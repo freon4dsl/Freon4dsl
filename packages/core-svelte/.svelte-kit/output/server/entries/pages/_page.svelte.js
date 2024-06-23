@@ -224,7 +224,7 @@ function warnAboutProxyRequirement(msg) {
 function getNextId() {
   return ++globalState.mobxGuid;
 }
-function once$1(func) {
+function once(func) {
   var invoked = false;
   return function() {
     if (invoked) {
@@ -234,7 +234,7 @@ function once$1(func) {
     return func.apply(this, arguments);
   };
 }
-var noop$1 = function noop() {
+var noop = function noop2() {
 };
 function isFunction(fn) {
   return typeof fn === "function";
@@ -531,16 +531,16 @@ var Atom = /* @__PURE__ */ function() {
 var isAtom = /* @__PURE__ */ createInstanceofPredicate("Atom", Atom);
 function createAtom(name, onBecomeObservedHandler, onBecomeUnobservedHandler) {
   if (onBecomeObservedHandler === void 0) {
-    onBecomeObservedHandler = noop$1;
+    onBecomeObservedHandler = noop;
   }
   if (onBecomeUnobservedHandler === void 0) {
-    onBecomeUnobservedHandler = noop$1;
+    onBecomeUnobservedHandler = noop;
   }
   var atom = new Atom(name);
-  if (onBecomeObservedHandler !== noop$1) {
+  if (onBecomeObservedHandler !== noop) {
     onBecomeObserved(atom, onBecomeObservedHandler);
   }
-  if (onBecomeUnobservedHandler !== noop$1) {
+  if (onBecomeUnobservedHandler !== noop) {
     onBecomeUnobserved(atom, onBecomeUnobservedHandler);
   }
   return atom;
@@ -2227,7 +2227,7 @@ function spy(listener) {
     };
   } else {
     globalState.spyListeners.push(listener);
-    return once$1(function() {
+    return once(function() {
       globalState.spyListeners = globalState.spyListeners.filter(function(l) {
         return l !== listener;
       });
@@ -2484,7 +2484,7 @@ var flow = /* @__PURE__ */ Object.assign(function flow2(arg1, arg2) {
         }
         var _res = gen["return"](void 0);
         var yieldedPromise = Promise.resolve(_res.value);
-        yieldedPromise.then(noop$1, noop$1);
+        yieldedPromise.then(noop, noop);
         cancelPromise(yieldedPromise);
         rejector(new FlowCancellationError());
       } catch (e) {
@@ -2633,7 +2633,7 @@ function hasInterceptors(interceptable) {
 function registerInterceptor(interceptable, handler) {
   var interceptors = interceptable.interceptors_ || (interceptable.interceptors_ = []);
   interceptors.push(handler);
-  return once$1(function() {
+  return once(function() {
     var idx = interceptors.indexOf(handler);
     if (idx !== -1) {
       interceptors.splice(idx, 1);
@@ -2664,7 +2664,7 @@ function hasListeners(listenable) {
 function registerListener(listenable, handler) {
   var listeners = listenable.changeListeners_ || (listenable.changeListeners_ = []);
   listeners.push(handler);
-  return once$1(function() {
+  return once(function() {
     var idx = listeners.indexOf(handler);
     if (idx !== -1) {
       listeners.splice(idx, 1);
@@ -4574,6 +4574,9 @@ if (typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "object") {
   });
 }
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+function getDefaultExportFromCjs(x) {
+  return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
+}
 /*! *****************************************************************************
 Copyright (C) Microsoft. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -5676,7 +5679,7 @@ class MobxModelElementImpl {
 }
 function allOwners(dec) {
   const result = [];
-  let owner = dec === null || dec === void 0 ? void 0 : dec.freOwner();
+  let owner = dec?.freOwner();
   while (!!owner) {
     result.push(owner);
     owner = owner.freOwner();
@@ -5693,8 +5696,7 @@ class FreDelta {
     this.unit = unit;
   }
   toString() {
-    var _a;
-    return "Delta<" + ((_a = this.owner) === null || _a === void 0 ? void 0 : _a.freLanguageConcept()) + "[" + this.propertyName + "]>";
+    return "Delta<" + this.owner?.freLanguageConcept() + "[" + this.propertyName + "]>";
   }
 }
 class FrePrimDelta extends FreDelta {
@@ -5777,7 +5779,7 @@ class DeltaUtil {
   static getElemName(node) {
     let ownerName = node["name"];
     if (!ownerName) {
-      ownerName = node === null || node === void 0 ? void 0 : node.freLanguageConcept();
+      ownerName = node?.freLanguageConcept();
     }
     return ownerName;
   }
@@ -5787,37 +5789,6 @@ class EmptyStdLib {
     this.elements = [];
   }
 }
-function __awaiter(thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function(resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function(resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, [])).next());
-  });
-}
-typeof SuppressedError === "function" ? SuppressedError : function(error, suppressed, message) {
-  var e = new Error(message);
-  return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
-};
 const LOGGER$q = new FreLogger("Box");
 class Box {
   isDirty() {
@@ -5839,9 +5810,9 @@ class Box {
     this.actualY = -1;
     this.actualWidth = -1;
     this.actualHeight = -1;
-    this.setFocus = () => __awaiter(this, void 0, void 0, function* () {
+    this.setFocus = async () => {
       console.error(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id);
-    });
+    };
     FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");
     this.element = node;
     this.role = role;
@@ -8570,7 +8541,7 @@ lodash.exports;
           return func(number);
         };
       }
-      var createSet = !(Set2 && 1 / setToArray(new Set2([, -0]))[1] == INFINITY) ? noop2 : function(values2) {
+      var createSet = !(Set2 && 1 / setToArray(new Set2([, -0]))[1] == INFINITY) ? noop3 : function(values2) {
         return new Set2(values2);
       };
       function createToPairs(keysFunc) {
@@ -8797,7 +8768,7 @@ lodash.exports;
       function getAllKeysIn(object2) {
         return baseGetAllKeys(object2, keysIn, getSymbolsIn);
       }
-      var getData = !metaMap ? noop2 : function(func) {
+      var getData = !metaMap ? noop3 : function(func) {
         return metaMap.get(func);
       };
       function getFuncName(func) {
@@ -10039,7 +10010,7 @@ lodash.exports;
           return !predicate.apply(this, args);
         };
       }
-      function once(func) {
+      function once2(func) {
         return before(2, func);
       }
       var overArgs = castRest(function(func, transforms) {
@@ -10985,7 +10956,7 @@ lodash.exports;
         }
         return this;
       }
-      function noop2() {
+      function noop3() {
       }
       function nthArg(n) {
         n = toInteger(n);
@@ -11160,7 +11131,7 @@ lodash.exports;
       lodash2.nthArg = nthArg;
       lodash2.omit = omit;
       lodash2.omitBy = omitBy;
-      lodash2.once = once;
+      lodash2.once = once2;
       lodash2.orderBy = orderBy;
       lodash2.over = over;
       lodash2.overArgs = overArgs;
@@ -11340,7 +11311,7 @@ lodash.exports;
       lodash2.multiply = multiply;
       lodash2.nth = nth;
       lodash2.noConflict = noConflict;
-      lodash2.noop = noop2;
+      lodash2.noop = noop3;
       lodash2.now = now;
       lodash2.pad = pad;
       lodash2.padEnd = padEnd;
@@ -11648,12 +11619,11 @@ class FreCreatePartCommand extends FreCommand {
     LOGGER$n.log("+++++++++++++++ Create part command " + propertyName + ", " + conceptName);
   }
   execute(box2, trigger, editor, index) {
-    var _a, _b;
-    LOGGER$n.log("CreatePartCommand: trigger [" + triggerTypeToString(trigger) + "] part: " + this.conceptName + " in " + this.propertyName + " refshort " + this.referenceShortcut + " parentbox " + ((_a = box2 === null || box2 === void 0 ? void 0 : box2.element) === null || _a === void 0 ? void 0 : _a.freLanguageConcept()));
+    LOGGER$n.log("CreatePartCommand: trigger [" + triggerTypeToString(trigger) + "] part: " + this.conceptName + " in " + this.propertyName + " refshort " + this.referenceShortcut + " parentbox " + box2?.element?.freLanguageConcept());
     const ownerConcept = box2.element.freLanguageConcept();
     const propName = this.propertyName;
     const theModelElement = box2.element[propName];
-    const newElement = (_b = FreLanguage.getInstance().classifier(this.conceptName)) === null || _b === void 0 ? void 0 : _b.constructor();
+    const newElement = FreLanguage.getInstance().classifier(this.conceptName)?.constructor();
     if (newElement === void 0 || newElement === null) {
       console.error("ActionBox action: Unexpected new element undefined");
       return EMPTY_POST_ACTION;
@@ -11789,13 +11759,12 @@ function getContextMenuOptions(conceptName, listParent, propertyName, optionsTyp
   return items;
 }
 function addListElement(editor, listParent, propertyName, index, typeOfAdded, before) {
-  var _a;
   LOGGER$l.log(`addListElement of type: ${typeOfAdded} index: ${index}`);
   const { property, isList, type } = getPropertyInfo(listParent, propertyName);
   if (!before) {
     index++;
   }
-  const newElement = (_a = FreLanguage.getInstance().classifier(typeOfAdded)) === null || _a === void 0 ? void 0 : _a.constructor();
+  const newElement = FreLanguage.getInstance().classifier(typeOfAdded)?.constructor();
   if (newElement === void 0 || newElement === null) {
     console.error("New element undefined");
     return;
@@ -12110,12 +12079,11 @@ class VerticalLayoutBox extends LayoutBox {
 }
 class ListBox extends LayoutBox {
   constructor(node, propertyName, role, children, initializer) {
-    var _a;
     super(node, role, children, initializer);
     this.conceptName = "unknown-type";
     this.kind = "ListBox";
     this.propertyName = propertyName;
-    this.conceptName = (_a = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)) === null || _a === void 0 ? void 0 : _a.type;
+    this.conceptName = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
   }
   options(type) {
     return getContextMenuOptions(this.conceptName, this.element, this.propertyName, type);
@@ -12171,7 +12139,7 @@ class ActionBox extends AbstractChoiceBox {
       LOGGER$j.log(`  has property ${this.propertyName} and concept ${this.conceptName}`);
       const clsOtIntf = FreLanguage.getInstance().classifier(this.conceptName);
       const propDef = FreLanguage.getInstance().classifierProperty(this.conceptName, this.propertyName);
-      LOGGER$j.log(`clsIntf: ${clsOtIntf} prop kind: ${propDef === null || propDef === void 0 ? void 0 : propDef.propertyKind}`);
+      LOGGER$j.log(`clsIntf: ${clsOtIntf} prop kind: ${propDef?.propertyKind}`);
       clsOtIntf.subConceptNames.concat(this.conceptName).forEach((creatableConceptname) => {
         const creatableConcept = FreLanguage.getInstance().classifier(creatableConceptname);
         LOGGER$j.log(`creatableConcept: ${creatableConcept}`);
@@ -12184,7 +12152,7 @@ class ActionBox extends AbstractChoiceBox {
       });
     } else if (!!this.propertyName) {
       const propDef = FreLanguage.getInstance().classifierProperty(this.element.freLanguageConcept(), this.propertyName);
-      LOGGER$j.log(`parent: ${this.element.freLanguageConcept()} prop ${propDef.name} kind: ${propDef === null || propDef === void 0 ? void 0 : propDef.propertyKind}`);
+      LOGGER$j.log(`parent: ${this.element.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`);
       this.addReferences(this.element, propDef, result, editor);
     } else {
       LOGGER$j.log("No property and concept defined for action box " + this.role);
@@ -12868,8 +12836,7 @@ class BoxUtil {
     return result;
   }
   static referenceBox(node, propertyName, setFunc, scoper, index) {
-    var _a;
-    const propType = (_a = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)) === null || _a === void 0 ? void 0 : _a.type;
+    const propType = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
     if (!propType) {
       throw new Error("Cannot find property type '" + propertyName + "'");
     }
@@ -13310,9 +13277,8 @@ class BTree {
 }
 const BTREE = new BTree();
 function runtimeReplacer(key, value) {
-  var _a;
   if (key === "declaration") {
-    return "REF-" + ((_a = value === null || value === void 0 ? void 0 : value.declaration) === null || _a === void 0 ? void 0 : _a.name);
+    return "REF-" + value?.declaration?.name;
   }
   if (value instanceof Map) {
     return Array.from(value.entries());
@@ -13523,23 +13489,21 @@ class FreLanguage {
     return Array.from(this.units.values()).map((unit) => unit.typeName);
   }
   createModel(id) {
-    var _a;
-    return (_a = this.pmodel) === null || _a === void 0 ? void 0 : _a.constructor(id);
+    return this.pmodel?.constructor(id);
   }
   createUnit(typeName, id) {
-    var _a;
-    return (_a = this.units.get(typeName)) === null || _a === void 0 ? void 0 : _a.constructor(id);
+    return this.units.get(typeName)?.constructor(id);
   }
   createConceptOrUnit(typeName, id) {
     let myType = this.concept(typeName);
     if (isNullOrUndefined(myType)) {
       myType = this.unit(typeName);
     }
-    return myType === null || myType === void 0 ? void 0 : myType.constructor(id);
+    return myType?.constructor(id);
   }
   addModel(model) {
     if (!!this.pmodel) {
-      console.error("Language: adding model of type " + (model === null || model === void 0 ? void 0 : model.typeName) + " while there is already a model of type " + this.pmodel.typeName);
+      console.error("Language: adding model of type " + model?.typeName + " while there is already a model of type " + this.pmodel.typeName);
     }
     this.pmodel = model;
   }
@@ -13591,13 +13555,12 @@ function isFreBinaryExpression(node) {
   return !!node && node.freIsExpression && node.freIsExpression() && node.freIsBinaryExpression && node.freIsBinaryExpression();
 }
 function modelUnit(node) {
-  var _a;
   let current = node;
   while (!!current) {
     if (current.freIsUnit()) {
       return current;
     } else {
-      current = (_a = current.freOwnerDescriptor()) === null || _a === void 0 ? void 0 : _a.owner;
+      current = current.freOwnerDescriptor()?.owner;
     }
   }
   return null;
@@ -13620,7 +13583,7 @@ class FreChangeManager {
     LOGGER$b.log("ChangeManager: set PART value for " + nodeToChange.freLanguageConcept() + "[" + propertyName + "] := " + newValue);
     if (!!this.changePartCallbacks) {
       const unit = modelUnit(nodeToChange);
-      if (!!(unit === null || unit === void 0 ? void 0 : unit.freOwner()) || nodeToChange.freIsModel()) {
+      if (!!unit?.freOwner() || nodeToChange.freIsModel()) {
         const delta = new FrePartDelta(unit, nodeToChange, propertyName, oldValue, newValue);
         for (const cb of this.changePartCallbacks) {
           cb(delta);
@@ -13632,7 +13595,7 @@ class FreChangeManager {
     LOGGER$b.log("ChangeManager: set PRIMITIVE value for " + nodeToChange.freLanguageConcept() + "[" + propertyName + "] := " + value);
     if (!!this.changePrimCallbacks) {
       const unit = modelUnit(nodeToChange);
-      if (!!(unit === null || unit === void 0 ? void 0 : unit.freOwner()) || nodeToChange.freIsModel()) {
+      if (!!unit?.freOwner() || nodeToChange.freIsModel()) {
         const delta = new FrePrimDelta(unit, nodeToChange, propertyName, nodeToChange[propertyName], value);
         for (const cb of this.changePrimCallbacks) {
           cb(delta);
@@ -13646,7 +13609,7 @@ class FreChangeManager {
     LOGGER$b.log("ChangeManager: UPDATE LIST ELEMENT for " + owner.freLanguageConcept() + "[" + propertyName + "][ " + index + "] := " + newValue);
     if (!!this.changeListElemCallbacks) {
       const unit = modelUnit(owner);
-      if (!!(unit === null || unit === void 0 ? void 0 : unit.freOwner()) || owner.freIsModel()) {
+      if (!!unit?.freOwner() || owner.freIsModel()) {
         const delta = new FrePartDelta(unit, owner, propertyName, oldValue, newValue, index);
         if (delta !== null && delta !== void 0) {
           for (const cb of this.changeListElemCallbacks) {
@@ -13660,7 +13623,7 @@ class FreChangeManager {
     LOGGER$b.log("ChangeManager: UPDATE PART LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]");
     if (!!this.changeListCallbacks) {
       const unit = modelUnit(listOwner);
-      if (!!(unit === null || unit === void 0 ? void 0 : unit.freOwner()) || listOwner.freIsModel()) {
+      if (!!unit?.freOwner() || listOwner.freIsModel()) {
         const delta = new FrePartListDelta(unit, listOwner, propertyName, index, removed, added);
         for (const cb of this.changeListCallbacks) {
           cb(delta);
@@ -13672,7 +13635,7 @@ class FreChangeManager {
     LOGGER$b.log("ChangeManager: UPDATE PRIMITIVE LIST for " + listOwner.freLanguageConcept() + "[" + propertyName + "]");
     if (!!this.changeListCallbacks) {
       const unit = modelUnit(listOwner);
-      if (!!(unit === null || unit === void 0 ? void 0 : unit.freOwner()) || listOwner.freIsModel()) {
+      if (!!unit?.freOwner() || listOwner.freIsModel()) {
         const delta = new FrePrimListDelta(unit, listOwner, propertyName, index, removed, added);
         for (const cb of this.changeListCallbacks) {
           cb(delta);
@@ -13684,7 +13647,7 @@ class FreChangeManager {
     LOGGER$b.log("ChangeManager: UPDATE LIST ELEMENT for " + listOwner.freLanguageConcept() + "[" + propertyName + "][" + index + "] := " + newValue);
     if (!!this.changeListElemCallbacks) {
       const unit = modelUnit(listOwner);
-      if (!!(unit === null || unit === void 0 ? void 0 : unit.freOwner()) || listOwner.freIsModel()) {
+      if (!!unit?.freOwner() || listOwner.freIsModel()) {
         const delta = new FrePrimDelta(unit, listOwner, propertyName, oldValue, newValue, index);
         if (delta !== null && delta !== void 0) {
           for (const cb of this.changeListElemCallbacks) {
@@ -14118,11 +14081,10 @@ class FreModelSerializer {
     }
   }
   convertToJSON(tsObject, publicOnly) {
-    var _a;
     const typename = tsObject.freLanguageConcept();
     let result;
     if (publicOnly !== void 0 && publicOnly) {
-      if (((_a = this.language.concept(typename)) === null || _a === void 0 ? void 0 : _a.isPublic) || !!this.language.unit(typename)) {
+      if (this.language.concept(typename)?.isPublic || !!this.language.unit(typename)) {
         result = this.convertToJSONinternal(tsObject, true, typename);
       }
     } else {
@@ -14395,12 +14357,11 @@ class FreLionwebSerializer {
     return parsedReferences;
   }
   convertToJSON(freNode, publicOnly) {
-    var _a;
     const typename = freNode.freLanguageConcept();
     LOGGER$3.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
     const idMap = /* @__PURE__ */ new Map();
     if (publicOnly !== void 0 && publicOnly) {
-      if (((_a = this.language.concept(typename)) === null || _a === void 0 ? void 0 : _a.isPublic) || !!this.language.unit(typename)) {
+      if (this.language.concept(typename)?.isPublic || !!this.language.unit(typename)) {
         this.convertToJSONinternal(freNode, true, idMap);
       }
     } else {
@@ -14410,7 +14371,6 @@ class FreLionwebSerializer {
     return Object.values(idMap);
   }
   convertToJSONinternal(freNode, publicOnly, idMap) {
-    var _a;
     let result = idMap.get(freNode.freId());
     if (result !== void 0) {
       LOGGER$3.error("already found: " + freNode.freId());
@@ -14420,7 +14380,7 @@ class FreLionwebSerializer {
     result = createLionWebJsonNode();
     idMap[freNode.freId()] = result;
     result.id = freNode.freId();
-    result.parent = (_a = freNode === null || freNode === void 0 ? void 0 : freNode.freOwner()) === null || _a === void 0 ? void 0 : _a.freId();
+    result.parent = freNode?.freOwner()?.freId();
     if (result.parent === void 0 || freNode.freIsUnit()) {
       result.parent = null;
     }
@@ -14432,8 +14392,8 @@ class FreLionwebSerializer {
       language = concept.language;
     } else {
       const unit = this.language.unit(typename);
-      conceptKey = unit === null || unit === void 0 ? void 0 : unit.key;
-      language = unit === null || unit === void 0 ? void 0 : unit.language;
+      conceptKey = unit?.key;
+      language = unit?.language;
     }
     if (conceptKey === void 0) {
       LOGGER$3.error(`Unknown concept key: ${typename}`);
@@ -14459,7 +14419,6 @@ class FreLionwebSerializer {
     };
   }
   convertPropertyToJSON(p, parentNode, publicOnly, result, idMap) {
-    var _a, _b, _c;
     if (p.id === void 0) {
       LOGGER$3.log(`no id defined for property ${p.name}`);
       return;
@@ -14498,7 +14457,7 @@ class FreLionwebSerializer {
               LOGGER$3.log("REF NULL for " + p.name);
               break;
             }
-            const referredId = (_a = ref === null || ref === void 0 ? void 0 : ref.referred) === null || _a === void 0 ? void 0 : _a.freId();
+            const referredId = ref?.referred?.freId();
             if (!!ref.name || !!referredId) {
               lwReference.targets.push({
                 resolveInfo: ref.name,
@@ -14512,11 +14471,11 @@ class FreLionwebSerializer {
             LOGGER$3.log("REF NULL for " + p.name + " parant " + parentNode["name"]);
             break;
           }
-          const referredId = (_b = ref === null || ref === void 0 ? void 0 : ref.referred) === null || _b === void 0 ? void 0 : _b.freId();
+          const referredId = ref?.referred?.freId();
           if (!!ref.name || !!referredId) {
             lwReference.targets.push({
               resolveInfo: !!ref ? ref["name"] : null,
-              reference: (_c = ref === null || ref === void 0 ? void 0 : ref.referred) === null || _c === void 0 ? void 0 : _c.freId()
+              reference: ref?.referred?.freId()
             });
           }
         }
@@ -14544,13 +14503,11 @@ function propertyValueToString(value) {
       return value;
   }
 }
-var global$1 = typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};
-var performance = global$1.performance || {};
-performance.now || performance.mozNow || performance.msNow || performance.oNow || performance.webkitNow || function() {
-  return (/* @__PURE__ */ new Date()).getTime();
-};
+var process$1 = commonjsGlobal.process;
+var process$2 = /* @__PURE__ */ getDefaultExportFromCjs(process$1);
 new FreModelSerializer();
 new FreLionwebSerializer();
+process$2.env.LIONWEB_PORT || 63320;
 var HttpInfoCodes;
 (function(HttpInfoCodes2) {
   HttpInfoCodes2[HttpInfoCodes2["Continue"] = 100] = "Continue";
@@ -14745,7 +14702,7 @@ class RtBoolean extends RtObject {
 RtBoolean.TRUE = new RtBoolean(true);
 RtBoolean.FALSE = new RtBoolean(false);
 function isRtBoolean(object2) {
-  const _type = object2 === null || object2 === void 0 ? void 0 : object2._type;
+  const _type = object2?._type;
   return !!_type && _type === "RtBoolean";
 }
 class RtError extends RtObject {
@@ -14766,7 +14723,7 @@ class RtError extends RtObject {
   }
 }
 function isRtError(obj) {
-  const _type = obj === null || obj === void 0 ? void 0 : obj._type;
+  const _type = obj?._type;
   return !!_type && _type === "RtError";
 }
 class RtString extends RtObject {
@@ -14797,7 +14754,7 @@ class RtString extends RtObject {
 }
 RtString.EMPTY_STRING = new RtString("");
 function isRtString(object2) {
-  const _type = object2 === null || object2 === void 0 ? void 0 : object2._type;
+  const _type = object2?._type;
   return !!_type && _type === "RtString";
 }
 class RtEmpty extends RtObject {
@@ -15074,6 +15031,8 @@ class ShowCaseUnit extends FreNodeBaseImpl {
     observableprimlist(this, "numlist");
     observableprim(this, "name");
     this.name = "";
+    this.numlist = [];
+    this.partlist = [];
     observablepart(this, "part");
     observablepartlist(this, "partlist");
   }
@@ -15178,6 +15137,8 @@ class ShowCaseModel extends FreNodeBaseImpl {
     } else {
       this.$id = FreUtils.ID();
     }
+    this.name = "";
+    this.unit = null;
     observablepart(this, "unit");
   }
   /**

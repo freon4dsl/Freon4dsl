@@ -1,1 +1,0 @@
-{"version":3,"file":"ContextMenuStore.d.ts","sourceRoot":"","sources":["../../../../../src/lib/components/svelte-utils/ContextMenuStore.ts"],"names":[],"mappings":";AACA,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,cAAc,CAAC;AAC7C,OAAO,KAAK,WAAW,MAAM,uBAAuB,CAAC;AAOrD,eAAO,MAAM,kBAAkB,EAAE,QAAQ,CAAC,OAAO,CAA4B,CAAC;AAC9E,eAAO,MAAM,WAAW,EAAE,QAAQ,CAAC,WAAW,CAAkB,CAAC"}
