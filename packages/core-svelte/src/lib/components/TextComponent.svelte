@@ -4,7 +4,7 @@
 
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
-	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils";
+	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils/index.js";
 	import {
 		ActionBox,
 		ALT,
@@ -33,7 +33,7 @@
 	} from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";
-	import { replaceHTML } from "./svelte-utils";
+	import { replaceHTML } from "./svelte-utils/index.js";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
     const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings

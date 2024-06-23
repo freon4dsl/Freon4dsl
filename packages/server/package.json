@@ -19,6 +19,7 @@
     "cleanup": "bash ../../scripts/cleanup.sh",
     "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
     "build": "tsc --build",
+    "build-dev": "tsc --build",
     "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
     "build-release": "npm run build",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
@@ -34,7 +35,7 @@
     "koa-bodyparser": "4.3.0",
     "koa-router": "10.0.0",
     "koa2-cors": "2.0.6",
-    "supertest": "^6.1.6",
+    "supertest": "^7.0.0",
     "tslib": "^2.6.3"
   }
 }

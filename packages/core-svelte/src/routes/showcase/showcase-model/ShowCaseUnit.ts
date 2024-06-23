@@ -3,9 +3,17 @@
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
  * to the changes in the state of its properties.
  */
-import { observablepart, observablepartlist, observableprim, observableprimlist, FreNodeBaseImpl, FreUtils } from "@freon4dsl/core";
-import type FreModelUnit from "@freon4dsl/core";
-import { ShowCasePart } from "./ShowCasePart";
+import {
+    observablepart,
+    observablepartlist,
+    observableprim,
+    observableprimlist,
+    FreNodeBaseImpl,
+    FreUtils,
+    FreParseLocation
+} from "@freon4dsl/core";
+import type {FreModelUnit} from "@freon4dsl/core";
+import { ShowCasePart } from "./ShowCasePart.js";
 
 export class ShowCaseUnit extends FreNodeBaseImpl implements FreModelUnit {
     /**
@@ -59,6 +67,8 @@ export class ShowCaseUnit extends FreNodeBaseImpl implements FreModelUnit {
         observableprimlist(this, "numlist");
         observableprim(this, "name");
         this.name = "";
+        this.numlist = [];
+        this.partlist = [];
 
         // Both 'observablepart' and 'observablepartlist' change the get and set of the attribute
         // such that the parent-part relationship is consistently maintained,

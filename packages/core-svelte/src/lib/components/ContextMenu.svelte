@@ -6,11 +6,11 @@
      *  such that the complete menu stays within the bounderies of the editor viewport. The state of the editor
      *  viewport is stored in the EditorViewportStore (by FreonComponent).
      */
-    import { clickOutsideConditional } from "./svelte-utils";
+    import { clickOutsideConditional } from "./svelte-utils/index.js";
     import { tick } from "svelte";
     import { FreLogger, MenuItem, FreEditor } from "@freon4dsl/core";
-    import { contextMenuVisible } from "./svelte-utils/ContextMenuStore";
-    import { viewport } from "./svelte-utils/EditorViewportStore";
+    import { contextMenuVisible } from "./svelte-utils/ContextMenuStore.js";
+    import { viewport } from "./svelte-utils/EditorViewportStore.js";
 
     // items for the context menu
     export let items: MenuItem[];

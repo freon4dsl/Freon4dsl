@@ -1,6 +1,6 @@
-import {ShowCasePart} from "./ShowCasePart";
-import {ShowCaseUnit} from "./ShowCaseUnit";
-import {ShowCaseModel} from "./ShowCaseModel";
+import {ShowCasePart} from "./ShowCasePart.js";
+import {ShowCaseUnit} from "./ShowCaseUnit.js";
+import {ShowCaseModel} from "./ShowCaseModel.js";
 
 export class ModelInstantiator {
     createModel(): ShowCaseModel {

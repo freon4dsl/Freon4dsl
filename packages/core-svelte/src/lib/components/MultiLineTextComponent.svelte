@@ -4,12 +4,12 @@
 
 <script lang="ts">
 	import { afterUpdate, onMount } from "svelte";
-	import { componentId } from "./svelte-utils";
+	import { componentId } from "./svelte-utils/index.js";
 	import { FreEditor, FreLogger, MultiLineTextBox } from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";
 	// Probably needed to code/encode HTML inside <TextArea>
-	import { replaceHTML } from "./svelte-utils";
+	import { replaceHTML } from "./svelte-utils/index.js";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
     const LOGGER = new FreLogger("MultiLineTextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings

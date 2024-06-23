@@ -25,15 +25,15 @@
     } from "@freon4dsl/core";
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    import { componentId } from "./svelte-utils";
+    import { componentId } from "./svelte-utils/index.js";
     import {
         activeElem,
         activeIn,
         draggedElem,
         draggedFrom,
         selectedBoxes
-    } from "./svelte-utils/DropAndSelectStore";
-    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore";
+    } from "./svelte-utils/DropAndSelectStore.js";
+    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore.js";
 
     // properties
     export let box: TableCellBox;

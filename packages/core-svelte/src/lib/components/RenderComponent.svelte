@@ -39,8 +39,8 @@
     import TextDropdownComponent from "./TextDropdownComponent.svelte";
     import SvgComponent from "./SvgComponent.svelte";
     import { afterUpdate } from "svelte";
-    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore";
-    import { componentId, setBoxSizes } from "./svelte-utils";
+    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore.js";
+    import { componentId, setBoxSizes } from "./svelte-utils/index.js";
     import ElementComponent from "./ElementComponent.svelte";
 
     const LOGGER = new FreLogger("RenderComponent").mute();
@@ -129,7 +129,8 @@
         {:else if isActionBox(box) || isSelectBox(box)}
             <TextDropdownComponent box={box} editor={editor}/>
         {:else}
-            <p class="error">[UNKNOWN BOX TYPE: {box.kind}]</p>
+            <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
+            <p class="error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
         {/if}
     </span>
 {/if}

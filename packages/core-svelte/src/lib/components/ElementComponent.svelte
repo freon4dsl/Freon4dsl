@@ -3,7 +3,7 @@
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
     import { FreLogger, type FreEditor, ElementBox, Box } from "@freon4dsl/core";
-    import { componentId } from "./svelte-utils";
+    import { componentId } from "./svelte-utils/index.js";
 
     export let box: ElementBox;
     export let editor: FreEditor;

@@ -1,8 +1,0 @@
-editor CALLOUT precedence 20
-
-Attribute {
-    [ Attribute named \"${name}\" has type ${declaredType} ]
-}
-Parameter {
-    [Parameter named \"${name}\" has type ${declaredType}]
-}

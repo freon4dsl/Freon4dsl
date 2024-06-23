@@ -10,8 +10,7 @@
     } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    import { componentId } from "./svelte-utils";
-    import { executeCustomKeyboardShortCut, isOdd } from "./svelte-utils";
+    import { componentId, executeCustomKeyboardShortCut, isOdd } from "./svelte-utils/index.js";
 
     // properties
     export let grid: GridBox;

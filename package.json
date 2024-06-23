@@ -2,16 +2,17 @@
   "name": "freon4dsl",
   "private": true,
   "scripts": {
-    "clean": "rm -rf node_modules/ && npm run clean --workspaces --if-present",
+    "clean": "rm -f package-lock.json && rm -rf node_modules/ && npm run clean --workspaces --if-present",
     "start": "npm run start --stream --parallel",
     "build": "npm run build --workspaces --if-present",
+    "build-dev": "npm run build-dev --workspaces --if-present",
     "build-release": "npm run build-release --workspaces --if-present",
     "publish-local": "npm run publish-local --workspaces --if-present",
     "unpublish-local": "npm run unpublish-local --workspaces --if-present",
+    "install-local": "npm install --registry http://localhost:4873",
     "lint": "npm run lint --workspaces --if-present",
     "setup": "npm run setup --workspaces --if-present",
-    "test": "npm run test --stream --workspaces --if-present",
-    "install-local": "npm install --registry http://localhost:4873",
+    "test": "npm run test --workspaces --if-present",
     "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css"
   },
   "devDependencies": {
@@ -39,6 +40,7 @@
     "rollup": "4.18.0",
     "rollup-plugin-auto-external": "2.0.0",
     "rollup-plugin-css-only": "4.5.2",
+    "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-livereload": "2.0.5",
     "rollup-plugin-polyfill-node": "0.13.0",
     "rollup-plugin-svelte": "^7.2.0",
@@ -48,7 +50,7 @@
     "svelte-preprocess": "5.1.4",
     "ts-jest": "29.1.4",
     "ts-node": "^10.9.2",
-    "tslib": "2.6.2",
+    "tslib": "^2.6.3",
     "typescript": "5.4.5",
     "typescript-svelte-plugin": "0.3.38"
   },
@@ -56,9 +58,11 @@
     "packages/core",
     "packages/core-svelte",
     "packages/meta",
-    "packages/playground",
-    "packages/test",
-    "packages/server"
+    "packages/webapp-lib",
+    "packages/samples/*",
+    "packages/webapp-starter",
+    "packages/server",
+    "packages/test"
   ],
   "version": "0.7.0-beta"
 }

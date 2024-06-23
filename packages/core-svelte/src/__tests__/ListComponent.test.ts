@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
 import { HorizontalListBox, LabelBox, FreEditor } from "@freon4dsl/core";
-import { ModelMaker } from "./models/ModelMaker";
+import { ModelMaker } from "./models/ModelMaker.js";
 import ListComponent from "../lib/components/ListComponent.svelte"; // Note that this form of import is neccessary for jest to function!
 
 describe.skip("List component", () => {
@@ -19,7 +19,7 @@ describe.skip("List component", () => {
     });
 
     it("all elements are visible", () => {
-        const result = render(ListComponent, { list: horizontalBox, editor: myEditor });
+        const result = render(ListComponent, { box: horizontalBox, editor: myEditor });
         horizontalBox.children.forEach((box , index)=> {
             const myLabel = screen.getByText('Label' + index);
             expect(myLabel).toBeVisible();
@@ -27,7 +27,7 @@ describe.skip("List component", () => {
     });
 
     it("when clicked, a single element gets focus", () => {
-        const result = render(ListComponent, { list: horizontalBox, editor: myEditor });
+        const result = render(ListComponent, { box: horizontalBox, editor: myEditor });
         // nothing has focus before the click
         horizontalBox.children.forEach((box , index)=> {
             const myLabel = screen.getByText('Label' + index);
@@ -54,7 +54,7 @@ describe.skip("List component", () => {
     });
 
     it("using arrow keys, another element gets focus", () => {
-        const result = render(ListComponent, { list: horizontalBox, editor: myEditor });
+        const result = render(ListComponent, { box: horizontalBox, editor: myEditor });
         // click the second element
         fireEvent.click(screen.getByText('Label1'));
         // the second element has focus

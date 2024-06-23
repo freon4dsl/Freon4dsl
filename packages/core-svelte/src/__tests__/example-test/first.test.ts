@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/svelte';
-import { TextComponent } from "../../lib/components";
+import { TextComponent } from "../../lib/components/index.js";
 import { FreEditor, TextBox } from "@freon4dsl/core";
 
 // see https://testing-library.com/docs/ for testing options
@@ -15,7 +15,7 @@ describe("First test in core-svelte", () => {
             return;
         });
         const myEditor = new FreEditor(null, null);
-        render(TextComponent, {textBox: myTextBox, editor: myEditor });
+        render(TextComponent, {box: myTextBox, editor: myEditor, text: myTextBox.getText() });
         const node = screen.queryByText("Hello world!");
         expect(node).not.toBeNull();
     });

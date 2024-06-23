@@ -1,5 +1,5 @@
-import { matchElementList, observablepartlist, FreNodeBaseImpl, FreNamedNode, FreUtils } from "@freon4dsl/core";
-import { SimpleElement } from "./SimpleElement";
+import { matchElementList, observablepartlist, FreNodeBaseImpl, type FreNamedNode, FreUtils } from "@freon4dsl/core";
+import { SimpleElement } from "./SimpleElement.js";
 import { makeObservable, observable } from "mobx";
 
 export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode  {
