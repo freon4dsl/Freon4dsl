@@ -1,7 +1,6 @@
 import { FreBinaryExpression } from "../../ast";
 import { BTREE, FRE_BINARY_EXPRESSION_LEFT } from "../../util";
-import { RoleProvider } from "../simplifiedBoxAPI/index";
-import { FreCaret, FreCaretPosition } from "../util";
+import { FreCaret } from "../util";
 import { Box } from "../boxes";
 import { FreEditor } from "../FreEditor";
 import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction";
@@ -39,13 +38,18 @@ export abstract class FreCommand {
      * @param editor
      */
     abstract undo(box: Box, editor: FreEditor): void;
+    // todo implement undo function in all subclasses of FreCommand
 }
 
 class FreNullCommand extends FreCommand {
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     execute(box: Box, text: FreTriggerUse, editor: FreEditor): FrePostAction {
         return EMPTY_POST_ACTION;
     }
 
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     undo(box: Box, editor: FreEditor): void { /* to be done */ }
 }
 
@@ -75,6 +79,8 @@ export class FreCreateBinaryExpressionCommand extends FreCommand {
         };
     }
 
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     undo() { /* to be done */ }
 }
 
@@ -112,5 +118,7 @@ export class FreCustomCommand extends FreCommand {
         return EMPTY_POST_ACTION;
     }
 
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     undo() { /* to be done */ }
 }

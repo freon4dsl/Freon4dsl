@@ -82,5 +82,7 @@ export class FreCreatePartCommand extends FreCommand {
         };
     }
 
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     undo(box: Box, editor: FreEditor) { /* to be done */ }
 }

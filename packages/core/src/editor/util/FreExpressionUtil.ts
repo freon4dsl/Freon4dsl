@@ -28,6 +28,8 @@ import { BehaviorExecutionResult } from "./BehaviorUtils";
 // const LOGGER = new FreLogger("FreExpressionNodeHelpers");
 // todo maybe moved these functions to BoxUtils?
 
+// @ts-ignore
+// todo remove param initializer and change generation in meta accordingly
 export function createDefaultExpressionBox(exp: FreExpressionNode, role: string, children: Box[], initializer?: Partial<HorizontalLayoutBox>): Box {
     const isLeftMost: Boolean = BTREE.isLeftMostChild(exp);
     const isRightMost: Boolean = BTREE.isRightMostChild(exp);
@@ -70,8 +72,8 @@ export function createDefaultExpressionBox(exp: FreExpressionNode, role: string,
 export function createDefaultBinaryBox(exp: FreBinaryExpression,
                                        symbol: string,
                                        editor: FreEditor,
-                                       boxProviderCache: FreProjectionHandler,
-                                       style?: string): HorizontalLayoutBox {
+                                       boxProviderCache: FreProjectionHandler
+                                                            ): HorizontalLayoutBox {
     // TODO move this method to BoxUtils
     const result = BoxFactory.horizontalLayout(exp, BINARY_EXPRESSION, "");
     // const projection = editor.projection;

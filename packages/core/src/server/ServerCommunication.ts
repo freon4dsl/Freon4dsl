@@ -61,6 +61,8 @@ export class ServerCommunication implements IServerCommunication {
         console.error(`ServerCommunication ${severity}: ${msg}`);
     }
 
+    // @ts-ignore
+    // parameters present to adhere to interface
     async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
         return null
     }

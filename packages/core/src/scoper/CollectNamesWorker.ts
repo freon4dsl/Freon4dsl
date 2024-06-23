@@ -51,6 +51,8 @@ export class CollectNamesWorker implements AstWorker {
         return false;
     }
 
+    // @ts-ignore
+    // parameter is present to adhere to signature of super class
     execAfter(modelelement: FreNode): boolean {
         return false;
     }
