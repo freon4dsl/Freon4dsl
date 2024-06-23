@@ -80,11 +80,11 @@ export class DefaultActionsTemplate {
 
     customActionsForOptional(editorDef: FreEditUnit): string {
         let result: string = "";
-        editorDef.getDefaultProjectiongroup().projections.forEach( projection => {
+        editorDef.getDefaultProjectiongroup()?.projections.forEach( projection => {
             if (!!projection && projection instanceof FreEditProjection) {
                 projection.lines.forEach(line => {
                     line.items.forEach(item => {
-                        if (item instanceof FreOptionalPropertyProjection) {
+                        if (item instanceof FreOptionalPropertyProjection && !!item.property) {
                             const firstLiteral: string = item.firstLiteral();
                             const myClassifier = projection.classifier.referred;
                             // TODO check this change

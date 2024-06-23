@@ -19,6 +19,9 @@ export class FreonGenerateInterpreter extends FreonGeneratePartAction {
     generate(): void {
         LOGGER.log("Starting Freon interpreter generation ...");
         super.generate();
+        if (this.language === null || this.language === undefined) {
+            return;
+        }
 
         // read interpreter .eval file
         const interpeterDef = new FreInterpreterDef();

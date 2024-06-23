@@ -11,14 +11,14 @@ const LOGGER = new MetaLogger("DiagramGenerator").mute();
  */
 export class DiagramGenerator {
     public outputfolder: string = ".";
-    public language: FreMetaLanguage;
+    public language?: FreMetaLanguage;
     private diagramFolder: string = '';
     private diagramGenFolder: string = '';
     fileNames: string[] = [];
     private diagramAstFolder: string = '';
 
     generate(): void {
-        if (this.language === null) {
+        if (this.language === null || this.language === undefined) {
             LOGGER.error("Cannot generate diagrams because language is not set.");
             return;
         }

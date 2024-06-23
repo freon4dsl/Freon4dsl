@@ -2,6 +2,7 @@ import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
 import { FreTyperMerger } from "../typerdef/parser/FreTyperMerger";
+import {TyperDef} from "../typerdef/metalanguage";
 
 const LOGGER = new MetaLogger("FreonGenerateTyper"); // .mute();
 export class FreonGenerateTyper extends FreonGeneratePartAction {
@@ -17,13 +18,15 @@ export class FreonGenerateTyper extends FreonGeneratePartAction {
 
     generate(): void {
         LOGGER.log("Starting Freon typer generation ...");
-
+        if (this.language === null || this.language === undefined) {
+            return;
+        }
         super.generate();
         this.typerGenerator = new FreonTyperGenerator();
         this.typerGenerator.language = this.language;
         this.typerGenerator.outputfolder = this.outputFolder;
 
-        const typer = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
+        const typer: TyperDef = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
         if (typer === null) {
             throw new Error("Typer definition could not be parsed, exiting.");
         }

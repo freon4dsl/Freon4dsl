@@ -17,7 +17,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
         this.checker = new FreEditChecker(language);
     }
 
-    protected merge(submodels: FreEditUnit[]): FreEditUnit {
+    protected merge(submodels: FreEditUnit[]): FreEditUnit | undefined {
         if (submodels.length > 0) {
             const result: FreEditUnit = submodels[0];
 
@@ -38,38 +38,40 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                             // there is already a group with this name in the definition, so
                             // merge all info into this group
                             const found = projectionGroupsByName.get(group.name);
-                            found.projections.push(...group.projections);
-                            if (!!group.extras) {
-                                if (!found.extras) {
-                                    found.extras = [];
-                                }
-                                found.extras.push(...group.extras);
-                            }
-                            if (group.standardReferenceSeparator) {
-                                if (found.standardReferenceSeparator) {
-                                    if (group.standardReferenceSeparator !== found.standardReferenceSeparator) {
-                                        this.checker.errors.push(`Reference separator in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
+                            if (!!found) {
+                                found.projections.push(...group.projections);
+                                if (!!group.extras) {
+                                    if (!found.extras) {
+                                        found.extras = [];
                                     }
-                                } else {
-                                    found.standardReferenceSeparator = group.standardReferenceSeparator;
+                                    found.extras.push(...group.extras);
                                 }
-                            }
-                            if (group.standardBooleanProjection) {
-                                if (found.standardBooleanProjection) {
-                                    if (group.standardBooleanProjection !== found.standardBooleanProjection) {
-                                        this.checker.errors.push(`Boolean projection in ${ParseLocationUtil.location(group.standardBooleanProjection)} is not equal to the one found in ${ParseLocationUtil.location(found.standardBooleanProjection)}.`);
+                                if (group.standardReferenceSeparator) {
+                                    if (found.standardReferenceSeparator) {
+                                        if (group.standardReferenceSeparator !== found.standardReferenceSeparator) {
+                                            this.checker.errors.push(`Reference separator in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
+                                        }
+                                    } else {
+                                        found.standardReferenceSeparator = group.standardReferenceSeparator;
                                     }
-                                } else {
-                                    found.standardBooleanProjection = group.standardBooleanProjection;
                                 }
-                            }
-                            if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
-                                if (found.precedence !== null && found.precedence !== undefined) {
-                                    if (group.precedence !== found.precedence) {
-                                        this.checker.errors.push(`Precendence of ${group.name} in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
+                                if (group.standardBooleanProjection) {
+                                    if (found.standardBooleanProjection) {
+                                        if (group.standardBooleanProjection !== found.standardBooleanProjection) {
+                                            this.checker.errors.push(`Boolean projection in ${ParseLocationUtil.location(group.standardBooleanProjection)} is not equal to the one found in ${ParseLocationUtil.location(found.standardBooleanProjection)}.`);
+                                        }
+                                    } else {
+                                        found.standardBooleanProjection = group.standardBooleanProjection;
                                     }
-                                } else {
-                                    found.precedence = group.precedence;
+                                }
+                                if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
+                                    if (found.precedence !== null && found.precedence !== undefined) {
+                                        if (group.precedence !== found.precedence) {
+                                            this.checker.errors.push(`Precendence of ${group.name} in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
+                                        }
+                                    } else {
+                                        found.precedence = group.precedence;
+                                    }
                                 }
                             }
                         } else {
@@ -87,7 +89,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             this.mergeExtraInformation(result);
             return result;
         } else {
-            return null;
+            return undefined;
         }
     }
 
@@ -105,7 +107,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             if (!!group.extras) {
                 allExtras.push(...group.extras);
             }
-            group.extras = null;
+            group.extras = [];
         });
         defaultGroup.extras = allExtras;
     }

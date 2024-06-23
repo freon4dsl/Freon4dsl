@@ -1,5 +1,6 @@
 import { MetaElementReference } from "./internal";
-import { FreMetaDefinitionElement } from "../../utils";
+// This import cannot be shortened. Importing "../../utils" results in circular dependencies
+import { FreMetaDefinitionElement } from "../../utils/FreMetaDefinitionElement";
 
 // root of the inheritance structure of all elements in a language definition
 export abstract class FreMetaLangElement extends FreMetaDefinitionElement {
@@ -50,16 +51,16 @@ export class FreMetaLanguage extends FreMetaLangElement {
         return result.concat(this.interfaces);
     }
 
-    findConcept(name: string): FreMetaConcept {
+    findConcept(name: string): FreMetaConcept | undefined {
         return this.concepts.find(con => con.name === name);
     }
 
-    findInterface(name: string): FreMetaInterface {
+    findInterface(name: string): FreMetaInterface | undefined {
         return this.interfaces.find(con => con.name === name);
     }
 
-    findClassifier(name: string): FreMetaClassifier {
-        let result: FreMetaClassifier;
+    findClassifier(name: string): FreMetaClassifier | undefined {
+        let result: FreMetaClassifier | undefined;
         result = this.findConcept(name);
         if (result === undefined) {
             result = this.findInterface(name);
@@ -74,16 +75,17 @@ export class FreMetaLanguage extends FreMetaLangElement {
     }
 
     findBasicType(name: string): FreMetaClassifier {
+        // If not found, this method returns $freAny
         return FreMetaPrimitiveType.find(name);
     }
 
-    findUnitDescription(name: string): FreMetaUnitDescription {
+    findUnitDescription(name: string): FreMetaUnitDescription | undefined {
         return this.units.find(u => u.name === name);
     }
 }
 
 export abstract class FreMetaClassifier extends FreMetaLangElement {
-    private static __ANY: FreMetaClassifier = null;
+    private static __ANY: FreMetaClassifier;
 
     static get ANY(): FreMetaClassifier {
         if (FreMetaClassifier.__ANY === null || FreMetaClassifier.__ANY === undefined) {
@@ -153,7 +155,7 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
         return result;
     }
 
-    nameProperty(): FreMetaPrimitiveProperty {
+    nameProperty(): FreMetaPrimitiveProperty | undefined {
         return this.allPrimProperties().find(p => p.name === "name" && p.type === FreMetaPrimitiveType.identifier);
     }
 }
@@ -457,7 +459,7 @@ export class FreMetaBinaryExpressionConcept extends FreMetaExpressionConcept {
 export class FreMetaLimitedConcept extends FreMetaConcept {
     instances: FreMetaInstance[] = [];
 
-    findInstance(name: string): FreMetaInstance {
+    findInstance(name: string): FreMetaInstance | undefined {
         return this.instances.find(inst => inst.name === name);
     }
 
@@ -546,7 +548,7 @@ export class FreMetaInstance extends FreMetaLangElement {
     // Note that these properties may be undefined, when there is no definition in the .ast file
     props: FreMetaInstanceProperty[] = [];
 
-    nameProperty(): FreMetaInstanceProperty {
+    nameProperty(): FreMetaInstanceProperty | undefined {
         return this.props.find(p => p.name === "name");
     }
 }

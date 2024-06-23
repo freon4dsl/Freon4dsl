@@ -9,7 +9,7 @@ import { FreMetaLanguage } from "../languagedef/metalanguage/FreMetaLanguage";
  * Subclasses need to call super.generate().
  */
 export class FreonGeneratePartAction extends FreonGenerateAction {
-    protected language: FreMetaLanguage;
+    protected language?: FreMetaLanguage;
 
     public constructor(options: ICommandLineActionOptions) {
         super(options);

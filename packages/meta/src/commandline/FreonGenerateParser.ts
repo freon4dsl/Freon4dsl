@@ -19,15 +19,17 @@ export class FreonGenerateParser extends FreonGeneratePartAction {
     generate(): void {
         LOGGER.log("Starting Freon reader and writer generation ...");
         super.generate();
-
+        if (this.language === null || this.language === undefined) {
+            return;
+        }
         this.parserGenerator.outputfolder = this.outputFolder;
         this.parserGenerator.language = this.language;
 
         const editor = new FreEditParser(this.language).parseMulti(this.editFiles);
         // This command is being used to generate, specifically and only,
-        // the reader/writer couple. Therefore we do not generate a default editor when
+        // the reader/writer couple. Therefore, we do not generate a default editor when
         // no editor definition is found.
-        if (editor === null) {
+        if (editor === null || editor === undefined) {
             throw new Error("Editor definition could not be parsed, exiting.");
         }
         this.parserGenerator.generate(editor);

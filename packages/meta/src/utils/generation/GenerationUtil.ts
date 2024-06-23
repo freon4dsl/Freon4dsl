@@ -193,7 +193,7 @@ export class GenerationUtil {
      * represents the name of the concept.
      * @param con
      */
-    public static findNameProp(con: FreMetaClassifier): FreMetaPrimitiveProperty {
+    public static findNameProp(con: FreMetaClassifier): FreMetaPrimitiveProperty | undefined {
         return con.allPrimProperties().find(p => p.name === "name" && p.type === FreMetaPrimitiveType.identifier);
     }
 

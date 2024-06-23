@@ -39,7 +39,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
 
     protected onExecute(): Promise<void> {
         const self = this;
-        self.outputFolder = this.outputFolderArg.value;
+        self.outputFolder = this.outputFolderArg.value ? this.outputFolderArg.value : '';
         // @ts-ignore
         // error TS6133: 'resolve' is declared but its value is never read.
         // error TS6133: 'reject' is declared but its value is never read.

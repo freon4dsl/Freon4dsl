@@ -102,14 +102,14 @@ export class ClassifierChecker {
                         if (!!inAnotherInterface) { // there is a prop with the same name in another implemented interface
                             // we must check type conformance both ways!
                             // when types conform: add a new prop with the most specific type to classifier
-                            let virtualProp: FreMetaProperty = null;
+                            let virtualProp: FreMetaProperty;
                             if (LangUtil.compareTypes(toBeImplemented, inAnotherInterface)) {
                                 virtualProp = CommonChecker.makeCopyOfProp(toBeImplemented, classifier);
                             } else if (LangUtil.compareTypes(inAnotherInterface, toBeImplemented)) {
                                 virtualProp = CommonChecker.makeCopyOfProp(inAnotherInterface, classifier);
                             }
-                            // if virtualProp exists, the types did conform to eachother
-                            this.runner.simpleCheck(!!virtualProp,
+                            // if virtualProp exists, the types did conform to each other
+                            this.runner.simpleCheck(!!virtualProp!,
                                 `Concept '${classifier.name}': property '${toBeImplemented.name}' in '${intf.name}' does not conform to property '${toBeImplemented.name}' in '${inAnotherInterface.owningClassifier.name}' ${ParseLocationUtil.location(classifier)}.`);
                         }
                     }
@@ -158,7 +158,7 @@ export class ClassifierChecker {
     }
 
     private checkPropAgainstInterface(intf: FreMetaInterface, prop: FreMetaProperty) {
-        let inIntf: FreMetaProperty = intf.primProperties.find(prevProp => prevProp.name === prop.name);
+        let inIntf: FreMetaProperty | undefined = intf.primProperties.find(prevProp => prevProp.name === prop.name);
         if (!inIntf) {
             inIntf = intf.properties.find(prevProp => prevProp.name === prop.name);
         }
@@ -168,7 +168,7 @@ export class ClassifierChecker {
         }
     }
 
-    private findImplementedProperty(prop: FreMetaProperty, concept: FreMetaConcept, includeInterfaces: boolean) {
+    private findImplementedProperty(prop: FreMetaProperty, concept: FreMetaConcept, includeInterfaces: boolean) : FreMetaProperty {
         const propsToCheck: FreMetaProperty[] = [];
         propsToCheck.push(...concept.primProperties);
         propsToCheck.push(...concept.properties);
@@ -178,7 +178,7 @@ export class ClassifierChecker {
                 propsToCheck.push(...intf.referred.allProperties());
             });
         }
-        let implementedProp = propsToCheck.find(prevProp => prevProp.name === prop.name);
+        let implementedProp: FreMetaProperty | undefined = propsToCheck.find(prevProp => prevProp.name === prop.name);
         // if not implemented by the concept itself, try its base - recursive -
         const myBase = concept.base?.referred;
         if (!implementedProp && !!myBase) {
@@ -223,8 +223,8 @@ export class ClassifierChecker {
         }
     }
 
-    private searchLocalProps(myBase: FreMetaClassifier, prop: FreMetaProperty) {
-        let inSuper: FreMetaProperty = myBase.primProperties.find(prevProp => prevProp.name === prop.name);
+    private searchLocalProps(myBase: FreMetaClassifier, prop: FreMetaProperty): FreMetaProperty {
+        let inSuper: FreMetaProperty | undefined = myBase.primProperties.find(prevProp => prevProp.name === prop.name);
         if (!inSuper) {
             inSuper = myBase.properties.find(prevProp => prevProp.name === prop.name);
         }

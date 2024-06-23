@@ -349,7 +349,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     error: `Property '${myProp.name}' may not have a keyword projection, because it is a list ${ParseLocationUtil.location(item)}.`,
                     whenOk: () => {
                         this.runner.simpleCheck(
-                            !FreEditChecker.includesWhitespace(item.boolInfo.trueKeyword),
+                            !FreEditChecker.includesWhitespace(item.boolInfo? item.boolInfo.trueKeyword : ''),
                             `The text for a keyword projection should not include any whitespace ${ParseLocationUtil.location(item)}.`);
                     }
                 });
@@ -394,6 +394,9 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     }
 
     private checkSuperProjection(editor: FreEditUnit, item: FreEditSuperProjection, cls: FreMetaClassifier) {
+        if (item.superRef === null || item.superRef === undefined) {
+            return;
+        }
         LOGGER.log("checking super projection: " + cls?.name);
         const myParent = item.superRef.referred;
         this.runner.nestedCheck({
@@ -472,14 +475,14 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             if (classifierInfo.trigger === "ERROR") {
                 this.runner.simpleCheck(false,
                     `A trigger may not be an empty string ${ParseLocationUtil.location(classifierInfo)}.`);
-                classifierInfo.trigger = null;
+                classifierInfo.trigger = '';
             }
         }
         if (!!classifierInfo.symbol) {
             if (classifierInfo.symbol === "ERROR") {
                 this.runner.simpleCheck(false,
                     `A symbol may not be an empty string ${ParseLocationUtil.location(classifierInfo)}.`);
-                classifierInfo.symbol = null;
+                classifierInfo.symbol = '';
             }
         }
     }
@@ -501,10 +504,12 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     private checkPropsWithTableProjection(editor: FreEditUnit) {
         LOGGER.log("checking properties that have a TableProjection");
         for (const projection of this.propsWithTableProjection) {
-            const myprop = projection.property.referred;
-            const propEditor = editor.findTableProjectionsForType(myprop.type);
-            this.runner.simpleWarning(propEditor !== null && propEditor !== undefined,
-            `No table projection defined for '${myprop.name}', it will be shown as a table with a single column ${ParseLocationUtil.location(projection)}.`);
+            const myprop: FreMetaProperty | undefined= projection.property?.referred;
+            if (!!myprop) {
+                const propEditor: FreEditTableProjection[] = editor.findTableProjectionsForType(myprop.type);
+                this.runner.simpleWarning(propEditor !== null && propEditor !== undefined,
+                    `No table projection defined for '${myprop.name}', it will be shown as a table with a single column ${ParseLocationUtil.location(projection)}.`);
+            }
         }
     }
 
@@ -513,39 +518,39 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         if (item instanceof FreOptionalPropertyProjection) {
             this.checkOptionalProjection(item, cls, editor);
         } else {
-            if (!!item.expression) {
-                const myProp = cls.allProperties().find(prop => prop.name === item.expression.appliedfeature?.sourceName);
+            if (item.expression !== null || item.expression !== undefined) {
+                const myProp:FreMetaProperty | undefined = cls.allProperties().find(prop => prop.name === item.expression!.appliedfeature?.sourceName);
                 this.runner.nestedCheck({
                     check: !!myProp,
-                    error: `Cannot find property "${item.expression.toFreString()}" ${ParseLocationUtil.location(item)}`,
+                    error: `Cannot find property "${item.expression!.toFreString()}" ${ParseLocationUtil.location(item)}`,
                     whenOk: () => {
                         // set the 'property' attribute of the projection
-                        item.property = MetaElementReference.create<FreMetaProperty>(myProp, "FreProperty");
+                        item.property = MetaElementReference.create<FreMetaProperty>(myProp!, "FreProperty");
                         item.property.owner = this.language;
-                        item.expression = null;
+                        item.expression = undefined;
                         // check the rest
                         if (!!item.boolInfo) {
                             // check whether the boolInfo is appropriate
-                            this.checkBooleanPropertyProjection(item, myProp);
+                            this.checkBooleanPropertyProjection(item, myProp!);
                         } else if (!!item.listInfo) {
-                            this.runner.nestedCheck({check: myProp.isList,
+                            this.runner.nestedCheck({check: myProp!.isList,
                                 error: `Only properties that are lists can be displayed as list or table ${ParseLocationUtil.location(item)}.`,
                                 whenOk: () => {
                                     // either create a default list projection or check the user defined one
-                                    this.checkListProperty(item, myProp);
+                                    this.checkListProperty(item, myProp!);
                                 }
                             });
                         } else {
-                            if (myProp.isList) {
-                                this.checkListProperty(item, myProp);
+                            if (myProp!.isList) {
+                                this.checkListProperty(item, myProp!);
                             }
                         }
                         if (!!item.projectionName && item.projectionName.length > 0) {
                             this.runner.nestedCheck({
-                                check: !myProp.isPrimitive && myProp.isPart,
+                                check: !myProp!.isPrimitive && myProp!.isPart,
                                 error: `Named projections are only allowed for non-primitive part properties ${ParseLocationUtil.location(item)}.`,
                                 whenOk: () => {
-                                    const propType = myProp.type;
+                                    const propType = myProp!.type;
                                     this.checkProjectionName(item.projectionName, propType, item, editor);
                                 }
                             });
@@ -561,7 +566,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             return;
         }
         const myGroup = editor.projectiongroups.find(group => group.name === projectionName);
-        const found: FreEditClassifierProjection[] = myGroup?.findProjectionsForType(propType);
+        const found: FreEditClassifierProjection[] | undefined = myGroup?.findProjectionsForType(propType);
         this.runner.simpleCheck(
             !!myGroup && !!found && found.length > 0,
             `Cannot find a projection named '${projectionName}' for concept or interface '${propType.name}' ${ParseLocationUtil.location(item)}.`);

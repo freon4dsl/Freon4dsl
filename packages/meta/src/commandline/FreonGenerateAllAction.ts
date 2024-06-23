@@ -31,8 +31,8 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
     protected interpreterGenerator: InterpreterGenerator = new InterpreterGenerator();
-    protected language: FreMetaLanguage;
-    private diagramGenerator: DiagramGenerator = new DiagramGenerator();
+    protected diagramGenerator: DiagramGenerator = new DiagramGenerator();
+    protected language?: FreMetaLanguage;
 
     public constructor() {
         super({
@@ -104,6 +104,9 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     }
 
     private generateTyper = () => {
+        if (this.language === undefined || this.language === null) {
+            return;
+        }
         LOG2USER.info("Generating typer");
         let typer: TyperDef;
         try {
@@ -122,6 +125,9 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     };
 
     private generateInterpreter = () => {
+        if (this.language === undefined || this.language === null) {
+            return;
+        }
         LOG2USER.info("Generating interpreter");
         const interpreterDef: FreInterpreterDef = new FreInterpreterDef();
         // TODO For now simply evaluate all concepts and model units
@@ -144,14 +150,19 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     };
 
     private generateScoper = () => {
+        if (this.language === undefined || this.language === null) {
+            return;
+        }
         LOG2USER.info("Generating scoper");
-        let scoper: ScopeDef;
+        let scoper: ScopeDef | undefined;
         try {
             if (this.scopeFiles.length > 0) {
                 scoper = new ScoperParser(this.language).parseMulti(this.scopeFiles);
-                this.scoperGenerator.language = this.language;
-                this.scoperGenerator.outputfolder = this.outputFolder;
-                this.scoperGenerator.generate(scoper);
+                if (!!scoper) {
+                    this.scoperGenerator.language = this.language;
+                    this.scoperGenerator.outputfolder = this.outputFolder;
+                    this.scoperGenerator.generate(scoper);
+                }
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -162,14 +173,19 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     };
 
     private generateValidator = () => {
+        if (this.language === undefined || this.language === null) {
+            return;
+        }
         LOG2USER.info("Generating validator");
-        let validator: ValidatorDef;
+        let validator: ValidatorDef | undefined;
         try {
             if (this.validFiles.length > 0) {
                 validator = new ValidatorParser(this.language).parseMulti(this.validFiles);
-                this.validatorGenerator.language = this.language;
-                this.validatorGenerator.outputfolder = this.outputFolder;
-                this.validatorGenerator.generate(validator);
+                if (!!validator) {
+                    this.validatorGenerator.language = this.language;
+                    this.validatorGenerator.outputfolder = this.outputFolder;
+                    this.validatorGenerator.generate(validator);
+                }
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -179,9 +195,12 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         }
     };
 
-    private generateEditorAndParser = () => {
+    private generateEditorAndParser = (): FreEditUnit | undefined => {
+        if (this.language === undefined || this.language === null) {
+            return undefined;
+        }
         LOG2USER.info("Generating editor, reader and writer");
-        let editor: FreEditUnit;
+        let editor: FreEditUnit | undefined;
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
             this.editorGenerator.language = this.language;
@@ -193,11 +212,13 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             } else {
                 editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
             }
-            // add default values for everything that is not present in the default projection group
-            DefaultEditorGenerator.addDefaults(editor);
+            if (!!editor) {
+                // add default values for everything that is not present in the default projection group
+                DefaultEditorGenerator.addDefaults(editor);
 
-            this.editorGenerator.generate(editor);
-            this.parserGenerator.generate(editor);
+                this.editorGenerator.generate(editor);
+                this.parserGenerator.generate(editor);
+            }
             return editor;
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -205,24 +226,28 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 // LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
             }
         }
-        return null;
+        return undefined;
     };
 
     private generateLanguage = () => {
-        // generate the language
-        LOG2USER.info("Generating language structure");
-        this.language = new LanguageParser(this.idFile).parseMulti(this.languageFiles);
-        this.languageGenerator.outputfolder = this.outputFolder;
-        this.languageGenerator.generate(this.language);
+        if (this.language !== undefined && this.language !== null) {
+            // generate the language
+            LOG2USER.info("Generating language structure");
+            this.language = new LanguageParser(this.idFile).parseMulti(this.languageFiles);
+            this.languageGenerator.outputfolder = this.outputFolder;
+            this.languageGenerator.generate(this.language!);
+        }
     };
 
     private generateDiagrams = () => {
-        // generate the language
-        LOG2USER.info("Generating language diagrams");
-        this.diagramGenerator.outputfolder = this.outputFolder;
-        this.diagramGenerator.language = this.language;
-        this.diagramGenerator.fileNames = this.languageFiles;
-        this.diagramGenerator.generate();
+        if (this.language !== undefined && this.language !== null) {
+            // generate the diagrams
+            LOG2USER.info("Generating language diagrams");
+            this.diagramGenerator.outputfolder = this.outputFolder;
+            this.diagramGenerator.language = this.language;
+            this.diagramGenerator.fileNames = this.languageFiles;
+            this.diagramGenerator.generate();
+        }
     };
 
 }

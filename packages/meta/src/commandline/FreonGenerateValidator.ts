@@ -3,6 +3,7 @@ import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
 import { MetaLogger } from "../utils/MetaLogger";
+import {ValidatorDef} from "../validatordef/metalanguage";
 
 const LOGGER = new MetaLogger("FreonGenerateValidator"); // .mute();
 
@@ -20,14 +21,16 @@ export class FreonGenerateValidator extends FreonGeneratePartAction {
 
     generate(): void {
         LOGGER.log("Starting Freon validator generation ...");
-
+        if (this.language === null || this.language === undefined) {
+            return;
+        }
         super.generate();
         this.validatorGenerator = new ValidatorGenerator();
         this.validatorGenerator.language = this.language;
         this.validatorGenerator.outputfolder = this.outputFolder;
 
-        const validator = new ValidatorParser(this.language).parseMulti(this.validFiles);
-        if (validator === null) {
+        const validator:ValidatorDef | undefined = new ValidatorParser(this.language).parseMulti(this.validFiles);
+        if (validator === null || validator === undefined) {
             throw new Error("Validator definition could not be parsed, cannot generate validator.");
         }
         try {
