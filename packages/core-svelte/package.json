@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/core-svelte",
-  "version": "0.6.0",
+  "version": "0.7.0-beta",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
     "clean": "rm -rf node_modules/",
     "dev": "vite dev",
     "build": "vite build && npm run package",
+    "build-dev": "vite build && npm run package",
     "preview": "vite preview",
     "package": "svelte-kit sync && svelte-package && publint",
     "prepublishOnly": "npm run package",
@@ -43,12 +44,9 @@
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*"
   ],
-  "peerDependencies": {
-    "svelte": "^4.0.0",
-    "@freon4dsl/core": "^0.6.0",
-    "mobx": "^6.12.3"
-  },
   "devDependencies": {
+    "@freon4dsl/core": "^0.7.0-beta",
+    "mobx": "^6.12.3",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/svelte": "^5.1.0",
     "@testing-library/user-event": "^14.5.2",

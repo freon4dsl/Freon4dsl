@@ -1,6 +1,7 @@
 {
   "name": "@freon4dsl/core",
-  "version": "0.6.0",
+  "version": "0.7.0-beta",
+  "description": "The uttermost core part of the Freon library, which enables you to build editors for the web",
   "publishConfig": {
     "access": "public"
   },
@@ -13,13 +14,17 @@
     "type": "git",
     "url": "https://github.com/freon4dsl/Freon4dsl"
   },
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "build": "rollup -c",
+    "build-dev": "rollup -c",
     "build-release": "npm run build",
+    "clean": "rm -rf node_modules/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "jest --config ./jest.config.js",
     "start": "echo Start core",
-    "dummy": "echo DUMMY",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",

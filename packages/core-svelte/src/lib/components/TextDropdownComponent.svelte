@@ -6,7 +6,7 @@
     // within the text.
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
-    import { clickOutsideConditional, componentId, selectedBoxes } from "./svelte-utils";
+    import { clickOutsideConditional, componentId, selectedBoxes } from "./svelte-utils/index.js";
     import {
         type AbstractChoiceBox,
         ARROW_DOWN,
@@ -206,8 +206,8 @@
                     case ENTER: { // user wants current selection
                         // find the chosen option
                         let chosenOption: SelectOption = null;
-                        if (filteredOptions.length === 1) { // if there is just one option left, choose that one
-                            if (filteredOptions.length !== 0) {
+                        if (filteredOptions.length <= 1) {
+                            if (filteredOptions.length !== 0) { // if there is just one option left, choose that one
                                 chosenOption = filteredOptions[0];
                             } else { // there are no valid options left
                                 editor.setUserMessage('No valid selection')

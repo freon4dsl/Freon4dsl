@@ -1,4 +1,4 @@
-import { observableprim, FreNodeBaseImpl, FreNamedNode, FreUtils } from "@freon4dsl/core";
+import { observableprim, FreNodeBaseImpl, type FreNamedNode, FreUtils } from "@freon4dsl/core";
 
 export class SimpleElement extends FreNodeBaseImpl implements FreNamedNode {
 

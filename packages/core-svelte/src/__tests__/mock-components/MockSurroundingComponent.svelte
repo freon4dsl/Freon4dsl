@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import { onMount } from "svelte";
-    import { MockVariables } from "./MockVariables";
+    import { MockVariables } from "./MockVariables.js";
 
     onMount( () => {
         MockVariables.reset();

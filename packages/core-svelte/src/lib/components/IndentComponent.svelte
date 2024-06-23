@@ -8,7 +8,7 @@
     import { afterUpdate, onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
     import type {IndentBox, FreEditor} from "@freon4dsl/core";
-    import { componentId } from "./svelte-utils";
+    import { componentId } from "./svelte-utils/index.js";
 
     // Parameters
     export let box: IndentBox;

@@ -19,7 +19,7 @@
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
     import { afterUpdate, onMount, tick } from "svelte";
-    import { contextMenu, contextMenuVisible, selectedBoxes, viewport, componentId } from "./svelte-utils";
+    import { contextMenu, contextMenuVisible, selectedBoxes, viewport, componentId } from "./svelte-utils/index.js";
 
     let LOGGER = new FreLogger("FreonComponent");//.mute();
     export let editor: FreEditor;
