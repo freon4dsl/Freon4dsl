@@ -67,8 +67,8 @@ export function createClassifierReference(data: Partial<MetaElementReference<Fre
     return result;
 }
 
-export function createExpression(data: Partial<FreLangExp>): FreLangExp {
-    let result: FreLangExp = null;
+export function createExpression(data: Partial<FreLangExp>): FreLangExp | undefined {
+    let result: FreLangExp | undefined = undefined;
     if (!!data.sourceName) {
         if (data.sourceName === Names.nameForSelf) {
             // cannot use FreLangSelfExp.create() because referredElement is not yet known
@@ -81,13 +81,15 @@ export function createExpression(data: Partial<FreLangExp>): FreLangExp {
             result.sourceName = data.sourceName;
         }
     }
-    if (!!data.appliedfeature) {
-        result.appliedfeature = data.appliedfeature;
-        result.appliedfeature.sourceExp = result;
-    }
-    if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+    if (result !== null && result !== undefined) {
+        if (!!data.appliedfeature) {
+            result.appliedfeature = data.appliedfeature;
+            result.appliedfeature.sourceExp = result;
+        }
+        if (!!data.location) {
+            result.location = data.location;
+            result.location.filename = currentFileName;
+        }
     }
     return result;
 }

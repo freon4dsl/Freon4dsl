@@ -6,7 +6,7 @@ import { FreLangCheckerPhase1 } from "./FreLangCheckerPhase1";
 export class FreLangChecker extends Checker<FreMetaLanguage> {
 
     check(language: FreMetaLanguage): void {
-        const runner: CheckRunner = new CheckRunner(this.errors, this.warnings);
+        const runner = new CheckRunner(this.errors, this.warnings);
         const phase1: FreLangCheckerPhase1 = new FreLangCheckerPhase1(language);
         phase1.check(language, runner);
         // now everything has been resolved, check that all concepts and interfaces have

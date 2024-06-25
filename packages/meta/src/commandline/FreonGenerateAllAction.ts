@@ -108,13 +108,15 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             return;
         }
         LOG2USER.info("Generating typer");
-        let typer: TyperDef;
+        let typer: TyperDef | undefined;
         try {
             if (this.typerFiles.length > 0) {
                 typer = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
-                this.typerGenerator.language = this.language;
-                this.typerGenerator.outputfolder = this.outputFolder;
-                this.typerGenerator.generate(typer);
+                 if (!!typer) {
+                     this.typerGenerator.language = this.language;
+                     this.typerGenerator.outputfolder = this.outputFolder;
+                     this.typerGenerator.generate(typer);
+                 }
             }
         } catch (e: unknown) {
             if (e instanceof Error) {

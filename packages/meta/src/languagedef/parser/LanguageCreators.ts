@@ -271,10 +271,10 @@ function createCommonPropertyAttrs(data: Partial<FreMetaProperty>, result: FreMe
 }
 
 // we parse all props as primitive properties because they can have an extra attribute: 'initialValue'
-export function createPartOrPrimProperty(data: Partial<FreMetaPrimitiveProperty>): FreMetaProperty {
+export function createPartOrPrimProperty(data: Partial<FreMetaPrimitiveProperty>): FreMetaProperty | undefined {
     // console.log("createPartOrPrimProperty " + data.name + " "+ data.typeReference + " "+ data.typeName);
     // Note that we use 'data.typeReference', because at this stage we only have the name of the type, not the object itself.
-    let result: FreMetaProperty = null;
+    let result: FreMetaProperty | undefined = undefined;
     // In the following we ignore data.initialValue for Part Properties (i.e. props where the type is a Concept).
     // But we do add an error message to the list of non-fatal parse errors.
     // This list of errors is added to the list of checking errors in the parse functions in FreParser.
@@ -300,15 +300,17 @@ export function createPartOrPrimProperty(data: Partial<FreMetaPrimitiveProperty>
             const conceptProperty = new FreMetaConceptProperty();
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
             // we are not interested in its value, only whether it is present
-            if (data.initialValue !== null && data.initialValue !== undefined) {
+            if (!!data.initialValue && !!data.location) {
                 nonFatalParseErrors.push(`A non-primitive property may not have an initial value ${ParseLocationUtil.locationPlus(currentFileName, data.location)}.`);
             }
             result = conceptProperty;
         }
         result.typeReference = data.typeReference;
     }
-    result.isPart = true;
-    createCommonPropertyAttrs(data, result);
+    if (!!result) {
+        result.isPart = true;
+        createCommonPropertyAttrs(data, result);
+    }
     return result;
 }
 
@@ -323,9 +325,9 @@ export function createReferenceProperty(data: Partial<FreMetaConceptProperty>): 
     return result;
 }
 
-export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> {
+export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> | undefined {
     // console.log("createClassifierReference " + data.name);
-    let result: MetaElementReference<FreMetaClassifier> = null;
+    let result: MetaElementReference<FreMetaClassifier> | undefined = undefined;
     if (!!data.name) {
         const type: string = data.name;
         if (type === "string") {

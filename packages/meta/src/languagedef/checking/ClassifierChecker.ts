@@ -76,7 +76,7 @@ export class ClassifierChecker {
                 this.checkPropsOfBase(classifier.base.referred, prop);
             } else if (classifier instanceof FreMetaInterface) {
                 classifier.base.forEach(intfRef => {
-                    const inSuper = this.searchLocalProps(intfRef.referred, prop);
+                    const inSuper: FreMetaProperty | undefined = this.searchLocalProps(intfRef.referred, prop);
                     if (!!inSuper) {
                         this.runner.simpleCheck(LangUtil.compareTypes(prop, inSuper),
                             `Property '${prop.name}' with non conforming type already exists in base interface '${intfRef.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSuper)}.`);
@@ -126,7 +126,8 @@ export class ClassifierChecker {
                 basePropsToCheck.push(...myBase.properties);
                 classifier.interfaces.forEach(intf => {
                     basePropsToCheck.forEach(baseProp => {
-                        if (!this.searchLocalProps(classifier, baseProp)) {
+                        const inSuper: FreMetaProperty | undefined = this.searchLocalProps(classifier, baseProp);
+                        if (!inSuper) {
                             this.checkPropAgainstInterface(intf.referred, baseProp);
                         }
                     });
@@ -137,7 +138,7 @@ export class ClassifierChecker {
 
     private checkPropsOfBase(myBase: FreMetaConcept, prop: FreMetaProperty) {
         if (!!myBase && !!prop) {
-            const inSuper = this.searchLocalProps(myBase, prop);
+            const inSuper: FreMetaProperty | undefined = this.searchLocalProps(myBase, prop);
             if (!!inSuper) {
                 this.runner.nestedCheck({
                     check: LangUtil.compareTypes(prop, inSuper),
@@ -168,7 +169,7 @@ export class ClassifierChecker {
         }
     }
 
-    private findImplementedProperty(prop: FreMetaProperty, concept: FreMetaConcept, includeInterfaces: boolean) : FreMetaProperty {
+    private findImplementedProperty(prop: FreMetaProperty, concept: FreMetaConcept, includeInterfaces: boolean) : FreMetaProperty | undefined {
         const propsToCheck: FreMetaProperty[] = [];
         propsToCheck.push(...concept.primProperties);
         propsToCheck.push(...concept.properties);
@@ -223,7 +224,7 @@ export class ClassifierChecker {
         }
     }
 
-    private searchLocalProps(myBase: FreMetaClassifier, prop: FreMetaProperty): FreMetaProperty {
+    private searchLocalProps(myBase: FreMetaClassifier, prop: FreMetaProperty): FreMetaProperty | undefined {
         let inSuper: FreMetaProperty | undefined = myBase.primProperties.find(prevProp => prevProp.name === prop.name);
         if (!inSuper) {
             inSuper = myBase.properties.find(prevProp => prevProp.name === prop.name);

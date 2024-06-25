@@ -22,7 +22,7 @@ export abstract class FreLangExp extends FreMetaLangElement {
     language: FreMetaLanguage;                           // the language for which this expression is defined
 
     // returns the property to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
-    findRefOfLastAppliedFeature(): FreMetaProperty {
+    findRefOfLastAppliedFeature(): FreMetaProperty | undefined {
         if (!!this.language) {
             if (this.appliedfeature !== undefined) {
                 // console.log(" last of: " + this.appliedfeature.sourceName);
@@ -37,7 +37,7 @@ export abstract class FreLangExp extends FreMetaLangElement {
         } else {
             throw Error("Applied feature cannot be found because language is not set.");
         }
-        return null;
+        return undefined;
     }
 
     toFreString(): string {
@@ -48,8 +48,8 @@ export abstract class FreLangExp extends FreMetaLangElement {
 export class FreLangSimpleExp extends FreLangExp {
     value: number;
 
-    findRefOfLastAppliedFeature(): FreMetaProperty {
-        return null;
+    findRefOfLastAppliedFeature(): FreMetaProperty | undefined {
+        return undefined;
     }
 
     toFreString(): string {

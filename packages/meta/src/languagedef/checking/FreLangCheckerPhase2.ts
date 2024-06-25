@@ -111,7 +111,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
     }
 
     private checkLimitedConceptAgain(freLimitedConcept: FreMetaLimitedConcept) {
-        let nameProperty: FreMetaPrimitiveProperty = freLimitedConcept.allPrimProperties().find(p => p.name === "name");
+        let nameProperty: FreMetaPrimitiveProperty | undefined = freLimitedConcept.allPrimProperties().find(p => p.name === "name");
         // if 'name' property is not present, create it.
         if ( !nameProperty ) {
             nameProperty = new FreMetaPrimitiveProperty();

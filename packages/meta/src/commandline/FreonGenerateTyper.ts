@@ -26,10 +26,11 @@ export class FreonGenerateTyper extends FreonGeneratePartAction {
         this.typerGenerator.language = this.language;
         this.typerGenerator.outputfolder = this.outputFolder;
 
-        const typer: TyperDef = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
-        if (typer === null) {
+        const typer: TyperDef | undefined = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
+        if (typer === null || typer === undefined) {
             throw new Error("Typer definition could not be parsed, exiting.");
+        } else {
+            this.typerGenerator.generate(typer);
         }
-        this.typerGenerator.generate(typer);
     }
 }

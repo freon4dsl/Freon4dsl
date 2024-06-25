@@ -105,7 +105,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                             whenOk: () => {
                                 const foundInstance = (myLimitedConcept as FreMetaLimitedConcept).instances.find(l => l.name === langExp.instanceName);
                                 this.runner.simpleCheck(!!foundInstance,
-                                    `${langExp.instanceName} is not a predefined instance of ${myLimitedConcept.name} ` +
+                                    `${langExp.instanceName} is not a predefined instance of ${myLimitedConcept!.name} ` +
                                             `${ParseLocationUtil.location(langExp)}.`
                                 );
                                 if (!!foundInstance) {
@@ -161,7 +161,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
             check: !!functionName,
             error: `${langExp.sourceName} is not a valid function ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
-                let functionType: FreMetaClassifier = null;
+                let functionType: FreMetaClassifier | undefined = undefined;
                 if (langExp.sourceName === validFunctionNames[2]) { // "typeof"
                     this.runner.nestedCheck({
                         check: langExp.actualparams.length === 1,
@@ -187,7 +187,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                                     error: `Cannot find reference to ${p.sourceName} ${ParseLocationUtil.location(langExp)}`,
                                     whenOk: () => {
                                         functionType = foundClassifier;
-                                        p.$referredElement = MetaElementReference.create<FreMetaClassifier>(foundClassifier, "FreClassifier");
+                                        p.$referredElement = MetaElementReference.create<FreMetaClassifier>(foundClassifier!, "FreClassifier");
                                         p.$referredElement.owner = p;
                                     }
                                 });
