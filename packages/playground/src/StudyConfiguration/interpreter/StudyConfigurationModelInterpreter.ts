@@ -47,7 +47,7 @@
                 let timeline = ctx.find("timeline") as unknown as Timeline;
                 let referencedEvent = node.$event;
                 let lastInstanceOfReferencedEvent = timeline.getLastInstanceForThisEvent(referencedEvent);
-                // console.log("lastInstanceOfReferencedEvent: " + lastInstanceOfReferencedEvent.day);
+                console.log("lastInstanceOfReferencedEvent: " + lastInstanceOfReferencedEvent.day);
                 return new RtNumber(lastInstanceOfReferencedEvent.day);
             }
 
@@ -57,9 +57,9 @@
                 } else if (node instanceof language.When) {
                     return main.evaluate(node, ctx);
                 } else {
+                    console.log("evalEventSchedule: eventStart is not a Day or When");
                     throw new RtError("evalEventSchedule: eventStart is not a Day");
                 }
-                throw new RtError("evalEventSchedule is not defined");
             }
         
             ///////////////// STANDARD EXPRESSIONS

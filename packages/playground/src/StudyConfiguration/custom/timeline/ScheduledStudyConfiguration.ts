@@ -67,8 +67,8 @@ export class ScheduledStudyConfiguration {
   }
 
   isScheduleComplete(timeline): boolean {
-    let readyEvents = this.getAllScheduledEvents().find(scheduledEvent => scheduledEvent.notYetScheduled(timeline));
-    return readyEvents === undefined;
+    let firstNoScheduledEvent = this.getAllScheduledEvents().find(scheduledEvent => scheduledEvent.notYetScheduled(timeline));
+    return firstNoScheduledEvent === undefined;
   }
 }
 

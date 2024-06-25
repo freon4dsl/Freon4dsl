@@ -3,8 +3,17 @@ import { Timeline, EventInstance, TimelineDay, EventInstanceState } from "../tim
 import { Simulator, } from "../timeline/Simulator";
 import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number } from "../../language/gen/index";
 import * as utils from "./Utils";
-import { ScheduledEvent } from "../timeline/ScheduledEvent";
+import { ScheduledEvent, ScheduledEventState } from "../timeline/ScheduledEvent";
 import { TimelineScriptTemplate } from "../templates/TimelineScriptTemplate";
+
+
+function addScheduledEventAndInstanceToTimeline(studyConfiguration, eventNumber,day, timeline) {
+  let scheduledEvent = new ScheduledEvent(studyConfiguration.periods[0].events[eventNumber]);
+  scheduledEvent.state = ScheduledEventState.Scheduled;
+  let eventInstance = new EventInstance(scheduledEvent, day);
+  eventInstance.state = EventInstanceState.Completed;
+  timeline.addEvent(eventInstance);
+  }
 
 describe ("Access to simulation data", () => {
 
@@ -31,7 +40,7 @@ describe("Simulation of Trial to Generate the Timeline", () => {
       studyConfiguration = utils.setupEnvironment();
     });
     
-  it.only("generates a one visit timeline for a visit on day 1", () => {
+  it("generates a one visit timeline for a visit on day 1", () => {
       // GIVEN a study configuration with one period and one event
       let eventSchedule = utils.createEventScheduleStartingOnADay("Visit 1", 1);
       let period = new Period("Screening");
@@ -45,21 +54,19 @@ describe("Simulation of Trial to Generate the Timeline", () => {
       // Then the generated timeline has one event on the expected event day
       let timeline = simulator.timeline;
       let expectedTimeline = new Timeline()
-      let eventInstance1 = new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[0]), 1);
-      eventInstance1.status = EventInstanceState.Completed;
-      expectedTimeline.addEvent(eventInstance1);
+      addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline)
       expectedTimeline.setCurrentDay(1);
 
       expect(timeline).toEqual(expectedTimeline);  
   });
 
-  it.only("generates a two visit timeline with a visit on day 1 and 7", () => {
+  it("generates a two visit timeline with a visit on day 1 and 7", () => {
     // GIVEN a study configuration with one period and two events
     let period = new Period("Screening");
     studyConfiguration.periods.push(period);
     let eventSchedule = utils.createEventScheduleStartingOnADay("Visit 1", 1);
     utils.createEventAndAddToPeriod(period, "Visit 1", eventSchedule);
-    eventSchedule = utils.createEventScheduleStartingOnADay("Visit 2", 8);
+    eventSchedule = utils.createEventScheduleStartingOnADay("Visit 2", 7);
     utils.createEventAndAddToPeriod(period, "Visit 2", eventSchedule);
 
     // WHEN the study is simulated and a timeline is generated
@@ -69,13 +76,9 @@ describe("Simulation of Trial to Generate the Timeline", () => {
 
     // Then the generated timeline has two events on the expected event days
     let expectedTimeline = new Timeline()
-    let eventInstance1 = new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[0]), 1);
-    eventInstance1.status = EventInstanceState.Completed;
-    expectedTimeline.addEvent(eventInstance1);
-    let eventInstance2 = new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[1]), 8);
-    eventInstance2.status = EventInstanceState.Completed;
-    expectedTimeline.addEvent(eventInstance2);
-    expectedTimeline.setCurrentDay(8);
+    addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline)
+    addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 7, expectedTimeline)
+    expectedTimeline.setCurrentDay(7);
 
     expect(timeline).toEqual(expectedTimeline);  
 });
@@ -89,13 +92,13 @@ describe("Simulation of Trial to Generate the Timeline", () => {
       let simulator = new Simulator(studyConfiguration);
       simulator.run();
       let timeline = simulator.timeline;
-      console.log("timeline: " + timeline.days.toString());
 
       // Then the generated timeline has two events on the expected event days
       let expectedTimeline = new Timeline()
-      expectedTimeline.addEvent(new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[0]), 1));
-      expectedTimeline.addEvent(new EventInstance(new ScheduledEvent(studyConfiguration.periods[0].events[1]), 8));
-
+      addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline)
+      addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 7, expectedTimeline)
+      expectedTimeline.setCurrentDay(8);
+  
       expect(timeline).toEqual(expectedTimeline);  
   });
 

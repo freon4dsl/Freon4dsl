@@ -79,7 +79,7 @@ describe ("Access to simulation data", () => {
         } else {
           let timeline = new Timeline();
           let eventInstance = new EventInstance(scheduledEvent,1);
-          eventInstance.status = EventInstanceState.Completed;
+          eventInstance.state = EventInstanceState.Completed;
           timeline.addEvent(eventInstance);
           timeline.setCurrentDay(8);
 
@@ -109,7 +109,7 @@ describe ("Access to simulation data", () => {
         } else { 
           let timeline = new Timeline();
           let eventInstance = new EventInstance(scheduledEvent,1);
-          eventInstance.status = EventInstanceState.Completed;
+          eventInstance.state = EventInstanceState.Completed;
           timeline.addEvent(eventInstance);
           timeline.setCurrentDay(8);
 

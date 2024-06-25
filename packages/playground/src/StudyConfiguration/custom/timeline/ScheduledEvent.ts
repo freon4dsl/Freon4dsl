@@ -3,12 +3,21 @@ import { InterpreterContext, isRtError, RtNumber } from "@freon4dsl/core";
 import { MainStudyConfigurationModelInterpreter } from "../../interpreter/MainStudyConfigurationModelInterpreter";
 import { EventInstance, Timeline } from "./Timeline";
 
+export enum ScheduledEventState {
+  Initial,
+  Ready,
+  Active,
+  Scheduled,
+  Completed
+};
+
 /*
  * A ScheduledEvent is a wrapper around an Event from the StudyConfiguration language.
  * It provides a simplified interface for the simulator and allows for the same Event to be scheduled multiple times.
  */
 export class ScheduledEvent {
   configuredEvent: Event;
+  state = ScheduledEventState.Initial;
 
   constructor(event: Event) {
     this.configuredEvent = event;
@@ -30,6 +39,25 @@ export class ScheduledEvent {
     return (value as RtNumber).value
   }
 
+
+  // If a specific day is specified for the event to start on then return that day
+  // otherwise return the number of days to wait from the timeline's current day.
+  daysToWait(timeline: Timeline) {
+    if (this.configuredEvent.schedule.eventStart instanceof Day) {
+      return this.day(timeline);
+    } else {
+      return this.day(timeline) - timeline.currentDay;
+    }
+  }
+
+  getState(): ScheduledEventState {
+    return this.state;
+  }
+
+  setState(state: ScheduledEventState) {
+    this.state = state;
+  }
+
   name(): string {
     return this.configuredEvent.name;
   }
@@ -47,9 +75,11 @@ export class ScheduledEvent {
   }
 
 
-  notYetScheduled(timeline) {
+  notYetScheduled(timeline): boolean {
     try {
-      return this.anyRepeatsNotCompleted(timeline) && timeline.noCompletedInstanceOf(this);
+      console.log('notYetScheduled: ' + this.name() + ' timeline: ' + timeline.currentDay + ' day: ' + this.day(timeline) + ' result: ' + (this.anyRepeatsNotCompleted(timeline) || this.getState() === ScheduledEventState.Initial));
+      // return this.anyRepeatsNotCompleted(timeline) || timeline.noCompletedInstanceOf(this);
+      return this.anyRepeatsNotCompleted(timeline) || this.getState() === ScheduledEventState.Initial;
     }
     catch (e) {
       console.log("notYetScheduled caught exception: " + e.toString());
@@ -63,7 +93,7 @@ export class ScheduledEvent {
    * otherwise return null.
    */
   getInstanceIfEventIsReady(timeline: Timeline): unknown {
-    if (timeline.noCompletedInstanceOf(this) && this.day(timeline) <= timeline.currentDay) {
+    if (timeline.noCompletedInstanceOf(this) && this.day(timeline) >= timeline.currentDay) {
       return new EventInstance(this);
     } else {
       return null;

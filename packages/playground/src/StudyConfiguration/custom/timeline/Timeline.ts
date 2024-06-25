@@ -1,5 +1,5 @@
 import { RtBoolean, RtObject } from '@freon4dsl/core';
-import { ScheduledEvent } from './ScheduledEvent';
+import { ScheduledEvent, ScheduledEventState } from './ScheduledEvent';
 import { Event } from '../../language/gen/index';
 
 /*
@@ -37,7 +37,12 @@ export class Timeline extends RtObject{
 
   // wrapper so Scheduler can set event statuses
   setCompleted(completedEvent) {
-      completedEvent.status = EventInstanceState.Completed;
+      completedEvent.state = EventInstanceState.Completed;
+  }
+
+  setScheduled(eventInstance) {
+    eventInstance.state = EventInstanceState.Scheduled;
+    eventInstance.scheduledEvent.setState(ScheduledEventState.Scheduled);
   }
 
   addEvent(event: EventInstance) {
@@ -65,7 +70,7 @@ export class Timeline extends RtObject{
     this.days.forEach(day => {
       console.log("Day: " + day.day);
       day.events.forEach(event => {
-        console.log("Event: " + event.name + " day: " + event.day + " status: " + event.status );
+        console.log("Event: " + event.name + " day: " + event.day + " status: " + event.getState() );
       });
     });
   }
@@ -74,7 +79,7 @@ export class Timeline extends RtObject{
   hasCompletedInstanceOf(scheduledEvent: ScheduledEvent) {
     for (const day of this.days) {
       for (const event of day.events) {
-        if (event.scheduledEvent.name() === scheduledEvent.name() && event.status === EventInstanceState.Completed) {
+        if (event.scheduledEvent.name() === scheduledEvent.name() && event.state === EventInstanceState.Completed) {
           return true; // Exit nested loops early if we find a completed instance
         }
       }
@@ -89,6 +94,7 @@ export class Timeline extends RtObject{
 
 export enum EventInstanceState {
   Ready,
+  Scheduled,
   Active,
   Completed
 }
@@ -102,7 +108,7 @@ export class EventInstance {
   startDay: number; // The day the window of the event was scheduled to start
   endDay: number;   // The day the window of the event was scheduled to end
   scheduledEvent: ScheduledEvent; // The scheduled event that this instance was created from
-  status : EventInstanceState = EventInstanceState.Ready;
+  state : EventInstanceState = EventInstanceState.Ready;
 
   constructor(scheduledEvent: ScheduledEvent, day?: number, startDay?: number, endDay?: number) {
     this.name = scheduledEvent.name();
@@ -111,6 +117,15 @@ export class EventInstance {
     this.endDay = endDay !== undefined ? endDay : (day !== undefined ? day + 1 : undefined);;
     this.scheduledEvent = scheduledEvent;
   }
+
+  setState(state: EventInstanceState) {
+    this.state = state;
+  }
+
+  getState() {
+    return this.state;
+  }
+
 }
 
 /*
