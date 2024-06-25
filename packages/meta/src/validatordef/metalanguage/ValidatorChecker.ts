@@ -166,8 +166,11 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         // and whether it is a list
         if (nr.property !== null) {
             this.myExpressionChecker.checkLangExp(nr.property, enclosingConcept);
-            this.runner.simpleCheck(nr.property.findRefOfLastAppliedFeature().isList,
-                `NotEmpty rule '${nr.property.toFreString()}' should refer to a list ${ParseLocationUtil.location(nr)}.`);
+            const xx: FreMetaProperty | undefined = nr.property.findRefOfLastAppliedFeature();
+            if (!!xx) { // todo check whether we need an extra error message for this case
+                this.runner.simpleCheck(xx.isList,
+                    `NotEmpty rule '${nr.property.toFreString()}' should refer to a list ${ParseLocationUtil.location(nr)}.`);
+            }
         }
     }
 

@@ -38,11 +38,11 @@ export class FretLimitedInstanceExp extends FretExp {
         return `${prefix}${this.$myInstance.name}`;
     }
 
-    get myLimited(): FreMetaLimitedConcept {
+    get myLimited(): FreMetaLimitedConcept | undefined {
         if (!!this.$myLimited && !!this.$myLimited.referred) {
             return this.$myLimited.referred;
         }
-        return null;
+        return undefined;
     }
 
     set myLimited(limitedConcept: FreMetaLimitedConcept) {
@@ -52,11 +52,11 @@ export class FretLimitedInstanceExp extends FretExp {
         }
     }
 
-    get myInstance(): FreMetaInstance {
+    get myInstance(): FreMetaInstance | undefined {
         if (!!this.$myInstance && !!this.$myInstance.referred) {
             return this.$myInstance.referred;
         }
-        return null;
+        return undefined;
     }
 
     set myInstance(cls: FreMetaInstance) {
@@ -66,7 +66,7 @@ export class FretLimitedInstanceExp extends FretExp {
         }
     }
 
-    get type(): FreMetaClassifier {
+    get type(): FreMetaClassifier | undefined {
         return this.myLimited;
     }
 }

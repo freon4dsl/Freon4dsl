@@ -1,5 +1,5 @@
 import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage";
-import { ExtraClassifierInfo, FreEditProjectionGroup } from "../../editordef/metalanguage";
+import {ExtraClassifierInfo, FreEditProjectionGroup} from "../../editordef/metalanguage";
 import { GrammarRule, BinaryExpressionRule } from "./grammarModel";
 import { GenerationUtil } from "../../utils";
 

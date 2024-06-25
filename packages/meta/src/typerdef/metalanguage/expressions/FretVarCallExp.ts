@@ -30,11 +30,11 @@ export class FretVarCallExp extends FretExp {
      * Instead of returning a 'MetaElementReference<FretVarDecl>' object,
      * it returns the referred 'FretVarDecl' object, if it can be found.
      */
-    get variable(): FretVarDecl {
+    get variable(): FretVarDecl | undefined {
         if (!!this.$variable) {
             return this.$variable.referred;
         }
-        return null;
+        return undefined;
     }
 
     set variable(newOne: FretVarDecl) {

@@ -10,11 +10,11 @@ export abstract class FretExp extends FreTyperElement {
     toFreString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'FretExp'";
     }
-    get returnType(): FreMetaClassifier {
+    get returnType(): FreMetaClassifier | undefined {
         if (!!this.$returnType && !!this.$returnType.referred) {
             return this.$returnType.referred;
         }
-        return null;
+        return undefined;
     }
     set returnType(cls: FreMetaClassifier) {
         if (!!cls) {
