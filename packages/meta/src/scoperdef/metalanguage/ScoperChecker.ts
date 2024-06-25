@@ -69,7 +69,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
-                    const xx: FreMetaProperty = exp.findRefOfLastAppliedFeature();
+                    const xx: FreMetaProperty | undefined = exp.findRefOfLastAppliedFeature();
                     if (!!xx) {
                         this.runner.nestedCheck({
                             check: (!!xx.type && (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription)),

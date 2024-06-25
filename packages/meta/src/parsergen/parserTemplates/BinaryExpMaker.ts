@@ -1,5 +1,5 @@
 import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage";
-import { FreEditProjectionGroup } from "../../editordef/metalanguage";
+import { ExtraClassifierInfo, FreEditProjectionGroup } from "../../editordef/metalanguage";
 import { GrammarRule, BinaryExpressionRule } from "./grammarModel";
 import { GenerationUtil } from "../../utils";
 
@@ -46,8 +46,11 @@ export class BinaryExpMaker {
     private findEditDefs(binaryConceptsUsed: FreMetaBinaryExpressionConcept[], projectionGroup: FreEditProjectionGroup): Map<FreMetaClassifier, string> {
         const result: Map<FreMetaClassifier, string> = new Map<FreMetaClassifier, string>();
         for (const binCon of binaryConceptsUsed) {
-            const mySymbol = projectionGroup.findExtrasForType(binCon).symbol;
-            result.set(binCon, mySymbol);
+            const myExtras:ExtraClassifierInfo | undefined = projectionGroup.findExtrasForType(binCon);
+            if (!!myExtras) {
+                const mySymbol: string = myExtras.symbol;
+                result.set(binCon, mySymbol);
+            }
         }
         return result;
     }

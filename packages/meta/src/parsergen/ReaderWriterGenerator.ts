@@ -64,7 +64,10 @@ export class ReaderWriterGenerator {
         analyser.analyseModel(this.language);
 
         // Create in memory all grammar rules and syntax analysis methods
-        const grammarModel: GrammarModel = grammarGenerator.createGrammar(this.language, analyser, editDef);
+        const grammarModel: GrammarModel | undefined = grammarGenerator.createGrammar(this.language, analyser, editDef);
+        if (!grammarModel) {
+            return;
+        }
 
         // Write the grammar to file
         generatedContent = grammarModel.toGrammar();

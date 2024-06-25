@@ -52,21 +52,38 @@ export class DefaultActionsTemplate {
              */
             export const BINARY_EXPRESSION_CREATORS: ${Names.FreCreateBinaryExpressionAction}[] = [
                 ${language.concepts.filter(c => (c instanceof FreMetaBinaryExpressionConcept) && !c.isAbstract).map(c =>
-            `${Names.FreCreateBinaryExpressionAction}.create({
-                    trigger: "${editorDef.findExtrasForType(c).symbol}",
-                    activeInBoxRoles: [
-                        LEFT_MOST,
-                        RIGHT_MOST,
-                        BEFORE_BINARY_OPERATOR,
-                        AFTER_BINARY_OPERATOR
-                    ],
-                    expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
-                        const parent = box.element;
-                        const newExpression = new ${Names.concept(c)}();
-                        parent[(box as ActionBox).propertyName] = newExpression;
-                        return newExpression;
-                    }
-            })`
+            !!editorDef.findExtrasForType(c) ?
+                `${Names.FreCreateBinaryExpressionAction}.create({
+                        trigger: "${editorDef.findExtrasForType(c)!.symbol}",
+                        activeInBoxRoles: [
+                            LEFT_MOST,
+                            RIGHT_MOST,
+                            BEFORE_BINARY_OPERATOR,
+                            AFTER_BINARY_OPERATOR
+                        ],
+                        expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
+                            const parent = box.element;
+                            const newExpression = new ${Names.concept(c)}();
+                            parent[(box as ActionBox).propertyName] = newExpression;
+                            return newExpression;
+                        }
+                })`
+            : 
+                `${Names.FreCreateBinaryExpressionAction}.create({
+                        trigger: "unknown-trigger",
+                        activeInBoxRoles: [
+                            LEFT_MOST,
+                            RIGHT_MOST,
+                            BEFORE_BINARY_OPERATOR,
+                            AFTER_BINARY_OPERATOR
+                        ],
+                        expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
+                            const parent = box.element;
+                            const newExpression = new ${Names.concept(c)}();
+                            parent[(box as ActionBox).propertyName] = newExpression;
+                            return newExpression;
+                        }
+                })`
         )}
             ];
 

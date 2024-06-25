@@ -463,7 +463,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             // check the reference shortcut and change the expression into a reference to a property
             if (!!classifierInfo.referenceShortcutExp) {
                 this.myExpressionChecker.checkLangExp(classifierInfo.referenceShortcutExp, classifierInfo.classifier.referred);
-                const xx: FreMetaProperty = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
+                const xx: FreMetaProperty | undefined = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
                 // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
                 if (!!xx) {
                     classifierInfo.referenceShortCut = MetaElementReference.create<FreMetaProperty>(xx as FreMetaProperty, "FreProperty");
