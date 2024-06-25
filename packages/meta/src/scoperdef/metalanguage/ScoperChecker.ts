@@ -25,7 +25,9 @@ export class ScoperChecker extends Checker<ScopeDef> {
 
     constructor(language: FreMetaLanguage) {
         super(language);
-        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        if (!!this.language) {
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        }
         // in a scope definition an expression may be simply 'self'
         // this.myExpressionChecker.strictUseOfThis = false;
     }

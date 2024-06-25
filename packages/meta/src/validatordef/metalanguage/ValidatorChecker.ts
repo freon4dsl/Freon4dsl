@@ -41,7 +41,9 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     constructor(language: FreMetaLanguage) {
         super(language);
         LOGGER.log("Created validator checker");
-        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        if (!!this.language) {
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        }
     }
 
     public check(definition: ValidatorDef): void {
@@ -121,7 +123,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                     // tr.property.appliedfeature.sourceName = "unitName";
                     // tr.property.appliedfeature.referredElement = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
                     tr.property.location = tr.location;
-                    tr.property.language = this.language;
+                    tr.property.language = this.language!;
                   }
             });
         }

@@ -7,7 +7,7 @@ import { FreEditUnit } from "../../editordef/metalanguage";
 describe("Checking editor definition ", () => {
     const testdir = "src/__tests__/editor-tests/faultyDefFiles/checking-errors/";
     let parser: FreEditParser;
-    let language: FreMetaLanguage;
+    let language: FreMetaLanguage | undefined;
     let checker: Checker<FreEditUnit>;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();
@@ -15,8 +15,10 @@ describe("Checking editor definition ", () => {
     beforeEach(() => {
         try {
             language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
-            parser = new FreEditParser(language);
-            checker = parser.checker;
+            if (!!language) {
+                parser = new FreEditParser(language);
+                checker = parser.checker;
+            }
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log("Language could not be read");
@@ -28,7 +30,8 @@ describe("Checking editor definition ", () => {
         try {
             parser.parse(testdir + "test1.edit");
         } catch (e: unknown) {
-            if (e instanceof Error) {            // console.log(e.message + e.stack);
+            if (e instanceof Error) {
+                console.log(e.message + e.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 expect(e.message).toBe(`checking errors (3).`);
                 expect(checker.errors.includes("No empty projections allowed [file: test1.edit:3:10].")).toBeTruthy();

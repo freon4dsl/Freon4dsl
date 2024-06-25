@@ -1,11 +1,10 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import {Checker, MetaLogger} from "../../utils";
-import {FreMetaLanguage} from "../../languagedef/metalanguage";
+import { MetaLogger } from "../../utils";
 
 describe("Checking language parser on checking errors", () => {
-    const testdir: string = "src/__tests__/language-tests/faultyDefFiles/checking-errors/";
-    const parser: LanguageParser = new LanguageParser();
-    const checker: Checker<FreMetaLanguage> = parser.checker;
+    const testdir = "src/__tests__/language-tests/faultyDefFiles/checking-errors/";
+    const parser = new LanguageParser();
+    const checker = parser.checker;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();
 
@@ -131,7 +130,6 @@ describe("Checking language parser on checking errors", () => {
             parser.parse(testdir + "test7.ast");
         } catch (e: unknown) {
             if (e instanceof Error) {            // console.log(checker.errors.map(err => err));
-                console.log("STATCK: " + e.stack);
                 expect(e.message).toBe(`checking errors (15).`);
                 expect(checker.errors
                     .includes("Type 'NoName' cannot be used as a reference, because it has no property 'name: identifier' [file: test7.ast:4:24].")).toBeTruthy();

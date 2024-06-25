@@ -22,7 +22,7 @@ describe("Checking language parser on syntax errors", () => {
     });
 
     test("language name should not contain a dot", () => {
-        const parseFile = testdir + "test2.ast";
+        const parseFile: string = testdir + "test2.ast";
         try {
             parser.parse(parseFile);
         } catch (e: unknown) {

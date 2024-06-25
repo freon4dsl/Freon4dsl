@@ -16,7 +16,7 @@ export abstract class FretExp extends FreTyperElement {
         }
         return undefined;
     }
-    set returnType(cls: FreMetaClassifier) {
+    set returnType(cls: FreMetaClassifier | undefined) {
         if (!!cls) {
             this.$returnType = MetaElementReference.create<FreMetaClassifier>(cls, "FreClassifier");
             this.$returnType.owner = this.language;

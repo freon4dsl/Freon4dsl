@@ -26,7 +26,7 @@ import { MetaLogger } from "../../utils";
 import { MetaElementReference } from "../../languagedef/metalanguage";
 import { FreLangExpressionChecker } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("FreEditChecker").mute();
+const LOGGER: MetaLogger = new MetaLogger("FreEditChecker").mute();
 
 export class FreEditChecker extends Checker<FreEditUnit> {
 
@@ -40,7 +40,9 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     constructor(language: FreMetaLanguage) {
         super(language);
-        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        if (!!this.language) {
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        }
     }
 
     /**
@@ -50,6 +52,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
      */
     public check(editUnit: FreEditUnit): void {
         LOGGER.log("checking editUnit");
+        if ( this.language === null || this.language === undefined ) {
+            throw new Error(`Editor definition checker does not known the language, exiting ` +
+                `${ParseLocationUtil.location(editUnit)}.`);
+        }
         // create a check runner
         this.runner = new CheckRunner(this.errors, this.warnings);
         // reset global(s)
@@ -467,7 +473,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
                 if (!!xx) {
                     classifierInfo.referenceShortCut = MetaElementReference.create<FreMetaProperty>(xx as FreMetaProperty, "FreProperty");
-                    classifierInfo.referenceShortCut.owner = this.language;
+                    classifierInfo.referenceShortCut.owner = this.language!;
                 }
             }
         }
@@ -491,11 +497,11 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         LOGGER.log("resolving references ");
         for (const group of editorDef.projectiongroups) {
             for (const proj of group.projections) {
-                proj.classifier.owner = this.language;
+                proj.classifier.owner = this.language!;
             }
             if (!!group.extras) {
                 for (const proj of group.extras) {
-                    proj.classifier.owner = this.language;
+                    proj.classifier.owner = this.language!;
                 }
             }
         }
@@ -526,7 +532,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     whenOk: () => {
                         // set the 'property' attribute of the projection
                         item.property = MetaElementReference.create<FreMetaProperty>(myProp!, "FreProperty");
-                        item.property.owner = this.language;
+                        item.property.owner = this.language!;
                         item.expression = undefined;
                         // check the rest
                         if (!!item.boolInfo) {
@@ -574,7 +580,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     private copyReference(reference: MetaElementReference<FreMetaProperty>): MetaElementReference<FreMetaProperty> {
         const result: MetaElementReference<FreMetaProperty> = MetaElementReference.create<FreMetaProperty>(reference.referred, "FreProperty");
-        result.owner = this.language;
+        result.owner = this.language!;
         return result;
     }
 }
