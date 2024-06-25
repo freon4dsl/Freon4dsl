@@ -7,7 +7,7 @@ import { ConceptMaker } from "./ConceptMaker";
 import { GrammarModel } from "./grammarModel";
 import { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser";
 import { GrammarPart } from "./grammarModel/GrammarPart";
-import {LOG2USER, Names} from "../../utils";
+import { LOG2USER, Names } from "../../utils";
 import { ParserGenUtil } from "./ParserGenUtil";
 
 export class GrammarGenerator {

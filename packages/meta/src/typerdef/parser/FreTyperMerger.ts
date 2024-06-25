@@ -21,7 +21,7 @@ export class FreTyperMerger {
         this.reader = new FreTyperReader();
     }
 
-    parse(filePath: string): TyperDef {
+    parse(filePath: string): TyperDef | undefined {
         // Check if file exists
         if (!fs.existsSync(filePath)) {
             LOG2USER.error("definition file '" + filePath + "' does not exist, exiting.");
@@ -33,10 +33,10 @@ export class FreTyperMerger {
             this.runChecker(typeDefinition);
             return typeDefinition;
         }
-        return null;
+        return undefined;
     }
 
-    parseMulti(filePaths: string[]): TyperDef {
+    parseMulti(filePaths: string[]): TyperDef | undefined {
         const submodels: TyperDef[] = [];
 
         // read the files and parse them separately
@@ -60,10 +60,12 @@ export class FreTyperMerger {
         }
 
         // combine the submodels into one
-        const model: TyperDef = this.merge(submodels);
+        const model: TyperDef | undefined = this.merge(submodels);
 
-        // run the checker on the complete model
-        this.runChecker(model);
+        if (!!model) {
+            // run the checker on the complete model
+            this.runChecker(model);
+        }
 
         // return the model
         return model;
@@ -84,7 +86,7 @@ export class FreTyperMerger {
         }
     }
 
-    private merge(submodels: TyperDef[]) {
+    private merge(submodels: TyperDef[]): TyperDef | undefined {
         if (submodels.length > 0) {
             const result: TyperDef = submodels[0];
             submodels.forEach((sub, index) => {
@@ -104,7 +106,7 @@ export class FreTyperMerger {
             });
             return result;
         } else {
-            return null;
+            return undefined;
         }
     }
 }

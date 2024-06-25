@@ -28,7 +28,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
         if (!!sppt.root) {
             return this.transformSharedPackedParseTreeNode(sppt.root) as unknown as T;
         } else {
-            return null;
+            return null as T;
         }
     }
 

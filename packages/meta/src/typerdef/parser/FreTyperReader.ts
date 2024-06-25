@@ -20,12 +20,12 @@ export class FreTyperReader {
      * otherwise an error wil be thrown containing the parse or analysis error.
      * @param sentence
      */
-    readFromString(sentence: string, sourceFileName: string): Object {
+    readFromString(sentence: string, sourceFileName: string): Object | undefined {
         this.analyser.filename = sourceFileName;
         const startRule: string = "TyperDef";
 
         // parse the input
-        let unit: Object = null;
+        let unit: Object | undefined = undefined;
         if (this.parser) {
             try {
                 if (startRule.length > 0) {

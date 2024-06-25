@@ -37,7 +37,7 @@ describe("Checking new typer", () => {
             if (e instanceof Error) {
                 // console.log(e.stack);
                 const errors: string[] = parser.checker.errors;
-                // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
                 expect(e.message).toBe(`checking errors (8).`);
                 expect(errors.includes("Concept or interface 'Type' occurs more than once in this list [file: type-rules1.type:4:10].")).toBeTruthy();
                 expect(errors.includes("Concept or interface 'Exp' occurs more than once in this list [file: type-rules1.type:7:11].")).toBeTruthy();

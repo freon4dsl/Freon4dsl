@@ -98,7 +98,7 @@ export class FreTyperPartTemplate {
     private generateFromDefinition(typerdef: TyperDef, language: FreMetaLanguage, relativePath: string) {
         this.typerdef = typerdef;
         this.language = language;
-        const rootType = Names.classifier(typerdef?.typeRoot());
+        const rootType: string = !!typerdef?.typeRoot() ? Names.classifier(typerdef?.typeRoot()!) : "unknown-root-type";
         ListUtil.addIfNotPresent(this.imports, rootType);
         const generatedClassName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.FreTyperPart;

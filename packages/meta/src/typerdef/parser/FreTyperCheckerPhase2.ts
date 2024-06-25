@@ -119,7 +119,9 @@ export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
             check: !!exp.variable,
             error: `Cannot find reference to ${exp.$variable.name} ${ParseLocationUtil.location(exp.$variable)}.`,
             whenOk: () => {
-                exp.returnType = exp.variable.type;
+                if (!!exp.variable?.type) {
+                    exp.returnType = exp.variable.type;
+                }
             }
         });
     }
@@ -143,8 +145,8 @@ export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
         const properties: FreMetaProperty[] = [];
         conditions.forEach(cond => {
             // find out which part of the condition refers to 'variable'
-            let variablePart: FretExp;
-            let knownTypePart: FretExp;
+            let variablePart: FretExp | undefined = undefined;
+            let knownTypePart: FretExp | undefined = undefined;
             let baseSource = cond.left.baseSource();
             if (baseSource instanceof FretVarCallExp && baseSource.variable === variable) {
                 variablePart = cond.left;
@@ -156,19 +158,23 @@ export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
                     knownTypePart = cond.left;
                 }
             }
-            this.checkUniquenessOfProperty(variablePart, properties);
-            // return a new condition with the knownTypePart always as the right
-            if (cond instanceof FretEqualsExp) {
-                result.push(FretEqualsExp.create({ left: variablePart, right: knownTypePart }));
-            } else if (cond instanceof FretConformsExp) {
-                result.push(FretConformsExp.create({ left: variablePart, right: knownTypePart }));
+            if (!!variablePart) {
+                this.checkUniquenessOfProperty(variablePart, properties);
+                if (!!knownTypePart) {
+                    // return a new condition with the knownTypePart always as the right
+                    if (cond instanceof FretEqualsExp) {
+                        result.push(FretEqualsExp.create({left: variablePart, right: knownTypePart}));
+                    } else if (cond instanceof FretConformsExp) {
+                        result.push(FretConformsExp.create({left: variablePart, right: knownTypePart}));
+                    }
+                }
             }
         });
         return result;
     }
 
     private checkUniquenessOfProperty(variablePart: FretExp, properties: FreMetaProperty[]) {
-        if (!!variablePart && variablePart instanceof FretPropertyCallExp) {
+        if (!!variablePart && variablePart instanceof FretPropertyCallExp && !!variablePart.property) {
             if (properties.includes(variablePart.property)) {
                 this.runner.simpleCheck(false,
                     `Property may not be present twice ${ParseLocationUtil.location(variablePart)}.`);
