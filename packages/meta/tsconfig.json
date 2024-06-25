@@ -85,7 +85,7 @@
     "node_modules",
     "coverage",
     "config",
-//    "src/**/*.test.ts"
+    "src/**/*.test.ts"
   ]
 
 }
