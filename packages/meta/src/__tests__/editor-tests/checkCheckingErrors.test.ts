@@ -31,7 +31,6 @@ describe("Checking editor definition ", () => {
             parser.parse(testdir + "test1.edit");
         } catch (e: unknown) {
             if (e instanceof Error) {
-                console.log(e.message + e.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 expect(e.message).toBe(`checking errors (3).`);
                 expect(checker.errors.includes("No empty projections allowed [file: test1.edit:3:10].")).toBeTruthy();

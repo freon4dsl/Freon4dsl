@@ -331,7 +331,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
                         error: `Checking against unknown value type (TODO: better message), ${ParseLocationUtil.location(propDef.$property)}.`,
                         whenOk: () => {
                             if (propType !== TyperDef.freonType) {
-                                const typeCheck: FreMetaClassifier[] = CommonSuperTypeUtil.commonSuperType([propType, valueType]);
+                                const typeCheck: FreMetaClassifier[] = CommonSuperTypeUtil.commonSuperType([propType, valueType!]);
                                 doesConform = typeCheck.length > 0 && typeCheck[0] === propType;
                             } else {
                                 // valueType conforms to FreType if
@@ -340,7 +340,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
                                 } else if (valueType instanceof FretTypeConcept) { // (1) it is a TypeConcept, or
                                     doesConform = this.definition.typeConcepts.includes(valueType);
                                 } else { // (2) it is marked 'isType'
-                                    doesConform = this.definition.types.includes(valueType);
+                                    doesConform = this.definition.types.includes(valueType!);
                                 }
                             }
                         }
@@ -417,9 +417,10 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         });
     }
 
-    private checkFunctionCallExpression(exp: FretFunctionCallExp, enclosingConcept: FreMetaClassifier, surroundingExp: FretWhereExp) {
+    private checkFunctionCallExpression(exp: FretFunctionCallExp, enclosingConcept: FreMetaClassifier, surroundingExp?: FretWhereExp) {
         // LOGGER.log("checkFunctionCallExpression " + exp?.toFreString());
-        const functionName = validFunctionNames.find(name => name === exp.calledFunction);
+
+        const functionName: string | undefined = validFunctionNames.find(name => name === exp.calledFunction);
         this.runner.nestedCheck({
             check: !!functionName,
             error: `${exp.calledFunction} is not a valid function ${ParseLocationUtil.location(exp)}.`,
@@ -458,7 +459,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         });
     }
 
-    private checkArguments(langExp: FretFunctionCallExp, enclosingConcept: FreMetaClassifier, surroundingExp: FretWhereExp) {
+    private checkArguments(langExp: FretFunctionCallExp, enclosingConcept: FreMetaClassifier, surroundingExp?: FretWhereExp) {
         langExp.actualParameters.forEach(p => {
                 this.checkFretExp(p, enclosingConcept, surroundingExp, false);
             }
