@@ -24,17 +24,10 @@ export class Simulator {
 
   constructor(studyConfiguration: StudyConfiguration) {
     // Setup the Scheduler
-    this.studyConfiguration = studyConfiguration;
     this.scheduledStudyConfiguration = new ScheduledStudyConfiguration(studyConfiguration);
-    this.scheduledStudyConfiguration.setupScheduledPeriodsAndEvents();
-    // this.setupTimeline();
+    this.timeline = new Timeline();
+    //   this.timeline.addEvent(this.getFirstEvent());
   }
-
-
-  // setupTimeline() {
-  //   this.timeline = new Timeline();
-  //   this.timeline.addEvent(this.getFirstEvent());
-  // }
 
   getTimeline() {
     return this.timeline;
@@ -48,7 +41,7 @@ export class Simulator {
     this.sim.setLogger(function (s: string) {
        log(s);
     });    // Run the simulation for the appropriate number of days
-    console.log("running simulation");
+    console.log("running simulation...");
     let results = this.sim.simulate(50); 
     return results;
   }

@@ -13,11 +13,6 @@ export class ScheduledStudyConfiguration {
 
   constructor(studyConfiguration: StudyConfiguration) {
     this.studyConfiguration = studyConfiguration;
-    this.setupScheduledPeriodsAndEvents();
-  }
-
-  // Setup the ScheduledEvents to be a ScheduleEvent for every Event in every Period of the StudyConfiguration
-  setupScheduledPeriodsAndEvents() {
     this.scheduledPeriods = this.getConfiguredPeriods().map(period => new ScheduledPeriod(period));
   }
 
@@ -29,15 +24,12 @@ export class ScheduledStudyConfiguration {
     return this.studyConfiguration.periods;
   }
 
-  getFirstPeriod() {
-    return this.scheduledPeriods[0];
-  }
-
   getFirstScheduledPeriod() { 
+    //TODO: change to search for the period with a visit on day-0 or StartDay.
     return this.scheduledPeriods[0];
   }
 
-  getEvents() {
+  getScheduledEvents() {
     return this.scheduledEvents;
   }
 
@@ -54,9 +46,9 @@ export class ScheduledStudyConfiguration {
     }
   }
 
-  getFirstEvent() {
-    let firstPeriod = this.getFirstPeriod();
-    let firstEventOnDay1 = firstPeriod.scheduledEvents.find(scheduledEvent => {
+  getFirstStudyStartEvent(): ScheduledEvent | undefined {
+    let eventsOnADay = this.getEventsOnScheduledOnASpecificDay();
+    let firstEventOnDay1 = eventsOnADay.find(scheduledEvent => {
       if (scheduledEvent.configuredEvent.schedule.eventStart instanceof Day) {
         return (scheduledEvent.configuredEvent.schedule.eventStart as Day).startDay as number === 1;
       } else {return false;}
@@ -64,10 +56,19 @@ export class ScheduledStudyConfiguration {
     return firstEventOnDay1;
   }
 
+  getEventsOnScheduledOnASpecificDay(): ScheduledEvent[]  {
+    let firstPeriod = this.getFirstScheduledPeriod();
+    return firstPeriod.scheduledEvents.filter(scheduledEvent => scheduledEvent.configuredEvent.schedule.eventStart instanceof Day);
+  }
+
   getReadyEvents(timeline: Timeline) {
-    console.log("this.getAllScheduledEvents: " + this.getAllScheduledEvents().length);
     let readyEvents = this.getAllScheduledEvents().filter(scheduledEvent => scheduledEvent.getInstanceIfEventIsReady(timeline));
     return readyEvents;
-  } 
+  }
+
+  isScheduleComplete(timeline): boolean {
+    let readyEvents = this.getAllScheduledEvents().find(scheduledEvent => scheduledEvent.notYetScheduled(timeline));
+    return readyEvents === undefined;
+  }
 }
 

@@ -41,7 +41,7 @@ describe ("Access to simulation data", () => {
         // See beforeAll()
 
         // WHEN the Scheduled Study Configuration is asked for the first scheduled period 
-        let scheduledEvent = scheduledStudyConfiguration.getFirstEvent();
+        let scheduledEvent = scheduledStudyConfiguration.getFirstStudyStartEvent();
 
         // Then the first scheduled Period is Screening
         if (scheduledEvent) {
@@ -73,7 +73,7 @@ describe ("Access to simulation data", () => {
         // GIVEN a timeline with the Visit 1 event completed
         // AND a scheduled study configuration with a Visit 2 event starting 7 days after the Visit 1 event
         // AND it's day 8
-        let scheduledEvent = scheduledStudyConfiguration.getFirstEvent();
+        let scheduledEvent = scheduledStudyConfiguration.getFirstStudyStartEvent();
         if (!scheduledEvent) {
           throw new Error("No scheduled event found");
         } else {
@@ -103,7 +103,7 @@ describe ("Access to simulation data", () => {
         scheduledStudyConfiguration = new ScheduledStudyConfiguration(studyConfiguration);
 
         // WHEN the Scheduled Study Configuration is asked for the first scheduled period 
-        let scheduledEvent = scheduledStudyConfiguration.getFirstEvent();
+        let scheduledEvent = scheduledStudyConfiguration.getFirstStudyStartEvent();
         if (!scheduledEvent) {
           throw new Error("No scheduled event found");
         } else { 

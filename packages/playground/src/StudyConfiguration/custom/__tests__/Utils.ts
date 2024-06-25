@@ -22,16 +22,16 @@ export function createWhenEventSchedule(eventName: string, binaryExpression: Bin
 }
 
 // Create a EventSchedule DSL element and set its 'eventStart' to a 'Day' DSL element starting 'startDay'. 
-export function createDayEventSchedule(eventName: string, startDay: number) {
-  let eventSchedule = new EventSchedule(eventName + "EventSchedule");
-  let day = new Day(eventName + startDay.toString);
+export function createEventScheduleStartingOnADay(uniquePrefix: string, startDay: number) {
+  let eventSchedule = new EventSchedule(uniquePrefix + "EventSchedule");
+  let day = new Day(uniquePrefix + startDay.toString);
   day.startDay = startDay;
   eventSchedule.eventStart = day;
   return eventSchedule;
 }
 
 // Add a Event DSL element to a Period DSL element.
-export function addEventToPeriod(period: Period, eventName: string, eventSchedule: EventSchedule): Event {
+export function createEventAndAddToPeriod(period: Period, eventName: string, eventSchedule: EventSchedule): Event {
   let event = new Event(eventName);
   event.name = eventName; 
   event.schedule = eventSchedule;
@@ -48,12 +48,12 @@ export function addAPeriodAndTwoEvents(studyConfiguration: StudyConfiguration, p
   let period = new Period(periodName);
   period.name = periodName;
 
-  let dayEventSchedule = createDayEventSchedule(event1Name, event1Day);
-  addEventToPeriod(period, event1Name, dayEventSchedule);
+  let dayEventSchedule = createEventScheduleStartingOnADay(event1Name, event1Day);
+  createEventAndAddToPeriod(period, event1Name, dayEventSchedule);
 
   let when = createWhenEventSchedule(event2Name, PlusExpression.create({left:  new StartDay(), 
                                                                        right: Number.create({value:event2Day})}));
-  addEventToPeriod(period, event2Name, when);
+  createEventAndAddToPeriod(period, event2Name, when);
 
   studyConfiguration.periods.push(period);
   return studyConfiguration;
@@ -64,8 +64,8 @@ export function addEventScheduledOffCompletedEvent(studyConfiguration: StudyConf
   let period = new Period(periodName);
   period.name = periodName;
 
-  let dayEventSchedule = createDayEventSchedule(event1Name, event1Day);
-  let firstEvent = addEventToPeriod(period, event1Name, dayEventSchedule);
+  let dayEventSchedule = createEventScheduleStartingOnADay(event1Name, event1Day);
+  let firstEvent = createEventAndAddToPeriod(period, event1Name, dayEventSchedule);
 
   let eventReference = new EventReference(event1Name);
   let freNodeReference = FreNodeReference.create(firstEvent, "Event");
@@ -73,7 +73,7 @@ export function addEventScheduledOffCompletedEvent(studyConfiguration: StudyConf
   let when = createWhenEventSchedule(event2Name, PlusExpression.create({left: eventReference,
                                                                         right: Number.create({value:event2Day})}));
 
-  addEventToPeriod(period, event2Name, when);
+  createEventAndAddToPeriod(period, event2Name, when);
 
   studyConfiguration.periods.push(period);
   return studyConfiguration;

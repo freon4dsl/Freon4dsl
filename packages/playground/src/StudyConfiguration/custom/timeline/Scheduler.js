@@ -7,53 +7,52 @@ import * as Sim from "../simjs/sim.js"
     * The Events and Timeline are based on TypeScript classes so they are created externally and passed in to the this.
     */
   export class Scheduler extends Sim.Entity {
-    day = new Sim.Event("Day");
-    studyEvent = new Sim.Event("Visit");
-    completedEvents = [];
-    events;
-    timeline;
     simulation;
-      
+
     start(...args) {
-      console.log('Scheduler Start args length:'+ args.length);
       this.simulation = args[0];
-      //TODO: switch to not having events and timelines as variables and just use the simulation object.
-      this.events = this.simulation.scheduledStudyConfiguration.getEvents();
-      this.timeline = this.simulation.getTimeline();
-      this.eventsIndex = 0;
-      this.scheduleVisit(this.studyEvent, this.simulation.scheduledStudyConfiguration.getFirstEvent());
+      // Scheduling starts with all the events that are scheduled on specific days.
+      // This must include something that is the study start day that is assumed to be day 0.
+      this.scheduleEventsOnSpecificDays();
     }
 
-    scheduleVisit(visit) {
-      console.log('Scheduling Visit where eventsIndex is:' + this.eventsIndex);
-      if (this.eventsIndex > 0) {
-        console.log('Finished Visit: ' + this.eventsIndex.toFixed(0));
-        // First visit isn't in the events array
-        this.completedEvents.push(this.events[this.eventsIndex - 1]);
+    getScheduledStudyConfiguration() {
+      return this.simulation.scheduledStudyConfiguration;
+    }
+
+    getTimeline() {
+      return this.simulation.getTimeline();
+    }
+
+    getEvents() {
+      return this.getScheduledStudyConfiguration().getEvents();
+    }
+
+    // Find all the events with First-Scheduled on just a specific day and schedule them.
+    scheduleEventsOnSpecificDays() {
+      let eventsScheduledOnASpecificDay = this.getScheduledStudyConfiguration().getEventsOnScheduledOnASpecificDay();
+      for (let event of eventsScheduledOnASpecificDay) {
+        let daysToWait = event.day();
+        console.log('Scheduling Specific Day Event: ' + event.name() + ' on Day: ' + daysToWait);
+        this.setTimer(daysToWait).done(this.eventCompleted, this, [this.getTimeline().newEventInstance(event, daysToWait)]);
       }
-      console.log('completedEvents len: ' + this.completedEvents.length);
-      if (this.eventsIndex >= this.events.length) {
-        console.log('Study Complete');
+    }
+
+    eventCompleted(completedEvent) {
+      console.log('Completed Event:' + completedEvent.name + ' at time: ' + this.time());
+      this.getTimeline().setCompleted(completedEvent);
+      this.getTimeline().setCurrentDay(this.time())
+      this.getTimeline().addEvent(completedEvent,this.time());
+      if (this.getScheduledStudyConfiguration().isScheduleComplete(this.getTimeline())) {
+        console.log('No Events to Schedule');
       } else {
-        let currentEvent = this.events[this.eventsIndex];
-        console.log('Scheduling Visit: ' + (this.eventsIndex+1).toFixed(0));  // +1 because we are 0 indexed but what to display as a 1-based visit number
-        console.log('Adding to Timeline Event Name: ' + currentEvent.name() + ' on Day: ' + currentEvent.day());
-        this.timeline.addEvent(this.timeline.newEventInstance(currentEvent, currentEvent.day()));
-        console.log('Scheduler Timeline Length: ' + this.timeline.days.length);
-        let daysToWait = currentEvent.day();
-        if (daysToWait === null) {
-          if (currentEvent.dependency) {
-            console.log('Dependency: ' + currentEvent.dependency);
-            console.log('# Completed Visits: ' + this.completedEvents.length);
-            console.log('Last Completed Visit: ' + this.completedEvents[this.completedEvents.length - 1].name);
-            let dependency = this.completedEvents.find(v => v.name === currentEvent.dependency);
-            console.log('Dependency on: ' + dependency.name);
-            daysToWait = 1;
-          }
+        console.log('Scheduling Next Event');
+        let eventsToBeScheduled = this.getScheduledStudyConfiguration().getReadyEvents(this.getTimeline());
+        for (let event of eventsToBeScheduled) {
+          let daysToWait = event.day();
+          console.log('Scheduling Event: ' + event.name() + ' on Day: ' + daysToWait);
+          this.setTimer(daysToWait).done(this.eventCompleted, this, [this.getTimeline().newEventInstance(event, daysToWait)]);
         }
-        console.log('Days to Wait: ' + daysToWait);
-        this.setTimer(daysToWait).done(this.scheduleVisit, this, [currentEvent]);
-        this.eventsIndex++;
       }
     }
   }

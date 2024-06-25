@@ -15,7 +15,6 @@ export class ScheduledEvent {
   }
 
   day(timeline: Timeline): number {
-    // let day = this.event.schedule.eventStart as Day;
     let eventStart = this.configuredEvent.schedule.eventStart;
     const interpreter = new MainStudyConfigurationModelInterpreter()
     interpreter.setTracing(true);
@@ -26,7 +25,7 @@ export class ScheduledEvent {
       console.log("interpreter isRtError, value: " + value.toString());
     } else {
       const trace = interpreter.getTrace().root.toStringRecursive();
-      console.log(trace);
+      // console.log(trace);
     }
     return (value as RtNumber).value
   }
@@ -39,20 +38,37 @@ export class ScheduledEvent {
     return null;
   }
 
+  anyRepeatsNotCompleted(timeline: Timeline): boolean {
+    // Copilot suggested:
+    // let repeatableEvents = this.getAllScheduledEvents().filter(scheduledEvent => scheduledEvent.configuredEvent.schedule.repeatable);
+    // let repeatableEventsNotCompleted = repeatableEvents.filter(scheduledEvent => !timeline.hasCompletedInstanceOf(scheduledEvent));
+    // return repeatableEventsNotCompleted.length > 0;
+    return false;
+  }
+
+
+  notYetScheduled(timeline) {
+    try {
+      return this.anyRepeatsNotCompleted(timeline) && timeline.noCompletedInstanceOf(this);
+    }
+    catch (e) {
+      console.log("notYetScheduled caught exception: " + e.toString());
+      // This exception is expected to happen when Event has dependency on another event that has not been completed so evaluation of FirstScheduled fails.
+      return false;
+    }
+  }
+
   /*
    * if this event has not been completed on a previous day and the timeline day is at or after the day this event is scheduled for then return a new EventInstance
    * otherwise return null.
    */
   getInstanceIfEventIsReady(timeline: Timeline): unknown {
-    console.log("this.day(): " + this.day(timeline));
-    console.log("timeline.currentDay: " + timeline.currentDay);
-    console.log("timeline.hasCompletedInstanceOf(this): " + timeline.hasCompletedInstanceOf(this));
-    if (!timeline.hasCompletedInstanceOf(this) && this.day(timeline) <= timeline.currentDay) {
+    if (timeline.noCompletedInstanceOf(this) && this.day(timeline) <= timeline.currentDay) {
       return new EventInstance(this);
     } else {
-      console.log("getInstanceIfEventIsReady returning null for:"+ this.name());
       return null;
     }
   }
+
 }
 

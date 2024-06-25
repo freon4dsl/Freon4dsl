@@ -27,7 +27,7 @@
             }
 
             evalWhen(node: language.When, ctx: InterpreterContext): RtObject {
-                console.log("evalWhen node.startWhen class: " + node.startWhen.constructor.name);
+                // console.log("evalWhen node.startWhen class: " + node.startWhen.constructor.name);
                 return main.evaluate(node.startWhen, ctx);
             }
 
@@ -41,13 +41,13 @@
             }
                 
             evalEventReference(node: language.EventReference, ctx: InterpreterContext): RtObject {
-                console.log("Entered evalEventReference");
-                console.log("evalEventReference node.$id: " + node.$id);
-                console.log("referenced event: " + node.$event);
+                // console.log("Entered evalEventReference");
+                // console.log("evalEventReference node.$id: " + node.$id);
+                // console.log("referenced event: " + node.$event);
                 let timeline = ctx.find("timeline") as unknown as Timeline;
                 let referencedEvent = node.$event;
                 let lastInstanceOfReferencedEvent = timeline.getLastInstanceForThisEvent(referencedEvent);
-                console.log("lastInstanceOfReferencedEvent: " + lastInstanceOfReferencedEvent.day);
+                // console.log("lastInstanceOfReferencedEvent: " + lastInstanceOfReferencedEvent.day);
                 return new RtNumber(lastInstanceOfReferencedEvent.day);
             }
 
@@ -92,6 +92,19 @@
                 const left = main.evaluate(node.left, ctx) as RtNumber;
                 const right = main.evaluate(node.right, ctx) as RtNumber;
                 return RtBoolean.of(left.value > right.value);
-            }        
+            }   
+ 
+            // Copy for when the version in MainStudyConfigurationModelInterpreter is overwritten
+            //
+            // evaluateWithContext(node: Object, ctx: InterpreterContext): RtObject {
+            //     MainStudyConfigurationModelInterpreter.main.reset();
+            //     try {
+            //         return MainStudyConfigurationModelInterpreter.main.evaluate(node, ctx);
+            //     } catch (e: any) {
+            //         return new RtError(e.message);
+            //     }
+            // }
+        
+        
         }
         

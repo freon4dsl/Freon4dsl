@@ -19,9 +19,9 @@ export class Timeline extends RtObject{
     throw new Error('Timelines are not comparable. Method not implemented.');
   }
 
-  // newEventInstance(name?: string, day?: number, startDay?: number, endDay?: number) {
-  //   return new EventInstance(name, day, startDay, endDay);
-  // }
+  newEventInstance(scheduledEvent: ScheduledEvent, day?: number, startDay?: number, endDay?: number) {
+    return new EventInstance(scheduledEvent, day, startDay, endDay);
+  }
 
   getDays() {
     return this.days;
@@ -33,6 +33,11 @@ export class Timeline extends RtObject{
 
   setCurrentDay(day: number) { 
     this.currentDay = day;
+  }
+
+  // wrapper so Scheduler can set event statuses
+  setCompleted(completedEvent) {
+      completedEvent.status = EventInstanceState.Completed;
   }
 
   addEvent(event: EventInstance) {
@@ -55,9 +60,30 @@ export class Timeline extends RtObject{
     return eventInstances[eventInstances.length - 1]; // TODO: sort by day and get the most recent
   }
 
+  printTimeline() {
+    console.log("Timeline:");
+    this.days.forEach(day => {
+      console.log("Day: " + day.day);
+      day.events.forEach(event => {
+        console.log("Event: " + event.name + " day: " + event.day + " status: " + event.status );
+      });
+    });
+  }
+
   // Return true if the event has already been completed on a previous day at least once
   hasCompletedInstanceOf(scheduledEvent: ScheduledEvent) {
-    return this.days.some(day => day.events.some(event => event.scheduledEvent === scheduledEvent && event.status === EventInstanceState.Completed));
+    for (const day of this.days) {
+      for (const event of day.events) {
+        if (event.scheduledEvent.name() === scheduledEvent.name() && event.status === EventInstanceState.Completed) {
+          return true; // Exit nested loops early if we find a completed instance
+        }
+      }
+    }    
+    return false;
+  }
+
+  noCompletedInstanceOf(scheduledEvent: ScheduledEvent) {
+    return !this.hasCompletedInstanceOf(scheduledEvent);
   }
 }
 
