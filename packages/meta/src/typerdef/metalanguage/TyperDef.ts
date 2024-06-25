@@ -62,7 +62,7 @@ export class TyperDef extends FreTyperElement {
     $types: MetaElementReference<FreMetaClassifier>[] = []; // implementation of reference 'types'
     $conceptsWithType: MetaElementReference<FreMetaClassifier>[] = []; // implementation of reference 'conceptsWithType'
     // properties: FretProperty[] = [];
-    private $typeRoot: FreMetaClassifier;
+    private $typeRoot: FreMetaClassifier | undefined;
     private typeRootHasBeenCalculated: boolean = false;
     readonly $typename: string = "TyperDef"; // holds the metatype in the form of a string
 
@@ -103,11 +103,11 @@ export class TyperDef extends FreTyperElement {
             this.$conceptsWithType.push(xx);
         });
     }
-    typeRoot(): FreMetaClassifier {
+    typeRoot(): FreMetaClassifier | undefined {
         if (!this.typeRootHasBeenCalculated) {
             // get the common super type of all types, if possible
             const list = CommonSuperTypeUtil.commonSuperType(this.types);
-            this.$typeRoot = list.length > 0 ? list[0] : null;
+            this.$typeRoot = list.length > 0 ? list[0] : undefined;
             this.typeRootHasBeenCalculated = true;
         }
         return this.$typeRoot;

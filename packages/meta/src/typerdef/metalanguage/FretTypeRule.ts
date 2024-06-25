@@ -21,11 +21,11 @@ export abstract class FretTypeRule extends FreTyperElement {
     toFreString() {
         return "TO BE IMPLEMENTED BY SUBCLASSES OF FretTypeRule";
     }
-    get returnType(): FreMetaClassifier {
+    get returnType(): FreMetaClassifier | undefined {
         if (!!this.$returnType && !!this.$returnType.referred) {
             return this.$returnType.referred;
         }
-        return null;
+        return undefined;
     }
     set returnType(cls: FreMetaClassifier) {
         if (!!cls) {

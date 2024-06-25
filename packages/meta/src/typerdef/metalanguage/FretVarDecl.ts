@@ -39,11 +39,11 @@ export class FretVarDecl extends FreTyperElement {
      * Instead of returning a 'MetaElementReference<FreClassifier>' object,
      * it returns the referred 'FreClassifier' object, if it can be found.
      */
-    get type(): FreMetaClassifier {
+    get type(): FreMetaClassifier | undefined {
         if (!!this.$type) {
             return this.$type.referred;
         }
-        return null;
+        return undefined;
     }
 
     set type(newOne: FreMetaClassifier) {

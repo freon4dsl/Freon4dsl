@@ -40,11 +40,11 @@ export class FretClassifierSpec extends FreTyperElement {
      * Instead of returning a 'MetaElementReference<FreClassifier>' object,
      * it returns the referred 'FreClassifier' object, if it can be found.
      */
-    get myClassifier(): FreMetaClassifier {
+    get myClassifier(): FreMetaClassifier | undefined {
         if (!!this.$myClassifier) {
             return this.$myClassifier.referred;
         }
-        return null;
+        return undefined;
     }
     toFreString(): string {
         return this.$myClassifier.name + " {\n\t" + this.rules.map(r => r.toFreString()).join("\n\t") + "\n} ";

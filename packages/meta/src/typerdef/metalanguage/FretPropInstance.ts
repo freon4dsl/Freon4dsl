@@ -43,11 +43,11 @@ export class FretPropInstance extends FreTyperElement {
      * Instead of returning a 'MetaElementReference<FreProperty>' object,
      * it returns the referred 'FreProperty' object, if it can be found.
      */
-    get property(): FreMetaProperty {
+    get property(): FreMetaProperty | undefined {
         if (!!this.$property) {
             return this.$property.referred;
         }
-        return null;
+        return undefined;
     }
     toFreString(): string {
         return this.$property.name + " : " + this.value.toFreString();
