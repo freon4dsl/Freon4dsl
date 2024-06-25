@@ -8,22 +8,22 @@ import {
     getNonFatalParseErrors,
     setCurrentFileName, setIdMap
 } from "./LanguageCreators";
-// import { FreLangChecker } from "../checking/FreLangChecker";
+import { FreLangChecker } from "../checking/FreLangChecker";
 
 // const LOGGER = new MetaLogger("LanguageParser").mute();
 
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
-    idFile: string = '';
+    idFile: string | undefined;
 
     constructor(idFile?: string) {
         super();
-        this.idFile = idFile ? idFile : '';
+        this.idFile = idFile ? idFile : undefined;
         this.parser = pegjsParser;
-        // this.checker = new FreLangChecker(null);
+        this.checker = new FreLangChecker(undefined);
     }
 
     parse(definitionFile: string): FreMetaLanguage | undefined {
-        if (this.idFile !== undefined && this.idFile !== null) {
+        if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);
             const idMap = this.parseIds(idJson);

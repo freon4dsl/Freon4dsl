@@ -69,6 +69,7 @@ export class FreGenericParser<DEFINITION> {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
             model = this.parser.parse(langSpec);
         } catch (e: unknown) {
+            LOG2USER.error("TYPE of error in parse: " + e.constructor.name);
             if (isPegjsError(e)) {
                 // syntax error
                 const errorLoc: ParseLocation = { filename: definitionFile, start: e.location.start, end: e.location.end };
@@ -138,7 +139,7 @@ export class FreGenericParser<DEFINITION> {
     }
 
     private runChecker(model: DEFINITION) {
-        if (model !== null) {
+        if (!!model && !!this.checker) {
             this.checker.errors = [];
             this.checker.warnings = [];
             this.checker.check(model);

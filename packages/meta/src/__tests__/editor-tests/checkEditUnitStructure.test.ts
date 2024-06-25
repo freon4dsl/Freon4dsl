@@ -84,6 +84,7 @@ describe("Checking FretEditUnit: ", () => {
                             if (item instanceof FreEditPropertyProjection && item.property.referred.isList) {
                                 // the following tests the defaults added by DefaultEditorGenerator
                                 expect(item.listInfo).not.toBeNull();
+                                expect(item.listInfo).not.toBeUndefined();
                                 expect(item.listInfo.direction).toBe(FreEditProjectionDirection.Vertical);
                                 expect(item.listInfo.joinType).toBe(ListJoinType.Separator);
                                 expect(item.listInfo.joinText).toBe("");
@@ -97,7 +98,7 @@ describe("Checking FretEditUnit: ", () => {
     });
 
     test("in a non-generated group: all list properties have a listInfo", () => {
-        const editor = readFile(testdir + "test2.edit");
+        const editor:FreEditUnit = readFile(testdir + "test2.edit");
 
         // the series of classifiers that we are testing here
         const classifiersToTest: FreMetaClassifier[] = language.concepts
@@ -126,7 +127,7 @@ describe("Checking FretEditUnit: ", () => {
                const found: FreEditPropertyProjection[] = propItems.filter(item => item.property.referred === prop);
                found.forEach(item => {
                    // there are projections of this property, see if they are lists
-                   expect(item.listInfo).not.toBeNull();
+                   expect(item.listInfo).not.toBeUndefined();
                });
             });
             // check the property items against the non-list properties of c
@@ -134,7 +135,7 @@ describe("Checking FretEditUnit: ", () => {
                 const found: FreEditPropertyProjection[] = propItems.filter(item => item.property.referred === prop);
                 found.forEach(item => {
                     // there are projections of this property, see if they are not lists
-                    expect(item.listInfo).toBeNull();
+                    expect(item.listInfo).toBeUndefined();
                 });
             });
         });

@@ -95,7 +95,7 @@ export class FreEditUnit extends FreMetaDefinitionElement {
 
 export class BoolKeywords extends FreMetaDefinitionElement {
     trueKeyword: string = "true";
-    falseKeyword?: string = '';
+    falseKeyword?: string = undefined;
 
     toString(): string {
         return `BoolKeywords [ ${this.trueKeyword} | ${this.falseKeyword} ]`;

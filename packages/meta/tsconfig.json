@@ -85,9 +85,7 @@
     "node_modules",
     "coverage",
     "config",
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx",
-    "src/**/*.story.tsx"
+//    "src/**/*.test.ts"
   ]
 
 }
