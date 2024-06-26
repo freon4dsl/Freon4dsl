@@ -162,55 +162,54 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         // every classifier may have only one 'normal' projection in a group
         // every classifier may have only one 'table' projection in a group
         group.projections.forEach(proj => {
-            if (proj instanceof FreEditTableProjection) {
-                const myCls = proj.classifier.referred;
-                if (!!myCls) {
+            const myCls: FreMetaClassifier | undefined = proj.classifier?.referred;
+            if (!!myCls) {
+                if (proj instanceof FreEditTableProjection) {
                     this.runner.simpleCheck(!classifiersWithTableProj.includes(myCls),
                         `There may be only one table projection for ${myCls.name} in a projection group ${ParseLocationUtil.location(proj)}.`);
                     classifiersWithTableProj.push(myCls);
-                } // else: error message produced elsewhere
-            } else if (proj instanceof FreEditProjection) {
-                const myCls = proj.classifier.referred;
-                if (!!myCls) {
+                } else if (proj instanceof FreEditProjection) {
                     this.runner.simpleCheck(!classifiersWithNormalProj.includes(myCls),
                         `There may be only one 'normal' (non-table) projection for ${myCls.name} in a projection group ${ParseLocationUtil.location(proj)}.`);
                     classifiersWithNormalProj.push(myCls);
-                } // else: error message produced elsewhere
-            }
+                }
+            } // else: error message produced elsewhere
         });
     }
 
     private checkAndMergeExtras(extras: ExtraClassifierInfo[]): ExtraClassifierInfo[] {
         const allExtras: ExtraClassifierInfo[] = [];
         for (const extra of extras) {
-            // first merge the extras for the same classifier
-            const knownOne = allExtras.find(ex => ex.classifier.referred === extra.classifier.referred);
-            // if already present, then merge the extra info
-            if (!!knownOne) {
-                if (!!extra.symbol) {
-                    if (!!knownOne.symbol) {
-                        this.errors.push(`symbol for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
-                    } else {
-                        knownOne.symbol = extra.symbol;
+            if (extra.classifier !== undefined && extra.classifier !== null) {
+                // first merge the extras for the same classifier
+                const knownOne: ExtraClassifierInfo | undefined = allExtras.find(ex => ex.classifier?.referred === extra.classifier!.referred);
+                // if already present, then merge the extra info
+                if (!!knownOne) {
+                    if (!!extra.symbol) {
+                        if (!!knownOne.symbol) {
+                            this.errors.push(`symbol for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
+                        } else {
+                            knownOne.symbol = extra.symbol;
+                        }
                     }
-                }
-                if (!!extra.trigger) {
-                    if (!!knownOne.trigger) {
-                        this.errors.push(`trigger for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
-                    } else {
-                        knownOne.trigger = extra.trigger;
+                    if (!!extra.trigger) {
+                        if (!!knownOne.trigger) {
+                            this.errors.push(`trigger for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
+                        } else {
+                            knownOne.trigger = extra.trigger;
+                        }
                     }
-                }
-                if (!!extra.referenceShortCut) {
-                    if (!!knownOne.referenceShortCut) {
-                        this.errors.push(`reference shortcut for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
-                    } else {
-                        knownOne.referenceShortCut = extra.referenceShortCut;
+                    if (!!extra.referenceShortCut) {
+                        if (!!knownOne.referenceShortCut) {
+                            this.errors.push(`reference shortcut for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
+                        } else {
+                            knownOne.referenceShortCut = extra.referenceShortCut;
+                        }
                     }
+                } else {
+                    // this is a new extra, add it to allExtras
+                    allExtras.push(extra);
                 }
-            } else {
-                // this is a new extra, add it to allExtras
-                allExtras.push(extra);
             }
         }
 
@@ -218,7 +217,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         // check whether all triggers are unique over all classifiers.
         for (const ext of allExtras) {
             this.checkExtras(ext);
-            if (!!ext.trigger) {
+            if (!!ext.trigger && !!ext.classifier) {
                 const matchingExtras = allExtras.filter(xx => xx !== ext && xx.trigger === ext.trigger);
                 this.runner.nestedCheck({
                     check: matchingExtras.length === 0,
@@ -233,7 +232,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         // different from the triggers, unless there is a trigger for that classifier
         // Note that this check must be done after the merging of the extras.
         for (const ext of allExtras) {
-            if (!!ext.symbol && !ext.trigger) {
+            if (!!ext.symbol && !!ext.classifier && !ext.trigger) {
                 const matchingTriggers = allExtras.filter(xx => xx !== ext && xx.trigger === ext.symbol);
                 const matchingSymbols = allExtras.filter(xx => xx !== ext && !xx.trigger && xx.symbol === ext.symbol);
                 this.runner.nestedCheck({
@@ -251,19 +250,19 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     private checkProjection(projection: FreEditClassifierProjection, editor: FreEditUnit) {
         LOGGER.log("checking projection for " + projection.classifier?.name);
-        const myClassifier: FreMetaClassifier = projection.classifier.referred;
+        const myClassifier: FreMetaClassifier | undefined = projection.classifier?.referred;
         this.runner.nestedCheck({
             check: !!myClassifier,
-            error: `Classifier ${projection.classifier.name} is unknown ${ParseLocationUtil.location(projection)}`,
+            error: `Classifier ${projection.classifier?.name} is unknown ${ParseLocationUtil.location(projection)}`,
             whenOk: () => {
                 if (myClassifier instanceof FreMetaLimitedConcept) {
                     this.runner.simpleCheck(false,
                         `A limited concept cannot have a projection, it can only be used as reference ${ParseLocationUtil.location(projection)}.`);
                 } else {
                     if (projection instanceof FreEditProjection) {
-                        this.checkNormalProjection(projection, myClassifier, editor);
+                        this.checkNormalProjection(projection, myClassifier!, editor);
                     } else if (projection instanceof FreEditTableProjection) {
-                        this.checkTableProjection(projection, myClassifier, editor);
+                        this.checkTableProjection(projection, myClassifier!, editor);
                     }
                 }
             }
@@ -466,7 +465,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     private checkExtras(classifierInfo: ExtraClassifierInfo) {
         LOGGER.log("checking extra info on classifier " + classifierInfo.classifier?.name);
-        if (!!classifierInfo.classifier.referred) { // error message done elsewhere
+        if (!!classifierInfo.classifier?.referred) { // error message done elsewhere
             // check the reference shortcut and change the expression into a reference to a property
             if (!!classifierInfo.referenceShortcutExp && !!this.myExpressionChecker) {
                 this.myExpressionChecker.checkLangExp(classifierInfo.referenceShortcutExp, classifierInfo.classifier.referred);
@@ -498,11 +497,15 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         LOGGER.log("resolving references ");
         for (const group of editorDef.projectiongroups) {
             for (const proj of group.projections) {
-                proj.classifier.owner = this.language!;
+                if (!!proj.classifier) {
+                    proj.classifier.owner = this.language!;
+                }
             }
             if (!!group.extras) {
                 for (const proj of group.extras) {
-                    proj.classifier.owner = this.language!;
+                    if (!!proj.classifier) {
+                        proj.classifier.owner = this.language!;
+                    }
                 }
             }
         }

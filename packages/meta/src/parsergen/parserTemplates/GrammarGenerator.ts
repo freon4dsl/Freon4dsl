@@ -74,7 +74,7 @@ export class GrammarGenerator {
         const binaryExpMaker: BinaryExpMaker = new BinaryExpMaker();
         // always use the default projection group for binary expressions
         let groupForBinaries: FreEditProjectionGroup = projectionGroup;
-        if (projectionGroup.name !== Names.defaultProjectionName && !!projectionGroup.owningDefinition.getDefaultProjectiongroup()) {
+        if (projectionGroup.name !== Names.defaultProjectionName && !!projectionGroup.owningDefinition?.getDefaultProjectiongroup()) {
             groupForBinaries = projectionGroup.owningDefinition.getDefaultProjectiongroup()!;
         }
         if (analyser.binaryConceptsUsed.length > 0) {

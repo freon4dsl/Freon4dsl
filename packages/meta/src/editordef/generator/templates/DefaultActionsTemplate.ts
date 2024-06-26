@@ -95,7 +95,7 @@ export class DefaultActionsTemplate {
             `;
         }
 
-    customActionsForOptional(editorDef: FreEditUnit): string {
+    private customActionsForOptional(editorDef: FreEditUnit): string {
         let result: string = "";
         editorDef.getDefaultProjectiongroup()?.projections.forEach( projection => {
             if (!!projection && projection instanceof FreEditProjection) {
@@ -103,30 +103,27 @@ export class DefaultActionsTemplate {
                     line.items.forEach(item => {
                         if (item instanceof FreOptionalPropertyProjection && !!item.property) {
                             const firstLiteral: string = item.firstLiteral();
-                            const myClassifier = projection.classifier.referred;
-                            // TODO check this change
-                            // const propertyProjection: FreEditPropertyProjection = item.findPropertyProjection();
-                            // const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
-                            // console.log("Looking for [" + optionalPropertyName + "] in [" + myClassifier.name + "]")
-                            // const prop: FreProperty = myClassifier.allProperties().find(prop => prop.name === optionalPropertyName);
+                            const myClassifier: FreMetaClassifier | undefined = projection.classifier?.referred;
                             const prop: FreMetaProperty = item.property.referred;
                             const optionalPropertyName = prop.name;
                             // end change
                             let rolename: string = "unknown role";
-                            if (prop.isPart) {
-                                // TODO Check for lists (everywhere)
-                                rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
-                            } else if (prop.isPrimitive) {
-                                if ( prop.type === FreMetaPrimitiveType.number) {
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox");
-                                } else if ( prop.type === FreMetaPrimitiveType.string) {
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox");
-                                } else if ( prop.type === FreMetaPrimitiveType.boolean) {
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox");
+                            if (!!myClassifier) {
+                                if (prop.isPart) {
+                                    // TODO Check for lists (everywhere)
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
+                                } else if (prop.isPrimitive) {
+                                    if (prop.type === FreMetaPrimitiveType.number) {
+                                        rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox");
+                                    } else if (prop.type === FreMetaPrimitiveType.string) {
+                                        rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox");
+                                    } else if (prop.type === FreMetaPrimitiveType.boolean) {
+                                        rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox");
+                                    }
+                                } else {
+                                    // reference
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "referencebox");
                                 }
-                            } else {
-                                // reference
-                                rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "referencebox" );
                             }
                             result += `${Names.FreCustomAction}.create(
                                     {

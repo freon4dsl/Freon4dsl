@@ -66,7 +66,9 @@ export class ConceptMaker {
         }
         for (const projection of this.namedProjections) {
             // generate a grammar rule entry
-            rules.push(this.generateProjection(projection.classifier.referred, projection, true));
+            if (!!projection.classifier) {
+                rules.push(this.generateProjection(projection.classifier.referred, projection, true));
+            }
         }
         return rules;
     }

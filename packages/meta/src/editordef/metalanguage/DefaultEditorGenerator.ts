@@ -18,7 +18,7 @@ import {
     FreEditPropertyProjection,
     FreEditUnit, FreOptionalPropertyProjection
 } from "../metalanguage";
-import { Names } from "../../utils";
+import {LOG2USER, Names} from "../../utils";
 import { EditorDefaults } from "./EditorDefaults";
 
 export class DefaultEditorGenerator {
@@ -41,6 +41,10 @@ export class DefaultEditorGenerator {
      */
     public static addDefaults(editor: FreEditUnit): void {
         // console.log("adding defaults: " + editor.projectiongroups.map(p => p.name).join(", "))
+        if (editor.language === undefined || editor.language === null) {
+            LOG2USER.error("Cannot generate default editor, because language is unknown.")
+            return;
+        }
         // initialize
         this.interfacesUsed = [];
         // find projection group to add defaults to, or make one if it does not exist

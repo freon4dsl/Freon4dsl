@@ -37,7 +37,7 @@ export class ParserGenUtil {
         // take care of named projections: search the projection group with the right name
         if (!!projectionName && projectionName.length > 0) {
             if (projectionGroup.name !== projectionName) {
-                myGroup = projectionGroup.owningDefinition.projectiongroups.find(group => group.name === projectionName);
+                myGroup = projectionGroup.owningDefinition?.projectiongroups.find(group => group.name === projectionName);
             }
         }
         let myProjection: FreEditProjection | undefined = undefined;
@@ -48,7 +48,7 @@ export class ParserGenUtil {
             }
         }
         if (!myProjection) { // still not found, try the default group
-            myProjection = projectionGroup.owningDefinition.getDefaultProjectiongroup()?.findNonTableProjectionForType(classifier);
+            myProjection = projectionGroup.owningDefinition?.getDefaultProjectiongroup()?.findNonTableProjectionForType(classifier);
         }
         return myProjection;
     }

@@ -93,38 +93,38 @@ export class EditorGenerator {
         }
 
         // Generate the actions
-        LOGGER.log(`Generating actions default: ${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`);
-        const defaultActionsFile = FileUtil.pretty(defaultActions.generate(this.language, editDef, relativePath), "DefaultActions", generationStatus);
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language)}.ts`, defaultActionsFile);
+        LOGGER.log(`Generating actions default: ${this.editorGenFolder}/${Names.defaultActions(this.language!)}.ts`);
+        const defaultActionsFile = FileUtil.pretty(defaultActions.generate(this.language!, editDef, relativePath), "DefaultActions", generationStatus);
+        fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language!)}.ts`, defaultActionsFile);
 
         LOGGER.log(`Generating editor language definition: ${this.editorGenFolder}/index.ts`);
-        const editorDefFile = FileUtil.pretty(editorDefTemplate.generateEditorDef(this.language, editDef, relativePath), "Editor Definition", generationStatus);
+        const editorDefFile = FileUtil.pretty(editorDefTemplate.generateEditorDef(this.language!, editDef, relativePath), "Editor Definition", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/EditorDef.ts`, editorDefFile);
 
         // the following do not need the relativePath for imports
-        LOGGER.log(`Generating actions: ${this.editorGenFolder}/${Names.actions(this.language)}.ts`);
-        const actionsFile = FileUtil.pretty(actions.generate(this.language), "Actions", generationStatus);
-        fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language)}.ts`, actionsFile);
+        LOGGER.log(`Generating actions: ${this.editorGenFolder}/${Names.actions(this.language!)}.ts`);
+        const actionsFile = FileUtil.pretty(actions.generate(this.language!), "Actions", generationStatus);
+        fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language!)}.ts`, actionsFile);
 
-        LOGGER.log(`Generating custom actions: ${this.editorFolder}${Names.customActions(this.language)}.ts`);
-        const customActionsFile = FileUtil.pretty(customActions.generate(this.language), "CustomActions", generationStatus);
-        FileUtil.generateManualFile(`${this.editorFolder}/${Names.customActions(this.language)}.ts`, customActionsFile, "CustomActions");
+        LOGGER.log(`Generating custom actions: ${this.editorFolder}${Names.customActions(this.language!)}.ts`);
+        const customActionsFile = FileUtil.pretty(customActions.generate(this.language!), "CustomActions", generationStatus);
+        FileUtil.generateManualFile(`${this.editorFolder}/${Names.customActions(this.language!)}.ts`, customActionsFile, "CustomActions");
 
-        LOGGER.log(`Generating custom projection: ${this.editorFolder}${Names.customProjection(this.language)}.ts`);
-        const customProjectionFile = FileUtil.pretty(customProjectiontemplate.generate(this.language), "Custom Projection", generationStatus);
-        FileUtil.generateManualFile(`${this.editorFolder}/${Names.customProjection(this.language)}.ts`, customProjectionFile, "Custom Projection");
+        LOGGER.log(`Generating custom projection: ${this.editorFolder}${Names.customProjection(this.language!)}.ts`);
+        const customProjectionFile = FileUtil.pretty(customProjectiontemplate.generate(this.language!), "Custom Projection", generationStatus);
+        FileUtil.generateManualFile(`${this.editorFolder}/${Names.customProjection(this.language!)}.ts`, customProjectionFile, "Custom Projection");
 
         // LOGGER.log(`Generating editor styles: ${this.stylesFolder}/CustomStyles.ts`);
         // const editorStylesConst = FileUtil.pretty(stylesTemplate.generateConst(), "Editor Styles constant", generationStatus);
         // FileUtil.generateManualFile(`${this.stylesFolder}/CustomStyles.ts`, editorStylesConst, "Editor Styles Constant");
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
-        const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language, allExtraClassifiers),
+        const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language!, allExtraClassifiers),
             "Editor Gen Index", generationStatus);
         fs.writeFileSync(`${this.editorGenFolder}/index.ts`, editorIndexGenFile);
 
         LOGGER.log(`Generating editor index: ${this.editorFolder}/index.ts`);
-        const editorIndexFile = FileUtil.pretty(editorIndexTemplate.generateIndex(this.language), "Editor Index", generationStatus);
+        const editorIndexFile = FileUtil.pretty(editorIndexTemplate.generateIndex(this.language!), "Editor Index", generationStatus);
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {

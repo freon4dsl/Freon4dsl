@@ -92,7 +92,7 @@ export class WriterTemplate {
         const binaryExtras: ExtraClassifierInfo[] = [];
         if (!!this.currentProjectionGroup && this.currentProjectionGroup.extras) {
             for (const myExtra of this.currentProjectionGroup.extras) {
-                const myConcept: FreMetaClassifier = myExtra.classifier.referred;
+                const myConcept: FreMetaClassifier | undefined = myExtra.classifier?.referred;
                 if (myConcept instanceof FreMetaBinaryExpressionConcept && !myConcept.isAbstract) {
                     binaryExtras.push(myExtra);
                 }
@@ -417,15 +417,17 @@ export class WriterTemplate {
      * @param projection
      */
     private makeConceptMethod (projection: FreEditClassifierProjection): string {
-        const myConcept: FreMetaClassifier = projection.classifier.referred;
-        if (projection instanceof FreEditProjection) {
-            if (myConcept instanceof FreMetaBinaryExpressionConcept) {
-                // do nothing, binary expressions are treated differently
-            } else {
-                return this.makeNormalMethod(projection, myConcept);
-            }
-        } // else if (conceptDef instanceof FreEditTableProjection) {
-        // cannot unparse a table projection
+        const myConcept: FreMetaClassifier | undefined = projection.classifier?.referred;
+        if (!!myConcept) {
+            if (projection instanceof FreEditProjection) {
+                if (myConcept instanceof FreMetaBinaryExpressionConcept) {
+                    // do nothing, binary expressions are treated differently
+                } else {
+                    return this.makeNormalMethod(projection, myConcept);
+                }
+            } // else if (conceptDef instanceof FreEditTableProjection) {
+            // cannot unparse a table projection
+        }
         return "";
     }
 
@@ -809,13 +811,16 @@ export class WriterTemplate {
     }
 
     private makeBinaryExpMethod(myConcept: ExtraClassifierInfo) {
-        const name: string = Names.classifier(myConcept.classifier.referred);
+        let xName: string = '<unknown>';
+        if (!!myConcept.classifier) {
+            xName = Names.classifier(myConcept.classifier.referred);
+        }
         const comment = `/**
                           * See the public unparse method.
                           */`;
         if (!!(myConcept.symbol)) {
             return `${comment}
-            private unparse${name}(modelelement: ${name}, short: boolean) {
+            private unparse${xName}(modelelement: ${xName}, short: boolean) {
                 this.unparse(modelelement.left, short);
                 this.output[this.currentLine] += "${myConcept.symbol} ";
                 this.unparse(modelelement.right, short);
