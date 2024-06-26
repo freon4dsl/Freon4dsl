@@ -43,14 +43,14 @@ export class EditorDefTemplate {
             // TODO handle other sub types of FreClassifier
              // find the triggers for all concepts
             const extras: ExtraClassifierInfo | undefined = defaultProjGroup.findExtrasForType(concept);
-            if (extras !== undefined) {
+            if (!!extras) {
                 const trigger: string = extras.trigger;
                 if (!!trigger && trigger.length > 0) {
                     conceptsWithTrigger.push(new ConceptTriggerElement(concept, trigger));
                 }
 
                 // find concepts with reference shortcuts
-                const referenceShortCut = extras.referenceShortCut?.referred;
+                const referenceShortCut: FreMetaProperty | undefined = extras.referenceShortCut?.referred;
                 if (!!referenceShortCut) {
                     conceptsWithRefShortcut.push(new ConceptShortCutElement(concept, referenceShortCut));
                 }

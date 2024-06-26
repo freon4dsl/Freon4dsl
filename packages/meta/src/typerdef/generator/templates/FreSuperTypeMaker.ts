@@ -131,7 +131,8 @@ export class FreSuperTypeMaker {
             result += `/* make cartesian product of all conditions */`;
             for (let i = 0; i < myConditions.length; i++) {
                 const propAToBeChanged: string = this.getPropNameFromExp(myConditions[i].left);
-                let propAisAstElement: boolean = false;
+                let propAisAstElement: boolean = true;
+                // const propAisAstElement: boolean = !FreTyperGenUtils.isType(myConditions[i].left.returnType);
                 let propAtypeName: string = '';
                 if (!!myConditions[i].left.returnType) {
                     propAisAstElement = !FreTyperGenUtils.isType(myConditions[i].left.returnType!);
@@ -142,11 +143,11 @@ export class FreSuperTypeMaker {
                     if (FreTyperGenUtils.isType(cls)) {
                         const typeName = Names.classifier(cls);
                         const propBToBeChanged: string = this.getPropNameFromExp(myConditions[j].left);
-                        let propBisAstElement: boolean = false;
+                        let propBisAstElement: boolean = true;
                         let propBtypeName: string = '';
                         if (!!myConditions[j].left.returnType) {
-                            propAisAstElement = !FreTyperGenUtils.isType(myConditions[j].left.returnType!);
-                            propAtypeName = Names.classifier(myConditions[j].left.returnType!);
+                            propBisAstElement = !FreTyperGenUtils.isType(myConditions[j].left.returnType!);
+                            propBtypeName = Names.classifier(myConditions[j].left.returnType!);
                         }
                         const propsBNotToBeChanged: string[] = cls.allProperties().map(prop => prop.name).filter(name => name !== propBToBeChanged);
                         result += `
