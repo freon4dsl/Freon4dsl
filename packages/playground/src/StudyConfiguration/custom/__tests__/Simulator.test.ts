@@ -106,8 +106,8 @@ describe("Simulation of Trial to Generate the Timeline", () => {
   it("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
     // GIVEN a study configuration with one period and two events
     let listOfEventsToAdd: EventsToAdd[] = [
-      { eventName: "Visit 1", eventDay: 1 },
-      { eventName: "Visit 2", eventDay: 7 }
+      { eventName: "Visit 1", eventDay: 1, repeat: 0},
+      { eventName: "Visit 2", eventDay: 7, repeat: 0 }
     ];
     studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, "Screening", listOfEventsToAdd);
 
@@ -128,9 +128,9 @@ describe("Simulation of Trial to Generate the Timeline", () => {
   it("generates a three visit timeline for visits 7 days after the end of the previous visit", () => {
     // GIVEN a study configuration with one period and two events
     let listOfEventsToAdd: EventsToAdd[] = [
-      { eventName: "Visit 1", eventDay: 1 },
-      { eventName: "Visit 2", eventDay: 7 },
-      { eventName: "Visit 3", eventDay: 7 }
+      { eventName: "Visit 1", eventDay: 1, repeat: 0 },
+      { eventName: "Visit 2", eventDay: 7, repeat: 0 },
+      { eventName: "Visit 3", eventDay: 7, repeat: 0 }
     ];
     studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, "Screening", listOfEventsToAdd);
 
@@ -148,6 +148,27 @@ describe("Simulation of Trial to Generate the Timeline", () => {
 
     expect(timeline).toEqual(expectedTimeline);  
   });
+
+  // it.only("generates a two visit timeline for a visit that repeats twice", () => {
+  //   // GIVEN a study configuration with one period and two events
+  //   let listOfEventsToAdd: EventsToAdd[] = [
+  //     { eventName: "Visit 1", eventDay: 1, repeat: 2 },
+  //   ];
+  //   studyConfiguration = utils.addRepeatingEvents(studyConfiguration, "Screening", listOfEventsToAdd);
+
+  //   // WHEN the study is simulated and a timeline is generated
+  //   let simulator = new Simulator(studyConfiguration);
+  //   simulator.run();
+  //   let timeline = simulator.timeline;
+
+  //   // Then the generated timeline has two events on the expected event days
+  //   let expectedTimeline = new Timeline()
+  //   addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline)
+  //   addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 8, expectedTimeline)
+  //   expectedTimeline.setCurrentDay(8);
+
+  //   expect(timeline).toEqual(expectedTimeline);  
+  // });
 
 
 let expectedTimelineDataAsScript = 

@@ -1,6 +1,6 @@
 import * as Sim from "../simjs/sim.js"
 import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
-import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference } from "../../language/gen/index";
+import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference, RepeatCondition, RepeatUnit } from "../../language/gen/index";
 import { FreNodeReference } from "@freon4dsl/core";
 
 // Setup the sim.js environment and an empty StudyConfiguration.
@@ -30,6 +30,17 @@ export function createEventScheduleStartingOnADay(uniquePrefix: string, startDay
   eventSchedule.eventStart = day;
   return eventSchedule;
 }
+
+// export function createEventScheduleThatRepeats(eventName: string, numberOfRepeats: number) {
+//   let eventSchedule = createEventScheduleStartingOnADay(eventName, 1);
+//   let repeatCondition = new RepeatCondition("RepeatCount-" + eventName);
+//   repeatCondition.maxRepeats = numberOfRepeats;
+//   let repeatUnit = new RepeatUnit("");
+//   repeatCondition.repeatUnit = RepeatUnit.daily;
+
+//   eventSchedule.eventRepeat = repeatCondition;
+//   return eventSchedule;
+// }
 
 // Add a Event DSL element to a Period DSL element.
 export function createEventAndAddToPeriod(period: Period, eventName: string, eventSchedule: EventSchedule): Event {
@@ -83,10 +94,10 @@ export function addEventScheduledOffCompletedEvent(studyConfiguration: StudyConf
 export interface EventsToAdd {
   eventName: string;
   eventDay: number;
+  repeat: number;
 }
 
 export function addEventsScheduledOffCompletedEvents(studyConfiguration: StudyConfiguration, periodName: string, eventsToAdd: EventsToAdd[]  ): StudyConfiguration {
-
   let period = new Period(periodName);
   period.name = periodName;
   // Setup the study start event
@@ -110,3 +121,20 @@ export function addEventsScheduledOffCompletedEvents(studyConfiguration: StudyCo
   studyConfiguration.periods.push(period);
   return studyConfiguration;
 }
+
+// export function addRepeatingEvents(studyConfiguration: StudyConfiguration, periodName: string, eventsToAdd: EventsToAdd[]): StudyConfiguration {
+//   let period = new Period(periodName);
+//   period.name = periodName;
+//   // Setup the study start event
+//   let dayEventSchedule = createEventScheduleThatRepeats(eventsToAdd[0].eventName, eventsToAdd[0].repeat);
+//   let event = createEventAndAddToPeriod(period, eventsToAdd[0].eventName, dayEventSchedule);
+
+//     let eventReference = new EventReference(eventToAdd.eventName);
+//     let freNodeReference = FreNodeReference.create(previousEvent, "Event");
+//     eventReference.event = freNodeReference;
+//     let when = createWhenEventSchedule(eventToAdd.eventName, PlusExpression.create({left: eventReference,
+//                                                                                    right: Number.create({value:eventToAdd.eventDay})}));
+//   studyConfiguration.periods.push(period);
+//   return studyConfiguration;
+// }
+
