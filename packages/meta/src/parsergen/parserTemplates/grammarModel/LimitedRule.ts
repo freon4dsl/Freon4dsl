@@ -4,10 +4,10 @@ import { Names } from "../../../utils";
 import { ParserGenUtil } from "../ParserGenUtil";
 
 export class LimitedRule extends GrammarRule {
-    concept: FreMetaLimitedConcept = null;
+    concept: FreMetaLimitedConcept;
     // the mapping of keywords to predef instances
     // first is the name of the instance, second is the keyword
-    myMap: Map<string, string> = null;
+    myMap: Map<string, string>;
 
     constructor(limitedConcept: FreMetaLimitedConcept, myMap: Map<string, string>) {
         super();

@@ -27,13 +27,13 @@ export class MetaLogger {
         MetaLogger.muteAll = false;
     }
 
-    static filter: string = null;
+    static filter: string = '';
 
     static showString(s: string | null) {
-        MetaLogger.filter = s;
+        MetaLogger.filter = s ? s : '';
     }
 
-    category: string;
+    category: string = '';
     active: boolean = false;
 
     constructor(cat: string) {

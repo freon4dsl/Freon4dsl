@@ -21,10 +21,10 @@ const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage;
-    private writerFolder: string;
-    private writerGenFolder: string;
-    private readerFolder: string;
-    private readerGenFolder: string;
+    private writerFolder: string = '';
+    private writerGenFolder: string = '';
+    private readerFolder: string = '';
+    private readerGenFolder: string = '';
 
     generate(editDef: FreEditUnit): void {
         if (this.language === null) {
@@ -64,7 +64,10 @@ export class ReaderWriterGenerator {
         analyser.analyseModel(this.language);
 
         // Create in memory all grammar rules and syntax analysis methods
-        const grammarModel: GrammarModel = grammarGenerator.createGrammar(this.language, analyser, editDef);
+        const grammarModel: GrammarModel | undefined = grammarGenerator.createGrammar(this.language, analyser, editDef);
+        if (!grammarModel) {
+            return;
+        }
 
         // Write the grammar to file
         generatedContent = grammarModel.toGrammar();
@@ -86,7 +89,7 @@ export class ReaderWriterGenerator {
             generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language, grammarPart.unit)}.ts`;
             indexContent += `export * from "./${Names.unitAnalyser(this.language, grammarPart.unit)}";\n`;
             const analyserContent = grammarPart.toMethod(this.language, relativePath);
-            let message: string;
+            let message: string = '';
             if (!!grammarPart.unit) {
                 message = `syntax analyser for unit ${grammarPart.unit?.name}`;
             } else {

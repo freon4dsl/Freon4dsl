@@ -41,7 +41,9 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     constructor(language: FreMetaLanguage) {
         super(language);
         LOGGER.log("Created validator checker");
-        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        if (!!this.language) {
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        }
     }
 
     public check(definition: ValidatorDef): void {
@@ -121,7 +123,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                     // tr.property.appliedfeature.sourceName = "unitName";
                     // tr.property.appliedfeature.referredElement = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
                     tr.property.location = tr.location;
-                    tr.property.language = this.language;
+                    tr.property.language = this.language!;
                   }
             });
         }
@@ -166,8 +168,11 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         // and whether it is a list
         if (nr.property !== null) {
             this.myExpressionChecker.checkLangExp(nr.property, enclosingConcept);
-            this.runner.simpleCheck(nr.property.findRefOfLastAppliedFeature().isList,
-                `NotEmpty rule '${nr.property.toFreString()}' should refer to a list ${ParseLocationUtil.location(nr)}.`);
+            const xx: FreMetaProperty | undefined = nr.property.findRefOfLastAppliedFeature();
+            if (!!xx) { // todo check whether we need an extra error message for this case
+                this.runner.simpleCheck(xx.isList,
+                    `NotEmpty rule '${nr.property.toFreString()}' should refer to a list ${ParseLocationUtil.location(nr)}.`);
+            }
         }
     }
 
@@ -264,7 +269,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                     }
                 }
         });
-        if (!!!severity.severity) {
+        if (!severity.severity) {
             severity.severity = FreErrorSeverity.ToDo;
         }
     }

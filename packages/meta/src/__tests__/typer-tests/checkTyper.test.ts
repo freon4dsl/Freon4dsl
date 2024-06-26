@@ -7,15 +7,16 @@ import { FreTyperMerger } from "../../typerdef/parser/FreTyperMerger";
 describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/faultyDefFiles/";
     let parser: FreTyperMerger;
-
-    let language: FreMetaLanguage;
+    let language: FreMetaLanguage | undefined;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 
     beforeEach(() => {
         try {
             language = new LanguageParser().parse(testdir + "types.ast");
-            parser = new FreTyperMerger(language);
+            if (!!language) {
+                parser = new FreTyperMerger(language);
+            }
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log("Language could not be read: " + e.stack);
@@ -26,18 +27,18 @@ describe("Checking new typer", () => {
     test( " on type-rules1 file", () => {
         try {
             if (!!parser) {
-                const typeUnit: TyperDef = parser.parse(testdir + "type-rules1.type");
-
+                const typeUnit: TyperDef | undefined= parser.parse(testdir + "type-rules1.type");
                 expect(typeUnit).not.toBeNull();
-                expect(typeUnit.types.length).toBe(8);
-                expect(typeUnit.conceptsWithType.length).toBe(7);
-                expect(typeUnit.anyTypeSpec).not.toBeNull();
+                expect(typeUnit).not.toBeUndefined();
+                expect(typeUnit!.types.length).toBe(8);
+                expect(typeUnit!.conceptsWithType.length).toBe(7);
+                expect(typeUnit!.anyTypeSpec).not.toBeNull();
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.stack);
                 const errors: string[] = parser.checker.errors;
-                // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
                 expect(e.message).toBe(`checking errors (8).`);
                 expect(errors.includes("Concept or interface 'Type' occurs more than once in this list [file: type-rules1.type:4:10].")).toBeTruthy();
                 expect(errors.includes("Concept or interface 'Exp' occurs more than once in this list [file: type-rules1.type:7:11].")).toBeTruthy();
@@ -55,11 +56,12 @@ describe("Checking new typer", () => {
     test( " on type-rules2 file", () => {
         try {
             if (!!parser) {
-                const typeUnit: TyperDef = parser.parse(testdir + "type-rules2.type");
-
-                expect(typeUnit.types.length).toBe(8);
-                expect(typeUnit.conceptsWithType.length).toBe(7);
-                expect(typeUnit.anyTypeSpec).not.toBeNull();
+                const typeUnit: TyperDef | undefined = parser.parse(testdir + "type-rules2.type");
+                expect(typeUnit).not.toBeNull();
+                expect(typeUnit).not.toBeUndefined();
+                expect(typeUnit!.types.length).toBe(8);
+                expect(typeUnit!.conceptsWithType.length).toBe(7);
+                expect(typeUnit!.anyTypeSpec).not.toBeNull();
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -85,11 +87,12 @@ describe("Checking new typer", () => {
     test( " on type-rules4 file", () => {
         try {
             if (!!parser) {
-                const typeUnit: TyperDef = parser.parse(testdir + "type-rules4.type");
-
-                expect(typeUnit.types.length).toBe(7);
-                expect(typeUnit.conceptsWithType.length).toBe(7);
-                expect(typeUnit.anyTypeSpec).not.toBeNull();
+                const typeUnit: TyperDef | undefined = parser.parse(testdir + "type-rules4.type");
+                expect(typeUnit).not.toBeNull();
+                expect(typeUnit).not.toBeUndefined();
+                expect(typeUnit!.types.length).toBe(7);
+                expect(typeUnit!.conceptsWithType.length).toBe(7);
+                expect(typeUnit!.anyTypeSpec).not.toBeNull();
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -109,11 +112,12 @@ describe("Checking new typer", () => {
         // TODO this one gives a parse error: "NullPointerException", wait for David to come back on this
         try {
             if (!!parser) {
-                const typeUnit: TyperDef = parser.parse(testdir + "type-rules5.type");
-
-                expect(typeUnit.types.length).toBe(8);
-                expect(typeUnit.conceptsWithType.length).toBe(7);
-                expect(typeUnit.anyTypeSpec).not.toBeNull();
+                const typeUnit: TyperDef | undefined = parser.parse(testdir + "type-rules5.type");
+                expect(typeUnit).not.toBeNull();
+                expect(typeUnit).not.toBeUndefined();
+                expect(typeUnit!.types.length).toBe(8);
+                expect(typeUnit!.conceptsWithType.length).toBe(7);
+                expect(typeUnit!.anyTypeSpec).not.toBeNull();
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -129,11 +133,12 @@ describe("Checking new typer", () => {
         // TODO make new input file
         try {
             if (!!parser) {
-                const typeUnit: TyperDef = parser.parse(testdir + "type-rules6.type");
-
-                expect(typeUnit.types.length).toBe(8);
-                expect(typeUnit.conceptsWithType.length).toBe(7);
-                expect(typeUnit.anyTypeSpec).not.toBeNull();
+                const typeUnit: TyperDef | undefined = parser.parse(testdir + "type-rules6.type");
+                expect(typeUnit).not.toBeNull();
+                expect(typeUnit).not.toBeUndefined();
+                expect(typeUnit!.types.length).toBe(8);
+                expect(typeUnit!.conceptsWithType.length).toBe(7);
+                expect(typeUnit!.anyTypeSpec).not.toBeNull();
             }
         } catch (e: unknown) {
             if (e instanceof Error) {

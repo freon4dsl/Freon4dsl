@@ -125,7 +125,7 @@ export class GenerationUtil {
      */
     public static langExpToTypeScript(exp: FreLangExp): string {
         // tslint:disable-next-line:typedef-whitespace
-        let result: string;
+        let result: string = '';
         if (exp instanceof FreLangSelfExp) {
             result = `modelelement.${this.langExpToTypeScript(exp.appliedfeature)}`;
         } else if (exp instanceof FreLangFunctionCallExp) {
@@ -193,7 +193,7 @@ export class GenerationUtil {
      * represents the name of the concept.
      * @param con
      */
-    public static findNameProp(con: FreMetaClassifier): FreMetaPrimitiveProperty {
+    public static findNameProp(con: FreMetaClassifier): FreMetaPrimitiveProperty | undefined {
         return con.allPrimProperties().find(p => p.name === "name" && p.type === FreMetaPrimitiveType.identifier);
     }
 

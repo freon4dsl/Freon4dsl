@@ -7,8 +7,8 @@ import { FreMetaDefinitionElement } from "../../utils";
 import { MetaElementReference } from "../../languagedef/metalanguage";
 
 export class ScopeDef extends FreMetaDefinitionElement {
-    scoperName: string;
-    languageName: string;
+    scoperName: string = '';
+    languageName: string = '';
     namespaces: MetaElementReference<FreMetaClassifier>[] = [];
     scopeConceptDefs: ScopeConceptDef[] = [];
 }

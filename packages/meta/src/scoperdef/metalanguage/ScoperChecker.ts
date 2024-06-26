@@ -25,7 +25,9 @@ export class ScoperChecker extends Checker<ScopeDef> {
 
     constructor(language: FreMetaLanguage) {
         super(language);
-        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        if (!!this.language) {
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        }
         // in a scope definition an expression may be simply 'self'
         // this.myExpressionChecker.strictUseOfThis = false;
     }
@@ -69,7 +71,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
             whenOk: () => {
                 namespaceAddition.expressions.forEach(exp => {
                     this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
-                    const xx: FreMetaProperty = exp.findRefOfLastAppliedFeature();
+                    const xx: FreMetaProperty | undefined = exp.findRefOfLastAppliedFeature();
                     if (!!xx) {
                         this.runner.nestedCheck({
                             check: (!!xx.type && (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription)),

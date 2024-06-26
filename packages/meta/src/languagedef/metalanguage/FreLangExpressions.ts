@@ -16,13 +16,13 @@ import { MetaElementReference } from ".";
  */
 
 export abstract class FreLangExp extends FreMetaLangElement {
-    sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
+    sourceName: string = '';							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
     appliedfeature: FreLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
     $referredElement: MetaElementReference<FreMetaLangElement>;  // refers to the element called 'sourceName'
     language: FreMetaLanguage;                           // the language for which this expression is defined
 
     // returns the property to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
-    findRefOfLastAppliedFeature(): FreMetaProperty {
+    findRefOfLastAppliedFeature(): FreMetaProperty | undefined {
         if (!!this.language) {
             if (this.appliedfeature !== undefined) {
                 // console.log(" last of: " + this.appliedfeature.sourceName);
@@ -37,7 +37,7 @@ export abstract class FreLangExp extends FreMetaLangElement {
         } else {
             throw Error("Applied feature cannot be found because language is not set.");
         }
-        return null;
+        return undefined;
     }
 
     toFreString(): string {
@@ -48,8 +48,8 @@ export abstract class FreLangExp extends FreMetaLangElement {
 export class FreLangSimpleExp extends FreLangExp {
     value: number;
 
-    findRefOfLastAppliedFeature(): FreMetaProperty {
-        return null;
+    findRefOfLastAppliedFeature(): FreMetaProperty | undefined {
+        return undefined;
     }
 
     toFreString(): string {
@@ -80,7 +80,7 @@ export class FreLangSelfExp extends FreLangExp {
 
 export class FreInstanceExp extends FreLangExp {
     // sourceName should be name of a limited concept
-    instanceName: string;   // should be name of one of the predefined instances of 'sourceName'
+    instanceName: string = '';   // should be name of one of the predefined instances of 'sourceName'
     $referredElement: MetaElementReference<FreMetaInstance>;
 
     toFreString(): string {
@@ -143,7 +143,7 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
 }
 
 export class FreLangFunctionCallExp extends FreLangExp {
-    // sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
+    // sourceName: string = ''; 			// only used in validator for 'conformsTo' and 'equalsType'
     actualparams: FreLangExp[] = [];
     returnValue: boolean;
     $referredElement: MetaElementReference<FreMetaFunction>;

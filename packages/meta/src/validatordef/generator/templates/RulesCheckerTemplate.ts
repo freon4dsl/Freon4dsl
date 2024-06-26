@@ -9,7 +9,7 @@ import {
     FreErrorSeverity,
     FREON_CORE
 } from "../../../utils";
-import { FreMetaLanguage, FreMetaPrimitiveProperty } from "../../../languagedef/metalanguage";
+import {FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty} from "../../../languagedef/metalanguage";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -225,16 +225,20 @@ export class RulesCheckerTemplate {
     }
 
     private makeIsuniqueRule(rule: IsuniqueRule, locationdescription: string, severity: string, message: string): string {
-        const listpropertyName = rule.listproperty.appliedfeature.toFreString();
-        const listName = rule.list.appliedfeature.toFreString();
-        const uniquelistName = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
-        const referredListproperty = rule.listproperty.findRefOfLastAppliedFeature();
-        const listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
-        const listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
+        const listpropertyName:string = rule.listproperty.appliedfeature.toFreString();
+        const listName: string = rule.list.appliedfeature.toFreString();
+        const uniquelistName: string = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
+        const referredListproperty: FreMetaProperty | undefined = rule.listproperty.findRefOfLastAppliedFeature();
+        let listpropertyTypeName: string = '';
+        let listpropertyTypescript: string = '';
+        if (!!referredListproperty) {
+            listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
+            listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
+        }
         //
         let refAddition: string = "";
         let howToWriteName: string = "this.myWriter.writeNameOnly(elem)";
-        if (!rule.list.findRefOfLastAppliedFeature().isPart) { // the elements in the list are all FreElementReferences
+        if (!!rule.list.findRefOfLastAppliedFeature() && !rule.list.findRefOfLastAppliedFeature()!.isPart) { // the elements in the list are all FreElementReferences
             refAddition += ".referred";
             howToWriteName = "elem.name"; // if the list element is a reference there is no need to call the writer
         }

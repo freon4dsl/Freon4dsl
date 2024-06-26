@@ -41,9 +41,9 @@ export class FreParseLocation {
         }
         return result;
     }
-    filename: string;
-    line: number;
-    column: number;
+    filename: string = '';
+    line: number = 0;
+    column: number = 0;
 }
 
 /**
@@ -53,7 +53,7 @@ export class FreGenericParser<DEFINITION> {
     parser: Parser;
     checker: Checker<DEFINITION>;
 
-    parse(definitionFile: string): DEFINITION {
+    parse(definitionFile: string): DEFINITION | undefined {
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
@@ -64,7 +64,7 @@ export class FreGenericParser<DEFINITION> {
         // clean the error list from the creator functions
         this.cleanNonFatalParseErrors();
         // parse definition file
-        let model: DEFINITION = null;
+        let model: DEFINITION | undefined = undefined;
         try {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
             model = this.parser.parse(langSpec);
@@ -82,15 +82,17 @@ export class FreGenericParser<DEFINITION> {
             }
         }
 
-        // run the checker
-        this.runChecker(model);
+        if (!!model) {
+            // run the checker
+            this.runChecker(model);
+        }
 
         // return the model
         return model;
     }
 
-    parseMulti(filePaths: string[]): DEFINITION {
-        let model: DEFINITION;
+    parseMulti(filePaths: string[]): DEFINITION | undefined {
+        let model: DEFINITION | undefined;
         const submodels: DEFINITION[] = [];
 
         // clean the error list from the creator functions used by this.parser
@@ -126,15 +128,17 @@ export class FreGenericParser<DEFINITION> {
         // combine the submodels into one
         model = this.merge(submodels);
 
-        // run the checker
-        this.runChecker(model);
+        if (!!model) {
+            // run the checker
+            this.runChecker(model);
+        }
 
         // return the model
         return model;
     }
 
     private runChecker(model: DEFINITION) {
-        if (model !== null) {
+        if (model !== undefined && model !== null) {
             this.checker.errors = [];
             this.checker.warnings = [];
             this.checker.check(model);
@@ -153,11 +157,11 @@ export class FreGenericParser<DEFINITION> {
         }
     }
 
-    protected merge(submodels: DEFINITION[]): DEFINITION {
+    protected merge(submodels: DEFINITION[]): DEFINITION | undefined {
         if (submodels.length > 0) {
             throw Error("FreParser.merge should be implemented by its subclasses.");
         }
-        return null;
+        return undefined;
     }
 
     // @ts-expect-error

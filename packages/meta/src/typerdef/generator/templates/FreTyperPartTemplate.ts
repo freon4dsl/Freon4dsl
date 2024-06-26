@@ -13,7 +13,7 @@ export class FreTyperPartTemplate {
     imports: string[] = [];
     importedClassifiers: FreMetaClassifier[] = []; // holds all classifiers that need to be imported, either from LANGUAGE_GEN_FOLDER, or from TYPER_CONCEPTS_FOLDER
 
-    generateTyperPart(language: FreMetaLanguage, typerdef: TyperDef, relativePath: string): string {
+    generateTyperPart(language: FreMetaLanguage, typerdef: TyperDef | undefined, relativePath: string): string {
         if (!!typerdef) {
             return this.generateFromDefinition(typerdef, language, relativePath);
         } else {
@@ -98,7 +98,7 @@ export class FreTyperPartTemplate {
     private generateFromDefinition(typerdef: TyperDef, language: FreMetaLanguage, relativePath: string) {
         this.typerdef = typerdef;
         this.language = language;
-        const rootType = Names.classifier(typerdef?.typeRoot());
+        const rootType: string = !!typerdef?.typeRoot() ? Names.classifier(typerdef?.typeRoot()!) : "unknown-root-type";
         ListUtil.addIfNotPresent(this.imports, rootType);
         const generatedClassName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.FreTyperPart;
@@ -247,7 +247,7 @@ export class FreTyperPartTemplate {
     }
 
     private makeIsType(allTypes: FreMetaClassifier[]) {
-        let result: string;
+        let result: string = '';
         // add statements for all concepts that are marked 'isType'
         // all elements of allTypes should be FreConcepts
         const myList: FreMetaConcept[] = allTypes.filter(t => t instanceof FreMetaConcept) as FreMetaConcept[];

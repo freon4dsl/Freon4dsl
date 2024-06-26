@@ -18,7 +18,7 @@ const containerKeyword: string = "container";
 
 export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> {
     strictUseOfSelf: boolean = true; // if true, then a ThisExpression must have an appliedfeature
-    runner = new CheckRunner(this.errors, this.warnings);
+    runner: CheckRunner = new CheckRunner(this.errors, this.warnings);
 
     constructor(language: FreMetaLanguage) {
         super(language);
@@ -39,7 +39,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                 error: `Language reference ('${definition.languageName}') in Test expression checker does not match language '${this.language.name}' ` +
                         `${ParseLocationUtil.location(definition)}.`,
                 whenOk: () => {
-                    definition.language = this.language;
+                    definition.language = this.language!;
                     definition.conceptExps.forEach(rule => {
                         // rule.language = this.language;
                         this.checkLangExpSet(rule);
@@ -68,7 +68,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
             LOGGER.error("enclosingConcept is null in 'checkLangExp'.");
             return;
         }
-        langExp.language = this.language;
+        langExp.language = this.language!;
         LOGGER.log("checkLangExp " + langExp.toFreString() );
         if (langExp instanceof FreInstanceExp) {
             this.checkInstanceExpression(langExp);
@@ -89,7 +89,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     // LimitedConcept:instanceName
     public checkInstanceExpression(langExp: FreInstanceExp) {
         LOGGER.log("checkInstanceExpression " + langExp?.toFreString());
-        const myLimitedConcept = this.language.findConcept(langExp.sourceName);
+        const myLimitedConcept = this.language!.findConcept(langExp.sourceName);
 
         this.runner.nestedCheck( {
             check: !!myLimitedConcept,
@@ -105,7 +105,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                             whenOk: () => {
                                 const foundInstance = (myLimitedConcept as FreMetaLimitedConcept).instances.find(l => l.name === langExp.instanceName);
                                 this.runner.simpleCheck(!!foundInstance,
-                                    `${langExp.instanceName} is not a predefined instance of ${myLimitedConcept.name} ` +
+                                    `${langExp.instanceName} is not a predefined instance of ${myLimitedConcept!.name} ` +
                                             `${ParseLocationUtil.location(langExp)}.`
                                 );
                                 if (!!foundInstance) {
@@ -161,14 +161,14 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
             check: !!functionName,
             error: `${langExp.sourceName} is not a valid function ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
-                let functionType: FreMetaClassifier = null;
+                let functionType: FreMetaClassifier | undefined = undefined;
                 if (langExp.sourceName === validFunctionNames[2]) { // "typeof"
                     this.runner.nestedCheck({
                         check: langExp.actualparams.length === 1,
                         error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +
                             `found ${langExp.actualparams.length} ${ParseLocationUtil.location(langExp)}.`,
                         whenOk: () => langExp.actualparams?.forEach( p => {
-                                p.language = this.language;
+                                p.language = this.language!;
                                 this.checkLangExp(p, enclosingConcept);
                                 functionType = p.findRefOfLastAppliedFeature()?.type;
                             }
@@ -180,14 +180,14 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                         error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 1 parameter, ` +
                             `found ${langExp.actualparams.length} ${ParseLocationUtil.location(langExp)}.`,
                         whenOk: () => langExp.actualparams?.forEach( p => {
-                                p.language = this.language;
-                                const foundClassifier = this.language.findClassifier(p.sourceName);
+                                p.language = this.language!;
+                                const foundClassifier = this.language!.findClassifier(p.sourceName);
                                 this.runner.nestedCheck({
                                     check: !!foundClassifier,
                                     error: `Cannot find reference to ${p.sourceName} ${ParseLocationUtil.location(langExp)}`,
                                     whenOk: () => {
                                         functionType = foundClassifier;
-                                        p.$referredElement = MetaElementReference.create<FreMetaClassifier>(foundClassifier, "FreClassifier");
+                                        p.$referredElement = MetaElementReference.create<FreMetaClassifier>(foundClassifier!, "FreClassifier");
                                         p.$referredElement.owner = p;
                                     }
                                 });
@@ -200,7 +200,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                         error:  `Function '${functionName}' in '${enclosingConcept.name}' should have 2 parameters, ` +
                             `found ${langExp.actualparams.length} ${ParseLocationUtil.location(langExp)}.`,
                         whenOk: () => langExp.actualparams?.forEach( p => {
-                                p.language = this.language;
+                                p.language = this.language!;
                                 this.checkLangExp(p, enclosingConcept);
                                 // TODO set functionType
                             }

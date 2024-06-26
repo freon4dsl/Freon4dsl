@@ -5,7 +5,7 @@ import { ParserGenUtil } from "../ParserGenUtil";
 import { RightHandSideEntry, RHSPropEntry } from "./RHSEntries/";
 
 export class ConceptRule extends GrammarRule {
-    concept: FreMetaClassifier = null;
+    concept: FreMetaClassifier | undefined = undefined;
     ruleParts: RightHandSideEntry[] = [];
 
     constructor(concept: FreMetaClassifier, projectionName?: string) {
@@ -42,6 +42,9 @@ export class ConceptRule extends GrammarRule {
     }
 
     toMethod(mainAnalyserName: string): string {
+        if (!this.concept) {
+            return '';
+        }
         const myProperties = this.propsToSet();
         // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
         return `${ParserGenUtil.makeComment(this.toGrammar())}
@@ -58,6 +61,9 @@ export class ConceptRule extends GrammarRule {
     }
 
     toString(): string {
+        if (!this.concept) {
+            return '';
+        }
         const indent: string = "\n\t";
         return indent + "ConceptRule: " + this.concept.name + indent + this.ruleParts.map(sub => sub.toString(2)).join(indent);
     }

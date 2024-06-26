@@ -1,5 +1,5 @@
 import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { FreMetaLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { TyperDef } from "../../metalanguage";
 
 /**
@@ -15,9 +15,9 @@ export class FreTyperTemplate {
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.FreTyperPart;
-        let rootType: string;
-        if (!!typerdef) {
-            rootType = Names.classifier(typerdef.typeRoot());
+        let rootType: string = '';
+        if (!!typerdef && !!typerdef.typeRoot()) {
+            rootType = Names.classifier(typerdef.typeRoot() as FreMetaClassifier);
         }
 
         // Template starts here

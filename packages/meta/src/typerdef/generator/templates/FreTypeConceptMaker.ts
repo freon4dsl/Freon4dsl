@@ -160,11 +160,15 @@ export class FreTypeConceptMaker {
 
     // TODO test this method and see if it is better than the one in GenerationHelpers
     private sortConcepts(list: FreMetaConcept[]): FreMetaConcept[] {
-        const result: FreMetaConcept[] = list.map(con => !con.base ? con : null).filter(el => el !== null);
-        const conceptsWithBase: FreMetaConcept[] = list.map(con => con.base ? con : null).filter(el => el !== null);
+        const result: (FreMetaConcept | undefined)[] = list.map(con => !con.base ? con : undefined).filter(el => el !== undefined);
+        const conceptsWithBase: (FreMetaConcept | undefined)[] = list.map(con => con.base ? con : undefined).filter(el => el !== undefined);
         if (conceptsWithBase.length > 0) {
-            ListUtil.addListIfNotPresent(result, this.sortConcepts(conceptsWithBase.map(con => con.base.referred)));
+            ListUtil.addListIfNotPresent(result, this.sortConcepts(conceptsWithBase.map(con => con!.base.referred)));
         }
-        return result;
+        if (result.length > 0) {
+            return result as FreMetaConcept[];
+        } else {
+            return [];
+        }
     }
 }

@@ -8,7 +8,7 @@ import { GenerationStatus, FileUtil } from "../utils";
 // TODO subclasses do not call super.onDefineParameters(): is comment wrong or something else?
 export abstract class FreonGenerateAction extends CommandLineAction {
     private outputFolderArg: CommandLineStringParameter;
-    protected outputFolder: string;
+    protected outputFolder: string = '';
 
     protected defFolder: CommandLineStringParameter;
     protected languageFiles: string[] = [];
@@ -16,27 +16,10 @@ export abstract class FreonGenerateAction extends CommandLineAction {
     protected validFiles: string[] = [];
     protected scopeFiles: string[] = [];
     protected typerFiles: string[] = [];
-    protected idFile: string;
+    protected idFile: string = '';
 
     protected constructor(options: ICommandLineActionOptions) {
         super(options);
-    }
-
-    protected onExecute(): Promise<void> {
-        const self = this;
-        self.outputFolder = this.outputFolderArg.value;
-        // @ts-ignore
-        // error TS6133: 'resolve' is declared but its value is never read.
-        // error TS6133: 'reject' is declared but its value is never read.
-        // The parameters are expected by the constructor of Promise.
-        return new Promise(function(resolve, reject) {
-            self.generate();
-        });
-    }
-
-    public abstract generate(): void;
-
-    protected onDefineParameters(): void {
         this.defFolder = this.defineStringParameter({
             argumentName: "DEFINITIONS_DIR",
             defaultValue: "defs",
@@ -53,6 +36,20 @@ export abstract class FreonGenerateAction extends CommandLineAction {
             required: false
         });
     }
+
+    protected onExecute(): Promise<void> {
+        const self = this;
+        self.outputFolder = this.outputFolderArg.value ? this.outputFolderArg.value : '';
+        // @ts-ignore
+        // error TS6133: 'resolve' is declared but its value is never read.
+        // error TS6133: 'reject' is declared but its value is never read.
+        // The parameters are expected by the constructor of Promise.
+        return new Promise(function(resolve, reject) {
+            self.generate();
+        });
+    }
+
+    public abstract generate(): void;
 
     protected findDefinitionFiles() {
         if (!this.defFolder.value) {

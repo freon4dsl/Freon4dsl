@@ -397,6 +397,7 @@ LimitedTest {
     },
   },
   "_FRE_name": "anyNameWillDo",
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
@@ -559,6 +560,7 @@ PartsTest {
   },
   "_FRE_name": "myName",
   "_FRE_partsOfParts": null,
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
@@ -1463,6 +1465,7 @@ PartsTest {
       "line": 23,
     },
   },
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
@@ -1715,6 +1718,7 @@ PartsTest {
   },
   "_FRE_name": "myName",
   "_FRE_partsOfParts": null,
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
@@ -1901,6 +1905,7 @@ PrimitivesTest {
       "line": 37,
     },
   },
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
@@ -2025,6 +2030,7 @@ PrimsWithKeywordTest {
       },
     },
   ],
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
@@ -2389,6 +2395,7 @@ RefsTest {
       "line": 13,
     },
   },
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,
@@ -3285,6 +3292,7 @@ RefsTest {
       "line": 80,
     },
   },
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,

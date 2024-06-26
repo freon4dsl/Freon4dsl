@@ -1,4 +1,5 @@
 import { MetaElementReference } from "./internal";
+// This import cannot be shortened. Importing "../../utils" results in circular dependencies
 import { FreMetaDefinitionElement } from "../../utils/FreMetaDefinitionElement";
 
 // root of the inheritance structure of all elements in a language definition
@@ -17,8 +18,8 @@ export class FreMetaLanguage extends FreMetaLangElement {
     interfaces: FreMetaInterface[] = [];
     modelConcept: FreMetaModelDescription;
     units: FreMetaUnitDescription[] = [];
-    id: string;
-    key: string;
+    id: string = '';
+    key: string = '';
     usedLanguages: string[] = [];
 
     constructor() {
@@ -50,16 +51,16 @@ export class FreMetaLanguage extends FreMetaLangElement {
         return result.concat(this.interfaces);
     }
 
-    findConcept(name: string): FreMetaConcept {
+    findConcept(name: string): FreMetaConcept | undefined {
         return this.concepts.find(con => con.name === name);
     }
 
-    findInterface(name: string): FreMetaInterface {
+    findInterface(name: string): FreMetaInterface | undefined {
         return this.interfaces.find(con => con.name === name);
     }
 
-    findClassifier(name: string): FreMetaClassifier {
-        let result: FreMetaClassifier;
+    findClassifier(name: string): FreMetaClassifier | undefined {
+        let result: FreMetaClassifier | undefined;
         result = this.findConcept(name);
         if (result === undefined) {
             result = this.findInterface(name);
@@ -74,16 +75,17 @@ export class FreMetaLanguage extends FreMetaLangElement {
     }
 
     findBasicType(name: string): FreMetaClassifier {
+        // If not found, this method returns $freAny
         return FreMetaPrimitiveType.find(name);
     }
 
-    findUnitDescription(name: string): FreMetaUnitDescription {
+    findUnitDescription(name: string): FreMetaUnitDescription | undefined {
         return this.units.find(u => u.name === name);
     }
 }
 
 export abstract class FreMetaClassifier extends FreMetaLangElement {
-    private static __ANY: FreMetaClassifier = null;
+    private static __ANY: FreMetaClassifier;
 
     static get ANY(): FreMetaClassifier {
         if (FreMetaClassifier.__ANY === null || FreMetaClassifier.__ANY === undefined) {
@@ -93,8 +95,8 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
         return this.__ANY;
     }
 
-    id: string;
-    key: string;
+    id: string = '';
+    key: string = '';
 
     private _owningLanguage: FreMetaLanguage;
     originalOwningLanguage: FreMetaLanguage;
@@ -113,7 +115,7 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
         }
     }
 
-    isPublic: boolean;
+    isPublic: boolean = false;
     properties: FreMetaProperty[] = [];
     // TODO remove this attribute and make it a function on 'properties'
     primProperties: FreMetaPrimitiveProperty[] = [];
@@ -153,7 +155,7 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
         return result;
     }
 
-    nameProperty(): FreMetaPrimitiveProperty {
+    nameProperty(): FreMetaPrimitiveProperty | undefined {
         return this.allPrimProperties().find(p => p.name === "name" && p.type === FreMetaPrimitiveType.identifier);
     }
 }
@@ -208,11 +210,8 @@ export class FreMetaUnitDescription extends FreMetaClassifier {
     }
 
     allPrimProperties(): FreMetaPrimitiveProperty[] {
-        const result: FreMetaPrimitiveProperty[] = this.implementedPrimProperties();
-        return result;
+        return this.implementedPrimProperties();
     }
-
-
 }
 
 export class FreMetaInterface extends FreMetaClassifier {
@@ -443,13 +442,13 @@ export class FreMetaConcept extends FreMetaClassifier {
 }
 
 export class FreMetaExpressionConcept extends FreMetaConcept {
-    _isPlaceHolder: boolean;
+    // _isPlaceHolder: boolean;
 }
 
 export class FreMetaBinaryExpressionConcept extends FreMetaExpressionConcept {
     // left: FreExpressionConcept;
     // right: FreExpressionConcept;
-    priority: number;
+    priority: number = -1;
 
     getPriority(): number {
         const p = this.priority;
@@ -460,7 +459,7 @@ export class FreMetaBinaryExpressionConcept extends FreMetaExpressionConcept {
 export class FreMetaLimitedConcept extends FreMetaConcept {
     instances: FreMetaInstance[] = [];
 
-    findInstance(name: string): FreMetaInstance {
+    findInstance(name: string): FreMetaInstance | undefined {
         return this.instances.find(inst => inst.name === name);
     }
 
@@ -475,12 +474,12 @@ export class FreMetaLimitedConcept extends FreMetaConcept {
 }
 
 export class FreMetaProperty extends FreMetaLangElement {
-    id?: string;
-    key?: string;
-    isPublic: boolean;
-    isOptional: boolean;
-    isList: boolean;
-    isPart: boolean; // if false then it is a reference property
+    id?: string = '';
+    key?: string = '';
+    isPublic: boolean = false;
+    isOptional: boolean = false;
+    isList: boolean = false;
+    isPart: boolean = false; // if false then it is a reference property
     implementedInBase: boolean = false;
     private $type: MetaElementReference<FreMetaClassifier>;
     private _owningClassifier: FreMetaClassifier;
@@ -524,11 +523,11 @@ export class FreMetaProperty extends FreMetaLangElement {
 }
 
 export class FreMetaConceptProperty extends FreMetaProperty {
-    hasLimitedType: boolean; // set in checker
+    hasLimitedType: boolean = false; // set in checker
 }
 
 export class FreMetaPrimitiveProperty extends FreMetaProperty {
-    isStatic: boolean;
+    isStatic: boolean = false;
     initialValueList: FreMetaPrimitiveValue[] = [];
 
     get isPrimitive(): boolean {
@@ -549,7 +548,7 @@ export class FreMetaInstance extends FreMetaLangElement {
     // Note that these properties may be undefined, when there is no definition in the .ast file
     props: FreMetaInstanceProperty[] = [];
 
-    nameProperty(): FreMetaInstanceProperty {
+    nameProperty(): FreMetaInstanceProperty | undefined {
         return this.props.find(p => p.name === "name");
     }
 }
@@ -620,14 +619,14 @@ export class FreMetaPrimitiveType extends FreMetaConcept {
     }
 }
 
-export function isBinaryExpression(elem: FreMetaLangElement): elem is FreMetaBinaryExpressionConcept {
-    return elem instanceof FreMetaBinaryExpressionConcept;
-}
-
-export function isExpression(elem: FreMetaLangElement): elem is FreMetaExpressionConcept {
-    return elem instanceof FreMetaExpressionConcept;
-}
-
-export function isLimited(elem: FreMetaLangElement): elem is FreMetaLimitedConcept {
-    return elem instanceof FreMetaLimitedConcept;
-}
+// export function isBinaryExpression(elem: FreMetaLangElement): elem is FreMetaBinaryExpressionConcept {
+//     return elem instanceof FreMetaBinaryExpressionConcept;
+// }
+//
+// export function isExpression(elem: FreMetaLangElement): elem is FreMetaExpressionConcept {
+//     return elem instanceof FreMetaExpressionConcept;
+// }
+//
+// export function isLimited(elem: FreMetaLangElement): elem is FreMetaLimitedConcept {
+//     return elem instanceof FreMetaLimitedConcept;
+// }

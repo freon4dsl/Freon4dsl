@@ -3,7 +3,7 @@ import {
     FreMetaInterface,
     FreLangExp,
     FreLangFunctionCallExp,
-    FreMetaLanguage
+    FreMetaLanguage, FreMetaProperty
 } from "../../../languagedef/metalanguage";
 import {
     Names,
@@ -164,10 +164,10 @@ export class ScoperTemplate {
 
     private addNamespaceExpression(expression: FreLangExp, coreImports: string[]): string {
         let result: string = "";
-        const myRef = expression.findRefOfLastAppliedFeature();
+        const myRef: FreMetaProperty | undefined = expression.findRefOfLastAppliedFeature();
 
         const loopVar: string = "loopVariable";
-        if (myRef.isList) {
+        if (!!myRef && myRef.isList) {
             // add "FreNodeReference" to imports, because now we know that its is used
             ListUtil.addIfNotPresent(coreImports, Names.FreNodeReference);
             result = result.concat(`
@@ -215,7 +215,7 @@ export class ScoperTemplate {
         let result;
         // special case: the expression refers to 'typeof'
         if (expression instanceof FreLangFunctionCallExp && expression.sourceName === "typeof") {
-            let actualParamToGenerate: string;
+            let actualParamToGenerate: string = '';
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
                 actualParamToGenerate = `modelelement.freOwnerDescriptor().owner`;

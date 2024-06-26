@@ -13,7 +13,7 @@ export class ParseLocationUtil {
             line: 1,
             column: 1 }
     };
-    static location(elem: FreMetaDefinitionElement): string {
+    static location(elem: FreMetaDefinitionElement | undefined): string {
         if (!!elem) {
             if (!!elem.location && !!elem.location.filename) {
                 const shortFileName: string = ParseLocationUtil.getShortFileName(elem.location.filename);

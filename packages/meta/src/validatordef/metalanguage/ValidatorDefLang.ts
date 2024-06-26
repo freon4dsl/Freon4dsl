@@ -11,20 +11,20 @@ import { FreMetaDefinitionElement } from "../../utils";
 import { FreErrorSeverity } from "../../utils/generation/FreErrorSeverity";
 
 export class ValidatorDef extends FreMetaDefinitionElement {
-    validatorName: string;
-    languageName: string;
-    conceptRules: ConceptRuleSet[];
+    validatorName: string = '';
+    languageName: string = '';
+    conceptRules: ConceptRuleSet[] = [];
 }
 
 export class ConceptRuleSet extends FreMetaDefinitionElement {
     conceptRef: MetaElementReference<FreMetaConcept>;
-    rules: ValidationRule[];
+    rules: ValidationRule[] = [];
 }
 
 export class ValidationSeverity extends FreMetaDefinitionElement {
     // 'value' is the string that the language engineer has provided in the .valid file
     // it will disregarded after checking, instead 'severity' will be used
-    value: string;
+    value: string = '';
     severity: FreErrorSeverity; // is set by the checker
 }
 
@@ -38,7 +38,7 @@ export class ValidationMessage extends FreMetaDefinitionElement {
 export type ValidationMessagePart = ValidationMessageText | ValidationMessageReference;
 
 export class ValidationMessageText extends FreMetaDefinitionElement {
-    value: string;
+    value: string = '';
     toFreString(): string {
         return this.value;
     }

@@ -16,10 +16,10 @@ const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage;
-    protected validatorGenFolder: string;
-    protected validatorFolder: string;
+    protected validatorGenFolder: string = '';
+    protected validatorFolder: string = '';
 
-    generate(validdef: ValidatorDef): void {
+    generate(validdef: ValidatorDef| undefined): void {
         if (this.language === null) {
             LOGGER.error("Cannot generate validator because language is not set.");
             return;

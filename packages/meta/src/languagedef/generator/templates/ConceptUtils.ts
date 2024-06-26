@@ -25,7 +25,7 @@ export class ConceptUtils {
 
     public static makeBasicProperties(metaType: string, conceptName: string, hasSuper: boolean): string {
         return `readonly $typename: ${metaType} = "${conceptName}";    // holds the metatype in the form of a string
-                ${!hasSuper ? "$id: string;     // a unique identifier" : ""}
+                ${!hasSuper ? "$id: string = '';     // a unique identifier" : ""}
                 parseLocation: ${Names.FreParseLocation};    // if relevant, the location of this element within the source from which it is parsed`;
     }
 
@@ -276,7 +276,7 @@ export class ConceptUtils {
     }
 
     private static makeCopyProperty(freProperty: FreMetaProperty): string {
-        let result: string;
+        let result: string = '';
         if (freProperty.isList) {
             if (freProperty.isPrimitive) {
                 result = `this.${freProperty.name}.forEach(x =>
@@ -321,7 +321,7 @@ export class ConceptUtils {
     }
 
     private static makeMatchEntry(freProperty: FreMetaProperty, importsFromCore: string[]): string {
-        let result: string;
+        let result: string = '';
         if (freProperty.isPrimitive) {
             if (freProperty.isList) {
                 // here we know that matchPrimitiveList needs to be imported => add to imports

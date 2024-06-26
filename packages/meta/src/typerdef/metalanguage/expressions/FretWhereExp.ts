@@ -32,7 +32,7 @@ export class FretWhereExp extends FretExp {
         ${this.conditions.map(cond => cond.toFreString()).join("\n\t\t")}
     }`;
     }
-    get type(): FreMetaClassifier {
+    get type(): FreMetaClassifier |undefined {
         return this.variable.type;
     }
 }

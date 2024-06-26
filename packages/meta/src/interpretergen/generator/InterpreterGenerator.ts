@@ -17,8 +17,8 @@ const LOGGER = new MetaLogger("InterpreterGenerator").mute();
 export class InterpreterGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage;
-    private interpreterFolder: string;
-    private interpreterGenFolder: string;
+    private interpreterFolder: string = '';
+    private interpreterGenFolder: string = '';
     fileNames: string[] = [];
 
     generate(interpreterDef: FreInterpreterDef): void {

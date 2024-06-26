@@ -236,12 +236,12 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
             } else {
                 if (!freProperty.isPart) {
                     // it is a reference, so check whether the type has a name by which it can be referred
-                    const nameProperty: FreMetaPrimitiveProperty = realType.nameProperty();
+                    const nameProperty: FreMetaPrimitiveProperty | undefined = realType.nameProperty();
                     this.runner.nestedCheck({
                         check: !!nameProperty,
                         error: `Type '${realType.name}' cannot be used as a reference, because it has no property 'name: identifier' ${ParseLocationUtil.location(freProperty.typeReference)}.`,
                         whenOk: () => {
-                            this.runner.simpleCheck(nameProperty.type === FreMetaPrimitiveType.identifier,
+                            this.runner.simpleCheck(nameProperty!.type === FreMetaPrimitiveType.identifier,
                                 `Type '${realType.name}' cannot be used as a reference, because its name property is not of type 'identifier' ${ParseLocationUtil.location(freProperty.typeReference)}.`);
                         }
                     });

@@ -1,7 +1,8 @@
 import * as fs from "fs";
+import {WatchEventType} from "fs";
 
 export class FileWatcher {
-    filename: string;
+    filename: string = '';
     lastChanged: number = 0;
     callback: () => void;
 
@@ -15,7 +16,7 @@ export class FileWatcher {
     // error TS6133: 'filename' is declared but its value is never read.
     // error TS6133: 'event' is declared but its value is never read.
     // Note that the params are required by fs.watch.
-    fileWatcher = (event: string, filename: string) => {
+    fileWatcher = (event: WatchEventType, filename: string | null) => {
         const timestamp = fs.statSync(this.filename).mtimeMs;
         const process = this.lastChanged !== timestamp;
         this.lastChanged = timestamp;

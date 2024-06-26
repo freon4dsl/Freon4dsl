@@ -10,7 +10,7 @@ import { MetaElementReference } from "../metalanguage/MetaElementReference";
 
 export class LanguageExpressionTester extends FreMetaLangElement {
     // location: ParseLocation;
-    languageName: string;
+    languageName: string = '';
     language: FreMetaLanguage;
     conceptExps: TestExpressionsForConcept[] = [];
 }
