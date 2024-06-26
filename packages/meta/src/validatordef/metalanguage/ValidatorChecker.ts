@@ -41,7 +41,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     constructor(language: FreMetaLanguage | undefined) {
         super(language);
         LOGGER.log("Created validator checker");
-        if ( this.language !== null || this.language !== undefined ) {
+        if ( this.language !== null && this.language !== undefined ) {
             this.myExpressionChecker = new FreLangExpressionChecker(this.language);
         }
     }
