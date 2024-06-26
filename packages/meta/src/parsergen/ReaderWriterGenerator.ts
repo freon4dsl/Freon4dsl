@@ -20,14 +20,14 @@ const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
  */
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";
-    public language: FreMetaLanguage;
+    public language: FreMetaLanguage | undefined;
     private writerFolder: string = '';
     private writerGenFolder: string = '';
     private readerFolder: string = '';
     private readerGenFolder: string = '';
 
     generate(editDef: FreEditUnit): void {
-        if (this.language === null) {
+        if (this.language === null  || this.language === undefined) {
             LOGGER.error("Cannot generate parser and unparser because language is not set.");
             return;
         }
@@ -86,9 +86,9 @@ export class ReaderWriterGenerator {
 
         // Write the syntax analysers for each unit to file
         grammarModel.parts.forEach(grammarPart => {
-            generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language, grammarPart.unit)}.ts`;
-            indexContent += `export * from "./${Names.unitAnalyser(this.language, grammarPart.unit)}";\n`;
-            const analyserContent = grammarPart.toMethod(this.language, relativePath);
+            generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
+            indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}";\n`;
+            const analyserContent: string = grammarPart.toMethod(this.language!, relativePath);
             let message: string = '';
             if (!!grammarPart.unit) {
                 message = `syntax analyser for unit ${grammarPart.unit?.name}`;

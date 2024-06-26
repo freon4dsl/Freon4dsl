@@ -310,7 +310,7 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "SyntaxAnalyser";
     }
 
-    public static unitAnalyser(language: FreMetaLanguage, unit: FreMetaUnitDescription | FreMetaModelDescription): string {
+    public static unitAnalyser(language: FreMetaLanguage, unit: FreMetaUnitDescription | FreMetaModelDescription | undefined): string {
         if (!!unit) {
             return this.startWithUpperCase(unit?.name) + "SyntaxAnalyserPart";
         } else {
