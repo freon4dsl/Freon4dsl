@@ -15,9 +15,6 @@ import {
     HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil, ExpandableBox
 } from "@freon4dsl/core";
 import { Description, Period, Event } from "../language/gen/";
-import { PeriodBoxProvider } from "./gen/PeriodBoxProvider";
-import exp from "constants";
-import P from "@smui/common/elements/P.svelte";
 
 /**
  * Class CustomStudyConfigurationModelProjection provides an entry point for the language engineer to
