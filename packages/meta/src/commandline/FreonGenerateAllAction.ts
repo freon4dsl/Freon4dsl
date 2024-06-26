@@ -232,13 +232,11 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     };
 
     private generateLanguage = () => {
-        if (this.language !== undefined && this.language !== null) {
-            // generate the language
-            LOG2USER.info("Generating language structure");
-            this.language = new LanguageParser(this.idFile).parseMulti(this.languageFiles);
-            this.languageGenerator.outputfolder = this.outputFolder;
-            this.languageGenerator.generate(this.language!);
-        }
+        // generate the language
+        LOG2USER.info("Generating language structure");
+        this.language = new LanguageParser(this.idFile).parseMulti(this.languageFiles);
+        this.languageGenerator.outputfolder = this.outputFolder;
+        this.languageGenerator.generate(this.language!);
     };
 
     private generateDiagrams = () => {
