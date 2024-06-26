@@ -16,7 +16,7 @@ export class ScheduledStudyConfiguration {
     this.scheduledPeriods = this.getConfiguredPeriods().map(period => new ScheduledPeriod(period));
   }
 
-  getAllScheduledEvents() {
+  getAllEventsInSchedule() {
     return this.scheduledPeriods.map(scheduledPeriod => scheduledPeriod.getAllScheduledEvents().flat()).flat();
   }
 
@@ -61,13 +61,13 @@ export class ScheduledStudyConfiguration {
     return firstPeriod.scheduledEvents.filter(scheduledEvent => scheduledEvent.configuredEvent.schedule.eventStart instanceof Day);
   }
 
-  getReadyEvents(timeline: Timeline) {
-    let readyEvents = this.getAllScheduledEvents().filter(scheduledEvent => scheduledEvent.getInstanceIfEventIsReady(timeline));
+  getEventsReadyToBeScheduled(timeline: Timeline) {
+    let readyEvents = this.getAllEventsInSchedule().filter(scheduledEvent => scheduledEvent.getInstanceIfEventIsReadyToSchedule(timeline));
     return readyEvents;
   }
 
-  isScheduleComplete(timeline): boolean {
-    let firstNoScheduledEvent = this.getAllScheduledEvents().find(scheduledEvent => scheduledEvent.notYetScheduled(timeline));
+  anyEventsToSchedule(timeline): boolean {
+    let firstNoScheduledEvent = this.getAllEventsInSchedule().find(scheduledEvent => scheduledEvent.notYetScheduled(timeline));
     return firstNoScheduledEvent === undefined;
   }
 }

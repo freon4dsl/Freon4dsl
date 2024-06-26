@@ -84,7 +84,7 @@ describe("Simulation of Trial to Generate the Timeline", () => {
 });
 
 
-  it("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
+  it("generates a two visit timeline for a visit 7 days after the study start day", () => {
       // GIVEN a study configuration with one period and two events
       studyConfiguration = utils.addAPeriodAndTwoEvents(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
 
@@ -100,6 +100,24 @@ describe("Simulation of Trial to Generate the Timeline", () => {
       expectedTimeline.setCurrentDay(8);
   
       expect(timeline).toEqual(expectedTimeline);  
+  });
+
+  it.only("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
+    // GIVEN a study configuration with one period and two events
+    studyConfiguration = utils.addEventScheduledOffCompletedEvent(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
+
+    // WHEN the study is simulated and a timeline is generated
+    let simulator = new Simulator(studyConfiguration);
+    simulator.run();
+    let timeline = simulator.timeline;
+
+    // Then the generated timeline has two events on the expected event days
+    let expectedTimeline = new Timeline()
+    addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline)
+    addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 7, expectedTimeline)
+    expectedTimeline.setCurrentDay(8);
+
+    expect(timeline).toEqual(expectedTimeline);  
   });
 
   let expectedTimelineDataAsScript = 

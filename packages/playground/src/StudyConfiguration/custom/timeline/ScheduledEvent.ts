@@ -36,6 +36,7 @@ export class ScheduledEvent {
       const trace = interpreter.getTrace().root.toStringRecursive();
       // console.log(trace);
     }
+    // console.log("ScheduledEvent.day() for: " + this.name() + " is: " + (value as RtNumber).value);
     return (value as RtNumber).value
   }
 
@@ -92,10 +93,13 @@ export class ScheduledEvent {
    * if this event has not been completed on a previous day and the timeline day is at or after the day this event is scheduled for then return a new EventInstance
    * otherwise return null.
    */
-  getInstanceIfEventIsReady(timeline: Timeline): unknown {
-    if (timeline.noCompletedInstanceOf(this) && this.day(timeline) >= timeline.currentDay) {
+  getInstanceIfEventIsReadyToSchedule(timeline: Timeline): unknown {
+    let scheduledDay = this.day(timeline);
+    if (timeline.noCompletedInstanceOf(this) && scheduledDay != undefined && scheduledDay >= timeline.currentDay) {
+      console.log("getInstanceIfEventIsReady: " + this.name() + " is to be scheduled on timeline day: " + timeline.currentDay + " with scheduledDay of: " + scheduledDay );
       return new EventInstance(this);
     } else {
+      console.log("getInstanceIfEventIsReady: " + this.name() + " is NOT to be scheduled on timeline day: " + timeline.currentDay + " with scheduledDay of: " + scheduledDay );
       return null;
     }
   }

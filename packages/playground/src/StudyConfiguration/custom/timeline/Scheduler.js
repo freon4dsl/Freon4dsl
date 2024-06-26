@@ -29,7 +29,7 @@ import * as Sim from "../simjs/sim.js"
     }
 
     scheduleEvent(schedulingMsg, scheduledEvent, timeline, daysToWait) {
-      console.log(schedulingMsg + ": " + scheduledEvent.name() + ' on Day: ' + daysToWait);
+      console.log(schedulingMsg + ": " + scheduledEvent.name() + ' with wait of: ' + daysToWait + ' days');
       let eventInstance = timeline.newEventInstance(scheduledEvent, daysToWait);
       this.setTimer(daysToWait).done(this.eventCompleted, this, [eventInstance]);
       timeline.setScheduled(eventInstance);
@@ -50,11 +50,11 @@ import * as Sim from "../simjs/sim.js"
       timeline.setCompleted(completedEvent);
       timeline.setCurrentDay(this.time())
       timeline.addEvent(completedEvent,this.time());
-      if (this.getScheduledStudyConfiguration().isScheduleComplete(timeline)) {
+      if (this.getScheduledStudyConfiguration().anyEventsToSchedule(timeline)) {
         console.log('No Events to Schedule');
       } else {
         console.log('Scheduling Next Event');
-        let readyScheduledEvents = this.getScheduledStudyConfiguration().getReadyEvents(timeline);
+        let readyScheduledEvents = this.getScheduledStudyConfiguration().getEventsReadyToBeScheduled(timeline);
         for (let scheduledEvent of readyScheduledEvents) {
           let daysToWait = scheduledEvent.daysToWait(timeline, this.time());
           this.scheduleEvent('Scheduling Event', scheduledEvent, timeline, daysToWait);

@@ -60,7 +60,7 @@ export function addAPeriodAndTwoEvents(studyConfiguration: StudyConfiguration, p
 }
 
 
-export function addEventScheduledOffCompletedEvent(studyConfiguration: StudyConfiguration, periodName: string, event1Name: string, event1Day: number, event2Name: string, event2Day ): StudyConfiguration {
+export function addEventScheduledOffCompletedEvent(studyConfiguration: StudyConfiguration, periodName: string, event1Name: string, event1Day: number, event2Name: string, event2Day: number ): StudyConfiguration {
   let period = new Period(periodName);
   period.name = periodName;
 

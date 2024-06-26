@@ -59,9 +59,9 @@ export class Timeline extends RtObject{
     return timelineDay ? timelineDay.events : [];
   }
 
-  getLastInstanceForThisEvent(event: Event): EventInstance {
+  getLastInstanceForThisEvent(eventToMatch: Event): EventInstance {
     let allEventInstances = this.days.flatMap(day => day.events);
-    let eventInstances = allEventInstances.filter(event => event.scheduledEvent.name() === event.name);
+    let eventInstances = allEventInstances.filter(event => eventToMatch.name === event.name);
     return eventInstances[eventInstances.length - 1]; // TODO: sort by day and get the most recent
   }
 

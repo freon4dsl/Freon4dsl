@@ -47,14 +47,16 @@
                 let timeline = ctx.find("timeline") as unknown as Timeline;
                 let referencedEvent = node.$event;
                 let lastInstanceOfReferencedEvent = timeline.getLastInstanceForThisEvent(referencedEvent);
-                console.log("lastInstanceOfReferencedEvent: " + lastInstanceOfReferencedEvent.day);
+                // console.log("evalEventReference reference to: " + referencedEvent.name + " lastInstanceOfReferencedEvent: " + lastInstanceOfReferencedEvent.day);
                 return new RtNumber(lastInstanceOfReferencedEvent.day);
             }
 
             evalEventStart(node: language.EventStart, ctx: InterpreterContext): RtObject {
                 if (node instanceof language.Day) {
+                    console.log("evalEventStart: node is a Day");
                     return main.evaluate(node, ctx);
                 } else if (node instanceof language.When) {
+                    console.log("evalEventStart: node is a When");
                     return main.evaluate(node, ctx);
                 } else {
                     console.log("evalEventSchedule: eventStart is not a Day or When");

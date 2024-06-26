@@ -84,7 +84,7 @@ describe ("Access to simulation data", () => {
           timeline.setCurrentDay(8);
 
           // WHEN the schedule is checked 
-          let readyEvents = scheduledStudyConfiguration.getReadyEvents(timeline);
+          let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(timeline);
 
           // THEN the next event is Visit 2
           console.log("readyEvents #: " + readyEvents.length);
@@ -114,15 +114,28 @@ describe ("Access to simulation data", () => {
           timeline.setCurrentDay(8);
 
           // WHEN the schedule is checked 
-          let readyEvents = scheduledStudyConfiguration.getReadyEvents(timeline);
+          let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(timeline);
 
           // THEN the next and only event is Visit 2
           expect(readyEvents.length).toEqual(1);
           expect(readyEvents[0].configuredEvent.name).toEqual("Visit 2");
         }
-          
       });
+        
+      it.only ("finds no ready events if depend on an unscheduled event" , () => {
+        // GIVEN a scheduled study configuration with an event + 7 days from the first event
+        studyConfiguration = utils.addEventScheduledOffCompletedEvent(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
+        scheduledStudyConfiguration = new ScheduledStudyConfiguration(studyConfiguration);
+        // And there is nothing completed on the timeline
+        let timeline = new Timeline();
+        timeline.setCurrentDay(1);
 
+        // WHEN the schedule is checked for ready events
+        let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(timeline);
+
+        // THEN the next and only event is Visit 1 (because Visit 2 isn't ready till Visit 1 is completed)
+        expect(readyEvents.length).toEqual(1);
+        expect(readyEvents[0].configuredEvent.name).toEqual("Visit 1");
+      });  
     });
-
-  });
+});
