@@ -2,7 +2,7 @@
 import {
     FreNode,
     Box,
-    FreProjection,
+    FreProjection, FreProjectionHandler
     FreTableDefinition,
     GridCellBox,
     HorizontalLayoutBox,
@@ -23,6 +23,8 @@ const dividerSvg: string = `M1 1 L20 1 L20 2 L1 2`;
  */
 export class CustomEducationProjection implements FreProjection {
     name: string = "Manual";
+    // added handler, which is set in EditorDef.ts
+    handler: FreProjectionHandler;
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
         ["FractionLiteralExpression", this.createFractionBox]
     ]);
