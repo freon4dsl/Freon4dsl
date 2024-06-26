@@ -19,8 +19,8 @@ export class Timeline extends RtObject{
     throw new Error('Timelines are not comparable. Method not implemented.');
   }
 
-  newEventInstance(scheduledEvent: ScheduledEvent, day?: number, startDay?: number, endDay?: number) {
-    return new EventInstance(scheduledEvent, day, startDay, endDay);
+  newEventInstance(scheduledEvent: ScheduledEvent, dayEventWillOccurOn?: number, startDay?: number, endDay?: number) {
+    return new EventInstance(scheduledEvent, dayEventWillOccurOn, startDay, endDay);
   }
 
   getDays() {

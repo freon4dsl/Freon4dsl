@@ -5,12 +5,13 @@ import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression,
 import * as utils from "./Utils";
 import { ScheduledEvent, ScheduledEventState } from "../timeline/ScheduledEvent";
 import { TimelineScriptTemplate } from "../templates/TimelineScriptTemplate";
+import { EventsToAdd } from "./Utils";
 
 
-function addScheduledEventAndInstanceToTimeline(studyConfiguration, eventNumber,day, timeline) {
+function addScheduledEventAndInstanceToTimeline(studyConfiguration: StudyConfiguration, eventNumber: number, dayEventCompleted: number, timeline: Timeline) {
   let scheduledEvent = new ScheduledEvent(studyConfiguration.periods[0].events[eventNumber]);
   scheduledEvent.state = ScheduledEventState.Scheduled;
-  let eventInstance = new EventInstance(scheduledEvent, day);
+  let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
   eventInstance.state = EventInstanceState.Completed;
   timeline.addEvent(eventInstance);
   }
@@ -96,15 +97,19 @@ describe("Simulation of Trial to Generate the Timeline", () => {
       // Then the generated timeline has two events on the expected event days
       let expectedTimeline = new Timeline()
       addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline)
-      addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 7, expectedTimeline)
+      addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 8, expectedTimeline)
       expectedTimeline.setCurrentDay(8);
   
       expect(timeline).toEqual(expectedTimeline);  
   });
 
-  it.only("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
+  it("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
     // GIVEN a study configuration with one period and two events
-    studyConfiguration = utils.addEventScheduledOffCompletedEvent(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
+    let listOfEventsToAdd: EventsToAdd[] = [
+      { eventName: "Visit 1", eventDay: 1 },
+      { eventName: "Visit 2", eventDay: 7 }
+    ];
+    studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, "Screening", listOfEventsToAdd);
 
     // WHEN the study is simulated and a timeline is generated
     let simulator = new Simulator(studyConfiguration);
@@ -114,13 +119,38 @@ describe("Simulation of Trial to Generate the Timeline", () => {
     // Then the generated timeline has two events on the expected event days
     let expectedTimeline = new Timeline()
     addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline)
-    addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 7, expectedTimeline)
+    addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 8, expectedTimeline)
     expectedTimeline.setCurrentDay(8);
 
     expect(timeline).toEqual(expectedTimeline);  
   });
 
-  let expectedTimelineDataAsScript = 
+  it("generates a three visit timeline for visits 7 days after the end of the previous visit", () => {
+    // GIVEN a study configuration with one period and two events
+    let listOfEventsToAdd: EventsToAdd[] = [
+      { eventName: "Visit 1", eventDay: 1 },
+      { eventName: "Visit 2", eventDay: 7 },
+      { eventName: "Visit 3", eventDay: 7 }
+    ];
+    studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, "Screening", listOfEventsToAdd);
+
+    // WHEN the study is simulated and a timeline is generated
+    let simulator = new Simulator(studyConfiguration);
+    simulator.run();
+    let timeline = simulator.timeline;
+
+    // Then the generated timeline has two events on the expected event days
+    let expectedTimeline = new Timeline()
+    addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline);
+    addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 8, expectedTimeline);
+    addScheduledEventAndInstanceToTimeline(studyConfiguration, 2, 15, expectedTimeline);
+    expectedTimeline.setCurrentDay(15);
+
+    expect(timeline).toEqual(expectedTimeline);  
+  });
+
+
+let expectedTimelineDataAsScript = 
 `  var groups = new vis.DataSet([
   { "content": "<b>Phase</b>", "id": "Phase", className: 'phase' },
   { "content": "Visit 1", "id": "Visit 1" },

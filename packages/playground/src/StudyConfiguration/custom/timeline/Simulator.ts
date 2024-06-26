@@ -37,10 +37,11 @@ export class Simulator {
     // Setup the simulator so it uses the Scheduler and link the Scheduler to this Simulator instance
     // This Scheduler is JavaScript and passing the Simulator instance to it is a way to allow the JavaScript to call back into the TypeScript data structures.
     this.sim = new Sim.Sim();
-    this.sim.addEntity(Scheduler, "Scheduler", this);
     this.sim.setLogger(function (s: string) {
        log(s);
-    });    // Run the simulation for the appropriate number of days
+    });
+    this.sim.addEntity(Scheduler, "Scheduler", this);
+    // Run the simulation for the appropriate number of days
     console.log("running simulation...");
     let results = this.sim.simulate(50); 
     return results;

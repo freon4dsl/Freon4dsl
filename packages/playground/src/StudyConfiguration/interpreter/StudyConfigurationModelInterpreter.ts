@@ -27,7 +27,6 @@
             }
 
             evalWhen(node: language.When, ctx: InterpreterContext): RtObject {
-                // console.log("evalWhen node.startWhen class: " + node.startWhen.constructor.name);
                 return main.evaluate(node.startWhen, ctx);
             }
 

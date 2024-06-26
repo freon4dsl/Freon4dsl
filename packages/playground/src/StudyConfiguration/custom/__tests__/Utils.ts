@@ -18,6 +18,7 @@ export function createWhenEventSchedule(eventName: string, binaryExpression: Bin
   let whenExpression = new When(eventName + binaryExpression.toString);
   whenExpression.startWhen = binaryExpression;
   eventSchedule.eventStart = whenExpression;
+  console.log("eventSchedule: " + eventSchedule.toString());
   return eventSchedule;
 }
 
@@ -75,6 +76,37 @@ export function addEventScheduledOffCompletedEvent(studyConfiguration: StudyConf
 
   createEventAndAddToPeriod(period, event2Name, when);
 
+  studyConfiguration.periods.push(period);
+  return studyConfiguration;
+}
+
+export interface EventsToAdd {
+  eventName: string;
+  eventDay: number;
+}
+
+export function addEventsScheduledOffCompletedEvents(studyConfiguration: StudyConfiguration, periodName: string, eventsToAdd: EventsToAdd[]  ): StudyConfiguration {
+
+  let period = new Period(periodName);
+  period.name = periodName;
+  // Setup the study start event
+  let dayEventSchedule = createEventScheduleStartingOnADay(eventsToAdd[0].eventName, eventsToAdd[0].eventDay);
+  let previousEvent = createEventAndAddToPeriod(period, eventsToAdd[0].eventName, dayEventSchedule);
+
+  // Add subsequent events scheduled off the previous event
+  let firstEvent = true;
+  eventsToAdd.forEach(eventToAdd => {
+    if (firstEvent) { // Skip the first event as it is already added
+      firstEvent = false;
+      return;
+    }
+    let eventReference = new EventReference(eventToAdd.eventName);
+    let freNodeReference = FreNodeReference.create(previousEvent, "Event");
+    eventReference.event = freNodeReference;
+    let when = createWhenEventSchedule(eventToAdd.eventName, PlusExpression.create({left: eventReference,
+                                                                                   right: Number.create({value:eventToAdd.eventDay})}));
+    previousEvent = createEventAndAddToPeriod(period, eventToAdd.eventName, when);
+  });
   studyConfiguration.periods.push(period);
   return studyConfiguration;
 }

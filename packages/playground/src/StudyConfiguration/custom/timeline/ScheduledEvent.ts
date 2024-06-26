@@ -34,7 +34,13 @@ export class ScheduledEvent {
       console.log("interpreter isRtError, value: " + value.toString());
     } else {
       const trace = interpreter.getTrace().root.toStringRecursive();
-      // console.log(trace);
+      if (!timeline) {
+        console.log("ScheduledEvent.day() timeline is null: " + trace);
+      } else {        
+      if (timeline.currentDay > 8) {
+        console.log("ScheduledEvent.day() trace: " + trace);
+        }
+      }
     }
     // console.log("ScheduledEvent.day() for: " + this.name() + " is: " + (value as RtNumber).value);
     return (value as RtNumber).value
@@ -45,8 +51,10 @@ export class ScheduledEvent {
   // otherwise return the number of days to wait from the timeline's current day.
   daysToWait(timeline: Timeline) {
     if (this.configuredEvent.schedule.eventStart instanceof Day) {
+      console.log("ScheduledEvent.daysToWait() for: " + this.name() + " timeline.currentDay: " + timeline.currentDay + " day: " + this.day(timeline) + " result: " + this.day(timeline));
       return this.day(timeline);
     } else {
+      console.log("ScheduledEvent.daysToWait() for: " + this.name() + " timeline.currentDay: " + timeline.currentDay + " day: " + this.day(timeline) + " result: " + (this.day(timeline) - timeline.currentDay));
       return this.day(timeline) - timeline.currentDay;
     }
   }
