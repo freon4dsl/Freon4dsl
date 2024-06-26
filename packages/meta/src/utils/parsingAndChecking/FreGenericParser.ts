@@ -47,10 +47,13 @@ export class FreParseLocation {
 }
 
 /**
- * Generic Parser, subclasses need to initialize the parser, checker and msg fields.
+ * Generic Parser, subclasses need to initialize the parser, and checker fields.
  */
 export class FreGenericParser<DEFINITION> {
+    // todo find a way to ensure that these props are set by the subclasses, without introducing lots of test of undefined
+    // @ts-ignore, the parser is set in each of the subclasses
     parser: Parser;
+    // @ts-ignore, the checker is set in each of the subclasses
     checker: Checker<DEFINITION>;
 
     parse(definitionFile: string): DEFINITION | undefined {
