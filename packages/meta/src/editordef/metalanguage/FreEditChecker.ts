@@ -35,7 +35,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     }
 
     runner: CheckRunner;
-    private myExpressionChecker: FreLangExpressionChecker;
+    private myExpressionChecker: FreLangExpressionChecker | undefined;
     private propsWithTableProjection: FreEditPropertyProjection[] = [];
 
     constructor(language: FreMetaLanguage) {
@@ -43,6 +43,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         if (!!this.language) {
             this.myExpressionChecker = new FreLangExpressionChecker(this.language);
         }
+        // this instance is never used
+        this.runner = new CheckRunner(this.errors, this.warnings);
     }
 
     /**
@@ -56,15 +58,12 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             throw new Error(`Editor definition checker does not known the language, exiting ` +
                 `${ParseLocationUtil.location(editUnit)}.`);
         }
-        // create a check runner
-        this.runner = new CheckRunner(this.errors, this.warnings);
+        // // create a check runner
+        // this.runner = new CheckRunner(this.errors, this.warnings);
         // reset global(s)
         this.propsWithTableProjection = [];
 
         // get the language against which this editor definition should be checked and resolve all references
-        if (this.language === null || this.language === undefined) {
-            throw new Error(`Editor definition checker does not known the language.`);
-        }
         editUnit.language = this.language;
         this.resolveReferences(editUnit);
 
@@ -92,8 +91,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             `No editor with name 'default' found, a default editor will be generated.`);
 
         // add any messages found by the expression checker
-        this.errors = this.errors.concat(this.myExpressionChecker.errors);
-        this.warnings = this.warnings.concat(this.myExpressionChecker.warnings);
+        if (!!this.myExpressionChecker) {
+            this.errors = this.errors.concat(this.myExpressionChecker.errors);
+            this.warnings = this.warnings.concat(this.myExpressionChecker.warnings);
+        }
     }
 
     private checkUniqueNameOfProjectionGroup(names: string[], group: FreEditProjectionGroup) {
@@ -467,7 +468,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         LOGGER.log("checking extra info on classifier " + classifierInfo.classifier?.name);
         if (!!classifierInfo.classifier.referred) { // error message done elsewhere
             // check the reference shortcut and change the expression into a reference to a property
-            if (!!classifierInfo.referenceShortcutExp) {
+            if (!!classifierInfo.referenceShortcutExp && !!this.myExpressionChecker) {
                 this.myExpressionChecker.checkLangExp(classifierInfo.referenceShortcutExp, classifierInfo.classifier.referred);
                 const xx: FreMetaProperty | undefined = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
                 // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat

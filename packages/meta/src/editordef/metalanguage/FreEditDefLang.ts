@@ -34,7 +34,7 @@ export enum ListJoinType {
  * The root of the complete editor definition
  */
 export class FreEditUnit extends FreMetaDefinitionElement {
-    language: FreMetaLanguage;
+    language: FreMetaLanguage | undefined;
     projectiongroups: FreEditProjectionGroup[] = [];
     classifiersUsedInSuperProjection: string[] = []; // holds the names of all classifiers that are refered in an FreEditSuperProjection
 
@@ -47,9 +47,13 @@ export class FreEditUnit extends FreMetaDefinitionElement {
      * Lowest precedence first!
      */
     getAllNonDefaultProjectiongroups(): FreEditProjectionGroup[] {
-        const result = this.projectiongroups.filter(group => group.name !== Names.defaultProjectionName);
-        result.sort ( (a, b) => {
-            return a.precedence - b.precedence;
+        const result: FreEditProjectionGroup[] = this.projectiongroups.filter((group: FreEditProjectionGroup): boolean => group.name !== Names.defaultProjectionName);
+        result.sort ( (a: FreEditProjectionGroup, b: FreEditProjectionGroup): number => {
+            if (a.precedence !== undefined && b.precedence !== undefined) {
+                return a.precedence - b.precedence;
+            } else {
+                return 0;
+            }
         });
         return result;
     }
@@ -111,11 +115,11 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
     standardBooleanProjection?: BoolKeywords = undefined; // may only be present in default group
     standardReferenceSeparator?: string = undefined;      // may only be present in default group
     extras: ExtraClassifierInfo[] = [];                   // may only be present in default group
-    owningDefinition: FreEditUnit;
-    precedence: number;
+    owningDefinition: FreEditUnit | undefined;
+    precedence: number | undefined;
 
     findProjectionsForType(cls: FreMetaClassifier): FreEditClassifierProjection[] {
-        let tmp: FreEditClassifierProjection[] | undefined = this.projections.filter(con => con.classifier.referred === cls);
+        let tmp: FreEditClassifierProjection[] | undefined = this.projections.filter((con: FreEditClassifierProjection): boolean => con.classifier?.referred === cls);
         if (tmp === undefined) {
             tmp = [];
         }
@@ -123,16 +127,16 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
     }
 
     findTableProjectionForType(cls: FreMetaClassifier): FreEditTableProjection | undefined {
-        return this.allTableProjections().find(con => con.classifier.referred === cls);
+        return this.allTableProjections().find(con => con.classifier?.referred === cls);
     }
 
     findNonTableProjectionForType(cls: FreMetaClassifier): FreEditProjection | undefined {
-        return this.allNonTableProjections().find(con => con.classifier.referred === cls);
+        return this.allNonTableProjections().find(con => con.classifier?.referred === cls);
     }
 
     findExtrasForType(cls: FreMetaClassifier): ExtraClassifierInfo | undefined {
         if (!!this.extras) {
-            return this.extras.find(con => con.classifier.referred === cls);
+            return this.extras.find(con => con.classifier?.referred === cls);
         } else {
             return undefined;
         }
@@ -162,7 +166,7 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
  */
 export abstract class FreEditClassifierProjection extends FreMetaDefinitionElement {
     name: string = '';
-    classifier: MetaElementReference<FreMetaClassifier>;
+    classifier: MetaElementReference<FreMetaClassifier> | undefined;
     toString(): string {
         return `TO BE IMPLEMENTED BY SUBCLASSES`;
     }
@@ -232,7 +236,7 @@ export class FreEditTableProjection extends FreEditClassifierProjection {
  * Holds extra information, defined in the default editor, per classifier
  */
 export class ExtraClassifierInfo extends FreMetaDefinitionElement {
-    classifier: MetaElementReference<FreMetaClassifier>;
+    classifier: MetaElementReference<FreMetaClassifier> | undefined;
     // The string that triggers the creation of an object of this class in the editor.
     trigger: string = '';
     // The property to be used when an element of type 'classifier' is used within a reference.

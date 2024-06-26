@@ -18,13 +18,13 @@ const LOGGER = new MetaLogger("FreonTyperGenerator");
  */
 export class FreonTyperGenerator {
     public outputfolder: string = ".";
-    public language: FreMetaLanguage;
+    public language: FreMetaLanguage | undefined;
     protected typerGenFolder: string = '';
     protected typerConceptsFolder: string = '';
     protected typerFolder: string = '';
 
     generate(typerdef: TyperDef | undefined): void {
-        if (this.language === null) {
+        if (this.language === undefined || this.language === null) {
             LOGGER.error("Cannot generate typer because language is not set.");
             return;
         }
@@ -32,11 +32,11 @@ export class FreonTyperGenerator {
         this.getFolderNames();
         LOGGER.log("Generating typer in folder " + this.typerGenFolder);
 
-        const typer = new FreTyperTemplate();
-        const typerDef = new TyperDefTemplate();
-        const typeConceptMaker = new FreTypeConceptMaker();
-        const customPart = new FreCustomTyperPartTemplate();
-        const typerPart = new FreTyperPartTemplate();
+        const typer: FreTyperTemplate = new FreTyperTemplate();
+        const typerDef: TyperDefTemplate= new TyperDefTemplate();
+        const typeConceptMaker: FreTypeConceptMaker = new FreTypeConceptMaker();
+        const customPart: FreCustomTyperPartTemplate = new FreCustomTyperPartTemplate();
+        const typerPart: FreTyperPartTemplate = new FreTyperPartTemplate();
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.typerFolder);
@@ -50,7 +50,7 @@ export class FreonTyperGenerator {
         FileUtil.deleteFilesInDir(this.typerGenFolder, generationStatus);
 
         // set relative path to get the imports right
-        let relativePath = "../../";
+        let relativePath: string = "../../";
 
         //  Generate typer
         if (!!typerdef && typerdef.typeConcepts.length > 0 ) {
@@ -75,7 +75,7 @@ export class FreonTyperGenerator {
         // fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
         LOGGER.log(`Generating typerPart: ${this.typerGenFolder}/${Names.typerPart(this.language)}.ts`);
-        const checkerFile = FileUtil.pretty(typerPart.generateTyperPart(this.language, typerdef, relativePath), "TyperPart Class", generationStatus);
+        const checkerFile: string = FileUtil.pretty(typerPart.generateTyperPart(this.language, typerdef, relativePath), "TyperPart Class", generationStatus);
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typerPart(this.language)}.ts`, checkerFile);
 
         LOGGER.log(`Generating typer gen index: ${this.typerGenFolder}/index.ts`);
@@ -118,7 +118,7 @@ export class FreonTyperGenerator {
         FileUtil.deleteDirAndContent(this.typerGenFolder);
         if (force) {
             FileUtil.deleteFile(`${this.typerFolder}/index.ts`);
-            if (this.language === null) {
+            if (this.language === undefined || this.language === null) {
                 LOG2USER.error("Cannot remove all files because language is not set.");
             } else {
                 FileUtil.deleteFile(`${this.typerFolder}/${Names.customTyper(this.language)}.ts`);
@@ -126,7 +126,7 @@ export class FreonTyperGenerator {
             FileUtil.deleteDirIfEmpty(this.typerFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOG2USER.info(`Not removed: ${this.typerFolder}/${Names.customTyper(this.language)}.ts` +
+            LOG2USER.info(`Not removed: ${this.typerFolder}/${!!this.language ? Names.customTyper(this.language): "<Custom Typer>"}.ts` +
             "\n\t" + `${this.typerFolder}/index.ts`);
         }
     }
