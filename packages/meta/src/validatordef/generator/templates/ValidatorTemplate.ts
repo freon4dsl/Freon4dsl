@@ -13,8 +13,8 @@ export class ValidatorTemplate {
     validatorInterfaceName: string = Names.FreValidator;
     typerInterfaceName: string = Names.FreTyper;
 
-    generateValidator(language: FreMetaLanguage, validdef: ValidatorDef, relativePath: string): string {
-        const doValidDef = validdef !== null && validdef !== undefined;
+    generateValidator(language: FreMetaLanguage, validdef: ValidatorDef | undefined, relativePath: string): string {
+        const doValidDef: boolean = validdef !== null && validdef !== undefined;
 
         const allLangConcepts: string = Names.allConcepts();
         const generatedClassName: string = Names.validator(language);
@@ -101,7 +101,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateGenIndex(language: FreMetaLanguage, validdef: ValidatorDef): string {
+    generateGenIndex(language: FreMetaLanguage, validdef: ValidatorDef | undefined): string {
         return `
         export * from "./${Names.nonOptionalsChecker(language)}";
         export * from "./${Names.validator(language)}";

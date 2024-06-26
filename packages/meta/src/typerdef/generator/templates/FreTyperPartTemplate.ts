@@ -13,7 +13,7 @@ export class FreTyperPartTemplate {
     imports: string[] = [];
     importedClassifiers: FreMetaClassifier[] = []; // holds all classifiers that need to be imported, either from LANGUAGE_GEN_FOLDER, or from TYPER_CONCEPTS_FOLDER
 
-    generateTyperPart(language: FreMetaLanguage, typerdef: TyperDef, relativePath: string): string {
+    generateTyperPart(language: FreMetaLanguage, typerdef: TyperDef | undefined, relativePath: string): string {
         if (!!typerdef) {
             return this.generateFromDefinition(typerdef, language, relativePath);
         } else {

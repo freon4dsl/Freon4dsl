@@ -15,6 +15,7 @@ export class FreonGenerateScoper extends FreonGeneratePartAction {
             documentation:
                 "Generates TypeScript code for the scoper of language defined in the .ast files. " + "The scoper definition is found in the .scope files."
         });
+        this.scoperGenerator = new ScoperGenerator();
     }
 
     generate(): void {
@@ -23,7 +24,6 @@ export class FreonGenerateScoper extends FreonGeneratePartAction {
         if (this.language === null || this.language === undefined) {
             return;
         }
-        this.scoperGenerator = new ScoperGenerator();
         this.scoperGenerator.language = this.language;
         this.scoperGenerator.outputfolder = this.outputFolder;
 

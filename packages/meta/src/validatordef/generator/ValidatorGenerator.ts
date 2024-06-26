@@ -19,7 +19,7 @@ export class ValidatorGenerator {
     protected validatorGenFolder: string = '';
     protected validatorFolder: string = '';
 
-    generate(validdef: ValidatorDef): void {
+    generate(validdef: ValidatorDef| undefined): void {
         if (this.language === null) {
             LOGGER.error("Cannot generate validator because language is not set.");
             return;

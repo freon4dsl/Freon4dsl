@@ -10,7 +10,7 @@ import { LOG2USER } from "../../utils/UserLogger";
 import { FreTypeConceptMaker } from "./templates/FreTypeConceptMaker";
 import { TyperDefTemplate } from "./templates/TyperDefTemplate";
 
-const LOGGER = new MetaLogger("FreonTyperGenerator").mute();
+const LOGGER = new MetaLogger("FreonTyperGenerator");
 
 /**
  * This class generates the implementation for a typer definition.
@@ -23,7 +23,7 @@ export class FreonTyperGenerator {
     protected typerConceptsFolder: string = '';
     protected typerFolder: string = '';
 
-    generate(typerdef: TyperDef): void {
+    generate(typerdef: TyperDef | undefined): void {
         if (this.language === null) {
             LOGGER.error("Cannot generate typer because language is not set.");
             return;

@@ -112,12 +112,10 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         try {
             if (this.typerFiles.length > 0) {
                 typer = new FreTyperMerger(this.language).parseMulti(this.typerFiles);
-                 if (!!typer) {
-                     this.typerGenerator.language = this.language;
-                     this.typerGenerator.outputfolder = this.outputFolder;
-                     this.typerGenerator.generate(typer);
-                 }
             }
+            this.typerGenerator.language = this.language;
+            this.typerGenerator.outputfolder = this.outputFolder;
+            this.typerGenerator.generate(typer);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 LOG2USER.error("Stopping typer generation because of errors: " + e.message + "\n" + e.stack);
@@ -160,12 +158,10 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         try {
             if (this.scopeFiles.length > 0) {
                 scoper = new ScoperParser(this.language).parseMulti(this.scopeFiles);
-                if (!!scoper) {
-                    this.scoperGenerator.language = this.language;
-                    this.scoperGenerator.outputfolder = this.outputFolder;
-                    this.scoperGenerator.generate(scoper);
-                }
             }
+            this.scoperGenerator.language = this.language;
+            this.scoperGenerator.outputfolder = this.outputFolder;
+            this.scoperGenerator.generate(scoper);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 LOG2USER.error("Stopping scoper generation because of errors: " + e.message + "\n" + e.stack);
@@ -183,12 +179,10 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         try {
             if (this.validFiles.length > 0) {
                 validator = new ValidatorParser(this.language).parseMulti(this.validFiles);
-                if (!!validator) {
-                    this.validatorGenerator.language = this.language;
-                    this.validatorGenerator.outputfolder = this.outputFolder;
-                    this.validatorGenerator.generate(validator);
-                }
             }
+            this.validatorGenerator.language = this.language;
+            this.validatorGenerator.outputfolder = this.outputFolder;
+            this.validatorGenerator.generate(validator);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
