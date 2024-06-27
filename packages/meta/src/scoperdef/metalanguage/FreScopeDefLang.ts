@@ -14,15 +14,15 @@ export class ScopeDef extends FreMetaDefinitionElement {
 }
 
 export class ScopeConceptDef extends FreMetaDefinitionElement {
-    conceptRef: MetaElementReference<FreMetaConcept>;
-    namespaceAdditions: FreNamespaceAddition;
-    alternativeScope: FreAlternativeScope;
+    conceptRef: MetaElementReference<FreMetaConcept> | undefined;
+    namespaceAdditions: FreNamespaceAddition | undefined;
+    alternativeScope: FreAlternativeScope | undefined;
 }
 
 export class FreNamespaceAddition extends FreMetaDefinitionElement {
-    expressions: FreLangExp[];
+    expressions: FreLangExp[] = [];
 }
 
 export class FreAlternativeScope extends FreMetaDefinitionElement {
-    expression: FreLangExp;
+    expression: FreLangExp | undefined;
 }

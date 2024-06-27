@@ -1,5 +1,5 @@
 import { CommandLineAction, CommandLineStringParameter, ICommandLineActionOptions } from "@rushstack/ts-command-line";
-import { GenerationStatus, FileUtil } from "../utils";
+import {GenerationStatus, FileUtil, LOG2USER} from "../utils";
 
 /**
  * Generic generator action. The only option defined here is the -o flag for the output folder.
@@ -74,7 +74,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
             } else if (filename.endsWith("id.json")) {
                 this.idFile = filename;
             } else {
-                console.log("WARNING: unrecognized file: " + filename)
+                LOG2USER.warning("WARNING: unrecognized file: " + filename);
             }
         }
     }

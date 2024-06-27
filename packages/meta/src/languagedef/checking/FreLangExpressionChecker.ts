@@ -72,8 +72,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
         LOGGER.log("checkLangExp " + langExp.toFreString() );
         if (langExp instanceof FreInstanceExp) {
             this.checkInstanceExpression(langExp);
-        } else
-        if (langExp instanceof FreLangSelfExp) {
+        } else if (langExp instanceof FreLangSelfExp) {
             this.checkSelfExpression(langExp, enclosingConcept);
         } else if (langExp instanceof FreLangConceptExp) {
             this.checkConceptExpression(langExp, enclosingConcept);

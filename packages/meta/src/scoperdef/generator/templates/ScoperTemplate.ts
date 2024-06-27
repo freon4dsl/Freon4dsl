@@ -101,18 +101,19 @@ export class ScoperTemplate {
     private makeAdditionalNamespaceTexts(scopedef: ScopeDef, coreImports: string[]) {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceAdditions) {
-                const myClassifier = def.conceptRef.referred;
-                // let isDone: boolean = false;
-                const comment = "// based on namespace addition for " + myClassifier.name + "\n";
-                ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
-                if (myClassifier instanceof FreMetaInterface) {
-                    for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
-                        this.makeAdditionalNamespaceTextsForConcept(implementor, def, comment, coreImports);
-                        ListUtil.addIfNotPresent(this.languageImports, Names.concept(implementor));
-                    }
-                } else {
-                    this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, comment, coreImports);
+                const myClassifier: FreMetaConcept | undefined = def.conceptRef?.referred;
+                if (!!myClassifier) {
+                    const comment = "// based on namespace addition for " + myClassifier.name + "\n";
                     ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
+                    if (myClassifier instanceof FreMetaInterface) {
+                        for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
+                            this.makeAdditionalNamespaceTextsForConcept(implementor, def, comment, coreImports);
+                            ListUtil.addIfNotPresent(this.languageImports, Names.concept(implementor));
+                        }
+                    } else {
+                        this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, comment, coreImports);
+                        ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
+                    }
                 }
             }
         }
@@ -130,8 +131,10 @@ export class ScoperTemplate {
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(comment);
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
             `if (element instanceof ${typeName}) {`);
-        for (const expression of def.namespaceAdditions.expressions) {
-            this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(this.addNamespaceExpression(expression, coreImports));
+        if (!!def.namespaceAdditions) {
+            for (const expression of def.namespaceAdditions.expressions) {
+                this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(this.addNamespaceExpression(expression, coreImports));
+            }
         }
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
             `}\n`);
@@ -139,9 +142,9 @@ export class ScoperTemplate {
 
     private makeAlternativeScopeTexts(scopedef: ScopeDef) {
         for (const def of scopedef.scopeConceptDefs) {
-            if (!!def.alternativeScope) {
-                const conceptName = def.conceptRef.referred.name;
-                // we are adding to three textstrings
+            if (!!def.alternativeScope && !!def.conceptRef) {
+                const conceptName: string = def.conceptRef.referred.name;
+                // we are adding to three text strings
                 // first, to the import statements
                 ListUtil.addIfNotPresent(this.languageImports, Names.classifier(def.conceptRef.referred));
                 // console.log("Adding 444: " + Names.classifier(def.conceptRef.referred)  + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
@@ -153,11 +156,13 @@ export class ScoperTemplate {
                      }`);
 
                 // third, to the 'getAlternativeScope' method
-                this.getAlternativeScopeText = this.getAlternativeScopeText.concat(
-                    `if (!!modelelement && modelelement instanceof ${conceptName}) {
+                if (!!def.alternativeScope.expression) {
+                    this.getAlternativeScopeText = this.getAlternativeScopeText.concat(
+                        `if (!!modelelement && modelelement instanceof ${conceptName}) {
                         // use alternative scope '${def.alternativeScope.expression.toFreString()}'
                         ${this.altScopeExpToTypeScript(def.alternativeScope.expression)}
                     }`);
+                }
             }
         }
     }
