@@ -26,11 +26,8 @@ import { Description, Period, Event } from "../language/gen/";
  */
 export class CustomStudyConfigurationModelProjection implements FreProjection {
     name: string = "Manual";
-
-    // added handler, which is set in EditorDef.ts
     handler: FreProjectionHandler;
-
-     // add your custom methods here
+    // add your custom methods here
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
         ["Description", this.createDescription],
         ["Period", this.createPeriod],

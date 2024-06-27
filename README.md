@@ -45,6 +45,11 @@ Goto the playground directory `packages/playground` (or stay there if you are al
 This will open a browser with the example from the playground package on 
 the URL displayed: `http://localhost:5000/`. The example and all other projects in playground are
 work in progress.
+## Testing
+```bash
+    cd Freon4dsl/packages/playground/src/StudyConfiguration/custom/
+    npm run test
+``` 
 ## Source organisation
 The source code for Freon is organised into the following packages.
 * *docs*: documentation, i.e. this website

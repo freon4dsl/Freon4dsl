@@ -12,8 +12,8 @@ import { FreNode, Box, FreProjection, FreProjectionHandler, FreTableDefinition }
  */
 export class CustomDocuProjectProjection implements FreProjection {
     name: string = "Manual";
-    // added handler, which is set in EditorDef.ts
     handler: FreProjectionHandler;
+
 
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
         // register your custom box methods here
