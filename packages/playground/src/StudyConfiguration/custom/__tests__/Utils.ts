@@ -2,6 +2,8 @@ import * as Sim from "../simjs/sim.js"
 import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
 import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference, RepeatCondition, RepeatUnit } from "../../language/gen/index";
 import { FreNodeReference } from "@freon4dsl/core";
+import { EventInstance, EventInstanceState, Timeline } from "../timeline/Timeline";
+import { ScheduledEvent, ScheduledEventState } from "../timeline/ScheduledEvent";
 
 // Setup the sim.js environment and an empty StudyConfiguration.
 export function setupEnvironment(): StudyConfiguration{
@@ -31,16 +33,15 @@ export function createEventScheduleStartingOnADay(uniquePrefix: string, startDay
   return eventSchedule;
 }
 
-// export function createEventScheduleThatRepeats(eventName: string, numberOfRepeats: number) {
-//   let eventSchedule = createEventScheduleStartingOnADay(eventName, 1);
-//   let repeatCondition = new RepeatCondition("RepeatCount-" + eventName);
-//   repeatCondition.maxRepeats = numberOfRepeats;
-//   let repeatUnit = new RepeatUnit("");
-//   repeatCondition.repeatUnit = RepeatUnit.daily;
-
-//   eventSchedule.eventRepeat = repeatCondition;
-//   return eventSchedule;
-// }
+export function createEventScheduleThatRepeats(eventName: string, numberOfRepeats: number) {
+  let eventSchedule = createEventScheduleStartingOnADay(eventName, 1);
+  let repeatCondition = new RepeatCondition("RepeatCount-" + eventName);
+  repeatCondition.maxRepeats = numberOfRepeats;
+  let reference = FreNodeReference.create(RepeatUnit.weekly, "RepeatUnit");
+  repeatCondition.repeatUnit = reference;
+  eventSchedule.eventRepeat = repeatCondition;
+  return eventSchedule;
+}
 
 // Add a Event DSL element to a Period DSL element.
 export function createEventAndAddToPeriod(period: Period, eventName: string, eventSchedule: EventSchedule): Event {
@@ -122,19 +123,24 @@ export function addEventsScheduledOffCompletedEvents(studyConfiguration: StudyCo
   return studyConfiguration;
 }
 
-// export function addRepeatingEvents(studyConfiguration: StudyConfiguration, periodName: string, eventsToAdd: EventsToAdd[]): StudyConfiguration {
-//   let period = new Period(periodName);
-//   period.name = periodName;
-//   // Setup the study start event
-//   let dayEventSchedule = createEventScheduleThatRepeats(eventsToAdd[0].eventName, eventsToAdd[0].repeat);
-//   let event = createEventAndAddToPeriod(period, eventsToAdd[0].eventName, dayEventSchedule);
+export function addRepeatingEvents(studyConfiguration: StudyConfiguration, periodName: string, eventsToAdd: EventsToAdd[]): StudyConfiguration {
+  let period = new Period(periodName);
+  period.name = periodName;
+  // Setup the study start event
+  let dayEventSchedule = createEventScheduleThatRepeats(eventsToAdd[0].eventName, eventsToAdd[0].repeat);
+  let event = createEventAndAddToPeriod(period, eventsToAdd[0].eventName, dayEventSchedule);
+  studyConfiguration.periods.push(period);
+  return studyConfiguration;
+}
 
-//     let eventReference = new EventReference(eventToAdd.eventName);
-//     let freNodeReference = FreNodeReference.create(previousEvent, "Event");
-//     eventReference.event = freNodeReference;
-//     let when = createWhenEventSchedule(eventToAdd.eventName, PlusExpression.create({left: eventReference,
-//                                                                                    right: Number.create({value:eventToAdd.eventDay})}));
-//   studyConfiguration.periods.push(period);
-//   return studyConfiguration;
-// }
+export function addScheduledEventAndInstanceToTimeline(studyConfiguration: StudyConfiguration, eventNumber: number, dayEventCompleted: number, timeline: Timeline) : EventInstance {
+  let scheduledEvent = new ScheduledEvent(studyConfiguration.periods[0].events[eventNumber]);
+  scheduledEvent.state = ScheduledEventState.Scheduled;
+  let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
+  eventInstance.state = EventInstanceState.Completed;
+  timeline.addEvent(eventInstance);
+  return eventInstance;
+  }
+
+
 

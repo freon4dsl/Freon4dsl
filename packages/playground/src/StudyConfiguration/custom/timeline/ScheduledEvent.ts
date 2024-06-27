@@ -1,4 +1,4 @@
-import { Event, Day } from "../../language/gen/index";
+import { Event, Day, RepeatCondition } from "../../language/gen/index";
 import { InterpreterContext, isRtError, RtNumber } from "@freon4dsl/core";
 import { MainStudyConfigurationModelInterpreter } from "../../interpreter/MainStudyConfigurationModelInterpreter";
 import { EventInstance, Timeline } from "./Timeline";
@@ -76,13 +76,16 @@ export class ScheduledEvent {
   }
 
   anyRepeatsNotCompleted(timeline: Timeline): boolean {
-    // Copilot suggested:
-    // let repeatableEvents = this.getAllScheduledEvents().filter(scheduledEvent => scheduledEvent.configuredEvent.schedule.repeatable);
-    // let repeatableEventsNotCompleted = repeatableEvents.filter(scheduledEvent => !timeline.hasCompletedInstanceOf(scheduledEvent));
-    // return repeatableEventsNotCompleted.length > 0;
+    if (this.configuredEvent.schedule.eventRepeat instanceof RepeatCondition) {
+      let repeatCondition = this.configuredEvent.schedule.eventRepeat;
+      let numberCompletedInstances = timeline.numberCompletedInstancesOf(this);
+      if (timeline.numberCompletedInstancesOf(this) < repeatCondition.maxRepeats) {
+        console.log("anyRepeatsNotCompleted: " + this.name() + " timeline: " + timeline.currentDay + " maxRepeats: " + repeatCondition.maxRepeats + " numberCompletedInstances: " + numberCompletedInstances);
+        return true;
+      }
+    }
     return false;
   }
-
 
   notYetScheduled(timeline): boolean {
     try {

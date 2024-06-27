@@ -1,23 +1,13 @@
 import * as Sim from "../simjs/sim.js"
-import { Timeline, EventInstance, TimelineDay, EventInstanceState } from "../timeline/Timeline";
+import { Timeline, EventInstance } from "../timeline/Timeline";
 import { Simulator, } from "../timeline/Simulator";
-import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number } from "../../language/gen/index";
+import { StudyConfiguration, Period } from "../../language/gen/index";
 import * as utils from "./Utils";
-import { ScheduledEvent, ScheduledEventState } from "../timeline/ScheduledEvent";
 import { TimelineScriptTemplate } from "../templates/TimelineScriptTemplate";
-import { EventsToAdd } from "./Utils";
+import { EventsToAdd, addScheduledEventAndInstanceToTimeline } from "./Utils";
 
-
-function addScheduledEventAndInstanceToTimeline(studyConfiguration: StudyConfiguration, eventNumber: number, dayEventCompleted: number, timeline: Timeline) {
-  let scheduledEvent = new ScheduledEvent(studyConfiguration.periods[0].events[eventNumber]);
-  scheduledEvent.state = ScheduledEventState.Scheduled;
-  let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
-  eventInstance.state = EventInstanceState.Completed;
-  timeline.addEvent(eventInstance);
-  }
 
 describe ("Access to simulation data", () => {
-
   var simulator;
   var studyConfiguration: StudyConfiguration;
 
@@ -149,26 +139,29 @@ describe("Simulation of Trial to Generate the Timeline", () => {
     expect(timeline).toEqual(expectedTimeline);  
   });
 
-  // it.only("generates a two visit timeline for a visit that repeats twice", () => {
-  //   // GIVEN a study configuration with one period and two events
-  //   let listOfEventsToAdd: EventsToAdd[] = [
-  //     { eventName: "Visit 1", eventDay: 1, repeat: 2 },
-  //   ];
-  //   studyConfiguration = utils.addRepeatingEvents(studyConfiguration, "Screening", listOfEventsToAdd);
+  it.only("generates a two visit timeline for a visit that repeats twice", () => {
+    // GIVEN a study configuration with one period and two events
+    let listOfEventsToAdd: EventsToAdd[] = [
+      { eventName: "Visit 1", eventDay: 1, repeat: 2 },
+    ];
+    studyConfiguration = utils.addRepeatingEvents(studyConfiguration, "Screening", listOfEventsToAdd);
 
-  //   // WHEN the study is simulated and a timeline is generated
-  //   let simulator = new Simulator(studyConfiguration);
-  //   simulator.run();
-  //   let timeline = simulator.timeline;
+    // WHEN the study is simulated and a timeline is generated
+    let simulator = new Simulator(studyConfiguration);
+    simulator.run();
+    let timeline = simulator.timeline;
 
-  //   // Then the generated timeline has two events on the expected event days
-  //   let expectedTimeline = new Timeline()
-  //   addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline)
-  //   addScheduledEventAndInstanceToTimeline(studyConfiguration, 1, 8, expectedTimeline)
-  //   expectedTimeline.setCurrentDay(8);
+    // Then the generated timeline has two events on the expected event days
+    let expectedTimeline = new Timeline()
+    let eventInstance1 = addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline);
+    let eventInstance2 = new EventInstance(eventInstance1.scheduledEvent, 8);
+    timeline.addEvent(eventInstance2);
+    let eventInstance3 = new EventInstance(eventInstance1.scheduledEvent, 15);
+    timeline.addEvent(eventInstance3);
+    expectedTimeline.setCurrentDay(15);
 
-  //   expect(timeline).toEqual(expectedTimeline);  
-  // });
+    expect(timeline).toEqual(expectedTimeline);  
+  });
 
 
 let expectedTimelineDataAsScript = 

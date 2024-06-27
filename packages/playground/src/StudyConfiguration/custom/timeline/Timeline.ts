@@ -87,6 +87,18 @@ export class Timeline extends RtObject{
     return false;
   }
 
+  numberCompletedInstancesOf(scheduledEvent: ScheduledEvent) {
+    let count = 0;
+    for (const day of this.days) {
+      for (const event of day.events) {
+        if (event.scheduledEvent.name() === scheduledEvent.name() && event.state === EventInstanceState.Completed) {
+          count++;
+        }
+      }
+    }    
+    return count;
+  }
+
   noCompletedInstanceOf(scheduledEvent: ScheduledEvent) {
     return !this.hasCompletedInstanceOf(scheduledEvent);
   }
