@@ -6,18 +6,17 @@ import { ScopeDef } from "../metalanguage";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
-import { MetaElementReference } from "../../languagedef/metalanguage";
-import { FreMetaModelDescription } from "../../languagedef/metalanguage/FreMetaLanguage";
+import { MetaElementReference, FreMetaModelDescription } from "../../languagedef/metalanguage";
 
-const LOGGER = new MetaLogger("ScoperGenerator").mute();
+const LOGGER: MetaLogger = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
-    public language: FreMetaLanguage;
+    public language: FreMetaLanguage | undefined;
     protected scoperGenFolder: string = '';
     protected scoperFolder: string = '';
 
     generate(scopedef: ScopeDef | undefined): void {
-        if (this.language === null) {
+        if (this.language === null || this.language === undefined) {
             LOGGER.error("Cannot generate scoper because language is not set.");
             return;
         }

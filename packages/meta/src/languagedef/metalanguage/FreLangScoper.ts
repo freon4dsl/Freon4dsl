@@ -16,6 +16,7 @@ export interface FreMetaScoper {
 }
 
 export class FreLangScoper {
+    // @ts-ignore this property will be set by users of FreLangScoper
     public language: FreMetaLanguage;
     extraScopers: FreMetaScoper[] = [];
 

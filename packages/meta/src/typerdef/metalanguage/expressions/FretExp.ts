@@ -2,9 +2,12 @@ import { FreMetaClassifier, MetaElementReference, FreMetaLanguage } from "../../
 import { FreTyperElement } from "../FreTyperElement";
 
 export abstract class FretExp extends FreTyperElement {
+    // @ts-ignore Property is set during parsing and checking phases
     language: FreMetaLanguage;
+    // @ts-ignore Property is set during parsing and checking phases
     $returnType: MetaElementReference<FreMetaClassifier>;
     readonly $typename: string = "FretExp"; // holds the metatype in the form of a string
+    // @ts-ignore Property is set during parsing and checking phases
     owner: FreTyperElement;
 
     toFreString(): string {

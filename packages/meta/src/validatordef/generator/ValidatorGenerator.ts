@@ -15,12 +15,12 @@ import { LOG2USER } from "../../utils/UserLogger";
 const LOGGER = new MetaLogger("ValidatorGenerator").mute();
 export class ValidatorGenerator {
     public outputfolder: string = ".";
-    public language: FreMetaLanguage;
+    public language: FreMetaLanguage | undefined;
     protected validatorGenFolder: string = '';
     protected validatorFolder: string = '';
 
     generate(validdef: ValidatorDef| undefined): void {
-        if (this.language === null) {
+        if (this.language === null || this.language === undefined) {
             LOGGER.error("Cannot generate validator because language is not set.");
             return;
         }
@@ -109,7 +109,7 @@ export class ValidatorGenerator {
         FileUtil.deleteDirAndContent(this.validatorGenFolder);
         if (force) {
             FileUtil.deleteFile(`${this.validatorFolder}/index.ts`);
-            if (this.language === null) {
+            if (this.language === null || this.language === undefined) {
                 LOG2USER.error("Cannot remove all because language is not set.");
             } else {
                 FileUtil.deleteFile(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts`);
@@ -117,7 +117,7 @@ export class ValidatorGenerator {
             FileUtil.deleteDirIfEmpty(this.validatorFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOG2USER.info(`${this.validatorFolder}/${Names.customValidator(this.language)}.ts` +
+            LOG2USER.info(`Not deleted: ${this.validatorFolder}/${!!this.language ? Names.customValidator(this.language) : "<Custom Validator>"}.ts` +
                 "\n\t" + `${this.validatorFolder}/index.ts`);
         }
     }

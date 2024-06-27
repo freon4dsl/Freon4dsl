@@ -24,6 +24,7 @@ export class FretWhereExp extends FretExp {
     }
 
     readonly $typename: string = "FretWhereExp"; // holds the metatype in the form of a string
+    // @ts-ignore Property is set during parsing and checking phases
     variable: FretVarDecl; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
     conditions: FretBinaryExp[] = []; // are sorted by the checker such that the left side is always the one to refer to the variable
 

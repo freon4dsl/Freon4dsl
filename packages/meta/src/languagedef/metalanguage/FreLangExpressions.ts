@@ -15,11 +15,19 @@ import { MetaElementReference } from ".";
  *  5. Self expression: an expression that refers to a property of a classifier, like 'self.age'
  */
 
+// Some properties of the classes defined here are marked @ts-ignore to avoid the error:
+// TS2564: ... has no initializer and is not definitely assigned in the constructor.
+// These properties need to be undefined during parsing and checking. After the checking process
+// has been executed without errors, we can assume that these properties are initialized.
+
 export abstract class FreLangExp extends FreMetaLangElement {
     sourceName: string = '';							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
-    appliedfeature: FreLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
-    $referredElement: MetaElementReference<FreMetaLangElement>;  // refers to the element called 'sourceName'
-    language: FreMetaLanguage;                           // the language for which this expression is defined
+    // @ts-ignore
+    appliedfeature: FreLangAppliedFeatureExp;	                // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
+    // @ts-ignore
+    $referredElement: MetaElementReference<FreMetaLangElement>; // refers to the element called 'sourceName'
+    // @ts-ignore
+    language: FreMetaLanguage;                                  // the language for which this expression is defined
 
     // returns the property to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
     findRefOfLastAppliedFeature(): FreMetaProperty | undefined {
@@ -46,6 +54,7 @@ export abstract class FreLangExp extends FreMetaLangElement {
 }
 
 export class FreLangSimpleExp extends FreLangExp {
+    // @ts-ignore
     value: number;
 
     findRefOfLastAppliedFeature(): FreMetaProperty | undefined {
@@ -67,6 +76,7 @@ export class FreLangSelfExp extends FreLangExp {
         return result;
     }
 
+    // @ts-ignore
     $referredElement: MetaElementReference<FreMetaClassifier>; // is not needed, can be determined based on its parent
 
     toFreString(): string {
@@ -81,6 +91,7 @@ export class FreLangSelfExp extends FreLangExp {
 export class FreInstanceExp extends FreLangExp {
     // sourceName should be name of a limited concept
     instanceName: string = '';   // should be name of one of the predefined instances of 'sourceName'
+    // @ts-ignore
     $referredElement: MetaElementReference<FreMetaInstance>;
 
     toFreString(): string {
@@ -89,6 +100,7 @@ export class FreInstanceExp extends FreLangExp {
 }
 
 export class FreLangConceptExp extends FreLangExp {
+    // @ts-ignore
     $referredElement: MetaElementReference<FreMetaClassifier>;
 
     toFreString(): string {
@@ -106,7 +118,9 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
         return result;
     }
 
+    // @ts-ignore
     sourceExp: FreLangExp;
+    // @ts-ignore
     $referredElement: MetaElementReference<FreMetaProperty>;
 
     get referredElement(): FreMetaProperty {
@@ -145,7 +159,9 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
 export class FreLangFunctionCallExp extends FreLangExp {
     // sourceName: string = ''; 			// only used in validator for 'conformsTo' and 'equalsType'
     actualparams: FreLangExp[] = [];
+    // @ts-ignore
     returnValue: boolean;
+    // @ts-ignore
     $referredElement: MetaElementReference<FreMetaFunction>;
 
     toFreString(): string {

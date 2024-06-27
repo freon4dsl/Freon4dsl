@@ -32,6 +32,7 @@ export class FretCreateExp extends FretExp {
     readonly $typename: string = "FretCreateExp"; // holds the metatype in the form of a string
 
     propertyDefs: FretPropInstance[] = []; // implementation of part 'propertyDefs'
+    // @ts-ignore Property is set during parsing and checking phases
     $type: MetaElementReference<FreMetaClassifier>; // implementation of reference 'type'
 
      /**

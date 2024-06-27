@@ -1,7 +1,7 @@
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
-    ConceptRuleSet, ExpressionRule, IsuniqueRule,
+    ConceptRuleSet, ExpressionRule, IsUniqueRule,
     NotEmptyRule,
     ValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText, ValidationRule, ValidationSeverity,
     ValidNameRule
@@ -134,8 +134,8 @@ export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionR
     return result;
 }
 
-export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
-    const result = new IsuniqueRule();
+export function createIsuniqueRule(data: Partial<IsUniqueRule>): IsUniqueRule {
+    const result = new IsUniqueRule();
 
     createRuleCommonParts(data, result);
     if (!!data.list) {

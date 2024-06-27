@@ -29,6 +29,7 @@ export class FretLimitedInstanceExp extends FretExp {
     readonly $typename: string = "FretLimitedInstanceExp"; // holds the metatype in the form of a string
 
     $myLimited?: MetaElementReference<FreMetaLimitedConcept>;
+    // @ts-ignore Property is set during parsing and checking phases
     $myInstance: MetaElementReference<FreMetaInstance>;
     toFreString(): string {
         let prefix: string = "";

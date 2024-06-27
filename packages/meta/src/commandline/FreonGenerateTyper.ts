@@ -14,6 +14,7 @@ export class FreonGenerateTyper extends FreonGeneratePartAction {
             summary: "Generates the TypeScript code for the typer for your language",
             documentation: "Generates TypeScript code for the typer of language defined in the .ast file. The typer definition is found in the .type file."
         });
+        this.typerGenerator = new FreonTyperGenerator();
     }
 
     generate(): void {

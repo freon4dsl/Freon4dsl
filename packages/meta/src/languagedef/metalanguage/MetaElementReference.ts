@@ -21,8 +21,11 @@ export class MetaElementReference<T extends FreMetaLangElement> {
     private _FRE_name: string = "";
     private _FRE_referred: T | undefined = undefined;
 
+    // @ts-ignore
     public owner: FreMetaDefinitionElement;
+    // @ts-ignore
     public location: ParseLocation;
+    // @ts-ignore
     public aglParseLocation: FreParseLocation;
 
     // Need for the scoper to work

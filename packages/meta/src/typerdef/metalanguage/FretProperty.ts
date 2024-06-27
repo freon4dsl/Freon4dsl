@@ -49,6 +49,7 @@ export class FretProperty extends FreMetaConceptProperty {
         // }
         return result;
     }
+    // @ts-ignore Property is set during parsing and checking phases
     owner: FretTypeConcept;
     readonly $typename: string = "FretProperty"; // holds the metatype in the form of a string
 

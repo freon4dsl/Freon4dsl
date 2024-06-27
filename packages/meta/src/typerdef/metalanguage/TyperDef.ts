@@ -54,9 +54,11 @@ export class TyperDef extends FreTyperElement {
         result.properties.push(prop);
         return result;
     }
+    // @ts-ignore Property is set during parsing and checking phases
     language: FreMetaLanguage;
 
     typeConcepts: FretTypeConcept[] = []; // implementation of part 'typeConcepts'
+    // @ts-ignore Property is set during parsing and checking phases
     anyTypeSpec: FretAnyTypeSpec; // implementation of part 'anyTypeSpec'
     classifierSpecs: FretClassifierSpec[] = []; // implementation of part 'classifierSpecs'
     $types: MetaElementReference<FreMetaClassifier>[] = []; // implementation of reference 'types'

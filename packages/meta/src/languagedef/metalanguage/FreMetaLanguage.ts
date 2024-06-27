@@ -2,6 +2,11 @@ import { MetaElementReference } from "./internal";
 // This import cannot be shortened. Importing "../../utils" results in circular dependencies
 import { FreMetaDefinitionElement } from "../../utils/FreMetaDefinitionElement";
 
+// Some properties of the classes defined here are marked @ts-ignore to avoid the error:
+// TS2564: ... has no initializer and is not definitely assigned in the constructor.
+// These properties need to be undefined during parsing and checking. After the checking process
+// has been executed without errors, we can assume that these properties are initialized.
+
 // root of the inheritance structure of all elements in a language definition
 export abstract class FreMetaLangElement extends FreMetaDefinitionElement {
     protected _name: string = "";
@@ -16,6 +21,7 @@ export abstract class FreMetaLangElement extends FreMetaDefinitionElement {
 export class FreMetaLanguage extends FreMetaLangElement {
     concepts: FreMetaConcept[] = [];
     interfaces: FreMetaInterface[] = [];
+    // @ts-ignore
     modelConcept: FreMetaModelDescription;
     units: FreMetaUnitDescription[] = [];
     id: string = '';
@@ -98,7 +104,9 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
     id: string = '';
     key: string = '';
 
+    // @ts-ignore
     private _owningLanguage: FreMetaLanguage;
+    // @ts-ignore
     originalOwningLanguage: FreMetaLanguage;
     get language() {
         return this._owningLanguage;
@@ -281,6 +289,7 @@ export class FreMetaInterface extends FreMetaClassifier {
 
 export class FreMetaConcept extends FreMetaClassifier {
     isAbstract: boolean = false;
+    // @ts-ignore
     base: MetaElementReference<FreMetaConcept>;
     interfaces: MetaElementReference<FreMetaInterface>[] = []; // the interfaces that this concept implements
 
@@ -481,8 +490,11 @@ export class FreMetaProperty extends FreMetaLangElement {
     isList: boolean = false;
     isPart: boolean = false; // if false then it is a reference property
     implementedInBase: boolean = false;
+    // @ts-ignore
     private $type: MetaElementReference<FreMetaClassifier>;
+    // @ts-ignore
     private _owningClassifier: FreMetaClassifier;
+    // @ts-ignore
     originalOwningClassifier: FreMetaClassifier;
     get owningClassifier() {
         return this._owningClassifier;
@@ -544,6 +556,7 @@ export class FreMetaPrimitiveProperty extends FreMetaProperty {
 }
 
 export class FreMetaInstance extends FreMetaLangElement {
+    // @ts-ignore
     concept: MetaElementReference<FreMetaConcept>; // should be a limited concept
     // Note that these properties may be undefined, when there is no definition in the .ast file
     props: FreMetaInstanceProperty[] = [];
@@ -554,7 +567,9 @@ export class FreMetaInstance extends FreMetaLangElement {
 }
 
 export class FreMetaInstanceProperty extends FreMetaLangElement {
+    // @ts-ignore
     owningInstance: MetaElementReference<FreMetaInstance>;
+    // @ts-ignore
     property: MetaElementReference<FreMetaProperty>;
     valueList: FreMetaPrimitiveValue[] = [];
 
@@ -569,12 +584,15 @@ export class FreMetaInstanceProperty extends FreMetaLangElement {
 
 // the following two classes are only used in the typer and validator definitions
 export class FreMetaFunction extends FreMetaLangElement {
+    // @ts-ignore
     language: FreMetaLanguage;
     formalparams: FreMetaParameter[] = [];
+    // @ts-ignore
     returnType: MetaElementReference<FreMetaConcept>;
 }
 
 export class FreMetaParameter extends FreMetaLangElement {
+    // @ts-ignore
     type: MetaElementReference<FreMetaConcept>;
 }
 

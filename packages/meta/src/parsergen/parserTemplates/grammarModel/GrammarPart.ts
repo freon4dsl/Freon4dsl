@@ -4,7 +4,7 @@ import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
 import { FreMetaUnitDescription } from "../../../languagedef/metalanguage/FreMetaLanguage";
 
 export class GrammarPart {
-    unit: FreMetaUnitDescription;
+    unit: FreMetaUnitDescription | undefined;
     rules: GrammarRule[] = [];
     private imports: FreMetaClassifier[] = [];
 

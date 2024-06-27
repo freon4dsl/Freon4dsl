@@ -20,7 +20,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     strictUseOfSelf: boolean = true; // if true, then a ThisExpression must have an appliedfeature
     runner: CheckRunner = new CheckRunner(this.errors, this.warnings);
 
-    constructor(language: FreMetaLanguage) {
+    constructor(language: FreMetaLanguage | undefined) {
         super(language);
     }
 
@@ -72,8 +72,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
         LOGGER.log("checkLangExp " + langExp.toFreString() );
         if (langExp instanceof FreInstanceExp) {
             this.checkInstanceExpression(langExp);
-        } else
-        if (langExp instanceof FreLangSelfExp) {
+        } else if (langExp instanceof FreLangSelfExp) {
             this.checkSelfExpression(langExp, enclosingConcept);
         } else if (langExp instanceof FreLangConceptExp) {
             this.checkConceptExpression(langExp, enclosingConcept);

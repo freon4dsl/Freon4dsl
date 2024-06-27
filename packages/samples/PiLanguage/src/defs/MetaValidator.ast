@@ -38,7 +38,7 @@ concept ExpressionRule base ValidationRule {
     comparator: PiComparator;
 }
 
-concept IsuniqueRule base ValidationRule {
+concept IsUniqueRule base ValidationRule {
     list: PiLangExp;
     listproperty: PiLangExp;
     comparator: PiComparator;

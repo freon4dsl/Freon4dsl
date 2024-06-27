@@ -17,6 +17,7 @@ export class FreonGenerateValidator extends FreonGeneratePartAction {
             documentation:
                 "Generates TypeScript code for the validator of language defined in the .ast file. The validator definition is found in the .valid file."
         });
+        this.validatorGenerator = new ValidatorGenerator();
     }
 
     generate(): void {

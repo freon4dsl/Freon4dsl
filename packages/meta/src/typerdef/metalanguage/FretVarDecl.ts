@@ -28,10 +28,12 @@ export class FretVarDecl extends FreTyperElement {
         }
         return result;
     }
+    // @ts-ignore Property is set during parsing and checking phases
     owner: FretWhereExp;
 
     readonly $typename: string = "FretVarDecl"; // holds the metatype in the form of a string
 
+    // @ts-ignore Property is set during parsing and checking phases
     $type: MetaElementReference<FreMetaClassifier>; // implementation of reference 'type'
 
     /**

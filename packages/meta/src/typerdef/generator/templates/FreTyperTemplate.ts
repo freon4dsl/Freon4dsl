@@ -1,4 +1,11 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
+import {
+    Names,
+    FREON_CORE,
+    LANGUAGE_GEN_FOLDER,
+    CONFIGURATION_FOLDER,
+    LANGUAGE_UTILS_GEN_FOLDER,
+    LOG2USER
+} from "../../../utils";
 import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { TyperDef } from "../../metalanguage";
 
@@ -7,10 +14,12 @@ import { TyperDef } from "../../metalanguage";
  * typer(s). It also generates the indexes for the 'gen' folder and the folder with the custom typer.
  */
 export class FreTyperTemplate {
-    language: FreMetaLanguage;
 
     generateTyper(language: FreMetaLanguage, typerdef: TyperDef, relativePath: string): string {
-        this.language = language;
+        if (language === undefined || language === null) {
+            LOG2USER.error("Could not create typer, because language was not set.");
+            return '';
+        }
         // const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
@@ -240,6 +249,10 @@ export class FreTyperTemplate {
     }
 
     generateGenIndex(language: FreMetaLanguage): string {
+        if (language === undefined || language === null) {
+            LOG2USER.error("Could not create gen/index, because language was not set.");
+            return '';
+        }
         return `
         export * from "./${Names.typerPart(language)}";
         export * from "./${Names.typerDef(language)}";
@@ -247,6 +260,10 @@ export class FreTyperTemplate {
     }
 
     generateIndex(language: FreMetaLanguage): string {
+        if (language === undefined || language === null) {
+            LOG2USER.error("Could not create index, because language was not set.");
+            return '';
+        }
         return `
         export * from "./${Names.customTyper(language)}";
         `;

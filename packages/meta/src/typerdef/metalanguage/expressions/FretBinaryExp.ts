@@ -9,7 +9,9 @@ import { FretExp } from "./FretExp";
 export abstract class FretBinaryExp extends FretExp {
     readonly $typename: string = "FretBinaryExp"; // holds the metatype in the form of a string
 
+    // @ts-ignore Property is set during parsing and checking phases
     left: FretExp; // implementation of part 'left'
+    // @ts-ignore Property is set during parsing and checking phases
     right: FretExp; // implementation of part 'right'
 
     toFreString() {

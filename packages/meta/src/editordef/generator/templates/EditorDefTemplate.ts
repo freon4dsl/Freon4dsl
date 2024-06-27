@@ -218,7 +218,7 @@ export class EditorDefTemplate {
     }
 
     private generateHeaderInfo(projection: FreEditTableProjection, coreImports: string[]): string {
-        if (!!projection && !!projection.headers && projection.headers.length > 0) {
+        if (!!projection && !!projection.headers && projection.headers.length > 0 && !!projection.classifier) {
             ListUtil.addIfNotPresent(coreImports, "BoxUtil");
             ListUtil.addIfNotPresent(coreImports, "FreTableHeaderInfo");
             return `new FreTableHeaderInfo("${projection.classifier.name}", "${projection.name}", [${projection.headers.map(head =>
