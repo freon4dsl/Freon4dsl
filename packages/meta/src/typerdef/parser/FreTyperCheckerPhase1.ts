@@ -69,8 +69,9 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         }
         definition.language = this.language;
 
-        // To be able to find references in the type defintion to nodes other than those form the language
+        // To be able to find references in the type defintion to nodes other than those from the language
         // we need an extra scoper, and we need to set the opposites of all 'parts': their owning nodes
+        FreMetaEnvironment.metascoper.language = this.language;
         FreMetaEnvironment.metascoper.extraScopers.push(new FretScoper(definition));
         FretOwnerSetter.setNodeOwners(definition);
 

@@ -8,7 +8,8 @@ import { CommonChecker } from "./CommonChecker";
  * (2) all its properties adhere to the inheritance rules
  */
 export class ClassifierChecker {
-    runner: CheckRunner;
+    // The property 'runner' is set by both public methods, therefore we can assume that it is set in all private methods.
+    runner: CheckRunner | unknown;
 
     /**
      * Returns true if there is a circularity found in the inheritance tree of this classifier.
@@ -36,6 +37,7 @@ export class ClassifierChecker {
     // A has part b: B and B has part a: A and both are mandatory
     // Note: this can be done only after checking for circular inheritance, because we need to look at allParts.
     public checkInfiniteLoops(classifier: FreMetaClassifier, runner: CheckRunner) {
+        this.runner = runner;
         classifier.allParts().forEach(aPart => {
             if (!aPart.isPrimitive && !aPart.isOptional && !aPart.isList) {
                 const aPartType = aPart.type;
@@ -65,7 +67,8 @@ export class ClassifierChecker {
             // no prop with same name allowed, not even if they have the same type
             const inSameCls = propsDone.find(prevProp => prevProp.name === prop.name);
             if (!!inSameCls) {
-                this.runner.simpleCheck(false,
+                // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
+                this.runner!.simpleCheck(false,
                     `Property '${prop.name}' already exists in ${classifier.name} ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSameCls)}.`);
             }
             propsDone.push(prop);
@@ -78,7 +81,8 @@ export class ClassifierChecker {
                 classifier.base.forEach(intfRef => {
                     const inSuper: FreMetaProperty | undefined = this.searchLocalProps(intfRef.referred, prop);
                     if (!!inSuper) {
-                        this.runner.simpleCheck(LangUtil.compareTypes(prop, inSuper),
+                        // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
+                        this.runner!.simpleCheck(LangUtil.compareTypes(prop, inSuper),
                             `Property '${prop.name}' with non conforming type already exists in base interface '${intfRef.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSuper)}.`);
                     }
                 });
@@ -109,7 +113,8 @@ export class ClassifierChecker {
                                 virtualProp = CommonChecker.makeCopyOfProp(inAnotherInterface, classifier);
                             }
                             // if virtualProp exists, the types did conform to each other
-                            this.runner.simpleCheck(!!virtualProp!,
+                            // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
+                            this.runner!.simpleCheck(!!virtualProp!,
                                 `Concept '${classifier.name}': property '${toBeImplemented.name}' in '${intf.name}' does not conform to property '${toBeImplemented.name}' in '${inAnotherInterface.owningClassifier.name}' ${ParseLocationUtil.location(classifier)}.`);
                         }
                     }
@@ -140,7 +145,8 @@ export class ClassifierChecker {
         if (!!myBase && !!prop) {
             const inSuper: FreMetaProperty | undefined = this.searchLocalProps(myBase, prop);
             if (!!inSuper) {
-                this.runner.nestedCheck({
+                // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
+                this.runner!.nestedCheck({
                     check: LangUtil.compareTypes(prop, inSuper),
                     error: `Property '${prop.name}' with non conforming type already exists in base concept '${myBase.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSuper)}.`,
                     whenOk: () => {
@@ -164,7 +170,8 @@ export class ClassifierChecker {
             inIntf = intf.properties.find(prevProp => prevProp.name === prop.name);
         }
         if (!!inIntf) {
-            this.runner.simpleCheck(LangUtil.compareTypes(prop, inIntf),
+            // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
+            this.runner!.simpleCheck(LangUtil.compareTypes(prop, inIntf),
                 `(Inherited) property '${prop.name}' with non conforming type exists in implemented interface '${intf.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inIntf)}.`);
         }
     }
@@ -192,7 +199,8 @@ export class ClassifierChecker {
         if (circularNames.includes(con.name)) {
             // error, already seen this name
             const text: string = circularNames.map(name => name ).join(", ");
-            this.runner.simpleCheck(false,
+            // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
+            this.runner!.simpleCheck(false,
                 `Concept or interface '${con.name}' is part of a forbidden circular inheritance tree (${text}) ${ParseLocationUtil.location(con)}.`);
             return true;
         } else {

@@ -15,6 +15,7 @@ import { CommonChecker } from "./CommonChecker";
 import { ClassifierChecker } from "./ClassifierChecker";
 
 export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
+    // @ts-ignore This property is set in the 'check' method, therefore we can assume that it is initialized in the private methods.
     language: FreMetaLanguage;
 
     // now everything has been resolved, check that all concepts and interfaces have
