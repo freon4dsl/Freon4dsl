@@ -53,7 +53,9 @@ export const validFunctionNames: string[] = ["typeof", "commonSuperType", "owner
  * if needed.
  */
 export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
+    // @ts-ignore Property is set by users and its value checked in the only public method 'check'.
     language: FreMetaLanguage;
+    // @ts-ignore Property is set in the only public method 'check'.
     definition: TyperDef;
     typeConcepts: FreMetaClassifier[] = [];         // all concepts marked as 'isType'
     conceptsWithRules: FreMetaClassifier[] = [];    // all concepts for which a rule is found.

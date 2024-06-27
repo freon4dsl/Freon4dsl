@@ -27,12 +27,14 @@ export class FretClassifierSpec extends FreTyperElement {
         }
         return result;
     }
+    // @ts-ignore Property is set during parsing and checking phases
     owner: TyperDef;
 
     readonly $typename: string = "FretClassifierSpec"; // holds the metatype in the form of a string
     $id: string = ''; // a unique identifier
 
     rules: FretTypeRule[] = []; // implementation of part 'rules'
+    // @ts-ignore Property is set during parsing and checking phases
     $myClassifier: MetaElementReference<FreMetaClassifier>; // implementation of reference 'myClassifier'
 
     /**

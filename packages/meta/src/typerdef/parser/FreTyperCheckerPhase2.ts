@@ -15,7 +15,9 @@ import { FreMetaProperty } from "../../languagedef/metalanguage";
 // const LOGGER = new MetaLogger("FreTyperCheckerPhase2"); //.mute();
 
 export class FreTyperCheckerPhase2 extends CheckerPhase<TyperDef> {
+    // @ts-ignore Property is set in the only public method 'check'.
     definition: TyperDef;
+    // @ts-ignore Property is set in the only public method 'check'.
     runner: CheckRunner;
 
     public check(definition: TyperDef, runner: CheckRunner): void {

@@ -23,6 +23,7 @@ export class FretVarCallExp extends FretExp {
     }
 
     readonly $typename: string = "FretVarCallExp"; // holds the metatype in the form of a string
+    // @ts-ignore Property is set during parsing and checking phases
     $variable: MetaElementReference<FretVarDecl>; // implementation of reference 'variable'
 
     /**

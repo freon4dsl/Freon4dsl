@@ -12,6 +12,7 @@ import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/m
  * This class generates the code for all 'conformsto' entries in the .type file.
  */
 export class FreSuperTypeMaker {
+    // @ts-ignore Property is set in the only public method 'makeSuperTypes'.
     typerdef: TyperDef;
 
     public makeSuperTypes(typerdef: TyperDef, typevarName: string, imports: FreMetaClassifier[]): string {
@@ -114,7 +115,7 @@ export class FreSuperTypeMaker {
         }
     }
 
-    public makeWhereExp(exp: FretWhereExp, varName: string, imports: FreMetaClassifier[]): string {
+    private makeWhereExp(exp: FretWhereExp, varName: string, imports: FreMetaClassifier[]): string {
         let result: string = "/* FretWhereExp */\n";
         const myConditions = exp.conditions;
         myConditions.forEach((cond, index) => {

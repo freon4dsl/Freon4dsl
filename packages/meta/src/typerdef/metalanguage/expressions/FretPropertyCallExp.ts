@@ -25,7 +25,9 @@ export class FretPropertyCallExp extends FretExp {
     }
     readonly $typename: string = "FretPropertyCallExp"; // holds the metatype in the form of a string
 
+    // @ts-ignore Property is set during parsing and checking phases
     source: FretExp; // implementation of part 'source'
+    // @ts-ignore Property is set during parsing and checking phases
     $property: MetaElementReference<FreMetaProperty>;
     toFreString(): string {
         let sourceStr: string = "";
