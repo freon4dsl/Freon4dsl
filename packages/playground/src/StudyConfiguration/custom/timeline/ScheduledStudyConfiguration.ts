@@ -1,4 +1,4 @@
-import { Timeline } from "./Timeline";
+import { EventInstance, Timeline } from "./Timeline";
 import { Day, Period, StudyConfiguration } from "../../language/gen";
 import { ScheduledEvent } from "./ScheduledEvent";
 import { ScheduledPeriod } from "./ScheduledPeriod";
@@ -57,18 +57,18 @@ export class ScheduledStudyConfiguration {
   }
 
   getEventsOnScheduledOnASpecificDay(): ScheduledEvent[]  {
-    let firstPeriod = this.getFirstScheduledPeriod();
+    let firstPeriod = this.getFirstScheduledPeriod(); //TODO: check if in any period?
     return firstPeriod.scheduledEvents.filter(scheduledEvent => scheduledEvent.configuredEvent.schedule.eventStart instanceof Day);
   }
 
-  getEventsReadyToBeScheduled(timeline: Timeline) {
-    let readyEvents = this.getAllEventsInSchedule().filter(scheduledEvent => scheduledEvent.getInstanceIfEventIsReadyToSchedule(timeline));
-    return readyEvents;
-  }
+  // anyEventsToSchedule(timeline): boolean {
+  //   let firstNoScheduledEvent = this.getAllEventsInSchedule().find(scheduledEvent => scheduledEvent.notYetScheduled(timeline));
+  //   return firstNoScheduledEvent === undefined;
+  // }
 
-  anyEventsToSchedule(timeline): boolean {
-    let firstNoScheduledEvent = this.getAllEventsInSchedule().find(scheduledEvent => scheduledEvent.notYetScheduled(timeline));
-    return firstNoScheduledEvent === undefined;
+  getEventsReadyToBeScheduled(completedEvent: EventInstance, timeline: Timeline) {
+    let readyEvents = this.getAllEventsInSchedule().filter(scheduledEvent => scheduledEvent.getInstanceIfEventIsReadyToSchedule(completedEvent, timeline));
+    return readyEvents;
   }
 }
 

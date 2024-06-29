@@ -4,6 +4,7 @@ import { ScheduledStudyConfiguration } from "../timeline/ScheduledStudyConfigura
 import { Simulator } from "../timeline/Simulator";
 import { EventInstance, EventInstanceState, Timeline } from "../timeline/Timeline";
 import * as utils from "./Utils";
+import { ScheduledEvent } from "../timeline/ScheduledEvent";
 
 describe ("Access to simulation data", () => {
     // var simulator;
@@ -129,9 +130,13 @@ describe ("Access to simulation data", () => {
         // And there is nothing completed on the timeline
         let timeline = new Timeline();
         timeline.setCurrentDay(1);
+        let firstEvent = scheduledStudyConfiguration.getFirstStudyStartEvent() as ScheduledEvent;
+        let completedEvent = new EventInstance(firstEvent);
+        completedEvent.state = EventInstanceState.Completed;
+        timeline.addEvent(completedEvent);
 
         // WHEN the schedule is checked for ready events
-        let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(timeline);
+        let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(completedEvent, timeline);
 
         // THEN the next and only event is Visit 1 (because Visit 2 isn't ready till Visit 1 is completed)
         expect(readyEvents.length).toEqual(1);

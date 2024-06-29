@@ -46,19 +46,23 @@ import * as Sim from "../simjs/sim.js"
     }
 
     eventCompleted(completedEvent) {
+      // Complete the event
       console.log('Completed Event:' + completedEvent.name + ' at time: ' + this.time());
       let timeline = this.getTimeline();
+      completedEvent.day = this.time();
       timeline.setCompleted(completedEvent);
       timeline.setCurrentDay(this.time())
       console.log('completedEvent.day(): ' + completedEvent.day + ' this.time(): ' + this.time());
-      timeline.addEvent(completedEvent,this.time());
-      if (this.getScheduledStudyConfiguration().anyEventsToSchedule(timeline)) {
-        console.log('No Events to Schedule');
+      timeline.addEvent(completedEvent);
+
+      // Schedule events that are ready as a result of the completion of the event.
+      let readyScheduledEvents = this.getScheduledStudyConfiguration().getEventsReadyToBeScheduled(completedEvent, timeline);
+      if (readyScheduledEvents.length === 0) {
+          console.log('No Events to Schedule');      
       } else {
-        console.log('Scheduling Next Event');
-        let readyScheduledEvents = this.getScheduledStudyConfiguration().getEventsReadyToBeScheduled(timeline);
+        console.log('Scheduling Next Event(s)');
         for (let scheduledEvent of readyScheduledEvents) {
-          let daysToWait = scheduledEvent.daysToWait(timeline, this.time());
+          let daysToWait = scheduledEvent.daysToWait(completedEvent, timeline, this.time());
           this.scheduleEvent('Scheduling Event', scheduledEvent, timeline, daysToWait);
         }
       }
