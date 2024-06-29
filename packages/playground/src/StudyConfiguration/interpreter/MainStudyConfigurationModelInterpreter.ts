@@ -73,5 +73,4 @@ export class MainStudyConfigurationModelInterpreter implements FreInterpreter {
             return new RtError(e.message);
         }
     }
-
 }

@@ -66,6 +66,15 @@ export class InterpreterMainTemplate {
                     return new RtError(e.message);
                 }
             }
+
+            evaluateWithContext(node: Object, ctx: InterpreterContext): RtObject {
+                ${Names.interpreterName(language)}.main.reset();
+                try {
+                    return ${Names.interpreterName(language)}.main.evaluate(node, ctx);
+                } catch (e: any) {
+                    return new RtError(e.message);
+                }
+            }
         }
         `;
     }

@@ -9,9 +9,6 @@ As shown below. I created the custom projection for period, that has events insi
     export class CustomStudyConfigurationModelProjection implements FreProjection {
         name: string = "Manual";
 
-        // added handler, which is set in EditorDef.ts
-        handler: FreProjectionHandler;
-
         nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
             ["Description", this.createDescription],
             ["Period", this.createPeriod],
@@ -53,11 +50,8 @@ Add handler property
 
     export class CustomStudyConfigurationModelProjection implements FreProjection {
         name: string = "Manual";
+        handler: FreProjectionHandler; <--------------------------------------------------------------
 
-        // added handler, which is set in EditorDef.ts
-        handler: FreProjectionHandler;     <--------------------------------------------------------------
-
-        // add your custom methods here
         nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
             ["Description", this.createDescription],
             ["Period", this.createPeriod],

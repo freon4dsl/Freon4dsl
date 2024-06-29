@@ -5,7 +5,7 @@ export class CustomProjectionTemplate {
 
     generate(language: FreMetaLanguage): string {
         return `
-            import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjection}, ${Names.FreTableDefinition} } from "${FREON_CORE}";
+            import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjectionHandler}, ${Names.FreProjection}, ${Names.FreTableDefinition} } from "${FREON_CORE}";
 
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
@@ -18,6 +18,7 @@ export class CustomProjectionTemplate {
              */
             export class ${Names.customProjection(language)} implements ${Names.FreProjection} {
                 name: string = "Manual";
+                handler: FreProjectionHandler;
                 nodeTypeToBoxMethod: Map<string, (node: ${Names.FreNode}) => ${Names.Box}> =
                     new Map<string, (node: ${Names.FreNode}) => ${Names.Box}>([
                         // register your custom box methods here

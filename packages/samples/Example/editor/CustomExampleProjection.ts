@@ -11,7 +11,7 @@ import {
     FreLanguage,
     FRE_BINARY_EXPRESSION_LEFT,
     FRE_BINARY_EXPRESSION_RIGHT,
-    HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil
+    HorizontalListBox, FreProjection, FreProjectionHandler,  FreProjectionHandler, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil
 } from "@freon4dsl/core";
 import { Documentation, OrExpression, SumExpression } from "../language/gen/";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment";
@@ -32,6 +32,7 @@ const OPERAND_COLUMN = 2;
 
 export class CustomExampleProjection implements FreProjection {
     name: string = "manual";
+    handler: FreProjectionHandler;
 
     constructor(name?: string) {
         if (!!name) {
