@@ -52,7 +52,6 @@ import * as Sim from "../simjs/sim.js"
       completedEvent.day = this.time();
       timeline.setCompleted(completedEvent);
       timeline.setCurrentDay(this.time())
-      console.log('completedEvent.day(): ' + completedEvent.day + ' this.time(): ' + this.time());
       timeline.addEvent(completedEvent);
 
       // Schedule events that are ready as a result of the completion of the event.

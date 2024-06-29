@@ -86,14 +86,15 @@ export class ScheduledEvent {
   }
 
   anyRepeatsNotCompleted(timeline: Timeline): boolean {
+    let numberCompletedInstances = timeline.numberCompletedInstancesOf(this);
     if (this.isRepeatingEvent) {
       let repeatCondition = this.configuredEvent.schedule.eventRepeat as RepeatCondition;
-      let numberCompletedInstances = timeline.numberCompletedInstancesOf(this);
-      if (timeline.numberCompletedInstancesOf(this) < repeatCondition.maxRepeats) {
+      if (numberCompletedInstances <= repeatCondition.maxRepeats) { // Less that or equal because the first instance is not counted as a repeat.
         console.log("anyRepeatsNotCompleted: " + this.name() + " timeline: " + timeline.currentDay + " maxRepeats: " + repeatCondition.maxRepeats + " numberCompletedInstances: " + numberCompletedInstances);
         return true;
       }
     }
+    console.log("anyRepeatsNotCompleted: " + this.name() + " timeline: " + timeline.currentDay + " numberCompletedInstances: " + numberCompletedInstances + " result: false");
     return false;
   }
 
