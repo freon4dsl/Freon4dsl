@@ -85,7 +85,7 @@ describe ("Access to simulation data", () => {
           timeline.setCurrentDay(8);
 
           // WHEN the schedule is checked 
-          let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(timeline);
+          let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(eventInstance, timeline);
 
           // THEN the next event is Visit 2
           console.log("readyEvents #: " + readyEvents.length);
@@ -115,7 +115,7 @@ describe ("Access to simulation data", () => {
           timeline.setCurrentDay(8);
 
           // WHEN the schedule is checked 
-          let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(timeline);
+          let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(eventInstance, timeline);
 
           // THEN the next and only event is Visit 2
           expect(readyEvents.length).toEqual(1);
@@ -123,7 +123,7 @@ describe ("Access to simulation data", () => {
         }
       });
         
-      it.only ("finds no ready events if depend on an unscheduled event" , () => {
+      it ("finds no ready events if depend on an unscheduled event" , () => {
         // GIVEN a scheduled study configuration with an event + 7 days from the first event
         studyConfiguration = utils.addEventScheduledOffCompletedEvent(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
         scheduledStudyConfiguration = new ScheduledStudyConfiguration(studyConfiguration);
@@ -137,10 +137,11 @@ describe ("Access to simulation data", () => {
 
         // WHEN the schedule is checked for ready events
         let readyEvents = scheduledStudyConfiguration.getEventsReadyToBeScheduled(completedEvent, timeline);
+        let scheduledOnADay = scheduledStudyConfiguration.getEventsOnScheduledOnASpecificDay();
 
         // THEN the next and only event is Visit 1 (because Visit 2 isn't ready till Visit 1 is completed)
-        expect(readyEvents.length).toEqual(1);
-        expect(readyEvents[0].configuredEvent.name).toEqual("Visit 1");
+        expect(readyEvents.length).toEqual(0);
+        expect(scheduledOnADay[0].configuredEvent.name).toEqual("Visit 1");
       });  
     });
 });
