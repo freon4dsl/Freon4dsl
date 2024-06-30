@@ -139,7 +139,7 @@ describe("Simulation of Trial to Generate the Timeline", () => {
     expect(timeline).toEqual(expectedTimeline);  
   });
 
-  it.only("generates a three visit timeline for a visit that repeats twice", () => {
+  it("generates a three visit timeline for a visit that repeats twice", () => {
     // GIVEN a study configuration with one period and two events
     let listOfEventsToAdd: EventsToAdd[] = [
       { eventName: "Visit 1", eventDay: 1, repeat: 2 },
@@ -151,7 +151,7 @@ describe("Simulation of Trial to Generate the Timeline", () => {
     simulator.run();
     let timeline = simulator.timeline;
 
-    // Then the generated timeline has two events on the expected event days
+    // Then the generated timeline has three instances of the repeating event on the expected days
     let expectedTimeline = new Timeline()
     let eventInstance1 = addScheduledEventAndInstanceToTimeline(studyConfiguration, 0, 1, expectedTimeline);
     expectedTimeline.setCompleted(eventInstance1);

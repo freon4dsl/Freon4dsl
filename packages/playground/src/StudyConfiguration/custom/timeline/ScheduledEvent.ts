@@ -132,11 +132,18 @@ export class ScheduledEvent {
   }
 
   /*
+  * TODO: update this description...
+  *
    * if this event has not been completed on a previous day and the timeline day is at or after the day this event is scheduled for then return a new EventInstance
    * otherwise return null.
    */
   getInstanceIfEventIsReadyToSchedule(completedEvent: EventInstance, timeline: Timeline): unknown {
-    if (completedEvent.scheduledEvent.name() === this.name() && this.isRepeatingEvent() && this.anyRepeatsNotCompleted(timeline)) {
+    let repeatingEvent = this.isRepeatingEvent();
+    if (this.configuredEvent.schedule.eventStart instanceof Day && !repeatingEvent) {
+      console.log("getInstanceIfEventIsReady: Not ready to schedule because:" + this.name() + " is scheduled to start on a specific day");
+      return null;
+    } else if (completedEvent.scheduledEvent.name() === this.name() && repeatingEvent && this.anyRepeatsNotCompleted(timeline)) {
+      console.log("getInstanceIfEventIsReady: " + this.name() + " is to be repeated on timeline day: " + timeline.currentDay + " with scheduledDay of: " + this.day(timeline) );
       return new EventInstance(this);
     } else {
       let scheduledDay = this.day(timeline);
