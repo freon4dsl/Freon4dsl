@@ -27,12 +27,14 @@ export class FretClassifierSpec extends FreTyperElement {
         }
         return result;
     }
+    // @ts-ignore Property is set during parsing and checking phases
     owner: TyperDef;
 
     readonly $typename: string = "FretClassifierSpec"; // holds the metatype in the form of a string
-    $id: string; // a unique identifier
+    $id: string = ''; // a unique identifier
 
     rules: FretTypeRule[] = []; // implementation of part 'rules'
+    // @ts-ignore Property is set during parsing and checking phases
     $myClassifier: MetaElementReference<FreMetaClassifier>; // implementation of reference 'myClassifier'
 
     /**
@@ -40,11 +42,11 @@ export class FretClassifierSpec extends FreTyperElement {
      * Instead of returning a 'MetaElementReference<FreClassifier>' object,
      * it returns the referred 'FreClassifier' object, if it can be found.
      */
-    get myClassifier(): FreMetaClassifier {
+    get myClassifier(): FreMetaClassifier | undefined {
         if (!!this.$myClassifier) {
             return this.$myClassifier.referred;
         }
-        return null;
+        return undefined;
     }
     toFreString(): string {
         return this.$myClassifier.name + " {\n\t" + this.rules.map(r => r.toFreString()).join("\n\t") + "\n} ";

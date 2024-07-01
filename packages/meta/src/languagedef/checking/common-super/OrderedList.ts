@@ -54,7 +54,7 @@ export class OrderedList<T extends FreMetaLangElement> implements Iterable<T> {
         return this.elements[index];
     }
 
-    getByName(name: string): InternalElement<T> {
+    getByName(name: string): InternalElement<T> | undefined {
         return this.elements.find(p => p.name === name);
     }
 
@@ -72,6 +72,8 @@ export class OrderedListIterator<T extends FreMetaLangElement> implements Iterat
         this.list = list;
     }
 
+    // todo remove parameter
+    // @ts-expect-error
     next(value?: any): IteratorResult<T> {
         const l = this.list.length();
         if (this.index < l) {

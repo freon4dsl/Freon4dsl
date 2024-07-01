@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    /* See also https://www.totaltypescript.com/tsconfig-cheat-sheet */
 
     /* Basic Options */
     // "incremental": true,                         /* Enable incremental compilation */
@@ -13,6 +14,7 @@
     // "checkJs": true,                             /* Report errors in .js files. */
     // "jsx": "preserve",                           /* Specify JSX code generation: 'preserve', 'react-native', 'react', 'react-jsx' or 'react-jsxdev'. */
     "declaration": true,                            /* Generates corresponding '.d.ts' file. */
+//    "composite": true,                            /* if you're building for a library in a monorepo */
     "declarationMap": true,                         /* Generates a sourcemap for each corresponding '.d.ts' file. */
     "sourceMap": true,                              /* Generates corresponding '.map' file. */
     // "outFile": "./",                             /* Concatenate and emit output to single file. */
@@ -27,18 +29,19 @@
     // "isolatedModules": true,                     /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
 
     /* Strict Type-Checking Options */
-    // "strict": true,                              /* Enable all strict type-checking options. */
-    // "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
-    // "strictNullChecks": true,                    /* Enable strict null checks. */
-    // "strictFunctionTypes": true,                 /* Enable strict checking of function types. */
-    // "strictBindCallApply": true,                 /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
-    // "strictPropertyInitialization": true,        /* Enable strict checking of property initialization in classes. */
-    // "noImplicitThis": true,                      /* Raise error on 'this' expressions with an implied 'any' type. */
-    // "alwaysStrict": true,                        /* Parse in strict mode and emit "use strict" for each source file. */
+    "strict": true,                              /* Enable all strict type-checking options. */
+//    "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
+//    "strictNullChecks": true,                    /* Enable strict null checks. */
+//    "strictFunctionTypes": true,                 /* Enable strict checking of function types. */
+//    "strictBindCallApply": true,                 /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
+//    "strictPropertyInitialization": true,        /* Enable strict checking of property initialization in classes. */
+//    "noImplicitThis": true,                      /* Raise error on 'this' expressions with an implied 'any' type. */
+//    "alwaysStrict": true,                        /* Parse in strict mode and emit "use strict" for each source file. */
+//    "useUnknownInCatchVariables": true,          /* Allows changing the type of the variable in a catch clause from any to unknown. */
 
     /* Additional Checks */
-    // "noUnusedLocals": true,                      /* Report errors on unused locals. */
-    // "noUnusedParameters": true,                  /* Report errors on unused parameters. */
+    "noUnusedLocals": true,                      /* Report errors on unused locals. */
+    "noUnusedParameters": true,                  /* Report errors on unused parameters. */
     "noImplicitReturns": true,                   /* Report error when not all code paths in function return a value. */
     "noFallthroughCasesInSwitch": true,          /* Report errors for fallthrough cases in switch statement. */
     // "noUncheckedIndexedAccess": true,            /* Include 'undefined' in index signature results */
@@ -82,9 +85,7 @@
     "node_modules",
     "coverage",
     "config",
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx",
-    "src/**/*.story.tsx"
+    "src/**/*.test.ts"
   ]
 
 }

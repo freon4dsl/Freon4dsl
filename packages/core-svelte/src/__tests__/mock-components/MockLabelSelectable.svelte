@@ -1,5 +1,5 @@
 <script lang="ts">
-    import LabelComponent from "../../components/LabelComponent.svelte";
+    import LabelComponent from "../../lib/components/LabelComponent.svelte";
     import { LabelBox, FreEditor } from "@freon4dsl/core";
     // Parameters
     export let box1: LabelBox;

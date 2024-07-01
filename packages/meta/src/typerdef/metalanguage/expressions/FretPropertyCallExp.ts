@@ -25,7 +25,9 @@ export class FretPropertyCallExp extends FretExp {
     }
     readonly $typename: string = "FretPropertyCallExp"; // holds the metatype in the form of a string
 
+    // @ts-ignore Property is set during parsing and checking phases
     source: FretExp; // implementation of part 'source'
+    // @ts-ignore Property is set during parsing and checking phases
     $property: MetaElementReference<FreMetaProperty>;
     toFreString(): string {
         let sourceStr: string = "";
@@ -34,11 +36,11 @@ export class FretPropertyCallExp extends FretExp {
         }
         return `${sourceStr}${this.$property.name}`;
     }
-    get property(): FreMetaProperty {
+    get property(): FreMetaProperty | undefined {
         if (!!this.$property && !!this.$property.referred) {
             return this.$property.referred;
         }
-        return null;
+        return undefined;
     }
     set property(cls: FreMetaProperty) {
         if (!!cls) {
@@ -46,12 +48,16 @@ export class FretPropertyCallExp extends FretExp {
             this.$property.owner = this.language;
         }
     }
-    get type(): FreMetaClassifier {
+    get type(): FreMetaClassifier | undefined {
         return this.property?.type;
     }
 
     get isList(): boolean {
-        return this.property.isList;
+        if (this.property?.isList) {
+            return this.property.isList;
+        } else {
+            return false;
+        }
     }
 
     baseSource(): FretExp {

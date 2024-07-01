@@ -1,6 +1,8 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { FreMetaConcept, FreMetaExpressionConcept, FreMetaLanguage, FreMetaLimitedConcept, FreMetaPrimitiveProperty } from "../../languagedef/metalanguage";
 import { LangUtil, MetaLogger } from "../../utils";
+import {net} from "net.akehurst.language-agl-processor";
+import language = net.akehurst.language;
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
 describe("Checking internal structure of language", () => {
@@ -10,14 +12,18 @@ describe("Checking internal structure of language", () => {
     MetaLogger.muteAllErrors();
 
     function readAstFile(parseFile: string): FreMetaLanguage {
-        let freLanguage: FreMetaLanguage;
+        let freLanguage: FreMetaLanguage | undefined;
         try {
             freLanguage = parser.parse(parseFile);
-        } catch (e) {
-            // this would be a true error
-            console.log(e.message + parser.checker.errors.map(err => err).join("\n") + e.stack );
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // this would be a true error
+                console.log(e.message + parser.checker.errors.map(err => err).join("\n") + e.stack);
+            }
         }
-        return freLanguage;
+        expect(language).not.toBeNull();
+        expect(language).not.toBeUndefined();
+        return freLanguage as FreMetaLanguage;
     }
 
     // on FretLanguage
@@ -53,15 +59,17 @@ describe("Checking internal structure of language", () => {
         expect(freLanguage).not.toBeUndefined();
         // no references in the parts list, and vice versa
         // no primProps in reference list
-        const freConcept = freLanguage.findConcept("BB");
-        freConcept.parts().forEach(part => {
+        const freConcept: FreMetaConcept | undefined = freLanguage.findConcept("BB");
+        expect(freConcept).not.toBeNull();
+        expect(freConcept).not.toBeUndefined();
+        freConcept!.parts().forEach(part => {
             expect(part.isPart).toBe(true);
         });
-        freConcept.references().forEach(part => {
+        freConcept!.references().forEach(part => {
             expect(part.isPart).toBe(false);
             expect(part).not.toBeInstanceOf(FreMetaPrimitiveProperty);
         });
-        freConcept.primProperties.forEach(part => {
+        freConcept!.primProperties.forEach(part => {
             expect(part.isPart).toBe(true);
         });
     });
@@ -72,24 +80,26 @@ describe("Checking internal structure of language", () => {
 
         // no references in the parts list, and vice versa
         // no primProps in reference list
-        const freConcept = freLanguage.findConcept("BB");
-        expect(freConcept.allParts().length).toBeGreaterThan(0);
-        freConcept.allParts().forEach(part => {
+        const freConcept: FreMetaConcept | undefined = freLanguage.findConcept("BB");
+        expect(freConcept).not.toBeNull();
+        expect(freConcept).not.toBeUndefined();
+        expect(freConcept!.allParts().length).toBeGreaterThan(0);
+        freConcept!.allParts().forEach(part => {
             expect(part.isPart).toBe(true);
         });
-        freConcept.allReferences().forEach(ref => {
+        freConcept!.allReferences().forEach(ref => {
             expect(ref.isPart).toBe(false);
             expect(ref).not.toBeInstanceOf(FreMetaPrimitiveProperty);
         });
-        freConcept.allPrimProperties().forEach(part => {
+        freConcept!.allPrimProperties().forEach(part => {
             expect(part.isPart).toBe(true);
         });
 
         // if a 'base' has a prop, we can find it
-        const baseConcept = freConcept.base.referred.base.referred;     // should be "BaseBaseBB"
+        const baseConcept = freConcept!.base.referred.base.referred;     // should be "BaseBaseBB"
         expect(baseConcept).not.toBeUndefined();
         baseConcept.allProperties().forEach(prop => {
-            expect(freConcept.allProperties()).toContain(prop);
+            expect(freConcept!.allProperties()).toContain(prop);
         });
 
         // we can find all subconcepts, also recursive
@@ -103,7 +113,7 @@ describe("Checking internal structure of language", () => {
         expect(list).not.toContain(freLanguage.findConcept("BaseBaseBB"));
 
         // we can find all superconcepts, also recursive
-        list = LangUtil.superConcepts(freConcept);
+        list = LangUtil.superConcepts(freConcept!);
         expect(list).toContain(freLanguage.findConcept("BaseBB"));
         expect(list).not.toContain(freLanguage.findConcept("DD"));
         expect(list).not.toContain(freLanguage.findConcept("Model"));
@@ -144,9 +154,10 @@ describe("Checking internal structure of language", () => {
     test("initial values of primitive properties", () => {
         const freLanguage: FreMetaLanguage = readAstFile(testdir + "test5.ast");
         expect(freLanguage).not.toBeUndefined();
-        const BB: FreMetaConcept = freLanguage.concepts.find(con => con.name === "BB");
+        const BB: FreMetaConcept | undefined = freLanguage.concepts.find(con => con.name === "BB");
         expect(BB).not.toBeNull();
-        BB.allPrimProperties().forEach(prim => {
+        expect(BB).not.toBeUndefined();
+        BB!.allPrimProperties().forEach(prim => {
             switch (prim.name) {
                 case "BBprop1": {
                     expect(prim.initialValue).toBe("prop1Value");
@@ -191,25 +202,27 @@ describe("Checking internal structure of language", () => {
     test("all kinds of limited concepts", () => {
         const freLanguage: FreMetaLanguage = readAstFile(testdir + "test6.ast");
         expect(freLanguage).not.toBeUndefined();
-        const CC: FreMetaConcept = freLanguage.concepts.find(con => con.name === "CC");
+        const CC: FreMetaConcept | undefined = freLanguage.concepts.find(con => con.name === "CC");
+        expect(CC).not.toBeNull();
+        expect(CC).not.toBeUndefined();
         expect(CC instanceof FreMetaLimitedConcept).toBe(true);
         (CC as FreMetaLimitedConcept).instances.forEach(inst => {
             switch (inst.name) {
                 case "CC1": {
-                    expect(inst.props.find(prop => prop.name === "AAprop1").value).toBe("some_text");
-                    expect(inst.props.find(prop => prop.name === "AAprop2").valueList).toStrictEqual(["text1", "text2"]);
-                    expect(inst.props.find(prop => prop.name === "AAprop3").value).toBe(78);
-                    expect(inst.props.find(prop => prop.name === "AAprop4").valueList).toStrictEqual([102, 3489]);
-                    expect(inst.props.find(prop => prop.name === "AAprop5").value).toBe(true);
-                    expect(inst.props.find(prop => prop.name === "AAprop6").valueList).toStrictEqual([false, false]);
+                    expect(inst.props.find(prop => prop.name === "AAprop1")?.value).toBe("some_text");
+                    expect(inst.props.find(prop => prop.name === "AAprop2")?.valueList).toStrictEqual(["text1", "text2"]);
+                    expect(inst.props.find(prop => prop.name === "AAprop3")?.value).toBe(78);
+                    expect(inst.props.find(prop => prop.name === "AAprop4")?.valueList).toStrictEqual([102, 3489]);
+                    expect(inst.props.find(prop => prop.name === "AAprop5")?.value).toBe(true);
+                    expect(inst.props.find(prop => prop.name === "AAprop6")?.valueList).toStrictEqual([false, false]);
                     break;
                 }
                 case "CC2": {
-                    expect(inst.props.find(prop => prop.name === "AAprop1").value).toBe("other_text");
+                    expect(inst.props.find(prop => prop.name === "AAprop1")?.value).toBe("other_text");
                     expect(inst.props.find(prop => prop.name === "AAprop2")).toBeUndefined();
-                    expect(inst.props.find(prop => prop.name === "AAprop3").value).toBe(99999);
+                    expect(inst.props.find(prop => prop.name === "AAprop3")?.value).toBe(99999);
                     expect(inst.props.find(prop => prop.name === "AAprop4")).toBeUndefined();
-                    expect(inst.props.find(prop => prop.name === "AAprop5").value).toBe(false);
+                    expect(inst.props.find(prop => prop.name === "AAprop5")?.value).toBe(false);
                     expect(inst.props.find(prop => prop.name === "AAprop6")).toBeUndefined();
                     break;
                 }

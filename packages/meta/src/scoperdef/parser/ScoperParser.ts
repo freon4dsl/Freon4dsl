@@ -1,10 +1,10 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { FreGenericParser } from "../../utils";
 import { ScopeDef, ScoperChecker } from "../metalanguage";
-import { setCurrentFileName } from "./ScoperCreators";
+// import { setCurrentFileName } from "./ScoperCreators";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
 
-const scoperParser = require("./ScoperGrammar");
+import scoperParser from "./ScoperGrammar";
 
 export class ScoperParser extends FreGenericParser<ScopeDef> {
     public language: FreMetaLanguage;
@@ -16,7 +16,7 @@ export class ScoperParser extends FreGenericParser<ScopeDef> {
         this.checker = new ScoperChecker(language);
     }
 
-    protected merge(submodels: ScopeDef[]): ScopeDef {
+    protected merge(submodels: ScopeDef[]): ScopeDef | undefined {
         if (submodels.length > 0) {
             const result: ScopeDef = submodels[0];
             submodels.forEach((sub, index) => {
@@ -27,12 +27,12 @@ export class ScoperParser extends FreGenericParser<ScopeDef> {
             });
             return result;
         } else {
-            return null;
+            return undefined;
         }
     }
 
     protected setCurrentFileName(file: string) {
-        setCurrentFileName(file);
+        // setCurrentFileName(file);
         expressionFileName(file);
     }
 

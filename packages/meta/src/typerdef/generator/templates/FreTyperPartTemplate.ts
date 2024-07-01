@@ -1,4 +1,4 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../../utils";
+import {Names, FREON_CORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER, LOG2USER} from "../../../utils";
 import { FreMetaConcept, FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage";
 import { TyperDef } from "../../metalanguage";
 import { ListUtil } from "../../../utils";
@@ -8,23 +8,30 @@ import { FreSuperTypeMaker } from "./FreSuperTypeMaker";
 import { FreTyperGenUtils } from "./FreTyperGenUtils";
 
 export class FreTyperPartTemplate {
+    // @ts-ignore Property is set in the only public method 'generateTyperPart'.
     typerdef: TyperDef;
+    // @ts-ignore Property is set in the only public method 'generateTyperPart'.
     language: FreMetaLanguage;
     imports: string[] = [];
     importedClassifiers: FreMetaClassifier[] = []; // holds all classifiers that need to be imported, either from LANGUAGE_GEN_FOLDER, or from TYPER_CONCEPTS_FOLDER
 
-    generateTyperPart(language: FreMetaLanguage, typerdef: TyperDef, relativePath: string): string {
+    generateTyperPart(language: FreMetaLanguage, typerdef: TyperDef | undefined, relativePath: string): string {
+        if (language === undefined || language === null) {
+            LOG2USER.error("Could not create type part, because language was not set.");
+            return '';
+        }
+        this.language = language;
         if (!!typerdef) {
-            return this.generateFromDefinition(typerdef, language, relativePath);
+            return this.generateFromDefinition(typerdef, relativePath);
         } else {
-            return this.generateDefault(language);
+            return this.generateDefault();
         }
     }
 
-    private generateDefault(language: FreMetaLanguage): string {
+    private generateDefault(): string {
         // const allLangConcepts: string = Names.allConcepts(language);
         const typerInterfaceName: string = Names.FreTyperPart;
-        const generatedClassName: string = Names.typerPart(language);
+        const generatedClassName: string = Names.typerPart(this.language);
 
         // Template starts here
         return `
@@ -95,14 +102,12 @@ export class FreTyperPartTemplate {
         }`;
     }
 
-    private generateFromDefinition(typerdef: TyperDef, language: FreMetaLanguage, relativePath: string) {
+    private generateFromDefinition(typerdef: TyperDef, relativePath: string) {
         this.typerdef = typerdef;
-        this.language = language;
-        const rootType = Names.classifier(typerdef?.typeRoot());
+        this.language = this.language;
+        const rootType: string = !!typerdef?.typeRoot() ? Names.classifier(typerdef?.typeRoot()!) : "unknown-root-type";
         ListUtil.addIfNotPresent(this.imports, rootType);
-        const allLangConcepts: string = Names.allConcepts(language);
-        // ListUtil.addIfNotPresent(this.imports, allLangConcepts);
-        const generatedClassName: string = Names.typerPart(language);
+        const generatedClassName: string = Names.typerPart(this.language);
         const typerInterfaceName: string = Names.FreTyperPart;
         const equalsMaker: FreTypeEqualsMaker = new FreTypeEqualsMaker();
         const inferMaker: FreTypeInferMaker = new FreTypeInferMaker();
@@ -118,7 +123,7 @@ export class FreTyperPartTemplate {
          * otherwise this class implements the default typer.
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
-            mainTyper: FreCompositeTyper; //  ${Names.typer(language)};
+            mainTyper: FreCompositeTyper; //  ${Names.typer(this.language)};
 
             /**
              * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
@@ -135,7 +140,7 @@ export class FreTyperPartTemplate {
             public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
                 if (!modelelement) { return null; }
                 let result: ${Names.FreType} = null;
-                ${inferMaker.makeInferType(typerdef, allLangConcepts, rootType, "modelelement", this.importedClassifiers)}
+                ${inferMaker.makeInferType(typerdef, "modelelement", this.importedClassifiers)}
                 return result;
             }
 
@@ -241,7 +246,7 @@ export class FreTyperPartTemplate {
 
         });
 
-        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, ${Names.FreNodeReference}, FreCommonSuperTypeUtil } from "${FREON_CORE}";
+        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, FreCommonSuperTypeUtil } from "${FREON_CORE}";
         import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}`;
 
@@ -249,7 +254,7 @@ export class FreTyperPartTemplate {
     }
 
     private makeIsType(allTypes: FreMetaClassifier[]) {
-        let result: string;
+        let result: string = '';
         // add statements for all concepts that are marked 'isType'
         // all elements of allTypes should be FreConcepts
         const myList: FreMetaConcept[] = allTypes.filter(t => t instanceof FreMetaConcept) as FreMetaConcept[];

@@ -11,8 +11,12 @@ import { refRuleName } from "./GrammarUtils";
 import { GrammarPart } from "./GrammarPart";
 
 export class GrammarModel {
+    constructor(language: FreMetaLanguage) {
+        this.language = language;
+    }
+
     // these four properties are set by the GrammarGenerator
-    public language: FreMetaLanguage = null;
+    public language: FreMetaLanguage;
     public parts: GrammarPart[] = [];
     public trueValue: string = "true";
     public falseValue: string = "false";
@@ -64,7 +68,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         return result.trimEnd();
     }
 
-    toMethod(relativePath: string): string {
+    toMethod(): string {
         const className: string = Names.syntaxAnalyser(this.language);
         let switchContent: string = "";
         this.parts.forEach(part => part.rules.map(rule => {
@@ -274,12 +278,11 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
 
             public location(branch: SPPTBranch): ${Names.FreParseLocation} {
-                const location = ${Names.FreParseLocation}.create({
+                return ${Names.FreParseLocation}.create({
                     filename: this.sourceName,
                     line: branch.location.line,
                     column: branch.location.column
                 });
-                return location;
             }
         }`;
         // end Template

@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from "@testing-library/svelte";
-import { LabelBox, FreEditor, FreNode } from "@freon4dsl/core";
-import { SimpleElement } from "./models/SimpleElement";
-import LabelComponent from "../components/LabelComponent.svelte";
+import { LabelBox, FreEditor, type FreNode } from "@freon4dsl/core";
+import { SimpleElement } from "./models/SimpleElement.js";
+import LabelComponent from "../lib/components/LabelComponent.svelte";
 import MockLabelSelectable from "./mock-components/MockLabelSelectable.svelte";
 
 describe.skip("Label component", () => {
@@ -13,7 +13,7 @@ describe.skip("Label component", () => {
     const myEditor = new FreEditor(null, null);
 
     it("is rendered with label", () => {
-        render(LabelComponent, { label: myLabelBox, editor: myEditor });
+        render(LabelComponent, { box: myLabelBox });
         const myLabel = screen.getByText('LabelText');
         expect(myLabel).toBeVisible();
         myLabelBox.setFocus();
@@ -21,7 +21,7 @@ describe.skip("Label component", () => {
     });
 
     it("gets focus from its box", () => {
-        render(LabelComponent, { label: myLabelBox, editor: myEditor });
+        render(LabelComponent, { box: myLabelBox });
         const myLabel = screen.getByText('LabelText');
         expect(myLabel).toBeVisible();
         myLabelBox.setFocus();

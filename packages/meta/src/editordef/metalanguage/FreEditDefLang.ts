@@ -34,11 +34,11 @@ export enum ListJoinType {
  * The root of the complete editor definition
  */
 export class FreEditUnit extends FreMetaDefinitionElement {
-    language: FreMetaLanguage;
+    language: FreMetaLanguage | undefined;
     projectiongroups: FreEditProjectionGroup[] = [];
     classifiersUsedInSuperProjection: string[] = []; // holds the names of all classifiers that are refered in an FreEditSuperProjection
 
-    getDefaultProjectiongroup(): FreEditProjectionGroup {
+    getDefaultProjectiongroup(): FreEditProjectionGroup | undefined {
         return this.projectiongroups.find(group => group.name === Names.defaultProjectionName);
     }
 
@@ -47,9 +47,13 @@ export class FreEditUnit extends FreMetaDefinitionElement {
      * Lowest precedence first!
      */
     getAllNonDefaultProjectiongroups(): FreEditProjectionGroup[] {
-        const result = this.projectiongroups.filter(group => group.name !== Names.defaultProjectionName);
-        result.sort ( (a, b) => {
-            return a.precedence - b.precedence;
+        const result: FreEditProjectionGroup[] = this.projectiongroups.filter((group: FreEditProjectionGroup): boolean => group.name !== Names.defaultProjectionName);
+        result.sort ( (a: FreEditProjectionGroup, b: FreEditProjectionGroup): number => {
+            if (a.precedence !== undefined && b.precedence !== undefined) {
+                return a.precedence - b.precedence;
+            } else {
+                return 0;
+            }
         });
         return result;
     }
@@ -88,14 +92,14 @@ export class FreEditUnit extends FreMetaDefinitionElement {
         return `${this.projectiongroups.map(pr => pr.toString()). join("\n")}`;
     }
 
-    findExtrasForType(cls: FreMetaClassifier): ExtraClassifierInfo {
-        return this.getDefaultProjectiongroup().findExtrasForType(cls);
+    findExtrasForType(cls: FreMetaClassifier): ExtraClassifierInfo | undefined {
+        return this.getDefaultProjectiongroup()?.findExtrasForType(cls);
     }
 }
 
 export class BoolKeywords extends FreMetaDefinitionElement {
     trueKeyword: string = "true";
-    falseKeyword?: string;
+    falseKeyword?: string = undefined;
 
     toString(): string {
         return `BoolKeywords [ ${this.trueKeyword} | ${this.falseKeyword} ]`;
@@ -106,31 +110,35 @@ export class BoolKeywords extends FreMetaDefinitionElement {
  * A group of projection definitions that share the same name
  */
 export class FreEditProjectionGroup extends FreMetaDefinitionElement {
-    name: string = null;
+    name: string = '';
     projections: FreEditClassifierProjection[] = [];
-    standardBooleanProjection: BoolKeywords = null; // may only be present in default group
-    standardReferenceSeparator: string = null;      // may only be present in default group
-    extras: ExtraClassifierInfo[] = null;           // may only be present in default group
-    owningDefinition: FreEditUnit;
-    precedence: number;
+    standardBooleanProjection?: BoolKeywords = undefined; // may only be present in default group
+    standardReferenceSeparator?: string = undefined;      // may only be present in default group
+    extras: ExtraClassifierInfo[] = [];                   // may only be present in default group
+    owningDefinition: FreEditUnit | undefined;
+    precedence: number | undefined;
 
     findProjectionsForType(cls: FreMetaClassifier): FreEditClassifierProjection[] {
-        return this.projections.filter(con => con.classifier.referred === cls);
+        let tmp: FreEditClassifierProjection[] | undefined = this.projections.filter((con: FreEditClassifierProjection): boolean => con.classifier?.referred === cls);
+        if (tmp === undefined) {
+            tmp = [];
+        }
+        return tmp;
     }
 
-    findTableProjectionForType(cls: FreMetaClassifier): FreEditTableProjection {
-        return this.allTableProjections().find(con => con.classifier.referred === cls);
+    findTableProjectionForType(cls: FreMetaClassifier): FreEditTableProjection | undefined {
+        return this.allTableProjections().find(con => con.classifier?.referred === cls);
     }
 
-    findNonTableProjectionForType(cls: FreMetaClassifier): FreEditProjection {
-        return this.allNonTableProjections().find(con => con.classifier.referred === cls);
+    findNonTableProjectionForType(cls: FreMetaClassifier): FreEditProjection | undefined {
+        return this.allNonTableProjections().find(con => con.classifier?.referred === cls);
     }
 
-    findExtrasForType(cls: FreMetaClassifier): ExtraClassifierInfo {
+    findExtrasForType(cls: FreMetaClassifier): ExtraClassifierInfo | undefined {
         if (!!this.extras) {
-            return this.extras.find(con => con.classifier.referred === cls);
+            return this.extras.find(con => con.classifier?.referred === cls);
         } else {
-            return null;
+            return undefined;
         }
     }
 
@@ -157,8 +165,8 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
  * A single projection definition for a single concept or interface
  */
 export abstract class FreEditClassifierProjection extends FreMetaDefinitionElement {
-    name: string;
-    classifier: MetaElementReference<FreMetaClassifier>;
+    name: string = '';
+    classifier: MetaElementReference<FreMetaClassifier> | undefined;
     toString(): string {
         return `TO BE IMPLEMENTED BY SUBCLASSES`;
     }
@@ -170,15 +178,15 @@ export abstract class FreEditClassifierProjection extends FreMetaDefinitionEleme
 export class FreEditProjection extends FreEditClassifierProjection {
     lines: FreEditProjectionLine[] = [];
 
-    firstProperty(): FreMetaProperty {
+    firstProperty(): FreMetaProperty | undefined {
         for (const line of this.lines) {
             for (const item of line.items) {
-                if (item instanceof FreEditPropertyProjection) {
+                if (item instanceof FreEditPropertyProjection && !!item.property) {
                     return item.property.referred;
                 }
             }
         }
-        return null;
+        return undefined;
     }
 
     findAllPartProjections(): FreEditPropertyProjection[] {
@@ -228,15 +236,15 @@ export class FreEditTableProjection extends FreEditClassifierProjection {
  * Holds extra information, defined in the default editor, per classifier
  */
 export class ExtraClassifierInfo extends FreMetaDefinitionElement {
-    classifier: MetaElementReference<FreMetaClassifier>;
+    classifier: MetaElementReference<FreMetaClassifier> | undefined;
     // The string that triggers the creation of an object of this class in the editor.
-    trigger: string = null;
+    trigger: string = '';
     // The property to be used when an element of type 'classifier' is used within a reference.
-    referenceShortCut: MetaElementReference<FreMetaProperty> = null;
+    referenceShortCut?: MetaElementReference<FreMetaProperty> = undefined;
     // The parsed expression that refers to the referenceShortcut. Deleted during checking!
-    referenceShortcutExp: FreLangExp = null;
+    referenceShortcutExp?: FreLangExp = undefined;
     // Only for binary expressions: the operator between left and right parts.
-    symbol: string = null;
+    symbol: string = '';
 
     toString(): string {
         return `${this.classifier?.name} {
@@ -290,19 +298,19 @@ export class FreEditProjectionText extends FreMetaDefinitionElement {
  * are represented by subclasses of this class.
  */
 export class FreEditPropertyProjection extends FreMetaDefinitionElement {
-    property: MetaElementReference<FreMetaProperty> = null;
+    property?: MetaElementReference<FreMetaProperty> = undefined;
     // expression used during parsing, should not be used after that phase
-    expression: FreLangExp = null;
+    expression?: FreLangExp = undefined;
     // projection info if the referred property is a list
-    listInfo: ListInfo = null;
+    listInfo?: ListInfo = undefined;
     // projection info if the referred property is a primitive of boolean type
-    boolInfo: BoolKeywords = null;
+    boolInfo?: BoolKeywords = undefined;
     // projection to be used for this property
     // TODO Only used in parser?
-    projectionName: string = null;
+    projectionName: string = '';
 
     toString(): string {
-        let extraText: string;
+        let extraText: string = '';
         if (!!this.listInfo) {
             extraText = `\n/* list */ ${this.listInfo}`;
         }
@@ -319,8 +327,8 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
 export class FreOptionalPropertyProjection extends FreEditPropertyProjection {
     lines: FreEditProjectionLine[] = [];
 
-    public findPropertyProjection(): FreEditPropertyProjection {
-        let result: FreEditPropertyProjection = null;
+    public findPropertyProjection(): FreEditPropertyProjection | undefined {
+        let result: FreEditPropertyProjection | undefined = undefined;
         this.lines.forEach(l => {
             if (!result) {
                 result = l.items.find(item => item instanceof FreEditPropertyProjection) as FreEditPropertyProjection;
@@ -376,7 +384,7 @@ export class ListInfo extends FreMetaDefinitionElement {
  * An element of a line in a projection definition that represents the projection of a superconcept or interface.
  */
 export class FreEditSuperProjection extends FreMetaDefinitionElement {
-    superRef: MetaElementReference<FreMetaClassifier> = null;
+    superRef?: MetaElementReference<FreMetaClassifier> = undefined;
     projectionName: string = "";
     toString(): string {
         return `[=> ${this.superRef?.name} /* found ${this.superRef?.referred?.name} */ ${this.projectionName.length > 0 ? `:${this.projectionName}` : ``}]`;
@@ -389,9 +397,9 @@ export class FreEditSuperProjection extends FreMetaDefinitionElement {
  * This class is only used during parsing. It is removed from the model in the creation phase.
  */
 export class FreEditParsedClassifier extends FreEditClassifierProjection {
-    projection: FreEditProjection = null;
-    tableProjection: FreEditTableProjection = null;
-    classifierInfo: ExtraClassifierInfo = null;
+    projection?: FreEditProjection = undefined;
+    tableProjection?: FreEditTableProjection = undefined;
+    classifierInfo?: ExtraClassifierInfo = undefined;
     toString(): string {
         return `ParsedClassifier ${this.classifier?.name}`;
     }

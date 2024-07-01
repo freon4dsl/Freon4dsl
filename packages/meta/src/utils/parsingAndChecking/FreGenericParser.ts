@@ -1,11 +1,12 @@
 import * as fs from "fs";
 import { Checker } from "./Checker";
-import { Parser } from "pegjs";
+import { Parser, parser } from "pegjs";
 import { LOG2USER } from "../UserLogger";
 import { FreMetaDefinitionElement } from "../FreMetaDefinitionElement";
 import { ParseLocationUtil } from "./ParseLocationUtil";
 
 // The following two types are used to store the location information from the PEGJS parser
+// todo rethink how to adjust the errors from the PegJs parser
 export type ParseLocation = {
     filename: string;
     start: Location;
@@ -17,6 +18,10 @@ export type Location = {
     line: number;
     column: number;
 };
+
+function isPegjsError(object: any): object is parser.SyntaxError {
+    return 'location' in object;
+}
 
 /**
  * This class is used to store the location information from the AGL parser.
@@ -36,19 +41,22 @@ export class FreParseLocation {
         }
         return result;
     }
-    filename: string;
-    line: number;
-    column: number;
+    filename: string = '';
+    line: number = 0;
+    column: number = 0;
 }
 
 /**
- * Generic Parser, subclasses need to initialize the parser, checker and msg fields.
+ * Generic Parser, subclasses need to initialize the parser, and checker fields.
  */
 export class FreGenericParser<DEFINITION> {
+    // todo find a way to ensure that these props are set by the subclasses, without introducing lots of test of undefined
+    // @ts-ignore, the parser is set in each of the subclasses
     parser: Parser;
+    // @ts-ignore, the checker is set in each of the subclasses
     checker: Checker<DEFINITION>;
 
-    parse(definitionFile: string): DEFINITION {
+    parse(definitionFile: string): DEFINITION | undefined {
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
@@ -59,30 +67,35 @@ export class FreGenericParser<DEFINITION> {
         // clean the error list from the creator functions
         this.cleanNonFatalParseErrors();
         // parse definition file
-        let model: DEFINITION = null;
+        let model: DEFINITION | undefined = undefined;
         try {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
             model = this.parser.parse(langSpec);
-        } catch (e) {
-            // syntax error
-            const errorstr = `${e}
+        } catch (e: unknown) {
+            if (isPegjsError(e)) {
+                // syntax error
+                const errorLoc: ParseLocation = { filename: definitionFile, start: e.location.start, end: e.location.end };
+                const errorstr: string = `${e}
                 ${e.location && e.location.start ?
-                    ParseLocationUtil.locationPlus(definitionFile, e.location)
-                :
+                    ParseLocationUtil.locationPlus(definitionFile, errorLoc)
+                    :
                     ``}`;
-            LOG2USER.error(errorstr);
-            throw new Error("syntax error: " + errorstr);
+                LOG2USER.error(errorstr);
+                throw new Error("syntax error: " + errorstr);
+            }
         }
 
-        // run the checker
-        this.runChecker(model);
+        if (!!model) {
+            // run the checker
+            this.runChecker(model);
+        }
 
         // return the model
         return model;
     }
 
-    parseMulti(filePaths: string[]): DEFINITION {
-        let model: DEFINITION;
+    parseMulti(filePaths: string[]): DEFINITION | undefined {
+        let model: DEFINITION | undefined;
         const submodels: DEFINITION[] = [];
 
         // clean the error list from the creator functions used by this.parser
@@ -98,16 +111,19 @@ export class FreGenericParser<DEFINITION> {
                 try {
                     this.setCurrentFileName(file); // sets the filename in the creator functions to the right value
                     submodels.push(this.parser.parse(langSpec));
-                } catch (e) {
-                    // throw syntax error, but adjust the location first
-                    // to avoid a newline in the output, we do not put this if-stat in a smart string
-                    let location: string = "";
-                    if (!!e.location && !!e.location.start) {
-                        location = ParseLocationUtil.locationPlus(file, e.location);
+                } catch (e: unknown) {
+                    if (isPegjsError(e)) {
+                        // throw syntax error, but adjust the location first
+                        // to avoid a newline in the output, we do not put this if-stat in a smart string
+                        const errorLoc: ParseLocation = { filename: file, start: e.location.start, end: e.location.end };
+                        let location: string = "";
+                        if (!!e.location && !!e.location.start) {
+                            location = ParseLocationUtil.locationPlus(file, errorLoc);
+                        }
+                        const errorstr = `${e.message.trimEnd()} ${location}`;
+                        LOG2USER.error(errorstr);
+                        throw new Error("syntax error: " + errorstr);
                     }
-                    const errorstr = `${e.message.trimEnd()} ${location}`;
-                    LOG2USER.error(errorstr);
-                    throw new Error("syntax error: " + errorstr);
                 }
             }
         }
@@ -115,15 +131,17 @@ export class FreGenericParser<DEFINITION> {
         // combine the submodels into one
         model = this.merge(submodels);
 
-        // run the checker
-        this.runChecker(model);
+        if (!!model) {
+            // run the checker
+            this.runChecker(model);
+        }
 
         // return the model
         return model;
     }
 
     private runChecker(model: DEFINITION) {
-        if (model !== null) {
+        if (model !== undefined && model !== null) {
             this.checker.errors = [];
             this.checker.warnings = [];
             this.checker.check(model);
@@ -142,13 +160,16 @@ export class FreGenericParser<DEFINITION> {
         }
     }
 
-    protected merge(submodels: DEFINITION[]): DEFINITION {
+    protected merge(submodels: DEFINITION[]): DEFINITION | undefined {
         if (submodels.length > 0) {
             throw Error("FreParser.merge should be implemented by its subclasses.");
         }
-        return null;
+        return undefined;
     }
 
+    // @ts-expect-error
+    // error TS6133: 'file' is declared but its value is never read.
+    // This error is ignored because this implementation is here merely to avoid it being called.
     protected setCurrentFileName(file: string) {
         throw Error("FreParser.setCurrentFileName should be implemented by its subclasses.");
     }

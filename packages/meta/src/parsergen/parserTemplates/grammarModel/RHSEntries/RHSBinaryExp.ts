@@ -6,7 +6,7 @@ import { GenerationUtil } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBinaryExp extends RHSPropEntry {
-    type: FreMetaBinaryExpressionConcept = null;
+    type: FreMetaBinaryExpressionConcept;
 
     constructor(prop: FreMetaProperty, type: FreMetaBinaryExpressionConcept) {
         super(prop);

@@ -35,7 +35,7 @@ export class RHSOptionalGroup extends RHSPropEntry {
             if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
                 const _optGroup = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);` + // to avoid an extra newline
                 `const _propItem = this.${mainAnalyserName}.getChildren(_optGroup);` +
-                `${this.subs.map((sub, index2) => `${sub.toMethod(this.propIndex, "_propItem", mainAnalyserName)}`).join("\n")}
+                `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "_propItem", mainAnalyserName)}`).join("\n")}
             }`;
         } else if (this.subs.length === 1) {
             const first = this.subs[0];

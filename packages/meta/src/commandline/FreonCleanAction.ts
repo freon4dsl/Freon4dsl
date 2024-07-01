@@ -9,7 +9,7 @@ import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
-import { MetaLogger } from "../utils/MetaLogger";
+import { MetaLogger } from "../utils";
 import { GenerationStatus, FileUtil } from "../utils";
 import { LanguageParser } from "../languagedef/parser/LanguageParser";
 import { FreMetaLanguage } from "../languagedef/metalanguage";
@@ -21,9 +21,9 @@ export class FreonCleanAction extends CommandLineAction {
     private defFolderArg: CommandLineStringParameter;
     protected forceFlag: CommandLineFlagParameter;
 
-    protected outputFolder: string;
-    private defFolder: string;
-    private force: boolean;
+    protected outputFolder: string = '';
+    private defFolder: string = '';
+    private force: boolean = false;
 
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
@@ -31,7 +31,7 @@ export class FreonCleanAction extends CommandLineAction {
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
     protected validatorGenerator: ValidatorGenerator = new ValidatorGenerator();
     protected typerGenerator: FreonTyperGenerator = new FreonTyperGenerator();
-    private language: FreMetaLanguage;
+    private language?: FreMetaLanguage;
 
     public constructor() {
         super({
@@ -41,19 +41,7 @@ export class FreonCleanAction extends CommandLineAction {
                 "Removes the TypeScript code for the language implementation, the editor, the scoper, the typer, the reader, the writer, and the " +
                 "validator. Any files that may contain customizations are left untouched."
         });
-    }
 
-    protected onExecute(): Promise<void> {
-        const self = this;
-        self.outputFolder = this.outputFolderArg.value;
-        self.force = this.forceFlag.value;
-        self.defFolder = this.defFolderArg.value;
-        return new Promise(function(resolve, rejest) {
-            self.doClean();
-        });
-    }
-
-    protected onDefineParameters(): void {
         this.forceFlag = this.defineFlagParameter({
             parameterLongName: "--force",
             parameterShortName: "-f",
@@ -76,15 +64,37 @@ export class FreonCleanAction extends CommandLineAction {
         });
     }
 
+    protected onExecute(): Promise<void> {
+        const self = this;
+        self.outputFolder = this.outputFolderArg.value ? this.outputFolderArg.value : '';
+        self.force = this.forceFlag.value;
+        self.defFolder = this.defFolderArg.value ? this.defFolderArg.value : '';
+        // @ts-ignore
+        // error TS6133: 'resolve' is declared but its value is never read.
+        // error TS6133: 'reject' is declared but its value is never read.
+        // The parameters are expected by the constructor of Promise.
+        return new Promise(function(resolve, reject) {
+            self.doClean();
+        });
+    }
+
     doClean(): void {
         LOGGER.info("Removing of all parts of your language");
         // LOGGER.log("Output will be cleaned from: " + this.outputFolder);
+        if (this.outputFolder.length === 0) {
+            LOGGER.error("No folder to be cleaned provided.");
+            return;
+        }
 
         // when the force flag is present we need to parse the definition ast files
         // because some generators must remove files with names based on the language
         if (this.force) {
-            LOGGER.info("Force flag is present therefore we need to parse the definition ast files, because some generators must remove files with names based on the language.");
-            this.findLanguage();
+            if (this.defFolder.length === 0) {
+                LOGGER.error("A definition folder must be provided when the force flag is used.");
+            } else {
+                LOGGER.info("Force flag is present therefore we need to parse the definition ast files, because some generators must remove files with names based on the language.");
+                this.findLanguage();
+            }
         }
         // clean the workspace
         try {
@@ -93,8 +103,10 @@ export class FreonCleanAction extends CommandLineAction {
             this.cleanValidator();
             this.cleanScoper();
             this.cleanTyper();
-        } catch (e) {
-            LOGGER.error("Stopping cleaning because of errors: " + e.message + "\n");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                LOGGER.error("Stopping cleaning because of errors: " + e.message + "\n");
+            }
         }
     }
 
@@ -102,11 +114,15 @@ export class FreonCleanAction extends CommandLineAction {
         LOGGER.log("Cleaning typer");
         try {
             this.typerGenerator.outputfolder = this.outputFolder;
-            this.typerGenerator.language = this.language;
+            if (!!this.language) {
+                this.typerGenerator.language = this.language;
+            }
             this.typerGenerator.clean(this.force);
-        } catch (e) {
-            // LOGGER.error("Stopping typer cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error("Stopping typer cleansing because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // LOGGER.error("Stopping typer cleansing because of errors: " + e.message + "\n" + e.stack);
+                LOGGER.error("Stopping typer cleansing because of errors: " + e.message);
+            }
         }
     };
 
@@ -114,11 +130,15 @@ export class FreonCleanAction extends CommandLineAction {
         LOGGER.log("Cleaning scoper");
         try {
             this.scoperGenerator.outputfolder = this.outputFolder;
-            this.scoperGenerator.language = this.language;
+            if (!!this.language) {
+                this.scoperGenerator.language = this.language;
+            }
             this.scoperGenerator.clean(this.force);
-        } catch (e) {
-            // LOGGER.error("Stopping scoper cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error("Stopping scoper cleansing because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // LOGGER.error("Stopping scoper cleansing because of errors: " + e.message + "\n" + e.stack);
+                LOGGER.error("Stopping scoper cleansing because of errors: " + e.message);
+            }
         }
     };
 
@@ -126,11 +146,15 @@ export class FreonCleanAction extends CommandLineAction {
         LOGGER.log("Cleaning validator");
         try {
             this.validatorGenerator.outputfolder = this.outputFolder;
-            this.validatorGenerator.language = this.language;
+            if (!!this.language) {
+                this.validatorGenerator.language = this.language;
+            }
             this.validatorGenerator.clean(this.force);
-        } catch (e) {
-            // LOGGER.error("Stopping validator cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error("Stopping validator cleansing because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // LOGGER.error("Stopping validator cleansing because of errors: " + e.message + "\n" + e.stack);
+                LOGGER.error("Stopping validator cleansing because of errors: " + e.message);
+            }
         }
     };
 
@@ -138,15 +162,21 @@ export class FreonCleanAction extends CommandLineAction {
         LOGGER.log("Cleaning editor, reader and writer");
         try {
             this.editorGenerator.outputfolder = this.outputFolder;
-            this.editorGenerator.language = this.language;
+            if (!!this.language) {
+                this.editorGenerator.language = this.language;
+            }
             this.editorGenerator.clean(this.force);
 
             this.parserGenerator.outputfolder = this.outputFolder;
-            this.parserGenerator.language = this.language;
+            if (!!this.language) {
+                this.parserGenerator.language = this.language;
+            }
             this.parserGenerator.clean(this.force);
-        } catch (e) {
-            // LOGGER.error("Stopping editor and parser cleansing because of errors: " + e.message + "\n" + e.stack);
-            LOGGER.error("Stopping editor, reader and writer cleansing because of errors: " + e.message);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // LOGGER.error("Stopping editor and parser cleansing because of errors: " + e.message + "\n" + e.stack);
+                LOGGER.error("Stopping editor, reader and writer cleansing because of errors: " + e.message);
+            }
         }
     };
 

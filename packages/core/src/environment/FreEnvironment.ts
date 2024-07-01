@@ -3,7 +3,6 @@ import { FreInterpreter } from "../interpreter";
 import { FreValidator } from "../validator";
 import { FreScoperComposite } from "../scoper";
 import { FreCompositeTyper } from "../typer";
-import { FreStdlib } from "../stdlib";
 import { FreWriter } from "../writer";
 import { FreReader } from "../reader";
 import { FreModel } from "../ast";

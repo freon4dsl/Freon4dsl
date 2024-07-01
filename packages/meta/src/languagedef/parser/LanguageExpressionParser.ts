@@ -2,7 +2,7 @@ import { FreMetaLanguage } from "../metalanguage/FreMetaLanguage";
 import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker";
 import { FreGenericParser } from "../../utils/parsingAndChecking/FreGenericParser";
 import { LanguageExpressionTester } from "./LanguageExpressionTester";
-const pegjsParser = require("./ExpressionGrammar");
+import pegjsParser  from "./ExpressionGrammar";
 import { setCurrentFileName } from "./ExpressionCreators";
 
 export class LanguageExpressionParser extends FreGenericParser<LanguageExpressionTester> {
@@ -15,9 +15,12 @@ export class LanguageExpressionParser extends FreGenericParser<LanguageExpressio
         this.checker = new FreLangExpressionChecker(this.language);
     }
 
-    protected merge(submodels: LanguageExpressionTester[]): LanguageExpressionTester {
+    // @ts-ignore
+    // error TS6133: 'submodels' is declared but its value is never read.
+    // This error is ignored because this class is only used for tests.
+    protected merge(submodels: LanguageExpressionTester[]): LanguageExpressionTester | undefined{
         // no need to merge submodels, LanguageExpressionTester is only used for tests
-        return null;
+        return undefined;
     }
 
     protected setCurrentFileName(file: string) {
@@ -26,5 +29,8 @@ export class LanguageExpressionParser extends FreGenericParser<LanguageExpressio
 
     protected getNonFatalParseErrors(): string[] {
         return [];
+    }
+
+    protected cleanNonFatalParseErrors() {
     }
 }

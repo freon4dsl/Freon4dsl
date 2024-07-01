@@ -3,7 +3,7 @@ import {
     FreMetaInterface,
     FreLangExp,
     FreLangFunctionCallExp,
-    FreMetaLanguage
+    FreMetaLanguage, FreMetaProperty
 } from "../../../languagedef/metalanguage";
 import {
     Names,
@@ -40,9 +40,10 @@ export class ScoperTemplate {
         const generatedClassName: string = Names.scoper(language);
         const scoperBaseName: string = Names.FreScoperBase;
 
+        const coreImports: string[] = [scoperBaseName, Names.FreLogger, Names.FreNode, Names.FreNamespace ];
         if (!!scopedef) { // should always be the case, either the definition read from file or the default
             this.makeAlternativeScopeTexts(scopedef);
-            this.makeAdditionalNamespaceTexts(scopedef);
+            this.makeAdditionalNamespaceTexts(scopedef, coreImports);
         }
         // add the necessary names to the imports
         // ListUtil.addIfNotPresent(this.languageImports, langConceptType);
@@ -90,34 +91,35 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        import { ${scoperBaseName}, ${Names.FreLogger}, ${Names.FreNode}, ${Names.FreNodeReference}, ${Names.FreNamespace}, ${Names.FreTyper} } from "${FREON_CORE}"
-        import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        ${coreImports.length > 0 ? `import { ${coreImports.map(name => name).join(", ")} } from "${FREON_CORE}";`: "" }
+        ${this.languageImports.length > 0 ? `import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`: "" }
         `;
 
         return templateImports + templateBody;
     }
 
-    private makeAdditionalNamespaceTexts(scopedef: ScopeDef) {
+    private makeAdditionalNamespaceTexts(scopedef: ScopeDef, coreImports: string[]) {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceAdditions) {
-                const myClassifier = def.conceptRef.referred;
-                // let isDone: boolean = false;
-                const comment = "// based on namespace addition for " + myClassifier.name + "\n";
-                ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
-                if (myClassifier instanceof FreMetaInterface) {
-                    for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
-                        this.makeAdditionalNamespaceTextsForConcept(implementor, def, comment);
-                        ListUtil.addIfNotPresent(this.languageImports, Names.concept(implementor));
-                    }
-                } else {
-                    this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, comment);
+                const myClassifier: FreMetaConcept | undefined = def.conceptRef?.referred;
+                if (!!myClassifier) {
+                    const comment = "// based on namespace addition for " + myClassifier.name + "\n";
                     ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
+                    if (myClassifier instanceof FreMetaInterface) {
+                        for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
+                            this.makeAdditionalNamespaceTextsForConcept(implementor, def, comment, coreImports);
+                            ListUtil.addIfNotPresent(this.languageImports, Names.concept(implementor));
+                        }
+                    } else {
+                        this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, comment, coreImports);
+                        ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
+                    }
                 }
             }
         }
     }
 
-    private makeAdditionalNamespaceTextsForConcept(freConcept: FreMetaConcept, def: ScopeConceptDef, comment: string) {
+    private makeAdditionalNamespaceTextsForConcept(freConcept: FreMetaConcept, def: ScopeConceptDef, comment: string, coreImports: string[]) {
         const typeName = Names.concept(freConcept);
         // we are adding to three textstrings
         // first, to the import statements
@@ -129,8 +131,10 @@ export class ScoperTemplate {
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(comment);
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
             `if (element instanceof ${typeName}) {`);
-        for (const expression of def.namespaceAdditions.expressions) {
-            this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(this.addNamespaceExpression(expression));
+        if (!!def.namespaceAdditions) {
+            for (const expression of def.namespaceAdditions.expressions) {
+                this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(this.addNamespaceExpression(expression, coreImports));
+            }
         }
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
             `}\n`);
@@ -138,9 +142,9 @@ export class ScoperTemplate {
 
     private makeAlternativeScopeTexts(scopedef: ScopeDef) {
         for (const def of scopedef.scopeConceptDefs) {
-            if (!!def.alternativeScope) {
-                const conceptName = def.conceptRef.referred.name;
-                // we are adding to three textstrings
+            if (!!def.alternativeScope && !!def.conceptRef) {
+                const conceptName: string = def.conceptRef.referred.name;
+                // we are adding to three text strings
                 // first, to the import statements
                 ListUtil.addIfNotPresent(this.languageImports, Names.classifier(def.conceptRef.referred));
                 // console.log("Adding 444: " + Names.classifier(def.conceptRef.referred)  + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
@@ -152,21 +156,25 @@ export class ScoperTemplate {
                      }`);
 
                 // third, to the 'getAlternativeScope' method
-                this.getAlternativeScopeText = this.getAlternativeScopeText.concat(
-                    `if (!!modelelement && modelelement instanceof ${conceptName}) {
+                if (!!def.alternativeScope.expression) {
+                    this.getAlternativeScopeText = this.getAlternativeScopeText.concat(
+                        `if (!!modelelement && modelelement instanceof ${conceptName}) {
                         // use alternative scope '${def.alternativeScope.expression.toFreString()}'
                         ${this.altScopeExpToTypeScript(def.alternativeScope.expression)}
                     }`);
+                }
             }
         }
     }
 
-    private addNamespaceExpression(expression: FreLangExp): string {
+    private addNamespaceExpression(expression: FreLangExp, coreImports: string[]): string {
         let result: string = "";
-        const myRef = expression.findRefOfLastAppliedFeature();
+        const myRef: FreMetaProperty | undefined = expression.findRefOfLastAppliedFeature();
 
         const loopVar: string = "loopVariable";
-        if (myRef.isList) {
+        if (!!myRef && myRef.isList) {
+            // add "FreNodeReference" to imports, because now we know that its is used
+            ListUtil.addIfNotPresent(coreImports, Names.FreNodeReference);
             result = result.concat(`
             // generated based on '${expression.toFreString()}'
             for (let ${loopVar} of element.${expression.appliedfeature.toFreString()}) {
@@ -212,7 +220,7 @@ export class ScoperTemplate {
         let result;
         // special case: the expression refers to 'typeof'
         if (expression instanceof FreLangFunctionCallExp && expression.sourceName === "typeof") {
-            let actualParamToGenerate: string;
+            let actualParamToGenerate: string = '';
             // we know that typeof has exactly 1 actual parameter
             if ( expression.actualparams[0].sourceName === "container" ) {
                 actualParamToGenerate = `modelelement.freOwnerDescriptor().owner`;

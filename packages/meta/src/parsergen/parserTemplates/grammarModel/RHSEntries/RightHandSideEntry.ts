@@ -17,10 +17,16 @@ export abstract class RightHandSideEntry {
         return `RightHandSideEntry.toGrammar() should be implemented by its subclasses.`;
     }
 
+    // @ts-ignore
+    // error TS6133: 'depth' is declared but its value is never read.
+    // This error is ignored because this parameter is only used by subclasses.
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         return `RightHandSideEntry.toMethod() should be implemented by its subclasses.`;
     }
 
+    // @ts-ignore
+    // error TS6133: 'depth' is declared but its value is never read.
+    // This error is ignored because this parameter is only used by subclasses.
     toString(depth: number): string {
         return `RightHandSideEntry.toString() should be implemented by its subclasses.`;
     }

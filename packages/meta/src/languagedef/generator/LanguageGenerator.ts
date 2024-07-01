@@ -20,7 +20,6 @@ import {
     EnvironmentTemplate,
     IndexTemplate,
     LanguageTemplate,
-    MetaTypeTemplate,
     WalkerTemplate,
     WorkerInterfaceTemplate,
     DefaultWorkerTemplate,
@@ -36,15 +35,15 @@ import { ListUtilTemplate } from "./templates/ListUtilTemplate";
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
-    private languageGenFolder: string;
-    private utilsGenFolder: string;
-    private stdlibGenFolder: string;
-    private configurationFolder: string;
-    private configurationGenFolder: string;
-    private languageFolder: string;
-    private utilsFolder: string;
-    private stdlibFolder: string;
-    private commandlineFolder: string;
+    private languageGenFolder: string = '';
+    private utilsGenFolder: string = '';
+    private stdlibGenFolder: string = '';
+    private configurationFolder: string = '';
+    private configurationGenFolder: string = '';
+    private languageFolder: string = '';
+    private utilsFolder: string = '';
+    private stdlibFolder: string = '';
+    private commandlineFolder: string = '';
 
     generate(language: FreMetaLanguage): void {
         LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_GEN_FOLDER);
@@ -104,7 +103,7 @@ export class LanguageGenerator {
         language.interfaces.forEach(freInterface => {
             LOGGER.log(`Generating interface: ${this.languageGenFolder}/${Names.interface(freInterface)}.ts`);
             const innerGenerated = FileUtil.pretty(
-                interfaceTemplate.generateInterface(freInterface, relativePath),
+                interfaceTemplate.generateInterface(freInterface),
                 "interface " + freInterface.name,
                 generationStatus
             );
@@ -185,7 +184,7 @@ export class LanguageGenerator {
         }
 
         LOGGER.log(`Generating command line: ${this.commandlineFolder}/FreonCommandLine.ts`);
-        const commandLineFile = FileUtil.pretty(commandLineTemplate.generateCommandLine(language), "CommandLine Class", generationStatus);
+        const commandLineFile = FileUtil.pretty(commandLineTemplate.generateCommandLine(), "CommandLine Class", generationStatus);
         FileUtil.generateManualFile(`${this.commandlineFolder}/FreonCommandLine.ts`, commandLineFile, "CommandLine Class");
 
         LOGGER.log(`Generating command line runner: ${this.commandlineFolder}/FreonCommandLineRunner.ts`);
@@ -193,7 +192,7 @@ export class LanguageGenerator {
         FileUtil.generateManualFile(`${this.commandlineFolder}/FreonCommandLineRunner.ts`, commandLineRunnerFile, "CommandLineRunner Class");
 
         LOGGER.log(`Generating dummy action: ${this.commandlineFolder}/DummyAction.ts`);
-        const emptyActionFile = FileUtil.pretty(commandLineTemplate.generateEmptyAction(language), "DummyAction Class", generationStatus);
+        const emptyActionFile = FileUtil.pretty(commandLineTemplate.generateEmptyAction(), "DummyAction Class", generationStatus);
         FileUtil.generateManualFile(`${this.commandlineFolder}/DummyAction.ts`, emptyActionFile, "DummyAction Class");
 
         if (generationStatus.numberOfErrors > 0) {

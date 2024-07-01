@@ -2,3 +2,6 @@
 import { MetaLogger } from "./MetaLogger";
 
 export const LOG2USER = new MetaLogger("");
+// the following turns on info and log messages,
+// default only error message are shown
+LOG2USER.active = true;

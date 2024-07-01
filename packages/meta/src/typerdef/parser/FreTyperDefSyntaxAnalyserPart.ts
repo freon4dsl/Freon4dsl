@@ -25,16 +25,19 @@ import {
     FretConformsExp
 } from "../metalanguage";
 import { FreTyperSyntaxAnalyser } from "./FreTyperSyntaxAnalyser";
-import { FretTypeConcept } from "../metalanguage/FretTypeConcept";
-import { FretClassifierSpec } from "../metalanguage/FretClassifierSpec";
-import { FretTypeRule } from "../metalanguage/FretTypeRule";
-import { FretVarCallExp } from "../metalanguage/expressions/FretVarCallExp";
-import { FretVarDecl } from "../metalanguage/FretVarDecl";
-import { FretCreateExp } from "../metalanguage/expressions/FretCreateExp";
-import { FretPropInstance } from "../metalanguage/FretPropInstance";
-import { FretBinaryExp } from "../metalanguage/expressions/FretBinaryExp";
-import { FretConformanceRule } from "../metalanguage/FretConformanceRule";
-import { FretEqualsRule } from "../metalanguage/FretEqualsRule";
+import {
+    FretTypeConcept,
+    FretClassifierSpec,
+    FretTypeRule,
+    FretVarCallExp,
+    FretVarDecl,
+    FretCreateExp,
+    FretPropInstance,
+    FretBinaryExp,
+    FretConformanceRule,
+    FretEqualsRule
+} from "../metalanguage";
+import SPPTBranchFromInput = net.akehurst.language.agl.sppt.SPPTBranchFromInput;
 
 /**
  * This class is the (mainly) generated syntax analyser that reforms the parsed
@@ -62,10 +65,10 @@ export class FreTyperDefSyntaxAnalyserPart {
      */
     public transformTyperDef(branch: SPPTBranch): TyperDef {
         // console.log('transformTyperDef called: ' + branch.name);
-        let __types: MetaElementReference<FreMetaClassifier>[];
+        let __types: MetaElementReference<FreMetaClassifier>[] = [];
         let __typeConcepts: FretTypeConcept[];
-        let __conceptsWithType: MetaElementReference<FreMetaClassifier>[];
-        let __anyTypeSpec: FretAnyTypeSpec;
+        let __conceptsWithType: MetaElementReference<FreMetaClassifier>[] = [];
+        let __anyTypeSpec: FretAnyTypeSpec | undefined;
         let __classifierSpecs: FretClassifierSpec[];
         const children = this.mainAnalyser.getChildren(branch);
         if (!children[1].isEmptyMatch) {
@@ -131,7 +134,7 @@ export class FreTyperDefSyntaxAnalyserPart {
     public transformFretTypeConcept(branch: SPPTBranch): FretTypeConcept {
         // console.log('transformFretTypeConcept called: ' + branch.name);
         let __name: string;
-        let __base: MetaElementReference<FreMetaConcept>;
+        let __base: MetaElementReference<FreMetaConcept> | undefined = undefined;
         let __properties: FretProperty[];
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[1]); // RHSPrimEntry
@@ -144,7 +147,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         } // RHSListGroup
         __properties = [];
         const _myList = this.mainAnalyser.getChildren(children[4]);
-        _myList.forEach(subNode => {
+        _myList.forEach((subNode: SPPTBranchFromInput) => {
             const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(subNode.nonSkipChildren?.toArray()[0]);
             if (!!_transformed) {
                 __properties.push(_transformed);
@@ -216,7 +219,7 @@ export class FreTyperDefSyntaxAnalyserPart {
     public transformFretSelfExp(branch: SPPTBranch): FretSelfExp {
         // console.log('transformFretSelfExp called: ' + branch.name);
 
-        const children = this.mainAnalyser.getChildren(branch);
+        // const children = this.mainAnalyser.getChildren(branch);
         return FretSelfExp.create({ aglParseLocation: this.mainAnalyser.location(branch) });
     }
 
@@ -229,7 +232,7 @@ export class FreTyperDefSyntaxAnalyserPart {
     public transformFretAnytypeExp(branch: SPPTBranch): FretAnytypeExp {
         // console.log('transformFretAnytypeExp called: ' + branch.name);
 
-        const children = this.mainAnalyser.getChildren(branch);
+        // const children = this.mainAnalyser.getChildren(branch);
         return FretAnytypeExp.create({ aglParseLocation: this.mainAnalyser.location(branch) });
     }
 
@@ -308,7 +311,7 @@ export class FreTyperDefSyntaxAnalyserPart {
      */
     public transformFretLimitedInstanceExp(branch: SPPTBranch): FretLimitedInstanceExp {
         // console.log('transformFretLimitedInstanceExp called: ' + branch.name);
-        let __myLimited: MetaElementReference<FreMetaLimitedConcept>;
+        let __myLimited: MetaElementReference<FreMetaLimitedConcept> | undefined = undefined;
         let __myInstance: MetaElementReference<FreMetaInstance>;
         const children = this.mainAnalyser.getChildren(branch);
         if (!children[0].isEmptyMatch) {
@@ -338,7 +341,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         // RHSBinExpListWithTerminator
         __conditions = [];
         const _myList = this.mainAnalyser.getChildren(children[3]);
-        _myList.forEach(subNode => {
+        _myList.forEach((subNode: SPPTBranchFromInput) => {
             const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(subNode.nonSkipChildren?.toArray()[0]);
             if (!!_transformed) {
                 __conditions.push(_transformed);
@@ -500,7 +503,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         while (index < children.length) {
             const operator = this.mainAnalyser.transformSharedPackedParseTreeNode(children[index++]);
             const second = this.mainAnalyser.transformSharedPackedParseTreeNode(children[index++]);
-            let combined: FretExp = null;
+            let combined: FretExp | undefined = undefined;
 
             switch (operator) {
                 case "equalsto": {
@@ -512,7 +515,7 @@ export class FreTyperDefSyntaxAnalyserPart {
                     break;
                 }
                 default: {
-                    combined = null;
+                    combined = undefined;
                 }
             }
             first = combined;

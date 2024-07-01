@@ -1,18 +1,13 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
-import { FreMetaLanguage, FreMetaProperty } from "../../languagedef/metalanguage";
+import {
+    FreMetaConcept,
+    FreMetaLanguage,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty
+} from "../../languagedef/metalanguage";
+import { parseCorrectModel} from "./utils";
 
-function parseCorrectModel(parser: LanguageParser, parseFile: string) {
-    let model: FreMetaLanguage = null;
-    try {
-        model = parser.parse(parseFile);
-    } catch (e) {
-        // console.log(e.message + e.stack);
-        // console.log(parser.checker.errors.map(err => `"${err}"`).join("\n") );
-        expect(e.message).toBeNull();
-    }
-    return model;
-}
 
 // The same tests as in property-inheritance1, only now all property types are interfaces
 describe("Checking generation of virtual props", () => {
@@ -26,21 +21,24 @@ describe("Checking generation of virtual props", () => {
     //      should not have a name equal to any other, except when their types conform.
     // when types conform: add a new prop with the most specific type to classifier
     test("no counter parts", () => {
-        const parseFile = testdir + "prop_test7.ast";
-        const model = parseCorrectModel(parser, parseFile);
+        const parseFile: string = testdir + "prop_test7.ast";
+        const model: FreMetaLanguage | undefined = parseCorrectModel(parser, parseFile);
         // check the one primitive property
-        const rightOne = model?.concepts.find(concept => concept.name === "Right");
-        const found = rightOne.primProperties.find(prop => prop.name === "name1");
-        expect(!!found).toEqual(true);
-        expect(found.type.name).toBe("boolean");
+        const rightOne: FreMetaConcept | undefined = model?.concepts.find(concept => concept.name === "Right");
+        expect(rightOne).not.toBeNull();
+        expect(rightOne).not.toBeUndefined();
+        const found: FreMetaPrimitiveProperty | undefined = rightOne!.primProperties.find(prop => prop.name === "name1");
+        expect(found).not.toBeNull();
+        expect(found).not.toBeUndefined();
+        expect(found!.type.name).toBe("boolean");
 
         // check all other properties
         for (let index = 2; index < 5; index++) {
-            const found2 = rightOne.properties.find(prop => prop.name === "name" + index);
+            const found2 = rightOne!.properties.find(prop => prop.name === "name" + index);
             // console.log("found" + index + ": " + found?.name + ": " + found?.type.name);
             expect(!!found2).toEqual(true);
         }
-        rightOne.properties.forEach(prop => {
+        rightOne!.properties.forEach(prop => {
             switch (prop.name) {
                 case "name2": {
                     expect(prop.type.name).toBe("Type1");
@@ -59,21 +57,24 @@ describe("Checking generation of virtual props", () => {
     });
 
     test("with counterparts in concept", () => {
-        const parseFile = testdir + "prop_test7a.ast";
-        const model = parseCorrectModel(parser, parseFile);
+        const parseFile: string = testdir + "prop_test7a.ast";
+        const model: FreMetaLanguage | undefined = parseCorrectModel(parser, parseFile);
         // check the one primitive property
-        const rightOne = model?.concepts.find(concept => concept.name === "Right");
-        const found = rightOne.primProperties.find(prop => prop.name === "name1");
-        expect(!!found).toEqual(true);
-        expect(found.type.name).toBe("boolean");
+        const rightOne: FreMetaConcept | undefined = model?.concepts.find(concept => concept.name === "Right");
+        expect(rightOne).not.toBeNull();
+        expect(rightOne).not.toBeUndefined();
+        const found: FreMetaPrimitiveProperty | undefined = rightOne!.primProperties.find(prop => prop.name === "name1");
+        expect(found).not.toBeNull();
+        expect(found).not.toBeUndefined();
+        expect(found!.type.name).toBe("boolean");
 
         // check all other properties
         for (let index = 2; index < 5; index++) {
-            const found2 = rightOne.properties.find(prop => prop.name === "name" + index);
+            const found2 = rightOne!.properties.find(prop => prop.name === "name" + index);
             // console.log("found" + index + ": " + found?.name + ": " + found?.type.name);
             expect(!!found2).toEqual(true);
         }
-        rightOne.properties.forEach(prop => {
+        rightOne!.properties.forEach(prop => {
             switch (prop.name) {
                 case "name2": {
                     expect(prop.type.name).toBe("Type1");
@@ -93,24 +94,30 @@ describe("Checking generation of virtual props", () => {
 
     test("with counterparts in BASE concept", () => {
         const parseFile = testdir + "prop_test7b.ast";
-        const model = parseCorrectModel(parser, parseFile);
+        //
+        const model: FreMetaLanguage | undefined = parseCorrectModel(parser, parseFile);
         // check the one primitive property
-        const rightOne = model?.concepts.find(concept => concept.name === "Right");
-        let found = rightOne.primProperties.find(prop => prop.name === "name1");
-        expect(!!found).toEqual(false);
+        const rightOne: FreMetaConcept | undefined = model?.concepts.find(concept => concept.name === "Right");
+        expect(rightOne).not.toBeNull();
+        expect(rightOne).not.toBeUndefined();
+        // try the properties of rightOne first, 'name1' should not be present
+        let found: FreMetaPrimitiveProperty | undefined = rightOne!.primProperties.find(prop => prop.name === "name1");
+        expect(found).toBeUndefined();
         // the prim prop should be in 'RightBase'
-        found = rightOne.base.referred.primProperties.find(prop => prop.name === "name1");
-        expect(!!found).toEqual(true);
-        expect(found.type.name).toBe("boolean");
+        found = rightOne!.base.referred.primProperties.find(prop => prop.name === "name1");
+        expect(found).not.toBeNull();
+        expect(found).not.toBeUndefined();
+        expect(found!.type.name).toBe("boolean");
 
         // check all other properties
         const otherProps: FreMetaProperty[] = [];
         for (let index = 2; index < 5; index++) {
-            let found2 = rightOne.properties.find(prop => prop.name === "name" + index);
+            let found2 = rightOne!.properties.find(prop => prop.name === "name" + index);
             expect(!!found2).toEqual(false);
-            found2 = rightOne.base.referred.properties.find(prop => prop.name === "name" + index);
-            expect(!!found2).toEqual(true);
-            otherProps.push(found2);
+            found2 = rightOne!.base.referred.properties.find(prop => prop.name === "name" + index);
+            expect(found2).not.toBeNull();
+            expect(found2).not.toBeUndefined();
+            otherProps.push(found2!);
         }
         otherProps.forEach(prop => {
             switch (prop.name) {

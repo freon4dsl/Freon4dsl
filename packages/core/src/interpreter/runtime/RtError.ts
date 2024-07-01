@@ -15,6 +15,8 @@ export class RtError extends RtObject {
         return this._message;
     }
 
+    // @ts-ignore
+    // parameter is present to adhere to signature of super class
     equals(other: RtObject): RtBoolean {
         return RtBoolean.FALSE;
     }

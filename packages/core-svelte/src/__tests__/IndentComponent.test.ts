@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import { render, screen } from "@testing-library/svelte";
-import { IndentBox, LabelBox, FreEditor, FreNode } from "@freon4dsl/core";
-import { SimpleElement } from "./models/SimpleElement";
-import IndentComponent from "../components/IndentComponent.svelte";
+import { IndentBox, LabelBox, FreEditor, type FreNode } from "@freon4dsl/core";
+import { SimpleElement } from "./models/SimpleElement.js";
+import IndentComponent from "../lib/components/IndentComponent.svelte";
 import { configure } from '@testing-library/dom'
 configure({ testIdAttribute: 'id' })
 
@@ -17,7 +17,7 @@ describe.skip("Indent component", () => {
     const myIndentBox = new IndentBox(element2,"indent-role", 4, myLabelBox);
 
     it(", with label as slot, is indented", () => {
-        const result = render(IndentComponent, { indentBox: myIndentBox, editor: myEditor });
+        const result = render(IndentComponent, { box: myIndentBox, editor: myEditor });
         const myLabel = screen.getByText('LabelText');
         expect(myLabel).toBeVisible();
         const indentComp = screen.getByTestId(`${myIndentBox.element.freId()}-${myIndentBox.role}`);

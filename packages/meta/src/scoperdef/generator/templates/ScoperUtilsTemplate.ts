@@ -5,7 +5,7 @@ import { ScopeDef } from "../../metalanguage";
 export class ScoperUtilsTemplate {
 
     generateScoperUtils(language: FreMetaLanguage, scopedef: ScopeDef, relativePath: string): string {
-        const allLangConcepts: string = Names.allConcepts(language);
+        const allLangConcepts: string = Names.allConcepts();
         const concreteNamespaces: FreMetaClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scopedef.namespaces);
         const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
         // also process the units that are not explicitly marked as namespace

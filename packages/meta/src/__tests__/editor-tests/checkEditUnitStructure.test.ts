@@ -7,14 +7,14 @@ import {
     FreEditClassifierProjection,
     FreEditProjection, FreEditProjectionDirection,
     FreEditPropertyProjection,
-    FreEditUnit
+    FreEditUnit, FreEditProjectionGroup
 } from "../../editordef/metalanguage";
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
 
 describe("Checking FretEditUnit: ", () => {
     const testdir = "src/__tests__/editor-tests/correctDefFiles/";
     let parser: FreEditParser;
-    let language: FreMetaLanguage;
+    let language: FreMetaLanguage | undefined;
     let checker: Checker<FreEditUnit>;
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();
@@ -23,18 +23,24 @@ describe("Checking FretEditUnit: ", () => {
         // read the language file (.ast)
         try {
             language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
-            parser = new FreEditParser(language);
-            checker = parser.checker;
-        } catch (e) {
-            console.log("Language could not be read");
+            if (!!language) {
+                parser = new FreEditParser(language);
+                checker = parser.checker;
+            }
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read");
+            }
         }
         // read the .edit file
-        let editor: FreEditUnit;
+        let editor: FreEditUnit | undefined;
         try {
             editor = parser.parse(parseFile);
-        } catch (e) {
-            console.log(e.message + e.stack);
-            console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log(e.message + e.stack);
+                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            }
         }
         if (editor !== null && editor !== undefined) {
             DefaultEditorGenerator.addDefaults(editor);
@@ -46,16 +52,16 @@ describe("Checking FretEditUnit: ", () => {
     }
 
     test("all non-limited, non-binary expression concepts have a default-default projection and there is a default projection group", () => {
-        const editor = readFile(testdir + "test1.edit");
-
+        const editor: FreEditUnit = readFile(testdir + "test1.edit");
+        expect(language).not.toBeNull();
         expect(editor.language).toEqual(language);
         expect(editor.getDefaultProjectiongroup()).not.toBeNull();
-        language.concepts.filter(c => !(c instanceof FreMetaLimitedConcept) && !(c instanceof FreMetaBinaryExpressionConcept)).forEach(c => {
+        language!.concepts.filter(c => !(c instanceof FreMetaLimitedConcept) && !(c instanceof FreMetaBinaryExpressionConcept)).forEach(c => {
             const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(c);
             expect(projections).not.toBeNull();
             expect(projections[0]).not.toBeNull();
         });
-        language.units.forEach(u => {
+        language!.units.forEach(u => {
             const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(u);
             expect(projections).not.toBeNull();
             expect(projections[0]).not.toBeNull();
@@ -64,11 +70,11 @@ describe("Checking FretEditUnit: ", () => {
 
     test("in the generated default group: all list projections have a listInfo with the correct values", () => {
         const editor = readFile(testdir + "test1.edit");
-
+        expect(language).not.toBeNull();
         // the series of classifiers that we are testing here
-        const classifiersToTest: FreMetaClassifier[] = language.concepts
+        const classifiersToTest: FreMetaClassifier[] = language!.concepts
             .filter(c => !(c instanceof FreMetaLimitedConcept) && !(c instanceof FreMetaBinaryExpressionConcept));
-        classifiersToTest.push(...language.units);
+        classifiersToTest.push(...language!.units);
 
         classifiersToTest.forEach(c => {
             const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(c);
@@ -77,13 +83,13 @@ describe("Checking FretEditUnit: ", () => {
                 if (proj instanceof FreEditProjection) {
                     proj.lines.forEach(line => {
                         line.items.forEach(item => {
-                            if (item instanceof FreEditPropertyProjection && item.property.referred.isList) {
+                            if (item instanceof FreEditPropertyProjection && item.property && item.property.referred.isList) {
                                 // the following tests the defaults added by DefaultEditorGenerator
                                 expect(item.listInfo).not.toBeNull();
-                                expect(item.listInfo.direction).toBe(FreEditProjectionDirection.Vertical);
-                                expect(item.listInfo.joinType).toBe(ListJoinType.Separator);
-                                expect(item.listInfo.joinText).toBe("");
-                                expect(item.listInfo.isTable).toBe(false);
+                                expect(item.listInfo!.direction).toBe(FreEditProjectionDirection.Vertical);
+                                expect(item.listInfo!.joinType).toBe(ListJoinType.Separator);
+                                expect(item.listInfo!.joinText).toBe("");
+                                expect(item.listInfo!.isTable).toBe(false);
                             }
                         });
                     });
@@ -94,11 +100,11 @@ describe("Checking FretEditUnit: ", () => {
 
     test("in a non-generated group: all list properties have a listInfo", () => {
         const editor = readFile(testdir + "test2.edit");
-
+        expect(language).not.toBeNull();
         // the series of classifiers that we are testing here
-        const classifiersToTest: FreMetaClassifier[] = language.concepts
+        const classifiersToTest: FreMetaClassifier[] = language!.concepts
             .filter(c => !(c instanceof FreMetaLimitedConcept) && !(c instanceof FreMetaBinaryExpressionConcept));
-        classifiersToTest.push(...language.units);
+        classifiersToTest.push(...language!.units);
 
         // do the test
         classifiersToTest.forEach(c => {
@@ -119,7 +125,7 @@ describe("Checking FretEditUnit: ", () => {
             });
             // check the property items against the list properties of c
             c.allProperties().filter(prop => prop.isList).forEach(prop => {
-               const found: FreEditPropertyProjection[] = propItems.filter(item => item.property.referred === prop);
+               const found: FreEditPropertyProjection[] = propItems.filter(item => item.property?.referred === prop);
                found.forEach(item => {
                    // there are projections of this property, see if they are lists
                    expect(item.listInfo).not.toBeNull();
@@ -127,10 +133,10 @@ describe("Checking FretEditUnit: ", () => {
             });
             // check the property items against the non-list properties of c
             c.allProperties().filter(prop => !prop.isList).forEach(prop => {
-                const found: FreEditPropertyProjection[] = propItems.filter(item => item.property.referred === prop);
+                const found: FreEditPropertyProjection[] = propItems.filter(item => item.property?.referred === prop);
                 found.forEach(item => {
                     // there are projections of this property, see if they are not lists
-                    expect(item.listInfo).toBeNull();
+                    expect(item.listInfo).toBeUndefined();
                 });
             });
         });
@@ -138,11 +144,11 @@ describe("Checking FretEditUnit: ", () => {
 
     test("every list property has a list projection, even if only a table projection is defined", () => {
         const editor = readFile(testdir + "test3.edit");
-
+        expect(language).not.toBeNull();
         // the series of classifiers of which we are interested in its properties
-        const classifiersToTest: FreMetaClassifier[] = language.concepts
+        const classifiersToTest: FreMetaClassifier[] = language!.concepts
             .filter(c => !(c instanceof FreMetaLimitedConcept) && !(c instanceof FreMetaBinaryExpressionConcept));
-        classifiersToTest.push(...language.units);
+        classifiersToTest.push(...language!.units);
 
         classifiersToTest.forEach(c => {
             c.allProperties().filter(prop => prop.isList).forEach(prop => {
@@ -162,47 +168,64 @@ describe("Checking FretEditUnit: ", () => {
 
     test("boolean properties with one or two keywords have the right boolInfo", () => {
         const editor = readFile(testdir + "test2.edit");
-
+        expect(language).not.toBeNull();
+        expect(language).not.toBeUndefined();
+        const defProjGroup: FreEditProjectionGroup | undefined = editor.getDefaultProjectiongroup();
+        expect(defProjGroup).not.toBeNull();
+        expect(defProjGroup).not.toBeUndefined();
         // test the first boolean prop, with just one keyword present
-        let projections: FreEditClassifierProjection[] = editor.getDefaultProjectiongroup().findProjectionsForType(language.findClassifier("AAAAAA"));
+        const aaCls: FreMetaClassifier | undefined = language!.findClassifier("AAAAAA");
+        expect(aaCls).not.toBeNull();
+        expect(aaCls).not.toBeUndefined();
+        let projections: FreEditClassifierProjection[] = defProjGroup!.findProjectionsForType(language!.findClassifier("AAAAAA")!);
         expect(projections).not.toBeNull();
+        expect(projections).not.toBeUndefined();
         let first: FreEditClassifierProjection = projections[0];
         expect(first).not.toBeNull();
+        expect(first).not.toBeUndefined();
         if (first instanceof FreEditProjection ) {
             // find the projection of the boolean property
-            let myBoolProjection: FreEditPropertyProjection = null;
+            let myBoolProjection: FreEditPropertyProjection | undefined = undefined;
             first.lines.forEach(line => {
                 line.items.forEach(item => {
-                    if (item instanceof FreEditPropertyProjection && item.property.name === "AAprop5") {
+                    if (item instanceof FreEditPropertyProjection && item.property && item.property.name === "AAprop5") {
                         myBoolProjection = item;
                     }
                 });
             });
             expect(myBoolProjection).not.toBeNull();
-            expect(myBoolProjection.boolInfo).not.toBeNull();
-            expect(myBoolProjection.boolInfo.trueKeyword).toBe("xxxx");
-            expect(myBoolProjection.boolInfo.falseKeyword).toBeUndefined();
+            expect(myBoolProjection).not.toBeUndefined();
+            expect(myBoolProjection!.boolInfo).not.toBeUndefined();
+            expect(myBoolProjection!.boolInfo!.trueKeyword).toBe("xxxx");
+            expect(myBoolProjection!.boolInfo!.falseKeyword).toBeUndefined();
         }
 
         // test the second boolean prop, with two keywords present
-        projections = editor.getDefaultProjectiongroup().findProjectionsForType(language.findClassifier("BB"));
+        const bbCls: FreMetaClassifier | undefined = language!.findClassifier("BB");
+        expect(bbCls).not.toBeNull();
+        expect(bbCls).not.toBeUndefined();
+        projections = defProjGroup!.findProjectionsForType(language!.findClassifier("BB")!);
         expect(projections).not.toBeNull();
+        expect(projections).not.toBeUndefined();
         first = projections[0];
         expect(first).not.toBeNull();
+        expect(first).not.toBeUndefined();
         if (first instanceof FreEditProjection ) {
             // find the projection of the boolean property
-            let myBoolProjection: FreEditPropertyProjection = null;
+            let myBoolProjection: FreEditPropertyProjection | undefined = undefined;
             first.lines.forEach(line => {
                 line.items.forEach(item => {
-                    if (item instanceof FreEditPropertyProjection && item.property.name === "BBprop5") {
+                    if (item instanceof FreEditPropertyProjection && item.property && item.property.name === "BBprop5") {
                         myBoolProjection = item;
                     }
                 });
             });
             expect(myBoolProjection).not.toBeNull();
-            expect(myBoolProjection.boolInfo).not.toBeNull();
-            expect(myBoolProjection.boolInfo.trueKeyword).toBe("aap");
-            expect(myBoolProjection.boolInfo.falseKeyword).toBe("noot");
+            expect(myBoolProjection).not.toBeUndefined();
+            expect(myBoolProjection!.boolInfo).not.toBeNull();
+            expect(myBoolProjection!.boolInfo).not.toBeUndefined();
+            expect(myBoolProjection!.boolInfo!.trueKeyword).toBe("aap");
+            expect(myBoolProjection!.boolInfo!.falseKeyword).toBe("noot");
         }
     });
 

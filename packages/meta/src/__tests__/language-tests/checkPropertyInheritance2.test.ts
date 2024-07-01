@@ -1,6 +1,6 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
+import {FreMetaConcept, FreMetaLanguage} from "../../languagedef/metalanguage";
 
 // The same tests as in property-inheritance1, only now all property types are interfaces
 describe("Checking property inheritance", () => {
@@ -17,14 +17,16 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test1.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (4).`);
-            expect(checker.errors.includes("Property 'name1' already exists in XXX [file: prop_test1.ast:14:5] and [file: prop_test1.ast:13:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name2' already exists in XXX [file: prop_test1.ast:16:5] and [file: prop_test1.ast:15:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' already exists in XXX [file: prop_test1.ast:18:5] and [file: prop_test1.ast:17:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name4' already exists in XXX [file: prop_test1.ast:20:5] and [file: prop_test1.ast:19:5].")).toBeTruthy();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (4).`);
+                expect(checker.errors.includes("Property 'name1' already exists in XXX [file: prop_test1.ast:14:5] and [file: prop_test1.ast:13:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name2' already exists in XXX [file: prop_test1.ast:16:5] and [file: prop_test1.ast:15:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name3' already exists in XXX [file: prop_test1.ast:18:5] and [file: prop_test1.ast:17:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name4' already exists in XXX [file: prop_test1.ast:20:5] and [file: prop_test1.ast:19:5].")).toBeTruthy();
+            }
         }
     });
 
@@ -35,29 +37,37 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test2.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (4).`);
-            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:26:5] and [file: prop_test2.ast:19:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:27:5] and [file: prop_test2.ast:20:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:28:5] and [file: prop_test2.ast:21:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:25:5] and [file: prop_test2.ast:18:5].")).toBeTruthy();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (4).`);
+                expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:26:5] and [file: prop_test2.ast:19:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:27:5] and [file: prop_test2.ast:20:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:28:5] and [file: prop_test2.ast:21:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test2.ast:25:5] and [file: prop_test2.ast:18:5].")).toBeTruthy();
+            }
         }
     });
 
     test("props in single base concept on type equality: flag 'implementedInBase' is set", () => {
         const parseFile = testdir + "prop_test3.ast";
-        let model: FreMetaLanguage = null;
+        let model: FreMetaLanguage | undefined = undefined;
         try {
             model = parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBeNull();
-         }
-        const rightOne = model?.concepts.find(concept => concept.name === "Right");
-        rightOne.allProperties().forEach(prop => {
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBeNull();
+            }
+        }
+        expect(model).not.toBeNull();
+        expect(model).not.toBeUndefined();
+        const rightOne: FreMetaConcept | undefined = model?.concepts.find(concept => concept.name === "Right");
+        expect(rightOne).not.toBeNull();
+        expect(rightOne).not.toBeUndefined();
+        rightOne!.allProperties().forEach(prop => {
             expect(prop.implementedInBase).toBeTruthy();
         });
     });
@@ -66,14 +76,16 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test4.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (4).`);
-            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:34:5] and [file: prop_test4.ast:27:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:35:5] and [file: prop_test4.ast:28:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:36:5] and [file: prop_test4.ast:29:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:33:5] and [file: prop_test4.ast:26:5].")).toBeTruthy();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (4).`);
+                expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:34:5] and [file: prop_test4.ast:27:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:35:5] and [file: prop_test4.ast:28:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:36:5] and [file: prop_test4.ast:29:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseConcept1' [file: prop_test4.ast:33:5] and [file: prop_test4.ast:26:5].")).toBeTruthy();
+            }
         }
     });
 
@@ -82,29 +94,37 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test4a.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseBaseBaseConcept' [file: prop_test4a.ast:26:5] and [file: prop_test4a.ast:39:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseBaseBaseConcept' [file: prop_test4a.ast:27:5] and [file: prop_test4a.ast:40:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseBaseBaseConcept' [file: prop_test4a.ast:28:5] and [file: prop_test4a.ast:41:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base concept 'BaseBaseBaseConcept' [file: prop_test4a.ast:29:5] and [file: prop_test4a.ast:42:5].")).toBeTruthy();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base concept 'BaseBaseBaseConcept' [file: prop_test4a.ast:26:5] and [file: prop_test4a.ast:39:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base concept 'BaseBaseBaseConcept' [file: prop_test4a.ast:27:5] and [file: prop_test4a.ast:40:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base concept 'BaseBaseBaseConcept' [file: prop_test4a.ast:28:5] and [file: prop_test4a.ast:41:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base concept 'BaseBaseBaseConcept' [file: prop_test4a.ast:29:5] and [file: prop_test4a.ast:42:5].")).toBeTruthy();
+            }
         }
     });
 
     // TODO make sure this test works again
     test.skip("props in base concept in inheritance tree on type conformance: flag 'implementedInBase' is set", () => {
         const parseFile = testdir + "prop_test4b.ast";
-        let model: FreMetaLanguage = null;
+        let model: FreMetaLanguage | undefined = undefined;
         try {
             model = parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBeNull();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBeNull();
+            }
         }
-        const rightOne = model?.concepts.find(concept => concept.name === "Right");
-        rightOne.allProperties().forEach(prop => {
+        expect(model).not.toBeNull();
+        expect(model).not.toBeUndefined();
+        const rightOne: FreMetaConcept | undefined = model?.concepts.find(concept => concept.name === "Right");
+        expect(rightOne).not.toBeNull();
+        expect(rightOne).not.toBeUndefined();
+        rightOne!.allProperties().forEach(prop => {
             expect(prop.implementedInBase).toBeTruthy();
         });
     });
@@ -113,14 +133,16 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test5.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (4).`);
-            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base interface 'Base2' [file: prop_test5.ast:34:5] and [file: prop_test5.ast:27:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base interface 'Base2' [file: prop_test5.ast:35:5] and [file: prop_test5.ast:28:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base interface 'Base2' [file: prop_test5.ast:36:5] and [file: prop_test5.ast:29:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base interface 'Base2' [file: prop_test5.ast:33:5] and [file: prop_test5.ast:26:5].")).toBeTruthy();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (4).`);
+                expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base interface 'Base2' [file: prop_test5.ast:34:5] and [file: prop_test5.ast:27:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base interface 'Base2' [file: prop_test5.ast:35:5] and [file: prop_test5.ast:28:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base interface 'Base2' [file: prop_test5.ast:36:5] and [file: prop_test5.ast:29:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base interface 'Base2' [file: prop_test5.ast:33:5] and [file: prop_test5.ast:26:5].")).toBeTruthy();
+            }
         }
     });
 
@@ -129,18 +151,20 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test5a.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (8).`);
-            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base interface 'Base_Base1' [file: prop_test5a.ast:26:5] and [file: prop_test5a.ast:33:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base interface 'Base_Base2' [file: prop_test5a.ast:26:5] and [file: prop_test5a.ast:40:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base interface 'Base_Base1' [file: prop_test5a.ast:27:5] and [file: prop_test5a.ast:34:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base interface 'Base_Base2' [file: prop_test5a.ast:27:5] and [file: prop_test5a.ast:41:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base interface 'Base_Base1' [file: prop_test5a.ast:28:5] and [file: prop_test5a.ast:35:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base interface 'Base_Base2' [file: prop_test5a.ast:28:5] and [file: prop_test5a.ast:42:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base interface 'Base_Base1' [file: prop_test5a.ast:29:5] and [file: prop_test5a.ast:36:5].")).toBeTruthy();
-            expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base interface 'Base_Base2' [file: prop_test5a.ast:29:5] and [file: prop_test5a.ast:43:5].")).toBeTruthy();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (8).`);
+                expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base interface 'Base_Base1' [file: prop_test5a.ast:26:5] and [file: prop_test5a.ast:33:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name1' with non conforming type already exists in base interface 'Base_Base2' [file: prop_test5a.ast:26:5] and [file: prop_test5a.ast:40:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base interface 'Base_Base1' [file: prop_test5a.ast:27:5] and [file: prop_test5a.ast:34:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name2' with non conforming type already exists in base interface 'Base_Base2' [file: prop_test5a.ast:27:5] and [file: prop_test5a.ast:41:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base interface 'Base_Base1' [file: prop_test5a.ast:28:5] and [file: prop_test5a.ast:35:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name3' with non conforming type already exists in base interface 'Base_Base2' [file: prop_test5a.ast:28:5] and [file: prop_test5a.ast:42:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base interface 'Base_Base1' [file: prop_test5a.ast:29:5] and [file: prop_test5a.ast:36:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property 'name4' with non conforming type already exists in base interface 'Base_Base2' [file: prop_test5a.ast:29:5] and [file: prop_test5a.ast:43:5].")).toBeTruthy();
+            }
         }
     });
 
@@ -149,14 +173,16 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test6.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (4).`);
-            expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base2' [file: prop_test6.ast:34:5] and [file: prop_test6.ast:27:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base2' [file: prop_test6.ast:35:5] and [file: prop_test6.ast:28:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base2' [file: prop_test6.ast:36:5] and [file: prop_test6.ast:29:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base2' [file: prop_test6.ast:33:5] and [file: prop_test6.ast:26:5].")).toBeTruthy();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (4).`);
+                expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base2' [file: prop_test6.ast:34:5] and [file: prop_test6.ast:27:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base2' [file: prop_test6.ast:35:5] and [file: prop_test6.ast:28:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base2' [file: prop_test6.ast:36:5] and [file: prop_test6.ast:29:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base2' [file: prop_test6.ast:33:5] and [file: prop_test6.ast:26:5].")).toBeTruthy();
+            }
         }
     });
 
@@ -164,23 +190,24 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test6a.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (12).`);
-            expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base2' [file: prop_test6a.ast:26:5] and [file: prop_test6a.ast:33:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base_Base2' [file: prop_test6a.ast:26:5] and [file: prop_test6a.ast:47:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base_Base1' [file: prop_test6a.ast:26:5] and [file: prop_test6a.ast:40:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base2' [file: prop_test6a.ast:27:5] and [file: prop_test6a.ast:34:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base_Base2' [file: prop_test6a.ast:27:5] and [file: prop_test6a.ast:48:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base_Base1' [file: prop_test6a.ast:27:5] and [file: prop_test6a.ast:41:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base2' [file: prop_test6a.ast:28:5] and [file: prop_test6a.ast:35:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base_Base2' [file: prop_test6a.ast:28:5] and [file: prop_test6a.ast:49:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base_Base1' [file: prop_test6a.ast:28:5] and [file: prop_test6a.ast:42:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base2' [file: prop_test6a.ast:29:5] and [file: prop_test6a.ast:36:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base_Base2' [file: prop_test6a.ast:29:5] and [file: prop_test6a.ast:50:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base_Base1' [file: prop_test6a.ast:29:5] and [file: prop_test6a.ast:43:5].")).toBeTruthy();
-
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (12).`);
+                expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base2' [file: prop_test6a.ast:26:5] and [file: prop_test6a.ast:33:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base_Base2' [file: prop_test6a.ast:26:5] and [file: prop_test6a.ast:47:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base_Base1' [file: prop_test6a.ast:26:5] and [file: prop_test6a.ast:40:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base2' [file: prop_test6a.ast:27:5] and [file: prop_test6a.ast:34:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base_Base2' [file: prop_test6a.ast:27:5] and [file: prop_test6a.ast:48:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base_Base1' [file: prop_test6a.ast:27:5] and [file: prop_test6a.ast:41:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base2' [file: prop_test6a.ast:28:5] and [file: prop_test6a.ast:35:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base_Base2' [file: prop_test6a.ast:28:5] and [file: prop_test6a.ast:49:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base_Base1' [file: prop_test6a.ast:28:5] and [file: prop_test6a.ast:42:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base2' [file: prop_test6a.ast:29:5] and [file: prop_test6a.ast:36:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base_Base2' [file: prop_test6a.ast:29:5] and [file: prop_test6a.ast:50:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base_Base1' [file: prop_test6a.ast:29:5] and [file: prop_test6a.ast:43:5].")).toBeTruthy();
+            }
         }
     });
 
@@ -190,18 +217,20 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test7.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (8).`);
-            expect(checker.errors.includes("Concept 'Wrong1': property 'name1' in 'Base3' does not conform to property 'name1' in 'Base2' [file: prop_test7.ast:23:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept 'Wrong1': property 'name2' in 'Base3' does not conform to property 'name2' in 'Base2' [file: prop_test7.ast:23:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept 'Wrong1': property 'name4' in 'Base3' does not conform to property 'name4' in 'Base2' [file: prop_test7.ast:23:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept 'Wrong1': property 'name3' in 'Base3' does not conform to property 'name3' in 'Base2' [file: prop_test7.ast:23:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept 'Wrong2': property 'name1' in 'Base4' does not conform to property 'name1' in 'Base2' [file: prop_test7.ast:27:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept 'Wrong2': property 'name2' in 'Base4' does not conform to property 'name2' in 'Base2' [file: prop_test7.ast:27:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept 'Wrong2': property 'name4' in 'Base4' does not conform to property 'name4' in 'Base2' [file: prop_test7.ast:27:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept 'Wrong2': property 'name3' in 'Base4' does not conform to property 'name3' in 'Base2' [file: prop_test7.ast:27:1].")).toBeTruthy();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (8).`);
+                expect(checker.errors.includes("Concept 'Wrong1': property 'name1' in 'Base3' does not conform to property 'name1' in 'Base2' [file: prop_test7.ast:23:1].")).toBeTruthy();
+                expect(checker.errors.includes("Concept 'Wrong1': property 'name2' in 'Base3' does not conform to property 'name2' in 'Base2' [file: prop_test7.ast:23:1].")).toBeTruthy();
+                expect(checker.errors.includes("Concept 'Wrong1': property 'name4' in 'Base3' does not conform to property 'name4' in 'Base2' [file: prop_test7.ast:23:1].")).toBeTruthy();
+                expect(checker.errors.includes("Concept 'Wrong1': property 'name3' in 'Base3' does not conform to property 'name3' in 'Base2' [file: prop_test7.ast:23:1].")).toBeTruthy();
+                expect(checker.errors.includes("Concept 'Wrong2': property 'name1' in 'Base4' does not conform to property 'name1' in 'Base2' [file: prop_test7.ast:27:1].")).toBeTruthy();
+                expect(checker.errors.includes("Concept 'Wrong2': property 'name2' in 'Base4' does not conform to property 'name2' in 'Base2' [file: prop_test7.ast:27:1].")).toBeTruthy();
+                expect(checker.errors.includes("Concept 'Wrong2': property 'name4' in 'Base4' does not conform to property 'name4' in 'Base2' [file: prop_test7.ast:27:1].")).toBeTruthy();
+                expect(checker.errors.includes("Concept 'Wrong2': property 'name3' in 'Base4' does not conform to property 'name3' in 'Base2' [file: prop_test7.ast:27:1].")).toBeTruthy();
+            }
         }
     });
 
@@ -209,17 +238,18 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test7a.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (6).`);
-            expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base3' [file: prop_test7a.ast:26:5] and [file: prop_test7a.ast:56:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base3' [file: prop_test7a.ast:27:5] and [file: prop_test7a.ast:57:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base3' [file: prop_test7a.ast:28:5] and [file: prop_test7a.ast:58:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base3' [file: prop_test7a.ast:29:5] and [file: prop_test7a.ast:59:5].")).toBeTruthy();
-            expect(checker.errors.includes("Concept 'Wrong1': property 'name5' in 'Base3' does not conform to property 'name5' in 'Base5' [file: prop_test7a.ast:25:1].")).toBeTruthy();
-            expect(checker.errors.includes("Concept 'Wrong1': property 'name6' in 'Base3' does not conform to property 'name6' in 'Base5' [file: prop_test7a.ast:25:1].")).toBeTruthy();
-
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (6).`);
+                expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base3' [file: prop_test7a.ast:26:5] and [file: prop_test7a.ast:56:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base3' [file: prop_test7a.ast:27:5] and [file: prop_test7a.ast:57:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base3' [file: prop_test7a.ast:28:5] and [file: prop_test7a.ast:58:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base3' [file: prop_test7a.ast:29:5] and [file: prop_test7a.ast:59:5].")).toBeTruthy();
+                expect(checker.errors.includes("Concept 'Wrong1': property 'name5' in 'Base3' does not conform to property 'name5' in 'Base5' [file: prop_test7a.ast:25:1].")).toBeTruthy();
+                expect(checker.errors.includes("Concept 'Wrong1': property 'name6' in 'Base3' does not conform to property 'name6' in 'Base5' [file: prop_test7a.ast:25:1].")).toBeTruthy();
+            }
         }
     });
 
@@ -228,19 +258,20 @@ describe("Checking property inheritance", () => {
         const parseFile = testdir + "prop_test8.ast";
         try {
             parser.parse(parseFile);
-        } catch (e) {
-            // console.log(e.message + e.stack);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-            expect(e.message).toBe(`checking errors (8).`);
-            expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base1' [file: prop_test8.ast:35:5] and [file: prop_test8.ast:46:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base1' [file: prop_test8.ast:36:5] and [file: prop_test8.ast:47:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base1' [file: prop_test8.ast:37:5] and [file: prop_test8.ast:48:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base1' [file: prop_test8.ast:38:5] and [file: prop_test8.ast:49:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name5' with non conforming type exists in implemented interface 'Base2' [file: prop_test8.ast:39:5] and [file: prop_test8.ast:53:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name6' with non conforming type exists in implemented interface 'Base2' [file: prop_test8.ast:40:5] and [file: prop_test8.ast:54:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name7' with non conforming type exists in implemented interface 'Base2' [file: prop_test8.ast:41:5] and [file: prop_test8.ast:55:5].")).toBeTruthy();
-            expect(checker.errors.includes("(Inherited) property 'name8' with non conforming type exists in implemented interface 'Base2' [file: prop_test8.ast:42:5] and [file: prop_test8.ast:56:5].")).toBeTruthy();
-
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                // console.log(e.message + e.stack);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (8).`);
+                expect(checker.errors.includes("(Inherited) property 'name1' with non conforming type exists in implemented interface 'Base1' [file: prop_test8.ast:35:5] and [file: prop_test8.ast:46:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name2' with non conforming type exists in implemented interface 'Base1' [file: prop_test8.ast:36:5] and [file: prop_test8.ast:47:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name3' with non conforming type exists in implemented interface 'Base1' [file: prop_test8.ast:37:5] and [file: prop_test8.ast:48:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name4' with non conforming type exists in implemented interface 'Base1' [file: prop_test8.ast:38:5] and [file: prop_test8.ast:49:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name5' with non conforming type exists in implemented interface 'Base2' [file: prop_test8.ast:39:5] and [file: prop_test8.ast:53:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name6' with non conforming type exists in implemented interface 'Base2' [file: prop_test8.ast:40:5] and [file: prop_test8.ast:54:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name7' with non conforming type exists in implemented interface 'Base2' [file: prop_test8.ast:41:5] and [file: prop_test8.ast:55:5].")).toBeTruthy();
+                expect(checker.errors.includes("(Inherited) property 'name8' with non conforming type exists in implemented interface 'Base2' [file: prop_test8.ast:42:5] and [file: prop_test8.ast:56:5].")).toBeTruthy();
+            }
         }
     });
 });

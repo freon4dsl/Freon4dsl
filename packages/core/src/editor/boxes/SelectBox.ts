@@ -15,9 +15,7 @@ export class SelectBox extends AbstractChoiceBox {
      */
     deleteWhenEmpty: boolean = false;
 
-    private getAllOptions(editor: FreEditor): SelectOption[] {
-        return [];
-    }
+    private getAllOptions: (editor: FreEditor) => SelectOption[];
 
     constructor(
         node: FreNode,

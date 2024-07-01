@@ -57,6 +57,7 @@ export abstract class FreBoxProvider {
      * This method should be overwritten by each box provider.
      * @param projectionName
      */
+    // @ts-ignore
     protected getContent(projectionName: string): Box {
         return new LabelBox(this._element, "unknown-projection", () => "Content should be determined by the appropriate subclass of FreBoxProvider.");
     }

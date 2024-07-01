@@ -32,7 +32,7 @@ import { RightHandSideEntry } from "./RightHandSideEntry";
 import { makeIndent } from "../GrammarUtils";
 
 export class RHSText extends RightHandSideEntry {
-    text: string;
+    text: string = '';
 
     constructor(str: string) {
         super();
@@ -43,7 +43,7 @@ export class RHSText extends RightHandSideEntry {
         return this.text + this.doNewline();
     }
 
-    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+    toMethod(): string {
         return ``;
     }
 

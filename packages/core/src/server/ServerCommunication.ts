@@ -3,6 +3,7 @@ import { FreLogger } from "../logging/index";
 import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../storage/index";
 import { FreErrorSeverity } from "../validator/index";
 import type { IServerCommunication } from "./IServerCommunication";
+import process from 'process';
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
@@ -60,6 +61,8 @@ export class ServerCommunication implements IServerCommunication {
         console.error(`ServerCommunication ${severity}: ${msg}`);
     }
 
+    // @ts-ignore
+    // parameters present to adhere to interface
     async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
         return null
     }
