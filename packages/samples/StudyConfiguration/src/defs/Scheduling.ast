@@ -1,0 +1,62 @@
+language StudyConfigurationModel
+
+concept EventStart {
+}  
+
+concept When base EventStart {
+    startWhen: StudyConfigExpression;
+}
+
+expression Day base EventStart {
+    startDay: number;
+}
+
+expression EventReference base EventStart {
+    reference event: Event;
+}
+
+expression StudyStart base EventStart {
+}
+
+concept AnyDay base EventStart {
+}
+
+interface RepeatExpression {    
+}
+
+limited RepeatUnit {
+    daily; weekly; monthly; forever;
+}
+
+concept RepeatCondition implements RepeatExpression {
+    repeatUnit: RepeatUnit;
+    maxRepeats: number;
+    until: StudyConfigExpression;
+}
+
+concept RepeatCount implements RepeatExpression {
+    repeatCount: number;
+}
+
+concept Days {
+    count: number;
+}
+
+concept EventWindow {
+    daysBefore: Days;
+    daysAfter: Days;
+}
+
+concept EventTimeOfDay {
+    startHour: number;
+    startMinute: number;
+    endHour: number;
+    endMinute: number;
+}
+
+concept EventSchedule {
+    eventStart: EventStart;
+    eventWindow: EventWindow;
+    eventRepeat: RepeatExpression;
+    eventTimeOfDay: EventTimeOfDay;
+}
