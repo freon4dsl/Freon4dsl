@@ -25,15 +25,15 @@
     } from "@freon4dsl/core";
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    import { componentId } from "./svelte-utils/index.js";
+    import { componentId } from "$lib/index.js";
     import {
         activeElem,
         activeIn,
         draggedElem,
         draggedFrom,
         selectedBoxes
-    } from "./svelte-utils/DropAndSelectStore.js";
-    import { contextMenu, contextMenuVisible } from "./svelte-utils/ContextMenuStore.js";
+    } from "$lib/index.js";
+    import { contextMenu, contextMenuVisible } from "$lib/index.js";
 
     // properties
     export let box: TableCellBox;
@@ -106,7 +106,7 @@
         LOGGER.log("GridCellComponent onKeyDown");
         if (isMetaKey(event) || event.key === ENTER) {
             LOGGER.log("Keyboard shortcut in GridCell ===============");
-            let index: number = parentOrientation === TableDirection.HORIZONTAL ? row : column;
+            // let index: number = parentOrientation === TableDirection.HORIZONTAL ? row : column;
             // todo handle this here, because there are no shortcuts for Enter created by TableUtils anymore,
             // or add the shortcuts
             // executeCustomKeyboardShortCut(event, index, box, editor);
@@ -209,7 +209,7 @@
         on:keydown={onKeydown}
         on:dragstart|stopPropagation={event => dragstart(event)}
         on:drop|stopPropagation={event => drop(event)}
-        ondragover="return false"
+
         on:dragenter|stopPropagation={(event) => dragenter(event)}
         on:mouseout|stopPropagation={mouseout}
         on:focus={() => {}}

@@ -22,7 +22,7 @@
     // Local variables
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
-    let textArea: HTMLAreaElement  ; 	// the teaxt area element on the screen
+    let textArea: HTMLTextAreaElement; 		// the text area element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
 
 

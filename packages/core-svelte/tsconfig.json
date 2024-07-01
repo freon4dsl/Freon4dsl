@@ -13,6 +13,8 @@
     "moduleResolution": "NodeNext",
 
     // the old options, todo: see if we still need them
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "types": ["node", "jest"],

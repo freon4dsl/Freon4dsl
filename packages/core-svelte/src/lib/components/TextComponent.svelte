@@ -538,7 +538,7 @@
 
 	let widthSpan: HTMLSpanElement;
 
-	function onInput(event: InputEvent) {
+	function onInput(event: InputEvent & { currentTarget: HTMLInputElement }) {
 		setInputWidth();
 	}
 

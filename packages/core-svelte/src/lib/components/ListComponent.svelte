@@ -105,11 +105,11 @@
         }
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
-    const dragover = (event: DragEvent, index): boolean => {
-        LOGGER.log("drag over " + box.id);
-        event.preventDefault();
-        return false;
-    }
+    // const dragover = (event: DragEvent, index): boolean => {
+    //     LOGGER.log("drag over " + box.id);
+    //     event.preventDefault();
+    //     return false;
+    // }
     const mouseout = (): boolean => {
         LOGGER.log("LIST mouse out " + box.id);
         // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
@@ -205,7 +205,7 @@
         <span
                 class="list-item"
                 class:is-active={$activeElem?.row === index && $activeIn === id}
-                class:dragged={$draggedElem?.row === index && $draggedFrom === id}
+                class:dragged={$draggedElem?.propertyIndex === index && $draggedFrom === id}
                 style:grid-column="{!isHorizontal ? 1 : index+1}"
                 style:grid-row="{isHorizontal ? 1 : index+1}"
                 animate:flip
