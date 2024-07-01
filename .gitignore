@@ -113,14 +113,3 @@ packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-
 /packages/test/src/vehicles/
 
 package-lock.json
-
-git rm --cached ../DocuProject/rollup.config.js
-git rm --cached ../Education/rollup.config.js
-git rm --cached ../Example/rollup.config.js
-git rm --cached ../MpsExpressions/rollup.config.js
-git rm --cached ../Octopus/rollup.config.js
-git rm --cached ../PiLanguage/rollup.config.js
-git rm --cached ../TaxRules/rollup.config.js
-git rm --cached ../UndoTester/rollup.config.js
-git rm --cached ../UnusedOrInvalid/LionwebM3/rollup.config.js
-git rm --cached ../UnusedOrInvalid/RulesLanguage/rollup.config.js
