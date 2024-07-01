@@ -30,7 +30,7 @@
         contextMenu,
         contextMenuVisible,
         componentId
-    } from "./svelte-utils/index.js";
+    } from "$lib/index.js";
     import { afterUpdate, onMount } from "svelte";
 
     // Parameters
@@ -197,7 +197,6 @@
 <span class={isHorizontal ? "horizontalList" : "verticalList"}
       id="{id}"
       bind:this={htmlElement}
-      tabindex={0}
       style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
       style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
 >
@@ -220,6 +219,7 @@
                 on:focus={() => {}}
                 on:blur={() => {}}
                 on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event, index)}
+                role="none"
         >
             <RenderComponent box={box} editor={editor}/>
 		</span>
@@ -228,10 +228,10 @@
 
 
 <style>
-    .list-component {
-        --fre-list-grid-template-columns: "";
-        --fre-list-grid-template-rows: "";
-    }
+    /*.list-component {*/
+    /*    --fre-list-grid-template-columns: "";*/
+    /*    --fre-list-grid-template-rows: "";*/
+    /*}*/
     .horizontalList {
         /*grid-template-rows: var(--fre-list-grid-template-rows);*/
         /*grid-template-columns: var(--fre-list-grid-template-columns);*/

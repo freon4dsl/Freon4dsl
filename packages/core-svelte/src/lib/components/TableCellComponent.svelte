@@ -201,6 +201,7 @@
 
 <span
         id="{id}"
+        role="cell"
         class="gridcellcomponent {orientation} {isHeader} {cssClass} "
         style:grid-row="{row}"
         style:grid-column="{column}"
@@ -216,7 +217,7 @@
         on:blur={() => {}}
         on:keydown={onKeydown}
         on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event)}
-        tabIndex={0}
+        tabindex={0}
         bind:this={htmlElement}
 >
     <RenderComponent box={childBox} editor={editor}/>

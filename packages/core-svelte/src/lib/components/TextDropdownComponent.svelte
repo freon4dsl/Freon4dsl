@@ -394,6 +394,7 @@
       on:blur={onBlur}
       on:contextmenu={(event) => endEditing()}
       class="dropdown"
+      role="none"
 >
     <TextComponent
             bind:isEditing={isEditing}

@@ -546,7 +546,8 @@
 </script>
 
 <!-- todo there is a double selection here: two borders are showing -->
-<span on:click={onClick} id="{id}">
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
+<span on:click={onClick} id="{id}" role="none">
 	{#if isEditing}
 		<span class="inputtext">
 			<input type="text"
@@ -566,12 +567,14 @@
 		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
 		     But ... this is only a problem when this component is inside a draggable element (like List or table)
 		-->
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 		<span class="{box.role} text-box-{boxType} text"
               on:click={startEditing}
               bind:this={spanElement}
 			  contenteditable=true
 			  spellcheck=false
-              id="{id}-span">
+              id="{id}-span"
+			  role="none">
 			{#if !!text && text.length > 0}
 				{text}
 			{:else}

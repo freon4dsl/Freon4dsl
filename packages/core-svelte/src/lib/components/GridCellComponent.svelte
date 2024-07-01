@@ -92,8 +92,9 @@
         style="{cssStyle}"
         on:keydown={onKeydown}
         id="{id}"
-        tabIndex={0}
+        tabindex={0}
         bind:this={htmlElement}
+        role="gridcell"
 >
     <RenderComponent box={contentBox} editor={editor}/>
 </div>
