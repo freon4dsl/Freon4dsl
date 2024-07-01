@@ -26,7 +26,6 @@ export class Simulator {
     // Setup the Scheduler
     this.scheduledStudyConfiguration = new ScheduledStudyConfiguration(studyConfiguration);
     this.timeline = new Timeline();
-    //   this.timeline.addEvent(this.getFirstEvent());
   }
 
   getTimeline() {

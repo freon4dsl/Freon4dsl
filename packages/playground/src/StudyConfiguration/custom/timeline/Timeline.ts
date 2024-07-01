@@ -109,9 +109,6 @@ export class Timeline extends RtObject{
     throw new Error('Method not implemented.');
   }
 
-  addPeriodInstance(periodInstance: PeriodInstance) {
-    throw new Error('Method not implemented.');
-  }
 }
 
 

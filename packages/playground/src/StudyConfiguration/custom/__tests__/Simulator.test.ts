@@ -1,5 +1,5 @@
 import * as Sim from "../simjs/sim.js"
-import { Timeline, EventInstance, PeriodInstance } from "../timeline/Timeline";
+import { Timeline, EventInstance, PeriodInstance, TimelineInstance } from "../timeline/Timeline";
 import { Simulator, } from "../timeline/Simulator";
 import { StudyConfiguration, Period } from "../../language/gen/index";
 import * as utils from "./Utils";
@@ -179,7 +179,7 @@ describe ("Access to simulation data", () => {
       let expectedTimeline = new Timeline();
       let scheduledPeriod = simulator.scheduledStudyConfiguration.scheduledPeriods[0];
       let periodInstance = new PeriodInstance(scheduledPeriod, 1);
-      expectedTimeline.addPeriodInstance(periodInstance);
+      expectedTimeline.addEvent(periodInstance as TimelineInstance);
       expectedTimeline.setCurrentDay(1);
 
       expect(timeline.currentPeriod.name).toEqual(period.name);  

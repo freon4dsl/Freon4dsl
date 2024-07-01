@@ -1,8 +1,9 @@
-import { Event, Day, RepeatCondition, RepeatUnit } from "../../language/gen/index";
+import { Event, Day, RepeatCondition, RepeatUnit, Period } from "../../language/gen/index";
 import { InterpreterContext, isRtError, RtNumber } from "@freon4dsl/core";
 import { MainStudyConfigurationModelInterpreter } from "../../interpreter/MainStudyConfigurationModelInterpreter";
-import { EventInstance, Timeline } from "./Timeline";
+import { EventInstance, PeriodInstance, Timeline } from "./Timeline";
 import { repeat } from "lodash";
+import { ScheduledPeriod } from "./ScheduledPeriod";
 
 export enum ScheduledEventState {
   Initial,
@@ -154,6 +155,14 @@ export class ScheduledEvent {
         console.log("getInstanceIfEventIsReady: " + this.name() + " is NOT to be scheduled on timeline day: " + timeline.currentDay + " with scheduledDay of: " + scheduledDay );
         return null;
       }
+    }
+  }
+
+  updatePeriodIfNeeded(timeline: Timeline) {
+    let period = this.configuredEvent.freOwner() as Period;
+    let scheduledPeriod = period.freOwner() as unknown as ScheduledPeriod;
+    if (timeline.currentPeriod.name != period.name) {
+      timeline.currentPeriod = new PeriodInstance(period, timeline.currentDay);
     }
   }
 
