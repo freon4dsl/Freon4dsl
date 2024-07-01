@@ -8,6 +8,7 @@ const LOGGER = new FreLogger("ModelManager");
 
 export type CallbackFunction = (m: ModelManager) => void;
 
+export type CurrentUnitChanged = (m: ModelManager) => void;
 /**
  * ModelManager keeps im memory track of the current model, the modelunits in memory and the current model unit.
  * Performs all communication with the server.
@@ -18,10 +19,17 @@ export type CallbackFunction = (m: ModelManager) => void;
 export class ModelManager {
     private static instance: ModelManager = null;
 
+    /**
+     * Sets the servercommunication to be used by the model manager.
+     * @param serverCommunication
+     */
     static setServerCommunication(serverCommunication: IServerCommunication): void {
         ModelManager.getInstance().serverCommunication = serverCommunication;
     }
 
+    /**
+     * Therte is one and only one model manager
+     */
     static getInstance(): ModelManager {
         if (ModelManager.instance === null) {
             ModelManager.instance = new ModelManager();
@@ -30,6 +38,25 @@ export class ModelManager {
     }
 
     private constructor() {
+    }
+
+    /**
+     * Callbacks to inform listeners that the currentmodel/currentunit has changed.
+     */
+    private currentUnitListeners: CallbackFunction[] = [];
+    addCurrentUnitListener(l: CallbackFunction): void {
+        this.currentUnitListeners.push(l);
+    }
+    currentUnitChanged(): void {
+        this.currentUnitListeners.forEach(l => l(this));
+    }
+
+    private currentModelListeners: CallbackFunction[] = [];
+    addCurrentModelListener(l: CallbackFunction): void {
+        this.currentModelListeners.push(l);
+    }
+    currentModelChanged(): void {
+        this.currentModelListeners.forEach(l => l(this));
     }
 
     private _onError: (errorMsg: string, severity: FreErrorSeverity) => void;
@@ -49,8 +76,6 @@ export class ModelManager {
     /**
      * Callbacks to inform listeners that the currentmodel/currentunit has changed.
      */
-    currentUnitChanged: CallbackFunction;
-    currentModelChanged: CallbackFunction;
     allModelsChanged: CallbackFunction;
 
     serverCommunication: IServerCommunication;
@@ -77,7 +102,7 @@ export class ModelManager {
     set currentUnit(value: FreModelUnit) {
         LOGGER.log("Set current unit " + value?.name);
         this._currentUnit = value;
-        this?.currentUnitChanged(this)
+        this.currentUnitChanged()
     }
     get currentModel(): FreModel {
         return this._currentModel;
@@ -85,7 +110,7 @@ export class ModelManager {
 
     set currentModel(value: FreModel) {
         this._currentModel = value;
-        this?.currentModelChanged(this);
+        this.currentModelChanged();
     }
 
     /**
@@ -109,13 +134,16 @@ export class ModelManager {
     async newModel(modelName: string) {
         LOGGER.log("new model called: " + modelName);
         // save the old current unit, if there is one
-        await this.saveCurrentUnit();
-        // create a new model
-        this.currentModel = FreLanguage.getInstance().createModel();
-        this._currentModel.name = modelName;
-        this.currentUnit = null;
-        this.currentModelChanged(this);
-        this.currentUnitChanged(this);
+        // await this.saveCurrentUnit();
+        // create a new model on the server
+        await this.serverCommunication.createModel(modelName)
+        // create a new model in memory
+        await this.openModel(modelName)
+        // this.currentModel = FreLanguage.getInstance().createModel();
+        // this._currentModel.name = modelName;
+        // this.currentUnit = null;
+        // this.currentModelChanged();
+        // this.currentUnitChanged();
     }
 
     /**
@@ -135,32 +163,31 @@ export class ModelManager {
         LOGGER.log("2")
         // fill the new model with the units loaded from the server
         const unitIdentifiers: ModelUnitIdentifier[] = await this.serverCommunication.loadUnitList(modelName)
-            LOGGER.log("loadUnitList callback with " + unitIdentifiers);
-            if (unitIdentifiers && unitIdentifiers.length > 0) {
-                // load the first unit completely and show it
-                // load all others units as interfaces
-                let first: boolean = true;
-                for (const unitIdentifier of unitIdentifiers) {
-                    if (first) {
-                        const unit = await this.serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit
-                        // await this.serverCommunication.loadModelUnit(modelName, unitName.id, (unit: FreModelUnit) => {
-                            this._currentModel.addUnit(unit);
-                            LOGGER.log("First: Current model / unit is " + this?._currentModel?.name + "/" + unit?.name);
-                            this.currentUnit = unit;
-                            this?.currentUnitChanged(this);
-                            this?.currentModelChanged(this);
-                        // });
-                        first = false;
-                    } else {
-                        await this.serverCommunication.loadModelUnitInterface(modelName, unitIdentifier, (unit: FreModelUnit) => {
-                            LOGGER.log("Not first: Current model / unit is " + this?._currentModel?.name + "/" + unit?.name);
-                            this._currentModel.addUnit(unit);
-                            this?.currentModelChanged(this);
-                        });
-                    }
+        LOGGER.log("loadUnitList callback with " + unitIdentifiers);
+        if (unitIdentifiers && unitIdentifiers.length > 0) {
+            // load the first unit completely and show it, load all others units as interfaces
+            let first: boolean = true;
+            for (const unitIdentifier of unitIdentifiers) {
+                if (first) {
+                    const unit = await this.serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit
+                    // await this.serverCommunication.loadModelUnit(modelName, unitName.id, (unit: FreModelUnit) => {
+                        this._currentModel.addUnit(unit);
+                        LOGGER.log("First: Current model / unit is " + this?._currentModel?.name + "/" + unit?.name);
+                        this.currentUnit = unit;
+                        this?.currentUnitChanged();
+                        this?.currentModelChanged();
+                    // });
+                    first = false;
+                } else {
+                    await this.serverCommunication.loadModelUnitInterface(modelName, unitIdentifier, (unit: FreModelUnit) => {
+                        LOGGER.log("Not first: Current model / unit is " + this?._currentModel?.name + "/" + unit?.name);
+                        this._currentModel.addUnit(unit);
+                        this?.currentModelChanged();
+                    });
                 }
-
             }
+
+        }
     }
 
     /**
@@ -229,7 +256,7 @@ export class ModelManager {
         if (!!newUnit) {
             newUnit.name = newName;
             this.currentUnit = newUnit;
-            this.currentUnitChanged(this)
+            this.currentUnitChanged()
         } else {
             this._onError( `Model unit of type '${unitType}' could not be created.`, FreErrorSeverity.Error);
         }
@@ -250,9 +277,9 @@ export class ModelManager {
         // if the unit is shown in the editor, get rid of that one, as well
         if (this.currentUnit === unit) {
             this.currentUnit = null;
-            this.currentUnitChanged(this);
+            this.currentUnitChanged();
         }
-        this.currentModelChanged(this);
+        this.currentModelChanged();
     }
 
     /**
@@ -302,7 +329,7 @@ export class ModelManager {
                         this.currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
                         this.currentUnit = newCompleteUnit;
                         // notify observers
-                        this.currentUnitChanged(this);
+                        this.currentUnitChanged();
                     }
                 });
         } else {
@@ -310,7 +337,7 @@ export class ModelManager {
             this.currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
             // notify observers
             this.currentUnit = newCompleteUnit;
-            this.currentUnitChanged(this);
+            this.currentUnitChanged();
         }
     }
 }

@@ -38,3 +38,4 @@ export * from "./environment";
 export * from "./change-manager";
 
 export * from "./interpreter";
+export * from "./modelmanager"
