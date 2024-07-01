@@ -32,29 +32,33 @@ Now you can build Freon with:
   npm run build
 ```
 
-Choose one of the projects in playground. Note that not all of them will work correctly (it is a playground :-)). 
-Generate the code for that project (we have choosen the 'example' project):
+And run all tests  with:
 ```bash
-  cd packages/playground
-  npm run install-example
-  npm run example
+  npm run test
 ```
 
-To start the projectional editor for the choosen language in the playground package,
-do two things in separate terminals:
+## Starting the web app editor
+* Go to the package containing your language, this can e.g. be any package in `packages/samples`.
+  - Build the language using `npm run build`
 
-Go to directory `packages/server` and start the server:
+* Go to the `webapp-starter` package.
+  - Open the file `package.json
+  - In the _dependencies_ section change the language dependency to your chosen language
+  - Also open the file `src/starter.ts`
+  - Change lines 7 and 8 to import the correct environment from your chosen language package.
+
+* Go to directory `packages/server` and start the server:
 ```bash
     cd packages/server
     npm run start
 ```
 
-Goto the playground directory `packages/playground` (or stay there if you are already there) and start Freon:
+* Goto the `webapp-starter` and start Freon:
 ```bash
-    cd packages/playground
+    cd packages/webapp-starter
     npm run prepare-app
     npm run dev
-```   
+```
 This will open a browser with the example from the playground package on 
 the URL displayed: `http://localhost:5000/`. The example and all other projects in playground are
 work in progress.
@@ -74,10 +78,10 @@ The source code for Freon is organised into the following packages.
 * *packages/meta/src/scoperdef*: source code that generates code from a scoper definition (*.scope*) file.
 * *packages/meta/src/typerdef*: source code that generates code from a typer definition (*.type*) file.
 * *packages/meta/src/validatordef*: source code that generates code from a validator definition (*.valid*) file.
-* *packages/playground*: source code generated from the language definition files.
-* *packages/playground/src/webapp*: a copy of *packages/webapp*, for use within the playground.
-* *packages/playground/src/example/defs*: the language definition files for the example language called 'Example'.
 * *packages/server*: source code for a minimalistic model-server used for demonstration purposes.
-* *packages/webapp*: source code for the web-application used for all generated languages.
+* *packages/webapp-lib*: source code for the web-application used for all generated languages.
+* *packages/samples/*: source code for a number of sample languages.
+* *packages/webapp-starter/*: source code for web app including one language.
+  This package import the `webapp-lib` for the full web app and one language from `samples` to be used in the webapp.
 * _/*_: the usual suspects.
 
