@@ -96,3 +96,5 @@ packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-
 /packages/server/modelstore-example/NEXT/
 /packages/server/modelstore-example/QWER/
 /packages/server/modelstore-example/www/
+/packages/webapp-lib/.svelte-kit/
+/packages/core-svelte/.svelte-kit/
