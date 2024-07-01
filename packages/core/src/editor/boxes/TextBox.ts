@@ -1,11 +1,10 @@
-import { autorun } from "mobx";
 import { FreUtils } from "../../util";
 import { FreCaret, FreCaretPosition } from "../util";
 import { FreNode } from "../../ast";
 import { Box } from "./Box";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("TextBox");
+const LOGGER: FreLogger = new FreLogger("TextBox");
 
 export enum CharAllowed {
     OK,

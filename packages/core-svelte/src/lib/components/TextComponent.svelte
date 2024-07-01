@@ -441,7 +441,7 @@
 	}
 
 	/**
-	 * When setting the focus programatically, the 'inputElement' variable is not immediately set.
+	 * When setting the focus programmatically, the 'inputElement' variable is not immediately set.
 	 * It may be null or undefined! Therefore, we need this check to set the focus.
  	 */
 	beforeUpdate(() => {
