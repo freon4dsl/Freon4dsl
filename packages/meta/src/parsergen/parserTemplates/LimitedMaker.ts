@@ -24,14 +24,7 @@ export class LimitedMaker {
                 const myTypeScript: string = `${Names.classifier(limitedConcept)}.${Names.instance(item)}`;
                 // set the string to be used to the value of the name property, iff present
                 // else use the typescript name of the instance
-                let myKeyword: string = item.nameProperty().value.toString();
-                if (!myKeyword ) {
-                    console.log("no keyword");
-                }
-                if (myKeyword.length === 0) {
-                    console.log("no lengthy keyword");
-                }
-
+                let myKeyword: string | undefined = item.nameProperty()?.value.toString();
                 if (!myKeyword || myKeyword.length === 0) {
                     myKeyword = Names.instance(item);
                 }

@@ -32,10 +32,13 @@ export class FretPropInstance extends FreTyperElement {
         }
         return result;
     }
+    // @ts-ignore Property is set during parsing and checking phases
     owner: FretCreateExp;
 
     readonly $typename: string = "FretPropInstance"; // holds the metatype in the form of a string
+    // @ts-ignore Property is set during parsing and checking phases
     value: FretExp; // implementation of part 'value'
+    // @ts-ignore Property is set during parsing and checking phases
     $property: MetaElementReference<FreMetaProperty>; // implementation of reference 'property'
 
     /**
@@ -43,11 +46,11 @@ export class FretPropInstance extends FreTyperElement {
      * Instead of returning a 'MetaElementReference<FreProperty>' object,
      * it returns the referred 'FreProperty' object, if it can be found.
      */
-    get property(): FreMetaProperty {
+    get property(): FreMetaProperty | undefined {
         if (!!this.$property) {
             return this.$property.referred;
         }
-        return null;
+        return undefined;
     }
     toFreString(): string {
         return this.$property.name + " : " + this.value.toFreString();

@@ -111,6 +111,7 @@ ExpressionTest {
   ],
   "_FRE_name": "simpleExpressions",
   "_FRE_normalEx": [],
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,

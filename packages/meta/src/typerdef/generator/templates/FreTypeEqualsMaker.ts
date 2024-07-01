@@ -12,7 +12,7 @@ import { FreMetaClassifier } from "../../../languagedef/metalanguage";
  * This class generates the code for the 'equalsto' entries in the .type file.
  */
 export class FreTypeEqualsMaker {
-    typerdef: TyperDef = null;
+    typerdef: TyperDef | undefined = undefined;
 
     public makeEqualsType(typerDef: TyperDef, leftVarName: string, rightVarName: string, imports: FreMetaClassifier[]): string {
         FreTyperGenUtils.types = typerDef.types;
@@ -29,7 +29,7 @@ export class FreTypeEqualsMaker {
         const astSubRules: string[] = [];
         sortedTypes.forEach( type => {
             // find the equalsRule, if present
-            const foundRule: FretEqualsRule = equalsRules.find(conRule => conRule.owner.myClassifier === type);
+            const foundRule: FretEqualsRule | undefined = equalsRules.find(conRule => conRule.owner.myClassifier === type);
             if (!!foundRule) {
                 const myType: string = Names.classifier(type);
                 astSubRules.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType((${leftVarName} as AstType).astElement, "${myType}")) {
@@ -49,7 +49,7 @@ export class FreTypeEqualsMaker {
                 } `);
         // make an entry for each rule that is not defined for an ast-element
         equalsRules.map(conRule => {
-            if (FreTyperGenUtils.isType(conRule.owner.myClassifier)) {
+            if (!!conRule.owner.myClassifier && FreTyperGenUtils.isType(conRule.owner.myClassifier)) {
                 allRules.push(`if (${leftVarName}.$typename === "${Names.classifier(conRule.owner.myClassifier)}") {
                     ${this.makeEqualsForExp(conRule.exp, leftVarName, rightVarName, true, imports)};
                 }`);
@@ -65,7 +65,7 @@ export class FreTypeEqualsMaker {
             exp.conditions.forEach((cond, index) => {
                 const leftStr: string = FreTyperGenUtils.makeExpAsElement(cond.left, leftVarName, varIsType, imports);
                 const rightStr: string = FreTyperGenUtils.makeExpAsElement(cond.right, rightVarName, varIsType, imports);
-                if (FreTyperGenUtils.isType(cond.left.returnType)) {
+                if (!!cond.left.returnType && FreTyperGenUtils.isType(cond.left.returnType)) {
                     allConditions.push(`const condition${index + 1}: boolean = this.mainTyper.equals(${leftStr}, ${rightStr});`);
                 } else {
                     allConditions.push(`const condition${index + 1}: boolean = ${leftStr} === ${rightStr};`);

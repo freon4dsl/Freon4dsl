@@ -48,7 +48,7 @@ import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWi
 
 export class ConceptMaker {
     imports: FreMetaClassifier[] = [];
-    private currentProjectionGroup: FreEditProjectionGroup = null;
+    private currentProjectionGroup: FreEditProjectionGroup | undefined = undefined;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last to added
     private namedProjections: FreEditProjection[] = [];
@@ -58,7 +58,7 @@ export class ConceptMaker {
         const rules: GrammarRule[] = [];
         for (const freConcept of conceptsUsed) {
             // all methods in this class depend on the fact that only non-table projections are passes as parameter!!
-            const projection: FreEditProjection = ParserGenUtil.findNonTableProjection(projectionGroup, freConcept);
+            const projection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(projectionGroup, freConcept);
             if (!!projection) {
                 // generate a grammar rule entry
                 rules.push(this.generateProjection(freConcept, projection, false));
@@ -66,7 +66,9 @@ export class ConceptMaker {
         }
         for (const projection of this.namedProjections) {
             // generate a grammar rule entry
-            rules.push(this.generateProjection(projection.classifier.referred, projection, true));
+            if (!!projection.classifier) {
+                rules.push(this.generateProjection(projection.classifier.referred, projection, true));
+            }
         }
         return rules;
     }
@@ -102,14 +104,14 @@ export class ConceptMaker {
         }
         if (!!list && list.length > 0) {
             list.forEach(item => {
-                if (item instanceof FreOptionalPropertyProjection) {
+                if (item instanceof FreOptionalPropertyProjection && !!item.property) {
                     const subs: RightHandSideEntry[] = [];
                     let propIndex: number = 0; // the index in the list of parts in the optional group
                     let foundIndex: boolean = false;
                     item.lines.forEach(line => {
                         const subParts = this.addItems(line.items, true, isSingleEntry);
                         subParts.forEach((part, index) => {
-                            if (part instanceof RHSPropEntry && part.property === item.property.referred) {
+                            if (part instanceof RHSPropEntry && part.property === item.property!.referred) {
                                 propIndex += index;
                                 foundIndex = true;
                             }
@@ -135,19 +137,22 @@ export class ConceptMaker {
         return parts;
     }
 
-    private makePropPart(item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
-        const prop: FreMetaProperty = item.property.referred;
-        let result: RHSPropEntry = null;
+    private makePropPart(item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry | undefined {
+        const prop: FreMetaProperty | undefined = item.property?.referred;
+        let result: RHSPropEntry | undefined = undefined;
         if (!!prop) {
             const propType: FreMetaClassifier = prop.type; // more efficient to determine referred only once
             this.imports.push(propType);
             // take care of named projections
-            let myProjName: string = null;
-            if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
-                ListUtil.addIfNotPresent<FreEditProjection>(
-                    this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName)
-                );
-                myProjName = item.projectionName;
+            let myProjName: string = '';
+            if (!!this.currentProjectionGroup) {
+                if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
+                    const xx: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName);
+                    if (!!xx) {
+                        ListUtil.addIfNotPresent<FreEditProjection>(this.namedProjections, xx);
+                    }
+                    myProjName = item.projectionName;
+                }
             }
             //
             if (prop instanceof FreMetaPrimitiveProperty) {
@@ -158,17 +163,19 @@ export class ConceptMaker {
                 if (!prop.isList) {
                     result = new RHSBinaryExp(prop, propType); // __fre_binary_propTypeName
                 } else {
-                    const joinText = this.makeListJoinText(item.listInfo?.joinText);
-                    if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
-                        result = new RHSBinExpList(prop, propType); // __fre_binary_propTypeName*
-                    } else if (item.listInfo?.joinType === ListJoinType.Separator) {
-                        result = new RHSBinExpListWithSeparator(prop, propType, joinText); // [ __fre_binary_propTypeName / "joinText" ]
-                    } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
-                        const sub1 = new RHSPartEntry(prop, item.projectionName);
-                        result = new RHSBinExpListWithInitiator(prop, propType, sub1, joinText); // `("joinText" __fre_binary_propTypeName)*`
-                    } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
-                        // const sub1 = new RHSPartEntry(prop, item.projectionName);
-                        result = new RHSBinExpListWithTerminator(prop, propType, joinText, isSingleEntry); // `(__fre_binary_propTypeName 'joinText' )*`
+                    if (!!item.listInfo) {
+                        const joinText: string = this.makeListJoinText(item.listInfo?.joinText);
+                        if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+                            result = new RHSBinExpList(prop, propType); // __fre_binary_propTypeName*
+                        } else if (item.listInfo?.joinType === ListJoinType.Separator) {
+                            result = new RHSBinExpListWithSeparator(prop, propType, joinText); // [ __fre_binary_propTypeName / "joinText" ]
+                        } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
+                            const sub1 = new RHSPartEntry(prop, item.projectionName);
+                            result = new RHSBinExpListWithInitiator(prop, propType, sub1, joinText); // `("joinText" __fre_binary_propTypeName)*`
+                        } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
+                            // const sub1 = new RHSPartEntry(prop, item.projectionName);
+                            result = new RHSBinExpListWithTerminator(prop, propType, joinText, isSingleEntry); // `(__fre_binary_propTypeName 'joinText' )*`
+                        }
                     }
                 }
             } else {
@@ -182,43 +189,45 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeListProperty(prop: FreMetaProperty, item: FreEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry {
-        let result: RHSPropEntry;
-        if (prop.isPart) {
-            // (list, part, optionality not relevant)
-            const joinText = this.makeListJoinText(item.listInfo?.joinText);
-            if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
-                result = new RHSPartListEntry(prop); // propTypeName*
-            } else if (item.listInfo?.joinType === ListJoinType.Separator) {
-                result = new RHSPartListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
-            } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
-                const sub1 = new RHSPartEntry(prop, item.projectionName);
-                result = new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
-            } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
-                const sub1 = new RHSPartEntry(prop, item.projectionName);
-                result = new RHSPartListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName 'joinText' )*`
-            }
-        } else if (!prop.isPart) {
-            // (list, reference, optionality not relevant)
-            const joinText = this.makeListJoinText(item.listInfo?.joinText);
-            if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
-                result = new RHSRefListEntry(prop); // propTypeName*
-            } else if (item.listInfo?.joinType === ListJoinType.Separator) {
-                result = new RHSRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
-            } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
-                const sub1 = new RHSRefEntry(prop);
-                // TODO create a RHSRefListWithInitiator class
-                result = new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
-            } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
-                const sub1 = new RHSRefEntry(prop);
-                result = new RHSRefListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName "joinText")*`
+    private makeListProperty(prop: FreMetaProperty, item: FreEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry | undefined {
+        let result: RHSPropEntry | undefined = undefined;
+        if (!!item.listInfo) {
+            if (prop.isPart) {
+                // (list, part, optionality not relevant)
+                const joinText = this.makeListJoinText(item.listInfo?.joinText);
+                if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+                    result = new RHSPartListEntry(prop); // propTypeName*
+                } else if (item.listInfo?.joinType === ListJoinType.Separator) {
+                    result = new RHSPartListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
+                } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
+                    const sub1 = new RHSPartEntry(prop, item.projectionName);
+                    result = new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
+                } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
+                    const sub1 = new RHSPartEntry(prop, item.projectionName);
+                    result = new RHSPartListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName 'joinText' )*`
+                }
+            } else if (!prop.isPart) {
+                // (list, reference, optionality not relevant)
+                const joinText = this.makeListJoinText(item.listInfo?.joinText);
+                if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+                    result = new RHSRefListEntry(prop); // propTypeName*
+                } else if (item.listInfo?.joinType === ListJoinType.Separator) {
+                    result = new RHSRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
+                } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
+                    const sub1 = new RHSRefEntry(prop);
+                    // TODO create a RHSRefListWithInitiator class
+                    result = new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
+                } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
+                    const sub1 = new RHSRefEntry(prop);
+                    result = new RHSRefListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName "joinText")*`
+                }
             }
         }
         return result;
     }
 
-    private makeSingleProperty(prop: FreMetaProperty, myProjName: string, inOptionalGroup: boolean): RHSPropEntry {
-        let result: RHSPropEntry;
+    private makeSingleProperty(prop: FreMetaProperty, myProjName: string, inOptionalGroup: boolean): RHSPropEntry | undefined {
+        let result: RHSPropEntry | undefined = undefined;
         if (prop.isPart && (!prop.isOptional || inOptionalGroup)) {
             result = new RHSPartEntry(prop, myProjName); // `${propTypeName}`;
         } else if (prop.isPart && prop.isOptional && !inOptionalGroup) {
@@ -255,7 +264,7 @@ export class ConceptMaker {
     private makePrimitiveProperty(prop: FreMetaPrimitiveProperty,
                                   propType: FreMetaClassifier,
                                   item: FreEditPropertyProjection,
-                                  inOptionalGroup: boolean): RHSPropEntry {
+                                  inOptionalGroup: boolean): RHSPropEntry | undefined {
         if (propType === FreMetaPrimitiveType.boolean && !!item.boolInfo) {
             // note that lists of booleans can never have a boolean keyword projection
             if (!item.boolInfo.falseKeyword) {
@@ -270,20 +279,21 @@ export class ConceptMaker {
                 return new RHSPrimOptionalEntry(prop);
             }
         } else {
-            const joinText = this.makeListJoinText(item.listInfo?.joinText);
-            if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
-                return new RHSPrimListEntry(prop); // propTypeName*
-            } else if (item.listInfo?.joinType === ListJoinType.Separator) {
-                return new RHSPrimListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
-            } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
-                const sub1 = new RHSPrimEntry(prop);
-                return new RHSPrimListGroupWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
-            } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
-                const sub1 = new RHSPrimEntry(prop);
-                return new RHSPrimListGroup(prop, sub1, joinText); // `(propTypeName 'joinText' )*`
-            } else {
-                return null;
+            if (!!item.listInfo) {
+                const joinText = this.makeListJoinText(item.listInfo?.joinText);
+                if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+                    return new RHSPrimListEntry(prop); // propTypeName*
+                } else if (item.listInfo?.joinType === ListJoinType.Separator) {
+                    return new RHSPrimListEntryWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
+                } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
+                    const sub1 = new RHSPrimEntry(prop);
+                    return new RHSPrimListGroupWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
+                } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
+                    const sub1 = new RHSPrimEntry(prop);
+                    return new RHSPrimListGroup(prop, sub1, joinText); // `(propTypeName 'joinText' )*`
+                }
             }
+            return undefined;
         }
     }
 
@@ -308,15 +318,19 @@ export class ConceptMaker {
     private makeSuperParts(item: FreEditSuperProjection, inOptionalGroup: boolean): RightHandSideEntry[] {
         const subs: RightHandSideEntry[] = [];
         // find the projection that we need
-        const myProjection: FreEditProjection = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
-        const isSingleEntry: boolean = (myProjection.lines.length === 1);
-        myProjection.lines.forEach(line => {
-            subs.push(...this.addItems(line.items, inOptionalGroup, isSingleEntry));
-        });
+        if (!!this.currentProjectionGroup && !!item.superRef) {
+            const myProjection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
+            if (!!myProjection) {
+                const isSingleEntry: boolean = (myProjection.lines.length === 1);
+                myProjection.lines.forEach(line => {
+                    subs.push(...this.addItems(line.items, inOptionalGroup, isSingleEntry));
+                });
+            }
+        }
         return subs;
     }
 
-    private makeLimitedProp(prop: FreMetaProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry {
+    private makeLimitedProp(prop: FreMetaProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry | undefined {
         if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSLimitedRefEntry(prop);
@@ -324,20 +338,22 @@ export class ConceptMaker {
                 return new RHSLimitedRefOptionalEntry(prop);
             }
         } else {
-            const joinText = this.makeListJoinText(item.listInfo?.joinText);
-            if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
-                return new RHSLimitedRefListEntry(prop); // propTypeName*
-            } else if (item.listInfo?.joinType === ListJoinType.Separator) {
-                return new RHSLimitedRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
-            } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
-                const sub1 = new RHSLimitedRefEntry(prop);
-                return new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
-            } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
-                const sub1 = new RHSLimitedRefEntry(prop);
-                return new RHSPartListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName 'joinText' )*`
+            if (!!item.listInfo) {
+                const joinText = this.makeListJoinText(item.listInfo?.joinText);
+                if (joinText.length === 0 || item.listInfo?.joinType === ListJoinType.NONE) {
+                    return new RHSLimitedRefListEntry(prop); // propTypeName*
+                } else if (item.listInfo?.joinType === ListJoinType.Separator) {
+                    return new RHSLimitedRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
+                } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
+                    const sub1 = new RHSLimitedRefEntry(prop);
+                    return new RHSPartListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
+                } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
+                    const sub1 = new RHSLimitedRefEntry(prop);
+                    return new RHSPartListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName 'joinText' )*`
+                }
             }
         }
-        return null;
+        return undefined;
     }
 
     private checkRule(rule: ConceptRule) {
@@ -347,7 +363,7 @@ export class ConceptMaker {
                 if (!xx.includes(part.property)) {
                     xx.push(part.property);
                 } else {
-                    LOG2USER.warning(`Warning: Found two entries for property '${part.property.name}' in '${rule.concept.name}'. Only the last will yield a parse result.`);
+                    LOG2USER.warning(`Warning: Found two entries for property '${part.property.name}' in '${rule.concept?.name}'. Only the last will yield a parse result.`);
                 }
             }
         }

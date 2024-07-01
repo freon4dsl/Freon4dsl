@@ -2,7 +2,7 @@ import {LanguageParser} from "../../languagedef/parser/LanguageParser";
 import {FreMetaLanguage} from "../../languagedef/metalanguage";
 
 export function parseCorrectModel(parser: LanguageParser, parseFile: string) {
-    let model: FreMetaLanguage = null;
+    let model: FreMetaLanguage | undefined = undefined;
     try {
         model = parser.parse(parseFile);
     } catch (e: unknown) {

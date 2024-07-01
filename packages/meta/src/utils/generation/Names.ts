@@ -162,8 +162,12 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "Initialization";
     }
 
-    public static concept(concept: FreMetaConcept): string {
-        return this.startWithUpperCase(concept?.name);
+    public static concept(concept: FreMetaConcept | undefined): string {
+        if (!!concept) {
+            return this.startWithUpperCase(concept?.name);
+        } else {
+            return "<unknown concept>";
+        }
     }
 
     public static classifier(concept: FreMetaClassifier): string {
@@ -310,7 +314,7 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "SyntaxAnalyser";
     }
 
-    public static unitAnalyser(language: FreMetaLanguage, unit: FreMetaUnitDescription | FreMetaModelDescription): string {
+    public static unitAnalyser(language: FreMetaLanguage, unit: FreMetaUnitDescription | FreMetaModelDescription | undefined): string {
         if (!!unit) {
             return this.startWithUpperCase(unit?.name) + "SyntaxAnalyserPart";
         } else {

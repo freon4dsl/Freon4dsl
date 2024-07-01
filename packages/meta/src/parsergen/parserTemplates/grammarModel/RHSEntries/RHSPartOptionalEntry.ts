@@ -5,7 +5,7 @@ import { GenerationUtil } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSPartOptionalEntry extends RHSPropEntry {
-    private readonly projectionName: string;
+    private readonly projectionName: string = '';
 
     constructor(prop: FreMetaProperty, projectionName: string) {
         super(prop);

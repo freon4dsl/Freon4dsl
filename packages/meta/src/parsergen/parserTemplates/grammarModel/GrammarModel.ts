@@ -11,8 +11,12 @@ import { refRuleName } from "./GrammarUtils";
 import { GrammarPart } from "./GrammarPart";
 
 export class GrammarModel {
+    constructor(language: FreMetaLanguage) {
+        this.language = language;
+    }
+
     // these four properties are set by the GrammarGenerator
-    public language: FreMetaLanguage = null;
+    public language: FreMetaLanguage;
     public parts: GrammarPart[] = [];
     public trueValue: string = "true";
     public falseValue: string = "false";

@@ -12,15 +12,16 @@ const LOGGER = new MetaLogger("FreLangScoper"); // .mute();
 // const anyElement = "_$anyElement";
 
 export interface FreMetaScoper {
-    getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement;
+    getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement | undefined;
 }
 
 export class FreLangScoper {
+    // @ts-ignore this property will be set by users of FreLangScoper
     public language: FreMetaLanguage;
     extraScopers: FreMetaScoper[] = [];
 
-    public getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement {
-        let result: FreMetaLangElement;
+    public getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement | undefined {
+        let result: FreMetaLangElement | undefined;
         if (typeName === "FrePrimitiveType" ) {
             result = FreMetaPrimitiveType.find(name);
         } else if (typeName === "FreConcept" || typeName === "FreLimitedConcept" || typeName === "FreExpressionConcept" || typeName === "FreBinaryExpressionConcept") {

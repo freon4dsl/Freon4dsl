@@ -6,7 +6,7 @@ import { GenerationUtil } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBinExpListWithTerminator extends RHSPropEntry {
-    type: FreMetaBinaryExpressionConcept = null;
+    type: FreMetaBinaryExpressionConcept;
     private readonly separatorText: string = "";
     private readonly isSingleEntry: boolean;
 

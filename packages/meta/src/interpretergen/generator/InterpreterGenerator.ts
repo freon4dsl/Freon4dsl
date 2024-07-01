@@ -16,13 +16,13 @@ const LOGGER = new MetaLogger("InterpreterGenerator").mute();
  */
 export class InterpreterGenerator {
     public outputfolder: string = ".";
-    public language: FreMetaLanguage;
-    private interpreterFolder: string;
-    private interpreterGenFolder: string;
+    public language: FreMetaLanguage | undefined;
+    private interpreterFolder: string = '';
+    private interpreterGenFolder: string = '';
     fileNames: string[] = [];
 
     generate(interpreterDef: FreInterpreterDef): void {
-        if (this.language === null) {
+        if (this.language === null || this.language === undefined) {
             LOGGER.error("Cannot generate interpreter because language is not set.");
             return;
         }

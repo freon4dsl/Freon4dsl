@@ -1,38 +1,43 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
+import { BoolKeywords, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
 import { LimitedMaker } from "./LimitedMaker";
 import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
 import { ConceptMaker } from "./ConceptMaker";
-import { GrammarModel } from "./grammarModel/GrammarModel";
+import { GrammarModel } from "./grammarModel";
 import { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser";
 import { GrammarPart } from "./grammarModel/GrammarPart";
-import { Names } from "../../utils";
+import { LOG2USER, Names } from "../../utils";
 import { ParserGenUtil } from "./ParserGenUtil";
 
 export class GrammarGenerator {
 
-    createGrammar(language: FreMetaLanguage, analyser: LanguageAnalyser, editUnit: FreEditUnit): GrammarModel {
+    createGrammar(language: FreMetaLanguage, analyser: LanguageAnalyser, editUnit: FreEditUnit): GrammarModel | undefined{
         // create an empty model of the grammar and syntax analysis
-        const grammar = new GrammarModel();
-        grammar.language = language;
+        const grammar: GrammarModel = new GrammarModel(language);
 
         // add the standard option from the editor definition
-        const stdBoolKeywords = editUnit.getDefaultProjectiongroup().standardBooleanProjection;
+        const defProjGroup: FreEditProjectionGroup | undefined = editUnit.getDefaultProjectiongroup();
+        let stdBoolKeywords: BoolKeywords | undefined;
+        let refSeparator: string | undefined;
+        if (!!defProjGroup) {
+            stdBoolKeywords = defProjGroup.standardBooleanProjection;
+            refSeparator = defProjGroup.standardReferenceSeparator;
+        }
         if (!!stdBoolKeywords) {
             grammar.trueValue = stdBoolKeywords.trueKeyword;
-            grammar.falseValue = stdBoolKeywords.falseKeyword;
+            grammar.falseValue = stdBoolKeywords.falseKeyword ? stdBoolKeywords.falseKeyword : '';
         }
-        const refSeparator = editUnit.getDefaultProjectiongroup().standardReferenceSeparator;
         if (!!refSeparator) {
             grammar.refSeparator = refSeparator;
         }
-
         // find the projection group that can be used for the parser and unparser
-        const projectionGroup = ParserGenUtil.findParsableProjectionGroup(editUnit);
+        const projectionGroup:FreEditProjectionGroup | undefined = ParserGenUtil.findParsableProjectionGroup(editUnit);
         // if no projection group found, return
         if (!projectionGroup) {
-            return null;
+            // todo better error message
+            LOG2USER.error("No projection group found for generating a grammar.")
+            return undefined;
         }
 
         // create the grammar rules and add them to the model
@@ -50,8 +55,10 @@ export class GrammarGenerator {
     }
 
     private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: FreAnalyser) {
-        const grammarPart = new GrammarPart();
-        grammarPart.unit = analyser.unit;
+        const grammarPart: GrammarPart = new GrammarPart();
+        if (!!analyser.unit) {
+            grammarPart.unit = analyser.unit;
+        }
         // create parse rules and syntax analysis methods for the concepts
         const conceptMaker: ConceptMaker = new ConceptMaker();
         grammarPart.rules.push(...conceptMaker.generateClassifiers(projectionGroup, analyser.classifiersUsed));
@@ -67,8 +74,8 @@ export class GrammarGenerator {
         const binaryExpMaker: BinaryExpMaker = new BinaryExpMaker();
         // always use the default projection group for binary expressions
         let groupForBinaries: FreEditProjectionGroup = projectionGroup;
-        if (projectionGroup.name !== Names.defaultProjectionName) {
-            groupForBinaries = projectionGroup.owningDefinition.getDefaultProjectiongroup();
+        if (projectionGroup.name !== Names.defaultProjectionName && !!projectionGroup.owningDefinition?.getDefaultProjectiongroup()) {
+            groupForBinaries = projectionGroup.owningDefinition.getDefaultProjectiongroup()!;
         }
         if (analyser.binaryConceptsUsed.length > 0) {
             grammarPart.rules.push(...binaryExpMaker.generateBinaryExpressions(groupForBinaries, analyser.binaryConceptsUsed));

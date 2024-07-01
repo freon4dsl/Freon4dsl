@@ -47,7 +47,7 @@ export function createEditUnit(group: FreEditProjectionGroup): FreEditUnit {
 }
 
 function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEditProjectionGroup) {
-    data.projections.forEach(proj => {
+    data.projections?.forEach(proj => {
         if (proj instanceof FreEditParsedClassifier) {
             if (!!proj.tableProjection) {
                 const myProj: FreEditTableProjection = new FreEditTableProjection();
@@ -163,15 +163,16 @@ export function createClassifierReference(data: Partial<MetaElementReference<Fre
     let result: MetaElementReference<FreMetaClassifier>;
     if (!!data.name) {
         result = MetaElementReference.create<FreMetaClassifier>(data.name, "FreClassifier");
+        if (!!data.location) {
+            result.location = data.location;
+            result.location.filename = currentFileName;
+        }
     }
-    if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
-    }
+    result = MetaElementReference.create<FreMetaClassifier>("unknown", "FreClassifier");
     return result;
 }
 
-export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraClassifierInfo {
+export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraClassifierInfo | undefined {
     const result: ExtraClassifierInfo = new ExtraClassifierInfo();
     let hasContent: boolean = false;
     if (!!data.trigger) {
@@ -193,7 +194,7 @@ export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraC
     if (hasContent) {
         return result;
     } else {
-        return null;
+        return undefined;
     }
 }
 
@@ -328,7 +329,6 @@ export function createListPropertyProjection(data: { expression: any, projection
     return result;
 }
 
-// tslint:disable-next-line:typedef
 export function createTablePropertyProjection(data: { expression: any, projectionName: any, location: any, tableInfo: any }): FreEditPropertyProjection {
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
     if (!!data["tableInfo"]) {
@@ -344,7 +344,9 @@ export function createTablePropertyProjection(data: { expression: any, projectio
         result.location = data["location"];
         result.location.filename = currentFileName;
     }
-    result.listInfo.joinType = ListJoinType.NONE;
+    if (!!result.listInfo) {
+        result.listInfo.joinType = ListJoinType.NONE;
+    }
     return result;
 }
 

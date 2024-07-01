@@ -1,6 +1,6 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils";
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
+import {FreMetaConcept, FreMetaLanguage} from "../../languagedef/metalanguage";
 
 // The same tests as in property-inheritance1, only now all property types are interfaces
 describe("Checking property inheritance", () => {
@@ -52,7 +52,7 @@ describe("Checking property inheritance", () => {
 
     test("props in single base concept on type equality: flag 'implementedInBase' is set", () => {
         const parseFile = testdir + "prop_test3.ast";
-        let model: FreMetaLanguage = null;
+        let model: FreMetaLanguage | undefined = undefined;
         try {
             model = parser.parse(parseFile);
         } catch (e: unknown) {
@@ -62,8 +62,12 @@ describe("Checking property inheritance", () => {
                 expect(e.message).toBeNull();
             }
         }
-        const rightOne = model?.concepts.find(concept => concept.name === "Right");
-        rightOne.allProperties().forEach(prop => {
+        expect(model).not.toBeNull();
+        expect(model).not.toBeUndefined();
+        const rightOne: FreMetaConcept | undefined = model?.concepts.find(concept => concept.name === "Right");
+        expect(rightOne).not.toBeNull();
+        expect(rightOne).not.toBeUndefined();
+        rightOne!.allProperties().forEach(prop => {
             expect(prop.implementedInBase).toBeTruthy();
         });
     });
@@ -105,7 +109,7 @@ describe("Checking property inheritance", () => {
     // TODO make sure this test works again
     test.skip("props in base concept in inheritance tree on type conformance: flag 'implementedInBase' is set", () => {
         const parseFile = testdir + "prop_test4b.ast";
-        let model: FreMetaLanguage = null;
+        let model: FreMetaLanguage | undefined = undefined;
         try {
             model = parser.parse(parseFile);
         } catch (e: unknown) {
@@ -115,8 +119,12 @@ describe("Checking property inheritance", () => {
                 expect(e.message).toBeNull();
             }
         }
-        const rightOne = model?.concepts.find(concept => concept.name === "Right");
-        rightOne.allProperties().forEach(prop => {
+        expect(model).not.toBeNull();
+        expect(model).not.toBeUndefined();
+        const rightOne: FreMetaConcept | undefined = model?.concepts.find(concept => concept.name === "Right");
+        expect(rightOne).not.toBeNull();
+        expect(rightOne).not.toBeUndefined();
+        rightOne!.allProperties().forEach(prop => {
             expect(prop.implementedInBase).toBeTruthy();
         });
     });

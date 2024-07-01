@@ -13,17 +13,17 @@ import { FreLangChecker } from "../checking/FreLangChecker";
 // const LOGGER = new MetaLogger("LanguageParser").mute();
 
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
-    idFile: string;
+    idFile: string | undefined;
 
     constructor(idFile?: string) {
         super();
-        this.idFile = idFile;
+        this.idFile = idFile ? idFile : undefined;
         this.parser = pegjsParser;
-        this.checker = new FreLangChecker(null);
+        this.checker = new FreLangChecker(undefined);
     }
 
-    parse(definitionFile: string): FreMetaLanguage {
-        if (this.idFile !== undefined && this.idFile !== null) {
+    parse(definitionFile: string): FreMetaLanguage | undefined {
+        if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);
             const idMap = this.parseIds(idJson);
@@ -31,10 +31,10 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
         } else {
             LOG2USER.info("No id.json found")
         }
-
         return super.parse(definitionFile);
     }
-    parseMulti(filePaths: string[]): FreMetaLanguage {
+
+    parseMulti(filePaths: string[]): FreMetaLanguage | undefined {
         if (this.idFile !== undefined && this.idFile !== null) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);
@@ -43,10 +43,10 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
         } else {
             LOG2USER.info("No id.json found")
         }
-
         return super.parseMulti(filePaths);
     }
-    protected merge(submodels: FreMetaLanguage[]): FreMetaLanguage {
+
+    protected merge(submodels: FreMetaLanguage[]): FreMetaLanguage | undefined {
         if (submodels.length > 0) {
             const result: FreMetaLanguage = new FreMetaLanguage();
             result.name = submodels[0].name;
@@ -68,7 +68,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
             });
             return result;
         } else {
-            return null;
+            return undefined;
         }
     }
 

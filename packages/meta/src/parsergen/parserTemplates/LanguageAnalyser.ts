@@ -11,7 +11,7 @@ import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
 
 export interface FreAnalyser {
     // name of the unit
-    unit: FreMetaUnitDescription;
+    unit: FreMetaUnitDescription | undefined
     // all concepts used in this unit
     classifiersUsed: FreMetaClassifier[];
     // all binary concepts used in this unit

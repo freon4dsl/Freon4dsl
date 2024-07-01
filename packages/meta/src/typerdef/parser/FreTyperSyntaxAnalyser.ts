@@ -17,7 +17,7 @@ import { FreParseLocation } from "../../utils";
  */
 export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     locationMap: any;
-    filename: string;
+    filename: string = '';
     private _unit_TyperDef_analyser: FreTyperDefSyntaxAnalyserPart = new FreTyperDefSyntaxAnalyserPart(this);
 
     clear(): void {
@@ -28,7 +28,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
         if (!!sppt.root) {
             return this.transformSharedPackedParseTreeNode(sppt.root) as unknown as T;
         } else {
-            return null;
+            return null as T;
         }
     }
 

@@ -18,7 +18,7 @@ export class UnitTemplate {
         const modelImports = this.findModelImports(unitDescription, myName);
         const coreImports = ClassifierUtil.findMobxImports(unitDescription)
             .concat([Names.FreModelUnit, Names.FreParseLocation])
-            .concat(hasReferences ? (Names.FreNodeReference) : null);
+            .concat(hasReferences ? (Names.FreNodeReference) : '');
         const metaType = Names.metaType();
         const intfaces = Array.from(
             new Set(
@@ -37,7 +37,7 @@ export class UnitTemplate {
 
                 ${ConceptUtils.makeStaticCreateMethod(unitDescription, myName)}
 
-                fileExtension: string;
+                fileExtension: string = '';
                 ${ConceptUtils.makeBasicProperties(metaType, myName, false)}
                 ${unitDescription.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
                 ${unitDescription.parts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}

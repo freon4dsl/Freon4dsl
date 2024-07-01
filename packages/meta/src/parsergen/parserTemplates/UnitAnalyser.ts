@@ -10,7 +10,7 @@ import { FreMetaPrimitiveType, FreMetaUnitDescription } from "../../languagedef/
 import { FreAnalyser } from "./LanguageAnalyser";
 
 export class UnitAnalyser implements FreAnalyser {
-    unit: FreMetaUnitDescription = null;
+    unit: FreMetaUnitDescription | undefined = undefined;
     // all concepts used in this unit
     classifiersUsed: FreMetaClassifier[] = [];
     // all binary concepts used in this unit
@@ -118,7 +118,7 @@ export class UnitAnalyser implements FreAnalyser {
     }
 
     reset() {
-        this.unit = null;
+        this.unit = undefined;
         // all concepts in this unit
         this.classifiersUsed = [];
         // all binary concepts in this unit

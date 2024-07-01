@@ -15,6 +15,7 @@ import { CommonChecker } from "./CommonChecker";
 import { ClassifierChecker } from "./ClassifierChecker";
 
 export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
+    // @ts-ignore This property is set in the 'check' method, therefore we can assume that it is initialized in the private methods.
     language: FreMetaLanguage;
 
     // now everything has been resolved, check that all concepts and interfaces have
@@ -111,7 +112,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
     }
 
     private checkLimitedConceptAgain(freLimitedConcept: FreMetaLimitedConcept) {
-        let nameProperty: FreMetaPrimitiveProperty = freLimitedConcept.allPrimProperties().find(p => p.name === "name");
+        let nameProperty: FreMetaPrimitiveProperty | undefined = freLimitedConcept.allPrimProperties().find(p => p.name === "name");
         // if 'name' property is not present, create it.
         if ( !nameProperty ) {
             nameProperty = new FreMetaPrimitiveProperty();
@@ -190,17 +191,19 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
                                 check: myProp instanceof FreMetaPrimitiveProperty,
                                 error: `Predefined property '${freInstanceProperty.name}' should have a primitive type ${ParseLocationUtil.location(freInstanceProperty)}.`,
                                 whenOk: () => {
-                                    freInstanceProperty.property = MetaElementReference.create<FreMetaProperty>(myProp, "FreProperty");
-                                    const myPropType: FreMetaPrimitiveType = myProp.type as FreMetaPrimitiveType;
-                                    if (!myProp.isList) {
-                                        this.runner.simpleCheck(CommonChecker.checkValueToType(freInstanceProperty.value, myPropType),
-                                            `Type of '${freInstanceProperty.value}' (${typeof freInstanceProperty.value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
-                                    } else {
-                                        if (!!freInstanceProperty.valueList) {
-                                            freInstanceProperty.valueList.forEach(value => {
-                                                this.runner.simpleCheck(CommonChecker.checkValueToType(value, myPropType),
-                                                    `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
-                                            });
+                                    if (!!myProp) {
+                                        freInstanceProperty.property = MetaElementReference.create<FreMetaProperty>(myProp, "FreProperty");
+                                        const myPropType: FreMetaPrimitiveType = myProp.type as FreMetaPrimitiveType;
+                                        if (!myProp.isList) {
+                                            this.runner.simpleCheck(CommonChecker.checkValueToType(freInstanceProperty.value, myPropType),
+                                                `Type of '${freInstanceProperty.value}' (${typeof freInstanceProperty.value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
+                                        } else {
+                                            if (!!freInstanceProperty.valueList) {
+                                                freInstanceProperty.valueList.forEach(value => {
+                                                    this.runner.simpleCheck(CommonChecker.checkValueToType(value, myPropType),
+                                                        `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
+                                                });
+                                            }
                                         }
                                     }
                                 }

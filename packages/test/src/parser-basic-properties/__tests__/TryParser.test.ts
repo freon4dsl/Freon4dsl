@@ -100,7 +100,7 @@ describe("Parser properties of type", () => {
 
     test( " Ref with Optionals present", () => {
         try {
-            let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.ref");
+            let input: string = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.ref");
             const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
             // console.log(writer.writeToString(unit1));
             expect(unit1).toMatchSnapshot();

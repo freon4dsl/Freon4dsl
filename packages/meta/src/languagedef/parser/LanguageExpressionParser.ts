@@ -18,9 +18,9 @@ export class LanguageExpressionParser extends FreGenericParser<LanguageExpressio
     // @ts-ignore
     // error TS6133: 'submodels' is declared but its value is never read.
     // This error is ignored because this class is only used for tests.
-    protected merge(submodels: LanguageExpressionTester[]): LanguageExpressionTester {
+    protected merge(submodels: LanguageExpressionTester[]): LanguageExpressionTester | undefined{
         // no need to merge submodels, LanguageExpressionTester is only used for tests
-        return null;
+        return undefined;
     }
 
     protected setCurrentFileName(file: string) {

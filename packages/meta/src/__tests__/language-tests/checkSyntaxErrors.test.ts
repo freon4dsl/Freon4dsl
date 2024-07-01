@@ -22,7 +22,7 @@ describe("Checking language parser on syntax errors", () => {
     });
 
     test("language name should not contain a dot", () => {
-        const parseFile = testdir + "test2.ast";
+        const parseFile: string = testdir + "test2.ast";
         try {
             parser.parse(parseFile);
         } catch (e: unknown) {
@@ -40,7 +40,7 @@ describe("Checking language parser on syntax errors", () => {
             parser.parse(parseFile);
         } catch (e: unknown) {
             if (e instanceof Error) {
-                expect(e.message).toBe(`syntax error: SyntaxError: Expected ":" or "?" but "[" found.`
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected ":", "?", or whitespace but "[" found.`
                     + "\n                "
                     + `[file: test3.ast:10:22]`);
             }
@@ -53,7 +53,7 @@ describe("Checking language parser on syntax errors", () => {
             parser.parse(parseFile);
         } catch (e: unknown) {
             if (e instanceof Error) {
-                expect(e.message).toBe(`syntax error: SyntaxError: Expected "private", "reference", "}", or variable but "=" found.`
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected "private", "reference", "}", variable, or whitespace but "=" found.`
                     + "\n                "
                     + `[file: test5.ast:12:5]`);
             }
@@ -66,7 +66,7 @@ describe("Checking language parser on syntax errors", () => {
             parser.parse(parseFile);
         } catch (e: unknown) {
             if (e instanceof Error) {
-                expect(e.message).toBe(`syntax error: SyntaxError: Expected ";", "=", or "[]" but "p" found.`
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected ";", "=", "[]", or whitespace but "p" found.`
                     + "\n                "
                     + `[file: test6.ast:11:5]`);
             }
@@ -79,7 +79,7 @@ describe("Checking language parser on syntax errors", () => {
             parser.parse(parseFile);
         } catch (e: unknown) {
             if (e instanceof Error) {
-                expect(e.message).toBe(`syntax error: SyntaxError: Expected ":" but "?" found.`
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected ":" or whitespace but "?" found.`
                     + "\n                "
                     + `[file: test7.ast:10:10]`);
             }
@@ -92,7 +92,7 @@ describe("Checking language parser on syntax errors", () => {
             parser.parse(parseFile);
         } catch (e: unknown) {
             if (e instanceof Error) {
-                expect(e.message).toBe(`syntax error: SyntaxError: Expected "implements" or "{" but "," found.`
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected "implements", "{", or whitespace but "," found.`
                     + "\n                "
                     + `[file: test8.ast:9:23]`);
             }
@@ -105,7 +105,7 @@ describe("Checking language parser on syntax errors", () => {
             parser.parse(parseFile);
         } catch (e: unknown) {
             if (e instanceof Error) {
-                expect(e.message).toBe(`syntax error: SyntaxError: Expected "base" or "{" but "i" found.`
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected "base", "{", or whitespace but "i" found.`
                     + "\n                "
                     + `[file: test9.ast:9:16]`);
             }
@@ -118,7 +118,7 @@ describe("Checking language parser on syntax errors", () => {
             parser.parse(parseFile);
         } catch (e: unknown) {
             if (e instanceof Error) {
-                expect(e.message).toBe(`syntax error: SyntaxError: Expected "\\"" or variable but "}" found.`
+                expect(e.message).toBe(`syntax error: SyntaxError: Expected "\\"", variable, or whitespace but "}" found.`
                     + "\n                "
                     + `[file: test10.ast:11:21]`);
             }

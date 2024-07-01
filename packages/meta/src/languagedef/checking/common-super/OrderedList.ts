@@ -54,7 +54,7 @@ export class OrderedList<T extends FreMetaLangElement> implements Iterable<T> {
         return this.elements[index];
     }
 
-    getByName(name: string): InternalElement<T> {
+    getByName(name: string): InternalElement<T> | undefined {
         return this.elements.find(p => p.name === name);
     }
 

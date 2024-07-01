@@ -26,7 +26,7 @@ import { MetaLogger } from "../../utils";
 import { MetaElementReference } from "../../languagedef/metalanguage";
 import { FreLangExpressionChecker } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("FreEditChecker").mute();
+const LOGGER: MetaLogger = new MetaLogger("FreEditChecker").mute();
 
 export class FreEditChecker extends Checker<FreEditUnit> {
 
@@ -35,12 +35,16 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     }
 
     runner: CheckRunner;
-    private myExpressionChecker: FreLangExpressionChecker;
+    private myExpressionChecker: FreLangExpressionChecker | undefined;
     private propsWithTableProjection: FreEditPropertyProjection[] = [];
 
     constructor(language: FreMetaLanguage) {
         super(language);
-        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        if (!!this.language) {
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        }
+        // this instance is never used
+        this.runner = new CheckRunner(this.errors, this.warnings);
     }
 
     /**
@@ -50,15 +54,16 @@ export class FreEditChecker extends Checker<FreEditUnit> {
      */
     public check(editUnit: FreEditUnit): void {
         LOGGER.log("checking editUnit");
-        // create a check runner
-        this.runner = new CheckRunner(this.errors, this.warnings);
+        if ( this.language === null || this.language === undefined ) {
+            throw new Error(`Editor definition checker does not known the language, exiting ` +
+                `${ParseLocationUtil.location(editUnit)}.`);
+        }
+        // // create a check runner
+        // this.runner = new CheckRunner(this.errors, this.warnings);
         // reset global(s)
         this.propsWithTableProjection = [];
 
         // get the language against which this editor definition should be checked and resolve all references
-        if (this.language === null || this.language === undefined) {
-            throw new Error(`Editor definition checker does not known the language.`);
-        }
         editUnit.language = this.language;
         this.resolveReferences(editUnit);
 
@@ -86,8 +91,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             `No editor with name 'default' found, a default editor will be generated.`);
 
         // add any messages found by the expression checker
-        this.errors = this.errors.concat(this.myExpressionChecker.errors);
-        this.warnings = this.warnings.concat(this.myExpressionChecker.warnings);
+        if (!!this.myExpressionChecker) {
+            this.errors = this.errors.concat(this.myExpressionChecker.errors);
+            this.warnings = this.warnings.concat(this.myExpressionChecker.warnings);
+        }
     }
 
     private checkUniqueNameOfProjectionGroup(names: string[], group: FreEditProjectionGroup) {
@@ -155,55 +162,54 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         // every classifier may have only one 'normal' projection in a group
         // every classifier may have only one 'table' projection in a group
         group.projections.forEach(proj => {
-            if (proj instanceof FreEditTableProjection) {
-                const myCls = proj.classifier.referred;
-                if (!!myCls) {
+            const myCls: FreMetaClassifier | undefined = proj.classifier?.referred;
+            if (!!myCls) {
+                if (proj instanceof FreEditTableProjection) {
                     this.runner.simpleCheck(!classifiersWithTableProj.includes(myCls),
                         `There may be only one table projection for ${myCls.name} in a projection group ${ParseLocationUtil.location(proj)}.`);
                     classifiersWithTableProj.push(myCls);
-                } // else: error message produced elsewhere
-            } else if (proj instanceof FreEditProjection) {
-                const myCls = proj.classifier.referred;
-                if (!!myCls) {
+                } else if (proj instanceof FreEditProjection) {
                     this.runner.simpleCheck(!classifiersWithNormalProj.includes(myCls),
                         `There may be only one 'normal' (non-table) projection for ${myCls.name} in a projection group ${ParseLocationUtil.location(proj)}.`);
                     classifiersWithNormalProj.push(myCls);
-                } // else: error message produced elsewhere
-            }
+                }
+            } // else: error message produced elsewhere
         });
     }
 
     private checkAndMergeExtras(extras: ExtraClassifierInfo[]): ExtraClassifierInfo[] {
         const allExtras: ExtraClassifierInfo[] = [];
         for (const extra of extras) {
-            // first merge the extras for the same classifier
-            const knownOne = allExtras.find(ex => ex.classifier.referred === extra.classifier.referred);
-            // if already present, then merge the extra info
-            if (!!knownOne) {
-                if (!!extra.symbol) {
-                    if (!!knownOne.symbol) {
-                        this.errors.push(`symbol for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
-                    } else {
-                        knownOne.symbol = extra.symbol;
+            if (extra.classifier !== undefined && extra.classifier !== null) {
+                // first merge the extras for the same classifier
+                const knownOne: ExtraClassifierInfo | undefined = allExtras.find(ex => ex.classifier?.referred === extra.classifier!.referred);
+                // if already present, then merge the extra info
+                if (!!knownOne) {
+                    if (!!extra.symbol) {
+                        if (!!knownOne.symbol) {
+                            this.errors.push(`symbol for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
+                        } else {
+                            knownOne.symbol = extra.symbol;
+                        }
                     }
-                }
-                if (!!extra.trigger) {
-                    if (!!knownOne.trigger) {
-                        this.errors.push(`trigger for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
-                    } else {
-                        knownOne.trigger = extra.trigger;
+                    if (!!extra.trigger) {
+                        if (!!knownOne.trigger) {
+                            this.errors.push(`trigger for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
+                        } else {
+                            knownOne.trigger = extra.trigger;
+                        }
                     }
-                }
-                if (!!extra.referenceShortCut) {
-                    if (!!knownOne.referenceShortCut) {
-                        this.errors.push(`reference shortcut for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
-                    } else {
-                        knownOne.referenceShortCut = extra.referenceShortCut;
+                    if (!!extra.referenceShortCut) {
+                        if (!!knownOne.referenceShortCut) {
+                            this.errors.push(`reference shortcut for classifier ${extra.classifier.name} is already defined: ${ParseLocationUtil.location(extra)} and ${ParseLocationUtil.location(knownOne)}.`);
+                        } else {
+                            knownOne.referenceShortCut = extra.referenceShortCut;
+                        }
                     }
+                } else {
+                    // this is a new extra, add it to allExtras
+                    allExtras.push(extra);
                 }
-            } else {
-                // this is a new extra, add it to allExtras
-                allExtras.push(extra);
             }
         }
 
@@ -211,7 +217,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         // check whether all triggers are unique over all classifiers.
         for (const ext of allExtras) {
             this.checkExtras(ext);
-            if (!!ext.trigger) {
+            if (!!ext.trigger && !!ext.classifier) {
                 const matchingExtras = allExtras.filter(xx => xx !== ext && xx.trigger === ext.trigger);
                 this.runner.nestedCheck({
                     check: matchingExtras.length === 0,
@@ -226,7 +232,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         // different from the triggers, unless there is a trigger for that classifier
         // Note that this check must be done after the merging of the extras.
         for (const ext of allExtras) {
-            if (!!ext.symbol && !ext.trigger) {
+            if (!!ext.symbol && !!ext.classifier && !ext.trigger) {
                 const matchingTriggers = allExtras.filter(xx => xx !== ext && xx.trigger === ext.symbol);
                 const matchingSymbols = allExtras.filter(xx => xx !== ext && !xx.trigger && xx.symbol === ext.symbol);
                 this.runner.nestedCheck({
@@ -244,19 +250,19 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     private checkProjection(projection: FreEditClassifierProjection, editor: FreEditUnit) {
         LOGGER.log("checking projection for " + projection.classifier?.name);
-        const myClassifier: FreMetaClassifier = projection.classifier.referred;
+        const myClassifier: FreMetaClassifier | undefined = projection.classifier?.referred;
         this.runner.nestedCheck({
             check: !!myClassifier,
-            error: `Classifier ${projection.classifier.name} is unknown ${ParseLocationUtil.location(projection)}`,
+            error: `Classifier ${projection.classifier?.name} is unknown ${ParseLocationUtil.location(projection)}`,
             whenOk: () => {
                 if (myClassifier instanceof FreMetaLimitedConcept) {
                     this.runner.simpleCheck(false,
                         `A limited concept cannot have a projection, it can only be used as reference ${ParseLocationUtil.location(projection)}.`);
                 } else {
                     if (projection instanceof FreEditProjection) {
-                        this.checkNormalProjection(projection, myClassifier, editor);
+                        this.checkNormalProjection(projection, myClassifier!, editor);
                     } else if (projection instanceof FreEditTableProjection) {
-                        this.checkTableProjection(projection, myClassifier, editor);
+                        this.checkTableProjection(projection, myClassifier!, editor);
                     }
                 }
             }
@@ -349,7 +355,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     error: `Property '${myProp.name}' may not have a keyword projection, because it is a list ${ParseLocationUtil.location(item)}.`,
                     whenOk: () => {
                         this.runner.simpleCheck(
-                            !FreEditChecker.includesWhitespace(item.boolInfo.trueKeyword),
+                            !FreEditChecker.includesWhitespace(item.boolInfo? item.boolInfo.trueKeyword : ''),
                             `The text for a keyword projection should not include any whitespace ${ParseLocationUtil.location(item)}.`);
                     }
                 });
@@ -394,6 +400,9 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     }
 
     private checkSuperProjection(editor: FreEditUnit, item: FreEditSuperProjection, cls: FreMetaClassifier) {
+        if (item.superRef === null || item.superRef === undefined) {
+            return;
+        }
         LOGGER.log("checking super projection: " + cls?.name);
         const myParent = item.superRef.referred;
         this.runner.nestedCheck({
@@ -456,15 +465,15 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     private checkExtras(classifierInfo: ExtraClassifierInfo) {
         LOGGER.log("checking extra info on classifier " + classifierInfo.classifier?.name);
-        if (!!classifierInfo.classifier.referred) { // error message done elsewhere
+        if (!!classifierInfo.classifier?.referred) { // error message done elsewhere
             // check the reference shortcut and change the expression into a reference to a property
-            if (!!classifierInfo.referenceShortcutExp) {
+            if (!!classifierInfo.referenceShortcutExp && !!this.myExpressionChecker) {
                 this.myExpressionChecker.checkLangExp(classifierInfo.referenceShortcutExp, classifierInfo.classifier.referred);
-                const xx: FreMetaProperty = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
+                const xx: FreMetaProperty | undefined = classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
                 // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
                 if (!!xx) {
                     classifierInfo.referenceShortCut = MetaElementReference.create<FreMetaProperty>(xx as FreMetaProperty, "FreProperty");
-                    classifierInfo.referenceShortCut.owner = this.language;
+                    classifierInfo.referenceShortCut.owner = this.language!;
                 }
             }
         }
@@ -472,14 +481,14 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             if (classifierInfo.trigger === "ERROR") {
                 this.runner.simpleCheck(false,
                     `A trigger may not be an empty string ${ParseLocationUtil.location(classifierInfo)}.`);
-                classifierInfo.trigger = null;
+                classifierInfo.trigger = '';
             }
         }
         if (!!classifierInfo.symbol) {
             if (classifierInfo.symbol === "ERROR") {
                 this.runner.simpleCheck(false,
                     `A symbol may not be an empty string ${ParseLocationUtil.location(classifierInfo)}.`);
-                classifierInfo.symbol = null;
+                classifierInfo.symbol = '';
             }
         }
     }
@@ -488,11 +497,15 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         LOGGER.log("resolving references ");
         for (const group of editorDef.projectiongroups) {
             for (const proj of group.projections) {
-                proj.classifier.owner = this.language;
+                if (!!proj.classifier) {
+                    proj.classifier.owner = this.language!;
+                }
             }
             if (!!group.extras) {
                 for (const proj of group.extras) {
-                    proj.classifier.owner = this.language;
+                    if (!!proj.classifier) {
+                        proj.classifier.owner = this.language!;
+                    }
                 }
             }
         }
@@ -501,10 +514,12 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     private checkPropsWithTableProjection(editor: FreEditUnit) {
         LOGGER.log("checking properties that have a TableProjection");
         for (const projection of this.propsWithTableProjection) {
-            const myprop = projection.property.referred;
-            const propEditor = editor.findTableProjectionsForType(myprop.type);
-            this.runner.simpleWarning(propEditor !== null && propEditor !== undefined,
-            `No table projection defined for '${myprop.name}', it will be shown as a table with a single column ${ParseLocationUtil.location(projection)}.`);
+            const myprop: FreMetaProperty | undefined= projection.property?.referred;
+            if (!!myprop) {
+                const propEditor: FreEditTableProjection[] = editor.findTableProjectionsForType(myprop.type);
+                this.runner.simpleWarning(propEditor !== null && propEditor !== undefined,
+                    `No table projection defined for '${myprop.name}', it will be shown as a table with a single column ${ParseLocationUtil.location(projection)}.`);
+            }
         }
     }
 
@@ -513,39 +528,39 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         if (item instanceof FreOptionalPropertyProjection) {
             this.checkOptionalProjection(item, cls, editor);
         } else {
-            if (!!item.expression) {
-                const myProp = cls.allProperties().find(prop => prop.name === item.expression.appliedfeature?.sourceName);
+            if (item.expression !== null || item.expression !== undefined) {
+                const myProp:FreMetaProperty | undefined = cls.allProperties().find(prop => prop.name === item.expression!.appliedfeature?.sourceName);
                 this.runner.nestedCheck({
                     check: !!myProp,
-                    error: `Cannot find property "${item.expression.toFreString()}" ${ParseLocationUtil.location(item)}`,
+                    error: `Cannot find property "${item.expression!.toFreString()}" ${ParseLocationUtil.location(item)}`,
                     whenOk: () => {
                         // set the 'property' attribute of the projection
-                        item.property = MetaElementReference.create<FreMetaProperty>(myProp, "FreProperty");
-                        item.property.owner = this.language;
-                        item.expression = null;
+                        item.property = MetaElementReference.create<FreMetaProperty>(myProp!, "FreProperty");
+                        item.property.owner = this.language!;
+                        item.expression = undefined;
                         // check the rest
                         if (!!item.boolInfo) {
                             // check whether the boolInfo is appropriate
-                            this.checkBooleanPropertyProjection(item, myProp);
+                            this.checkBooleanPropertyProjection(item, myProp!);
                         } else if (!!item.listInfo) {
-                            this.runner.nestedCheck({check: myProp.isList,
+                            this.runner.nestedCheck({check: myProp!.isList,
                                 error: `Only properties that are lists can be displayed as list or table ${ParseLocationUtil.location(item)}.`,
                                 whenOk: () => {
                                     // either create a default list projection or check the user defined one
-                                    this.checkListProperty(item, myProp);
+                                    this.checkListProperty(item, myProp!);
                                 }
                             });
                         } else {
-                            if (myProp.isList) {
-                                this.checkListProperty(item, myProp);
+                            if (myProp!.isList) {
+                                this.checkListProperty(item, myProp!);
                             }
                         }
                         if (!!item.projectionName && item.projectionName.length > 0) {
                             this.runner.nestedCheck({
-                                check: !myProp.isPrimitive && myProp.isPart,
+                                check: !myProp!.isPrimitive && myProp!.isPart,
                                 error: `Named projections are only allowed for non-primitive part properties ${ParseLocationUtil.location(item)}.`,
                                 whenOk: () => {
-                                    const propType = myProp.type;
+                                    const propType = myProp!.type;
                                     this.checkProjectionName(item.projectionName, propType, item, editor);
                                 }
                             });
@@ -561,7 +576,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             return;
         }
         const myGroup = editor.projectiongroups.find(group => group.name === projectionName);
-        const found: FreEditClassifierProjection[] = myGroup?.findProjectionsForType(propType);
+        const found: FreEditClassifierProjection[] | undefined = myGroup?.findProjectionsForType(propType);
         this.runner.simpleCheck(
             !!myGroup && !!found && found.length > 0,
             `Cannot find a projection named '${projectionName}' for concept or interface '${propType.name}' ${ParseLocationUtil.location(item)}.`);
@@ -569,7 +584,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     private copyReference(reference: MetaElementReference<FreMetaProperty>): MetaElementReference<FreMetaProperty> {
         const result: MetaElementReference<FreMetaProperty> = MetaElementReference.create<FreMetaProperty>(reference.referred, "FreProperty");
-        result.owner = this.language;
+        result.owner = this.language!;
         return result;
     }
 }

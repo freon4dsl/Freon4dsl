@@ -16,7 +16,7 @@ export class ScoperParser extends FreGenericParser<ScopeDef> {
         this.checker = new ScoperChecker(language);
     }
 
-    protected merge(submodels: ScopeDef[]): ScopeDef {
+    protected merge(submodels: ScopeDef[]): ScopeDef | undefined {
         if (submodels.length > 0) {
             const result: ScopeDef = submodels[0];
             submodels.forEach((sub, index) => {
@@ -27,7 +27,7 @@ export class ScoperParser extends FreGenericParser<ScopeDef> {
             });
             return result;
         } else {
-            return null;
+            return undefined;
         }
     }
 

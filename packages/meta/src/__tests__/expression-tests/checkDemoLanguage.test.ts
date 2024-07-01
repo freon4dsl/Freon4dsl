@@ -1,6 +1,7 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
 import { MetaLogger } from "../../utils";
+import {FreMetaLanguage} from "../../languagedef/metalanguage";
 
 describe("Checking expression parser on syntax errors", () => {
     const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
@@ -18,11 +19,10 @@ describe("Checking expression parser on syntax errors", () => {
     });
 
     test("original test on demo language", () => {
-        const demoLanguage = new LanguageParser().parse(testdir + "demoLanguage.ast");
-        if (demoLanguage === null) {
-            throw new Error("Demo Language could not be parsed, exiting.");
-        }
-        const parser = new LanguageExpressionParser(demoLanguage);
+        const demoLanguage: FreMetaLanguage | undefined = new LanguageParser().parse(testdir + "demoLanguage.ast");
+        expect(demoLanguage).not.toBeNull();
+        expect(demoLanguage).not.toBeUndefined();
+        const parser = new LanguageExpressionParser(demoLanguage!);
         const checker = parser.checker;
         const demoExpressionFile = testdir + "demoExpressions.fretest";
         try {

@@ -35,15 +35,15 @@ import { ListUtilTemplate } from "./templates/ListUtilTemplate";
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {
     public outputfolder: string = ".";
-    private languageGenFolder: string;
-    private utilsGenFolder: string;
-    private stdlibGenFolder: string;
-    private configurationFolder: string;
-    private configurationGenFolder: string;
-    private languageFolder: string;
-    private utilsFolder: string;
-    private stdlibFolder: string;
-    private commandlineFolder: string;
+    private languageGenFolder: string = '';
+    private utilsGenFolder: string = '';
+    private stdlibGenFolder: string = '';
+    private configurationFolder: string = '';
+    private configurationGenFolder: string = '';
+    private languageFolder: string = '';
+    private utilsFolder: string = '';
+    private stdlibFolder: string = '';
+    private commandlineFolder: string = '';
 
     generate(language: FreMetaLanguage): void {
         LOGGER.log("Generating language '" + language.name + "' in folder " + this.outputfolder + "/" + LANGUAGE_GEN_FOLDER);
