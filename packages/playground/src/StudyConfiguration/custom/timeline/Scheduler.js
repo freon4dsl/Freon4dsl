@@ -49,7 +49,7 @@ import * as Sim from "../simjs/sim.js"
       // Complete the event
       console.log('Completed Event:' + completedEvent.name + ' at time: ' + this.time());
       let timeline = this.getTimeline();
-      completedEvent.day = this.time();
+      completedEvent.startDay = this.time();
       timeline.setCompleted(completedEvent);
       timeline.setCurrentDay(this.time())
       timeline.addEvent(completedEvent);

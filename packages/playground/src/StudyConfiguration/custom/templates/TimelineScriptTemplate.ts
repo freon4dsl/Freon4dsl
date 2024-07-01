@@ -1,5 +1,5 @@
 
-import { Timeline } from '../timeline/Timeline';
+import { EventInstance, Timeline } from '../timeline/Timeline';
 import {StudyConfigurationModelModelUnitWriter} from '../../writer/gen/StudyConfigurationModelModelUnitWriter';
 import { writeFileSync } from 'fs';
 
@@ -19,9 +19,9 @@ export class TimelineScriptTemplate {
     { start: new Date(2024, 0, 1), end: new Date(2024, 0, 6, 23, 59, 59), group: "Phase", className: "screening-phase", title: "tip...", content: "<b>Screening</b>", id: "1" },
     { start: new Date(2024, 0, 7, 0, 1), end: new Date(2024, 0, 30, 23, 59, 59), group: "Phase", className: "treatment-phase", title: "tip...", content: "<b>Treatment<b>", id: "2" },
 ${timeline.getDays().map((timelineDay, counter) => timelineDay.events.map ((eventInstance) => `
-    { start: new Date(2024, 0, ${eventInstance.startDay}), end: new Date(2024, 0, ${eventInstance.startDay}, 23, 59, 59), group: "${eventInstance.name}", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-${eventInstance.name}" },
-    { start: new Date(2024, 0, ${eventInstance.day}), end: new Date(2024, 0, ${eventInstance.day}, 23, 59, 59), group: "${eventInstance.name}", className: "treatment-visits", title: "${writer.writeToString(eventInstance.scheduledEvent.configuredEvent.schedule.eventStart)}", content: "&nbsp;", id: "${eventInstance.name}" },
-    { start: new Date(2024, 0, ${eventInstance.endDay}), end: new Date(2024, 0, ${eventInstance.endDay}, 23, 59, 59), group: "${eventInstance.name}", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-${eventInstance.name}" },
+    { start: new Date(2024, 0, ${(eventInstance as EventInstance).startDayOfWindow}), end: new Date(2024, 0, ${eventInstance.startDay}, 23, 59, 59), group: "${eventInstance.name}", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-${eventInstance.name}" },
+    { start: new Date(2024, 0, ${eventInstance.startDay}), end: new Date(2024, 0, ${eventInstance.startDay}, 23, 59, 59), group: "${eventInstance.name}", className: "treatment-visits", title: "${writer.writeToString((eventInstance as EventInstance).scheduledEvent.configuredEvent.schedule.eventStart)}", content: "&nbsp;", id: "${eventInstance.name}" },
+    { start: new Date(2024, 0, ${(eventInstance as EventInstance).endDayOfWindow}), end: new Date(2024, 0, ${(eventInstance as EventInstance).endDayOfWindow}, 23, 59, 59), group: "${eventInstance.name}", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-${eventInstance.name}" },
 `).join('')).join('')}
     { start: new Date(2024, 0, 6), end: new Date(2024, 0, 30, 23, 59, 59), group: "AnyDay", className: "any-day", title: "Adverse Event", content: "Unscheduled Adverse Event Visit", id: "911" },
 

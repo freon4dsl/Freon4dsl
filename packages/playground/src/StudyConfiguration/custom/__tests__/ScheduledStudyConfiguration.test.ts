@@ -2,7 +2,7 @@ import { time } from "console";
 import { StudyConfiguration } from "../../language/gen";
 import { ScheduledStudyConfiguration } from "../timeline/ScheduledStudyConfiguration";
 import { Simulator } from "../timeline/Simulator";
-import { EventInstance, EventInstanceState, Timeline } from "../timeline/Timeline";
+import { EventInstance, TimelineInstanceState, Timeline } from "../timeline/Timeline";
 import * as utils from "./Utils";
 import { ScheduledEvent } from "../timeline/ScheduledEvent";
 
@@ -12,9 +12,9 @@ describe ("Access to simulation data", () => {
     var scheduledStudyConfiguration: ScheduledStudyConfiguration;
   
   beforeEach(() => {
-    studyConfiguration = utils.setupEnvironment();
+    studyConfiguration = utils.setupStudyConfiguration();
     // simulator = new Simulator(studyConfiguration);
-    utils.setupEnvironment();
+    utils.setupStudyConfiguration();
   });
 
 
@@ -80,7 +80,7 @@ describe ("Access to simulation data", () => {
         } else {
           let timeline = new Timeline();
           let eventInstance = new EventInstance(scheduledEvent,1);
-          eventInstance.state = EventInstanceState.Completed;
+          eventInstance.state = TimelineInstanceState.Completed;
           timeline.addEvent(eventInstance);
           timeline.setCurrentDay(8);
 
@@ -110,7 +110,7 @@ describe ("Access to simulation data", () => {
         } else { 
           let timeline = new Timeline();
           let eventInstance = new EventInstance(scheduledEvent,1);
-          eventInstance.state = EventInstanceState.Completed;
+          eventInstance.state = TimelineInstanceState.Completed;
           timeline.addEvent(eventInstance);
           timeline.setCurrentDay(8);
 
@@ -132,7 +132,7 @@ describe ("Access to simulation data", () => {
         timeline.setCurrentDay(1);
         let firstEvent = scheduledStudyConfiguration.getFirstStudyStartEvent() as ScheduledEvent;
         let completedEvent = new EventInstance(firstEvent);
-        completedEvent.state = EventInstanceState.Completed;
+        completedEvent.state = TimelineInstanceState.Completed;
         timeline.addEvent(completedEvent);
 
         // WHEN the schedule is checked for ready events

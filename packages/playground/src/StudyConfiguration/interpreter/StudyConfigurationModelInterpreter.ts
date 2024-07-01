@@ -47,7 +47,7 @@
                 let referencedEvent = node.$event;
                 let lastInstanceOfReferencedEvent = timeline.getLastInstanceForThisEvent(referencedEvent);
                 // console.log("evalEventReference reference to: " + referencedEvent.name + " lastInstanceOfReferencedEvent: " + lastInstanceOfReferencedEvent.day);
-                return new RtNumber(lastInstanceOfReferencedEvent.day);
+                return new RtNumber(lastInstanceOfReferencedEvent.startDay);
             }
 
             evalEventStart(node: language.EventStart, ctx: InterpreterContext): RtObject {

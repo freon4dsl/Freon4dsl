@@ -2,11 +2,11 @@ import * as Sim from "../simjs/sim.js"
 import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
 import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference, RepeatCondition, RepeatUnit } from "../../language/gen/index";
 import { FreNodeReference } from "@freon4dsl/core";
-import { EventInstance, EventInstanceState, Timeline } from "../timeline/Timeline";
+import { EventInstance, TimelineInstanceState, Timeline } from "../timeline/Timeline";
 import { ScheduledEvent, ScheduledEventState } from "../timeline/ScheduledEvent";
 
 // Setup the sim.js environment and an empty StudyConfiguration.
-export function setupEnvironment(): StudyConfiguration{
+export function setupStudyConfiguration(): StudyConfiguration{
   new Sim.Sim(); // For some reason, need to do this for Sim to be properly loaded and available in the Scheduler class used by the Simulator.
   let studyConfigurationModelEnvironment = StudyConfigurationModelEnvironment.getInstance();
   let studyConfigurationModel = studyConfigurationModelEnvironment.newModel("Study1");
@@ -33,7 +33,7 @@ export function createEventScheduleStartingOnADay(uniquePrefix: string, startDay
   return eventSchedule;
 }
 
-export function createEventScheduleThatRepeats(eventName: string, numberOfRepeats: number) {
+export function createDay1EventScheduleThatRepeats(eventName: string, numberOfRepeats: number) {
   let eventSchedule = createEventScheduleStartingOnADay(eventName, 1);
   let repeatCondition = new RepeatCondition("RepeatCount-" + eventName);
   repeatCondition.maxRepeats = numberOfRepeats;
@@ -127,7 +127,7 @@ export function addRepeatingEvents(studyConfiguration: StudyConfiguration, perio
   let period = new Period(periodName);
   period.name = periodName;
   // Setup the study start event
-  let dayEventSchedule = createEventScheduleThatRepeats(eventsToAdd[0].eventName, eventsToAdd[0].repeat);
+  let dayEventSchedule = createDay1EventScheduleThatRepeats(eventsToAdd[0].eventName, eventsToAdd[0].repeat);
   let event = createEventAndAddToPeriod(period, eventsToAdd[0].eventName, dayEventSchedule);
   studyConfiguration.periods.push(period);
   return studyConfiguration;
@@ -137,7 +137,7 @@ export function addScheduledEventAndInstanceToTimeline(studyConfiguration: Study
   let scheduledEvent = new ScheduledEvent(studyConfiguration.periods[0].events[eventNumber]);
   scheduledEvent.state = ScheduledEventState.Scheduled;
   let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
-  eventInstance.state = EventInstanceState.Completed;
+  eventInstance.state = TimelineInstanceState.Completed;
   timeline.addEvent(eventInstance);
   return eventInstance;
   }
