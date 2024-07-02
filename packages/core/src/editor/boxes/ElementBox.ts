@@ -33,10 +33,6 @@ export class ElementBox extends Box {
     get children(): ReadonlyArray<Box> {
         return [this.content];
     }
-
-    // setFocus: () => void = async () => {
-    //     this._content.setFocus();
-    // };
 }
 
 export function isElementBox(b: Box): b is ElementBox {

@@ -27,7 +27,7 @@ export abstract class ListBox extends LayoutBox {
 }
 
 export class HorizontalListBox extends ListBox {
-    kind = "HorizontalListBox";
+    kind: string = "HorizontalListBox";
 
     constructor(element: FreNode, propertyName: string, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>) {
         super(element, role, propertyName, children, initializer);

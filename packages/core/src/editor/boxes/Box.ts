@@ -271,8 +271,8 @@ export abstract class Box {
      * on 'editor.selectedBox', and the setFocus() method of this box is called.
      * 4. In various boxes the setFocus() method is overwritten by the Svelte component that
      * shows the box. Thus, the correct handling of the focus is done by this Svelte component.
-     * 5. If this box does not have a component, i.e. it is not shown in the current projection,
-     * then the focus is set to the parent box.
+     * 5. If this box does not have a component, i.e. it is not shown in the current projection
+     * AND this method is not overridden, then the focus will be set to the parent box.
      */
     setFocus: () => void = async () => {
         console.log(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id + ", referring to parent");

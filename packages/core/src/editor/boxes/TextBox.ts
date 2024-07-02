@@ -14,7 +14,7 @@ export enum CharAllowed {
 }
 
 export class TextBox extends Box {
-    kind = "TextBox";
+    kind: string = "TextBox";
     /**
      * If true, the element will be deleted when the text becomes
      * empty because of removing the last character in the text.

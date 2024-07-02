@@ -10,7 +10,7 @@ import { FreLogger } from "../../logging";
 const LOGGER = new FreLogger("ActionBox");
 
 export class ActionBox extends AbstractChoiceBox {
-    readonly kind = "ActionBox";
+    readonly kind: string = "ActionBox";
     placeholder: string;
     /**
      * Filled with the name of the concept, in case this is used to create new concept instance.
