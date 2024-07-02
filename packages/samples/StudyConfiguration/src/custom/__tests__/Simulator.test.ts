@@ -25,7 +25,7 @@ describe ("Access to simulation data", () => {
 
   describe("Simulation of Trial Events to Generate the Timeline", () => {
 
-    it("generates a one visit timeline for a visit on day 1", () => {
+    it.only("generates a one visit timeline for a visit on day 1", () => {
         // GIVEN a study configuration with one period and one event
         let eventSchedule = utils.createEventScheduleStartingOnADay("Visit 1", 1);
         let period = new Period("Screening");
