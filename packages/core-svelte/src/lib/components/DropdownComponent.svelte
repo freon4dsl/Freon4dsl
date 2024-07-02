@@ -35,9 +35,11 @@
 >
     {#if options.length > 0 }
         {#each options as option (option.id + option.label)}
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
             <div class="dropdownitem"
                  class:isSelected={isSelected(option)}
                  on:click={(event) => {event.preventDefault(); event.stopPropagation(); handleClick(option); }}
+                 role="none"
             >
                 {option.label}
             </div>

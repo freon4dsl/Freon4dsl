@@ -7,7 +7,7 @@ import { FreUtils } from "../../util";
 export type GridOrientation = "neutral" | "row" | "column";
 
 export class GridBox extends Box {
-    kind = "GridBox";
+    kind: string = "GridBox";
     cells: GridCellBox[] = [];
     orientation: GridOrientation = "neutral";
 
@@ -33,7 +33,6 @@ export class GridBox extends Box {
     }
 
     // Sorting is done to make it easier to read the final HTML.
-    // It also fills the `$children` property.
     private sortCellsAndAddChildren() {
         this.cells = this.cells.sort(compare);
     }

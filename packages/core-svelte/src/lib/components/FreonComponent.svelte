@@ -168,11 +168,13 @@
     refreshSelection("Initialize FreonComponent");
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 <div class={"freon"}
      on:keydown={onKeyDown}
      on:scroll={onScroll}
      bind:this={element}
      id="{id}"
+     role="group"
 >
     <RenderComponent editor={editor}
                      box={rootBox}
