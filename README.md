@@ -29,6 +29,7 @@ Setup the multirepo and install all dependencies:
 
 Now you can build Freon with:
 ```bash
+  cd Freon4dsl
   npm run build
 ```
 
@@ -38,8 +39,12 @@ And run all tests  with:
 ```
 
 ## Starting the web app editor
-* Go to the package containing your language, this can e.g. be any package in `packages/samples`.
-  - Build the language using `npm run build`
+* Go to the package containing your language, this can e.g. be any package in 
+  and build the language
+```bash
+  cd Freon4dsl/packages/samples/StudyConfiguration
+  npm run build
+```
 
 * Go to the `webapp-starter` package.
   - Open the file `package.json
@@ -49,18 +54,18 @@ And run all tests  with:
 
 * Go to directory `packages/server` and start the server:
 ```bash
-    cd packages/server
+    cd Freon4dsl/packages/server
     npm run start
 ```
 
 * Goto the `webapp-starter` and start Freon:
 ```bash
-    cd packages/webapp-starter
+    cd Freon4dsl/packages/webapp-starter
     npm run prepare-app
     npm run dev
 ```
 This will open a browser with the example from the playground package on 
-the URL displayed: `http://localhost:5000/`. The example and all other projects in playground are
+the URL displayed: `http://localhost:8000/`. The example and all other projects in playground are
 work in progress.
 
 ## Source organisation

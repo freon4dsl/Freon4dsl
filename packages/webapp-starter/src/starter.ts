@@ -4,8 +4,8 @@ import { WebappConfigurator } from "@freon4dsl/webapp-lib";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import {ExampleEnvironment} from "@freon4dsl/samples-example";
-WebappConfigurator.getInstance().setEditorEnvironment(ExampleEnvironment.getInstance());
+import {StudyConfigurationModelEnvironment} from "@freon4dsl/samples-study-configuration";
+WebappConfigurator.getInstance().setEditorEnvironment(StudyConfigurationModelEnvironment.getInstance());
 
 /**
  * The one and only reference to the server on which the models are stored
