@@ -6,7 +6,8 @@ import {
     FreTableDefinition,
     GridCellBox,
     HorizontalLayoutBox,
-    LabelBox, SvgBox, HorizontalListBox, GridBox, createDefaultExpressionBox, BoxUtil
+    LabelBox, SvgBox, HorizontalListBox, GridBox, createDefaultExpressionBox, BoxUtil,
+    FreProjectionHandler
 } from "@freon4dsl/core";
 import { FractionLiteralExpression } from "../language/gen/index";
 
@@ -23,7 +24,8 @@ const dividerSvg: string = `M1 1 L20 1 L20 2 L1 2`;
  */
 export class CustomEducationProjection implements FreProjection {
     name: string = "Manual";
-    nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
+     handler: FreProjectionHandler;
+   nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
         ["FractionLiteralExpression", this.createFractionBox]
     ]);
     nodeTypeToTableDefinition: Map<string, () => FreTableDefinition> = new Map<string, () => FreTableDefinition>([]);
