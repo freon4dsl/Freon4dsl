@@ -10,7 +10,7 @@ import {
     FreCaret,
     FreProjectionHandler,
     wait,
-    isTextBox
+    isTextBox, ElementBox
 } from "./index";
 import { FreErrorSeverity } from "../validator";
 import { isNullOrUndefined } from "../util";
@@ -152,34 +152,58 @@ export class FreEditor {
     selectElement(element: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
         LOGGER.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: [" + propertyName + ", " + propertyIndex + "]" + " " + caretPosition);
         if (this.checkParam(element)) {
-            const box = this.projection.getBox(element);
-            const propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
-            if (!isNullOrUndefined(propBox)) {
-                this._selectedBox = propBox;
-                this._selectedProperty = propertyName;
-                this._selectedIndex = propertyIndex;
+            const box: ElementBox = this.projection.getBox(element);
+            // check whether the box is shown in the current projection
+            if (isNullOrUndefined(box) || !this.isBoxInTree(box)) {
+                // element is not shown, try selecting its parent
+                this.selectElement(element.freOwner());
             } else {
-                this._selectedBox = box;
-                this._selectedProperty = "";
-                this._selectedIndex = -1;
+                // try and find the property to be selected
+                let propBox: Box | undefined = undefined;
+                if (!isNullOrUndefined(propertyName) && !isNullOrUndefined(propertyIndex)) {
+                    propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
+                }
+                if (!isNullOrUndefined(propBox)) {
+                    this._selectedBox = propBox;
+                    this._selectedProperty = propertyName;
+                    this._selectedIndex = propertyIndex;
+                } else {
+                    this._selectedBox = box;
+                    this._selectedProperty = "";
+                    this._selectedIndex = -1;
+                }
+                if (!isNullOrUndefined(caretPosition)) {
+                    LOGGER.log("Set caretPosition to " + caretPosition)
+                    this._selectedPosition = caretPosition;
+                } else {
+                    this._selectedPosition = FreCaret.UNSPECIFIED;
+                }
+                this._selectedElement = element;
             }
-            if (!isNullOrUndefined(caretPosition)) {
-                LOGGER.log("Set caretPosition to " +  caretPosition)
-                this._selectedPosition = caretPosition;
-            } else {
-                this._selectedPosition = FreCaret.UNSPECIFIED;
-            }
-            this._selectedElement = element;
             this.selectionChanged();
         }
+    }
+
+    /**
+     * Once the editor is running there may exist boxes, or small box trees that are not in the current projection.
+     * This method checks whether the given box is in the current box tree.
+     * @param box
+     */
+    isBoxInTree(box: Box): boolean {
+        if (isNullOrUndefined(box)) {
+            return false;
+        }
+        if (box === this._rootBox) {
+            return true;
+        }
+        return this.isBoxInTree(box.parent);
     }
 
     /**
      * The only setter for _selectedElement, used to programmatically select an element,
      * e.g. from the webapp or caused by a model change on the server.
      * @param element
-     * @param propertyName
-     * @param propertyIndex
+     * @param role
      * @param caretPosition
      */
     selectElementBox(element: FreNode, role: string, caretPosition?: FreCaret) {
