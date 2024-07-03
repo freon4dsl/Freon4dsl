@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "tsc && jest",
     "clean": "rm -rf node_modules/",
     "build": "npm run generate && tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
