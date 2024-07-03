@@ -77,6 +77,7 @@ module.exports = {
   //   "tsx",
   //   "node"
   // ],
+  moduleFileExtensions: ["js", "jsx", "ts", "tsx"],
 
   // A map from regular expressions to module names that allow to stub out resources with a single module
   // moduleNameMapper: {},
@@ -98,7 +99,7 @@ module.exports = {
   // A preset that is used as a base for Jest's configuration
   // preset: undefined,
   preset: 'ts-jest',
-
+  
   // Run tests from one or more projects
   // projects: undefined,
 
@@ -173,13 +174,13 @@ module.exports = {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    "\\.tsx?$": "ts-jest",
-    "\\.jsx?$": "babel-jest"
+    "^.+\\.(ts|tsx)$": "ts-jest",
+    "^.+\\.(js|jsx)$": "babel-jest"
   },
-
+  
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   transformIgnorePatterns: [
-    "<rootDir>/(config|dist|node_modules)/"
+    "<rootDir>/(config|node_modules)/"
   ],
   
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
