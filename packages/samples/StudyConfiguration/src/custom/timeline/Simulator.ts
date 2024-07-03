@@ -1,13 +1,13 @@
 import { Scheduler } from "./Scheduler.js"
 import * as Sim from "../simjs/sim.js"
-import log from "../utils/SimpleLogger.js";
-import { Timeline } from "./Timeline.js";
-import { ScheduledEvent } from "./ScheduledEvent.js";
+import log from "../utils/SimpleLogger";
+import { Timeline } from "./Timeline";
+import { ScheduledEvent } from "./ScheduledEvent";
 import { Day } from "../../language/gen/index";
 import {StudyConfiguration, WorkflowDescription, Period, Event, EventSchedule } from "../../language/gen/index";
 import { time } from "console";
-import { ScheduledPeriod } from "./ScheduledPeriod.js";
-import { ScheduledStudyConfiguration } from "./ScheduledStudyConfiguration.js";
+import { ScheduledPeriod } from "./ScheduledPeriod";
+import { ScheduledStudyConfiguration } from "./ScheduledStudyConfiguration";
 
 /*
   * A Simulator is the layer between the Scheduler and the use of the simjs.updated simulation engine. It is an attempt to isolate the TypeScript from the JavaScript and potentially allow a different implementation of the simulation engine.
