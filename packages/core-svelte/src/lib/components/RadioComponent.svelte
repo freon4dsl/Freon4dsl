@@ -2,12 +2,12 @@
     /**
      * This component shows a boolean value as checkbox.
      */
-    import {BooleanBox, FreEditor} from "@freon4dsl/core";
+    import {BooleanControlBox, FreEditor} from "@freon4dsl/core";
     import {afterUpdate, onMount} from "svelte";
     import {selectedBoxes} from "$lib/index.js";
 
     export let editor: FreEditor;
-    export let box: BooleanBox;
+    export let box: BooleanControlBox;
 
     let id: string = box.id;
     let inputElement1: HTMLInputElement;

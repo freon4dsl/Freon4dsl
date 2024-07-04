@@ -7,12 +7,12 @@
     // On Designing and Building Toggle Switches by Sara Soueidan https://www.sarasoueidan.com/blog/toggle-switch-design/
     // and this example by Scott O'hara https://codepen.io/scottohara/pen/zLZwNv
 
-    import {BooleanBox, FreEditor} from "@freon4dsl/core";
+    import {BooleanControlBox, FreEditor} from "@freon4dsl/core";
     import {selectedBoxes} from "$lib/index.js";
     import {afterUpdate, onMount} from "svelte";
 
     export let editor: FreEditor;
-    export let box: BooleanBox;
+    export let box: BooleanControlBox;
     export let design: string = 'slider'; // only two options: 'inner' or 'slider'
 
     let value = box.getBoolean();

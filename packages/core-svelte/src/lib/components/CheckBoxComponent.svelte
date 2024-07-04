@@ -2,11 +2,11 @@
     /**
      * This component shows a boolean value as checkbox.
      */
-    import {FreEditor, FreLogger, BooleanBox} from "@freon4dsl/core";
+    import {FreEditor, FreLogger, BooleanControlBox} from "@freon4dsl/core";
     import { componentId } from "$lib/index.js";
     import {afterUpdate, onMount} from "svelte";
 
-    export let box: BooleanBox;
+    export let box: BooleanControlBox;
     export let editor: FreEditor;			// the editor
 
     const LOGGER = new FreLogger("CheckBoxComponent");
