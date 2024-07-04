@@ -6,9 +6,7 @@ import { FreNode } from "../../ast";
 // TODO can we rename this one? It is confusing to distinguish between the selectedBox in the editor and SelectBox instances.
 export class SelectBox extends AbstractChoiceBox {
     readonly kind: string = "SelectBox";
-    // getOptions: () => SelectOption[];
-    // getSelectedOption: () => SelectOption | null;
-    // setSelectedOption: (option: SelectOption) => void;
+
     /**
      * If true,  the element will be deleted as soon as the text becomes
      * empty because of removing the last character in the text.

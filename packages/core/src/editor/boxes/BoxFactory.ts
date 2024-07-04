@@ -5,7 +5,7 @@ import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreEditor } from "../FreEditor";
 import {
     Box,
-    BooleanBox,
+    BooleanControlBox,
     ActionBox,
     LabelBox,
     TextBox,
@@ -31,7 +31,7 @@ const LOGGER: FreLogger = new FreLogger("BoxFactory").mute();
 let actionCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
-let boolCache: BoxCache<BooleanBox> = {};
+let boolCache: BoxCache<BooleanControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
@@ -190,15 +190,14 @@ export class BoxFactory {
                 role: string,
                 getBoolean: () => boolean,
                 setBoolean: (text: boolean) => void,
-                initializer?: Partial<BooleanBox>,
-                selectOption?: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult,
-                ): BooleanBox {
+                initializer?: Partial<BooleanControlBox>
+                ): BooleanControlBox {
         if (cacheBooleanOff) {
-            return new BooleanBox(element, role, getBoolean, setBoolean, initializer);
+            return new BooleanControlBox(element, role, getBoolean, setBoolean, initializer);
         }
         // 1. Create the Boolean box, or find the one that already exists for this element and role
-        const creator = () => new BooleanBox(element, role, getBoolean, setBoolean, initializer, selectOption);
-        const result: BooleanBox = this.find<BooleanBox>(element, role, creator, boolCache);
+        const creator = () => new BooleanControlBox(element, role, getBoolean, setBoolean, initializer);
+        const result: BooleanControlBox = this.find<BooleanControlBox>(element, role, creator, boolCache);
 
         // 2. Apply the other arguments in case they have changed
         result.$getBoolean = getBoolean;

@@ -41,9 +41,6 @@
         editor.selectElementForBox(box);
         event.stopPropagation();
     }
-    // const onInput = (event: MouseEvent & {     currentTarget: EventTarget & HTMLInputElement }) => {
-    //     LOGGER.log("CheckBoxComponent.onInput for box " + box.role + ", selectable:" + box.selectable + ", value:" + value);
-    // }
     $: {
         console.log("value bool is " + value + ", box.value is " + box.getBoolean());
     }
@@ -54,7 +51,6 @@
       id="{id}"
 
 >
-    <label>Een hele mooie check box: </label>
     <input on:click={onClick} bind:this={inputElement} bind:checked={value} type="checkbox"/>
 </span>
 

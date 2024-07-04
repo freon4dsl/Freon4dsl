@@ -5,7 +5,7 @@ import { BoxFactory, FreEditor } from "../internal";
 import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
 
 export abstract class AbstractChoiceBox extends Box {
-    kind = "AbstractChoiceBox";
+    kind: string = "AbstractChoiceBox";
     placeholder: string;
     caretPosition: number = -1;
     _textBox: TextBox;

@@ -563,7 +563,8 @@ export class ProjectionTemplate {
                     trueKeyword = boolInfo.trueKeyword;
                     falseKeyword = boolInfo.falseKeyword ? boolInfo.falseKeyword : '';
                 }
-                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition})`;
+                ListUtil.addIfNotPresent(this.coreImports, "BoolDisplay");
+                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, BoolDisplay.CHECKBOX)`;
             default:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
         }

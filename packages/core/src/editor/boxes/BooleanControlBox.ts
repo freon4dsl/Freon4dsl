@@ -2,9 +2,7 @@ import { Box } from "./Box";
 import {FreNode} from "../../ast";
 import {FreLogger} from "../../logging";
 import {FreUtils} from "../../util";
-import {FreEditor} from "../FreEditor";
-import {SelectOption} from "./SelectOption";
-import {BehaviorExecutionResult} from "../util";
+
 
 const LOGGER: FreLogger = new FreLogger("BooleanBox");
 
@@ -16,14 +14,10 @@ export enum BoolDisplay {
     INNER_SWITCH,   // a Switch, shown within a box, with labels, that can be turned on and off
 }
 
-export class BooleanBox extends Box {
-    kind: string = "BooleanBox";
+export class BooleanControlBox extends Box {
+    kind: string = "BooleanControlBox";
     showAs: BoolDisplay = BoolDisplay.RADIO_BUTTON;
-    // placeholder, labels and selectOption are only used in the SELECT display
-    placeHolder: string = "";
     labels: { yes: string; no: string } = { yes: "true", no: "false" }
-    $selectOption: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult
-    //
     $getBoolean: () => boolean;
     $setBoolean: (newValue: boolean) => void;
 
@@ -45,17 +39,15 @@ export class BooleanBox extends Box {
                 role: string,
                 getBoolean: () => boolean,
                 setBoolean: (newValue: boolean) => void,
-                initializer?: Partial<BooleanBox>,
-                selectOption?: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult
+                initializer?: Partial<BooleanControlBox>
     ) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.$getBoolean = getBoolean;
         this.$setBoolean = setBoolean;
-        this.$selectOption = selectOption;
     }
 }
 
-export function isBooleanBox(b: Box): b is BooleanBox {
-    return b?.kind === "BooleanBox"; // b instanceof BooleanBox;
+export function isBooleanControlBox(b: Box): b is BooleanControlBox {
+    return b?.kind === "BooleanControlBox"; // b instanceof BooleanControlBox;
 }

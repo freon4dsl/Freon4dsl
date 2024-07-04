@@ -23,7 +23,7 @@
         isSvgBox,
         FreEditor,
         FreLogger,
-        Box, BoolDisplay, isBooleanBox,
+        Box, BoolDisplay, isBooleanControlBox,
         isElementBox, isOptionalBox2, isMultiLineTextBox
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
@@ -108,13 +108,13 @@
     >
         {#if box === null || box === undefined }
             <p class="error">[BOX IS NULL OR UNDEFINED]</p>
-        {:else if isBooleanBox(box) && box.showAs === BoolDisplay.CHECKBOX}
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.CHECKBOX}
             <CheckBoxComponent box={box} editor={editor}/>
-        {:else if isBooleanBox(box) && box.showAs === BoolDisplay.RADIO_BUTTON}
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.RADIO_BUTTON}
             <RadioComponent box={box} editor={editor}/>
-        {:else if isBooleanBox(box) && box.showAs === BoolDisplay.SWITCH}
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.SWITCH}
             <SwitchComponent box={box} editor={editor} design="slider"/>
-        {:else if isBooleanBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
             <SwitchComponent box={box} editor={editor} design="inner"/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>
