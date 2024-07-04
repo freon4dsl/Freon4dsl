@@ -82,6 +82,9 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-label-component-padding: 0px;
   --freon-horizontallist-component-padding: 0px;
   --freon-verticallist-component-padding: 0px;
+
+  /* Boolean components */
+  --freon-accent-color: #{theme.$yellow-200};
 }
 
 html,

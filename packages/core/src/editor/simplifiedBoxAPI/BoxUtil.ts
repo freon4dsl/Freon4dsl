@@ -1,13 +1,12 @@
 import { runInAction } from "mobx";
 import { FreNode, FreNamedNode, FreNodeReference } from "../../ast";
-import { Box, BoxFactory, CharAllowed, HorizontalListBox, SelectBox, SelectOption, TextBox, VerticalListBox } from "../boxes";
+import { Box, BooleanBox, BoxFactory, CharAllowed, EmptyLineBox, HorizontalListBox, SelectBox, SelectOption, TextBox, VerticalListBox } from "../boxes";
 import { FreUtils } from "../../util";
 import { BehaviorExecutionResult } from "../util";
-import { FreLanguage, PropertyKind } from "../../language";
+import { FreLanguage, FreLanguageProperty, PropertyKind } from "../../language";
 import { FreEditor } from "../FreEditor";
 import { FreScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
-import { EmptyLineBox } from "../boxes";
 import { FreBoxProvider, FreProjectionHandler } from "../projections";
 
 export class FreListInfo {
@@ -137,9 +136,9 @@ export class BoxUtil {
                       },
                       index?: number): Box {
         // find the information on the property to be shown
-        const propInfo = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
+        const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
-        const property = node[propertyName];
+        const property: FreNode = node[propertyName];
 
         // check the found information
         if (!(property !== undefined && property !== null)) {
@@ -151,19 +150,17 @@ export class BoxUtil {
 
         // all's well, create the box
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "booleanbox", index);
-        let result: SelectBox;
+        let result: BooleanBox;
         if (isList && this.checkList(isList, index, propertyName)) {
-            result = BoxFactory.select(
+            result = BoxFactory.bool(
                 node,
                 roleName,
-                "<optional>",
-                () => [{ id: labels.yes, label: labels.yes }, { id: labels.no, label: labels.no }],
-                () => {
-                    if (node[propertyName][index]) {
-                        return { id: labels.yes, label: labels.yes };
-                    } else {
-                        return { id: labels.no, label: labels.no };
-                    }
+                () => node[propertyName],
+                (v: boolean) => runInAction(() => {
+                    (node[propertyName] = v);}),
+                {
+                    placeHolder: `<${propertyName}>`,
+                    labels: { yes:labels.yes, no:labels.no }
                 },
                 // @ts-ignore
                 (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
@@ -178,30 +175,17 @@ export class BoxUtil {
                 }
             );
         } else {
-            result = BoxFactory.select(
+            result = BoxFactory.bool(
                 node,
                 roleName,
-                "<optional>",
-                () => [{ id: labels.yes, label: labels.yes }, { id: labels.no, label: labels.no }],
-                () => {
-                    if (node[propertyName] === true) {
-                        return { id: labels.yes, label: labels.yes };
-                    } else {
-                        return { id: labels.no, label: labels.no };
-                    }
-                },
-                // @ts-ignore
-                (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
-                    runInAction(() => {
-                        if (option.id === labels.yes) {
-                            node[propertyName] = true;
-                        } else if (option.id === labels.no) {
-                            node[propertyName] = false;
-                        }
-                    });
-                    return BehaviorExecutionResult.NULL;
-                }
-            );
+                () => node[propertyName],
+                (v: boolean) => runInAction(() => {
+                    (node[propertyName] = v);
+                }),
+                {
+                    placeHolder: `<${propertyName}>`,
+                    labels: { yes:labels.yes, no:labels.no }
+                });
         }
         result.propertyName = propertyName;
         result.propertyIndex = index;

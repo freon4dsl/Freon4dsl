@@ -103,9 +103,10 @@ export abstract class Box {
         if (this.isLeaf() && this.selectable) {
             return this;
         }
-        const childrenReversed = this.children.concat().reverse();
+        // @ts-ignore
+        const childrenReversed = this.children.filter(ch => true).reverse();
         for (const child of childrenReversed) {
-            const leafChild = child.lastLeaf;
+            const leafChild: Box = child.lastLeaf;
             if (!!leafChild) {
                 return leafChild;
             }

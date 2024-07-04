@@ -371,7 +371,7 @@
 									let execresult: FrePostAction = null;
 									runInAction(() => {
 										runInAction(() => {
-											const command = matchingOption.action.command(box);
+											const command = matchingOption.action.command();
 											execresult = command.execute(box, event.key, editor, 0);
 										});
 										if (!!execresult) {
