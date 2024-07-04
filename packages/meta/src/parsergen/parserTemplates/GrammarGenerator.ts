@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { BoolKeywords, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
+import { BoolDisplayType, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
 import { LimitedMaker } from "./LimitedMaker";
 import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
@@ -18,15 +18,15 @@ export class GrammarGenerator {
 
         // add the standard option from the editor definition
         const defProjGroup: FreEditProjectionGroup | undefined = editUnit.getDefaultProjectiongroup();
-        let stdBoolKeywords: BoolKeywords | undefined;
+        let stdBoolKeywords: BoolDisplayType | undefined;
         let refSeparator: string | undefined;
         if (!!defProjGroup) {
             stdBoolKeywords = defProjGroup.standardBooleanProjection;
             refSeparator = defProjGroup.standardReferenceSeparator;
         }
         if (!!stdBoolKeywords) {
-            grammar.trueValue = stdBoolKeywords.trueKeyword;
-            grammar.falseValue = stdBoolKeywords.falseKeyword ? stdBoolKeywords.falseKeyword : '';
+            grammar.trueValue = stdBoolKeywords.keywords?.trueKeyword ? stdBoolKeywords.keywords.trueKeyword : 'true';
+            grammar.falseValue = stdBoolKeywords.keywords?.falseKeyword ? stdBoolKeywords.keywords.falseKeyword : '';
         }
         if (!!refSeparator) {
             grammar.refSeparator = refSeparator;

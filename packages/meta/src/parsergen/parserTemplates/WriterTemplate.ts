@@ -22,7 +22,7 @@ import {
     FreEditProjectionItem,
     FreEditProjection,
     FreEditClassifierProjection,
-    FreOptionalPropertyProjection, ExtraClassifierInfo, FreEditSuperProjection, BoolKeywords
+    FreOptionalPropertyProjection, ExtraClassifierInfo, FreEditSuperProjection, BoolDisplayType
 } from "../../editordef/metalanguage";
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
@@ -50,15 +50,15 @@ export class WriterTemplate {
         this.currentProjectionGroup = ParserGenUtil.findParsableProjectionGroup(editDef);
 
         const defProjGroup: FreEditProjectionGroup | undefined = editDef.getDefaultProjectiongroup();
-        let stdBoolKeywords: BoolKeywords | undefined;
+        let stdBoolKeywords: BoolDisplayType | undefined;
         let refSeparator: string | undefined;
         if (!!defProjGroup) {
             stdBoolKeywords = defProjGroup.standardBooleanProjection;
             refSeparator = defProjGroup.standardReferenceSeparator;
         }
         if (!!stdBoolKeywords) {
-            this.trueValue = stdBoolKeywords.trueKeyword;
-            this.falseValue = stdBoolKeywords.falseKeyword ? stdBoolKeywords.falseKeyword : '';
+            this.trueValue = stdBoolKeywords.keywords?.trueKeyword ? stdBoolKeywords.keywords.trueKeyword : 'true';
+            this.falseValue = stdBoolKeywords.keywords?.falseKeyword ? stdBoolKeywords.keywords.falseKeyword : '';
         }
         if (!!refSeparator) {
             this.refSeparator = refSeparator;

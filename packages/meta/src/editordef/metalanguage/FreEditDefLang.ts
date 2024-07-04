@@ -106,13 +106,22 @@ export class BoolKeywords extends FreMetaDefinitionElement {
     }
 }
 
+export class BoolDisplayType extends FreMetaDefinitionElement {
+    displayType: string = "text";
+    keywords: BoolKeywords | undefined;
+
+    toString(): string {
+        return `StdBooleanProjection ${this.displayType} ${this.keywords?.toString()}`;
+    }
+}
+
 /**
  * A group of projection definitions that share the same name
  */
 export class FreEditProjectionGroup extends FreMetaDefinitionElement {
     name: string = '';
     projections: FreEditClassifierProjection[] = [];
-    standardBooleanProjection?: BoolKeywords = undefined; // may only be present in default group
+    standardBooleanProjection?: BoolDisplayType = undefined; // may only be present in default group
     standardReferenceSeparator?: string = undefined;      // may only be present in default group
     extras: ExtraClassifierInfo[] = [];                   // may only be present in default group
     owningDefinition: FreEditUnit | undefined;
@@ -304,6 +313,7 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
     // projection info if the referred property is a list
     listInfo?: ListInfo = undefined;
     // projection info if the referred property is a primitive of boolean type
+    boolDisplayKind: string = "text"; // Possible values: 'text', 'checkbox', 'radio', 'switch', 'inner-switch'.
     boolInfo?: BoolKeywords = undefined;
     // projection to be used for this property
     // TODO Only used in parser?
@@ -314,8 +324,8 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
         if (!!this.listInfo) {
             extraText = `\n/* list */ ${this.listInfo}`;
         }
-        if (!!this.boolInfo) {
-            extraText = `\n/* boolean */ ${this.boolInfo}`;
+        if (!!this.boolInfo || !!this.boolDisplayKind) {
+            extraText = `\n/* boolean */ ${this.boolDisplayKind} ${this.boolInfo}`;
         }
         return `\${ ${this.expression ? this.expression.toFreString() : ``} }${extraText}`;
     }

@@ -12,6 +12,9 @@ NumberLiteral {
 PercentageLiteral {
     [${self.value}%]
 }
+BooleanLiteral {
+    [${self.value text}]
+}
 MinusExpression  {
     symbol = "-"
 }

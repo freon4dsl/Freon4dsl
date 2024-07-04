@@ -2,7 +2,7 @@
 
 editor default
 
-boolean [YES | NO] // the strings used to display a boolean value
+boolean inner-switch [YES | NO] // the strings used to display a boolean value, all booleans will default be displayed as an inner switch control
 
 referenceSeparator [:] // the string that separates the names in a path name, e.g. pack1:cls3:part
 
@@ -12,6 +12,7 @@ Product {[ ${self.product} ]}
 
 BaseProduct {[
     Base Products ${name} for ${theme}
+        may be used: ${self.isApprovedLevel3 checkbox}
         ${parts}
 ]}
 

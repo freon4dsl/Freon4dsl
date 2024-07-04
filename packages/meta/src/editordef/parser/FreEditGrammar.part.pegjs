@@ -28,10 +28,12 @@ propProjectionEnd       = "}"
 projection_begin        = "["
 projection_end          = "]"
 projection_separator    = "|"
+booleanDisplay          = "text" / "checkbox" / "radio" / "switch" / "inner-switch"
 
-standardBooleanProjection = "boolean" ws projection_begin t1:textBut projection_separator t2:textBut projection_end ws
+standardBooleanProjection = "boolean" ws kind:booleanDisplay? ws projection_begin t1:textBut projection_separator t2:textBut projection_end ws
 {
     return creator.createStdBool({
+        "kind"          : kind,
         "trueKeyword"   : t1,
         "falseKeyword"  : t2,
         "location"      : location()
@@ -239,14 +241,15 @@ tableProperty = propProjectionStart ws
 }
 
 booleanProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws k:keywordDecl? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:booleanDisplay? ws k:keywordDecl? ws
                       propProjectionEnd
 {
     return creator.createBooleanPropertyProjection( {
-        "expression": creator.createSelfExp(propName),
-        "projectionName": projName,
-        "keyword":k,
-        "location": location()
+        "expression"        : creator.createSelfExp(propName),
+        "projectionName"    : projName,
+        "displayType"       : kind,
+        "keyword"           : k,
+        "location"          : location()
     });
 }
 

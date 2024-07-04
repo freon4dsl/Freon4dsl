@@ -1,5 +1,5 @@
 import {
-    BoolKeywords,
+    BoolDisplayType,
     ExtraClassifierInfo,
     ListInfo,
     ListJoinType,
@@ -15,7 +15,7 @@ import {
     FreEditSuperProjection,
     FreEditTableProjection,
     FreEditUnit,
-    FreOptionalPropertyProjection
+    FreOptionalPropertyProjection, BoolKeywords
 } from "../metalanguage";
 import { ListUtil } from "../../utils";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
@@ -144,18 +144,19 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
     return result;
 }
 
-export function createStdBool(data: Partial<BoolKeywords>): BoolKeywords {
-    const result: BoolKeywords = new BoolKeywords();
-    if (!!data.trueKeyword) {
-        result.trueKeyword = data.trueKeyword;
+export function createStdBool(data: Partial<BoolDisplayType>): BoolDisplayType {
+    const result: BoolDisplayType = new BoolDisplayType();
+    if (!!data.keywords) {
+        result.keywords = data.keywords;
     }
-    if (!!data.falseKeyword) {
-        result.falseKeyword = data.falseKeyword;
+    if (!!data.displayType) {
+        result.displayType = data.displayType;
     }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    console.log("STANDARD: " + result.toString());
     return result;
 }
 
@@ -350,9 +351,11 @@ export function createTablePropertyProjection(data: { expression: any, projectio
     return result;
 }
 
-// tslint:disable-next-line:typedef
-export function createBooleanPropertyProjection(data: { expression: any, projectionName: any, keyword: any, location: any }): FreEditPropertyProjection {
+export function createBooleanPropertyProjection(data: { expression: any, projectionName: any, displayType: any, keyword: any, location: any }): FreEditPropertyProjection {
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
+    if (!!data["displayType"]) {
+        result.boolDisplayKind = data["displayType"];
+    }
     if (!!data["keyword"]) {
         result.boolInfo = data["keyword"];
     }
@@ -366,11 +369,12 @@ export function createBooleanPropertyProjection(data: { expression: any, project
         result.location = data["location"];
         result.location.filename = currentFileName;
     }
+    console.log("Boolean property: " + result.toString())
     return result;
 }
 
 export function createBoolKeywords(data: Partial<BoolKeywords>): BoolKeywords {
-    const result = new BoolKeywords();
+    const result: BoolKeywords = new BoolKeywords();
     if (!!data.trueKeyword) {
         result.trueKeyword = data.trueKeyword;
     }

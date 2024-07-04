@@ -22,9 +22,14 @@ modelunit Product {
 // A BaseProduct defines all the different elements ('parts') that can be
 // used to create a marketable InsuranceProduct.
 concept BaseProduct {
-    name: identifier;           // internal name
-    theme: InsuranceTheme;      // the 'kind' of insurance
-    parts: InsurancePart[];     // all parts of this product
+    name: identifier;               // internal name
+    isUnderConstruction: boolean;   // defines whether this base product is still 'raw'
+    isApprovedLevel1: boolean;
+    isApprovedLevel2: boolean;
+    isApprovedLevel3: boolean;
+    yieldsProfit: BooleanLiteral;
+    theme: InsuranceTheme;          // the 'kind' of insurance
+    parts: InsurancePart[];         // all parts of this product
 }
 
 // An InsurancePart defines a single aspect of an InsuranceProduct together
@@ -97,6 +102,10 @@ limited PercentageType implements NamedType {
 
 limited NumberType implements NamedType {
     Number;
+}
+
+limited BooleanType implements NamedType {
+    Boolean;
 }
 
 limited EuroType implements NamedType {

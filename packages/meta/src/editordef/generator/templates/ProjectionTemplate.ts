@@ -1,5 +1,4 @@
 import {
-    BoolKeywords,
     ListInfo,
     ListJoinType,
     FreEditClassifierProjection,
@@ -13,7 +12,7 @@ import {
     FreEditTableProjection,
     FreEditUnit,
     FreOptionalPropertyProjection,
-    ExtraClassifierInfo
+    ExtraClassifierInfo, BoolKeywords
 } from "../../metalanguage";
 import {
     FreMetaBinaryExpressionConcept,
@@ -54,17 +53,17 @@ export class ProjectionTemplate {
 
     setStandardBooleanKeywords(editorDef: FreEditUnit) {
         // get the standard labels for true and false
-        const stdLabels: BoolKeywords | undefined = editorDef.getDefaultProjectiongroup()?.standardBooleanProjection;
+        const stdLabels: BoolKeywords | undefined = editorDef.getDefaultProjectiongroup()?.standardBooleanProjection?.keywords;
         if (!!stdLabels) {
             this.trueKeyword = stdLabels.trueKeyword;
-            this.falseKeyword = stdLabels.falseKeyword ? stdLabels.falseKeyword : '';
+            this.falseKeyword = stdLabels.falseKeyword ? stdLabels.falseKeyword : "false";
         }
     }
 
     generateBoxProvider(language: FreMetaLanguage, concept: FreMetaClassifier, editDef: FreEditUnit, extraClassifiers: FreMetaClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", "FreBoxProvider", "FreProjectionHandler"]);
+        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", Names.FreNode, "FreBoxProvider", "FreProjectionHandler", Names.FreLanguage]);
 
         // see which projections there are for this concept
         // myProjections: all non table projections
@@ -561,7 +560,7 @@ export class ProjectionTemplate {
                 if (!!boolInfo) {
                     // TODO this should probably get a new type of box
                     trueKeyword = boolInfo.trueKeyword;
-                    falseKeyword = boolInfo.falseKeyword ? boolInfo.falseKeyword : '';
+                    falseKeyword = boolInfo.falseKeyword ? boolInfo.falseKeyword : "false";
                 }
                 ListUtil.addIfNotPresent(this.coreImports, "BoolDisplay");
                 return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, BoolDisplay.CHECKBOX)`;
