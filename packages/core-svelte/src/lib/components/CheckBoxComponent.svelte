@@ -41,9 +41,9 @@
         editor.selectElementForBox(box);
         event.stopPropagation();
     }
-    $: {
-        console.log("value bool is " + value + ", box.value is " + box.getBoolean());
-    }
+    // $: {
+    //     console.log("value bool is " + value + ", box.value is " + box.getBoolean());
+    // }
 </script>
 
 <span class="checkbox {cssClass}"

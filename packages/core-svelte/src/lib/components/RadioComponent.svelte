@@ -33,7 +33,7 @@
         box.setFocus = setFocus;
     });
     const onChange = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
-        console.log("RadioComponent.onChange for box " + box.role + ", value:" + value);
+        // console.log("RadioComponent.onChange for box " + box.role + ", value:" + value);
         value = !value;
         box.setBoolean(!value);
         if (box.selectable) {
@@ -42,12 +42,12 @@
         event.stopPropagation();
     }
     const onClick = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
-        console.log("RadioComponent.onChange for box " + box.role + ", value:" + value);
+        // console.log("RadioComponent.onChange for box " + box.role + ", value:" + value);
         event.stopPropagation();
     }
-    $: {
-        console.log("value bool is " + value + ", box.value is " + box.getBoolean());
-    }
+    // $: {
+    //     console.log("value bool is " + value + ", box.value is " + box.getBoolean());
+    // }
 </script>
 
 <span class="radio {cssClass}"

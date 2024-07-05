@@ -44,9 +44,9 @@
         }
         event.stopPropagation();
     }
-    $: {
-        console.log("value bool is " + value + ", box.value is " + box.getBoolean());
-    }
+    // $: {
+    //     console.log("value bool is " + value + ", box.value is " + box.getBoolean());
+    // }
 </script>
 
 {#if design == 'inner'}

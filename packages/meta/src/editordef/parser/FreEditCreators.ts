@@ -366,7 +366,6 @@ export function createBooleanPropertyProjection(data: { expression: any, project
         result.location = data["location"];
         result.location.filename = currentFileName;
     }
-    console.log("Boolean property: " + result.toString())
     return result;
 }
 

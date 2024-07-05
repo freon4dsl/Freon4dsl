@@ -12,7 +12,13 @@ Product {[ ${self.product} ]}
 
 BaseProduct {[
     Base Products ${name} for ${theme}
-        may be used: ${self.isApprovedLevel3 checkbox}
+        is still under construction: ${self.isUnderConstruction switch}
+        is approved level1: ${self.isApprovedLevel1 radio [Sure | NoWay]}
+        is approved level2: ${self.isApprovedLevel2 inner-switch}
+        is approved level3: ${self.isApprovedLevel3 checkbox}
+        yields profit: ${self.yieldsProfit text [Plenty | Little]}
+
+
         ${parts}
 ]}
 

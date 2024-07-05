@@ -41,7 +41,6 @@ export class ProjectionTemplate {
     // The values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords').
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
-    // @ts-ignore TODO remove
     private stdBoolDisplayType: string = "text";
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
@@ -598,7 +597,7 @@ export class ProjectionTemplate {
         }
     }
 
-    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType | undefined, listInfo?: ListInfo | undefined): string {
+    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType, listInfo?: ListInfo): string {
         let direction: string = "verticalList";
         if (!!listInfo && listInfo.direction === FreEditProjectionDirection.Horizontal) {
             direction = "horizontalList";
