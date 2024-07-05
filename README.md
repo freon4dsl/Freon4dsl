@@ -59,8 +59,8 @@ And run all tests  with:
     npm run prepare-app
     npm run dev
 ```
-This will open a browser with the example from the playground package on 
-the URL displayed: `http://localhost:5000/`. The example and all other projects in playground are
+This will open a browser with the example from the samples/Example package on 
+the URL displayed: `http://localhost:5000/`. The example and all other projects in samples are
 work in progress.
 
 ## Source organisation
