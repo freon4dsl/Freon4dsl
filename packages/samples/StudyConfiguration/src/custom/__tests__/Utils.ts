@@ -20,7 +20,6 @@ export function createWhenEventSchedule(eventName: string, binaryExpression: Bin
   let whenExpression = new When(eventName + binaryExpression.toString);
   whenExpression.startWhen = binaryExpression;
   eventSchedule.eventStart = whenExpression;
-  console.log("eventSchedule: " + eventSchedule.toString());
   return eventSchedule;
 }
 
@@ -96,30 +95,48 @@ export interface EventsToAdd {
   eventName: string;
   eventDay: number;
   repeat: number;
+  period: string;
 }
 
-export function addEventsScheduledOffCompletedEvents(studyConfiguration: StudyConfiguration, periodName: string, eventsToAdd: EventsToAdd[]  ): StudyConfiguration {
+export function addEventsScheduledOffCompletedEvents(studyConfiguration: StudyConfiguration, eventsToAdd: EventsToAdd[]  ): StudyConfiguration {
+  let periodName = eventsToAdd[0].period;
   let period = new Period(periodName);
   period.name = periodName;
   // Setup the study start event
   let dayEventSchedule = createEventScheduleStartingOnADay(eventsToAdd[0].eventName, eventsToAdd[0].eventDay);
   let previousEvent = createEventAndAddToPeriod(period, eventsToAdd[0].eventName, dayEventSchedule);
+  studyConfiguration.periods.push(period);
 
   // Add subsequent events scheduled off the previous event
   let firstEvent = true;
   eventsToAdd.forEach(eventToAdd => {
+    console.log("current period: "+ periodName + " eventToAdd: " + eventToAdd.eventName + " day: " + eventToAdd.eventDay + " period: " + eventToAdd.period);
     if (firstEvent) { // Skip the first event as it is already added
       firstEvent = false;
       return;
     }
+    let newPeriod = false;
     let eventReference = new EventReference(eventToAdd.eventName);
+    if (periodName !== eventToAdd.period) {
+      console.log("Creating new period: " + eventToAdd.period);
+      periodName = eventToAdd.period;
+      period = new Period(periodName);
+      period.name = periodName;
+      newPeriod = true;
+    }    
     let freNodeReference = FreNodeReference.create(previousEvent, "Event");
     eventReference.event = freNodeReference;
     let when = createWhenEventSchedule(eventToAdd.eventName, PlusExpression.create({left: eventReference,
                                                                                    right: Number.create({value:eventToAdd.eventDay})}));
     previousEvent = createEventAndAddToPeriod(period, eventToAdd.eventName, when);
+    if (newPeriod) {
+      console.log("Adding the new period: " + periodName);
+      studyConfiguration.periods.push(period);
+    }
   });
-  studyConfiguration.periods.push(period);
+  console.log("studyConfiguration # periods: " + studyConfiguration.periods.length );
+  console.log("studyConfiguration first period: " + studyConfiguration.periods[0].name);
+  console.log("studyConfiguration second period: " + studyConfiguration.periods[1].name);
   return studyConfiguration;
 }
 

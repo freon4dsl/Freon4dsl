@@ -25,7 +25,7 @@ describe ("Access to simulation data", () => {
 
   describe("Simulation of Trial Events to Generate the Timeline", () => {
 
-    it.only("generates a one visit timeline for a visit on day 1", () => {
+    it("generates a one visit timeline for a visit on day 1", () => {
         // GIVEN a study configuration with one period and one event
         let eventSchedule = utils.createEventScheduleStartingOnADay("Visit 1", 1);
         let period = new Period("Screening");
@@ -90,10 +90,10 @@ describe ("Access to simulation data", () => {
     it("generates a two visit timeline for a visit 7 days after the end of the first visit", () => {
       // GIVEN a study configuration with one period and two events
       let listOfEventsToAdd: EventsToAdd[] = [
-        { eventName: "Visit 1", eventDay: 1, repeat: 0},
-        { eventName: "Visit 2", eventDay: 7, repeat: 0 }
+        { eventName: "Visit 1", eventDay: 1, repeat: 0, period: "Screening"},
+        { eventName: "Visit 2", eventDay: 7, repeat: 0, period: "Treatment"}
       ];
-      studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, "Screening", listOfEventsToAdd);
+      studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, listOfEventsToAdd);
 
       // WHEN the study is simulated and a timeline is generated
       let simulator = new Simulator(studyConfiguration);
@@ -112,11 +112,11 @@ describe ("Access to simulation data", () => {
     it("generates a three visit timeline for visits 7 days after the end of the previous visit", () => {
       // GIVEN a study configuration with one period and two events
       let listOfEventsToAdd: EventsToAdd[] = [
-        { eventName: "Visit 1", eventDay: 1, repeat: 0 },
-        { eventName: "Visit 2", eventDay: 7, repeat: 0 },
-        { eventName: "Visit 3", eventDay: 7, repeat: 0 }
+        { eventName: "Visit 1", eventDay: 1, repeat: 0, period: "Screening"},
+        { eventName: "Visit 2", eventDay: 7, repeat: 0, period: "Treatment"},
+        { eventName: "Visit 3", eventDay: 7, repeat: 0, period: "Treatment"}
       ];
-      studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, "Screening", listOfEventsToAdd);
+      studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, listOfEventsToAdd);
 
       // WHEN the study is simulated and a timeline is generated
       let simulator = new Simulator(studyConfiguration);
@@ -136,7 +136,7 @@ describe ("Access to simulation data", () => {
     it("generates a three visit timeline for a visit that repeats twice", () => {
       // GIVEN a study configuration with one period and two events
       let listOfEventsToAdd: EventsToAdd[] = [
-        { eventName: "Visit 1", eventDay: 1, repeat: 2 },
+        { eventName: "Visit 1", eventDay: 1, repeat: 2, period: "Screening"},
       ];
       studyConfiguration = utils.addRepeatingEvents(studyConfiguration, "Screening", listOfEventsToAdd);
 
@@ -163,14 +163,14 @@ describe ("Access to simulation data", () => {
 
   describe("Simulation of Trial Periods to Generate the Timeline", () => {
 
-    it ("can access the first instance of a periods on the timeline" , () => {
+    it ("can access the first instance of a period on the timeline" , () => {
       // GIVEN a study configuration with one period and one event
       let eventSchedule = utils.createEventScheduleStartingOnADay("Visit 1", 1);
       let period = new Period("Screening");
       utils.createEventAndAddToPeriod(period, "Visit 1", eventSchedule);
       studyConfiguration.periods.push(period);
 
-      // WHEN the study is simulated and a timeline is generated
+      // WHEN the study is simulated with no period is active yet and a timeline is generated
       let simulator = new Simulator(studyConfiguration);
       simulator.run();
 
@@ -182,10 +182,34 @@ describe ("Access to simulation data", () => {
       expectedTimeline.addEvent(periodInstance as TimelineInstance);
       expectedTimeline.setCurrentDay(1);
 
-      expect(timeline.currentPeriod.name).toEqual(period.name);  
+      expect((timeline.getCurrentPeriod() as PeriodInstance).scheduledPeriod.getName()).toEqual(period.name);  
 
     });
-        
+ 
+    it ("can access the second instance of a period on the timeline" , () => {
+      // GIVEN a study configuration with two periods and two events
+      let listOfEventsToAdd: EventsToAdd[] = [
+        { eventName: "Visit 1", eventDay: 1, repeat: 0, period: "Screening"},
+        { eventName: "Visit 2", eventDay: 7, repeat: 0, period: "Treatment"},
+      ];
+      studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, listOfEventsToAdd);
+
+     // WHEN the study is simulated with no period is active yet and a timeline is generated
+      let simulator = new Simulator(studyConfiguration);
+      simulator.run();
+
+      // Then the generated timeline has one event on the expected event day
+      let timeline = simulator.timeline;
+      let expectedTimeline = new Timeline();
+      let scheduledPeriod = simulator.scheduledStudyConfiguration.scheduledPeriods[0];
+      let periodInstance = new PeriodInstance(scheduledPeriod, 1);
+      expectedTimeline.addEvent(periodInstance as TimelineInstance);
+      expectedTimeline.setCurrentDay(1);
+
+      expect((timeline.getCurrentPeriod() as PeriodInstance).scheduledPeriod.getName()).toEqual("Treatment");  
+
+    });
+ 
   });
     
   describe("Generate the Timeline", () => {

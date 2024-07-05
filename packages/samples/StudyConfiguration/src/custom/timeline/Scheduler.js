@@ -29,11 +29,11 @@ import * as Sim from "../simjs/sim.js"
     }
 
     scheduleEvent(schedulingMsg, scheduledEvent, timeline, daysToWait) {
-      console.log(schedulingMsg + ": " + scheduledEvent.name() + ' with wait of: ' + daysToWait + ' days');
+      console.log(schedulingMsg + ": " + scheduledEvent.name + ' with wait of: ' + daysToWait + ' days');
       let eventInstance = timeline.newEventInstance(scheduledEvent, this.time() + daysToWait);
       this.setTimer(daysToWait).done(this.eventCompleted, this, [eventInstance]);
       timeline.setScheduled(eventInstance);
-      scheduledEvent.updatePeriodIfNeeded(timeline);
+      scheduledEvent.scheduled(this.getScheduledStudyConfiguration(), timeline);
     }
 
     // Find all the events with First-Scheduled on just a specific day and schedule them.

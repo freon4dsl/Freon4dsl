@@ -46,6 +46,14 @@ export class ScheduledStudyConfiguration {
     }
   }
 
+  getScheduledPeriod(period: Period) {
+    let scheduledPeriod = this.scheduledPeriods.find(scheduledPeriod => scheduledPeriod.configuredPeriod === period);
+    if (!scheduledPeriod) {
+      console.log("no scheduledPeriod found", scheduledPeriod);
+    }
+    return scheduledPeriod;
+  }
+
   getFirstStudyStartEvent(): ScheduledEvent | undefined {
     let eventsOnADay = this.getEventsOnScheduledOnASpecificDay();
     let firstEventOnDay1 = eventsOnADay.find(scheduledEvent => {

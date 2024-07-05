@@ -15,7 +15,7 @@ export class ScheduledPeriod {
     return this.scheduledEvents;
   }
 
-  name() {
+  getName() {
     return this.configuredPeriod.name;
   }
 
