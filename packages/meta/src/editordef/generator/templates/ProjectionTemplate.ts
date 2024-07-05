@@ -12,7 +12,7 @@ import {
     FreEditTableProjection,
     FreEditUnit,
     FreOptionalPropertyProjection,
-    ExtraClassifierInfo, BoolKeywords
+    ExtraClassifierInfo, BoolKeywords, FreEditProjectionGroup, BoolDisplayType
 } from "../../metalanguage";
 import {
     FreMetaBinaryExpressionConcept,
@@ -41,6 +41,8 @@ export class ProjectionTemplate {
     // The values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords').
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
+    // @ts-ignore TODO remove
+    private stdBoolDisplayType: string = "text";
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
     private modelImports: string[] = [];    // imports from ../language/gen
@@ -48,15 +50,22 @@ export class ProjectionTemplate {
     private configImports: string[] = [];   // imports from ../config/gen
     // Information about the use of projections from superconcepts or interfaces is also collected during the content
     // creation. This avoids the generation of unused classes and methods.
-    private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being usedknownBoxProjections
+    private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
     private supersUsed: FreMetaClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
 
     setStandardBooleanKeywords(editorDef: FreEditUnit) {
-        // get the standard labels for true and false
-        const stdLabels: BoolKeywords | undefined = editorDef.getDefaultProjectiongroup()?.standardBooleanProjection?.keywords;
-        if (!!stdLabels) {
-            this.trueKeyword = stdLabels.trueKeyword;
-            this.falseKeyword = stdLabels.falseKeyword ? stdLabels.falseKeyword : "false";
+        // get the standard labels for true and false, and the standard display type (checkbox, radio, text, etc.) for boolean values
+        const defProjGroup: FreEditProjectionGroup | undefined = editorDef.getDefaultProjectiongroup();
+        if (!!defProjGroup) {
+            const stdLabels: BoolKeywords | undefined = defProjGroup.standardBooleanProjection?.keywords;
+            if (!!stdLabels) {
+                this.trueKeyword = stdLabels.trueKeyword;
+                this.falseKeyword = stdLabels.falseKeyword ? stdLabels.falseKeyword : "false";
+            }
+            const displayType: string | undefined = defProjGroup.standardBooleanProjection?.displayType;
+            if (!!displayType) {
+                this.stdBoolDisplayType = displayType;
+            }
         }
     }
 
@@ -537,7 +546,7 @@ export class ProjectionTemplate {
         return joinEntry;
     }
 
-    private primitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolKeywords, listInfo?: ListInfo): string {
+    private primitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType, listInfo?: ListInfo): string {
         if (property.isList) {
             return this.listPrimitivePropertyProjection(property, element, boolInfo, listInfo);
         } else {
@@ -545,7 +554,7 @@ export class ProjectionTemplate {
         }
     }
 
-    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolKeywords): string {
+    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType): string {
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type) {
@@ -557,19 +566,39 @@ export class ProjectionTemplate {
             case FreMetaPrimitiveType.boolean:
                 let trueKeyword: string = this.trueKeyword;
                 let falseKeyword: string = this.falseKeyword;
+                let displayType: string = '';
+                switch(this.stdBoolDisplayType) {
+                    // "text" / "checkbox" / "radio" / "switch" / "inner-switch"
+                    case "text":         displayType = "BoolDisplay.SELECT"; break;
+                    case "checkbox":     displayType = "BoolDisplay.CHECKBOX"; break;
+                    case "radio":        displayType = "BoolDisplay.RADIO_BUTTON"; break;
+                    case "switch":       displayType = "BoolDisplay.SWITCH"; break;
+                    case "inner-switch": displayType = "BoolDisplay.INNER_SWITCH"; break;
+                }
                 if (!!boolInfo) {
-                    // TODO this should probably get a new type of box
-                    trueKeyword = boolInfo.trueKeyword;
-                    falseKeyword = boolInfo.falseKeyword ? boolInfo.falseKeyword : "false";
+                    if (!!boolInfo.keywords) {
+                        trueKeyword = boolInfo.keywords.trueKeyword;
+                        falseKeyword = boolInfo.keywords.falseKeyword ? boolInfo.keywords.falseKeyword : this.falseKeyword;
+                    }
+                    if (!!boolInfo.displayType) {
+                        switch(boolInfo.displayType) {
+                            // "text" / "checkbox" / "radio" / "switch" / "inner-switch"
+                            case "text":         displayType = "BoolDisplay.SELECT"; break;
+                            case "checkbox":     displayType = "BoolDisplay.CHECKBOX"; break;
+                            case "radio":        displayType = "BoolDisplay.RADIO_BUTTON"; break;
+                            case "switch":       displayType = "BoolDisplay.SWITCH"; break;
+                            case "inner-switch": displayType = "BoolDisplay.INNER_SWITCH"; break;
+                        }
+                    }
                 }
                 ListUtil.addIfNotPresent(this.coreImports, "BoolDisplay");
-                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, BoolDisplay.CHECKBOX)`;
+                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, ${displayType})`;
             default:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
         }
     }
 
-    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolKeywords, listInfo?: ListInfo): string {
+    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType | undefined, listInfo?: ListInfo | undefined): string {
         let direction: string = "verticalList";
         if (!!listInfo && listInfo.direction === FreEditProjectionDirection.Horizontal) {
             direction = "horizontalList";

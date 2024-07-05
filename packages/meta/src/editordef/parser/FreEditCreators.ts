@@ -109,9 +109,6 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
     if (!!data.standardBooleanProjection) {
         result.standardBooleanProjection = data.standardBooleanProjection;
     }
-    if (!!data.standardBooleanKeywords) {
-        result.standardBooleanKeywords = data.standardBooleanKeywords;
-    }
     if (!!data.standardReferenceSeparator) {
         result.standardReferenceSeparator = data.standardReferenceSeparator;
     }
@@ -124,7 +121,6 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    console.log("ADDED TO ProjGroup: " + result.standardBooleanProjection?.toString() + ", " + result.standardBooleanKeywords?.toString())
     return result;
 }
 
@@ -149,20 +145,18 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
     return result;
 }
 
-export function createStdBool(data: {"kind": any, "words": any, "location" : any})
-            : { kind: BoolDisplayType | undefined, words: BoolKeywords | undefined, "location" : any } {
-    const result: { kind: BoolDisplayType | undefined, words: BoolKeywords | undefined, "location" : any } = { kind: undefined, words: undefined, location: undefined};
-    if (!!data.kind) {
-        result.kind = data.kind;
+export function createStdBool(data: BoolDisplayType): BoolDisplayType{
+    const result: BoolDisplayType = new BoolDisplayType();
+    if (!!data.displayType) {
+        result.displayType = data.displayType;
     }
-    if (!!data.words ) {
-        result.words = data.words;
+    if (!!data.keywords ) {
+        result.keywords = data.keywords;
     }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    console.log("STANDARD: " + result.kind?.toString() + ", " + result.words?.toString());
     return result;
 }
 
@@ -238,7 +232,7 @@ export function createTableProjection(data: Partial<FreEditTableProjection>): Fr
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    // console.log("createTabelProjection " + result.toString());
+    // console.log("createTableProjection " + result.toString());
     return result;
 }
 
@@ -357,13 +351,10 @@ export function createTablePropertyProjection(data: { expression: any, projectio
     return result;
 }
 
-export function createBooleanPropertyProjection(data: { expression: any, projectionName: any, displayType: any, keyword: any, location: any }): FreEditPropertyProjection {
+export function createBooleanPropertyProjection(data: { expression: any, projectionName: any, boolInfo: any, location: any }): FreEditPropertyProjection {
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
-    if (!!data["displayType"]) {
-        result.boolDisplayKind = data["displayType"];
-    }
-    if (!!data["keyword"]) {
-        result.boolInfo = data["keyword"];
+    if (!!data["boolInfo"]) {
+        result.boolInfo = data["boolInfo"];
     }
     if (!!data["expression"]) {
         result.expression = data["expression"];

@@ -355,7 +355,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     error: `Property '${myProp.name}' may not have a keyword projection, because it is a list ${ParseLocationUtil.location(item)}.`,
                     whenOk: () => {
                         this.runner.simpleCheck(
-                            !FreEditChecker.includesWhitespace(item.boolInfo? item.boolInfo.trueKeyword : ''),
+                            !FreEditChecker.includesWhitespace(item.boolInfo && item.boolInfo.keywords? item.boolInfo.keywords.trueKeyword : ''),
                             `The text for a keyword projection should not include any whitespace ${ParseLocationUtil.location(item)}.`);
                     }
                 });
@@ -451,7 +451,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                                 // when a primitive property is in an optional group, it will not be shown when it has the default value for that property
                                 // a property of boolean type with one keyword should not be within optional group
                                 if (!!propProjections[0].boolInfo) {
-                                    this.runner.simpleCheck(!!propProjections[0].boolInfo.falseKeyword,
+                                    this.runner.simpleCheck(!!propProjections[0].boolInfo.keywords?.falseKeyword,
                                         `An optional boolean property is not allowed within an optional projection ${ParseLocationUtil.location(propProjections[0])}.`);
                                 }
                             }

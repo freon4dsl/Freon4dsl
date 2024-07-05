@@ -16,8 +16,7 @@ projectionGroup = ws "editor" ws name:var ws num:("precedence" ws n:numberlitera
     return creator.createProjectionGroup({
         "name"                          : name,
         "precedence"                    : num !== undefined && num !== null ? Number.parseInt(num, 10) : undefined, // the default for parseInt is not (!) the decimal system,
-        "standardBooleanProjection"     : stp["kind"],
-        "standardBooleanKeywords"       : stp["words"],
+        "standardBooleanProjection"     : stp,
         "standardReferenceSeparator"    : y,
         "projections"                   : projections,
         "location"                      : location()
@@ -34,8 +33,8 @@ booleanDisplay          = "text" / "checkbox" / "radio" / "switch" / "inner-swit
 standardBooleanProjection = "boolean" ws kind:booleanDisplay? ws kw:keywordDecl? ws
 {
     return creator.createStdBool({
-        "kind"          : kind,
-        "words"         : kw,
+        "displayType"   : kind,
+        "keywords"      : kw,
         "location"      : location()
     });
 }
@@ -241,14 +240,18 @@ tableProperty = propProjectionStart ws
 }
 
 booleanProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:booleanDisplay? ws k:keywordDecl? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:booleanDisplay? ws kw:keywordDecl? ws
                       propProjectionEnd
 {
+    let xx = creator.createStdBool({
+                                                   "displayType"   : kind,
+                                                   "keywords"      : kw,
+                                                   "location"      : location()
+                                               })
     return creator.createBooleanPropertyProjection( {
         "expression"        : creator.createSelfExp(propName),
         "projectionName"    : projName,
-        "displayType"       : kind,
-        "keyword"           : k,
+        "boolInfo"          : xx,
         "location"          : location()
     });
 }

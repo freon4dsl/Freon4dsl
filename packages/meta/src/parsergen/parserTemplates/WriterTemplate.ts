@@ -647,10 +647,10 @@ export class WriterTemplate {
                 // or from 'item', and add escapes to the keywords
                 let myTrueKeyword: string = ParserGenUtil.escapeRelevantChars(this.trueValue);
                 let myFalseKeyword: string = ParserGenUtil.escapeRelevantChars(this.falseValue);
-                if (!!item.boolInfo) {
-                    myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.trueKeyword);
-                    if (!!item.boolInfo.falseKeyword) {
-                        myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.falseKeyword);
+                if (!!item.boolInfo && !!item.boolInfo.keywords) {
+                    myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.keywords.trueKeyword);
+                    if (!!item.boolInfo.keywords.falseKeyword) {
+                        myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.keywords.falseKeyword);
                     } else {
                         myFalseKeyword = '';
                     }
