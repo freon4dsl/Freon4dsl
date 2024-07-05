@@ -56,6 +56,8 @@ export class LionWebCommunication extends ServerCommunication implements IServer
         ]);
     }
 
+    // @ts-ignore
+    // todo reimplement with use of callback or change signature
     async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
         LOGGER.log(`generateIds ${quantity}`);
         let result = ["10000","10010","10020","10030","10040"];
@@ -82,6 +84,8 @@ export class LionWebCommunication extends ServerCommunication implements IServer
      * @param unitName
      * @param loadCallback
      */
+    // @ts-ignore
+    // parameter present to adhere to interface
     async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNamedNode) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName.length > 0) {
@@ -102,7 +106,8 @@ export class LionWebCommunication extends ServerCommunication implements IServer
         }
     }
 
-
+    // @ts-ignore
+    // parameter present to adhere to interface
     async putModelUnit(modelName: string, unitName: string, piUnit: FreNode) {
         console.log("piUnit", piUnit)
         if (!!unitName && unitName.length > 0 && !!piUnit) {

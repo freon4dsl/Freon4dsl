@@ -1,11 +1,11 @@
 import { Box } from "./Box";
 import { FreNode } from "../../ast";
 import { FreLanguage } from "../../language";
-import { FreLogger } from "../../logging";
 import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
 import { LayoutBox, ListDirection } from "./LayoutBox";
 
-const LOGGER = new FreLogger("ListBox");
+// import { FreLogger } from "../../logging";
+// const LOGGER = new FreLogger("ListBox");
 
 /**
  * This Box represents a list in the FreElement model, i.e. one that is defined in the .ast file
@@ -21,8 +21,8 @@ export abstract class ListBox extends LayoutBox {
         this.conceptName = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
     }
 
-    options(type: MenuOptionsType, index: number): MenuItem[] {
-        return getContextMenuOptions(this.conceptName, this.element, this.propertyName, type, index);
+    options(type: MenuOptionsType): MenuItem[] {
+        return getContextMenuOptions(this.conceptName, this.element, this.propertyName, type);
     }
 }
 

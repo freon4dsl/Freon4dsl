@@ -1,5 +1,5 @@
 import { isEqual } from "lodash";
-import { autorun, computed, makeObservable, observable } from "mobx";
+import { autorun, makeObservable, observable } from "mobx";
 import { FreEnvironment } from "../environment";
 import { FreOwnerDescriptor, FreNode } from "../ast";
 import { FreLogger } from "../logging";

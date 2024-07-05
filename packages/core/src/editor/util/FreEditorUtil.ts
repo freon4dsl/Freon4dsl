@@ -12,8 +12,6 @@ export type DynamicBoolean = BooleanCallback | boolean;
 export const wait = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const NBSP: string = "".concat("\u00A0");
 
-const LATEST_ID = 0;
-
 const LOGGER = new FreLogger("FreEditorUtils").mute();
 
 export class FreEditorUtil {
@@ -45,7 +43,7 @@ export class FreEditorUtil {
                 if (act.trigger.meta === freKey.meta && act.trigger.key === freKey.key) {
                     if (act.activeInBoxRoles.includes(box.role)) {
                         LOGGER.log("findKeyboardShortcutCommand: executing keyboard action");
-                        return act.command(box);
+                        return act.command();
                     } else {
                         LOGGER.log("findKeyboardShortcutCommand: Keyboard action does not include role " + box.role);
                     }
