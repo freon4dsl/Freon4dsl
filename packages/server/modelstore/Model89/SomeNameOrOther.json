@@ -788,6 +788,16 @@
                "containment": {
                   "language": "-default-key-Example",
                   "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-47"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
                   "key": "-default-key-BinaryExpression-right"
                },
                "children": [
@@ -797,6 +807,27 @@
          ],
          "references": [],
          "parent": "ID-39"
+      },
+      {
+         "id": "ID-47",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "parent": "ID-40"
       },
       {
          "id": "ID-41",
