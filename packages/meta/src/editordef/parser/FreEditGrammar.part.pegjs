@@ -9,14 +9,15 @@ Editor_Definition = group:projectionGroup
 }
 
 projectionGroup = ws "editor" ws name:var ws num:("precedence" ws n:numberliteral ws {return n;})?
-        x:standardBooleanProjection? ws
+        stp:standardBooleanProjection? ws
         y:standardReferenceSeparator? ws
         projections:classifierProjection* ws
 {
     return creator.createProjectionGroup({
         "name"                          : name,
         "precedence"                    : num !== undefined && num !== null ? Number.parseInt(num, 10) : undefined, // the default for parseInt is not (!) the decimal system,
-        "standardBooleanProjection"     : x,
+        "standardBooleanProjection"     : stp["kind"],
+        "standardBooleanKeywords"       : stp["words"],
         "standardReferenceSeparator"    : y,
         "projections"                   : projections,
         "location"                      : location()
@@ -30,12 +31,11 @@ projection_end          = "]"
 projection_separator    = "|"
 booleanDisplay          = "text" / "checkbox" / "radio" / "switch" / "inner-switch"
 
-standardBooleanProjection = "boolean" ws kind:booleanDisplay? ws projection_begin t1:textBut projection_separator t2:textBut projection_end ws
+standardBooleanProjection = "boolean" ws kind:booleanDisplay? ws kw:keywordDecl? ws
 {
     return creator.createStdBool({
         "kind"          : kind,
-        "trueKeyword"   : t1,
-        "falseKeyword"  : t2,
+        "words"         : kw,
         "location"      : location()
     });
 }

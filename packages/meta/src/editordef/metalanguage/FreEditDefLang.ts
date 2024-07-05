@@ -122,6 +122,7 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
     name: string = '';
     projections: FreEditClassifierProjection[] = [];
     standardBooleanProjection?: BoolDisplayType = undefined; // may only be present in default group
+    standardBooleanKeywords?: BoolKeywords = undefined;
     standardReferenceSeparator?: string = undefined;      // may only be present in default group
     extras: ExtraClassifierInfo[] = [];                   // may only be present in default group
     owningDefinition: FreEditUnit | undefined;

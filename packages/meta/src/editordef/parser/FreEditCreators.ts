@@ -42,6 +42,7 @@ export function createEditUnit(group: FreEditProjectionGroup): FreEditUnit {
     if (!!group) {
         result.projectiongroups.push(group);
     }
+
     result.classifiersUsedInSuperProjection = classifiersUsedInSuperProjection;
     return result;
 }
@@ -108,6 +109,9 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
     if (!!data.standardBooleanProjection) {
         result.standardBooleanProjection = data.standardBooleanProjection;
     }
+    if (!!data.standardBooleanKeywords) {
+        result.standardBooleanKeywords = data.standardBooleanKeywords;
+    }
     if (!!data.standardReferenceSeparator) {
         result.standardReferenceSeparator = data.standardReferenceSeparator;
     }
@@ -120,6 +124,7 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    console.log("ADDED TO ProjGroup: " + result.standardBooleanProjection?.toString() + ", " + result.standardBooleanKeywords?.toString())
     return result;
 }
 
@@ -144,19 +149,20 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
     return result;
 }
 
-export function createStdBool(data: Partial<BoolDisplayType>): BoolDisplayType {
-    const result: BoolDisplayType = new BoolDisplayType();
-    if (!!data.keywords) {
-        result.keywords = data.keywords;
+export function createStdBool(data: {"kind": any, "words": any, "location" : any})
+            : { kind: BoolDisplayType | undefined, words: BoolKeywords | undefined, "location" : any } {
+    const result: { kind: BoolDisplayType | undefined, words: BoolKeywords | undefined, "location" : any } = { kind: undefined, words: undefined, location: undefined};
+    if (!!data.kind) {
+        result.kind = data.kind;
     }
-    if (!!data.displayType) {
-        result.displayType = data.displayType;
+    if (!!data.words ) {
+        result.words = data.words;
     }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    console.log("STANDARD: " + result.toString());
+    console.log("STANDARD: " + result.kind?.toString() + ", " + result.words?.toString());
     return result;
 }
 
