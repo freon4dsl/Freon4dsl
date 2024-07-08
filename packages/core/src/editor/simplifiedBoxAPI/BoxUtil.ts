@@ -467,7 +467,7 @@ export class BoxUtil {
     static getBoxOrAction(element: FreNode, propertyName: string, conceptName: string, boxProviderCache: FreProjectionHandler): Box {
         // find the information on the property to be shown
         const property = element[propertyName];
-        const roleName = RoleProvider.property(element.freLanguageConcept(), propertyName);
+        const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName);
         // console.log('getBoxOrAction ' + property?.freId())
         let result: Box;
         result = !!property

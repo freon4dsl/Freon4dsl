@@ -64,7 +64,7 @@ export abstract class AbstractChoiceBox extends Box {
         if (!!this.textBox) {
             this.textBox.setCaret(caret);
         }
-    };
+    }
 
     /** @internal
      * This function is called after the text changes in the browser.
@@ -72,21 +72,21 @@ export abstract class AbstractChoiceBox extends Box {
      */
     update: () => void = () => {
         /* To be overwritten by `ActionComponent` */
-    };
+    }
 
     /** @internal
      * Simulate a KeyBoard event
      */
     triggerKeyPressEvent: (key: string) => void = () => {
         /* To be overwritten by `AbstractChoiceComponent` */
-    };
+    }
 
     /** @internal
      * Simulate a KeyBoard event
      */
     triggerKeyDownEvent: (key: FreKey) => void = () => {
         /* To be overwritten by `AbstractChoiceComponent` */
-    };
+    }
 
     public deleteWhenEmpty1(): boolean {
         return false;

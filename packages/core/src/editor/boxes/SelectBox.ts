@@ -31,12 +31,10 @@ export class SelectBox extends AbstractChoiceBox {
     }
 
     getOptions(editor: FreEditor): SelectOption[] {
-        let matchingOptions: SelectOption[];
-        matchingOptions = this.getAllOptions(editor);
-        // matching text does not work correct as you need to know the cursor position.
-        // TODO filter in the component where the cursor position is known.
-            // .filter(option => MatchUtil.partialMatch(this.textBox.getText(), option.label));
-        return matchingOptions;
+        // console.log("Options for " + this.element.freLanguageConcept() + this.getAllOptions(editor).map(opt => {
+        //     opt.label
+        // }))
+        return this.getAllOptions(editor);
     }
 
     public deleteWhenEmpty1(): boolean {

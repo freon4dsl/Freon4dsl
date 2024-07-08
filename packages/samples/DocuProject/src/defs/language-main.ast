@@ -27,7 +27,7 @@ concept BaseProduct {
     isApprovedLevel1: boolean;
     isApprovedLevel2: boolean;
     isApprovedLevel3: boolean;
-    yieldsProfit: BooleanLiteral;
+    yieldsProfit: boolean;
     theme: InsuranceTheme;          // the 'kind' of insurance
     parts: InsurancePart[];         // all parts of this product
 }
