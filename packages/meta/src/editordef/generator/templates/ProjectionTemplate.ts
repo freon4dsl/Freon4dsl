@@ -412,7 +412,6 @@ export class ProjectionTemplate {
      *
      * @param item      The property projection
      * @param elementVarName
-     * @param mainLabel
      * @param language
      * @private
      */
@@ -490,7 +489,6 @@ export class ProjectionTemplate {
      * @param item
      * @param propertyConcept   The property for which the projection is generated.
      * @param elementVarName    The name of the element parameter of the getBox projection method.
-     * @param language
      * @private
      */
     private generatePartAsList(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string): string {
@@ -566,35 +564,44 @@ export class ProjectionTemplate {
                 let trueKeyword: string = this.trueKeyword;
                 let falseKeyword: string = this.falseKeyword;
                 let displayType: string = '';
-                switch(this.stdBoolDisplayType) {
-                    // "text" / "checkbox" / "radio" / "switch" / "inner-switch"
-                    case "text":         displayType = "BoolDisplay.SELECT"; break;
-                    case "checkbox":     displayType = "BoolDisplay.CHECKBOX"; break;
-                    case "radio":        displayType = "BoolDisplay.RADIO_BUTTON"; break;
-                    case "switch":       displayType = "BoolDisplay.SWITCH"; break;
-                    case "inner-switch": displayType = "BoolDisplay.INNER_SWITCH"; break;
-                }
+                displayType = this.getDisplayTypeFrom(this.stdBoolDisplayType);
                 if (!!boolInfo) {
                     if (!!boolInfo.keywords) {
                         trueKeyword = boolInfo.keywords.trueKeyword;
-                        falseKeyword = boolInfo.keywords.falseKeyword ? boolInfo.keywords.falseKeyword : this.falseKeyword;
+                        falseKeyword = boolInfo.keywords.falseKeyword ? boolInfo.keywords.falseKeyword : "undefined";
                     }
-                    if (!!boolInfo.displayType) {
-                        switch(boolInfo.displayType) {
-                            // "text" / "checkbox" / "radio" / "switch" / "inner-switch"
-                            case "text":         displayType = "BoolDisplay.SELECT"; break;
-                            case "checkbox":     displayType = "BoolDisplay.CHECKBOX"; break;
-                            case "radio":        displayType = "BoolDisplay.RADIO_BUTTON"; break;
-                            case "switch":       displayType = "BoolDisplay.SWITCH"; break;
-                            case "inner-switch": displayType = "BoolDisplay.INNER_SWITCH"; break;
-                        }
-                    }
+                    displayType = this.getDisplayTypeFrom(boolInfo.displayType);
                 }
                 ListUtil.addIfNotPresent(this.coreImports, "BoolDisplay");
                 return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, ${displayType})`;
             default:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
         }
+    }
+
+    private getDisplayTypeFrom(inType: string): string {
+        let result: string;
+        switch (inType) {
+            // "text" / "checkbox" / "radio" / "switch" / "inner-switch"
+            case "text":
+                result = "BoolDisplay.SELECT";
+                break;
+            case "checkbox":
+                result = "BoolDisplay.CHECKBOX";
+                break;
+            case "radio":
+                result = "BoolDisplay.RADIO_BUTTON";
+                break;
+            case "switch":
+                result = "BoolDisplay.SWITCH";
+                break;
+            case "inner-switch":
+                result = "BoolDisplay.INNER_SWITCH";
+                break;
+            default:
+                result = "BoolDisplay.SELECT";
+        }
+        return result;
     }
 
     private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType, listInfo?: ListInfo): string {
