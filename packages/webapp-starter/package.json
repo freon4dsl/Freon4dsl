@@ -7,7 +7,7 @@
     "clean": "rm -rf node_modules/",
     "build": "echo No build for webapp-starter",
     "build-app": "rollup -c",
-    "build-dev": "cd ../../packages/samples/Example && npm run build",
+    "build-dev": "cd ../../packages/samples/DocuProject && npm run build",
     "dev": "cross-env NODE_PORT=8001 rollup -c -w",
     "start": "sirv public --port 8000",
     "validate": "svelte-check --tsconfig ./tsconfig.json",
@@ -36,7 +36,7 @@
   "dependencies": {
     "@freon4dsl/core": "0.7.0-beta",
     "@freon4dsl/core-svelte": "0.7.0-beta",
-    "@freon4dsl/samples-example": "0.7.0-beta",
+    "@freon4dsl/samples-docuproject": "0.7.0-beta",
     "@freon4dsl/webapp-lib": "0.7.0-beta",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",

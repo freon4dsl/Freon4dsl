@@ -23,7 +23,8 @@
         isSvgBox,
         FreEditor,
         FreLogger,
-        Box, isElementBox, isOptionalBox2, isMultiLineTextBox
+        Box, BoolDisplay, isBooleanControlBox,
+        isElementBox, isOptionalBox2, isMultiLineTextBox
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
@@ -42,8 +43,11 @@
     import { selectedBoxes } from "$lib/index.js";
     import { componentId, setBoxSizes } from "$lib/index.js";
     import ElementComponent from "./ElementComponent.svelte";
+    import CheckBoxComponent from "$lib/components/CheckBoxComponent.svelte";
+    import RadioComponent from "$lib/components/RadioComponent.svelte";
+    import SwitchComponent from "$lib/components/SwitchComponent.svelte";
 
-    const LOGGER = new FreLogger("RenderComponent").mute();
+    const LOGGER = new FreLogger("RenderComponent");
 
     export let box: Box = null;
     export let editor: FreEditor;
@@ -104,6 +108,14 @@
     >
         {#if box === null || box === undefined }
             <p class="error">[BOX IS NULL OR UNDEFINED]</p>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.CHECKBOX}
+            <CheckBoxComponent box={box} editor={editor}/>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.RADIO_BUTTON}
+            <RadioComponent box={box} editor={editor}/>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.SWITCH}
+            <SwitchComponent box={box} editor={editor} design="slider"/>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
+            <SwitchComponent box={box} editor={editor} design="inner"/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>
         {:else if isGridBox(box) }

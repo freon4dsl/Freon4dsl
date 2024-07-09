@@ -196,8 +196,9 @@ describe("Checking FretEditUnit: ", () => {
             expect(myBoolProjection).not.toBeNull();
             expect(myBoolProjection).not.toBeUndefined();
             expect(myBoolProjection!.boolInfo).not.toBeUndefined();
-            expect(myBoolProjection!.boolInfo!.trueKeyword).toBe("xxxx");
-            expect(myBoolProjection!.boolInfo!.falseKeyword).toBeUndefined();
+            expect(myBoolProjection!.boolInfo!.keywords).not.toBeUndefined();
+            expect(myBoolProjection!.boolInfo!.keywords!.trueKeyword).toBe("xxxx");
+            expect(myBoolProjection!.boolInfo!.keywords!.falseKeyword).toBeUndefined();
         }
 
         // test the second boolean prop, with two keywords present
@@ -224,8 +225,9 @@ describe("Checking FretEditUnit: ", () => {
             expect(myBoolProjection).not.toBeUndefined();
             expect(myBoolProjection!.boolInfo).not.toBeNull();
             expect(myBoolProjection!.boolInfo).not.toBeUndefined();
-            expect(myBoolProjection!.boolInfo!.trueKeyword).toBe("aap");
-            expect(myBoolProjection!.boolInfo!.falseKeyword).toBe("noot");
+            expect(myBoolProjection!.boolInfo!.keywords).not.toBeUndefined();
+            expect(myBoolProjection!.boolInfo!.keywords!.trueKeyword).toBe("aap");
+            expect(myBoolProjection!.boolInfo!.keywords!.falseKeyword).toBe("noot");
         }
     });
 

@@ -105,7 +105,7 @@ export abstract class Box {
         }
         const childrenReversed = this.children.concat().reverse();
         for (const child of childrenReversed) {
-            const leafChild = child.lastLeaf;
+            const leafChild: Box = child.lastLeaf;
             if (!!leafChild) {
                 return leafChild;
             }

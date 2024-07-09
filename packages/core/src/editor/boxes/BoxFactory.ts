@@ -5,6 +5,7 @@ import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreEditor } from "../FreEditor";
 import {
     Box,
+    BooleanControlBox,
     ActionBox,
     LabelBox,
     TextBox,
@@ -30,6 +31,7 @@ const LOGGER: FreLogger = new FreLogger("BoxFactory").mute();
 let actionCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
+let boolCache: BoxCache<BooleanControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
@@ -45,6 +47,7 @@ let tableCellCache: BoxCache<TableCellBox> = {};
 let cacheActionOff: boolean = false;
 let cacheLabelOff: boolean = false;
 let cacheTextOff: boolean = false;
+let cacheBooleanOff: boolean = false;
 let cacheSelectOff: boolean = false;
 // let cacheIndentOff: boolean = false;
 // let cacheOptionalOff: boolean = false;
@@ -63,6 +66,7 @@ export class BoxFactory {
         actionCache = {};
         labelCache = {};
         textCache = {};
+        boolCache = {};
         selectCache = {};
         // indentCache = {};
         optionalCache = {};
@@ -80,6 +84,7 @@ export class BoxFactory {
         cacheActionOff = true;
         cacheLabelOff = true;
         cacheTextOff = true;
+        cacheBooleanOff = true;
         cacheSelectOff = true;
         // cacheIndentOff = true;
         // cacheOptionalOff = true;
@@ -93,6 +98,7 @@ export class BoxFactory {
         cacheActionOff = false;
         cacheLabelOff = false;
         cacheTextOff = false;
+        cacheBooleanOff = false;
         cacheSelectOff = false;
         // cacheIndentOff = false;
         // cacheOptionalOff = false;
@@ -175,6 +181,27 @@ export class BoxFactory {
         // 2. Apply the other arguments in case they have changed
         result.$getText = getText;
         result.$setText = setText;
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static bool(element: FreNode,
+                role: string,
+                getBoolean: () => boolean,
+                setBoolean: (text: boolean) => void,
+                initializer?: Partial<BooleanControlBox>
+                ): BooleanControlBox {
+        if (cacheBooleanOff) {
+            return new BooleanControlBox(element, role, getBoolean, setBoolean, initializer);
+        }
+        // 1. Create the Boolean box, or find the one that already exists for this element and role
+        const creator = () => new BooleanControlBox(element, role, getBoolean, setBoolean, initializer);
+        const result: BooleanControlBox = this.find<BooleanControlBox>(element, role, creator, boolCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.$getBoolean = getBoolean;
+        result.$setBoolean = setBoolean;
         FreUtils.initializeObject(result, initializer);
 
         return result;
@@ -377,9 +404,7 @@ export class BoxFactory {
     }
 }
 
-// BoxFactory.cachesOff();
-
-const equals = (a, b) => {
+const equals = (a, b): boolean | any => {
     if (isNullOrUndefined(a) && !isNullOrUndefined(b) || !isNullOrUndefined(a) && isNullOrUndefined(b)) {
         return false;
     }

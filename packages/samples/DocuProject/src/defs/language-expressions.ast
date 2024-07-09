@@ -19,6 +19,9 @@ expression NumberLiteral base Literal {
 expression PercentageLiteral base Literal {
     value: number;
 }
+expression BooleanLiteral base Literal {
+    value: boolean;
+}
 
 // Basic binary expressions: plus, minus, multiply, divide
 abstract binary expression BinaryExpression base DocuExpression {

@@ -3,7 +3,7 @@ import { FreUtils } from "../../util";
 import { FreNode } from "../../ast";
 
 export class LabelBox extends Box {
-    readonly kind = "LabelBox";
+    readonly kind: string = "LabelBox";
 
     private $label: string = "";
 

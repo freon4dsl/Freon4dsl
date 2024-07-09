@@ -1,5 +1,4 @@
 import {
-    BoolKeywords,
     ListInfo,
     ListJoinType,
     FreEditClassifierProjection,
@@ -13,7 +12,7 @@ import {
     FreEditTableProjection,
     FreEditUnit,
     FreOptionalPropertyProjection,
-    ExtraClassifierInfo
+    ExtraClassifierInfo, BoolKeywords, FreEditProjectionGroup, BoolDisplayType
 } from "../../metalanguage";
 import {
     FreMetaBinaryExpressionConcept,
@@ -32,7 +31,7 @@ import {
     LOG2USER,
     Names,
     FREON_CORE,
-    Roles
+    Roles, ParseLocationUtil
 } from "../../../utils";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
@@ -42,6 +41,7 @@ export class ProjectionTemplate {
     // The values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords').
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
+    private stdBoolDisplayType: string = "text";
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
     private modelImports: string[] = [];    // imports from ../language/gen
@@ -49,22 +49,29 @@ export class ProjectionTemplate {
     private configImports: string[] = [];   // imports from ../config/gen
     // Information about the use of projections from superconcepts or interfaces is also collected during the content
     // creation. This avoids the generation of unused classes and methods.
-    private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being usedknownBoxProjections
+    private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
     private supersUsed: FreMetaClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
 
     setStandardBooleanKeywords(editorDef: FreEditUnit) {
-        // get the standard labels for true and false
-        const stdLabels: BoolKeywords | undefined = editorDef.getDefaultProjectiongroup()?.standardBooleanProjection;
-        if (!!stdLabels) {
-            this.trueKeyword = stdLabels.trueKeyword;
-            this.falseKeyword = stdLabels.falseKeyword ? stdLabels.falseKeyword : '';
+        // get the standard labels for true and false, and the standard display type (checkbox, radio, text, etc.) for boolean values
+        const defProjGroup: FreEditProjectionGroup | undefined = editorDef.getDefaultProjectiongroup();
+        if (!!defProjGroup) {
+            const stdLabels: BoolKeywords | undefined = defProjGroup.standardBooleanProjection?.keywords;
+            if (!!stdLabels) {
+                this.trueKeyword = stdLabels.trueKeyword;
+                this.falseKeyword = stdLabels.falseKeyword ? stdLabels.falseKeyword : "false";
+            }
+            const displayType: string | undefined = defProjGroup.standardBooleanProjection?.displayType;
+            if (!!displayType) {
+                this.stdBoolDisplayType = displayType;
+            }
         }
     }
 
     generateBoxProvider(language: FreMetaLanguage, concept: FreMetaClassifier, editDef: FreEditUnit, extraClassifiers: FreMetaClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", "FreBoxProvider", "FreProjectionHandler"]);
+        this.coreImports.push(...["Box", "BoxUtil", "BoxFactory", Names.FreNode, "FreBoxProvider", "FreProjectionHandler", Names.FreLanguage]);
 
         // see which projections there are for this concept
         // myProjections: all non table projections
@@ -405,7 +412,6 @@ export class ProjectionTemplate {
      *
      * @param item      The property projection
      * @param elementVarName
-     * @param mainLabel
      * @param language
      * @private
      */
@@ -414,6 +420,9 @@ export class ProjectionTemplate {
         const property: FreMetaProperty | undefined = item.property?.referred;
         if (property === null || property === undefined) {
             return '';
+        }
+        if (property.name === "yieldsProfit") {
+            console.log("yieldsProfit is in projection: " + ParseLocationUtil.location(item));
         }
         if (property instanceof FreMetaPrimitiveProperty) {
             result += this.primitivePropertyProjection(property, elementVarName, item.boolInfo, item.listInfo);
@@ -483,7 +492,6 @@ export class ProjectionTemplate {
      * @param item
      * @param propertyConcept   The property for which the projection is generated.
      * @param elementVarName    The name of the element parameter of the getBox projection method.
-     * @param language
      * @private
      */
     private generatePartAsList(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string): string {
@@ -538,7 +546,7 @@ export class ProjectionTemplate {
         return joinEntry;
     }
 
-    private primitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolKeywords, listInfo?: ListInfo): string {
+    private primitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType, listInfo?: ListInfo): string {
         if (property.isList) {
             return this.listPrimitivePropertyProjection(property, element, boolInfo, listInfo);
         } else {
@@ -546,7 +554,7 @@ export class ProjectionTemplate {
         }
     }
 
-    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolKeywords): string {
+    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType): string {
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type) {
@@ -558,18 +566,51 @@ export class ProjectionTemplate {
             case FreMetaPrimitiveType.boolean:
                 let trueKeyword: string = this.trueKeyword;
                 let falseKeyword: string = this.falseKeyword;
-                if (!!boolInfo) {
-                    // TODO this should probably get a new type of box
-                    trueKeyword = boolInfo.trueKeyword;
-                    falseKeyword = boolInfo.falseKeyword ? boolInfo.falseKeyword : '';
+                let displayType: string = '';
+                displayType = this.getDisplayTypeFrom(this.stdBoolDisplayType);
+                if (property.name === "yieldsProfit") {
+                    console.log("yieldsProfit.boolInfo: " + boolInfo?.toString());
                 }
-                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition})`;
+                if (!!boolInfo) {
+                    if (!!boolInfo.keywords) {
+                        trueKeyword = boolInfo.keywords.trueKeyword;
+                        falseKeyword = boolInfo.keywords.falseKeyword ? boolInfo.keywords.falseKeyword : "undefined";
+                    }
+                    displayType = this.getDisplayTypeFrom(boolInfo.displayType);
+                }
+                ListUtil.addIfNotPresent(this.coreImports, "BoolDisplay");
+                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, ${displayType})`;
             default:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
         }
     }
 
-    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolKeywords, listInfo?: ListInfo): string {
+    private getDisplayTypeFrom(inType: string): string {
+        let result: string;
+        switch (inType) {
+            // "text" / "checkbox" / "radio" / "switch" / "inner-switch"
+            case "text":
+                result = "BoolDisplay.SELECT";
+                break;
+            case "checkbox":
+                result = "BoolDisplay.CHECKBOX";
+                break;
+            case "radio":
+                result = "BoolDisplay.RADIO_BUTTON";
+                break;
+            case "switch":
+                result = "BoolDisplay.SWITCH";
+                break;
+            case "inner-switch":
+                result = "BoolDisplay.INNER_SWITCH";
+                break;
+            default:
+                result = "BoolDisplay.SELECT";
+        }
+        return result;
+    }
+
+    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType, listInfo?: ListInfo): string {
         let direction: string = "verticalList";
         if (!!listInfo && listInfo.direction === FreEditProjectionDirection.Horizontal) {
             direction = "horizontalList";
