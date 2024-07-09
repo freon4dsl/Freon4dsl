@@ -17,9 +17,11 @@
 
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions Ignored because everything is in the test environment -->
 <div id="mockComponent"
      on:keypress={onKeyPress}
      on:keydown={onKeyDown}
+     role="group"
 >
     <slot  />
 </div>

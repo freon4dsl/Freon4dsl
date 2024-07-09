@@ -54,10 +54,10 @@ export abstract class FreBoxProvider {
     /**
      * Returns the content of the box that is returned by box() (or .box).
      * See the comment there.
-     * This method should be overwritten by each box provider.
+     * This method should be overridden by each box provider.
      * @param projectionName
      */
-    // @ts-ignore
+    // @ts-ignore parameter is to be overridden
     protected getContent(projectionName: string): Box {
         return new LabelBox(this._element, "unknown-projection", () => "Content should be determined by the appropriate subclass of FreBoxProvider.");
     }
@@ -103,7 +103,8 @@ export abstract class FreBoxProvider {
                     ownerBoxProvider.projection(),
                     ownerDescriptor.propertyName
                 );
-                if (ownerRequired === null || ownerRequired === undefined) {
+                // TODO ownerRequired === "" should never happen, so this is a hack and the sourcfe should be found.
+                if (ownerRequired === null || ownerRequired === undefined || ownerRequired === "") {
                     // No requirement from owner projection: just find the first projection in the active list of projections
                     this.usedProjection = this.findProjectionToUse(false);
                 } else {

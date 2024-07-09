@@ -3,8 +3,8 @@
 # Freon, previously know as ProjectIt
 Projectional Editor for the Web. The current release (version 0.6.0-beta.0) can be found on npm.
 
-This beta release supports [LIonWeb](https://github.com/LIonWeb-org) (de)serialization. 
-As LIonWeb is in motion, excpect this release to change according to LIonWeb changes before it becomes final. 
+This beta release supports [LionWeb](https://github.com/LionWeb-io) (de)serialization. 
+As LionWeb is in motion, excpect this release to change according to LionWeb changes before it becomes final. 
 
 ## What is Freon
 
@@ -59,8 +59,8 @@ And run all tests  with:
     npm run prepare-app
     npm run dev
 ```
-This will open a browser with the example from the playground package on 
-the URL displayed: `http://localhost:8000/`. The example and all other projects in playground are
+This will open a browser with the example from the samples/Example package on 
+the URL displayed: `http://localhost:5000/`. The example and all other projects in samples are
 work in progress.
 
 ## Source organisation

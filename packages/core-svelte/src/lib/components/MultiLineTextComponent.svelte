@@ -4,12 +4,12 @@
 
 <script lang="ts">
 	import { afterUpdate, onMount } from "svelte";
-	import { componentId } from "./svelte-utils/index.js";
+	import { componentId } from "$lib/index.js";
 	import { FreEditor, FreLogger, MultiLineTextBox } from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";
 	// Probably needed to code/encode HTML inside <TextArea>
-	import { replaceHTML } from "./svelte-utils/index.js";
+	// import { replaceHTML } from "./svelte-utils/index.js";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
     const LOGGER = new FreLogger("MultiLineTextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -22,9 +22,8 @@
     // Local variables
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
-    let textArea: HTMLAreaElement  ; 	// the teaxt area element on the screen
+    let textArea: HTMLTextAreaElement; 		// the text area element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
-
 
 	/**
 	 * When this component is mounted, the setFocus and setCaret functions are
@@ -80,7 +79,7 @@
 	}
 
 	function onKeyDown(keyEvent: KeyboardEvent) {
-		LOGGER.log("Key Evenbt: " + keyEvent.code)
+		LOGGER.log("Key Event: " + keyEvent.code)
 		keyEvent.stopPropagation()
 	}
 

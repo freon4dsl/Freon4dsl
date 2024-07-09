@@ -2,11 +2,16 @@ editor specials
 
 BaseProduct {[
     /* In this projection 'self.parts' is always shown according to the projection */
-    /* defined for concept InsurancePart in the editor 'comments'.                 */
+    /* defined for concept InsurancePart in the editor 'specials'.                 */
     Base Products ${self.name} for ${self.theme}
+        is still under construction: ${self.isUnderConstruction switch}
+        is approved level1: ${self.isApprovedLevel1 radio}
+        is approved level2: ${self.isApprovedLevel2 inner-switch}
+        is approved level3: ${self.isApprovedLevel3 checkbox}
+        yields profit: ${self.yieldsProfit}
         ${self.parts:comments}
 ]}
 
 Entity {[
-    ${self.isCompany [COMPANY | PERSON]} ${self.name}
+    ${self.isCompany inner-switch [COMPANY | PERSON]} ${self.name}
 ]}

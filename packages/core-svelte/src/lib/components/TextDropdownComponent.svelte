@@ -124,7 +124,7 @@
         const result: SelectOption[] = [];
         filteredOptions.forEach( option => {
             if (seen.includes(option.label)) {
-                console.error("Option " + JSON.stringify(option) + " is a duplicate");
+                LOGGER.error("Option " + JSON.stringify(option) + " is a duplicate");
             } else {
                 seen.push(option.label);
                 result.push(option)
@@ -287,7 +287,9 @@
         isEditing = true;
         dropdownShown = true;
         editor.selectElementForBox(box);
-        allOptions = getOptions();
+        if (!allOptions) {
+            allOptions = getOptions();
+        }
         if (!!event) {
             if ( text === undefined || text === null) {
                 filteredOptions = allOptions.filter(o => true);
@@ -394,6 +396,7 @@
       on:blur={onBlur}
       on:contextmenu={(event) => endEditing()}
       class="dropdown"
+      role="none"
 >
     <TextComponent
             bind:isEditing={isEditing}

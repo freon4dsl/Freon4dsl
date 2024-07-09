@@ -3,10 +3,10 @@ import { FreUtils } from "../../util/index";
 import { Box } from "./Box";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("MultiLineTextBox");
+const LOGGER: FreLogger = new FreLogger("MultiLineTextBox");
 
 export class MultiLineTextBox extends Box {
-    kind = "MultiLineTextBox";
+    kind: string = "MultiLineTextBox";
     placeHolder: string = "type text";
     $getText: () => string;
     $setText: (newValue: string) => void;

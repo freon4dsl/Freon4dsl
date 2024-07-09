@@ -4,7 +4,7 @@ import { GridCellBox } from "./GridCellBox";
 import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
 
 export class TableCellBox extends GridCellBox {
-    kind = "TableCellBox";
+    kind: string = "TableCellBox";
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
     constructor(node: FreNode,
