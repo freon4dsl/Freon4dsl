@@ -80,7 +80,7 @@ export default {
 		}),
 		injectProcessEnv({
 			NODE_ENV: 'development',
-			NODE_PORT: '3005'
+			NODE_PORT: '3002'
 		}),
 
 		// In dev mode, call `npm run start` once

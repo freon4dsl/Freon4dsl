@@ -1,67 +1,501 @@
 {
-   "$typename": "Part",
-   "name": "Home",
-   "part": {
-      "$typename": "BaseProduct",
-      "name": "home1",
-      "parts": [
-         {
-            "$typename": "InsurancePart",
-            "name": "breakingAndEntering",
-            "isApproved": true,
-            "statisticalRisk": {
-               "$typename": "PercentageLiteral",
-               "value": 20
-            },
-            "maximumPayOut": {
-               "$typename": "EuroLiteral",
-               "euros": 250000,
-               "cents": 0
-            }
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-91",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-Part"
          },
-         {
-            "$typename": "InsurancePart",
-            "name": "fire",
-            "isApproved": false,
-            "statisticalRisk": {
-               "$typename": "PercentageLiteral",
-               "value": 10
-            },
-            "maximumPayOut": {
-               "$typename": "EuroLiteral",
-               "euros": 250000,
-               "cents": 0
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "TODO_set-correct-key"
+               },
+               "value": "Home"
             }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-Part-part"
+               },
+               "children": [
+                  "ID-92"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-92",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-BaseProduct"
          },
-         {
-            "$typename": "InsurancePart",
-            "name": "flooding",
-            "isApproved": true,
-            "statisticalRisk": {
-               "$typename": "PercentageLiteral",
-               "value": 20
-            },
-            "maximumPayOut": {
-               "$typename": "EuroLiteral",
-               "euros": 250000,
-               "cents": 0
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-name"
+               },
+               "value": "home1"
             }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-parts"
+               },
+               "children": [
+                  "ID-93",
+                  "ID-96",
+                  "ID-99",
+                  "ID-102"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-theme"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "HomeTheme",
+                     "reference": "ID-9"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-91"
+      },
+      {
+         "id": "ID-93",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-InsurancePart"
          },
-         {
-            "$typename": "InsurancePart",
-            "name": "stormAndLightning",
-            "isApproved": true,
-            "statisticalRisk": {
-               "$typename": "PercentageLiteral",
-               "value": 20
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-name"
+               },
+               "value": "breakingAndEntering"
             },
-            "maximumPayOut": {
-               "$typename": "EuroLiteral",
-               "euros": 250000,
-               "cents": 0
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-isApproved"
+               },
+               "value": "true"
             }
-         }
-      ],
-      "theme": "HomeTheme"
-   }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-statisticalRisk"
+               },
+               "children": [
+                  "ID-94"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-maximumPayOut"
+               },
+               "children": [
+                  "ID-95"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-92"
+      },
+      {
+         "id": "ID-94",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-PercentageLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-PercentageLiteral-value"
+               },
+               "value": "20"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-93"
+      },
+      {
+         "id": "ID-95",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-EuroLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-euros"
+               },
+               "value": "250000"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-cents"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-93"
+      },
+      {
+         "id": "ID-96",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-InsurancePart"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-name"
+               },
+               "value": "fire"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-isApproved"
+               },
+               "value": "false"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-statisticalRisk"
+               },
+               "children": [
+                  "ID-97"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-maximumPayOut"
+               },
+               "children": [
+                  "ID-98"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-92"
+      },
+      {
+         "id": "ID-97",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-PercentageLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-PercentageLiteral-value"
+               },
+               "value": "10"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-96"
+      },
+      {
+         "id": "ID-98",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-EuroLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-euros"
+               },
+               "value": "250000"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-cents"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-96"
+      },
+      {
+         "id": "ID-99",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-InsurancePart"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-name"
+               },
+               "value": "flooding"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-isApproved"
+               },
+               "value": "true"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-statisticalRisk"
+               },
+               "children": [
+                  "ID-100"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-maximumPayOut"
+               },
+               "children": [
+                  "ID-101"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-92"
+      },
+      {
+         "id": "ID-100",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-PercentageLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-PercentageLiteral-value"
+               },
+               "value": "20"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-99"
+      },
+      {
+         "id": "ID-101",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-EuroLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-euros"
+               },
+               "value": "250000"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-cents"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-99"
+      },
+      {
+         "id": "ID-102",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-InsurancePart"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-name"
+               },
+               "value": "stormAndLightning"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-isApproved"
+               },
+               "value": "true"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-statisticalRisk"
+               },
+               "children": [
+                  "ID-103"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePart-maximumPayOut"
+               },
+               "children": [
+                  "ID-104"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-92"
+      },
+      {
+         "id": "ID-103",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-PercentageLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-PercentageLiteral-value"
+               },
+               "value": "20"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-102"
+      },
+      {
+         "id": "ID-104",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-EuroLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-euros"
+               },
+               "value": "250000"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-cents"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-102"
+      }
+   ]
 }

@@ -33,10 +33,8 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
         console.error(`ServerCommunication ${severity}: ${msg}`);
     }
 
-    async loadModelList(modelListCallback: (names: string[]) => void) {
-        modelListCallback([
-            modelName
-        ]);
+    async loadModelList(): Promise<string[]> {
+        return [modelName];
     }
 
     // @ts-ignore

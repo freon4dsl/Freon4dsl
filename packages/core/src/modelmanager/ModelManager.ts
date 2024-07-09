@@ -117,33 +117,32 @@ export class ModelManager {
      * Load the list of existing models from the server.
      */
     async loadModelList() {
-        await this.serverCommunication.loadModelList((names: string[]) => {
-            if (names.length > 0) {
-                this._allModels = names;
-            } else {
-                this._allModels = [];
-            }
-            this.allModelsChanged(this)
-        });
+        const names = await this.serverCommunication.loadModelList()
+        if (names.length > 0) {
+            this._allModels = names;
+        } else {
+            this._allModels = [];
+        }
+        this.allModelsChanged(this)
     }
 
-    /**
+     /**
      * Creates a new model
      * @param modelName
      */
     async newModel(modelName: string) {
         LOGGER.log("new model called: " + modelName);
         // save the old current unit, if there is one
-        // await this.saveCurrentUnit();
+        await this.saveCurrentUnit();
         // create a new model on the server
         await this.serverCommunication.createModel(modelName)
         // create a new model in memory
-        await this.openModel(modelName)
-        // this.currentModel = FreLanguage.getInstance().createModel();
-        // this._currentModel.name = modelName;
-        // this.currentUnit = null;
-        // this.currentModelChanged();
-        // this.currentUnitChanged();
+        // await this.openModel(modelName)
+        this.currentModel = FreLanguage.getInstance().createModel();
+        this._currentModel.name = modelName;
+        this.currentUnit = null;
+        this.currentModelChanged();
+        this.currentUnitChanged();
     }
 
     /**

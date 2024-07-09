@@ -31,14 +31,14 @@ export interface IServerCommunication {
      * @param unitName
      * @param unit
      */
-    putModelUnit(modelName: string, unitId: ModelUnitIdentifier, unit: FreNode);
+    putModelUnit(modelName: string, unitId: ModelUnitIdentifier, unit: FreNode): void;
 
     /**
      * Deletes the unit according to the data in 'modelInfo' from the server
      * @param modelName
      * @param unitName
      */
-    deleteModelUnit(modelName: string, unit: ModelUnitIdentifier);
+    deleteModelUnit(modelName: string, unit: ModelUnitIdentifier): void;
 
     /**
      * Renames 'unit' in model with name 'modelName' to 'newName'.
@@ -47,7 +47,7 @@ export interface IServerCommunication {
      * @param newName
      * @param unit
      */
-    renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode) ;
+    renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): void ;
 
     /**
      * Create a new model with name _modelName_.
@@ -59,13 +59,13 @@ export interface IServerCommunication {
      * Deletes the complete model with name 'modelName', including all its modelunits
      * @param modelName
      */
-    deleteModel(modelName: string);
+    deleteModel(modelName: string): void;
 
     /**
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback
      */
-    loadModelList(modelListCallback: (names: string[]) => void);
+    loadModelList(): Promise<string[]>
 
     /**
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
@@ -98,7 +98,7 @@ export interface IServerCommunication {
      * @param modelName
      * @param unit
      */
-    createModelUnit(modelName: string, unit: FreModelUnit): Promise<void>
+    createModelUnit(modelName: string, unit: FreModelUnit): void
     
     /**
      * Reads all interfaces for all available units of model 'modelName' and calls loadCallback for each.

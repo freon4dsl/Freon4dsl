@@ -1,15 +1,15 @@
 // This file contains all methods to connect the webapp to the Freon generated language editorEnvironment and to the server that stores the models
+import { InMemoryModel } from "$lib/language/InMemoryModel.js"
 import {
     FreError,
     FreErrorSeverity,
     FreLogger
-} from "@freon4dsl/core";
+} from "@freon4dsl/core"
 import type {
     FreEnvironment,
     FreNode,
     FreModel,
     FreModelUnit,
-    FreNamedNode,
     FreOwnerDescriptor,
     IServerCommunication
 } from "@freon4dsl/core";
@@ -27,7 +27,7 @@ import { modelErrors } from "../components/stores/InfoPanelStore.js";
 import { runInAction } from "mobx";
 import {WebappConfigurator} from "../WebappConfigurator.js";
 
-const LOGGER = new FreLogger("EditorState"); // .mute();
+const LOGGER = new FreLogger("EditorState").mute();
 
 export class EditorState {
     private static instance: EditorState | null = null;
@@ -39,9 +39,31 @@ export class EditorState {
         return EditorState.instance;
     }
 
-    currentUnit: FreModelUnit = null;
-    currentModel: FreModel = null;
-    hasChanges: boolean = false; // TODO get the value from the editor
+    modelStore: InMemoryModel
+    modelChanged = (store: InMemoryModel): void => {
+        LOGGER.log("modelChanged")
+        currentModelName.set(store?.model?.name)
+        unitNames.set(store.getUnitIdentifiers());
+        units.set(store.getUnits())
+    }
+    
+    private constructor() {
+        this.modelStore = new InMemoryModel(this.langEnv, this.serverCommunication)
+        this.modelStore.addCurrentModelListener(this.modelChanged)
+    }
+    
+    private __currentUnit: FreModelUnit = null;
+    get currentUnit(): FreModelUnit {
+        return this.__currentUnit
+    }
+    set currentUnit(unit: FreModelUnit) {
+        this.__currentUnit = unit
+        currentUnitName.set({name: this?.currentUnit?.name, id: this?.currentUnit?.freId()});
+    }
+    
+    get currentModel(): FreModel {
+        return this.modelStore.model
+    }
     private langEnv: FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
     private serverCommunication: IServerCommunication = WebappConfigurator.getInstance().serverCommunication;
 
@@ -53,14 +75,11 @@ export class EditorState {
         LOGGER.log("new model called: " + modelName);
         editorProgressShown.set(true);
         // save the old current unit, if there is one
-        this.saveCurrentUnit();
+        await this.saveCurrentUnit();
         // reset all visible information on the model and unit
         this.resetGlobalVariables();
         // create a new model
-        this.serverCommunication.createModel(modelName)
-        this.currentModel = this.langEnv.newModel(modelName);
-        currentModelName.set(this.currentModel.name);
-        
+        await this.modelStore.createModel(modelName)
         editorProgressShown.set(false);
     }
 
@@ -73,40 +92,27 @@ export class EditorState {
         LOGGER.log("EditorState.openmodel(" + modelName + ")");
         editorProgressShown.set(true);
         this.resetGlobalVariables();
-
         // save the old current unit, if there is one
         await this.saveCurrentUnit();
         // create new model instance in memory and set its name
-        this.currentModel = this.langEnv.newModel(modelName);
-        currentModelName.set(modelName);
-        // fill the new model with the units loaded from the server
-        const unitIdentifiers = await this.serverCommunication.loadUnitList(modelName)
-            unitNames.set(unitIdentifiers);
-            if (!!unitIdentifiers && unitIdentifiers.length > 0) {
-                // load the first unit completely and show it
-                // load all others units as interfaces
-                let first: boolean = true;
-                for (const unitIdentifier of unitIdentifiers) {
-                    if (first) {
-                        const unit = await  this.serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit //, (unit: FreModelUnit) => {
-                            this.currentModel.addUnit(unit);
-                            this.currentUnit = unit;
-                            currentUnitName.set({name: this.currentUnit.name, id: this.currentUnit.freId()});
-                        // });
-                        first = false;
-                    } else {
-                        // serverCommunication.loadModelUnitInterface(modelName, unitIdentifier, (unit: FreModelUnit) => {
-                        //     this.currentModel.addUnit(unit);
-                        //     this.setUnitLists();
-                        // });
-                        const unit = await this.serverCommunication.loadModelUnit(modelName, unitIdentifier) as FreModelUnit
-                        this.currentModel.addUnit(unit);
-                    }
+        await this.modelStore.openModel(modelName)
+        const unitIdentifiers = this.modelStore.getUnitIdentifiers()
+        LOGGER.log("unit identifiers: " + JSON.stringify(unitIdentifiers));
+        if (!!unitIdentifiers && unitIdentifiers.length > 0) {
+            // load the first unit completely and show it
+            let first: boolean = true;
+            for (const unitIdentifier of unitIdentifiers) {
+                if (first) {
+                    const unit = this.modelStore.getUnitByName(unitIdentifier.name)
+                    LOGGER.log("UnitId " + unitIdentifier.name + " unit is " + unit?.name)
+                    this.currentUnit = unit;
+                    first = false;
                 }
-                EditorState.getInstance().showUnitAndErrors(this.currentUnit);
-            } else {
-                editorProgressShown.set(false);
             }
+            EditorState.getInstance().showUnitAndErrors(this.currentUnit);
+        } else {
+            editorProgressShown.set(false);
+        }
 
     }
 
@@ -129,29 +135,9 @@ export class EditorState {
     async newUnit(newName: string, unitType: string) {
         LOGGER.log("EditorCommuncation.newUnit: unitType: " + unitType + ", name: " + newName);
         editorProgressShown.set(true);
-
         // save the old current unit, if there is one
         await this.saveCurrentUnit();
-
-        // replace the current unit by its interface
-        // and create a new unit named 'newName'
-        const oldName: string = get(currentUnitName)?.name;
-        if (!!oldName && oldName !== "") {
-            // get the interface of the current unit from the server
-            // await serverCommunication.loadModelUnitInterface(
-            //     get(currentModelName),
-            //     get(currentUnitName),
-            //     (oldUnitInterface: FreModelUnit) => {
-            //         if (!!oldUnitInterface) {
-            //             // swap current unit with its interface in the in-memory model
-            //             EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
-            //         }
-            //         this.createNewUnit(newName, unitType);
-            //     });
-            await this.createNewUnit(newName, unitType)
-        } else {
-            await this.createNewUnit(newName, unitType);
-        }
+        await this.createNewUnit(newName, unitType)
     }
 
     /**
@@ -163,11 +149,9 @@ export class EditorState {
      */
     private async createNewUnit(newName: string, unitType: string) {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName);
-        // create a new unit and add it to the current model
-        const newUnit = EditorState.getInstance().currentModel.newUnit(unitType);
+        const newUnit = await this.modelStore.newUnit(newName, unitType)
         if (!!newUnit) {
             newUnit.name = newName;
-            await this.serverCommunication.createModelUnit(EditorState.getInstance().currentModel.name, newUnit);
             // show the new unit in the editor
             this.showUnitAndErrors(newUnit);
         } else {
@@ -179,15 +163,13 @@ export class EditorState {
      * Pushes the current unit to the server
      */
     async saveCurrentUnit() {
-        LOGGER.log("EditorState.saveCurrentUnit: " + get(currentUnitName)?.name);
-        const unit: FreNamedNode = this.langEnv.editor.rootElement as FreNamedNode;
+        LOGGER.log("saveCurrentUnit: " + get(currentUnitName)?.name);
+        const unit: FreModelUnit = this.langEnv.editor.rootElement as FreModelUnit;
         if (!!unit) {
-            if (!!this.currentModel?.name && this.currentModel?.name.length) {
+            if (!!this.currentModel?.name && this.currentModel?.name?.length) {
                 if (!!unit.name && unit.name.length > 0) {
-                    await this.serverCommunication.putModelUnit(this.currentModel.name, {name: unit.name, id: unit.freId()}, unit);
+                    await this.modelStore.saveUnit(unit)
                     currentUnitName.set({ name: unit.name, id: unit.freId() }); // just in case the user has changed the name in the editor
-                    EditorState.getInstance().setUnitLists();
-                    this.hasChanges = false;
                 } else {
                     setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
                 }
@@ -202,12 +184,9 @@ export class EditorState {
     async renameModelUnit(unit: FreModelUnit, newName: string) {
         console.log("Units before: " + this.currentModel.getUnits().map((u: FreModelUnit) => u.name));
         const oldName: string = unit.name;
-        // if (unit === this.currentUnit) {
-        //     await this.saveCurrentUnit();
-        // }
         unit.name = newName;
+        // TODO Use model store
         this.serverCommunication.renameModelUnit(this.currentModel.name, oldName, newName, unit);
-        this.setUnitLists();
         console.log("Units after: " + this.currentModel.getUnits().map((u: FreModelUnit) => u.name));
     }
 
@@ -219,23 +198,20 @@ export class EditorState {
         LOGGER.log("delete called for unit: " + unit.name);
 
         // get rid of the unit on the server
-        await this.serverCommunication.deleteModelUnit(get(currentModelName), {name: unit.name, id: unit.freId()});
-        // get rid of old model unit from memory
-        this.currentModel.removeUnit(unit);
+        await this.modelStore.deleteUnit(unit)
         // if the unit is shown in the editor, get rid of that one, as well
-        if (this.currentUnit === unit) {
+        if (this.currentUnit.freId() === unit.freId()) {
             this.langEnv.editor.rootElement = null;
             noUnitAvailable.set(true);
             modelErrors.set([]);
         }
         // get rid of the name in the navigator
-        currentUnitName.set(null);
-        this.setUnitLists();
+        currentUnitName.set({name: "", id: "???"});
     }
 
     /**
      * Whenever there is a change in the units of the current model,
-     * this function is called. It sets the store varible 'units' to the
+     * this function is called. It sets the store variable 'units' to the
      * right value.
      * @private
      */
@@ -260,48 +236,7 @@ export class EditorState {
         }
         // save the old current unit, if there is one
         await this.saveCurrentUnit();
-        // newUnit is stored in the in-memory model as an interface only
-        // we must get the full unit from the server and make a swap
-        // const newCompleteUnit = await this.serverCommunication.loadModelUnit(this.currentModel.name, {name: newUnit.name, id: newUnit.freId()}) as FreModelUnit; //, (newCompleteUnit: FreModelUnit) => {
-        // await this.swapInterfaceAndUnits(newCompleteUnit, newUnit);
-        // });
         this.showUnitAndErrors(newUnit);
-    }
-
-    /**
-     * Swaps 'newUnitInterface', which is part of the in-memory current model, for the complete unit 'newCompleteUnit'.
-     * Next, the current -complete- unit is swapped with its interface from the server.
-     * This makes sure that the state of in-memory model is such that only the unit that is shown in the editor
-     * is fully present, all other units are interfaces only.
-     * @param newCompleteUnit
-     * @param newUnitInterface
-     * @private
-     */
-    private async swapInterfaceAndUnits(newCompleteUnit: FreModelUnit, newUnitInterface: FreModelUnit) {
-        LOGGER.log("swapInterfaceAndUnits called");
-        if (!!EditorState.getInstance().currentUnit) {
-            // get the interface of the current unit from the server
-            await this.serverCommunication.loadModelUnitInterface(
-                EditorState.getInstance().currentModel.name,
-                { name: EditorState.getInstance().currentUnit.name, id: EditorState.getInstance().currentUnit.freId()},
-                (oldUnitInterface: FreModelUnit) => {
-                    if (!!newCompleteUnit) { // the new unit which has been retrieved from the server
-                        if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
-                            // swap old unit with its interface in the in-memory model
-                            EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
-                        }
-                        // swap the new unit interface with the full unit in the in-memory model
-                        EditorState.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
-                        // show the new unit in the editor
-                        this.showUnitAndErrors(newCompleteUnit);
-                    }
-                });
-        } else {
-            // swap the new unit interface with the full unit in the in-memory model
-            EditorState.getInstance().currentModel.replaceUnit(newUnitInterface, newCompleteUnit);
-            // show the new unit in the editor
-            this.showUnitAndErrors(newCompleteUnit);
-        }
     }
 
     /**
@@ -310,7 +245,7 @@ export class EditorState {
      * @param content
      * @param metaType
      */
-    unitFromFile(fileName: string, content: string, metaType: string, showIt: boolean) {
+    async unitFromFile(fileName: string, content: string, metaType: string, showIt: boolean) {
         // save the old current unit, if there is one
         this.saveCurrentUnit();
         let unit: FreModelUnit = null;
@@ -326,29 +261,13 @@ export class EditorState {
                     // set elem in editor
                     this.showUnitAndErrors(unit);
                 }
-                this.serverCommunication.putModelUnit(this.currentModel.name, {name: unit.name, id: unit.freId()}, unit);
+                await this.modelStore.addUnit(unit)
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
                 setUserMessage(e.message, FreErrorSeverity.Error);
             }
         }
-        // if (elem) {
-        // TODO find way to get interface without use of the server, because of concurrency error
-        // swap old unit with its interface in the in-memory model
-        // this.serverCommunication.loadModelUnitInterface(
-        //     EditorState.getInstance().currentModel.name,
-        //     EditorState.getInstance().currentUnit.name,
-        //     (oldUnitInterface: FreNamedNode) => {
-        //         if (!!oldUnitInterface) { // the old unit has been previously stored, and there is an interface available
-        //             // swap old unit with its interface in the in-memory model
-        //             EditorState.getInstance().currentModel.replaceUnit(EditorState.getInstance().currentUnit, oldUnitInterface);
-        //         }
-        //     });
-
-        // add the new unit to the current model
-        // this.currentModel.addUnit(elem);
-        // }
     }
 
     private makeUnitName(fileName: string): string {
@@ -384,22 +303,16 @@ export class EditorState {
      * @private
      */
     private showUnitAndErrors(newUnit: FreModelUnit) {
-        LOGGER.log("showUnitAndErrors called, unitName: " + newUnit.name);
+        LOGGER.log("showUnitAndErrors called, unitName: " + newUnit?.name);
         if (!!newUnit) {
             noUnitAvailable.set(false);
             this.langEnv.editor.rootElement = newUnit;
             this.currentUnit = newUnit;
-            currentUnitName.set({name: newUnit.name, id: newUnit.freId()});
-            this.setUnitLists();
-            this.hasChanges = true;
             this.getErrors();
         } else {
             noUnitAvailable.set(true);
             this.langEnv.editor.rootElement = null;
             this.currentUnit = null;
-            currentUnitName.set(null);
-            this.setUnitLists();
-            this.hasChanges = false;
         }
         editorProgressShown.set(false);
     }

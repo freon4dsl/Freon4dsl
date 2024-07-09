@@ -1,11 +1,10 @@
 import { ClientResponse, ListPartitionsResponse, RepositoryClient } from "@lionweb/repository-client"
-import process from "process"
+// import process from "process"
 import { FreModelUnit, FreNamedNode, FreNode } from "../ast/index"
 import { FreLogger } from "../logging/index";
 import { FreLionwebSerializer, FreSerializer } from "../storage/index";
 import { FreErrorSeverity } from "../validator/index";
 import type { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
-import { ServerCommunication } from "./ServerCommunication";
 import { collectUsedLanguages } from "./UsedLanguages"
 
 const LOGGER = new FreLogger("LionWebRepositoryCommunication"); 
@@ -34,7 +33,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     //     }
     // }
 
-    private _nodePort = process.env.NODE_PORT || 3005;
+    private _nodePort = 3005 // process.env.NODE_PORT || 3005;
     private _SERVER_IP = `http://127.0.0.1`;
     private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
 
@@ -126,16 +125,15 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback
      */
-    async loadModelList(modelListCallback: (names: string[]) => void) {
+    async loadModelList(): Promise<string[]> {
         LOGGER.log(`loadModelList`);
         const repos = await this.client.dbAdmin.listRepositories()
         const res = repos.body.repositoryNames 
         if (!!res) {
-            await modelListCallback(res);
+            return res;
         } else {
-            await modelListCallback([]);
+            return [];
         }
-        return []
     }
 
     /**
@@ -165,7 +163,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
             if (!!res) {
                 try {
                     console.log(JSON.stringify(res, null, 2))
-                    let unit = ServerCommunication.lionweb_serial.toTypeScriptInstance(res.body.chunk);
+                    let unit = this.lionweb_serial.toTypeScriptInstance(res.body.chunk);
                     return unit as FreNode;
                 } catch (e) {
                     LOGGER.error( "loadModelUnit, " + e.message);
@@ -186,26 +184,6 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      */
     // @ts-ignore
     async loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (unit: FreModelUnit) => void) {
-    // async loadModelUnitInterface(modelName: string, unitName: ModelUnitIdentifier, loadCallback: (piUnitInterface: FreNamedNode) => void) {
-        // LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unitName}`);
-        // if (!!unitName && unitName.length > 0) {
-        //     const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
-        //     if (!!res) {
-        //         try {
-        //             let unit: FreNode;
-        //             if (res["$typename"] === undefined) {
-        //                 unit = this.lionweb_serial.toTypeScriptInstance(res);
-        //             } else {
-        //                 unit = ServerCommunication.serial.toTypeScriptInstance(res);
-        //             }
-        //             // const model = ServerCommunication.serial.toTypeScriptInstance(res);
-        //             loadCallback(unit as FreNamedNode);
-        //         } catch (e) {
-        //             LOGGER.error( "loadModelUnitInterface, " + e.message);
-        //             this.onError(e.message, FreErrorSeverity.NONE);
-        //         }
-        //     }
-        // }
     }
   
     // @ts-ignore
@@ -219,7 +197,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     }
 
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode) {
-        LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
+        LOGGER.log(`renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         this.client.repository = modelName
         // put the unit and its interface under the new name
         this.putModelUnit(modelName, {name: newName, id: unit.freId()}, unit);

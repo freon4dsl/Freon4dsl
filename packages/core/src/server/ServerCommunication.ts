@@ -52,7 +52,7 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
-    private _nodePort = process.env.NODE_PORT || 8001;
+    private _nodePort = process.env.NODE_PORT || 3005;
     private _SERVER_IP = `http://127.0.0.1`;
     private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
 
@@ -75,7 +75,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param unitId
      * @param unit
      */
-    async putModelUnit(modelName: string, unitId: ModelUnitIdentifier, unit: FreNamedNode) {
+    async putModelUnit(modelName: string, unitId: ModelUnitIdentifier, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitId.name}`);
         if (!!unitId.name && unitId.name.length > 0 && unitId.name.match(/^[a-z,A-Z][a-z,A-Z0-9_\-\.]*$/)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
@@ -111,7 +111,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param modelName
      * @param unitName
      */
-    async deleteModelUnit(modelName: string, unit: ModelUnitIdentifier) {
+    async deleteModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<void> {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             await this.fetchWithTimeout<any>(`deleteModelUnit`, `folder=${modelName}&name=${unit.name}`);
@@ -123,7 +123,7 @@ export class ServerCommunication implements IServerCommunication {
      * Deletes the complete model named 'modelName'.
      * @param modelName
      */
-    async deleteModel(modelName: string ) {
+    async deleteModel(modelName: string ): Promise<void> {
         LOGGER.log(`ServerCommunication.deleteModel ${modelName}`);
         if (!!modelName && modelName.length > 0) {
             await this.fetchWithTimeout<any>(`deleteModel`, `folder=${modelName}`);
@@ -134,13 +134,13 @@ export class ServerCommunication implements IServerCommunication {
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback
      */
-    async loadModelList(modelListCallback: (names: string[]) => void) {
+    async loadModelList(): Promise<string[]> {
         LOGGER.log(`ServerCommunication.loadModelList`);
         const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`);
         if (!!res) {
-            modelListCallback(res);
+            return res
         } else {
-            modelListCallback([]);
+            return [];
         }
     }
 
@@ -275,7 +275,7 @@ export class ServerCommunication implements IServerCommunication {
         this.onError(errorMess, FreErrorSeverity.NONE);
     }
 
-    async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode) {
+    async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         // put the unit and its interface under the new name
         this.putModelUnit(modelName, {name: newName, id: unit.freId()}, unit);

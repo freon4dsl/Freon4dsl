@@ -12,7 +12,7 @@
                                     use:Anchor={{addClass: addClass, removeClass: removeClass}}
                                     bind:this={anchor[index]}
                             >
-                                <Item activated={(unit.name === $currentUnitName.name)}
+                                <Item activated={(unit.name === $currentUnitName?.name)}
                                       on:SMUI:action={() => menus[index].setOpen(true)}>
                                     <Text>{unit.name}</Text>
                                 </Item>

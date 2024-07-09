@@ -82,15 +82,14 @@
     };
 
     // new model menuitem
-    const changeModel = () => {
+    const changeModel = async () => {
 		// console.log("FileMenu.changeModel");
         // get list of models from server
-        WebappConfigurator.getInstance().serverCommunication.loadModelList((names: string[]) => {
-            if (names.length > 0) {
-                $modelNames = names;
-            }
-            $openModelDialogVisible = true;
-        });
+        const names = await WebappConfigurator.getInstance().serverCommunication.loadModelList()
+		if (names.length > 0) {
+			$modelNames = names;
+		}
+		$openModelDialogVisible = true;
     }
 
     // new unit menuitem
@@ -115,17 +114,16 @@
     }
 
     // delete model menuitem
-    const deleteModel = () => {
+    const deleteModel = async () => {
         // console.log("FileMenu.deleteModel");
         // get list of models from server
-		WebappConfigurator.getInstance().serverCommunication.loadModelList((names: string[]) => {
-            // if list not empty, show dialog
-            if (names.length > 0) {
-                $modelNames = names;
-                $deleteModelDialogVisible = true;
-                // console.log("dialog visible is true")
-            }
-        });
+		const names = await WebappConfigurator.getInstance().serverCommunication.loadModelList()
+		// if list not empty, show dialog
+		if (names.length > 0) {
+			$modelNames = names;
+			$deleteModelDialogVisible = true;
+			// console.log("dialog visible is true")
+		}
     }
 
     // import model unit menuitem
