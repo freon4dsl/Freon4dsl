@@ -152,32 +152,29 @@ export function addRepeatingEvents(studyConfiguration: StudyConfiguration, perio
   return studyConfiguration;
 }
 
-export function addScheduledEventAndInstanceToTimeline(studyConfiguration: StudyConfiguration, periodNumber: number, eventNumberWithinPeriod: number, dayEventCompleted: number, timeline: Timeline, nameOfPeriodToAddEventTo?: string) : EventInstance {
-  let eventInstance = null;
-  if (nameOfPeriodToAddEventTo) {
-    let scheduledPeriod = null;
-    let currentPeriodInstance = timeline.getPeriodInstanceFor(nameOfPeriodToAddEventTo);
-    if (currentPeriodInstance === undefined) {
-      let configuredPeriod = studyConfiguration.periods[periodNumber];
-      scheduledPeriod = new ScheduledPeriod(configuredPeriod);
-      let periodInstance = new PeriodInstance(scheduledPeriod, dayEventCompleted);
-      periodInstance.setState(TimelineInstanceState.Active);
-      timeline.addEvent(periodInstance);
-    } else {
-      scheduledPeriod = currentPeriodInstance.scheduledPeriod;
-    }
-    let scheduledEvent = scheduledPeriod.scheduledEvents[eventNumberWithinPeriod];
-    scheduledEvent.state = ScheduledEventState.Scheduled;
-    let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
-    eventInstance.state = TimelineInstanceState.Completed;
-    timeline.addEvent(eventInstance);
-  } else { // TODO: drop this path after all the tests that didn't set the period are updated
-    let scheduledEvent = new ScheduledEvent(studyConfiguration.periods[0].events[eventNumberWithinPeriod]);
-    scheduledEvent.state = ScheduledEventState.Scheduled;
-    let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
-    eventInstance.state = TimelineInstanceState.Completed;
-    timeline.addEvent(eventInstance);
+/*
+ * Add to the timeline an Event and if not already there add the Period it belongs to.
+ * - studyConfiguration: The StudyConfiguration containing the DSL defined Period and Event for which the scheduled Event and Period are added.
+ * - periodNumber: The index of the Period in the StudyConfiguration.periods array.
+ *  
+*/
+export function addEventAndInstanceToTimeline(studyConfiguration: StudyConfiguration, periodNumber: number, eventName: string, dayEventCompleted: number, timeline: Timeline, eventState: ScheduledEventState, periodState: TimelineInstanceState, nameOfPeriodToAddEventTo: string) : EventInstance {
+  let scheduledPeriodToAddEventTo = null;
+  let currentPeriodInstance = timeline.getPeriodInstanceFor(nameOfPeriodToAddEventTo);
+  if (currentPeriodInstance === undefined) { // The period is not already on the timeline, so add it
+    let configuredPeriod = studyConfiguration.periods[periodNumber]; 
+    scheduledPeriodToAddEventTo = new ScheduledPeriod(configuredPeriod);
+    let periodInstance = new PeriodInstance(scheduledPeriodToAddEventTo, dayEventCompleted);
+    periodInstance.setState(periodState);
+    timeline.addEvent(periodInstance);
+  } else {
+    scheduledPeriodToAddEventTo = currentPeriodInstance.scheduledPeriod; // Add the new event to the period that was previously added to the timeline
   }
+  let scheduledEvent = scheduledPeriodToAddEventTo.getScheduledEvent(eventName);
+  scheduledEvent.state = eventState;
+  let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
+  eventInstance.state = TimelineInstanceState.Completed;
+  timeline.addEvent(eventInstance);
   return eventInstance;
 }
 

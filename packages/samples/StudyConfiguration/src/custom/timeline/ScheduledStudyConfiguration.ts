@@ -64,7 +64,7 @@ export class ScheduledStudyConfiguration {
 
   getEventsOnScheduledOnASpecificDay(): ScheduledEvent[]  {
     let firstPeriod = this.getFirstScheduledPeriod(); //TODO: check if in any period?
-    let eventsOnADayInFirstPeriod = firstPeriod.scheduledEvents.filter(scheduledEvent => scheduledEvent.configuredEvent.schedule.eventStart instanceof Day);
+    let eventsOnADayInFirstPeriod = firstPeriod.getAllScheduledEvents().filter(scheduledEvent => scheduledEvent.configuredEvent.schedule.eventStart instanceof Day);
     console.log("getEventsOnScheduledOnASpecificDay # eventsOnADayInFirstPeriod: " + eventsOnADayInFirstPeriod.length);
     return eventsOnADayInFirstPeriod;
   }

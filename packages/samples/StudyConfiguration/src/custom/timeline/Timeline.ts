@@ -94,10 +94,11 @@ export class Timeline extends RtObject{
   }
 
   numberCompletedInstancesOf(scheduledEvent: ScheduledEvent) {
+    // what happens when event is a period
     let count = 0;
     for (const day of this.days) {
-      for (const event of day.events as EventInstance[]) {
-        if (event.scheduledEvent.getName() === scheduledEvent.getName() && event.state === TimelineInstanceState.Completed) {
+      for (const event of day.events) {
+        if (event instanceof(EventInstance) && event.scheduledEvent.getName() === scheduledEvent.getName() && event.state === TimelineInstanceState.Completed) {
           count++;
         }
       }
