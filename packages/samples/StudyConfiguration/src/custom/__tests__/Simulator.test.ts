@@ -234,8 +234,6 @@ describe ("Access to simulation data", () => {
   });
     
   describe("Generate the Timeline", () => {
-
-    var studyConfiguration: StudyConfiguration;
   
 let expectedTimelineDataAsScript = 
 `  var groups = new vis.DataSet([
@@ -262,7 +260,7 @@ var items = new vis.DataSet([
 ])
 `;
 
-    it.skip("generate a chart for a two visit timeline for a visit 7 days after the end of the first visit", () => {
+    it("generate a chart for a two visit timeline for a visit 7 days after the end of the first visit", () => {
         // GIVEN a study configuration with one period and two events
         studyConfiguration = utils.addAPeriodAndTwoEvents(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
 

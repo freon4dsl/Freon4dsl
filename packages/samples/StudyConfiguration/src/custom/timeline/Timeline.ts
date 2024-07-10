@@ -10,7 +10,6 @@ import { ScheduledStudyConfiguration } from './ScheduledStudyConfiguration';
 export class Timeline extends RtObject{
 
   days: TimelineDay[] = [];
-  phaseOccurrences: PhaseOccurrence[] = [];
   currentDay: number = 0;
 
   constructor() {
@@ -24,6 +23,11 @@ export class Timeline extends RtObject{
   newEventInstance(scheduledEvent: ScheduledEvent, dayEventWillOccurOn?: number, startDay?: number, endDay?: number) {
     return new EventInstance(scheduledEvent, dayEventWillOccurOn, startDay, endDay);
   }
+
+  getEventsForDay(day: number) {
+    return this.days.find(d => d.day === day).events.map(event => {event instanceof(EventInstance)});
+  }
+
 
   getDays() {
     return this.days;
@@ -207,22 +211,36 @@ export class TimelineDay {
   constructor(day: number) {
     this.day = day;
   }
-}
 
-/*
- * A PhaseOccurrence represents a phase of the study that occurred on the timeline.
- */
-export class PhaseOccurrence {
-  name: string;
-  startDay: number;
-  endDay: number;
-  startEvent: EventInstance;
-
-  constructor(name: string, startEvent: EventInstance, startDay: number, endDay: number) {
-    this.name = name;
-    this.startDay = startDay;
-    this.endDay = endDay;
+  getEventInstances() : EventInstance[] {
+    let result = this.events.filter(event => event instanceof EventInstance) as EventInstance[];
+    return result;
   }
-}
+
+  getPeriodInstances() {
+    return this.events.filter(event => {event instanceof(PeriodInstance)}) as PeriodInstance[];
+  }}
+
+
+  // Used Period instead of Phase so delete the following...
+// /*
+//  * A PhaseOccurrence represents a phase of the study that occurred on the timeline.
+//  */
+// export class PhaseOccurrence {
+//   name: string;
+//   startDay: number;
+//   endDay: number;
+//   startEvent: EventInstance;
+
+//   constructor(name: string, startEvent: EventInstance, startDay: number, endDay: number) {
+//     this.name = name;
+//     this.startDay = startDay;
+//     this.endDay = endDay;
+//   }
+
+//   getEvents() {
+//     return this.startEvent;
+//   } 
+// }
 
 
