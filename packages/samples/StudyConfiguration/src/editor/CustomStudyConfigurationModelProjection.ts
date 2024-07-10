@@ -11,7 +11,8 @@ import {
     FreLanguage,
     FRE_BINARY_EXPRESSION_LEFT,
     FRE_BINARY_EXPRESSION_RIGHT,
-    HorizontalListBox, FreProjection, FreProjectionHandler, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil //, ExpandableBox
+    HorizontalListBox, FreProjection, FreProjectionHandler, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil, //, ExpandableBox
+    BoolDisplay
 } from "@freon4dsl/core";
 import { Description, Period, Event } from "../language/gen";
 
@@ -120,7 +121,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 "",
                 [
                     BoxUtil.labelBox(event, "Checklist:", "top-1-line-9-item-0"),
-                    BoxUtil.booleanBox(event, "showSequenced", { yes: "YES", no: "NO" }),
+                    BoxUtil.booleanBox(event, "showSequenced", { yes: "YES", no: "NO" },BoolDisplay.CHECKBOX),
                     BoxUtil.labelBox(event, "Allow Sequencing", "top-1-line-9-item-2")
                 ],
                 { selectable: false }
