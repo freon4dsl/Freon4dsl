@@ -10,9 +10,8 @@ export class TimelineScriptTemplate {
 
     var template = 
 `  var groups = new vis.DataSet([
-    { "content": "<b>Phase</b>", "id": "Phase", className: 'phase' },${timeline.getDays().map((timelineDay,counter) => timelineDay.getPeriodInstances().map((periodInstance) => `
-    { "content": "${periodInstance.getName()}", "id": "${periodInstance.getName()}" },`).join('')).join('')}
-    ${timeline.getDays().map((timelineDay,counter) => timelineDay.getEventInstances().map((eventInstance) => `
+    { "content": "<b>Phase</b>", "id": "Phase", className: 'phase' },
+     ${timeline.getDays().map((timelineDay,counter) => timelineDay.getEventInstances().map((eventInstance) => `
       { "content": "${eventInstance.getName()}", "id": "${eventInstance.getName()}" },`).join('')).join('')}
     { "content": "Any Day", "id": "AnyDay", className: 'any-day' },
   ]);

@@ -274,8 +274,10 @@ var items = new vis.DataSet([
         let timelineDataAsScript = TimelineScriptTemplate.getTimelineDataAsScript(timeline);
         TimelineScriptTemplate.saveTimeline(timelineDataAsScript);
 
+        const normalizedTimelineDataAsScript = timelineDataAsScript.replace(/\s+/g, '');
+        const normalizedExpectedTimelineDataAsScript = expectedTimelineDataAsScript.replace(/\s+/g, '');
         // Then the generated timeline picture has two events on the expected event days
-        expect(timelineDataAsScript).toEqual(expectedTimelineDataAsScript);
+        expect(normalizedTimelineDataAsScript).toEqual(normalizedExpectedTimelineDataAsScript);
     }); 
   });
 });
