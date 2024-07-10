@@ -218,7 +218,7 @@ export class TimelineDay {
   }
 
   getPeriodInstances() {
-    return this.events.filter(event => {event instanceof(PeriodInstance)}) as PeriodInstance[];
+    return this.events.filter(event => event instanceof(PeriodInstance)) as PeriodInstance[];
   }}
 
 
