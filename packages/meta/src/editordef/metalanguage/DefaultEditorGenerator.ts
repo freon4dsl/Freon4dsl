@@ -7,7 +7,7 @@ import {
     FreMetaProperty
 } from "../../languagedef/metalanguage";
 import {
-    BoolKeywords,
+    BoolDisplayType,
     ExtraClassifierInfo,
     ListInfo,
     FreEditClassifierProjection,
@@ -16,7 +16,7 @@ import {
     FreEditProjectionLine,
     FreEditProjectionText,
     FreEditPropertyProjection,
-    FreEditUnit, FreOptionalPropertyProjection
+    FreEditUnit, FreOptionalPropertyProjection, BoolKeywords
 } from "../metalanguage";
 import {LOG2USER, Names} from "../../utils";
 import { EditorDefaults } from "./EditorDefaults";
@@ -53,7 +53,9 @@ export class DefaultEditorGenerator {
             // create a default projection group
             defaultGroup = new FreEditProjectionGroup();
             defaultGroup.name = Names.defaultProjectionName;
-            defaultGroup.standardBooleanProjection = new BoolKeywords();
+            defaultGroup.standardBooleanProjection = new BoolDisplayType();
+            defaultGroup.standardBooleanProjection.keywords = new BoolKeywords();
+            defaultGroup.standardBooleanProjection.keywords.falseKeyword = "false";
             defaultGroup.standardReferenceSeparator = EditorDefaults.standardReferenceSeparator;
             editor.projectiongroups.push(defaultGroup);
             defaultGroup.owningDefinition = editor;

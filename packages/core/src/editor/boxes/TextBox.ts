@@ -4,7 +4,7 @@ import { FreNode } from "../../ast";
 import { Box } from "./Box";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("TextBox");
+const LOGGER: FreLogger = new FreLogger("TextBox");
 
 export enum CharAllowed {
     OK,
@@ -14,7 +14,7 @@ export enum CharAllowed {
 }
 
 export class TextBox extends Box {
-    kind = "TextBox";
+    kind: string = "TextBox";
     /**
      * If true, the element will be deleted when the text becomes
      * empty because of removing the last character in the text.

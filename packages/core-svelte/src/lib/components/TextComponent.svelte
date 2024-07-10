@@ -371,7 +371,7 @@
 									let execresult: FrePostAction = null;
 									runInAction(() => {
 										runInAction(() => {
-											const command = matchingOption.action.command(box);
+											const command = matchingOption.action.command();
 											execresult = command.execute(box, event.key, editor, 0);
 										});
 										if (!!execresult) {
@@ -441,7 +441,7 @@
 	}
 
 	/**
-	 * When setting the focus programatically, the 'inputElement' variable is not immediately set.
+	 * When setting the focus programmatically, the 'inputElement' variable is not immediately set.
 	 * It may be null or undefined! Therefore, we need this check to set the focus.
  	 */
 	beforeUpdate(() => {
@@ -538,7 +538,7 @@
 
 	let widthSpan: HTMLSpanElement;
 
-	function onInput(event: InputEvent) {
+	function onInput(event: InputEvent & { currentTarget: HTMLInputElement }) {
 		setInputWidth();
 	}
 
@@ -546,7 +546,8 @@
 </script>
 
 <!-- todo there is a double selection here: two borders are showing -->
-<span on:click={onClick} id="{id}">
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
+<span on:click={onClick} id="{id}" role="none">
 	{#if isEditing}
 		<span class="inputtext">
 			<input type="text"
@@ -566,12 +567,14 @@
 		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
 		     But ... this is only a problem when this component is inside a draggable element (like List or table)
 		-->
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 		<span class="{box.role} text-box-{boxType} text"
               on:click={startEditing}
               bind:this={spanElement}
 			  contenteditable=true
 			  spellcheck=false
-              id="{id}-span">
+              id="{id}-span"
+			  role="none">
 			{#if !!text && text.length > 0}
 				{text}
 			{:else}

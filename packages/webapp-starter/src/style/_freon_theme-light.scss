@@ -227,6 +227,9 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
   --freon-verticallist-component-padding: 2px;
   --freon-verticallist-component-margin: 2px;
+
+  /* Boolean components */
+  --freon-boolean-accent-color: #{theme.$blue-800};
 }
 
 .gridcellOdd {

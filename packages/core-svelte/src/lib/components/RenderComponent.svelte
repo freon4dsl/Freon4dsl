@@ -23,7 +23,8 @@
         isSvgBox,
         FreEditor,
         FreLogger,
-        Box, isElementBox, isOptionalBox2, isMultiLineTextBox
+        Box, BoolDisplay, isBooleanControlBox,
+        isElementBox, isOptionalBox2, isMultiLineTextBox
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
@@ -39,11 +40,14 @@
     import TextDropdownComponent from "./TextDropdownComponent.svelte";
     import SvgComponent from "./SvgComponent.svelte";
     import { afterUpdate } from "svelte";
-    import { selectedBoxes } from "./svelte-utils/DropAndSelectStore.js";
-    import { componentId, setBoxSizes } from "./svelte-utils/index.js";
+    import { selectedBoxes } from "$lib/index.js";
+    import { componentId, setBoxSizes } from "$lib/index.js";
     import ElementComponent from "./ElementComponent.svelte";
+    import CheckBoxComponent from "$lib/components/CheckBoxComponent.svelte";
+    import RadioComponent from "$lib/components/RadioComponent.svelte";
+    import SwitchComponent from "$lib/components/SwitchComponent.svelte";
 
-    const LOGGER = new FreLogger("RenderComponent").mute();
+    const LOGGER = new FreLogger("RenderComponent");
 
     export let box: Box = null;
     export let editor: FreEditor;
@@ -66,7 +70,7 @@
         LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.freId() + '=' + b?.element?.freLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
         className = (isSelected ? "selected" : "unSelected");
-        if (!!element) { // upon initialization the element might by null
+        if (!!element) { // upon initialization the element might be null
             setBoxSizes(box, element.getBoundingClientRect());
         } else {
             LOGGER.log('No element for ' + box?.id + ' ' + box?.kind);
@@ -86,7 +90,7 @@
 
 </script>
 
-<!-- TableRows are not included here, because they use the CSS grid and tablecells must in HTML
+<!-- TableRows are not included here, because they use the CSS grid and table cells must in HTML
      always be directly under the main grid.
 -->
 <!-- ElementBoxes are without span, because they are not shown themselves.
@@ -95,13 +99,23 @@
 {#if isElementBox(box) }
     <ElementComponent box={box} editor={editor}/>
 {:else}
+    <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
     <span id={id}
           class="render-component {className}"
           on:click={onClick}
           bind:this={element}
+          role="group"
     >
         {#if box === null || box === undefined }
             <p class="error">[BOX IS NULL OR UNDEFINED]</p>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.CHECKBOX}
+            <CheckBoxComponent box={box} editor={editor}/>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.RADIO_BUTTON}
+            <RadioComponent box={box} editor={editor}/>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.SWITCH}
+            <SwitchComponent box={box} editor={editor} design="slider"/>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
+            <SwitchComponent box={box} editor={editor} design="inner"/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>
         {:else if isGridBox(box) }

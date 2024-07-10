@@ -28,7 +28,7 @@
     export let editor: FreEditor;
 
     let id = !!box ? componentId(box) : 'table-for-unknown-box';
-    let cells: GridCellBox[];
+    let cells: TableCellBox[];
     let templateColumns: string;
     let templateRows: string;
     let cssClass: string;
@@ -149,7 +149,6 @@
                 editor={editor}
                 parentComponentId={id}
                 parentOrientation={box.direction}
-                parentHasHeader={box.hasHeaders}
                 myMetaType={elementType}
                 on:dropOnCell={drop}/>
     {/each}

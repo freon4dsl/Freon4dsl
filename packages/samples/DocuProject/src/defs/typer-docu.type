@@ -60,6 +60,9 @@ NumberLiteral {
 PercentageLiteral {
     infertype PercentageType:Percentage;
 }
+BooleanLiteral {
+    infertype BooleanType:Boolean;
+}
 GenericLiteral {
     // Set{ 12, 14, 16, 18 }
     infertype GenericType {
