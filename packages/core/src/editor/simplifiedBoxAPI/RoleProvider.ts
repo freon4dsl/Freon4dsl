@@ -32,6 +32,10 @@ export class RoleProvider {
         return RoleProvider.startWithUpperCase(element.freLanguageConcept()) + element.freId() + "-indent-" + uid;
     }
 
+    public static group(element: FreNode, uid: string): string {
+        return RoleProvider.startWithUpperCase(element.freLanguageConcept()) + element.freId() + "-group-" + uid;
+    }
+
     static cell(owningConceptName: string, propertyName: string, rowIndex: number, columnIndex: number) {
         let roleName: string = RoleProvider.startWithUpperCase(owningConceptName) + "-" + propertyName;
         roleName += "-row-" + rowIndex + "-column-" + columnIndex;

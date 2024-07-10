@@ -9,6 +9,7 @@ import { FreScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
 import { EmptyLineBox } from "../boxes";
 import { FreBoxProvider, FreProjectionHandler } from "../projections";
+// import { BlobOptions } from "buffer";
 
 export class FreListInfo {
     text: string;
@@ -222,13 +223,7 @@ export class BoxUtil {
      * @param scoper
      * @param index
      */
-    static referenceBox(
-        node: FreNode,
-        propertyName: string,
-        setFunc: (selected: string) => void,
-        scoper: FreScoper,
-        index?: number
-    ): Box {
+    static referenceBox(node: FreNode, propertyName: string, setFunc: (selected: string) => void, scoper: FreScoper, index?: number): Box {
         const propType: string = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
         if (!propType) {
             throw new Error("Cannot find property type '" + propertyName + "'");
@@ -302,20 +297,28 @@ export class BoxUtil {
         });
     }
 
-    static indentBox(element: FreNode, indent: number, uid: string, childBox: Box): Box {
+    static groupBox(node: FreNode, label: string, level: number, uid: string, childBox: Box, selectable?: boolean): Box {
+        let _selectable: boolean = false;
+        if (selectable !== undefined && selectable !== null && selectable) {
+            _selectable = true;
+        }
+        const roleName: string = RoleProvider.group(node, uid) + "-" + this.makeKeyName(label);
+        return BoxFactory.group(node, roleName, label, level, childBox, {
+            selectable: _selectable
+        });
+    }
+
+    static indentBox(element: FreNode, indent: number, fullWidth: boolean = false, uid: string, childBox: Box): Box {
         return BoxFactory.indent(
             element,
             RoleProvider.indent(element, uid),
             indent,
+            fullWidth,
             childBox
         );
     }
 
-    static verticalPartListBox(element: FreNode,
-                               list: FreNode[],
-                               propertyName: string,
-                               listJoin: FreListInfo,
-                               boxProviderCache: FreProjectionHandler): VerticalListBox {
+    static verticalPartListBox(element: FreNode, list: FreNode[], propertyName: string, listJoin: FreListInfo, boxProviderCache: FreProjectionHandler): VerticalListBox {
         // make the boxes for the children
         let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
         // add a placeholder where a new element can be added
@@ -535,6 +538,10 @@ export class BoxUtil {
         const isList: boolean = propInfo.isList;
         const isPart: PropertyKind = propInfo.propertyKind;
         return { property, isList, isPart };
+    }
+
+    private static makeKeyName(value: string): string {
+        return value.replace(/ /g, "-").toLowerCase();
     }
 }
 

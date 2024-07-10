@@ -4,8 +4,8 @@ import { Box } from "./Box";
 /**
  * Box to indent another box with parameter "indent".
  */
-export class IndentBox extends Box {
-    readonly kind = "IndentBox";
+export class ExpandableBox extends Box {
+    readonly kind = "ExpandableBox";
 
     private $child: Box = null;
 
@@ -19,13 +19,8 @@ export class IndentBox extends Box {
         this.isDirty();
     }
 
-    indent: number = 4;
-    fullWidth: boolean = false;
-
-    constructor(node: FreNode, role: string, indent: number, fullWidth: boolean = false,  child: Box ) {
+    constructor(node: FreNode, role: string, child: Box) {
         super(node, role);
-        this.indent = indent;
-        this.fullWidth = fullWidth;
         this.child = child;
         this.selectable = false;
     }
@@ -50,6 +45,6 @@ export class IndentBox extends Box {
     }
 }
 
-export function isIndentBox(b: Box): b is IndentBox {
-    return b?.kind === "IndentBox"; // " b instanceof IndentBox;
+export function isExpandableBox(b: Box): b is ExpandableBox {
+    return b?.kind === "ExpandableBox"; // " b instanceof ExpandableBox;
 }

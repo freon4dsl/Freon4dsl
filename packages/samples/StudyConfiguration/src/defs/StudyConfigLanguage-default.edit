@@ -4,55 +4,44 @@ boolean [YES | NO] // are the strings used to display a boolean value
 
 StudyConfiguration {
     [
-
         STUDY NAME: ${name}
-
             Options:
                 ${showActivityDetails} Also Show Task Details
                 ${showSystems} Also Show Systems
          
-        =======================================
         STUDY PERIODS
-            ${periods }
+            ${periods}
 
-        =======================================
         TASK DETAILS
-            ${taskDetails }
+            ${taskDetails}
 
-        =======================================
         SYSTEM ACCESS DEFINITIONS
             ${systemAccesses}
 
-        =======================================
-        STAFFING
+         STAFFING
             ${staffing}
     ]
 }
+
 Period {
     [
-        ${name} Period
-        
+        Period: ${name}
         EVENTS
-
-            ${events }
-
+            ${events}
     ]
 }
+
 Event {
     [
-            ${name} Event
-
+            Event: ${name}
             Description: ${description}
-
             Schedule: 
                 ${schedule}
-
-            
 
             Checklist:    ${showSequenced} Allow Sequencing
                 ${checkList }
 
-    ]  trigger = "Visit"
+    ]  trigger = "Event"
 }
 
 CheckList {
@@ -71,17 +60,13 @@ Task {
 
 TaskDetail {
     [
-
-        
         ${name} TASK
             Intro: ${description}
             Decision: ${decision}
-
                 ${numberedSteps} Number the Steps when the Task is shown.
 
             Steps
                 ${steps}
-
     ]
 }
 
@@ -141,7 +126,6 @@ Person {
         Name: ${name}  ${useSystemContact} Use System Contact   Email: ${email}
                                                                 Phone: ${phoneNumber}
                                                                 Role : ${role} 
-
     ]
 }
 

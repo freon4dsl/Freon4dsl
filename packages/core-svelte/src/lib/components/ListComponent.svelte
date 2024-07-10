@@ -244,6 +244,7 @@
         border-style: var(--freon-horizontallist-component-border-style, solid);
         margin: var(--freon-horizontallist-component-margin, 1px);
         box-sizing: border-box;
+        height:100%;
     }
 
     .verticalList {
@@ -259,6 +260,7 @@
 
         /*margin-top: 10px;*/
         box-sizing: border-box;
+        width:100%;
     }
 </style>
 

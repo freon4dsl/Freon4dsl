@@ -548,7 +548,7 @@
 <!-- todo there is a double selection here: two borders are showing -->
 <span on:click={onClick} id="{id}">
 	{#if isEditing}
-		<span class="inputtext">
+		<span id="{id}" class="inputtext">
 			<input type="text"
                    class="inputtext"
 				   id="{id}-input"
@@ -591,7 +591,7 @@
 		border: none;
 		box-sizing: border-box;
 		padding: var(--freon-text-component-padding, 1px);
-		font-family: var(--freon-text-component-font-family, "Arial");
+		font-family: var(--freon-text-component-font-family, "Roboto");
 		font-size: var(--freon-text-component-font-size, 14pt);
 		font-weight: var(--freon-text-component-font-weight, inherit);
 		font-style: var(--freon-text-component-font-style, inherit);
@@ -607,7 +607,7 @@
 		margin: var(--freon-text-component-margin, 1px);
         border: none;
         background: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
-        font-family: var(--freon-text-component-font-family, "Arial");
+        font-family: var(--freon-text-component-font-family, "Roboto");
         font-size: var(--freon-text-component-font-size, 14pt);
         font-weight: var(--freon-text-component-font-weight, inherit);
         font-style: var(--freon-text-component-font-style, inherit);
@@ -616,7 +616,7 @@
     .text {
         color: var(--freon-text-component-color, blue);
         background: var(--freon-text-component-background-color, inherit);
-        font-family: var(--freon-text-component-font-family, "Arial");
+        font-family: var(--freon-text-component-font-family, "Roboto");
         font-size: var(--freon-text-component-font-size, 14pt);
         font-weight: var(--freon-text-component-font-weight, inherit);
         font-style: var(--freon-text-component-font-style, inherit);
@@ -629,7 +629,7 @@
 	.placeholder {
 		color: var(--freon-text-component-placeholder-color, blue);
 		background: var(--freon-text-component-background-color, inherit);
-		font-family: var(--freon-text-component-font-family, "Arial");
+		font-family: var(--freon-text-component-font-family, "Roboto");
 		font-size: var(--freon-text-component-font-size, 14pt);
 		font-weight: var(--freon-text-component-font-weight, inherit);
 		font-style: var(--freon-text-component-font-style, inherit);
@@ -641,7 +641,7 @@
 	.actionPlaceholder {
 		color: var(--freon-text-component-actionplaceholder-color, darkgrey);
 		background: var(--freon-text-component-background-color, inherit);
-		font-family: var(--freon-text-component-font-family, "Arial");
+		font-family: var(--freon-text-component-font-family, "Roboto");
 		font-size: var(--freon-text-component-font-size, 14pt);
 		font-weight: var(--freon-text-component-font-weight, inherit);
 		font-style: var(--freon-text-component-font-style, inherit);

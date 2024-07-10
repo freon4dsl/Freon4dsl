@@ -15,9 +15,12 @@
     export let editor: FreEditor;
 
     const LOGGER = new FreLogger("IndentComponent");
-
+ 
     const indentWidth: number = 8;
     let style: string = `margin-left: ${box?.indent * indentWidth}px;`;
+    if (box?.fullWidth) {
+         style = `width: 100%; ${style}`;
+    }
     let id: string = !!box ? componentId(box) : 'indent-for-unknown-box';
     let child: Box;
 
@@ -32,6 +35,7 @@
         LOGGER.log("REFRESH Indent for box (" + why + ") " + box?.role + " child " + box?.child?.role);
         child = box?.child;
         style = `margin-left: ${box?.indent * indentWidth}px;`
+        if (box?.fullWidth)  style = `width: 100%; ${style}`;
     };
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);

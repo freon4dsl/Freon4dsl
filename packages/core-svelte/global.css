@@ -1,3 +1,5 @@
+@import 'dist/tailwind.css';
+
 :root {
 	/* Projectional Editor "globals" */
 	--freon-colors-inverse_color: #d3e3fd;  /* Text color on non_normal background */
@@ -51,6 +53,15 @@
 	--freon-label-component-padding: 0px;
 	--freon-label-component-color: black;
 	--freon-label-component-background-color: inherit;
+
+    --freon-group-component-font-style: normal; 
+    --freon-group-component-font-weight: bold;
+    --freon-group-component-font-family: "Arial";
+    --freon-group-component-font-size: inherit;
+    --freon-group-component-margin: 0px;
+    --freon-group-component-padding: 0px;
+    --freon-group-component-color: black;
+    --freon-group-component-background-color: inherit;
 
 	--freon-grid-component-border-color: inherit;
 	--freon-grid-component-border-width: inherit;
@@ -160,4 +171,3 @@ button:focus {
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 }
-

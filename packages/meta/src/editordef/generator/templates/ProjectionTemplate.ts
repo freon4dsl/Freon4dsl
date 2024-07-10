@@ -103,7 +103,7 @@ export class ProjectionTemplate {
                 }
 
                 protected getContent(projectionName: string): Box {
-                // console.log("GET CONTENT " + this._element?.freId() + ' ' +  this._element?.freLanguageConcept() + ' ' + projectionName);
+                    // console.log("GET CONTENT " + this._element?.freId() + ' ' +  this._element?.freLanguageConcept() + ' ' + projectionName);
                     // see if we need to use a custom projection
                     if (!this.knownBoxProjections.includes(projectionName) && !this.knownTableProjections.includes(projectionName)) {
                         const BOX: Box = this.mainHandler.executeCustomProjection(this._element, projectionName);
@@ -345,7 +345,7 @@ export class ProjectionTemplate {
             }
             if (line.indent > 0) { // surround with indentBox
                 ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
-                result = `BoxUtil.indentBox(${elementVarName}, ${line.indent}, "${index}", ${result} )`;
+                result = `BoxUtil.indentBox(${elementVarName}, ${line.indent}, false, "${index}", ${result} )`;
             }
         }
         return result;

@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use 'global_color' as color-palette;
 
 @use '@material/theme/color-palette';
 
@@ -170,20 +171,23 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   box-sizing: border-box;
   /* Selectable */
   --freon-selected-background-color: rgba(211, 227, 253, 255);
-  --freon-selected-outline-color: #{theme.$blue-900};
+  --freon-selected-outline-color: var(--theme-colors-color:);
   --freon-selected-outline-width: 1px;
   --freon-selected-outline-style: solid;
+
   /* Normal text colors */
   //--freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
   --freon-editor-component-background-color: #{theme.$surface};              /* The background color of the editor */
   --freon-editor-component-color: #{--mdc-theme-primary};       /* The color of the text, unless set otherwise by the projection */
   --freon-editor-component-margin: 1px;
   --freon-editor-component-padding: 1px;
+  
   /* Fonts */
   --freon-editor-component-font-family: "Roboto";    /* The font family of the text, unless set otherwise by the projection */
   --freon-editor-component-font-size: 14px;          /* The font size of the text, unless set otherwise by the projection */
   --freon-editor-component-font-style: bold;       /* The font style of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-weight: bold;      /* The font weight of the text, unless set otherwise by the projection */
+  --freon-editor-component-font-weight: bold; 
+  
   /* Dropdown colors */
   --freon-dropdown-component-border-color: #{theme.$blue-900};
   --freon-dropdown-component-background-color: #{theme.$surface};
@@ -198,33 +202,46 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-dropdownitem-component-hover-color: inherit;
   --freon-dropdownitem-component-hover-background-color: inherit;
 
+   /* Text colors */
   --freon-text-component-color: #{theme.$blue-900};
   --freon-text-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
   --freon-text-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
   --freon-text-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
-  --freon-text-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
+  --freon-text-component-font-family: "Roboto";	/* The font size of the text, unless set otherwise by the projection */
   --freon-text-component-padding: 0px 1px 0px 1px;
   --freon-text-component-margin: 1px;
-
   --freon-text-component-placeholder-color: #{theme.$blue-900};
   --freon-text-component-actionplaceholder-color: darkgrey;
 
+  /* Label colors */
   --freon-label-component-color: black;
   --freon-label-component-background-color: inherit;
   --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-family: "Roboto";	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-padding: 0px 1px 0px 1px;
   --freon-label-component-margin: 1px;
+
+  /* Group colors */
+  --freon-group-component-font-style: normal; 
+  --freon-group-component-font-weight: bold;
+  --freon-group-component-font-family: "Roboto";
+  --freon-group-component-font-size: 1rem;
+  --freon-group-component-margin: 0px;
+  --freon-group-component-padding: 0px;
+  --freon-group-component-color: black;
+  --freon-group-component-background-color: inherit;  
 
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 
+  /* Horizontal list */
   --freon-horizontallist-component-padding: 1px;
   --freon-horizontallist-component-margin: 1px;
   --freon-horizontallist-component-align-items: center;
 
+  /* Vertical list */
   --freon-verticallist-component-padding: 2px;
   --freon-verticallist-component-margin: 2px;
 }

@@ -39,8 +39,7 @@ And run all tests  with:
 ```
 
 ## Starting the web app editor
-* Go to the package containing your language, this can e.g. be any package in 
-  and build the language
+* Go to the package containing your language, this can e.g. be any package and build the language. if you make changes to language then also do this run build
 ```bash
   cd Freon4dsl/packages/samples/StudyConfiguration
   npm run build
@@ -52,10 +51,22 @@ And run all tests  with:
   - Also open the file `src/starter.ts`
   - Change lines 7 and 8 to import the correct environment from your chosen language package.
 
+* Go to directory `packages/core-svelte` and build, and also if you make changes to the svelte components:
+```bash
+    cd Freon4dsl/packages/core-svelte
+    npm run build
+```
+
 * Go to directory `packages/server` and start the server:
 ```bash
     cd Freon4dsl/packages/server
     npm run start
+```
+
+* Goto the `webapp-lib` and build, and also ig you make changes to the core application
+```bash
+    cd Freon4dsl/packages/webapp-lib
+    npm run build
 ```
 
 * Goto the `webapp-starter` and start Freon:

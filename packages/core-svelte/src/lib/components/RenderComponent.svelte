@@ -12,6 +12,8 @@
         isActionBox,
         isEmptyLineBox,
         isGridBox,
+        isExpandableBox,
+        isGroupBox,
         isTableBox,
         isIndentBox,
         isLabelBox,
@@ -30,6 +32,8 @@
     import GridComponent from "./GridComponent.svelte";
     import IndentComponent from "./IndentComponent.svelte";
     import LabelComponent from "./LabelComponent.svelte";
+    import ExpandableComponent from "./ExpandableComponent.svelte";
+    import GroupComponent from "./GroupComponent.svelte";
     import LayoutComponent from "./LayoutComponent.svelte";
     import ListComponent from "./ListComponent.svelte";
     import OptionalComponent from "./OptionalComponent.svelte";
@@ -95,44 +99,48 @@
 {#if isElementBox(box) }
     <ElementComponent box={box} editor={editor}/>
 {:else}
-    <span id={id}
-          class="render-component {className}"
-          on:click={onClick}
-          bind:this={element}
-    >
-        {#if box === null || box === undefined }
-            <p class="error">[BOX IS NULL OR UNDEFINED]</p>
-        {:else if isEmptyLineBox(box) }
-            <EmptyLineComponent box={box}/>
-        {:else if isGridBox(box) }
-            <GridComponent box={box} editor={editor} />
-        {:else if isIndentBox(box) }
-            <IndentComponent box={box} editor={editor}/>
-        {:else if isLabelBox(box)}
-            <LabelComponent box={box}/>
-        {:else if isLayoutBox(box) }
-            <LayoutComponent box={box} editor={editor}/>
-        {:else if isListBox(box) }
-            <ListComponent box={box} editor={editor}/>
-        {:else if isOptionalBox(box) }
-            <OptionalComponent box={box} editor={editor}/>
-        {:else if isOptionalBox2(box) }
-            <OptionalComponentNew box={box} editor={editor}/>
-        {:else if isSvgBox(box) }
-            <SvgComponent box={box}/>
-        {:else if isTableBox(box) }
-            <TableComponent box={box} editor={editor} />
-        {:else if isTextBox(box) }
-            <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
-        {:else if isMultiLineTextBox(box) }
-            <MultiLineTextComponent box={box} editor={editor} text=""/>
-        {:else if isActionBox(box) || isSelectBox(box)}
-            <TextDropdownComponent box={box} editor={editor}/>
-        {:else}
-            <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
-            <p class="error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
-        {/if}
-    </span>
+    {#if isGroupBox(box)}
+        <span id={id} class="render-component {className} vertical-group" on:click={onClick} bind:this={element}>
+            <GroupComponent box={box} editor={editor}/>
+        </span>
+    {:else}
+        <span id={id} class="render-component {className}" on:click={onClick} bind:this={element}>
+            {#if box === null || box === undefined }
+                <p class="error">[BOX IS NULL OR UNDEFINED]</p>
+            {:else if isEmptyLineBox(box) }
+                <EmptyLineComponent box={box}/>
+            {:else if isGridBox(box) }
+                <GridComponent box={box} editor={editor} />
+            {:else if isIndentBox(box) }
+                <IndentComponent box={box} editor={editor}/>
+            {:else if isLabelBox(box)}
+                <LabelComponent box={box}/>
+            {:else if isExpandableBox(box) }
+                <ExpandableComponent box={box}/>
+            {:else if isLayoutBox(box) }
+                <LayoutComponent box={box} editor={editor}/>
+            {:else if isListBox(box) }
+                <ListComponent box={box} editor={editor}/>
+            {:else if isOptionalBox(box) }
+                <OptionalComponent box={box} editor={editor}/>
+            {:else if isOptionalBox2(box) }
+                <OptionalComponentNew box={box} editor={editor}/>
+            {:else if isSvgBox(box) }
+                <SvgComponent box={box}/>
+            {:else if isTableBox(box) }
+                <TableComponent box={box} editor={editor} />
+            {:else if isTextBox(box) }
+                <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
+            {:else if isMultiLineTextBox(box) }
+                <MultiLineTextComponent box={box} editor={editor} text=""/>
+            {:else if isActionBox(box) || isSelectBox(box)}
+                <TextDropdownComponent box={box} editor={editor}/>
+            {:else}
+                <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
+                <p class="error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
+            {/if}
+        </span>
+    {/if}
 {/if}
 
 <style>
@@ -152,5 +160,8 @@
         outline-color: var(--freon-selected-outline-color, darkblue);
         outline-style: var(--freon-selected-outline-style, solid);
         outline-width: var(--freon-selected-outline-width, 1px);
+    }
+    .vertical-group {
+        flex-direction: column; 
     }
 </style>

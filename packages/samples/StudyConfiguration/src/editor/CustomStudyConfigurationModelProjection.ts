@@ -13,7 +13,7 @@ import {
     FRE_BINARY_EXPRESSION_RIGHT,
     HorizontalListBox, FreProjection, FreProjectionHandler, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil //, ExpandableBox
 } from "@freon4dsl/core";
-import { Description, Period, Event } from "../language/gen";
+import { StudyConfiguration, Description, Period, Event } from "../language/gen";
 
 /**
  * Class CustomStudyConfigurationModelProjection provides an entry point for the language engineer to
@@ -27,8 +27,8 @@ import { Description, Period, Event } from "../language/gen";
 export class CustomStudyConfigurationModelProjection implements FreProjection {
     name: string = "Manual";
     handler: FreProjectionHandler;
-    // add your custom methods here
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
+        ["StudyConfiguration", this.createStudyConfiguration],
         ["Description", this.createDescription],
         ["Period", this.createPeriod],
         ["Event", this.createEvent],
@@ -44,17 +44,68 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
     }
 
     ////////////////////////////////////////////////////////////////////
+    createStudyConfiguration (element: StudyConfiguration): Box {
+        return BoxFactory.verticalLayout(element, "StudyConfiguration-overall", "", [
+            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-0"),
+            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-1", "",
+                [
+                    BoxUtil.labelBox(element, "STUDY NAME:", "top-1-line-1-item-0"),
+                    BoxUtil.textBox(element, "name"),
+                ],
+                { selectable: false },
+            ),
+            BoxUtil.indentBox(element, 4, true, "3",
+                BoxUtil.labelBox(element, "Options:", "top-1-line-3-item-0"),
+            ),
+            BoxUtil.indentBox( element, 8, true, "4",
+                BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "",
+                    [
+                        BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }),
+                        BoxUtil.labelBox(element, "Show Task Details", "top-1-line-4-item-1"),
+                    ],
+                    { selectable: false },
+                ),
+            ),
+            BoxUtil.indentBox(element, 8, true, "5",
+                BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "",
+                    [
+                        BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }),
+                        BoxUtil.labelBox(element, "Show Systems", "top-1-line-5-item-1"),
+                    ],
+                    { selectable: false },
+                ),
+            ),
+            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6"),
+            BoxUtil.groupBox(element, "STUDY PERIODS", 0, "study-periods-group",
+                BoxUtil.indentBox(element, 4, true, "9",
+                    BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
+                )
+            ),
+            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-10"),
+            BoxUtil.groupBox(element, "TASK DETAILS", 0, "task-details-group",
+                BoxUtil.indentBox(element, 4, true, "13",
+                    BoxUtil.verticalPartListBox(element, (element).taskDetails, "taskDetails", null, this.handler)
+                )
+            ),
+            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-14"),
+            BoxUtil.groupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
+                BoxUtil.indentBox(element, 4, true, "17",
+                    BoxUtil.verticalPartListBox(element, (element).systemAccesses, "systemAccesses", null,  this.handler)
+                )
+            ),
+            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-18"),
+            BoxUtil.groupBox(element, "STAFFING", 0, "staffing-group",
+                BoxUtil.indentBox(element, 4, true, "21",
+                    BoxUtil.getBoxOrAction(element, "staffing", "Staffing", this.handler)
+                )
+            ),
+        ]);
+    }
 
     createDescription (desc: Description): Box {
-        return BoxFactory.horizontalLayout(
-            desc,
-            "Description-hlist-line-0",
-            "",
+        return BoxFactory.horizontalLayout(desc, "Description-hlist-line-0", "",
             [
-                new MultiLineTextBox(desc, "study-part-description",
-                    () => { return desc.text},
-                    (t: string) => { desc.text = t}
-                )
+                new MultiLineTextBox(desc, "study-part-description", () => { return desc.text}, (t: string) => { desc.text = t})
             ],
             { selectable: false }
         );
@@ -62,45 +113,34 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
 
     createPeriod (period: Period): Box {
         return BoxFactory.verticalLayout(period, "Period-overall", "", [
-            BoxFactory.horizontalLayout(
-                period,
-                "Period-hlist-line-0",
-                "",
+            BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "",
                 [
-                    BoxUtil.labelBox(period, "Period2:", "top-1-line-0-item-1"),
-                    BoxUtil.textBox(period, "name")
-                    
+                    BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1"),
+                    BoxUtil.textBox(period, "name")                   
                 ],
                 { selectable: false }
             ),
-            BoxUtil.emptyLineBox(period, "Period-empty-line-1"),
-            BoxUtil.labelBox(period, "EVENTS2", "top-1-line-2-item-0"),
-            BoxUtil.indentBox(
-                period,
-                4,
-                "4",
-                BoxUtil.verticalPartListBox(period, period.events, "events", null, this.handler)
+            // BoxUtil.emptyLineBox(period, "Period-empty-line-1"),
+            // BoxUtil.labelBox(period, "EVENTS2", "top-1-line-2-item-0"),
+            BoxUtil.groupBox(period, "EVENTS", 0, "group-1-line-2-item-0",
+                BoxUtil.indentBox(period, 4, true, "4",
+                    BoxUtil.verticalPartListBox(period, period.events, "events", null, this.handler)
+                ) 
             ),
             BoxUtil.emptyLineBox(period, "Period-empty-line-5")
         ]);
     }
 
-
     createEvent (event: Event): Box {
         return BoxFactory.verticalLayout(event, "Event-overall", "", [
-            BoxFactory.horizontalLayout(
-                event,
-                "Event-hlist-line-0",
-                "",
+            BoxFactory.horizontalLayout(event, "Event-hlist-line-0", "",
                 [
-                    BoxUtil.labelBox(event, "Event2:", "top-1-line-0-item-1"),
-                    BoxUtil.textBox(event, "name")],
+                    BoxUtil.labelBox(event, "Event:", "top-1-line-0-item-1"),
+                    BoxUtil.textBox(event, "name")
+                ],
                { selectable: false }
             ),
-            BoxFactory.horizontalLayout(
-                event,
-                "Event-hlist-line-2",
-                "",
+            BoxFactory.horizontalLayout(event, "Event-hlist-line-2", "",
                 [
                     BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0"),
                     BoxUtil.getBoxOrAction(event, "description", "Description", this.handler)
@@ -108,16 +148,10 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 { selectable: false }
             ),
             BoxUtil.labelBox(event, "Schedule:", "top-1-line-4-item-0"),
-            BoxUtil.indentBox(
-                event,
-                4,
-                "5",
+            BoxUtil.indentBox(event, 4, true, "5",
                 BoxUtil.getBoxOrAction(event, "schedule", "EventSchedule", this.handler)
             ),
-            BoxFactory.horizontalLayout(
-                event,
-                "Event-hlist-line-9",
-                "",
+            BoxFactory.horizontalLayout(event, "Event-hlist-line-9", "",
                 [
                     BoxUtil.labelBox(event, "Checklist:", "top-1-line-9-item-0"),
                     BoxUtil.booleanBox(event, "showSequenced", { yes: "YES", no: "NO" }),
@@ -125,10 +159,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 ],
                 { selectable: false }
             ),
-            BoxUtil.indentBox(
-                event,
-                4,
-                "10",
+            BoxUtil.indentBox(event, 4, true, "10",
                 BoxUtil.getBoxOrAction(event, "checkList", "CheckList", this.handler)
             ),
             BoxUtil.emptyLineBox(event, "Event-empty-line-11")
