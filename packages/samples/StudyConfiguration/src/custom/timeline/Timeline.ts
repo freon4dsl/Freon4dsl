@@ -80,9 +80,13 @@ export class Timeline extends RtObject{
   // Return true if the event has already been completed on a previous day at least once
   hasCompletedInstanceOf(scheduledEvent: ScheduledEvent) {
     for (const day of this.days) {
-      for (const event of day.events as EventInstance[]) {
-        if (event.scheduledEvent.getName() === scheduledEvent.getName() && event.state === TimelineInstanceState.Completed) {
-          return true; // Exit nested loops early if we find a completed instance
+      for (const event of day.events) {
+        if (event instanceof(EventInstance)) {
+          let eventInstance = event as EventInstance;
+          console.log("hasCompletedInstanceOf scheduledEvent: " + scheduledEvent.getName() + " event: " + eventInstance.getName() + " state: " + eventInstance.state + " day: " + day.day);
+          if (eventInstance.scheduledEvent.getName() === scheduledEvent.getName() && event.state === TimelineInstanceState.Completed) {
+            return true; // Exit nested loops early if we find a completed instance
+          }
         }
       }
     }    
@@ -106,11 +110,17 @@ export class Timeline extends RtObject{
     return !this.hasCompletedInstanceOf(scheduledEvent);
   }
 
+  getPeriods() {
+    return this.days.flatMap(day => day.events.filter(event => event instanceof PeriodInstance));
+  }
+
+  getPeriodInstanceFor(scheduledPeriodName: string) {
+    return this.getPeriods().find(period => (period as PeriodInstance).scheduledPeriod.getName() === scheduledPeriodName) as PeriodInstance;
+  }
+
   // Return the first period that is active. There should be only one.
   getCurrentPeriod(): PeriodInstance {
-    let periodsOnTimeline = this.days.flatMap(day => day.events.filter(event => event instanceof PeriodInstance));
-    console.log("getCurrentPeriod # periodsOnTimeline: " + periodsOnTimeline.length);
-    let firstActivePeriodOnTimeline = periodsOnTimeline.find(period => (period as PeriodInstance).getState() === TimelineInstanceState.Active) as PeriodInstance;
+    let firstActivePeriodOnTimeline = this.getPeriods().find(period => (period as PeriodInstance).getState() === TimelineInstanceState.Active) as PeriodInstance;
     if (firstActivePeriodOnTimeline) {
       console.log("getCurrentPeriod firstActivePeriodOnTimeline: " + firstActivePeriodOnTimeline.getName());
     } else {

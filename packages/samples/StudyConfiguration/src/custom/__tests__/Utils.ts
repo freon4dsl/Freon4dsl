@@ -2,8 +2,9 @@ import * as Sim from "../simjs/sim.js"
 import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
 import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference, RepeatCondition, RepeatUnit } from "../../language/gen/index";
 import { FreNodeReference } from "@freon4dsl/core";
-import { EventInstance, TimelineInstanceState, Timeline } from "../timeline/Timeline";
+import { EventInstance, TimelineInstanceState, Timeline, PeriodInstance } from "../timeline/Timeline";
 import { ScheduledEvent, ScheduledEventState } from "../timeline/ScheduledEvent";
+import { ScheduledPeriod } from "../timeline/ScheduledPeriod";
 
 // Setup the sim.js environment and an empty StudyConfiguration.
 export function setupStudyConfiguration(): StudyConfiguration{
@@ -103,6 +104,7 @@ export function addEventsScheduledOffCompletedEvents(studyConfiguration: StudyCo
   let period = new Period(periodName);
   period.name = periodName;
   // Setup the study start event
+  console.log("Adding the first event: " + eventsToAdd[0].eventName + " day: " + eventsToAdd[0].eventDay);
   let dayEventSchedule = createEventScheduleStartingOnADay(eventsToAdd[0].eventName, eventsToAdd[0].eventDay);
   let previousEvent = createEventAndAddToPeriod(period, eventsToAdd[0].eventName, dayEventSchedule);
   studyConfiguration.periods.push(period);
@@ -135,8 +137,8 @@ export function addEventsScheduledOffCompletedEvents(studyConfiguration: StudyCo
     }
   });
   console.log("studyConfiguration # periods: " + studyConfiguration.periods.length );
-  console.log("studyConfiguration first period: " + studyConfiguration.periods[0].name);
-  console.log("studyConfiguration second period: " + studyConfiguration.periods[1].name);
+  console.log("studyConfiguration first period: " + studyConfiguration.periods[0].name + " # events:" + studyConfiguration.periods[0].events.length + " event name: " + studyConfiguration.periods[0].events[0].name);
+  console.log("studyConfiguration second period: " + studyConfiguration.periods[1].name + " # events:" + studyConfiguration.periods[0].events.length);
   return studyConfiguration;
 }
 
@@ -150,14 +152,34 @@ export function addRepeatingEvents(studyConfiguration: StudyConfiguration, perio
   return studyConfiguration;
 }
 
-export function addScheduledEventAndInstanceToTimeline(studyConfiguration: StudyConfiguration, eventNumber: number, dayEventCompleted: number, timeline: Timeline) : EventInstance {
-  let scheduledEvent = new ScheduledEvent(studyConfiguration.periods[0].events[eventNumber]);
-  scheduledEvent.state = ScheduledEventState.Scheduled;
-  let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
-  eventInstance.state = TimelineInstanceState.Completed;
-  timeline.addEvent(eventInstance);
-  return eventInstance;
+export function addScheduledEventAndInstanceToTimeline(studyConfiguration: StudyConfiguration, periodNumber: number, eventNumberWithinPeriod: number, dayEventCompleted: number, timeline: Timeline, nameOfPeriodToAddEventTo?: string) : EventInstance {
+  let eventInstance = null;
+  if (nameOfPeriodToAddEventTo) {
+    let scheduledPeriod = null;
+    let currentPeriodInstance = timeline.getPeriodInstanceFor(nameOfPeriodToAddEventTo);
+    if (currentPeriodInstance === undefined) {
+      let configuredPeriod = studyConfiguration.periods[periodNumber];
+      scheduledPeriod = new ScheduledPeriod(configuredPeriod);
+      let periodInstance = new PeriodInstance(scheduledPeriod, dayEventCompleted);
+      periodInstance.setState(TimelineInstanceState.Active);
+      timeline.addEvent(periodInstance);
+    } else {
+      scheduledPeriod = currentPeriodInstance.scheduledPeriod;
+    }
+    let scheduledEvent = scheduledPeriod.scheduledEvents[eventNumberWithinPeriod];
+    scheduledEvent.state = ScheduledEventState.Scheduled;
+    let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
+    eventInstance.state = TimelineInstanceState.Completed;
+    timeline.addEvent(eventInstance);
+  } else { // TODO: drop this path after all the tests that didn't set the period are updated
+    let scheduledEvent = new ScheduledEvent(studyConfiguration.periods[0].events[eventNumberWithinPeriod]);
+    scheduledEvent.state = ScheduledEventState.Scheduled;
+    let eventInstance = new EventInstance(scheduledEvent, dayEventCompleted);
+    eventInstance.state = TimelineInstanceState.Completed;
+    timeline.addEvent(eventInstance);
   }
+  return eventInstance;
+}
 
 
 

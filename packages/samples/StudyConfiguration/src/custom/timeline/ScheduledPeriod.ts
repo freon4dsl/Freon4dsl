@@ -16,7 +16,7 @@ export class ScheduledPeriod {
   }
 
   getName() {
-    return this.configuredPeriod.name;
+    return this.configuredPeriod.freId();
   }
 
 }

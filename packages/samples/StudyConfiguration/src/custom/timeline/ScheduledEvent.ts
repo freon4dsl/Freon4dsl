@@ -23,6 +23,7 @@ export class ScheduledEvent {
 
   constructor(event: Event) {
     this.configuredEvent = event;
+    console.log("ScheduledEvent.constructor() for configuredEvent: " + this.configuredEvent.name);
   }
 
   day(timeline: Timeline): number {
@@ -159,7 +160,7 @@ export class ScheduledEvent {
   }
 
   private addPeriodInstance(period: Period, scheduledStudyConfiguration: ScheduledStudyConfiguration, timeline: Timeline) {
-    let periodInstance = new PeriodInstance(scheduledStudyConfiguration.getScheduledPeriod(period), timeline.currentDay);
+    let periodInstance = new PeriodInstance(scheduledStudyConfiguration.getScheduledPeriod(period), this.day(timeline));
     console.log("ScheduledEvent.addPeriodInstance() for: " + this.getName() + " periodInstance: " + periodInstance.getName() + " period: " + period.name);
     timeline.addEvent(periodInstance as TimelineInstance);
   }
@@ -170,7 +171,7 @@ export class ScheduledEvent {
     let period = this.configuredEvent.freOwner() as unknown as Period;
     let currentPeriod = timeline.getCurrentPeriod();
     if (currentPeriod) {
-      if (currentPeriod.getName() != period.name) {
+      if (currentPeriod.getName() != period.freId()) {
         console.log("ScheduledEvent.scheduled() names not equal so new period for: " + this.getName() + " timeline.currentDay: " + timeline.currentDay + " currentPeriod: " + currentPeriod.getName() + " period: " + period.name);
         currentPeriod.setState(TimelineInstanceState.Completed);
         this.addPeriodInstance(period, scheduledStudyConfiguration, timeline);
