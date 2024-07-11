@@ -182,7 +182,7 @@
 </div>
 <!-- Here the only instance of ContextMenu is defined -->
 <!-- TODO make some default items for the context menu -->
-<!--<ContextMenu bind:this={$contextMenu} items={[]} editor={editor}/>-->
+<ContextMenu bind:this={$contextMenu} items={[]} editor={editor}/>
 
 <style>
     .freon {

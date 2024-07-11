@@ -9,7 +9,6 @@
 - [x] Documentatie aanpassen:
   - [x] link naar MDEnet presentatie
   - [x] MP3 Meinte op site
-- [ ] Docu live brengen
 
 # Beide
 - [ ] Opschonen ToDo list
@@ -22,20 +21,20 @@
 
 ## Anneke
 - [ ] Use of inherited projections in .edit file is not described in the documentation.(A)
-- [ ] \<br/> in LayoutComponent does not work as intended. (A)
+- [ ] \<br/> in layoutcomponent does not work as intended in LayoutComponent. (A)
 - [ ] subclasses of a namespace in scoper definition are not namespaces, but they should  be.
   Fixed for concepts, but need to be done for subinterfaces as well. (A)
-- [ ] When a type of a property cannot be found the error message is rather unclear: (A)
+- [ ] When a type of a property cannot be found the erro message is rather unclear: (A)
   -  `ERROR: Element 'correctAnswer' should have a type`
 - [ ] Typecheck on abstract class is not evaluated for subclasses. Reason: walker only walks concrete classes. (A)
-- [ ] Non-existing concept in .valid file is not checked => get JavaScript exception.  Need to check whether concepts exist.(A)
+- [ ] Non existing concept in .valid file is not checked => get JavaScript exception.  Need to check whether concepts exist.(A)
 - [ ] Typecheck error: select error wants to go to Question instead of QuestionRef in error inTest Scenario (A)
 - [ ] When sidebar is open, scrollbar goes wrong. (A)
 - [ ] Svelte tests, Playwright? (A)
 
 ## Jos
 - [ ] Custom scoper is never used => need to implement custom scoper
-  - [ ] Voorbeelden bedenken waarin custom scoper nodig is (J)
+  - [ ] Voorbeelden bedenken waarin custrom scoper nodig is (J)
   - [ ] Custom scoper implementeren.
 - [ ] Need to document styling properties (J)
 - [ ] Add more styling options in Svelte components. (J)
