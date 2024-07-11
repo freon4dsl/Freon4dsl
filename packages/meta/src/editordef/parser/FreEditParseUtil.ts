@@ -26,7 +26,7 @@ export class FreEditParseUtil {
             const firstItem = line.items[0];
             if (firstItem instanceof FreEditParsedProjectionIndent) {
                 if (line.items.length > 1) {
-                    // indent + someething after the indent, otherwise it's just an empty line
+                    // indent + something after the indent, otherwise it's just an empty line
                     ignoredIndent = Math.min(ignoredIndent, firstItem.amount);
                 }
                 // else ignore empty line with only an indents

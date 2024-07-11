@@ -1,0 +1,13 @@
+editor default
+
+Tests {[
+LABEL1
+LABEL2
+LABEL3
+
+    ${aList}
+]}
+
+Element {[
+    Element ${name}
+]}

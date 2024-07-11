@@ -394,7 +394,7 @@
       use:clickOutsideConditional={{enabled: dropdownShown}}
       on:click_outside={onClickOutside}
       on:blur={onBlur}
-      on:contextmenu={(event) => endEditing()}
+
       class="dropdown"
       role="none"
 >
