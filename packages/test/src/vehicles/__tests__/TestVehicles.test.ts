@@ -1,9 +1,9 @@
-import { VehiclesEnvironment } from "../config/gen/VehiclesEnvironment";
+import { VehicleModelEnvironment } from "../config/gen/VehicleModelEnvironment";
 import { VehicleModel, VehicleUnit } from "../language/gen";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions";
 
-const writer = VehiclesEnvironment.getInstance().writer;
-const reader = VehiclesEnvironment.getInstance().reader;
+const writer = VehicleModelEnvironment.getInstance().writer;
+const reader = VehicleModelEnvironment.getInstance().reader;
 
 describe("Vehicles parser on", () => {
 

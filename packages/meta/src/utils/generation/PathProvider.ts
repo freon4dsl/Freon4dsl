@@ -1,4 +1,4 @@
-import { FreLanguage, FreConcept } from "../../languagedef/metalanguage/FreLanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/FreMetaLanguage";
 import { Names } from "./Names";
 
 // files need to be generated into folders ...
@@ -26,6 +26,7 @@ export const WRITER_GEN_FOLDER = "writer/gen";
 export const READER_FOLDER = "reader";
 export const READER_GEN_FOLDER = "reader/gen";
 export const CONFIGURATION_FOLDER = "config";
+export const COMMAND_LINE_FOLDER = "commandline";
 export const CONFIGURATION_GEN_FOLDER = "config/gen";
 export const RESERVED_WORDS_ORIGIN = "../meta/src/validatordef/generator/templates"; // the folder in which the to-be-copied files can be found
 export const STYLES_ORIGIN = "../meta/src/editordef/generator/templates/styles";     // the folder in which the to-be-copied files can be found
@@ -69,37 +70,24 @@ export class PathProvider {
         return defFolder + "/" + languageName + ".type";
     }
 
-    // the generated classes that implement the language can be found in ...
-    public static concept(concept: FreConcept): string {
-        return LANGUAGE_GEN_FOLDER;
-    }
-
-    public static languageConceptType(language: FreLanguage): string {
-        return LANGUAGE_GEN_FOLDER;
-    }
-
-    public static allConcepts(language: FreLanguage): string {
-        return LANGUAGE_GEN_FOLDER;
-    }
-
     // the generated classes that implement the editor can be found in ...
-    public static context(language: FreLanguage): string {
+    public static context(language: FreMetaLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.context(language);
     }
 
-    public static actions(language: FreLanguage): string {
+    public static actions(language: FreMetaLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.actions(language);
     }
 
-    public static defaultActions(language: FreLanguage): string {
+    public static defaultActions(language: FreMetaLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.defaultActions(language);
     }
 
-    public static customActions(language: FreLanguage): string {
+    public static customActions(language: FreMetaLanguage): string {
         return EDITOR_FOLDER + "/" + Names.customActions(language);
     }
 
-    public static projection(language: FreLanguage): string {
+    public static projection(language: FreMetaLanguage): string {
         return EDITOR_GEN_FOLDER + "/" + Names.customProjection(language);
     }
 
@@ -108,43 +96,43 @@ export class PathProvider {
     }
 
     // the generated classes that implement the scoper can be found in ...
-    public static namespace(language: FreLanguage): string {
+    public static namespace(language: FreMetaLanguage): string {
         return SCOPER_GEN_FOLDER + "/" + Names.namespace(language);
     }
 
-    public static scoper(language: FreLanguage): string {
+    public static scoper(language: FreMetaLanguage): string {
         return SCOPER_GEN_FOLDER + "/" + Names.scoper(language);
     }
 
     // the generated classes that implement the typer can be found in ...
-    public static typer(language: FreLanguage): string {
+    public static typer(language: FreMetaLanguage): string {
         return TYPER_GEN_FOLDER + "/" + Names.typer(language);
     }
 
     // the generated classes that implement the validator can be found in ...
-    public static validator(language: FreLanguage): string {
+    public static validator(language: FreMetaLanguage): string {
         return VALIDATOR_GEN_FOLDER + "/" + Names.validator(language);
     }
 
-    public static checker(language: FreLanguage): string {
+    public static checker(language: FreMetaLanguage): string {
         return VALIDATOR_GEN_FOLDER + "/" + Names.rulesChecker(language);
     }
 
     // the generated classes that implement the unparser can be found in ...
-    public static unparser(language: FreLanguage): string {
+    public static unparser(language: FreMetaLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.writer(language);
     }
 
     // the generated classes that implement the visitor pattern can be found in ...
-    public static walker(language: FreLanguage): string {
+    public static walker(language: FreMetaLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.walker(language);
     }
 
-    public static workerInterface(language: FreLanguage): string {
+    public static workerInterface(language: FreMetaLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.workerInterface(language);
     }
 
-    public static defaultWorker(language: FreLanguage): string {
+    public static defaultWorker(language: FreMetaLanguage): string {
         return LANGUAGE_UTILS_GEN_FOLDER + "/" + Names.defaultWorker(language);
     }
 }

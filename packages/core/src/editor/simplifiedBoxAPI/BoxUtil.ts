@@ -1,13 +1,24 @@
 import { runInAction } from "mobx";
-import { FreNode, FreNamedNode } from "../../ast";
-import { Box, BoxFactory, CharAllowed, HorizontalListBox, SelectBox, SelectOption, TextBox, VerticalListBox } from "../boxes";
+import { FreNode, FreNamedNode, FreNodeReference } from "../../ast";
+import {
+    Box,
+    BooleanControlBox,
+    BoxFactory,
+    CharAllowed,
+    EmptyLineBox,
+    HorizontalListBox,
+    SelectBox,
+    SelectOption,
+    TextBox,
+    VerticalListBox,
+    BoolDisplay
+} from "../boxes";
 import { FreUtils } from "../../util";
 import { BehaviorExecutionResult } from "../util";
-import { FreLanguage, PropertyKind } from "../../language";
+import { FreLanguage, FreLanguageProperty, PropertyKind } from "../../language";
 import { FreEditor } from "../FreEditor";
 import { FreScoper } from "../../scoper";
 import { RoleProvider } from "./RoleProvider";
-import { EmptyLineBox } from "../boxes";
 import { FreBoxProvider, FreProjectionHandler } from "../projections";
 
 export class FreListInfo {
@@ -20,41 +31,41 @@ export class BoxUtil {
     static terminatorName: string = "Terminator";
     static initiatorName: string = "Initiator";
 
-    static emptyLineBox(element: FreNode, role: string): EmptyLineBox {
-        return new EmptyLineBox(element, role);
+    static emptyLineBox(node: FreNode, role: string): EmptyLineBox {
+        return new EmptyLineBox(node, role);
     }
 
     /**
      * Returns a textBox for property named 'propertyName' within 'element'.
      * When the property is a list (the type is "string[]", or "identifier[]"), this method can be
      * called for each item in the list. In that case an index to the item needs to be provided.
-     * @param element the owning FreNode of the displayed property
+     * @param node the owning FreNode of the displayed property
      * @param propertyName the name of the displayed property
      * @param index the index of the item in the list, if the property is a list
      */
-    static textBox(element: FreNode, propertyName: string, index?: number): TextBox {
+    static textBox(node: FreNode, propertyName: string, index?: number): TextBox {
         let result: TextBox = null;
         // find the information on the property to be shown
-        const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
+        const propInfo = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
-        const property = element[propertyName];
+        const property = node[propertyName];
         // create the box
         if (property !== undefined && property !== null && typeof property === "string") {
-            const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "textbox", index);
+            const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "textbox", index);
             if (isList && this.checkList(isList, index, propertyName)) {
                 result = BoxFactory.text(
-                    element,
+                    node,
                     roleName,
-                    () => element[propertyName][index],
-                    (v: string) => runInAction( () => { (element[propertyName][index] = v); }),
+                    () => node[propertyName][index],
+                    (v: string) => runInAction( () => { (node[propertyName][index] = v); }),
                     { placeHolder: `<${propertyName}>` }
                 );
             } else {
                 result = BoxFactory.text(
-                    element,
+                    node,
                     roleName,
-                    () => element[propertyName],
-                    (v: string) => runInAction( () => { (element[propertyName] = v); }),
+                    () => node[propertyName],
+                    (v: string) => runInAction( () => { (node[propertyName] = v); }),
                     { placeHolder: `<${propertyName}>` }
                 );
             }
@@ -70,26 +81,26 @@ export class BoxUtil {
      * Returns a textBox that holds a property of type 'number'.
      * When the property is a list (the type is "number[]"), this method can be
      * called for each item in the list. In that case an index to the item needs to be provided.
-     * @param element the owning FreNode of the displayed property
+     * @param node the owning FreNode of the displayed property
      * @param propertyName the name of the displayed property
      * @param index the index of the item in the list, if the property is a list
      */
-    static numberBox(element: FreNode, propertyName: string, index?: number): TextBox {
+    static numberBox(node: FreNode, propertyName: string, index?: number): TextBox {
         let result: TextBox = null;
         // find the information on the property to be shown
-        const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
-        const property = element[propertyName];
+        const propInfo = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
+        const property = node[propertyName];
         const isList: boolean = propInfo.isList;
         // create the box
         if (property !== undefined && property !== null && typeof property === "number") {
-            const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "numberbox", index);
+            const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "numberbox", index);
             if (isList && this.checkList(isList, index, propertyName)) {
                 result = BoxFactory.text(
-                    element,
+                    node,
                     roleName,
-                    () => element[propertyName][index].toString(),
+                    () => node[propertyName][index].toString(),
                     (v: string) => runInAction(() => {
-                        (element[propertyName][index] = Number.parseInt(v, 10));
+                        (node[propertyName][index] = Number.parseInt(v, 10));
                     }),
                     {
                         placeHolder: `<${propertyName}>`,
@@ -99,11 +110,11 @@ export class BoxUtil {
                     });
             } else {
                 result = BoxFactory.text(
-                    element,
+                    node,
                     roleName,
-                    () => element[propertyName].toString(),
+                    () => node[propertyName].toString(),
                     (v: string) => runInAction(() => {
-                        (element[propertyName] = Number.parseInt(v, 10));
+                        (node[propertyName] = Number.parseInt(v, 10));
                     }),
                     {
                         placeHolder: `<${propertyName}>`,
@@ -124,22 +135,24 @@ export class BoxUtil {
      * Returns a textBox that holds a property of type 'boolean'.
      * When the property is a list (the type is "boolean[]"), this method can be
      * called for each item in the list. In that case an index to the item needs to be provided.
-     * @param element the owning FreNode of the displayed property
+     * @param node the owning FreNode of the displayed property
      * @param propertyName the name of the displayed property
      * @param labels the different texts to be shown when the property is false or true
+     * @param kind
      * @param index the index of the item in the list, if the property is a list
-     */
-    static booleanBox(element: FreNode,
+     * */
+    static booleanBox(node: FreNode,
                       propertyName: string,
                       labels: { yes: string; no: string } = {
                           yes: "yes",
                           no: "no"
                       },
+                      kind: BoolDisplay,
                       index?: number): Box {
         // find the information on the property to be shown
-        const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
+        const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
-        const property = element[propertyName];
+        const property: FreNode = node[propertyName];
 
         // check the found information
         if (!(property !== undefined && property !== null)) {
@@ -150,27 +163,86 @@ export class BoxUtil {
         }
 
         // all's well, create the box
-        const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "booleanbox", index);
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "booleanbox", index);
+        let result: BooleanControlBox | SelectBox;
+        if (kind === BoolDisplay.SELECT) {
+            result = BoxUtil.makeBooleanSelectBox(node, propertyName, labels, isList, roleName, index);
+        } else {
+            result = BoxUtil.makeBooleanControlBox(node, propertyName, labels, isList, roleName, index);
+            result.showAs = kind;
+        }
+        result.propertyName = propertyName;
+        result.propertyIndex = index;
+        return result;
+    }
+
+    private static makeBooleanControlBox(node: FreNode,
+                                    propertyName: string,
+                                    labels: { yes: string; no: string } = {
+                                        yes: "yes",
+                                        no: "no"
+                                    },
+                                    isList: boolean,
+                                    roleName: string,
+                                    index?: number): BooleanControlBox {
+        let result: BooleanControlBox;
+        if (isList && this.checkList(isList, index, propertyName)) {
+            result = BoxFactory.bool(
+                node,
+                roleName,
+                () => node[propertyName],
+                (v: boolean) => runInAction(() => {
+                    (node[propertyName] = v);}),
+                {
+                    labels: { yes:labels.yes, no:labels.no }
+                }
+            );
+        } else {
+            result = BoxFactory.bool(
+                node,
+                roleName,
+                () => node[propertyName],
+                (v: boolean) => runInAction(() => {
+                    (node[propertyName] = v);
+                }),
+                {
+                    labels: { yes:labels.yes, no:labels.no }
+                });
+        }
+        return result;
+    }
+
+    private static makeBooleanSelectBox(node: FreNode,
+                                        propertyName: string,
+                                        labels: { yes: string; no: string } = {
+                                            yes: "yes",
+                                            no: "no"
+                                        },
+                                        isList: boolean,
+                                        roleName: string,
+                                        index?: number
+    ): SelectBox {
         let result: SelectBox;
         if (isList && this.checkList(isList, index, propertyName)) {
             result = BoxFactory.select(
-                element,
+                node,
                 roleName,
                 "<optional>",
                 () => [{ id: labels.yes, label: labels.yes }, { id: labels.no, label: labels.no }],
                 () => {
-                    if (element[propertyName][index]) {
+                    if (node[propertyName][index]) {
                         return { id: labels.yes, label: labels.yes };
                     } else {
                         return { id: labels.no, label: labels.no };
                     }
                 },
+                // @ts-ignore
                 (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
                     runInAction(() => {
                         if (option.id === labels.yes) {
-                            element[propertyName][index] = true;
+                            node[propertyName][index] = true;
                         } else if (option.id === labels.no) {
-                            element[propertyName][index] = false;
+                            node[propertyName][index] = false;
                         }
                     });
                     return BehaviorExecutionResult.NULL;
@@ -178,31 +250,30 @@ export class BoxUtil {
             );
         } else {
             result = BoxFactory.select(
-                element,
+                node,
                 roleName,
                 "<optional>",
                 () => [{ id: labels.yes, label: labels.yes }, { id: labels.no, label: labels.no }],
                 () => {
-                    if (element[propertyName]) {
+                    if (node[propertyName] === true) {
                         return { id: labels.yes, label: labels.yes };
                     } else {
                         return { id: labels.no, label: labels.no };
                     }
                 },
+                // @ts-ignore
                 (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
                     runInAction(() => {
                         if (option.id === labels.yes) {
-                            element[propertyName] = true;
+                            node[propertyName] = true;
                         } else if (option.id === labels.no) {
-                            element[propertyName] = false;
+                            node[propertyName] = false;
                         }
                     });
                     return BehaviorExecutionResult.NULL;
                 }
             );
         }
-        result.propertyName = propertyName;
-        result.propertyIndex = index;
         return result;
     }
 
@@ -214,26 +285,26 @@ export class BoxUtil {
      *
      * When the property is a list (the type is "reference SOMECONCEPT_OR_INTERFACE[]"), this method can be
      * called for each item in the list. In that case an index to the item needs to be provided.
-     * @param element the owning FreNode of the displayed property
+     * @param node the owning FreNode of the displayed property
      * @param propertyName the name of the displayed property
      * @param setFunc
      * @param scoper
      * @param index
      */
     static referenceBox(
-        element: FreNode,
+        node: FreNode,
         propertyName: string,
         setFunc: (selected: string) => void,
         scoper: FreScoper,
         index?: number
     ): Box {
-        const propType: string = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName)?.type;
+        const propType: string = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
         if (!propType) {
             throw new Error("Cannot find property type '" + propertyName + "'");
         }
         // console.log("referenceBox for type: " + propType)
-        let property = element[propertyName];
-        const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "referencebox", index);
+        let property = node[propertyName];
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "referencebox", index);
         // set the value for use in lists
         if (index !== null && index !== undefined && index >= 0) {
             property = property[index];
@@ -241,11 +312,11 @@ export class BoxUtil {
 
         let result: SelectBox;
         result = BoxFactory.select(
-            element,
+            node,
             roleName,
-            `<select ${propertyName}>`,
+            `<${propertyName}>`,
             () => {
-                return scoper.getVisibleNames(element, propType)
+                return scoper.getVisibleNames(node, propType)
                     .filter(name => !!name && name !== "")
                     .map(name => ({
                         id: name,
@@ -260,6 +331,7 @@ export class BoxUtil {
                     return null;
                 }
             },
+            // @ts-ignore
             (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
                 // L.log("==> SET selected option for property " + propertyName + " of " + element["name"] + " to " + option?.label);
                 if (!!option) {
@@ -269,7 +341,7 @@ export class BoxUtil {
                     });
                 } else {
                     runInAction(() => {
-                        element[propertyName] = null;
+                        node[propertyName] = null;
                     });
                 }
                 return BehaviorExecutionResult.EXECUTED;
@@ -283,18 +355,18 @@ export class BoxUtil {
 
     /**
      * Returns a labelBox for 'content' within 'element'.
-     * @param element
+     * @param node
      * @param content
      * @param uid
      * @param selectable when true this box can be selected, default is 'false'
      */
-    static labelBox(element: FreNode, content: string, uid: string, selectable?: boolean): Box {
+    static labelBox(node: FreNode, content: string, uid: string, selectable?: boolean): Box {
         let _selectable: boolean = false;
         if (selectable !== undefined && selectable !== null && selectable) {
             _selectable = true;
         }
-        const roleName: string = RoleProvider.label(element, uid) + "-" + content;
-        return BoxFactory.label(element, roleName, content, {
+        const roleName: string = RoleProvider.label(node, uid) + "-" + content;
+        return BoxFactory.label(node, roleName, content, {
             selectable: _selectable
         });
     }
@@ -331,9 +403,9 @@ export class BoxUtil {
         // check whether the property is a reference list
         if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
             // find the children to show in this listBox
-            let children = this.makeRefItems(property, element, propertyName, scoper, listInfo);
+            let children = this.makeRefItems(property as FreNodeReference<FreNamedNode>[], element, propertyName, scoper, listInfo);
             // add a placeholder where a new element can be added
-            children = this.addPlaceholder(children, element, propertyName);
+            children = this.addReferencePlaceholder(children, element, propertyName);
             let result: VerticalListBox;
             result = BoxFactory.verticalList(
                 element,
@@ -375,7 +447,7 @@ export class BoxUtil {
             // find the children to show in this listBox
             let children: Box[] = this.makeRefItems(property, element, propertyName, scoper, listJoin);
             // add a placeholder where a new element can be added
-            children = this.addPlaceholder(children, element, propertyName);
+            children = this.addReferencePlaceholder(children, element, propertyName);
             // return the box
             let result: HorizontalListBox;
             result = BoxFactory.horizontalList(
@@ -395,7 +467,7 @@ export class BoxUtil {
     static getBoxOrAction(element: FreNode, propertyName: string, conceptName: string, boxProviderCache: FreProjectionHandler): Box {
         // find the information on the property to be shown
         const property = element[propertyName];
-        const roleName = RoleProvider.property(element.freLanguageConcept(), propertyName);
+        const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName);
         // console.log('getBoxOrAction ' + property?.freId())
         let result: Box;
         result = !!property
@@ -439,6 +511,19 @@ export class BoxUtil {
         );
     }
 
+    private static addReferencePlaceholder(children: Box[], element: FreNode, propertyName: string) {
+        return children.concat(
+            BoxFactory.action(
+                element,
+                RoleProvider.property(element.freLanguageConcept(), propertyName, "new-list-item"),
+                `<+ ${propertyName}>`,
+                {
+                    propertyName: `${propertyName}`
+                    // conceptName: FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName).type
+                })
+        );
+    }
+
     private static findPartItems(property: FreNode[], element: FreNode, propertyName: string, listJoin: FreListInfo, boxProviderCache: FreProjectionHandler) {
         const numberOfItems = property.length;
         return property.map((listElem, index) => {
@@ -472,7 +557,7 @@ export class BoxUtil {
         });
     }
 
-    private static makeRefItems(properties: FreNamedNode[], element: FreNode, propertyName: string, scoper: FreScoper, listJoin?: FreListInfo): Box[] {
+    private static makeRefItems(properties: FreNodeReference<FreNamedNode>[], element: FreNode, propertyName: string, scoper: FreScoper, listJoin?: FreListInfo): Box[] {
         const result: Box[] = [];
         const numberOfItems = properties.length;
         properties.forEach((listElem, index) => {

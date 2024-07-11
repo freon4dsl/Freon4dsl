@@ -1,11 +1,11 @@
 import { FileHandler } from "../../utils/FileHandler";
-import { ExampleEnvironment } from "../config/gen/ExampleEnvironment";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { Demo, ExModel } from "../language/gen";
 
 describe("Test the STUB that replaces the parser", () => {
     // TODO find a way to create an invalid grammar
     test.skip( ": read a unit", () => {
-        const reader = ExampleEnvironment.getInstance().reader;
+        const reader = DemoEnvironment.getInstance().reader;
         const fileHandler = new FileHandler();
 
         let unit1: ExModel = null;

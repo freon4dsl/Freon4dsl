@@ -1,35 +1,44 @@
 import { GrammarRule } from "./GrammarRule";
-import { FreClassifier, FreLanguage, FrePrimitiveType } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLanguage, FreMetaPrimitiveType } from "../../../languagedef/metalanguage";
 import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
-import { FreUnitDescription } from "../../../languagedef/metalanguage/FreLanguage";
+import { FreMetaUnitDescription } from "../../../languagedef/metalanguage/FreMetaLanguage";
 
 export class GrammarPart {
-    unit: FreUnitDescription;
+    unit: FreMetaUnitDescription | undefined;
     rules: GrammarRule[] = [];
-    private imports: FreClassifier[] = [];
+    private imports: FreMetaClassifier[] = [];
 
-    public addToImports(extra: FreClassifier | FreClassifier[]) {
+    public addToImports(extra: FreMetaClassifier | FreMetaClassifier[]) {
         if (!!extra) {
             if (Array.isArray(extra)) {
                 for (const ext of extra) {
-                    if (!this.imports.includes(ext) && !(ext instanceof FrePrimitiveType)) {
+                    if (!this.imports.includes(ext) && !(ext instanceof FreMetaPrimitiveType)) {
                         this.imports.push(ext);
                     }
                 }
-            } else if (!this.imports.includes(extra) && !(extra instanceof FrePrimitiveType)) {
+            } else if (!this.imports.includes(extra) && !(extra instanceof FreMetaPrimitiveType)) {
                 this.imports.push(extra);
             }
         }
     }
 
-    toMethod(language: FreLanguage, relativePath: string): string {
+    toMethod(language: FreMetaLanguage, relativePath: string): string {
         const className: string = Names.unitAnalyser(language, this.unit);
 
         return `import {net} from "net.akehurst.language-agl-processor";
-        import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
-        import { ${this.imports.map(imp => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        ${this.rules.length > 0 ?
+            `import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;`
+            : ""
+        }
+        ${ this.imports.length > 0 ? 
+            `import { ${this.imports.map(imp => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";` 
+            : ""
+        }
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
-        import { ${Names.FreNodeReference} } from "@freon4dsl/core";
+        ${this.rules.length > 0 ? 
+            `import { ${Names.FreNodeReference} } from "@freon4dsl/core";`
+            : ""
+        }
 
         export class ${className} {
             mainAnalyser: ${Names.syntaxAnalyser(language)};

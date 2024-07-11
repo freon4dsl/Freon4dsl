@@ -30,6 +30,7 @@ export class FreLogger {
 
     static unmuteAllLogs() {
         FreLogger.muteAll = false;
+        this.mutedLogs = []
     }
 
     static filter: string = null;

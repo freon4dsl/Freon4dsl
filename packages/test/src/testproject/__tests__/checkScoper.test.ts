@@ -1,10 +1,12 @@
+import { FreLanguage } from "@freon4dsl/core";
+import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
 import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
-import { TestprojectScoper } from "../scoper/gen";
-import { TestprojectEnvironment } from "../config/gen/TestprojectEnvironment";
-import { TestprojectStdlib } from "../stdlib/gen/TestprojectStdlib";
+import { TestStartScoper } from "../scoper/gen";
+import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
 
 describe("Checking stdlib for Demo", () => {
-    let stdlib: TestprojectStdlib = TestprojectEnvironment.getInstance().stdlib as TestprojectStdlib;
+    TestStartEnvironment.getInstance();
+    let stdlib: TestStartStdlib = FreLanguage.getInstance().stdLib as TestStartStdlib;
     // The stdlib contains the following elements
     // ZZ.ZZinstance1
     // XX.XXinstance1
@@ -58,7 +60,8 @@ describe("Checking scoper for testproject", () => {
     let model: BB;
     let super1: AA;
     let super2: AA;
-    let ZZinstance1: ZZ = (TestprojectEnvironment.getInstance().stdlib as TestprojectStdlib).find("ZZinstance1", "ZZ") as ZZ;
+    let stdlib: TestStartStdlib = FreLanguage.getInstance().stdLib as TestStartStdlib;
+    let ZZinstance1: ZZ = stdlib.find("ZZinstance1", "ZZ") as ZZ;
 
     beforeEach( ()=> {
 
@@ -80,7 +83,7 @@ describe("Checking scoper for testproject", () => {
     test("all names in both super1 and super2 should be found", () => {
         model.supers.push(super1);
         model.supers.push(super2);
-        let scoper = new TestprojectScoper();
+        let scoper = new TestStartScoper();
         let vi = scoper.getVisibleNames(model);
         expect(vi).toContain("super1");
         expect(vi).toContain("super2");
@@ -91,7 +94,7 @@ describe("Checking scoper for testproject", () => {
 
     test("all names only from super2 should be found", () => {
         model.supers.push(super2);
-        let scoper = new TestprojectScoper();
+        let scoper = new TestStartScoper();
         let vi = scoper.getVisibleNames(model);
         // expect(vi).toContain("super1");
         expect(vi).toContain("super2");
@@ -102,7 +105,7 @@ describe("Checking scoper for testproject", () => {
 
     test("all names only from super1 should be found", () => {
         model.supers.push(super1);
-        let scoper = new TestprojectScoper();
+        let scoper = new TestStartScoper();
         let vi = scoper.getVisibleNames(model);
         expect(vi).toContain("super1");
         // expect(vi).toContain("super2");
@@ -114,7 +117,7 @@ describe("Checking scoper for testproject", () => {
     test("all elements in both super1 and super2 should be found", () => {
         model.supers.push(super1);
         model.supers.push(super2);
-        let scoper = new TestprojectScoper();
+        let scoper = new TestStartScoper();
         let vi = scoper.getVisibleElements(model);
         expect(vi).toContain(super1);
         expect(vi).toContain(super2);
@@ -125,7 +128,7 @@ describe("Checking scoper for testproject", () => {
 
     test("all elements only from super2 should be found", () => {
         model.supers.push(super2);
-        let scoper = new TestprojectScoper();
+        let scoper = new TestStartScoper();
         let vi = scoper.getVisibleElements(model);
         expect(vi).not.toContain(super1);
         expect(vi).toContain(super2);
@@ -136,7 +139,7 @@ describe("Checking scoper for testproject", () => {
 
     test("all elements only from super1 should be found", () => {
         model.supers.push(super1);
-        let scoper = new TestprojectScoper();
+        let scoper = new TestStartScoper();
         let vi = scoper.getVisibleElements(model);
         expect(vi).toContain(super1);
         expect(vi).not.toContain(super2);

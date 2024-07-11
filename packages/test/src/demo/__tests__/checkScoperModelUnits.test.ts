@@ -1,6 +1,6 @@
-import { DemoScoper } from "../scoper/gen/DemoScoper";
+import { DemoScoper } from "../scoper/gen";
 import { DemoModel, Demo } from "../language/gen";
-import { initializeScoperDef } from "../scoper/gen/index";
+import { initializeScoperDef } from "../scoper/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 import { DemoUnitCreator } from "./DemoUnitCreator";

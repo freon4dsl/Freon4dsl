@@ -1,26 +1,27 @@
 import { CheckerPhase, CheckRunner, isNullOrUndefined, ParseLocationUtil } from "../../utils";
 import {
-    FreConcept,
-    FreInstance,
-    FreLanguage,
-    FreLimitedConcept,
-    FrePrimitiveProperty,
-    FrePrimitiveType,
-    FreProperty,
-    FreInstanceProperty,
-    FreUnitDescription,
+    FreMetaConcept,
+    FreMetaInstance,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
+    FreMetaPrimitiveProperty,
+    FreMetaPrimitiveType,
+    FreMetaProperty,
+    FreMetaInstanceProperty,
+    FreMetaUnitDescription,
     MetaElementReference
 } from "../metalanguage";
 import { CommonChecker } from "./CommonChecker";
 import { ClassifierChecker } from "./ClassifierChecker";
 
-export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
-    language: FreLanguage;
+export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
+    // @ts-ignore This property is set in the 'check' method, therefore we can assume that it is initialized in the private methods.
+    language: FreMetaLanguage;
 
     // now everything has been resolved, check that all concepts and interfaces have
     // unique names, that there are no circular inheritance or interface relationships,
     // and that all their properties are consistent with regard to inheritance
-    public check(language: FreLanguage, runner: CheckRunner): void {
+    public check(language: FreMetaLanguage, runner: CheckRunner): void {
         this.runner = runner;
         this.language = language;
         const names: string[] = [];
@@ -41,7 +42,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
                 // check that limited concepts have a name property
                 // and that they do not inherit any non-prim properties
                 // Note: this can be done only after checking for circular inheritance, because we need to look at allPrimProperties.
-                if (con instanceof FreLimitedConcept) {
+                if (con instanceof FreMetaLimitedConcept) {
                     this.checkLimitedConceptAgain(con);
                 }
             }
@@ -69,7 +70,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
         }
     }
 
-    private checkUniqueFileExtension(extensions: string[], unit: FreUnitDescription) {
+    private checkUniqueFileExtension(extensions: string[], unit: FreMetaUnitDescription) {
         // our parser accepts only variables for fileExtensions, therefore we do not need to check it further here.
         // set the file extension, if not present
         if (isNullOrUndefined(unit.fileExtension) || unit.fileExtension.length === 0) {
@@ -110,13 +111,15 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
         }
     }
 
-    private checkLimitedConceptAgain(freLimitedConcept: FreLimitedConcept) {
-        let nameProperty: FrePrimitiveProperty = freLimitedConcept.allPrimProperties().find(p => p.name === "name");
+    private checkLimitedConceptAgain(freLimitedConcept: FreMetaLimitedConcept) {
+        let nameProperty: FreMetaPrimitiveProperty | undefined = freLimitedConcept.allPrimProperties().find(p => p.name === "name");
         // if 'name' property is not present, create it.
         if ( !nameProperty ) {
-            nameProperty = new FrePrimitiveProperty();
+            nameProperty = new FreMetaPrimitiveProperty();
             nameProperty.name = "name";
-            nameProperty.type = FrePrimitiveType.identifier;
+            nameProperty.id = "TODO_set-correct-id";
+            nameProperty.key = "TODO_set-correct-key";
+            nameProperty.type = FreMetaPrimitiveType.identifier;
             nameProperty.isPart = true;
             nameProperty.isList = false;
             nameProperty.isOptional = false;
@@ -125,7 +128,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
             nameProperty.owningClassifier = freLimitedConcept;
             freLimitedConcept.primProperties.push(nameProperty);
         } else {
-            this.runner.simpleCheck(nameProperty.type === FrePrimitiveType.identifier,
+            this.runner.simpleCheck(nameProperty.type === FreMetaPrimitiveType.identifier,
                 `A limited concept ('${freLimitedConcept.name}') can only be used as a reference, therefore its 'name' property should be of type 'identifier' ${ParseLocationUtil.location(freLimitedConcept)}.`);
         }
         this.runner.simpleCheck(freLimitedConcept.allParts().length === 0,
@@ -138,7 +141,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
         const baseNames: string[] = [];
         if (!!freLimitedConcept.base) { // if there is a base limited concept add all names of instances
             const myBase = freLimitedConcept.base.referred;
-            if (myBase instanceof FreLimitedConcept) {
+            if (myBase instanceof FreMetaLimitedConcept) {
                 baseNames.push(...myBase.allInstances().map(inst => inst.name));
             }
         }
@@ -158,7 +161,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
         });
     }
 
-    private checkInstance(freInstance: FreInstance) {
+    private checkInstance(freInstance: FreMetaInstance) {
         CommonChecker.checkClassifierReference(freInstance.concept, this.runner);
         this.runner.nestedCheck({
             check: freInstance.concept.referred !== null,
@@ -171,7 +174,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
         });
     }
 
-    private checkInstanceProperty(freInstanceProperty: FreInstanceProperty, enclosingConcept: FreConcept) {
+    private checkInstanceProperty(freInstanceProperty: FreMetaInstanceProperty, enclosingConcept: FreMetaConcept) {
         const myInstance = freInstanceProperty.owningInstance.referred;
         this.runner.nestedCheck(
             {
@@ -185,20 +188,22 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreLanguage> {
                         error: `Property '${freInstanceProperty.name}' does not exist on concept ${enclosingConcept.name} ${ParseLocationUtil.location(freInstanceProperty)}.`,
                         whenOk: () => {
                             this.runner.nestedCheck({
-                                check: myProp instanceof FrePrimitiveProperty,
+                                check: myProp instanceof FreMetaPrimitiveProperty,
                                 error: `Predefined property '${freInstanceProperty.name}' should have a primitive type ${ParseLocationUtil.location(freInstanceProperty)}.`,
                                 whenOk: () => {
-                                    freInstanceProperty.property = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
-                                    const myPropType: FrePrimitiveType = myProp.type as FrePrimitiveType;
-                                    if (!myProp.isList) {
-                                        this.runner.simpleCheck(CommonChecker.checkValueToType(freInstanceProperty.value, myPropType),
-                                            `Type of '${freInstanceProperty.value}' (${typeof freInstanceProperty.value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
-                                    } else {
-                                        if (!!freInstanceProperty.valueList) {
-                                            freInstanceProperty.valueList.forEach(value => {
-                                                this.runner.simpleCheck(CommonChecker.checkValueToType(value, myPropType),
-                                                    `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
-                                            });
+                                    if (!!myProp) {
+                                        freInstanceProperty.property = MetaElementReference.create<FreMetaProperty>(myProp, "FreProperty");
+                                        const myPropType: FreMetaPrimitiveType = myProp.type as FreMetaPrimitiveType;
+                                        if (!myProp.isList) {
+                                            this.runner.simpleCheck(CommonChecker.checkValueToType(freInstanceProperty.value, myPropType),
+                                                `Type of '${freInstanceProperty.value}' (${typeof freInstanceProperty.value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
+                                        } else {
+                                            if (!!freInstanceProperty.valueList) {
+                                                freInstanceProperty.valueList.forEach(value => {
+                                                    this.runner.simpleCheck(CommonChecker.checkValueToType(value, myPropType),
+                                                        `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
+                                                });
+                                            }
                                         }
                                     }
                                 }

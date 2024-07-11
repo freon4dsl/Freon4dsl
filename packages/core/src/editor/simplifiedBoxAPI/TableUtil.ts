@@ -16,10 +16,10 @@ import { FreNode } from "../../ast";
 import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreLanguage } from "../../language";
 import { RoleProvider } from "./RoleProvider";
-import { FreLogger } from "../../logging";
 import { FreHeaderProvider } from "../projections/FreHeaderProvider";
 
-const LOGGER = new FreLogger("NewTableUtil");
+// import { FreLogger } from "../../logging";
+// const LOGGER = new FreLogger("NewTableUtil");
 
 export class TableUtil {
     // Note that both tableBoxRowOriented and tableBoxColumnOriented look very similar.
@@ -30,13 +30,13 @@ export class TableUtil {
      * within 'element'. The property must be a list. Each element of the list is shown in a row of the table.
      * A series of getters that each return a Box object must be present: one per column.
      *
-     * @param element       The element that holds the list property.
+     * @param node       The element that holds the list property.
      * @param list
      * @param propertyName  The name of the list property to be shown.
      * @param boxProviderCache
      */
-    public static tableBoxRowOriented(element: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
-        return this.tableBox("row", element, list, propertyName, boxProviderCache);
+    public static tableBoxRowOriented(node: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
+        return this.tableBox("row", node, list, propertyName, boxProviderCache);
     }
 
     /**
@@ -44,18 +44,18 @@ export class TableUtil {
      * within 'element'. The property must be a list. Each element of the list is shown in a column of the table.
      * A series of getters that each return a Box object must be present: one per row.
      *
-     * @param element       The element that holds the list property.
+     * @param node       The element that holds the list property.
      * @param list
      * @param propertyName  The name of the list property to be shown.
      * @param boxProviderCache
      */
-    public static tableBoxColumnOriented(element: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
-        return this.tableBox("column", element, list, propertyName, boxProviderCache);
+    public static tableBoxColumnOriented(node: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
+        return this.tableBox("column", node, list, propertyName, boxProviderCache);
     }
 
-    public static rowBox(element: FreNode, propertyName: string, conceptName: string, cells: Box[], rowIndex: number, hasHeaders: boolean): TableRowBox {
+    public static rowBox(node: FreNode, propertyName: string, conceptName: string, cells: Box[], rowIndex: number, hasHeaders: boolean): TableRowBox {
         if (isNullOrUndefined(rowIndex)) {
-            console.log("NO rowIndex for TableRowBox! " + element.freLanguageConcept() + element.freId());
+            console.log("NO rowIndex for TableRowBox! " + node.freLanguageConcept() + node.freId());
         }
         // Note that css grid counts from 1, not 0, which is common in lists.
         let gridIndex: number;
@@ -65,32 +65,32 @@ export class TableUtil {
             gridIndex = rowIndex + 1;
         }
         const myContent = cells.map((cell, index) => {
-            const cellRoleName: string = RoleProvider.cell(element.freLanguageConcept(), propertyName, gridIndex, index + 1);
-            return new TableCellBox(element, propertyName, rowIndex, conceptName, cellRoleName, gridIndex, index + 1, cell);
+            const cellRoleName: string = RoleProvider.cell(node.freLanguageConcept(), propertyName, gridIndex, index + 1);
+            return new TableCellBox(node, propertyName, rowIndex, conceptName, cellRoleName, gridIndex, index + 1, cell);
         });
-        const role: string = RoleProvider.row(element.freLanguageConcept(), propertyName, gridIndex);
-        const result = new TableRowBox(element, role, myContent, gridIndex);
+        const role: string = RoleProvider.row(node.freLanguageConcept(), propertyName, gridIndex);
+        const result = new TableRowBox(node, role, myContent, gridIndex);
         result.propertyName = propertyName;
         result.propertyIndex = rowIndex;
         return result;
     }
 
     private static tableBox(orientation: GridOrientation,
-                            element: FreNode,
+                            node: FreNode,
                             list: FreNode[],
                             propertyName: string,
                             boxProviderCache: FreProjectionHandler): TableBox {
         // console.log('calling tableBox')
         // Find the information on the property to be shown and check it.
-        const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
-        FreUtils.CHECK(propInfo.isList, `Cannot create a table for property '${element.freLanguageConcept()}.${propertyName}' because it is not a list.`);
+        const propInfo = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
+        FreUtils.CHECK(propInfo.isList, `Cannot create a table for property '${node.freLanguageConcept()}.${propertyName}' because it is not a list.`);
         // Create the TableRowBoxes.
         const children: Box[] = [];
         let hasHeaders: boolean = false;
         let nrOfColumns: number = 0;
         if (!isNullOrUndefined(list) && list.length > 0) {
             // Add the headers, an empty TableRowBox if there are none.
-            const headerProvider: FreHeaderProvider = boxProviderCache.getHeaderProvider(element, propertyName, propInfo.type);
+            const headerProvider: FreHeaderProvider = boxProviderCache.getHeaderProvider(node, propertyName, propInfo.type);
             children.push(headerProvider.box);
             if (headerProvider.hasContent()) {
                 hasHeaders = true;
@@ -106,24 +106,24 @@ export class TableUtil {
             });
         } else {
             // Add an extra row where a new element to the list can be added.
-            children.push(this.createPlaceHolder(element, propertyName, propInfo.type, orientation));
+            children.push(this.createPlaceHolder(node, propertyName, propInfo.type, orientation));
         }
 
         // return the actual table box
-        const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "tablebox");
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "tablebox");
         if (orientation === "column") {
-            return new TableBoxColumnOriented(element, propertyName, propInfo.type, roleName, hasHeaders, children);
+            return new TableBoxColumnOriented(node, propertyName, propInfo.type, roleName, hasHeaders, children);
         } else {
-            return new TableBoxRowOriented(element, propertyName, propInfo.type, roleName, hasHeaders, children);
+            return new TableBoxRowOriented(node, propertyName, propInfo.type, roleName, hasHeaders, children);
         }
     }
 
-    private static createPlaceHolder(element: FreNode, propertyName: string, conceptName: string, orientation: GridOrientation): TableRowBox {
-        const content = BoxFactory.action(element, "alias-add-row-or-column", `<add new ${orientation}>`,
+    private static createPlaceHolder(node: FreNode, propertyName: string, conceptName: string, orientation: GridOrientation): TableRowBox {
+        const content = BoxFactory.action(node, "alias-add-row-or-column", `<add new ${orientation}>`,
             { propertyName: propertyName, conceptName: conceptName });
         // Note that a placeholder is only added when there are no other elements in the table, therefore its index is always 0.
         return TableUtil.rowBox(
-            element,
+            node,
             propertyName,
             conceptName,
             [content],

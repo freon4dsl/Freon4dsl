@@ -1,6 +1,6 @@
 import { FretInferenceRule, TyperDef } from "../../metalanguage";
 import { Names, GenerationUtil } from "../../../utils";
-import { FreClassifier, FreLimitedConcept } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage";
 import { FreTyperGenUtils } from "./FreTyperGenUtils";
 import { FretEqualsRule } from "../../metalanguage/FretEqualsRule";
 
@@ -9,10 +9,10 @@ import { FretEqualsRule } from "../../metalanguage/FretEqualsRule";
  */
 export class FreTypeInferMaker {
     extraMethods: string[] = [];
-    typerdef: TyperDef = null;
+    typerdef: TyperDef | undefined = undefined;
     // private toBeCopied: FreClassifier[] = [];
 
-    public makeInferType(typerDef: TyperDef, allLangConcepts: string, rootType: string, varName: string, imports: FreClassifier[]): string {
+    public makeInferType(typerDef: TyperDef, varName: string, imports: FreMetaClassifier[]): string {
         FreTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
         const result: string[] = [];
@@ -26,8 +26,8 @@ export class FreTypeInferMaker {
         // make an entry for all classifiers that have an infertype rule
         sortedTypes.forEach( type => {
             // find the equalsRule, if present
-            const foundRule: FretEqualsRule = inferRules.find(conRule => conRule.owner.myClassifier === type);
-            if (!!foundRule) {
+            const foundRule: FretEqualsRule | undefined = inferRules.find(conRule => conRule.owner.myClassifier === type);
+            if (!!foundRule && !!foundRule.owner.myClassifier) {
                 result.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(${varName}, "${Names.classifier(foundRule.owner.myClassifier)}")) {
                 result = ${FreTyperGenUtils.makeExpAsType(foundRule.exp, varName, false, imports)};
              }`);
@@ -35,7 +35,7 @@ export class FreTypeInferMaker {
         });
 
         // add an entry for all limited concepts
-        const allLimited = typerDef.language.concepts.filter(con => con instanceof FreLimitedConcept) as FreLimitedConcept[];
+        const allLimited = typerDef.language.concepts.filter(con => con instanceof FreMetaLimitedConcept) as FreMetaLimitedConcept[];
         allLimited.map(lim =>
             result.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(${varName}, "${Names.classifier(lim)}")) {
                 result = AstType.create({ astElement: modelelement });

@@ -1,7 +1,7 @@
-import { FreConceptProperty } from "../../languagedef/metalanguage";
+import { FreMetaConceptProperty } from "../../languagedef/metalanguage";
 import { FretTypeConcept } from "./FretTypeConcept";
 
-export class FretProperty extends FreConceptProperty {
+export class FretProperty extends FreMetaConceptProperty {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -49,6 +49,7 @@ export class FretProperty extends FreConceptProperty {
         // }
         return result;
     }
+    // @ts-ignore Property is set during parsing and checking phases
     owner: FretTypeConcept;
     readonly $typename: string = "FretProperty"; // holds the metatype in the form of a string
 

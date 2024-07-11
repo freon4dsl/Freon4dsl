@@ -1,4 +1,4 @@
-import { FreConcept, FreLanguage, FrePrimitiveType } from "../../../languagedef/metalanguage";
+import { FreMetaConcept, FreMetaPrimitiveType } from "../../../languagedef/metalanguage";
 import { FretTypeConcept, TyperDef } from "../../metalanguage";
 import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils";
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, FREON_CORE } from "../../../utils";
@@ -6,7 +6,7 @@ import { LANGUAGE_GEN_FOLDER, ListUtil, Names, FREON_CORE } from "../../../utils
 export class FreTypeConceptMaker {
     freTypeName: string = Names.FreType;
 
-    generateTypeConcept(language: FreLanguage, concept: FretTypeConcept, relativePath: string): string {
+    generateTypeConcept(concept: FretTypeConcept, relativePath: string): string {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.freTypeName}`;
@@ -15,7 +15,7 @@ export class FreTypeConceptMaker {
             coreImports.push(this.freTypeName);
             coreImports.push(Names.FreNode);
         }
-        const modelImports: string[] = this.findModelImports(concept, language);
+        const modelImports: string[] = this.findModelImports(concept);
         const typeImports: string[] = this.findTypeImports(concept, hasSuper);
 
         // Template starts here
@@ -50,7 +50,7 @@ export class FreTypeConceptMaker {
     private makeToFreString(myName: string, concept: FretTypeConcept): string {
         const props: string[] = [];
         concept.allProperties().forEach(prop => {
-            if (prop.type instanceof FrePrimitiveType) {
+            if (prop.type instanceof FreMetaPrimitiveType) {
                 props.push(`${prop.name}: \${this.${prop.name}}`);
             } else if (prop.type instanceof FretTypeConcept) {
                 props.push(`${prop.name}: \${this.${prop.name}?.toFreString(writer)}`);
@@ -87,11 +87,11 @@ export class FreTypeConceptMaker {
                 }`;
     }
 
-    private findModelImports(concept: FretTypeConcept, language: FreLanguage): string[] {
+    private findModelImports(concept: FretTypeConcept): string[] {
         // return the names of all property types that are not FretTypeConcepts
         const result: string[] = [];
         concept.implementedParts().forEach(part => {
-            if (!(part.type instanceof FretTypeConcept) && part.type.name !== this.freTypeName && !(part.type instanceof FrePrimitiveType)) {
+            if (!(part.type instanceof FretTypeConcept) && part.type.name !== this.freTypeName && !(part.type instanceof FreMetaPrimitiveType)) {
                 result.push(Names.classifier(part.type));
             }
         });
@@ -159,12 +159,16 @@ export class FreTypeConceptMaker {
     }
 
     // TODO test this method and see if it is better than the one in GenerationHelpers
-    private sortConcepts(list: FreConcept[]): FreConcept[] {
-        const result: FreConcept[] = list.map(con => !con.base ? con : null).filter(el => el !== null);
-        const conceptsWithBase: FreConcept[] = list.map(con => con.base ? con : null).filter(el => el !== null);
+    private sortConcepts(list: FreMetaConcept[]): FreMetaConcept[] {
+        const result: (FreMetaConcept | undefined)[] = list.map(con => !con.base ? con : undefined).filter(el => el !== undefined);
+        const conceptsWithBase: (FreMetaConcept | undefined)[] = list.map(con => con.base ? con : undefined).filter(el => el !== undefined);
         if (conceptsWithBase.length > 0) {
-            ListUtil.addListIfNotPresent(result, this.sortConcepts(conceptsWithBase.map(con => con.base.referred)));
+            ListUtil.addListIfNotPresent(result, this.sortConcepts(conceptsWithBase.map(con => con!.base.referred)));
         }
-        return result;
+        if (result.length > 0) {
+            return result as FreMetaConcept[];
+        } else {
+            return [];
+        }
     }
 }

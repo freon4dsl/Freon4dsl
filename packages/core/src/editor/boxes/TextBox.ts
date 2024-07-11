@@ -4,7 +4,7 @@ import { FreNode } from "../../ast";
 import { Box } from "./Box";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("TextBox");
+const LOGGER: FreLogger = new FreLogger("TextBox");
 
 export enum CharAllowed {
     OK,
@@ -14,7 +14,7 @@ export enum CharAllowed {
 }
 
 export class TextBox extends Box {
-    kind = "TextBox";
+    kind: string = "TextBox";
     /**
      * If true, the element will be deleted when the text becomes
      * empty because of removing the last character in the text.
@@ -29,25 +29,31 @@ export class TextBox extends Box {
 
     placeHolder: string = "";
     caretPosition: number = -1;
-    getText: () => string;
-    private readonly $setText: (newValue: string) => void;
+    $getText: () => string;
+    $setText: (newValue: string) => void;
 
     /**
      * Run the setText() as defined by the user of this box inside a mobx action.
      * @param newValue
      */
     setText(newValue: string): void {
+        LOGGER.log("setText to " + newValue);
         this.$setText(newValue);
+        this.isDirty();
+    }
+
+    getText(): string {
+        return this.$getText();
     }
 
     isCharAllowed: (currentText: string, key: string, index: number) => CharAllowed = () => {
         return CharAllowed.OK;
     };
 
-    constructor(exp: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
-        super(exp, role);
+    constructor(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
-        this.getText = getText;
+        this.$getText = getText;
         this.$setText = setText;
     }
 

@@ -14,7 +14,7 @@
   "author": "Sammy sammy@your_domain (https://your_domain)",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "16.11.7",
+    "@types/node": "20.12.11",
     "@rushstack/ts-command-line": "4.11.0",
     "lodash": "4.17.21"
   }

@@ -1,0 +1,90 @@
+{
+  "publishConfig": {
+    "access": "public"
+  },
+  "name": "@freon4dsl/webapp-lib",
+  "version": "0.7.0-beta",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/freon4dsl/Freon4dsl"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "svelte": "./dist/index.js",
+  "scripts": {
+    "clean": "rm -rf node_modules/",
+    "dev": "tsc --noEmit --watch && vite dev",
+    "build": "tsc --noEmit && vite build && npm run package",
+    "build-dev": "tsc --noEmit && vite build && npm run package",
+    "preview": "vite preview",
+    "package": "svelte-kit sync && svelte-package && publint",
+    "prepublishOnly": "npm run package",
+    "check": "svelte-kit sync && svelte-check --tsconfig tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig tsconfig.json --watch",
+    "build-release": "npm run build",
+    "validate": "svelte-check",
+    "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
+    "install-local": "npm install --registry http://localhost:4873",
+    "republish-local": "npm run unpublish-local && npm run publish-local",
+    "release": "npm publish",
+    "publish-local": "npm publish --registry http://localhost:4873",
+    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
+  ],
+  "dependencies": {
+    "@freon4dsl/core": "0.7.0-beta",
+    "svelte": "^4.2.17"
+  },
+  "devDependencies": {
+    "@material/theme": "^14.0.0",
+    "@material/typography": "^14.0.0",
+    "@mdi/js": "^7.4.47",
+    "@smui-extra/autocomplete": "^7.0.0",
+    "@smui/banner": "^7.0.0",
+    "@smui/button": "^7.0.0",
+    "@smui/card": "^7.0.0",
+    "@smui/checkbox": "^7.0.0",
+    "@smui/common": "^7.0.0",
+    "@smui/data-table": "^7.0.0",
+    "@smui/dialog": "^7.0.0",
+    "@smui/drawer": "^7.0.0",
+    "@smui/form-field": "^7.0.0",
+    "@smui/icon-button": "^7.0.0",
+    "@smui/layout-grid": "^7.0.0",
+    "@smui/linear-progress": "^7.0.0",
+    "@smui/list": "^7.0.0",
+    "@smui/menu": "^7.0.0",
+    "@smui/menu-surface": "^7.0.0",
+    "@smui/paper": "^7.0.0",
+    "@smui/radio": "^7.0.0",
+    "@smui/tab": "^7.0.0",
+    "@smui/tab-bar": "^7.0.0",
+    "@smui/textfield": "^7.0.0",
+    "@smui/tooltip": "^7.0.0",
+    "@smui/top-app-bar": "^7.0.0",
+    "click-outside": "^2.0.2",
+    "tslib": "^2.6.3",
+    "@sveltejs/adapter-auto": "^3.2.1",
+    "@sveltejs/kit": "^2.5.10",
+    "@sveltejs/package": "^2.3.1",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "publint": "^0.2.8",
+    "sass": "^1.77.6",
+    "svelte-check": "^3.8.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.12"
+  }
+}
+

@@ -1,63 +1,85 @@
 import { ReferenceShortcut } from "../editor";
 import { FreNode, FreModel, FreModelUnit } from "../ast";
+import { EmptyStdLib, FreStdlib } from "../stdlib/index";
 import { isNullOrUndefined } from "../util";
-import { FreLogger } from "../logging";
-const LOGGER = new FreLogger("Language");
+// import { FreLogger } from "../logging";
+// const LOGGER = new FreLogger("Language");
 
 export type PropertyKind = "primitive" | "part" | "reference";
 
 export type PrimType = string | boolean | number;
 
-export type Property = {
+export type FreLanguageProperty = {
     name: string;
     type: string;
+    id?: string;
+    key?: string;// used for LionWeb
     isList: boolean;
     isPublic: boolean;
+    language: string;
     propertyKind: PropertyKind;
 };
-export type Model = {
+export type FreLanguageModel = {
     typeName: string;
+    id?: string;
+    key?: string;// used for LionWeb
     isNamespace?: boolean;
     isNamedElement?: boolean;
+    isAbstract?: boolean;
+    language: string;
     subConceptNames?: string[];
-    properties: Map<string, Property>;
-    constructor: () => FreModel;
+    properties: Map<string, FreLanguageProperty>;
+    constructor: (id?: string) => FreModel;
+    referenceShortcut?: ReferenceShortcut;
 };
-export type ModelUnit = {
+export type FreLanguageModelUnit = {
     typeName: string;
+    id?: string;
+    key?: string;// used for LionWeb
     // isPublic?: boolean;
     isNamespace?: boolean;
     isNamedElement?: boolean;
-    subConceptNames?: string[];
+    isAbstract?: boolean;
+    language: string;
+    subConceptNames: string[];
     fileExtension: string;
-    properties: Map<string, Property>;
-    constructor: () => FreModelUnit;
+    properties: Map<string, FreLanguageProperty>;
+    constructor: (id?: string) => FreModelUnit;
+    trigger: string;
+    referenceShortcut?: ReferenceShortcut;
 };
-export type Concept = {
+export type FreLanguageConcept = {
     typeName: string;
+    id?: string;
+    key?: string;// used for LionWeb
     isAbstract: boolean;
     isPublic: boolean;
     isNamespace?: boolean;
     isNamedElement?: boolean;
+    language: string;
     baseName: string;
     subConceptNames: string[];
-    properties: Map<string, Property>;
-    constructor: () => FreNode;
+    properties: Map<string, FreLanguageProperty>;
+    constructor: (id?: string) => FreNode;
     // Used by editor, therefore only in Concept
     trigger: string;
     referenceShortcut?: ReferenceShortcut;
 };
 
-export type Interface = {
+export type FreLanguageInterface = {
     typeName: string;
+    id?: string;
+    key?: string;// used for LionWeb
     isPublic: boolean;
     isNamespace?: boolean;
     isNamedElement?: boolean;
+    isAbstract?: boolean;
     subConceptNames: string[];
-    properties: Map<string, Property>;
+    properties: Map<string, FreLanguageProperty>;
+    referenceShortcut?: ReferenceShortcut;
 };
 
-export type Classifier = Model | ModelUnit | Concept | Interface;
+export type FreLanguageClassifier = FreLanguageModel | FreLanguageModelUnit | FreLanguageConcept | FreLanguageInterface;
 
 export class FreLanguage {
     private static theInstance: FreLanguage;
@@ -70,15 +92,23 @@ export class FreLanguage {
     }
 
     private languageName: string;
-    private pmodel: Model;
-    private units: Map<string, ModelUnit> = new Map<string, ModelUnit>();
-    private concepts: Map<string, Concept> = new Map<string, Concept>();
-    private interfaces: Map<string, Interface> = new Map<string, Interface>();
+    private languageId?: string;
+    private pmodel: FreLanguageModel;
+    private units: Map<string, FreLanguageModelUnit> = new Map<string, FreLanguageModelUnit>();
+    private concepts: Map<string, FreLanguageConcept> = new Map<string, FreLanguageConcept>();
+    private interfaces: Map<string, FreLanguageInterface> = new Map<string, FreLanguageInterface>();
+    private _stdLib: FreStdlib = new EmptyStdLib();
+    set stdLib(lib: FreStdlib) {
+        this._stdLib = lib;
+    }
+    get stdLib(): FreStdlib {
+        return this._stdLib;
+    }
 
     private constructor() {
     }
 
-    model(): Model {
+    model(): FreLanguageModel {
         return this.pmodel;
     }
 
@@ -90,20 +120,41 @@ export class FreLanguage {
         }
     }
 
-    unit(typeName: string): ModelUnit | undefined {
+    unit(typeName: string): FreLanguageModelUnit | undefined {
         return this.units.get(typeName);
     }
 
-    concept(typeName: string): Concept | undefined {
+    unitByKey(key: string): FreLanguageModelUnit | undefined {
+        return this.helperByKey(this.units, key) as FreLanguageModelUnit;
+    }
+
+    concept(typeName: string): FreLanguageConcept | undefined {
         // console.log("Language find concept " + typeName);
         return this.concepts.get(typeName);
     }
 
-    interface(typeName: string): Interface | undefined {
+    conceptByKey(conceptKey: string): FreLanguageConcept | undefined {
+        return this.helperByKey(this.concepts, conceptKey) as FreLanguageConcept;
+    }
+
+    private helperByKey(map: Map<string, FreLanguageClassifier>, conceptKey: string): FreLanguageClassifier | undefined {
+        for ( const concept of map.values()) {
+            if ( concept.key === conceptKey) {
+                return concept;
+            }
+        }
+        return null;
+    }
+
+    interface(typeName: string): FreLanguageInterface | undefined {
         return this.interfaces.get(typeName);
     }
 
-    classifier(typeName: string): Classifier | undefined {
+    interfaceByKey(key: string): FreLanguageInterface | undefined {
+        return this.helperByKey(this.interfaces, key) as FreLanguageInterface;
+    }
+
+    classifier(typeName: string): FreLanguageClassifier | undefined {
         const concept1 = this.concepts.get(typeName);
         if (!!concept1) {
             return concept1;
@@ -127,20 +178,67 @@ export class FreLanguage {
         return undefined;
     }
 
-    conceptProperty(typeName: string, propertyName: string): Property | undefined {
+    classifierByKey(key: string): FreLanguageClassifier | undefined {
+        const concept1 = this.conceptByKey(key);
+        if (!!concept1) {
+            return concept1;
+        } else {
+            const intf = this.interfaceByKey(key);
+            if (!!intf) {
+                return intf;
+            } else {
+                const unit1 = this.unitByKey(key);
+                if (!!unit1) {
+                    return unit1;
+                } else {
+                    // TODO By Id for models
+                    const model = this.modelOfType(key);
+                    if (!! model) {
+                        return model;
+                    }
+                }
+            }
+        }
+        // console.log("RETURNING NULL FOR " + typeName)
+        return undefined;
+    }
+
+    // private conceptProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
+    //     return this.concepts.get(typeName)?.properties.get(propertyName);
+    // }
+    //
+    // private conceptPropertyByKey(conceptKey: string, propertyKey: string): FreLanguageProperty | undefined {
+    //     return this.helperPropByKey(this.conceptByKey(conceptKey).properties, propertyKey);
+    // }
+
+    helperPropByKey(map: Map<string, FreLanguageProperty>, key: string): FreLanguageProperty | undefined {
+        for ( const prop of map.values()) {
+            if ( prop.key === key) {
+                return prop;
+            }
+        }
+        return undefined;
+    }
+
+    // private unitProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
+    //     return this.units.get(typeName)?.properties.get(propertyName);
+    // }
+
+    unitPropertyByKey(unitKey: string, propertyKey: string): FreLanguageProperty | undefined {
         // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
-        return this.concepts.get(typeName)?.properties.get(propertyName);
+        return this.helperPropByKey(this.unitByKey(unitKey).properties, propertyKey);
     }
 
-    unitProperty(typeName: string, propertyName: string): Property | undefined {
-        return this.units.get(typeName)?.properties.get(propertyName);
+    // private interfaceProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
+    //     return this.interfaces.get(typeName)?.properties.get(propertyName);
+    // }
+
+    interfacePropertyByKey(interfaceKey: string, propertyKey: string): FreLanguageProperty | undefined {
+        // LOGGER.log("copnceptProperty [" + typeName + "."  + propertyName + "]");
+        return this.helperPropByKey(this.interfaceByKey(interfaceKey).properties, propertyKey);
     }
 
-    interfaceProperty(typeName: string, propertyName: string): Property | undefined {
-        return this.interfaces.get(typeName)?.properties.get(propertyName);
-    }
-
-    classifierProperty(typeName: string, propertyName: string): Property | undefined {
+    classifierProperty(typeName: string, propertyName: string): FreLanguageProperty | undefined {
         // LOGGER.log("CLASSIFIERPROPERTY " + typeName + "." + propertyName);
         const concept1 = this.concepts.get(typeName);
         if (!!concept1) {
@@ -164,13 +262,22 @@ export class FreLanguage {
         return undefined;
     }
 
-    allConceptProperties(typeName: string): IterableIterator<Property> | undefined {
+    classifierPropertyByKey(classifierKey: string, propertyKey: string): FreLanguageProperty | undefined {
+        // LOGGER.log("CLASSIFIERPROPERTY " + typeName + "." + propertyName);
+        const concept1 = this.classifierByKey(classifierKey);
+        return this.helperPropByKey(concept1.properties, propertyKey);
+    }
+
+    allConceptProperties(typeName: string): FreLanguageProperty[] | undefined {
         // console.log("Looking up properties for "+ typeName);
-        let myType: Concept | ModelUnit | undefined = this.concept(typeName);
+        let myType: FreLanguageConcept | FreLanguageModelUnit | undefined = this.concept(typeName);
         if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }
-        return myType?.properties.values();
+        if (myType === undefined) {
+            return [];
+        }
+        return [...myType.properties.values()];
     }
 
     /**
@@ -178,9 +285,9 @@ export class FreLanguage {
      * @param typename
      * @param ptype
      */
-    public getPropertiesOfKind(typename: string, ptype: PropertyKind): Property[] {
-        const classifier: Classifier | undefined = FreLanguage.getInstance().classifier(typename);
-        const foundProperties: Property[] = [];
+    public getPropertiesOfKind(typename: string, ptype: PropertyKind): FreLanguageProperty[] {
+        const classifier: FreLanguageClassifier | undefined = FreLanguage.getInstance().classifier(typename);
+        const foundProperties: FreLanguageProperty[] = [];
         if (!!classifier) {
             for (const prop of classifier.properties.values()) {
                 if (prop.propertyKind === ptype) {
@@ -197,7 +304,7 @@ export class FreLanguage {
      * @param element
      * @param prop
      */
-    public getPropertyValue(element: FreNode, prop: Property): FreNode[] {
+    public getPropertyValue(element: FreNode, prop: FreLanguageProperty): FreNode[] {
         if (prop.isList) {
             return element[prop.name];
         } else {
@@ -238,34 +345,34 @@ export class FreLanguage {
         return Array.from(this.units.values()).map(unit => unit.typeName);
     }
 
-    createModel(): FreModel {
-        return this.pmodel?.constructor();
+    createModel(id?: string): FreModel {
+        return this.pmodel?.constructor(id);
     }
 
-    createUnit(typeName: string): FreModelUnit | undefined {
-        return this.units.get(typeName)?.constructor();
+    createUnit(typeName: string, id?: string): FreModelUnit | undefined {
+        return this.units.get(typeName)?.constructor(id);
     }
 
     /**
      * Create a new instance of the class `typeName`.
      * @param typeName
      */
-    createConceptOrUnit(typeName: string): FreNode | undefined {
-        let myType: Concept | ModelUnit | undefined = this.concept(typeName);
+    createConceptOrUnit(typeName: string, id?: string): FreNode | undefined {
+        let myType: FreLanguageConcept | FreLanguageModelUnit | undefined = this.concept(typeName);
         if (isNullOrUndefined(myType)) {
             myType = this.unit(typeName);
         }
-        return myType?.constructor();
+        return myType?.constructor(id);
     }
 
-    addModel(model: Model) {
+    addModel(model: FreLanguageModel) {
         if (!!this.pmodel) {
             console.error("Language: adding model of type " + model?.typeName + " while there is already a model of type " + this.pmodel.typeName);
         }
         this.pmodel = model;
     }
 
-    addUnit(unit: ModelUnit) {
+    addUnit(unit: FreLanguageModelUnit) {
         this.units.set(unit.typeName, unit);
         unit.subConceptNames = [];
     }
@@ -274,11 +381,11 @@ export class FreLanguage {
      * Add a concept definition to this language
      * @param concept
      */
-    addConcept(concept: Concept) {
+    addConcept(concept: FreLanguageConcept) {
         this.concepts.set(concept.typeName, concept);
     }
 
-    addInterface(intface: Interface) {
+    addInterface(intface: FreLanguageInterface) {
         this.interfaces.set(intface.typeName, intface);
     }
 
@@ -292,6 +399,14 @@ export class FreLanguage {
 
     get name(): string {
         return this.languageName;
+    }
+
+    set id(id: string) {
+        this.languageId = id;
+    }
+
+    get id(): string {
+        return this.languageId;
     }
 
     subConcepts(typeName: string): string[] {

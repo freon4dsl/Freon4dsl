@@ -1,4 +1,4 @@
-import { FreLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils/index";
 import { FreInterpreterDef } from "../../metalanguage/FreInterpreterDef";
 
@@ -9,7 +9,7 @@ export class InterpreterBaseTemplate {
      * @param language
      * @param interpreterDef
      */
-    public interpreterBase(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
+    public interpreterBase(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
         return `// Generated my Freon, will be overwritten with every generation.
         import { InterpreterContext, RtObject, RtError } from "@freon4dsl/core";
         import { ${interpreterDef.conceptsToEvaluate.map(c => Names.classifier(c)).join(",")} } from "../../language/gen";
@@ -31,7 +31,7 @@ export class InterpreterBaseTemplate {
         `;
     }
 
-    public interpreterClass(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
+    public interpreterClass(language: FreMetaLanguage): string {
         const baseName = Names.interpreterBaseClassname(language);
         return `// Generated my Freon once, will NEVER be overwritten.
         import { InterpreterContext, IMainInterpreter, RtObject } from "@freon4dsl/core";
@@ -53,7 +53,7 @@ export class InterpreterBaseTemplate {
         `;
     }
 
-    public interpreterInit(language: FreLanguage, interpreterDef: FreInterpreterDef): string {
+    public interpreterInit(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
         const interpreter = Names.interpreterClassname(language);
         return `import { IMainInterpreter } from "@freon4dsl/core";
         import { ${interpreter} } from "../${interpreter}";

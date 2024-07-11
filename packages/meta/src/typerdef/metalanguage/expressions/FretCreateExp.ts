@@ -2,7 +2,7 @@
 
 import { FretExp } from "./FretExp";
 import { FretPropInstance } from "../FretPropInstance";
-import { FreClassifier, MetaElementReference } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, MetaElementReference } from "../../../languagedef/metalanguage";
 
 /**
  * Class FretCreateExp is the implementation of the concept with the same name in the language definition file.
@@ -32,18 +32,19 @@ export class FretCreateExp extends FretExp {
     readonly $typename: string = "FretCreateExp"; // holds the metatype in the form of a string
 
     propertyDefs: FretPropInstance[] = []; // implementation of part 'propertyDefs'
-    $type: MetaElementReference<FreClassifier>; // implementation of reference 'type'
+    // @ts-ignore Property is set during parsing and checking phases
+    $type: MetaElementReference<FreMetaClassifier>; // implementation of reference 'type'
 
      /**
       * Convenience method for reference 'type'.
       * Instead of returning a 'MetaElementReference<FreClassifier>' object,
       * it returns the referred 'FreClassifier' object, if it can be found.
       */
-    get type(): FreClassifier {
+    get type(): FreMetaClassifier | undefined {
         if (!!this.$type) {
             return this.$type.referred;
         }
-        return null;
+        return undefined;
     }
     toFreString(): string {
         return this.$type.name + " {\n\t\t" + this.propertyDefs.map(p => p.toFreString()).join(",\n\t\t") + "\n\t} ";

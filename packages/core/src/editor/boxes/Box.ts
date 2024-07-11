@@ -1,5 +1,10 @@
 import { FreNode } from "../../ast";
-import { isNullOrUndefined, FreUtils } from "../../util";
+import {
+    isNullOrUndefined,
+    FreUtils,
+    FRE_BINARY_EXPRESSION_LEFT,
+    FRE_BINARY_EXPRESSION_RIGHT
+} from "../../util";
 import { FreLogger } from "../../logging";
 
 const LOGGER = new FreLogger("Box");
@@ -29,7 +34,7 @@ export abstract class Box {
      */
     isDirty(): void {
         if (this.refreshComponent !== undefined && this.refreshComponent !== null) {
-            this.refreshComponent("====== FROM Box " + this.kind + " " + this.id);
+            this.refreshComponent("Called by Box " + this.kind + " " + this.id);
         } else {
             LOGGER.log("No refreshComponent() for " + this.role);
         }
@@ -43,9 +48,9 @@ export abstract class Box {
     actualWidth: number = -1;
     actualHeight: number = -1;
 
-    protected constructor(element: FreNode, role: string) {
-        FreUtils.CHECK(!!element, "Element cannot be empty in Box constructor");
-        this.element = element;
+    protected constructor(node: FreNode, role: string) {
+        FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");
+        this.element = node;
         this.role = role;
         this.$id = FreUtils.BOX_ID(); // uuid.v4();
     }
@@ -73,7 +78,7 @@ export abstract class Box {
     /**
      * Get the first selectable leaf box in the tree with `this` as root.
      */
-    get firstLeaf(): Box {
+    get firstLeaf(): Box | null {
         if (this.isLeaf() && this.selectable) {
             return this;
         }
@@ -94,13 +99,13 @@ export abstract class Box {
     /**
      * Get the last selectable leaf box in the tree with `this` as root.
      */
-    get lastLeaf(): Box {
+    get lastLeaf(): Box | null {
         if (this.isLeaf() && this.selectable) {
             return this;
         }
-        const childrenReversed = this.children.filter(ch => true).reverse();
+        const childrenReversed = this.children.concat().reverse();
         for (const child of childrenReversed) {
-            const leafChild = child.lastLeaf;
+            const leafChild: Box = child.lastLeaf;
             if (!!leafChild) {
                 return leafChild;
             }
@@ -112,7 +117,7 @@ export abstract class Box {
     /**
      * Return the previous selectable leaf in the tree.
      */
-    get nextLeafRight(): Box {
+    get nextLeafRight(): Box | null {
         if (!this.parent) {
             return null;
         }
@@ -134,7 +139,7 @@ export abstract class Box {
     /**
      * Return the next selectable leaf in the tree.
      */
-    get nextLeafLeft(): Box {
+    get nextLeafLeft(): Box | null {
         if (this.parent === null || this.parent === undefined) {
             return null;
         }
@@ -174,6 +179,22 @@ export abstract class Box {
     }
 
     /**
+     * Find the first box with role = `role`.
+     */
+    findBoxWithRole(role: string): Box | null {
+        if (this.role === role) {
+            return this;
+        }
+
+        for (const b of this.children) {
+            const result = b.findBoxWithRole(role);
+            if (result !== null) {
+                return result;
+            }
+        }
+        return null;
+    }
+    /**
      * Find first box for element with `freId()` equals elementId and with `role` inside `this`
      * and all of its children recursively.
      * @param propertyName
@@ -212,8 +233,10 @@ export abstract class Box {
      * @param propertyName
      * @param propertyIndex
      */
-    findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box {
-        // console.log('findChildBoxForProperty ' + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+    findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
+        // if (propertyName === "value" && propertyIndex === undefined) {
+            console.log('findChildBoxForProperty ' + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        // }
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
             if (!isNullOrUndefined(propertyName)) {
@@ -241,26 +264,34 @@ export abstract class Box {
 
     /**
      * This function is called to set the focus on this element programmatically. Because of
-     * asynchonicity and both mobx and svelte reactivity, this is done as follows.
+     * asynchronicity and both mobx and svelte reactivity, this is done as follows.
      * 1. The box model is changed as requested by the user or programmatically.
      * 2. The 'editor.selectedBox' attribute gets a new value.
      * 3. The RenderComponent determines which of the shown boxes needs the focus, based
      * on 'editor.selectedBox', and the setFocus() method of this box is called.
      * 4. In various boxes the setFocus() method is overwritten by the Svelte component that
      * shows the box. Thus, the correct handling of the focus is done by this Svelte component.
+     * 5. If this box does not have a component, i.e. it is not shown in the current projection
+     * AND this method is not overridden, then the focus will be set to the parent box.
      */
     setFocus: () => void = async () => {
-        console.error(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id);
+        console.log(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id + ", referring to parent");
+        this.parent?.setFocus();
     };
 
     /**
      * Get the first editable leaf box in the tree with `this` as root.
      */
-    get firstEditableChild(): Box {
-        const editableChildren = [];
+    get firstEditableChild(): Box | null {
+        const editableChildren: Box[] = [];
         this.getEditableChildrenRecursive(editableChildren);
         if (editableChildren.length > 0) {
-            return editableChildren[0];
+            // Prefer a left- or right-placeholder if possible
+            const binaryPlaceHolders = editableChildren.filter(box => 
+                box.role === FRE_BINARY_EXPRESSION_LEFT ||
+                box.role === FRE_BINARY_EXPRESSION_RIGHT
+            )
+            return binaryPlaceHolders.length > 0 ? binaryPlaceHolders[0] : editableChildren[0];
         } else {
             return this;
         }

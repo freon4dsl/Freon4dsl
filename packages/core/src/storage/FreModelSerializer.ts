@@ -1,6 +1,7 @@
 import { FreNode } from "../ast";
-import { FreLanguage, Property } from "../language";
+import { FreLanguage, FreLanguageProperty } from "../language";
 import { isNullOrUndefined } from "../util";
+import { FreSerializer } from "./FreSerializer";
 
 /**
  * Helper class to serialize a model using MobXModelElementImpl.
@@ -8,7 +9,7 @@ import { isNullOrUndefined } from "../util";
  *
  * Depends on private keys etc. as defined in MobXModelElement decorators.
  */
-export class FreModelSerializer {
+export class FreModelSerializer implements FreSerializer {
     private language: FreLanguage;
 
     constructor() {
@@ -22,7 +23,7 @@ export class FreModelSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    toTypeScriptInstance(jsonObject: Object): any {
+    public toTypeScriptInstance(jsonObject: Object): FreNode {
         return this.toTypeScriptInstanceInternal(jsonObject);
     }
 
@@ -31,7 +32,7 @@ export class FreModelSerializer {
      *
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
-    private toTypeScriptInstanceInternal(jsonObject: Object): any {
+    private toTypeScriptInstanceInternal(jsonObject: Object): FreNode {
         if (jsonObject === null) {
             throw new Error("Cannot read json: jsonObject is null.");
         }
@@ -54,7 +55,7 @@ export class FreModelSerializer {
         return result;
     }
 
-    private convertProperties(result: FreNode, property: Property, value: any) {
+    private convertProperties(result: FreNode, property: FreLanguageProperty, value: any) {
         // console.log(">> creating property "+ property.name + "  of type " + property.propertyKind + " isList " + property.isList);
         switch (property.propertyKind) {
             case "primitive":
@@ -106,7 +107,7 @@ export class FreModelSerializer {
         }
     }
 
-    private checkValueToType(value: any, shouldBeType: string, property: Property) {
+    private checkValueToType(value: any, shouldBeType: string, property: FreLanguageProperty) {
         if (typeof value !== shouldBeType) {
             throw new Error(`Value of property '${property.name}' is not of type '${shouldBeType}'.`);
         }
@@ -148,7 +149,7 @@ export class FreModelSerializer {
         return result;
     }
 
-    private convertPropertyToJSON(p: Property, tsObject: FreNode, publicOnly: boolean, result: Object) {
+    private convertPropertyToJSON(p: FreLanguageProperty, tsObject: FreNode, publicOnly: boolean, result: Object) {
         switch (p.propertyKind) {
             case "part":
                 const value = tsObject[p.name];

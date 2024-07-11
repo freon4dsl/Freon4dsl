@@ -1,4 +1,4 @@
-import { FreLangElement, FreClassifier, FreFunction, FreInstance, FreLanguage, FreProperty } from "./internal";
+import { FreMetaLangElement, FreMetaClassifier, FreMetaFunction, FreMetaInstance, FreMetaLanguage, FreMetaProperty } from "./internal";
 import { Names } from "../../utils";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -15,29 +15,37 @@ import { MetaElementReference } from ".";
  *  5. Self expression: an expression that refers to a property of a classifier, like 'self.age'
  */
 
-export abstract class FreLangExp extends FreLangElement {
-    sourceName: string;							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
-    appliedfeature: FreLangAppliedFeatureExp;	        // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
-    $referredElement: MetaElementReference<FreLangElement>;  // refers to the element called 'sourceName'
-    language: FreLanguage;                           // the language for which this expression is defined
+// Some properties of the classes defined here are marked @ts-ignore to avoid the error:
+// TS2564: ... has no initializer and is not definitely assigned in the constructor.
+// These properties need to be undefined during parsing and checking. After the checking process
+// has been executed without errors, we can assume that these properties are initialized.
+
+export abstract class FreLangExp extends FreMetaLangElement {
+    sourceName: string = '';							        // either the 'XXX' in "XXX.yyy" or 'yyy' in "yyy"
+    // @ts-ignore
+    appliedfeature: FreLangAppliedFeatureExp;	                // either the 'yyy' in "XXX.yyy" or 'null' in "yyy"
+    // @ts-ignore
+    $referredElement: MetaElementReference<FreMetaLangElement>; // refers to the element called 'sourceName'
+    // @ts-ignore
+    language: FreMetaLanguage;                                  // the language for which this expression is defined
 
     // returns the property to which the complete expression refers, i.e. the element to which the 'd' in 'a.b.c.d' refers.
-    findRefOfLastAppliedFeature(): FreProperty {
+    findRefOfLastAppliedFeature(): FreMetaProperty | undefined {
         if (!!this.language) {
             if (this.appliedfeature !== undefined) {
                 // console.log(" last of: " + this.appliedfeature.sourceName);
                 return this.appliedfeature.findRefOfLastAppliedFeature();
             } else {
-                const found: FreLangElement = this.$referredElement?.referred;
+                const found: FreMetaLangElement = this.$referredElement?.referred;
                 // console.log("found reference: " + found?.name + " of type " + typeof found);
-                if (found instanceof FreProperty) {
+                if (found instanceof FreMetaProperty) {
                     return found;
                 }
             }
         } else {
             throw Error("Applied feature cannot be found because language is not set.");
         }
-        return null;
+        return undefined;
     }
 
     toFreString(): string {
@@ -46,10 +54,11 @@ export abstract class FreLangExp extends FreLangElement {
 }
 
 export class FreLangSimpleExp extends FreLangExp {
+    // @ts-ignore
     value: number;
 
-    findRefOfLastAppliedFeature(): FreProperty {
-        return null;
+    findRefOfLastAppliedFeature(): FreMetaProperty | undefined {
+        return undefined;
     }
 
     toFreString(): string {
@@ -59,15 +68,16 @@ export class FreLangSimpleExp extends FreLangExp {
 
 export class FreLangSelfExp extends FreLangExp {
 
-    static create(referred: FreClassifier): FreLangSelfExp {
+    static create(referred: FreMetaClassifier): FreLangSelfExp {
         const result = new FreLangSelfExp();
-        result.$referredElement = MetaElementReference.create<FreClassifier>(referred, "FreClassifier");
+        result.$referredElement = MetaElementReference.create<FreMetaClassifier>(referred, "FreClassifier");
         result.$referredElement.owner = result;
         result.sourceName = Names.nameForSelf;
         return result;
     }
 
-    $referredElement: MetaElementReference<FreClassifier>; // is not needed, can be determined based on its parent
+    // @ts-ignore
+    $referredElement: MetaElementReference<FreMetaClassifier>; // is not needed, can be determined based on its parent
 
     toFreString(): string {
         if (!!this.sourceName) {
@@ -80,8 +90,9 @@ export class FreLangSelfExp extends FreLangExp {
 
 export class FreInstanceExp extends FreLangExp {
     // sourceName should be name of a limited concept
-    instanceName: string;   // should be name of one of the predefined instances of 'sourceName'
-    $referredElement: MetaElementReference<FreInstance>;
+    instanceName: string = '';   // should be name of one of the predefined instances of 'sourceName'
+    // @ts-ignore
+    $referredElement: MetaElementReference<FreMetaInstance>;
 
     toFreString(): string {
         return this.sourceName + ":" + this.instanceName;
@@ -89,7 +100,8 @@ export class FreInstanceExp extends FreLangExp {
 }
 
 export class FreLangConceptExp extends FreLangExp {
-    $referredElement: MetaElementReference<FreClassifier>;
+    // @ts-ignore
+    $referredElement: MetaElementReference<FreMetaClassifier>;
 
     toFreString(): string {
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toFreString()) : "");
@@ -98,7 +110,7 @@ export class FreLangConceptExp extends FreLangExp {
 
 export class FreLangAppliedFeatureExp extends FreLangExp {
 
-    static create(owner: FreLangExp, name: string, referred: FreProperty): FreLangAppliedFeatureExp {
+    static create(owner: FreLangExp, name: string, referred: FreMetaProperty): FreLangAppliedFeatureExp {
         const result = new FreLangAppliedFeatureExp();
         result.referredElement = referred;
         result.sourceName = name;
@@ -106,23 +118,25 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
         return result;
     }
 
+    // @ts-ignore
     sourceExp: FreLangExp;
-    $referredElement: MetaElementReference<FreProperty>;
+    // @ts-ignore
+    $referredElement: MetaElementReference<FreMetaProperty>;
 
-    get referredElement(): FreProperty {
+    get referredElement(): FreMetaProperty {
         return this.$referredElement?.referred;
     }
 
-    set referredElement(p: FreProperty) {
-        this.$referredElement = MetaElementReference.create<FreProperty>(p, "FreProperty");
+    set referredElement(p: FreMetaProperty) {
+        this.$referredElement = MetaElementReference.create<FreMetaProperty>(p, "FreProperty");
         this.$referredElement.owner = this;
     }
 
-    get reference(): MetaElementReference<FreProperty> {
+    get reference(): MetaElementReference<FreMetaProperty> {
         return this.$referredElement;
     }
 
-    set reference(p: MetaElementReference<FreProperty>) {
+    set reference(p: MetaElementReference<FreMetaProperty>) {
         this.$referredElement = p;
         this.$referredElement.owner = this;
     }
@@ -131,7 +145,7 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
         return this.sourceName + (this.appliedfeature ? ("." + this.appliedfeature.toFreString()) : "");
     }
 
-    findRefOfLastAppliedFeature(): FreProperty {
+    findRefOfLastAppliedFeature(): FreMetaProperty {
         if (this.appliedfeature !== undefined) {
             // console.log(" last of: " + this.appliedfeature.sourceName);
             return this.appliedfeature.findRefOfLastAppliedFeature();
@@ -143,10 +157,12 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
 }
 
 export class FreLangFunctionCallExp extends FreLangExp {
-    // sourceName: string; 			// only used in validator for 'conformsTo' and 'equalsType'
+    // sourceName: string = ''; 			// only used in validator for 'conformsTo' and 'equalsType'
     actualparams: FreLangExp[] = [];
+    // @ts-ignore
     returnValue: boolean;
-    $referredElement: MetaElementReference<FreFunction>;
+    // @ts-ignore
+    $referredElement: MetaElementReference<FreMetaFunction>;
 
     toFreString(): string {
         let actualPars: string = "( ";

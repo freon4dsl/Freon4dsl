@@ -1,13 +1,12 @@
 import { Names } from "../../../utils";
-import { FreClassifier, FreLanguage, FreLimitedConcept } from "../../../languagedef/metalanguage";
-import { FreEditUnit } from "../../metalanguage";
+import { FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../../languagedef/metalanguage";
 
 export class EditorIndexTemplate {
 
-    generateGenIndex(language: FreLanguage, editorDef: FreEditUnit, extraClassifiers: FreClassifier[]): string {
-        const boxProviderConcepts: FreClassifier[] = [];
+    generateGenIndex(language: FreMetaLanguage, extraClassifiers: FreMetaClassifier[]): string {
+        const boxProviderConcepts: FreMetaClassifier[] = [];
         language.concepts.forEach(concept => {
-            if (!(concept instanceof FreLimitedConcept) && !concept.isAbstract) {
+            if (!(concept instanceof FreMetaLimitedConcept) && !concept.isAbstract) {
                 boxProviderConcepts.push(concept);
             }
         });
@@ -15,17 +14,16 @@ export class EditorIndexTemplate {
             boxProviderConcepts.push(concept);
         });
         boxProviderConcepts.push(...extraClassifiers);
-        return `
-        export * from "./${Names.actions(language)}";
-        export * from "./${Names.defaultActions(language)}";
-        ${boxProviderConcepts.map(cls =>
-            `export * from "./${Names.boxProvider(cls)}";`
-        ).join("")}
-        export * from "./EditorDef";
-        `;
+        // todo remove the loop over usedLanguages, it is unused
+        // @ts-expect-error
+        return ` ${language.usedLanguages.map(lang => `  
+            export * from "./${Names.actions(language)}";
+            export * from "./${Names.defaultActions(language)}";`).join("")} 
+        ${boxProviderConcepts.map(cls => `export * from "./${Names.boxProvider(cls)}";` ).join("")} 
+            export * from "./EditorDef"; `;
     }
 
-    generateIndex(language: FreLanguage, editorDef: FreEditUnit): string {
+    generateIndex(language: FreMetaLanguage): string {
         return `
         export * from "./gen";
         export * from "./${Names.customProjection(language)}";

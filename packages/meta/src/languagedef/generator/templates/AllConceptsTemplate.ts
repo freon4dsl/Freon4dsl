@@ -1,9 +1,9 @@
 import { GenerationUtil, Names } from "../../../utils";
-import { FreLanguage } from "../../metalanguage";
+import { FreMetaLanguage } from "../../metalanguage";
 
 export class AllConceptsTemplate {
 
-    generateAllConceptsClass(language: FreLanguage): string {
+    generateAllConceptsClass(language: FreMetaLanguage): string {
         const unitNames = language.units.map(unit => Names.classifier(unit));
         const tmp = GenerationUtil.sortUnitNames(language, unitNames);
 
@@ -14,12 +14,12 @@ export class AllConceptsTemplate {
         } from "./internal";
 
         /**
-         * Type ${Names.allConcepts(language)} is a union of all concepts and interfaces that are defined for language ${language.name}.
+         * Type ${Names.allConcepts()} is a union of all concepts and interfaces that are defined for language ${language.name}.
          * This type is used instead of the more general FreNode interface or the MobxModelElementImpl class,
          * or even the type Object, to ensure that parts of the language environment work on the same set
          * of instances.
          */
-        export type ${Names.allConcepts(language)} =
+        export type ${Names.allConcepts()} =
         ${tmp.map(c =>
             `${c}`
         ).join(" | ")}
@@ -28,6 +28,6 @@ export class AllConceptsTemplate {
         /**
          * Type MODELUNIT combines the metatype of all possible modelunits of language ${language.name}
          */
-        export type ${Names.modelunit(language)} = ${unitNames.map(name => `${name}`).join("| ")};`;
+        export type ${Names.modelunit()} = ${unitNames.map(name => `${name}`).join("| ")};`;
     }
 }

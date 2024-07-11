@@ -4,7 +4,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/meta",
-  "version": "0.5.0",
+  "version": "0.7.0-beta",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,32 +16,37 @@
     "freon": "dist/bin/freon-generator.js"
   },
   "scripts": {
+    "clean": "rm -rf node_modules/",
     "cleanup": "bash ../../scripts/cleanup.sh",
-    "lang-parser": "pegjs src/languagedef/parser/LanguageGrammar.pegjs",
-    "scop-parser": "pegjs src/scoperdef/parser/ScoperGrammar.pegjs",
-    "edit-parser": "pegjs src/editordef/parser/FreEditGrammar.pegjs",
-    "valid-parser": "pegjs src/validatordef/parser/ValidatorGrammar.pegjs",
-    "lang-exp-parser": "pegjs src/languagedef/parser/ExpressionGrammar.pegjs",
+    "lang-parser": "peggy src/languagedef/parser/LanguageGrammar.pegjs",
+    "scop-parser": "peggy src/scoperdef/parser/ScoperGrammar.pegjs",
+    "edit-parser": "peggy src/editordef/parser/FreEditGrammar.pegjs",
+    "valid-parser": "peggy src/validatordef/parser/ValidatorGrammar.pegjs",
+    "lang-exp-parser": "peggy src/languagedef/parser/ExpressionGrammar.pegjs",
     "start": "echo Starting meta",
     "pegjs-concat-language": "cd src/languagedef/parser && bash ./concat.sh",
     "pegjs-concat-editor": "cd src/editordef/parser && bash ./concat.sh",
     "pegjs-concat-scoper": "cd src/scoperdef/parser && bash ./concat.sh",
     "pegjs-concat-validator": "cd src/validatordef/parser && bash ./concat.sh",
-    "concat-pegjs": "yarn pegjs-concat-language && yarn pegjs-concat-editor && yarn pegjs-concat-scoper",
-    "build": "yarn concat-pegjs && yarn lang-parser && yarn pegjs-concat-validator && yarn scop-parser && yarn valid-parser && yarn edit-parser && yarn lang-exp-parser && tsc && yarn copy-validtemplates",
+    "concat-pegjs": "npm run pegjs-concat-language && npm run pegjs-concat-editor && npm run pegjs-concat-scoper",
+    "build": "npm run concat-pegjs && npm run lang-parser && npm run pegjs-concat-validator && npm run scop-parser && npm run valid-parser && npm run edit-parser && npm run lang-exp-parser && tsc && npm run copy-validtemplates",
+    "build-dev": "npm run build",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "copy-validtemplates": "cp src/utils/generation/ReservedWords.ts ./dist/validatordef/generator/templates/ReservedWords.ts",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "republish-local": "npm run unpublish-local && npm run publish-local",
     "test": "jest",
-    "build-release": "yarn build && yarn copy-validtemplates"
+    "build-release": "npm run build && npm run copy-validtemplates"
   },
   "dependencies": {
-    "@rushstack/ts-command-line": "4.7.8",
-    "pegjs": "^0.10.0",
-    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
+    "@rushstack/ts-command-line": "^4.22.0",
     "kotlin": "^1.5.21",
-    "tslib": "^2.4.0"
+    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
+    "peggy": "^4.0.3",
+    "prettier": "^3.3.0",
+    "source-map-support": "^0.5.21",
+    "tslib": "^2.6.3"
   }
 }

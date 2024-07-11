@@ -1,6 +1,6 @@
 import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
-import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";
+import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";
@@ -24,7 +24,7 @@ function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
 
 describe("Testing Default Scoper", () => {
     const creator = new SimpleModelCreator();
-    const environment = ScoperTestEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
+    const environment = DSmodelEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
     const scoper = environment.scoper;
     const unparser = environment.writer;
 

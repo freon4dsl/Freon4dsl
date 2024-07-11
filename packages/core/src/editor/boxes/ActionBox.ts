@@ -1,16 +1,21 @@
-import { Concept, FreLanguage } from "../../language";
+import {
+    FreLanguageConcept,
+    FreLanguage,
+    FreLanguageProperty,
+    FreLanguageClassifier
+} from "../../language";
 import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util";
-import { FreCreatePartAction } from "../actions";
-import { triggerTypeToString, FreEditor, TextBox, isProKey } from "../internal";
+import { FreCreatePartAction, FreCustomAction, FreTriggerType } from "../actions";
+import { triggerTypeToString, FreEditor, isProKey } from "../internal";
 import { Box, AbstractChoiceBox, SelectOption } from "./internal";
-import { FreNode } from "../../ast";
+import { FreNode, FreNodeReference } from "../../ast";
 import { runInAction } from "mobx";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("ActionBox");
+const LOGGER: FreLogger = new FreLogger("ActionBox");
 
 export class ActionBox extends AbstractChoiceBox {
-    readonly kind = "ActionBox";
+    readonly kind: string = "ActionBox";
     placeholder: string;
     /**
      * Filled with the name of the concept, in case this is used to create new concept instance.
@@ -56,20 +61,30 @@ export class ActionBox extends AbstractChoiceBox {
      * @param editor
      */
     getOptions(editor: FreEditor): SelectOption[] {
+        LOGGER.log("getOptions for " + this.$id + "- " + this.conceptName + "." + this.propertyName);
         const result: SelectOption[] = [];
         if ( !!this.propertyName && !!this.conceptName) {
+            LOGGER.log(`  has property ${this.propertyName} and concept ${this.conceptName}`);
             // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
-            const clsOtIntf = FreLanguage.getInstance().concept(this.conceptName) ?? FreLanguage.getInstance().interface(this.conceptName);
-            clsOtIntf.subConceptNames.concat(this.conceptName).forEach( (creatableConceptname: string) => {
-                const creatableConcept = FreLanguage.getInstance().concept(creatableConceptname);
+            const clsOtIntf: FreLanguageClassifier = FreLanguage.getInstance().classifier(this.conceptName);
+            const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(this.conceptName, this.propertyName);
+            LOGGER.log(`clsIntf: ${clsOtIntf} prop kind: ${propDef?.propertyKind}`);
+            clsOtIntf.subConceptNames.concat(this.conceptName).forEach((creatableConceptname: string) => {
+                const creatableConcept: FreLanguageConcept = FreLanguage.getInstance().concept(creatableConceptname);
+                LOGGER.log(`creatableConcept: ${creatableConcept}`)
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!(creatableConcept.referenceShortcut)) {
-                        this.addReferenceShortcuts(creatableConcept, result, editor);
+                        this.addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor);
                     }
-                    result.push(this.getCreateElementOption(this.propertyName, creatableConceptname, creatableConcept));
+                    result.push(this.getCreateElementOption(this.propertyName, creatableConceptname, creatableConcept as FreLanguageConcept));
                 }
             });
+        } else if (!!this.propertyName) {
+            // Reference property
+            const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(this.element.freLanguageConcept(), this.propertyName);
+            LOGGER.log(`parent: ${this.element.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`);
+            this.addReferences(this.element, propDef, result, editor);
         } else {
             LOGGER.log("No property and concept defined for action box " + this.role);
         }
@@ -91,7 +106,7 @@ export class ActionBox extends AbstractChoiceBox {
         return result;
     }
 
-    private getCreateElementOption(propertyName: string, conceptName: string, concept: Concept): SelectOption {
+    private getCreateElementOption(propertyName: string, conceptName: string, concept: FreLanguageConcept): SelectOption {
         LOGGER.log("ActionBox.createElementAction property: " + propertyName + " concept " + conceptName);
         return {
             id: conceptName,
@@ -111,7 +126,7 @@ export class ActionBox extends AbstractChoiceBox {
      * @param editor  The editor context
      * @private
      */
-    private addReferenceShortcuts(concept: Concept, result: SelectOption[], editor: FreEditor) {
+    private addReferenceShortcuts(concept: FreLanguageConcept, result: SelectOption[], editor: FreEditor) {
         // Create the new element for this behavior inside a dummy and then point the owner to the
         // current element.  This way the new element is not part of the model and will not trigger mobx
         // reactions. But the scoper can be used to find available references, because the scoper only
@@ -138,10 +153,48 @@ export class ActionBox extends AbstractChoiceBox {
                         })
                     })));
         });
+    }    
+    
+    /**
+     * Get all referable elements for the property
+     * @param result  The array where the resulting actions should be added to
+     * @param editor  The editor context
+     * @private
+     */
+    private addReferences(parentNode: FreNode, property: FreLanguageProperty, result: SelectOption[], editor: FreEditor) {
+        // Create the new element for this behavior inside a dummy and then point the owner to the
+        // current element.  This way the new element is not part of the model and will not trigger mobx
+        // reactions. But the scoper can be used to find available references, because the scoper only
+        // needs the owner.
+        LOGGER.log("addReferences: " + parentNode.freLanguageConcept() + " property " + property.name)
+        const propType: string = property.type;
+        // const self: ActionBox = this;
+        runInAction(() => {
+            // const newElement = concept.constructor();
+            // newElement["$$owner"] = this.element;
+            result.push(...
+                editor.environment
+                    .scoper.getVisibleNames(parentNode, propType)
+                    .filter(name => !!name && name !== "")
+                    .map(name => ({
+                        id: parentNode.freLanguageConcept() + "-" + name,
+                        label: name,
+                        description: "create ref to " + propType,
+                        action: FreCustomAction.create({
+                            activeInBoxRoles: [],
+                            // @ts-ignore
+                            // todo check whether param 'ed' can be removed
+                            action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
+                                parentNode[property.name].push(FreNodeReference.create(name, null));
+                                return null;
+                            }
+                        })
+                    })));
+        });
     }
 
     triggerKeyPressEvent = (key: string) => { // TODO rename this one, e.g. to triggerKeyEvent
-        console.error("ActionBox " + this.role + " has empty triggerKeyPressEvent");
+        console.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
     };
 }
 

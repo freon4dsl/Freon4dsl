@@ -1,8 +1,8 @@
 import { FreTyperMerger } from "../../typerdef/parser";
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { MetaLogger } from "../../utils";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { FretClassifierSpec, FretInferenceRule, TyperDef } from "../../typerdef/metalanguage";
+import {FretClassifierSpec, FretInferenceRule, FretTypeRule, TyperDef} from "../../typerdef/metalanguage";
 
 function testTypeUnit(typeUnit: TyperDef) {
     expect(typeUnit).not.toBeNull();
@@ -13,15 +13,17 @@ function testTypeUnit(typeUnit: TyperDef) {
     // console.log(typeUnit.conceptsWithType.map(t => t.name).join(", "))
     expect(typeUnit.anyTypeSpec).not.toBeNull();
 
-    const stringLitRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "StringLiteral");
+    const stringLitRule:FretClassifierSpec | undefined = typeUnit.classifierSpecs.find(rule => rule.myClassifier?.name === "StringLiteral");
     expect(stringLitRule).not.toBeNull();
-    expect(stringLitRule instanceof FretClassifierSpec).toBeTruthy();
-    const inferOfStringLit = (stringLitRule as FretClassifierSpec).rules.find(r => r instanceof FretInferenceRule);
+    expect(stringLitRule).not.toBeUndefined();
+    expect(stringLitRule).toBeTruthy();
+    const inferOfStringLit:FretTypeRule | undefined = (stringLitRule as FretClassifierSpec).rules.find(r => r instanceof FretInferenceRule);
     expect(inferOfStringLit).not.toBeNull();
+    expect(inferOfStringLit).not.toBeUndefined();
     // expect(inferOfStringLit.returnType).not.toBeNull();
     // expect(inferOfStringLit.returnType.name).toBe(predefType.name);
 
-    const plusExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "PlusExp");
+    const plusExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier?.name === "PlusExp");
     expect(plusExpRule).not.toBeNull();
     expect(plusExpRule instanceof FretClassifierSpec).toBeTruthy();
     const inferOfPlusExp = (plusExpRule as FretClassifierSpec).rules.find(r => r instanceof FretInferenceRule);
@@ -35,17 +37,21 @@ describe("Checking new typer", () => {
     const langParser = new LanguageParser();
 
     let parser: FreTyperMerger;
-    let language: FreLanguage;
+    let language: FreMetaLanguage | undefined;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 
     beforeEach(() => {
         try {
             language = langParser.parse(testdir + "projectY.ast");
-            parser = new FreTyperMerger(language);
-        } catch (e) {
-            console.log("Language could not be read: " + e.stack);
-            // console.log("found errors in .ast: " + langParser.checker.errors.map(e => e).join("\n"));
+            if (!!language) {
+                parser = new FreTyperMerger(language);
+            }
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                console.log("Language could not be read: " + e.stack);
+                // console.log("found errors in .ast: " + langParser.checker.errors.map(e => e).join("\n"));
+            }
         }
     });
 
@@ -59,20 +65,24 @@ describe("Checking new typer", () => {
             expect(namedType).not.toBeNull();
             expect(namedType).not.toBeUndefined();
 
-            let typeUnit: TyperDef;
+            let typeUnit: TyperDef | undefined;
             try {
                 if (!!parser) {
                     typeUnit = parser.parse(testdir + "projectY.type");
                 }
-            } catch (e) {
-                // console.log(e.stack);
-                const errors: string[] = parser.checker.errors;
-                expect(errors.length).toBe(0);
-                // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    // console.log(e.stack);
+                    const errors: string[] = parser.checker.errors;
+                    expect(errors.length).toBe(0);
+                    // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                }
             }
 
-           // console.log(typeUnit?.toFretString());
-            testTypeUnit(typeUnit);
+            // console.log(typeUnit?.toFretString());
+            expect(typeUnit).not.toBeUndefined();
+            expect(typeUnit).not.toBeNull();
+            testTypeUnit(typeUnit!);
         }
     });
 
@@ -86,20 +96,24 @@ describe("Checking new typer", () => {
             expect(namedType).not.toBeNull();
             expect(namedType).not.toBeUndefined();
 
-            let typeUnit: TyperDef;
+            let typeUnit: TyperDef | undefined;
             try {
                 if (!!parser) {
                     typeUnit = parser.parseMulti(
                         [testdir + "multiFileInput/projectY-part1.type",
                             testdir + "multiFileInput/projectY-part2.type"]);
                 }
-            } catch (e) {
-                // console.log(e.stack);
-                const errors: string[] = parser.checker.errors;
-                expect(errors.length).toBe(0);
-                // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    // console.log(e.stack);
+                    const errors: string[] = parser.checker.errors;
+                    expect(errors.length).toBe(0);
+                    // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                }
             }
-            testTypeUnit(typeUnit);
+            expect(typeUnit).not.toBeUndefined();
+            expect(typeUnit).not.toBeNull();
+            testTypeUnit(typeUnit!);
         }
     });
 });

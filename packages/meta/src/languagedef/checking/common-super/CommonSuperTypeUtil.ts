@@ -1,5 +1,5 @@
 import { OrderedList } from "./OrderedList";
-import { FreClassifier, FreConcept, FreInterface } from "../../metalanguage";
+import { FreMetaClassifier, FreMetaConcept, FreMetaInterface } from "../../metalanguage";
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
 // 1. Breath First Search of each class hierarchy going "upwards" - result into OrderedList (preserve order + no duplicates).
@@ -9,10 +9,10 @@ import { FreClassifier, FreConcept, FreInterface } from "../../metalanguage";
 
 export class CommonSuperTypeUtil {
 
-    public static commonSuperType(inList: FreClassifier[]): FreClassifier[] {
+    public static commonSuperType(inList: FreMetaClassifier[]): FreMetaClassifier[] {
         if (!!inList && inList.length > 0) {
             // start with the supers from the first element
-            const rollingIntersect: OrderedList<FreClassifier> = this.getSupers(inList[0]);
+            const rollingIntersect: OrderedList<FreMetaClassifier> = this.getSupers(inList[0]);
             // intersect with the next
             for (let i = 1; i < inList.length; i++) {
                 // this.printOrderedList("rollingIntersect at " + i.toString(), rollingIntersect);
@@ -23,42 +23,42 @@ export class CommonSuperTypeUtil {
         return [];
     }
 
-    private static printOrderedList(comment: string, list: OrderedList<FreClassifier>) {
-        let result: string = comment;
-        for (const freClassifier of list) {
-            result += "\t" + freClassifier.name;
-        }
-        console.log(result);
-    }
+    // private static printOrderedList(comment: string, list: OrderedList<FreMetaClassifier>) {
+    //     let result: string = comment;
+    //     for (const freClassifier of list) {
+    //         result += "\t" + freClassifier.name;
+    //     }
+    //     console.log(result);
+    // }
 
     /**
      * Breath first search for supers of 'inCls'.
      * @param inCls
      * @private
      */
-    private static getSupers(inCls: FreClassifier): OrderedList<FreClassifier> {
-        const classes: OrderedList<FreClassifier> = new OrderedList<FreClassifier>();
+    private static getSupers(inCls: FreMetaClassifier): OrderedList<FreMetaClassifier> {
+        const classes: OrderedList<FreMetaClassifier> = new OrderedList<FreMetaClassifier>();
         if (!!inCls) {
-            let nextLevel: OrderedList<FreClassifier> = new OrderedList<FreClassifier>();
+            let nextLevel: OrderedList<FreMetaClassifier> = new OrderedList<FreMetaClassifier>();
             nextLevel.add(inCls.name, inCls);
             // console.log(nextLevel.getByName(inCls.name)?.name);
             // this.printOrderedList("nextLevel: ", nextLevel );
             while (nextLevel.length() > 0) {
                 classes.addAll(nextLevel);
-                const thisLevel: OrderedList<FreClassifier> = new OrderedList<FreClassifier>();
+                const thisLevel: OrderedList<FreMetaClassifier> = new OrderedList<FreMetaClassifier>();
                 thisLevel.addAll(nextLevel);
-                nextLevel = new OrderedList<FreClassifier>();
+                nextLevel = new OrderedList<FreMetaClassifier>();
                 for (const elem of thisLevel) {
-                    if (elem instanceof FreConcept) {
+                    if (elem instanceof FreMetaConcept) {
                         if (!!elem.base) {
-                            const superClass: FreClassifier = elem.base.referred;
+                            const superClass: FreMetaClassifier = elem.base.referred;
                             nextLevel.add(superClass.name, superClass);
                         }
                         for (const yy of elem.interfaces) {
                             nextLevel.add(yy.name, yy.referred);
                         }
                     }
-                    if (elem instanceof FreInterface) {
+                    if (elem instanceof FreMetaInterface) {
                         elem.base.forEach(b => {
                             nextLevel.add(b.name, b.referred);
                         });

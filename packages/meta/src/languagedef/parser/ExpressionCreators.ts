@@ -9,7 +9,7 @@ import {
 } from "../metalanguage/FreLangExpressions";
 import { MetaLogger } from "../../utils/MetaLogger";
 import { Names } from "../../utils";
-import { FreClassifier } from "../metalanguage/FreLanguage";
+import { FreMetaClassifier } from "../metalanguage/FreMetaLanguage";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
@@ -42,7 +42,7 @@ export function createTest(data: Partial<LanguageExpressionTester>): LanguageExp
 export function createConceptExps(data: Partial<TestExpressionsForConcept>): TestExpressionsForConcept {
     LOGGER.log("createConceptExps");
     const result = new TestExpressionsForConcept();
-    result.name = data.conceptRef.name + "ExpressionSet";
+    result.name = data.conceptRef?.name + "ExpressionSet";
     if (!!data.conceptRef) {
         result.conceptRef = data.conceptRef;
         result.conceptRef.owner = result;
@@ -57,9 +57,9 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     return result;
 }
 
-export function createClassifierReference(data: Partial<MetaElementReference<FreClassifier>>): MetaElementReference<FreClassifier> {
+export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = MetaElementReference.create<FreClassifier>(data.name, "FreClassifier");
+    const result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : '', "FreClassifier");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
@@ -67,8 +67,8 @@ export function createClassifierReference(data: Partial<MetaElementReference<Fre
     return result;
 }
 
-export function createExpression(data: Partial<FreLangExp>): FreLangExp {
-    let result: FreLangExp;
+export function createExpression(data: Partial<FreLangExp>): FreLangExp | undefined {
+    let result: FreLangExp | undefined = undefined;
     if (!!data.sourceName) {
         if (data.sourceName === Names.nameForSelf) {
             // cannot use FreLangSelfExp.create() because referredElement is not yet known
@@ -81,13 +81,15 @@ export function createExpression(data: Partial<FreLangExp>): FreLangExp {
             result.sourceName = data.sourceName;
         }
     }
-    if (!!data.appliedfeature) {
-        result.appliedfeature = data.appliedfeature;
-        result.appliedfeature.sourceExp = result;
-    }
-    if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
+    if (result !== null && result !== undefined) {
+        if (!!data.appliedfeature) {
+            result.appliedfeature = data.appliedfeature;
+            result.appliedfeature.sourceExp = result;
+        }
+        if (!!data.location) {
+            result.location = data.location;
+            result.location.filename = currentFileName;
+        }
     }
     return result;
 }
@@ -151,8 +153,6 @@ export function createSimpleExpression(data: Partial<FreLangSimpleExp>): FreLang
     LOGGER.log("createSimpleExpression");
     const result: FreLangSimpleExp = new FreLangSimpleExp();
     // when the normal check is present, a value of 0 will not be passed to result
-    // if (!!data.value) {
-    result.value = data.value;
-    // }
+    result.value = data.value ? data.value : 0;
     return result;
 }

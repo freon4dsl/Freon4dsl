@@ -1,4 +1,4 @@
-import { FreLanguage, FreLimitedConcept } from "../../metalanguage";
+import {FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept} from "../../metalanguage";
 import {
     LANGUAGE_GEN_FOLDER,
     Names,
@@ -11,13 +11,12 @@ export class StdlibTemplate {
     limitedConceptNames: string[] = [];
     constructorText: string = "";
 
-    generateStdlibClass(language: FreLanguage, relativePath: string): string {
+    generateStdlibClass(language: FreMetaLanguage, relativePath: string): string {
         this.makeTexts(language);
 
         return `
         import { ${Names.FreNamedNode}, ${Names.FreStdlib}, ${Names.FreLanguage} } from "${FREON_CORE}";
-        import { ${Names.metaType(language)},
-                    ${this.limitedConceptNames.map(name => `${name}`).join(", ") }
+        import { ${this.limitedConceptNames.map(name => `${name}`).join(", ") }
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
         import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
@@ -62,7 +61,7 @@ export class StdlibTemplate {
              * @param name
              * @param metatype
              */
-            public find(name: string, metatype?: ${Names.metaType(language)}) : ${Names.FreNamedNode} {
+            public find(name: string, metatype?: ${Names.metaType()}) : ${Names.FreNamedNode} {
                 if (!!name) {
                     const possibles = this.elements.filter((elem) => elem.name === name);
                     if (possibles.length !== 0) {
@@ -82,7 +81,7 @@ export class StdlibTemplate {
         }`;
     }
 
-    generateCustomStdlibClass(language: FreLanguage): string {
+    generateCustomStdlibClass(language: FreMetaLanguage): string {
         return `
         import { ${Names.FreNamedNode}, ${Names.FreStdlib} } from "@freon4dsl/core";
 
@@ -94,16 +93,17 @@ export class StdlibTemplate {
         }`;
     }
 
-    private makeTexts(language) {
-        language.concepts.filter(con => con instanceof FreLimitedConcept).map(limitedConcept => {
+    private makeTexts(language: FreMetaLanguage) {
+        language.concepts.filter((con: FreMetaConcept) => con instanceof FreMetaLimitedConcept).map((limCon: FreMetaConcept) => {
+            const limitedConcept: FreMetaLimitedConcept = limCon as FreMetaLimitedConcept;
             const myName = Names.concept(limitedConcept);
             this.limitedConceptNames.push(myName);
-            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map(x =>
+            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map((x: FreMetaInstance) =>
                 `this.elements.push(${myName}.${x.name});`).join("\n ")}`);
         });
     }
 
-    generateIndex(language: FreLanguage) {
+    generateIndex(language: FreMetaLanguage) {
         return `
         export * from "./${Names.customStdlib(language)}";
         `;

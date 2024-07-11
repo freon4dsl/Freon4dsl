@@ -17,32 +17,34 @@ export class NamedElementSearchWorker implements FreSearchWorker {
         return this.$result;
     }
 
+    // @ts-ignore
+    // parameter is present to adhere to signature of super class
     execAfter(modelelement: FreNode): boolean {
         // unused
         return false;
     }
 
-    execBefore(modelelement: FreNode): boolean {
+    execBefore(node: FreNode): boolean {
         if (!!this.metatype) {
-            if (this.metatype === modelelement.freLanguageConcept() || this.metatype === "FreNodeReference") {
-                this.checkElement(modelelement);
+            if (this.metatype === node.freLanguageConcept() || this.metatype === "FreNodeReference") {
+                this.checkElement(node);
             }
         } else {
-            this.checkElement(modelelement);
+            this.checkElement(node);
         }
         return true; // is irrelevant, there are no other workers in this search
     }
 
-    private checkElement(modelelement: FreNode) {
-        const valueOfNameProp = modelelement["name"];
+    private checkElement(node: FreNode) {
+        const valueOfNameProp = node["name"];
         if (valueOfNameProp !== null && valueOfNameProp !== undefined && typeof valueOfNameProp === "string" && valueOfNameProp.length > 0) {
             if (!this.caseSensitive) {
                 if (valueOfNameProp.toLowerCase().includes(this.nameToFind.toLowerCase())) {
-                    this.result.push(modelelement);
+                    this.result.push(node);
                 }
             } else {
                 if (valueOfNameProp.includes(this.nameToFind)) {
-                    this.result.push(modelelement);
+                    this.result.push(node);
                 }
             }
         }

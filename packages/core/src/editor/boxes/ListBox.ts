@@ -1,11 +1,11 @@
 import { Box } from "./Box";
 import { FreNode } from "../../ast";
 import { FreLanguage } from "../../language";
-import { FreLogger } from "../../logging";
 import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
 import { LayoutBox, ListDirection } from "./LayoutBox";
 
-const LOGGER = new FreLogger("ListBox");
+// import { FreLogger } from "../../logging";
+// const LOGGER = new FreLogger("ListBox");
 
 /**
  * This Box represents a list in the FreElement model, i.e. one that is defined in the .ast file
@@ -14,11 +14,11 @@ const LOGGER = new FreLogger("ListBox");
 export abstract class ListBox extends LayoutBox {
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    protected constructor(element: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<ListBox>) {
-        super(element, role, children, initializer);
+    protected constructor(node: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<ListBox>) {
+        super(node, role, children, initializer);
         this.kind = "ListBox";
         this.propertyName = propertyName;
-        this.conceptName = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName)?.type;
+        this.conceptName = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
     }
 
     options(type: MenuOptionsType): MenuItem[] {
@@ -27,7 +27,7 @@ export abstract class ListBox extends LayoutBox {
 }
 
 export class HorizontalListBox extends ListBox {
-    kind = "HorizontalListBox";
+    kind: string = "HorizontalListBox";
 
     constructor(element: FreNode, propertyName: string, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>) {
         super(element, role, propertyName, children, initializer);
@@ -38,8 +38,8 @@ export class HorizontalListBox extends ListBox {
 export class VerticalListBox extends ListBox {
     kind = "VerticalListBox";
 
-    constructor(element: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
-        super(element, role, propertyName, children, initializer);
+    constructor(node: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
+        super(node, role, propertyName, children, initializer);
         this.direction = ListDirection.VERTICAL;
     }
 }

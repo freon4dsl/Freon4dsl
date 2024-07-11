@@ -1,0 +1,1398 @@
+{
+   "serializationFormatVersion": "1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-48",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Topic"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Topic-name"
+               },
+               "value": "Fractions10"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Topic-description"
+               },
+               "value": "Fractions for children of age 10"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Topic-pages"
+               },
+               "children": [
+                  "ID-49",
+                  "ID-68",
+                  "ID-82"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-14"
+      },
+      {
+         "id": "ID-49",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Theory"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Page-name"
+               },
+               "value": "Fractions theory"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Theory-lines"
+               },
+               "children": [
+                  "ID-50",
+                  "ID-51",
+                  "ID-52",
+                  "ID-53",
+                  "ID-54"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Page-questions"
+               },
+               "children": [
+                  "ID-55"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Page-calcResult"
+               },
+               "children": [
+                  "ID-57"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-48"
+      },
+      {
+         "id": "ID-50",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Line"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Line-content"
+               },
+               "value": "When you encounter a fraction, you want to simplify this as much as possible."
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-51",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Line"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Line-content"
+               },
+               "value": "This means that you make the numbers above and below the line as small as possible."
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-52",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Line"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Line-content"
+               },
+               "value": "How do you do this?"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-53",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Line"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Line-content"
+               },
+               "value": " "
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-54",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Line"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Line-content"
+               },
+               "value": "By dividing both the numerator and the denominator by the same number."
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-55",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "Theory 1"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "Bla"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-56"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-56",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "false"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-57",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Function"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Function-cases"
+               },
+               "children": [
+                  "ID-58",
+                  "ID-66"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-58",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-FunctionCase"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-formula"
+               },
+               "children": [
+                  "ID-59"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-59",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-AndExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-60"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-63"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-58"
+      },
+      {
+         "id": "ID-60",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-61"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-62"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-59"
+      },
+      {
+         "id": "ID-61",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-QuestionRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-QuestionRef-question"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory 1",
+                     "reference": "ID-55"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-60"
+      },
+      {
+         "id": "ID-62",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-FractionLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FractionLiteralExpression-numerator"
+               },
+               "value": "1"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FractionLiteralExpression-denominator"
+               },
+               "value": "2"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-60"
+      },
+      {
+         "id": "ID-63",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-64"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-65"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-59"
+      },
+      {
+         "id": "ID-64",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-QuestionRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-QuestionRef-question"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory 1",
+                     "reference": "ID-55"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-63"
+      },
+      {
+         "id": "ID-65",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "false"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-63"
+      },
+      {
+         "id": "ID-66",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-FunctionCase"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-formula"
+               },
+               "children": [
+                  "ID-67"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeB",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-67",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "true"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-66"
+      },
+      {
+         "id": "ID-68",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Video"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Video-url"
+               },
+               "value": "https://www.mathematics.com/help"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Page-name"
+               },
+               "value": "Fractions video one"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Page-questions"
+               },
+               "children": [
+                  "ID-69",
+                  "ID-71"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Page-calcResult"
+               },
+               "children": [
+                  "ID-73"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-48"
+      },
+      {
+         "id": "ID-69",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "Video1 Q1"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "Is 3 / 4 the same as 6 / 8?"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-70"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-68"
+      },
+      {
+         "id": "ID-70",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "true"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-69"
+      },
+      {
+         "id": "ID-71",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "Video1 Simplify"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "Simplify  4/ 8"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-72"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-68"
+      },
+      {
+         "id": "ID-72",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-FractionLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FractionLiteralExpression-numerator"
+               },
+               "value": "1"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FractionLiteralExpression-denominator"
+               },
+               "value": "2"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-71"
+      },
+      {
+         "id": "ID-73",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Function"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Function-cases"
+               },
+               "children": [
+                  "ID-74",
+                  "ID-78"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-68"
+      },
+      {
+         "id": "ID-74",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-FunctionCase"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-formula"
+               },
+               "children": [
+                  "ID-75"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-73"
+      },
+      {
+         "id": "ID-75",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-76"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-77"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-74"
+      },
+      {
+         "id": "ID-76",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-QuestionRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-QuestionRef-question"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Video1 Q1",
+                     "reference": "ID-69"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-75"
+      },
+      {
+         "id": "ID-77",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "true"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-75"
+      },
+      {
+         "id": "ID-78",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-FunctionCase"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-formula"
+               },
+               "children": [
+                  "ID-79"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeB",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-73"
+      },
+      {
+         "id": "ID-79",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-80"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-81"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-78"
+      },
+      {
+         "id": "ID-80",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-QuestionRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-QuestionRef-question"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Video1 Q1",
+                     "reference": "ID-69"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-79"
+      },
+      {
+         "id": "ID-81",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "false"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-79"
+      },
+      {
+         "id": "ID-82",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Video"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Video-url"
+               },
+               "value": "https://www.myvideo.com"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Page-name"
+               },
+               "value": "Fractions video two"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Page-questions"
+               },
+               "children": [
+                  "ID-83"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Page-calcResult"
+               },
+               "children": [
+                  "ID-85"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-48"
+      },
+      {
+         "id": "ID-83",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "Video2 question"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "Did you understand the video?"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-84"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-82"
+      },
+      {
+         "id": "ID-84",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "true"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-83"
+      },
+      {
+         "id": "ID-85",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-Function"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-Function-cases"
+               },
+               "children": [
+                  "ID-86",
+                  "ID-90"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-82"
+      },
+      {
+         "id": "ID-86",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-FunctionCase"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-formula"
+               },
+               "children": [
+                  "ID-87"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-85"
+      },
+      {
+         "id": "ID-87",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-88"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-89"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-86"
+      },
+      {
+         "id": "ID-88",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-QuestionRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-QuestionRef-question"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Video2 question",
+                     "reference": "ID-83"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-87"
+      },
+      {
+         "id": "ID-89",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "true"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-87"
+      },
+      {
+         "id": "ID-90",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-FunctionCase"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-formula"
+               },
+               "children": [
+                  "ID-91"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-FunctionCase-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeB",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-85"
+      },
+      {
+         "id": "ID-91",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-92"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-93"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": "ID-90"
+      },
+      {
+         "id": "ID-92",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "false"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": "ID-91"
+      },
+      {
+         "id": "ID-93",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "1",
+            "key": "-default-key-QuestionRef"
+         },
+         "properties": [],
+         "children": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "1",
+                  "key": "-default-key-QuestionRef-question"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Video2 question",
+                     "reference": "ID-83"
+                  }
+               ]
+            }
+         ],
+         "parent": "ID-91"
+      }
+   ]
+}

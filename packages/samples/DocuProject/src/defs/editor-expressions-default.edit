@@ -1,0 +1,64 @@
+editor default
+
+////////////////////////////////////////////////////////////////
+//       Expressions to be able to calculate with Euros       //
+////////////////////////////////////////////////////////////////
+EuroLiteral {
+    [EUR ${euros},${cents}] // TODO make third level projection where EUR is the euro symbol
+}
+NumberLiteral {
+    [${self.value}]
+}
+PercentageLiteral {
+    [${self.value}%]
+}
+BooleanLiteral {
+    [${self.value text}]
+}
+MinusExpression  {
+    symbol = "-"
+}
+PlusExpression {
+    symbol = "+"
+}
+MultiplyExpression {
+    symbol = "*"
+}
+DivideExpression {
+    symbol = "/"
+}
+FunctionCallExpression {
+    [${funcDefinition} ( ${args horizontal separator[,] } )]
+    referenceShortcut = ${funcDefinition}
+    trigger = "calc"
+}
+InsurancePartRef {
+    [${self.part}]
+    referenceShortcut = ${self.part}
+}
+RiskAdjustmentRef {
+    [riskAdjustment]
+}
+ParameterRef {
+    [${self.parameter}[?.${self.attribute}]]
+    referenceShortcut = ${self.parameter}
+}
+RiskRef {
+    [statisticalRisk]
+}
+PayoutRef {
+    [maximumPayOut]
+}
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    [${kind}{ ${content horizontal separator[,]} }]
+    referenceShortcut = ${self.kind}
+}
+TypeRef {
+    [${self.type}]
+    referenceShortcut = ${self.type}
+}
+GenericTypeDecl {
+    [${kind}< ${baseType} >]
+    referenceShortcut = ${self.kind}
+}

@@ -1,24 +1,27 @@
-import { FreClassifier, MetaElementReference, FreLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, MetaElementReference, FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { FreTyperElement } from "../FreTyperElement";
 
 export abstract class FretExp extends FreTyperElement {
-    language: FreLanguage;
-    $returnType: MetaElementReference<FreClassifier>;
+    // @ts-ignore Property is set during parsing and checking phases
+    language: FreMetaLanguage;
+    // @ts-ignore Property is set during parsing and checking phases
+    $returnType: MetaElementReference<FreMetaClassifier>;
     readonly $typename: string = "FretExp"; // holds the metatype in the form of a string
+    // @ts-ignore Property is set during parsing and checking phases
     owner: FreTyperElement;
 
     toFreString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'FretExp'";
     }
-    get returnType(): FreClassifier {
+    get returnType(): FreMetaClassifier | undefined {
         if (!!this.$returnType && !!this.$returnType.referred) {
             return this.$returnType.referred;
         }
-        return null;
+        return undefined;
     }
-    set returnType(cls: FreClassifier) {
+    set returnType(cls: FreMetaClassifier | undefined) {
         if (!!cls) {
-            this.$returnType = MetaElementReference.create<FreClassifier>(cls, "FreClassifier");
+            this.$returnType = MetaElementReference.create<FreMetaClassifier>(cls, "FreClassifier");
             this.$returnType.owner = this.language;
         }
     }

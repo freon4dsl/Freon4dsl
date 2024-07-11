@@ -54,20 +54,6 @@ packages/meta/src/typerdef/parser/PiTyperGrammar.pegjs
 packages/meta/src/scoperdef/parser/ScoperGrammar.pegjs
 packages/meta/src/validatordef/parser/ValidatorGrammar.pegjs
 packages/meta/src/editordef/parser/EditorGrammar.pegjs
-packages/playground/src/*/editor/gen/*
-packages/playground/src/*/environment/gen/*
-packages/playground/src/*/language/gen/*
-packages/playground/src/*/scoper/gen/*
-packages/playground/src/*/typer/gen/*
-packages/playground/src/*/utils/gen/*
-packages/playground/src/*/validator/gen/*
-packages/playground/src/*/stdlib/gen/*
-packages/playground/handmade/unparsedDemoModel.txt
-packages/playground/exampleLangDefs/Entity/EntityDefinition.edit
-packages/playground/exampleLangDefs/Entity/EntityDefinition.ast
-packages/playground/exampleLangDefs/Entity/EntityDefinition.scop
-packages/playground/exampleLangDefs/Entity/EntityDefinition.type
-packages/playground/exampleLangDefs/Entity/EntityDefinition.valid
 
 packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/output/*
 
@@ -96,3 +82,5 @@ packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-
 /packages/server/modelstore-example/NEXT/
 /packages/server/modelstore-example/QWER/
 /packages/server/modelstore-example/www/
+/packages/webapp-lib/.svelte-kit/
+/packages/core-svelte/.svelte-kit/

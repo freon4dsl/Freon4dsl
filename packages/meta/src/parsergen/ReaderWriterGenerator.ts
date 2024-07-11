@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { MetaLogger } from "../utils";
-import { FreLanguage } from "../languagedef/metalanguage";
+import { FreMetaLanguage } from "../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils";
 import { FreEditUnit } from "../editordef/metalanguage";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates";
@@ -20,14 +20,14 @@ const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
  */
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";
-    public language: FreLanguage;
-    private writerFolder: string;
-    private writerGenFolder: string;
-    private readerFolder: string;
-    private readerGenFolder: string;
+    public language: FreMetaLanguage | undefined;
+    private writerFolder: string = '';
+    private writerGenFolder: string = '';
+    private readerFolder: string = '';
+    private readerGenFolder: string = '';
 
     generate(editDef: FreEditUnit): void {
-        if (this.language === null) {
+        if (this.language === null  || this.language === undefined) {
             LOGGER.error("Cannot generate parser and unparser because language is not set.");
             return;
         }
@@ -64,7 +64,10 @@ export class ReaderWriterGenerator {
         analyser.analyseModel(this.language);
 
         // Create in memory all grammar rules and syntax analysis methods
-        const grammarModel: GrammarModel = grammarGenerator.createGrammar(this.language, analyser, editDef);
+        const grammarModel: GrammarModel | undefined = grammarGenerator.createGrammar(this.language, analyser, editDef);
+        if (!grammarModel) {
+            return;
+        }
 
         // Write the grammar to file
         generatedContent = grammarModel.toGrammar();
@@ -78,15 +81,15 @@ export class ReaderWriterGenerator {
         // Write the main syntax analyser to file
         generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(this.language)}.ts`;
         indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}";\n`;
-        const mainContent = grammarModel.toMethod(relativePath);
+        const mainContent = grammarModel.toMethod();
         this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus);
 
         // Write the syntax analysers for each unit to file
         grammarModel.parts.forEach(grammarPart => {
-            generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language, grammarPart.unit)}.ts`;
-            indexContent += `export * from "./${Names.unitAnalyser(this.language, grammarPart.unit)}";\n`;
-            const analyserContent = grammarPart.toMethod(this.language, relativePath);
-            let message: string;
+            generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
+            indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}";\n`;
+            const analyserContent: string = grammarPart.toMethod(this.language!, relativePath);
+            let message: string = '';
             if (!!grammarPart.unit) {
                 message = `syntax analyser for unit ${grammarPart.unit?.name}`;
             } else {
@@ -110,7 +113,7 @@ export class ReaderWriterGenerator {
         // get the reader and write it to file
         generatedFilePath = `${this.readerGenFolder}/${Names.reader(this.language)}.ts`;
         indexContent += `export * from "./${Names.reader(this.language)}";\n`;
-        generatedContent = readerTemplate.generateReader(this.language, editDef, relativePath);
+        generatedContent = readerTemplate.generateReader(this.language, relativePath);
         this.makeFile(`language reader`, generatedFilePath, generatedContent, generationStatus);
 
         // write the index file for the reader gen folder
@@ -131,9 +134,11 @@ export class ReaderWriterGenerator {
             testContent = testContent.replace("}\`; // end of grammar", "}");
             testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
             Agl.processorFromString(testContent, null, null, null);
-        } catch (e) {
-            generationStatus.numberOfErrors += 1;
-            LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                generationStatus.numberOfErrors += 1;
+                LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
+            }
         }
     }
 
@@ -154,7 +159,12 @@ export class ReaderWriterGenerator {
         this.getFolderNames();
         FileUtil.deleteDirAndContent(this.writerGenFolder);
         FileUtil.deleteDirAndContent(this.readerGenFolder);
-        FileUtil.deleteDirIfEmpty(this.writerFolder);
-        FileUtil.deleteDirIfEmpty(this.readerFolder);
+        if (force) {
+            FileUtil.deleteDirAndContent(this.writerFolder);
+            FileUtil.deleteDirAndContent(this.readerFolder);
+        } else {
+            FileUtil.deleteDirIfEmpty(this.writerFolder);
+            FileUtil.deleteDirIfEmpty(this.readerFolder);
+        }
     }
 }

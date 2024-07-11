@@ -1,7 +1,7 @@
 import { FreNodeReference } from "@freon4dsl/core";
-import { DSmodel, DSref } from "../language/gen";
+import { DSmodel, DSref, DSunit } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
-import { ScoperTestEnvironment } from "../config/gen/ScoperTestEnvironment";
+import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
 import { ExtendedModelCreator } from "./ExtendedModelCreator";
 
 function print(prefix: string, visibleNames: string[]) {
@@ -25,13 +25,13 @@ function printDifference(creator: SimpleModelCreator, visibleNames: string[]) {
 }
 
 describe("Testing Default Scoper", () => {
-    const environment = ScoperTestEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
+    const environment = DSmodelEnvironment.getInstance(); // needed to initialize Language, which is needed in the serializer
     const creator = new ExtendedModelCreator();
     const scoper = environment.scoper;
     const unparser = environment.writer;
 
     beforeEach(done => {
-        ScoperTestEnvironment.getInstance();
+        DSmodelEnvironment.getInstance();
         done();
     });
 
@@ -79,7 +79,7 @@ describe("Testing Default Scoper", () => {
             "public7_OF_private6_OF_public2_OF_unit1_OF_model" ], "DSpublic");
 
         // add them to the other unit
-        const otherUnit = model.findUnit("unit16_OF_model");
+        const otherUnit = model.findUnit("unit16_OF_model") as DSunit;
         // console.log("otherUnit: " + otherUnit.$$propertyIndex);
         otherUnit.dsRefs.push(ref1);
         otherUnit.dsRefs.push(ref2);
@@ -93,7 +93,7 @@ describe("Testing Default Scoper", () => {
         expect(ref4.referred).toBeNull();
 
         // now add them to the same unit
-        let sameUnit = model.findUnit("unit1_OF_model");
+        let sameUnit = model.findUnit("unit1_OF_model") as DSunit;
         sameUnit.dsRefs.push(ref1);
         sameUnit.dsRefs.push(ref2);
         sameUnit.dsRefs.push(ref3);

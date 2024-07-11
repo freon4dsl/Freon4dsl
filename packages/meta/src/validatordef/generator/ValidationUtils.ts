@@ -1,10 +1,10 @@
-import { FreClassifier, FrePrimitiveType } from "../../languagedef/metalanguage";
+import {FreMetaClassifier, FreMetaPrimitiveProperty, FreMetaPrimitiveType} from "../../languagedef/metalanguage";
 
 export class ValidationUtils {
-    public static findLocationDescription(concept: FreClassifier): string {
-        let nameProp = concept.allPrimProperties().find(prop => prop.name === "name");
+    public static findLocationDescription(concept: FreMetaClassifier | undefined): string {
+        let nameProp: FreMetaPrimitiveProperty | undefined = concept?.allPrimProperties().find(prop => prop.name === "name");
         if (!(!!nameProp)) {
-            nameProp = concept.allPrimProperties().find(prop => prop.type === FrePrimitiveType.identifier);
+            nameProp = concept?.allPrimProperties().find(prop => prop.type === FreMetaPrimitiveType.identifier);
         }
         return !!nameProp ? `modelelement.${nameProp.name}` : `'unnamed'`;
     }

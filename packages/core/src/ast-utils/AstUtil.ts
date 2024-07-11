@@ -1,20 +1,20 @@
 import { FreLanguage } from "../language";
 import { FreBinaryExpression, FreNode, FreExpressionNode, FreModel, FreModelUnit, FreNamedNode, FreNodeReference } from "../ast";
 
-export function isFreModel(element: FreNode): element is FreModel {
-    return !!element && element.freIsModel && element.freIsModel();
+export function isFreModel(node: FreNode): node is FreModel {
+    return !!node && node.freIsModel && node.freIsModel();
 }
 
-export function isFreExpression(element: FreNode): element is FreExpressionNode {
-    return !!element && element.freIsExpression && element.freIsExpression();
+export function isFreExpression(node: FreNode): node is FreExpressionNode {
+    return !!node && node.freIsExpression && node.freIsExpression();
 }
 
-export function isFreBinaryExpression(element: FreNode): element is FreBinaryExpression {
-    return !!element && element.freIsExpression && element.freIsExpression() && element.freIsBinaryExpression && element.freIsBinaryExpression();
+export function isFreBinaryExpression(node: FreNode): node is FreBinaryExpression {
+    return !!node && node.freIsExpression && node.freIsExpression() && node.freIsBinaryExpression && node.freIsBinaryExpression();
 }
 
-export function ownerOfType(element: FreNode, typename: string, exact?: boolean): FreNode | null {
-    let parent = element.freOwnerDescriptor()?.owner;
+export function ownerOfType(node: FreNode, typename: string, exact?: boolean): FreNode | null {
+    let parent = node.freOwnerDescriptor()?.owner;
     while (!!parent) {
         if (exact ? instanceOfExact(parent, typename) : instanceOfSub(parent, typename)) {
             return parent;
@@ -27,10 +27,10 @@ export function ownerOfType(element: FreNode, typename: string, exact?: boolean)
 
 /**
  * Returns the modelunit that owns this `element'
- * @param element
+ * @param node
  */
-export function modelUnit(element: FreNode): FreModelUnit | null {
-    let current = element;
+export function modelUnit(node: FreNode): FreModelUnit | null {
+    let current = node;
     while (!!current) {
         if (current.freIsUnit()) {
             return current as FreModelUnit;
@@ -38,7 +38,7 @@ export function modelUnit(element: FreNode): FreModelUnit | null {
             current = current.freOwnerDescriptor()?.owner;
         }
     }
-    // No modelunit found, element is standalone
+    // No modelunit found, node is standalone
     return null;
 }
 
@@ -50,11 +50,11 @@ export function instanceOfSub(src: FreNode, target: string): boolean {
     return isSubConcept(src.freLanguageConcept(), target);
 }
 
-export function isExactConcept(src, target: string): boolean {
+export function isExactConcept(src: string, target: string): boolean {
     return src === target;
 }
 
-export function isSubConcept(src, target: string): boolean {
+export function isSubConcept(src: string, target: string): boolean {
     return src === target || FreLanguage.getInstance().classifier(target).subConceptNames.includes(src);
 }
 

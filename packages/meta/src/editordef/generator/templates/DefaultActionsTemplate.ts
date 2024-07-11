@@ -1,8 +1,8 @@
 import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
 import {
-    FreLanguage,
-    FreBinaryExpressionConcept,
-    FreClassifier, FreProperty, FrePrimitiveType
+    FreMetaLanguage,
+    FreMetaBinaryExpressionConcept,
+    FreMetaClassifier, FreMetaProperty, FreMetaPrimitiveType
 } from "../../../languagedef/metalanguage";
 import { Roles } from "../../../utils";
 import {
@@ -13,7 +13,7 @@ import {
 
 export class DefaultActionsTemplate {
 
-    generate(language: FreLanguage, editorDef: FreEditUnit, relativePath: string): string {
+    generate(language: FreMetaLanguage, editorDef: FreEditUnit, relativePath: string): string {
         const modelImports: string[] = language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`)
             .concat(language.units.map(u => `${Names.classifier(u)}`));
         return `
@@ -51,65 +51,79 @@ export class DefaultActionsTemplate {
              * (3) if neither (1) nor (2) yields a result, the default is used.
              */
             export const BINARY_EXPRESSION_CREATORS: ${Names.FreCreateBinaryExpressionAction}[] = [
-                ${language.concepts.filter(c => (c instanceof FreBinaryExpressionConcept) && !c.isAbstract).map(c =>
-            `${Names.FreCreateBinaryExpressionAction}.create({
-                    trigger: "${editorDef.findExtrasForType(c).symbol}",
-                    activeInBoxRoles: [
-                        LEFT_MOST,
-                        RIGHT_MOST,
-                        BEFORE_BINARY_OPERATOR,
-                        AFTER_BINARY_OPERATOR
-                    ],
-                    expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
-                        const parent = box.element;
-                        const newExpression = new ${Names.concept(c)}();
-                        parent[(box as ActionBox).propertyName] = newExpression;
-                        return newExpression;
-                    }
-            })`
+                ${language.concepts.filter(c => (c instanceof FreMetaBinaryExpressionConcept) && !c.isAbstract).map(c =>
+            !!editorDef.findExtrasForType(c) ?
+                `${Names.FreCreateBinaryExpressionAction}.create({
+                        trigger: "${editorDef.findExtrasForType(c)!.symbol}",
+                        activeInBoxRoles: [
+                            LEFT_MOST,
+                            RIGHT_MOST,
+                            BEFORE_BINARY_OPERATOR,
+                            AFTER_BINARY_OPERATOR
+                        ],
+                        expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
+                            const parent = box.element;
+                            const newExpression = new ${Names.concept(c)}();
+                            parent[(box as ActionBox).propertyName] = newExpression;
+                            return newExpression;
+                        }
+                })`
+            : 
+                `${Names.FreCreateBinaryExpressionAction}.create({
+                        trigger: "unknown-trigger",
+                        activeInBoxRoles: [
+                            LEFT_MOST,
+                            RIGHT_MOST,
+                            BEFORE_BINARY_OPERATOR,
+                            AFTER_BINARY_OPERATOR
+                        ],
+                        expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
+                            const parent = box.element;
+                            const newExpression = new ${Names.concept(c)}();
+                            parent[(box as ActionBox).propertyName] = newExpression;
+                            return newExpression;
+                        }
+                })`
         )}
             ];
 
             export const CUSTOM_ACTIONS: ${Names.FreCustomAction}[] = [
-                ${this.customActionsForOptional(language, editorDef)}
+                ${this.customActionsForOptional(editorDef)}
                 ${this.customActionForParts(language, editorDef)}
                 ${this.customActionForReferences(language, editorDef)}
             ];
             `;
         }
 
-    customActionsForOptional(language: FreLanguage, editorDef: FreEditUnit): string {
+    private customActionsForOptional(editorDef: FreEditUnit): string {
         let result: string = "";
-        editorDef.getDefaultProjectiongroup().projections.forEach( projection => {
+        editorDef.getDefaultProjectiongroup()?.projections.forEach( projection => {
             if (!!projection && projection instanceof FreEditProjection) {
                 projection.lines.forEach(line => {
                     line.items.forEach(item => {
-                        if (item instanceof FreOptionalPropertyProjection) {
+                        if (item instanceof FreOptionalPropertyProjection && !!item.property) {
                             const firstLiteral: string = item.firstLiteral();
-                            const myClassifier = projection.classifier.referred;
-                            // TODO check this change
-                            // const propertyProjection: FreEditPropertyProjection = item.findPropertyProjection();
-                            // const optionalPropertyName = (propertyProjection === undefined ? "UNKNOWN" : propertyProjection.property.name);
-                            // console.log("Looking for [" + optionalPropertyName + "] in [" + myClassifier.name + "]")
-                            // const prop: FreProperty = myClassifier.allProperties().find(prop => prop.name === optionalPropertyName);
-                            const prop: FreProperty = item.property.referred;
+                            const myClassifier: FreMetaClassifier | undefined = projection.classifier?.referred;
+                            const prop: FreMetaProperty = item.property.referred;
                             const optionalPropertyName = prop.name;
                             // end change
                             let rolename: string = "unknown role";
-                            if (prop.isPart) {
-                                // TODO Check for lists (everywhere)
-                                rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
-                            } else if (prop.isPrimitive) {
-                                if ( prop.type === FrePrimitiveType.number) {
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox");
-                                } else if ( prop.type === FrePrimitiveType.string) {
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox");
-                                } else if ( prop.type === FrePrimitiveType.boolean) {
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox");
+                            if (!!myClassifier) {
+                                if (prop.isPart) {
+                                    // TODO Check for lists (everywhere)
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
+                                } else if (prop.isPrimitive) {
+                                    if (prop.type === FreMetaPrimitiveType.number) {
+                                        rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox");
+                                    } else if (prop.type === FreMetaPrimitiveType.string) {
+                                        rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox");
+                                    } else if (prop.type === FreMetaPrimitiveType.boolean) {
+                                        rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox");
+                                    }
+                                } else {
+                                    // reference
+                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "referencebox");
                                 }
-                            } else {
-                                // reference
-                                rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "referencebox" );
                             }
                             result += `${Names.FreCustomAction}.create(
                                     {
@@ -130,9 +144,9 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForReferences(language: FreLanguage, editorDef: FreEditUnit): string {
+    customActionForReferences(language: FreMetaLanguage, editorDef: FreEditUnit): string {
         let result = "";
-        const allClassifiers: FreClassifier[] = [];
+        const allClassifiers: FreMetaClassifier[] = [];
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
         allClassifiers.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
@@ -157,7 +171,11 @@ export class DefaultActionsTemplate {
         return result;
     }
 
-    customActionForParts(language: FreLanguage, editorDef: FreEditUnit): string {
+    // @ts-expect-error
+    // error TS6133: 'language' is declared but its value is never read.
+    // error TS6133: 'editorDef' is declared but its value is never read.
+    // This error is ignored because ... todo remove parameters or implement this function
+    customActionForParts(language: FreMetaLanguage, editorDef: FreEditUnit): string {
         // Nothing to do for the moment
         return "";
     }

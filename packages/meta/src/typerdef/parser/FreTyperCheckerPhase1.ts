@@ -3,21 +3,20 @@ import {
     CheckerPhase,
     LangUtil,
     ListUtil,
-    MetaLogger,
     Names,
     ParseLocationUtil,
     reservedWordsInTypescript,
     freReservedWords
 } from "../../utils";
 import {
-    FreClassifier,
-    FreConcept,
-    FreInstance,
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaInstance,
     FreMetaEnvironment,
-    FreLanguage,
-    FreLimitedConcept,
-    FrePrimitiveType,
-    FreProperty,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
+    FreMetaPrimitiveType,
+    FreMetaProperty,
     MetaElementReference
 } from "../../languagedef/metalanguage";
 import {
@@ -46,7 +45,7 @@ import { FretScoper } from "./FretScoper";
 import { FretOwnerSetter } from "./FretOwnerSetter";
 import { CommonChecker, CommonSuperTypeUtil } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
+// const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
 
 /**
@@ -54,10 +53,12 @@ export const validFunctionNames: string[] = ["typeof", "commonSuperType", "owner
  * if needed.
  */
 export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
-    language: FreLanguage;
+    // @ts-ignore Property is set by users and its value checked in the only public method 'check'.
+    language: FreMetaLanguage;
+    // @ts-ignore Property is set in the only public method 'check'.
     definition: TyperDef;
-    typeConcepts: FreClassifier[] = [];         // all concepts marked as 'isType'
-    conceptsWithRules: FreClassifier[] = [];    // all concepts for which a rule is found.
+    typeConcepts: FreMetaClassifier[] = [];         // all concepts marked as 'isType'
+    conceptsWithRules: FreMetaClassifier[] = [];    // all concepts for which a rule is found.
                                                // Used to check whether there are two rules for the same concept.
 
     public check(definition: TyperDef, runner: CheckRunner): void {
@@ -70,8 +71,9 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         }
         definition.language = this.language;
 
-        // To be able to find references in the type defintion to nodes other than those form the language
+        // To be able to find references in the type defintion to nodes other than those from the language
         // we need an extra scoper, and we need to set the opposites of all 'parts': their owning nodes
+        FreMetaEnvironment.metascoper.language = this.language;
         FreMetaEnvironment.metascoper.extraScopers.push(new FretScoper(definition));
         FretOwnerSetter.setNodeOwners(definition);
 
@@ -100,11 +102,11 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
 
         // check all specs independently, add check whether there is more than one spec for this classifier
         // collect all classifiers for which a spec is defined
-        const allClassifiers: FreClassifier[] = [];
+        const allClassifiers: FreMetaClassifier[] = [];
         if (!!definition.classifierSpecs) {
             definition.classifierSpecs.forEach(spec => {
                 this.checkClassifierSpec(spec);
-                if (!allClassifiers.includes(spec.myClassifier)) {
+                if (!!spec.myClassifier && !allClassifiers.includes(spec.myClassifier)) {
                     allClassifiers.push(spec.myClassifier);
                 } else {
                     this.runner.simpleCheck(false, `There may be only one specification for a concept or interface ${ParseLocationUtil.location(spec)}.`);
@@ -115,11 +117,11 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // check whether there is a spec for all classifiers marked 'hasType'
         if (!!definition.conceptsWithType) {
             definition.conceptsWithType.forEach(con => {
-                if (con instanceof FreConcept && !con.isAbstract) {
-                    let foundRule: FretInferenceRule;
+                if (con instanceof FreMetaConcept && !con.isAbstract) {
+                    let foundRule: FretInferenceRule | undefined = undefined;
                     // see if there is a spec for this concept with an infertype rule
                     this.findSpecsForConcept(con).forEach(spec => {
-                        const rule: FretTypeRule = spec.rules.find(r => r instanceof FretInferenceRule);
+                        const rule: FretTypeRule | undefined = spec.rules.find(r => r instanceof FretInferenceRule);
                         if (!!rule) {
                             foundRule = rule as FretInferenceRule;
                         }
@@ -147,18 +149,18 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // }
     }
 
-    private findSpecsForConcept(con: FreConcept): FretClassifierSpec[] {
+    private findSpecsForConcept(con: FreMetaConcept): FretClassifierSpec[] {
         const result: FretClassifierSpec[] = [];
         ListUtil.addIfNotPresent(result, this.definition.classifierSpecs.find(spec => spec.myClassifier === con));
         // try finding specs for a superclassifier
-        const supers: FreClassifier[] = LangUtil.superClassifiers(con);
+        const supers: FreMetaClassifier[] = LangUtil.superClassifiers(con);
         for (const super1 of supers) {
             ListUtil.addIfNotPresent(result, this.definition.classifierSpecs.find(spec => spec.myClassifier === super1));
         }
         return result;
     }
 
-    private checkTypeReferences(types: MetaElementReference<FreClassifier>[]) {
+    private checkTypeReferences(types: MetaElementReference<FreMetaClassifier>[]) {
         // LOGGER.log("Checking types: '" + types.map(t => t.name).join(", ") + "'");
         if (!!types) {
             for (const t of types) {
@@ -176,13 +178,13 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         }
     }
 
-    private addInheritedClassifiers(types: FreClassifier[]): FreClassifier[] {
+    private addInheritedClassifiers(types: FreMetaClassifier[]): FreMetaClassifier[] {
         // LOGGER.log("addInheritedConcepts to: '" + types.map(t => t.name).join(", ") + "'");
-        const result: FreClassifier[] = [];
-        ListUtil.addListIfNotPresent<FreClassifier>(result, types);
+        const result: FreMetaClassifier[] = [];
+        ListUtil.addListIfNotPresent<FreMetaClassifier>(result, types);
         if (!!types) {
-            types.forEach((t: FreClassifier) => {
-                ListUtil.addListIfNotPresent<FreClassifier>(result, LangUtil.findAllImplementorsAndSubs(t));
+            types.forEach((t: FreMetaClassifier) => {
+                ListUtil.addListIfNotPresent<FreMetaClassifier>(result, LangUtil.findAllImplementorsAndSubs(t));
             });
         }
         return result;
@@ -201,12 +203,12 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         if (!!spec.myClassifier) {
             spec.rules.forEach(rule => {
                 // check the rule, using the overall model as enclosing concept
-                this.checkTypeRule(rule, spec.myClassifier);
+                this.checkTypeRule(rule, spec.myClassifier!);
             });
         }
     }
 
-    private checkTypeRule(rule: FretTypeRule, enclosingConcept: FreClassifier) {
+    private checkTypeRule(rule: FretTypeRule, enclosingConcept: FreMetaClassifier) {
         if (rule instanceof FretInferenceRule) {
             this.checkInferenceRule(rule, enclosingConcept);
         } else if (rule instanceof FretConformanceRule) {
@@ -217,10 +219,12 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
             this.checkLimitedRule(rule, enclosingConcept);
         }
         this.checkFretExp(rule.exp, enclosingConcept);
-        rule.returnType = rule.exp.returnType;
+        if (!!rule.exp.returnType) { // errormessage already provided
+            rule.returnType = rule.exp.returnType;
+        }
     }
 
-    private checkInferenceRule(rule: FretInferenceRule, enclosingConcept: FreClassifier) {
+    private checkInferenceRule(rule: FretInferenceRule, enclosingConcept: FreMetaClassifier) {
         this.runner.simpleCheck(enclosingConcept !== this.language.modelConcept,
             `'Anytype' cannot have an infertype rule ${ParseLocationUtil.location(rule)}.`);
         this.runner.simpleCheck(this.definition.conceptsWithType.includes(enclosingConcept),
@@ -229,14 +233,14 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // rule.exp = this.changeInstanceToPropCallExp(rule.exp, enclosingConcept);
     }
 
-    private checkConformanceRule(rule: FretConformanceRule, enclosingConcept: FreClassifier) {
+    private checkConformanceRule(rule: FretConformanceRule, enclosingConcept: FreMetaClassifier) {
         if (enclosingConcept !== this.language.modelConcept) {
             this.runner.simpleCheck(this.isMarkedIsType(enclosingConcept),
                 `Concept or interface '${enclosingConcept.name}' is not marked 'istype', therefore it cannot have a conformance rule ${ParseLocationUtil.location(rule)}.`);
         }
     }
 
-    private isMarkedIsType(enclosingConcept: FreClassifier): boolean {
+    private isMarkedIsType(enclosingConcept: FreMetaClassifier): boolean {
         let isTypeConcept: boolean = this.definition.types.includes(enclosingConcept);
         if (!isTypeConcept && enclosingConcept instanceof FretTypeConcept) {
             isTypeConcept = this.definition.typeConcepts.includes(enclosingConcept);
@@ -244,16 +248,16 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         return isTypeConcept;
     }
 
-    private checkEqualsRule(rule: FretEqualsRule, enclosingConcept: FreClassifier) {
+    private checkEqualsRule(rule: FretEqualsRule, enclosingConcept: FreMetaClassifier) {
         if (enclosingConcept !== this.language.modelConcept) {
             this.runner.simpleCheck(this.isMarkedIsType(enclosingConcept),
                 `Concept or interface '${enclosingConcept.name}' is not marked 'istype', therefore it cannot have an equals rule ${ParseLocationUtil.location(rule)}.`);
         }
     }
 
-    private checkLimitedRule(rule: FretLimitedRule, enclosingConcept: FreClassifier) {
+    private checkLimitedRule(rule: FretLimitedRule, enclosingConcept: FreMetaClassifier) {
         // LOGGER.log("Checking limited rule '" + rule.toFreString() + "' for " + enclosingConcept.name );
-        this.runner.simpleCheck(enclosingConcept instanceof FreLimitedConcept,
+        this.runner.simpleCheck(enclosingConcept instanceof FreMetaLimitedConcept,
             `This type of rule may only be used for limited concepts ${ParseLocationUtil.location(rule)}.`);
         // remedy possible parse error, TODO find better solution
         if (rule.exp instanceof FretBinaryExp) {
@@ -269,21 +273,21 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
     private changeVarCallIntoInstanceExp(myVarCall: FretVarCallExp): FretLimitedInstanceExp {
         const result: FretLimitedInstanceExp = new FretLimitedInstanceExp();
         result.owner = myVarCall.owner;
-        result.$myInstance = MetaElementReference.create<FreInstance>(myVarCall.$variable.name, "FreInstance");
+        result.$myInstance = MetaElementReference.create<FreMetaInstance>(myVarCall.$variable.name, "FreInstance");
         result.$myInstance.owner = result;
         result.aglParseLocation = myVarCall.aglParseLocation;
         return result;
     }
 
-    private checkFretExp(exp: FretExp, enclosingConcept: FreClassifier, surroundingExp?: FretWhereExp, surroundingAllowed?: boolean) {
+    private checkFretExp(exp: FretExp, enclosingConcept: FreMetaClassifier, surroundingExp?: FretWhereExp, surroundingAllowed?: boolean) {
         // console.log("Checking FretExp '" + exp.toFreString() + "'");
         exp.language = this.language;
         if (exp instanceof FretAnytypeExp ) {
             // nothing to check
-            exp.returnType = FreClassifier.ANY;
+            exp.returnType = FreMetaClassifier.ANY;
         } else if (exp instanceof FretBinaryExp) {
             this.checkBinaryExp(exp, enclosingConcept, surroundingExp);
-            exp.returnType = FrePrimitiveType.boolean;
+            exp.returnType = FreMetaPrimitiveType.boolean;
         } else if (exp instanceof FretCreateExp) {
             this.checkCreateExp(exp, enclosingConcept);
             exp.returnType = exp.type;
@@ -304,13 +308,13 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         }
     }
 
-    private checkBinaryExp(exp: FretBinaryExp, enclosingConcept: FreClassifier, surroundingExp?: FretWhereExp) {
+    private checkBinaryExp(exp: FretBinaryExp, enclosingConcept: FreMetaClassifier, surroundingExp?: FretWhereExp) {
         // LOGGER.log("Checking FretBinaryExp '" + exp.toFreString() + "'");
         this.checkFretExp(exp.left, enclosingConcept, surroundingExp);
         this.checkFretExp(exp.right, enclosingConcept, surroundingExp);
     }
 
-    private checkCreateExp(exp: FretCreateExp, classifier: FreClassifier, surroundingExp?: FretWhereExp) {
+    private checkCreateExp(exp: FretCreateExp, classifier: FreMetaClassifier, surroundingExp?: FretWhereExp) {
         // LOGGER.log("Checking FretCreateExp '" + exp.toFreString() + "'");
         this.checkTypeReference(exp.$type, false);
         // console.log("TYPE of Create: " + exp.__type.name + ", " + exp.__type.owner + ", " + exp.type?.name);
@@ -322,22 +326,28 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
                 check: !!propDef.property,
                 error: `Cannot find property '${propDef.$property.name}' ${ParseLocationUtil.location(propDef.$property)}.`,
                 whenOk: () => {
-                    const propType: FreClassifier = propDef.property.type;
-                    const valueType: FreClassifier = propDef.value.returnType;
-                    let doesConform: boolean;
-                    if (propType !== TyperDef.freonType) {
-                        const typeCheck: FreClassifier[] = CommonSuperTypeUtil.commonSuperType([propType, valueType]);
-                        doesConform = typeCheck.length > 0 && typeCheck[0] === propType;
-                    } else {
-                        // valueType conforms to FreType if
-                        if (valueType === TyperDef.freonType) { // (0) it is equal to FreType
-                            doesConform = true;
-                        } else if (valueType instanceof FretTypeConcept ) { // (1) it is a TypeConcept, or
-                            doesConform = this.definition.typeConcepts.includes(valueType);
-                        } else { // (2) it is marked 'isType'
-                            doesConform = this.definition.types.includes(valueType);
+                    const propType: FreMetaClassifier = propDef.property!.type;
+                    const valueType: FreMetaClassifier | undefined = propDef.value.returnType;
+                    let doesConform: boolean = false;
+                    this.runner.nestedCheck( {
+                        check: !!valueType,
+                        error: `Checking against unknown value type (TODO: better message), ${ParseLocationUtil.location(propDef.$property)}.`,
+                        whenOk: () => {
+                            if (propType !== TyperDef.freonType) {
+                                const typeCheck: FreMetaClassifier[] = CommonSuperTypeUtil.commonSuperType([propType, valueType!]);
+                                doesConform = typeCheck.length > 0 && typeCheck[0] === propType;
+                            } else {
+                                // valueType conforms to FreType if
+                                if (valueType === TyperDef.freonType) { // (0) it is equal to FreType
+                                    doesConform = true;
+                                } else if (valueType instanceof FretTypeConcept) { // (1) it is a TypeConcept, or
+                                    doesConform = this.definition.typeConcepts.includes(valueType);
+                                } else { // (2) it is marked 'isType'
+                                    doesConform = this.definition.types.includes(valueType!);
+                                }
+                            }
                         }
-                    }
+                    });
                     this.runner.simpleCheck(doesConform,
                         `Type of '${propDef.value.toFreString()}' (${valueType?.name}) does not conform to ${propType?.name} ${ParseLocationUtil.location(propDef)}.`);
                 }
@@ -345,7 +355,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         });
     }
 
-    private checkWhereExp(exp: FretWhereExp, classifier: FreClassifier) {
+    private checkWhereExp(exp: FretWhereExp, classifier: FreMetaClassifier) {
         // LOGGER.log("Checking FretWhereExp '" + exp.toFreString() + "'");
         this.runner.nestedCheck({
             check: !!exp.variable.type,
@@ -360,28 +370,31 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         });
     }
 
-    private checkInstanceExp(exp: FretLimitedInstanceExp, classifier: FreClassifier) {
+    private checkInstanceExp(exp: FretLimitedInstanceExp, classifier: FreMetaClassifier) {
         if (!!exp.$myLimited) {
             this.runner.simpleCheck(
                 !!exp.myLimited,
-                `Cannot find limited concept '${exp.$myLimited.name}' ${ParseLocationUtil.location(exp.$myLimited)}.XX`);
+                `Cannot find limited concept '${exp.$myLimited.name}' ${ParseLocationUtil.location(exp.$myLimited)}.`);
         } else {
             // use the enclosing classifier as limited concept
-            if (classifier instanceof FreLimitedConcept) {
+            if (classifier instanceof FreMetaLimitedConcept) {
                 exp.myLimited = classifier;
             }
         }
-        this.runner.nestedCheck({
-            check: !!exp.myInstance,
-            error: `Cannot find instance '${exp.$myInstance.name}' of '${exp.$myLimited?.name}' ${ParseLocationUtil.location(exp.$myInstance)}.`,
-            whenOk: () => {
-                this.runner.simpleCheck(!!exp.myLimited.findInstance(exp.$myInstance.name),
-                    `Instance '${exp.$myInstance.name}' is not of type '${exp.$myLimited.name}' ${ParseLocationUtil.location(exp.$myInstance)}.`);
-            }
-        });
+        this.runner.simpleCheck(!!exp.myLimited, `Cannot find limited concept or enclosing classifier ${ParseLocationUtil.location(exp)}.`);
+        if (!!exp.myLimited) {
+            this.runner.nestedCheck({
+                check: !!exp.myInstance,
+                error: `Cannot find instance '${exp.$myInstance.name}' of '${exp.$myLimited?.name}' ${ParseLocationUtil.location(exp.$myInstance)}.`,
+                whenOk: () => {
+                    this.runner.simpleCheck(!!exp.myLimited!.findInstance(exp.$myInstance.name),
+                        `Instance '${exp.$myInstance.name}' is not of type '${exp.$myLimited!.name}' ${ParseLocationUtil.location(exp.$myInstance)}.`);
+                }
+            });
+        }
     }
 
-    private checkPropertyCallExp(exp: FretPropertyCallExp, enclosingConcept: FreClassifier, surroundingExp?: FretWhereExp, surroundingAllowed?: boolean) {
+    private checkPropertyCallExp(exp: FretPropertyCallExp, enclosingConcept: FreMetaClassifier, surroundingExp?: FretWhereExp, surroundingAllowed?: boolean) {
         // console.log("Checking FretPropertyCallExp '" + exp.toFreString() + "'");
         if (!!exp.source) {
             this.checkFretExp(exp.source, enclosingConcept, surroundingExp, surroundingAllowed);
@@ -390,7 +403,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
                 check: !!exp.property,
                 error: `Cannot find property '${exp.$property.name}' in classifier '${exp.source.returnType?.name}' ${ParseLocationUtil.location(exp.$property)}.`,
                 whenOk: () => {
-                    exp.returnType = exp.property.type;
+                    exp.returnType = exp.property!.type;
                 }
             });
         }
@@ -402,14 +415,15 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
             check: !!exp.variable,
             error: `Cannot find reference to ${exp.$variable.name} ${ParseLocationUtil.location(exp.$variable)}.`,
             whenOk: () => {
-                exp.returnType = exp.variable.type;
+                exp.returnType = exp.variable?.type;
             }
         });
     }
 
-    private checkFunctionCallExpression(exp: FretFunctionCallExp, enclosingConcept: FreClassifier, surroundingExp: FretWhereExp) {
+    private checkFunctionCallExpression(exp: FretFunctionCallExp, enclosingConcept: FreMetaClassifier, surroundingExp?: FretWhereExp) {
         // LOGGER.log("checkFunctionCallExpression " + exp?.toFreString());
-        const functionName = validFunctionNames.find(name => name === exp.calledFunction);
+
+        const functionName: string | undefined = validFunctionNames.find(name => name === exp.calledFunction);
         this.runner.nestedCheck({
             check: !!functionName,
             error: `${exp.calledFunction} is not a valid function ${ParseLocationUtil.location(exp)}.`,
@@ -448,7 +462,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         });
     }
 
-    private checkArguments(langExp: FretFunctionCallExp, enclosingConcept: FreClassifier, surroundingExp: FretWhereExp) {
+    private checkArguments(langExp: FretFunctionCallExp, enclosingConcept: FreMetaClassifier, surroundingExp?: FretWhereExp) {
         langExp.actualParameters.forEach(p => {
                 this.checkFretExp(p, enclosingConcept, surroundingExp, false);
             }
@@ -487,7 +501,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         }
     }
 
-    private checkTypeConceptProperty(freProperty: FreProperty, fretTypeConcept: FretTypeConcept): void {
+    private checkTypeConceptProperty(freProperty: FreMetaProperty, fretTypeConcept: FretTypeConcept): void {
         // LOGGER.log("Checking type concept property '" + freProperty.name + "'");
         // set all unused properties of this class
         freProperty.isOptional = false;
@@ -510,7 +524,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // (6) check inherited props on rules layed out in languagedef checker
     }
 
-    private checkTypeReference(refType: MetaElementReference<FreClassifier>, typeConceptRequired: boolean) {
+    private checkTypeReference(refType: MetaElementReference<FreMetaClassifier>, typeConceptRequired: boolean) {
         this.runner.nestedCheck({
             check: !!refType.referred,
             error: `Cannot find reference to ${refType.name} ${ParseLocationUtil.location(refType)}.`,

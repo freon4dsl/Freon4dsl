@@ -1,57 +1,64 @@
-import { FreLanguage } from "../../languagedef/metalanguage";
-import { FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
+import { BoolDisplayType, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
 import { LimitedMaker } from "./LimitedMaker";
 import { BinaryExpMaker } from "./BinaryExpMaker";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
 import { ConceptMaker } from "./ConceptMaker";
-import { GrammarModel } from "./grammarModel/GrammarModel";
+import { GrammarModel } from "./grammarModel";
 import { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser";
 import { GrammarPart } from "./grammarModel/GrammarPart";
-import { Names } from "../../utils";
+import { LOG2USER, Names } from "../../utils";
 import { ParserGenUtil } from "./ParserGenUtil";
 
 export class GrammarGenerator {
 
-    createGrammar(language: FreLanguage, analyser: LanguageAnalyser, editUnit: FreEditUnit): GrammarModel {
+    createGrammar(language: FreMetaLanguage, analyser: LanguageAnalyser, editUnit: FreEditUnit): GrammarModel | undefined{
         // create an empty model of the grammar and syntax analysis
-        const grammar = new GrammarModel();
-        grammar.language = language;
+        const grammar: GrammarModel = new GrammarModel(language);
 
         // add the standard option from the editor definition
-        const stdBoolKeywords = editUnit.getDefaultProjectiongroup().standardBooleanProjection;
-        if (!!stdBoolKeywords) {
-            grammar.trueValue = stdBoolKeywords.trueKeyword;
-            grammar.falseValue = stdBoolKeywords.falseKeyword;
+        const defProjGroup: FreEditProjectionGroup | undefined = editUnit.getDefaultProjectiongroup();
+        let stdBoolKeywords: BoolDisplayType | undefined;
+        let refSeparator: string | undefined;
+        if (!!defProjGroup) {
+            stdBoolKeywords = defProjGroup.standardBooleanProjection;
+            refSeparator = defProjGroup.standardReferenceSeparator;
         }
-        const refSeparator = editUnit.getDefaultProjectiongroup().standardReferenceSeparator;
+        if (!!stdBoolKeywords) {
+            grammar.trueValue = stdBoolKeywords.keywords?.trueKeyword ? stdBoolKeywords.keywords.trueKeyword : 'true';
+            grammar.falseValue = stdBoolKeywords.keywords?.falseKeyword ? stdBoolKeywords.keywords.falseKeyword : '';
+        }
         if (!!refSeparator) {
             grammar.refSeparator = refSeparator;
         }
-
         // find the projection group that can be used for the parser and unparser
-        const projectionGroup = ParserGenUtil.findParsableProjectionGroup(editUnit);
+        const projectionGroup:FreEditProjectionGroup | undefined = ParserGenUtil.findParsableProjectionGroup(editUnit);
         // if no projection group found, return
         if (!projectionGroup) {
-            return null;
+            // todo better error message
+            LOG2USER.error("No projection group found for generating a grammar.")
+            return undefined;
         }
 
         // create the grammar rules and add them to the model
-        this.createGrammarRules(grammar, projectionGroup, analyser, language);
+        this.createGrammarRules(grammar, projectionGroup, analyser);
         return grammar;
     }
 
-    private createGrammarRules(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser, language: FreLanguage) {
+    private createGrammarRules(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, myLanguageAnalyser: LanguageAnalyser) {
         // generate the rules for each unit
         for (const unitAnalyser of myLanguageAnalyser.unitAnalysers) {
-            this.createRulesPerAnalyser(grammar, projectionGroup, unitAnalyser, language);
+            this.createRulesPerAnalyser(grammar, projectionGroup, unitAnalyser);
         }
         // do the same for the common analyser
-        this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser.commonAnalyser, language);
+        this.createRulesPerAnalyser(grammar, projectionGroup, myLanguageAnalyser.commonAnalyser);
     }
 
-    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: FreAnalyser, language: FreLanguage) {
-        const grammarPart = new GrammarPart();
-        grammarPart.unit = analyser.unit;
+    private createRulesPerAnalyser(grammar: GrammarModel, projectionGroup: FreEditProjectionGroup, analyser: FreAnalyser) {
+        const grammarPart: GrammarPart = new GrammarPart();
+        if (!!analyser.unit) {
+            grammarPart.unit = analyser.unit;
+        }
         // create parse rules and syntax analysis methods for the concepts
         const conceptMaker: ConceptMaker = new ConceptMaker();
         grammarPart.rules.push(...conceptMaker.generateClassifiers(projectionGroup, analyser.classifiersUsed));
@@ -67,11 +74,11 @@ export class GrammarGenerator {
         const binaryExpMaker: BinaryExpMaker = new BinaryExpMaker();
         // always use the default projection group for binary expressions
         let groupForBinaries: FreEditProjectionGroup = projectionGroup;
-        if (projectionGroup.name !== Names.defaultProjectionName) {
-            groupForBinaries = projectionGroup.owningDefinition.getDefaultProjectiongroup();
+        if (projectionGroup.name !== Names.defaultProjectionName && !!projectionGroup.owningDefinition?.getDefaultProjectiongroup()) {
+            groupForBinaries = projectionGroup.owningDefinition.getDefaultProjectiongroup()!;
         }
         if (analyser.binaryConceptsUsed.length > 0) {
-            grammarPart.rules.push(...binaryExpMaker.generateBinaryExpressions(language, groupForBinaries, analyser.binaryConceptsUsed));
+            grammarPart.rules.push(...binaryExpMaker.generateBinaryExpressions(groupForBinaries, analyser.binaryConceptsUsed));
         }
 
         // create parse rules and syntax analysis methods for the limited concepts

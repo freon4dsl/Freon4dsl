@@ -79,7 +79,8 @@
     /* Advanced Options */
     "skipLibCheck": true,                           /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,        /* Disallow inconsistently-cased references to the same file. */
-    "importsNotUsedAsValues": "preserve",
+//    "importsNotUsedAsValues": "preserve",         /* deprecated and will stop functioning in TypeScript 5.5 */
+    "verbatimModuleSyntax": false,
     "baseUrl": "./src",
     "lib": [
       "dom",

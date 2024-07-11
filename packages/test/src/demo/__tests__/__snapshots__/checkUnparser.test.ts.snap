@@ -2,7 +2,7 @@
 
 exports[`Testing Unparser Unparse DemoModel Instance 'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"' 1`] = `
 "DemoFunction determine {
-    expression ' \\"Hello Demo\\" ' + ' \\"Goodbye\\" '
+    expression ' "Hello Demo" ' + ' "Goodbye" '
     parameters
         AAP : TEST1
     declaredType TEST2
@@ -17,8 +17,8 @@ types:
 entities:
     DemoEntity Vehicle {
         baseInterface_attr 0
-        simpleprop \\"simple\\"
-        x \\"xxx\\"
+        simpleprop "simple"
+        x "xxx"
         attributes
             brand : String
             type : String
@@ -42,8 +42,8 @@ entities:
     }
     DemoEntity Car {
         baseInterface_attr 0
-        simpleprop \\"simple\\"
-        x \\"xxx\\"
+        simpleprop "simple"
+        x "xxx"
         attributes
             numberplate : Integer
             make : String
@@ -68,8 +68,8 @@ entities:
     }
     DemoEntity Bike {
         baseInterface_attr 0
-        simpleprop \\"simple\\"
-        x \\"xxx\\"
+        simpleprop "simple"
+        x "xxx"
         attributes
             backseat : Boolean
             gears : Integer
@@ -94,8 +94,8 @@ entities:
     }
     DemoEntity RaceBike {
         baseInterface_attr 0
-        simpleprop \\"simple\\"
-        x \\"xxx\\"
+        simpleprop "simple"
+        x "xxx"
         attributes
             color : String
             wheelsize : Integer
@@ -140,8 +140,8 @@ types:
 entities:
     DemoEntity School {
         baseInterface_attr 0
-        simpleprop \\"simple\\"
-        x \\"xxx\\"
+        simpleprop "simple"
+        x "xxx"
         attributes
             foundedIn : Integer
             name : String
@@ -161,8 +161,8 @@ entities:
     }
     DemoEntity Company {
         baseInterface_attr 0
-        simpleprop \\"simple\\"
-        x \\"xxx\\"
+        simpleprop "simple"
+        x "xxx"
         attributes
             name : String
             VAT_Number : Integer
@@ -191,7 +191,7 @@ model wide functions:
 
         declaredType Integer
     } DemoFunction helloString {
-          expression ' \\"Hello Demo\\" '
+          expression ' "Hello Demo" '
           parameters
 
           declaredType String

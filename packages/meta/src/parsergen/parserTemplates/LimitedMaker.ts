@@ -1,4 +1,4 @@
-import { FreClassifier, FreLimitedConcept } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
 import { Names } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { LimitedRule } from "./grammarModel/LimitedRule";
@@ -12,9 +12,9 @@ import { LimitedRule } from "./grammarModel/LimitedRule";
 export class LimitedMaker {
     generatedParseRules: string[] = [];
     branchNames: string[] = [];
-    imports: FreClassifier[] = [];
+    imports: FreMetaClassifier[] = [];
 
-    generateLimitedRules(limitedConcepts: FreLimitedConcept[]): GrammarRule[] {
+    generateLimitedRules(limitedConcepts: FreMetaLimitedConcept[]): GrammarRule[] {
         const rules: GrammarRule[] = [];
         for (const limitedConcept of limitedConcepts) {
             // find the mapping of keywords to predef instances
@@ -24,14 +24,7 @@ export class LimitedMaker {
                 const myTypeScript: string = `${Names.classifier(limitedConcept)}.${Names.instance(item)}`;
                 // set the string to be used to the value of the name property, iff present
                 // else use the typescript name of the instance
-                let myKeyword: string = item.nameProperty().value.toString();
-                if (!myKeyword ) {
-                    console.log("no keyword");
-                }
-                if (myKeyword.length === 0) {
-                    console.log("no lengthy keyword");
-                }
-
+                let myKeyword: string | undefined = item.nameProperty()?.value.toString();
                 if (!myKeyword || myKeyword.length === 0) {
                     myKeyword = Names.instance(item);
                 }

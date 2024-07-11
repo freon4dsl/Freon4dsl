@@ -15,21 +15,23 @@ export class StructureSearchWorker implements FreSearchWorker {
         return this.$result;
     }
 
-    execAfter(modelelement: FreNode): boolean {
+    // @ts-ignore
+    // parameter is present to adhere to signature of super class
+    execAfter(node: FreNode): boolean {
         // unused
         return false;
     }
 
-    execBefore(modelelement: FreNode): boolean {
+    execBefore(node: FreNode): boolean {
         if (!!this.metatype) {
-            if (this.metatype === modelelement.freLanguageConcept() || this.metatype === "FreNodeReference") {
-                if (modelelement.match(this.toFind)) {
-                    this.$result.push(modelelement);
+            if (this.metatype === node.freLanguageConcept() || this.metatype === "FreNodeReference") {
+                if (node.match(this.toFind)) {
+                    this.$result.push(node);
                 }
             }
         } else {
-            if (modelelement.match(this.toFind)) {
-                this.$result.push(modelelement);
+            if (node.match(this.toFind)) {
+                this.$result.push(node);
             }
         }
         return true; // is irrelevant, there are no other workers in this search

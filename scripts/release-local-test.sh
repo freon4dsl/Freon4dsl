@@ -6,9 +6,9 @@ set -e
 verdaccio &
 
 # publish freon
-lerna run build-release
-lerna run unpublish-local
-lerna run publish-local
+npm run build-release
+npm run unpublish-local
+npm run publish-local
 
 # checkout and build example project
 mkdir -p ../tmp
@@ -16,10 +16,10 @@ cd ../tmp
 rm -rf Freon-example
 git clone https://github.com/freon4dsl/Freon-example.git
 cd Freon-example
-git checkout master
-yarn install-local
-yarn generate
+git checkout 0.6.0
+npm run install-local
+npm run generate
 # yarn build
-yarn model-server &
-yarn prepare-app
-yarn dev
+npm run model-server &
+npm run prepare-app
+npm run dev

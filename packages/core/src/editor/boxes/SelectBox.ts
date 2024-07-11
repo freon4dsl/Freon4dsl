@@ -5,22 +5,17 @@ import { FreNode } from "../../ast";
 
 // TODO can we rename this one? It is confusing to distinguish between the selectedBox in the editor and SelectBox instances.
 export class SelectBox extends AbstractChoiceBox {
-    readonly kind = "SelectBox";
-    // getOptions: () => SelectOption[];
-    // getSelectedOption: () => SelectOption | null;
-    // setSelectedOption: (option: SelectOption) => void;
+    readonly kind: string = "SelectBox";
     /**
      * If true,  the element will be deleted as soon as the text becomes
      * empty because of removing the last character in the text.
      */
     deleteWhenEmpty: boolean = false;
 
-    private getAllOptions(editor: FreEditor): SelectOption[] {
-        return [];
-    }
+    private getAllOptions: (editor: FreEditor) => SelectOption[];
 
     constructor(
-        exp: FreNode,
+        node: FreNode,
         role: string,
         placeHolder: string,
         getOptions: (editor: FreEditor) => SelectOption[],
@@ -28,19 +23,17 @@ export class SelectBox extends AbstractChoiceBox {
         selectOption: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult,
         initializer?: Partial<SelectBox>
     ) {
-        super(exp, role, placeHolder, initializer);
+        super(node, role, placeHolder, initializer);
         this.getAllOptions = getOptions;
         this.getSelectedOption = getSelectedOption;
         this.selectOption = selectOption;
     }
 
     getOptions(editor: FreEditor): SelectOption[] {
-        let matchingOptions: SelectOption[];
-        matchingOptions = this.getAllOptions(editor);
-        // matching text does not work correct as you need to know the cursor position.
-        // TODO filter in the component where the cursor position is known.
-            // .filter(option => MatchUtil.partialMatch(this.textBox.getText(), option.label));
-        return matchingOptions;
+        // console.log("Options for " + this.element.freLanguageConcept() + this.getAllOptions(editor).map(opt => {
+        //     opt.label
+        // }))
+        return this.getAllOptions(editor);
     }
 
     public deleteWhenEmpty1(): boolean {

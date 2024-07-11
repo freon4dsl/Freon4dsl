@@ -19,14 +19,14 @@ export abstract class TableBox extends Box {
     public hasHeaders: boolean = false;
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    protected constructor(element: FreNode,
+    protected constructor(node: FreNode,
                           propertyName: string,
                           conceptName: string,
                           role: string,
                           hasHeaders: boolean,
                           children?: Box[],
                           initializer?: Partial<TableBoxRowOriented>) {
-        super(element, role);
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
             children.forEach(b => this.addChild(b));
@@ -70,7 +70,7 @@ export abstract class TableBox extends Box {
 
     clearChildren(): void {
         this._children.forEach(ch => ch.parent = null);
-        const dirty = (this._children.length !== 0);
+        const dirty: boolean = (this._children.length !== 0);
         this._children.splice(0, this._children.length);
         if (dirty) {
             // console.log("TableBox clearChildren dirty " + this.role)

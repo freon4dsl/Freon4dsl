@@ -1,11 +1,11 @@
-import { FreModelSerializer, FreError } from "@freon4dsl/core";
-import { ProjectYModelUnitType, XXunit, XX } from "../language/gen";
-import { ProjectYEnvironment } from "../config/gen/ProjectYEnvironment";
+import { FreModelSerializer, FreError, FreModelUnit } from "@freon4dsl/core";
+import { XXunit, XX } from "../language/gen";
+import { XXEnvironment } from "../config/gen/XXEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 
-const writer = ProjectYEnvironment.getInstance().writer;
-const reader = ProjectYEnvironment.getInstance().reader;
-const validator = ProjectYEnvironment.getInstance().validator;
+const writer = XXEnvironment.getInstance().writer;
+const reader = XXEnvironment.getInstance().reader;
+const validator = XXEnvironment.getInstance().validator;
 const serial: FreModelSerializer = new FreModelSerializer();
 const handler = new FileHandler();
 const metatype: string = "XXunit";
@@ -16,7 +16,7 @@ const testdir = "src/typer-test8/__inputs__/";
 function compareReadAndWrittenFiles(path: string) {
     try {
         const model = new XX();
-        const unit1 = reader.readFromString(handler.stringFromFile(path), metatype, model) as ProjectYModelUnitType;
+        const unit1 = reader.readFromString(handler.stringFromFile(path), metatype, model) as FreModelUnit;
         let result: string = writer.writeToString(unit1, 0, false);
         expect(result.length).toBeGreaterThan(0);
         const unit2 = reader.readFromString(result, metatype, model);
@@ -36,7 +36,7 @@ describe ("Testing Typer on", () => {
     // TODO make an input file in which a number of NamedTypes are created and used
 
     beforeEach(done => {
-        ProjectYEnvironment.getInstance();
+        XXEnvironment.getInstance();
         done();
     });
 

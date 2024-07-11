@@ -3,10 +3,10 @@ import { MetaLogger } from "../../utils/MetaLogger";
 
 const LOGGER = new MetaLogger("ScoperCreator").mute();
 
-let currentFileName: string = "SOME_FILENAME";
-export function setCurrentFileName(newName: string) {
-    currentFileName = newName;
-}
+// let currentFileName: string = "SOME_FILENAME";
+// export function setCurrentFileName(newName: string) {
+//     currentFileName = newName;
+// }
 
 export function createScopeDef(data: Partial<ScopeDef>): ScopeDef {
     LOGGER.log("createScopeDef");

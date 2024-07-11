@@ -48,17 +48,16 @@ function toPartialMatchRegex(re: RegExp) {
     const source = re.source;
     let i = 0;
 
-    // tslint:disable-next-line:cyclomatic-complexity
     function process() {
         let result = "";
         let tmp;
 
-        function appendRaw(nbChars) {
+        function appendRaw(nbChars: number) {
             result += source.substring(i, nbChars);
             i += nbChars;
         }
 
-        function appendOptional(nbChars) {
+        function appendOptional(nbChars: number) {
             result += "(?:" + source.substring(i, nbChars) + "|$)";
             i += nbChars;
         }
@@ -86,7 +85,18 @@ function toPartialMatchRegex(re: RegExp) {
                                 appendOptional(2);
                             }
                             break;
+                        case "p":
+                        case "P":
+                            if (re.unicode) {
+                                appendOptional(source.indexOf("}", i) - i + 1);
+                            } else {
+                                appendOptional(2);
+                            }
+                            break;
 
+                        case "k":
+                            appendOptional(source.indexOf(">", i) - i + 1);
+                            break;
                         default:
                             appendOptional(2);
                             break;
@@ -140,6 +150,24 @@ function toPartialMatchRegex(re: RegExp) {
                                 i += 3;
                                 process();
                                 result += source.substring(tmp, i - tmp);
+                                break;
+
+                            case "<":
+                                switch (source[i + 3])
+                                {
+                                    case "=":
+                                    case "!":
+                                        tmp = i;
+                                        i += 4;
+                                        process();
+                                        result += source.substr(tmp, i - tmp);
+                                        break;
+
+                                    default:
+                                        appendRaw(source.indexOf(">", i) - i + 1);
+                                        result += process() + "|$)";
+                                        break;
+                                }
                                 break;
                         }
                     } else {

@@ -1,8 +1,8 @@
-import { FreClassifier, FreConcept } from "../../languagedef/metalanguage/index";
-import { FreDefinitionElement } from "../../utils/index";
+import { FreMetaClassifier } from "../../languagedef/metalanguage/index";
+import { FreMetaDefinitionElement } from "../../utils/index";
 
-export class FreInterpreterDef extends FreDefinitionElement {
+export class FreInterpreterDef extends FreMetaDefinitionElement {
     readonly $typename: string = "FreInterpreterDef";
 
-    conceptsToEvaluate: FreClassifier[] = [];
+    conceptsToEvaluate: FreMetaClassifier[] = [];
 }

@@ -6,8 +6,8 @@ main: entity1 base anotherEntity,
                    andAnother,
                    andYetAnother
           start
-              attr1 : String = \\"myString\\",
-              attr2 : Integer = \\"TEKST\\"
+              attr1 : String = "myString",
+              attr2 : Integer = "TEKST"
           end
 unit wide functions:
     DemoFunction functionXXX {
@@ -27,8 +27,8 @@ main: entity56 base anotherEntity,
                     andAnother,
                     andYetAnother
           start
-              attr78 : Boolean = \\"myString\\",
-              attr9 : String = \\"TEKST\\"
+              attr78 : Boolean = "myString",
+              attr9 : String = "TEKST"
           end
 unit wide functions:
     DemoFunction functionYYY {

@@ -12,6 +12,7 @@ export * from "./EmptyLineBox";
 
 // the following classes directly inherit from Box
 export * from "./AbstractChoiceBox";
+export * from "./BooleanControlBox";
 export * from "./GridBox";
 export * from "./IndentBox";
 export * from "./LabelBox";
@@ -19,8 +20,10 @@ export * from "./ListBox";
 export * from "./LayoutBox";
 export * from "./ActionBox";
 export * from "./OptionalBox";
+export * from "./OptionalBox2";
 export * from "./SvgBox";
 export * from "./TextBox";
+export * from "./MultiLineTextBox";
 export * from "./SelectBox";
 export * from "./BoxFactory";
 export * from "./GridCellBox";

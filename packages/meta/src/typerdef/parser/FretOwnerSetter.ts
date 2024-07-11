@@ -52,7 +52,9 @@ export class FretOwnerSetter {
             });
         } else if (exp instanceof FretLimitedInstanceExp) {
             exp.$myInstance.owner = exp;
-            exp.$myLimited.owner = exp;
+            if (!!exp.$myLimited) {
+                exp.$myLimited.owner = exp;
+            }
         } else if (exp instanceof FretPropertyCallExp ) {
             this.setOwner(exp.source, exp);
             exp.$property.owner = exp;

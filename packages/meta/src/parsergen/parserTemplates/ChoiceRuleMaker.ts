@@ -1,4 +1,4 @@
-import { FreClassifier, FreConcept } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaConcept } from "../../languagedef/metalanguage";
 import { Names } from "../../utils";
 import { GrammarRule } from "./grammarModel/GrammarRule";
 import { ChoiceRule } from "./grammarModel/ChoiceRule";
@@ -6,13 +6,13 @@ import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule";
 
 export class ChoiceRuleMaker {
     static specialSuperName = `__fre_super_`;
-    static superNames: Map<FreClassifier, string> = new Map<FreClassifier, string>();
-    imports: FreClassifier[] = [];
+    static superNames: Map<FreMetaClassifier, string> = new Map<FreMetaClassifier, string>();
+    imports: FreMetaClassifier[] = [];
 
     // for interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
     // that either implement or extend the concept
     // because limited concepts can only be used as reference, these are excluded for this choice
-    generateChoiceRules(interfacesAndAbstractsUsed: Map<FreClassifier, FreClassifier[]> ): GrammarRule[] {
+    generateChoiceRules(interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]> ): GrammarRule[] {
         const rules: GrammarRule[] = [];
         for (const [freClassifier, subs] of interfacesAndAbstractsUsed) {
             const branchName = Names.classifier(freClassifier);
@@ -24,13 +24,13 @@ export class ChoiceRuleMaker {
         return rules;
     }
 
-    generateSuperRules(conceptsWithSubs: Map<FreConcept, FreClassifier[]> ): GrammarRule[] {
+    generateSuperRules(conceptsWithSubs: Map<FreMetaConcept, FreMetaClassifier[]> ): GrammarRule[] {
         const rules: GrammarRule[] = [];
         for (const [freConcept, subs] of conceptsWithSubs) {
             // make a special rule that is a choice between all subs and 'freClassifier' itself
             const branchName = ChoiceRuleMaker.specialSuperName + Names.classifier(freConcept);
             ChoiceRuleMaker.superNames.set(freConcept, branchName);
-            const implementors: FreClassifier[] = [];
+            const implementors: FreMetaClassifier[] = [];
             // make sure the concrete class rule is the first of the implementors because
             // that rule gets the least priority in the parser
             implementors.push(freConcept);
@@ -47,9 +47,9 @@ export class ChoiceRuleMaker {
      * @param implementors
      * @private
      */
-    private sortImplementorsOnPrimitiveProps(implementors: FreClassifier[]): FreClassifier[] {
-        const result: FreClassifier[] = [];
-        const withPrims: FreClassifier[] = [];
+    private sortImplementorsOnPrimitiveProps(implementors: FreMetaClassifier[]): FreMetaClassifier[] {
+        const result: FreMetaClassifier[] = [];
+        const withPrims: FreMetaClassifier[] = [];
         for (const concept of implementors) {
             if (concept.primProperties.length > 0 ) {
                 // there are primitive props, move this implementor to the end

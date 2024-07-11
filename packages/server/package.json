@@ -1,7 +1,6 @@
 {
-  "private": false,
   "name": "@freon4dsl/server",
-  "version": "0.5.0",
+  "version": "0.7.0-beta",
   "publishConfig": {
     "access": "public"
   },
@@ -16,15 +15,18 @@
     "model-server": "./dist/bin/start-server.js"
   },
   "scripts": {
+    "clean": "rm -rf node_modules/",
     "cleanup": "bash ../../scripts/cleanup.sh",
-    "start": "cross-env NODE_ENV=development NODE_PORT=3002 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
+    "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
     "build": "tsc --build",
+    "build-dev": "tsc --build",
     "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
-    "build-release": "yarn build",
+    "build-release": "npm run build",
     "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
+    "republish-local": "npm run unpublish-local && npm run publish-local",
     "test": "jest"
   },
   "dependencies": {
@@ -33,7 +35,7 @@
     "koa-bodyparser": "4.3.0",
     "koa-router": "10.0.0",
     "koa2-cors": "2.0.6",
-    "supertest": "^6.1.6",
-    "tslib": "2.4.0"
+    "supertest": "^7.0.0",
+    "tslib": "^2.6.3"
   }
 }

@@ -1,5 +1,4 @@
 import { runInAction } from "mobx";
-// import { FreLogger } from "../logging";
 import { FreEditor } from "../editor";
 import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast";
 import { isFreExpression } from "../ast-utils";
@@ -16,7 +15,7 @@ import { SimpleIdProvider } from "./SimpleIdProvider";
 
 export class FreUtils {
     // Default generators initialized below the class declaration
-    static nodeIdProvider: IdProvider;
+    static nodeIdProvider: IdProvider= new SimpleIdProvider("ID-");
     static boxIdProvider: IdProvider;
 
     /**
@@ -60,7 +59,7 @@ export class FreUtils {
 
     static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
         runInAction(() => {
-            if (!!freOwnerDescriptor) {
+            if (typeof freOwnerDescriptor !== 'undefined') {
                 if (freOwnerDescriptor.propertyIndex === undefined) {
                     freOwnerDescriptor.owner[freOwnerDescriptor.propertyName] = exp;
                 } else {

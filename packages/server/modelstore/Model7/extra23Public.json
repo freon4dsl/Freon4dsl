@@ -1,6 +1,44 @@
 {
-   "$typename": "ExampleUnit",
-   "name": "extra23",
-   "entities": [],
-   "methods": []
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-19",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-ExampleUnit"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-name"
+               },
+               "value": "extra23"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-entities"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-methods"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "parent": null
+      }
+   ]
 }

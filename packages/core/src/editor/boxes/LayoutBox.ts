@@ -3,19 +3,19 @@ import { Box } from "./Box";
 import { FreNode } from "../../ast";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("LayoutBox");
+const LOGGER: FreLogger = new FreLogger("LayoutBox");
 export enum ListDirection {
     HORIZONTAL = "Horizontal",
     VERTICAL = "Vertical"
 }
 
 export abstract class LayoutBox extends Box {
-    kind = "LayoutBox";
+    kind: string = "LayoutBox";
     protected direction: ListDirection = ListDirection.HORIZONTAL;
     protected _children: Box[] = [];
 
-    protected constructor(element: FreNode, role: string, children?: Box[], initializer?: Partial<LayoutBox>) {
-        super(element, role);
+    protected constructor(node: FreNode, role: string, children?: Box[], initializer?: Partial<LayoutBox>) {
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
             children.forEach(b => this.addChildNoDirty(b));
@@ -128,7 +128,7 @@ export abstract class LayoutBox extends Box {
 }
 
 export class HorizontalLayoutBox extends LayoutBox {
-    kind = "HorizontalLayoutBox";
+    kind: string = "HorizontalLayoutBox";
 
     constructor(element: FreNode, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>) {
         super(element, role, children, initializer);
@@ -137,7 +137,7 @@ export class HorizontalLayoutBox extends LayoutBox {
 }
 
 export class VerticalLayoutBox extends LayoutBox {
-    kind = "VerticalLayoutBox";
+    kind: string = "VerticalLayoutBox";
 
     constructor(element: FreNode, role: string, children?: Box[], initializer?: Partial<HorizontalLayoutBox>) {
         super(element, role, children, initializer);

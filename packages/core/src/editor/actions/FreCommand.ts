@@ -1,6 +1,6 @@
 import { FreBinaryExpression } from "../../ast";
 import { BTREE, FRE_BINARY_EXPRESSION_LEFT } from "../../util";
-import { FreCaret, FreCaretPosition } from "../util";
+import { FreCaret } from "../util";
 import { Box } from "../boxes";
 import { FreEditor } from "../FreEditor";
 import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction";
@@ -38,13 +38,18 @@ export abstract class FreCommand {
      * @param editor
      */
     abstract undo(box: Box, editor: FreEditor): void;
+    // todo implement undo function in all subclasses of FreCommand
 }
 
 class FreNullCommand extends FreCommand {
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     execute(box: Box, text: FreTriggerUse, editor: FreEditor): FrePostAction {
         return EMPTY_POST_ACTION;
     }
 
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     undo(box: Box, editor: FreEditor): void { /* to be done */ }
 }
 
@@ -68,22 +73,27 @@ export class FreCreateBinaryExpressionCommand extends FreCommand {
         // TODO Check whether this fix works consistently correct.
         const childProperty = selected.boxRoleToSelect === FRE_BINARY_EXPRESSION_LEFT ? "left" : "right";
         return function () {
+            LOGGER.log("FreCreateBinaryExpressionCommand select after: " + selected.element.freLanguageConcept() + " ID " + selected.element.freId() + " rolr " + childProperty)
             editor.selectElement(selected.element, childProperty);
+            editor.selectFirstEditableChildBox(selected.element)
         };
     }
 
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     undo() { /* to be done */ }
 }
 
 export class FreCustomCommand extends FreCommand {
     boxRoleToSelect: string;
-    caretPosition: FreCaretPosition;
+    caretPosition: FreCaret;
     action: CustomAction;
 
-    constructor(action: CustomAction, boxRoleToSelect) {
+    constructor(action: CustomAction, boxRoleToSelect: string, caretPosition: FreCaret) {
         super();
         this.action = action;
         this.boxRoleToSelect = boxRoleToSelect;
+        this.caretPosition = caretPosition;
     }
 
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
@@ -96,7 +106,7 @@ export class FreCustomCommand extends FreCommand {
             if (!!self.boxRoleToSelect) {
                 return function () {
                     // console.log("FreCommand select " + box.element.freLanguageConcept() + " box " + self.boxRoleToSelect);
-                    editor.selectElement(selected, self.boxRoleToSelect);
+                    editor.selectElementBox(selected, self.boxRoleToSelect, self.caretPosition);
                 };
             } else {
                 // Default: select the first editable child of the selected element
@@ -108,5 +118,7 @@ export class FreCustomCommand extends FreCommand {
         return EMPTY_POST_ACTION;
     }
 
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     undo() { /* to be done */ }
 }

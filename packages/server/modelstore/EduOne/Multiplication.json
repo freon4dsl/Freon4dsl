@@ -1,71 +1,451 @@
 {
-   "$typename": "Topic",
-   "name": "Multiplication",
-   "description": "This topic teaches simple multiplication skills",
-   "pages": [
+   "serializationFormatVersion": "1",
+   "languages": [],
+   "nodes": [
       {
-         "$typename": "Theory",
-         "name": "Doubling",
-         "lines": [
+         "id": "ID-93",
+         "classifier": {
+            "key": "Topic",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
             {
-               "$typename": "Line",
-               "content": "Calculating the double of a numner isn't that hard."
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Multiplication"
             },
             {
-               "$typename": "Line",
-               "content": "Doubling the number of X-es for XXX is XXX XXX"
-            },
-            {
-               "$typename": "Line",
-               "content": "This is the same as saying that three X-es times 2 gives you six X-es "
-            },
-            {
-               "$typename": "Line",
-               "content": "OR in mathematic terms two times three equals six: 2 * 3 = 6."
+               "property": {
+                  "key": "description",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "This topic teaches simple multiplication skills"
             }
          ],
-         "questions": [],
-         "calcResult": {
-            "$typename": "Function",
-            "cases": [
-               {
-                  "$typename": "FunctionCase",
-                  "formula": {
-                     "$typename": "BooleanLiteralExpression",
-                     "value": true
-                  },
-                  "grade": "gradeA"
-               }
-            ]
-         }
+         "children": [
+            {
+               "containment": {
+                  "key": "pages",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-94",
+                  "ID-102"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
       },
       {
-         "$typename": "WorkSheet",
-         "name": "Exercises in doubling",
-         "questions": [
+         "id": "ID-94",
+         "classifier": {
+            "key": "Theory",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
             {
-               "$typename": "Question",
-               "name": "Double-2",
-               "content": "What is the double of 2",
-               "correctAnswer": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 4
-               }
-            },
-            {
-               "$typename": "Question",
-               "name": "Double-3",
-               "content": "What is the double of 3?",
-               "correctAnswer": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 6
-               }
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Doubling"
             }
          ],
-         "calcResult": {
-            "$typename": "Function",
-            "cases": []
-         }
+         "children": [
+            {
+               "containment": {
+                  "key": "lines",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-95",
+                  "ID-96",
+                  "ID-97",
+                  "ID-98"
+               ]
+            },
+            {
+               "containment": {
+                  "key": "questions",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "key": "calcResult",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-99"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-95",
+         "classifier": {
+            "key": "Line",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Calculating the double of a numner isn't that hard."
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-96",
+         "classifier": {
+            "key": "Line",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Doubling the number of X-es for XXX is XXX XXX"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-97",
+         "classifier": {
+            "key": "Line",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "This is the same as saying that three X-es times 2 gives you six X-es "
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-98",
+         "classifier": {
+            "key": "Line",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "OR in mathematic terms two times three equals six: 2 * 3 = 6."
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-99",
+         "classifier": {
+            "key": "Function",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "cases",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-100"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-100",
+         "classifier": {
+            "key": "FunctionCase",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "formula",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-101"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "grade",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-1",
+                     "resolveInfo": "gradeA"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-101",
+         "classifier": {
+            "key": "BooleanLiteralExpression",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "false"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-102",
+         "classifier": {
+            "key": "WorkSheet",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Exercises in doubling"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "questions",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-103",
+                  "ID-105"
+               ]
+            },
+            {
+               "containment": {
+                  "key": "calcResult",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-107"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-103",
+         "classifier": {
+            "key": "Question",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Double-2"
+            },
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "What is the double of 2"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "correctAnswer",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-104"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-104",
+         "classifier": {
+            "key": "NumberLiteralExpression",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "4"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-105",
+         "classifier": {
+            "key": "Question",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Double-3"
+            },
+            {
+               "property": {
+                  "key": "content",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "What is the double of 3?"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "correctAnswer",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-106"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-106",
+         "classifier": {
+            "key": "NumberLiteralExpression",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "6"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-107",
+         "classifier": {
+            "key": "Function",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "cases",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "parent": null
       }
    ]
 }

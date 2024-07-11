@@ -1,13 +1,13 @@
 import {
-    FreConceptProperty,
-    FrePrimitiveProperty,
-    FreInterface
+    FreMetaConceptProperty,
+    FreMetaPrimitiveProperty,
+    FreMetaInterface
 } from "../../metalanguage";
 import { Names, FREON_CORE, GenerationUtil } from "../../../utils";
 
 export class InterfaceTemplate {
 
-    generateInterface(intf: FreInterface, relativePath: string): string {
+    generateInterface(intf: FreMetaInterface): string {
         // const language = intf.language;
         // const hasSuper = intf.base.length > 0;
         const extendsInterfaces: string[] = Array.from (
@@ -30,7 +30,7 @@ export class InterfaceTemplate {
         // Template starts here
         return `
             import { ${Names.FreNode} ${hasReferences ? `, ${Names.FreNodeReference}` : ""} } from "${FREON_CORE}";
-            import { ${imports.join(", ")} } from "./internal";
+            ${ imports.length > 0 ? `import { ${imports.join(", ")} } from "./internal";` : "" }
 
             /**
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.
@@ -46,18 +46,18 @@ export class InterfaceTemplate {
             }`;
     }
 
-    generatePrimitiveProperty(property: FrePrimitiveProperty): string {
+    generatePrimitiveProperty(property: FreMetaPrimitiveProperty): string {
         const comment = "// implementation of " + property.name ;
         return `${property.name}: ${GenerationUtil.getBaseTypeAsString(property)} ${property.isList ? "[]" : ""}; ${comment}`;
     }
 
-    generatePartProperty(property: FreConceptProperty): string {
+    generatePartProperty(property: FreMetaConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
         return `${property.name} : ${Names.classifier(property.type)}${arrayType}; ${comment}`;
     }
 
-    generateReferenceProperty(property: FreConceptProperty): string {
+    generateReferenceProperty(property: FreMetaConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
         return `${property.name} : ${Names.FreNodeReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;

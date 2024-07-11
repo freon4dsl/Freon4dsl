@@ -1,5 +1,5 @@
 import { FreNode } from "../ast";
-import { ListUtil } from "../util/ListUtil";
+import { ArrayUtil } from "../util/ArrayUtil";
 import { FreTyper } from "./FreTyper";
 import { FreType } from "./FreType";
 
@@ -146,7 +146,7 @@ export class FreCompositeTyper implements FreTyper {
     private elementListToTypeList(inlist: FreNode[]): FreType[] {
         const typelist: FreType[] = [];
         for (const elem of inlist) {
-            ListUtil.addIfNotPresent<FreType>(typelist, this.inferType(elem));
+            ArrayUtil.addIfNotPresent<FreType>(typelist, this.inferType(elem));
         }
         return typelist;
     }

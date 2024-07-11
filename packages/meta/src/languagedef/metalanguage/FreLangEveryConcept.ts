@@ -1,38 +1,38 @@
 import {
-    FreBinaryExpressionConcept,
-    FreConcept,
-    FreModelDescription,
-    FreUnitDescription,
-    FreConceptProperty,
-    FreExpressionConcept,
-    FreInstance,
-    FreInterface,
-    FreFunction,
-    FreParameter,
-    FreLanguage,
-    FreLimitedConcept,
-    FrePrimitiveProperty,
-    FreProperty,
-    FreInstanceProperty,
-    FreClassifier,
-    FreLangElement
+    FreMetaBinaryExpressionConcept,
+    FreMetaConcept,
+    FreMetaModelDescription,
+    FreMetaUnitDescription,
+    FreMetaConceptProperty,
+    FreMetaExpressionConcept,
+    FreMetaInstance,
+    FreMetaInterface,
+    FreMetaFunction,
+    FreMetaParameter,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty,
+    FreMetaInstanceProperty,
+    FreMetaClassifier,
+    FreMetaLangElement
 } from "./internal";
 
 export type FreLangEveryConcept =
-    | FreLangElement
-    | FreLanguage
-    | FreClassifier
-    | FreModelDescription
-    | FreUnitDescription
-    | FreInterface
-    | FreConcept
-    | FreExpressionConcept
-    | FreBinaryExpressionConcept
-    | FreLimitedConcept
-    | FreProperty
-    | FreConceptProperty
-    | FrePrimitiveProperty
-    | FreInstance
-    | FreInstanceProperty
-    | FreFunction
-    | FreParameter;
+    | FreMetaLangElement
+    | FreMetaLanguage
+    | FreMetaClassifier
+    | FreMetaModelDescription
+    | FreMetaUnitDescription
+    | FreMetaInterface
+    | FreMetaConcept
+    | FreMetaExpressionConcept
+    | FreMetaBinaryExpressionConcept
+    | FreMetaLimitedConcept
+    | FreMetaProperty
+    | FreMetaConceptProperty
+    | FreMetaPrimitiveProperty
+    | FreMetaInstance
+    | FreMetaInstanceProperty
+    | FreMetaFunction
+    | FreMetaParameter;

@@ -1,3 +1,4 @@
+import { FreLanguage } from "@freon4dsl/core";
 import { DemoAttributeType } from "../language/gen";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
@@ -14,9 +15,10 @@ import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 
 
 describe("Checking stdlib for Demo", () => {
-    let stdlib: DemoStdlib = DemoEnvironment.getInstance().stdlib as DemoStdlib;
+    let stdlib: DemoStdlib;
     beforeEach(done => {
         DemoEnvironment.getInstance();
+        stdlib = FreLanguage.getInstance().stdLib as DemoStdlib;
         done();
     });
 

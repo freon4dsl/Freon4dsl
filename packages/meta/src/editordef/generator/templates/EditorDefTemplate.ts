@@ -1,9 +1,9 @@
 import {
-    FreBinaryExpressionConcept,
-    FreConcept,
-    FreLanguage,
-    FreLimitedConcept,
-    FreProperty
+    FreMetaBinaryExpressionConcept,
+    FreMetaConcept,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
+    FreMetaProperty
 } from "../../../languagedef/metalanguage";
 import {
     CONFIGURATION_FOLDER,
@@ -12,14 +12,26 @@ import {
     LANGUAGE_GEN_FOLDER,
     ListUtil,
     Names,
-    FREON_CORE
+    FREON_CORE, LOG2USER
 } from "../../../utils";
-import { FreEditProjection, FreEditPropertyProjection, FreEditTableProjection, FreEditUnit } from "../../metalanguage";
+import {
+    ExtraClassifierInfo, FreEditClassifierProjection,
+    FreEditProjection,
+    FreEditProjectionGroup,
+    FreEditPropertyProjection,
+    FreEditTableProjection,
+    FreEditUnit
+} from "../../metalanguage";
 
 export class EditorDefTemplate {
 
-    generateEditorDef(language: FreLanguage, editorDef: FreEditUnit, relativePath: string): string {
-        const defaultProjGroup = editorDef.getDefaultProjectiongroup();
+    generateEditorDef(language: FreMetaLanguage, editorDef: FreEditUnit, relativePath: string): string {
+        const defaultProjGroup:FreEditProjectionGroup | undefined = editorDef.getDefaultProjectiongroup();
+        if (defaultProjGroup === null || defaultProjGroup === undefined) {
+            // this should never happen
+            LOG2USER.error("No default projection group found.");
+            return '';
+        }
 
         const conceptsWithTrigger: ConceptTriggerElement[] = [];
         const conceptsWithRefShortcut: ConceptShortCutElement[] = [];
@@ -27,23 +39,21 @@ export class EditorDefTemplate {
         const editorImports: string[] = [];
         const coreImports: string[] = [`${Names.FreLanguage}`, "FreProjectionHandler", "FreBoxProvider"];
 
-        language.concepts.filter(c => !(c instanceof FreLimitedConcept || c.isAbstract)).forEach(concept => {
+        language.concepts.filter(c => !(c instanceof FreMetaLimitedConcept || c.isAbstract)).forEach(concept => {
             // TODO handle other sub types of FreClassifier
-            if (concept instanceof FreConcept) {
-                // find the triggers for all concepts
-                // every concept should have one - added by EditorDefaultsGenerator
-                // console.log("searching trigger for: " + concept.name);
-                const trigger = defaultProjGroup.findExtrasForType(concept).trigger;
+             // find the triggers for all concepts
+            const extras: ExtraClassifierInfo | undefined = defaultProjGroup.findExtrasForType(concept);
+            if (!!extras) {
+                const trigger: string = extras.trigger;
                 if (!!trigger && trigger.length > 0) {
                     conceptsWithTrigger.push(new ConceptTriggerElement(concept, trigger));
                 }
 
                 // find concepts with reference shortcuts
-                const referenceShortCut = defaultProjGroup.findExtrasForType(concept).referenceShortCut?.referred;
+                const referenceShortCut: FreMetaProperty | undefined = extras.referenceShortCut?.referred;
                 if (!!referenceShortCut) {
                     conceptsWithRefShortcut.push(new ConceptShortCutElement(concept, referenceShortCut));
                 }
-
                 languageImports.push(Names.concept(concept));
             }
         });
@@ -52,7 +62,7 @@ export class EditorDefTemplate {
         // get all the constructors
         const constructors: string[] = [];
         language.concepts.forEach(concept => {
-            if (!(concept instanceof FreLimitedConcept) && !concept.isAbstract) {
+            if (!(concept instanceof FreMetaLimitedConcept) && !concept.isAbstract) {
                 constructors.push(`["${Names.concept(concept)}", () => {
                         return new ${Names.boxProvider(concept)}(${handlerVarName})
                     }]`);
@@ -80,10 +90,10 @@ export class EditorDefTemplate {
         // Get all special child projections for a concept: tables or named
         const conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>> = new Map<string, Map<string, Map<string, string>>>();
         language.classifiers().forEach(concept => {
-            editorDef.findProjectionsForType(concept).forEach(conceptProjection => {
+            editorDef.findProjectionsForType(concept).forEach((conceptProjection:FreEditClassifierProjection) => {
                 if (conceptProjection instanceof FreEditProjection) {
                     const partProjections: FreEditPropertyProjection[] = conceptProjection.findAllPartProjections();
-                    partProjections.filter(pp => !isNullOrUndefined(pp.projectionName)).forEach(p => {
+                    partProjections.filter((pp: FreEditPropertyProjection) => !isNullOrUndefined(pp.projectionName)).forEach((p:FreEditPropertyProjection) => {
                         let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
                         if (conceptMap === undefined) {
                             conceptMap = new Map<string, Map<string, string>>();
@@ -94,7 +104,9 @@ export class EditorDefTemplate {
                             projectionMap = new Map<string, string>();
                             conceptMap.set(conceptProjection.name, projectionMap);
                         }
-                        projectionMap.set(p.property.name, p.projectionName);
+                        if (p.property !== undefined) {
+                            projectionMap.set(p.property.name, p.projectionName);
+                        }
                     });
                     partProjections.filter(pp => !isNullOrUndefined(pp.listInfo) && pp.listInfo.isTable).forEach(p => {
                         let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
@@ -107,45 +119,49 @@ export class EditorDefTemplate {
                             projectionMap = new Map<string, string>();
                             conceptMap.set(conceptProjection.name, projectionMap);
                         }
-                        projectionMap.set(p.property.name, "__TABLE__");
+                        if (p.property !== undefined) {
+                            projectionMap.set(p.property.name, "__TABLE__");
+                        }
                     });
                 }
             });
             // TODO Might refactor this with almost the same code above.
             editorDef.findTableProjectionsForType(concept).forEach(conceptProjection => {
-                if (conceptProjection instanceof FreEditTableProjection) {
-                    const partProjections: FreEditPropertyProjection[] = conceptProjection.findAllPartProjections();
-                    partProjections.filter(pp => !isNullOrUndefined(pp.projectionName)).forEach(p => {
-                        let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
-                        if (conceptMap === undefined) {
-                            conceptMap = new Map<string, Map<string, string>>();
-                            conceptProjectionToPropertyProjection.set(concept.name, conceptMap);
-                        }
-                        let projectionMap = conceptMap.get(conceptProjection.name);
-                        if (projectionMap === undefined) {
-                            projectionMap = new Map<string, string>();
-                            conceptMap.set(conceptProjection.name, projectionMap);
-                        }
+                const partProjections: FreEditPropertyProjection[] = conceptProjection.findAllPartProjections();
+                partProjections.filter(pp => !isNullOrUndefined(pp.projectionName)).forEach(p => {
+                    let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
+                    if (conceptMap === undefined) {
+                        conceptMap = new Map<string, Map<string, string>>();
+                        conceptProjectionToPropertyProjection.set(concept.name, conceptMap);
+                    }
+                    let projectionMap = conceptMap.get(conceptProjection.name);
+                    if (projectionMap === undefined) {
+                        projectionMap = new Map<string, string>();
+                        conceptMap.set(conceptProjection.name, projectionMap);
+                    }
+                    if (p.property !== undefined) {
                         projectionMap.set(p.property.name, p.projectionName);
-                    });
-                    partProjections.filter(pp => !isNullOrUndefined(pp.listInfo) && pp.listInfo.isTable).forEach(p => {
-                        let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
-                        if (conceptMap === undefined) {
-                            conceptMap = new Map<string, Map<string, string>>();
-                            conceptProjectionToPropertyProjection.set(concept.name, conceptMap);
-                        }
-                        let projectionMap = conceptMap.get(conceptProjection.name);
-                        if (projectionMap === undefined) {
-                            projectionMap = new Map<string, string>();
-                            conceptMap.set(conceptProjection.name, projectionMap);
-                        }
+                    }
+                });
+                partProjections.filter(pp => !isNullOrUndefined(pp.listInfo) && pp.listInfo.isTable).forEach(p => {
+                    let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);
+                    if (conceptMap === undefined) {
+                        conceptMap = new Map<string, Map<string, string>>();
+                        conceptProjectionToPropertyProjection.set(concept.name, conceptMap);
+                    }
+                    let projectionMap = conceptMap.get(conceptProjection.name);
+                    if (projectionMap === undefined) {
+                        projectionMap = new Map<string, string>();
+                        conceptMap.set(conceptProjection.name, projectionMap);
+                    }
+                    if (p.property !== undefined) {
                         projectionMap.set(p.property.name, "__TABLE__");
-                    });
-                }
+                    }
+                });
             });
         });
 
-        const hasBinExps: boolean = language.concepts.filter(c => (c instanceof FreBinaryExpressionConcept)).length > 0;
+        const hasBinExps: boolean = language.concepts.filter(c => (c instanceof FreMetaBinaryExpressionConcept)).length > 0;
         // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
 
         // template starts here
@@ -202,7 +218,7 @@ export class EditorDefTemplate {
     }
 
     private generateHeaderInfo(projection: FreEditTableProjection, coreImports: string[]): string {
-        if (!!projection && !!projection.headers && projection.headers.length > 0) {
+        if (!!projection && !!projection.headers && projection.headers.length > 0 && !!projection.classifier) {
             ListUtil.addIfNotPresent(coreImports, "BoxUtil");
             ListUtil.addIfNotPresent(coreImports, "FreTableHeaderInfo");
             return `new FreTableHeaderInfo("${projection.classifier.name}", "${projection.name}", [${projection.headers.map(head =>
@@ -215,10 +231,10 @@ export class EditorDefTemplate {
 
 /** private class to store some info */
 class ConceptTriggerElement {
-    concept: FreConcept;
-    trigger: string;
+    concept: FreMetaConcept;
+    trigger: string = '';
 
-    constructor(concept: FreConcept, trigger: string) {
+    constructor(concept: FreMetaConcept, trigger: string) {
         this.concept = concept;
         this.trigger = trigger;
     }
@@ -226,10 +242,10 @@ class ConceptTriggerElement {
 
 /** private class to store some info */
 class ConceptShortCutElement {
-    concept: FreConcept;
-    property: FreProperty;
+    concept: FreMetaConcept;
+    property: FreMetaProperty;
 
-    constructor(concept: FreConcept, property: FreProperty) {
+    constructor(concept: FreMetaConcept, property: FreMetaProperty) {
         this.concept = concept;
         this.property = property;
     }
@@ -248,14 +264,18 @@ function conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyPr
         result += "    [                           // Concept has special projection for (one of) its parts\n";
         result += '        "' + conceptName + '", new Map( [                          // Projection has special projection for (one of) the parts\n';
         const conceptMap = conceptProjectionToPropertyProjection.get(conceptName);
-        for (const projection of conceptMap.keys()) {
-            result += "            [" + "                                       // Projection has special projection for some part \n";
-            result += '                "' + projection + '", new Map ([\n';
-            const projectionMap = conceptMap.get(projection);
-            for (const propertyProjection of projectionMap) {
-                result += '            [ "' + propertyProjection[0] + '", "' + propertyProjection[1] + '" ],             // special projection\n';
+        if (!!conceptMap) {
+            for (const projection of conceptMap.keys()) {
+                result += "            [" + "                                       // Projection has special projection for some part \n";
+                result += '                "' + projection + '", new Map ([\n';
+                const projectionMap = conceptMap.get(projection);
+                if (!!projectionMap) {
+                    for (const propertyProjection of projectionMap) {
+                        result += '            [ "' + propertyProjection[0] + '", "' + propertyProjection[1] + '" ],             // special projection\n';
+                    }
+                }
+                result += "         ])],";
             }
-            result += "         ])],";
         }
         result += "     ])],";
     }

@@ -14,7 +14,7 @@ ExpressionTest {
   "$$propertyName": "expr",
   "$id": "ID-10",
   "$typename": "ExpressionTest",
-  "_FRE_binEx": Array [
+  "_FRE_binEx": [
     PlusEx {
       "$$owner": [Circular],
       "$$propertyIndex": 0,
@@ -110,7 +110,8 @@ ExpressionTest {
     },
   ],
   "_FRE_name": "simpleExpressions",
-  "_FRE_normalEx": Array [],
+  "_FRE_normalEx": [],
+  "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
     "line": 1,

@@ -136,10 +136,10 @@ export class FreTransactionDelta extends FreDelta {
 }
 
 export class DeltaUtil {
-    static getElemName(element: FreNode): string {
-        let ownerName: string = element["name"];
+    static getElemName(node: FreNode): string {
+        let ownerName: string = node["name"];
         if (!ownerName) {
-            ownerName = element?.freLanguageConcept();
+            ownerName = node?.freLanguageConcept();
         }
         return ownerName;
     }

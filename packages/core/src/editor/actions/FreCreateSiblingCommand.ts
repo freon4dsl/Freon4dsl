@@ -31,7 +31,7 @@ export class FreCreateSiblingCommand extends FreCommand {
      * @param editor
      * @param index If the property is a list, the index in the list at which the created element will be stored.
      */
-    execute(box: Box, trigger: FreTriggerUse, editor: FreEditor, index: number): FrePostAction {
+    execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
         // todo make index optional and set the default value to -1;
         console.log("CreateSiblingCommand: trigger [" + triggerTypeToString(trigger) + "] part: " + this.conceptName + " refshort " + this.referenceShortcut);
         const ownerDescriptor = box.element.freOwnerDescriptor();
@@ -56,7 +56,7 @@ export class FreCreateSiblingCommand extends FreCommand {
         const self = this;
         if (!!this.boxRoleToSelect) {
             return function () {
-                editor.selectElement(newElement, self.boxRoleToSelect);
+                editor.selectElementBox(newElement, self.boxRoleToSelect);
             };
         } else {
             return function () {
@@ -66,5 +66,7 @@ export class FreCreateSiblingCommand extends FreCommand {
         }
     }
 
+    // @ts-ignore
+    // parameters present to adhere to base class signature
     undo(box: Box, editor: FreEditor) { /* to be done */ }
 }

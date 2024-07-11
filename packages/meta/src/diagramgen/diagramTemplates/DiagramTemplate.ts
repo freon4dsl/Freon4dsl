@@ -1,4 +1,4 @@
-import { FreConcept, FreInterface, FreLanguage, FreLimitedConcept, FreProperty } from "../../languagedef/metalanguage";
+import { FreMetaConcept, FreMetaInterface, FreMetaLanguage, FreMetaLimitedConcept, FreMetaProperty } from "../../languagedef/metalanguage";
 import { ListUtil } from "../../utils";
 
 export class DiagramTemplate {
@@ -8,7 +8,7 @@ export class DiagramTemplate {
         this.withHtml = html;
     }
 
-    public makeOverview(language: FreLanguage): string {
+    public makeOverview(language: FreMetaLanguage): string {
         return `%%{init: {'theme': 'forest'} }%%
     classDiagram
     direction TD
@@ -18,14 +18,14 @@ ${this.makeUmlInterfaces(language.interfaces)}
     ${this.makeUmlRelationships(language.concepts)}`;
     }
 
-    public makeOverviewPerFile(language: FreLanguage, filename: string): string {
-        const conceptsToInclude: FreConcept[] = [];
+    public makeOverviewPerFile(language: FreMetaLanguage, filename: string): string {
+        const conceptsToInclude: FreMetaConcept[] = [];
         language.concepts.forEach(c => {
             if (c.location?.filename === filename || c.aglParseLocation?.filename === filename) {
                 ListUtil.addIfNotPresent(conceptsToInclude, c);
             }
         });
-        const interfacesToInclude: FreInterface[] = [];
+        const interfacesToInclude: FreMetaInterface[] = [];
         language.interfaces.forEach(c => {
             if (c.location?.filename === filename || c.aglParseLocation?.filename === filename) {
                 ListUtil.addIfNotPresent(interfacesToInclude, c);
@@ -42,8 +42,8 @@ ${this.makeUmlInterfaces(interfacesToInclude)}
     ${this.makeUmlRelationships(conceptsToInclude)}`;
     }
 
-    public makeInheritanceTrees(language: FreLanguage): string {
-        const conceptsToInclude: FreConcept[] = [];
+    public makeInheritanceTrees(language: FreMetaLanguage): string {
+        const conceptsToInclude: FreMetaConcept[] = [];
         language.concepts.forEach(c => {
             if (!!c.base) {
                 ListUtil.addIfNotPresent(conceptsToInclude, c);
@@ -60,12 +60,12 @@ ${this.makeUmlClasses(conceptsToInclude)}
     ${conceptsToInclude.map(c => this.supersToUml(c)).join("")}`;
     }
 
-    private makeUmlClasses(conceptsToInclude: FreConcept[]): string {
+    private makeUmlClasses(conceptsToInclude: FreMetaConcept[]): string {
         return `${conceptsToInclude.map(c => this.conceptToUml(c)).join("\n")}`;
     }
 
-    private conceptToUml(concept: FreConcept): string {
-        if (concept instanceof FreLimitedConcept) {
+    private conceptToUml(concept: FreMetaConcept): string {
+        if (concept instanceof FreMetaLimitedConcept) {
             return `    class ${concept.name}${this.withHtml ? ":::enumeration" : ""} {
         ${!this.withHtml ? "<<enumeration>>" : ""}
         ${concept.allInstances().map(p => p.name).join("\n\t\t")}
@@ -79,47 +79,47 @@ ${this.makeUmlClasses(conceptsToInclude)}
         }
     }
 
-    private primPropToUml(prop: FreProperty): string {
+    private primPropToUml(prop: FreMetaProperty): string {
         if (prop.isPrimitive) {
             return `${prop.isPublic ? "+" : "-"} ${prop.type.name} ${prop.name}`;
         }
         return "";
     }
 
-    private makeUmlRelationships(concepts: FreConcept[]): string {
+    private makeUmlRelationships(concepts: FreMetaConcept[]): string {
         return `${concepts.map(c => this.supersToUml(c)).join("")}
         ${concepts.map(c => this.partsToUml(c)).join("")}
         ${concepts.map(c => this.referencesToUml(c)).join("")}
         ${concepts.map(c => this.implementsToUml(c)).join("")}`;
     }
 
-    private supersToUml(concept: FreConcept): string {
+    private supersToUml(concept: FreMetaConcept): string {
         if (!!concept.base) {
             return `${concept.base.name} <|-- ${concept.name}\n`;
         }
         return "";
     }
 
-    private partsToUml(concept: FreConcept): string {
+    private partsToUml(concept: FreMetaConcept): string {
         return `${concept.parts().map(p => `${concept.name} *-- ${p.isList ? "\"0..*\"" : "\"1\""} ${p.type.name} : ${p.name}\n`).join("\n\t\t")}`;
     }
 
-    private referencesToUml(concept: FreConcept): string {
+    private referencesToUml(concept: FreMetaConcept): string {
         return `${concept.references().map(p => `${concept.name} --> ${p.isList ? "\"0..*\"" : "\"1\""} ${p.type.name} : ${p.name}\n`).join("\n\t\t")}`;
     }
 
-    private makeUmlInterfaces(interfaces: FreInterface[]) {
+    private makeUmlInterfaces(interfaces: FreMetaInterface[]) {
         return `${interfaces.map(c => this.interfaceToUml(c)).join("\n")}`;
     }
 
-    private interfaceToUml(freInterface: FreInterface) {
+    private interfaceToUml(freInterface: FreMetaInterface) {
         return `    class ${freInterface.name}${this.withHtml ? ":::interface" : ""} {
         ${!this.withHtml ? "<<interface>>" : ""}
         ${freInterface.primProperties.map(p => this.primPropToUml(p)).join("\n\t\t")}
     }`;
     }
 
-    private implementsToUml(concept: FreConcept) {
+    private implementsToUml(concept: FreMetaConcept) {
         return `${concept.interfaces.map(p => `${concept.name} ..|> ${p.name}\n`).join("\n\t\t")}`;
     }
 }

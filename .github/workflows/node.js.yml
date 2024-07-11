@@ -16,21 +16,19 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 16.x ]
+        node-version: [ 20.x ]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4.1.5
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.0.2
       with:
         node-version: ${{ matrix.node-version }}
         # cache: 'npm'
-    - run: npm install --global yarn@1.22.19
-    - run: yarn cache clean --all
-    - run: yarn install
-    - run: yarn build
-    - run: yarn test
+    - run: npm install
+    - run: npm run build
+    - run: npm run test
 
 #    - name: Send mail
 #      if: always()

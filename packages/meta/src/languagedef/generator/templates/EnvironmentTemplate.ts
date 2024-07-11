@@ -11,23 +11,23 @@ import {
     READER_GEN_FOLDER,
     INTERPRETER_FOLDER
 } from "../../../utils/";
-import { FreLanguage } from "../../metalanguage";
+import { FreMetaLanguage } from "../../metalanguage";
 
 export class EnvironmentTemplate {
 
-    generateEnvironment(language: FreLanguage, relativePath: string): string {
+    generateEnvironment(language: FreMetaLanguage, relativePath: string): string {
         return `
         import { ${Names.FreEditor}, ${Names.FreEnvironment}, ${Names.FreReader},
                     ${Names.FreTyper}, ${Names.FreValidator}, ${Names.FreStdlib},
                     ${Names.FreWriter}, ${Names.FreInterpreter}, ${Names.FreScoperComposite}, ${Names.LanguageEnvironment}, ${Names.FreProjectionHandler}
                } from "${FREON_CORE}";
         import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
-        import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/${Names.scoperDef(language)}";
-        import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/${Names.typerDef(language)}";
-        import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/${Names.validator(language)}";
+        import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}";
+        import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}";
+        import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}";
         import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
         import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
-        import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}";
+        import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}";
         import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}";
         import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
@@ -81,7 +81,6 @@ export class EnvironmentTemplate {
             editor: ${Names.FreEditor};
             scoper: ${Names.FreScoperComposite} = new ${Names.FreScoperComposite}("main");
             typer: ${Names.FreTyper} = new ${Names.FreTyper}("main");
-            stdlib: ${Names.FreStdlib} = ${Names.stdlib(language)}.getInstance();
             validator: ${Names.FreValidator} = new ${Names.validator(language)}();
             writer: ${Names.FreWriter} = new ${Names.writer(language)}();
             reader: ${Names.FreReader} = new ${Names.reader(language)}();
@@ -91,5 +90,6 @@ export class EnvironmentTemplate {
                 ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
             ]);
         }`;
+        // todo find out why we cannot use EDITOR_FOLDER to import "${Names.actions(language)}, initializeEditorDef, initializeProjections"
     }
 }

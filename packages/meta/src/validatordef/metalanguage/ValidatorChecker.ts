@@ -1,20 +1,20 @@
 import { Checker, FreErrorSeverity, MetaLogger, ParseLocationUtil, CheckRunner } from "../../utils";
 import {
-    FreClassifier,
-    FreConcept,
+    FreMetaClassifier,
+    FreMetaConcept,
     FreLangAppliedFeatureExp,
     FreLangSelfExp,
     FreLangSimpleExp,
-    FreLanguage,
-    FrePrimitiveProperty,
-    FreProperty
+    FreMetaLanguage,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty
 } from "../../languagedef/metalanguage";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
     ConceptRuleSet,
     ExpressionRule,
-    IsuniqueRule,
+    IsUniqueRule,
     NotEmptyRule,
     ValidatorDef,
     ValidationMessage,
@@ -23,24 +23,27 @@ import {
     ValidationSeverity,
     ValidNameRule
 } from "./ValidatorDefLang";
-import { FrePrimitiveType } from "../../languagedef/metalanguage";
+import { FreMetaPrimitiveType } from "../../languagedef/metalanguage";
 import { CommonChecker, FreLangExpressionChecker } from "../../languagedef/checking";
 
-const LOGGER = new MetaLogger("ValidatorChecker").mute();
-const equalsTypeName = "equalsType";
-const conformsToName = "conformsTo";
+const LOGGER: MetaLogger = new MetaLogger("ValidatorChecker");
+const equalsTypeName: string = "equalsType";
+const conformsToName: string = "conformsTo";
 
 // 'severityLevels' should mirror the levels in FreValidator/FreErrorSeverity, but
 // all names should be in lowercase
-const severityLevels = ["error", "improvement", "todo", "info"];
+const severityLevels: string[] = ["error", "improvement", "todo", "info"];
 
 export class ValidatorChecker extends Checker<ValidatorDef> {
-    myExpressionChecker: FreLangExpressionChecker;
-    runner = new CheckRunner(this.errors, this.warnings);
+    myExpressionChecker: FreLangExpressionChecker | undefined;
+    runner: CheckRunner = new CheckRunner(this.errors, this.warnings);
 
-    constructor(language: FreLanguage) {
+    constructor(language: FreMetaLanguage | undefined) {
         super(language);
-        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        LOGGER.log("Created validator checker");
+        if ( this.language !== null && this.language !== undefined ) {
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+        }
     }
 
     public check(definition: ValidatorDef): void {
@@ -48,41 +51,38 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
 
         if ( this.language === null || this.language === undefined ) {
             throw new Error(`Validator definition checker does not known the language ${ParseLocationUtil.location(definition)}.`);
+        } else {
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
+            // in all private methods that are called by method 'check' we can assume that 'this.myExpressionChecker !== undefined'
         }
 
-        this.runner.nestedCheck(
-            {
-                check: this.language.name === definition.languageName,
-                error: `Language reference ('${definition.languageName}') in ` +
-                    `validator definition '${definition.validatorName}' does not match language '${this.language.name}' ` +
-                    `${ParseLocationUtil.location(definition)}.`,
-                whenOk: () => {
-                    definition.conceptRules.forEach(rule => {
-                        this.checkConceptRule(rule);
-                    });
-                }
-            });
+        definition.conceptRules.forEach(rule => {
+            this.checkConceptRule(rule);
+        });
         this.errors = this.errors.concat(this.myExpressionChecker.errors);
     }
 
-    private checkConceptRule(rule: ConceptRuleSet) {
-        CommonChecker.checkClassifierReference(rule.conceptRef, this.runner);
+    private checkConceptRule(rule: ConceptRuleSet): void {
+        LOGGER.log("Check concept rule");
+        if (!!rule.conceptRef) { // todo check whether this option needs to throw an error
+            CommonChecker.checkClassifierReference(rule.conceptRef, this.runner);
 
-        const enclosingConcept = rule.conceptRef.referred;
-        if (enclosingConcept) {
-            rule.rules.forEach(tr => {
-                this.checkRule(tr, enclosingConcept);
-            });
+            const enclosingConcept: FreMetaConcept = rule.conceptRef.referred;
+            if (enclosingConcept) {
+                rule.rules.forEach(tr => {
+                    this.checkRule(tr, enclosingConcept);
+                });
+            }
         }
     }
 
-    checkRule(tr: ValidationRule, enclosingConcept: FreConcept) {
+    private checkRule(tr: ValidationRule, enclosingConcept: FreMetaConcept) {
         if ( tr instanceof CheckEqualsTypeRule) { this.checkEqualsTypeRule(tr, enclosingConcept); }
         if ( tr instanceof CheckConformsRule) { this.checkConformsTypeRule(tr, enclosingConcept); }
         if ( tr instanceof NotEmptyRule) { this.checkNotEmptyRule(tr, enclosingConcept); }
         if ( tr instanceof ValidNameRule) { this.checkValidNameRule(tr, enclosingConcept); }
         if ( tr instanceof ExpressionRule) { this.checkExpressionRule(tr, enclosingConcept); }
-        if ( tr instanceof IsuniqueRule) { this.checkIsuniqueRule(tr, enclosingConcept); }
+        if ( tr instanceof IsUniqueRule) { this.checkIsuniqueRule(tr, enclosingConcept); }
         if (!!tr.severity) {
             this.checkAndFindSeverity(tr.severity);
         } else {
@@ -95,13 +95,14 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         }
     }
 
-    checkValidNameRule(tr: ValidNameRule, enclosingConcept: FreConcept) {
+    private checkValidNameRule(tr: ValidNameRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkValidNameRule");
         // check whether tr.property (if set) is a property of enclosingConcept
         // if not set, set tr.property to the 'self.unitName' property of the enclosingConcept
         if (!!tr.property) {
-            this.myExpressionChecker.checkLangExp(tr.property, enclosingConcept);
+            this.myExpressionChecker!.checkLangExp(tr.property, enclosingConcept);
         } else {
-            let myProp: FreProperty;
+            let myProp: FreMetaProperty | undefined = undefined;
             for (const i of enclosingConcept.allProperties()) {
                 if (i.name === "name") {
                     myProp = i;
@@ -111,69 +112,75 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 check: !!myProp,
                 error: `Cannot find property 'name' in ${enclosingConcept.name} ${ParseLocationUtil.location(tr)}.`,
                 whenOk: () => {
+                    let testedProp: FreMetaProperty = myProp!; // here we can use the non-null assertion operator
                     tr.property = FreLangSelfExp.create(enclosingConcept);
-                    tr.property.appliedfeature = FreLangAppliedFeatureExp.create(tr.property, "name", myProp);
+                    tr.property.appliedfeature = FreLangAppliedFeatureExp.create(tr.property, "name", testedProp);
                     // tr.property.appliedfeature.sourceName = "unitName";
                     // tr.property.appliedfeature.referredElement = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
                     tr.property.location = tr.location;
-                    tr.property.language = this.language;
+                    tr.property.language = this.language!;
                   }
             });
         }
         // check if found property is of type 'identifier'
         if (!!tr.property) {
             const myProp = tr.property.findRefOfLastAppliedFeature();
-            this.runner.simpleCheck((myProp instanceof FrePrimitiveProperty) && myProp.type === FrePrimitiveType.identifier,
+            this.runner.simpleCheck((myProp instanceof FreMetaPrimitiveProperty) && myProp.type === FreMetaPrimitiveType.identifier,
                 `Validname rule expression '${tr.property.toFreString()}' should have type 'identifier' ${ParseLocationUtil.location(tr.property)}.`);
         }
     }
 
-    checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: FreConcept) {
+    private checkEqualsTypeRule(tr: CheckEqualsTypeRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkEqualsTypeRule");
         // check references to types
         this.runner.nestedCheck(
             {
-                check: tr.type1 !== null && tr.type2 !== null,
+                check: !!tr.type1 && !!tr.type2,
                 error: `Typecheck '${equalsTypeName}' should have two types to compare ${ParseLocationUtil.location(tr)}.`,
                 whenOk: () => {
                     // LOGGER.log("Checking EqualsTo ( " + tr.type1.makeString() + ", " + tr.type2.makeString() +" )");
-                    this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept);
-                    this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept);
+                    this.myExpressionChecker!.checkLangExp(tr.type1!, enclosingConcept);
+                    this.myExpressionChecker!.checkLangExp(tr.type2!, enclosingConcept);
                 }
             });
     }
 
-    checkConformsTypeRule(tr: CheckConformsRule, enclosingConcept: FreConcept) {
+    private checkConformsTypeRule(tr: CheckConformsRule, enclosingConcept: FreMetaConcept) {
         // check references to types
         this.runner.nestedCheck(
             {
-                check: tr.type1 !== null || tr.type2 !== null,
+                check: !!tr.type1 && !!tr.type2,
                 error: `Typecheck "${conformsToName}" should have two types to compare ${ParseLocationUtil.location(tr)}.`,
                 whenOk: () => {
-                    this.myExpressionChecker.checkLangExp(tr.type1, enclosingConcept);
-                    this.myExpressionChecker.checkLangExp(tr.type2, enclosingConcept);
+                    this.myExpressionChecker!.checkLangExp(tr.type1!, enclosingConcept);
+                    this.myExpressionChecker!.checkLangExp(tr.type2!, enclosingConcept);
                 }
             });
     }
 
-    checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: FreConcept) {
+    private checkNotEmptyRule(nr: NotEmptyRule, enclosingConcept: FreMetaConcept) {
         // check whether nr.property is a property of enclosingConcept
         // and whether it is a list
-        if (nr.property !== null) {
-            this.myExpressionChecker.checkLangExp(nr.property, enclosingConcept);
-            this.runner.simpleCheck(nr.property.findRefOfLastAppliedFeature().isList,
-                `NotEmpty rule '${nr.property.toFreString()}' should refer to a list ${ParseLocationUtil.location(nr)}.`);
+        if (nr.property !== null && nr.property !== undefined) {
+            this.myExpressionChecker!.checkLangExp(nr.property, enclosingConcept);
+            const xx: FreMetaProperty | undefined = nr.property.findRefOfLastAppliedFeature();
+            if (!!xx) { // todo check whether we need an extra error message for this case
+                this.runner.simpleCheck(xx.isList,
+                    `NotEmpty rule '${nr.property.toFreString()}' should refer to a list ${ParseLocationUtil.location(nr)}.`);
+            }
         }
     }
 
-    private checkExpressionRule(tr: ExpressionRule, enclosingConcept: FreConcept) {
+    private checkExpressionRule(tr: ExpressionRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkExpressionRule");
         this.runner.nestedCheck(
             {
-                check: tr.exp1 !== null && tr.exp2 !== null,
+                check: !!tr.exp1 && !!tr.exp2,
                 error: `Expression rule '${tr.toFreString()}' should have two types to compare ${ParseLocationUtil.location(tr)}.`,
                 whenOk: () => {
                     // exp1 and exp2 should refer to valid properties or be simple expressions
-                    this.myExpressionChecker.checkLangExp(tr.exp1, enclosingConcept);
-                    this.myExpressionChecker.checkLangExp(tr.exp2, enclosingConcept);
+                    this.myExpressionChecker!.checkLangExp(tr.exp1!, enclosingConcept);
+                    this.myExpressionChecker!.checkLangExp(tr.exp2!, enclosingConcept);
                     // types of exp1 and exp2 should be equal
                     if (tr.exp1 instanceof FreLangSimpleExp) {
                         // test if type2 is a number
@@ -181,10 +188,10 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                         // test if type1 is a number
                     } else {
                         // compare both types
-                        const type1 = tr.exp1.findRefOfLastAppliedFeature()?.type;
-                        this.runner.simpleCheck(type1 !== null, `Cannot find the type of ${tr.exp1.toFreString()} ${ParseLocationUtil.location(tr)}.`);
-                        const type2 = tr.exp2.findRefOfLastAppliedFeature()?.type;
-                        this.runner.simpleCheck(type2 !== null, `Cannot find the type of ${tr.exp2.toFreString()} ${ParseLocationUtil.location(tr)}.`);
+                        const type1 = tr.exp1!.findRefOfLastAppliedFeature()?.type;
+                        this.runner.simpleCheck(type1 !== null, `Cannot find the type of ${tr.exp1!.toFreString()} ${ParseLocationUtil.location(tr)}.`);
+                        const type2 = tr.exp2!.findRefOfLastAppliedFeature()?.type;
+                        this.runner.simpleCheck(type2 !== null, `Cannot find the type of ${tr.exp2!.toFreString()} ${ParseLocationUtil.location(tr)}.`);
                         if (type1 !== null && type2 !== null) {
                             this.runner.simpleCheck(type1 === type2, `Types of expression rule '${tr.toFreString()}' should be equal ${ParseLocationUtil.location(tr)}.`);
                         }
@@ -193,15 +200,16 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
             });
     }
 
-    private checkIsuniqueRule(tr: IsuniqueRule, enclosingConcept: FreConcept) {
+    private checkIsuniqueRule(tr: IsUniqueRule, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("checkIsuniqueRule");
         this.runner.nestedCheck(
             {
-                check: tr.list !== null && tr.listproperty !== null,
+                check: !!tr.list && !!tr.listproperty,
                 error: `Isunique rule '${tr.toFreString()}' should have a list and a property of that list to compare the elements ${ParseLocationUtil.location(tr)}.`,
                 whenOk: () => {
                     // list should refer to a valid property of enclosingConcept
-                    this.myExpressionChecker.checkLangExp(tr.list, enclosingConcept);
-                    const myProp = tr.list.findRefOfLastAppliedFeature();
+                    this.myExpressionChecker!.checkLangExp(tr.list!, enclosingConcept);
+                    const myProp = tr.list!.findRefOfLastAppliedFeature();
                     if (!!myProp) { // error message provided by checkLangExp
                         this.runner.nestedCheck(
                             {
@@ -215,7 +223,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                                             error: `List ${myProp.name} does not have a valid type ${ParseLocationUtil.location(tr.list)}.`,
                                             whenOk: () => {
                                                 // now check the property of the list against the type of the elements in the list
-                                                this.myExpressionChecker.checkLangExp(tr.listproperty, myType);
+                                                this.myExpressionChecker!.checkLangExp(tr.listproperty!, myType);
                                             }
                                         });
                                 }
@@ -256,19 +264,19 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                     }
                 }
         });
-        if (!!!severity.severity) {
+        if (!severity.severity) {
             severity.severity = FreErrorSeverity.ToDo;
         }
     }
 
-    private checkValidationMessage(message: ValidationMessage, enclosingConcept: FreClassifier) {
+    private checkValidationMessage(message: ValidationMessage, enclosingConcept: FreMetaClassifier) {
         this.runner.nestedCheck({check: !!message.content && !!message.content[0],
             error: `User defined error message should have a value ${ParseLocationUtil.location(message)}.`,
             whenOk: () => {
                 message.content.forEach(part => {
                     // console.log("found " + part.toFreString());
-                    if (part instanceof ValidationMessageReference) {
-                        this.myExpressionChecker.checkLangExp(part.expression, enclosingConcept);
+                    if (part instanceof ValidationMessageReference && !!part.expression) {
+                        this.myExpressionChecker!.checkLangExp(part.expression, enclosingConcept);
                     }
                 });
             }

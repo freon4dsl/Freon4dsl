@@ -2,7 +2,7 @@ import { Box } from "./Box";
 import { FreNode } from "../../ast";
 
 export class EmptyLineBox extends Box {
-    kind = "EmptyLineBox";
+    kind: string = "EmptyLineBox";
 
     constructor(element: FreNode, role: string) {
         super(element, role);

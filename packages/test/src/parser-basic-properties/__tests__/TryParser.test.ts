@@ -1,11 +1,11 @@
 import { FreUtils } from "@freon4dsl/core";
-import { TestParserEnvironment } from "../config/gen/TestParserEnvironment";
+import { TestParserModelEnvironment } from "../config/gen/TestParserModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, PrimsWithKeywordTest, TestParserModel } from "../language/gen";
 
 describe("Parser properties of type", () => {
-    const reader = TestParserEnvironment.getInstance().reader;
-    const writer = TestParserEnvironment.getInstance().writer;
+    const reader = TestParserModelEnvironment.getInstance().reader;
+    const writer = TestParserModelEnvironment.getInstance().writer;
     const fileHandler = new FileHandler();
 
     beforeEach(() => {
@@ -100,7 +100,7 @@ describe("Parser properties of type", () => {
 
     test( " Ref with Optionals present", () => {
         try {
-            let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.ref");
+            let input: string = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.ref");
             const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
             // console.log(writer.writeToString(unit1));
             expect(unit1).toMatchSnapshot();

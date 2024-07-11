@@ -22,7 +22,7 @@ export class FreEditParseUtil {
         let ignoredIndent = 100; // begin with an arbitrary large amount
 
         // find the line with the least indentation
-        projection.lines.forEach((line, index) => {
+        projection.lines.forEach((line) => {
             const firstItem = line.items[0];
             if (firstItem instanceof FreEditParsedProjectionIndent) {
                 if (line.items.length > 1) {

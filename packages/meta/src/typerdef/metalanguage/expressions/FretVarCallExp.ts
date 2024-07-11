@@ -23,6 +23,7 @@ export class FretVarCallExp extends FretExp {
     }
 
     readonly $typename: string = "FretVarCallExp"; // holds the metatype in the form of a string
+    // @ts-ignore Property is set during parsing and checking phases
     $variable: MetaElementReference<FretVarDecl>; // implementation of reference 'variable'
 
     /**
@@ -30,11 +31,11 @@ export class FretVarCallExp extends FretExp {
      * Instead of returning a 'MetaElementReference<FretVarDecl>' object,
      * it returns the referred 'FretVarDecl' object, if it can be found.
      */
-    get variable(): FretVarDecl {
+    get variable(): FretVarDecl | undefined {
         if (!!this.$variable) {
             return this.$variable.referred;
         }
-        return null;
+        return undefined;
     }
 
     set variable(newOne: FretVarDecl) {

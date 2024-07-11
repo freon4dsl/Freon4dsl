@@ -1,13 +1,13 @@
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
-    ConceptRuleSet, ExpressionRule, IsuniqueRule,
+    ConceptRuleSet, ExpressionRule, IsUniqueRule,
     NotEmptyRule,
     ValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText, ValidationRule, ValidationSeverity,
     ValidNameRule
 } from "../metalanguage";
 import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
-import { FreDefinitionElement } from "../../utils";
+import {FreMetaDefinitionElement, ParseLocationUtil} from "../../utils";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang)
 // from the parsed data objects (from ValidatorGrammar.pegjs).
@@ -134,8 +134,8 @@ export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionR
     return result;
 }
 
-export function createIsuniqueRule(data: Partial<IsuniqueRule>): IsuniqueRule {
-    const result = new IsuniqueRule();
+export function createIsuniqueRule(data: Partial<IsUniqueRule>): IsUniqueRule {
+    const result = new IsUniqueRule();
 
     createRuleCommonParts(data, result);
     if (!!data.list) {
@@ -204,7 +204,8 @@ export function createValidationMessageText(data: Partial<ValidationMessageText>
     return result;
 }
 
-function setLocationAndFileName(result: FreDefinitionElement, data: Partial<ValidationMessageText>) {
-    result.location = data.location;
+function setLocationAndFileName(result: FreMetaDefinitionElement, data: Partial<ValidationMessageText>) {
+    // if data, or data.location is undefined, then used the defaultParseLocation
+    result.location = data.location ?? ParseLocationUtil.defaultParseLocation;
     result.location.filename = currentFileName;
 }

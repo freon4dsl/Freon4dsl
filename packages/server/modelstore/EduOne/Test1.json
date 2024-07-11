@@ -1,72 +1,513 @@
 {
-   "$typename": "Test",
-   "name": "Test1",
-   "scenarios": [
+   "serializationFormatVersion": "1",
+   "languages": [],
+   "nodes": [
       {
-         "$typename": "Scenario",
-         "description": "Test what happens when all answers are correct",
-         "steps": [
+         "id": "ID-176",
+         "classifier": {
+            "key": "Test",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
             {
-               "$typename": "Step",
-               "answersGiven": [
-                  {
-                     "$typename": "Answer",
-                     "expr": {
-                        "$typename": "BooleanLiteralExpression",
-                        "value": false
-                     },
-                     "question": "Theory 1"
-                  }
-               ],
-               "fromPage": "Fractions theory",
-               "expectedPage": "Fractions video two"
-            },
-            {
-               "$typename": "Step",
-               "answersGiven": [
-                  {
-                     "$typename": "Answer",
-                     "expr": {
-                        "$typename": "NumberLiteralExpression",
-                        "value": 30
-                     },
-                     "question": "Video1 Simplify"
-                  },
-                  {
-                     "$typename": "Answer",
-                     "expr": {
-                        "$typename": "BooleanLiteralExpression",
-                        "value": false
-                     },
-                     "question": "Video1 Q1"
-                  }
-               ],
-               "fromPage": "Fractions video one",
-               "expectedPage": "Fractions theory"
-            },
-            {
-               "$typename": "Step",
-               "answersGiven": [
-                  {
-                     "$typename": "Answer",
-                     "expr": {
-                        "$typename": "BooleanLiteralExpression",
-                        "value": false
-                     },
-                     "question": "Video2 question"
-                  }
-               ],
-               "fromPage": "Fractions video two",
-               "expectedPage": "Fractions theory"
+               "property": {
+                  "key": "name",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Test1"
             }
-         ]
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "scenarios",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-177",
+                  "ID-189"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "topic",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-14",
+                     "resolveInfo": "Fractions10"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "key": "flow",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-140",
+                     "resolveInfo": "Flow"
+                  }
+               ]
+            }
+         ],
+         "parent": null
       },
       {
-         "$typename": "Scenario",
-         "description": "Hi",
-         "steps": []
+         "id": "ID-177",
+         "classifier": {
+            "key": "Scenario",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "description",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Test what happens when all answers are correct"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "steps",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-178",
+                  "ID-181",
+                  "ID-186"
+               ]
+            }
+         ],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-178",
+         "classifier": {
+            "key": "Step",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "answersGiven",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-179"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "fromPage",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-15",
+                     "resolveInfo": "Fractions theory"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "key": "expectedPage",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-48",
+                     "resolveInfo": "Fractions video two"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-179",
+         "classifier": {
+            "key": "Answer",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "expr",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-180"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "question",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-21",
+                     "resolveInfo": "Theory 1"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-180",
+         "classifier": {
+            "key": "BooleanLiteralExpression",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "false"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-181",
+         "classifier": {
+            "key": "Step",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "answersGiven",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-182",
+                  "ID-184"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "fromPage",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-34",
+                     "resolveInfo": "Fractions video one"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "key": "expectedPage",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-15",
+                     "resolveInfo": "Fractions theory"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-182",
+         "classifier": {
+            "key": "Answer",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "expr",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-183"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "question",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-37",
+                     "resolveInfo": "Video1 Simplify"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-183",
+         "classifier": {
+            "key": "NumberLiteralExpression",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "30"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-184",
+         "classifier": {
+            "key": "Answer",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "expr",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-185"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "question",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-35",
+                     "resolveInfo": "Video1 Q1"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-185",
+         "classifier": {
+            "key": "BooleanLiteralExpression",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "false"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-186",
+         "classifier": {
+            "key": "Step",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "answersGiven",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-187"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "fromPage",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-48",
+                     "resolveInfo": "Fractions video two"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "key": "expectedPage",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-15",
+                     "resolveInfo": "Fractions theory"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-187",
+         "classifier": {
+            "key": "Answer",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [],
+         "children": [
+            {
+               "containment": {
+                  "key": "expr",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": [
+                  "ID-188"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "key": "question",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "targets": [
+                  {
+                     "reference": "ID-49",
+                     "resolveInfo": "Video2 question"
+                  }
+               ]
+            }
+         ],
+         "parent": null
+      },
+      {
+         "id": "ID-188",
+         "classifier": {
+            "key": "BooleanLiteralExpression",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "value",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "false"
+            }
+         ],
+         "children": [],
+         "references": [],
+         "parent": null
+      },
+      {
+         "id": "ID-189",
+         "classifier": {
+            "key": "Scenario",
+            "version": "1.0",
+            "language": "Education"
+         },
+         "properties": [
+            {
+               "property": {
+                  "key": "description",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "value": "Hi"
+            }
+         ],
+         "children": [
+            {
+               "containment": {
+                  "key": "steps",
+                  "version": "1.0",
+                  "language": "Education"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "parent": null
       }
-   ],
-   "topic": "Fractions10",
-   "flow": "Flow"
+   ]
 }

@@ -1,4 +1,4 @@
-import { FreClassifier, FreConcept, MetaElementReference, FreInterface, FreProperty } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaConcept, MetaElementReference, FreMetaInterface, FreMetaProperty } from "../../languagedef/metalanguage";
 import { GenerationUtil } from "./GenerationUtil";
 
 /**
@@ -10,14 +10,14 @@ export class LangUtil {
      * Returns the set of all concepts that are the base of 'self' recursively.
      * @param self
      */
-    public static superConcepts(self: FreClassifier): FreConcept[] {
-        const result: FreConcept[] = [];
+    public static superConcepts(self: FreMetaClassifier): FreMetaConcept[] {
+        const result: FreMetaConcept[] = [];
         LangUtil.superConceptsRecursive(self, result);
         return result;
     }
 
-    private static superConceptsRecursive(self: FreClassifier, result: FreConcept[]): void {
-        if (self instanceof FreConcept) {
+    private static superConceptsRecursive(self: FreMetaClassifier, result: FreMetaConcept[]): void {
+        if (self instanceof FreMetaConcept) {
             if (!!self.base) {
                 result.push(self.base.referred);
                 LangUtil.superConceptsRecursive(self.base.referred, result);
@@ -30,14 +30,14 @@ export class LangUtil {
      * Returns all interfaces that 'self' inherits from, recursive
      * @param self
      */
-    public static superInterfaces(self: FreClassifier): FreInterface[] {
-        const result: FreInterface[] = [];
+    public static superInterfaces(self: FreMetaClassifier): FreMetaInterface[] {
+        const result: FreMetaInterface[] = [];
         LangUtil.superInterfacesRecursive(self, result);
         return result;
     }
 
-    private static superInterfacesRecursive(self: FreClassifier, result: FreInterface[]): void {
-        if (self instanceof FreConcept) {
+    private static superInterfacesRecursive(self: FreMetaClassifier, result: FreMetaInterface[]): void {
+        if (self instanceof FreMetaConcept) {
             if (!!self.base) {
                 LangUtil.superInterfacesRecursive(self.base.referred, result);
             }
@@ -46,7 +46,7 @@ export class LangUtil {
                 LangUtil.superInterfacesRecursive(i.referred, result);
             }
         }
-        if (self instanceof FreInterface) {
+        if (self instanceof FreMetaInterface) {
             for (const i of self.base) {
                 result.push(i.referred);
                 LangUtil.superInterfacesRecursive(i.referred, result);
@@ -59,14 +59,14 @@ export class LangUtil {
      * implements of inherits from, recursive.
      * @param self
      */
-    public static superClassifiers(self: FreClassifier): FreClassifier[] {
-        const result: FreClassifier[] = [];
+    public static superClassifiers(self: FreMetaClassifier): FreMetaClassifier[] {
+        const result: FreMetaClassifier[] = [];
         LangUtil.superClassifiersRecursive(self, result);
         return result;
     }
 
-    private static superClassifiersRecursive(self: FreClassifier, result: FreClassifier[]) {
-        if (self instanceof FreConcept) {
+    private static superClassifiersRecursive(self: FreMetaClassifier, result: FreMetaClassifier[]) {
+        if (self instanceof FreMetaConcept) {
             if (!!self.base) {
                 result.push(self.base.referred);
                 LangUtil.superClassifiersRecursive(self.base.referred, result);
@@ -76,7 +76,7 @@ export class LangUtil {
                 LangUtil.superClassifiersRecursive(i.referred, result);
             }
         }
-        if (self instanceof FreInterface) {
+        if (self instanceof FreMetaInterface) {
             for (const i of self.base) {
                 result.push(i.referred);
                 LangUtil.superClassifiersRecursive(i.referred, result);
@@ -88,8 +88,8 @@ export class LangUtil {
      * Returns all concepts that 'self' is a super interface of, recursive. Param 'self' is NOT included in the result.
      * @param self
      */
-    public static subInterfaces(self: FreInterface): FreInterface[] {
-        const result: FreInterface[] = [];
+    public static subInterfaces(self: FreMetaInterface): FreMetaInterface[] {
+        const result: FreMetaInterface[] = [];
         for (const cls of self.language.interfaces) {
             if (LangUtil.superInterfaces(cls).includes(self)) {
                 result.push(cls);
@@ -103,8 +103,8 @@ export class LangUtil {
      * Param 'self' is NOT included in the result.
      * @param self
      */
-    public static subConcepts(self: FreClassifier): FreConcept[] {
-        const result: FreConcept[] = [];
+    public static subConcepts(self: FreMetaClassifier): FreMetaConcept[] {
+        const result: FreMetaConcept[] = [];
         for (const cls of self.language.concepts) {
             if (LangUtil.superClassifiers(cls).includes(self)) {
                 result.push(cls);
@@ -118,9 +118,9 @@ export class LangUtil {
      * Param 'self' IS included in the result.
      * @param self
      */
-    public static subConceptsIncludingSelf(self: FreClassifier): FreConcept[] {
+    public static subConceptsIncludingSelf(self: FreMetaClassifier): FreMetaConcept[] {
         const result = LangUtil.subConcepts(self);
-        if (self instanceof FreConcept) {
+        if (self instanceof FreMetaConcept) {
             result.push(self);
         }
         return result;
@@ -132,7 +132,7 @@ export class LangUtil {
      *
      * @param freInterface
      */
-    public static findImplementorsDirect(freInterface: FreInterface | MetaElementReference<FreInterface>): FreConcept[] {
+    public static findImplementorsDirect(freInterface: FreMetaInterface | MetaElementReference<FreMetaInterface>): FreMetaConcept[] {
         const myInterface = (freInterface instanceof MetaElementReference ? freInterface.referred : freInterface);
         return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
     }
@@ -143,9 +143,9 @@ export class LangUtil {
      *
      * @param freInterface
      */
-    public static findImplementorsRecursive(freInterface: FreInterface | MetaElementReference<FreInterface>): FreConcept[] {
+    public static findImplementorsRecursive(freInterface: FreMetaInterface | MetaElementReference<FreMetaInterface>): FreMetaConcept[] {
         const myInterface = (freInterface instanceof MetaElementReference ? freInterface.referred : freInterface);
-        const implementors: FreConcept[] = this.findImplementorsDirect(myInterface);
+        const implementors: FreMetaConcept[] = this.findImplementorsDirect(myInterface);
 
         // add implementors of sub-interfaces
         for (const sub of myInterface.allSubInterfacesRecursive()) {
@@ -166,14 +166,14 @@ export class LangUtil {
      *
      * @param classifier
      */
-    public static findAllImplementorsAndSubs(classifier: MetaElementReference<FreClassifier> | FreClassifier): FreClassifier[] {
-        let result: FreClassifier[] = [];
+    public static findAllImplementorsAndSubs(classifier: MetaElementReference<FreMetaClassifier> | FreMetaClassifier): FreMetaClassifier[] {
+        let result: FreMetaClassifier[] = [];
         const myClassifier = (classifier instanceof MetaElementReference ? classifier.referred : classifier);
         if (!!myClassifier) {
             result.push(myClassifier);
-            if (myClassifier instanceof FreConcept) { // find all subclasses and mark them as namespace
+            if (myClassifier instanceof FreMetaConcept) { // find all subclasses and mark them as namespace
                 result = result.concat(myClassifier.allSubConceptsRecursive());
-            } else if (myClassifier instanceof FreInterface) { // find all implementors and their subclasses
+            } else if (myClassifier instanceof FreMetaInterface) { // find all implementors and their subclasses
                 // we do not use findImplementorsRecursive(), because we not only add the implementing concepts,
                 // but the subinterfaces as well
                 for (const implementor of this.findImplementorsDirect(myClassifier)) {
@@ -225,14 +225,14 @@ export class LangUtil {
      * @param firstProp
      * @param secondProp
      */
-    public static compareTypes(firstProp: FreProperty, secondProp: FreProperty): boolean {
+    public static compareTypes(firstProp: FreMetaProperty, secondProp: FreMetaProperty): boolean {
         if (firstProp.isList !== secondProp.isList) {
             // return false when a list is compared with a non-list
             return false;
         }
 
-        const type1: FreClassifier = firstProp.type;
-        const type2: FreClassifier = secondProp.type;
+        const type1: FreMetaClassifier = firstProp.type;
+        const type2: FreMetaClassifier = secondProp.type;
         if (!type1 || !type2 ) {
             console.log("INTERNAL ERROR: property types are not set: " + firstProp.name + ", " + secondProp.name);
             return false;
@@ -242,22 +242,22 @@ export class LangUtil {
         return LangUtil.conforms(type1, type2);
     }
 
-    public static conforms(type1: FreClassifier, type2: FreClassifier) {
+    public static conforms(type1: FreMetaClassifier, type2: FreMetaClassifier) {
         if (type1 === type2) {
             // return true when types are equal
             // console.log("\t ==> types are equal")
             return true;
         }
-        if (type1 instanceof FreConcept) {
-            if (type2 instanceof FreConcept && type2.allSubConceptsRecursive().includes(type1)) {
+        if (type1 instanceof FreMetaConcept) {
+            if (type2 instanceof FreMetaConcept && type2.allSubConceptsRecursive().includes(type1)) {
                 // return true when type1 is subconcept of type2
                 // console.log("\t ==> " + type1.name + " is a sub concept of " + type2.name)
                 return true;
-            } else if (type2 instanceof FreInterface) {
+            } else if (type2 instanceof FreMetaInterface) {
                 return this.doesImplement(type1, type2);
             }
-        } else if (type1 instanceof FreInterface) {
-            if (type2 instanceof FreInterface && type2.allSubInterfacesRecursive().includes(type1)) {
+        } else if (type1 instanceof FreMetaInterface) {
+            if (type2 instanceof FreMetaInterface && type2.allSubInterfacesRecursive().includes(type1)) {
                 // return true when type1 is subinterface of type2
                 // console.log("\t ==> " + type1.name + " is a sub interface of " + type2.name)
                 return true;
@@ -266,7 +266,7 @@ export class LangUtil {
         return false;
     }
 
-    private static doesImplement(concept: FreConcept, interf: FreInterface): boolean {
+    private static doesImplement(concept: FreMetaConcept, interf: FreMetaInterface): boolean {
         let result: boolean = false;
         if (GenerationUtil.refListIncludes(concept.interfaces, interf)) {
             // return true when type1 implements type2

@@ -1,7 +1,7 @@
 {
-  "private": false,
   "name": "@freon4dsl/core",
-  "version": "0.5.0",
+  "version": "0.7.0-beta",
+  "description": "The uttermost core part of the Freon library, which enables you to build editors for the web",
   "publishConfig": {
     "access": "public"
   },
@@ -9,27 +9,31 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/freon4dsl/Freon4dsl"
   },
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "build": "rollup -c",
-    "build-release": "yarn run build",
+    "build-dev": "rollup -c",
+    "build-release": "npm run build",
+    "clean": "rm -rf node_modules/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "jest --config ./jest.config.js",
     "start": "echo Start core",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
-    "dummy": "echo DUMMY",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
-    "republish-local": "yarn unpublish-local && yarn publish-local"
+    "republish-local": "npm run unpublish-local && npm run publish-local"
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "mobx": "6.3.3",
-    "reflect-metadata": "^0.1.13",
-    "tslib": "2.4.0"
+    "mobx": "^6.12.3",
+    "reflect-metadata": "^0.2.2",
+    "tslib": "^2.6.3"
   }
 }

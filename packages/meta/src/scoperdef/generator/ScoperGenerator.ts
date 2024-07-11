@@ -1,23 +1,22 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils";
-import { FreLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { GenerationStatus, FileUtil, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
 import { ScopeDef } from "../metalanguage";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate";
 import { ScoperTemplate } from "./templates/ScoperTemplate";
-import { MetaElementReference } from "../../languagedef/metalanguage";
-import { FreModelDescription } from "../../languagedef/metalanguage/FreLanguage";
+import { MetaElementReference, FreMetaModelDescription } from "../../languagedef/metalanguage";
 
-const LOGGER = new MetaLogger("ScoperGenerator").mute();
+const LOGGER: MetaLogger = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
-    public language: FreLanguage;
-    protected scoperGenFolder: string;
-    protected scoperFolder: string;
+    public language: FreMetaLanguage | undefined;
+    protected scoperGenFolder: string = '';
+    protected scoperFolder: string = '';
 
-    generate(scopedef: ScopeDef): void {
-        if (this.language === null) {
+    generate(scopedef: ScopeDef | undefined): void {
+        if (this.language === null || this.language === undefined) {
             LOGGER.error("Cannot generate scoper because language is not set.");
             return;
         }
@@ -26,17 +25,17 @@ export class ScoperGenerator {
             scopedef = new ScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            scopedef.namespaces.push(MetaElementReference.create<FreModelDescription>(this.language.modelConcept, "FreModelDescription"));
+            scopedef.namespaces.push(MetaElementReference.create<FreMetaModelDescription>(this.language.modelConcept, "FreModelDescription"));
         }
 
-        const generationStatus = new GenerationStatus();
+        const generationStatus: GenerationStatus = new GenerationStatus();
         this.getFolderNames();
-        const name = scopedef ? scopedef.scoperName + " " : "";
+        const name: string = scopedef ? scopedef.scoperName + " " : "";
         LOGGER.log("Generating scoper " + name + "in folder " + this.scoperGenFolder);
 
-        const scoper = new ScoperTemplate();
-        const scoperDefTemplate = new ScoperDefTemplate();
-        const customScoperTemplate = new CustomScoperTemplate();
+        const scoper: ScoperTemplate = new ScoperTemplate();
+        const scoperDefTemplate: ScoperDefTemplate = new ScoperDefTemplate();
+        const customScoperTemplate: CustomScoperTemplate = new CustomScoperTemplate();
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.scoperFolder);
@@ -60,7 +59,7 @@ export class ScoperGenerator {
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoperDef(this.language)}.ts`, scoperDefFile);
 
         LOGGER.log(`Generating custom scoper: ${this.scoperGenFolder}/${Names.customScoper(this.language)}.ts`);
-        const scoperCustomFile = FileUtil.pretty(customScoperTemplate.generateCustomScoperPart(this.language, relativePath), "Custom Scoper", generationStatus);
+        const scoperCustomFile = FileUtil.pretty(customScoperTemplate.generateCustomScoperPart(this.language), "Custom Scoper", generationStatus);
         FileUtil.generateManualFile(`${this.scoperFolder}/${Names.customScoper(this.language)}.ts`, scoperCustomFile, "Custom Scoper");
 
         LOGGER.log(`Generating scoper gen index: ${this.scoperGenFolder}/index.ts`);
@@ -86,6 +85,10 @@ export class ScoperGenerator {
     clean(force: boolean) {
         this.getFolderNames();
         FileUtil.deleteDirAndContent(this.scoperGenFolder);
-        FileUtil.deleteDirIfEmpty(this.scoperFolder);
+        if (force) {
+            FileUtil.deleteDirAndContent(this.scoperFolder);
+        } else {
+            FileUtil.deleteDirIfEmpty(this.scoperFolder);
+        }
     }
 }

@@ -1,5 +1,5 @@
 import { FreModelSerializer } from "@freon4dsl/core";
-import { Demo } from "../language/gen";
+import { Demo, DemoModel } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 
 export class DemoUnitCreator {
@@ -12,8 +12,8 @@ export class DemoUnitCreator {
         let unit1Json = this.serializer.convertToJSON(model.models[0], false);
         // convert second unit as public interface
         let unit2Json = this.serializer.convertToJSON(model.models[1], true);
-        result.models.push(this.serializer.toTypeScriptInstance(unit1Json));
-        result.models.push(this.serializer.toTypeScriptInstance(unit2Json));
+        result.models.push(this.serializer.toTypeScriptInstance(unit1Json) as DemoModel);
+        result.models.push(this.serializer.toTypeScriptInstance(unit2Json) as DemoModel);
         return result;
     }
 }

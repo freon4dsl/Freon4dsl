@@ -69,7 +69,7 @@ export class ExtendedModelCreator {
             } else {
                 const serialized = this.serial.convertToJSON(completeUnit, true);
                 const unitInterface = this.serial.toTypeScriptInstance(serialized);
-                modelUnits.push(unitInterface);
+                modelUnits.push(unitInterface as DSunit);
             }
         }
         const model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });

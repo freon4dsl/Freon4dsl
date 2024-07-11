@@ -1,29 +1,20 @@
 import { FreNodeReference } from "@freon4dsl/core";
 import {
-    DemoEntity,
-    DemoAttribute,
-    DemoFunction,
-    DemoVariable,
-    DemoVariableRef,
-    DemoIfExpression,
-    DemoComparisonExpression,
-    DemoNumberLiteralExpression,
-    DemoOrExpression,
-    DemoStringLiteralExpression,
+    Demo,
     DemoAndExpression,
-    DemoPlusExpression,
-    DemoModel,
+    DemoAttribute,
+    DemoAttributeRef,
     DemoAttributeType,
-    DemoExpression,
+    DemoAttributeWithEntityType,
     DemoBinaryExpression,
-    DemoLessThenExpression,
-    DemoMultiplyExpression,
-    DemoDivideExpression,
-    DemoBooleanLiteralExpression,
-    DemoGreaterThenExpression,
-    DemoEqualsExpression,
-    DemoLiteralExpression,
-    AppliedFeature, DemoAttributeRef, DemoAttributeWithEntityType, Demo
+    DemoEntity,
+    DemoExpression,
+    DemoFunction,
+    DemoIfExpression,
+    DemoModel,
+    DemoOrExpression,
+    DemoVariable,
+    DemoVariableRef
 } from "../language/gen";
 import { MakeDivideExp, MakeEqualsExp, MakeLessThenExp, makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 
@@ -71,7 +62,7 @@ export class DemoModelCreator {
         ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
         ifExpression.whenTrue = makeLiteralExp("87");
         ifExpression.whenFalse = makeLiteralExp("1345");
-        const divideExpression = MakeDivideExp("678", "9990");
+        // const divideExpression = MakeDivideExp("678", "9990");
         ifFunction.expression = ifExpression;
         return ifFunction;
     }
@@ -87,7 +78,7 @@ export class DemoModelCreator {
         ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
         ifExpression.whenTrue = makeLiteralExp("87");
         ifExpression.whenFalse = makeLiteralExp("1345");
-        const divideExpression = MakeDivideExp("678", "9990");
+        // const divideExpression = MakeDivideExp("678", "9990");
         ifFunction.expression = ifExpression;
         return ifFunction;
     }
@@ -212,7 +203,7 @@ export class DemoModelCreator {
             funcWithManyParams.parameters.push(param);
         }
         funcWithManyParams.expression = this.addComplexExpression1();
-        funcWithManyParams.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");;
+        funcWithManyParams.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
 
         const length = DemoFunction.create({name: "length"});
         const Variable1 = DemoVariable.create({name: "Variable1"});
@@ -220,7 +211,7 @@ export class DemoModelCreator {
         length.parameters.push(Variable1);
         length.parameters.push(VariableNumber2);
         length.expression = this.addComplexExpression1();
-        length.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");;
+        length.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         // length(Variable1, VariableNumber2): (IF (2 < 5) THEN 1 ELSE 5 ENDIF + ((1 / 2) * 'Person'))
 
         const determine = DemoFunction.create({name: "determine"});
@@ -308,7 +299,7 @@ export class DemoModelCreator {
         ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
         ifExpression.whenTrue = makeLiteralExp("1");
         ifExpression.whenFalse = makeLiteralExp("5");
-        const divideExpression = MakeDivideExp("1", "2");
+        // const divideExpression = MakeDivideExp("1", "2");
         ifFunction.expression = ifExpression;
         // compare(Variable1, Variable2): IF (2 < 5) THEN 1 ELSE 5 ENDIF
 
@@ -475,9 +466,7 @@ export class DemoModelCreator {
         ifExpression.whenFalse = makeLiteralExp("5");
         const divideExpression = MakeDivideExp("1", "2");
         const multiplyExpression = MakeMultiplyExp(divideExpression, "Person");
-        const plusExpression = MakePlusExp(ifExpression, multiplyExpression);
-
-        return plusExpression;
+        return MakePlusExp(ifExpression, multiplyExpression);
     }
 
     private addComplexExpression2(attr: DemoVariable): DemoExpression {
@@ -517,9 +506,8 @@ export class DemoModelCreator {
         const multiplyExpression = MakeMultiplyExp(divideExpression, null);
         // multiplyExpression : (1/2) * ...
 
-        const plusExpression = MakePlusExp(thenExpression, multiplyExpression);
         // plusexpression : ("Yes" or ("No" = Variable1)) OR ("x" < 122) AND ("Hello World" < "Hello Universe") + (1/2) * ...
 
-        return plusExpression;
+        return MakePlusExp(thenExpression, multiplyExpression);
     }
 }

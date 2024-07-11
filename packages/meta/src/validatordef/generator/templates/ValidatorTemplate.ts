@@ -1,5 +1,11 @@
-import { CONFIGURATION_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names, PathProvider, FREON_CORE } from "../../../utils";
-import { FreLanguage } from "../../../languagedef/metalanguage";
+import {
+    CONFIGURATION_FOLDER,
+    LANGUAGE_UTILS_GEN_FOLDER,
+    Names,
+    FREON_CORE,
+    LANGUAGE_GEN_FOLDER
+} from "../../../utils";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage";
 import { ValidatorDef } from "../../metalanguage";
 
 export class ValidatorTemplate {
@@ -7,10 +13,10 @@ export class ValidatorTemplate {
     validatorInterfaceName: string = Names.FreValidator;
     typerInterfaceName: string = Names.FreTyper;
 
-    generateValidator(language: FreLanguage, validdef: ValidatorDef, relativePath: string): string {
-        const doValidDef = validdef !== null && validdef !== undefined;
+    generateValidator(language: FreMetaLanguage, validdef: ValidatorDef | undefined, relativePath: string): string {
+        const doValidDef: boolean = validdef !== null && validdef !== undefined;
 
-        const allLangConcepts: string = Names.allConcepts(language);
+        const allLangConcepts: string = Names.allConcepts();
         const generatedClassName: string = Names.validator(language);
         const rulesChecker: string = Names.rulesChecker(language);
         const nonOptionalsChecker: string = Names.nonOptionalsChecker(language);
@@ -20,8 +26,8 @@ export class ValidatorTemplate {
 
         // Template starts here
         return `
-        import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName} } from "${FREON_CORE}";
-        import { ${allLangConcepts} } from "${relativePath}${PathProvider.allConcepts(language)}";
+        import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName}, ${Names.FreNode} } from "${FREON_CORE}";
+        // import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}";
@@ -95,7 +101,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateGenIndex(language: FreLanguage, validdef: ValidatorDef): string {
+    generateGenIndex(language: FreMetaLanguage, validdef: ValidatorDef | undefined): string {
         return `
         export * from "./${Names.nonOptionalsChecker(language)}";
         export * from "./${Names.validator(language)}";
@@ -103,7 +109,7 @@ export class ValidatorTemplate {
         `;
     }
 
-    generateCustomValidator(language: FreLanguage, relativePath: string): string {
+    generateCustomValidator(language: FreMetaLanguage, relativePath: string): string {
         const className: string = Names.customValidator(language);
         const defaultWorkerName: string = Names.defaultWorker(language);
         const interfaceName: string = Names.checkerInterface(language);
@@ -118,7 +124,7 @@ export class ValidatorTemplate {
         }`;
     }
 
-    generateIndex(language: FreLanguage) {
+    generateIndex(language: FreMetaLanguage) {
         return `
         export * from "./${Names.customValidator(language)}";
         `;

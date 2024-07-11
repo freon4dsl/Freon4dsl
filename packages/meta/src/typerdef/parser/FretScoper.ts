@@ -1,8 +1,8 @@
 import { FreMetaScoper } from "../../languagedef/metalanguage/FreLangScoper";
-import { FreClassifier, FreLangElement } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaLangElement } from "../../languagedef/metalanguage";
 import { FretCreateExp, FretPropertyCallExp, FretVarCallExp, FretWhereExp } from "../metalanguage/expressions";
-import { FretProperty, FretTypeConcept, TyperDef, FreTyperElement } from "../metalanguage";
-import { FreDefinitionElement, Names } from "../../utils";
+import { FretProperty, TyperDef, FreTyperElement } from "../metalanguage";
+import { FreMetaDefinitionElement, Names } from "../../utils";
 
 /**
  * This class makes sure that references to parts of the typer definition can be found.
@@ -16,14 +16,14 @@ export class FretScoper implements FreMetaScoper {
         this.definition = definition;
     }
 
-    getFromVisibleElements(owner: FreDefinitionElement, name: string, typeName: string): FreLangElement {
-        let result: FreLangElement;
+    getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement | undefined {
+        let result: FreMetaLangElement | undefined;
         // if (name === "base2" ) {
         //     console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
         // }
         if (owner instanceof FretProperty || owner instanceof FreTyperElement ) { // FretProperty does not inherit from FretTyperElement!!
             if (typeName === "FreProperty") {
-                let nameSpace: FreClassifier;
+                let nameSpace: FreMetaClassifier | undefined;
                 if (owner instanceof FretCreateExp) {
                     nameSpace = owner.type;
                 } else if (owner instanceof FretPropertyCallExp) {
@@ -33,7 +33,7 @@ export class FretScoper implements FreMetaScoper {
             } else if (typeName === "FretVarDecl") {
                 if (owner instanceof FretVarCallExp) {
                     // find the only place in the typer definition where a variable can be declared: a FretWhereExp
-                    const whereExp: FretWhereExp = this.findSurroudingWhereExp(owner);
+                    const whereExp: FretWhereExp | undefined = this.findSurroudingWhereExp(owner);
                     if (whereExp?.variable.name === name) {
                         result = whereExp.variable;
                     }
@@ -49,14 +49,14 @@ export class FretScoper implements FreMetaScoper {
         return result;
     }
 
-    private findSurroudingWhereExp(owner: FreTyperElement): FretWhereExp {
+    private findSurroudingWhereExp(owner: FreTyperElement): FretWhereExp | undefined {
         if (owner instanceof FretWhereExp) {
             return owner;
         } else {
             if (owner.owner) {
                 return this.findSurroudingWhereExp(owner.owner);
             } else {
-                return null;
+                return undefined;
             }
         }
     }

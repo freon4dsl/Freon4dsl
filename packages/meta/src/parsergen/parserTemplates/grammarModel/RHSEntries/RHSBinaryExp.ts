@@ -1,14 +1,14 @@
 import { RHSPropEntry } from "./RHSPropEntry";
-import { FreBinaryExpressionConcept, FreProperty } from "../../../../languagedef/metalanguage";
+import { FreMetaBinaryExpressionConcept, FreMetaProperty } from "../../../../languagedef/metalanguage";
 import { makeIndent } from "../GrammarUtils";
 import { BinaryExpMaker } from "../../BinaryExpMaker";
 import { GenerationUtil } from "../../../../utils";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
 
 export class RHSBinaryExp extends RHSPropEntry {
-    type: FreBinaryExpressionConcept = null;
+    type: FreMetaBinaryExpressionConcept;
 
-    constructor(prop: FreProperty, type: FreBinaryExpressionConcept) {
+    constructor(prop: FreMetaProperty, type: FreMetaBinaryExpressionConcept) {
         super(prop);
         this.type = type;
         this.isList = false;

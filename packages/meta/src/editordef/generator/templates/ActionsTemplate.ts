@@ -1,9 +1,9 @@
 import { Names, FREON_CORE } from "../../../utils";
-import { FreLanguage } from "../../../languagedef/metalanguage/FreLanguage";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage/FreMetaLanguage";
 
 export class ActionsTemplate {
 
-    generate(language: FreLanguage): string {
+    generate(language: FreMetaLanguage): string {
         return `
             import {
                 ${Names.FreActions},

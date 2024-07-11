@@ -3,7 +3,7 @@
  */
 import { FreNode, FreModelUnit, FreNamedNode } from "../ast";
 import { AstWorker, modelUnit } from "../ast-utils";
-import { FreLanguage, Property } from "../language";
+import { FreLanguage, FreLanguageProperty } from "../language";
 import { FreLogger } from "../logging";
 
 const LOGGER = new FreLogger("CollectNamesWorker").mute();
@@ -20,7 +20,7 @@ export class CollectNamesWorker implements AstWorker {
         this.origin = origin;
     }
 
-    private isVisible(freNode: FreNode, property: Property): boolean {
+    private isVisible(freNode: FreNode, property: FreLanguageProperty): boolean {
         // return true;
         const owningUnit = modelUnit(freNode);
         const result = (owningUnit === null) || (this.origin === owningUnit) || property.isPublic;
@@ -32,7 +32,7 @@ export class CollectNamesWorker implements AstWorker {
 
     execBefore(modelelement: FreNode): boolean {
         // find child properties
-        const partProperties: Property[] = FreLanguage.getInstance().getPropertiesOfKind(modelelement.freLanguageConcept(), "part");
+        const partProperties: FreLanguageProperty[] = FreLanguage.getInstance().getPropertiesOfKind(modelelement.freLanguageConcept(), "part");
         // walk children
         for (const childProp of partProperties) {
             // get the concept of the child and see if that one has a 'name' property
@@ -51,6 +51,8 @@ export class CollectNamesWorker implements AstWorker {
         return false;
     }
 
+    // @ts-ignore
+    // parameter is present to adhere to signature of super class
     execAfter(modelelement: FreNode): boolean {
         return false;
     }

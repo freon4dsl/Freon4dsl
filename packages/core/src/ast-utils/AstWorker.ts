@@ -7,16 +7,16 @@ import { FreNode } from "../ast";
 export interface AstWorker {
     /**
      * Method called by AstWalker before any children are visited.
-     * @param modelelement The element being visited
+     * @param node The element being visited
      * @return When returns true, no other workers will be called for this modelElement.
      */
-    execBefore(modelelement: FreNode): boolean;
+    execBefore(node: FreNode): boolean;
 
     /**
      * Method called by AstWalker after all children are visited.
-     * @param modelelement The element being visited
+     * @param node The element being visited
      * @return When returns true, no other workers will be called for this modelElement.
      */
-    execAfter(modelelement: FreNode): boolean;
+    execAfter(node: FreNode): boolean;
 
 }

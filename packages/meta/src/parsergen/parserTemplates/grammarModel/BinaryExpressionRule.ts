@@ -1,14 +1,14 @@
 import { GrammarRule } from "./GrammarRule";
-import { FreClassifier, FreExpressionConcept } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaExpressionConcept } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { internalTransformNode } from "../ParserGenUtil";
 import { getTypeCall } from "./GrammarUtils";
 
 export class BinaryExpressionRule extends GrammarRule {
-    expressionBase: FreExpressionConcept;
-    private readonly symbolToConcept: Map<FreClassifier, string> = new Map<FreClassifier, string>();
+    expressionBase: FreMetaExpressionConcept;
+    private readonly symbolToConcept: Map<FreMetaClassifier, string> = new Map<FreMetaClassifier, string>();
 
-    constructor(ruleName: string, expressionBase: FreExpressionConcept, symbolToConcept: Map<FreClassifier, string>) {
+    constructor(ruleName: string, expressionBase: FreMetaExpressionConcept, symbolToConcept: Map<FreMetaClassifier, string>) {
         super();
         this.ruleName = ruleName;
         this.expressionBase = expressionBase;

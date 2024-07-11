@@ -7,12 +7,12 @@ import { FreUtils } from "../../util";
 export type GridOrientation = "neutral" | "row" | "column";
 
 export class GridBox extends Box {
-    kind = "GridBox";
+    kind: string = "GridBox";
     cells: GridCellBox[] = [];
     orientation: GridOrientation = "neutral";
 
-    constructor(exp: FreNode, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
-        super(exp, role);
+    constructor(node: FreNode, role: string, cells: GridCellBox[], initializer?: Partial<GridBox>) {
+        super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.cells = cells;
         this.cells.forEach(c => {
@@ -33,7 +33,6 @@ export class GridBox extends Box {
     }
 
     // Sorting is done to make it easier to read the final HTML.
-    // It also fills the `$children` property.
     private sortCellsAndAddChildren() {
         this.cells = this.cells.sort(compare);
     }

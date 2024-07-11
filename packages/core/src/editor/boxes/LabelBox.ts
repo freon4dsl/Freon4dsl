@@ -3,12 +3,12 @@ import { FreUtils } from "../../util";
 import { FreNode } from "../../ast";
 
 export class LabelBox extends Box {
-    readonly kind = "LabelBox";
+    readonly kind: string = "LabelBox";
 
     private $label: string = "";
 
-    constructor(element: FreNode, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>) {
-        super(element, role);
+    constructor(node: FreNode, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>) {
+        super(node, role);
         this.selectable = false; // default
         FreUtils.initializeObject(this, initializer);
         this.setLabel(getLabel);

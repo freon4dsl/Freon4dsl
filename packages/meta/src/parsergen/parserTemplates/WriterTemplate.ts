@@ -6,11 +6,11 @@ import {
     GenerationUtil
 } from "../../utils";
 import {
-    FreBinaryExpressionConcept, FreClassifier,
-    FreConcept, FreInterface,
-    FreLanguage, FreLimitedConcept,
-    FrePrimitiveProperty,
-    FreProperty
+    FreMetaBinaryExpressionConcept, FreMetaClassifier,
+    FreMetaConcept, FreMetaInterface,
+    FreMetaLanguage, FreMetaLimitedConcept,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty
 } from "../../languagedef/metalanguage";
 import {
     FreEditUnit,
@@ -22,16 +22,16 @@ import {
     FreEditProjectionItem,
     FreEditProjection,
     FreEditClassifierProjection,
-    FreOptionalPropertyProjection, ExtraClassifierInfo, FreEditSuperProjection
+    FreOptionalPropertyProjection, ExtraClassifierInfo, FreEditSuperProjection, BoolDisplayType
 } from "../../editordef/metalanguage";
-import { FrePrimitiveType } from "../../languagedef/metalanguage";
+import { FreMetaPrimitiveType } from "../../languagedef/metalanguage";
 import { ParserGenUtil } from "./ParserGenUtil";
 import { FreEditProjectionGroup } from "../../editordef/metalanguage";
 
 // TODO more preconditions should be added to avoid null pointer errors
 
 export class WriterTemplate {
-    private currentProjectionGroup: FreEditProjectionGroup = null;
+    private currentProjectionGroup: FreEditProjectionGroup | undefined = undefined;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last
     // to added to the template
@@ -44,51 +44,56 @@ export class WriterTemplate {
      * Returns a string representation of the class that implements an unparser for modelunits of
      * 'language', based on the given editor definition.
      */
-    public generateUnparser(language: FreLanguage, editDef: FreEditUnit, relativePath: string): string {
+    public generateUnparser(language: FreMetaLanguage, editDef: FreEditUnit, relativePath: string): string {
         // first initialize the class variables
         this.namedProjections = [];
         this.currentProjectionGroup = ParserGenUtil.findParsableProjectionGroup(editDef);
 
-        const stdBoolKeywords = editDef.getDefaultProjectiongroup().standardBooleanProjection;
-        if (!!stdBoolKeywords) {
-            this.trueValue = stdBoolKeywords.trueKeyword;
-            this.falseValue = stdBoolKeywords.falseKeyword;
+        const defProjGroup: FreEditProjectionGroup | undefined = editDef.getDefaultProjectiongroup();
+        let stdBoolKeywords: BoolDisplayType | undefined;
+        let refSeparator: string | undefined;
+        if (!!defProjGroup) {
+            stdBoolKeywords = defProjGroup.standardBooleanProjection;
+            refSeparator = defProjGroup.standardReferenceSeparator;
         }
-        const refSeparator = editDef.getDefaultProjectiongroup().standardReferenceSeparator;
+        if (!!stdBoolKeywords) {
+            this.trueValue = stdBoolKeywords.keywords?.trueKeyword ? stdBoolKeywords.keywords.trueKeyword : 'true';
+            this.falseValue = stdBoolKeywords.keywords?.falseKeyword ? stdBoolKeywords.keywords.falseKeyword : '';
+        }
         if (!!refSeparator) {
             this.refSeparator = refSeparator;
         }
 
         // next, do some admin: which concepts should be generated as what?
-        const allLangConceptsName: string = Names.allConcepts(language);
+        const allLangConceptsName: string = Names.allConcepts();
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.FreWriter;
-        const limitedConcepts: FreLimitedConcept[] = language.concepts.filter(c => c instanceof FreLimitedConcept) as FreLimitedConcept[];
-        const conceptsToUnparse: FreClassifier[] = [];
+        const limitedConcepts: FreMetaLimitedConcept[] = language.concepts.filter(c => c instanceof FreMetaLimitedConcept) as FreMetaLimitedConcept[];
+        const conceptsToUnparse: FreMetaClassifier[] = [];
         conceptsToUnparse.push(...language.concepts);
         conceptsToUnparse.push(...language.units);
 
         // find all concepts that are not limited, and do not have a projection
         // this should be only abstract concepts
-        const conceptsWithoutProjection: FreClassifier[] = conceptsToUnparse
-            .filter(c => !(c instanceof FreLimitedConcept)) // handled in list 'limitedConcepts'
-            .filter(c => !(c instanceof FreBinaryExpressionConcept && !c.isAbstract)) // handled in list 'binaryExtras'
+        const conceptsWithoutProjection: FreMetaClassifier[] = conceptsToUnparse
+            .filter(c => !(c instanceof FreMetaLimitedConcept)) // handled in list 'limitedConcepts'
+            .filter(c => !(c instanceof FreMetaBinaryExpressionConcept && !c.isAbstract)) // handled in list 'binaryExtras'
             .filter(c => {
                 const projection: FreEditClassifierProjection[] = editDef.findProjectionsForType(c);
                 return projection === undefined || projection === null || projection.length === 0;
             });
 
         // find all interfaces that do not have a projection
-        const interfacesWithoutProjection: FreInterface[] = language.interfaces.filter(c => {
+        const interfacesWithoutProjection: FreMetaInterface[] = language.interfaces.filter(c => {
             const projection: FreEditClassifierProjection[] = editDef.findProjectionsForType(c);
             return projection === undefined || projection === null || projection.length === 0;
         });
 
         const binaryExtras: ExtraClassifierInfo[] = [];
-        if (!!this.currentProjectionGroup.extras) {
+        if (!!this.currentProjectionGroup && this.currentProjectionGroup.extras) {
             for (const myExtra of this.currentProjectionGroup.extras) {
-                const myConcept: FreClassifier = myExtra.classifier.referred;
-                if (myConcept instanceof FreBinaryExpressionConcept && !myConcept.isAbstract) {
+                const myConcept: FreMetaClassifier | undefined = myExtra.classifier?.referred;
+                if (myConcept instanceof FreMetaBinaryExpressionConcept && !myConcept.isAbstract) {
                     binaryExtras.push(myExtra);
                 }
             }
@@ -96,8 +101,8 @@ export class WriterTemplate {
 
         // Template starts here
         return `
-        import { ${Names.FreNamedNode}, ${Names.FreNodeReference}, ${writerInterfaceName} } from "${FREON_CORE}";
-        import { ${allLangConceptsName},
+        import { ${Names.FreNamedNode}, ${Names.FreNodeReference}, ${writerInterfaceName}, ${Names.FreNode} } from "${FREON_CORE}";
+        import { 
             ${language.interfaces.length > 0
             ? language.interfaces.map(concept => `
                 ${Names.classifier(concept)}, `).join("")
@@ -206,11 +211,11 @@ export class WriterTemplate {
                 }
             }
 
-            ${this.currentProjectionGroup.projections.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
+            ${this.currentProjectionGroup?.projections.map(conceptDef => `${this.makeConceptMethod(conceptDef)}`).join("\n")}
             ${binaryExtras.map(bin => `${this.makeBinaryExpMethod(bin)}`).join("\n")}
             ${limitedConcepts.map(con => `${this.makeLimitedMethod(con)}`).join("\n")}
             ${conceptsWithoutProjection.map(concept => `${this.makeAbstractConceptMethodWithout(concept)}`).join("\n")}
-            ${interfacesWithoutProjection.map(intf => `${this.makeInterfaceMethod(intf, Names.allConcepts(language))}`).join("\n") }
+            ${interfacesWithoutProjection.map(intf => `${this.makeInterfaceMethod(intf, Names.allConcepts())}`).join("\n") }
             ${this.namedProjections.map(projection => `${this.makeConceptMethod(projection)}`).join("\n")}
 
             /**
@@ -247,6 +252,8 @@ export class WriterTemplate {
              * @param vertical
              * @param indent
              * @param short
+             * @param method
+             * @private
              */
             private _unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
         method: (modelelement: ${allLangConceptsName}, short: boolean) => void) {
@@ -283,7 +290,7 @@ export class WriterTemplate {
              * or a terminator string. Param 'vertical' indicates whether the list should be represented vertically or horizontally.
              * If 'short' is false, then a multi-line result will be given. Otherwise, only one single-line string is added.
              * @param list
-             * @param isIdentifier : indicates whether or not the value should be surrounded with double quotes
+             * @param isIdentifier indicates whether the value should be surrounded with double quotes
              * @param sepText
              * @param sepType
              * @param vertical
@@ -410,19 +417,21 @@ export class WriterTemplate {
      * @param projection
      */
     private makeConceptMethod (projection: FreEditClassifierProjection): string {
-        const myConcept: FreClassifier = projection.classifier.referred;
-        if (projection instanceof FreEditProjection) {
-            if (myConcept instanceof FreBinaryExpressionConcept) {
-                // do nothing, binary expressions are treated differently
-            } else {
-                return this.makeNormalMethod(projection, myConcept);
-            }
-        } // else if (conceptDef instanceof FreEditTableProjection) {
-        // cannot unparse a table projection
+        const myConcept: FreMetaClassifier | undefined = projection.classifier?.referred;
+        if (!!myConcept) {
+            if (projection instanceof FreEditProjection) {
+                if (myConcept instanceof FreMetaBinaryExpressionConcept) {
+                    // do nothing, binary expressions are treated differently
+                } else {
+                    return this.makeNormalMethod(projection, myConcept);
+                }
+            } // else if (conceptDef instanceof FreEditTableProjection) {
+            // cannot unparse a table projection
+        }
         return "";
     }
 
-    private makeLimitedMethod(myConcept: FreLimitedConcept) {
+    private makeLimitedMethod(myConcept: FreMetaLimitedConcept) {
         const name: string = Names.concept(myConcept);
         return `/**
                  * The limited concept '${myConcept.name}' is unparsed as its name.
@@ -434,7 +443,7 @@ export class WriterTemplate {
                  }`;
     }
 
-    private makeAbstractMethod(myConcept: FreConcept): string {
+    private makeAbstractMethod(myConcept: FreMetaConcept): string {
         const name: string = Names.concept(myConcept);
         return `/**
                  * The abstract concept '${myConcept.name}' is not unparsed.
@@ -444,7 +453,7 @@ export class WriterTemplate {
                 }`;
     }
 
-    private makeNormalMethod(projection: FreEditProjection, myConcept: FreClassifier) {
+    private makeNormalMethod(projection: FreEditProjection, myConcept: FreMetaClassifier) {
         const name: string = Names.classifier(myConcept);
         const lines: FreEditProjectionLine[] = projection.lines;
         const comment = `/**
@@ -452,7 +461,7 @@ export class WriterTemplate {
                           */`;
         // take care of named projections, the unparse method gets a different name
         let methodName: string = `unparse${name}`;
-        if (projection.name !== this.currentProjectionGroup.name) {
+        if (projection.name !== this.currentProjectionGroup?.name) {
             methodName += "_" + projection.name;
         }
         if (!!lines) {
@@ -485,7 +494,7 @@ export class WriterTemplate {
                 }
             }
         } else {
-            if (myConcept instanceof FreConcept && myConcept.isAbstract) {
+            if (myConcept instanceof FreMetaConcept && myConcept.isAbstract) {
                 return `${comment}
                     private ${methodName}(modelelement: ${name}, short: boolean) {
                         this.output[this.currentLine] += \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
@@ -520,13 +529,16 @@ export class WriterTemplate {
             const myText = ParserGenUtil.escapeRelevantChars(item.text).trimEnd();
             result += `this.output[this.currentLine] += \`${myText} \`;\n`;
         } else if (item instanceof FreOptionalPropertyProjection) {
-            const myElem = item.property.referred;
-            let myTypeScript: string = GenerationUtil.propertyToTypeScript(myElem);
-            if (!myElem.isPart) {
-                myTypeScript = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
-            }
-            if (myElem.isList) {
-                myTypeScript += " && " + myTypeScript + ".length > 0";
+            const myElem: FreMetaProperty | undefined = item.property?.referred;
+            let myTypeScript: string = '';
+            if (!!myElem) {
+                myTypeScript = GenerationUtil.propertyToTypeScript(myElem);
+                if (!myElem.isPart) {
+                    myTypeScript = GenerationUtil.propertyToTypeScriptWithoutReferred(myElem);
+                }
+                if (myElem.isList) {
+                    myTypeScript += " && " + myTypeScript + ".length > 0";
+                }
             }
             let subresult: string = "";
             item.lines.forEach((line, index) => {
@@ -544,20 +556,21 @@ export class WriterTemplate {
             });
             // surround whole sub-projection with an if-statement
             result += `if (!!${myTypeScript}) { ${subresult} }`;
-        } else if (item instanceof FreEditPropertyProjection) {
+        } else if (item instanceof FreEditPropertyProjection && !!item.property) {
             const myElem = item.property.referred;
-            if (myElem instanceof FrePrimitiveProperty) {
-                result += this.makeItemWithPrimitiveType(myElem, item, inOptionalGroup);
+            if (myElem instanceof FreMetaPrimitiveProperty) {
+                result += this.makeItemWithPrimitiveType(myElem, item);
             } else {
-                result += this.makeItemWithConceptType(myElem, item, indent, inOptionalGroup);
+                result += this.makeItemWithConceptType(myElem, item, inOptionalGroup);
             }
-        } else if (item instanceof FreEditSuperProjection) {
+        } else if (item instanceof FreEditSuperProjection && !!item.superRef) {
             // take care of named projection
-            if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
+            if (!!item.projectionName && item.projectionName.length > 0 && !!this.currentProjectionGroup && item.projectionName !== this.currentProjectionGroup.name) {
                 // find the projection that we need and add it to the extra list
-                ListUtil.addIfNotPresent<FreEditClassifierProjection>(
-                    this.namedProjections, ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName)
-                );
+                const foundProjection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
+                if (!!foundProjection) {
+                    ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, foundProjection);
+                }
                 result += `this.unparse${Names.classifier(item.superRef.referred)}_${item.projectionName}(modelelement, short);`;
             } else { // use the normal unparse method
                 result += `this.unparse${Names.classifier(item.superRef.referred)}(modelelement, short);`;
@@ -598,20 +611,23 @@ export class WriterTemplate {
      * @param item
      * @param inOptionalGroup
      */
-    private makeItemWithPrimitiveType(myElem: FrePrimitiveProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean): string {
+    private makeItemWithPrimitiveType(myElem: FreMetaPrimitiveProperty, item: FreEditPropertyProjection): string {
         // the property is of primitive type
         let result: string = ``;
-        const elemStr = GenerationUtil.propertyToTypeScript(item.property.referred);
-        if (myElem.isList) {
+        if (!item.property) {
+            return result;
+        }
+        const elemStr: string = GenerationUtil.propertyToTypeScript(item.property.referred);
+        if (myElem.isList && !!item.listInfo) {
             let isIdentifier: string = "false";
-            if (myElem.type === FrePrimitiveType.identifier) {
+            if (myElem.type === FreMetaPrimitiveType.identifier) {
                 isIdentifier = "true";
             }
-            const vertical = (item.listInfo.direction === FreEditProjectionDirection.Vertical);
-            const joinType = this.getJoinType(item);
+            const vertical: boolean = (item.listInfo.direction === FreEditProjectionDirection.Vertical);
+            const joinType: string = this.getJoinType(item);
             if (!item.listInfo.isTable) { // it is a list not table
                 // add escapes to joinText
-                let myJoinText = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
+                let myJoinText: string = ParserGenUtil.escapeRelevantChars(item.listInfo.joinText);
                 // Add a space to the join text. This is needed in a text string, not in a projectional editor.
                 myJoinText = (!!myJoinText && myJoinText.length > 0) ? myJoinText + " " : "";
                 result += `this._unparseListOfPrimitiveValues(
@@ -621,22 +637,22 @@ export class WriterTemplate {
                 );`;
             }
         } else {
-            let myCall: string;
-            const myType: FreClassifier = myElem.type;
-            if (myType === FrePrimitiveType.string ) {
+            let myCall: string = '';
+            const myType: FreMetaClassifier = myElem.type;
+            if (myType === FreMetaPrimitiveType.string ) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
-            } else if (myType === FrePrimitiveType.boolean) {
+            } else if (myType === FreMetaPrimitiveType.boolean) {
                 // get the right manner to unparse the boolean values
                 // either from the standard boolean keywords in the default projection group
                 // or from 'item', and add escapes to the keywords
                 let myTrueKeyword: string = ParserGenUtil.escapeRelevantChars(this.trueValue);
                 let myFalseKeyword: string = ParserGenUtil.escapeRelevantChars(this.falseValue);
-                if (!!item.boolInfo) {
-                    myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.trueKeyword);
-                    if (!!item.boolInfo.falseKeyword) {
-                        myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.falseKeyword);
+                if (!!item.boolInfo && !!item.boolInfo.keywords) {
+                    myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.keywords.trueKeyword);
+                    if (!!item.boolInfo.keywords.falseKeyword) {
+                        myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.keywords.falseKeyword);
                     } else {
-                        myFalseKeyword = null;
+                        myFalseKeyword = '';
                     }
                 }
                 if (myTrueKeyword === "true" && myFalseKeyword === "false") {
@@ -656,14 +672,6 @@ export class WriterTemplate {
                             this.output[this.currentLine] += \`${myFalseKeyword} \`
                           }`;
                 }
-                // if (!!item.boolInfo.falseKeyword) {
-                //     // add unparsing for two keywords
-                //
-                // } else {
-                //     myCall = `if (${elemStr}) {
-                //               this.output[this.currentLine] += \`${myTrueKeyword} \`
-                //           }`;
-                // }
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }
@@ -680,9 +688,12 @@ export class WriterTemplate {
      * @param indent
      * @param inOptionalGroup
      */
-    private makeItemWithConceptType(myElem: FreProperty, item: FreEditPropertyProjection, indent: number, inOptionalGroup: boolean) {
+    private makeItemWithConceptType(myElem: FreMetaProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean) {
         // the property has a concept as type, thus we need to call its unparse method
         let result: string = "";
+        if (!item.property) {
+            return result;
+        }
         const type = myElem.type;
         let nameOfUnparseMethod: string = "unparse";
         let typeCast: string = "";
@@ -694,10 +705,12 @@ export class WriterTemplate {
             // when all 'normal' methods have been generated - so we know all extra methods needed.
             // Note that the name of the call generated here must be equal to the name of the method
             // which is generated in 'makeNormalMethod'.
-            if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
+            if (!!item.projectionName && item.projectionName.length > 0 && !!this.currentProjectionGroup && item.projectionName !== this.currentProjectionGroup.name) {
                 // find the projection that we need and add it to the extra list
-                const foundProjection = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, type, item.projectionName);
-                ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, foundProjection);
+                const foundProjection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, type, item.projectionName);
+                if (!!foundProjection) {
+                    ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, foundProjection);
+                }
                 nameOfUnparseMethod += `${Names.classifier
                 (type)}_${item.projectionName}`;
                 typeCast = ` as ${Names.classifier(type)}`;
@@ -721,7 +734,7 @@ export class WriterTemplate {
                 }
             } else {
                 let myCall: string = "";
-                let myTypeScript: string;
+                let myTypeScript: string = '';
                 if (myElem.isPart) {
                     myTypeScript = GenerationUtil.propertyToTypeScript(item.property.referred);
                     myCall += `this.${nameOfUnparseMethod}(${myTypeScript}, short) `;
@@ -759,8 +772,8 @@ export class WriterTemplate {
         return joinType;
     }
 
-    private findNamedClassifiers(language: FreLanguage): FreClassifier[] {
-        const result: FreClassifier[] = [];
+    private findNamedClassifiers(language: FreMetaLanguage): FreMetaClassifier[] {
+        const result: FreMetaClassifier[] = [];
         for ( const elem of language.units) {
             if (GenerationUtil.hasNameProperty(elem)) {
                 result.push(elem);
@@ -774,8 +787,8 @@ export class WriterTemplate {
         return result;
     }
 
-    private makeWriteOnly(language: FreLanguage): string {
-        const namedClassifiers: FreClassifier[] = this.findNamedClassifiers(language);
+    private makeWriteOnly(language: FreMetaLanguage): string {
+        const namedClassifiers: FreMetaClassifier[] = this.findNamedClassifiers(language);
         const shortUnparsing: string = `
         // make sure the global variables are reset
                     this.output = [];
@@ -798,13 +811,16 @@ export class WriterTemplate {
     }
 
     private makeBinaryExpMethod(myConcept: ExtraClassifierInfo) {
-        const name: string = Names.classifier(myConcept.classifier.referred);
+        let xName: string = '<unknown>';
+        if (!!myConcept.classifier) {
+            xName = Names.classifier(myConcept.classifier.referred);
+        }
         const comment = `/**
                           * See the public unparse method.
                           */`;
         if (!!(myConcept.symbol)) {
             return `${comment}
-            private unparse${name}(modelelement: ${name}, short: boolean) {
+            private unparse${xName}(modelelement: ${xName}, short: boolean) {
                 this.unparse(modelelement.left, short);
                 this.output[this.currentLine] += "${myConcept.symbol} ";
                 this.unparse(modelelement.right, short);
@@ -813,7 +829,7 @@ export class WriterTemplate {
         return "";
     }
 
-    private makeInterfaceMethod(freInterface: FreInterface, classifierType: string): string {
+    private makeInterfaceMethod(freInterface: FreMetaInterface, classifierType: string): string {
         const name: string = Names.interface(freInterface);
         return `/**
                  * The interface '${freInterface.name}' is not unparsed.
@@ -823,8 +839,8 @@ export class WriterTemplate {
                 }`;
     }
 
-    private makeAbstractConceptMethodWithout(concept: FreClassifier): string {
-        if (concept instanceof FreConcept && concept.isAbstract) {
+    private makeAbstractConceptMethodWithout(concept: FreMetaClassifier): string {
+        if (concept instanceof FreMetaConcept && concept.isAbstract) {
             return this.makeAbstractMethod(concept);
         } else {
             console.log("INTERNAL ERROR: concept without projection is not abstract or limited: " + concept.name);

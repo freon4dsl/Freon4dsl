@@ -1,4 +1,3 @@
-import { runInAction } from "mobx";
 import { FreNode } from "../../ast";
 import { BehaviorExecutionResult } from "../util";
 import { FreLogger } from "../../logging";
@@ -6,6 +5,7 @@ import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreEditor } from "../FreEditor";
 import {
     Box,
+    BooleanControlBox,
     ActionBox,
     LabelBox,
     TextBox,
@@ -13,9 +13,9 @@ import {
     SelectBox,
     IndentBox,
     OptionalBox,
-    HorizontalListBox, VerticalListBox, SvgBox, BoolFunctie, GridCellBox,
+    HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
     HorizontalLayoutBox, VerticalLayoutBox,
-    TableCellBox
+    TableCellBox, OptionalBox2
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -31,10 +31,12 @@ const LOGGER: FreLogger = new FreLogger("BoxFactory").mute();
 let actionCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
+let boolCache: BoxCache<BooleanControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
-let indentCache: BoxCache<IndentBox> = {};
+// let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
-let svgCache: BoxCache<SvgBox> = {};
+let optionalCache2: BoxCache<OptionalBox2> = {};
+// let svgCache: BoxCache<SvgBox> = {};
 let horizontalLayoutCache: BoxCache<HorizontalLayoutBox> = {};
 let verticalLayoutCache: BoxCache<VerticalLayoutBox> = {};
 let horizontalListCache: BoxCache<HorizontalListBox> = {};
@@ -45,9 +47,10 @@ let tableCellCache: BoxCache<TableCellBox> = {};
 let cacheActionOff: boolean = false;
 let cacheLabelOff: boolean = false;
 let cacheTextOff: boolean = false;
+let cacheBooleanOff: boolean = false;
 let cacheSelectOff: boolean = false;
-let cacheIndentOff: boolean = false;
-let cacheOptionalOff: boolean = false;
+// let cacheIndentOff: boolean = false;
+// let cacheOptionalOff: boolean = false;
 let cacheHorizontalLayoutOff: boolean = false;
 let cacheVerticalLayoutOff: boolean = false;
 let cacheHorizontalListOff: boolean = false;
@@ -63,10 +66,12 @@ export class BoxFactory {
         actionCache = {};
         labelCache = {};
         textCache = {};
+        boolCache = {};
         selectCache = {};
-        indentCache = {};
+        // indentCache = {};
         optionalCache = {};
-        svgCache = {};
+        optionalCache2 = {};
+        // svgCache = {};
         horizontalLayoutCache = {};
         verticalLayoutCache = {};
         horizontalListCache = {};
@@ -79,9 +84,10 @@ export class BoxFactory {
         cacheActionOff = true;
         cacheLabelOff = true;
         cacheTextOff = true;
+        cacheBooleanOff = true;
         cacheSelectOff = true;
-        cacheIndentOff = true;
-        cacheOptionalOff = true;
+        // cacheIndentOff = true;
+        // cacheOptionalOff = true;
         cacheHorizontalLayoutOff = true;
         cacheVerticalLayoutOff = true;
         cacheHorizontalListOff = true;
@@ -92,9 +98,10 @@ export class BoxFactory {
         cacheActionOff = false;
         cacheLabelOff = false;
         cacheTextOff = false;
+        cacheBooleanOff = false;
         cacheSelectOff = false;
-        cacheIndentOff = false;
-        cacheOptionalOff = false;
+        // cacheIndentOff = false;
+        // cacheOptionalOff = false;
         cacheHorizontalLayoutOff = false;
         cacheVerticalLayoutOff = false;
         cacheHorizontalListOff = false;
@@ -140,12 +147,11 @@ export class BoxFactory {
         const creator = () => new ActionBox(element, role, placeHolder, initializer);
         const result: ActionBox = this.find<ActionBox>(element, role, creator, actionCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            result.placeholder = placeHolder;
-            result.textHelper.setText("");
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        result.placeholder = placeHolder;
+        result.textHelper.setText("");
+        FreUtils.initializeObject(result, initializer);
+
         return result;
     }
 
@@ -157,11 +163,9 @@ export class BoxFactory {
         const creator = () => new LabelBox(element, role, getLabel, initializer);
         const result: LabelBox = this.find<LabelBox>(element, role, creator, labelCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            result.setLabel(getLabel);
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        result.setLabel(getLabel);
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -174,12 +178,31 @@ export class BoxFactory {
         const creator = () => new TextBox(element, role, getText, setText, initializer);
         const result: TextBox = this.find<TextBox>(element, role, creator, textCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            result.getText = getText;
-            result.setText = setText;
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        result.$getText = getText;
+        result.$setText = setText;
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static bool(element: FreNode,
+                role: string,
+                getBoolean: () => boolean,
+                setBoolean: (text: boolean) => void,
+                initializer?: Partial<BooleanControlBox>
+                ): BooleanControlBox {
+        if (cacheBooleanOff) {
+            return new BooleanControlBox(element, role, getBoolean, setBoolean, initializer);
+        }
+        // 1. Create the Boolean box, or find the one that already exists for this element and role
+        const creator = () => new BooleanControlBox(element, role, getBoolean, setBoolean, initializer);
+        const result: BooleanControlBox = this.find<BooleanControlBox>(element, role, creator, boolCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.$getBoolean = getBoolean;
+        result.$setBoolean = setBoolean;
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -205,6 +228,8 @@ export class BoxFactory {
 
     static horizontalLayout(element: FreNode,
                             role: string,
+                            // @ts-expect-error
+                            // todo remove this parameter and adjust the generation in meta
                             propertyName: string,
                             children?: (Box | null)[],
                             initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
@@ -213,19 +238,20 @@ export class BoxFactory {
         }
         const creator = () => new HorizontalLayoutBox(element, role, children, initializer);
         const result: HorizontalLayoutBox = this.find<HorizontalLayoutBox>(element, role, creator, horizontalLayoutCache);
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            if (!equals(result.children, children)) {
-                result.replaceChildren(children);
-            }
-            FreUtils.initializeObject(result, initializer);
-        });
+
+        // 2. Apply the other arguments in case they have changed
+        if (!equals(result.children, children)) {
+            result.replaceChildren(children);
+        }
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
 
     static verticalLayout(element: FreNode,
                           role: string,
+                          // @ts-expect-error
+                          // todo remove this parameter and adjust the generation in meta
                           propertyName: string,
                           children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
         if (cacheVerticalLayoutOff) {
@@ -233,13 +259,11 @@ export class BoxFactory {
         }
         const creator = () => new VerticalLayoutBox(element, role, children, initializer);
         const result: VerticalLayoutBox = this.find<VerticalLayoutBox>(element, role, creator, verticalLayoutCache);
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            if (!equals(result.children, children)) {
-                result.replaceChildren(children);
-            }
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        if (!equals(result.children, children)) {
+            result.replaceChildren(children);
+        }
+        FreUtils.initializeObject(result, initializer);
         return result;
     }
 
@@ -253,13 +277,11 @@ export class BoxFactory {
         }
         const creator = () => new HorizontalListBox(element, role, propertyName, children, initializer);
         const result: HorizontalListBox = this.find<HorizontalListBox>(element, role, creator, horizontalListCache);
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            if (!equals(result.children, children)) {
-                result.replaceChildren(children);
-            }
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        if (!equals(result.children, children)) {
+            result.replaceChildren(children);
+        }
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -274,13 +296,11 @@ export class BoxFactory {
         }
         const creator = () => new VerticalListBox(element, role, propertyName, children, initializer);
         const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            if (!equals(result.children, children)) {
-                result.replaceChildren(children);
-            }
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        if (!equals(result.children, children)) {
+            result.replaceChildren(children);
+        }
+        FreUtils.initializeObject(result, initializer);
         return result;
     }
 
@@ -298,34 +318,49 @@ export class BoxFactory {
         const creator = () => new SelectBox(element, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
         const result: SelectBox = this.find<SelectBox>(element, role, creator, selectCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            result.placeholder = placeHolder;
-            result.getOptions = getOptions;
-            result.getSelectedOption = getSelectedOption;
-            result.selectOption = selectOption;
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        result.placeholder = placeHolder;
+        result.getOptions = getOptions;
+        result.getSelectedOption = getSelectedOption;
+        result.selectOption = selectOption;
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
 
-    static optional(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string): OptionalBox {
-        if (cacheOptionalOff) {
-            return new OptionalBox(element, role, condition, box, mustShow, actionText);
-        }
+    static optional(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string, initializer?: Partial<OptionalBox>): OptionalBox {
+        // TODO This only works with cache on, should also work with cache off. 
+        // if (cacheOptionalOff) {
+        //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
+        // }
         // 1. Create the optional box, or find the one that already exists for this element and role
         const creator = () => new OptionalBox(element, role, condition, box, mustShow, actionText);
         const result: OptionalBox = this.find<OptionalBox>(element, role, creator, optionalCache);
 
         // 2. Apply the other arguments in case they have changed
-        // FreUtils.initializeObject(result, initializer);
+        FreUtils.initializeObject(result, initializer);
 
         return result;
+    }
 
+    static optional2(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, optional: Box, initializer?: Partial<OptionalBox2>): OptionalBox2 {
+        // TODO This only works with cache on, should also work with cache off. 
+        // if (cacheOptionalOff) {
+        //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
+        // }
+        // 1. Create the optional box, or find the one that already exists for this element and role
+        const creator = () => new OptionalBox2(element, role, condition, box, mustShow, optional);
+        const result: OptionalBox2 = this.find<OptionalBox2>(element, role, creator, optionalCache2);
+
+        // 2. Apply the other arguments in case they have changed
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
     }
 
     static gridcell(element: FreNode,
+                    // @ts-expect-error
+                    // todo remove this parameter and adjust the generation in meta
                     propertyName: string,
                     role: string,
                     row: number,
@@ -339,10 +374,8 @@ export class BoxFactory {
         const creator = () => new GridCellBox(element, role, row, column, box, initializer);
         const result: GridCellBox = this.find<GridCellBox>(element, role, creator, gridcellCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -364,16 +397,14 @@ export class BoxFactory {
         const creator = () => new TableCellBox(element, propertyName, propertyIndex, conceptName, role, row, column, box, initializer);
         const result: TableCellBox = this.find<TableCellBox>(element, role, creator, tableCellCache);
 
-        runInAction(() => {
-            // 2. Apply the other arguments in case they have changed
-            FreUtils.initializeObject(result, initializer);
-        });
+        // 2. Apply the other arguments in case they have changed
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }
 }
 
-const equals = (a, b) => {
+const equals = (a, b): boolean | any => {
     if (isNullOrUndefined(a) && !isNullOrUndefined(b) || !isNullOrUndefined(a) && isNullOrUndefined(b)) {
         return false;
     }

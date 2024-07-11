@@ -1,15 +1,15 @@
 import { FreEditProjection, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
-import { FreBinaryExpressionConcept, FreClassifier, FreExpressionConcept } from "../../languagedef/metalanguage";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage";
 import { GenerationUtil } from "../../utils";
 
 export class ParserGenUtil {
 
     // find all expression bases for all binaries
-    static findAllExpressionBases(list: FreBinaryExpressionConcept[]): FreExpressionConcept[] {
-        const bases: FreExpressionConcept[] = [];
+    static findAllExpressionBases(list: FreMetaBinaryExpressionConcept[]): FreMetaExpressionConcept[] {
+        const bases: FreMetaExpressionConcept[] = [];
         list.forEach(impl => {
-            const expBase = GenerationUtil.findExpressionBase(impl as FreBinaryExpressionConcept);
+            const expBase = GenerationUtil.findExpressionBase(impl as FreMetaBinaryExpressionConcept);
             if (bases.indexOf(expBase) === -1) {
                 // add if not present
                 bases.push(expBase);
@@ -25,27 +25,30 @@ export class ParserGenUtil {
      * @param editUnit the edit definition to serach for the projection groups
      */
     static findParsableProjectionGroup(editUnit: FreEditUnit) {
-        let projectionGroup: FreEditProjectionGroup = editUnit.projectiongroups.find(g => g.name === EditorDefaults.parserGroupName);
+        let projectionGroup: FreEditProjectionGroup | undefined = editUnit.projectiongroups.find(g => g.name === EditorDefaults.parserGroupName);
         if (!projectionGroup) {
             projectionGroup = editUnit.getDefaultProjectiongroup();
         }
         return projectionGroup;
     }
 
-    static findNonTableProjection(projectionGroup: FreEditProjectionGroup, classifier: FreClassifier, projectionName?: string): FreEditProjection {
-        let myGroup: FreEditProjectionGroup = projectionGroup;
+    static findNonTableProjection(projectionGroup: FreEditProjectionGroup, classifier: FreMetaClassifier, projectionName?: string): FreEditProjection | undefined {
+        let myGroup: FreEditProjectionGroup | undefined = projectionGroup;
         // take care of named projections: search the projection group with the right name
         if (!!projectionName && projectionName.length > 0) {
             if (projectionGroup.name !== projectionName) {
-                myGroup = projectionGroup.owningDefinition.projectiongroups.find(group => group.name === projectionName);
+                myGroup = projectionGroup.owningDefinition?.projectiongroups.find(group => group.name === projectionName);
             }
         }
-        let myProjection: FreEditProjection = myGroup.findNonTableProjectionForType(classifier);
-        if (!myProjection && projectionGroup !== myGroup) { // if not found, then try my 'own' projection group
-            myProjection = projectionGroup.findNonTableProjectionForType(classifier);
+        let myProjection: FreEditProjection | undefined = undefined;
+        if (!!myGroup) {
+            myProjection = myGroup.findNonTableProjectionForType(classifier);
+            if (!myProjection && projectionGroup !== myGroup) { // if not found, then try my 'own' projection group
+                myProjection = projectionGroup.findNonTableProjectionForType(classifier);
+            }
         }
         if (!myProjection) { // still not found, try the default group
-            myProjection = projectionGroup.owningDefinition.getDefaultProjectiongroup().findNonTableProjectionForType(classifier);
+            myProjection = projectionGroup.owningDefinition?.getDefaultProjectiongroup()?.findNonTableProjectionForType(classifier);
         }
         return myProjection;
     }

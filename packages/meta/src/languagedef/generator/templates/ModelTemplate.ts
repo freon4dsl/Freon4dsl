@@ -1,18 +1,18 @@
 import { Names, FREON_CORE } from "../../../utils";
 import { ConceptUtils } from "./ConceptUtils";
-import { FreModelDescription } from "../../metalanguage/FreLanguage";
+import { FreMetaModelDescription } from "../../metalanguage/FreMetaLanguage";
 import { ClassifierUtil } from "./ClassifierUtil";
 
 export class ModelTemplate {
     // Note: a model may not have other properties than units
-    public generateModel(modelDescription: FreModelDescription): string {
+    public generateModel(modelDescription: FreMetaModelDescription): string {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
         const coreImports = ClassifierUtil.findMobxImports(modelDescription)
             .concat([Names.FreModel, Names.FreLanguage, Names.FreParseLocation]);
         const modelImports = this.findModelImports(modelDescription, myName);
-        const metaType = Names.metaType(language);
+        const metaType = Names.metaType();
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
@@ -39,13 +39,13 @@ export class ModelTemplate {
                  * @param name
                  * @param metatype
                  */
-                findUnit(name: string, metatype?: ${metaType} ): ${Names.modelunit(language)} {
-                    let result: ${Names.modelunit(language)} = null;
+                findUnit(name: string, metatype?: ${metaType} ): ${Names.modelunit()} {
+                    let result: ${Names.modelunit()} = null;
                     ${modelDescription.parts().map(p =>
             `${p.isList ?
                 `result = this.${p.name}.find(mod => mod.name === name);`
                 :
-                `if (this.${p.name}.name === name ) result = this.${p.name}`
+                `if (this.${p.name}.name === name ) { result = this.${p.name}; }`
             }`
         ).join("\n")}
                     if (!!result && !!metatype) {
@@ -64,7 +64,7 @@ export class ModelTemplate {
                  * @param oldUnit
                  * @param newUnit
                  */
-                replaceUnit(oldUnit: ${Names.modelunit(language)}, newUnit: ${Names.modelunit(language)}): boolean {
+                replaceUnit(oldUnit: ${Names.modelunit()}, newUnit: ${Names.modelunit()}): boolean {
                     if ( oldUnit.freLanguageConcept() !== newUnit.freLanguageConcept()) {
                         return false;
                     }
@@ -92,7 +92,7 @@ export class ModelTemplate {
                      *
                      * @param newUnit
                      */
-                    addUnit(newUnit: ${Names.modelunit(language)}): boolean {
+                    addUnit(newUnit: ${Names.modelunit()}): boolean {
                         if (!!newUnit) {
                             const myMetatype = newUnit.freLanguageConcept();
                             switch (myMetatype) {
@@ -115,7 +115,7 @@ export class ModelTemplate {
                      *
                      * @param oldUnit
                      */
-                    removeUnit(oldUnit: ${Names.modelunit(language)}): boolean {
+                    removeUnit(oldUnit: ${Names.modelunit()}): boolean {
                         if (!!oldUnit) {
                             const myMetatype = oldUnit.freLanguageConcept();
                             switch (myMetatype) {
@@ -134,12 +134,11 @@ export class ModelTemplate {
                     }
 
                 /**
-                 * Returns an empty model unit of type 'unitTypeName' within 'model'.
+                 * Returns an empty model unit of type 'typeName' within 'model'.
                  *
-                 * @param model
-                 * @param unitTypeName
+                 * @param typename
                  */
-                newUnit(typename: ${Names.metaType(language)}) : ${Names.modelunit(language)}  {
+                newUnit(typename: ${Names.metaType()}) : ${Names.modelunit()}  {
                     switch (typename) {
                         ${language.modelConcept.allParts().map(part =>
             `case "${Names.classifier(part.type)}": {
@@ -160,8 +159,8 @@ export class ModelTemplate {
                     /**
                      * Returns a list of model units.
                      */
-                    getUnits(): ${Names.modelunit(language)}[] {
-                        let result : ${Names.modelunit(language)}[] = [];
+                    getUnits(): ${Names.modelunit()}[] {
+                        let result : ${Names.modelunit()}[] = [];
                         ${language.modelConcept.allParts().map(part =>
             `${part.isList ?
                 `result = result.concat(this.${part.name});`
@@ -176,7 +175,7 @@ export class ModelTemplate {
                     /**
                      * Returns a list of model units of type 'type'.
                      */
-                    getUnitsForType(type: string): ${Names.modelunit(language)}[] {
+                    getUnitsForType(type: string): ${Names.modelunit()}[] {
                         switch (type) {
                         ${language.modelConcept.allParts().map(part =>
             `${part.isList ?
@@ -185,7 +184,7 @@ export class ModelTemplate {
                                 }`
                 :
                 `case "${Names.classifier(part.type)}": {
-                                    let result : ${Names.modelunit(language)}[] = [];
+                                    let result : ${Names.modelunit()}[] = [];
                                     result.push(this.${part.name});
                                     return result;
                                 }`
@@ -196,17 +195,17 @@ export class ModelTemplate {
                 }`;
 
         return `
-            import { ${coreImports.join(",")} } from "${FREON_CORE}";
-            import { ${Names.modelunit(language)}, ${modelImports.join(", ")} } from "./internal";
+            import { ${Names.modelunit()}, ${coreImports.join(",")} } from "${FREON_CORE}";
+            import { ${modelImports.join(", ")} } from "./internal";
 
             ${result}`;
     }
 
-    private findModelImports(modelDescription: FreModelDescription, myName: string): string[] {
+    private findModelImports(modelDescription: FreMetaModelDescription, myName: string): string[] {
         return Array.from(
             new Set(
                 modelDescription.parts().map(part => Names.classifier(part.type))
-                    .concat(Names.metaType(modelDescription.language))
+                    // .concat(Names.metaType(modelDescription.language))
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )

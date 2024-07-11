@@ -1,14 +1,14 @@
-import { FreLangElement, FreMetaEnvironment } from "./internal";
-import { ParseLocation, FreDefinitionElement, FreParseLocation } from "../../utils";
+import { FreMetaLangElement, FreMetaEnvironment } from "./internal";
+import { ParseLocation, FreMetaDefinitionElement, FreParseLocation } from "../../utils";
 
 /**
  * Implementation for a (named) reference in Freon.
  * Reference can be set with either a referred object, or with a unitName.
  */
-export class MetaElementReference<T extends FreLangElement> {
+export class MetaElementReference<T extends FreMetaLangElement> {
 
-    public static create<T extends FreLangElement>(name: string | T, typeName: string): MetaElementReference<T> {
-        const result = new MetaElementReference(null, typeName);
+    public static create<T extends FreMetaLangElement>(name: string | T, typeName: string): MetaElementReference<T> {
+        const result: MetaElementReference<T> = new MetaElementReference<T>(undefined, typeName);
         if (typeof name === "string") {
             result.name = name;
         } else if (typeof name === "object") {
@@ -18,20 +18,21 @@ export class MetaElementReference<T extends FreLangElement> {
         return result;
     }
 
-    // tslint:disable-next-line:variable-name
     private _FRE_name: string = "";
-    // tslint:disable-next-line:variable-name
-    private _FRE_referred: T = null;
+    private _FRE_referred: T | undefined = undefined;
 
-    public owner: FreDefinitionElement;
+    // @ts-ignore
+    public owner: FreMetaDefinitionElement;
+    // @ts-ignore
     public location: ParseLocation;
+    // @ts-ignore
     public aglParseLocation: FreParseLocation;
 
     // Need for the scoper to work
-    private typeName: string;
+    private typeName: string = '';
     private scoper = FreMetaEnvironment.metascoper;
 
-    private constructor(referredElement: T, typeName: string) {
+    private constructor(referredElement: T | undefined, typeName: string) {
         // super();
         this.referred = referredElement;
         this.typeName = typeName;
@@ -39,7 +40,7 @@ export class MetaElementReference<T extends FreLangElement> {
 
     set name(value: string) {
         this._FRE_name = value;
-        this._FRE_referred = null;
+        this._FRE_referred = undefined;
     }
 
     get name(): string {
@@ -62,7 +63,7 @@ export class MetaElementReference<T extends FreLangElement> {
         return this._FRE_referred;
     }
 
-    set referred(referredElement) {
+    set referred(referredElement: T | undefined) {
         if (!!referredElement) {
             this._FRE_name = referredElement.name;
         } else {

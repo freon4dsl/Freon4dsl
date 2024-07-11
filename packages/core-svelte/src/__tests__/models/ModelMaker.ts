@@ -1,6 +1,6 @@
-import { ElementWithList } from "./ElementWithList";
-import { SimpleElement } from "./SimpleElement";
-import { ElementWithOptional } from "./ElementWithOptional";
+import { ElementWithList } from "./ElementWithList.js";
+import { SimpleElement } from "./SimpleElement.js";
+import { ElementWithOptional } from "./ElementWithOptional.js";
 
 export class ModelMaker {
     static makeList(): ElementWithList {

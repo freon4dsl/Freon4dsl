@@ -4,10 +4,10 @@ import { GridCellBox } from "./GridCellBox";
 import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
 
 export class TableCellBox extends GridCellBox {
-    kind = "TableCellBox";
+    kind: string = "TableCellBox";
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    constructor(element: FreNode,
+    constructor(node: FreNode,
                 propertyName: string,
                 propertyIndex: number,
                 conceptName: string,
@@ -16,7 +16,7 @@ export class TableCellBox extends GridCellBox {
                 column: number,
                 box: Box,
                 initializer?: Partial<TableCellBox>) {
-        super(element, role, row, column, box, initializer);
+        super(node, role, row, column, box, initializer);
         // both propertyName and conceptName should be equal to the same attributes of the parent TableBox and TableRowBox
         this.propertyName = propertyName;
         this.propertyIndex = propertyIndex;

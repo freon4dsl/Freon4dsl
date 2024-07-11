@@ -1,8 +1,8 @@
 import { FretExp } from "./FretExp";
-import { FreClassifier, FreConcept } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaConcept } from "../../../languagedef/metalanguage";
 
 export class FretAnytypeExp extends FretExp {
-    static anyType: FreClassifier = new FreConcept();
+    static anyType: FreMetaClassifier = new FreMetaConcept();
 
     /**
      * A convenience method that creates an instance of this class
@@ -27,7 +27,7 @@ export class FretAnytypeExp extends FretExp {
         return `anytype`;
     }
 
-    get type(): FreClassifier {
+    get type(): FreMetaClassifier {
         return FretAnytypeExp.anyType;
     }
 

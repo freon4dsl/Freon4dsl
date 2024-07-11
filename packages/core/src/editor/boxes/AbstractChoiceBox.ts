@@ -5,19 +5,19 @@ import { BoxFactory, FreEditor } from "../internal";
 import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
 
 export abstract class AbstractChoiceBox extends Box {
-    kind = "AbstractChoiceBox";
+    kind: string = "AbstractChoiceBox";
     placeholder: string;
     caretPosition: number = -1;
     _textBox: TextBox;
     textHelper: ChoiceTextHelper;
 
-    protected constructor(exp: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
-        super(exp, role);
+    protected constructor(node: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
+        super(node, role);
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
         FreUtils.initializeObject(this, initializer);
         this._textBox = BoxFactory.text(
-            exp,
+            node,
             "action-" + role + "-textbox",
             () => {
                 /* To be overwritten by `SelectComponent` */
@@ -47,10 +47,14 @@ export abstract class AbstractChoiceBox extends Box {
         return null;
     }
 
+    // @ts-ignore
+    // parameter is present to support subclasses
     getOptions(editor: FreEditor): SelectOption[] {
         return [];
     }
 
+    // @ts-ignore
+    // parameter is present to support subclasses
     selectOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
         console.error("AbstractChoiceBox.selectOption");
         return BehaviorExecutionResult.NULL;
@@ -60,7 +64,7 @@ export abstract class AbstractChoiceBox extends Box {
         if (!!this.textBox) {
             this.textBox.setCaret(caret);
         }
-    };
+    }
 
     /** @internal
      * This function is called after the text changes in the browser.
@@ -68,21 +72,21 @@ export abstract class AbstractChoiceBox extends Box {
      */
     update: () => void = () => {
         /* To be overwritten by `ActionComponent` */
-    };
+    }
 
     /** @internal
      * Simulate a KeyBoard event
      */
     triggerKeyPressEvent: (key: string) => void = () => {
         /* To be overwritten by `AbstractChoiceComponent` */
-    };
+    }
 
     /** @internal
      * Simulate a KeyBoard event
      */
     triggerKeyDownEvent: (key: FreKey) => void = () => {
         /* To be overwritten by `AbstractChoiceComponent` */
-    };
+    }
 
     public deleteWhenEmpty1(): boolean {
         return false;

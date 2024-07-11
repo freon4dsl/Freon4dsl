@@ -1,0 +1,111 @@
+typer
+
+// What are types?
+istype { NamedType }
+
+type GenericType {
+    base: FreType;
+    kind: GenericKind;
+}
+
+// Which concepts have a type?
+hastype { DocuExpression, DocuType, CalcFunction, Parameter, RiskRef, PayoutRef }
+
+// Which type does an expression have?
+TypeRef {
+    infertype self.type;
+}
+CalcFunction {
+    infertype self.declaredType;
+}
+FunctionCallExpression {
+    infertype self.funcDefinition;
+}
+InsurancePartRef {
+    infertype InsurancePartType:InsurancePart;
+}
+RiskAdjustmentRef {
+    infertype PercentageType:Percentage;
+}
+Parameter {
+    infertype self.declaredType;
+}
+ParameterRef {
+    infertype self.parameter;
+}
+RiskRef {
+    infertype PercentageType:Percentage;
+}
+PayoutRef {
+    infertype EuroType:EUR;
+}
+PlusExpression {
+    infertype commonSuperType(self.left, self.right);
+}
+MinusExpression {
+    infertype commonSuperType(self.left, self.right);
+}
+DivideExpression {
+    infertype commonSuperType(self.left, self.right);
+}
+MultiplyExpression {
+    infertype commonSuperType(self.left, self.right);
+}
+EuroLiteral {
+    infertype EuroType:EUR;
+}
+NumberLiteral {
+    infertype NumberType:Number;
+}
+PercentageLiteral {
+    infertype PercentageType:Percentage;
+}
+BooleanLiteral {
+    infertype BooleanType:Boolean;
+}
+GenericLiteral {
+    // Set{ 12, 14, 16, 18 }
+    infertype GenericType {
+        base: typeof(self.content),
+        kind: self.kind
+    };
+}
+
+GenericTypeDecl {
+    infertype GenericType {
+        base: typeof(self.baseType),
+        kind: self.kind
+    };
+}
+
+// Which types are 'equal' to each other?
+NamedType {
+    equalsto aa:NamedType where {
+            aa.name equalsto self.name;
+        };
+    conformsto other:NamedType where {
+            other.name equalsto self.name;
+        };
+}
+
+// //////////////////////////////////////////
+//  Extras to show in the documentation   //
+// //////////////////////////////////////////
+
+GenericType {
+    equalsto x:GenericType where {
+            x.base equalsto self.base;
+            x.kind equalsto self.kind;
+        };
+    conformsto other:GenericType where {
+            // both conditions must be true
+            self.base conformsto other.base;
+            self.kind conformsto other.kind;
+        };
+}
+
+GenericKind {
+    Set conformsto Collection;
+    Sequence conformsto Collection;
+    Bag conformsto Collection;
+}

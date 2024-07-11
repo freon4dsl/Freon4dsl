@@ -1,0 +1,75 @@
+language LionCoreM3 
+
+model LionCoreM3 {
+    name: identifier;
+    units: Language[];
+}
+
+interface IKeyed base INamed {
+    key: string;
+}
+
+modelunit Language implements IKeyed {
+    version: string;
+    entities: LanguageEntity[];
+    reference dependsOn: Language[];
+    // Freon specific addition
+    file-extension = "lmm";
+}
+
+abstract concept LanguageEntity implements IKeyed {
+}
+
+concept Property base Feature {
+    reference type: Datatype;
+}
+
+abstract concept Feature implements IKeyed {
+  optional: boolean;
+}
+
+abstract concept Classifier base LanguageEntity  {
+    features: Feature[];
+}
+
+concept Concept base Classifier {
+    abstract: boolean;
+    partition: boolean;
+    reference extends?: Concept;
+    reference implements: ConceptInterface[];
+}
+
+concept Annotation base Classifier {
+    multiple: boolean;
+    reference annotates: Classifier;
+    reference extends?: Concept;
+    reference implements: ConceptInterface[];
+}
+
+abstract concept Link base Feature  {
+    multiple: boolean;
+    reference type: Classifier;
+}
+
+concept ConceptInterface  base Classifier {
+    reference extends: ConceptInterface[];
+}
+
+concept Containment  base Link { }
+
+concept Reference base Link {
+ }
+
+abstract concept Datatype base LanguageEntity {
+}
+
+concept PrimitiveType base Datatype {
+}
+
+concept Enumeration base Datatype {
+    literals: EnumerationLiteral[];
+}
+
+concept EnumerationLiteral implements IKeyed {
+}
+

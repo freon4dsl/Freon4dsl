@@ -1,19 +1,19 @@
-import { FreClassifier, FrePrimitiveType } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage";
 import { Names } from "../../../utils";
 import { ChoiceRuleMaker } from "../ChoiceRuleMaker";
 
-export function getPrimCall(propType: FreClassifier): string {
+export function getPrimCall(propType: FreMetaClassifier): string {
     switch (propType) {
-        case FrePrimitiveType.string: {
+        case FreMetaPrimitiveType.string: {
             return "stringLiteral";
         }
-        case FrePrimitiveType.identifier: {
+        case FreMetaPrimitiveType.identifier: {
             return "identifier";
         }
-        case FrePrimitiveType.number: {
+        case FreMetaPrimitiveType.number: {
             return "numberLiteral";
         }
-        case FrePrimitiveType.boolean: {
+        case FreMetaPrimitiveType.boolean: {
             return "booleanLiteral";
         }
         default:
@@ -21,7 +21,7 @@ export function getPrimCall(propType: FreClassifier): string {
     }
 }
 
-export function getTypeCall(propType: FreClassifier, projectionName?: string): string {
+export function getTypeCall(propType: FreMetaClassifier, projectionName?: string): string {
     const result = ChoiceRuleMaker.superNames.get(propType);
     if (!!result && result.length > 0) {
         return result;

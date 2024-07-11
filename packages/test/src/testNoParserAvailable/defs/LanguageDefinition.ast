@@ -1,4 +1,4 @@
-language Example
+language Demo
 
 model Demo {
     name: identifier;

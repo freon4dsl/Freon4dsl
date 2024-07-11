@@ -1,6 +1,6 @@
 language test4
 
-model TEST {
+model TEST4 {
     unit: TEST_CHOICES;
 }
 modelunit TEST_CHOICES {
