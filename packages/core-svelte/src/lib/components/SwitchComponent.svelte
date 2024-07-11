@@ -7,9 +7,11 @@
     // On Designing and Building Toggle Switches by Sara Soueidan https://www.sarasoueidan.com/blog/toggle-switch-design/
     // and this example by Scott O'hara https://codepen.io/scottohara/pen/zLZwNv
 
-    import {BooleanControlBox, FreEditor} from "@freon4dsl/core";
+    import {BooleanControlBox, FreEditor, FreLogger} from "@freon4dsl/core";
     import {selectedBoxes} from "$lib/index.js";
     import {afterUpdate, onMount} from "svelte";
+
+    const LOGGER = new FreLogger("SwitchComponent");
 
     export let editor: FreEditor;
     export let box: BooleanControlBox;
@@ -27,12 +29,18 @@
             sliderElement.focus();
         }
     }
+    const refresh = (why?: string): void => {
+        LOGGER.log("REFRESH BooleanControlBox: " + why);
+        value = box.getBoolean();
+    };
     onMount(() => {
         value = box.getBoolean();
         box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
     afterUpdate(() => {
         box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
     function handleClick(event){
         const target = event.target;
@@ -44,9 +52,6 @@
         }
         event.stopPropagation();
     }
-    // $: {
-    //     console.log("value bool is " + value + ", box.value is " + box.getBoolean());
-    // }
 </script>
 
 {#if design == 'inner'}
