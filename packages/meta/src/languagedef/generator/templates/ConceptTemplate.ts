@@ -227,7 +227,7 @@ export class ConceptTemplate {
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )
-        );
+        ).concat(concept.allSingleNonOptionalPartsInitializers().map(pi => Names.concept(pi.concept)));
     }
 
     private createInstancePropValue(property: FreMetaInstanceProperty): string {

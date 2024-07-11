@@ -1,6 +1,6 @@
 editor default
 
-EventCompletedExpression {
+When {
     [
         when ${startWhen}
     ]

@@ -1,5 +1,11 @@
 language StudyConfigurationModel
 
+abstract expression FirstScheduledExpression {
+}
+
+expression PreviousVisit base FirstScheduledExpression {
+}
+
 abstract expression StudyConfigExpression {
 }
 
@@ -13,9 +19,6 @@ expression StartDay base StudyConfigExpression {
 }
 
 expression LastDay base StudyConfigExpression {
-}
-
-expression PreviousVisit base StudyConfigExpression {
 }
 
 expression NextVisit base StudyConfigExpression {

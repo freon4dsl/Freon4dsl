@@ -66,7 +66,8 @@ export class UnitTemplate {
                     .filter(name => !(name === myName))
                     .filter(r => (r !== null) && (r.length > 0))
             )
-        );
+        ).concat(unitDescription.allSingleNonOptionalPartsInitializers().map(pi => Names.concept(pi.concept)));
+        
     }
 
 }
