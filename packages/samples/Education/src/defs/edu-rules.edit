@@ -5,14 +5,11 @@ editor default
 FlowDescription {[
     ${name} for topic ${topic}
 
-    ${rules separator[XXX]}
+    ${rules}
 ]}
 
 FlowRule {[
-    EXTRA
-    SUPER
-    TEXT
-
+    -------------------------------------
     Name: ${name}
         Description: ${self.description}
         For page ${page}
