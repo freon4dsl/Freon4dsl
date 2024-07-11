@@ -138,7 +138,8 @@ export class Timeline extends RtObject{
 
 
 export abstract class TimelineInstance {
-  startDay: number;      // The day the event occurred on
+  startDay: number;      // The day the instance occurred on
+  endDay: number;        // The day the instance ended on
   state: TimelineInstanceState = TimelineInstanceState.Active;
 
   setState(state: TimelineInstanceState) {
@@ -147,6 +148,22 @@ export abstract class TimelineInstance {
 
   getState() {
     return this.state;
+  }
+
+  getEndDay(timeline: Timeline) {
+    if (this.endDay === undefined) {
+      return timeline.currentDay;
+    } else {  
+      return this.endDay;
+    }
+  }
+
+  setEndDay(endDay: number) {
+    this.endDay = endDay;
+  }
+
+  getStartDay() {
+    return this.startDay;
   }
 
   abstract getName(): string;
@@ -168,6 +185,11 @@ export class PeriodInstance extends TimelineInstance {
   getName() {
     return this.scheduledPeriod.getName();
   }
+
+  setCompleted(onDay: number) {
+    this.setState(TimelineInstanceState.Completed);
+    this.setEndDay(onDay);
+  } 
 }
 
 export enum TimelineInstanceState {
@@ -199,6 +221,17 @@ export class EventInstance extends TimelineInstance {
     return this.scheduledEvent.getName();
   }
 
+  getStartDayOfWindow() {
+    return this.scheduledEvent.configuredEvent.schedule.eventWindow.daysBefore.count - this.startDay;
+  }
+
+  getEndDayOfWindow() {
+    return this.scheduledEvent.configuredEvent.schedule.eventWindow.daysAfter.count + this.startDay;
+  }
+
+  // getEndDay() {
+  //   return this.startDay;
+  // }
 }
 
 /*

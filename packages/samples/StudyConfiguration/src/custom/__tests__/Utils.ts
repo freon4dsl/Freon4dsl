@@ -1,6 +1,6 @@
 import * as Sim from "../simjs/sim.js"
 import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
-import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference, RepeatCondition, RepeatUnit } from "../../language/gen/index";
+import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference, RepeatCondition, RepeatUnit, Days, EventWindow } from "../../language/gen/index";
 import { FreNodeReference } from "@freon4dsl/core";
 import { EventInstance, TimelineInstanceState, Timeline, PeriodInstance } from "../timeline/Timeline";
 import { ScheduledEvent, ScheduledEventState } from "../timeline/ScheduledEvent";
@@ -24,12 +24,25 @@ export function createWhenEventSchedule(eventName: string, binaryExpression: Bin
   return eventSchedule;
 }
 
+export function createEventWindow(uniquePrefix:string, daysBefore: number, daysAfter: number) {
+  let eventWindow = new EventWindow("EventWindow");
+  let daysBeforeDay = new Days(uniquePrefix + "DaysBefore")
+  daysBeforeDay.count = 1;
+  let daysAfterDay = new Days(uniquePrefix + "DaysAfter")
+  daysAfterDay.count = 1;
+  eventWindow.daysBefore = daysBeforeDay;
+  eventWindow.daysAfter = daysAfterDay;
+  return eventWindow;
+}
+
+
 // Create a EventSchedule DSL element and set its 'eventStart' to a 'Day' DSL element starting 'startDay'. 
 export function createEventScheduleStartingOnADay(uniquePrefix: string, startDay: number) {
   let eventSchedule = new EventSchedule(uniquePrefix + "EventSchedule");
   let day = new Day(uniquePrefix + startDay.toString);
   day.startDay = startDay;
   eventSchedule.eventStart = day;
+  eventSchedule.eventWindow = createEventWindow(uniquePrefix, 1, 1);
   return eventSchedule;
 }
 
