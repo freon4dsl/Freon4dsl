@@ -67,9 +67,10 @@
         {/each}
     {:else}
         {#each children as child, i (child.id)}
-            {#if i > 0 && i < children.length && !(isEmptyLineBox(children[i - 1]))}
+<!--            {#if i > 0 && i < children.length && !(isEmptyLineBox(children[i - 1]))}
                 <br/>
             {/if}
+-->
             <RenderComponent box={child} editor={editor}/>
         {/each}
     {/if}
@@ -86,7 +87,7 @@
     .horizontal {
         white-space: nowrap;
         /*display: inline-block; !* maybe use display: flex; ?? *!*/
-        display: inline-block;
+        display: flex;
         align-items: var(--freon-horizontallist-component-align-items, baseline);
     }
 

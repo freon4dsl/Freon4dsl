@@ -5,11 +5,11 @@ import {Box} from "./Box";
 
 const LOGGER: FreLogger = new FreLogger("NumberControlBox");
 
-export class NumberDisplayInfo {
-    max: number | undefined = 100;
-    min: number | undefined = 0;
-    step: number| undefined = 1;
-    initialValue: number | undefined = 0;
+export type NumberDisplayInfo = {
+    max: number | undefined;
+    min: number | undefined;
+    step: number| undefined;
+    initialValue: number | undefined;
 }
 export enum NumberDisplay {
     SELECT,             // a text component
