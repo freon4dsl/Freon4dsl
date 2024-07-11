@@ -12,6 +12,7 @@ import {
     SelectOption,
     SelectBox,
     IndentBox,
+    GroupBox,
     OptionalBox,
     HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
     HorizontalLayoutBox, VerticalLayoutBox,
@@ -33,6 +34,7 @@ let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
 let boolCache: BoxCache<BooleanControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
+let groupCache: BoxCache<GroupBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
 let optionalCache2: BoxCache<OptionalBox2> = {};
@@ -49,6 +51,7 @@ let cacheLabelOff: boolean = false;
 let cacheTextOff: boolean = false;
 let cacheBooleanOff: boolean = false;
 let cacheSelectOff: boolean = false;
+let cacheGroupOff: boolean = false;
 // let cacheIndentOff: boolean = false;
 // let cacheOptionalOff: boolean = false;
 let cacheHorizontalLayoutOff: boolean = false;
@@ -68,6 +71,7 @@ export class BoxFactory {
         textCache = {};
         boolCache = {};
         selectCache = {};
+        groupCache = {};
         // indentCache = {};
         optionalCache = {};
         optionalCache2 = {};
@@ -86,6 +90,7 @@ export class BoxFactory {
         cacheTextOff = true;
         cacheBooleanOff = true;
         cacheSelectOff = true;
+        cacheGroupOff = true;
         // cacheIndentOff = true;
         // cacheOptionalOff = true;
         cacheHorizontalLayoutOff = true;
@@ -100,6 +105,7 @@ export class BoxFactory {
         cacheTextOff = false;
         cacheBooleanOff = false;
         cacheSelectOff = false;
+        cacheGroupOff = false;
         // cacheIndentOff = false;
         // cacheOptionalOff = false;
         cacheHorizontalLayoutOff = false;
@@ -207,8 +213,25 @@ export class BoxFactory {
         return result;
     }
 
-    static indent(element: FreNode, role: string, indent: number, childBox: Box): IndentBox {
-        return new IndentBox(element, role, indent, childBox);
+    static group(element: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number),childBox: Box, initializer?: Partial<GroupBox>): GroupBox {
+        if (cacheGroupOff) {
+            return new GroupBox(element, role, getLabel, getLevel, childBox, initializer);
+        }
+        // 1. Create the  box, or find the one that already exists for this element and role
+        const creator = () => new GroupBox(element, role, getLabel, getLevel, childBox, initializer);
+        const result: GroupBox = this.find<GroupBox>(element, role, creator, groupCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.setLabel(getLabel);
+        result.setLevel(getLevel);
+        result.child = childBox;
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static indent(element: FreNode, role: string, indent: number, fullWidth: boolean = false, childBox: Box): IndentBox {
+        return new IndentBox(element, role, indent, fullWidth, childBox);
         // 1. Create the  box, or find the one that already exists for this element and role
         // const creator = () => new IndentBox(element, role, indent, childBox);
         // const result: IndentBox = this.find<IndentBox>(element, role, creator, indentCache);
@@ -226,13 +249,8 @@ export class BoxFactory {
         return oneOk && twoOk;
     }
 
-    static horizontalLayout(element: FreNode,
-                            role: string,
-                            // @ts-expect-error
-                            // todo remove this parameter and adjust the generation in meta
-                            propertyName: string,
-                            children?: (Box | null)[],
-                            initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
+    static horizontalLayout(element: FreNode, role: string, // @ts-expect-error // todo remove this parameter and adjust the generation in meta
+                            propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {
             return new HorizontalLayoutBox(element, role, children, initializer);
         }
@@ -248,12 +266,8 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalLayout(element: FreNode,
-                          role: string,
-                          // @ts-expect-error
-                          // todo remove this parameter and adjust the generation in meta
-                          propertyName: string,
-                          children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
+    static verticalLayout(element: FreNode, role: string, // @ts-expect-error // todo remove this parameter and adjust the generation in meta
+                          propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
         if (cacheVerticalLayoutOff) {
             return new VerticalLayoutBox(element, role, children, initializer);
         }

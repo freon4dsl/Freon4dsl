@@ -1,5 +1,5 @@
 @use 'sass:color';
-
+@use '../_global_color' as gc;
 @use '@material/theme/color-palette';
 
 // Freon Colors!! (Dark Theme)
@@ -49,47 +49,154 @@
 
 /* The follwoing are CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
 /* Change the values as you like. */
-/* Note that we need to use a different syntax to be able to use SCSS variables as value
+/* Note that we need to use a different syntax grato be able to use SCSS variables as value
 for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/css-vars */
 .editor-part {
-  /* Normal text colors */
-  --freon-editor-component-color: #{--mdc-theme-text-primary-on-dark};       /* The color of the text, unless set otherwise by the projection */
-  --freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
-  --freon-editor-component-background-color: #{theme.$surface};              /* The background color of the editor */
-
-  /* Dropdown colors */
-  --freon-dropdownitem-component-color: #{theme.$blue-900};
-  --freon-dropdown-component-background-color: #{theme.$surface};
-  --freon-dropdown-component-color: inherit;
-  --freon-dropdown-component-border-color: #{theme.$blue-900};
-  --freon-dropdownitem-component-border-color: #{theme.$blue-900};
-
+  box-sizing: border-box;
   /* Selectable */
-  --freon-selected-background-color: rgba(211, 227, 253, 255);
-  --freon-selected-outline-color: #{theme.$blue-900};
-  --freon-text-component-color: #{theme.$blue-900};
+  --freon-selected-background-color: #{gc.$mac-gray-900t};
+  --freon-selected-outline-color: #{gc.$mac-primary-900};
+  --freon-selected-outline-width: 0px;
+  --freon-selected-outline-style: solid;
 
-
-  /* Fonts */
-  --freon-editor-component-font-family: "Arial";     /* The font family of the text, unless set otherwise by the projection */
+  /* Normal text colors */
+  //--freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
+  --freon-editor-component-background-color: #{gc.$mac-gray-900};             /* The background color of the editor */
+  --freon-editor-component-color: #{gc.$mac-gray-200};        /* The color of the text, unless set otherwise by the projection */
+  --freon-editor-component-margin: 1px;
+  --freon-editor-component-padding: 1px;
+  --freon-editor-component-font-family: "Roboto";    /* The font family of the text, unless set otherwise by the projection */
   --freon-editor-component-font-size: 14px;          /* The font size of the text, unless set otherwise by the projection */
   --freon-editor-component-font-style: normal;       /* The font style of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-weight: normal;      /* The font weight of the text, unless set otherwise by the projection */
+  --freon-editor-component-font-weight: normal; 
+  
+  /* Dropdown colors */
+  --freon-dropdown-component-border-color: #{gc.$mac-primary-900};
+  --freon-dropdown-component-background-color: #{gc.$mac-primary-300};
+  --freon-dropdown-component-color: #{gc.$mac-primary-900};
+  --freon-dropdownitem-component-color: #{gc.$mac-primary-900};
+  --freon-dropdownitem-component-background-color: #{gc.$mac-primary-300};
+  --freon-dropdownitem-component-border-color: #{gc.$mac-primary-900};
+  --freon-dropdownitem-component-error-bg-color: #{gc.$mac-red-600};
+  --freon-dropdownitem-component-selected-color: #{gc.$mac-gray-300};
+  --freon-dropdownitem-component-selected-background-color: #{gc.$mac-gray-900};
+  --freon-dropdownitem-component-hover-color: inherit;
+  --freon-dropdownitem-component-hover-background-color: inherit;
 
+   /* Text colors */
+  --freon-text-component-color: #{gc.$mac-primary-900};
+  --freon-text-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-text-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-text-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
+  --freon-text-component-font-family: "Roboto";	/* The font size of the text, unless set otherwise by the projection */
+  --freon-text-component-padding: 0px 3px 0px 3px;
+  --freon-text-component-margin: 1px;
+  --freon-text-component-placeholder-color: #{gc.$mac-primary-900};
+  --freon-text-component-actionplaceholder-color: #{gc.$mac-gray-100};
+
+  /* Label colors */
+  --freon-label-component-color: #{gc.$mac-gray-100};
+  --freon-label-component-background-color: inherit;
+  --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-family: "Roboto";	/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-padding: 0px 1px 0px 1px;
+  --freon-label-component-margin: 1px;
+
+  /* Group colors */
+  --freon-group-component-font-style: normal; 
+  --freon-group-component-font-weight: bold;
+  --freon-group-component-font-family: "Roboto";
+  --freon-group-component-font-size: 0.875rem;
+  --freon-group-component-margin: 0px;
+  --freon-group-component-padding: 0px;
+  --freon-group-component-color: #{gc.$mac-primary-100};
+  --freon-group-component-background-color: #{gc.$mac-primary-900t};
+ 
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-  --freon-text-component-padding: 0px;
-  --freon-label-component-padding: 0px;
-  --freon-horizontallist-component-padding: 0px;
-  --freon-verticallist-component-padding: 0px;
+
+  /* Horizontal list */
+  --freon-horizontallist-component-padding: 1px;
+  --freon-horizontallist-component-margin: 1px;
+  --freon-horizontallist-component-align-items: top;
+
+  /* Vertical list */
+  --freon-verticallist-component-padding: 0 0 0 1rem;
+  --freon-verticallist-component-margin: 0;
 
   /* Boolean components */
-  --freon-accent-color: #{theme.$yellow-200};
+  --freon-boolean-accent-color: #{gc.$mac-primary-900};
+}
+.gridcellOdd {
+  //--freon-gridcell-component-justify-left: right;
+  --freon-gridcell-component-background-color: #{theme.$grey-300};
+}
+.gridcellEven {
+  --freon-gridcell-component-background-color: transparent;
+}
+.gridcell-header {
+  --freon-gridcell-component-background-color: #{theme.$grey-500};
+}
+
+.\/\*, .\*\/ {
+  //--freon-label-component-font-weight: lighter;
+  --freon-label-component-font-style: italic;
+  --freon-label-component-color: #{theme.$grey-500};
+}
+.\{ {
+  --freon-label-component-font-weight: bold;
+}
+.using.entity\: , .Validation {
+  --freon-label-component-font-weight: bold;
+  --freon-label-component-color: red;
+}
+.unit {
+  --freon-label-component-font-weight: bold;
+  --freon-label-component-color: darkmagenta;
+}
+.alias-SetValue-attribute-referencebox-textbox {
+  --freon-text-component-color: #{color-palette.$brown-600};
+  //--freon-text-component-background-color: #{color-palette.$yellow-300};
+}
+
+.\,, .\%, .\. {
+  --freon-label-component-margin: 0px 0px 0px 0px;
+  --freon-label-component-padding: 0px 0px 0px 0px;
+}
+
+.\/\*, .\*\/ {
+  //--freon-label-component-font-weight: lighter;
+  --freon-label-component-font-style: italic;
+  --freon-label-component-color: #{theme.$grey-500};
+}
+.\{ {
+  --freon-label-component-font-weight: bold;
+}
+.using.entity\: , .Validation {
+  --freon-label-component-font-weight: bold;
+  --freon-label-component-color: red;
+}
+.action-SetValue-attribute-referencebox-textbox {
+  --freon-text-component-background-color: orange;
+}
+
+.\,, .\%, .\. {
+  --freon-label-component-margin: 0px 0px 0px 0px;
+  --freon-label-component-padding: 0px 0px 0px 0px;
+}
+
+.action-binary-pre-textbox, .action-binary-post-textbox, .action-exp-left-textbox, .action-exp-right-textbox {
+  --freon-text-component-margin: 0px;
+  --freon-text-component-padding: -1px 1px 0px 1px;
 }
 
 html,
 body {
   background-color: theme.$surface;
   color: theme.$on-surface;
+  margin: 0;
+  box-sizing: border-box;
   --mdc-theme-primary: #{theme.$primary};
 }

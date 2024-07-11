@@ -69,7 +69,7 @@ concept Task {
 
 concept Step {
     title: string;
-    detailsDescription?: string;
+    detailsDescription: string;
     references: Reference[];
     people: Person[];
     systems: SystemAccessReference[];

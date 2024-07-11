@@ -165,3 +165,7 @@ button:focus {
 optional {
 	background-color: purple;
 }
+
+.vertical-group {
+	flex-direction: column; 
+}

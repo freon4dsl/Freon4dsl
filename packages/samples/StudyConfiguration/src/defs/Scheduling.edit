@@ -57,11 +57,8 @@ EventWindow {
 EventSchedule {
     [
     First Scheduled : ${eventStart}
-
     Then Repeats    : ${eventRepeat}
-
     Window          : ${eventWindow}
-
     Time of Day     : ${eventTimeOfDay}
     ]
     trigger = "First, Repeats, Window..."

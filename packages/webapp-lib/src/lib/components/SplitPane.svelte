@@ -22,7 +22,7 @@
     $: min = 100 * (buffer / size);
     $: max = 100 - min;
     $: pos = clamp(pos, min, max);
-    let container: HTMLElement;
+    let svcontainer: HTMLElement;
     let dragging = false;
 
     /* difference with original */
@@ -38,7 +38,7 @@
     }
 
     function setPos(event) {
-        const { top, left } = container.getBoundingClientRect();
+        const { top, left } = svcontainer.getBoundingClientRect();
         const px = type === 'vertical'
             ? (event.clientY - top)
             : (event.clientX - left);
@@ -46,7 +46,7 @@
         // dispatch('change');
     }
     function setTouchPos(event) {
-        const { top, left } = container.getBoundingClientRect();
+        const { top, left } = svcontainer.getBoundingClientRect();
         const px = type === 'vertical'
             ? (event.touches[0].clientY - top)
             : (event.touches[0].clientX - left);
@@ -99,16 +99,16 @@
 </script>
 
 <style>
-    .container {
+    .sv-container {
         position: relative;
-        width: calc(100vw);
+        width: 100vw;
         height: calc(100vh - 96px); /* minus 96px, because this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 24 + 1 * 10) TODO change this comment */
         min-height: 400px;
     }
-    .pane {
+    .sv-pane {
         position:absolute;
         float: left;
-        width: 100%;
+        width: 100vw;
         height: 100%;
         box-sizing: border-box;
     }
@@ -164,12 +164,12 @@
 </style>
 
 <!-- we use offsetWidth and offsetHeight instead of clientWidth and clientHeight, because these include any scrollbars -->
-<div class="container" bind:this={container} >
-    <div class="pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
+<div class="sv-container" bind:this={svcontainer} >
+    <div class="sv-pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
         <slot name="a"></slot>
     </div>
 
-    <div class="pane" style="{dimension}: {100 - (pos)}%; top:{ topB}px; overflow: auto;" bind:offsetWidth={wb} bind:offsetHeight={hb}>
+    <div class="sv-pane" style="{dimension}: {100 - (pos)}%; top:{ topB}px; overflow: auto;" bind:offsetWidth={wb} bind:offsetHeight={hb}>
         <slot name="b"></slot>
     </div>
 

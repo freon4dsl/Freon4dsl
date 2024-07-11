@@ -1,7 +1,9 @@
 import CheckBoxComponent from "$lib/components/CheckBoxComponent.svelte";
 import DropdownComponent from '$lib/components/DropdownComponent.svelte';
 import EmptyLineComponent from '$lib/components/EmptyLineComponent.svelte';
+import ExpandableComponent from '$lib/components/ExpandableComponent.svelte';
 import FreonComponent from '$lib/components/FreonComponent.svelte';
+import GroupComponent from '$lib/components/GroupComponent.svelte';
 import IndentComponent from '$lib/components/IndentComponent.svelte';
 import LabelComponent from '$lib/components/LabelComponent.svelte';
 import ListComponent from '$lib/components/ListComponent.svelte';
@@ -20,7 +22,9 @@ export {
     CheckBoxComponent,
     DropdownComponent,
     EmptyLineComponent,
+    ExpandableComponent,
     FreonComponent,
+    GroupComponent,
     IndentComponent,
     LabelComponent,
     ListComponent,

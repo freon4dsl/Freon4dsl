@@ -103,7 +103,6 @@ export abstract class FreBoxProvider {
                     ownerBoxProvider.projection(),
                     ownerDescriptor.propertyName
                 );
-                // TODO ownerRequired === "" should never happen, so this is a hack and the sourcfe should be found.
                 if (ownerRequired === null || ownerRequired === undefined || ownerRequired === "") {
                     // No requirement from owner projection: just find the first projection in the active list of projections
                     this.usedProjection = this.findProjectionToUse(false);
