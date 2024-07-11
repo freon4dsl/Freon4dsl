@@ -166,14 +166,14 @@ export class ScheduledEvent {
   }
 
   // Do whatever is needed when the event is scheduled.
-  scheduled(scheduledStudyConfiguration: ScheduledStudyConfiguration, timeline: Timeline) {
+  scheduled(scheduledStudyConfiguration: ScheduledStudyConfiguration, timeline: Timeline, daysToWait: number) {
     console.log("ScheduledEvent.scheduled() for: " + this.getName() + " timeline.currentDay: " + timeline.currentDay);
     let period = this.configuredEvent.freOwner() as unknown as Period;
-    let currentPeriod = timeline.getCurrentPeriod();
-    if (currentPeriod) {
-      if (currentPeriod.getName() != period.freId()) {
-        console.log("ScheduledEvent.scheduled() names not equal so new period for: " + this.getName() + " timeline.currentDay: " + timeline.currentDay + " currentPeriod: " + currentPeriod.getName() + " period: " + period.name);
-        currentPeriod.setState(TimelineInstanceState.Completed);
+    let currentPeriodInstance = timeline.getCurrentPeriod();
+    if (currentPeriodInstance) {
+      if (currentPeriodInstance.getName() != period.freId()) {
+        console.log("ScheduledEvent.scheduled() names not equal so new period for: " + this.getName() + " timeline.currentDay: " + timeline.currentDay + " currentPeriod: " + currentPeriodInstance.getName() + " period: " + period.name);
+        currentPeriodInstance.setCompleted(timeline.currentDay + daysToWait - 1);
         this.addPeriodInstance(period, scheduledStudyConfiguration, timeline);
       }  
     } else {

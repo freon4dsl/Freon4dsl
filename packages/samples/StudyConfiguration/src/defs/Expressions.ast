@@ -21,6 +21,10 @@ expression PreviousVisit base StudyConfigExpression {
 expression NextVisit base StudyConfigExpression {
 }
 
+expression EventReference base StudyConfigExpression {
+    reference event: Event;
+}
+
 abstract expression LiteralExpression base StudyConfigExpression {}
 
 expression String base LiteralExpression {

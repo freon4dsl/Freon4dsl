@@ -234,33 +234,60 @@ describe ("Access to simulation data", () => {
   });
     
   describe("Generate the Timeline", () => {
+
+    it("generate a chart for a two visit and one period timeline for a visit 7 days after the end of the first visit", () => {
   
-let expectedTimelineDataAsScript = 
-`  var groups = new vis.DataSet([
-  { "content": "<b>Phase</b>", "id": "Phase", className: 'phase' },
-  { "content": "Visit 1", "id": "Visit 1" },
-  { "content": "Visit 2", "id": "Visit 2" },
-  { "content": "Any Day", "id": "AnyDay", className: 'any-day' },
-]);
+      // HTML is split into two parts: the data and the visualization, so tests don't need to check both. The visualization is so simple that it doesn't need to be tested in multiple other tests.
+      let expectedTimelineDataAsScript = 
+        ` var groups = new vis.DataSet([
+            { "content": "<b>Phase</b>", "id": "Phase", className: 'phase' },
+            { "content": "Visit 1", "id": "Visit 1" },{ "content": "Visit 2", "id": "Visit 2" },
+            { "content": "Any Day", "id": "AnyDay", className: 'any-day' },
+          ]);
 
-var items = new vis.DataSet([
-  { start: new Date(2024, 0, 1), end: new Date(2024, 0, 6, 23, 59, 59), group: "Phase", className: "screening-phase", title: "tip...", content: "<b>Screening</b>", id: "1" },
-  { start: new Date(2024, 0, 7, 0, 1), end: new Date(2024, 0, 30, 23, 59, 59), group: "Phase", className: "treatment-phase", title: "tip...", content: "<b>Treatment<b>", id: "2" },
+          var items = new vis.DataSet([
+            { start: new Date(2024, 0, 1), end: new Date(2024, 0, 8, 23, 59, 59), group: "Phase", className: "screening-phase", title: "Day: 1", content: "<b>Screening</b>", id: "1" },
+            { start: new Date(2024, 0, 0), end: new Date(2024, 0, 0, 23, 59, 59), group: "Visit 1", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-Visit 1" },
+            { start: new Date(2024, 0, 1), end: new Date(2024, 0, 1, 23, 59, 59), group: "Visit 1", className: "treatment-visits", title: "day 1", content: "&nbsp;", id: "Visit 1" },
+            { start: new Date(2024, 0, 2), end: new Date(2024, 0, 2, 23, 59, 59), group: "Visit 1", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-Visit 1" },
+            { start: new Date(2024, 0, 7), end: new Date(2024, 0, 7, 23, 59, 59), group: "Visit 2", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-Visit 2" },
+            { start: new Date(2024, 0, 8), end: new Date(2024, 0, 8, 23, 59, 59), group: "Visit 2", className: "treatment-visits", title: "when Start Day + 7", content: "&nbsp;", id: "Visit 2" },
+            { start: new Date(2024, 0, 9), end: new Date(2024, 0, 9, 23, 59, 59), group: "Visit 2", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-Visit 2" },
+            { start: new Date(2024, 0, 6), end: new Date(2024, 0, 8, 23, 59, 59), group: "AnyDay", className: "any-day", title: "Adverse Event", content: "Unscheduled Adverse Event Visit", id: "911" },
+          ])
+        `;
 
-  { start: new Date(2024, 0, 0), end: new Date(2024, 0, 0, 23, 59, 59), group: "Visit 1", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-Visit 1" },
-  { start: new Date(2024, 0, 1), end: new Date(2024, 0, 1, 23, 59, 59), group: "Visit 1", className: "treatment-visits", title: "day 1", content: "&nbsp;", id: "Visit 1" },
-  { start: new Date(2024, 0, 2), end: new Date(2024, 0, 2, 23, 59, 59), group: "Visit 1", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-Visit 1" },
-
-  { start: new Date(2024, 0, 7), end: new Date(2024, 0, 7, 23, 59, 59), group: "Visit 2", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-Visit 2" },
-  { start: new Date(2024, 0, 8), end: new Date(2024, 0, 8, 23, 59, 59), group: "Visit 2", className: "treatment-visits", title: "when Start Day + 7", content: "&nbsp;", id: "Visit 2" },
-  { start: new Date(2024, 0, 9), end: new Date(2024, 0, 9, 23, 59, 59), group: "Visit 2", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-Visit 2" },
-
-  { start: new Date(2024, 0, 6), end: new Date(2024, 0, 30, 23, 59, 59), group: "AnyDay", className: "any-day", title: "Adverse Event", content: "Unscheduled Adverse Event Visit", id: "911" },
-
-])
-`;
-
-    it("generate a chart for a two visit timeline for a visit 7 days after the end of the first visit", () => {
+      let expectedTimelineVisualizationHTML =
+        ` // create visualization
+          var container = document.getElementById('visualization');
+          var options = {
+            format: {
+                minorLabels: {
+                    millisecond:'',
+                    second:     '',
+                    minute:     '',
+                    hour:       '',
+                    weekday:    '',
+                    day:        'DDD',
+                    week:       '',
+                    month:      '',
+                    year:       ''
+                },
+            },
+            timeAxis: {scale: 'day', step: 1},
+            showMajorLabels: false,
+            orientation: 'both',
+            start: new Date(2024, 0, 1),
+            end: new Date(2024, 0, 9, 23, 59, 59),
+            min: new Date(2024, 0, 1),
+            max: new Date(2024, 0, 9, 23, 59, 59),
+            margin: {
+                item: {
+                    horizontal: 0,
+                },
+            },
+          };
+        `
         // GIVEN a study configuration with one period and two events
         studyConfiguration = utils.addAPeriodAndTwoEvents(studyConfiguration, "Screening", "Visit 1", 1, "Visit 2", 7);
 
@@ -269,13 +296,66 @@ var items = new vis.DataSet([
         simulator.run();
         let timeline = simulator.timeline;
 
-        // console.log("timeline: " + timeline.getDays()[0].day);
-        // console.log("timeline: " + timeline.getDays()[0].events[0].name);
-        let timelineDataAsScript = TimelineScriptTemplate.getTimelineDataAsScript(timeline);
-        TimelineScriptTemplate.saveTimeline(timelineDataAsScript);
+        let timelineDataAsScript = TimelineScriptTemplate.getTimelineDataHTML(timeline);
+        let timelineVisualizationHTML = TimelineScriptTemplate.getTimelineVisualizationHTML(timeline);
+        // Save full HTML of chart for viewing / debugging
+        TimelineScriptTemplate.saveTimeline(timelineDataAsScript + timelineVisualizationHTML);
 
+        const normalizedTimelineDataAsScript = timelineDataAsScript.replace(/\s+/g, '');
+        const normalizedExpectedTimelineDataAsScript = expectedTimelineDataAsScript.replace(/\s+/g, '');
         // Then the generated timeline picture has two events on the expected event days
-        expect(timelineDataAsScript).toEqual(expectedTimelineDataAsScript);
+        expect(normalizedTimelineDataAsScript).toEqual(normalizedExpectedTimelineDataAsScript);
+
+        const normalizedTimelineVisualizationHTML = timelineVisualizationHTML.replace(/\s+/g, '');
+        const normalizedExpectedTimelineVisualizationHTML = expectedTimelineVisualizationHTML.replace(/\s+/g, '');
+        expect(normalizedTimelineVisualizationHTML).toEqual(normalizedExpectedTimelineVisualizationHTML);
     }); 
+
+    it("generate a chart for two periods", () => {
+  
+      // HTML is split into two parts: the data and the visualization, so tests don't need to check both. The visualization is so simple that it doesn't need to be tested in multiple other tests.
+      let expectedTimelineDataAsScript = 
+        `var groups = new vis.DataSet([
+           { "content": "<b>Phase</b>", "id": "Phase", className: 'phase' },
+           { "content": "Visit 1", "id": "Visit 1" },{ "content": "Visit 2", "id": "Visit 2" },
+           { "content": "Any Day", "id": "AnyDay", className: 'any-day' },
+         ]);
+
+        var items = new vis.DataSet([
+          { start: new Date(2024, 0, 1), end: new Date(2024, 0, 7, 23, 59, 59), group: "Phase", className: "screening-phase", title: "Day: 1", content: "<b>Screening</b>", id: "Screening" },
+          { start: new Date(2024, 0, 8), end: new Date(2024, 0, 8, 23, 59, 59), group: "Phase", className: "treatment-phase", title: "Day: 8", content: "<b>Treatment</b>", id: "Treatment" },
+          { start: new Date(2024, 0, 0), end: new Date(2024, 0, 0, 23, 59, 59), group: "Visit 1", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-Visit 1" },
+          { start: new Date(2024, 0, 1), end: new Date(2024, 0, 1, 23, 59, 59), group: "Visit 1", className: "treatment-visits", title: "day 1", content: "&nbsp;", id: "Visit 1" },
+          { start: new Date(2024, 0, 2), end: new Date(2024, 0, 2, 23, 59, 59), group: "Visit 1", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-Visit 1" },
+          { start: new Date(2024, 0, 7), end: new Date(2024, 0, 7, 23, 59, 59), group: "Visit 2", className: "window", title: "Window before Event", content: "&nbsp;", id: "before-Visit 2" },
+          { start: new Date(2024, 0, 8), end: new Date(2024, 0, 8, 23, 59, 59), group: "Visit 2", className: "treatment-visits", title: "when Visit 1 + 7", content: "&nbsp;", id: "Visit 2" },
+          { start: new Date(2024, 0, 9), end: new Date(2024, 0, 9, 23, 59, 59), group: "Visit 2", className: "window", title: "Window after Event", content: "&nbsp;", id: "after-Visit 2" },
+          { start: new Date(2024, 0, 6), end: new Date(2024, 0, 8, 23, 59, 59), group: "AnyDay", className: "any-day", title: "Adverse Event", content: "Unscheduled Adverse Event Visit", id: "911" },
+         ])
+        `;
+        // GIVEN a study configuration with one period and two events
+        let listOfEventsToAdd: EventsToAdd[] = [
+          { eventName: "Visit 1", eventDay: 1, repeat: 0, period: "Screening"},
+          { eventName: "Visit 2", eventDay: 7, repeat: 0, period: "Treatment"},
+        ];
+        studyConfiguration = utils.addEventsScheduledOffCompletedEvents(studyConfiguration, listOfEventsToAdd);
+  
+  
+        // WHEN the study is simulated and a timeline picture is generated
+        let simulator = new Simulator(studyConfiguration);
+        simulator.run();
+        let timeline = simulator.timeline;
+
+        let timelineDataAsScript = TimelineScriptTemplate.getTimelineDataHTML(timeline);
+        let timelineVisualizationHTML = TimelineScriptTemplate.getTimelineVisualizationHTML(timeline);
+        // Save full HTML of chart for viewing / debugging
+        TimelineScriptTemplate.saveTimeline(timelineDataAsScript + timelineVisualizationHTML);
+
+        const normalizedTimelineDataAsScript = timelineDataAsScript.replace(/\s+/g, '');
+        const normalizedExpectedTimelineDataAsScript = expectedTimelineDataAsScript.replace(/\s+/g, '');
+        // Then the generated timeline picture has two events on the expected event days
+        expect(normalizedTimelineDataAsScript).toEqual(normalizedExpectedTimelineDataAsScript);
+    }); 
+
   });
 });

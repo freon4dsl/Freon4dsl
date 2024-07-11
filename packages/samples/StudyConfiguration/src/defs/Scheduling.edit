@@ -1,6 +1,6 @@
 editor default
 
-When {
+EventCompletedExpression {
     [
         when ${startWhen}
     ]
@@ -11,15 +11,16 @@ Day {
     [
         day ${startDay}
     ]
+    trigger = "On a Specific Day"
 }
 
 StudyStart {
     [Study Start]
-    trigger = "Study Start"
+    trigger = "At Study Start"
 } 
 
 AnyDay {
-    [Any Day]
+    [On Any Day]
     trigger = "Any Day"
 } 
 
