@@ -88,7 +88,7 @@
     .group {
         display: inline-block;
         height: 36px;
-        background-color: var(--freon-group-background-color, inherit);
+        background-color: var(--freon-group-component-background-color, inherit);
     }
     .group-label {
         color: var(--freon-group-component-color, inherit);

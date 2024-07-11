@@ -1,3 +1,4 @@
+import CheckBoxComponent from "$lib/components/CheckBoxComponent.svelte";
 import DropdownComponent from '$lib/components/DropdownComponent.svelte';
 import EmptyLineComponent from '$lib/components/EmptyLineComponent.svelte';
 import ExpandableComponent from '$lib/components/ExpandableComponent.svelte';
@@ -8,7 +9,9 @@ import LabelComponent from '$lib/components/LabelComponent.svelte';
 import ListComponent from '$lib/components/ListComponent.svelte';
 import OptionalComponent from '$lib/components/OptionalComponent.svelte';
 import OptionalComponentNew from '$lib/components/OptionalComponentNew.svelte';
+import RadioComponent from "$lib/components/RadioComponent.svelte";
 import RenderComponent from '$lib/components/RenderComponent.svelte';
+import SwitchComponent from "$lib/components/SwitchComponent.svelte";
 import TableComponent from '$lib/components/TableComponent.svelte';
 import TableCellComponent from '$lib/components/TableCellComponent.svelte';
 import TextComponent from '$lib/components/TextComponent.svelte';
@@ -16,6 +19,7 @@ import TextDropdownComponent from '$lib/components/TextDropdownComponent.svelte'
 import SvgComponent from '$lib/components/SvgComponent.svelte';
 
 export {
+    CheckBoxComponent,
     DropdownComponent,
     EmptyLineComponent,
     ExpandableComponent,
@@ -26,7 +30,9 @@ export {
     ListComponent,
     OptionalComponent,
     OptionalComponentNew,
+    RadioComponent,
     RenderComponent,
+    SwitchComponent,
     TableComponent,
     TableCellComponent,
     TextComponent,

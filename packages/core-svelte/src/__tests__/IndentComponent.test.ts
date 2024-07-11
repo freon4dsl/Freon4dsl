@@ -14,7 +14,7 @@ describe.skip("Indent component", () => {
     const element2: FreNode = new SimpleElement("ANOTHERNAME");
     const myEditor = new FreEditor(null, null);
     const myLabelBox = new LabelBox(element1, "role", () => "LabelText");
-    const myIndentBox = new IndentBox(element2,"indent-role", 4, myLabelBox);
+    const myIndentBox = new IndentBox(element2,"indent-role", 4, false, myLabelBox);
 
     it(", with label as slot, is indented", () => {
         const result = render(IndentComponent, { box: myIndentBox, editor: myEditor });

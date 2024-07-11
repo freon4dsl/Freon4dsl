@@ -29,11 +29,11 @@ import * as Sim from "../simjs/sim.js"
     }
 
     scheduleEvent(schedulingMsg, scheduledEvent, timeline, daysToWait) {
-      console.log(schedulingMsg + ": " + scheduledEvent.name() + ' with wait of: ' + daysToWait + ' days');
+      console.log(schedulingMsg + ": " + scheduledEvent.getName() + ' with wait of: ' + daysToWait + ' days');
       let eventInstance = timeline.newEventInstance(scheduledEvent, this.time() + daysToWait);
       this.setTimer(daysToWait).done(this.eventCompleted, this, [eventInstance]);
       timeline.setScheduled(eventInstance);
-      scheduledEvent.updatePeriodIfNeeded(timeline);
+      scheduledEvent.scheduled(this.getScheduledStudyConfiguration(), timeline);
     }
 
     // Find all the events with First-Scheduled on just a specific day and schedule them.
@@ -42,13 +42,14 @@ import * as Sim from "../simjs/sim.js"
       for (let scheduledEvent of eventsScheduledOnASpecificDay) {
         let timeline = this.getTimeline();
         let daysToWait = scheduledEvent.day(timeline, this.time());
+        timeline.setCurrentDay(this.time())
         this.scheduleEvent('Scheduling Specific Day Event', scheduledEvent, timeline, daysToWait);
       }
     }
 
     eventCompleted(completedEvent) {
       // Complete the event
-      console.log('Completed Event:' + completedEvent.name + ' at time: ' + this.time());
+      console.log('Completed Event:' + completedEvent.getName() + ' at time: ' + this.time());
       let timeline = this.getTimeline();
       completedEvent.startDay = this.time();
       timeline.setCompleted(completedEvent);

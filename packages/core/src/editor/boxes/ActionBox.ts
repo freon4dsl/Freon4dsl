@@ -1,4 +1,9 @@
-import { FreLanguageConcept, FreLanguage, FreLanguageProperty } from "../../language";
+import {
+    FreLanguageConcept,
+    FreLanguage,
+    FreLanguageProperty,
+    FreLanguageClassifier
+} from "../../language";
 import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util";
 import { FreCreatePartAction, FreCustomAction, FreTriggerType } from "../actions";
 import { triggerTypeToString, FreEditor, isProKey } from "../internal";
@@ -7,10 +12,10 @@ import { FreNode, FreNodeReference } from "../../ast";
 import { runInAction } from "mobx";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("ActionBox");
+const LOGGER: FreLogger = new FreLogger("ActionBox");
 
 export class ActionBox extends AbstractChoiceBox {
-    readonly kind = "ActionBox";
+    readonly kind: string = "ActionBox";
     placeholder: string;
     /**
      * Filled with the name of the concept, in case this is used to create new concept instance.
@@ -62,11 +67,11 @@ export class ActionBox extends AbstractChoiceBox {
             LOGGER.log(`  has property ${this.propertyName} and concept ${this.conceptName}`);
             // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
-            const clsOtIntf = FreLanguage.getInstance().classifier(this.conceptName);
-            const propDef = FreLanguage.getInstance().classifierProperty(this.conceptName, this.propertyName);
+            const clsOtIntf: FreLanguageClassifier = FreLanguage.getInstance().classifier(this.conceptName);
+            const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(this.conceptName, this.propertyName);
             LOGGER.log(`clsIntf: ${clsOtIntf} prop kind: ${propDef?.propertyKind}`);
             clsOtIntf.subConceptNames.concat(this.conceptName).forEach((creatableConceptname: string) => {
-                const creatableConcept = FreLanguage.getInstance().classifier(creatableConceptname);
+                const creatableConcept: FreLanguageConcept = FreLanguage.getInstance().concept(creatableConceptname);
                 LOGGER.log(`creatableConcept: ${creatableConcept}`)
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!(creatableConcept.referenceShortcut)) {
@@ -77,7 +82,7 @@ export class ActionBox extends AbstractChoiceBox {
             });
         } else if (!!this.propertyName) {
             // Reference property
-            const propDef = FreLanguage.getInstance().classifierProperty(this.element.freLanguageConcept(), this.propertyName);
+            const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(this.element.freLanguageConcept(), this.propertyName);
             LOGGER.log(`parent: ${this.element.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`);
             this.addReferences(this.element, propDef, result, editor);
         } else {
@@ -151,9 +156,8 @@ export class ActionBox extends AbstractChoiceBox {
     }    
     
     /**
-     * Get all referrable element for the concept.property
-     * @param concept The concept with the referenceShortcut
-     * @param result  The array where the resutling actions should be addedd to
+     * Get all referable elements for the property
+     * @param result  The array where the resulting actions should be added to
      * @param editor  The editor context
      * @private
      */

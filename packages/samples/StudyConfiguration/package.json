@@ -7,6 +7,7 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
+    "test": "tsc && jest",
     "clean": "rm -rf node_modules/",
     "build": "npm run generate && tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
@@ -24,5 +25,13 @@
     "mobx-utils": "^6.0.8",
     "net.akehurst.language-agl-processor": "4.0.0-rc.5",
     "tslib": "^2.6.2"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.24.7",
+    "@types/jest": "^29.5.12",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.5",
+    "typescript": "^5.5.3"
   }
 }

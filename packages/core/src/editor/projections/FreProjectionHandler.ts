@@ -66,7 +66,7 @@ export class FreProjectionHandler {
      * Internally, one of the box providers in 'elementToProvider' is used.
      * @param element
      */
-    getBox(element: FreNode): ElementBox {
+    getBox(element: FreNode): ElementBox | undefined {
         // todo remove try-catch
         try {
             if (isNullOrUndefined(element)) {
@@ -79,7 +79,7 @@ export class FreProjectionHandler {
         return this.getBoxProvider(element)?.box;
     }
 
-    ////////// Methods for registring the boxproviders ////////////
+    ////////// Methods for registering the boxproviders ////////////
 
     /**
      * Method that initilizes the property 'conceptNameToProviderConstructor'.
@@ -108,7 +108,7 @@ export class FreProjectionHandler {
         }
 
         // return if present, else create a new provider based on the language concept
-        let boxProvider = this.elementToProvider.get(node.freId());
+        let boxProvider: FreBoxProvider = this.elementToProvider.get(node.freId());
         if (isNullOrUndefined(boxProvider)) {
             LOGGER.log("getBoxProvider is null/undefined for type " + node.freLanguageConcept());
             boxProvider = this.conceptNameToProviderConstructor.get(node.freLanguageConcept())(this);

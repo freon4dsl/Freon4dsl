@@ -30,7 +30,7 @@
         contextMenu,
         contextMenuVisible,
         componentId
-    } from "./svelte-utils/index.js";
+    } from "$lib/index.js";
     import { afterUpdate, onMount } from "svelte";
 
     // Parameters
@@ -105,11 +105,11 @@
         }
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
-    const dragover = (event: DragEvent, index): boolean => {
-        LOGGER.log("drag over " + box.id);
-        event.preventDefault();
-        return false;
-    }
+    // const dragover = (event: DragEvent, index): boolean => {
+    //     LOGGER.log("drag over " + box.id);
+    //     event.preventDefault();
+    //     return false;
+    // }
     const mouseout = (): boolean => {
         LOGGER.log("LIST mouse out " + box.id);
         // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
@@ -197,7 +197,6 @@
 <span class={isHorizontal ? "horizontalList" : "verticalList"}
       id="{id}"
       bind:this={htmlElement}
-      tabindex={0}
       style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
       style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
 >
@@ -205,7 +204,7 @@
         <span
                 class="list-item"
                 class:is-active={$activeElem?.row === index && $activeIn === id}
-                class:dragged={$draggedElem?.row === index && $draggedFrom === id}
+                class:dragged={$draggedElem?.propertyIndex === index && $draggedFrom === id}
                 style:grid-column="{!isHorizontal ? 1 : index+1}"
                 style:grid-row="{isHorizontal ? 1 : index+1}"
                 animate:flip
@@ -220,6 +219,7 @@
                 on:focus={() => {}}
                 on:blur={() => {}}
                 on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event, index)}
+                role="none"
         >
             <RenderComponent box={box} editor={editor}/>
 		</span>
@@ -228,10 +228,10 @@
 
 
 <style>
-    .list-component {
-        --fre-list-grid-template-columns: "";
-        --fre-list-grid-template-rows: "";
-    }
+    /*.list-component {*/
+    /*    --fre-list-grid-template-columns: "";*/
+    /*    --fre-list-grid-template-rows: "";*/
+    /*}*/
     .horizontalList {
         /*grid-template-rows: var(--fre-list-grid-template-rows);*/
         /*grid-template-columns: var(--fre-list-grid-template-columns);*/

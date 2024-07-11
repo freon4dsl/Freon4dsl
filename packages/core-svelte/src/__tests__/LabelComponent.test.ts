@@ -31,7 +31,7 @@ describe.skip("Label component", () => {
     it("gets focus when clicked", () => {
         // the SelectableComponent listens to mouse clicks,
         // therefore we test this using a wrapper 'TestLabelSelectable'
-        render(MockLabelSelectable, {box1: myLabelBox, box2: secondLabelBox, editor: myEditor})
+        render(MockLabelSelectable, {box1: myLabelBox, box2: secondLabelBox})
         const myContainer1 = screen.getByTestId('test-label1');
         expect(myContainer1).toBeVisible();
         const myLabel = screen.getByText('LabelText');
@@ -49,7 +49,7 @@ describe.skip("Label component", () => {
     it("loses focus when another label is clicked", () => {
         // the SelectableComponent listens to mouse clicks,
         // therefore we test this using a wrapper 'MockLabelSelectable'
-        render(MockLabelSelectable, {box1: myLabelBox, box2: secondLabelBox, editor: myEditor})
+        render(MockLabelSelectable, {box1: myLabelBox, box2: secondLabelBox})
         const myContainer1 = screen.getByTestId('test-label1');
         expect(myContainer1).toBeVisible();
         const myLabel = screen.getByText('LabelText');

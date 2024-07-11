@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { FreModelUnit, FreModel, FreNode, FreLanguage, LwChunk, FreLogger, FreLionwebSerializer } from "@freon4dsl/core";
 import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
 import {StudyConfiguration, WorkflowDescription, Event } from "../../language/gen/index";  
+import * as path from 'path';
 
 export class WebformTemplate {
 
@@ -9,8 +10,9 @@ export class WebformTemplate {
       FreLogger.muteAllLogs();
       const tmp = StudyConfigurationModelEnvironment.getInstance();
       const serializer = new FreLionwebSerializer();
-      console.log("current directory:"+process.cwd());
-      let metaModel: LwChunk = JSON.parse(fs.readFileSync(`./src/StudyConfiguration/custom/__tests__/modelstore/StudyConfiguration/${modelName}.json`).toString());
+      const studyFolderPath: string = path.resolve(__dirname, '..','__tests__', 'modelstore', 'StudyConfiguration');
+      console.log("studyFolderPath (TODO: move from tests folder):"+studyFolderPath);
+      let metaModel: LwChunk = JSON.parse(fs.readFileSync(`${studyFolderPath}/${modelName}.json`).toString());
       const ts = serializer.toTypeScriptInstance(metaModel);
       let model: StudyConfiguration = ts as StudyConfiguration;
       return model;
@@ -290,7 +292,8 @@ variants: {  }`;
 
     private static writeWebFormToFile(webFormYaml: string, formName: string) {
       // log("template:" + webFormYaml);
-      var fileName = `${formName}.yaml`;
+      const studyFolderPath: string = path.resolve(__dirname, '..','__tests__', 'modelstore', 'StudyConfiguration');
+      var fileName = `${studyFolderPath}/tmp/${formName}.yaml`;
       if (fs.existsSync(fileName)) {
         try {
           fs.unlinkSync(fileName);

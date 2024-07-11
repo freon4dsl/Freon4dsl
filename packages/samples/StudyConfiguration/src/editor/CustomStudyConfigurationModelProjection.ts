@@ -11,7 +11,8 @@ import {
     FreLanguage,
     FRE_BINARY_EXPRESSION_LEFT,
     FRE_BINARY_EXPRESSION_RIGHT,
-    HorizontalListBox, FreProjection, FreProjectionHandler, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil //, ExpandableBox
+    HorizontalListBox, FreProjection, FreProjectionHandler, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil, //, ExpandableBox
+    BoolDisplay
 } from "@freon4dsl/core";
 import { StudyConfiguration, Description, Period, Event } from "../language/gen";
 
@@ -60,7 +61,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             BoxUtil.indentBox( element, 8, true, "4",
                 BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "",
                     [
-                        BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }),
+                        BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
                         BoxUtil.labelBox(element, "Show Task Details", "top-1-line-4-item-1"),
                     ],
                     { selectable: false },
@@ -69,7 +70,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             BoxUtil.indentBox(element, 8, true, "5",
                 BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "",
                     [
-                        BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }),
+                        BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
                         BoxUtil.labelBox(element, "Show Systems", "top-1-line-5-item-1"),
                     ],
                     { selectable: false },
@@ -154,7 +155,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             BoxFactory.horizontalLayout(event, "Event-hlist-line-9", "",
                 [
                     BoxUtil.labelBox(event, "Checklist:", "top-1-line-9-item-0"),
-                    BoxUtil.booleanBox(event, "showSequenced", { yes: "YES", no: "NO" }),
+                    BoxUtil.booleanBox(event, "showSequenced", { yes: "YES", no: "NO" },BoolDisplay.CHECKBOX),
                     BoxUtil.labelBox(event, "Allow Sequencing", "top-1-line-9-item-2")
                 ],
                 { selectable: false }

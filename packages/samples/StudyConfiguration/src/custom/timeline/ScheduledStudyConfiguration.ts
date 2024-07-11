@@ -8,12 +8,13 @@ import { ScheduledPeriod } from "./ScheduledPeriod";
 
 export class ScheduledStudyConfiguration {
   scheduledPeriods: ScheduledPeriod[] = [];
-  scheduledEvents: ScheduledEvent[] = [];
   studyConfiguration: StudyConfiguration;
 
+
+  //TODO: change so the Scheduled Events are inside the scheduled periods
   constructor(studyConfiguration: StudyConfiguration) {
     this.studyConfiguration = studyConfiguration;
-    this.scheduledPeriods = this.getConfiguredPeriods().map(period => new ScheduledPeriod(period));
+    this.scheduledPeriods = this.getConfiguredPeriods().map(configuredPeriod => new ScheduledPeriod(configuredPeriod));
   }
 
   getAllEventsInSchedule() {
@@ -29,10 +30,6 @@ export class ScheduledStudyConfiguration {
     return this.scheduledPeriods[0];
   }
 
-  getScheduledEvents() {
-    return this.scheduledEvents;
-  }
-
   getAllEventsInAScheduledPeriod(scheduledPeriod: ScheduledPeriod) {
     return this.getAllEventsInAPeriod(scheduledPeriod.configuredPeriod);
   }
@@ -46,6 +43,14 @@ export class ScheduledStudyConfiguration {
     }
   }
 
+  getScheduledPeriod(period: Period) {
+    let scheduledPeriod = this.scheduledPeriods.find(scheduledPeriod => scheduledPeriod.configuredPeriod === period);
+    if (!scheduledPeriod) {
+      console.log("no scheduledPeriod found", scheduledPeriod);
+    }
+    return scheduledPeriod;
+  }
+
   getFirstStudyStartEvent(): ScheduledEvent | undefined {
     let eventsOnADay = this.getEventsOnScheduledOnASpecificDay();
     let firstEventOnDay1 = eventsOnADay.find(scheduledEvent => {
@@ -53,12 +58,15 @@ export class ScheduledStudyConfiguration {
         return (scheduledEvent.configuredEvent.schedule.eventStart as Day).startDay as number === 1;
       } else {return false;}
     });
+    console.log("getFirstStudyStartEvent firstEventOnDay1: " + firstEventOnDay1.getName());
     return firstEventOnDay1;
   }
 
   getEventsOnScheduledOnASpecificDay(): ScheduledEvent[]  {
     let firstPeriod = this.getFirstScheduledPeriod(); //TODO: check if in any period?
-    return firstPeriod.scheduledEvents.filter(scheduledEvent => scheduledEvent.configuredEvent.schedule.eventStart instanceof Day);
+    let eventsOnADayInFirstPeriod = firstPeriod.getAllScheduledEvents().filter(scheduledEvent => scheduledEvent.configuredEvent.schedule.eventStart instanceof Day);
+    console.log("getEventsOnScheduledOnASpecificDay # eventsOnADayInFirstPeriod: " + eventsOnADayInFirstPeriod.length);
+    return eventsOnADayInFirstPeriod;
   }
 
   // anyEventsToSchedule(timeline): boolean {

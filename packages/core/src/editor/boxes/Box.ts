@@ -105,7 +105,7 @@ export abstract class Box {
         }
         const childrenReversed = this.children.concat().reverse();
         for (const child of childrenReversed) {
-            const leafChild = child.lastLeaf;
+            const leafChild: Box = child.lastLeaf;
             if (!!leafChild) {
                 return leafChild;
             }
@@ -264,16 +264,19 @@ export abstract class Box {
 
     /**
      * This function is called to set the focus on this element programmatically. Because of
-     * asynchonicity and both mobx and svelte reactivity, this is done as follows.
+     * asynchronicity and both mobx and svelte reactivity, this is done as follows.
      * 1. The box model is changed as requested by the user or programmatically.
      * 2. The 'editor.selectedBox' attribute gets a new value.
      * 3. The RenderComponent determines which of the shown boxes needs the focus, based
      * on 'editor.selectedBox', and the setFocus() method of this box is called.
      * 4. In various boxes the setFocus() method is overwritten by the Svelte component that
      * shows the box. Thus, the correct handling of the focus is done by this Svelte component.
+     * 5. If this box does not have a component, i.e. it is not shown in the current projection
+     * AND this method is not overridden, then the focus will be set to the parent box.
      */
     setFocus: () => void = async () => {
-        console.error(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id);
+        console.log(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id + ", referring to parent");
+        this.parent?.setFocus();
     };
 
     /**

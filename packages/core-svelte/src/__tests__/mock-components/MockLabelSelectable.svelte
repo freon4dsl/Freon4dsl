@@ -1,10 +1,9 @@
 <script lang="ts">
     import LabelComponent from "../../lib/components/LabelComponent.svelte";
-    import { LabelBox, FreEditor } from "@freon4dsl/core";
+    import { LabelBox } from "@freon4dsl/core";
     // Parameters
     export let box1: LabelBox;
     export let box2: LabelBox;
-    export let editor: FreEditor;
 
 </script>
 
