@@ -24,6 +24,7 @@
         FreEditor,
         FreLogger,
         Box, BoolDisplay, isBooleanControlBox,
+        NumberDisplay, isNumberControlBox,
         isElementBox, isOptionalBox2, isMultiLineTextBox
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
@@ -46,6 +47,7 @@
     import CheckBoxComponent from "$lib/components/CheckBoxComponent.svelte";
     import RadioComponent from "$lib/components/RadioComponent.svelte";
     import SwitchComponent from "$lib/components/SwitchComponent.svelte";
+    import NumericSliderComponent from "$lib/components/NumericSliderComponent.svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -116,6 +118,8 @@
             <SwitchComponent box={box} editor={editor} design="slider"/>
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
             <SwitchComponent box={box} editor={editor} design="inner"/>
+        {:else if isNumberControlBox(box) && box.showAs === NumberDisplay.HORIZONTAL_STEP_SLIDER}
+            <NumericSliderComponent box={box} editor={editor}/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>
         {:else if isGridBox(box) }

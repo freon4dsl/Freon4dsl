@@ -6,6 +6,7 @@ import { FreEditor } from "../FreEditor";
 import {
     Box,
     BooleanControlBox,
+    NumberControlBox,
     ActionBox,
     LabelBox,
     TextBox,
@@ -32,6 +33,7 @@ let actionCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
 let boolCache: BoxCache<BooleanControlBox> = {};
+let numberCache: BoxCache<NumberControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
@@ -67,6 +69,7 @@ export class BoxFactory {
         labelCache = {};
         textCache = {};
         boolCache = {};
+        numberCache = {};
         selectCache = {};
         // indentCache = {};
         optionalCache = {};
@@ -189,7 +192,7 @@ export class BoxFactory {
     static bool(element: FreNode,
                 role: string,
                 getBoolean: () => boolean,
-                setBoolean: (text: boolean) => void,
+                setBoolean: (value: boolean) => void,
                 initializer?: Partial<BooleanControlBox>
                 ): BooleanControlBox {
         if (cacheBooleanOff) {
@@ -202,6 +205,27 @@ export class BoxFactory {
         // 2. Apply the other arguments in case they have changed
         result.$getBoolean = getBoolean;
         result.$setBoolean = setBoolean;
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static number(element: FreNode,
+                role: string,
+                getNumber: () => number,
+                setNumber: (value: number) => void,
+                initializer?: Partial<NumberControlBox>
+    ): NumberControlBox {
+        if (cacheBooleanOff) {
+            return new NumberControlBox(element, role, getNumber, setNumber, initializer);
+        }
+        // 1. Create the Boolean box, or find the one that already exists for this element and role
+        const creator = () => new NumberControlBox(element, role, getNumber, setNumber, initializer);
+        const result: NumberControlBox = this.find<NumberControlBox>(element, role, creator, numberCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.$getNumber = getNumber;
+        result.$setNumber = setNumber;
         FreUtils.initializeObject(result, initializer);
 
         return result;

@@ -28,6 +28,7 @@ concept BaseProduct {
     isApprovedLevel2: boolean;
     isApprovedLevel3: boolean;
     yieldsProfit: boolean;
+    range: number;
     theme: InsuranceTheme;          // the 'kind' of insurance
     parts: InsurancePart[];         // all parts of this product
 }
@@ -80,7 +81,7 @@ concept Parameter  {
 
 /* This concept is used wherever an explicit type can be used,
  * be it either a referred type (i.e. the name of a type that is known),
- * or declared type (i.e. a type delcaration that is made on-the-spot).
+ * or declared type (i.e. a type declaration that is made on-the-spot).
  */
 abstract concept DocuType {
 }

@@ -31,7 +31,7 @@ import {
     LOG2USER,
     Names,
     FREON_CORE,
-    Roles, ParseLocationUtil
+    Roles
 } from "../../../utils";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
 
@@ -421,9 +421,6 @@ export class ProjectionTemplate {
         if (property === null || property === undefined) {
             return '';
         }
-        if (property.name === "yieldsProfit") {
-            console.log("yieldsProfit is in projection: " + ParseLocationUtil.location(item));
-        }
         if (property instanceof FreMetaPrimitiveProperty) {
             result += this.primitivePropertyProjection(property, elementVarName, item.boolInfo, item.listInfo);
         } else if (property instanceof FreMetaConceptProperty) {
@@ -568,9 +565,6 @@ export class ProjectionTemplate {
                 let falseKeyword: string = this.falseKeyword;
                 let displayType: string = '';
                 displayType = this.getDisplayTypeFrom(this.stdBoolDisplayType);
-                if (property.name === "yieldsProfit") {
-                    console.log("yieldsProfit.boolInfo: " + boolInfo?.toString());
-                }
                 if (!!boolInfo) {
                     if (!!boolInfo.keywords) {
                         trueKeyword = boolInfo.keywords.trueKeyword;
