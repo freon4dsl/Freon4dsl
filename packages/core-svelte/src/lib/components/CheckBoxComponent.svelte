@@ -15,8 +15,7 @@
     let inputElement: HTMLInputElement;
     let style: string;
     let cssClass: string;
-    let value
-        $: value = box.getBoolean();
+    let value = box.getBoolean();
 
     /**
      * This function sets the focus on this element programmatically.
@@ -27,23 +26,25 @@
     async function setFocus(): Promise<void> {
         inputElement.focus();
     }
+    const refresh = (why?: string): void => {
+        LOGGER.log("REFRESH BooleanControlBox: " + why);
+        value = box.getBoolean();
+    };
     onMount(() => {
         value = box.getBoolean();
         box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
     afterUpdate(() => {
         box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
     const onClick = (event: MouseEvent) => {
         LOGGER.log("CheckBoxComponent.onClick for box " + box.role + ", value:" + value);
-        // value = !value;
         box.setBoolean(!value);
         editor.selectElementForBox(box);
         event.stopPropagation();
     }
-    // $: {
-    //     console.log("value bool is " + value + ", box.value is " + box.getBoolean());
-    // }
 </script>
 
 <span class="checkbox {cssClass}"

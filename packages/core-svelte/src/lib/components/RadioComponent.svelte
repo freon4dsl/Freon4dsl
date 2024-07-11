@@ -2,9 +2,11 @@
     /**
      * This component shows a boolean value as checkbox.
      */
-    import {BooleanControlBox, FreEditor} from "@freon4dsl/core";
+    import {BooleanControlBox, FreEditor, FreLogger} from "@freon4dsl/core";
     import {afterUpdate, onMount} from "svelte";
     import {selectedBoxes} from "$lib/index.js";
+
+    const LOGGER = new FreLogger("RadioComponent");
 
     export let editor: FreEditor;
     export let box: BooleanControlBox;
@@ -25,12 +27,18 @@
     async function setFocus(): Promise<void> {
         inputElement1.focus();
     }
+    const refresh = (why?: string): void => {
+        LOGGER.log("REFRESH BooleanControlBox: " + why);
+        value = box.getBoolean();
+    };
     onMount(() => {
         value = box.getBoolean();
         box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
     afterUpdate(() => {
         box.setFocus = setFocus;
+        box.refreshComponent = refresh;
     });
     const onChange = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
         // console.log("RadioComponent.onChange for box " + box.role + ", value:" + value);
@@ -42,12 +50,9 @@
         event.stopPropagation();
     }
     const onClick = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
-        // console.log("RadioComponent.onChange for box " + box.role + ", value:" + value);
+        // console.log("RadioComponent.onClick for box " + box.role + ", value:" + value);
         event.stopPropagation();
     }
-    // $: {
-    //     console.log("value bool is " + value + ", box.value is " + box.getBoolean());
-    // }
 </script>
 
 <span class="radio {cssClass}"
