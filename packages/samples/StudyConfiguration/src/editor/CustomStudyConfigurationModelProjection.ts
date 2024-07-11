@@ -4,7 +4,7 @@ import {
     Box,
     GridCellBox,
     LabelBox,
-    SvgBox,
+    IconBox,
     GridBox,
     createDefaultExpressionBox,
     ActionBox,
@@ -15,6 +15,7 @@ import {
     BoolDisplay
 } from "@freon4dsl/core";
 import { StudyConfiguration, Description, Period, Event } from "../language/gen";
+import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * Class CustomStudyConfigurationModelProjection provides an entry point for the language engineer to
@@ -116,7 +117,8 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
         return BoxFactory.verticalLayout(period, "Period-overall", "", [
             BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "",
                 [
-                    BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1"),
+                    new IconBox(period, "draggrip", faGripVertical),
+                    BoxUtil.labelBox(period, "Period A:", "top-1-line-0-item-1"),
                     BoxUtil.textBox(period, "name")                   
                 ],
                 { selectable: false }

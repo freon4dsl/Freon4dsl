@@ -33,7 +33,8 @@ yarn-debug.log
 yarn-error.log
 
 # generated docs
-docs/*
+# docs/*
+# /docs/
 
 # generated files
 gen/
@@ -68,7 +69,6 @@ packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-
 
 /packages/test/src/testDefinedScoper/defs/Language.ast
 /packages/test/src/testDefinedScoper/__tests__/ModelCreator.ts
-/docs/
 /packages/server/modelstore-example/APEKOOL/
 /packages/server/modelstore-example/EMPTY-MODEL/
 /packages/server/modelstore-example/ExtraModel/

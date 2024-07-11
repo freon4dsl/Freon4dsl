@@ -4,6 +4,7 @@ import EmptyLineComponent from '$lib/components/EmptyLineComponent.svelte';
 import ExpandableComponent from '$lib/components/ExpandableComponent.svelte';
 import FreonComponent from '$lib/components/FreonComponent.svelte';
 import GroupComponent from '$lib/components/GroupComponent.svelte';
+import IconComponent from '$lib/components/IconComponent.svelte';
 import IndentComponent from '$lib/components/IndentComponent.svelte';
 import LabelComponent from '$lib/components/LabelComponent.svelte';
 import ListComponent from '$lib/components/ListComponent.svelte';
@@ -37,7 +38,8 @@ export {
     TableCellComponent,
     TextComponent,
     TextDropdownComponent,
-    SvgComponent
+    SvgComponent,
+    IconComponent
 }
 
 export * from "$lib/components/svelte-utils/index.js";
