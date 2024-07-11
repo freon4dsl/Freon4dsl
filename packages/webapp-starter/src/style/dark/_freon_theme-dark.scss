@@ -34,6 +34,10 @@
   @include linear-progress.buffer-color(theme.$red-100);
 }
 
+:focus {
+  outline: none;
+}
+
 // status-bar style is used for the StatusBar component above the editor
 .status-bar {
   //--freon-colors-bg-status: #4f9a94;
@@ -47,6 +51,16 @@
   --freon-colors-slider: #{theme.$on-secondary};    /* The color of the slider between the error/search pane and the editor */
 }
 
+.text-box-action {
+  --freon-text-component-color: rgb(194, 194, 194);
+}
+.text-box-select {
+  --freon-text-component-color: rgb(96, 196, 96);
+}
+.text-box-text {
+  --freon-text-component-color: rgb(133, 186, 255);
+}
+
 /* The follwoing are CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
 /* Change the values as you like. */
 /* Note that we need to use a different syntax grato be able to use SCSS variables as value
@@ -54,7 +68,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 .editor-part {
   box-sizing: border-box;
   /* Selectable */
-  --freon-selected-background-color: #{gc.$mac-gray-900t};
+  --freon-selected-background-color: #{gc.$mac-gray-50t};
   --freon-selected-outline-color: #{gc.$mac-primary-900};
   --freon-selected-outline-width: 0px;
   --freon-selected-outline-style: solid;
@@ -84,34 +98,34 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-dropdownitem-component-hover-background-color: inherit;
 
    /* Text colors */
-  --freon-text-component-color: #{gc.$mac-primary-900};
+  --freon-text-component-color: #{gc.$mac-primary-200};
   --freon-text-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
   --freon-text-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
   --freon-text-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
   --freon-text-component-font-family: "Roboto";	/* The font size of the text, unless set otherwise by the projection */
-  --freon-text-component-padding: 0px 3px 0px 3px;
-  --freon-text-component-margin: 1px;
-  --freon-text-component-placeholder-color: #{gc.$mac-primary-900};
+  --freon-text-component-padding: 0px 1px 0px 1px;
+  --freon-text-component-margin: 0px 1px 0px 2px;
+  --freon-text-component-placeholder-color: #{gc.$mac-primary-200};
   --freon-text-component-actionplaceholder-color: #{gc.$mac-gray-100};
 
   /* Label colors */
-  --freon-label-component-color: #{gc.$mac-gray-100};
+  --freon-label-component-color: #{gc.$mac-gray-400};
   --freon-label-component-background-color: inherit;
   --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-family: "Roboto";	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-padding: 0px 1px 0px 1px;
-  --freon-label-component-margin: 1px;
+  --freon-label-component-margin: 0px 0px 0px 4px;
 
   /* Group colors */
   --freon-group-component-font-style: normal; 
-  --freon-group-component-font-weight: bold;
+  --freon-group-component-font-weight: normal;
   --freon-group-component-font-family: "Roboto";
   --freon-group-component-font-size: 0.875rem;
   --freon-group-component-margin: 0px;
   --freon-group-component-padding: 0px;
-  --freon-group-component-color: #{gc.$mac-primary-100};
+  --freon-group-component-color: #{gc.$mac-white};
   --freon-group-component-background-color: #{gc.$mac-primary-900t};
  
   /* Popup */

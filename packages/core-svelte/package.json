@@ -16,7 +16,7 @@
   "scripts": {
     "clean": "rm -rf node_modules/",
     "dev": "tsc --noEmit --watch && vite dev",
-    "build": "tsc --noEmit && vite build && npm run package && postcss src/tailwind.css -o dist/tailwind.css",
+    "build": "tsc --noEmit && vite build && npm run package",
     "build:css": "postcss src/tailwind.css -o dist/tailwind.css",
     "build-dev": "tsc --noEmit && vite build && npm run package",
     "preview": "vite preview",

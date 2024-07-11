@@ -2,6 +2,7 @@ import flowbitePlugin from 'flowbite/plugin';
 import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
+  // prefix: 'tw-',
   content: ['./src/**/*.{html,js,svelte,ts}',
             './src/lib/**/*.{html,js,svelte,ts}'
   ],
