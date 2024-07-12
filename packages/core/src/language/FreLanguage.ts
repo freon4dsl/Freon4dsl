@@ -30,6 +30,7 @@ export type FreLanguageModel = {
     subConceptNames?: string[];
     properties: Map<string, FreLanguageProperty>;
     constructor: (id?: string) => FreModel;
+    creator: (data: Partial<FreModel>) => FreModel;
     referenceShortcut?: ReferenceShortcut;
 };
 export type FreLanguageModelUnit = {
@@ -45,6 +46,7 @@ export type FreLanguageModelUnit = {
     fileExtension: string;
     properties: Map<string, FreLanguageProperty>;
     constructor: (id?: string) => FreModelUnit;
+    creator: (data: Partial<FreModelUnit>) => FreModelUnit;
     trigger: string;
     referenceShortcut?: ReferenceShortcut;
 };
@@ -61,6 +63,7 @@ export type FreLanguageConcept = {
     subConceptNames: string[];
     properties: Map<string, FreLanguageProperty>;
     constructor: (id?: string) => FreNode;
+    creator: (data: Partial<FreNode>) => FreNode;
     // Used by editor, therefore only in Concept
     trigger: string;
     referenceShortcut?: ReferenceShortcut;
@@ -76,6 +79,8 @@ export type FreLanguageInterface = {
     isAbstract?: boolean;
     subConceptNames: string[];
     properties: Map<string, FreLanguageProperty>;
+    constructor?: (id?: string) => FreNode | undefined;
+    creator?: (data: Partial<FreNode>) => FreNode | undefined;
     referenceShortcut?: ReferenceShortcut;
 };
 

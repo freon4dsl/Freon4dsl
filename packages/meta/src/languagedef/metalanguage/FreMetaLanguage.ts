@@ -1,3 +1,4 @@
+import { LangUtil } from "../../utils/index";
 import { MetaElementReference } from "./internal";
 // This import cannot be shortened. Importing "../../utils" results in circular dependencies
 import { FreMetaDefinitionElement } from "../../utils/FreMetaDefinitionElement";
@@ -90,6 +91,13 @@ export class FreMetaLanguage extends FreMetaLangElement {
     }
 }
 
+export // Type to keep info about a part that needs to be initialized and its implementing concept
+type PartInitializer = {
+    part: FreMetaConceptProperty,   // the part that needs initializing
+    concept: FreMetaConcept         // T he class that needs tp be constructed
+}
+
+
 export abstract class FreMetaClassifier extends FreMetaLangElement {
     private static __ANY: FreMetaClassifier;
 
@@ -163,6 +171,20 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
         return result;
     }
 
+    allSingleNonOptionalPartsInitializers(): PartInitializer[] {
+        return this.allParts().flatMap(prop => {
+            if (!prop.isPrimitive && !prop.implementedInBase && prop.isPart && !prop.isList && !prop.isOptional && !prop.hasLimitedType) {
+                const subs = LangUtil.subConceptsIncludingSelf(prop.type)
+                if ((subs.length === 1) && !(subs[0].isAbstract) && !(subs[0].name === "FreType")) {
+                    return [{ part: prop, concept: subs[0] }]
+                } else {
+                    return []
+                }
+            }
+            return []
+        })
+    }
+    
     nameProperty(): FreMetaPrimitiveProperty | undefined {
         return this.allPrimProperties().find(p => p.name === "name" && p.type === FreMetaPrimitiveType.identifier);
     }
@@ -224,7 +246,7 @@ export class FreMetaUnitDescription extends FreMetaClassifier {
 
 export class FreMetaInterface extends FreMetaClassifier {
     base: MetaElementReference<FreMetaInterface>[] = [];
-
+    
     allPrimProperties(): FreMetaPrimitiveProperty[] {
         let result: FreMetaPrimitiveProperty[] = []; // return a new array
         result.push(...this.primProperties);
