@@ -133,15 +133,15 @@ export class ModelTemplate {
                 newUnit(typename: ${Names.metaType()}) : ${Names.modelunit()}  {
                     switch (typename) {
                         ${language.modelConcept.allParts().map(part =>
-            `case "${Names.classifier(part.type)}": {
-                                const unit: ${Names.classifier(part.type)} = new ${Names.classifier(part.type)}();
-                                    ${part.isList ?
-                `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
-                :
-                `this.${part.name} = unit as ${Names.classifier(part.type)}`
-            }
-                                    return unit;
-                                }`
+                            `case "${Names.classifier(part.type)}": {
+                                const unit: ${Names.classifier(part.type)} = ${Names.classifier(part.type)}.create({});
+                                ${part.isList ?
+                                   `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
+                                   :
+                                  `this.${part.name} = unit as ${Names.classifier(part.type)}`
+                                 }
+                                return unit;
+                            }`
         ).join("\n")
         }
                     }

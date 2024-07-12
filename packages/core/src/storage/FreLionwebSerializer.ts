@@ -136,6 +136,7 @@ export class FreLionwebSerializer implements FreSerializer {
         const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, node);
         // LOGGER.log("Classifier with id " + conceptId + " classifier " + this.language.classifierById(conceptId));
         const classifier = this.language.classifierByKey(conceptMetaPointer.key);
+        // @ts-expect-error TS2345
         if (isNullOrUndefined(classifier)) {
             LOGGER.log(`1 Cannot read json 3: ${conceptMetaPointer.key} unknown.`);
             return null;
