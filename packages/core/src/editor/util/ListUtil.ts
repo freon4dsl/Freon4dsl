@@ -226,7 +226,7 @@ function addListElement(editor: FreEditor, listParent: FreNode, propertyName: st
     // targetPropertyName ${propertyName}, index: ${index}`);
 
     // make the change, if the property is a list and the type of the new element conforms to the type of elements in the list
-    const newElement: FreNode = FreLanguage.getInstance().classifier(typeOfAdded)?.constructor();
+    const newElement: FreNode = FreLanguage.getInstance().classifier(typeOfAdded)?.creator({});
     if (newElement === undefined || newElement === null) {
         console.error("New element undefined"); // TODO Find out why this happens sometimes
         return;

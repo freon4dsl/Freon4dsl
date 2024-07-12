@@ -105,6 +105,9 @@ export class LangUtil {
      */
     public static subConcepts(self: FreMetaClassifier): FreMetaConcept[] {
         const result: FreMetaConcept[] = [];
+        if (self.language === undefined) {
+            return []
+        }
         for (const cls of self.language.concepts) {
             if (LangUtil.superClassifiers(cls).includes(self)) {
                 result.push(cls);
@@ -119,6 +122,9 @@ export class LangUtil {
      * @param self
      */
     public static subConceptsIncludingSelf(self: FreMetaClassifier): FreMetaConcept[] {
+        if (self === undefined) {
+            return []
+        }
         const result = LangUtil.subConcepts(self);
         if (self instanceof FreMetaConcept) {
             result.push(self);
