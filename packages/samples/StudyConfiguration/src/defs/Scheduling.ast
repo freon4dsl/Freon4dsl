@@ -5,7 +5,7 @@ interface EventStart {
 
 
 concept When implements EventStart {
-    startWhen: EventCompletedExpression;
+    startWhen: FirstScheduledExpression;
 }
 
 concept Day implements EventStart {
