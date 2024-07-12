@@ -39,7 +39,7 @@ export class FreCreateSiblingCommand extends FreCommand {
         const propName: string = ownerDescriptor.propertyName;
         let theModelElement = ownerDescriptor.owner[propName];
 
-        const newElement: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.constructor();
+        const newElement: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.creator({});
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
             console.error("FreCreateSiblingCommand: Unexpected new element undefined");

@@ -223,23 +223,31 @@ export class ConceptUtils {
     }
 
     public static makeStaticCreateMethod(concept: FreMetaClassifier, myName: string): string {
+        const allPartsToInitialize = concept.allSingleNonOptionalPartsInitializers()
+
         return `/**
                  * A convenience method that creates an instance of this class
                  * based on the properties defined in 'data'.
-                 * @param data
+                 * @param data partial object
                  */
                 static create(data: Partial<${myName}>): ${myName} {
-                    const result = new ${myName}();
+                    const result = new ${myName}(data.$id);
                     ${concept.allProperties().map(freProp =>
                         `${(freProp.isList) ?
                             `if (!!data.${freProp.name}) {
-                                            data.${freProp.name}.forEach(x =>
-                                                result.${freProp.name}.push(x)
-                                            );
-                                        }`
-                            : `if (!!data.${freProp.name}) {
-                                            result.${freProp.name} = data.${freProp.name};
-                                        }`
+                                data.${freProp.name}.forEach(x =>
+                                    result.${freProp.name}.push(x)
+                                );
+                            }`
+                            :
+                            `if (!!data.${freProp.name}) {
+                                result.${freProp.name} = data.${freProp.name};
+                            ${allPartsToInitialize.find(ip => ip.part === freProp) ?
+                                    `} else {
+                                        result.${freProp.name} = ${Names.concept(allPartsToInitialize.find(ip => ip.part === freProp)?.concept)}.create({})`
+                                   : ``
+                               }   
+                            }`
                         }`).join("\n")
                     }
                     if (!!data.parseLocation) {
