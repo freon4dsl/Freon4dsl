@@ -2,6 +2,7 @@ import { FreLanguage } from "@freon4dsl/core";
 import { DemoAttributeType } from "../language/gen";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 // limited DemoAttributeType implements Type {
 //     name: string;
@@ -16,10 +17,9 @@ import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 
 describe("Checking stdlib for Demo", () => {
     let stdlib: DemoStdlib;
-    beforeEach(done => {
+    beforeEach(() => {
         DemoEnvironment.getInstance();
         stdlib = FreLanguage.getInstance().stdLib as DemoStdlib;
-        done();
     });
 
     test("all predefined instances of limited concepts should be found", () => {

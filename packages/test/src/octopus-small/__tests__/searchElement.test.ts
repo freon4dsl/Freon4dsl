@@ -9,6 +9,7 @@ import {
     UmlPart
 } from "../language/gen";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
+import { describe, test, expect } from "vitest"
 
 const writer = OctopusModelEnvironment.getInstance().writer;
 const reader = OctopusModelEnvironment.getInstance().reader;

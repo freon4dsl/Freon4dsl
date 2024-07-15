@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Testing Unparser Unparse DemoModel Instance 'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"' 1`] = `
+exports[`Testing Unparser > Unparse DemoModel Instance > 'determine(AAP : TEST1) : TEST2 = "Hello Demo" + "Goodbye"' 1`] = `
 "DemoFunction determine {
     expression ' "Hello Demo" ' + ' "Goodbye" '
     parameters
@@ -9,7 +9,7 @@ exports[`Testing Unparser Unparse DemoModel Instance 'determine(AAP : TEST1) : T
 }"
 `;
 
-exports[`Testing Unparser Unparse DemoModel Instance complete example model with simple attribute types 1`] = `
+exports[`Testing Unparser > Unparse DemoModel Instance > complete example model with simple attribute types 1`] = `
 "model DemoModel_with_inheritance {
 main:
 types:
@@ -132,7 +132,7 @@ model wide functions:
 }"
 `;
 
-exports[`Testing Unparser Unparse DemoModel Instance complete example model with simple attribute types 2`] = `
+exports[`Testing Unparser > Unparse DemoModel Instance > complete example model with simple attribute types 2`] = `
 "model CorrectUnit {
 main:
 types:

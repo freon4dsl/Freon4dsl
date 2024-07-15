@@ -1,6 +1,7 @@
 import { Demo, DemoUnit } from "../language/gen";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
+import { describe, test, expect } from "vitest"
 
 describe("Test the parser", () => {
     test( ": read two units and create a model", () => {

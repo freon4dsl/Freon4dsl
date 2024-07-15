@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Parser properties of type  Limited Concept  1`] = `
+exports[`Parser properties of type >  Limited Concept  1`] = `
 LimitedTest {
   "$$owner": TestParserModel {
     "$$owner": null,
@@ -405,7 +405,7 @@ LimitedTest {
 }
 `;
 
-exports[`Parser properties of type  Part  1`] = `
+exports[`Parser properties of type >  Part  1`] = `
 PartsTest {
   "$$owner": TestParserModel {
     "$$owner": null,
@@ -568,7 +568,7 @@ PartsTest {
 }
 `;
 
-exports[`Parser properties of type  Part and Sub Parts  1`] = `
+exports[`Parser properties of type >  Part and Sub Parts  1`] = `
 PartsTest {
   "$$owner": TestParserModel {
     "$$owner": null,
@@ -1473,7 +1473,7 @@ PartsTest {
 }
 `;
 
-exports[`Parser properties of type  Part with Optionals present 1`] = `
+exports[`Parser properties of type >  Part with Optionals present 1`] = `
 PartsTest {
   "$$owner": TestParserModel {
     "$$owner": null,
@@ -1726,7 +1726,7 @@ PartsTest {
 }
 `;
 
-exports[`Parser properties of type  Primitive  1`] = `
+exports[`Parser properties of type >  Primitive  1`] = `
 PrimitivesTest {
   "$$owner": TestParserModel {
     "$$owner": null,
@@ -1913,7 +1913,7 @@ PrimitivesTest {
 }
 `;
 
-exports[`Parser properties of type  Primitive with Keyword projection  1`] = `
+exports[`Parser properties of type >  Primitive with Keyword projection  1`] = `
 PrimsWithKeywordTest {
   "$$owner": TestParserModel {
     "$$owner": null,
@@ -2038,7 +2038,7 @@ PrimsWithKeywordTest {
 }
 `;
 
-exports[`Parser properties of type  Ref  1`] = `
+exports[`Parser properties of type >  Ref  1`] = `
 RefsTest {
   "$$owner": TestParserModel {
     "$$owner": null,
@@ -2403,7 +2403,7 @@ RefsTest {
 }
 `;
 
-exports[`Parser properties of type  Ref with Optionals present 1`] = `
+exports[`Parser properties of type >  Ref with Optionals present 1`] = `
 RefsTest {
   "$$owner": TestParserModel {
     "$$owner": null,
