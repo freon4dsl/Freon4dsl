@@ -7,16 +7,8 @@
      * This component supports drag and drop.
      */
     import { flip } from "svelte/animate";
-    import {
-        Box,
-        dropListElement,
-        isActionBox,
-        isNullOrUndefined,
-        FreLanguage,
-        ListBox,
-        ListDirection,
-        ListElementInfo,
-        MenuOptionsType,
+    import { Box, dropListElement, isActionBox, isNullOrUndefined, FreLanguage,
+        ListBox, ListDirection, ListElementInfo, MenuOptionsType,
         moveListElement,
         FreEditor,
         FreLogger
@@ -238,11 +230,11 @@
         white-space: nowrap;
         display: grid;
         padding: var(--freon-horizontallist-component-padding, 1px);
+        margin: var(--freon-horizontallist-component-margin, 1px);
         background-color: var(--freon-editor-component-background-color, white);
         border-color: var(--freon-horizontallist-component-border-color, darkgreen);
         border-width: var(--freon-horizontallist-component-border-width, 0pt);
         border-style: var(--freon-horizontallist-component-border-style, solid);
-        margin: var(--freon-horizontallist-component-margin, 1px);
         box-sizing: border-box;
         height:100%;
     }
@@ -252,15 +244,19 @@
         /*grid-template-columns: var(--fre-list-grid-template-columns);*/
         /*display: grid;*/
         /*background-color: var(--freon-editor-component-background-color, white);*/
-        padding: var(--freon-verticallist-component-padding, 1px);
-        margin: var(--freon-verticallist-component-margin, 1px);
+        /*padding: var(--freon-verticallist-component-padding, 1px);*/
+        /*margin: var(--freon-verticallist-component-margin, 1px);*/
         border-color: var(--freon-verticallist-component-border-color, red);
         border-width: var(--freon-verticallist-component-border-width, 0pt);
         border-style: var(--freon-verticallist-component-border-style, solid);
 
-        /*margin-top: 10px;*/
         box-sizing: border-box;
         width:100%;
+        list-style-type: none;
+    }
+
+    .list-item {
+       margin-top: 0.5rem; 
     }
 </style>
 

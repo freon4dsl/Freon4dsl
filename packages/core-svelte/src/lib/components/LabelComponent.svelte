@@ -66,9 +66,11 @@
         font-weight: var(--freon-label-component-font-weight, normal);
         font-size: var(--freon-label-component-font-size, inherit);
         font-family: var(--freon-label-component-font-family, "inherit");
+        font-variant: var(--freon-label-component-font-variant, "normal");
         padding: var(--freon-label-component-padding, 1px);
         margin: var(--freon-label-component-margin, 1px);
         white-space: normal;
         display: inline-block;
     }
+
 </style>

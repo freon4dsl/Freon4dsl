@@ -1,10 +1,5 @@
 import { FreNode } from "../../ast";
-import {
-    isNullOrUndefined,
-    FreUtils,
-    FRE_BINARY_EXPRESSION_LEFT,
-    FRE_BINARY_EXPRESSION_RIGHT
-} from "../../util";
+import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util";
 import { FreLogger } from "../../logging";
 
 const LOGGER = new FreLogger("Box");

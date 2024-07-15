@@ -3,17 +3,7 @@ import { BehaviorExecutionResult } from "../util";
 import { FreLogger } from "../../logging";
 import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreEditor } from "../FreEditor";
-import {
-    Box,
-    BooleanControlBox,
-    ActionBox,
-    LabelBox,
-    TextBox,
-    SelectOption,
-    SelectBox,
-    IndentBox,
-    GroupBox,
-    OptionalBox,
+import { Box, BooleanControlBox, ActionBox, LabelBox, TextBox, SelectOption, SelectBox, IndentBox, GroupBox, OptionalBox,
     HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
     HorizontalLayoutBox, VerticalLayoutBox,
     TableCellBox, OptionalBox2
@@ -161,12 +151,12 @@ export class BoxFactory {
         return result;
     }
 
-    static label(element: FreNode, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>): LabelBox {
+    static label(element: FreNode, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>, cssClass?: string): LabelBox {
         if (cacheLabelOff) {
-            return new LabelBox(element, role, getLabel, initializer);
+            return new LabelBox(element, role, getLabel, initializer, cssClass);
         }
         // 1. Create the label box, or find the one that already exists for this element and role
-        const creator = () => new LabelBox(element, role, getLabel, initializer);
+        const creator = () => new LabelBox(element, role, getLabel, initializer, cssClass);
         const result: LabelBox = this.find<LabelBox>(element, role, creator, labelCache);
 
         // 2. Apply the other arguments in case they have changed
@@ -213,9 +203,9 @@ export class BoxFactory {
         return result;
     }
 
-    static group(element: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number),childBox: Box, initializer?: Partial<GroupBox>): GroupBox {
+    static group(element: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number),childBox: Box, initializer?: Partial<GroupBox>, cssClass?: string): GroupBox {
         if (cacheGroupOff) {
-            return new GroupBox(element, role, getLabel, getLevel, childBox, initializer);
+            return new GroupBox(element, role, getLabel, getLevel, childBox, initializer, cssClass);
         }
         // 1. Create the  box, or find the one that already exists for this element and role
         const creator = () => new GroupBox(element, role, getLabel, getLevel, childBox, initializer);
@@ -250,11 +240,11 @@ export class BoxFactory {
     }
 
     static horizontalLayout(element: FreNode, role: string, // @ts-expect-error // todo remove this parameter and adjust the generation in meta
-                            propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
+                            propertyName: string, alignment: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {
-            return new HorizontalLayoutBox(element, role, children, initializer);
+            return new HorizontalLayoutBox(element, role, alignment, children, initializer);
         }
-        const creator = () => new HorizontalLayoutBox(element, role, children, initializer);
+        const creator = () => new HorizontalLayoutBox(element, role, alignment, children, initializer);
         const result: HorizontalLayoutBox = this.find<HorizontalLayoutBox>(element, role, creator, horizontalLayoutCache);
 
         // 2. Apply the other arguments in case they have changed

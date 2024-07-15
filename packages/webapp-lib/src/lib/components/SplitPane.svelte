@@ -102,14 +102,14 @@
     .sv-container {
         position: relative;
         width: 100vw;
-        height: calc(100vh - 96px); /* minus 96px, because this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 24 + 1 * 10) TODO change this comment */
+        height: calc(100vh - 48px);  /* height: calc(100vh - 96px); */
         min-height: 400px;
     }
     .sv-pane {
         position:absolute;
         float: left;
-        width: 100vw;
-        height: 100%;
+        width: 100%; /* 100vw; */
+        height: calc(100vh - 48px);  /* 100%; */
         box-sizing: border-box;
     }
     .mousecatcher {
@@ -165,14 +165,20 @@
 
 <!-- we use offsetWidth and offsetHeight instead of clientWidth and clientHeight, because these include any scrollbars -->
 <div class="sv-container" bind:this={svcontainer} >
-    <div class="sv-pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
+    <!-- <div class="sv-pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
         <slot name="a"></slot>
     </div>
 
     <div class="sv-pane" style="{dimension}: {100 - (pos)}%; top:{ topB}px; overflow: auto;" bind:offsetWidth={wb} bind:offsetHeight={hb}>
         <slot name="b"></slot>
+    </div> -->
+    <div class="sv-pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
+        <slot name="a"></slot>
     </div>
 
+    <div class="sv-pane" style="{dimension}: {100 - (pos)}%; top:0px; {side}: {pos}%; overflow: auto;" bind:offsetWidth={wb} bind:offsetHeight={hb}>
+        <slot name="b"></slot>
+    </div>
     {#if !fixed}
         <div class="{type} divider" style="{side}: calc({pos}% - 8px)" use:drag={setPos} use:touchDrag={setTouchPos}></div>
     {/if}

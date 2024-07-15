@@ -5,6 +5,7 @@ import { FreNodeReference } from "@freon4dsl/core";
 import { EventInstance, TimelineInstanceState, Timeline, PeriodInstance } from "../timeline/Timeline";
 import { ScheduledEvent, ScheduledEventState } from "../timeline/ScheduledEvent";
 import { ScheduledPeriod } from "../timeline/ScheduledPeriod";
+import { SvelteComponent_1 } from "svelte";
 
 // Setup the sim.js environment and an empty StudyConfiguration.
 export function setupStudyConfiguration(): StudyConfiguration{

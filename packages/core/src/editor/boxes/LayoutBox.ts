@@ -12,6 +12,7 @@ export enum ListDirection {
 export abstract class LayoutBox extends Box {
     kind: string = "LayoutBox";
     protected direction: ListDirection = ListDirection.HORIZONTAL;
+    protected alignment: string = "top";
     protected _children: Box[] = [];
 
     protected constructor(node: FreNode, role: string, children?: Box[], initializer?: Partial<LayoutBox>) {
@@ -116,6 +117,10 @@ export abstract class LayoutBox extends Box {
         return this.direction;
     }
 
+    getAlignment(): string {
+        return this.alignment;
+    }
+
     toString() {
         let result: string = "Layout: " + this.role + " " + this.direction.toString() + "<";
         for (const child of this.children) {
@@ -130,9 +135,10 @@ export abstract class LayoutBox extends Box {
 export class HorizontalLayoutBox extends LayoutBox {
     kind: string = "HorizontalLayoutBox";
 
-    constructor(element: FreNode, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>) {
+    constructor(element: FreNode, role: string, alignment: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>) {
         super(element, role, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
+        this.alignment = alignment;
     }
 }
 

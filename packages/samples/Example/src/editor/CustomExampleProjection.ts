@@ -59,7 +59,7 @@ export class CustomExampleProjection implements FreProjection {
         return BoxFactory.horizontalLayout(
             doc,
             "Documentation-hlist-line-0",
-            "",
+            "", "center",
             [
                 BoxUtil.labelBox(doc, "doc start: ", "top-1-line-0-item-0"),
                 // BoxUtil.textBox(this._element as Documentation, "text"),

@@ -7,3 +7,29 @@ body {
   padding: 0;
   margin: 0;
 }
+
+.app-small-caps {
+  font-variant: all-small-caps !important;
+}
+
+.editor-part {
+  box-sizing: border-box;
+    /* Horizontal list - trbl */
+    --freon-horizontallist-component-padding: 0 0 10px 0;
+    --freon-horizontallist-component-margin: 0;
+    --freon-horizontallist-component-align-items: top;
+
+    /* Vertical list - trbl */
+    --freon-verticallist-component-padding: 0 0 1px 0;
+    --freon-verticallist-component-margin: 0px;
+
+    /* Horizontal layout - trbl */
+    --freon-horizontallayout-component-padding: 0 0 0 0;
+    --freon-horizontallayout-component-margin: 0px;
+    --freon-horizontallayout-component-align-items: top;
+
+    /* Vertical layout - trbl */
+    --freon-verticallayout-component-padding: 0 0 5px 0;
+    --freon-verticallayout-component-margin: 0;
+
+}

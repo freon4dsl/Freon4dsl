@@ -111,10 +111,11 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Label colors */
   --freon-label-component-color: #{gc.$mac-gray-400};
   --freon-label-component-background-color: inherit;
-  --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-family: "Roboto";	/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-size: 14px;
+  --freon-label-component-font-style: normal;	
+  --freon-label-component-font-weight: normal;	
+  --freon-label-component-font-family: "Roboto";	
+  --freon-label-component-font-variant: normal;
   --freon-label-component-padding: 0px 1px 0px 1px;
   --freon-label-component-margin: 0px 0px 0px 4px;
 
@@ -131,14 +132,6 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 
-  /* Horizontal list */
-  --freon-horizontallist-component-padding: 1px;
-  --freon-horizontallist-component-margin: 1px;
-  --freon-horizontallist-component-align-items: top;
-
-  /* Vertical list */
-  --freon-verticallist-component-padding: 0 0 0 1rem;
-  --freon-verticallist-component-margin: 0;
 
   /* Boolean components */
   --freon-boolean-accent-color: #{gc.$mac-primary-900};
@@ -213,4 +206,8 @@ body {
   margin: 0;
   box-sizing: border-box;
   --mdc-theme-primary: #{theme.$primary};
+}
+
+.app-green-font {
+  color: #00fcfc !important;
 }

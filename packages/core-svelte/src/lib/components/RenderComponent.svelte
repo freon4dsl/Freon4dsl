@@ -13,6 +13,7 @@
         isEmptyLineBox,
         isGridBox,
         isGroupBox,
+        isIconBox,
         isTableBox,
         isIndentBox,
         isLabelBox,
@@ -42,6 +43,7 @@
     import TextComponent from "./TextComponent.svelte";
     import TextDropdownComponent from "./TextDropdownComponent.svelte";
     import SvgComponent from "./SvgComponent.svelte";
+    import IconComponent from "./IconComponent.svelte";
     import { afterUpdate } from "svelte";
     import { selectedBoxes } from "$lib/index.js";
     import { componentId, setBoxSizes } from "$lib/index.js";
@@ -137,6 +139,8 @@
                 <OptionalComponentNew box={box} editor={editor}/>
             {:else if isSvgBox(box) }
                 <SvgComponent box={box}/>
+            {:else if isIconBox(box) }
+                <IconComponent box={box}/>
             {:else if isTableBox(box) }
                 <TableComponent box={box} editor={editor} />
             {:else if isTextBox(box) }

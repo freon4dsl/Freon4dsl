@@ -8,13 +8,7 @@
      */
     import { afterUpdate, onMount } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
-    import {
-        Box,
-        FreEditor,
-        FreLogger,
-        ListDirection,
-        LayoutBox
-    } from "@freon4dsl/core";
+    import {Box, FreEditor, FreLogger, ListDirection, LayoutBox } from "@freon4dsl/core";
     import { componentId } from "$lib/index.js";
 
     // Parameters
@@ -26,6 +20,7 @@
     let element: HTMLSpanElement;
     let children: Box[];
     let isHorizontal: boolean;
+    let alignment = 'center';
 
     async function setFocus(): Promise<void> {
         if (!!element) {
@@ -48,9 +43,25 @@
         id = !!box ? componentId(box) : 'layout-for-unknown-box';
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
+        alignment = box.getAlignment();
     };
     $: { // Evaluated and re-evaluated when the box changes.
         refresh("Refresh Layout box changed " + box?.id);
+    }
+    $: style = isHorizontal ? `align-items: ${getAlignment(alignment)};` : '';
+
+  
+    function getAlignment(alignment:any) {
+        switch (alignment) {
+            case 'top':
+                return 'flex-start';
+            case 'center':
+                return 'center';
+            case 'bottom':
+                return 'flex-end';
+            default:
+                return 'center';
+        }
     }
 </script>
 
@@ -60,6 +71,7 @@
       class:vertical="{!isHorizontal}"
       tabIndex={0}
       bind:this={element}
+      style="{style}"
 >
     {#if isHorizontal }
         {#each children as child (child.id)}
@@ -67,10 +79,6 @@
         {/each}
     {:else}
         {#each children as child, i (child.id)}
-<!--            {#if i > 0 && i < children.length && !(isEmptyLineBox(children[i - 1]))}
-                <br/>
-            {/if}
--->
             <RenderComponent box={child} editor={editor}/>
         {/each}
     {/if}
@@ -79,19 +87,19 @@
 <style>
     .layout-component {
         background: transparent;
-        padding: var(--freon-horizontallist-component-padding, 1px);
-        margin: var(--freon-horizontallist-component-margin, 1px);
         box-sizing: border-box;
     }
 
     .horizontal {
         white-space: nowrap;
-        /*display: inline-block; !* maybe use display: flex; ?? *!*/
         display: flex;
-        align-items: var(--freon-horizontallist-component-align-items, baseline);
+        padding: var(--freon-horizontallayout-component-padding, 1px);
+        margin: var(--freon-horizontallayout-component-margin, 1px);
     }
 
     .vertical {
         width: 100%;
+        padding: var(--freon-verticallayout-component-padding, 1px);
+        margin: var(--freon-verticallayout-component-margin, 1px);
     }
 </style>

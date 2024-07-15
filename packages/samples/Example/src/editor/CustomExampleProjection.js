@@ -35,7 +35,7 @@ var CustomExampleProjection = /** @class */ (function () {
     };
     ////////////////////////////////////////////////////////////////////
     CustomExampleProjection.prototype.createDocumentation = function (doc) {
-        return core_1.BoxFactory.horizontalLayout(doc, "Documentation-hlist-line-0", "", [
+        return core_1.BoxFactory.horizontalLayout(doc, "Documentation-hlist-line-0", "", "center", [
             core_1.BoxUtil.labelBox(doc, "doc start: ", "top-1-line-0-item-0"),
             // BoxUtil.textBox(this._element as Documentation, "text"),
             new core_1.MultiLineTextBox(doc, "exampleunit-documentation", function () { return doc.text; }, function (t) { doc.text = t; }),
