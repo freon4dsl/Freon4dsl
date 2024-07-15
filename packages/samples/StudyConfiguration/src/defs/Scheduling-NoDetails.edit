@@ -1,27 +1,27 @@
-editor default
+editor NoDetails precedence 5
 
 When {
     [
         when ${startWhen}
     ]
-    trigger = "When Some Condition Is True"
 } 
+
+StartDay {
+    [Start Day ]
+}
 
 Day {
     [
         day ${startDay}
     ]
-    trigger = "On a Specific Day"
 }
 
 StudyStart {
     [Study Start]
-    trigger = "At Study Start"
 } 
 
 AnyDay {
     [On Any Day]
-    trigger = "Any Day"
 } 
 
 RepeatCondition {
@@ -30,21 +30,18 @@ RepeatCondition {
     max  ${maxRepeats}  times
     until ${until}
     ]
-    trigger = "Max...Until"
 } 
 
 RepeatCount {
     [
         ${repeatCount} time(s)  
     ]
-    trigger = "Number of Times"
 } 
 
 EventTimeOfDay {
     [
         ${startHour}:${startMinute}   -    ${endHour}:${endMinute}
     ] 
-    trigger = "Time of Day"
 } 
 
 EventWindow {
@@ -52,23 +49,19 @@ EventWindow {
         ${daysBefore} day(s) before
         ${daysAfter}  day(s) after
     ]
-    trigger = "Before/After"
 }
 
 EventSchedule {
     [
     First Scheduled : ${eventStart}
     Then Repeats    : ${eventRepeat}
-    Window          : ${eventWindow}
-    Time of Day     : ${eventTimeOfDay}
     ]
-    trigger = "First, Repeats, Window..."
 } 
 
 
 EventReference {
-    [${event}]
-}
+    [${event} ${eventState} ]
+    referenceShortcut = ${event}}
 
 Days {
     [${count}]

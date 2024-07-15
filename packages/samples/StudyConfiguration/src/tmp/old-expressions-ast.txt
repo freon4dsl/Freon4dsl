@@ -1,0 +1,14 @@
+abstract expression StudyConfigExpression {
+}
+
+expression IfExpression base StudyConfigExpression {
+    condition: StudyConfigExpression;
+    whenTrue: StudyConfigExpression;
+    whenFalse: StudyConfigExpression;
+}
+
+expression LastDay base StudyConfigExpression {
+}
+
+expression NextVisit base StudyConfigExpression {
+}
