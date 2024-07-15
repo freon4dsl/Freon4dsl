@@ -7,11 +7,13 @@ export class IconBox extends Box {
     readonly kind = "IconBox";
 
     iconDef: IconDefinition = faQuestion;
+    cursorStyle: string = "default";
 
-    constructor(node: FreNode, role: string, iconDef: IconDefinition, initializer?: Partial<IconBox>) {
+    constructor(node: FreNode, role: string, iconDef: IconDefinition, cursorStyle?: string, initializer?: Partial<IconBox>) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.iconDef = iconDef;
+        this.cursorStyle = cursorStyle;
         this.selectable = false;
     }
 }

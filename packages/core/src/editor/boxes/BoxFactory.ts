@@ -250,11 +250,11 @@ export class BoxFactory {
     }
 
     static horizontalLayout(element: FreNode, role: string, // @ts-expect-error // todo remove this parameter and adjust the generation in meta
-                            propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
+                            propertyName: string, alignment: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {
-            return new HorizontalLayoutBox(element, role, children, initializer);
+            return new HorizontalLayoutBox(element, role, alignment, children, initializer);
         }
-        const creator = () => new HorizontalLayoutBox(element, role, children, initializer);
+        const creator = () => new HorizontalLayoutBox(element, role, alignment, children, initializer);
         const result: HorizontalLayoutBox = this.find<HorizontalLayoutBox>(element, role, creator, horizontalLayoutCache);
 
         // 2. Apply the other arguments in case they have changed

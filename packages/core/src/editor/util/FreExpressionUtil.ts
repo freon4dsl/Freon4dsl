@@ -38,7 +38,7 @@ export function createDefaultExpressionBox(exp: FreExpressionNode, role: string,
         if (children.length === 1 && isHorizontalBox(children[0])) {
             result = children[0] as HorizontalLayoutBox;
         } else {
-            result = BoxFactory.horizontalLayout(exp, EXPRESSION, "", children);
+            result = BoxFactory.horizontalLayout(exp, EXPRESSION, "", "top", children);
         }
         if (isLeftMost) {
             // TODO Change into Svelte Style
@@ -55,7 +55,7 @@ export function createDefaultExpressionBox(exp: FreExpressionNode, role: string,
         if (children.length === 1) {
             return children[0];
         } else {
-            return BoxFactory.horizontalLayout(exp, EXPRESSION, "", children);
+            return BoxFactory.horizontalLayout(exp, EXPRESSION, "", "top", children);
         }
     }
 }
@@ -75,7 +75,7 @@ export function createDefaultBinaryBox(exp: FreBinaryExpression,
                                        boxProviderCache: FreProjectionHandler
                                                             ): HorizontalLayoutBox {
     // TODO move this method to BoxUtils
-    const result = BoxFactory.horizontalLayout(exp, BINARY_EXPRESSION, "");
+    const result = BoxFactory.horizontalLayout(exp, BINARY_EXPRESSION, "top",  "");
     // const projection = editor.projection;
     // const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 

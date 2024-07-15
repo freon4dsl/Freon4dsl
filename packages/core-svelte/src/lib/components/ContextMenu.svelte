@@ -183,6 +183,7 @@
         gap: 2px;
         position: absolute; /* relative to a 'relative' parent */
         background: #e5e5e5;
+        color: #3c3c3c; 
         min-width: 120px;
         box-shadow: 1.5px 1.5px 5px grey;
     }

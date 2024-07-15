@@ -111,10 +111,11 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Label colors */
   --freon-label-component-color: #{gc.$mac-gray-400};
   --freon-label-component-background-color: inherit;
-  --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-family: "Roboto";	/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-size: 14px;
+  --freon-label-component-font-style: normal;	
+  --freon-label-component-font-weight: normal;	
+  --freon-label-component-font-family: "Roboto";	
+  --freon-label-component-font-variant: normal;
   --freon-label-component-padding: 0px 1px 0px 1px;
   --freon-label-component-margin: 0px 0px 0px 4px;
 

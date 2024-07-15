@@ -16,6 +16,7 @@ modelunit StudyConfiguration {
 
 concept Period {
     name: identifier;
+    description: Description;
     events: Event[];
 }
 

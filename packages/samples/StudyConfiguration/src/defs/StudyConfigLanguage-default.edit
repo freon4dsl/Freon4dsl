@@ -26,6 +26,7 @@ StudyConfiguration {
 Period {
     [
         Period: ${name}
+        Description: ${description}
         EVENTS
             ${events}
     ]

@@ -155,7 +155,7 @@ export class ProjectionTemplate {
                         if (!!this._element.freOwnerDescriptor().owner &&
                             isFreBinaryExpression(this._element.freOwnerDescriptor().owner)
                         ) {
-                            return BoxFactory.horizontalLayout(this._element, "brackets", '', [
+                            return BoxFactory.horizontalLayout(this._element, "brackets", '','center', [
                                 BoxUtil.labelBox(this._element, "(", "bracket-open", true),
                                 binBox,
                                 BoxUtil.labelBox(this._element, ")", "bracket-close", true)
@@ -348,7 +348,7 @@ export class ProjectionTemplate {
             if (line.items.length > 1) { // surround with horizontal box
                 // TODO Too many things are now selectable, but if false, you cannot select e.g. an attribute
                 ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
-                result = `BoxFactory.horizontalLayout(${elementVarName}, "${boxLabel}-hlist-line-${index}", '', [ ${result} ], { selectable: false } ) `;
+                result = `BoxFactory.horizontalLayout(${elementVarName}, "${boxLabel}-hlist-line-${index}", '', 'center', [ ${result} ], { selectable: false } ) `;
             }
             if (line.indent > 0) { // surround with indentBox
                 ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
@@ -612,14 +612,16 @@ export class ProjectionTemplate {
 
     private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType, listInfo?: ListInfo): string {
         let direction: string = "verticalList";
+        let alignment: string = "";
         if (!!listInfo && listInfo.direction === FreEditProjectionDirection.Horizontal) {
             direction = "horizontalList";
+            alignment = "center, ";
         }
         // TODO also adjust role '..-hlist' to '..-vlist'?
         ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
         ListUtil.addIfNotPresent(this.coreImports, "Box");
         // TODO Create Action for the role to actually add an element.
-        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist", "",
+        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist", "", ${alignment} 
                             (${element}.${property.name}.map( (item, index)  =>
                                 ${this.singlePrimitivePropertyProjection(property, element, boolInfo)}
                             ) as Box[]).concat( [

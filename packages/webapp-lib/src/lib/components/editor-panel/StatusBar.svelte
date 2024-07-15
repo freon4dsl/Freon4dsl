@@ -75,5 +75,6 @@
 	color: var(--freon-colors-text-status);
 	font-style: var(--freon-text-style-status);
 	white-space: nowrap;
+	display: none; //temporary
   }
 </style>

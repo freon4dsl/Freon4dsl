@@ -102,14 +102,14 @@
     .sv-container {
         position: relative;
         width: 100vw;
-        height: calc(100vh - 96px); /* minus 96px, because this is the height of the top-app-bar plus the status-bar plus padding round main frame (48 + 24 + 1 * 10) TODO change this comment */
+        height: calc(100vh - 48px);  /* height: calc(100vh - 96px); */
         min-height: 400px;
     }
     .sv-pane {
         position:absolute;
         float: left;
-        width: 100vw;
-        height: 100%;
+        width: 100%; /* 100vw; */
+        height: calc(100vh - 48px);  /* 100%; */
         box-sizing: border-box;
     }
     .mousecatcher {
