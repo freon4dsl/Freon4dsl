@@ -28,7 +28,7 @@ concept TaskDetailDef {
     name: identifier;
     numberedSteps: boolean;
     description: Description;
-    decision: StudyConfigExpression;
+    decision: FirstScheduledExpression;
     steps: Step[];
 }
 
@@ -83,7 +83,7 @@ concept WorkflowDescription implements WorkflowDecision  {
 }
 
 concept WorkflowBranch implements WorkflowDecision {
-    branch: StudyConfigExpression;
+    branch: FirstScheduledExpression;
 }
 
 interface NoteOrDescription {

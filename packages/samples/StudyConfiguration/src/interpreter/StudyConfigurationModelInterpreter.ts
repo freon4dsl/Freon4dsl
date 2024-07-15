@@ -17,7 +17,7 @@
                 main = m;
             }
             
-            evalNumber(node: language.Number, ctx: InterpreterContext): RtObject {
+            evalNumber(node: language.NumberLiteralExpression, ctx: InterpreterContext): RtObject {
                 return new RtNumber(node.value);
             }
         

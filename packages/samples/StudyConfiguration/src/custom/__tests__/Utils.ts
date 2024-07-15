@@ -1,6 +1,6 @@
 import * as Sim from "../simjs/sim.js"
 import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
-import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, Number, EventReference, RepeatCondition, RepeatUnit, Days, EventWindow } from "../../language/gen/index";
+import {StudyConfiguration, Period, Event, EventSchedule, Day, BinaryExpression, PlusExpression, When, StartDay, NumberLiteralExpression, EventReference, RepeatCondition, RepeatUnit, Days, EventWindow } from "../../language/gen/index";
 import { FreNodeReference } from "@freon4dsl/core";
 import { EventInstance, TimelineInstanceState, Timeline, PeriodInstance } from "../timeline/Timeline";
 import { ScheduledEvent, ScheduledEventState } from "../timeline/ScheduledEvent";
@@ -19,7 +19,10 @@ export function setupStudyConfiguration(): StudyConfiguration{
 export function createWhenEventSchedule(eventName: string, binaryExpression: BinaryExpression) {
   let eventSchedule = new EventSchedule(eventName + binaryExpression.toString());
   let whenExpression = new When(eventName + binaryExpression.toString);
-  whenExpression.startWhen = binaryExpression;
+  let startWhenEventReference = new EventReference(eventName+"EventReference");
+  console.log("createWhenEventSchedule NEED TO REWRITE THIS AFTER EXPRESSION LANG UPDATES. ALL IT DOES NOW IS COMPILE! ");
+  // startWhenEventReference.$referencedEventState
+  whenExpression.startWhen = startWhenEventReference;
   eventSchedule.eventStart = whenExpression;
   return eventSchedule;
 }
@@ -78,7 +81,7 @@ export function addAPeriodAndTwoEvents(studyConfiguration: StudyConfiguration, p
   createEventAndAddToPeriod(period, event1Name, dayEventSchedule);
 
   let when = createWhenEventSchedule(event2Name, PlusExpression.create({left:  new StartDay(), 
-                                                                       right: Number.create({value:event2Day})}));
+                                                                       right: NumberLiteralExpression.create({value:event2Day})}));
   createEventAndAddToPeriod(period, event2Name, when);
 
   studyConfiguration.periods.push(period);
@@ -97,7 +100,7 @@ export function addEventScheduledOffCompletedEvent(studyConfiguration: StudyConf
   let freNodeReference = FreNodeReference.create(firstEvent, "Event");
   eventReference.event = freNodeReference;
   let when = createWhenEventSchedule(event2Name, PlusExpression.create({left: eventReference,
-                                                                        right: Number.create({value:event2Day})}));
+                                                                        right: NumberLiteralExpression.create({value:event2Day})}));
 
   createEventAndAddToPeriod(period, event2Name, when);
 
@@ -142,7 +145,7 @@ export function addEventsScheduledOffCompletedEvents(studyConfiguration: StudyCo
     let freNodeReference = FreNodeReference.create(previousEvent, "Event");
     eventReference.event = freNodeReference;
     let when = createWhenEventSchedule(eventToAdd.eventName, PlusExpression.create({left: eventReference,
-                                                                                   right: Number.create({value:eventToAdd.eventDay})}));
+                                                                                   right: NumberLiteralExpression.create({value:eventToAdd.eventDay})}));
     previousEvent = createEventAndAddToPeriod(period, eventToAdd.eventName, when);
     if (newPeriod) {
       console.log("Adding the new period: " + periodName);

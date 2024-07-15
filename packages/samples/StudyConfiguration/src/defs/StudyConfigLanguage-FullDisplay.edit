@@ -1,4 +1,4 @@
-editor default
+editor FullDisplay precedence 1
 
 boolean [YES | NO] // are the strings used to display a boolean value
 

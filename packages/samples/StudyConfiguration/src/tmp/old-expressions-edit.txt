@@ -1,0 +1,24 @@
+
+LastDay {
+    [Last Day ]
+}
+
+PreviousVisit {
+    [Previous-Visit ]
+}
+
+NextVisit {
+    [Next-Visit ]
+}
+
+IfExpression {
+        [
+        if (${condition}) then
+            ${whenTrue}
+        else
+            ${whenFalse}
+        endif
+        ]
+    trigger = "if"
+}
+

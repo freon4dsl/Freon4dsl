@@ -6,35 +6,25 @@ abstract expression FirstScheduledExpression {
 expression PreviousVisit base FirstScheduledExpression {
 }
 
-abstract expression StudyConfigExpression {
+expression Time base FirstScheduledExpression   {
+    value: number;
+    unit: TimeUnit;
 }
 
-expression IfExpression base StudyConfigExpression {
-    condition: StudyConfigExpression;
-    whenTrue: StudyConfigExpression;
-    whenFalse: StudyConfigExpression;
+expression StartDay base FirstScheduledExpression {
 }
 
-expression StartDay base StudyConfigExpression {
-}
 
-expression LastDay base StudyConfigExpression {
-}
-
-expression NextVisit base StudyConfigExpression {
-}
-
-expression EventReference base StudyConfigExpression {
-    reference event: Event;
-}
-
-abstract expression LiteralExpression base StudyConfigExpression {}
+abstract expression LiteralExpression base FirstScheduledExpression {}
 
 expression String base LiteralExpression {
     value: string;
 }
 
-expression Number base LiteralExpression   {
+// Not an expression because it's created in CustomStudyConfigurationModelActions based on /0..9/ regex
+// Do so it doesn't show up in the choices
+//
+concept NumberLiteralExpression {
     value: number;
 }
 
@@ -42,16 +32,12 @@ expression BooleanLiteralExpression base LiteralExpression {
     value: boolean;
 }
 
-expression NumberLiteralExpression base LiteralExpression   {
-    value: number;
-}
-
 ///////////////////////////////////
 //    Binary Expressions
 ////////////////////////////////////
-abstract binary expression BinaryExpression base StudyConfigExpression {
-    left: StudyConfigExpression;
-    right: StudyConfigExpression;
+abstract binary expression BinaryExpression base FirstScheduledExpression {
+    left: FirstScheduledExpression;
+    right: FirstScheduledExpression;
 }
 
 binary expression MultiplyExpression base BinaryExpression {

@@ -1,23 +1,12 @@
 editor default
 
-NumberLiteralExpression {
-    [${value}]
-}
-StartDay {
-    [Start Day ]
+Time {
+    [${value} ${unit}]
 }
 
-LastDay {
-    [Last Day ]
-}
-
-PreviousVisit {
-    [Previous-Visit ]
-}
-
-NextVisit {
-    [Next-Visit ]
-}
+// NumberLiteralExpression {
+//    [${value}]
+// }
 
 PlusExpression {
     symbol = "+"
@@ -25,10 +14,6 @@ PlusExpression {
 
 MinusExpression {
     symbol = "-"
-}
-
-Number {
-    [${value}]
 }
 
 String {
@@ -66,16 +51,5 @@ GreaterThenExpression {
 }
 EqualsExpression {
     symbol = "=="
-}
-
-IfExpression {
-        [
-        if (${condition}) then
-            ${whenTrue}
-        else
-            ${whenFalse}
-        endif
-        ]
-    trigger = "if"
 }
 

@@ -3,19 +3,18 @@ language StudyConfigurationModel
 interface EventStart {
 }  
 
-
 concept When implements EventStart {
-    startWhen: FirstScheduledExpression;
+    startWhen: EventReference;
 }
 
 concept Day implements EventStart {
     startDay: number;
 }
 
-expression StudyStart implements EventStart {
+concept AnyDay implements EventStart {
 }
 
-concept AnyDay implements EventStart {
+expression StudyStart implements EventStart {
 }
 
 interface RepeatExpression {    
@@ -25,10 +24,23 @@ limited RepeatUnit {
     daily; weekly; monthly; forever;
 }
 
+limited TimeUnit {
+   hours; days; weeks; months;
+}
+
+limited EventState {
+    completed; started; scheduled; skipped;
+}
+
 concept RepeatCondition implements RepeatExpression {
     repeatUnit: RepeatUnit;
     maxRepeats: number;
-    until: StudyConfigExpression;
+    until: FirstScheduledExpression;
+}
+
+expression EventReference base FirstScheduledExpression {
+    reference event: Event;
+    eventState: EventState;
 }
 
 concept RepeatCount implements RepeatExpression {

@@ -26,7 +26,7 @@ import { StudyConfiguration, Description, Period, Event } from "../language/gen"
  * (3) if neither (1) nor (2) yields a result, the default is used.
  */
 export class CustomStudyConfigurationModelProjection implements FreProjection {
-    name: string = "Manual";
+    name: string = "Custom";
     handler: FreProjectionHandler;
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
         ["StudyConfiguration", this.createStudyConfiguration],
@@ -55,25 +55,24 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 ],
                 { selectable: false },
             ),
-            BoxUtil.indentBox(element, 4, true, "3",
-                BoxUtil.labelBox(element, "Options:", "top-1-line-3-item-0"),
-            ),
-            BoxUtil.indentBox( element, 8, true, "4",
-                BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "",
-                    [
-                        BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
-                        BoxUtil.labelBox(element, "Show Task Details", "top-1-line-4-item-1"),
-                    ],
-                    { selectable: false },
-                ),
-            ),
-            BoxUtil.indentBox(element, 8, true, "5",
-                BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "",
-                    [
-                        BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
-                        BoxUtil.labelBox(element, "Show Systems", "top-1-line-5-item-1"),
-                    ],
-                    { selectable: false },
+            BoxUtil.groupBox(element, "Options:", 0, "study-periods-group",
+                BoxUtil.indentBox(element, 4, true, "3",
+                    BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-3", "", [
+                        BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "",
+                        [
+                            BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
+                            BoxUtil.labelBox(element, "Show Task Details", "top-1-line-4-item-1"),
+                        ],
+                        { selectable: false },
+                        ),
+                        BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "",
+                            [
+                                BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
+                                BoxUtil.labelBox(element, "Show Systems", "top-1-line-5-item-1"),
+                            ],
+                            { selectable: false },
+                        ),
+                    ],),
                 ),
             ),
             BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6"),
@@ -82,24 +81,25 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                     BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
                 )
             ),
-            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-10"),
-            BoxUtil.groupBox(element, "TASK DETAILS", 0, "task-details-group",
-                BoxUtil.indentBox(element, 4, true, "13",
-                    BoxUtil.verticalPartListBox(element, (element).taskDetails, "taskDetails", null, this.handler)
-                )
-            ),
-            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-14"),
-            BoxUtil.groupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
-                BoxUtil.indentBox(element, 4, true, "17",
-                    BoxUtil.verticalPartListBox(element, (element).systemAccesses, "systemAccesses", null,  this.handler)
-                )
-            ),
-            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-18"),
-            BoxUtil.groupBox(element, "STAFFING", 0, "staffing-group",
-                BoxUtil.indentBox(element, 4, true, "21",
-                    BoxUtil.getBoxOrAction(element, "staffing", "Staffing", this.handler)
-                )
-            ),
+            ...(element.showActivityDetails === true? [
+                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-10"),
+                BoxUtil.groupBox(element, "TASK DETAILS", 0, "task-details-group",
+                    BoxUtil.indentBox(element, 4, true, "13",
+                        BoxUtil.verticalPartListBox(element, (element).taskDetails, "taskDetails", null, this.handler)
+                    )
+                ),
+                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-14"),
+                BoxUtil.groupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
+                    BoxUtil.indentBox(element, 4, true, "17",
+                        BoxUtil.verticalPartListBox(element, (element).systemAccesses, "systemAccesses", null,  this.handler)
+                    )
+                ),
+                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-18"),
+                BoxUtil.groupBox(element, "STAFFING", 0, "staffing-group",
+                    BoxUtil.indentBox(element, 4, true, "21",
+                        BoxUtil.getBoxOrAction(element, "staffing", "Staffing", this.handler)
+                    )
+                )] : []),
         ]);
     }
 
