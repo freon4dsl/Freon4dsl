@@ -4,9 +4,9 @@ Time {
     [${value} ${unit}]
 }
 
-// NumberLiteralExpression {
-//    [${value}]
-// }
+NumberLiteralExpression {
+    [${value}]
+}
 
 PlusExpression {
     symbol = "+"
