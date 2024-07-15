@@ -72,4 +72,5 @@
         white-space: normal;
         display: inline-block;
     }
+
 </style>

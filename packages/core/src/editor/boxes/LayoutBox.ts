@@ -12,7 +12,7 @@ export enum ListDirection {
 export abstract class LayoutBox extends Box {
     kind: string = "LayoutBox";
     protected direction: ListDirection = ListDirection.HORIZONTAL;
-    protected alignment: string = "center";
+    protected alignment: string = "top";
     protected _children: Box[] = [];
 
     protected constructor(node: FreNode, role: string, children?: Box[], initializer?: Partial<LayoutBox>) {

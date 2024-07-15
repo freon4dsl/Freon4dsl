@@ -230,11 +230,11 @@
         white-space: nowrap;
         display: grid;
         padding: var(--freon-horizontallist-component-padding, 1px);
+        margin: var(--freon-horizontallist-component-margin, 1px);
         background-color: var(--freon-editor-component-background-color, white);
         border-color: var(--freon-horizontallist-component-border-color, darkgreen);
         border-width: var(--freon-horizontallist-component-border-width, 0pt);
         border-style: var(--freon-horizontallist-component-border-style, solid);
-        margin: var(--freon-horizontallist-component-margin, 1px);
         box-sizing: border-box;
         height:100%;
     }

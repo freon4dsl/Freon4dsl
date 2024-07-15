@@ -355,36 +355,26 @@ export class BoxUtil {
      * @param uid
      * @param selectable when true this box can be selected, default is 'false'
      */
-    static labelBox(node: FreNode, content: string, uid: string, selectable?: boolean): Box {
+    static labelBox(node: FreNode, content: string, uid: string, selectable?: boolean, cssClass?: string): Box {
         let _selectable: boolean = false;
         if (selectable !== undefined && selectable !== null && selectable) {
             _selectable = true;
         }
         const roleName: string = RoleProvider.label(node, uid) + "-" + content;
-        return BoxFactory.label(node, roleName, content, {
-            selectable: _selectable
-        });
+        return BoxFactory.label(node, roleName, content, { selectable: _selectable }, cssClass);
     }
 
-    static groupBox(node: FreNode, label: string, level: number, uid: string, childBox: Box, selectable?: boolean): Box {
+    static groupBox(node: FreNode, label: string, level: number, uid: string, childBox: Box, selectable?: boolean, cssClass?: string): Box {
         let _selectable: boolean = false;
         if (selectable !== undefined && selectable !== null && selectable) {
             _selectable = true;
         }
         const roleName: string = RoleProvider.group(node, uid) + "-" + this.makeKeyName(label);
-        return BoxFactory.group(node, roleName, label, level, childBox, {
-            selectable: _selectable
-        });
+        return BoxFactory.group(node, roleName, label, level, childBox, { selectable: _selectable }, cssClass);
     }
 
     static indentBox(element: FreNode, indent: number, fullWidth: boolean = false, uid: string, childBox: Box): Box {
-        return BoxFactory.indent(
-            element,
-            RoleProvider.indent(element, uid),
-            indent,
-            fullWidth,
-            childBox
-        );
+        return BoxFactory.indent(element, RoleProvider.indent(element, uid), indent, fullWidth, childBox);
     }
 
     static verticalPartListBox(element: FreNode, list: FreNode[], propertyName: string, listJoin: FreListInfo, boxProviderCache: FreProjectionHandler): VerticalListBox {
@@ -535,7 +525,7 @@ export class BoxUtil {
             if (listJoin !== null && listJoin !== undefined) {
                 if (listJoin.type === this.separatorName) {
                     if (index < numberOfItems - 1) {
-                        return BoxFactory.horizontalLayout(element, roleName, propertyName, "center", [
+                        return BoxFactory.horizontalLayout(element, roleName, propertyName, "top", [
                             myProvider.box,
                             BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                         ]);
@@ -543,12 +533,12 @@ export class BoxUtil {
                         return myProvider.box;
                     }
                 } else if (listJoin.type === this.terminatorName) {
-                    return BoxFactory.horizontalLayout(element, roleName, propertyName, "center", [
+                    return BoxFactory.horizontalLayout(element, roleName, propertyName, "top", [
                         myProvider.box,
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text)
                     ]);
                 } else if (listJoin.type === this.initiatorName) {
-                    return BoxFactory.horizontalLayout(element, roleName, propertyName, "center", [
+                    return BoxFactory.horizontalLayout(element, roleName, propertyName, "top", [
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                         myProvider.box
                     ]);

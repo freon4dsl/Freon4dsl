@@ -132,14 +132,6 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 
-  /* Horizontal list */
-  --freon-horizontallist-component-padding: 1px;
-  --freon-horizontallist-component-margin: 1px;
-  --freon-horizontallist-component-align-items: top;
-
-  /* Vertical list */
-  --freon-verticallist-component-padding: 0 0 0 1rem;
-  --freon-verticallist-component-margin: 0;
 
   /* Boolean components */
   --freon-boolean-accent-color: #{gc.$mac-primary-900};
@@ -214,4 +206,8 @@ body {
   margin: 0;
   box-sizing: border-box;
   --mdc-theme-primary: #{theme.$primary};
+}
+
+.app-green-font {
+  color: #00fcfc !important;
 }

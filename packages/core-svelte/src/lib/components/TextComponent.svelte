@@ -5,15 +5,7 @@
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
 	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils/index.js";
-	import {
-		ActionBox,
-		ALT,
-		ARROW_DOWN,
-		ARROW_LEFT,
-		ARROW_RIGHT,
-		ARROW_UP,
-		BACKSPACE,
-		CharAllowed,
+	import { ActionBox, ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE, CharAllowed,
 		CONTROL,
 		DELETE,
 		ENTER,

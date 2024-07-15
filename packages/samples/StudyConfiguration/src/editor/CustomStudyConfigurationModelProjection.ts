@@ -16,7 +16,7 @@ import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
  * (3) if neither (1) nor (2) yields a result, the default is used.
  */
 export class CustomStudyConfigurationModelProjection implements FreProjection {
-    name: string = "Manual";
+    name: string = "Custom";
     handler: FreProjectionHandler;
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
         ["StudyConfiguration", this.createStudyConfiguration],
@@ -39,7 +39,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
     createStudyConfiguration (element: StudyConfiguration): Box {
         return BoxFactory.verticalLayout(element, "StudyConfiguration-overall", "", [
             BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-0"),
-            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-1", "", "center",
+            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-1", "", "top",
                 [
                     BoxUtil.labelBox(element, "STUDY NAME:", "top-1-line-1-item-0"),
                     BoxUtil.textBox(element, "name"),
@@ -50,7 +50,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxUtil.labelBox(element, "Options:", "top-1-line-3-item-0"),
             ),
             BoxUtil.indentBox( element, 8, true, "4",
-                BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "", "center",
+                BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "", "top",
                     [
                         BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
                         BoxUtil.labelBox(element, "Show Task Details", "top-1-line-4-item-1"),
@@ -59,7 +59,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 ),
             ),
             BoxUtil.indentBox(element, 8, true, "5",
-                BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "","center",
+                BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "","top",
                     [
                         BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
                         BoxUtil.labelBox(element, "Show Systems", "top-1-line-5-item-1"),
@@ -150,7 +150,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxFactory.verticalLayout(event, "Event-detail", "", [
                     BoxFactory.horizontalLayout(event, "Event-hlist-line-2", "","top",
                         [
-                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0"),
+                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps app-green-font"),
                             BoxUtil.getBoxOrAction(event, "description", "Description", this.handler)
                         ],
                         { selectable: false }
@@ -178,30 +178,30 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
 
     createSchedule (schedule: EventSchedule): Box {
         return BoxFactory.verticalLayout(schedule, "EventSchedule-overall", "", [
-            BoxFactory.horizontalLayout(schedule, "EventSchedule-hlist-line-0", "", "center",
+            BoxFactory.horizontalLayout(schedule, "EventSchedule-hlist-line-0", "", "top",
                 [
-                    BoxUtil.labelBox(schedule, "First Scheduled:", "top-1-line-0-item-0"),
+                    BoxUtil.labelBox(schedule, "First Scheduled:", "top-1-line-0-item-0", undefined, "app-small-caps"),
                     BoxUtil.getBoxOrAction(schedule, "eventStart", "EventStart", this.handler),
                 ],
                 { selectable: false },
             ),
             BoxFactory.horizontalLayout(schedule, "EventSchedule-hlist-line-1", "", "top",
                 [
-                    BoxUtil.labelBox(schedule, "Then Repeats:", "top-1-line-1-item-0"),
+                    BoxUtil.labelBox(schedule, "Then Repeats:", "top-1-line-1-item-0", undefined, "app-small-caps"),
                     BoxUtil.getBoxOrAction(schedule, "eventRepeat", "RepeatExpression", this.handler),
                 ],
                 { selectable: false },
             ),
             BoxFactory.horizontalLayout(schedule, "EventSchedule-hlist-line-2", "", "top",
                 [
-                    BoxUtil.labelBox(schedule, "Window:", "top-1-line-2-item-0"),
+                    BoxUtil.labelBox(schedule, "Window:", "top-1-line-2-item-0", undefined, "app-small-caps"),
                     BoxUtil.getBoxOrAction(schedule, "eventWindow", "EventWindow", this.handler),
                 ],
                 { selectable: false },
             ),
-            BoxFactory.horizontalLayout(schedule, "EventSchedule-hlist-line-3", "", "center",
+            BoxFactory.horizontalLayout(schedule, "EventSchedule-hlist-line-3", "", "top",
                 [
-                    BoxUtil.labelBox(schedule, "Time of Day:", "top-1-line-3-item-0"),
+                    BoxUtil.labelBox(schedule, "Time of Day:", "top-1-line-3-item-0", undefined, "app-small-caps"),
                     BoxUtil.getBoxOrAction(schedule, "eventTimeOfDay", "EventTimeOfDay", this.handler),
                 ],
                 { selectable: false },

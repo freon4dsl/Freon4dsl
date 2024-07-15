@@ -9,13 +9,14 @@ export class GroupBox extends Box {
     private $level: number = 0;
     private $child: Box = null;
     
-    constructor(node: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number), child: Box, initializer?: Partial<GroupBox>) {
+    constructor(node: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number), child: Box, initializer?: Partial<GroupBox>, cssClass?: string) {
         super(node, role);
         this.selectable = false; // default
         FreUtils.initializeObject(this, initializer);
         this.setLabel(getLabel);
         this.setLevel(getLevel);
         this.child = child;
+        this.cssClass = cssClass;
     }
 
     setLabel(getLabel: string | (() => string)) {

@@ -87,17 +87,19 @@
 <style>
     .layout-component {
         background: transparent;
-        padding: var(--freon-horizontallist-component-padding, 1px);
-        margin: var(--freon-horizontallist-component-margin, 1px);
         box-sizing: border-box;
     }
 
     .horizontal {
         white-space: nowrap;
         display: flex;
+        padding: var(--freon-horizontallayout-component-padding, 1px);
+        margin: var(--freon-horizontallayout-component-margin, 1px);
     }
 
     .vertical {
         width: 100%;
+        padding: var(--freon-verticallayout-component-padding, 1px);
+        margin: var(--freon-verticallayout-component-margin, 1px);
     }
 </style>
