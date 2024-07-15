@@ -165,14 +165,20 @@
 
 <!-- we use offsetWidth and offsetHeight instead of clientWidth and clientHeight, because these include any scrollbars -->
 <div class="sv-container" bind:this={svcontainer} >
-    <div class="sv-pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
+    <!-- <div class="sv-pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
         <slot name="a"></slot>
     </div>
 
     <div class="sv-pane" style="{dimension}: {100 - (pos)}%; top:{ topB}px; overflow: auto;" bind:offsetWidth={wb} bind:offsetHeight={hb}>
         <slot name="b"></slot>
+    </div> -->
+    <div class="sv-pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
+        <slot name="a"></slot>
     </div>
 
+    <div class="sv-pane" style="{dimension}: {100 - (pos)}%; top:0px; {side}: {pos}%; overflow: auto;" bind:offsetWidth={wb} bind:offsetHeight={hb}>
+        <slot name="b"></slot>
+    </div>
     {#if !fixed}
         <div class="{type} divider" style="{side}: calc({pos}% - 8px)" use:drag={setPos} use:touchDrag={setTouchPos}></div>
     {/if}
