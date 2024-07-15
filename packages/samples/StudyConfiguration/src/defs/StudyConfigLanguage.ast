@@ -8,7 +8,10 @@ modelunit StudyConfiguration {
     name: identifier;
     showActivityDetails: boolean;
     showSystems: boolean;
+    showScheduling: boolean;
+    showPeriods: boolean;
     periods: Period[];
+    eventsWithoutPeriod: Event[];
     taskDetails: TaskDetail[];
     systemAccesses: SystemAccess[];
     staffing: Staffing;

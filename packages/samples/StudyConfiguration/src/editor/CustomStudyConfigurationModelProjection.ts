@@ -48,30 +48,46 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             ),
             BoxUtil.groupBox(element, "Options:", 0, "study-periods-group",
                 BoxUtil.indentBox(element, 4, true, "3",
-                    BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-3", "", [
-                        BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "","top",
-                        [
-                            BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
-                            BoxUtil.labelBox(element, "Show Task Details", "top-1-line-4-item-1"),
-                        ],
-                        { selectable: false },
-                        ),
+                        BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-31", "", [
+                            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-41", "","top",
+                            [
+                                BoxUtil.booleanBox(element, "showPeriods", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
+                                BoxUtil.labelBox(element, "Show Periods", "top-1-line-41-item-1"),
+                            ],
+                            { selectable: false },
+                            ),
+                            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "","top",
+                            [
+                                BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
+                                BoxUtil.labelBox(element, "Show Task Details", "top-1-line-4-item-1"),
+                            ],
+                            { selectable: false },
+                            ),
                         BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "","top",
                             [
                                 BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
                                 BoxUtil.labelBox(element, "Show Systems", "top-1-line-5-item-1"),
                             ],
                             { selectable: false },
-                        ),
-                    ],),
+                            ),
+                        ],
+                    ),
                 ),
             ),
-            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6"),
-            BoxUtil.groupBox(element, "STUDY PERIODS", 0, "study-periods-group",
-                BoxUtil.indentBox(element, 4, true, "9",
-                    BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
-                )
-            ),
+            ...(element.showPeriods === true? [                    
+                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6"),
+                BoxUtil.groupBox(element, "STUDY PERIODS", 0, "study-periods-group",
+                    BoxUtil.indentBox(element, 4, true, "9",
+                        BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
+                    )
+                ),
+            ] : [
+                BoxUtil.groupBox(element, "EVENTS", 0, "group-1-line-2-item-0",
+                    BoxUtil.indentBox(element, 4, true, "4",
+                        BoxUtil.verticalPartListBox(element, element.eventsWithoutPeriod, "eventsWithoutPeriod", null, this.handler)
+                    ) 
+                ),
+            ]),
             ...(element.showActivityDetails === true? [
                 BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-10"),
                 BoxUtil.groupBox(element, "TASK DETAILS", 0, "task-details-group",
@@ -109,14 +125,16 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
 
     createPeriod (period: Period): Box {
         return BoxFactory.verticalLayout(period, "Period-overall", "", [
-            BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "", "center",
-                [
-                    new IconBox(period, "draggrip", faGripVertical, "grab"),
-                    BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1"),
-                    BoxUtil.textBox(period, "name")                   
-                ],
-                { selectable: false }
-            ),
+            ...((period.freOwner() as StudyConfiguration).showActivityDetails === true? [                    
+                    BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "", "center",
+                    [
+                        new IconBox(period, "draggrip", faGripVertical, "grab"),
+                        BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1"),
+                        BoxUtil.textBox(period, "name")                   
+                    ],
+                    { selectable: false }
+                ),
+            ] : []),
             BoxUtil.indentBox(period, 1.5, true, "e1",
                 BoxFactory.verticalLayout(period, "Period-detail", "", [
                     BoxFactory.horizontalLayout(period, "Period-hlist-line-1", "","top",
@@ -155,10 +173,12 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                         ],
                         { selectable: false }
                     ),
-                    BoxUtil.labelBox(event, "Schedule:", "top-1-line-4-item-0"),
-                    BoxUtil.indentBox(event, 2, true, "e11",
-                        BoxUtil.getBoxOrAction(event, "schedule", "EventSchedule", this.handler)
-                    ),
+                    ...(((event.freOwner() as Period).freOwner() as StudyConfiguration).showActivityDetails === true? [                    
+                        BoxUtil.labelBox(event, "Schedule:", "top-1-line-4-item-0"),
+                        BoxUtil.indentBox(event, 2, true, "e11",
+                            BoxUtil.getBoxOrAction(event, "schedule", "EventSchedule", this.handler)
+                        ),
+                    ] : []),
                     BoxFactory.horizontalLayout(event, "Event-hlist-line-9", "", "top",
                         [
                             BoxUtil.labelBox(event, "Checklist:", "top-1-line-9-item-0"),
