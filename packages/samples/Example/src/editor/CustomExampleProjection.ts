@@ -76,7 +76,7 @@ export class CustomExampleProjection implements FreProjection {
     createSumBox (sum: SumExpression): Box {
         const cells: GridCellBox[] = [
             new GridCellBox(sum, "Sum-from-cell", 3, 1,
-                new HorizontalLayoutBox(sum, "Sum-from-part", [
+                new HorizontalLayoutBox(sum, "Sum-from-part", "top", [
                     this.optionalPartBox(sum, "SumExpression-variable", "variable"),
                     new LabelBox(sum, "sum-from-equals", "="),
                     this.optionalPartBox(sum, "SumExpression-from", "from")
