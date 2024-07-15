@@ -49,14 +49,14 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             BoxUtil.groupBox(element, "Options:", 0, "study-periods-group",
                 BoxUtil.indentBox(element, 4, true, "3",
                     BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-3", "", [
-                        BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "",
+                        BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "","top",
                         [
                             BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
                             BoxUtil.labelBox(element, "Show Task Details", "top-1-line-4-item-1"),
                         ],
                         { selectable: false },
                         ),
-                        BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "",
+                        BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "","top",
                             [
                                 BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
                                 BoxUtil.labelBox(element, "Show Systems", "top-1-line-5-item-1"),
@@ -90,7 +90,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                     BoxUtil.indentBox(element, 4, true, "21",
                         BoxUtil.getBoxOrAction(element, "staffing", "Staffing", this.handler)
                     )
-                )] : []),
+                    )] : []),
         ]);
     }
 
