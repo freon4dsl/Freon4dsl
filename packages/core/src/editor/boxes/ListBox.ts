@@ -14,7 +14,7 @@ import { LayoutBox, ListDirection } from "./LayoutBox";
 export abstract class ListBox extends LayoutBox {
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
-    protected constructor(node: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<ListBox>) {
+    protected constructor(node: FreNode, role: string, propertyName: string, children?: Box[], initializer?: Partial<ListBox>) {
         super(node, role, children, initializer);
         this.kind = "ListBox";
         this.propertyName = propertyName;
@@ -29,18 +29,20 @@ export abstract class ListBox extends LayoutBox {
 export class HorizontalListBox extends ListBox {
     kind: string = "HorizontalListBox";
 
-    constructor(element: FreNode, propertyName: string, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>) {
+    constructor(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>, cssClass?: string) {
         super(element, role, propertyName, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
+        this.cssClass = cssClass;
     }
 }
 
 export class VerticalListBox extends ListBox {
     kind = "VerticalListBox";
 
-    constructor(node: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
+    constructor(node: FreNode, role: string, propertyName: string, children?: Box[], initializer?: Partial<HorizontalListBox>, cssClass?: string) {
         super(node, role, propertyName, children, initializer);
         this.direction = ListDirection.VERTICAL;
+        this.cssClass = cssClass;
     }
 }
 

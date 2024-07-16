@@ -22,7 +22,7 @@
     let element: HTMLDivElement = null;
     let content: HTMLDivElement = null;
     let style: string;
-    let cssClass: string;
+    let cssClass: string = '';
     let label: string;
     let level: number;
     let child: Box;

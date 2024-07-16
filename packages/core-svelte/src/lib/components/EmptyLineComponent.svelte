@@ -7,9 +7,11 @@
 
     export let box: EmptyLineBox;
     let id: string = !!box ? componentId(box) : 'emptyline-for-unknown-box';
+    let cssClass: string = !!box ? box.cssClass : '';
+
 </script>
 
-<span id="{id}" >
+<span id="{id}" class="{cssClass}" >
     <br>
 </span>
 

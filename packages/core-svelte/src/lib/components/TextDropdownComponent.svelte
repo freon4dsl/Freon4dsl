@@ -7,18 +7,7 @@
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
     import { clickOutsideConditional, componentId, selectedBoxes } from "./svelte-utils/index.js";
-    import {
-        type AbstractChoiceBox,
-        ARROW_DOWN,
-        ARROW_UP,
-        ENTER,
-        ESCAPE,
-        isSelectBox,
-        FreEditor,
-        FreLogger,
-        type SelectOption,
-        TextBox
-    } from "@freon4dsl/core";
+    import { type AbstractChoiceBox, ARROW_DOWN, ARROW_UP, ENTER, ESCAPE, isSelectBox, FreEditor, FreLogger, type SelectOption, TextBox } from "@freon4dsl/core";
 
     import { runInAction } from "mobx";
     import { afterUpdate, onMount } from "svelte";
@@ -38,7 +27,8 @@
     let selectedId: string;		                // the id of the selected option in the dropdown
     let filteredOptions: SelectOption[];        // the list of filtered options that are shown in the dropdown
     let allOptions: SelectOption[];             // all options as calculated by the editor
-    let textComponent;
+    let textComponent: any;
+    let cssClass: string = '';
 
     let setText = (value: string) => {
         if (value === null || value === undefined) {
@@ -83,6 +73,7 @@
                 setText(box.textHelper.getText());
             }
         }
+        cssClass = box.cssClass;
         // because the box maybe a different one than we started with ...
         // box.setFocus = setFocus; todo remove?
     }
@@ -389,26 +380,11 @@
 </script>
 
 
-<span id="{id}"
-      on:keydown={onKeyDown}
-      use:clickOutsideConditional={{enabled: dropdownShown}}
-      on:click_outside={onClickOutside}
-      on:blur={onBlur}
-      on:contextmenu={(event) => endEditing()}
-      class="dropdown"
-      role="none"
->
+<span id="{id}" class="dropdown {cssClass}" on:keydown={onKeyDown} on:click_outside={onClickOutside} on:blur={onBlur} on:contextmenu={(event) => endEditing()} use:clickOutsideConditional={{enabled: dropdownShown}} role="none">
     <TextComponent
-            bind:isEditing={isEditing}
-            bind:text={text}
-            bind:this={textComponent}
-            partOfActionBox={true}
-            box={textBox}
-            editor={editor}
-            on:textUpdate={textUpdate}
-            on:startEditing={startEditing}
-            on:endEditing={endEditing}
-            on:onFocusOutText={onFocusOutText}
+            bind:isEditing={isEditing} bind:text={text} bind:this={textComponent}
+            partOfActionBox={true} box={textBox} editor={editor}
+            on:textUpdate={textUpdate} on:startEditing={startEditing} on:endEditing={endEditing} on:onFocusOutText={onFocusOutText}
     />
     {#if dropdownShown}
         <DropdownComponent

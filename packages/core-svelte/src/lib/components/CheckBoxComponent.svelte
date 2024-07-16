@@ -14,7 +14,7 @@
     let id: string = !!box ? componentId(box) : 'checkbox-for-unknown-box';
     let inputElement: HTMLInputElement;
     let style: string;
-    let cssClass: string;
+    let cssClass: string ='';
     let value = box.getBoolean();
 
     /**
@@ -29,6 +29,7 @@
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH BooleanControlBox: " + why);
         value = box.getBoolean();
+        cssClass = !!box ? box.cssClass : '';
     };
     onMount(() => {
         value = box.getBoolean();
@@ -47,11 +48,6 @@
     }
 </script>
 
-<span class="checkbox {cssClass}"
-      style="{style}"
-      id="{id}"
-
->
+<span id="{id}" class="checkbox {cssClass}" style="{style}">
     <input on:click={onClick} bind:this={inputElement} bind:checked={value} type="checkbox"/>
 </span>
-

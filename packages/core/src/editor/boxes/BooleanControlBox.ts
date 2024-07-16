@@ -3,7 +3,6 @@ import {FreNode} from "../../ast";
 import {FreLogger} from "../../logging";
 import {FreUtils} from "../../util";
 
-
 const LOGGER: FreLogger = new FreLogger("BooleanBox");
 
 export enum BoolDisplay {
@@ -35,16 +34,12 @@ export class BooleanControlBox extends Box {
         return this.$getBoolean();
     }
 
-    constructor(node: FreNode,
-                role: string,
-                getBoolean: () => boolean,
-                setBoolean: (newValue: boolean) => void,
-                initializer?: Partial<BooleanControlBox>
-    ) {
+    constructor(node: FreNode, role: string, getBoolean: () => boolean, setBoolean: (newValue: boolean) => void, initializer?: Partial<BooleanControlBox>, cssClass?: string) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.$getBoolean = getBoolean;
         this.$setBoolean = setBoolean;
+        this.cssClass = cssClass;
     }
 }
 

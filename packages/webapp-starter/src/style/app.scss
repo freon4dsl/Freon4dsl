@@ -8,10 +8,17 @@ body {
   margin: 0;
 }
 
+/* Application Classes */
 .app-small-caps {
   font-variant: all-small-caps !important;
 }
 
+.app-uppercase {
+  text-transform: uppercase;
+}
+
+
+/* Generic Settings */
 .editor-part {
   box-sizing: border-box;
     /* Horizontal list - trbl */
@@ -24,7 +31,7 @@ body {
     --freon-verticallist-component-margin: 0px;
 
     /* Horizontal layout - trbl */
-    --freon-horizontallayout-component-padding: 0 0 0 0;
+    --freon-horizontallayout-component-padding: 0 0 5px 0;
     --freon-horizontallayout-component-margin: 0px;
     --freon-horizontallayout-component-align-items: top;
 

@@ -22,6 +22,7 @@
          style = `width: 100%; ${style}`;
     }
     let id: string = !!box ? componentId(box) : 'indent-for-unknown-box';
+    let cssClass: string = '';
     let child: Box;
 
     onMount( () => {
@@ -32,19 +33,19 @@
     })
 
     const refresh = (why?: string): void => {
-        LOGGER.log("REFRESH Indent for box (" + why + ") " + box?.role + " child " + box?.child?.role);
-        child = box?.child;
-        style = `margin-left: ${box?.indent * indentWidth}px;`
-        if (box?.fullWidth)  style = `width: 100%; ${style}`;
+        if (!!box) {
+            LOGGER.log("REFRESH Indent for box (" + why + ") " + box?.role + " child " + box?.child?.role);
+            child = box?.child;
+            style = `margin-left: ${box?.indent * indentWidth}px;`
+            if (box?.fullWidth)  style = `width: 100%; ${style}`;
+            cssClass = box.cssClass;
+        }
     };
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
     }
 </script>
 
-<span
-    style="{style}"
-    id="{id}"
->
+<span id="{id}" class="{cssClass}" style="{style}">
     <RenderComponent box={child} editor={editor}/>
 </span>

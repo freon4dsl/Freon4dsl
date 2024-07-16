@@ -45,48 +45,25 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-0"),
             BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-1", "", "top",
                 [
-                    BoxUtil.labelBox(element, "STUDY NAME:", "top-1-line-1-item-0"),
-                    BoxUtil.textBox(element, "name"),
+                    BoxUtil.labelBox(element, "STUDY NAME:", "top-1-line-1-item-0", undefined, "app-uppercase"),
+                    BoxUtil.textBox(element, "name")
                 ],
                 { selectable: false },
-            ),
-            BoxUtil.groupBox(element, "Options:", 0, "study-periods-group",
+            ), 
+            BoxUtil.groupBox(element, "OPTIONS:", 0, "study-periods-group",
                 BoxUtil.indentBox(element, 4, true, "3",
-                        BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-31", "", [
-                            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-41", "","top",
-                            [
-                                BoxUtil.booleanBox(element, "showPeriods", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
-                                BoxUtil.labelBox(element, "Show Periods", "top-1-line-41-item-1"),
-                            ],
-                            { selectable: false },
-                            ),
-                            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-4", "","top",
-                            [
-                                BoxUtil.booleanBox(element, "showActivityDetails", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
-                                BoxUtil.labelBox(element, "Show Task Details", "top-1-line-4-item-1"),
-                            ],
-                            { selectable: false },
-                            ),
-                            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-51", "","top",
-                            [
-                                BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
-                                BoxUtil.labelBox(element, "Show Systems", "top-1-line-5-item-1"),
-                            ],
-                            { selectable: false },
-                            ),
-                            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "","top",
-                            [
-                                BoxUtil.booleanBox(element, "showScheduling", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
-                                BoxUtil.labelBox(element, "Show Scheduling", "top-1-line-5-item-1"),
-                            ],
-                            { selectable: false },
-                            ),
-                        ],
-                    ),
-                ),
+                    BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-3", "", 
+                    [
+                        BoxUtil.emptyLineBox(element, "option-empty-line", "h-2"),
+                        BoxUtil.switchElement(element, "showPeriods", "Show Periods"), 
+                        BoxUtil.switchElement(element, "showActivityDetails", "Show Task Details"),
+                        BoxUtil.switchElement(element, "showSystems", "Show Systems"),
+                        BoxUtil.switchElement(element, "showScheduling", "Show Scheduling") 
+                    ])
+                )
             ),
+            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6", "h-8"),
             ...(element.showPeriods === true? [                    
-                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6"),
                 BoxUtil.groupBox(element, "STUDY PERIODS", 0, "study-periods-group",
                     BoxUtil.indentBox(element, 4, true, "9",
                         BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
@@ -100,35 +77,27 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 ),
             ]),
             ...(element.showActivityDetails === true? [
-                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-10"),
-                BoxUtil.groupBox(element, "TASK DETAILS", 0, "task-details-group",
-                    BoxUtil.indentBox(element, 4, true, "13",
-                        BoxUtil.verticalPartListBox(element, (element).taskDetails, "taskDetails", null, this.handler)
-                    )
-                ),
-                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-14"),
-                BoxUtil.groupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
-                    BoxUtil.indentBox(element, 4, true, "17",
-                        BoxUtil.verticalPartListBox(element, (element).systemAccesses, "systemAccesses", null,  this.handler)
-                    )
-                ),
-                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-18"),
-                BoxUtil.groupBox(element, "STAFFING", 0, "staffing-group",
-                    BoxUtil.indentBox(element, 4, true, "21",
-                        BoxUtil.getBoxOrAction(element, "staffing", "Staffing", this.handler)
-                    )
-                    )] : []),
+                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-10"),
+                    BoxUtil.groupBox(element, "TASK DETAILS", 0, "task-details-group",
+                        BoxUtil.indentBox(element, 4, true, "13",
+                            BoxUtil.verticalPartListBox(element, (element).taskDetails, "taskDetails", null, this.handler)
+                        ),
+                    undefined, "app-uppercase"),
+                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-14"),
+                    BoxUtil.groupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
+                        BoxUtil.indentBox(element, 4, true, "17",
+                            BoxUtil.verticalPartListBox(element, (element).systemAccesses, "systemAccesses", null,  this.handler)
+                        ),
+                    undefined, "app-uppercase"),
+                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-18"),
+                    BoxUtil.groupBox(element, "STAFFING", 0, "staffing-group",
+                        BoxUtil.indentBox(element, 4, true, "21",
+                            BoxUtil.getBoxOrAction(element, "staffing", "Staffing", this.handler)
+                        ),
+                    undefined, "app-uppercase")
+                ] : []),
         ]);
     }
-
-    // createDescription (desc: Description): Box {
-    //     return BoxFactory.horizontalLayout(desc, "Description-hlist-line-0", "","top",
-    //         [
-    //             new MultiLineTextBox(desc, "study-part-description", () => { return desc.text}, (t: string) => { desc.text = t})
-    //         ],
-    //         { selectable: false }
-    //     );
-    // }
 
     createDescription (desc: Description): Box {
         return new MultiLineTextBox(desc, "study-part-description", () => { return desc.text}, (t: string) => { desc.text = t});
@@ -140,7 +109,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                     BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "", "center",
                     [
                         new IconBox(period, "draggrip", faGripVertical, "grab"),
-                        BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1"),
+                        BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1", undefined, "app-uppercase"),
                         BoxUtil.textBox(period, "name")                   
                     ],
                     { selectable: false }
@@ -176,7 +145,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             BoxFactory.horizontalLayout(event, "Event-hlist-line-0", "","center",
                 [
                     new IconBox(event, "draggrip", faGripVertical, "grab"),
-                    BoxUtil.labelBox(event, "Event:", "top-1-line-0-item-1"),
+                    BoxUtil.labelBox(event, "Event:", "top-1-line-0-item-1", undefined, "app-uppercase"),
                     BoxUtil.textBox(event, "name")
                 ],
                { selectable: false }
@@ -185,7 +154,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxFactory.verticalLayout(event, "Event-detail", "", [
                     BoxFactory.horizontalLayout(event, "Event-hlist-line-2", "","top",
                         [
-                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps app-green-font"),
+                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps"),
                             BoxUtil.getBoxOrAction(event, "description", "Description", this.handler)
                         ],
                         { selectable: false }

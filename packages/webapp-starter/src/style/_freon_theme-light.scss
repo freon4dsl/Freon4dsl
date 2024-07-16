@@ -5,14 +5,14 @@
 // Freon Colors!!
 @use '@material/theme/index' as theme with (
   //$primary: #80cbc4,
-  $primary: #4f9a94,
+  $primary: #608cb6,
   //$secondary: #ce93d8,
   $secondary: #ffcc80,
   $surface: #eeeeee,
   $background: #fff,
   $error: #B00020,
   //$on-primary: color-palette.$orange-50,
-  $on-secondary: #00695c,   // a slighter darker version of 'primary'
+  $on-secondary: #003669,   // a slighter darker version of 'primary'
   //$on-surface: black,
   //$on-error: black,
   //accessible-ink-color,
@@ -43,7 +43,7 @@
 // status-bar style is used for the StatusBar component above the editor
 .status-bar {
   //--freon-colors-bg-status: #4f9a94;
-  --freon-colors-bg-status: #80cbc4;
+  --freon-colors-bg-status: #608cb6;
   --freon-colors-text-status: black;
   --freon-text-style-status: italic;
 }
