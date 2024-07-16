@@ -63,10 +63,17 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                             ],
                             { selectable: false },
                             ),
-                        BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "","top",
+                            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-51", "","top",
                             [
                                 BoxUtil.booleanBox(element, "showSystems", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
                                 BoxUtil.labelBox(element, "Show Systems", "top-1-line-5-item-1"),
+                            ],
+                            { selectable: false },
+                            ),
+                            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-5", "","top",
+                            [
+                                BoxUtil.booleanBox(element, "showScheduling", { yes: "YES", no: "NO" }, BoolDisplay.CHECKBOX),
+                                BoxUtil.labelBox(element, "Show Scheduling", "top-1-line-5-item-1"),
                             ],
                             { selectable: false },
                             ),
@@ -155,6 +162,12 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
     }
 
     createEvent (event: Event): Box {
+        let showScheduling = false;
+        if (event.freOwner() instanceof(Period)) {
+            showScheduling = ((event.freOwner() as Period).freOwner() as StudyConfiguration).showScheduling;
+        } else {
+            showScheduling = (event.freOwner() as StudyConfiguration).showScheduling;
+        }
         return BoxFactory.verticalLayout(event, "Event-overall", "", [
             BoxFactory.horizontalLayout(event, "Event-hlist-line-0", "","center",
                 [
@@ -173,7 +186,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                         ],
                         { selectable: false }
                     ),
-                    ...(((event.freOwner() as Period).freOwner() as StudyConfiguration).showActivityDetails === true? [                    
+                    ...(showScheduling === true? [                    
                         BoxUtil.labelBox(event, "Schedule:", "top-1-line-4-item-0"),
                         BoxUtil.indentBox(event, 2, true, "e11",
                             BoxUtil.getBoxOrAction(event, "schedule", "EventSchedule", this.handler)
