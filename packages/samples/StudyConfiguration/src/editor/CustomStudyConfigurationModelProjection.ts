@@ -170,8 +170,8 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                     BoxFactory.horizontalLayout(event, "Event-hlist-line-9", "", "top",
                         [
                             BoxUtil.labelBox(event, "Checklist:", "top-1-line-9-item-0"),
-                            BoxUtil.booleanBox(event, "showSequenced", { yes: "YES", no: "NO" },BoolDisplay.CHECKBOX),
-                            BoxUtil.labelBox(event, "Allow Sequencing", "top-1-line-9-item-2")
+                            // BoxUtil.booleanBox(event, "showSequenced", { yes: "YES", no: "NO" },BoolDisplay.CHECKBOX),
+                            // BoxUtil.labelBox(event, "Allow Sequencing", "top-1-line-9-item-2")
                         ],
                         { selectable: false }
                     ),

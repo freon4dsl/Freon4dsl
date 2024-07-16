@@ -32,7 +32,8 @@ Event {
             Schedule: 
                 ${schedule}
 
-            Checklist:    ${showSequenced} Allow Sequencing
+            Checklist:   
+            // Checklist:    ${showSequenced} Allow Sequencing
                 ${checkList }
 
     ]  
