@@ -1,4 +1,4 @@
-import { LangUtil } from "../../utils/index";
+import { LangUtil, ParseLocation } from "../../utils/index";
 import { MetaElementReference } from "./internal";
 // This import cannot be shortened. Importing "../../utils" results in circular dependencies
 import { FreMetaDefinitionElement } from "../../utils/FreMetaDefinitionElement";
@@ -557,7 +557,9 @@ export class FreMetaProperty extends FreMetaLangElement {
 }
 
 export class FreMetaConceptProperty extends FreMetaProperty {
+    // TODO Is never set , why the comment?
     hasLimitedType: boolean = false; // set in checker
+    initial: FreMetaPrimitiveValue | undefined;
 }
 
 export class FreMetaPrimitiveProperty extends FreMetaProperty {
@@ -618,8 +620,19 @@ export class FreMetaParameter extends FreMetaLangElement {
     type: MetaElementReference<FreMetaConcept>;
 }
 
+export class FreMetaEnumValue extends FreMetaDefinitionElement {
+    sourceName: string
+    instanceName: string
+    
+    constructor(limitedConceptName: string, limitedInstanceName: string, location: ParseLocation) {
+        super();
+        this.sourceName = limitedConceptName
+        this.instanceName = limitedInstanceName
+        this.location = location
+    }
+}
 // the basic types in the Fre-languages
-export type FreMetaPrimitiveValue = string | boolean | number ;
+export type FreMetaPrimitiveValue = string | boolean | number | FreMetaEnumValue;
 
 export class FreMetaPrimitiveType extends FreMetaConcept {
     /**
