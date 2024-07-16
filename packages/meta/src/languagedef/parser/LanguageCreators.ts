@@ -15,9 +15,9 @@ import {
     FreMetaPrimitiveType,
     FreMetaProperty,
     FreMetaUnitDescription,
-    MetaElementReference
+    MetaElementReference, FreMetaEnumValue
 } from "../metalanguage";
-import { ParseLocationUtil } from "../../utils";
+import { ParseLocation, ParseLocationUtil } from "../../utils";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";
@@ -161,6 +161,11 @@ export function createConcept(data: Partial<FreMetaConcept>): FreMetaConcept {
     return result;
 }
 
+export function createEnumValue(data: {sourceName: string, instanceName: string, location: ParseLocation}): FreMetaEnumValue {
+    const result = new FreMetaEnumValue(data.sourceName, data.instanceName, data.location)
+    return result
+}
+
 export function createLimitedConcept(data: Partial<FreMetaLimitedConcept>): FreMetaLimitedConcept {
     // console.log("createLimitedConcept " + data.name);
     const result = new FreMetaLimitedConcept();
@@ -272,7 +277,7 @@ function createCommonPropertyAttrs(data: Partial<FreMetaProperty>, result: FreMe
 
 // we parse all props as primitive properties because they can have an extra attribute: 'initialValue'
 export function createPartOrPrimProperty(data: Partial<FreMetaPrimitiveProperty>): FreMetaProperty | undefined {
-    // console.log("createPartOrPrimProperty " + data.name + " "+ data.typeReference + " "+ data.typeName);
+    // console.log("createPartOrPrimProperty " + data.name + " "+ data.typeReference + " "+ data.initialValue);
     // Note that we use 'data.typeReference', because at this stage we only have the name of the type, not the object itself.
     let result: FreMetaProperty | undefined = undefined;
     // In the following we ignore data.initialValue for Part Properties (i.e. props where the type is a Concept).
@@ -297,11 +302,18 @@ export function createPartOrPrimProperty(data: Partial<FreMetaPrimitiveProperty>
             }
             result = primitiveProperty;
         } else {
+            // console.log("createPartOrPrimProperty " + data.initialValue)
             const conceptProperty = new FreMetaConceptProperty();
             // in the following statement we cannot use "!!data.initialValue" because it could be a boolean
             // we are not interested in its value, only whether it is present
             if (!!data.initialValue && !!data.location) {
-                nonFatalParseErrors.push(`A non-primitive property may not have an initial value ${ParseLocationUtil.locationPlus(currentFileName, data.location)}.`);
+                // We have an initail value, this should be an enum value, because it isn't a primitive
+                // console.warn(`A non-primitive property may not have an initial value ${ParseLocationUtil.locationPlus(currentFileName, data.location)}.`);
+                // if (data.initialValue instanceof FreMetaEnumValue) {
+                    conceptProperty.initial = data.initialValue
+                // } else {
+                //     nonFatalParseErrors.push(`Property '${data.name}' with concept type must have a limited literal as initial value  ${ParseLocationUtil.locationPlus(currentFileName, data.location)}.`);
+                // }
             }
             result = conceptProperty;
         }

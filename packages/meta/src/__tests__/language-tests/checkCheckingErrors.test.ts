@@ -197,7 +197,8 @@ describe("Checking language parser on checking errors", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {            // console.log(checker.errors.map(err => err));
                 expect(e.message).toBe(`checking errors (1).`);
-                expect(checker.errors.includes("A non-primitive property may not have an initial value [file: test11.ast:14:5].")).toBeTruthy();
+                console.log("ERRORS: " + checker.errors)
+                expect(checker.errors.includes("Non-primitive property 'prop1' may not have an initial value [file: test11.ast:14:12].")).toBeTruthy();
             }
         }
     });
