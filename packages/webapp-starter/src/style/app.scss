@@ -40,3 +40,16 @@ body {
     --freon-verticallayout-component-margin: 0;
 
 }
+
+.tinymce-wrapper textarea {
+  visibility: visible !important;
+}
+
+.tox-statusbar {
+  display: none !important;
+}
+
+.mce-content-body {
+  background: #000000 !important;
+  color: white !important;
+}

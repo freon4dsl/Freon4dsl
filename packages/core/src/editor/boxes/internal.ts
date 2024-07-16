@@ -26,6 +26,7 @@ export * from "./OptionalBox2";
 export * from "./SvgBox";
 export * from "./TextBox";
 export * from "./MultiLineTextBox";
+export * from "./MultiLineTextBox2";
 export * from "./SelectBox";
 export * from "./BoxFactory";
 export * from "./GridCellBox";

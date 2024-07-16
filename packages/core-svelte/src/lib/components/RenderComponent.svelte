@@ -8,28 +8,9 @@
     // Note also that this component has no 'setFocus' method because it is not
     // strongly coupled to a box. Each box is coupled to the corresponding
     // component in the if-statement.
-    import {
-        isActionBox,
-        isEmptyLineBox,
-        isGridBox,
-        isGroupBox,
-        isIconBox,
-        isTableBox,
-        isIndentBox,
-        isLabelBox,
-        isLayoutBox,
-        isListBox,
-        isOptionalBox,
-        isSelectBox,
-        isTextBox,
-        isSvgBox,
-        isBooleanControlBox,
-        FreEditor,
-        FreLogger,
-        Box, BoolDisplay, 
-        isElementBox, isOptionalBox2, isMultiLineTextBox
-    } from "@freon4dsl/core";
+    import { isActionBox, isEmptyLineBox, isGridBox, isGroupBox, isIconBox, isTableBox, isIndentBox, isLabelBox, isLayoutBox, isListBox, isOptionalBox, isSelectBox, isTextBox, isSvgBox, isBooleanControlBox, FreEditor, FreLogger, Box, BoolDisplay,  isElementBox, isOptionalBox2, isMultiLineTextBox, isMultiLineTextBox2 } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
+    import MultiLineTextComponent2 from "./MultiLineTextComponent2.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
     import GridComponent from "./GridComponent.svelte";
     import IndentComponent from "./IndentComponent.svelte";
@@ -147,6 +128,8 @@
                 <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
             {:else if isMultiLineTextBox(box) }
                 <MultiLineTextComponent box={box} editor={editor} text=""/>
+            {:else if isMultiLineTextBox2(box) }
+                <MultiLineTextComponent2 box={box} editor={editor} text=""/>
             {:else if isActionBox(box) || isSelectBox(box)}
                 <TextDropdownComponent box={box} editor={editor}/>
             {:else}

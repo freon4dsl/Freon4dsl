@@ -44,6 +44,7 @@
     "reflect-metadata": "0.2.2",
     "rollup": "4.18.0",
     "rollup-plugin-auto-external": "2.0.0",
+    "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-css-only": "4.5.2",
     "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-livereload": "2.0.5",

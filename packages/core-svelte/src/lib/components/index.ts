@@ -17,6 +17,8 @@ import TableCellComponent from '$lib/components/TableCellComponent.svelte';
 import TextComponent from '$lib/components/TextComponent.svelte';
 import TextDropdownComponent from '$lib/components/TextDropdownComponent.svelte';
 import SvgComponent from '$lib/components/SvgComponent.svelte';
+import MultiLineTextComponent from '$lib/components/MultiLineTextComponent.svelte';
+import MultiLineTextComponent2 from '$lib/components/MultiLineTextComponent2.svelte';
 
 export {
     CheckBoxComponent,
@@ -37,7 +39,9 @@ export {
     TextComponent,
     TextDropdownComponent,
     SvgComponent,
-    IconComponent
+    IconComponent,
+    MultiLineTextComponent,
+    MultiLineTextComponent2
 }
 
 export * from "$lib/components/svelte-utils/index.js";
