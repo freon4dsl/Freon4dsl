@@ -135,19 +135,21 @@ export abstract class LayoutBox extends Box {
 export class HorizontalLayoutBox extends LayoutBox {
     kind: string = "HorizontalLayoutBox";
 
-    constructor(element: FreNode, role: string, alignment: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>) {
+    constructor(element: FreNode, role: string, alignment: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>, cssClass?: string) {
         super(element, role, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
         this.alignment = alignment;
+        this.cssClass = cssClass;
     }
 }
 
 export class VerticalLayoutBox extends LayoutBox {
     kind: string = "VerticalLayoutBox";
 
-    constructor(element: FreNode, role: string, children?: Box[], initializer?: Partial<HorizontalLayoutBox>) {
+    constructor(element: FreNode, role: string, children?: Box[], initializer?: Partial<HorizontalLayoutBox>, cssClass?: string) {
         super(element, role, children, initializer);
         this.direction = ListDirection.VERTICAL;
+        this.cssClass = cssClass;
     }
 }
 

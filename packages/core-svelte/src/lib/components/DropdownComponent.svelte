@@ -3,11 +3,13 @@
      * This component is a dropdown menu that is used with a TextDropdownComponent.
      */
     import { createEventDispatcher } from "svelte";
-    import { FreLogger, type SelectOption } from "@freon4dsl/core";
+    import { Box, FreLogger, type SelectOption } from "@freon4dsl/core";
 
     export let selectedId: string = "";
     export let options: SelectOption[] = [];
     let id: string = "dropdown";
+    let cssClass: string = '';
+    let style: string = '';
     const dispatcher = createEventDispatcher();
 
     const LOGGER = new FreLogger("DropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -30,17 +32,14 @@
     };
 </script>
 
-<nav class="dropdown"
-     id="{id}"
->
+<nav id="{id}" class="dropdown {cssClass}">
     {#if options.length > 0 }
         {#each options as option (option.id + option.label)}
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
             <div class="dropdownitem"
                  class:isSelected={isSelected(option)}
                  on:click={(event) => {event.preventDefault(); event.stopPropagation(); handleClick(option); }}
-                 role="none"
-            >
+                 role="none">
                 {option.label}
             </div>
         {/each}

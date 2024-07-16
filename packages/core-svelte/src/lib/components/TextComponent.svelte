@@ -5,24 +5,7 @@
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
 	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils/index.js";
-	import { ActionBox, ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE, CharAllowed,
-		CONTROL,
-		DELETE,
-		ENTER,
-		ESCAPE,
-		isActionBox,
-		isActionTextBox,
-		isSelectBox,
-		FreCaret,
-		FreCaretPosition,
-		FreEditor,
-		FreLogger,
-		SelectBox,
-		FreErrorSeverity,
-		SHIFT,
-		TAB,
-		TextBox, isRegExp, triggerTypeToString, type FrePostAction
-	} from "@freon4dsl/core";
+	import { ActionBox, ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE, CharAllowed, CONTROL, DELETE, ENTER, ESCAPE, isActionBox, isActionTextBox, isSelectBox, FreCaret, FreCaretPosition, FreEditor, FreLogger, SelectBox, FreErrorSeverity, SHIFT, TAB, TextBox, isRegExp, triggerTypeToString, type FrePostAction } from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";
 	import { replaceHTML } from "./svelte-utils/index.js";
@@ -49,6 +32,8 @@
     let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
     let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
     let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
+	let cssClass: string = '';
+
     										// Note that 'from <= to' always holds.
 	let placeHolderStyle: string;
 	$: placeHolderStyle = (partOfActionBox ? "actionPlaceholder" : "placeholder");
@@ -430,6 +415,7 @@
 		}
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
 		setInputWidth();
+		cssClass = box.cssClass;
 	}
 
 	/**
@@ -539,7 +525,7 @@
 
 <!-- todo there is a double selection here: two borders are showing -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-<span on:click={onClick} id="{id}" role="none">
+<span id="{id}" on:click={onClick} role="none" class="{cssClass}">
 	{#if isEditing}
 		<span id="{id}" class="inputtext">
 			<input type="text"

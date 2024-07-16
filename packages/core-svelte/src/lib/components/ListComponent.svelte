@@ -7,22 +7,9 @@
      * This component supports drag and drop.
      */
     import { flip } from "svelte/animate";
-    import { Box, dropListElement, isActionBox, isNullOrUndefined, FreLanguage,
-        ListBox, ListDirection, ListElementInfo, MenuOptionsType,
-        moveListElement,
-        FreEditor,
-        FreLogger
-    } from "@freon4dsl/core";
+    import { Box, dropListElement, isActionBox, isNullOrUndefined, FreLanguage, ListBox, ListDirection, ListElementInfo, MenuOptionsType, moveListElement, FreEditor, FreLogger } from "@freon4dsl/core";
     import RenderComponent from "./RenderComponent.svelte";
-    import {
-        activeElem,
-        activeIn,
-        draggedElem,
-        draggedFrom,
-        contextMenu,
-        contextMenuVisible,
-        componentId
-    } from "$lib/index.js";
+    import { activeElem, activeIn, draggedElem, draggedFrom, contextMenu, contextMenuVisible, componentId } from "$lib/index.js";
     import { afterUpdate, onMount } from "svelte";
 
     // Parameters
@@ -35,6 +22,7 @@
     let htmlElement: HTMLSpanElement;
     let isHorizontal: boolean;                  // indicates whether the list should be shown horizontally or vertically
     let shownElements: Box[];                   // the parts of the list that are being shown
+    let cssClass: string = '';
 
     // determine the type of the elements in the list
     // this speeds up the check whether an element may be dropped here
@@ -172,6 +160,7 @@
         shownElements = [...box.children];
         id = !!box ? componentId(box) : 'list-for-unknown-box';
         isHorizontal = !!box ? (box.getDirection() === ListDirection.HORIZONTAL) : false;
+        cssClass = !!box ? box.cssClass : '';
     }
 
     $: { // Evaluated and re-evaluated when the box changes.
@@ -186,12 +175,11 @@
 
 <!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->
 <!-- Likewise on:blur is needed for on:mouseout -->
-<span class={isHorizontal ? "horizontalList" : "verticalList"}
-      id="{id}"
-      bind:this={htmlElement}
-      style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
-      style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}"
->
+<span id="{id}" class="{cssClass}"
+    class:horizontalList="{isHorizontal}" class:verticalList="{!isHorizontal}"     
+    bind:this={htmlElement}
+    style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
+    style:grid-template-rows="{isHorizontal ? 1 : shownElements.length}">
     {#each shownElements as box, index (box.id)}
         <span
                 class="list-item"

@@ -166,30 +166,24 @@ export class BoxFactory {
         return result;
     }
 
-    static text(element: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>): TextBox {
+    static text(element: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>, cssClass?: string): TextBox {
         if (cacheTextOff) {
-            return new TextBox(element, role, getText, setText, initializer);
+            return new TextBox(element, role, getText, setText, initializer, cssClass);
         }
         // 1. Create the text box, or find the one that already exists for this element and role
-        const creator = () => new TextBox(element, role, getText, setText, initializer);
+        const creator = () => new TextBox(element, role, getText, setText, initializer, cssClass);
         const result: TextBox = this.find<TextBox>(element, role, creator, textCache);
 
         // 2. Apply the other arguments in case they have changed
         result.$getText = getText;
         result.$setText = setText;
         FreUtils.initializeObject(result, initializer);
-
         return result;
     }
 
-    static bool(element: FreNode,
-                role: string,
-                getBoolean: () => boolean,
-                setBoolean: (text: boolean) => void,
-                initializer?: Partial<BooleanControlBox>
-                ): BooleanControlBox {
+    static bool(element: FreNode, role: string, getBoolean: () => boolean, setBoolean: (text: boolean) => void, initializer?: Partial<BooleanControlBox>, cssClass?: string): BooleanControlBox {
         if (cacheBooleanOff) {
-            return new BooleanControlBox(element, role, getBoolean, setBoolean, initializer);
+            return new BooleanControlBox(element, role, getBoolean, setBoolean, initializer, cssClass);
         }
         // 1. Create the Boolean box, or find the one that already exists for this element and role
         const creator = () => new BooleanControlBox(element, role, getBoolean, setBoolean, initializer);
@@ -220,8 +214,8 @@ export class BoxFactory {
         return result;
     }
 
-    static indent(element: FreNode, role: string, indent: number, fullWidth: boolean = false, childBox: Box): IndentBox {
-        return new IndentBox(element, role, indent, fullWidth, childBox);
+    static indent(element: FreNode, role: string, indent: number, fullWidth: boolean = false, childBox: Box, cssClass?: string): IndentBox {
+        return new IndentBox(element, role, indent, fullWidth, childBox, cssClass);
         // 1. Create the  box, or find the one that already exists for this element and role
         // const creator = () => new IndentBox(element, role, indent, childBox);
         // const result: IndentBox = this.find<IndentBox>(element, role, creator, indentCache);
@@ -239,12 +233,14 @@ export class BoxFactory {
         return oneOk && twoOk;
     }
 
-    static horizontalLayout(element: FreNode, role: string, // @ts-expect-error // todo remove this parameter and adjust the generation in meta
-                            propertyName: string, alignment: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
+    static horizontalLayout(element: FreNode, role: string,
+        // @ts-ignore
+        propertyName: string, 
+        alignment: string, children?: (Box | null)[], initializer?: Partial<HorizontalLayoutBox>, cssClass?: string): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {
-            return new HorizontalLayoutBox(element, role, alignment, children, initializer);
+            return new HorizontalLayoutBox(element, role, alignment, children, initializer, cssClass);
         }
-        const creator = () => new HorizontalLayoutBox(element, role, alignment, children, initializer);
+        const creator = () => new HorizontalLayoutBox(element, role, alignment, children, initializer, cssClass);
         const result: HorizontalLayoutBox = this.find<HorizontalLayoutBox>(element, role, creator, horizontalLayoutCache);
 
         // 2. Apply the other arguments in case they have changed
@@ -256,12 +252,14 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalLayout(element: FreNode, role: string, // @ts-expect-error // todo remove this parameter and adjust the generation in meta
-                          propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
+    static verticalLayout(element: FreNode, role: string, 
+        // @ts-ignore
+        propertyName: string,
+        children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>, cssClass?: string): VerticalLayoutBox {
         if (cacheVerticalLayoutOff) {
-            return new VerticalLayoutBox(element, role, children, initializer);
+            return new VerticalLayoutBox(element, role, children, initializer, cssClass);
         }
-        const creator = () => new VerticalLayoutBox(element, role, children, initializer);
+        const creator = () => new VerticalLayoutBox(element, role, children, initializer, cssClass);
         const result: VerticalLayoutBox = this.find<VerticalLayoutBox>(element, role, creator, verticalLayoutCache);
         // 2. Apply the other arguments in case they have changed
         if (!equals(result.children, children)) {
@@ -271,13 +269,9 @@ export class BoxFactory {
         return result;
     }
 
-    static horizontalList(element: FreNode,
-                          role: string,
-                          propertyName: string,
-                          children?: (Box | null)[],
-                          initializer?: Partial<HorizontalListBox>): HorizontalListBox {
+    static horizontalList(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>, cssClass?: string): HorizontalListBox {
         if (cacheHorizontalListOff) {
-            return new HorizontalListBox(element, role, propertyName, children, initializer);
+            return new HorizontalListBox(element, role, propertyName, children, initializer, cssClass);
         }
         const creator = () => new HorizontalListBox(element, role, propertyName, children, initializer);
         const result: HorizontalListBox = this.find<HorizontalListBox>(element, role, creator, horizontalListCache);
@@ -290,15 +284,11 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalList(element: FreNode,
-                        role: string,
-                        propertyName: string,
-                        children?: (Box | null)[],
-                        initializer?: Partial<VerticalListBox>): VerticalListBox {
+    static verticalList(element: FreNode, role: string, propertyName: string, children?: (Box | null)[], initializer?: Partial<VerticalListBox>, cssClass?: string): VerticalListBox {
         if (cacheVerticalListOff) {
-            return new VerticalListBox(element, role, propertyName, children, initializer);
+            return new VerticalListBox(element, role, propertyName, children, initializer, cssClass);
         }
-        const creator = () => new VerticalListBox(element, role, propertyName, children, initializer);
+        const creator = () => new VerticalListBox(element, role, propertyName, children, initializer, cssClass);
         const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
         // 2. Apply the other arguments in case they have changed
         if (!equals(result.children, children)) {

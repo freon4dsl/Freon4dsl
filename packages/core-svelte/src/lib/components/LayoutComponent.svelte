@@ -1,5 +1,4 @@
 <svelte:options immutable={true}/>
-
 <script lang="ts">
     /**
      * This component shows a list of various boxes (no 'true' list). It can be shown
@@ -21,6 +20,7 @@
     let children: Box[];
     let isHorizontal: boolean;
     let alignment = 'center';
+    let cssClass: string = '';
 
     async function setFocus(): Promise<void> {
         if (!!element) {
@@ -44,6 +44,7 @@
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
         alignment = box.getAlignment();
+        cssClass = !!box ? box.cssClass : '';
     };
     $: { // Evaluated and re-evaluated when the box changes.
         refresh("Refresh Layout box changed " + box?.id);
@@ -65,14 +66,9 @@
     }
 </script>
 
-<span class="layout-component"
-      id="{id}"
-      class:horizontal="{isHorizontal}"
-      class:vertical="{!isHorizontal}"
-      tabIndex={0}
-      bind:this={element}
-      style="{style}"
->
+<span id="{id}" class="layout-component {cssClass}"
+    class:horizontal="{isHorizontal}" class:vertical="{!isHorizontal}"
+    tabIndex={0} bind:this={element} style="{style}">
     {#if isHorizontal }
         {#each children as child (child.id)}
             <RenderComponent box={child} editor={editor}/>

@@ -14,7 +14,7 @@
     let id: string = !!box ? componentId(box) : 'label-for-unknown-box';
     let element: HTMLSpanElement = null;
     let style: string;
-    let cssClass: string;
+    let cssClass: string = !!box ? box.cssClass : '';
     let text: string;
 
     onMount( () => {
@@ -43,11 +43,7 @@
     }
 </script>
 
-<span class="label {text} {cssClass}"
-      style="{style}"
-      bind:this={element}
-      id="{id}"
->
+<span id="{id}" class="label {text} {cssClass}" style="{style}" bind:this={element}>
     {text}
 </span>
 

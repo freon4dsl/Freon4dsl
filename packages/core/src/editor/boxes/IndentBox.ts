@@ -22,12 +22,13 @@ export class IndentBox extends Box {
     indent: number = 4;
     fullWidth: boolean = false;
 
-    constructor(node: FreNode, role: string, indent: number, fullWidth: boolean = false,  child: Box ) {
+    constructor(node: FreNode, role: string, indent: number, fullWidth: boolean = false,  child: Box, cssClass?: string ) {
         super(node, role);
         this.indent = indent;
         this.fullWidth = fullWidth;
         this.child = child;
         this.selectable = false;
+        this.cssClass = cssClass;
     }
 
     /**
