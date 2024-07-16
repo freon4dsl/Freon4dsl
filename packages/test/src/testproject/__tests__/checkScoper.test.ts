@@ -3,6 +3,7 @@ import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
 import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestStartScoper } from "../scoper/gen";
 import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
+import { describe, test, expect, beforeEach } from "vitest"
 
 describe("Checking stdlib for Demo", () => {
     TestStartEnvironment.getInstance();

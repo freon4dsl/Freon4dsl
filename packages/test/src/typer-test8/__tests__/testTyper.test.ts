@@ -2,6 +2,7 @@ import { FreModelSerializer, FreError, FreModelUnit } from "@freon4dsl/core";
 import { XXunit, XX } from "../language/gen";
 import { XXEnvironment } from "../config/gen/XXEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
+import { describe, test, expect, beforeEach } from "vitest"
 
 const writer = XXEnvironment.getInstance().writer;
 const reader = XXEnvironment.getInstance().reader;
@@ -35,9 +36,8 @@ function compareReadAndWrittenFiles(path: string) {
 describe ("Testing Typer on", () => {
     // TODO make an input file in which a number of NamedTypes are created and used
 
-    beforeEach(done => {
+    beforeEach(() => {
         XXEnvironment.getInstance();
-        done();
     });
 
     test ("literal expressions", () => {

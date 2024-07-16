@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Test the parser : read two units and create a model 1`] = `
+exports[`Test the parser > : read two units and create a model 1`] = `
 "unit eenNaam {
 main: entity1 base anotherEntity,
                    andAnother,
@@ -21,7 +21,7 @@ unit wide functions:
 }"
 `;
 
-exports[`Test the parser : read two units and create a model 2`] = `
+exports[`Test the parser > : read two units and create a model 2`] = `
 "unit andereNaam {
 main: entity56 base anotherEntity,
                     andAnother,

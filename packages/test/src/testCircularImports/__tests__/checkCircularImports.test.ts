@@ -1,4 +1,5 @@
 import { ConceptA } from "../language/gen/internal";
+import { describe, test, expect } from "vitest"
 
 describe("Checking circular imports", () => {
     let concept1 = ConceptA.create({

@@ -1,15 +1,12 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoModel, DemoAttributeType } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 describe("Testing Typer", () => {
     describe("Typer.isType on DemoModel Instance", () => {
         let model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
         let typer = DemoEnvironment.getInstance().typer;
-
-        beforeEach(done => {
-            done();
-        });
 
         test("all entities should be types", () => {
             expect(typer.isType(model)).toBe(false);
