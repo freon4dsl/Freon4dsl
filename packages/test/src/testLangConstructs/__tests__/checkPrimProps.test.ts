@@ -1,4 +1,5 @@
 import { ConceptWithPrimProps, ConceptWithAllProps, ConceptWithBasePrim, ConceptWithInheritanceTree1 } from "../language/gen";
+import { describe, test, expect } from "vitest"
 
 describe("Checking primitive properties", () => {
     let concept1 = ConceptWithPrimProps.create({

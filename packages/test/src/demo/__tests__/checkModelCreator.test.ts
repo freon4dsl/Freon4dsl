@@ -1,14 +1,15 @@
 import { FreNode } from "@freon4dsl/core";
 import { DemoModel, DemoFunction, DemoEntity } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
+import { describe, test, expect } from "vitest"
 
 describe("Demo Model", () => {
     describe("Checking DemoModel incorrect instance", () => {
         let model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
 
-        beforeEach(done => {
-            done();
-        });
+        // beforeEach(done => {
+        //     done();
+        // });
 
         test("model name should be set", () => {
             expect(model.name).not.toBeNull();

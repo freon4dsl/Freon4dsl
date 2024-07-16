@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Parser concepts of type  Expression  1`] = `
+exports[`Parser concepts of type >  Expression  1`] = `
 ExpressionTest {
   "$$owner": TestConceptsModel {
     "$$owner": null,

@@ -2,6 +2,7 @@ import { FreUtils } from "@freon4dsl/core";
 import { FileHandler } from "../../utils/FileHandler";
 import { TestConceptsModelEnvironment } from "../config/gen/TestConceptsModelEnvironment";
 import { ExpressionTest, TestConceptsModel } from "../language/gen";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 describe("Parser concepts of type", () => {
     const reader = TestConceptsModelEnvironment.getInstance().reader;

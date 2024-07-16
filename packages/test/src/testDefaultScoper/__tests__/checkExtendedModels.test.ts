@@ -3,6 +3,7 @@ import { DSmodel, DSref, DSunit } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
 import { ExtendedModelCreator } from "./ExtendedModelCreator";
+import { describe, test, expect, beforeEach } from "vitest"
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";
@@ -30,9 +31,8 @@ describe("Testing Default Scoper", () => {
     const scoper = environment.scoper;
     const unparser = environment.writer;
 
-    beforeEach(done => {
+    beforeEach(() => {
         DSmodelEnvironment.getInstance();
-        done();
     });
 
     test("validator messages in model with 1 unit of depth 3", () => {

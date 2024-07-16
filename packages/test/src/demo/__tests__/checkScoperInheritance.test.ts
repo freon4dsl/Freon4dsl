@@ -2,15 +2,15 @@ import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen";
 import { DemoEntity, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 describe("testing Scoper", () => {
     let modelCreator = new DemoModelCreator();
     let inheritanceModel: Demo = modelCreator.createInheritanceModel();
     let scoper = new DemoScoper();
 
-    beforeEach(done => {
+    beforeEach(() => {
         DemoEnvironment.getInstance();
-        done();
     });
 
     // TODO make this two separate tests, that each run every time

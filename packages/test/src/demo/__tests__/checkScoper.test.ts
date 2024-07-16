@@ -2,15 +2,15 @@ import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen";
 import { DemoModel, DemoFunction, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleElements from DemoModel Instance", () => {
         let model: Demo = new DemoModelCreator().createIncorrectModel();
         let scoper = new DemoScoper();
 
-        beforeEach(done => {
+        beforeEach(() => {
             DemoEnvironment.getInstance();
-            done();
         });
 
         test("visible elements in model and unit", () => {

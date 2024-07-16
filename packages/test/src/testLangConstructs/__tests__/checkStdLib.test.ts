@@ -2,6 +2,7 @@ import { FreLanguage } from "@freon4dsl/core";
 import { AllEnvironment } from "../config/gen/AllEnvironment";
 import { LimitedConcept1, LimitedWithBase, LimitedWithInheritanceTree, LimitedWithInterface } from "../language/gen";
 import { AllStdlib } from "../stdlib/gen/AllStdlib";
+import { describe, it, test, expect } from "vitest"
 
 describe("Checking stdlib for Lang Constructs", () => {
     AllEnvironment.getInstance();
