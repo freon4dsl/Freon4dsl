@@ -5,6 +5,7 @@ import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
 import { DemoUnitCreator } from "./DemoUnitCreator";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 describe("testing Scoper on model units", () => {
 
@@ -13,9 +14,8 @@ describe("testing Scoper on model units", () => {
         let scoper = DemoEnvironment.getInstance().scoper;
         let stdlib = DemoStdlib.getInstance();
 
-        beforeEach(done => {
+        beforeEach(() => {
             DemoEnvironment.getInstance();
-            done();
         });
 
         test("visible elements in model", () => {

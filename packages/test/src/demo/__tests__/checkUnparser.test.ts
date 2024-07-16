@@ -15,16 +15,13 @@ import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions"
 import { DemoValidator } from "../validator/gen";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 // import { FileHandler } from "../../utils/FileHandler";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
         // const model: DemoModel = new DemoModelCreator().createIncorrectModel().models[0];
         const unparser = DemoEnvironment.getInstance().writer;
-
-        beforeEach(done => {
-            done();
-        });
 
         test("3", () => {
             let result: string;

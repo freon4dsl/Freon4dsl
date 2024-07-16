@@ -2,6 +2,7 @@ import { UndoModel, UndoPart, UndoUnit } from "../language/gen";
 import { UndoModelEnvironment } from "../config/gen/UndoModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { FreUndoManager } from "@freon4dsl/core";
+import { describe, it, expect} from "vitest"
 
 const handler = new FileHandler();
 const reader = UndoModelEnvironment.getInstance().reader;

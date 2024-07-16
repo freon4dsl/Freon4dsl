@@ -2,6 +2,7 @@ import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen";
 import { AppliedFeature, DemoAttributeRef, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 describe("testing Alternative Scopes", () => {
     describe("testing IsInScope", () => {
@@ -12,9 +13,8 @@ describe("testing Alternative Scopes", () => {
         // where 'Variable1.attrFromPerson' is of type Company
         let scoper = new DemoScoper();
 
-        beforeEach(done => {
+        beforeEach(() => {
             DemoEnvironment.getInstance();
-            done();
         });
 
         test("isInscope 'name' of 'Variable1.attrFromPerson', Variable1: Person", () => {

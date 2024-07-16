@@ -56,7 +56,9 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
     "typescript": "5.4.5",
-    "typescript-svelte-plugin": "0.3.38"
+    "typescript-svelte-plugin": "0.3.38",
+    "@vitest/ui": "^2.0.3"
+
   },
   "workspaces": [
     "packages/core",
