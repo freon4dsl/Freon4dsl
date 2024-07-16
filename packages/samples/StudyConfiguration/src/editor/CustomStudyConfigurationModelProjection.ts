@@ -46,10 +46,11 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 ],
                 { selectable: false },
             ), 
-            BoxUtil.groupBox(element, "Options:", 0, "study-periods-group",
+            BoxUtil.groupBox(element, "OPTIONS:", 0, "study-periods-group",
                 BoxUtil.indentBox(element, 4, true, "3",
                     BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-3", "", 
                     [
+                        BoxUtil.emptyLineBox(element, "option-empty-line"),
                         BoxUtil.switchElement(element, "showPeriods", "Show Periods"), 
                         BoxUtil.switchElement(element, "showActivityDetails", "Show Task Details"),
                         BoxUtil.switchElement(element, "showSystems", "Show Systems"),
@@ -85,7 +86,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                         ),
                     undefined, "app-uppercase"),
                     BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-18"),
-                    BoxUtil.groupBox(element, "Staffing", 0, "staffing-group",
+                    BoxUtil.groupBox(element, "STAFFING", 0, "staffing-group",
                         BoxUtil.indentBox(element, 4, true, "21",
                             BoxUtil.getBoxOrAction(element, "staffing", "Staffing", this.handler)
                         ),
@@ -149,7 +150,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxFactory.verticalLayout(event, "Event-detail", "", [
                     BoxFactory.horizontalLayout(event, "Event-hlist-line-2", "","top",
                         [
-                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps app-green-font"),
+                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps"),
                             BoxUtil.getBoxOrAction(event, "description", "Description", this.handler)
                         ],
                         { selectable: false }

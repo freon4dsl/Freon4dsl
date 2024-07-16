@@ -4,14 +4,14 @@
 
 // Freon Colors!! (Dark Theme)
 @use '@material/theme/index' as theme with (
-  $primary: #00695c,
+  $primary: #003f69,
   $secondary: color.scale(#b53d00, $whiteness: +20%),
   $surface: color-palette.$grey-900,
   $background: #000,
   $error: #B00020,
   //$on-primary: #ffffb0,
   //$on-primary: purple,     // a slighter darker version of 'secondary'
-  $on-secondary: #4f9a94,   // a slighter darker version of 'primary'
+  $on-secondary: #4f709a,   // a slighter darker version of 'primary'
   //$on-surface: black,
   //$on-error: black,
   //accessible-ink-color,
@@ -41,7 +41,7 @@
 // status-bar style is used for the StatusBar component above the editor
 .status-bar {
   //--freon-colors-bg-status: #4f9a94;
-  --freon-colors-bg-status: #4f9a94;
+  --freon-colors-bg-status: #003f69;
   --freon-colors-text-status: white;
   --freon-text-style-status: italic;
 }

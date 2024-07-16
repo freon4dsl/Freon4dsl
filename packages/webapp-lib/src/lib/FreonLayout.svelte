@@ -148,7 +148,7 @@
 			<div class="mdc-typography--headline6">Study Checklist Setup</div>
 		</Section>
 		<Section align="end" toolbar>
-			<IconButton aria-label="GitHub" target="_blank" href="https://github.com/freon4dsl/Freon4dsl.git">
+			<!-- <IconButton aria-label="GitHub" target="_blank" href="https://github.com/freon4dsl/Freon4dsl.git">
 				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiGithub} />
 				</Icon>
@@ -157,7 +157,7 @@
 				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiWeb} />
 				</Icon>
-			</IconButton>
+			</IconButton> -->
 			<IconButton aria-label="Help Page" on:click={() => {$helpDialogVisible = true; console.log($helpDialogVisible)}}>
 				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiHelp} />
