@@ -4,7 +4,7 @@ import {
     FreMetaExpressionConcept,
     FreMetaPrimitiveProperty,
     FreMetaInterface, FreMetaConcept, FreMetaProperty, FreMetaClassifier, FreMetaLimitedConcept,
-    MetaElementReference, FreMetaEnvironment, FreMetaPrimitiveType, FreMetaModelDescription, FreMetaUnitDescription
+    MetaElementReference, FreMetaEnvironment, FreMetaPrimitiveType, FreMetaModelDescription, FreMetaUnitDescription, FreMetaConceptProperty, FreMetaEnumValue
 } from "../metalanguage";
 import { CheckRunner, CheckerPhase, MetaLogger, freReservedWords, reservedWordsInTypescript, ParseLocationUtil } from "../../utils";
 import { CommonChecker } from "./CommonChecker";
@@ -200,6 +200,45 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                             this.runner.simpleCheck(
                                 isUnit,
                                 `Type of property '${freProperty.name}' should be a modelunit ${ParseLocationUtil.location(freProperty.typeReference)}.`);
+                        }
+                        if (realType instanceof FreMetaLimitedConcept) {
+                            // console.log("FreMetaLimitedConcept for property " + freProperty.name)
+                            // Check whether initialvalue is correct
+                            if (freProperty instanceof FreMetaConceptProperty) {
+                                // console.log("    instance of FreMetaConceptProperty with initial " + freProperty.initial );
+                                if (!!freProperty.initial) {
+                                    this.runner.nestedCheck({
+                                        check: freProperty.initial instanceof FreMetaEnumValue,
+                                        error: `Property ${freProperty.name} has incorrect initializer type, should be a limited literal ${freProperty.location}`,
+                                        whenOk: () => {
+                                            // check reference to enum
+                                            const init = freProperty.initial as FreMetaEnumValue
+                                            const enumRef = MetaElementReference.create<FreMetaLimitedConcept>(init.sourceName, "FreClassifier")
+                                            enumRef.location = freProperty.location
+                                            CommonChecker.checkClassifierReference(enumRef, this.runner);
+                                            // console.log(`enumRef referred '${enumRef.referred}`)
+                                            if (!!enumRef.referred) {
+                                                // console.log(".     Refferred found")
+                                                // found, now check enum literal name
+                                                const init = freProperty.initial
+                                                if (init instanceof FreMetaEnumValue) {
+                                                    this.runner.simpleCheck((enumRef.referred as FreMetaLimitedConcept).instances.some(i => i.name === init.instanceName),
+                                                        `Literal '${init.instanceName}' does not exist in limited '${init.sourceName}' at ${ParseLocationUtil.location(freProperty.typeReference)}`)
+                                                } else {
+                                                    this.runner.simpleCheck(false,
+                                                        `Non-primitive property '${freProperty.name} may not have an initial value ${ParseLocationUtil.location(freProperty.typeReference)}`)
+                                                }
+                                            }
+                                        }
+                                    })
+                                } 
+                            }
+                        } else {
+                            // It is a concept, not a limited
+                            if (freProperty instanceof FreMetaConceptProperty) {
+                                    this.runner.simpleCheck(freProperty.initial === undefined,
+                                        `Non-primitive property '${freProperty.name}' may not have an initial value ${ParseLocationUtil.location(freProperty.typeReference)}.`)
+                            }
                         }
                         // TODO review the rules around 'public'
                         // if (freProperty.isPart && freeProperty.isPublic) {

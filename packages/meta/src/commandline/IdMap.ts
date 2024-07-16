@@ -16,7 +16,7 @@ export class IdMap {
     languageStore = new Map<string, LanguageData>();
 
     setLanguageIdAndKey(language: string, id: string, key: string): void {
-        console.log("IdMap.setLanguageIdAndKey " + language + " id " + id + " key " + key);
+        // console.log("IdMap.setLanguageIdAndKey " + language + " id " + id + " key " + key);
         this.languageStore.set(language, {id: id, key: key});
     }
 

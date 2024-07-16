@@ -6,7 +6,7 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaProperty,
     FreMetaPrimitiveType,
-    FreMetaInterface
+    FreMetaInterface, FreMetaEnumValue
 } from "../../metalanguage";
 
 export class ConceptUtils {
@@ -35,6 +35,13 @@ export class ConceptUtils {
         return `${freProp.name} : ${GenerationUtil.getBaseTypeAsString(freProp)}${arrayType}; \t${comment}`;
     }
 
+    private static initEnumValue(freProp: FreMetaConceptProperty): string {
+        if (!!freProp.initial && freProp.initial instanceof FreMetaEnumValue) {
+            return `this.${freProp.name} = FreNodeReference.create<${freProp.initial.sourceName}>(${freProp.initial.sourceName}.${freProp.initial.instanceName}, "${freProp.initial.sourceName}");`;
+        } else {
+            return ""
+        }
+    }
     private static initializer(freProp: FreMetaPrimitiveProperty): string {
         let initializer = "";
         const myType: FreMetaClassifier = freProp.type;
@@ -167,7 +174,8 @@ export class ConceptUtils {
                 (p.isList ?
                         `observablepartlist(this, "${p.name}");`
                         :
-                        `observablepart(this, "${p.name}");`
+                        `observablepart(this, "${p.name}");
+                        ${this.initEnumValue(p)}`
                 )
             ).join("\n")}`
             : ``

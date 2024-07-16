@@ -15,14 +15,14 @@ import {
 import { DemoValidator } from "../validator/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
+import { describe, test, expect, beforeEach } from "vitest"
 
 describe("Testing Validator", () => {
     const model: Demo = new DemoModelCreator().createIncorrectModel();
     const validator = new DemoValidator();
 
-    beforeEach(done => {
+    beforeEach(() => {
         DemoEnvironment.getInstance();
-        done();
     });
 
     test("multiplication 3 * 10", () => {

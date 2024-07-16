@@ -2,6 +2,7 @@ import { FreLanguage, jsonAsString } from "@freon4dsl/core";
 import { KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
 import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
+import { describe, test, expect } from "vitest"
 
 describe("Checking stdlib for Demo", () => {
     TestStartEnvironment.getInstance();

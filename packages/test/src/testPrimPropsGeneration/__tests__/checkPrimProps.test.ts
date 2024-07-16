@@ -1,4 +1,5 @@
 import { BB } from "../language/gen";
+import { describe, test, expect } from "vitest"
 
 describe("Checking generation of primitive properties", () => {
 

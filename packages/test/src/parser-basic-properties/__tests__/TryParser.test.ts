@@ -2,6 +2,7 @@ import { FreUtils } from "@freon4dsl/core";
 import { TestParserModelEnvironment } from "../config/gen/TestParserModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { LimitedTest, PartsTest, PrimitivesTest, RefsTest, PrimsWithKeywordTest, TestParserModel } from "../language/gen";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 describe("Parser properties of type", () => {
     const reader = TestParserModelEnvironment.getInstance().reader;

@@ -40,7 +40,7 @@ concept RepeatCondition implements RepeatExpression {
 
 expression EventReference base FirstScheduledExpression {
     reference event: Event;
-    eventState: EventState;
+    eventState: EventState = EventState:completed;
 }
 
 concept RepeatCount implements RepeatExpression {
