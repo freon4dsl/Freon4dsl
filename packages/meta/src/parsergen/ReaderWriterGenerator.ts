@@ -4,8 +4,8 @@ import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import { GenerationStatus, FileUtil, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
-import * as  net from "net.akehurst.language-agl-processor";
-import Agl = net.net.akehurst.language.agl.processor.Agl;
+import net from "net.akehurst.language-agl-processor";
+var Agl = net.net.akehurst.language.agl.processor.Agl;
 import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
 import { GrammarModel } from "./parserTemplates/grammarModel/GrammarModel.js";
 
