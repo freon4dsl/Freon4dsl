@@ -49,19 +49,28 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             BoxUtil.groupBox(element, "Options:", 0, "study-periods-group",
                 BoxUtil.indentBox(element, 4, true, "3",
                     BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-3", "", 
-                        [
+                    [
+                        BoxUtil.switchElement(element, "showPeriods", "Show Periods"), 
                         BoxUtil.switchElement(element, "showActivityDetails", "Show Task Details"),
-                        BoxUtil.switchElement(element, "showSystems", "Show Systems")
-                        ]
-                    )
+                        BoxUtil.switchElement(element, "showSystems", "Show Systems"),
+                        BoxUtil.switchElement(element, "showScheduling", "Show Scheduling") 
+                    ])
                 )
             ),
-            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6"),
-            BoxUtil.groupBox(element, "STUDY PERIODS", 0, "study-periods-group", 
-                BoxUtil.indentBox(element, 4, true, "9",
-                    BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
+            ...(element.showPeriods === true? [                    
+                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6"),
+                BoxUtil.groupBox(element, "STUDY PERIODS", 0, "study-periods-group",
+                    BoxUtil.indentBox(element, 4, true, "9",
+                        BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
+                    )
                 ),
-            undefined, "app-uppercase"),
+            ] : [
+                BoxUtil.groupBox(element, "EVENTS", 0, "group-1-line-2-item-0",
+                    BoxUtil.indentBox(element, 4, true, "4",
+                        BoxUtil.verticalPartListBox(element, element.eventsWithoutPeriod, "eventsWithoutPeriod", null, this.handler)
+                    ) 
+                ),
+            ]),
             ...(element.showActivityDetails === true? [
                     BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-10"),
                     BoxUtil.groupBox(element, "TASK DETAILS", 0, "task-details-group",
@@ -91,14 +100,16 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
 
     createPeriod (period: Period): Box {
         return BoxFactory.verticalLayout(period, "Period-overall", "", [
-            BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "", "center",
-                [
-                    new IconBox(period, "draggrip", faGripVertical, "grab"),
-                    BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1", undefined, "app-uppercase"),
-                    BoxUtil.textBox(period, "name")                   
-                ],
-                { selectable: false }
-            ),
+            ...((period.freOwner() as StudyConfiguration).showActivityDetails === true? [                    
+                    BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "", "center",
+                    [
+                        new IconBox(period, "draggrip", faGripVertical, "grab"),
+                        BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1", undefined, "app-uppercase"),
+                        BoxUtil.textBox(period, "name")                   
+                    ],
+                    { selectable: false }
+                ),
+            ] : []),
             BoxUtil.indentBox(period, 1.5, true, "e1",
                 BoxFactory.verticalLayout(period, "Period-detail", "", [
                     BoxFactory.horizontalLayout(period, "Period-hlist-line-1", "","top",
@@ -119,6 +130,12 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
     }
 
     createEvent (event: Event): Box {
+        let showScheduling = false;
+        if (event.freOwner() instanceof(Period)) {
+            showScheduling = ((event.freOwner() as Period).freOwner() as StudyConfiguration).showScheduling;
+        } else {
+            showScheduling = (event.freOwner() as StudyConfiguration).showScheduling;
+        }
         return BoxFactory.verticalLayout(event, "Event-overall", "", [
             BoxFactory.horizontalLayout(event, "Event-hlist-line-0", "","center",
                 [
@@ -137,10 +154,12 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                         ],
                         { selectable: false }
                     ),
-                    BoxUtil.labelBox(event, "Schedule:", "top-1-line-4-item-0"),
-                    BoxUtil.indentBox(event, 2, true, "e11",
-                        BoxUtil.getBoxOrAction(event, "schedule", "EventSchedule", this.handler)
-                    ),
+                    ...(showScheduling === true? [                    
+                        BoxUtil.labelBox(event, "Schedule:", "top-1-line-4-item-0"),
+                        BoxUtil.indentBox(event, 2, true, "e11",
+                            BoxUtil.getBoxOrAction(event, "schedule", "EventSchedule", this.handler)
+                        ),
+                    ] : []),
                     BoxFactory.horizontalLayout(event, "Event-hlist-line-9", "", "top",
                         [
                             BoxUtil.labelBox(event, "Checklist:", "top-1-line-9-item-0"),
