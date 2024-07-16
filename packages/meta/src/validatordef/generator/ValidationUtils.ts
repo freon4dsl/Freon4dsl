@@ -1,4 +1,4 @@
-import {FreMetaClassifier, FreMetaPrimitiveProperty, FreMetaPrimitiveType} from "../../languagedef/metalanguage";
+import {FreMetaClassifier, FreMetaPrimitiveProperty, FreMetaPrimitiveType} from "../../languagedef/metalanguage/index.js";
 
 export class ValidationUtils {
     public static findLocationDescription(concept: FreMetaClassifier | undefined): string {

@@ -1,9 +1,9 @@
-import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
-import { RHSPropEntry } from "./RHSPropEntry";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage";
-import { internalTransformFreNodeRef, ParserGenUtil } from "../../ParserGenUtil";
-import { makeIndent } from "../GrammarUtils";
-import { GenerationUtil } from "../../../../utils";
+import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
+import { RHSPropEntry } from "./RHSPropEntry.js";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import { internalTransformFreNodeRef, ParserGenUtil } from "../../ParserGenUtil.js";
+import { makeIndent } from "../GrammarUtils.js";
+import { GenerationUtil } from "../../../../utils/index.js";
 
 export class RHSRefListWithTerminator extends RHSPropPartWithSeparator {
     // (propTypeName 'joinText' )*

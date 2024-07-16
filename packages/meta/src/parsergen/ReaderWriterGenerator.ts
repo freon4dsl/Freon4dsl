@@ -1,13 +1,13 @@
 import * as fs from "fs";
-import { MetaLogger } from "../utils";
-import { FreMetaLanguage } from "../languagedef/metalanguage";
-import { GenerationStatus, FileUtil, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils";
-import { FreEditUnit } from "../editordef/metalanguage";
-import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates";
-import { net } from "net.akehurst.language-agl-processor";
-import Agl = net.akehurst.language.agl.processor.Agl;
-import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser";
-import { GrammarModel } from "./parserTemplates/grammarModel/GrammarModel";
+import { MetaLogger } from "../utils/index.js";
+import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
+import { GenerationStatus, FileUtil, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils/index.js";
+import { FreEditUnit } from "../editordef/metalanguage/index.js";
+import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
+import * as  net from "net.akehurst.language-agl-processor";
+import Agl = net.net.akehurst.language.agl.processor.Agl;
+import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
+import { GrammarModel } from "./parserTemplates/grammarModel/GrammarModel.js";
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
 

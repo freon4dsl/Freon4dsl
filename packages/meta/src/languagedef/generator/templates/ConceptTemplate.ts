@@ -1,4 +1,4 @@
-import { GenerationUtil, Names } from "../../../utils";
+import { GenerationUtil, Names } from "../../../utils/index.js";
 import {
     FreMetaPrimitiveProperty,
     FreMetaBinaryExpressionConcept,
@@ -9,9 +9,9 @@ import {
     FreMetaInstanceProperty,
     FreMetaClassifier,
     FreMetaPrimitiveType
-} from "../../metalanguage";
-import { ConceptUtils } from "./ConceptUtils";
-import { ClassifierUtil } from "./ClassifierUtil";
+} from "../../metalanguage/index.js";
+import { ConceptUtils } from "./ConceptUtils.js";
+import { ClassifierUtil } from "./ClassifierUtil.js";
 
 export class ConceptTemplate {
     generateConcept(concept: FreMetaConcept): string {

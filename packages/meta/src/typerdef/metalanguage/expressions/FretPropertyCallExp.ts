@@ -1,5 +1,5 @@
-import { FreMetaClassifier, MetaElementReference, FreMetaProperty } from "../../../languagedef/metalanguage";
-import { FretExp } from "./FretExp";
+import { FreMetaClassifier, MetaElementReference, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
+import { FretExp } from "./FretExp.js";
 
 export class FretPropertyCallExp extends FretExp {
     /**

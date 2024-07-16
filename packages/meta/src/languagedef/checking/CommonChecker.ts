@@ -5,8 +5,8 @@ import {
     FreMetaPrimitiveType,
     FreMetaPrimitiveValue,
     FreMetaProperty
-} from "../metalanguage";
-import { CheckRunner, MetaLogger, Names, ParseLocationUtil } from "../../utils";
+} from "../metalanguage/index.js";
+import { CheckRunner, MetaLogger, Names, ParseLocationUtil } from "../../utils/index.js";
 
 const LOGGER = new MetaLogger("CommonChecker").mute();
 

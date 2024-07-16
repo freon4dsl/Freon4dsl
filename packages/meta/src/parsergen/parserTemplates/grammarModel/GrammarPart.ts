@@ -1,7 +1,7 @@
-import { GrammarRule } from "./GrammarRule";
-import { FreMetaClassifier, FreMetaLanguage, FreMetaPrimitiveType } from "../../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils";
-import { FreMetaUnitDescription } from "../../../languagedef/metalanguage/FreMetaLanguage";
+import { GrammarRule } from "./GrammarRule.js";
+import { FreMetaClassifier, FreMetaLanguage, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils/index.js";
+import { FreMetaUnitDescription } from "../../../languagedef/metalanguage/FreMetaLanguage.js";
 
 export class GrammarPart {
     unit: FreMetaUnitDescription | undefined;

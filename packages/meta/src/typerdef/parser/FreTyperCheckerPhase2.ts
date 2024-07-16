@@ -1,4 +1,4 @@
-import { CheckerPhase, CheckRunner, ListUtil, ParseLocationUtil } from "../../utils";
+import { CheckerPhase, CheckRunner, ListUtil, ParseLocationUtil } from "../../utils/index.js";
 import {
     FretAnytypeExp,
     FretBinaryExp, FretConformsExp,
@@ -8,9 +8,9 @@ import {
     FretLimitedInstanceExp, FretPropertyCallExp, FretSelfExp, FretVarCallExp, FretVarDecl,
     FretWhereExp,
     TyperDef
-} from "../metalanguage";
-import { ClassifierChecker } from "../../languagedef/checking/ClassifierChecker";
-import { FreMetaProperty } from "../../languagedef/metalanguage";
+} from "../metalanguage/index.js";
+import { ClassifierChecker } from "../../languagedef/checking/ClassifierChecker.js";
+import { FreMetaProperty } from "../../languagedef/metalanguage/index.js";
 
 // const LOGGER = new MetaLogger("FreTyperCheckerPhase2"); //.mute();
 

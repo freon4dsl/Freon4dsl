@@ -28,8 +28,8 @@
 //         return indent + "RHSGroup: " + indent + this.subs.map(sub => sub.toString(depth+1)).join(indent);
 //     }
 // }
-import { RightHandSideEntry } from "./RightHandSideEntry";
-import { makeIndent } from "../GrammarUtils";
+import { RightHandSideEntry } from "./RightHandSideEntry.js";
+import { makeIndent } from "../GrammarUtils.js";
 
 export class RHSText extends RightHandSideEntry {
     text: string = '';

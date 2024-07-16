@@ -1,10 +1,10 @@
-import { FreTyperElement } from "./FreTyperElement";
-import { FreMetaClassifier, MetaElementReference, FreMetaLanguage, FreMetaProperty } from "../../languagedef/metalanguage";
-import { FretTypeConcept } from "./FretTypeConcept";
-import { FretClassifierSpec } from "./FretClassifierSpec";
-import { FretAnyTypeSpec } from "./FretAnyTypeSpec";
-import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
-import { Names } from "../../utils";
+import { FreTyperElement } from "./FreTyperElement.js";
+import { FreMetaClassifier, MetaElementReference, FreMetaLanguage, FreMetaProperty } from "../../languagedef/metalanguage/index.js";
+import { FretTypeConcept } from "./FretTypeConcept.js";
+import { FretClassifierSpec } from "./FretClassifierSpec.js";
+import { FretAnyTypeSpec } from "./FretAnyTypeSpec.js";
+import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil.js";
+import { Names } from "../../utils/index.js";
 
 export class TyperDef extends FreTyperElement {
     static freonType: FreMetaClassifier = this.makeFreType();

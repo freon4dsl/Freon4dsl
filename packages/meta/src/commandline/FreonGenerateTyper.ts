@@ -1,8 +1,8 @@
-import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
-import { MetaLogger } from "../utils/MetaLogger";
-import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
-import { FreTyperMerger } from "../typerdef/parser/FreTyperMerger";
-import {TyperDef} from "../typerdef/metalanguage";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
+import { MetaLogger } from "../utils/MetaLogger.js";
+import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
+import { FreTyperMerger } from "../typerdef/parser/FreTyperMerger.js";
+import {TyperDef} from "../typerdef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateTyper"); // .mute();
 export class FreonGenerateTyper extends FreonGeneratePartAction {

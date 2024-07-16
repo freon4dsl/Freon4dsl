@@ -16,15 +16,15 @@ import {
     FreEditTableProjection,
     FreEditUnit,
     FreOptionalPropertyProjection, BoolKeywords
-} from "../metalanguage";
-import { ListUtil } from "../../utils";
-import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
-import { FreEditParseUtil } from "./FreEditParseUtil";
+} from "../metalanguage/index.js";
+import { ListUtil } from "../../utils/index.js";
+import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
+import { FreEditParseUtil } from "./FreEditParseUtil.js";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference } from "../../languagedef/metalanguage";
+import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
 
 // const LOGGER = new MetaLogger("EditorCreators").mute();
 

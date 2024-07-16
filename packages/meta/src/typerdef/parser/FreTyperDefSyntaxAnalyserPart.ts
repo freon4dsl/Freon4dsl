@@ -7,7 +7,7 @@ import {
     FreMetaClassifier,
     FreMetaLimitedConcept,
     FreMetaInstance, FreMetaProperty, FreMetaConcept
-} from "../../languagedef/metalanguage";
+} from "../../languagedef/metalanguage/index.js";
 import {
     TyperDef,
     FretAnyTypeSpec,
@@ -23,8 +23,8 @@ import {
     FretProperty,
     FretEqualsExp,
     FretConformsExp
-} from "../metalanguage";
-import { FreTyperSyntaxAnalyser } from "./FreTyperSyntaxAnalyser";
+} from "../metalanguage/index.js";
+import { FreTyperSyntaxAnalyser } from "./FreTyperSyntaxAnalyser.js";
 import {
     FretTypeConcept,
     FretClassifierSpec,
@@ -36,7 +36,7 @@ import {
     FretBinaryExp,
     FretConformanceRule,
     FretEqualsRule
-} from "../metalanguage";
+} from "../metalanguage/index.js";
 import SPPTBranchFromInput = net.akehurst.language.agl.sppt.SPPTBranchFromInput;
 
 /**

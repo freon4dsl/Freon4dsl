@@ -1,6 +1,4 @@
-{
-    let create = require("./LanguageCreators");
-}
+
 
 Language_Definition
   = ws "language" rws name:var rws langparts:(langdef)*

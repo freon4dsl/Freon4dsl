@@ -1,5 +1,5 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, Names, FREON_CORE } from "../../utils";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { LANGUAGE_GEN_FOLDER, Names, FREON_CORE } from "../../utils/index.js";
 
 export class ReaderTemplate {
 

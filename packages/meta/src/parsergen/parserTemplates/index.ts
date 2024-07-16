@@ -1,3 +1,3 @@
-export * from "./ReaderTemplate";
-export * from "./WriterTemplate";
-export * from "./GrammarGenerator";
+export * from "./ReaderTemplate.js";
+export * from "./WriterTemplate.js";
+export * from "./GrammarGenerator.js";

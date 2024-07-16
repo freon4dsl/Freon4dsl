@@ -1,9 +1,9 @@
-import { FreMetaLanguage } from "../metalanguage/FreMetaLanguage";
-import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker";
-import { FreGenericParser } from "../../utils/parsingAndChecking/FreGenericParser";
-import { LanguageExpressionTester } from "./LanguageExpressionTester";
-import pegjsParser  from "./ExpressionGrammar";
-import { setCurrentFileName } from "./ExpressionCreators";
+import { FreMetaLanguage } from "../metalanguage/FreMetaLanguage.js";
+import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker.js";
+import { FreGenericParser } from "../../utils/parsingAndChecking/FreGenericParser.js";
+import { LanguageExpressionTester } from "./LanguageExpressionTester.js";
+import pegjsParser  from "./ExpressionGrammar.js";
+import { setCurrentFileName } from "./ExpressionCreators.js";
 
 export class LanguageExpressionParser extends FreGenericParser<LanguageExpressionTester> {
     public language: FreMetaLanguage;

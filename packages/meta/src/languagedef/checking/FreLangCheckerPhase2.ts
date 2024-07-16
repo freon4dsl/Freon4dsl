@@ -1,4 +1,4 @@
-import { CheckerPhase, CheckRunner, isNullOrUndefined, ParseLocationUtil } from "../../utils";
+import { CheckerPhase, CheckRunner, isNullOrUndefined, ParseLocationUtil } from "../../utils/index.js";
 import {
     FreMetaConcept,
     FreMetaInstance,
@@ -10,9 +10,9 @@ import {
     FreMetaInstanceProperty,
     FreMetaUnitDescription,
     MetaElementReference
-} from "../metalanguage";
-import { CommonChecker } from "./CommonChecker";
-import { ClassifierChecker } from "./ClassifierChecker";
+} from "../metalanguage/index.js";
+import { CommonChecker } from "./CommonChecker.js";
+import { ClassifierChecker } from "./ClassifierChecker.js";
 
 export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
     // @ts-ignore This property is set in the 'check' method, therefore we can assume that it is initialized in the private methods.

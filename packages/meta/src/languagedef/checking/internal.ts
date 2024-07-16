@@ -4,8 +4,8 @@
  * in order to avoid problem with circular imports.
  */
 
-export * from "./FreLangCheckerPhase1";
-export * from "./FreLangCheckerPhase2";
-export * from "./FreLangExpressionChecker";
-export * from "./common-super/CommonSuperTypeUtil";
-export * from "./CommonChecker";
+export * from "./FreLangCheckerPhase1.js";
+export * from "./FreLangCheckerPhase2.js";
+export * from "./FreLangExpressionChecker.js";
+export * from "./common-super/CommonSuperTypeUtil.js";
+export * from "./CommonChecker.js";

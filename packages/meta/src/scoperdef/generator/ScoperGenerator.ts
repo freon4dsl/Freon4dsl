@@ -1,12 +1,12 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils";
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { GenerationStatus, FileUtil, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils";
-import { ScopeDef } from "../metalanguage";
-import { CustomScoperTemplate } from "./templates/CustomScoperTemplate";
-import { ScoperDefTemplate } from "./templates/ScoperDefTemplate";
-import { ScoperTemplate } from "./templates/ScoperTemplate";
-import { MetaElementReference, FreMetaModelDescription } from "../../languagedef/metalanguage";
+import { MetaLogger } from "../../utils/index.js";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { GenerationStatus, FileUtil, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils/index.js";
+import { ScopeDef } from "../metalanguage/index.js";
+import { CustomScoperTemplate } from "./templates/CustomScoperTemplate.js";
+import { ScoperDefTemplate } from "./templates/ScoperDefTemplate.js";
+import { ScoperTemplate } from "./templates/ScoperTemplate.js";
+import { MetaElementReference, FreMetaModelDescription } from "../../languagedef/metalanguage/index.js";
 
 const LOGGER: MetaLogger = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {

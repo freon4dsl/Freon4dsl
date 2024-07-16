@@ -5,9 +5,9 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaInterface, FreMetaConcept, FreMetaProperty, FreMetaClassifier, FreMetaLimitedConcept,
     MetaElementReference, FreMetaEnvironment, FreMetaPrimitiveType, FreMetaModelDescription, FreMetaUnitDescription
-} from "../metalanguage";
-import { CheckRunner, CheckerPhase, MetaLogger, freReservedWords, reservedWordsInTypescript, ParseLocationUtil } from "../../utils";
-import { CommonChecker } from "./CommonChecker";
+} from "../metalanguage/index.js";
+import { CheckRunner, CheckerPhase, MetaLogger, freReservedWords, reservedWordsInTypescript, ParseLocationUtil } from "../../utils/index.js";
+import { CommonChecker } from "./CommonChecker.js";
 
 const LOGGER = new MetaLogger("FreLanguageChecker").mute();
 

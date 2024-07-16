@@ -1,6 +1,7 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../utils";
-import {FreMetaConcept, FreMetaLanguage} from "../../languagedef/metalanguage";
+import { MetaLogger } from "../../utils/index.js";
+import {FreMetaConcept, FreMetaLanguage} from "../../languagedef/metalanguage/index.js";
+import { describe, test, expect } from "vitest"
 
 describe("Checking property inheritance", () => {
     const testdir = "src/__tests__/language-tests/faultyDefFiles/property-inheritance1/";
@@ -55,7 +56,7 @@ describe("Checking property inheritance", () => {
             model = parser.parse(parseFile);
         } catch (e: unknown) {
             if (e instanceof Error) {
-                // console.log(e.message + e.stack);
+                console.log(e?.message + e?.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
                 expect(e.message).toBeNull();
             }

@@ -1,5 +1,6 @@
 import {LanguageParser} from "../../languagedef/parser/LanguageParser";
-import {FreMetaLanguage} from "../../languagedef/metalanguage";
+import {FreMetaLanguage} from "../../languagedef/metalanguage/index.js";
+import { expect } from "vitest"
 
 export function parseCorrectModel(parser: LanguageParser, parseFile: string) {
     let model: FreMetaLanguage | undefined = undefined;

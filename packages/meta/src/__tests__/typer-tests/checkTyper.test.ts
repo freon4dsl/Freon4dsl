@@ -1,8 +1,9 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../utils";
-import { TyperDef } from "../../typerdef/metalanguage";
+import { MetaLogger } from "../../utils/index.js";
+import { TyperDef } from "../../typerdef/metalanguage/index.js";
 import { FreTyperMerger } from "../../typerdef/parser/FreTyperMerger";
+import { describe, test, expect, beforeEach } from "vitest"
 
 describe("Checking new typer", () => {
     const testdir = "src/__tests__/typer-tests/faultyDefFiles/";

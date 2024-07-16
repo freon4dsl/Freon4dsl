@@ -1,5 +1,5 @@
-import { FreMetaLangElement, FreMetaEnvironment } from "./internal";
-import { ParseLocation, FreMetaDefinitionElement, FreParseLocation } from "../../utils";
+import { FreMetaLangElement, FreMetaEnvironment } from "./internal.js";
+import { ParseLocation, FreMetaDefinitionElement, FreParseLocation } from "../../utils/index.js";
 
 /**
  * Implementation for a (named) reference in Freon.

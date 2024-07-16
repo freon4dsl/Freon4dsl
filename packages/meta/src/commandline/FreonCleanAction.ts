@@ -3,16 +3,16 @@ import {
     CommandLineFlagParameter,
     CommandLineStringParameter
 } from "@rushstack/ts-command-line";
-import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator";
-import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator";
-import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
-import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
-import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator";
-import { MetaLogger } from "../utils";
-import { GenerationStatus, FileUtil } from "../utils";
-import { LanguageParser } from "../languagedef/parser/LanguageParser";
-import { FreMetaLanguage } from "../languagedef/metalanguage";
+import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator.js";
+import { EditorGenerator } from "../editordef/generator/EditorGenerator.js";
+import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
+import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator.js";
+import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator.js";
+import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
+import { MetaLogger } from "../utils/index.js";
+import { GenerationStatus, FileUtil } from "../utils/index.js";
+import { LanguageParser } from "../languagedef/parser/LanguageParser.js";
+import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonCleanAction"); // .mute();
 

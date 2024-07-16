@@ -1,7 +1,7 @@
-import { RHSPropEntry } from "./RHSPropEntry";
-import { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage";
-import { makeIndent } from "../GrammarUtils";
-import { ParserGenUtil } from "../../ParserGenUtil";
+import { RHSPropEntry } from "./RHSPropEntry.js";
+import { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage/index.js";
+import { makeIndent } from "../GrammarUtils.js";
+import { ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
     private readonly trueKeyword: string = "";

@@ -4,14 +4,14 @@ import {
     FreLangExp,
     FreLangFunctionCallExp,
     FreMetaLanguage, FreMetaProperty
-} from "../../../languagedef/metalanguage";
+} from "../../../languagedef/metalanguage/index.js";
 import {
     Names,
     LANGUAGE_GEN_FOLDER,
     FREON_CORE,
     GenerationUtil, LangUtil, ListUtil
-} from "../../../utils";
-import { ScopeDef, ScopeConceptDef } from "../../metalanguage";
+} from "../../../utils/index.js";
+import { ScopeDef, ScopeConceptDef } from "../../metalanguage/index.js";
 
 export class ScoperTemplate {
     languageImports: string[] = []; // holds the names of all classifiers that need to be imported from the generated language structure

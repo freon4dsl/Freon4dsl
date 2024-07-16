@@ -1,7 +1,7 @@
-import { Names, FREON_CORE } from "../../../utils";
-import { ConceptUtils } from "./ConceptUtils";
-import { FreMetaModelDescription } from "../../metalanguage/FreMetaLanguage";
-import { ClassifierUtil } from "./ClassifierUtil";
+import { Names, FREON_CORE } from "../../../utils/index.js";
+import { ConceptUtils } from "./ConceptUtils.js";
+import { FreMetaModelDescription } from "../../metalanguage/FreMetaLanguage.js";
+import { ClassifierUtil } from "./ClassifierUtil.js";
 
 export class ModelTemplate {
     // Note: a model may not have other properties than units

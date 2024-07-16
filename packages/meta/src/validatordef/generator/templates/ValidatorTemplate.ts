@@ -4,9 +4,9 @@ import {
     Names,
     FREON_CORE,
     LANGUAGE_GEN_FOLDER
-} from "../../../utils";
-import { FreMetaLanguage } from "../../../languagedef/metalanguage";
-import { ValidatorDef } from "../../metalanguage";
+} from "../../../utils/index.js";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import { ValidatorDef } from "../../metalanguage/index.js";
 
 export class ValidatorTemplate {
     errorClassName: string = Names.FreError;

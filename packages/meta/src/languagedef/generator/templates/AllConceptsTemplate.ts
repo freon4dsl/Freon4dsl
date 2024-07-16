@@ -1,5 +1,5 @@
-import { GenerationUtil, Names } from "../../../utils";
-import { FreMetaLanguage } from "../../metalanguage";
+import { GenerationUtil, Names } from "../../../utils/index.js";
+import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class AllConceptsTemplate {
 

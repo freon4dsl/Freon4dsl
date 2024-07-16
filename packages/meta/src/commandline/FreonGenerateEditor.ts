@@ -1,9 +1,9 @@
-import { EditorGenerator } from "../editordef/generator/EditorGenerator";
-import { FreEditParser } from "../editordef/parser/FreEditParser";
-import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
+import { EditorGenerator } from "../editordef/generator/EditorGenerator.js";
+import { FreEditParser } from "../editordef/parser/FreEditParser.js";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 // This import cannot be shortened. Importing "../utils" would result in circular dependencies.
-import { MetaLogger } from "../utils/MetaLogger";
-import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator";
+import { MetaLogger } from "../utils/MetaLogger.js";
+import { DefaultEditorGenerator } from "../editordef/metalanguage/DefaultEditorGenerator.js";
 
 const LOGGER = new MetaLogger("FreonGenerateEditor"); // .mute();
 

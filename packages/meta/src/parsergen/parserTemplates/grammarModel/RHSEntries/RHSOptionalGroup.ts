@@ -1,8 +1,8 @@
-import { RHSPropEntry } from "./RHSPropEntry";
-import { RightHandSideEntry } from "./RightHandSideEntry";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage";
-import { makeIndent } from "../GrammarUtils";
-import { RHSBooleanWithSingleKeyWord } from "./RHSBooleanWithSingleKeyWord";
+import { RHSPropEntry } from "./RHSPropEntry.js";
+import { RightHandSideEntry } from "./RightHandSideEntry.js";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import { makeIndent } from "../GrammarUtils.js";
+import { RHSBooleanWithSingleKeyWord } from "./RHSBooleanWithSingleKeyWord.js";
 
 export class RHSOptionalGroup extends RHSPropEntry {
     private readonly subs: RightHandSideEntry[] = [];

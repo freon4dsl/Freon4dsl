@@ -4,14 +4,14 @@ import {
     FREON_CORE,
     ListUtil,
     GenerationUtil
-} from "../../utils";
+} from "../../utils/index.js";
 import {
     FreMetaBinaryExpressionConcept, FreMetaClassifier,
     FreMetaConcept, FreMetaInterface,
     FreMetaLanguage, FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
     FreMetaProperty
-} from "../../languagedef/metalanguage";
+} from "../../languagedef/metalanguage/index.js";
 import {
     FreEditUnit,
     FreEditProjectionText,
@@ -23,10 +23,10 @@ import {
     FreEditProjection,
     FreEditClassifierProjection,
     FreOptionalPropertyProjection, ExtraClassifierInfo, FreEditSuperProjection, BoolDisplayType
-} from "../../editordef/metalanguage";
-import { FreMetaPrimitiveType } from "../../languagedef/metalanguage";
-import { ParserGenUtil } from "./ParserGenUtil";
-import { FreEditProjectionGroup } from "../../editordef/metalanguage";
+} from "../../editordef/metalanguage/index.js";
+import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/index.js";
+import { ParserGenUtil } from "./ParserGenUtil.js";
+import { FreEditProjectionGroup } from "../../editordef/metalanguage/index.js";
 
 // TODO more preconditions should be added to avoid null pointer errors
 

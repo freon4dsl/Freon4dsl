@@ -1,14 +1,14 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { BoolDisplayType, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
-import { LimitedMaker } from "./LimitedMaker";
-import { BinaryExpMaker } from "./BinaryExpMaker";
-import { ChoiceRuleMaker } from "./ChoiceRuleMaker";
-import { ConceptMaker } from "./ConceptMaker";
-import { GrammarModel } from "./grammarModel";
-import { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser";
-import { GrammarPart } from "./grammarModel/GrammarPart";
-import { LOG2USER, Names } from "../../utils";
-import { ParserGenUtil } from "./ParserGenUtil";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { BoolDisplayType, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { LimitedMaker } from "./LimitedMaker.js";
+import { BinaryExpMaker } from "./BinaryExpMaker.js";
+import { ChoiceRuleMaker } from "./ChoiceRuleMaker.js";
+import { ConceptMaker } from "./ConceptMaker.js";
+import { GrammarModel } from "./grammarModel/index.js";
+import { LanguageAnalyser, FreAnalyser } from "./LanguageAnalyser.js";
+import { GrammarPart } from "./grammarModel/GrammarPart.js";
+import { LOG2USER, Names } from "../../utils/index.js";
+import { ParserGenUtil } from "./ParserGenUtil.js";
 
 export class GrammarGenerator {
 

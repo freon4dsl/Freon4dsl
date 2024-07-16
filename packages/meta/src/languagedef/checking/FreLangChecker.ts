@@ -1,7 +1,7 @@
-import { Checker, CheckRunner } from "../../utils";
-import { FreMetaLanguage } from "../metalanguage";
-import { FreLangCheckerPhase2 } from "./FreLangCheckerPhase2";
-import { FreLangCheckerPhase1 } from "./FreLangCheckerPhase1";
+import { Checker, CheckRunner } from "../../utils/index.js";
+import { FreMetaLanguage } from "../metalanguage/index.js";
+import { FreLangCheckerPhase2 } from "./FreLangCheckerPhase2.js";
+import { FreLangCheckerPhase1 } from "./FreLangCheckerPhase1.js";
 
 export class FreLangChecker extends Checker<FreMetaLanguage> {
 

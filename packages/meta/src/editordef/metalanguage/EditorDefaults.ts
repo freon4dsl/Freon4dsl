@@ -1,4 +1,4 @@
-import { ListJoinType } from "./FreEditDefLang";
+import { ListJoinType } from "./FreEditDefLang.js";
 
 export class EditorDefaults {
     static standardReferenceSeparator = ".";

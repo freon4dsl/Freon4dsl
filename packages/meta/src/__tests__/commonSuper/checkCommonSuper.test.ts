@@ -1,5 +1,6 @@
-import { FreMetaClassifier, FreMetaConcept, MetaElementReference, FreMetaInterface } from "../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaConcept, MetaElementReference, FreMetaInterface } from "../../languagedef/metalanguage/index.js";
 import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
+import { describe, test, expect } from "vitest"
 
 function concept(name: string): FreMetaConcept {
     const result: FreMetaConcept = new FreMetaConcept();

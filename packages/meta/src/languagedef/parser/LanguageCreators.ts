@@ -1,4 +1,4 @@
-import { IdMap } from "../../commandline/IdMap";
+import { IdMap } from "../../commandline/IdMap.js";
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
@@ -16,8 +16,8 @@ import {
     FreMetaProperty,
     FreMetaUnitDescription,
     MetaElementReference
-} from "../metalanguage";
-import { ParseLocationUtil } from "../../utils";
+} from "../metalanguage/index.js";
+import { ParseLocationUtil } from "../../utils/index.js";
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";

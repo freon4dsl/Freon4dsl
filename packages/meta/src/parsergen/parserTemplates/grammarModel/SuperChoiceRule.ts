@@ -1,9 +1,9 @@
-import { GrammarRule } from "./GrammarRule";
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier } from "../../../languagedef/metalanguage";
-import { Names } from "../../../utils";
-import { BinaryExpMaker } from "../BinaryExpMaker";
-import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil";
-import { getTypeCall } from "./GrammarUtils";
+import { GrammarRule } from "./GrammarRule.js";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
+import { Names } from "../../../utils/index.js";
+import { BinaryExpMaker } from "../BinaryExpMaker.js";
+import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil.js";
+import { getTypeCall } from "./GrammarUtils.js";
 
 export class SuperChoiceRule extends GrammarRule {
     // the same as ChoiceRule, except that the call to the implementors is never to '__pi_super_...'

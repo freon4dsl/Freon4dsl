@@ -1,4 +1,4 @@
-import { FretTypeRule } from "./FretTypeRule";
+import { FretTypeRule } from "./FretTypeRule.js";
 
 export class FretInferenceRule extends FretTypeRule {
 
