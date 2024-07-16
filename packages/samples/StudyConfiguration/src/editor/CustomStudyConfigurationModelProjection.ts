@@ -29,7 +29,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
         ["EventSchedule", this.createSchedule],
     ]);
 
-    nodeTypeToTableDefinition: Map<string, (node: FreNode) => FreTableDefinition> = new Map<string, (node: FreNode) => FreTableDefinition>([
+    nodeTypeToTableDefinition: Map<string, () => FreTableDefinition> = new Map<string, () => FreTableDefinition>([
         ["CheckList", this.createCheckList],
         // register your custom table definition methods here
         // ['NAME_OF_CONCEPT', this.TABLE_DEFINITION_FOR_CONCEPT],
@@ -55,7 +55,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                     BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-3", "", 
                     [
                         BoxUtil.emptyLineBox(element, "option-empty-line", "h-2"),
-                        BoxUtil.switchElement(element, "showPeriods", "Show Periods"), 
+                        BoxUtil.switchElement(element, "showPeriods", "Configure by Periods/Phases"), 
                         BoxUtil.switchElement(element, "showActivityDetails", "Show Task Details"),
                         BoxUtil.switchElement(element, "showSystems", "Show Systems"),
                         BoxUtil.switchElement(element, "showScheduling", "Show Scheduling") 
@@ -83,12 +83,14 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                             BoxUtil.verticalPartListBox(element, (element).taskDetails, "taskDetails", null, this.handler)
                         ),
                     undefined, "app-uppercase"),
-                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-14"),
-                    BoxUtil.groupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
-                        BoxUtil.indentBox(element, 4, true, "17",
-                            BoxUtil.verticalPartListBox(element, (element).systemAccesses, "systemAccesses", null,  this.handler)
-                        ),
-                    undefined, "app-uppercase"),
+                    ...(element.showSystems === true? [
+                        BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-14"),
+                        BoxUtil.groupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
+                            BoxUtil.indentBox(element, 4, true, "17",
+                                BoxUtil.verticalPartListBox(element, (element).systemAccesses, "systemAccesses", null,  this.handler)
+                            ),
+                        undefined, "app-uppercase"),
+                    ] : []),
                     BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-18"),
                     BoxUtil.groupBox(element, "STAFFING", 0, "staffing-group",
                         BoxUtil.indentBox(element, 4, true, "21",
@@ -105,7 +107,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
 
     createPeriod (period: Period): Box {
         return BoxFactory.verticalLayout(period, "Period-overall", "", [
-            ...((period.freOwner() as StudyConfiguration).showActivityDetails === true? [                    
+            ...((period.freOwner() as StudyConfiguration).showPeriods === true? [                    
                     BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "", "center",
                     [
                         new IconBox(period, "draggrip", faGripVertical, "grab"),
@@ -215,7 +217,8 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
         ]);
     }
 
-    private createCheckList(checklist: CheckList): FreTableDefinition {
+    private createCheckList(): FreTableDefinition {
+        let checklist: CheckList = null;
         console.log("CALLLED createTask");
         let showActivityDetails = false;
         let event = checklist.freOwner() as Event;
