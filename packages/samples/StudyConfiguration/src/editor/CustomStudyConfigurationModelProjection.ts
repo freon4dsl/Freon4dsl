@@ -50,7 +50,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxUtil.indentBox(element, 4, true, "3",
                     BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-3", "", 
                     [
-                        BoxUtil.emptyLineBox(element, "option-empty-line"),
+                        BoxUtil.emptyLineBox(element, "option-empty-line", "h-2"),
                         BoxUtil.switchElement(element, "showPeriods", "Show Periods"), 
                         BoxUtil.switchElement(element, "showActivityDetails", "Show Task Details"),
                         BoxUtil.switchElement(element, "showSystems", "Show Systems"),
@@ -58,8 +58,8 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                     ])
                 )
             ),
+            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6", "h-8"),
             ...(element.showPeriods === true? [                    
-                BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6"),
                 BoxUtil.groupBox(element, "STUDY PERIODS", 0, "study-periods-group",
                     BoxUtil.indentBox(element, 4, true, "9",
                         BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
