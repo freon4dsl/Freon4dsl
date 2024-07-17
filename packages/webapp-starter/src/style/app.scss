@@ -17,6 +17,25 @@ body {
   text-transform: uppercase;
 }
 
+.align-top {
+  align-items: flex-start;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-bottom {
+  align-items: flex-end;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.w-full {
+  width: 100%;
+}
 
 /* Generic Settings */
 .editor-part {
@@ -41,15 +60,27 @@ body {
 
 }
 
+
+span:has(> .tinymce-wrapper) {
+  width: 100%;
+}
+
 .tinymce-wrapper textarea {
   visibility: visible !important;
+  width: 100%;
+  padding-right: 0.25rem;
+}
+
+.tinymce-wrapper {
+  width: 100%;
+  padding-right: 0.25rem;
 }
 
 .tox-statusbar {
   display: none !important;
 }
 
-.mce-content-body {
-  background: #000000 !important;
-  color: white !important;
-}
+// .mce-content-body {
+//   background: #000000 !important;
+//   color: white !important;
+// }
