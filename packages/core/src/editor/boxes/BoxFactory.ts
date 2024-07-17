@@ -197,12 +197,12 @@ export class BoxFactory {
         return result;
     }
 
-    static group(element: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number),childBox: Box, initializer?: Partial<GroupBox>, cssClass?: string): GroupBox {
+    static group(element: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number),childBox: Box, initializer?: Partial<GroupBox>, cssClass?: string, isExpanded?: boolean): GroupBox {
         if (cacheGroupOff) {
-            return new GroupBox(element, role, getLabel, getLevel, childBox, initializer, cssClass);
+            return new GroupBox(element, role, getLabel, getLevel, childBox, initializer, cssClass, isExpanded);
         }
         // 1. Create the  box, or find the one that already exists for this element and role
-        const creator = () => new GroupBox(element, role, getLabel, getLevel, childBox, initializer);
+        const creator = () => new GroupBox(element, role, getLabel, getLevel, childBox, initializer, cssClass, isExpanded);
         const result: GroupBox = this.find<GroupBox>(element, role, creator, groupCache);
 
         // 2. Apply the other arguments in case they have changed

@@ -57,14 +57,14 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                         BoxUtil.switchElement(element, "showSystems", "Show Systems"),
                         BoxUtil.switchElement(element, "showScheduling", "Show Scheduling") 
                     ])
-                )
+                ), undefined, undefined, true
             ),
             BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-3", "h-8"),
             ...(element.showPeriods === true? [                    
                 BoxUtil.groupBox(element, "STUDY PERIODS", 0, "study-periods-group",
                     BoxUtil.indentBox(element, 4, true, "9",
                         BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
-                    )
+                    ), undefined, undefined, true
                 ),
             ] : [
                 BoxUtil.groupBox(element, "EVENTS", 0, "group-1-line-2-item-0",

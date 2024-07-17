@@ -26,10 +26,12 @@
     let label: string;
     let level: number;
     let child: Box;
-    let isExpanded = false; 
+    let isExpanded: boolean = false; 
+    let contentStyle: string = 'display: none';
 
     onMount( () => {
         if (!!box) {
+            contentStyle = isExpanded ? 'display:block;' : 'display:none;';
             box.refreshComponent = refresh;
         }
     });
@@ -47,6 +49,7 @@
             style = box.cssStyle;
             cssClass = box.cssClass;
             child = box?.child;
+            isExpanded = box.isExpanded;
         }
     };
 
@@ -74,9 +77,11 @@
         <FontAwesomeIcon class="w-3 h-3" icon={faEllipsis} />
     </Button> 
 </div>
-<div bind:this={content} style="display:none">
-    <RenderComponent box={child} editor={editor}/>
-</div>
+{#key contentStyle}
+    <div bind:this={content} style="{contentStyle}">
+        <RenderComponent box={child} editor={editor}/>
+    </div>
+{/key}
 
 <style>
     .group:empty:before {

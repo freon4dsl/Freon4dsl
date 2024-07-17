@@ -242,13 +242,13 @@ export class BoxUtil {
         return BoxFactory.label(node, roleName, content, { selectable: _selectable }, cssClass);
     }
 
-    static groupBox(node: FreNode, label: string, level: number, uid: string, childBox: Box, selectable?: boolean, cssClass?: string): Box {
+    static groupBox(node: FreNode, label: string, level: number, uid: string, childBox: Box, selectable?: boolean, cssClass?: string, isExpanded?: boolean): Box {
         let _selectable: boolean = false;
         if (selectable !== undefined && selectable !== null && selectable) {
             _selectable = true;
         }
         const roleName: string = RoleProvider.group(node, uid) + "-" + this.makeKeyName(label);
-        return BoxFactory.group(node, roleName, label, level, childBox, { selectable: _selectable }, cssClass);
+        return BoxFactory.group(node, roleName, label, level, childBox, { selectable: _selectable }, cssClass, isExpanded);
     }
 
     static indentBox(element: FreNode, indent: number, fullWidth: boolean = false, uid: string, childBox: Box, cssClass?: string): Box {

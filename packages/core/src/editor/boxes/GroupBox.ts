@@ -9,7 +9,7 @@ export class GroupBox extends Box {
     private $level: number = 0;
     private $child: Box = null;
     
-    constructor(node: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number), child: Box, initializer?: Partial<GroupBox>, cssClass?: string) {
+    constructor(node: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number), child: Box, initializer?: Partial<GroupBox>, cssClass?: string, isExpanded?: boolean) {
         super(node, role);
         this.selectable = false; // default
         FreUtils.initializeObject(this, initializer);
@@ -17,6 +17,11 @@ export class GroupBox extends Box {
         this.setLevel(getLevel);
         this.child = child;
         this.cssClass = cssClass;
+        if (isExpanded === undefined) {
+            this.isExpanded = false;
+        } else {
+            this.isExpanded = isExpanded;
+        }      
     }
 
     setLabel(getLabel: string | (() => string)) {
@@ -58,6 +63,8 @@ export class GroupBox extends Box {
     getLevel(): number {
         return this.$level;
     }
+    
+    isExpanded: boolean;
 
     get child() {
         return this.$child;
