@@ -50,6 +50,11 @@ export default {
 		}
 	},
 	plugins: [
+		// copy({
+		// 	targets: [
+		// 	  { src: '@freon4dsl/node_modules/@tinymce/*', dest: 'public/tinymce' }
+		// 	]
+		//   }),
 		commonjs(),
 		svelte({
 			extensions: ['.svelte', '.svg'],
