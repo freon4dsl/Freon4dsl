@@ -42,7 +42,7 @@
                 : "none")));
 </script>
 
-<div>
+<div style="height:100%">
     <Banner bind:open={$userMessageOpen} mobileStacked content$style='max-width: max-content;'>
         <Label slot='label' style="color:{severityClass}">
             {$userMessage}

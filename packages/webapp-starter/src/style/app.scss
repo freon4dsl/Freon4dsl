@@ -8,6 +8,14 @@ body {
   margin: 0;
 }
 
+main {
+  height: calc(100vh - 4px);
+}
+
+.mdc-drawer-app-content {
+  height: 100%;
+}
+
 /* Application Classes */
 .app-small-caps {
   font-variant: all-small-caps !important;
@@ -50,7 +58,7 @@ body {
     --freon-verticallist-component-margin: 0px;
 
     /* Horizontal layout - trbl */
-    --freon-horizontallayout-component-padding: 0 0 5px 0;
+    --freon-horizontallayout-component-padding: 0 0 0 0;
     --freon-horizontallayout-component-margin: 0px;
     --freon-horizontallayout-component-align-items: top;
 
@@ -84,3 +92,19 @@ span:has(> .tinymce-wrapper) {
 //   background: #000000 !important;
 //   color: white !important;
 // }
+
+.pb-1 {
+  padding-bottom: 0.25rem !important;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem !important;
+}
+
+.pb-3 {
+  padding-bottom: 0.75rem !important;
+}
+
+.pb-4 {
+  padding-bottom: 1rem !important;
+}

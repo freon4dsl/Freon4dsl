@@ -211,5 +211,6 @@
 	}
 	.main-frame {
 		overflow: hidden;
+		height: 100%;
 	}
 </style>

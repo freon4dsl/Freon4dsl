@@ -483,7 +483,7 @@ export class BoxUtil {
                 this.booleanBox(element, id, { yes: "YES", no: "NO" }, BoolDisplay.SWITCH),
                 this.labelBox(element, label, id +'_label'),
             ],
-            { selectable: false });
+            { selectable: false }, "pb-2");
     }
 }
 
