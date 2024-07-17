@@ -25,6 +25,8 @@
     export let editor: FreEditor;			// the editor
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
+	let cssClass: string = '';
+
     // Local variables
     let id: string = !!box ? componentId(box) : 'text-with-unknown-box';
     let textArea: HTMLTextAreaElement; 		// the text area element on the screen
@@ -92,11 +94,13 @@
 
 	let conf = {
 		menubar: false,
-		toolbar: 'undo redo | formatselect | \
-			bullist numlist outdent indent | removeformat',
+		plugins: 'lists checklist',
+		toolbar: 'undo redo | formatselect \
+		| fontsize | bold italic underline forecolor backcolor \
+		| checklist bullist numlist outdent indent | removeformat',
 		skin: 'oxide-dark',
 		content_css: 'site.css',
-		height: '200px'
+		height: '190px'
 	}
 
 </script>
@@ -127,6 +131,4 @@
         display: inline-block;
 		height: auto;
 	}
-
-
 </style>

@@ -117,10 +117,10 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxFactory.verticalLayout(period, "Period-detail", "", [
                     BoxFactory.horizontalLayout(period, "Period-hlist-line-1", "","top",
                         [
-                            BoxUtil.labelBox(period, "Description:", "top-1-line-2-item-0"),
+                            BoxUtil.labelBox(period, "Description:", "top-1-line-2-item-0",undefined, "app-small-caps"),
                             BoxUtil.getBoxOrAction(period, "description", "Description", this.handler)
                         ],
-                        { selectable: false }
+                        { selectable: false }, "w-full"
                     ),
                     BoxUtil.groupBox(period, "EVENTS", 0, "group-1-line-2-item-0",
                         BoxUtil.indentBox(period, 4, true, "4",
@@ -155,7 +155,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                             BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps"),
                             BoxUtil.getBoxOrAction(event, "description", "Description", this.handler)
                         ],
-                        { selectable: false }
+                        { selectable: false }, "w-full"
                     ),
                     ...(showScheduling === true? [                    
                         BoxUtil.labelBox(event, "Schedule:", "top-1-line-4-item-0"),
