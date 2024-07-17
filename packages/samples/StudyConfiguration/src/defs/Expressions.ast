@@ -8,7 +8,7 @@ expression PreviousVisit base FirstScheduledExpression {
 
 expression Time base FirstScheduledExpression   {
     value: number;
-    unit: TimeUnit;
+    unit: TimeUnit = TimeUnit:days;
 }
 
 expression StartDay base FirstScheduledExpression {
