@@ -47,8 +47,8 @@ CheckList {
 
 Task {
     table [
-             Task    | Details | Notes / Decisions / Branches 
-             ${name} | ${taskDetails} | ${decision}
+             Task    | Notes / Decisions / Branches 
+             ${name} | ${decision}
         ]
 
 }
