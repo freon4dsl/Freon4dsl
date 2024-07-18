@@ -24,7 +24,7 @@
                   "version": "2023.1",
                   "key": "-default-key-StudyConfiguration-showActivityDetails"
                },
-               "value": "true"
+               "value": "false"
             },
             {
                "property": {
@@ -40,7 +40,7 @@
                   "version": "2023.1",
                   "key": "-default-key-StudyConfiguration-showScheduling"
                },
-               "value": "false"
+               "value": "true"
             },
             {
                "property": {
@@ -48,7 +48,7 @@
                   "version": "2023.1",
                   "key": "-default-key-StudyConfiguration-showPeriods"
                },
-               "value": "false"
+               "value": "true"
             }
          ],
          "containments": [
@@ -1584,11 +1584,42 @@
                   "version": "2023.1",
                   "key": "-default-key-CheckList-activities"
                },
-               "children": []
+               "children": [
+                  "ID-74"
+               ]
             }
          ],
          "references": [],
          "parent": "ID-26"
+      },
+      {
+         "id": "ID-74",
+         "classifier": {
+            "language": "-default-key-StudyConfigurationModel",
+            "version": "2023.1",
+            "key": "-default-key-Task"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-StudyConfigurationModel",
+                  "version": "2023.1",
+                  "key": "-default-key-Task-name"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-default-key-StudyConfigurationModel",
+                  "version": "2023.1",
+                  "key": "-default-key-Task-sequenced"
+               },
+               "value": "false"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "parent": "ID-27"
       },
       {
          "id": "ID-28",
