@@ -58,10 +58,12 @@ export function moveListElement(parentElement: FreNode, movedElement: FreNode, t
             // the property must be removed before it is added at a different location, not the other way around!
             const tmpProp = property[oldIndex];
             property.splice(oldIndex, 1);
+            /* START GM - This doesn't seem to work
             // Make sure the item is added at the correct index
-            if (targetIndex > 0) {
-                targetIndex -= 1;
-            }
+            // if (targetIndex > 0) {
+            //     targetIndex -= 1;
+            // }
+            END GM */
             property.splice(targetIndex, 0, tmpProp);
         }
         // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');

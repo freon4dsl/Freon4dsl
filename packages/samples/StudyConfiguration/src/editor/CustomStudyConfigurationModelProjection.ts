@@ -4,6 +4,7 @@ import { FreNode, FreLanguage, FreProjection, FreProjectionHandler, FreTableDefi
 import { StudyConfiguration, Description, Period, Event, EventSchedule, Task, TaskDetail, CheckList } from "../language/gen";
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import { StudyConfigurationModelEnvironment } from "config/gen/StudyConfigurationModelEnvironment";
+import { result } from "lodash";
 
 /**
  * Class CustomStudyConfigurationModelProjection provides an entry point for the language engineer to
@@ -47,7 +48,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 { selectable: false },
             ), 
             BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-1", "h-2"),
-            BoxUtil.groupBox(element, "OPTIONS:", 0, "study-periods-group",
+            BoxUtil.listGroupBox(element, "OPTIONS:", 0, "study-periods-group",
                 BoxUtil.indentBox(element, 4, true, "3",
                     BoxFactory.verticalLayout(element, "StudyConfiguration-vlist-line-3", "", 
                     [
@@ -61,13 +62,13 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             ),
             BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-3", "h-8"),
             ...(element.showPeriods === true? [                    
-                BoxUtil.groupBox(element, "STUDY PERIODS", 0, "study-periods-group",
+                BoxUtil.listGroupBox(element, "STUDY PERIODS", 0, "study-periods-group",
                     BoxUtil.indentBox(element, 4, true, "9",
                         BoxUtil.verticalPartListBox(element, (element).periods, "periods", null, this.handler)
                     ), undefined, undefined, true
                 ),
             ] : [
-                BoxUtil.groupBox(element, "EVENTS", 0, "group-1-line-2-item-0",
+                BoxUtil.listGroupBox(element, "EVENTS", 0, "group-1-line-2-item-0",
                     BoxUtil.indentBox(element, 4, true, "4",
                         BoxUtil.verticalPartListBox(element, element.events, "events", null, this.handler)
                     ) 
@@ -75,21 +76,21 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
             ]),
             ...(element.showActivityDetails === true? [
                     BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-4", "h-4"),
-                    BoxUtil.groupBox(element, "TASK DETAILS", 0, "task-details-group",
+                    BoxUtil.listGroupBox(element, "TASK DETAILS", 0, "task-details-group",
                         BoxUtil.indentBox(element, 4, true, "13",
                             BoxUtil.verticalPartListBox(element, (element).taskDetails, "taskDetails", null, this.handler)
                         ),
                     undefined, "app-uppercase"),
                     ...(element.showSystems === true? [
                     BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-5", "h-4"),
-                    BoxUtil.groupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
+                    BoxUtil.listGroupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
                         BoxUtil.indentBox(element, 4, true, "17",
                             BoxUtil.verticalPartListBox(element, (element).systemAccesses, "systemAccesses", null,  this.handler)
                         ),
                     undefined, "app-uppercase"),
                     ] : []),
                     BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6", "h-4"),
-                    BoxUtil.groupBox(element, "STAFFING", 0, "staffing-group",
+                    BoxUtil.listGroupBox(element, "STAFFING", 0, "staffing-group",
                         BoxUtil.indentBox(element, 4, true, "21",
                             BoxUtil.getBoxOrAction(element, "staffing", "Staffing", this.handler)
                         ),
@@ -103,35 +104,55 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
     }
 
     createPeriod (period: Period): Box {
-        return BoxFactory.verticalLayout(period, "Period-overall", "", [
-            ...((period.freOwner() as StudyConfiguration).showPeriods === true? [                    
-                    BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "", "center",
-                    [
-                        new IconBox(period, "draggrip", faGripVertical, "grab"),
-                        BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1", undefined, "app-uppercase"),
-                        BoxUtil.textBox(period, "name")                   
-                    ],
-                    { selectable: false }
-                ),
-            ] : []),
-            BoxUtil.indentBox(period, 1.5, true, "e1",
-                BoxFactory.verticalLayout(period, "Period-detail", "", [
-                    BoxFactory.horizontalLayout(period, "Period-hlist-line-1", "","top",
+        let box: Box = BoxUtil.itemGroupBox(period, "name", "Period:", 0, 
+            BoxUtil.indentBox(period, 1.5, true, "period-indent",
+                BoxFactory.verticalLayout(period, "period-detail", "", [
+                    BoxFactory.horizontalLayout(period, "period-hlist-line-1", "","top",
                         [
                             BoxUtil.labelBox(period, "Description:", "top-1-line-2-item-0",undefined, "app-small-caps"),
                             BoxUtil.getBoxOrAction(period, "description", "Description", this.handler)
                         ],
                         { selectable: false }, "w-full"
                     ),
-                    BoxUtil.groupBox(period, "EVENTS", 0, "group-1-line-2-item-0",
+                    BoxUtil.listGroupBox(period, "EVENTS", 0, "group-1-line-2-item-0",
                         BoxUtil.indentBox(period, 4, true, "4",
                             BoxUtil.verticalPartListBox(period, period.events, "events", null, this.handler)
                         ) 
                     )
                 ])
-            )
-        ]);
+            ), "w-full", true, true
+        );
+        return box;
     }
+
+    // createPeriod (period: Period): Box {
+    //     return BoxFactory.verticalLayout(period, "Period-overall", "", [
+    //         BoxFactory.horizontalLayout(period, "Period-hlist-line-0", "", "center",
+    //             [
+    //                 new IconBox(period, "draggrip", faGripVertical, "grab"),
+    //                 BoxUtil.labelBox(period, "Period:", "top-1-line-0-item-1", undefined, "app-uppercase"),
+    //                 BoxUtil.textBox(period, "name")                   
+    //             ],
+    //             { selectable: false }
+    //         ),
+    //         BoxUtil.indentBox(period, 1.5, true, "e1",
+    //             BoxFactory.verticalLayout(period, "Period-detail", "", [
+    //                 BoxFactory.horizontalLayout(period, "Period-hlist-line-1", "","top",
+    //                     [
+    //                         BoxUtil.labelBox(period, "Description:", "top-1-line-2-item-0",undefined, "app-small-caps"),
+    //                         BoxUtil.getBoxOrAction(period, "description", "Description", this.handler)
+    //                     ],
+    //                     { selectable: false }, "w-full"
+    //                 ),
+    //                 BoxUtil.listGroupBox(period, "EVENTS", 0, "group-1-line-2-item-0",
+    //                     BoxUtil.indentBox(period, 4, true, "4",
+    //                         BoxUtil.verticalPartListBox(period, period.events, "events", null, this.handler)
+    //                     ) 
+    //                 )
+    //             ])
+    //         )
+    //     ]);
+    // }
 
     createEvent (event: Event): Box {
         let showScheduling = false;
@@ -140,15 +161,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
         } else {
             showScheduling = (event.freOwner() as StudyConfiguration).showScheduling;
         }
-        return BoxFactory.verticalLayout(event, "Event-overall", "", [
-            BoxFactory.horizontalLayout(event, "Event-hlist-line-0", "","center",
-                [
-                    new IconBox(event, "draggrip", faGripVertical, "grab"),
-                    BoxUtil.labelBox(event, "Event:", "top-1-line-0-item-1", undefined, "app-uppercase"),
-                    BoxUtil.textBox(event, "name")
-                ],
-               { selectable: false }
-            ),
+        let box: Box = BoxUtil.itemGroupBox(event, "name", "Event:", 0,
             BoxUtil.indentBox(event, 1.5, true, "e1",
                 BoxFactory.verticalLayout(event, "Event-detail", "", [
                     BoxFactory.horizontalLayout(event, "Event-hlist-line-2", "","top",
@@ -165,13 +178,14 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                         ),
                     ] : []),
                             BoxUtil.labelBox(event, "Checklist:", "top-1-line-9-item-0"),
-                          BoxUtil.indentBox(event, 2, true, "e12",
+                        BoxUtil.indentBox(event, 2, true, "e12",
                         BoxUtil.getBoxOrAction(event, "checkList", "CheckList", this.handler)
                     ),
                     BoxUtil.emptyLineBox(event, "Event-empty-line-11")
                 ])
-            )
-        ]);
+            ), "w-full", false, true
+        );
+        return box;
     }
 
     createSchedule (schedule: EventSchedule): Box {

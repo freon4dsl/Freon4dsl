@@ -7,8 +7,9 @@ import { CharAllowed } from "./CharAllowed";
 
 const LOGGER: FreLogger = new FreLogger("TextBox");
 
-export class TextBox extends Box {
-    kind: string = "TextBox";
+export class ItemGroupBox extends Box {
+    kind: string = "ItemGroupBox";
+
     /**
      * If true, the element will be deleted when the text becomes
      * empty because of removing the last character in the text.
@@ -25,6 +26,11 @@ export class TextBox extends Box {
     caretPosition: number = -1;
     $getText: () => string;
     $setText: (newValue: string) => void;
+    $label: string = "";
+    $level: number = 0;
+    $child: Box = null;
+    $isExpanded: boolean = false;
+    $isDraggable: boolean = true;
 
     /**
      * Run the setText() as defined by the user of this box inside a mobx action.
@@ -40,16 +46,51 @@ export class TextBox extends Box {
         return this.$getText();
     }
 
+    setLabel(getLabel: string | (() => string)) {
+        if (typeof getLabel === "function") {
+            if (this.getLabel !== getLabel) {
+                this.getLabel = getLabel;
+                this.isDirty();
+            }
+        } else if (typeof getLabel === "string") {
+            if (this.$label !== getLabel) {
+                this.$label = getLabel;
+                this.isDirty();
+            }
+        } else {
+            throw new Error("LabelBox: incorrect label type");
+        }
+    }
+
+    getLabel(): string {
+        return this.$label;
+    }
+
+    get child() {
+        return this.$child;
+    }
+
+    set child(v: Box) {
+        this.$child = v;
+        this.$child.parent = this;
+        this.isDirty();
+    }
+
     isCharAllowed: (currentText: string, key: string, index: number) => CharAllowed = () => {
         return CharAllowed.OK;
     };
 
-    constructor(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>, cssClass?: string) {
+    constructor(node: FreNode, role: string, getLabel: string | (() => string), getText: () => string, setText: (text: string) => void, level: number, child: Box, initializer?: Partial<ItemGroupBox>, cssClass?: string, isExpanded?: boolean, isDraggable?: boolean) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.$getText = getText;
         this.$setText = setText;
+        this.setLabel(getLabel);
         this.cssClass = cssClass;
+        this.$child = child;
+        this.$level = level;
+        this.$isExpanded = isExpanded;
+        this.$isDraggable = isDraggable;
     }
 
     public deleteWhenEmpty1(): boolean {
@@ -95,6 +136,6 @@ export class TextBox extends Box {
     }
 }
 
-export function isTextBox(b: Box): b is TextBox {
-    return !!b && b.kind === "TextBox"; // b instanceof TextBox;
+export function isItemGroupBox(b: Box): b is ItemGroupBox {
+    return !!b && b.kind === "ItemGroupBox"; // b instanceof ItemGroupBox;
 }

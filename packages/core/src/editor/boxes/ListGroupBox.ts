@@ -2,14 +2,14 @@ import { Box } from "./Box";
 import { FreUtils } from "../../util";
 import { FreNode } from "../../ast";
 
-export class GroupBox extends Box {
-    readonly kind = "GroupBox";
+export class ListGroupBox extends Box {
+    readonly kind = "ListGroupBox";
     
     private $label: string = "";
     private $level: number = 0;
     private $child: Box = null;
     
-    constructor(node: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number), child: Box, initializer?: Partial<GroupBox>, cssClass?: string, isExpanded?: boolean) {
+    constructor(node: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number), child: Box, initializer?: Partial<ListGroupBox>, cssClass?: string, isExpanded?: boolean) {
         super(node, role);
         this.selectable = false; // default
         FreUtils.initializeObject(this, initializer);
@@ -36,7 +36,7 @@ export class GroupBox extends Box {
                 this.isDirty();
             }
         } else {
-            throw new Error("GroupBox: incorrect label type");
+            throw new Error("ListGroupBox: incorrect label type");
         }
     }
 
@@ -56,7 +56,7 @@ export class GroupBox extends Box {
                 this.isDirty();
             }
         } else {
-            throw new Error("GroupBox: incorrect level type");
+            throw new Error("ListGroupBox: incorrect level type");
         }
     }
 
@@ -93,6 +93,6 @@ export class GroupBox extends Box {
     }  
 } 
     
-export function isGroupBox(b: Box): b is GroupBox {
-    return b?.kind === "GroupBox"; // b instanceof GroupBox;
+export function isListGroupBox(b: Box): b is ListGroupBox {
+    return b?.kind === "ListGroupBox"; // b instanceof ListGroupBox;
 }

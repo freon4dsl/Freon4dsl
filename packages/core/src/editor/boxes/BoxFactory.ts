@@ -3,7 +3,7 @@ import { BehaviorExecutionResult } from "../util";
 import { FreLogger } from "../../logging";
 import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreEditor } from "../FreEditor";
-import { Box, BooleanControlBox, ActionBox, LabelBox, TextBox, SelectOption, SelectBox, IndentBox, GroupBox, OptionalBox,
+import { Box, BooleanControlBox, ActionBox, LabelBox, TextBox, SelectOption, SelectBox, IndentBox, ItemGroupBox, ListGroupBox, OptionalBox,
     HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
     HorizontalLayoutBox, VerticalLayoutBox,
     TableCellBox, OptionalBox2
@@ -24,7 +24,8 @@ let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
 let boolCache: BoxCache<BooleanControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
-let groupCache: BoxCache<GroupBox> = {};
+let listGroupCache: BoxCache<ListGroupBox> = {};
+let itemGroupCache: BoxCache<ItemGroupBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
 let optionalCache2: BoxCache<OptionalBox2> = {};
@@ -41,7 +42,8 @@ let cacheLabelOff: boolean = false;
 let cacheTextOff: boolean = false;
 let cacheBooleanOff: boolean = false;
 let cacheSelectOff: boolean = false;
-let cacheGroupOff: boolean = false;
+let cacheListGroupOff: boolean = false;
+let cacheItemGroupOff: boolean = false;
 // let cacheIndentOff: boolean = false;
 // let cacheOptionalOff: boolean = false;
 let cacheHorizontalLayoutOff: boolean = false;
@@ -61,7 +63,8 @@ export class BoxFactory {
         textCache = {};
         boolCache = {};
         selectCache = {};
-        groupCache = {};
+        listGroupCache = {};
+        itemGroupCache = {};
         // indentCache = {};
         optionalCache = {};
         optionalCache2 = {};
@@ -80,7 +83,8 @@ export class BoxFactory {
         cacheTextOff = true;
         cacheBooleanOff = true;
         cacheSelectOff = true;
-        cacheGroupOff = true;
+        cacheListGroupOff = true;
+        cacheItemGroupOff = true;
         // cacheIndentOff = true;
         // cacheOptionalOff = true;
         cacheHorizontalLayoutOff = true;
@@ -95,7 +99,8 @@ export class BoxFactory {
         cacheTextOff = false;
         cacheBooleanOff = false;
         cacheSelectOff = false;
-        cacheGroupOff = false;
+        cacheListGroupOff = false;
+        cacheItemGroupOff = false;
         // cacheIndentOff = false;
         // cacheOptionalOff = false;
         cacheHorizontalLayoutOff = false;
@@ -197,17 +202,33 @@ export class BoxFactory {
         return result;
     }
 
-    static group(element: FreNode, role: string, getLabel: string | (() => string), getLevel: number | (() => number),childBox: Box, initializer?: Partial<GroupBox>, cssClass?: string, isExpanded?: boolean): GroupBox {
-        if (cacheGroupOff) {
-            return new GroupBox(element, role, getLabel, getLevel, childBox, initializer, cssClass, isExpanded);
+    static listGroup(element: FreNode, role: string, getLabel: string | (() => string), level: number, childBox: Box, initializer?: Partial<ListGroupBox>, cssClass?: string, isExpanded?: boolean): ListGroupBox {
+        if (cacheListGroupOff) {
+            return new ListGroupBox(element, role, getLabel, level, childBox, initializer, cssClass, isExpanded);
         }
         // 1. Create the  box, or find the one that already exists for this element and role
-        const creator = () => new GroupBox(element, role, getLabel, getLevel, childBox, initializer, cssClass, isExpanded);
-        const result: GroupBox = this.find<GroupBox>(element, role, creator, groupCache);
+        const creator = () => new ListGroupBox(element, role, getLabel, level, childBox, initializer, cssClass, isExpanded);
+        const result: ListGroupBox = this.find<ListGroupBox>(element, role, creator, listGroupCache);
 
         // 2. Apply the other arguments in case they have changed
         result.setLabel(getLabel);
-        result.setLevel(getLevel);
+        result.setLevel(level);
+        result.child = childBox;
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static itemGroup(element: FreNode, role: string, getLabel, getText: () => string, setText: (text: string) => void, level: number, childBox: Box, initializer?: Partial<ItemGroupBox>, cssClass?: string, isExpanded?: boolean, isDraggable?: boolean): ItemGroupBox {
+        if (cacheItemGroupOff) {
+            return new ItemGroupBox(element, role, getLabel, getText, setText, level, childBox, initializer, cssClass, isExpanded, isDraggable);
+        }
+        // 1. Create the  box, or find the one that already exists for this element and role
+        const creator = () => new ItemGroupBox(element, role, getLabel, getText, setText, level, childBox, initializer, cssClass, isExpanded, isDraggable);
+        const result: ItemGroupBox = this.find<ItemGroupBox>(element, role, creator, itemGroupCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.setLabel(getLabel);
         result.child = childBox;
         FreUtils.initializeObject(result, initializer);
 

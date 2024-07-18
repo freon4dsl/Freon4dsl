@@ -1,6 +1,7 @@
 import { runInAction } from "mobx";
 import { FreNode, FreNamedNode, FreNodeReference } from "../../ast";
-import { Box, BooleanControlBox, BoxFactory, CharAllowed, EmptyLineBox, HorizontalListBox, SelectBox, SelectOption, TextBox, VerticalListBox, BoolDisplay } from "../boxes";
+import { Box, BooleanControlBox, BoxFactory, EmptyLineBox, HorizontalListBox, SelectBox, SelectOption, TextBox, VerticalListBox, BoolDisplay, ItemGroupBox, ListGroupBox } from "../boxes";
+import { CharAllowed } from "../boxes/CharAllowed";
 import { FreUtils } from "../../util";
 import { BehaviorExecutionResult } from "../util";
 import { FreLanguage, FreLanguageProperty, PropertyKind } from "../../language";
@@ -242,13 +243,49 @@ export class BoxUtil {
         return BoxFactory.label(node, roleName, content, { selectable: _selectable }, cssClass);
     }
 
-    static groupBox(node: FreNode, label: string, level: number, uid: string, childBox: Box, selectable?: boolean, cssClass?: string, isExpanded?: boolean): Box {
+    static listGroupBox(node: FreNode, label: string, level: number, uid: string, childBox: Box, selectable?: boolean, cssClass?: string, isExpanded?: boolean): Box {
+        let result: ListGroupBox = null;
         let _selectable: boolean = false;
         if (selectable !== undefined && selectable !== null && selectable) {
             _selectable = true;
         }
         const roleName: string = RoleProvider.group(node, uid) + "-" + this.makeKeyName(label);
-        return BoxFactory.group(node, roleName, label, level, childBox, { selectable: _selectable }, cssClass, isExpanded);
+        result = BoxFactory.listGroup(node, roleName, label, level, childBox, { selectable: _selectable }, cssClass, isExpanded);
+        return result;
+    }
+
+    static itemGroupBox(node: FreNode, propertyName: string, label: string, level: number, childBox: Box, cssClass?: string, isExpanded?: boolean, isDraggable?: boolean): Box {
+        let result: ItemGroupBox = null;
+        const property = node[propertyName];
+        if (property !== undefined && property !== null && typeof property === "string") {
+            //const roleName: string = RoleProvider.group(node, uid) + "-" + this.makeKeyName(label);
+            const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "textbox");
+            result = BoxFactory.itemGroup( node, roleName, label, () => node[propertyName], (v: string) => runInAction( () => { (node[propertyName] = v); }), level, childBox, { placeHolder: `<${propertyName}>` }, cssClass, isExpanded, isDraggable );
+            result.propertyName = propertyName;
+        } else {
+            FreUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a string: " + property + "\"");
+        }
+        return result;
+
+        // let result: TextBox = null;
+        // // find the information on the property to be shown
+        // const propInfo = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
+        // const isList: boolean = propInfo.isList;
+        // const property = node[propertyName];
+        // // create the box
+        // if (property !== undefined && property !== null && typeof property === "string") {
+        //     const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "textbox", index);
+        //     if (isList && this.checkList(isList, index, propertyName)) {
+        //         result = BoxFactory.text( node, roleName, () => node[propertyName][index], (v: string) => runInAction( () => { (node[propertyName][index] = v); }), { placeHolder: `<${propertyName}>` }, cssClass );
+        //     } else {
+        //         result = BoxFactory.text( node, roleName, () => node[propertyName], (v: string) => runInAction( () => { (node[propertyName] = v); }), { placeHolder: `<${propertyName}>` }, cssClass );
+        //     }
+        //     result.propertyName = propertyName;
+        //     result.propertyIndex = index;
+        // } else {
+        //     FreUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a string: " + property + "\"");
+        // }
+        // return result;
     }
 
     static indentBox(element: FreNode, indent: number, fullWidth: boolean = false, uid: string, childBox: Box, cssClass?: string): Box {
