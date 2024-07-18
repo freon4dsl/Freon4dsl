@@ -13,8 +13,6 @@
 
     let id: string = !!box ? componentId(box) : 'checkbox-for-unknown-box';
     let inputElement: HTMLInputElement;
-    let style: string;
-    let cssClass: string;
     let value = box.getBoolean();
 
     /**
@@ -47,11 +45,32 @@
     }
 </script>
 
-<span class="checkbox {cssClass}"
-      style="{style}"
-      id="{id}"
+<div id="{id}" class="mdc-checkbox fre-checkbox">
+    <input
+            type="checkbox"
+            class="mdc-checkbox__native-control"
+            on:click={onClick}
+            bind:this={inputElement}
+            bind:checked={value}
+    >
+    <div class="mdc-checkbox__background">
+        <svg
+                class="mdc-checkbox__checkmark"
+                viewBox="0 0 24 24"
+        >
+            <path
+                    class="mdc-checkbox__checkmark-path"
+                    fill="none"
+                    d="M1.73,12.91 8.1,19.28 22.79,4.59"
+            />
+        </svg>
+        <div class="mdc-checkbox__mixedmark" />
+    </div>
+</div>
 
->
-    <input on:click={onClick} bind:this={inputElement} bind:checked={value} type="checkbox"/>
-</span>
+<style>
+    .fre-checkbox {
+        --mdc-theme-secondary: var(--checkbox-color);
+    }
+</style>
 
