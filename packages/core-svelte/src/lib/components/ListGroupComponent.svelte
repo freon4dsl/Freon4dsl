@@ -5,7 +5,7 @@
      * with non-editable text
      */
     import { onMount, afterUpdate } from "svelte";
-    import { Box, FreLogger, GroupBox, FreEditor } from "@freon4dsl/core";
+    import { Box, FreLogger, ListGroupBox, FreEditor } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils/index.js";
     import RenderComponent from "./RenderComponent.svelte";
 
@@ -13,14 +13,14 @@
     import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
     import { faChevronDown, faChevronUp, faPlus, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 
-    export let box: GroupBox;
+    export let box: ListGroupBox;
     export let editor: FreEditor;
 
-    const LOGGER = new FreLogger("GroupComponent");
+    const LOGGER = new FreLogger("ListGroupBoxComponent");
 
     let id: string = !!box ? componentId(box) : 'group-for-unknown-box';
-    let element: HTMLDivElement = null;
-    let content: HTMLDivElement = null;
+    // let element: HTMLDivElement = null;
+    let contentElement: HTMLDivElement = null;
     let style: string;
     let cssClass: string = '';
     let label: string;
@@ -31,8 +31,9 @@
 
     onMount( () => {
         if (!!box) {
+            isExpanded = box.isExpanded;
             contentStyle = isExpanded ? 'display:block;' : 'display:none;';
-            box.refreshComponent = refresh;
+             box.refreshComponent = refresh;   
         }
     });
 
@@ -43,13 +44,12 @@
     });
 
     const refresh = (why?: string) => {
-        LOGGER.log("REFRESH GroupComponent (" + why + ")");
+        LOGGER.log("REFRESH ListGroupBoxComponent (" + why + ")");
         if (!!box) {
             label = box.getLabel();
             style = box.cssStyle;
             cssClass = box.cssClass;
             child = box?.child;
-            isExpanded = box.isExpanded;
         }
     };
 
@@ -57,15 +57,16 @@
         refresh("FROM component " + box?.id);
     }
 
-    function toggleButton() {
-        content.style.display = content.style.display === "block" ? "none" : "block";
+    function toggleExpanded() {
+        contentElement.style.display = contentElement.style.display === "block" ? "none" : "block";
         isExpanded = !isExpanded;
+        contentStyle = isExpanded ? 'display:block;' : 'display:none;';
     }
 </script>
 
-<div bind:this={element} id="{id}" class="group {cssClass}" style="{style}">
+<div id="{id}" class="group {cssClass}" style="{style}">
     {#key isExpanded}
-        <Button pill={true} class="w-7 h-7 p0" color="none" size="xs" on:click={toggleButton}>
+        <Button pill={true} class="w-7 h-7 p-0" color="none" size="xs" on:click={toggleExpanded}>
             <FontAwesomeIcon class="w-3 h-3" icon={isExpanded ? faChevronUp : faChevronDown} />
         </Button>
     {/key}
@@ -78,7 +79,7 @@
     </Button> 
 </div>
 {#key contentStyle}
-    <div bind:this={content} style="{contentStyle}">
+    <div bind:this={contentElement} style="{contentStyle}">
         <RenderComponent box={child} editor={editor}/>
     </div>
 {/key}

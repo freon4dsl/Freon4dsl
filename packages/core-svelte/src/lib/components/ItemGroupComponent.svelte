@@ -5,19 +5,24 @@
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
 	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils/index.js";
-	import { ActionBox, ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE, CONTROL, DELETE, ENTER, ESCAPE, isActionBox, isActionTextBox, isSelectBox, FreCaret, FreCaretPosition, FreEditor, FreLogger, SelectBox, FreErrorSeverity, SHIFT, TAB, TextBox, isRegExp, triggerTypeToString, type FrePostAction } from "@freon4dsl/core";
+	import { ActionBox, ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE, CONTROL, DELETE, ENTER, ESCAPE, isActionBox, isActionTextBox, isSelectBox, FreCaret, FreCaretPosition, FreEditor, FreLogger, SelectBox, FreErrorSeverity, SHIFT, TAB, ItemGroupBox, Box, isRegExp, triggerTypeToString, type FrePostAction } from "@freon4dsl/core";
 	import { CharAllowed} from "@freon4dsl/core";
+	import RenderComponent from "./RenderComponent.svelte";
 
 	import { runInAction } from "mobx";
 	import { replaceHTML } from "./svelte-utils/index.js";
 
+    import { Button } from 'flowbite-svelte';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+    import { faGripVertical, faChevronDown, faChevronUp, faEllipsis, faXmark } from '@fortawesome/free-solid-svg-icons';
+
 	// TODO find out better way to handle muting/unmuting of LOGGERs
-    const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
+    const LOGGER = new FreLogger("ItemGroupComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
     const dispatcher = createEventDispatcher();
     type BoxType = "action" | "select" | "text";
 
     // Parameters
-    export let box: TextBox;				// the accompanying textbox
+    export let box: ItemGroupBox;				// the accompanying textbox
     export let editor: FreEditor;			// the editor
 	export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user, needs to be exported for binding in TextDropdownComponent
 	export let partOfActionBox: boolean = false; // indication whether this text component is part of an TextDropdownComponent
@@ -25,7 +30,7 @@
 
     // Local variables
     let id: string;                         // an id for the html element
-    id = !!box ? componentId(box) : 'text-with-unknown-box';
+    id = !!box ? componentId(box) : 'texitemgroup-with-unknown-box';
     let spanElement: HTMLSpanElement;       // the <span> element on the screen
     let inputElement: HTMLInputElement; 	// the <input> element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
@@ -34,8 +39,19 @@
     let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
     let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
 	let cssClass: string = '';
+	let style: string;
 
-    										// Note that 'from <= to' always holds.
+	// let element: HTMLDivElement = null;
+    let contentElement: HTMLDivElement = null;
+    	
+    let label: string;
+    let level: number;
+    let child: Box;
+    let isExpanded: boolean = false; 
+    let contentStyle: string = 'display: none';
+    let isDraggable: boolean = true;	
+	
+	// Note that 'from <= to' always holds.
 	let placeHolderStyle: string;
 	$: placeHolderStyle = (partOfActionBox ? "actionPlaceholder" : "placeholder");
     let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
@@ -192,7 +208,7 @@
         // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
         // stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
         // preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
-        LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+        //LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
 		if (event.altKey || event.ctrlKey) {  // No shift, because that is handled as normal text
 			// first check if this event has a command defined for it
@@ -212,12 +228,12 @@
 				// COPY
 				event.stopPropagation();
 				navigator.clipboard.writeText(text) // TODO get only the selected text from document.getSelection
-						.then(() => {
-							editor.setUserMessage('Text copied to clipboard', FreErrorSeverity.Info);
-						})
-						.catch(err => {
-							editor.setUserMessage('Error in copying text: ' + err.message);
-						});
+					.then(() => {
+						editor.setUserMessage('Text copied to clipboard', FreErrorSeverity.Info);
+					})
+					.catch(err => {
+						editor.setUserMessage('Error in copying text: ' + err.message);
+					});
 			} else if (event.ctrlKey && !event.altKey && event.key === 'v') { // ctrl-v
 				// PASTE
 				event.stopPropagation();
@@ -331,7 +347,7 @@
 					getCaretPosition(event);
 					switch (box.isCharAllowed(text, event.key, from)) {
 						case CharAllowed.OK: // add to text, handled by browser
-							LOGGER.log('CharAllowed');
+							//LOGGER.log('CharAllowed');
 							event.stopPropagation();
 							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
 							if (editor.selectedBox.kind === "ActionBox") {
@@ -360,7 +376,7 @@
 									event.stopPropagation();
 								}
 							} else {
-								LOGGER.log("     is NOT an action box, but: " + editor.selectedBox.kind);
+								//LOGGER.log("     is NOT an action box, but: " + editor.selectedBox.kind);
 							}
 							break;
 						case CharAllowed.NOT_OK: // ignore
@@ -417,6 +433,8 @@
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
 		setInputWidth();
 		cssClass = box.cssClass;
+		label = box.getLabel();
+		child = box?.child;
 	}
 
 	/**
@@ -471,12 +489,18 @@
      */
     onMount(() => {
         LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")");
-        originalText = text = box.getText();
-		placeholder = box.placeHolder;
-		setInputWidth();
-		box.setFocus = setFocus;
-		box.setCaret = setCaret;
-		box.refreshComponent = refresh;
+		if (!!box) {
+			originalText = text = box.getText();
+			placeholder = box.placeHolder;
+			isExpanded = box.$isExpanded;
+			contentStyle = isExpanded ? 'display:block;' : 'display:none;';
+			
+			setInputWidth();
+			box.setFocus = setFocus;
+			box.setCaret = setCaret;
+			box.refreshComponent = refresh;
+		}
+
     });
 
 	/**
@@ -522,46 +546,74 @@
 	}
 
 	refresh();
+
+	function toggleExpanded() {
+    	contentElement.style.display = contentElement.style.display === "block" ? "none" : "block";
+        isExpanded = !isExpanded;
+		contentStyle = isExpanded ? 'display:block;' : 'display:none;';
+    }
 </script>
 
 <!-- todo there is a double selection here: two borders are showing -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-<span id="{id}" on:click={onClick} role="none" class="{cssClass}">
-	{#if isEditing}
-		<span id="{id}" class="inputtext">
-			<input type="text"
-                   class="inputtext"
-				   id="{id}-input"
-                   bind:this={inputElement}
-				   on:input={onInput}
-                   bind:value={text}
-                   on:focusout={onFocusOut}
-                   on:keydown={onKeyDown}
-				   draggable="true"
-				   on:dragstart={onDragStart}
-                   placeholder="{placeholder}"/>
-			<span class="inputttext width" bind:this={widthSpan}></span>
-		</span>
-	{:else}
-		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
-		     But ... this is only a problem when this component is inside a draggable element (like List or table)
-		-->
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-		<span class="{box.role} text-box-{boxType} text"
-              on:click={startEditing}
-              bind:this={spanElement}
-			  contenteditable=true
-			  spellcheck=false
-              id="{id}-span"
-			  role="none">
-			{#if !!text && text.length > 0}
-				{text}
-			{:else}
-				<span class="{placeHolderStyle}">{placeholder}</span>
-			{/if}
-		</span>
-	{/if}
-</span>
+<div id="{id}-group" class="group {cssClass}" style="{style}">
+	{#key isDraggable}
+		<FontAwesomeIcon class="w-3 h-3" style="cursor: grab;" icon={faGripVertical} />
+	{/key}
+	{#key isExpanded}
+		<Button pill={true} class="w-7 h-7 p-0" color="none" size="xs" on:click={toggleExpanded}>
+			<FontAwesomeIcon class="w-3 h-3" icon={isExpanded ? faChevronUp : faChevronDown} />
+		</Button>
+	{/key}
+    <span class="group-label">{label}</span>
+	<span id="{id}" on:click={onClick} role="none" class="{cssClass}">
+		{#if isEditing}
+			<span id="{id}" class="inputtext">
+				<input type="text"
+					class="inputtext"
+					id="{id}-input"
+					bind:this={inputElement}
+					on:input={onInput}
+					bind:value={text}
+					on:focusout={onFocusOut}
+					on:keydown={onKeyDown}
+					draggable="true"
+					on:dragstart={onDragStart}
+					placeholder="{placeholder}"/>
+				<span class="inputttext width" bind:this={widthSpan}></span>
+			</span>
+		{:else}
+			<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
+				But ... this is only a problem when this component is inside a draggable element (like List or table)
+			-->
+			<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
+			<span class="{box.role} text-box-{boxType} text"
+				on:click={startEditing}
+				bind:this={spanElement}
+				contenteditable=true
+				spellcheck=false
+				id="{id}-span"
+				role="none">
+				{#if !!text && text.length > 0}
+					{text}
+				{:else}
+					<span class="{placeHolderStyle}">{placeholder}</span>
+				{/if}
+			</span>
+		{/if}
+	</span>
+	<Button pill={true} size="xs" class="w-7 h-7 p-0 button-transparent" outline>
+        <FontAwesomeIcon class="w-3 h-3" icon={faEllipsis} />
+    </Button>
+    <Button pill={true} size="xs" class="w-7 h-7 p-0 button-transparent" outline>
+        <FontAwesomeIcon class="w-3 h-3" icon={faXmark} />
+    </Button> 
+</div>
+{#key contentStyle}
+    <div bind:this={contentElement} style="{contentStyle}">
+        <RenderComponent box={child} editor={editor}/>
+    </div>
+{/key}
 
 <style>
 	.width {
@@ -632,4 +684,29 @@
 		white-space: normal;
 		display: inline-block;
 	}
+	.group:empty:before {
+        content: attr(data-placeholdertext);
+        margin: var(--freon-group-component-margin, 1px);
+        padding: var(--freon-group-component-padding, 1px);
+        background-color: var(--freon-group-component-background-color, inherit);
+    }
+    .group {
+        display: inline-block;
+        height: 32px;
+        background-color: inherit;
+    }
+    .group-label {
+        color: var(--freon-group-component-color, inherit);
+        font-style: var(--freon-group-component-font-style, inherit);
+        font-weight: var(--freon-group-component-font-weight, normal);
+        font-size: var(--freon-group-component-font-size, inherit);
+        font-family: var(--freon-group-component-font-family, "inherit");
+        padding: var(--freon-group-component-padding, 1px);
+        margin: var(--freon-group-component-margin, 1px);
+        white-space: normal;
+    }
+    .button-transparent {
+        background-color: transparent !important;
+        border-color: transparent !important;
+    }
 </style>

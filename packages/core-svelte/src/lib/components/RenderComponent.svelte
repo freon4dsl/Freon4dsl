@@ -8,14 +8,15 @@
     // Note also that this component has no 'setFocus' method because it is not
     // strongly coupled to a box. Each box is coupled to the corresponding
     // component in the if-statement.
-    import { isActionBox, isEmptyLineBox, isGridBox, isGroupBox, isIconBox, isTableBox, isIndentBox, isLabelBox, isLayoutBox, isListBox, isOptionalBox, isSelectBox, isTextBox, isSvgBox, isBooleanControlBox, FreEditor, FreLogger, Box, BoolDisplay,  isElementBox, isOptionalBox2, isMultiLineTextBox, isMultiLineTextBox2 } from "@freon4dsl/core";
+    import { isActionBox, isEmptyLineBox, isGridBox, isItemGroupBox, isListGroupBox, isIconBox, isTableBox, isIndentBox, isLabelBox, isLayoutBox, isListBox, isOptionalBox, isSelectBox, isTextBox, isSvgBox, isBooleanControlBox, FreEditor, FreLogger, Box, BoolDisplay,  isElementBox, isOptionalBox2, isMultiLineTextBox, isMultiLineTextBox2 } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
     import MultiLineTextComponent2 from "./MultiLineTextComponent2.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
     import GridComponent from "./GridComponent.svelte";
     import IndentComponent from "./IndentComponent.svelte";
     import LabelComponent from "./LabelComponent.svelte";
-    import GroupComponent from "./GroupComponent.svelte";
+    import ListGroupComponent from "./ListGroupComponent.svelte";
+    import ItemGroupComponent from "./ItemGroupComponent.svelte";
     import LayoutComponent from "./LayoutComponent.svelte";
     import ListComponent from "./ListComponent.svelte";
     import OptionalComponent from "./OptionalComponent.svelte";
@@ -85,9 +86,13 @@
 {#if isElementBox(box) }
     <ElementComponent box={box} editor={editor}/>
 {:else}
-    {#if isGroupBox(box)}
+    {#if isListGroupBox(box)}
         <span id={id} class="render-component {className} vertical-group" bind:this={element} role="group">
-            <GroupComponent box={box} editor={editor}/>
+            <ListGroupComponent box={box} editor={editor}/>
+        </span>
+    {:else if isItemGroupBox(box)}
+        <span id={id} class="render-component {className} vertical-group" bind:this={element} role="group">
+            <ItemGroupComponent box={box} editor={editor} text="" isEditing={false} />
         </span>
     {:else}
        <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
