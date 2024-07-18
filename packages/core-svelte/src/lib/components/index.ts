@@ -3,7 +3,6 @@ import DropdownComponent from '$lib/components/DropdownComponent.svelte';
 import EmptyLineComponent from '$lib/components/EmptyLineComponent.svelte';
 import FreonComponent from '$lib/components/FreonComponent.svelte';
 import ListGroupComponent from '$lib/components/ListGroupComponent.svelte';
-import ItemGroupComponent2 from '$lib/components/ItemGroupComponent2.svelte';
 import IconComponent from '$lib/components/IconComponent.svelte';
 import IndentComponent from '$lib/components/IndentComponent.svelte';
 import LabelComponent from '$lib/components/LabelComponent.svelte';
@@ -27,7 +26,6 @@ export {
     EmptyLineComponent,
     FreonComponent,
     ListGroupComponent,
-    ItemGroupComponent2,
     IndentComponent,
     LabelComponent,
     ListComponent,
