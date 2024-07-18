@@ -168,6 +168,12 @@
     refreshSelection("Initialize FreonComponent");
 </script>
 
+<!-- include the material design styling -->
+<svelte:head>
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+</svelte:head>
+
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 <div class={"freon"}
      on:keydown={onKeyDown}
@@ -197,6 +203,8 @@
         background-color: var(--freon-editor-component-background-color, white);
         margin: var(--freon-editor-component-margin, 1px);
         padding: var(--freon-editor-component-padding, 1px);
-
+        --slider-color: purple;
+        --radio-color: darkred;
+        --checkbox-color: lightblue;
     }
 </style>
