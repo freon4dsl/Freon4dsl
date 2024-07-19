@@ -48,7 +48,9 @@
   },
   "devDependencies": {
     "vitest": "^2.0.3",
-    "@vitest/ui": "^2.0.3"
+    "@vitest/ui": "^2.0.3",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest-tsconfig-paths": "^3.4.1"
   },
   "dependencies": {
     "@rushstack/ts-command-line": "^4.22.0",
