@@ -31,7 +31,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
             const idMap = this.parseIds(idJson);
             setIdMap(idMap);
         } else {
-            LOG2USER.info("No id.json found")
+            LOG2USER.log("No id.json found")
         }
         return super.parse(definitionFile);
     }
@@ -43,7 +43,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
             const idMap = this.parseIds(idJson);
             setIdMap(idMap);
         } else {
-            LOG2USER.info("No id.json found")
+            LOG2USER.log("No id.json found")
         }
         return super.parseMulti(filePaths);
     }

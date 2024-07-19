@@ -196,12 +196,12 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
                                         const myPropType: FreMetaPrimitiveType = myProp.type as FreMetaPrimitiveType;
                                         if (!myProp.isList) {
                                             this.runner.simpleCheck(CommonChecker.checkValueToType(freInstanceProperty.value, myPropType),
-                                                `Type of '${freInstanceProperty.value}' (${typeof freInstanceProperty.value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
+                                                `Type of '${freInstanceProperty.value}' (${CommonChecker.primitiveValueToString(freInstanceProperty.value)}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
                                         } else {
                                             if (!!freInstanceProperty.valueList) {
                                                 freInstanceProperty.valueList.forEach(value => {
                                                     this.runner.simpleCheck(CommonChecker.checkValueToType(value, myPropType),
-                                                        `Type of '${value}' (${typeof value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
+                                                        `Type of '${CommonChecker.primitiveValueToString(value)}' (${typeof value}) does not fit type (${myPropType.name}) of property '${freInstanceProperty.name}' ${ParseLocationUtil.location(freInstanceProperty)}.`);
                                                 });
                                             }
                                         }

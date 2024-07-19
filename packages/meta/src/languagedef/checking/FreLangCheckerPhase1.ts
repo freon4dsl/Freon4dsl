@@ -4,7 +4,7 @@ import {
     FreMetaExpressionConcept,
     FreMetaPrimitiveProperty,
     FreMetaInterface, FreMetaConcept, FreMetaProperty, FreMetaClassifier, FreMetaLimitedConcept,
-    MetaElementReference, FreMetaEnvironment, FreMetaPrimitiveType, FreMetaModelDescription, FreMetaUnitDescription
+    MetaElementReference, FreMetaEnvironment, FreMetaPrimitiveType, FreMetaModelDescription, FreMetaUnitDescription, FreMetaConceptProperty, FreMetaEnumValue
 } from "../metalanguage/index.js";
 import { CheckRunner, CheckerPhase, MetaLogger, freReservedWords, reservedWordsInTypescript, ParseLocationUtil } from "../../utils/index.js";
 import { CommonChecker } from "./CommonChecker.js";
@@ -182,24 +182,59 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                 error: `Element '${freProperty.name}' should have a type ${ParseLocationUtil.location(freProperty)}.`,
                 whenOk: () => {
                     CommonChecker.checkClassifierReference(freProperty.typeReference, this.runner);
-                    const realType = freProperty.type;
-                    if (!!realType) { // error message handled by checkClassifierReference
+                    const realPropertyType = freProperty.type;
+                    if (!!realPropertyType) { // error message handled by checkClassifierReference
                         const owningClassifier = freProperty.owningClassifier;
-                        this.checkPropertyType(freProperty, realType);
+                        this.checkPropertyType(freProperty, realPropertyType);
 
-                        const isUnit = (realType instanceof FreMetaUnitDescription);
+                        const isUnit = (realPropertyType instanceof FreMetaUnitDescription);
 
                         // check use of unit types in non-model concepts: may be references only
                         if (isUnit && freProperty.isPart) {
                             this.runner.simpleCheck(
                                 owningClassifier instanceof FreMetaModelDescription,
-                                `Modelunit '${realType.name}' may be used as reference only in a non-model concept ${ParseLocationUtil.location(freProperty.typeReference)}.`);
+                                `Modelunit '${realPropertyType.name}' may be used as reference only in a non-model concept ${ParseLocationUtil.location(freProperty.typeReference)}.`);
                         }
                         // check use of non-unit types in model concept
                         if (owningClassifier instanceof FreMetaModelDescription) {
                             this.runner.simpleCheck(
                                 isUnit,
                                 `Type of property '${freProperty.name}' should be a modelunit ${ParseLocationUtil.location(freProperty.typeReference)}.`);
+                        }
+                        if (realPropertyType instanceof FreMetaLimitedConcept) {
+                            // Check whether initial value is correct
+                            if (freProperty instanceof FreMetaConceptProperty) {
+                                if (!!freProperty.initial) {
+                                    this.runner.nestedCheck({
+                                        check: freProperty.initial instanceof FreMetaEnumValue,
+                                        error: `Property ${freProperty.name} has incorrect initializer type, should be a limited literal ${ParseLocationUtil.location(freProperty)}.`,
+                                        whenOk: () => {
+                                            // check reference to enum
+                                            const init = freProperty.initial as FreMetaEnumValue
+                                            const enumRef = MetaElementReference.create<FreMetaLimitedConcept>(init.sourceName, "FreClassifier")
+                                            enumRef.location = freProperty.location
+                                            CommonChecker.checkClassifierReference(enumRef, this.runner);
+                                            if (!!enumRef.referred) {
+                                                this.runner.nestedCheck({
+                                                    check: CommonChecker.checkLimitedType(enumRef.referred, realPropertyType),
+                                                    error: `Type of ${enumRef.referred.name} does not fit ${realPropertyType.toString()} of ${freProperty.name} ${ParseLocationUtil.location(freProperty)}.`,
+                                                    whenOk: () => {
+                                                        // found, now check limited instance name
+                                                        this.runner.simpleCheck((enumRef.referred as FreMetaLimitedConcept).instances.some(i => i.name === init.instanceName),
+                                                            `Literal '${init.instanceName}' does not exist in limited '${init.sourceName}' at ${ParseLocationUtil.location(freProperty.typeReference)}.`)
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                } 
+                            }
+                        } else {
+                            // The type of the property is a concept, not a limited
+                            if (freProperty instanceof FreMetaConceptProperty) {
+                                    this.runner.simpleCheck(freProperty.initial === undefined,
+                                        `Non-primitive property '${freProperty.name}' may not have an initial value ${ParseLocationUtil.location(freProperty.typeReference)}.`)
+                            }
                         }
                         // TODO review the rules around 'public'
                         // if (freProperty.isPart && freeProperty.isPublic) {
@@ -271,7 +306,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                             `Initial value of property '${element.name}' should be a single value ${ParseLocationUtil.location(element)}.`);
                         if (element.initialValue !== null && element.initialValue !== undefined) { // the property has an initial value, so check it
                             this.runner.simpleCheck(CommonChecker.checkValueToType(element.initialValue, myType as FreMetaPrimitiveType),
-                                `Type of '${element.initialValue}' (${typeof element.initialValue}) does not fit type (${element.type.name}) of property '${element.name}' ${ParseLocationUtil.location(element)}.`);
+                                `Type of '${element.initialValue.toString()}' (${CommonChecker.primitiveValueToString(element.initialValue)}) does not fit type (${element.type.name}) of property '${element.name}' ${ParseLocationUtil.location(element)}.`);
                         }
                     } else {
                         // this.runner.simpleCheck(element.initialValue === null || element.initialValue === undefined,
@@ -279,7 +314,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                         if (element.initialValueList.length > 0) { // the property has an initial value, so check it
                             element.initialValueList.forEach(value => {
                                 this.runner.simpleCheck(CommonChecker.checkValueToType(value, myType as FreMetaPrimitiveType),
-                                    `Type of '${value}' (${typeof element.initialValue}) does not fit type (${element.type.name}[]) of property '${element.name}' ${ParseLocationUtil.location(element)}.`);
+                                    `Type of '${value}' (${CommonChecker.primitiveValueToString(element.initialValue)}) does not fit type (${element.type.name}[]) of property '${element.name}' ${ParseLocationUtil.location(element)}.`);
                             });
                         }
                     }

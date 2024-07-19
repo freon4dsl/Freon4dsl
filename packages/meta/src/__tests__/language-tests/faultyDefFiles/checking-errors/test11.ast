@@ -12,8 +12,26 @@ modelunit testUnit {
 concept YY  {
     // ERROR: no initial value allowed in concept properties
     prop1: ZZ = 10;
+    numberProp1: number = "this should be a number";
+    numberProp2: number = true;
+    numberProp3: number = Color:red;
+    
+    limitedProp1: Color = Color:red;
+    limitedProp2: Color = 1;
+    limitedProp3: Color = "red";
+    limitedProp4: Color = Size:small;
+    limitedProp5: Color = Size:huge;
+    limitedProp6: Color = Color:green;
 }
 
 concept ZZ {
     name: identifier;
+}
+
+limited Color {
+    red; yellow; blue;
+}
+
+limited Size {
+    larger; medium; small;
 }

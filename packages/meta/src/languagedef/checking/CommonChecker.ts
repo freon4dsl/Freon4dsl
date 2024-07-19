@@ -1,12 +1,15 @@
 import {
     FreMetaClassifier,
     FreMetaConcept,
-    MetaElementReference, FreMetaPrimitiveProperty,
+    MetaElementReference,
+    FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
     FreMetaPrimitiveValue,
-    FreMetaProperty
+    FreMetaProperty,
+    FreMetaLimitedConcept, FreMetaEnumValue
 } from "../metalanguage/index.js";
 import { CheckRunner, MetaLogger, Names, ParseLocationUtil } from "../../utils/index.js";
+import { CommonSuperTypeUtil } from "./common-super/CommonSuperTypeUtil.js";
 
 const LOGGER = new MetaLogger("CommonChecker").mute();
 
@@ -19,16 +22,16 @@ export class CommonChecker {
         }
 
         runner.nestedCheck({
-                check: reference.name !== undefined,
-                error: `Classifier reference should have a name ${ParseLocationUtil.location(reference)}.`,
-                whenOk: () => {
-                    runner.nestedCheck(
-                        {
-                            check: reference.referred !== undefined,
-                            error: `Reference to classifier '${reference.name}' cannot be resolved ${ParseLocationUtil.location(reference)}.`
-                        });
-                }
-            });
+            check: reference.name !== undefined,
+            error: `Classifier reference should have a name ${ParseLocationUtil.location(reference)}.`,
+            whenOk: () => {
+                runner.nestedCheck(
+                    {
+                        check: reference.referred !== undefined,
+                        error: `Reference to classifier '${reference.name}' cannot be resolved ${ParseLocationUtil.location(reference)}.`
+                    });
+            }
+        });
     }
 
     public static checkOrCreateNameProperty(classifier: FreMetaClassifier, runner: CheckRunner) {
@@ -85,6 +88,23 @@ export class CommonChecker {
             return true;
         }
         return false;
+    }
+    
+    public static primitiveValueToString(type: FreMetaPrimitiveValue): string {
+        if (type instanceof FreMetaEnumValue) {
+            return type.sourceName
+        } else {
+            return typeof type
+        }
+    }
+
+    /**
+     * returns true if the 'limited' conforms to 'primType'
+     * @param value
+     * @param type
+     */
+    public static checkLimitedType(sub: FreMetaLimitedConcept, superType: FreMetaLimitedConcept): boolean {
+        return CommonSuperTypeUtil.getSupers(sub).includes(superType);
     }
 
     public static makeCopyOfProp(property: FreMetaProperty, classifier: FreMetaConcept): FreMetaProperty {

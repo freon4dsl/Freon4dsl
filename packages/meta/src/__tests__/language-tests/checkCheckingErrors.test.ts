@@ -196,9 +196,19 @@ describe("Checking language parser on checking errors", () => {
         try {
             parser.parse(testdir + "test11.ast");
         } catch (e: unknown) {
-            if (e instanceof Error) {            // console.log(checker.errors.map(err => err));
-                expect(e.message).toBe(`checking errors (1).`);
-                expect(checker.errors.includes("A non-primitive property may not have an initial value [file: test11.ast:14:5].")).toBeTruthy();
+            if (e instanceof Error) {
+                // console.log("ERRORS: " + checker.errors.map(e => e + "\n"))
+                expect(e.message).toBe(`checking errors (9).`);
+                expect(checker.errors.includes("Non-primitive property 'prop1' may not have an initial value [file: test11.ast:14:12].")).toBeTruthy();
+                expect(checker.errors.includes("Type of 'this should be a number' (string) does not fit type (number) of property 'numberProp1' [file: test11.ast:15:5].")).toBeTruthy();
+                expect(checker.errors.includes("Type of 'true' (boolean) does not fit type (number) of property 'numberProp2' [file: test11.ast:16:5].")).toBeTruthy();
+                expect(checker.errors.includes("Type of 'Color:red' (Color) does not fit type (number) of property 'numberProp3' [file: test11.ast:17:5].")).toBeTruthy();
+                expect(checker.errors.includes("Non-primitive property 'prop1' may not have an initial value [file: test11.ast:14:12].")).toBeTruthy();
+                expect(checker.errors.includes("Property limitedProp2 has incorrect initializer type, should be a limited literal [file: test11.ast:20:5].")).toBeTruthy();
+                expect(checker.errors.includes("Property limitedProp3 has incorrect initializer type, should be a limited literal [file: test11.ast:21:5].")).toBeTruthy();
+                expect(checker.errors.includes("Type of Size does not fit Color of limitedProp4 [file: test11.ast:22:5].")).toBeTruthy();
+                expect(checker.errors.includes("Type of Size does not fit Color of limitedProp5 [file: test11.ast:23:5].")).toBeTruthy();
+                expect(checker.errors.includes("Literal 'green' does not exist in limited 'Color' at [file: test11.ast:24:19].")).toBeTruthy()
             }
         }
     });

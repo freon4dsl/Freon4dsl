@@ -137,7 +137,8 @@ partProperty = isPrivate:privateKey? name:var ws isOptional:optionalKey? colon_s
     }
 
 referenceProperty = isPrivate:privateKey? referenceKey ws name:var ws isOptional:optionalKey? colon_separator ws type:classifierReference isList:"[]"? semicolon_separator
-    { return create.createReferenceProperty({
+    {
+     return create.createReferenceProperty({
         "isPublic": (isPrivate?false:true),
         "name": name,
         "typeReference": type,
@@ -192,9 +193,22 @@ propValue = "\"" value:string "\""      { return value; }
           / number:numberliteral        { return Number.parseInt(number); }
           / "[" ws list:propValueList ws "]"  { return list; }
           / "[]"
+          / instance:instanceExpression { return instance }
 
 propValueList = head:propValue tail:(comma_separator v:propValue { return v; })*
                     { return [head].concat(tail); }
 
 initialvalue = equals_separator value:propValue
     { return value; }
+
+initialvalueref = equals_separator value:instanceExpression
+    { return value; }
+    
+instanceExpression = conceptName:var ':' instance:var
+    {
+        return create.createEnumValue({
+                "sourceName": conceptName,
+                "instanceName": instance,
+                "location": location()
+            })
+    }

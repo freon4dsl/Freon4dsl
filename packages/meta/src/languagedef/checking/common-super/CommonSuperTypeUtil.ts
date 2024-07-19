@@ -36,7 +36,7 @@ export class CommonSuperTypeUtil {
      * @param inCls
      * @private
      */
-    private static getSupers(inCls: FreMetaClassifier): OrderedList<FreMetaClassifier> {
+    public static getSupers(inCls: FreMetaClassifier): OrderedList<FreMetaClassifier> {
         const classes: OrderedList<FreMetaClassifier> = new OrderedList<FreMetaClassifier>();
         if (!!inCls) {
             let nextLevel: OrderedList<FreMetaClassifier> = new OrderedList<FreMetaClassifier>();
