@@ -5,6 +5,8 @@
     import {FreEditor, FreLogger, BooleanControlBox} from "@freon4dsl/core";
     import { componentId } from "$lib/index.js";
     import {afterUpdate, onMount} from "svelte";
+    import '@material/web/checkbox/checkbox.js';
+    import {Checkbox} from "@material/web/checkbox/internal/checkbox.js";
 
     export let box: BooleanControlBox;
     export let editor: FreEditor;			// the editor
@@ -12,7 +14,7 @@
     const LOGGER = new FreLogger("CheckBoxComponent");
 
     let id: string = !!box ? componentId(box) : 'checkbox-for-unknown-box';
-    let inputElement: HTMLInputElement;
+    let inputElement: Checkbox;
     let value = box.getBoolean();
 
     /**
@@ -38,39 +40,31 @@
         box.refreshComponent = refresh;
     });
     const onClick = (event: MouseEvent) => {
-        LOGGER.log("CheckBoxComponent.onClick for box " + box.role + ", value:" + value);
-        box.setBoolean(!value);
-        editor.selectElementForBox(box);
+        // At on:click inputElement.checked is not yet changed, therefore we use a negation.
+        // We use on:click instead of on:change because we need to stop propagation.
+        value = !inputElement.checked;
+        box.setBoolean(value);
+        if (box.selectable) {
+            editor.selectElementForBox(box);
+        }
         event.stopPropagation();
+        LOGGER.log("CheckBoxComponent.onClick for box " + box.role + ", box value: " + box.getBoolean());
     }
 </script>
 
-<div id="{id}" class="mdc-checkbox fre-checkbox">
-    <input
-            type="checkbox"
-            class="mdc-checkbox__native-control"
+<span id="{id}" class="fre-checkbox">
+    <md-checkbox
+            aria-label="{id}"
             on:click={onClick}
             bind:this={inputElement}
-            bind:checked={value}
-    >
-    <div class="mdc-checkbox__background">
-        <svg
-                class="mdc-checkbox__checkmark"
-                viewBox="0 0 24 24"
-        >
-            <path
-                    class="mdc-checkbox__checkmark-path"
-                    fill="none"
-                    d="M1.73,12.91 8.1,19.28 22.79,4.59"
-            />
-        </svg>
-        <div class="mdc-checkbox__mixedmark" />
-    </div>
-</div>
+            checked={value}
+    ></md-checkbox>
+</span>
 
 <style>
     .fre-checkbox {
-        --mdc-theme-secondary: var(--checkbox-color);
+        padding: 1px;
+        --md-sys-color-primary: var(--freon-boolean-checkbox-color, var(--mdc-theme-primary));
     }
 </style>
 

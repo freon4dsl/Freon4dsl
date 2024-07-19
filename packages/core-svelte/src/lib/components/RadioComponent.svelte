@@ -4,9 +4,8 @@
      */
     import {BooleanControlBox, FreEditor, FreLogger} from "@freon4dsl/core";
     import {afterUpdate, onMount} from "svelte";
-    import {selectedBoxes} from "$lib/index.js";
 
-    const LOGGER = new FreLogger("RadioComponent");
+    const LOGGER = new FreLogger("RadioComponent").mute();
 
     export let editor: FreEditor;
     export let box: BooleanControlBox;
@@ -38,7 +37,7 @@
         box.refreshComponent = refresh;
     });
     const onChange = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
-        // console.log("RadioComponent.onChange for box " + box.role + ", value:" + value);
+        LOGGER.log("RadioComponent.onChange for box " + box.role + ", value:" + value);
         value = !value;
         box.setBoolean(value);
         if (box.selectable) {
@@ -47,7 +46,7 @@
         event.stopPropagation();
     }
     const onClick = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
-        // console.log("RadioComponent.onClick for box " + box.role + ", value:" + value);
+        LOGGER.log("RadioComponent.onClick for box " + box.role + ", value:" + value);
         event.stopPropagation();
     }
 </script>
@@ -93,8 +92,7 @@
 
 <style>
     .radio {
-        --mdc-theme-secondary: var(--radio-color, red);
-
+        --mdc-theme-secondary: var(--freon-boolean-radio-color, var(--mdc-theme-primary));
     }
     .radiolabel {
         padding-right: 4px;

@@ -84,7 +84,7 @@
     }
 
     .s--inner button:focus {
-        outline: var(--freon-boolean-accent-color) solid 1px;
+        outline: var(--freon-boolean-switch-color, var(--mdc-theme-primary)) solid 1px;
     }
 
     /* Slider Design Option */
@@ -115,7 +115,7 @@
     }
 
     .s--slider button[aria-checked='true']{
-        background-color: var(--freon-boolean-accent-color)
+        background-color: var(--freon-boolean-switch-color, var(--mdc-theme-primary))
     }
 
     .s--slider button[aria-checked='true']::before{
@@ -131,7 +131,7 @@
     [role='switch'][aria-checked='true'] :first-child,
     [role='switch'][aria-checked='false'] :last-child {
         border-radius: 0.25em;
-        background: var(--freon-boolean-accent-color);
+        background: var(--freon-boolean-switch-color, var(--mdc-theme-primary));
         display: inline-block;
     }
 

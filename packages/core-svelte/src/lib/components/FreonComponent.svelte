@@ -203,9 +203,5 @@
         background-color: var(--freon-editor-component-background-color, white);
         margin: var(--freon-editor-component-margin, 1px);
         padding: var(--freon-editor-component-padding, 1px);
-        --slider-color: purple;
-        --radio-color: darkred;
-        --checkbox-color: orange;
-        --switch-color: green;
     }
 </style>

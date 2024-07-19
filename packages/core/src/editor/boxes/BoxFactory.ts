@@ -232,7 +232,7 @@ export class BoxFactory {
         // 1. Create the Boolean box, or find the one that already exists for this element and role
         const creator = () => new NumberControlBox(element, role, getNumber, setNumber, initializer);
         const result: NumberControlBox = this.find<NumberControlBox>(element, role, creator, numberCache);
-        console.log(`Returning existing NumberControlBox: "` + result)
+        // console.log(`Returning existing NumberControlBox: "` + result)
 
         // 2. Apply the other arguments in case they have changed
         // result.$getNumber = getNumber;

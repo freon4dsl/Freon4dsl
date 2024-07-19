@@ -1,4 +1,5 @@
-RadioBox color uses  "--mdc-theme-secondary", if you want to override this value set "--radiobox-color".
-CheckBox color uses  "--mdc-theme-secondary", if you want to override this value set "--checkbox-color".
-SwitchBox color uses  "--mdc-theme-primary", if you want to override this value set "--switch-color".
-NumericSliderBox color uses  "--mdc-theme-primary", if you want to override this value set "--slider-color".
+RadioComponent uses  "--mdc-theme-secondary" for its color, if you want to override this value set "--freon-boolean-radiobox-color".
+CheckComponent uses  "--mdc-theme-secondary", if you want to override set "--freon-boolean-checkbox-color".
+SwitchComponent uses  "--mdc-theme-primary", if you want to override set "--freon-boolean-switch-color".
+NumericSliderComponent uses  "--mdc-theme-primary", if you want to override set "--freon-numeric-slider-color".
+InnerSwitchComponent uses  "--mdc-theme-primary", if you want to override set "--freon-boolean-switch-color".

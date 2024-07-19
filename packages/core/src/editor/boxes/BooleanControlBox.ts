@@ -4,7 +4,7 @@ import {FreLogger} from "../../logging";
 import {FreUtils} from "../../util";
 
 
-const LOGGER: FreLogger = new FreLogger("BooleanBox");
+const LOGGER: FreLogger = new FreLogger("BooleanBox").mute();
 
 export enum BoolDisplay {
     SELECT,         // a dropdown menu with selections for True and False

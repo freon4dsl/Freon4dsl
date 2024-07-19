@@ -171,8 +171,6 @@ export class BoxUtil {
                 }
             );
         }
-        let inf: NumberDisplayInfo = result.displayInfo;
-        console.log("min: " + inf.min + ", max: " + inf.max + ", step: " + inf.step )
         return result;
     }
     /**

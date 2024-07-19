@@ -66,6 +66,7 @@
     "vitest": "^1.6.0"
   },
   "dependencies": {
+    "@material/web": "^1.5.1",
     "@material/slider": "^14.0.0",
     "@material/switch": "^14.0.0",
     "@smui/ripple": "^7.0.0",

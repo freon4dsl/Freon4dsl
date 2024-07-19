@@ -4,9 +4,7 @@
 
 // Freon Colors!!
 @use '@material/theme/index' as theme with (
-  //$primary: #80cbc4,
   $primary: #4f9a94,
-  //$secondary: #ce93d8,
   $secondary: #ffcc80,
   $surface: #eeeeee,
   $background: #fff,
@@ -21,7 +19,6 @@
   //luminance,
   //text-emphasis,
   //tone
-
 );
 
 // Include all the global styles that do not involve dark/light modes.
@@ -228,8 +225,13 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-verticallist-component-padding: 2px;
   --freon-verticallist-component-margin: 2px;
 
-  /* Boolean components */
-  --freon-boolean-accent-color: #{theme.$blue-800};
+  /* Boolean Controls */
+  //--freon-boolean-switch-color: #{theme.$blue-900};
+  //--freon-boolean-checkbox-color: #{theme.$blue-900};
+  //--freon-boolean-radio-color: #{theme.$blue-900};
+  //
+  ///* Numeric Controls */
+  //--freon-numeric-slider-color: #{theme.$blue-900};
 }
 
 .gridcellOdd {
