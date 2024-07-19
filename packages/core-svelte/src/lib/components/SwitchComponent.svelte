@@ -1,176 +1,183 @@
+<!-- This component was copied from https://github.com/hperrin/svelte-material-ui/blob/master/packages/switch/src/Switch.svelte,
+and stripped down to the parts that Freon needs. -->
+
 <script lang="ts">
-    // adapted for Freon from https://svelte.dev/repl/d65a4e9f0ae74d1eb1b08d13e428af32?version=3.35.0
-
-    // original comments
-    // based on suggestions from:
-    // Inclusive Components by Heydon Pickering https://inclusive-components.design/toggle-button/
-    // On Designing and Building Toggle Switches by Sara Soueidan https://www.sarasoueidan.com/blog/toggle-switch-design/
-    // and this example by Scott O'hara https://codepen.io/scottohara/pen/zLZwNv
-
+    import {type MDCSwitchRenderAdapter, MDCSwitchRenderFoundation, type MDCSwitchState} from '@material/switch';
+    import {afterUpdate, onMount} from 'svelte';
+    import Ripple from '@smui/ripple';
     import {BooleanControlBox, FreEditor, FreLogger} from "@freon4dsl/core";
-    import {selectedBoxes} from "$lib/index.js";
-    import {afterUpdate, onMount} from "svelte";
+    import {classMap} from "@smui/common/internal";
 
-    const LOGGER = new FreLogger("SwitchComponent");
+    const LOGGER = new FreLogger("RadioComponent");
 
     export let editor: FreEditor;
     export let box: BooleanControlBox;
-    export let design: string = 'slider'; // only two options: 'inner' or 'slider'
 
-    let value = box.getBoolean();
     let id: string = box.id;
-    let switchElement: HTMLButtonElement;
-    let sliderElement: HTMLButtonElement;
+    let checked: boolean = box.getBoolean();
 
+    let element: HTMLButtonElement;
+    let instance: MDCSwitchRenderFoundation;
+    let internalClasses: { [k: string]: boolean } = {};
+    let rippleElement: HTMLDivElement;
+    let rippleActive = false;
+
+    // 'selected' and 'state' are needed for the MDCSwitchRenderFoundation
+    let selected = checked === undefined ? false : checked;
+    let state = {
+        get disabled() {
+            return false;
+        },
+        set disabled(value) {
+        },
+        get processing() {
+            return false;
+        },
+        set processing(value) {
+        },
+        get selected() {
+            return selected;
+        },
+        set selected(value) {
+            selected = value;
+        },
+    } as MDCSwitchState;
+
+    /**
+     * This function sets the focus on this element programmatically.
+     * It is called from the box. Note that because focus can be set,
+     * the html needs to have its tabindex set, and its needs to be bound
+     * to a variable.
+     */
     async function setFocus(): Promise<void> {
-        if (design === 'inner') {
-            switchElement.focus();
-        } else if (design === 'slider') {
-            sliderElement.focus();
-        }
+        element.focus();
     }
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH BooleanControlBox: " + why);
-        value = box.getBoolean();
+        checked = box.getBoolean();
     };
-    onMount(() => {
-        value = box.getBoolean();
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
     afterUpdate(() => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
+
+    onMount(() => {
+        checked = box.getBoolean();
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
+        instance = new MDCSwitchRenderFoundation({
+            addClass,
+            hasClass,
+            isDisabled: () => false,
+            removeClass,
+            setAriaChecked: () => {
+                // Handled automatically.
+            },
+            setDisabled: (value) => {
+            },
+            state,
+        } as MDCSwitchRenderAdapter);
+
+        instance.init();
+        instance.initFromDOM();
+
+        return () => {
+            instance.destroy();
+        };
+    });
+
+    function hasClass(className) {
+        return className in internalClasses
+            ? internalClasses[className]
+            : element.classList.contains(className);
+    }
+
+    function addClass(className) {
+        if (!internalClasses[className]) {
+            internalClasses[className] = true;
+        }
+    }
+
+    function removeClass(className) {
+        if (!(className in internalClasses) || internalClasses[className]) {
+            internalClasses[className] = false;
+        }
+    }
+
     function handleClick(event){
-        const target = event.target;
-        const state = target.getAttribute('aria-checked');
-        value = state === 'true' ? false : true;
-        box.setBoolean(value);
+        instance.handleClick();
+        checked = !checked;
+        box.setBoolean(checked);
         if (box.selectable) {
             editor.selectElementForBox(box);
         }
         event.stopPropagation();
+        LOGGER.log("Value is: "+ box.getBoolean());
     }
+
 </script>
 
-{#if design == 'inner'}
-    <div class="s s--inner">
-        <button
-                bind:this={switchElement}
-                role="switch"
-                aria-checked={value}
-                aria-labelledby={`switch-${id}`}
-                on:click={handleClick}>
-            <span>{box.labels.yes}</span>
-            <span>{box.labels.no}</span>
-        </button>
+<button
+        bind:this={element}
+        use:Ripple={{
+    unbounded: true,
+    active: rippleActive,
+    rippleElement,
+    addClass,
+    removeClass
+  }}
+        class={classMap({
+		'freon-switch': true,
+    'mdc-switch': true,
+    ...internalClasses,
+  })}
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        on:click={handleClick}
+>
+    <div class="mdc-switch__track" />
+    <div class="mdc-switch__handle-track">
+        <div class="mdc-switch__handle">
+            <div class="mdc-switch__shadow">
+                <div class="mdc-elevation-overlay" />
+            </div>
+            <div class="mdc-switch__ripple" bind:this={rippleElement} />
+            <div class='mdc-switch__icons'>
+                <svg
+                        class="mdc-switch__icon mdc-switch__icon--on"
+                        viewBox="0 0 24 24"
+                >
+                    <path
+                            d="M19.69,5.23L8.96,15.96l-4.23-4.23L2.96,13.5l6,6L21.46,7L19.69,5.23z"
+                    />
+                </svg>
+                <svg
+                        class="mdc-switch__icon mdc-switch__icon--off"
+                        viewBox="0 0 24 24"
+                >
+                    <path d="M20 13H4v-2h16v2z" />
+                </svg>
+            </div>
+        </div>
     </div>
-{:else if design == 'slider'}
-    <div class="s s--slider" >
-        <button
-                bind:this={sliderElement}
-                role="switch"
-                aria-checked={value}
-                aria-labelledby={`switch-${id}`}
-                on:click={handleClick}>
-        </button>
-    </div>
-{/if}
+</button>
 
 <style>
-    :root {
-        /*--accent-color: CornflowerBlue;*/
-        --gray: #ccc;
+    /* Because not all colors of the material switch follow the theme colors,
+    we set them here, one by one. */
+    .freon-switch {
+        --switch-track-color: color-mix(in srgb,var(--switch-color),#fff 75%);
+        --switch-hover-color: color-mix(in srgb,var(--switch-color),#000 25%);
+        --mdc-theme-primary: var(--switch-color);
+        /* The default for these in @material/switch is a light pink */
+        --mdc-switch-selected-track-color: var(--switch-track-color);
+        --mdc-switch-selected-hover-track-color: var(--switch-track-color);
+        --mdc-switch-selected-focus-track-color: var(--switch-track-color);
+        --mdc-switch-selected-pressed-track-color: var(--switch-track-color);
+        /* The default for these in @material/switch  is a dark purple */
+        --mdc-switch-selected-hover-handle-color: var(--switch-hover-color);
+        --mdc-switch-selected-focus-handle-color: var(--switch-hover-color);
+        --mdc-switch-selected-pressed-handle-color: var(--switch-hover-color);
     }
-    /* Inner Design Option */
-    .s--inner button {
-        padding: 0.5em;
-        background-color: #fff;
-        border: 1px solid var(--gray);
-    }
-    [role='switch'][aria-checked='true'] :first-child,
-    [role='switch'][aria-checked='false'] :last-child {
-        display: none;
-        color: #fff;
-    }
-
-    .s--inner button span {
-        user-select: none;
-        pointer-events:none;
-        padding: 0.25em;
-    }
-
-    .s--inner button:focus {
-        outline: var(--freon-boolean-accent-color) solid 1px;
-    }
-
-    /* Slider Design Option */
-
-    .s--slider {
-        display: flex;
-        align-items: center;
-    }
-
-    .s--slider button {
-        width: 2.4em;
-        height: 1.2em;
-        position: relative;
-        margin: 0 0 0 0.5em;
-        background: var(--gray);
-        border: none;
-    }
-
-    .s--slider button::before {
-        content: '';
-        position: absolute;
-        width: 0.9em;
-        height: 0.9em;
-        background: #fff;
-        top: 0.13em;
-        right: 1.4em;
-        transition: transform 0.3s;
-    }
-
-    .s--slider button[aria-checked='true']{
-        background-color: var(--freon-boolean-accent-color)
-    }
-
-    .s--slider button[aria-checked='true']::before{
-        transform: translateX(1.2em);
-        transition: transform 0.3s;
-    }
-
-    .s--slider button:focus {
-        /*box-shadow: 0 0px 0px 1px var(--freon-boolean-accent-color);*/
-    }
-
-    /* Inner Design Option */
-    [role='switch'][aria-checked='true'] :first-child,
-    [role='switch'][aria-checked='false'] :last-child {
-        border-radius: 0.25em;
-        background: var(--freon-boolean-accent-color);
-        display: inline-block;
-    }
-
-    .s--inner button:focus {
-        /*box-shadow: 0 0px 8px var(--freon-boolean-accent-color);*/
-        border-radius: 0.1em;
-    }
-
-    /* Slider Design Option */
-    .s--slider button {
-        border-radius: 1.5em;
-    }
-
-    .s--slider button::before {
-        border-radius: 100%;
-    }
-
-    .s--slider button:focus {
-        /*box-shadow: 0 0px 8px var(--freon-boolean-accent-color);*/
-        border-radius: 1.5em;
-    }
-
-
 </style>

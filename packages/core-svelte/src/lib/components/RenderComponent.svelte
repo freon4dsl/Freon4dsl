@@ -48,6 +48,7 @@
     import RadioComponent from "$lib/components/RadioComponent.svelte";
     import SwitchComponent from "$lib/components/SwitchComponent.svelte";
     import NumericSliderComponent from "$lib/components/NumericSliderComponent.svelte";
+    import InnerSwitchComponent from "$lib/components/InnerSwitchComponent.svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -71,7 +72,14 @@
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
         LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.freId() + '=' + b?.element?.freLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
-        className = (isSelected ? "selected" : "unSelected");
+        if (isBooleanControlBox(box) && (box.showAs === BoolDisplay.RADIO_BUTTON
+            || box.showAs === BoolDisplay.SWITCH
+            // || box.showAs === BoolDisplay.CHECKBOX
+        )) {
+            // do not set extra class, the control itself handles being selected
+        } else {
+            className = (isSelected ? "selected" : "unSelected");
+        }
         if (!!element) { // upon initialization the element might be null
             setBoxSizes(box, element.getBoundingClientRect());
         } else {
@@ -115,10 +123,10 @@
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.RADIO_BUTTON}
             <RadioComponent box={box} editor={editor}/>
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.SWITCH}
-            <SwitchComponent box={box} editor={editor} design="slider"/>
+            <SwitchComponent box={box} editor={editor}/>
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
-            <SwitchComponent box={box} editor={editor} design="inner"/>
-        {:else if isNumberControlBox(box) && box.showAs === NumberDisplay.HORIZONTAL_STEP_SLIDER}
+            <InnerSwitchComponent box={box} editor={editor}/>
+        {:else if isNumberControlBox(box) }
             <NumericSliderComponent box={box} editor={editor}/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>
@@ -166,7 +174,7 @@
         border: none;
     }
     .selected {
-        background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
+        /*background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));*/
         outline-color: var(--freon-selected-outline-color, darkblue);
         outline-style: var(--freon-selected-outline-style, solid);
         outline-width: var(--freon-selected-outline-width, 1px);

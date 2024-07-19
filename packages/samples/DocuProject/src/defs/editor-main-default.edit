@@ -17,6 +17,8 @@ BaseProduct {[
         is approved level2: ${self.isApprovedLevel2 inner-switch}
         is approved level3: ${self.isApprovedLevel3 checkbox}
         yields profit: ${self.yieldsProfit text [Plenty | Little]}
+        expected nr of use: ${self.nrOfUse}
+        range: ${self.range}
 
 
         ${parts}

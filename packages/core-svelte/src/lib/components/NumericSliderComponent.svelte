@@ -1,344 +1,356 @@
-<script lang="ts">
-    // adapted from https://svelte.dev/repl/7f0042a186ee4d8e949c46ca663dbe6c?version=3.33.0
-    import {afterUpdate, createEventDispatcher, onMount} from "svelte";
-    import { fly, fade } from "svelte/transition";
-    import {NumberControlBox, FreEditor, FreLogger} from "@freon4dsl/core";
+<!-- This component was copied from https://github.com/hperrin/svelte-material-ui/blob/master/packages/slider/src/Slider.svelte,
+and stripped down to the parts that Freon needs. -->
 
-    const LOGGER = new FreLogger("NumericSliderComponent");
+<script lang="ts">
+    import {FreEditor, FreLogger, NumberControlBox} from "@freon4dsl/core";
+    import {MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
+    import {afterUpdate, onMount} from 'svelte';
+    import Ripple from '@smui/ripple';
+    import {classMap} from "@smui/common/internal";
+
+    const LOGGER = new FreLogger("SwitchComponent");
 
     export let editor: FreEditor;
     export let box: NumberControlBox;
 
+    let discrete: boolean = box.displayInfo.discrete;
+    let tickMarks: boolean = box.displayInfo.showMarks;
+    let step: number = box.displayInfo.step;
+    let min: number = box.displayInfo.min;
+    let max: number = box.displayInfo.max;
     let id: string = box.id;
-    let min: number = 0;
-    let max: number = 100;
-    let step: number = 1;
-    let initialValue: number = 0;
-    let value: number = 0;
+    let value: number = box.getNumber();
 
-    // Node Bindings
-    let container = null;
-    let thumb: HTMLDivElement = null;
-    let progressBar = null;
-    let element = null;
+    let valueToAriaValueTextFn: (value: number, thumb: Thumb) => string
+        = ( value ) => `${value}`;
 
-    // Internal State
-    let elementX = null;
-    let currentThumb = null;
-    let holding = false;
-    let thumbHover = false;
-    let keydownAcceleration = 0;
-    let accelerationTimer = null;
+    let element: HTMLDivElement;
+    let instance: MDCSliderFoundation;
+    let input: HTMLInputElement;
+    let thumbEl: HTMLDivElement;
+    let thumbKnob: HTMLDivElement;
+    let internalClasses: { [k: string]: boolean } = {};
+    let thumbClasses: { [k: string]: boolean } = {};
+    let inputAttrs: { [k: string]: string | undefined } = {};
+    let trackActiveStyles: { [k: string]: string } = {};
+    let thumbStyles: { [k: string]: string } = {};
+    let thumbRippleActive: boolean = false;
+    let currentTickMarks: TickMark[];
 
-    // Dispatch 'change' events
-    const dispatch = createEventDispatcher();
+    if (tickMarks && step > 0) {
+        if (typeof value === 'number') {
+            const numberOfMarks = Math.floor((max - min) / step) + 1;
+            if (numberOfMarks > 0) {
+                currentTickMarks = Array(numberOfMarks); // creates an array of length 'numberOfMarks'
+                for (let i = 0; i < numberOfMarks; i++) {
+                    if ((min + i * step) <= value) {
+                        currentTickMarks[i] = TickMark.ACTIVE;
+                    } else {
+                        currentTickMarks[i] = TickMark.INACTIVE;
+                    }
+                }
+            }
+        }
+    }
 
-    // Mouse shield used onMouseDown to prevent any mouse events penetrating other elements,
-    // ie. hover events on other elements while dragging. Especially for Safari
-    const mouseEventShield = document.createElement("div");
-    mouseEventShield.setAttribute("class", "mouse-over-shield");
-    mouseEventShield.addEventListener("mouseover", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    });
+    if (typeof value === 'number') {
+        const percent = value / (max - min);
+        trackActiveStyles.transform = `scaleX(${percent})`;
+        thumbStyles.left = `calc(${percent * 100}% -24px)`;
+        thumbStyles.size = `24px`;
+    }
+
+    let previousValue = value;
+    $: if (instance) {
+        if (previousValue !== value && typeof value === 'number') {
+            instance.setValue(value);
+        }
+        previousValue = value;
+        // Needed for range start to take effect.
+        instance.layout();
+    }
 
     async function setFocus(): Promise<void> {
-        thumb.focus();
+        element.focus();
     }
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH NumberControlBox: " + why);
         value = box.getNumber();
     };
-    onMount(() => {
-        value = box.getNumber();
-        if (!!box.displayInfo) {
-            min = box.displayInfo.min? box.displayInfo.min : 0;
-            max = box.displayInfo.max? box.displayInfo.max : 100;
-            step = box.displayInfo.step? box.displayInfo.step : 1;
-            initialValue = box.displayInfo.initialValue? box.displayInfo.initialValue : 0;
-        }
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
     afterUpdate(() => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 
-    function resizeWindow() {
-        elementX = element.getBoundingClientRect().left;
+    onMount(() => {
+        value = box.getNumber();
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
+        instance = new MDCSliderFoundation(
+            {
+                hasClass,
+                addClass,
+                removeClass,
+                addThumbClass,
+                removeThumbClass,
+                getAttribute: (attribute) => element.getAttribute(attribute),
+                getInputValue: (thumb: Thumb) =>
+                    `${value ?? 0}`,
+                setInputValue: (val, thumb: Thumb) => {
+                    value = Number(val);
+                    previousValue = value;
+                },
+                getInputAttribute: getInputAttr,
+                setInputAttribute: addInputAttr,
+                removeInputAttribute: removeInputAttr,
+                focusInput: (thumb: Thumb) => {
+                    input.focus();
+                },
+                isInputFocused: (thumb: Thumb) =>
+                    input ===
+                    document.activeElement,
+                getThumbKnobWidth: (thumb: Thumb) =>
+                    thumbKnob.getBoundingClientRect().width,
+                getThumbBoundingClientRect: (thumb: Thumb) =>
+                    thumbEl.getBoundingClientRect(),
+                getBoundingClientRect: () => element.getBoundingClientRect(),
+                getValueIndicatorContainerWidth: (thumb: Thumb) => {
+                    return thumbEl
+                        .querySelector<HTMLElement>(`.mdc-slider__value-indicator-container`)!
+                        .getBoundingClientRect().width;
+                },
+                isRTL: () => getComputedStyle(element).direction === 'rtl',
+                setThumbStyleProperty: addThumbStyle,
+                removeThumbStyleProperty: removeThumbStyle,
+                setTrackActiveStyleProperty: addTrackActiveStyle,
+                removeTrackActiveStyleProperty: removeTrackActiveStyle,
+                // Handled by Svelte.
+                setValueIndicatorText: (_value, _thumb) => undefined,
+                getValueToAriaValueTextFn: () => valueToAriaValueTextFn,
+                updateTickMarks: (tickMarks) => {
+                    currentTickMarks = tickMarks;
+                },
+                setPointerCapture: (pointerId) => {
+                    element.setPointerCapture(pointerId);
+                },
+                registerEventHandler: (evtType, handler) => {
+                    element.addEventListener(evtType, handler);
+                },
+                deregisterEventHandler: (evtType, handler) => {
+                    element.removeEventListener(evtType, handler);
+                },
+                registerThumbEventHandler: (thumb, evtType, handler) => {
+                    thumbEl.addEventListener(evtType, handler);
+                },
+                deregisterThumbEventHandler: (thumb, evtType, handler) => {
+                    thumbEl.removeEventListener(evtType, handler);
+                },
+                registerInputEventHandler: (thumb, evtType, handler) => {
+                    input.addEventListener(evtType, handler);
+                },
+                deregisterInputEventHandler: (thumb, evtType, handler) => {
+                    input.removeEventListener(evtType, handler);
+                },
+                registerBodyEventHandler: (evtType, handler) => {
+                    document.body.addEventListener(evtType, handler);
+                },
+                deregisterBodyEventHandler: (evtType, handler) => {
+                    document.body.removeEventListener(evtType, handler);
+                },
+                registerWindowEventHandler: (evtType, handler) => {
+                    window.addEventListener(evtType, handler);
+                },
+                deregisterWindowEventHandler: (evtType, handler) => {
+                    window.removeEventListener(evtType, handler);
+                },
+            });
+
+        instance.init();
+        instance.layout({ skipUpdateUI: true });
+
+        return () => {
+            instance.destroy();
+        };
+    });
+
+    // The functions hasClass, addClass, and removeClass are used by the MDC to set the tickmarks
+    function hasClass(className) {
+        return className in internalClasses
+            ? internalClasses[className]
+            : element.classList.contains(className);
     }
 
-    // Allows both bind:value and on:change for parent value retrieval
-    function setValue(val) {
-        value = val;
-        dispatch("change", { value });
-    }
-
-    function onTrackEvent(e) {
-        // Update value immediately before beginning drag
-        updateValueOnEvent(e);
-        onDragStart(e);
-    }
-
-    function onHover(e) {
-        thumbHover = thumbHover ? false : true;
-    }
-
-    function onDragStart(e) {
-        // If mouse event add a pointer events shield
-        if (e.type === "mousedown") document.body.append(mouseEventShield);
-        currentThumb = thumb;
-    }
-
-    function onDragEnd(e) {
-        // If using mouse - remove pointer event shield
-        if (e.type === "mouseup") {
-            if (document.body.contains(mouseEventShield))
-                document.body.removeChild(mouseEventShield);
-            // Needed to check whether thumb and mouse overlap after shield removed
-            if (isMouseInElement(e, thumb)) thumbHover = true;
+    function addClass(className) {
+        if (!internalClasses[className]) {
+            internalClasses[className] = true;
         }
-        currentThumb = null;
     }
 
-    // Check if mouse event cords overlay with an element's area
-    function isMouseInElement(event, element) {
-        let rect = element.getBoundingClientRect();
-        let { clientX: x, clientY: y } = event;
-        if (x < rect.left || x >= rect.right) return false;
-        if (y < rect.top || y >= rect.bottom) return false;
-        return true;
+    function removeClass(className) {
+        if (!(className in internalClasses) || internalClasses[className]) {
+            internalClasses[className] = false;
+        }
     }
 
-    // Accessible keypress handling
-    function onKeyPress(e) {
-        // Max out at +/- 10 to value per event (50 events / 5)
-        // 100 below is to increase the amount of events required to reach max velocity
-        if (keydownAcceleration < 50) keydownAcceleration++;
-        let throttled = Math.ceil(keydownAcceleration / 5);
+    function addThumbClass(className, thumb) {
+        if (!thumbClasses[className]) {
+            thumbClasses[className] = true;
+        }
+    }
 
-        if (e.key === "ArrowUp" || e.key === "ArrowRight") {
-            if (value + throttled > max || value >= max) {
-                setValue(max);
+    function removeThumbClass(className, thumb) {
+        if (!(className in thumbClasses) || thumbClasses[className]) {
+            thumbClasses[className] = false;
+        }
+    }
+
+    function addThumbStyle(name, value, thumb) {
+        if (thumbStyles[name] != value) {
+            if (name === 'size') {
+                // This is a hack, better ways to do this appreciated.
+                // Keep the old value, it is somehow overwritten by the SMUI Ripple, that calculates a very large ripple size.
+                thumbStyles.size = `24px`;
+            } else
+                if (value === '' || value == null) {
+                delete thumbStyles[name];
+                thumbStyles = thumbStyles;
             } else {
-                setValue(value + throttled);
+                thumbStyles[name] = value;
             }
         }
-        if (e.key === "ArrowDown" || e.key === "ArrowLeft") {
-            if (value - throttled < min || value <= min) {
-                setValue(min);
+    }
+
+    function removeThumbStyle(name, thumb) {
+        if (name in thumbStyles) {
+            delete thumbStyles[name];
+            thumbStyles = thumbStyles;
+        }
+    }
+
+    function getInputAttr(name, thumb) {
+        // Some custom logic for "value", since Svelte doesn't seem to actually
+        // set the attribute, just the DOM property.
+        if (name === 'value') {
+            return `${value}`;
+        }
+        return name in inputAttrs
+            ? inputAttrs[name] ?? null
+            : input.getAttribute(name);
+    }
+
+    function addInputAttr(name, value, thumb) {
+        if (inputAttrs[name] !== value) {
+            inputAttrs[name] = value;
+        }
+    }
+
+    function removeInputAttr(name, thumb) {
+        if (!(name in inputAttrs) || inputAttrs[name] != null) {
+            inputAttrs[name] = undefined;
+        }
+    }
+
+    function addTrackActiveStyle(name, value) {
+        if (trackActiveStyles[name] != value) {
+            if (value === '' || value == null) {
+                delete trackActiveStyles[name];
+                trackActiveStyles = trackActiveStyles;
             } else {
-                setValue(value - throttled);
+                trackActiveStyles[name] = value;
             }
         }
-
-        // Reset acceleration after 100ms of no events
-        clearTimeout(accelerationTimer);
-        accelerationTimer = setTimeout(() => (keydownAcceleration = 1), 100);
     }
 
-    function calculateNewValue(clientX) {
-        // Find distance between cursor and element's left cord (20px / 2 = 10px) - Center of thumb
-        let delta = clientX - (elementX + 10);
-
-        // Use width of the container minus (5px * 2 sides) offset for percent calc
-        let percent = (delta * 100) / (container.clientWidth - 10);
-
-        // Limit percent 0 -> 100
-        percent = percent < 0 ? 0 : percent > 100 ? 100 : percent;
-
-        // Limit value min -> max
-        setValue((percent * (max - min) / 100) + min);
+    function removeTrackActiveStyle(name) {
+        if (name in trackActiveStyles) {
+            delete trackActiveStyles[name];
+            trackActiveStyles = trackActiveStyles;
+        }
     }
 
-    // Handles both dragging of touch/mouse as well as simple one-off click/touches
-    function updateValueOnEvent(e) {
-        // touchstart && mousedown are one-off updates, otherwise expect a currentPointer node
-        if (!currentThumb && e.type !== "touchstart" && e.type !== "mousedown")
-            return false;
-
-        if (e.stopPropagation) e.stopPropagation();
-        if (e.preventDefault) e.preventDefault();
-
-        // Get client's x cord either touch or mouse
-        const clientX =
-            e.type === "touchmove" || e.type === "touchstart"
-                ? e.touches[0].clientX
-                : e.clientX;
-
-        calculateNewValue(clientX);
-    }
-
-    // React to left position of element relative to window
-    $: if (element) elementX = element.getBoundingClientRect().left;
-
-    // Set a class based on if dragging
-    $: holding = Boolean(currentThumb);
-
-    // Update progressbar and thumb styles to represent value
-    $: if (progressBar && thumb) {
-        // Limit value min -> max
-        value = value > min ? value : min;
-        value = value < max ? value : max;
-
-        let percent = ((value - min) * 100) / (max - min);
-        let offsetLeft = (container.clientWidth - 10) * (percent / 100) + 5;
-
-        // Update thumb position + active range track width
-        thumb.style.left = `${offsetLeft}px`;
-        progressBar.style.width = `${offsetLeft}px`;
-    }
 </script>
 
-<svelte:window
-        on:touchmove|nonpassive={updateValueOnEvent}
-        on:touchcancel={onDragEnd}
-        on:touchend={onDragEnd}
-        on:mousemove={updateValueOnEvent}
-        on:mouseup={onDragEnd}
-        on:resize={resizeWindow}
-/>
-<div class="range">
-    <div
-            class="range__wrapper"
-            tabindex="0"
-            on:keydown={onKeyPress}
-            bind:this={element}
-            role="slider"
-            aria-valuemin={min}
-            aria-valuemax={max}
-            aria-valuenow={value}
-            {id}
-            on:mousedown={onTrackEvent}
-            on:touchstart={onTrackEvent}
-    >
-        <div class="range__track" bind:this={container}>
-            <div class="range__track--highlighted" bind:this={progressBar} />
+<span
+        bind:this={element}
+        id="{id}"
+        class={Object.entries({
+	'freon-slider': true,
+    'mdc-slider': true,
+    'mdc-slider--discrete': discrete,
+    'mdc-slider--tick-marks': discrete && tickMarks,
+    ...internalClasses,
+  })
+    .filter(([name, value]) => name !== '' && value)
+    .map(([name]) => name)
+    .join(' ')}
+>
+    <input
+            bind:this={input}
+            class='mdc-slider__input'
+            type="range"
+            {step}
+            {min}
+            {max}
+            bind:value
+            on:blur
+            on:focus
+            {...inputAttrs}
+    />
+    <div class="mdc-slider__track">
+        <div class="mdc-slider__track--inactive" />
+        <div class="mdc-slider__track--active">
             <div
-                    class="range__thumb"
-                    class:range__thumb--holding={holding}
-                    bind:this={thumb}
-                    on:touchstart={onDragStart}
-                    on:mousedown={onDragStart}
-                    on:mouseover={() => (thumbHover = true)}
-                    on:mouseout={() => (thumbHover = false)}
-            >
-                {#if holding || thumbHover}
-                    <div
-                            class="range__tooltip"
-                            in:fly={{ y: 7, duration: 200 }}
-                            out:fade={{ duration: 100 }}
-                    >
-                        {value}
-                    </div>
-                {/if}
-            </div>
+                    class="mdc-slider__track--active_fill"
+                    style={Object.entries(trackActiveStyles)
+          .map(([name, value]) => `${name}: ${value};`)
+          .join(' ')}
+            />
         </div>
+        {#if discrete && tickMarks && step > 0}
+            <div class="mdc-slider__tick-marks">
+                {#each currentTickMarks as tickMark}
+                    <div
+                        class={tickMark === TickMark.ACTIVE
+              ? 'mdc-slider__tick-mark--active'
+              : 'mdc-slider__tick-mark--inactive'}
+                    />
+                {/each}
+            </div>
+        {/if}
     </div>
-</div>
-
-<svelte:head>
-    <style>
-        .mouse-over-shield {
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            height: 100%;
-            width: 100%;
-            background-color: rgba(255, 0, 0, 0);
-            z-index: 10000;
-            cursor: grabbing;
-        }
-    </style>
-</svelte:head>
+    <div
+            bind:this={thumbEl}
+            use:Ripple={{
+        unbounded: true,
+        active: thumbRippleActive,
+        eventTarget: input,
+        activeTarget: input,
+        addClass: (className) => addThumbClass(className, Thumb.END),
+        removeClass: (className) => removeThumbClass(className, Thumb.END),
+        addStyle: (name, value) => addThumbStyle(name, value, Thumb.END),
+      }}
+            class={classMap({
+        'mdc-slider__thumb': true,
+        ...thumbClasses,
+      })}
+            style={Object.entries(thumbStyles)
+        .map(([name, value]) => `${name}: ${value};`)
+        .join(' ')}
+    >
+        {#if discrete}
+            <div class="mdc-slider__value-indicator-container" aria-hidden="true">
+                <div class="mdc-slider__value-indicator">
+                    <span class="mdc-slider__value-indicator-text">{value}</span>
+                </div>
+            </div>
+        {/if}
+        <div bind:this={thumbKnob} class="mdc-slider__thumb-knob" />
+    </div>
+</span>
 
 <style>
-    .range {
-        position: relative;
-        flex: 1;
-    }
-
-    .range__wrapper {
-        min-width: 100%;
-        position: relative;
-        padding: 0.5rem;
-        box-sizing: border-box;
-        outline: none;
-    }
-
-    .range__wrapper:focus-visible > .range__track {
-        box-shadow: 0 0 0 2px white, 0 0 0 3px var(--track-focus, #6185ff);
-    }
-
-    .range__track {
-        height: 6px;
-        background-color: var(--track-bgcolor, #d0d0d0);
-        border-radius: 999px;
-    }
-
-    .range__track--highlighted {
-        background-color: var(--track-highlight-bgcolor, #6185ff);
-        background: var(
-                --track-highlight-bg,
-                linear-gradient(90deg, #6185ff, #9c65ff)
-        );
-        width: 0;
-        height: 6px;
-        position: absolute;
-        border-radius: 999px;
-    }
-
-    .range__thumb {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        background-color: var(--thumb-bgcolor, white);
-        cursor: pointer;
-        border-radius: 999px;
-        margin-top: -8px;
-        transition: box-shadow 100ms;
-        user-select: none;
-        box-shadow: var(
-                --thumb-boxshadow,
-                0 1px 1px 0 rgba(0, 0, 0, 0.14),
-                0 0px 2px 1px rgba(0, 0, 0, 0.2)
-        );
-    }
-
-    .range__thumb--holding {
-        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14),
-        0 1px 2px 1px rgba(0, 0, 0, 0.2),
-        0 0 0 6px var(--thumb-holding-outline, rgba(113, 119, 250, 0.3));
-    }
-
-    .range__tooltip {
-        pointer-events: none;
-        position: absolute;
-        top: -33px;
-        color: var(--tooltip-text, white);
-        width: 38px;
-        padding: 4px 0;
-        border-radius: 4px;
-        text-align: center;
-        background-color: var(--tooltip-bgcolor, #6185ff);
-        background: var(--tooltip-bg, linear-gradient(45deg, #6185ff, #9c65ff));
-    }
-
-    .range__tooltip::after {
-        content: "";
-        display: block;
-        position: absolute;
-        height: 7px;
-        width: 7px;
-        background-color: var(--tooltip-bgcolor, #6185ff);
-        bottom: -3px;
-        left: calc(50% - 3px);
-        clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
-        transform: rotate(-45deg);
-        border-radius: 0 0 0 3px;
+    .freon-slider {
+        --mdc-theme-primary: var(--slider-color, blue);
+        width: 250px;
     }
 </style>

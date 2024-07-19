@@ -89,8 +89,6 @@ export class BoxUtil {
      * @param index the index of the item in the list, if the property is a list
      */
     static numberBox(node: FreNode, propertyName: string, index?: number): Box {
-
-
     // static numberBox(node: FreNode, propertyName: string, display: NumberDisplay, index?: number, displayInfo?: NumberDisplayInfo): Box {
         let result: TextBox | NumberControlBox = null;
         // find the information on the property to be shown
@@ -105,7 +103,7 @@ export class BoxUtil {
             // } else {
             //     result = this.makeNumberSelectBox(isList, index, propertyName, node, roleName);
             // }
-            result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, NumberDisplay.HORIZONTAL_SLIDER, {min: 10, max: 200, step: 20, initialValue: 50});
+            result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, NumberDisplay.HORIZONTAL_SLIDER, {min: 10, max: 210, step: 5, showMarks: true, discrete: true});
             result.propertyName = propertyName;
             result.propertyIndex = index;
         } else {
@@ -173,8 +171,9 @@ export class BoxUtil {
                 }
             );
         }
+        let inf: NumberDisplayInfo = result.displayInfo;
+        console.log("min: " + inf.min + ", max: " + inf.max + ", step: " + inf.step )
         return result;
-
     }
     /**
      * Returns a textBox that holds a property of type 'boolean'.

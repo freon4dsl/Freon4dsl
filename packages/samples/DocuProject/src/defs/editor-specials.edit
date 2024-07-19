@@ -9,6 +9,8 @@ BaseProduct {[
         is approved level2: ${self.isApprovedLevel2 inner-switch}
         is approved level3: ${self.isApprovedLevel3 checkbox}
         yields profit: ${self.yieldsProfit}
+        expected nr of use: ${self.nrOfUse}
+        range: ${self.range}
         ${self.parts:comments}
 ]}
 
