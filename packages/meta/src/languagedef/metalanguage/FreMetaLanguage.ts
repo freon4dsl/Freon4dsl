@@ -502,6 +502,10 @@ export class FreMetaLimitedConcept extends FreMetaConcept {
         }
         return result;
     }
+    
+    toString(): string {
+        return this.name
+    }
 }
 
 export class FreMetaProperty extends FreMetaLangElement {
@@ -629,6 +633,10 @@ export class FreMetaEnumValue extends FreMetaDefinitionElement {
         this.sourceName = limitedConceptName
         this.instanceName = limitedInstanceName
         this.location = location
+    }
+    
+    toString(): string {
+        return this.sourceName + ":" + this.instanceName;
     }
 }
 // the basic types in the Fre-languages
