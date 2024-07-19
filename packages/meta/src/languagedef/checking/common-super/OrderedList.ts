@@ -23,6 +23,10 @@ export class OrderedList<T extends FreMetaLangElement> implements Iterable<T> {
             this.add(t.name, t);
         }
     }
+    
+    includes(elem: T): boolean {
+        return this.getByName(elem.name) !== undefined
+    }
 
     /**
      * Retains only the elements that are contained in the "list".
