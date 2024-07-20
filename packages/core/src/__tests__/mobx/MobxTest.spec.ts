@@ -2,6 +2,7 @@ import { FreNodeReferenceTestScoper } from "./FreNodeReferenceTestScoper";
 import { TestScoper } from "./TestScoper";
 import { MobxTestElement, ModelContext, MobxTestRoot, MobxTestParts } from "./MobxModel";
 import { observe, reaction } from "mobx";
+import { describe, it, expect, beforeEach } from "vitest"
 
 describe("Mobx Model", () => {
 
@@ -17,7 +18,7 @@ describe("Mobx Model", () => {
     let reaktion: number = 0;
     let observedLeft: number = 0;
 
-    beforeEach(done => {
+    beforeEach(() => {
         root = new MobxTestRoot("root");
         element = new MobxTestParts("partsContainer");
         part1 = new MobxTestElement("part1");
@@ -59,7 +60,6 @@ describe("Mobx Model", () => {
             }
         );
         reaktion = 0;
-        done();
     });
     it("single references", () => {
         // name and reference should be to part2
