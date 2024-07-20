@@ -1,18 +1,6 @@
 // This file contains all methods to connect the webapp to the Freon generated language editorEnvironment and to the server that stores the models
-import { InMemoryModel } from "$lib/language/InMemoryModel.js"
-import {
-    FreError,
-    FreErrorSeverity,
-    FreLogger
-} from "@freon4dsl/core"
-import type {
-    FreEnvironment,
-    FreNode,
-    FreModel,
-    FreModelUnit,
-    FreOwnerDescriptor,
-    IServerCommunication
-} from "@freon4dsl/core";
+import { FreError, FreErrorSeverity, FreLogger, InMemoryModel } from "@freon4dsl/core"
+import type { FreEnvironment, FreNode, FreModel, FreModelUnit, FreOwnerDescriptor, IServerCommunication } from "@freon4dsl/core";
 import { get } from "svelte/store";
 import {
     currentModelName,
@@ -48,7 +36,7 @@ export class EditorState {
     }
     
     private constructor() {
-        this.modelStore = new InMemoryModel(this.langEnv, this.serverCommunication)
+            this.modelStore = new InMemoryModel(this.langEnv, this.serverCommunication)
         this.modelStore.addCurrentModelListener(this.modelChanged)
     }
     

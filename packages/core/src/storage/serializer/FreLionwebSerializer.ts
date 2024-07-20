@@ -1,10 +1,10 @@
 import { LionWebJsonChunk, LionWebJsonContainment, LionWebJsonMetaPointer, LionWebJsonNode, LionWebJsonReference } from "@lionweb/validation";
-import { FreNamedNode, FreNode, FreNodeReference } from "../ast";
-import { FreLanguage, FreLanguageProperty } from "../language";
-import { FreLogger } from "../logging";
-import { FreUtils, isNullOrUndefined } from "../util";
+import { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index";
+import { FreLanguage, FreLanguageProperty } from "../../language/index";
+import { FreLogger } from "../../logging/index";
+import { FreUtils, isNullOrUndefined } from "../../util/index";
 import { FreSerializer } from "./FreSerializer";
-import { createLionWebJsonNode, isLionWebJsonChunk } from "./NewLionwebM3";
+import { createLionWebJsonNode, isLionWebJsonChunk } from "./NewLionwebM3"
 
 const LOGGER = new FreLogger("FreLionwebSerializer");
 /**

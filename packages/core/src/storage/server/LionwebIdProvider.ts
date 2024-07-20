@@ -1,4 +1,4 @@
-import { IdProvider } from "../util/index";
+import { IdProvider } from "../../util/index";
 
 export class LionwebIdProvider implements IdProvider {
     newId(): string {

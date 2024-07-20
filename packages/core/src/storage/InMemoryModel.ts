@@ -1,11 +1,7 @@
-import {
-    type FreEnvironment,
-    FreLogger,
-    type FreModel,
-    type FreModelUnit,
-    type IServerCommunication, ModelManager,
-    type ModelUnitIdentifier
-} from "@freon4dsl/core"
+import { FreModel, FreModelUnit } from "../ast/index"
+import { FreEnvironment } from "../environment/index"
+import { FreLogger } from "../logging/index"
+import { IServerCommunication, ModelUnitIdentifier } from "./server/index"
 
 export type ModelChangedCallbackFunction = (m: InMemoryModel) => void;
 
@@ -50,6 +46,7 @@ export class InMemoryModel {
         return this.models
     }
     
+    // @ts-expect-error TS6133
     async newUnit(name: string, unitConcept: string): Promise<FreModelUnit> {
         const newUnit = this.model.newUnit(unitConcept); 
         await this.server.createModelUnit(this.model.name, newUnit)
@@ -74,7 +71,7 @@ export class InMemoryModel {
     }
     
     getUnitById(id: ModelUnitIdentifier){
-
+        console.log(`getUnitById: ${id.name}`)
     }
 
     getUnits(): FreModelUnit[] {

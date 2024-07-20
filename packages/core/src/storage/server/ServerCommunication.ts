@@ -1,7 +1,7 @@
-import { FreModelUnit, FreNamedNode, FreNode } from "../ast/index";
-import { FreLogger } from "../logging/index";
-import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../storage/index";
-import { FreErrorSeverity } from "../validator/index";
+import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index";
+import { FreLogger } from "../../logging/index";
+import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../index";
+import { FreErrorSeverity } from "../../validator/index";
 import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
 import process from 'process';
 

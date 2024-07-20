@@ -1,9 +1,10 @@
 import { ClientResponse, ListPartitionsResponse, RepositoryClient } from "@lionweb/repository-client"
+// import { createLwNode, LionWebJsonNode } from "@lionweb/validation"
 // import process from "process"
-import { FreModelUnit, FreNamedNode, FreNode } from "../ast/index"
-import { FreLogger } from "../logging/index";
-import { FreLionwebSerializer, FreSerializer } from "../storage/index";
-import { FreErrorSeverity } from "../validator/index";
+import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index"
+import { FreLogger } from "../../logging/index";
+import { createLionWebJsonNode, FreLionwebSerializer, FreSerializer } from "../index"
+import { FreErrorSeverity } from "../../validator/index";
 import type { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
 import { collectUsedLanguages } from "./UsedLanguages"
 
@@ -50,17 +51,30 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     }
 
     async createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
-        const model = this.lionweb_serial.convertToJSON(unit);
-        const usedLanguages = collectUsedLanguages(model)
+        const jsonUnit = this.lionweb_serial.convertToJSON(unit);// as LionWebJsonNode[];
+        // extract the root only to create a partition in the repository
+        const rootNode = createLionWebJsonNode()
+        rootNode.classifier = jsonUnit[0].classifier
+        rootNode.id = jsonUnit[0].id
+        let partition = {
+            "serializationFormatVersion": "2023.1",
+            "languages": collectUsedLanguages([rootNode]),
+            "nodes": [rootNode]
+        }
+        const partitionResult = await this.client.bulk.createPartitions(partition);
+        LOGGER.log("createpartition result is " + JSON.stringify(partitionResult));
+        // rootNode.properties = jsonUnit[0].properties
+        // rootNode.references = jsonUnit[0].references
+        // rootNode.classifier = jsonUnit[0].classifier
+        // rootNode.classifier = jsonUnit[0].classifier
         let output = {
             "serializationFormatVersion": "2023.1",
-            "languages": usedLanguages,
-            "nodes": model
+            "languages": collectUsedLanguages(jsonUnit),
+            "nodes": jsonUnit
         }
-        console.log("Used Languages " + JSON.stringify(usedLanguages));
         this.client.repository = modelName
-        const requestResult = await this.client.bulk.createPartitions(output);
-        console.log("CREATE MODEL UNIT " + JSON.stringify(requestResult));
+        const requestResult = await this.client.bulk.store(output);
+        LOGGER.log("CREATE MODEL UNIT " + JSON.stringify(requestResult));
     }
 
     
@@ -83,8 +97,8 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
             }
             console.log("USed Languages " + JSON.stringify(usedLanguages));
             this.client.repository = modelName
-            const requestResuklt = await this.client.bulk.store(output);
-            console.log("PUT MODEL UNIT " + JSON.stringify(requestResuklt));
+            const requestResult = await this.client.bulk.store(output);
+            console.log("PUT MODEL UNIT " + JSON.stringify(requestResult));
         } else {
             LOGGER.error( "Name of Unit '" + unitIdentifier.name + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
             this.onError("Name of Unit '" + unitIdentifier.name

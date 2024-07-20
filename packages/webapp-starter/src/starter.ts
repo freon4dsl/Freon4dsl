@@ -1,5 +1,4 @@
-import {FreonLayout} from '@freon4dsl/webapp-lib';
-import { WebappConfigurator } from "@freon4dsl/webapp-lib";
+import {FreonLayout, WebappConfigurator } from "@freon4dsl/webapp-lib";
 
 /**
  * The one and only reference to the actual language for which this editor runs
@@ -10,9 +9,9 @@ WebappConfigurator.getInstance().setEditorEnvironment(InsuranceModelEnvironment.
 /**
  * The one and only reference to the server on which the models are stored
  */
-import { ServerCommunication, LionWebRepositoryCommunication, FreLogger } from "@freon4dsl/core"
-// WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommunication.getInstance());
-WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
+import { LionWebRepositoryCommunication } from "@freon4dsl/core"
+WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommunication.getInstance());
+// WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
 // export const serverCommunication: IServerCommunication = MpsServerCommunication.getInstance();
 
 /**
@@ -22,7 +21,7 @@ const app = new FreonLayout({
 	target: document.body,
 });
 
-FreLogger.unmute("EditorState");
-FreLogger.unmute("ServerCommunication");
+// FreLogger.unmute("EditorState");
+// FreLogger.unmute("ServerCommunication");
 
 export default app;
