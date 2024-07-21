@@ -559,7 +559,8 @@ export class ProjectionTemplate {
             case FreMetaPrimitiveType.identifier:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
             case FreMetaPrimitiveType.number:
-                return `BoxUtil.numberBox(${element}, "${property.name}"${listAddition})`;
+                ListUtil.addIfNotPresent(this.coreImports, "NumberDisplay");
+                return `BoxUtil.numberBox(${element}, "${property.name}"${listAddition}, NumberDisplay.SELECT)`;
             case FreMetaPrimitiveType.boolean:
                 let trueKeyword: string = this.trueKeyword;
                 let falseKeyword: string = this.falseKeyword;

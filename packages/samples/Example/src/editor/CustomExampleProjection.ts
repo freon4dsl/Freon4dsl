@@ -11,17 +11,9 @@ import {
     FreLanguage,
     FRE_BINARY_EXPRESSION_LEFT,
     FRE_BINARY_EXPRESSION_RIGHT,
-    HorizontalListBox,
-    FreProjection,
-    FreTableDefinition,
-    TableRowBox,
-    HorizontalLayoutBox,
-    MultiLineTextBox,
-    BoxFactory,
-    BoxUtil,
-    TableUtil
+    HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil
 } from "@freon4dsl/core";
-import {Attribute, Documentation, OrExpression, SumExpression} from "../language/gen/";
+import { Documentation, OrExpression, SumExpression } from "../language/gen/";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment";
 
 const sumIcon = "M 6 5 L 6.406531 20.35309 L 194.7323 255.1056 L 4.31761 481.6469 L 3.767654 495.9135 L 373 494 C 376.606 448.306 386.512 401.054 395 356 L 383 353 C 371.817 378.228 363.867 405.207 340 421.958 C 313.834 440.322 279.304 438 249 438 L 79 438 L 252.2885 228.6811 L 96.04328 33.3622 L 187 32.99999 C 245.309 32.99999 328.257 18.91731 351.329 89.00002 C 355.273 100.98 358.007 113.421 359 126 L 372 126 L 362 5 L 6 5 L 6 5 L 6 5 L 6 5 L 6 5 z ";
@@ -53,9 +45,7 @@ export class CustomExampleProjection implements FreProjection {
         ["Documentation", this.createDocumentation]
     ]);
 
-    nodeTypeToTableDefinition: Map<string, () => FreTableDefinition> = new Map<string, () => FreTableDefinition>([
-        ["Attribute", this.createAttributeTable]
-    ]);
+    nodeTypeToTableDefinition: Map<string, () => FreTableDefinition> = new Map<string, () => FreTableDefinition>([]);
 
     getTableHeadersFor(projectionName: string): TableRowBox {
         return null;
@@ -63,16 +53,7 @@ export class CustomExampleProjection implements FreProjection {
 
     ////////////////////////////////////////////////////////////////////
 
-    public createAttributeTable(): FreTableDefinition {
-        const cells: Box[] = [];
-        cells.push(BoxUtil.textBox(this._element as Attribute, "name"));
-        return {
-            headers: [],
-            cells: cells
-        }
-    }
-
-    public createDocumentation (doc: Documentation): Box {
+    createDocumentation (doc: Documentation): Box {
         return BoxFactory.horizontalLayout(
             doc,
             "Documentation-hlist-line-0",
@@ -90,7 +71,7 @@ export class CustomExampleProjection implements FreProjection {
         );
     }
     
-    public createSumBox (sum: SumExpression): Box {
+    createSumBox (sum: SumExpression): Box {
         const cells: GridCellBox[] = [
             new GridCellBox(sum, "Sum-from-cell", 3, 1,
                 new HorizontalLayoutBox(sum, "Sum-from-part", [

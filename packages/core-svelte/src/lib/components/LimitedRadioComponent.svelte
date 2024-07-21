@@ -1,6 +1,14 @@
 <script lang="ts">
+    import {FreEditor, FreLogger, LimitedControlBox} from "@freon4dsl/core";
+
+    export let box: LimitedControlBox;
+    export let editor: FreEditor;			// the editor
+
+    const LOGGER = new FreLogger("LimitedRadioComponent");
+
+    let id: string = box.id;
     let myEnum = ["red", "yellow", "green"]
-    export let id;
+    let ariaLabel: string = "toBeDone";
 
     let currentValue = 2;
     const onChange = (event: MouseEvent) => {
@@ -15,8 +23,7 @@
     }
 </script>
 
-
-<span role="radiogroup" aria-labelledby="group-title" id={id} class="radiogroup">
+<span role="radiogroup" aria-labelledby={ariaLabel} id={id} class="radiogroup">
 	{#each myEnum as nn, i}
   <span>
     <md-radio

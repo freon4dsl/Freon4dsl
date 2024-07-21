@@ -3,8 +3,7 @@ import {FreNode} from "../../ast";
 import {FreLogger} from "../../logging";
 import {FreUtils} from "../../util";
 
-
-const LOGGER: FreLogger = new FreLogger("BooleanBox").mute();
+const LOGGER: FreLogger = new FreLogger("BooleanControlBox").mute();
 
 export enum BoolDisplay {
     SELECT,         // a dropdown menu with selections for True and False

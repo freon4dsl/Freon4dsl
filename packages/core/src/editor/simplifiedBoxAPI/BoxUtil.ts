@@ -14,7 +14,7 @@ import {
     SelectBox,
     SelectOption,
     TextBox,
-    VerticalListBox
+    VerticalListBox, CharAllowed
 } from "../boxes";
 import {FreUtils} from "../../util";
 import {BehaviorExecutionResult} from "../util";
@@ -86,10 +86,12 @@ export class BoxUtil {
      * called for each item in the list. In that case an index to the item needs to be provided.
      * @param node the owning FreNode of the displayed property
      * @param propertyName the name of the displayed property
+     * @param display
      * @param index the index of the item in the list, if the property is a list
+     * @param displayInfo
      */
-    static numberBox(node: FreNode, propertyName: string, index?: number): Box {
-    // static numberBox(node: FreNode, propertyName: string, display: NumberDisplay, index?: number, displayInfo?: NumberDisplayInfo): Box {
+    // static numberBox(node: FreNode, propertyName: string, index?: number): Box {
+    static numberBox(node: FreNode, propertyName: string, display: NumberDisplay, index?: number, displayInfo?: NumberDisplayInfo): Box {
         let result: TextBox | NumberControlBox = null;
         // find the information on the property to be shown
         const propInfo:FreLanguageProperty = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
@@ -98,12 +100,12 @@ export class BoxUtil {
         // create the box
         if (property !== undefined && property !== null && typeof property === "number") {
             const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "numberbox", index);
-            // if (display !== NumberDisplay.SELECT) {
-            //     result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, display, displayInfo);
-            // } else {
-            //     result = this.makeNumberSelectBox(isList, index, propertyName, node, roleName);
-            // }
-            result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, NumberDisplay.HORIZONTAL_SLIDER, {min: 10, max: 210, step: 5, showMarks: true, discrete: true});
+            if (display !== NumberDisplay.SELECT) {
+                result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, display, displayInfo);
+            } else {
+                result = this.makeNumberSelectBox(isList, index, propertyName, node, roleName);
+            }
+            // result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, NumberDisplay.HORIZONTAL_SLIDER, {min: 10, max: 210, step: 5, showMarks: true, discrete: true});
             result.propertyName = propertyName;
             result.propertyIndex = index;
         } else {
@@ -112,37 +114,37 @@ export class BoxUtil {
         return result;
     }
 
-    // private static makeNumberSelectBox(isList: boolean, index: number, propertyName: string, node: FreNode, roleName: string): TextBox {
-    //     if (isList && this.checkList(isList, index, propertyName)) {
-    //         return BoxFactory.text(
-    //             node,
-    //             roleName,
-    //             () => node[propertyName][index].toString(),
-    //             (v: string) => runInAction(() => {
-    //                 (node[propertyName][index] = Number.parseInt(v, 10));
-    //             }),
-    //             {
-    //                 placeHolder: `<${propertyName}>`,
-    //                 isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
-    //                     return isNumber(currentText, key, innerIndex);
-    //                 }
-    //             });
-    //     } else {
-    //         return BoxFactory.text(
-    //             node,
-    //             roleName,
-    //             () => node[propertyName].toString(),
-    //             (v: string) => runInAction(() => {
-    //                 (node[propertyName] = Number.parseInt(v, 10));
-    //             }),
-    //             {
-    //                 placeHolder: `<${propertyName}>`,
-    //                 isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
-    //                     return isNumber(currentText, key, innerIndex);
-    //                 }
-    //             });
-    //     }
-    // }
+    private static makeNumberSelectBox(isList: boolean, index: number, propertyName: string, node: FreNode, roleName: string): TextBox {
+        if (isList && this.checkList(isList, index, propertyName)) {
+            return BoxFactory.text(
+                node,
+                roleName,
+                () => node[propertyName][index].toString(),
+                (v: string) => runInAction(() => {
+                    (node[propertyName][index] = Number.parseInt(v, 10));
+                }),
+                {
+                    placeHolder: `<${propertyName}>`,
+                    isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
+                        return isNumber(currentText, key, innerIndex);
+                    }
+                });
+        } else {
+            return BoxFactory.text(
+                node,
+                roleName,
+                () => node[propertyName].toString(),
+                (v: string) => runInAction(() => {
+                    (node[propertyName] = Number.parseInt(v, 10));
+                }),
+                {
+                    placeHolder: `<${propertyName}>`,
+                    isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
+                        return isNumber(currentText, key, innerIndex);
+                    }
+                });
+        }
+    }
 
     private static makeNumberControlBox(isList: boolean, index: number, propertyName: string, node: FreNode, roleName: string, display: NumberDisplay, displayInfo: NumberDisplayInfo): NumberControlBox {
         let result: NumberControlBox;
@@ -649,18 +651,18 @@ export class BoxUtil {
     }
 }
 
-// function isNumber(currentText: string, key: string, index: number): CharAllowed {
-//     // tslint:disable-next-line:max-line-length
-//     // console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof ["+ typeof currentText + "] key [" + key + "] index [" + index + "]");
-//     if (isNaN(Number(key))) {
-//         if (index === currentText.length) {
-//             return CharAllowed.GOTO_NEXT;
-//         } else if (index === 0) {
-//             return CharAllowed.GOTO_PREVIOUS;
-//         } else {
-//             return CharAllowed.NOT_OK;
-//         }
-//     } else {
-//         return CharAllowed.OK;
-//     }
-// }
+function isNumber(currentText: string, key: string, index: number): CharAllowed {
+    // tslint:disable-next-line:max-line-length
+    // console.log("isNumber text [" + currentText + "] + length [" + currentText.length + "] typeof ["+ typeof currentText + "] key [" + key + "] index [" + index + "]");
+    if (isNaN(Number(key))) {
+        if (index === currentText.length) {
+            return CharAllowed.GOTO_NEXT;
+        } else if (index === 0) {
+            return CharAllowed.GOTO_PREVIOUS;
+        } else {
+            return CharAllowed.NOT_OK;
+        }
+    } else {
+        return CharAllowed.OK;
+    }
+}

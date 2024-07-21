@@ -23,8 +23,9 @@
         isSvgBox,
         FreEditor,
         FreLogger,
-        Box, BoolDisplay, isBooleanControlBox,
-        NumberDisplay, isNumberControlBox,
+        Box,
+        BoolDisplay, isBooleanControlBox,
+        isNumberControlBox,
         isElementBox, isOptionalBox2, isMultiLineTextBox
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
@@ -44,11 +45,14 @@
     import { selectedBoxes } from "$lib/index.js";
     import { componentId, setBoxSizes } from "$lib/index.js";
     import ElementComponent from "./ElementComponent.svelte";
-    import CheckBoxComponent from "$lib/components/CheckBoxComponent.svelte";
-    import RadioComponent from "$lib/components/RadioComponent.svelte";
+    import BooleanCheckboxComponent from "$lib/components/BooleanCheckboxComponent.svelte";
+    import BooleanRadioComponent from "$lib/components/BooleanRadioComponent.svelte";
     import SwitchComponent from "$lib/components/SwitchComponent.svelte";
-    import NumericSliderComponent from "$lib/components/NumericSliderComponent.svelte";
     import InnerSwitchComponent from "$lib/components/InnerSwitchComponent.svelte";
+    import NumericSliderComponent from "$lib/components/NumericSliderComponent.svelte";
+    import LimitedCheckboxComponent from "$lib/components/LimitedCheckboxComponent.svelte";
+    import LimitedRadioComponent from "$lib/components/LimitedRadioComponent.svelte";
+    import {isLimitedControlBox, LimitedDisplay} from "@freon4dsl/core/src/editor/boxes/LimitedControlBox.js";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -72,10 +76,7 @@
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
         LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.freId() + '=' + b?.element?.freLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
-        if (isBooleanControlBox(box) && (box.showAs === BoolDisplay.RADIO_BUTTON
-            || box.showAs === BoolDisplay.SWITCH
-            // || box.showAs === BoolDisplay.CHECKBOX
-        )) {
+        if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected
         } else {
             className = (isSelected ? "selected" : "unSelected");
@@ -119,15 +120,19 @@
         {#if box === null || box === undefined }
             <p class="error">[BOX IS NULL OR UNDEFINED]</p>
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.CHECKBOX}
-            <CheckBoxComponent box={box} editor={editor}/>
+            <BooleanCheckboxComponent box={box} editor={editor}/>
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.RADIO_BUTTON}
-            <RadioComponent box={box} editor={editor}/>
+            <BooleanRadioComponent box={box} editor={editor}/>
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.SWITCH}
             <SwitchComponent box={box} editor={editor}/>
         {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
             <InnerSwitchComponent box={box} editor={editor}/>
         {:else if isNumberControlBox(box) }
             <NumericSliderComponent box={box} editor={editor}/>
+        {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.RADIO_BUTTON}
+            <LimitedRadioComponent box={box} editor={editor}/>
+        {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.CHECKBOX_GROUP}
+            <LimitedCheckboxComponent box={box} editor={editor}/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>
         {:else if isGridBox(box) }

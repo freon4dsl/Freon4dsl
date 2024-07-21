@@ -14,6 +14,7 @@ export * from "./EmptyLineBox";
 export * from "./AbstractChoiceBox";
 export * from "./BooleanControlBox";
 export * from "./NumberControlBox";
+export * from "./LimitedControlBox";
 export * from "./GridBox";
 export * from "./IndentBox";
 export * from "./LabelBox";

@@ -40,9 +40,11 @@
         box.refreshComponent = refresh;
     });
     const onClick = (event: MouseEvent) => {
-        // At on:click inputElement.checked is not yet changed, therefore we use a negation.
-        // We use on:click instead of on:change because we need to stop propagation.
-        value = !inputElement.checked;
+        event.stopPropagation();
+        LOGGER.log("CheckBoxComponent.onClick for box " + box.role + ", box value: " + box.getBoolean());
+    }
+    const onChange = (event: MouseEvent) => {
+        value = inputElement.checked;
         box.setBoolean(value);
         if (box.selectable) {
             editor.selectElementForBox(box);
@@ -56,6 +58,7 @@
     <md-checkbox
             aria-label="{id}"
             on:click={onClick}
+            on:change={onChange}
             bind:this={inputElement}
             checked={value}
     ></md-checkbox>
