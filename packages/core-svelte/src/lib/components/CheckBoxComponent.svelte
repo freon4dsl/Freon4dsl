@@ -6,7 +6,7 @@
     import { componentId } from "$lib/index.js";
     import {afterUpdate, onMount} from "svelte";
     import '@material/web/checkbox/checkbox.js';
-    import {Checkbox} from "@material/web/checkbox/internal/checkbox.js";
+    import {MdCheckbox} from "@material/web/checkbox/checkbox.js";
 
     export let box: BooleanControlBox;
     export let editor: FreEditor;			// the editor
@@ -14,7 +14,7 @@
     const LOGGER = new FreLogger("CheckBoxComponent");
 
     let id: string = !!box ? componentId(box) : 'checkbox-for-unknown-box';
-    let inputElement: Checkbox;
+    let inputElement: MdCheckbox;
     let value = box.getBoolean();
 
     /**

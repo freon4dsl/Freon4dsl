@@ -1,14 +1,13 @@
 <script lang="ts">
     // adapted for Freon from https://svelte.dev/repl/d65a4e9f0ae74d1eb1b08d13e428af32?version=3.35.0
 
-    // original comments
+    // original comments:
     // based on suggestions from:
     // Inclusive Components by Heydon Pickering https://inclusive-components.design/toggle-button/
     // On Designing and Building Toggle Switches by Sara Soueidan https://www.sarasoueidan.com/blog/toggle-switch-design/
     // and this example by Scott O'hara https://codepen.io/scottohara/pen/zLZwNv
 
     import {BooleanControlBox, FreEditor, FreLogger} from "@freon4dsl/core";
-    import {selectedBoxes} from "$lib/index.js";
     import {afterUpdate, onMount} from "svelte";
 
     const LOGGER = new FreLogger("SwitchComponent");
@@ -38,8 +37,7 @@
     });
     function handleClick(event){
         const target = event.target;
-        const state = target.getAttribute('aria-checked');
-        value = state === 'true' ? false : true;
+        value = target.getAttribute('aria-checked') !== 'true';
         box.setBoolean(value);
         if (box.selectable) {
             editor.selectElementForBox(box);
@@ -48,8 +46,10 @@
     }
 </script>
 
-<div class="s s--inner">
+<div class="innerswitch">
+    <md-focus-ring for="{id}" style="--md-focus-ring-shape: 2px"></md-focus-ring>
     <button
+            id="{id}"
             bind:this={switchElement}
             role="switch"
             aria-checked={value}
@@ -61,15 +61,20 @@
 </div>
 
 <style>
-    :root {
-        /*--accent-color: CornflowerBlue;*/
-        --gray: #ccc;
+    .innerswitch {
+        /* these two are needed for md-focus-ring */
+        display: inline-block;
+        position: relative;
     }
     /* Inner Design Option */
-    .s--inner button {
-        padding: 0.5em;
-        background-color: #fff;
-        border: 1px solid var(--gray);
+    .innerswitch button {
+        padding: 0.3em;
+        background-color: var(--mdc-theme-background, #fff);
+        border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);
+        /* it seems that the md control resets a number of common variables, therefore we reset them here */
+        font-weight: var(--freon-text-component-font-weight, normal);
+        font-size: var(--freon-text-component-font-size, 14px);
+        font-family: var(--freon-text-component-font-family, "Arial");
     }
     [role='switch'][aria-checked='true'] :first-child,
     [role='switch'][aria-checked='false'] :last-child {
@@ -77,57 +82,16 @@
         color: #fff;
     }
 
-    .s--inner button span {
+    .innerswitch button span {
         user-select: none;
         pointer-events:none;
         padding: 0.25em;
     }
 
-    .s--inner button:focus {
+    .innerswitch button:focus {
         outline: var(--freon-boolean-switch-color, var(--mdc-theme-primary)) solid 1px;
     }
 
-    /* Slider Design Option */
-
-    .s--slider {
-        display: flex;
-        align-items: center;
-    }
-
-    .s--slider button {
-        width: 2.4em;
-        height: 1.2em;
-        position: relative;
-        margin: 0 0 0 0.5em;
-        background: var(--gray);
-        border: none;
-    }
-
-    .s--slider button::before {
-        content: '';
-        position: absolute;
-        width: 0.9em;
-        height: 0.9em;
-        background: #fff;
-        top: 0.13em;
-        right: 1.4em;
-        transition: transform 0.3s;
-    }
-
-    .s--slider button[aria-checked='true']{
-        background-color: var(--freon-boolean-switch-color, var(--mdc-theme-primary))
-    }
-
-    .s--slider button[aria-checked='true']::before{
-        transform: translateX(1.2em);
-        transition: transform 0.3s;
-    }
-
-    .s--slider button:focus {
-        /*box-shadow: 0 0px 0px 1px var(--freon-boolean-accent-color);*/
-    }
-
-    /* Inner Design Option */
     [role='switch'][aria-checked='true'] :first-child,
     [role='switch'][aria-checked='false'] :last-child {
         border-radius: 0.25em;
@@ -135,22 +99,8 @@
         display: inline-block;
     }
 
-    .s--inner button:focus {
+    .innerswitch button:focus {
         /*box-shadow: 0 0px 8px var(--freon-boolean-accent-color);*/
         border-radius: 0.1em;
-    }
-
-    /* Slider Design Option */
-    .s--slider button {
-        border-radius: 1.5em;
-    }
-
-    .s--slider button::before {
-        border-radius: 100%;
-    }
-
-    .s--slider button:focus {
-        /*box-shadow: 0 0px 8px var(--freon-boolean-accent-color);*/
-        border-radius: 1.5em;
     }
 </style>

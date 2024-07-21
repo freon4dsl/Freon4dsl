@@ -49,15 +49,11 @@
 </script>
 
 <span class="freon-switch" id="{id}">
-    <md-switch id="switch" icons selected={value} on:click={onChange} bind:this={switchElement}></md-switch>
+    <md-switch id="switch" show-only-selected-icon selected={value} on:click={onChange} bind:this={switchElement} ></md-switch>
 </span>
 
 <style>
     .freon-switch {
-        /* System tokens */
-        --md-sys-color-primary: #4f9a94;
-        --md-sys-color-on-primary: #ffffff;
-        --md-sys-color-outline: #6f7979;
-        --md-sys-color-surface-container-highest: #dde4e3;
+        --md-sys-color-primary: var(--freon-boolean-switch-color, var(--mdc-theme-primary));
     }
 </style>
