@@ -2,6 +2,7 @@ language StudyConfigurationModel
 
 model StudyConfigurationModel {
     configuration: StudyConfiguration;
+    availability: Availability;
 }
 
 modelunit StudyConfiguration {

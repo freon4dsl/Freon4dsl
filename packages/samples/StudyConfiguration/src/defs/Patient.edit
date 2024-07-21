@@ -1,0 +1,40 @@
+editor default
+
+Availability {
+  [
+    PATIENT
+      Patient Not Available Dates or Date Ranges:
+        ${patientNotAvailableDates}
+    
+    STAFFING
+      Number Staff Available: ${baselineStaff}
+
+      Staffing Level Changes:
+      ${staffLevels}
+  ]
+}
+
+PatientNotAvailable {
+  [
+  ${dates}
+  ]
+}
+
+StaffLevel {
+  [ 
+    # Staff: ${staffAvailable} on/thru: ${dateOrRange}]
+}
+
+DateRange {
+  [${startDate}${endDate}]
+  trigger = "Date or Date Range"
+}
+
+StartRangeDate {
+  [${month}/${day}/${year}]
+}
+
+EndRangeDate {
+  [-${month}/${day}/${year}]
+  trigger = "End of Date Range"
+}
