@@ -14,15 +14,12 @@ export type NumberDisplayInfo = {
 }
 export enum NumberDisplay {
     SELECT,             // a text component
-    HORIZONTAL_SLIDER,  // a slider from left to right
-    VERTICAL_SLIDER,    // a slider from bottom to top
-    HORIZONTAL_STEP_SLIDER,  // a slider from left to right, with discrete steps
-    VERTICAL_STEP_SLIDER,    // a slider from bottom to top, with discrete steps
+    SLIDER,  // a slider from left to right
 }
 
 export class NumberControlBox extends Box {
     kind: string = "NumberControlBox";
-    showAs: NumberDisplay = NumberDisplay.HORIZONTAL_STEP_SLIDER;
+    showAs: NumberDisplay = NumberDisplay.SLIDER;
     displayInfo: NumberDisplayInfo | undefined;
 
     $getNumber: () => number;
@@ -35,7 +32,7 @@ export class NumberControlBox extends Box {
     setNumber(newValue: number): void {
         LOGGER.log("setNumber to " + newValue);
         this.$setNumber(newValue);
-        if (newValue > this.displayInfo.max) {
+        if (this.showAs === NumberDisplay.SLIDER && newValue > this.displayInfo.max) {
             this.displayInfo.max = newValue;
             console.log("NumberBox: value greater than max")
         }
@@ -56,8 +53,9 @@ export class NumberControlBox extends Box {
         FreUtils.initializeObject(this, initializer);
         this.$getNumber = getNumber;
         this.$setNumber = setNumber;
-        this.completeDisplayInfo(getNumber());
-
+        if (this.showAs === NumberDisplay.SLIDER) {
+            this.completeDisplayInfo(getNumber());
+        }
     }
 
     /**

@@ -3,13 +3,13 @@ editor specials
 BaseProduct {[
     /* In this projection 'self.parts' is always shown according to the projection */
     /* defined for concept InsurancePart in the editor 'specials'.                 */
-    Base Products ${self.name} for ${self.theme}
+    Base Products ${self.name} for ${self.theme radio}
         is still under construction: ${self.isUnderConstruction switch}
         is approved level1: ${self.isApprovedLevel1 radio}
         is approved level2: ${self.isApprovedLevel2 inner-switch}
         is approved level3: ${self.isApprovedLevel3 checkbox}
         yields profit: ${self.yieldsProfit}
-        expected nr of use: ${self.nrOfUse}
+        expected nr of use: ${self.nrOfUse slider}
         range: ${self.range}
         ${self.parts:comments}
 ]}
