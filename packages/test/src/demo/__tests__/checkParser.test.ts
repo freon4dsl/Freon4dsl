@@ -2,12 +2,13 @@ import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { Demo, DemoModel } from "../language/gen";
 import { FileHandler } from "../../utils/FileHandler";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 describe("Testing Parser", () => {
 
-    beforeEach(done => {
+    beforeEach(() => {
         DemoEnvironment.getInstance();
-        done();
+        // done();
     });
 
     test("complete example model unparsed and parsed again", () => {

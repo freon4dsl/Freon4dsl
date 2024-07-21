@@ -2,14 +2,15 @@ import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoEntity, DemoFunction, DemoModel } from "../language/gen";
 import { FreModelSerializer } from "@freon4dsl/core";
 import { JsonModelCreator } from "./JsonModelCreator";
+import { describe, it, test, expect, beforeEach } from "vitest"
 
 describe("Checking Serializer on Demo", () => {
     DemoEnvironment.getInstance();
     let initialModel: DemoModel = new JsonModelCreator().model;
 
-    beforeEach(done => {
-        done();
-    });
+    // beforeEach(done => {
+    //     done();
+    // });
 
     test("model-to-json, followed by json-to-model should result in same model", () => {
         expect(initialModel.name).not.toBeNull();

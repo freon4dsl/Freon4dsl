@@ -6,7 +6,7 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaProperty,
     FreMetaPrimitiveType,
-    FreMetaInterface
+    FreMetaInterface, FreMetaEnumValue
 } from "../../metalanguage";
 
 export class ConceptUtils {
@@ -35,6 +35,13 @@ export class ConceptUtils {
         return `${freProp.name} : ${GenerationUtil.getBaseTypeAsString(freProp)}${arrayType}; \t${comment}`;
     }
 
+    private static initEnumValue(freProp: FreMetaConceptProperty): string {
+        if (!!freProp.initial && freProp.initial instanceof FreMetaEnumValue) {
+            return `this.${freProp.name} = FreNodeReference.create<${freProp.initial.sourceName}>(${freProp.initial.sourceName}.${freProp.initial.instanceName}, "${freProp.initial.sourceName}");`;
+        } else {
+            return ""
+        }
+    }
     private static initializer(freProp: FreMetaPrimitiveProperty): string {
         let initializer = "";
         const myType: FreMetaClassifier = freProp.type;
@@ -167,7 +174,8 @@ export class ConceptUtils {
                 (p.isList ?
                         `observablepartlist(this, "${p.name}");`
                         :
-                        `observablepart(this, "${p.name}");`
+                        `observablepart(this, "${p.name}");
+                        ${this.initEnumValue(p)}`
                 )
             ).join("\n")}`
             : ``
@@ -223,23 +231,31 @@ export class ConceptUtils {
     }
 
     public static makeStaticCreateMethod(concept: FreMetaClassifier, myName: string): string {
+        const allPartsToInitialize = concept.allSingleNonOptionalPartsInitializers()
+
         return `/**
                  * A convenience method that creates an instance of this class
                  * based on the properties defined in 'data'.
-                 * @param data
+                 * @param data partial object
                  */
                 static create(data: Partial<${myName}>): ${myName} {
-                    const result = new ${myName}();
+                    const result = new ${myName}(data.$id);
                     ${concept.allProperties().map(freProp =>
                         `${(freProp.isList) ?
                             `if (!!data.${freProp.name}) {
-                                            data.${freProp.name}.forEach(x =>
-                                                result.${freProp.name}.push(x)
-                                            );
-                                        }`
-                            : `if (!!data.${freProp.name}) {
-                                            result.${freProp.name} = data.${freProp.name};
-                                        }`
+                                data.${freProp.name}.forEach(x =>
+                                    result.${freProp.name}.push(x)
+                                );
+                            }`
+                            :
+                            `if (!!data.${freProp.name}) {
+                                result.${freProp.name} = data.${freProp.name};
+                            ${allPartsToInitialize.find(ip => ip.part === freProp) ?
+                                    `} else {
+                                        result.${freProp.name} = ${Names.concept(allPartsToInitialize.find(ip => ip.part === freProp)?.concept)}.create({})`
+                                   : ``
+                               }   
+                            }`
                         }`).join("\n")
                     }
                     if (!!data.parseLocation) {

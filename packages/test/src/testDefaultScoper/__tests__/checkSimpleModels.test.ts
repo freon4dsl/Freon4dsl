@@ -1,6 +1,7 @@
 import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
+import { describe, test, expect } from "vitest"
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";

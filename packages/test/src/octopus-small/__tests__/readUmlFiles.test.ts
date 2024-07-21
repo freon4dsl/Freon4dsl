@@ -1,6 +1,7 @@
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
 import { compareReadAndWrittenUnits } from "../../utils/HelperFunctions";
 import { OctopusModel } from "../language/gen";
+import { describe, it, test } from "vitest"
 
 const writer = OctopusModelEnvironment.getInstance().writer;
 const reader = OctopusModelEnvironment.getInstance().reader;

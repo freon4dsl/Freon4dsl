@@ -7,7 +7,7 @@ import {
 } from "../language/gen";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
-
+import { describe, it, test, expect } from "vitest"
 
 const writer = OctopusModelEnvironment.getInstance().writer;
 const reader = OctopusModelEnvironment.getInstance().reader;
