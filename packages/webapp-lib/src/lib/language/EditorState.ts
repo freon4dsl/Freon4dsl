@@ -137,7 +137,7 @@ export class EditorState {
      */
     private async createNewUnit(newName: string, unitType: string) {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName);
-        const newUnit = await this.modelStore.newUnit(newName, unitType)
+        const newUnit = await this.modelStore.createUnit(newName, unitType)
         if (!!newUnit) {
             newUnit.name = newName;
             // show the new unit in the editor
