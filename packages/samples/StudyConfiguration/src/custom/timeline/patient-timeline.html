@@ -12,9 +12,11 @@
     #visualization {
       box-sizing: border-box;
       width: 100%;
-      height: 50vh;
+      height: 40vh;
       position: relative;
     }
+
+    /* .vis-group.patient { background-color: #FFFFCC; } */
     
     .vis-item.screen  { background-color: #B0E2FF; }
     .vis-item.v2      { background-color: #EAEAEA; }
@@ -55,7 +57,7 @@
   var groups = new vis.DataSet([
     {"content": "<b>Phase</b>", "id": "Phase", className:'phase'},
     {"content": "Screen", "id": "Screen"},
-    {"content": "V2", "id": "V2"},
+    {"content": "V2", "id": "V2", className: 'event'},
     {"content": "V3", "id": "V3"},
     {"content": "V4", "id": "V4"},
     {"content": "V5", "id": "V5"},
@@ -73,59 +75,59 @@
 
     {start: new Date(2024, 10, 6), end: new Date(2024, 10, 6, 23, 59, 59), group:"V2", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"211"},
     {start: new Date(2024, 10, 7), end: new Date(2024, 10, 7, 23, 59, 59), group:"V2", className:"treatment-visits", title: "Visit scheduled for day 7", content:"&nbsp;",id:"212"},
-    {start: new Date(2024, 10, 8), end: new Date(2024, 10, 8, 23, 59, 59), group:"V2", className:"actual-in-window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"213"},
+    {start: new Date(2024, 10, 8), end: new Date(2024, 10, 8, 23, 59, 59), group:"V2", className:"actual-in-window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"213"},
 
     {start: new Date(2024, 10, 20), end: new Date(2024, 10, 20, 23, 59, 59), group:"V2", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"214"},
     {start: new Date(2024, 10, 21), end: new Date(2024, 10, 21, 23, 59, 59), group:"V2", className:"treatment-visits", title: "Visit scheduled for day 7", content:"&nbsp;",id:"215"},
-    {start: new Date(2024, 10, 22), end: new Date(2024, 10, 22, 23, 59, 59), group:"V2", className:"window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"216"},
+    {start: new Date(2024, 10, 22), end: new Date(2024, 10, 22, 23, 59, 59), group:"V2", className:"window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"216"},
 
     {start: new Date(2024, 11, 4), end: new Date(2024, 11, 4, 23, 59, 59), group:"V2", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"217"},
     {start: new Date(2024, 11, 5), end: new Date(2024, 11, 5, 23, 59, 59), group:"V2", className:"treatment-visits", title: "Visit scheduled for day 7", content:"&nbsp;",id:"218"},
-    {start: new Date(2024, 11, 6), end: new Date(2024, 11, 6, 23, 59, 59), group:"V2", className:"window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"219"},
+    {start: new Date(2024, 11, 6), end: new Date(2024, 11, 6, 23, 59, 59), group:"V2", className:"window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"219"},
 
     {start: new Date(2024, 11, 18), end: new Date(2024, 11, 18, 23, 59, 59), group:"V2", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"220"},
     {start: new Date(2024, 11, 19), end: new Date(2024, 11, 19, 23, 59, 59), group:"V2", className:"treatment-visits", title: "Visit scheduled for day 7", content:"&nbsp;",id:"221"},
-    {start: new Date(2024, 11, 20), end: new Date(2024, 11, 20, 23, 59, 59), group:"V2", className:"window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"222"},
+    {start: new Date(2024, 11, 20), end: new Date(2024, 11, 20, 23, 59, 59), group:"V2", className:"window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"222"},
 
     {start: new Date(2025, 0, 1), end: new Date(2025, 0, 1, 23, 59, 59), group:"V2", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"223"},
     {start: new Date(2025, 0, 2), end: new Date(2025, 0, 2, 23, 59, 59), group:"V2", className:"treatment-visits", title: "Visit scheduled for day 7", content:"&nbsp;",id:"224"},
-    {start: new Date(2025, 0, 3), end: new Date(2025, 0, 3, 23, 59, 59), group:"V2", className:"window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"225"},
+    {start: new Date(2025, 0, 3), end: new Date(2025, 0, 3, 23, 59, 59), group:"V2", className:"window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"225"},
 
     {start: new Date(2025, 0, 15), end: new Date(2025, 0, 15, 23, 59, 59), group:"V2", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"226"},
     {start: new Date(2025, 0, 16), end: new Date(2025, 0, 16, 23, 59, 59), group:"V2", className:"treatment-visits", title: "Visit scheduled for day 7", content:"&nbsp;",id:"227"},
-    {start: new Date(2025, 0, 17), end: new Date(2025, 0, 17, 23, 59, 59), group:"V2", className:"window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"228"},
+    {start: new Date(2025, 0, 17), end: new Date(2025, 0, 17, 23, 59, 59), group:"V2", className:"window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"228"},
 
     {start: new Date(2025, 0, 29), end: new Date(2025, 0, 29, 23, 59, 59), group:"V2", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"229"},
     {start: new Date(2025, 0, 30), end: new Date(2025, 0, 30, 23, 59, 59), group:"V2", className:"treatment-visits", title: "Visit scheduled for day 7", content:"&nbsp;",id:"230"},
-    {start: new Date(2025, 0, 31), end: new Date(2025, 0, 31, 23, 59, 59), group:"V2", className:"window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"231"},
+    {start: new Date(2025, 0, 31), end: new Date(2025, 0, 31, 23, 59, 59), group:"V2", className:"window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"231"},
 
     {start: new Date(2025, 1, 12), end: new Date(2025, 1, 12, 23, 59, 59), group:"V2", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"232"},
     {start: new Date(2025, 1, 13), end: new Date(2025, 1, 13, 23, 59, 59), group:"V2", className:"treatment-visits", title: "Visit scheduled for day 7", content:"&nbsp;",id:"233"},
-    {start: new Date(2025, 1, 14), end: new Date(2025, 1, 14, 23, 59, 59), group:"V2", className:"window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"234"},
+    {start: new Date(2025, 1, 14), end: new Date(2025, 1, 14, 23, 59, 59), group:"V2", className:"window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"234"},
 
 
     {start: new Date(2024, 10, 12), end: new Date(2024, 10, 13, 23, 59, 59), group:"V3", className:"window", title: "Visit can start 2 day before", content:"&nbsp;",id:"311"},
     {start: new Date(2024, 10, 14), end: new Date(2024, 10, 14, 23, 59, 59), group:"V3", className:"treatment-visits", title: "Visit scheduled for day 14", content:"&nbsp",id:"312"},
-    {start: new Date(2024, 10, 15), end: new Date(2024, 10, 16, 23, 59, 59), group:"V3", className:"window", title: "Screening visit is allow up to 2 days after", content:"&nbsp;",id:"313"},
+    {start: new Date(2024, 10, 15), end: new Date(2024, 10, 16, 23, 59, 59), group:"V3", className:"window", title: "Visit is allow up to 2 days after", content:"&nbsp;",id:"313"},
 
     {start: new Date(2024, 10, 21), end: new Date(2024, 10, 21, 23, 59, 59), group:"V3", className:"window", title: "Visit can start 2 day before", content:"&nbsp;",id:"314"},
     {start: new Date(2024, 10, 22), end: new Date(2024, 10, 22, 23, 59, 59), group:"V3", className:"treatment-visits", title: "Visit scheduled for day 14", content:"&nbsp",id:"315"},
-    {start: new Date(2024, 10, 23), end: new Date(2024, 10, 23, 23, 59, 59), group:"V3", className:"window", title: "Screening visit is allow up to 2 days after", content:"&nbsp;",id:"316"},
+    {start: new Date(2024, 10, 23), end: new Date(2024, 10, 23, 23, 59, 59), group:"V3", className:"window", title: "Visit is allow up to 2 days after", content:"&nbsp;",id:"316"},
 
     {start: new Date(2024, 10, 19), end: new Date(2024, 10, 20, 23, 59, 59), group:"V4", className:"window", title: "Visit can start 3 day before", content:"&nbsp;",id:"411"},
     {start: new Date(2024, 10, 21), end: new Date(2024, 10, 21, 23, 59, 59), group:"V4", className:"treatment-visits", title: "Visit scheduled for day 21", content:"&nbsp",id:"412"},
-    {start: new Date(2024, 10, 22), end: new Date(2024, 10, 23, 23, 59, 59), group:"V4", className:"window", title: "Screening visit is allow up to 3 days after", content:"&nbsp;",id:"413"},
+    {start: new Date(2024, 10, 22), end: new Date(2024, 10, 23, 23, 59, 59), group:"V4", className:"window", title: "Visit is allow up to 3 days after", content:"&nbsp;",id:"413"},
 
     {start: new Date(2024, 10, 27), end: new Date(2024, 10, 27, 23, 59, 59), group:"V5", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"511"},
     {start: new Date(2024, 10, 28), end: new Date(2024, 10, 28, 23, 59, 59), group:"V5", className:"treatment-visits", title: "Visit scheduled for day 28", content:"&nbsp",id:"512"},
-    {start: new Date(2024, 10, 29), end: new Date(2024, 10, 29, 23, 59, 59), group:"V5", className:"window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"513"},
+    {start: new Date(2024, 10, 29), end: new Date(2024, 10, 29, 23, 59, 59), group:"V5", className:"window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"513"},
 
     {start: new Date(2025, 1, 25), end: new Date(2025, 1, 26, 23, 59, 59), group:"V6", className:"window", title: "Visit can start 1 day before", content:"&nbsp;",id:"514"},
     {start: new Date(2025, 1, 27), end: new Date(2025, 1, 27, 23, 59, 59), group:"V6", className:"treatment-visits", title: "Visit scheduled for day 28", content:"&nbsp",id:"515"},
-    {start: new Date(2025, 1, 28), end: new Date(2025, 2, 1, 23, 59, 59), group:"V6", className:"window", title: "Screening visit is allow up to one day after", content:"&nbsp;",id:"516"},
+    {start: new Date(2025, 1, 28), end: new Date(2025, 2, 1, 23, 59, 59), group:"V6", className:"window", title: "Visit is allow up to one day after", content:"&nbsp;",id:"516"},
 
     {start: new Date(2024, 10, 1), end: new Date(2024, 10, 1, 23, 59, 59), group:"Patient", className:"actual", title: "Patient Visit Occurred", content:"&nbsp",id:"8001"},
-    {start: new Date(2024, 10, 8), end: new Date(2024, 10, 8, 23, 59, 59), group:"Patient", className:"actual-in-window", title: "Patient Visit Occurred", content:"&#x25CF;",id:"8002"},
+    {start: new Date(2024, 10, 8), end: new Date(2024, 10, 8, 23, 59, 59), group:"Patient", className:"actual-in-window", title: "Patient Visit Occurred", content:"&nbsp;",id:"8002"},
     {start: new Date(2024, 10, 14), end: new Date(2024, 10, 17, 23, 59, 59), group:"Patient", className:"patient", title: "Days when the Patient is Unavailable", content:"&nbsp;",id:"800"},
     {start: new Date(2024, 11, 19), end: new Date(2025, 0, 2, 23, 59, 59), group:"Patient", className:"patient", title: "Days when the Patient is Unavailable", content:"&nbsp;",id:"801"},
     {start: new Date(2025, 0, 30), end: new Date(2025, 0, 30, 23, 59, 59), group:"Patient", className:"patient", title: "Days when the Patient is Unavailable", content:"&nbsp;",id:"802"},

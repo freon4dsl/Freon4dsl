@@ -66,7 +66,6 @@ export const MANUAL_CUSTOM_ACTIONS: FreCustomAction[] = [
             "EqualsExpression-left",
             "EqualsExpression-right",
             "Day-startDay",
-            "When-startWhen"
         ],
         trigger: /[0-9]/,
         action: (box: Box, trigger: FreTriggerUse, editor: FreEditor) => {

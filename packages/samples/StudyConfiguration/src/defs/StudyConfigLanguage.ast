@@ -12,6 +12,7 @@ modelunit StudyConfiguration {
     showScheduling: boolean;
     showPeriods: boolean;
     periods: Period[];
+    defaultPeriod: Period;
     events: Event[];
     taskDetails: TaskDetail[];
     systemAccesses: SystemAccess[];
