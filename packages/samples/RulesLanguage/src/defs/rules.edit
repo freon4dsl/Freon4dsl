@@ -1,0 +1,70 @@
+editor default
+
+Rules {
+    [
+    Rules ${self.name} using data from ${self.imports}
+
+        using entity: ${self.forEntity}
+        ${self.Rules vertical }
+    ]
+}
+
+CheckingRule {
+    [
+
+        Validation ${self.name}: ${self.check}
+
+            description: ${self.description}
+
+    ]
+}
+
+IfThenElseRule {
+    [
+        Rule ${self.name}
+            description: ${self.description}
+        ${self.IfStatement}
+
+    ]
+}
+
+IfStatement {
+    [
+        if
+            ${self.Condition}
+        then
+            ${self.ThenStatements vertical separator [and]}
+        else
+            ${self.ElseStatements vertical}
+    ]
+}
+
+SetValue {
+    [
+        set ${self.attribute} to ${self.value}
+    ]
+}
+
+AttributeRef {
+    [
+        ${self.attr}
+    ]
+    referenceShortcut = ${self.attr}
+}
+
+DateLiteral {
+    [${self.day} / ${self.month} / ${self.year}]
+}
+
+HasNoValue {
+    [has no value: ${self.attribute}]
+}
+
+HasAnyValue {
+    [has any value: ${self.attribute}]
+}
+
+CheckingRuleCall {
+    [check ${self.rule}]
+}
+

@@ -63,10 +63,6 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         }
         const partitionResult = await this.client.bulk.createPartitions(partition);
         LOGGER.log("createpartition result is " + JSON.stringify(partitionResult));
-        // rootNode.properties = jsonUnit[0].properties
-        // rootNode.references = jsonUnit[0].references
-        // rootNode.classifier = jsonUnit[0].classifier
-        // rootNode.classifier = jsonUnit[0].classifier
         let output = {
             "serializationFormatVersion": "2023.1",
             "languages": collectUsedLanguages(jsonUnit),
@@ -95,10 +91,8 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
                 "languages": usedLanguages,
                 "nodes": model
             }
-            console.log("USed Languages " + JSON.stringify(usedLanguages));
             this.client.repository = modelName
-            const requestResult = await this.client.bulk.store(output);
-            console.log("PUT MODEL UNIT " + JSON.stringify(requestResult));
+            /* const requestResult = */ await this.client.bulk.store(output);
         } else {
             LOGGER.error( "Name of Unit '" + unitIdentifier.name + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
             this.onError("Name of Unit '" + unitIdentifier.name

@@ -4,7 +4,7 @@ import { FreErrorSeverity } from "../../validator/index";
 export type OnError = (errorMsg: string, severity: FreErrorSeverity) => void;
 /**
  * ModelUnit identity for communication with server.
- * Needs both name and id, as the Freon server uses thge name, and the LionWeb server uses the id.
+ * Needs both name and id, as the Freon server uses the name, and the LionWeb server uses the id.
  */
 export type ModelUnitIdentifier = {
     name: string
@@ -27,6 +27,9 @@ export interface IServerCommunication {
 
     /**
      * Takes 'unit' and stores it according to the data in 'modelInfo'
+     * This assumes that the unit already exists on the server, if tghe _unit_
+     * does not exist on the server use _createModelUnit_.
+     * @see createModelUnit
      * @param modelName
      * @param unitName
      * @param unit
