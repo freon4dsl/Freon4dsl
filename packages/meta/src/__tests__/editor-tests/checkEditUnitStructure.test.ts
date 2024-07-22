@@ -1,6 +1,6 @@
 import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../utils";
+import {Checker, MetaLogger, Names} from "../../utils";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
     ListJoinType,
@@ -12,7 +12,7 @@ import {
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
 
 describe("Checking FretEditUnit: ", () => {
-    const testdir = "src/__tests__/editor-tests/correctDefFiles/";
+    const testdir: string = "src/__tests__/editor-tests/correctDefFiles/";
     let parser: FreEditParser;
     let language: FreMetaLanguage | undefined;
     let checker: Checker<FreEditUnit>;
@@ -43,10 +43,17 @@ describe("Checking FretEditUnit: ", () => {
             }
         }
         if (editor !== null && editor !== undefined) {
+            let defaultGroup: FreEditProjectionGroup | undefined = editor.getDefaultProjectiongroup();
+            if (defaultGroup === null || defaultGroup === undefined) { // no default group, create one
+                console.log("Creating new default group")
+                defaultGroup = new FreEditProjectionGroup();
+                defaultGroup.name = Names.defaultProjectionName;
+                editor.projectiongroups.push(defaultGroup);
+                defaultGroup.owningDefinition = editor;
+            }
             DefaultEditorGenerator.addDefaults(editor);
         } else {
             throw new Error("No editor!!");
-            // console.log("No editor!!")
         }
         return editor;
     }

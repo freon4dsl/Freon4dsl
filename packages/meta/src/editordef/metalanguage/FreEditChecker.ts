@@ -34,6 +34,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         return keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r") || keyword.includes("\t");
     }
 
+    // @ts-ignore runner gets its value in the 'check' method
     runner: CheckRunner;
     private myExpressionChecker: FreLangExpressionChecker | undefined;
     private propsWithTableProjection: FreEditPropertyProjection[] = [];
@@ -43,8 +44,6 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         if (!!this.language) {
             this.myExpressionChecker = new FreLangExpressionChecker(this.language);
         }
-        // this instance is never used
-        this.runner = new CheckRunner(this.errors, this.warnings);
     }
 
     /**
@@ -58,8 +57,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             throw new Error(`Editor definition checker does not known the language, exiting ` +
                 `${ParseLocationUtil.location(editUnit)}.`);
         }
-        // // create a check runner
-        // this.runner = new CheckRunner(this.errors, this.warnings);
+        // create a check runner
+        this.runner = new CheckRunner(this.errors, this.warnings);
         // reset global(s)
         this.propsWithTableProjection = [];
 
@@ -144,7 +143,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
         // special requirements for the 'default' projectionGroup
         if (group.name !== Names.defaultProjectionName) {
-            this.runner.simpleCheck(!group.standardProjections,
+            this.runner.simpleCheck(!!group.standardProjections,
                 `Only the 'default' projectionGroup may define standard projections ${ParseLocationUtil.location(group.standardProjections[0])}.`);
             if (group.precedence !== null && group.precedence !== undefined) {
                 this.runner.simpleCheck(group.precedence !== 0,
@@ -588,8 +587,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     }
 
     private checkStandardProjections(standardProjections: FreEditStandardProjection[]) {
-        console.log("Found standard projections: " + standardProjections.map(proj => proj.toString()))
-        for( let proj of standardProjections) {
+        // console.log("Found standard projections: " + standardProjections.map(proj => proj.toString()))
+        for(let proj of standardProjections) {
             // first check whether the string that represents the 'for' type is correct
             this.runner.nestedCheck({
                 check:  proj.for === ForType.Boolean ||
@@ -597,14 +596,14 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         proj.for === ForType.Limited ||
                         proj.for === ForType.LimitedList ||
                         proj.for === ForType.ReferenceSeparator,
-                error: `A standard projection may only be defined for "boolean", "number", "limited", "limited[]", or "referenceSeparator" ${ParseLocationUtil.location(proj)}.`,
+                error: `A standard projection may only be defined for 'boolean', 'number', 'limited', 'limited[]', or 'referenceSeparator' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
                 whenOk: () => {
                     if (proj.for === ForType.Boolean) {
                         // boolean standard projection:
                         // check keywords
                         this.runner.nestedCheck({
-                            check: !!proj.keywords,
-                            error: `A standard projection for boolean must include a keyword definition ${ParseLocationUtil.location(proj)}.`,
+                            check: proj.keywords !== undefined && proj.keywords !== null,
+                            error: `A standard projection for booleans must include a keyword definition ${ParseLocationUtil.location(proj)}.`,
                             whenOk: () => {
                                 this.runner.simpleCheck(
                                     !FreEditChecker.includesWhitespace(proj.keywords!.trueKeyword),
@@ -613,38 +612,38 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         });
                         // check display type
                         this.runner.simpleCheck(
-                            proj.displayType === DisplayType.Text ||
+                            proj.displayType == DisplayType.Text ||
                                 proj.displayType === DisplayType.Checkbox ||
                                 proj.displayType === DisplayType.Radio ||
                                 proj.displayType === DisplayType.InnerSwitch ||
                                 proj.displayType === DisplayType.Switch,
-                            `A projection for boolean values may only be displayed as "text", "checkbox", "radio", "switch", or "inner-switch" ${ParseLocationUtil.location(proj)}.`
+                            `A boolean value may only be displayed as 'text', 'checkbox', 'radio', 'switch', or 'inner-switch' ${ParseLocationUtil.location(proj)}.`
                         );
                     } else if (proj.for === ForType.Number) {
                         // number standard projection, check display type
                         this.runner.simpleCheck(
                             proj.displayType === DisplayType.Text ||
                             proj.displayType === DisplayType.Slider,
-                            `A projection for number values may only be displayed as "text", or "slider" ${ParseLocationUtil.location(proj)}.`
+                            `A number value may only be displayed as 'text', or 'slider' ${ParseLocationUtil.location(proj)}.`
                         );
                     } else if (proj.for === ForType.Limited) {
                         // limited standard projection, check display type
                         this.runner.simpleCheck(
                             proj.displayType === DisplayType.Text ||
                             proj.displayType === DisplayType.Radio,
-                            `A projection for limited (enum) values may only be displayed as "text", or "radio" ${ParseLocationUtil.location(proj)}.`
+                            `A limited (enum) value may only be displayed as 'text', or 'radio' ${ParseLocationUtil.location(proj)}.`
                         );
                     } else if (proj.for === ForType.LimitedList) {
                         // limited-list standard projection, check display type
                         this.runner.simpleCheck(
                             proj.displayType === DisplayType.Text ||
                             proj.displayType === DisplayType.Checkbox,
-                            `A projection for a list of limited (enum) values may only be displayed as "text", or "checkbox" ${ParseLocationUtil.location(proj)}.`
+                            `A list of limited (enum) values may only be displayed as 'text', or 'checkbox' ${ParseLocationUtil.location(proj)}.`
                         );
                     } else if (proj.for === ForType.ReferenceSeparator) {
                         // reference separator standard projection, check separator
                         this.runner.nestedCheck({
-                            check: !!proj.separator,
+                            check: proj.separator !== undefined && proj.separator !== null && proj.separator.length > 0,
                             error: `A standard projection for reference separator must include a separator ${ParseLocationUtil.location(proj)}.`,
                             whenOk: () => {
                                 this.runner.simpleCheck(

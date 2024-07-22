@@ -162,4 +162,22 @@ describe("Checking editor definition ", () => {
             }
         }
     });
+
+    test("on standard displays for primitives and limiteds", () => {
+        try {
+            parser.parse(testdir + "test10.edit");
+        } catch (e: unknown) {
+            console.log(e);
+            if (e instanceof Error) {
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                expect(e.message).toBe(`checking errors (6).`);
+                expect(checker.errors.includes("A standard projection for booleans must include a keyword definition [file: test10.edit:4:5].")).toBeTruthy();
+                expect(checker.errors.includes("A boolean value may only be displayed as 'text', 'checkbox', 'radio', 'switch', or 'inner-switch' [file: test10.edit:4:5].")).toBeTruthy();
+                expect(checker.errors.includes("A number value may only be displayed as 'text', or 'slider' [file: test10.edit:5:5].")).toBeTruthy();
+                expect(checker.errors.includes("A limited (enum) value may only be displayed as 'text', or 'radio' [file: test10.edit:6:5].")).toBeTruthy();
+                expect(checker.errors.includes("A list of limited (enum) values may only be displayed as 'text', or 'checkbox' [file: test10.edit:7:5].")).toBeTruthy();
+                expect(checker.errors.includes("The text for a separator should not include any whitespace [file: test10.edit:8:5].")).toBeTruthy();
+            }
+        }
+    });
 });

@@ -49,7 +49,7 @@ export enum ForType {
     Boolean = "boolean",
     Number = "number",
     Limited = "limited",
-    LimitedList = "limited[]",
+    LimitedList = "limitedList",
     ReferenceSeparator = "referenceSeparator"
 }
 
