@@ -1,5 +1,4 @@
 import {
-    BoolDisplayType,
     ExtraClassifierInfo,
     ListInfo,
     ListJoinType,
@@ -15,7 +14,7 @@ import {
     FreEditSuperProjection,
     FreEditTableProjection,
     FreEditUnit,
-    FreOptionalPropertyProjection, BoolKeywords
+    FreOptionalPropertyProjection, BoolKeywords, FreEditStandardProjection
 } from "../metalanguage";
 import { ListUtil } from "../../utils";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
@@ -31,6 +30,7 @@ import { MetaElementReference } from "../../languagedef/metalanguage";
 let currentFileName: string = "SOME_FILENAME";
 const classifiersUsedInSuperProjection: string[] = []; // remember these to add this list to the overall FreEditUnit
 export function setCurrentFileName(newName: string) {
+    // console.log("Curent file name: " + newName)
     currentFileName = newName;
 }
 
@@ -38,6 +38,7 @@ export function setCurrentFileName(newName: string) {
 // This is used as a bridge between JavaScript in the Pegjs parser and typescript
 
 export function createEditUnit(group: FreEditProjectionGroup): FreEditUnit {
+    // console.log("Creators.createEditUnit: " + group.name)
     const result: FreEditUnit = new FreEditUnit();
     if (!!group) {
         result.projectiongroups.push(group);
@@ -99,6 +100,7 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
 }
 
 export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): FreEditProjectionGroup {
+    // console.log("Creators.createProjectionGroup: " + data.name)
     const result: FreEditProjectionGroup = new FreEditProjectionGroup();
     if (!!data.name) {
         result.name = data.name;
@@ -106,11 +108,9 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
     if (data.precedence !== null && data.precedence !== undefined) { // precedence may be 0, "!!data.precedence" would return false
         result.precedence = data.precedence;
     }
-    if (!!data.standardBooleanProjection) {
-        result.standardBooleanProjection = data.standardBooleanProjection;
-    }
-    if (!!data.standardReferenceSeparator) {
-        result.standardReferenceSeparator = data.standardReferenceSeparator;
+    if (!!data.standardProjections) {
+        // console.log("Creators: found standard projections: " + data.standardProjections.map(proj => proj.toString()))
+        result.standardProjections = data.standardProjections;
     }
     if (!!data.projections) {
         // data.projections is a list of FreEditParsedClassifier
@@ -121,6 +121,28 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    return result;
+}
+
+export function createStandard(data: Partial<FreEditStandardProjection>): FreEditStandardProjection {
+    const result: FreEditStandardProjection = new FreEditStandardProjection();
+    if (!!data.for) {
+        result.for = data.for;
+    }
+    if (!!data.displayType) {
+        result.displayType = data.displayType;
+    }
+    if (!!data.keywords) {
+        result.keywords = data.keywords;
+    }
+    if (!!data.separator) {
+        result.separator = data.separator;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    // console.log("Creators.createStandard: " + result.toString())
     return result;
 }
 
@@ -142,36 +164,22 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("Creators.createParsedClassifier: " + result.toString())
     return result;
 }
 
-export function createStdBool(data: BoolDisplayType): BoolDisplayType{
-    const result: BoolDisplayType = new BoolDisplayType();
-    if (!!data.displayType) {
-        result.displayType = data.displayType;
-    }
-    if (!!data.keywords ) {
-        result.keywords = data.keywords;
-    }
-    if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
-    }
-    return result;
-}
-
-export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> {
-    let result: MetaElementReference<FreMetaClassifier>;
-    if (!!data.name) {
-        result = MetaElementReference.create<FreMetaClassifier>(data.name, "FreClassifier");
-        if (!!data.location) {
-            result.location = data.location;
-            result.location.filename = currentFileName;
-        }
-    }
-    result = MetaElementReference.create<FreMetaClassifier>("unknown", "FreClassifier");
-    return result;
-}
+// export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> {
+//     let result: MetaElementReference<FreMetaClassifier>;
+//     if (!!data.name) {
+//         result = MetaElementReference.create<FreMetaClassifier>(data.name, "FreClassifier");
+//         if (!!data.location) {
+//             result.location = data.location;
+//             result.location.filename = currentFileName;
+//         }
+//     }
+//     result = MetaElementReference.create<FreMetaClassifier>("unknown", "FreClassifier");
+//     return result;
+// }
 
 export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraClassifierInfo | undefined {
     const result: ExtraClassifierInfo = new ExtraClassifierInfo();
@@ -297,75 +305,48 @@ export function createSuperProjection(data: Partial<FreEditSuperProjection>): Fr
     return result;
 }
 
-// tslint:disable-next-line:typedef
-export function createPropertyProjection(data: { expression: any, projectionName: any, location: any }): FreEditPropertyProjection {
+export function createSinglePropertyProjection(data: Partial<FreEditPropertyProjection>): FreEditPropertyProjection {
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
-    if (!!data["expression"]) {
-        result.expression = data["expression"];
+    if (!!data.expression) {
+        result.expression = data.expression;
     }
-    if (!!data["projectionName"]) {
-        result.projectionName = data["projectionName"];
+    if (!!data.projectionName) {
+        result.projectionName = data.projectionName;
     }
-    if (!!data["location"]) {
-        result.location = data["location"];
+    if (!!data.displayType) {
+        result.displayType = data.displayType;
+    }
+    if (!!data.boolKeywords) {
+        result.boolKeywords = data.boolKeywords;
+    }
+    if (!!data.location) {
+        result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("Creators.createSinglePropertyProjection: <<" + result.toString() + ">>");
     return result;
 }
 
-// tslint:disable-next-line:typedef
-export function createListPropertyProjection(data: { expression: any, projectionName: any, location: any, listInfo: any }): FreEditPropertyProjection {
+export function createListPropertyProjection(data: Partial<FreEditPropertyProjection>): FreEditPropertyProjection {
+    // console.log("Creators.createListPropertyProjection " + data);
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
-    result.listInfo = data["listInfo"];
-    if (!!data["expression"]) {
-        result.expression = data["expression"];
+    if (!!data.expression) {
+        result.expression = data.expression;
     }
-    if (!!data["projectionName"]) {
-        result.projectionName = data["projectionName"];
+    if (!!data.projectionName) {
+        result.projectionName = data.projectionName;
+    }
+    if (!!data.displayType) {
+        result.displayType = data.displayType;
+    }
+    if (!!data.listInfo) {
+        result.listInfo = data.listInfo;
     }
     if (!!data["location"]) {
         result.location = data["location"];
         result.location.filename = currentFileName;
     }
-    return result;
-}
-
-export function createTablePropertyProjection(data: { expression: any, projectionName: any, location: any, tableInfo: any }): FreEditPropertyProjection {
-    const result: FreEditPropertyProjection = new FreEditPropertyProjection();
-    if (!!data["tableInfo"]) {
-        result.listInfo = data["tableInfo"];
-    }
-    if (!!data["expression"]) {
-        result.expression = data["expression"];
-    }
-    if (!!data["projectionName"]) {
-        result.projectionName = data["projectionName"];
-    }
-    if (!!data["location"]) {
-        result.location = data["location"];
-        result.location.filename = currentFileName;
-    }
-    if (!!result.listInfo) {
-        result.listInfo.joinType = ListJoinType.NONE;
-    }
-    return result;
-}
-
-export function createBooleanPropertyProjection(data: { expression: any, projectionName: any, boolInfo: any, location: any }): FreEditPropertyProjection {
-    const result: FreEditPropertyProjection = new FreEditPropertyProjection();
-    if (!!data["boolInfo"]) {
-        result.boolInfo = data["boolInfo"];
-    }
-    if (!!data["expression"]) {
-        result.expression = data["expression"];
-    }
-    if (!!data["projectionName"]) {
-        result.projectionName = data["projectionName"];
-    }
-    if (!!data["location"]) {
-        result.location = data["location"];
-        result.location.filename = currentFileName;
-    }
+    // console.log("Creators.createListPropertyProjection <<" + result.toString() + ">>");
     return result;
 }
 
@@ -381,6 +362,7 @@ export function createBoolKeywords(data: Partial<BoolKeywords>): BoolKeywords {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("Creators.createBoolKeywords: <<" + result.toString() + ">>");
     return result;
 }
 
@@ -422,6 +404,7 @@ export function createListInfo(data: Partial<ListInfo>): ListInfo {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("Creators.createListInfo: <<" + result.toString() + ">>")
     return result;
 }
 

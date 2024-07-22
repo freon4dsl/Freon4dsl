@@ -9,15 +9,13 @@ Editor_Definition = group:projectionGroup
 }
 
 projectionGroup = ws "editor" ws name:var ws num:("precedence" ws n:numberliteral ws {return n;})?
-        stp:standardBooleanProjection? ws
-        y:standardReferenceSeparator? ws
+        standard:("defaults" ws "{" ws list:singleStandardProjection* ws "}" ws {return list;})?
         projections:classifierProjection* ws
 {
     return creator.createProjectionGroup({
         "name"                          : name,
-        "precedence"                    : num !== undefined && num !== null ? Number.parseInt(num, 10) : undefined, // the default for parseInt is not (!) the decimal system,
-        "standardBooleanProjection"     : stp,
-        "standardReferenceSeparator"    : y,
+        "precedence"                    : num !== undefined && num !== null ? Number.parseInt(num, 10) : undefined, // the standard for parseInt is not (!) the decimal system,
+        "standardProjections"           : standard,
         "projections"                   : projections,
         "location"                      : location()
     });
@@ -28,19 +26,55 @@ propProjectionEnd       = "}"
 projection_begin        = "["
 projection_end          = "]"
 projection_separator    = "|"
-booleanDisplay          = "text" / "checkbox" / "radio" / "switch" / "inner-switch"
+displayType             = "text" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
 
-standardBooleanProjection = "boolean" ws kind:booleanDisplay? ws kw:keywordDecl? ws
+//standardProjections = "defaults" ws "{" ws list:singleStandardProjection* ws "}"
+//{
+//    console.log("list: " + list + ", " + location().start.line)
+//    return { list: list };
+//}
+                                                 
+singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 {
-    return creator.createStdBool({
+    return creator.createStandard({
+        "for"           : "boolean",
         "displayType"   : kind,
         "keywords"      : kw,
         "location"      : location()
     });
 }
-
-standardReferenceSeparator = "referenceSeparator" ws projection_begin t:textBut projection_end ws
-{ return t; }
+/ "referenceSeparator" ws projection_begin t:textBut projection_end ws
+{
+    return creator.createStandard({
+        "for"           : "referenceSeparator",
+        "separator"     : t,
+        "location"      : location()
+    });
+}
+/ "number" ws kind:displayType? ws
+{
+    return creator.createStandard({
+        "for"           : "number",
+        "displayType"   : kind,
+        "location"      : location()
+    });
+}
+/ "limited" projection_begin projection_end ws kind:displayType? ws
+{
+    return creator.createStandard({
+        "for"           : "limitedList",
+        "displayType"   : kind,
+        "location"      : location()
+    });
+}
+/ "limited" ws kind:displayType? ws
+{
+    return creator.createStandard({
+        "for"           : "limited",
+        "displayType"   : kind,
+        "location"      : location()
+    });
+}
 
 classifierProjection =
             classifier:classifierReference curly_begin ws
@@ -201,57 +235,29 @@ textItem = chars:anythingBut+
 
 property_projection = s:singleProperty {return s;}
     / l:listProperty {return l;}
-    / t:tableProperty {return t;}
-    / b:booleanProperty {return b;}
 
 singleProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:displayType? ws kw:keywordDecl? ws
                       propProjectionEnd
 {
-    return creator.createPropertyProjection( {
-        "expression": creator.createSelfExp(propName),
-        "projectionName": projName,
-        "location": location()
+    return creator.createSinglePropertyProjection( {
+        "expression"        : creator.createSelfExp(propName),
+        "projectionName"    : projName,
+        "displayType"       : kind,
+        "boolKeywords"      : kw,
+        "location"          : location()
     });
 }
 
 listProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws l:listInfo? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws l:listInfo? ws kind:displayType? ws
                       propProjectionEnd
 {
     return creator.createListPropertyProjection( {
-        "expression": creator.createSelfExp(propName),
-        "projectionName": projName,
-        "listInfo": l,
-        "location": location()
-    });
-}
-
-tableProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws t:tableInfo? ws
-                      propProjectionEnd
-{
-    return creator.createTablePropertyProjection( {
-        "expression": creator.createSelfExp(propName),
-        "projectionName": projName,
-        "tableInfo": t,
-        "location": location()
-    });
-}
-
-booleanProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:booleanDisplay? ws kw:keywordDecl? ws
-                      propProjectionEnd
-{
-    let xx = creator.createStdBool({
-                                                   "displayType"   : kind,
-                                                   "keywords"      : kw,
-                                                   "location"      : location()
-                                               })
-    return creator.createBooleanPropertyProjection( {
         "expression"        : creator.createSelfExp(propName),
         "projectionName"    : projName,
-        "boolInfo"          : xx,
+        "listInfo"          : l,
+        "displayType"       : kind,
         "location"          : location()
     });
 }
@@ -270,15 +276,6 @@ superProjection = projection_begin "=>" ws superRef:classifierReference projName
     });
 }
 
-tableInfo = "table" ws dir:("rows" / "columns")? ws
-{
-    return creator.createListInfo({
-        "isTable"   : true,
-        "direction" : creator.createListDirection( {"direction": dir, "location": location() } ),
-        "location"  : location()
-    });
-}
-
 keywordDecl = projection_begin text1:textBut text2:(projection_separator t2:textBut {return t2;})? projection_end
 {
     return creator.createBoolKeywords({
@@ -288,7 +285,17 @@ keywordDecl = projection_begin text1:textBut text2:(projection_separator t2:text
     });
 }
 
-listInfo =  dir:listDirection? l:(type:listInfoType "[" t:textBut "]" {return { "type": type, "text": t }})? ws
+listInfo = t:tableInfo { return t;} / l:listNoTableInfo {return l;}
+
+tableInfo = "table" ws dir:("rows" / "columns")? ws
+{
+    return creator.createListInfo({
+        "isTable"   : true,
+        "direction" : creator.createListDirection( {"direction": dir, "location": location() } ),
+        "location"  : location()
+    });
+}
+listNoTableInfo =  dir:listDirection? l:(type:listInfoType "[" t:textBut "]" {return { "type": type, "text": t }})? ws
 {
     return creator.createListInfo({
         "isTable"   : false,

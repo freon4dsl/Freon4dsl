@@ -46,22 +46,14 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                                     }
                                     found.extras.push(...group.extras);
                                 }
-                                if (group.standardReferenceSeparator) {
-                                    if (found.standardReferenceSeparator) {
-                                        if (group.standardReferenceSeparator !== found.standardReferenceSeparator) {
+                                if (!!group.standardProjections) {
+                                    if (!!found.standardProjections) {
+                                        // todo remove this check?
+                                        if (group.standardProjections !== found.standardProjections) {
                                             this.checker.errors.push(`Reference separator in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
                                         }
                                     } else {
-                                        found.standardReferenceSeparator = group.standardReferenceSeparator;
-                                    }
-                                }
-                                if (group.standardBooleanProjection) {
-                                    if (found.standardBooleanProjection) {
-                                        if (group.standardBooleanProjection !== found.standardBooleanProjection) {
-                                            this.checker.errors.push(`Boolean projection in ${ParseLocationUtil.location(group.standardBooleanProjection)} is not equal to the one found in ${ParseLocationUtil.location(found.standardBooleanProjection)}.`);
-                                        }
-                                    } else {
-                                        found.standardBooleanProjection = group.standardBooleanProjection;
+                                        found.standardProjections = group.standardProjections;
                                     }
                                 }
                                 if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false

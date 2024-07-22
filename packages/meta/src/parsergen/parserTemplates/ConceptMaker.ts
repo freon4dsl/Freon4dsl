@@ -265,12 +265,12 @@ export class ConceptMaker {
                                   propType: FreMetaClassifier,
                                   item: FreEditPropertyProjection,
                                   inOptionalGroup: boolean): RHSPropEntry | undefined {
-        if (propType === FreMetaPrimitiveType.boolean && !!item.boolInfo?.keywords) {
+        if (propType === FreMetaPrimitiveType.boolean && !!item.boolKeywords) {
             // note that lists of booleans can never have a boolean keyword projection
-            if (!item.boolInfo.keywords.falseKeyword) {
-                return new RHSBooleanWithSingleKeyWord(prop, item.boolInfo.keywords.trueKeyword);
+            if (!item.boolKeywords.falseKeyword) {
+                return new RHSBooleanWithSingleKeyWord(prop, item.boolKeywords.trueKeyword);
             } else {
-                return new RHSBooleanWithDoubleKeyWord(prop, item.boolInfo.keywords.trueKeyword, item.boolInfo.keywords.falseKeyword);
+                return new RHSBooleanWithDoubleKeyWord(prop, item.boolKeywords.trueKeyword, item.boolKeywords.falseKeyword);
             }
         } else if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {

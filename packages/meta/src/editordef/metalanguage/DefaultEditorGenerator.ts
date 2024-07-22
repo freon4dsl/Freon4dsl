@@ -7,7 +7,6 @@ import {
     FreMetaProperty
 } from "../../languagedef/metalanguage";
 import {
-    BoolDisplayType,
     ExtraClassifierInfo,
     ListInfo,
     FreEditClassifierProjection,
@@ -16,7 +15,7 @@ import {
     FreEditProjectionLine,
     FreEditProjectionText,
     FreEditPropertyProjection,
-    FreEditUnit, FreOptionalPropertyProjection, BoolKeywords
+    FreEditUnit, FreOptionalPropertyProjection, BoolKeywords, FreEditStandardProjection, DisplayType, ForType
 } from "../metalanguage";
 import {LOG2USER, Names} from "../../utils";
 import { EditorDefaults } from "./EditorDefaults";
@@ -53,10 +52,7 @@ export class DefaultEditorGenerator {
             // create a default projection group
             defaultGroup = new FreEditProjectionGroup();
             defaultGroup.name = Names.defaultProjectionName;
-            defaultGroup.standardBooleanProjection = new BoolDisplayType();
-            defaultGroup.standardBooleanProjection.keywords = new BoolKeywords();
-            defaultGroup.standardBooleanProjection.keywords.falseKeyword = "false";
-            defaultGroup.standardReferenceSeparator = EditorDefaults.standardReferenceSeparator;
+            DefaultEditorGenerator.defaultsForStandardProjections(defaultGroup);
             editor.projectiongroups.push(defaultGroup);
             defaultGroup.owningDefinition = editor;
         }
@@ -81,6 +77,36 @@ export class DefaultEditorGenerator {
 
         // add defaults for classifiers that are used within a super projection, iff not already present
         DefaultEditorGenerator.defaultsForSupers(editor.language, defaultGroup, editor.classifiersUsedInSuperProjection);
+    }
+
+    private static defaultsForStandardProjections(defaultGroup: FreEditProjectionGroup) {
+        // create the standard for the boolean projection
+        let yy: FreEditStandardProjection = new FreEditStandardProjection();
+        yy.for = ForType.Boolean;
+        yy.keywords = new BoolKeywords();
+        yy.keywords.falseKeyword = "false";
+        yy.displayType = DisplayType.Text;
+        defaultGroup.standardProjections.push(yy);
+        // create the standard for the number projection
+        yy = new FreEditStandardProjection();
+        yy.for = ForType.Number;
+        yy.displayType = DisplayType.Text;
+        defaultGroup.standardProjections.push(yy);
+        // create the standard for the single limited projection
+        yy = new FreEditStandardProjection();
+        yy.for = ForType.Limited;
+        yy.displayType = DisplayType.Text;
+        defaultGroup.standardProjections.push(yy);
+        // create the standard for the limited list projection
+        yy = new FreEditStandardProjection();
+        yy.for = ForType.LimitedList;
+        yy.displayType = DisplayType.Text;
+        defaultGroup.standardProjections.push(yy);
+        // create the standard for the reference separator
+        yy = new FreEditStandardProjection();
+        yy.for = ForType.ReferenceSeparator;
+        yy.separator = EditorDefaults.standardReferenceSeparator;
+        defaultGroup.standardProjections.push(yy);
     }
 
     private static defaultsForBinaryExpressions(language: FreMetaLanguage, defaultGroup: FreEditProjectionGroup) {

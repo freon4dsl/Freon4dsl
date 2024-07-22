@@ -40,11 +40,11 @@ describe("Checking parser generation", () => {
         expect(language).not.toBeNull();
         expect(language).not.toBeUndefined();
         if (!!language) {
-            console.log("Parsed language: " + language.name);
+            // console.log("Parsed language: " + language.name);
             const editor: FreEditUnit | undefined = new FreEditParser(language).parse(testdir + "test1.edit");
             expect(editor).not.toBeNull();
             expect(editor).not.toBeUndefined();
-            console.log("Parsed editor: ");
+            // console.log("Parsed editor: ");
             const generator = new ReaderWriterGenerator();
             generator.language = language;
             generator.outputfolder = outputDir;
