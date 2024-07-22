@@ -5,7 +5,7 @@ Rules {
     Rules ${self.name} using data from ${self.imports}
 
         using entity: ${self.forEntity}
-        ${self.Rules vertical }
+        ${self.rules vertical }
     ]
 }
 
@@ -23,7 +23,7 @@ IfThenElseRule {
     [
         Rule ${self.name}
             description: ${self.description}
-        ${self.IfStatement}
+        ${self.ifStatement}
 
     ]
 }
@@ -31,11 +31,11 @@ IfThenElseRule {
 IfStatement {
     [
         if
-            ${self.Condition}
+            ${self.condition}
         then
-            ${self.ThenStatements vertical separator [and]}
+            ${self.thenStatements vertical separator [and]}
         else
-            ${self.ElseStatements vertical}
+            ${self.elseStatements vertical}
     ]
 }
 

@@ -1,5 +1,5 @@
 import typescript from '@rollup/plugin-typescript';
-import pkg from 'packages/samples/RulesLanguage/package.json' assert { type: 'json'};
+import pkg from './package.json' assert { type: 'json'};
 
 const config = [
     {

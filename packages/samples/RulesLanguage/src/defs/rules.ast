@@ -26,7 +26,7 @@ concept CheckingRule base Rule {
 }
 
 concept IfThenElseRule base Rule {
-    IfStatement: IfStatement;
+    ifStatement: IfStatement;
 }
 
 concept IfStatement base Statement {
