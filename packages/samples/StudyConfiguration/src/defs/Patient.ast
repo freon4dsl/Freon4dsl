@@ -27,7 +27,7 @@ limited Month {
 concept Date {
   day: string;
   month: Month;
-  year: string;
+  year: string = "2025";
 }
 
 concept EndRangeDate base Date {}

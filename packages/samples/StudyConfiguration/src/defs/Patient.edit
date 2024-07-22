@@ -7,7 +7,7 @@ Availability {
         ${patientNotAvailableDates}
     
     STAFFING
-      Number Staff Available: ${baselineStaff}
+      Number of CRCs Normally Available: ${baselineStaff}
 
       Staffing Level Changes:
       ${staffLevels}
@@ -22,7 +22,7 @@ PatientNotAvailable {
 
 StaffLevel {
   [ 
-    # Staff: ${staffAvailable} on/thru: ${dateOrRange}]
+    # Staff: ${staffAvailable} on: ${dateOrRange}]
 }
 
 DateRange {
@@ -35,6 +35,6 @@ StartRangeDate {
 }
 
 EndRangeDate {
-  [-${month}/${day}/${year}]
+  [thru: ${month}/${day}/${year}]
   trigger = "End of Date Range"
 }
