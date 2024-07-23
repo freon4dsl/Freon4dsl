@@ -2,7 +2,7 @@ import { FreMetaLanguage } from "../metalanguage/FreMetaLanguage.js";
 import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker.js";
 import { FreGenericParser } from "../../utils/parsingAndChecking/FreGenericParser.js";
 import { LanguageExpressionTester } from "./LanguageExpressionTester.js";
-import pegjsParser  from "./ExpressionGrammar.js";
+import { parser }  from "./ExpressionGrammar.js";
 import { setCurrentFileName } from "./ExpressionCreators.js";
 
 export class LanguageExpressionParser extends FreGenericParser<LanguageExpressionTester> {
@@ -10,7 +10,7 @@ export class LanguageExpressionParser extends FreGenericParser<LanguageExpressio
 
     constructor(language: FreMetaLanguage) {
         super();
-        this.parser = pegjsParser;
+        this.parser = parser;
         this.language = language;
         this.checker = new FreLangExpressionChecker(this.language);
     }

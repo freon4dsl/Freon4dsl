@@ -1,4 +1,4 @@
-import {LanguageParser} from "../../languagedef/parser/LanguageParser";
+import {LanguageParser} from "../../languagedef/parser/LanguageParser.js";
 import {FreMetaLanguage} from "../../languagedef/metalanguage/index.js";
 import { expect } from "vitest"
 

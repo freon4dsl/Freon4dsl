@@ -1,4 +1,4 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { MetaLogger } from "../../utils/index.js";
 import {
     FreMetaConcept,
@@ -6,7 +6,7 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaProperty
 } from "../../languagedef/metalanguage/index.js";
-import { parseCorrectModel} from "./utils/index.js";
+import { parseCorrectModel} from "./utils.js";
 import { describe, test, expect } from "vitest"
 
 // The same tests as in property-inheritance1, only now all property types are interfaces
