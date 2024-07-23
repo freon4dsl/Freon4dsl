@@ -1,8 +1,3 @@
-{
-    let create = require("./ValidatorCreators");
-    let expCreate = require("../../languagedef/parser/ExpressionCreators");
-}
-
 Validator_Definition
   = ws "validator" ws validatorName:var ws "for" ws "language" ws languageName:var ws cr:(conceptRule)*
     {
