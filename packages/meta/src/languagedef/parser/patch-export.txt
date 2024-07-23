@@ -3,6 +3,6 @@
   */
 export const parser = {
   StartRules: ["Language_Definition"],
-  SyntaxError: peg$SyntaxError,
+  SyntaxError: "peg$SyntaxError",
   parse: peg$parse
 };
