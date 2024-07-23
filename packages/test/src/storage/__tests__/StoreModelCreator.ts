@@ -41,6 +41,7 @@ export function createAttribute(name: string, type: string): Attribute {
 export function modelToString(model: RulesModel): string {
     let result = `Model: ${model.name}\n`
     model.dataUnits.forEach(data => {
+        result += `Data: ${data.name}\n`
         data.entities.forEach((entity) => {
             result += (`  Entity: ${entity.name}\n`)
             entity.attributes.forEach(attribute => {
@@ -50,6 +51,7 @@ export function modelToString(model: RulesModel): string {
         })
     })
     model.ruleUnits.forEach(ruleUnit => {
+        result += `Rules: ${ruleUnit.name}\n`
         ruleUnit.rules.forEach((rule) => {
             result += (`  ${rule.freLanguageConcept()}: ${rule.name}\n`)
         })

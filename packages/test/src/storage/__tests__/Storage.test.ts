@@ -13,6 +13,7 @@ describe.skip("Store test", () => {
     let freonServer = new ServerCommunication()
     let lionWebServer = new LionWebRepositoryCommunication()
     let originalModel: RulesModel
+    // FreLogger.unmute("LionWebRepositoryCommunication")
 
     beforeEach( async () => {
         inMemoryModel = new InMemoryModel(env, freonServer)
@@ -32,13 +33,13 @@ describe.skip("Store test", () => {
 
     it("open existing model", async () => {
         const retrievedModel = await inMemoryModel.openModel("serverModel") as RulesModel
-        expect(inMemoryModel.model.getUnits().length === 2)
+        expect(retrievedModel.getUnits().length === 2)
         expect(retrievedModel.freLanguageConcept()).toBe("RulesModel")
-        expect(inMemoryModel.model.getUnits().some(unit => unit.name === "dataUnit1")).toBeTruthy()
-        expect(inMemoryModel.model.getUnits().some(unit => unit.name === "rulesUnit1")).toBeTruthy()
+        expect(retrievedModel.getUnits().some(unit => unit.name === "dataUnit1")).toBeTruthy()
+        expect(retrievedModel.getUnits().some(unit => unit.name === "rulesUnit1")).toBeTruthy()
         
-        expect(inMemoryModel.model.getUnits().find(unit => unit.name === "dataUnit1").freLanguageConcept() === "Data")
-        expect(inMemoryModel.model.getUnits().find(unit => unit.name === "rulesUnit1").freLanguageConcept() === "Rules")
+        expect(retrievedModel.getUnits().find(unit => unit.name === "dataUnit1").freLanguageConcept() === "Data")
+        expect(retrievedModel.getUnits().find(unit => unit.name === "rulesUnit1").freLanguageConcept() === "Rules")
 
         expect(modelToString(originalModel), "Retrieved model should be identical to stored model")
             .toBe(modelToString(retrievedModel))

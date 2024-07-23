@@ -379,7 +379,7 @@ export class FreLionwebSerializer implements FreSerializer {
             case "part":
                 const value = parentNode[p.name];
                 if (value === null || value === undefined) {
-                    LOGGER.log("PART is null: " + + parentNode["name"] + "." + p.name);
+                    LOGGER.log("PART is null: " + parentNode["name"] + "." + p.name);
                     break;
                 }
                 const child: LionWebJsonContainment = {
@@ -414,7 +414,7 @@ export class FreLionwebSerializer implements FreSerializer {
                         if (!!ref.name || !!referredId) {
                             lwReference.targets.push({
                                 resolveInfo: ref.name,
-                                reference: referredId
+                                reference: referredId ?? null
                             });
                         }
                     }
@@ -427,9 +427,10 @@ export class FreLionwebSerializer implements FreSerializer {
                     }
                     const referredId = ref?.referred?.freId();
                     if (!!ref.name || !!referredId) {
+                        const referenceProp = ref?.referred?.freId()
                         lwReference.targets.push({
                             resolveInfo: !!ref ? ref["name"] : null,
-                            reference: ref?.referred?.freId()
+                            reference: referenceProp ?? null
                         });
                     }
                 }

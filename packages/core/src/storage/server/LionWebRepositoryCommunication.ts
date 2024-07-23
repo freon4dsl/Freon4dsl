@@ -102,6 +102,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
 
     async createModel(modelName: string): Promise<any> {
         await this.client.dbAdmin.createRepository(modelName, false)
+        this.client.repository = modelName
     }
 
     
@@ -208,9 +209,9 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         LOGGER.log(`renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         this.client.repository = modelName
         // put the unit and its interface under the new name
-        this.putModelUnit(modelName, {name: newName, id: unit.freId()}, unit);
+        await this.putModelUnit(modelName, {name: newName, id: unit.freId()}, unit);
         // remove the old unit and interface
-        this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId()});
+        await this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId()});
     }
 
 }
