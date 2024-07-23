@@ -12,11 +12,12 @@ describe.skip("Store test", () => {
     let env = RulesModelEnvironment.getInstance()
     let freonServer = new ServerCommunication()
     let lionWebServer = new LionWebRepositoryCommunication()
+    const communication = freonServer
     let originalModel: RulesModel
     // FreLogger.unmute("LionWebRepositoryCommunication")
 
     beforeEach( async () => {
-        inMemoryModel = new InMemoryModel(env, freonServer)
+        inMemoryModel = new InMemoryModel(env, communication)
         // Create a model in the server
         originalModel = await inMemoryModel.createModel("serverModel") as RulesModel
         const unit1 = await inMemoryModel.createUnit("dataUnit1", "Data") as Data
@@ -51,6 +52,10 @@ describe.skip("Store test", () => {
         expect(inMemoryModel.model.getUnits().length).toBe(2)
         await inMemoryModel.deleteUnit(unit1)
         expect(inMemoryModel.model.getUnits().length).toBe(1)
+
+        const newInMemoryModel = new InMemoryModel(env, communication)
+        const retrievedModel = await newInMemoryModel.openModel("serverModel") as RulesModel
+        expect(retrievedModel.getUnits().length === 1)
     });
 
 });
