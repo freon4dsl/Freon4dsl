@@ -1,6 +1,6 @@
-import { FreNode } from "../ast";
-import { FreLanguage, FreLanguageProperty } from "../language";
-import { isNullOrUndefined } from "../util";
+import { FreNode } from "../../ast/index";
+import { FreLanguage, FreLanguageProperty } from "../../language/index";
+import { isNullOrUndefined } from "../../util/index";
 import { FreSerializer } from "./FreSerializer";
 
 /**

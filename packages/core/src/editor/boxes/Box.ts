@@ -103,6 +103,8 @@ export abstract class Box {
         if (this.isLeaf() && this.selectable) {
             return this;
         }
+        // TODO Why filter or concat here?
+        // const childrenReversed = this.children.filter(ch => true).reverse();
         const childrenReversed = this.children.concat().reverse();
         for (const child of childrenReversed) {
             const leafChild: Box = child.lastLeaf;

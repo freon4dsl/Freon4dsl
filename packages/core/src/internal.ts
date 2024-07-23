@@ -8,33 +8,32 @@
  */
 
 // ast and logging depends on nothing
-export * from "./logging";
-export * from "./ast";
+export * from "./logging/index";
+export * from "./ast/index";
 // language holds dependencies on ast, editor, and util
-export * from "./language";
+export * from "./language/index";
 // ast-utils depends on language, ast, util
-export * from "./ast-utils";
+export * from "./ast-utils/index";
 
 // editor and util depend upon each other, and upon language
-export * from "./util";
-export * from "./editor";
+export * from "./util/index";
+export * from "./editor/index";
 
 // the following parts depend upon language and ast
-export * from "./environment";
-export * from "./reader";
-export * from "./scoper";
-export * from "./searchers";
-export * from "./storage";
-export * from "./server";
-export * from "./stdlib";
-export * from "./typer";
-export * from "./validator";
-export * from "./writer";
+export * from "./environment/index";
+export * from "./reader/index";
+export * from "./scoper/index";
+export * from "./searchers/index";
+export * from "./storage/index";
+export * from "./stdlib/index";
+export * from "./typer/index";
+export * from "./validator/index";
+export * from "./writer/index";
 
 // environment depends on most of the other parts
-export * from "./environment";
+export * from "./environment/index";
 
 // change manager
-export * from "./change-manager";
+export * from "./change-manager/index";
 
-export * from "./interpreter";
+export * from "./interpreter/index";

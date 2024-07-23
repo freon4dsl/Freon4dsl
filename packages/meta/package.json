@@ -17,7 +17,7 @@
     "freon": "dist/bin/freon-generator.js"
   },
   "scripts": {
-    "clean": "rm -rf node_modules/",
+    "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "lang-parser1": "peggy src/languagedef/parser/LanguageGrammar.part.pegjs src/languagedef/parser/BasicGrammar.part.pegjs",
     "lang-parser": "peggy src/languagedef/parser/LanguageGrammar.pegjs && npm run patch-language",
