@@ -9,9 +9,9 @@ WebappConfigurator.getInstance().setEditorEnvironment(InsuranceModelEnvironment.
 /**
  * The one and only reference to the server on which the models are stored
  */
-import { LionWebRepositoryCommunication } from "@freon4dsl/core"
-WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommunication.getInstance());
-// WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
+import { LionWebRepositoryCommunication, ServerCommunication } from "@freon4dsl/core"
+// WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommunication.getInstance());
+WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
 // export const serverCommunication: IServerCommunication = MpsServerCommunication.getInstance();
 
 /**
