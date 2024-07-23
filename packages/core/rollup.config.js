@@ -12,13 +12,13 @@ const config = [
 		input: 'src/index.ts',
 		output: [
 			{
-				sourcemap: !production,
+				sourcemap: true,
 				format: 'es',
 				name: pkg.name,
 				file: pkg.module,
 			},
 			{
-				sourcemap: !production,
+				sourcemap: true,
 				format: 'umd',
 				name: pkg.name,
 				file: pkg.main,

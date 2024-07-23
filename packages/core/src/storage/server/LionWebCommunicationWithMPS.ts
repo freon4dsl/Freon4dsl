@@ -1,8 +1,8 @@
-import { FreNamedNode, FreNode } from "../ast/index";
-import { FreLogger } from "../logging/index";
-import { FreLionwebSerializer } from "../storage/index";
-import { FreErrorSeverity } from "../validator/index";
-import { IServerCommunication } from "./IServerCommunication";
+import { FreNamedNode, FreNode } from "../../ast/index";
+import { FreLogger } from "../../logging/index";
+import { FreLionwebSerializer } from "../index";
+import { FreErrorSeverity } from "../../validator/index";
+import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
 import { ServerCommunication } from "./ServerCommunication";
 import process from 'process';
 
@@ -16,44 +16,30 @@ const modelName = "r:5dda8fb0-8c78-4ed5-8c46-0eb8c112a60a(import_from_json.prope
 const projectName = "mps-meetup-2023"
 const modelPath = `/lionweb/bulk?modelRef=${modelName}&project=${projectName}`
 
-export class LionWebCommunication extends ServerCommunication implements IServerCommunication {
-
+export class LionWebCommunicationWithMPS extends ServerCommunication implements IServerCommunication {
+    
     // static converterLionWeb = new Freon2LionWebConverter();
-    static instanceLionWeb: LionWebCommunication;
+    static instanceLionWeb: LionWebCommunicationWithMPS;
 
-    static getInstance(): LionWebCommunication {
-        if (!(!!LionWebCommunication.instanceLionWeb)) {
-            LionWebCommunication.instanceLionWeb = new LionWebCommunication();
+    static getInstance(): LionWebCommunicationWithMPS {
+        if (!(!!LionWebCommunicationWithMPS.instanceLionWeb)) {
+            LionWebCommunicationWithMPS.instanceLionWeb = new LionWebCommunicationWithMPS();
         }
-        return LionWebCommunication.instanceLionWeb;
+        return LionWebCommunicationWithMPS.instanceLionWeb;
     }
 
     onError(msg: string,  severity: FreErrorSeverity): void {
         // default implementation
         console.error(`ServerCommunication ${severity}: ${msg}`);
     }
-    // deleteModel(modelName: string) {
-    // }
-    //
-    // deleteModelUnit(modelName: string, unitName: string) {
-    // }
-    //
-    async loadModelList(modelListCallback: (names: string[]) => void) {
-        modelListCallback([
-            modelName
-        ]);
+
+    async loadModelList(): Promise<string[]> {
+        return [modelName];
     }
 
-    // loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNode) => void) {
-    // }
-    //
-    // loadModelUnitInterface(modelName: string, unitName: string, loadCallback: (piUnit: FreNode) => void) {
-    // }
-    //
-    async loadUnitList(modelName: string, modelListCallback: (names: string[]) => void) {
-        modelListCallback([
-            modelName
-        ]);
+    // @ts-ignore
+    async loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]> {
+        return []
     }
 
     // @ts-ignore
@@ -96,7 +82,8 @@ export class LionWebCommunication extends ServerCommunication implements IServer
                     const unit = serializer.toTypeScriptInstance(res);
                     //TODO: Hardcoded to avoid empty default property for units
                     unit["name"] = "PropertyRoot";
-                    loadCallback(unit as FreNamedNode);
+                    return unit ;
+                    // loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error( "loadModelUnit, " + e.message);
                     this.onError("loadModelUnit: " + e.message, FreErrorSeverity.Error);
@@ -104,16 +91,18 @@ export class LionWebCommunication extends ServerCommunication implements IServer
                 }
             }
         }
+        return null
     }
+
 
     // @ts-ignore
     // parameter present to adhere to interface
-    async putModelUnit(modelName: string, unitName: string, piUnit: FreNode) {
-        console.log("piUnit", piUnit)
-        if (!!unitName && unitName.length > 0 && !!piUnit) {
+    async putModelUnit(modelName: string, unitIdentifier: ModelUnitIdentifier, unit: FreNode) {
+        console.log("unit", unit)
+        if (!!unitIdentifier.name && unitIdentifier.name.length > 0 && !!unit) {
             try {
                 const serializer = new FreLionwebSerializer();
-                const lionWebNodes = serializer.convertToJSON(piUnit);
+                const lionWebNodes = serializer.convertToJSON(unit);
                 console.log("lionWebNodes", lionWebNodes)
                 let output = {
                     "serializationFormatVersion": "2023.1",

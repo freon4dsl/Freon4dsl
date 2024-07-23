@@ -1,125 +1,909 @@
 {
-   "$typename": "Product",
-   "name": "HomeAll",
-   "product": {
-      "$typename": "InsuranceProduct",
-      "name": "HomeAll",
-      "productName": "Super Save",
-      "advertisedPremium": {
-         "$typename": "EuroLiteral",
-         "euros": 200,
-         "cents": 0
-      },
-      "riskAdjustment": {
-         "$typename": "PercentageLiteral",
-         "value": 5
-      },
-      "calculation": {
-         "$typename": "PlusExpression",
-         "left": {
-            "$typename": "FunctionCallExpression",
-            "args": [
-               {
-                  "$typename": "InsurancePartRef",
-                  "part": "fire"
-               },
-               {
-                  "$typename": "RiskAdjustmentRef",
-                  "name": "riskAdjustment"
-               }
-            ],
-            "funcDefinition": "adjust"
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-105",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-Product"
          },
-         "right": {
-            "$typename": "FunctionCallExpression",
-            "args": [
-               {
-                  "$typename": "InsurancePartRef",
-                  "part": "breakingAndEntering"
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "TODO_set-correct-key"
                },
-               {
-                  "$typename": "PlusExpression",
-                  "left": {
-                     "$typename": "RiskAdjustmentRef",
-                     "name": "riskAdjustment"
-                  },
-                  "right": {
-                     "$typename": "PercentageLiteral",
-                     "value": 1
-                  }
-               }
-            ],
-            "funcDefinition": "adjust"
-         }
+               "value": "HomeAll"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-Product-product"
+               },
+               "children": [
+                  "ID-106"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
       },
-      "helpers": [
-         {
-            "$typename": "CalcFunction",
-            "name": "adjust",
-            "description": null,
-            "declaredType": {
-               "$typename": "TypeRef",
-               "type": "EUR"
+      {
+         "id": "ID-106",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-InsuranceProduct"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-name"
+               },
+               "value": "HomeAll"
             },
-            "body": {
-               "$typename": "MultiplyExpression",
-               "left": {
-                  "$typename": "MultiplyExpression",
-                  "left": {
-                     "$typename": "ParameterRef",
-                     "attribute": {
-                        "$typename": "RiskRef",
-                        "name": "statisticalRisk"
-                     },
-                     "parameter": "part"
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-productName"
+               },
+               "value": "Super Save"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-advertisedPremium"
+               },
+               "children": [
+                  "ID-107"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-riskAdjustment"
+               },
+               "children": [
+                  "ID-108"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-calculation"
+               },
+               "children": [
+                  "ID-109"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-helpers"
+               },
+               "children": [
+                  "ID-118"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-themes"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "HomeTheme",
+                     "reference": "ID-9"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-nrPremiumDays"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Month",
+                     "reference": "ID-13"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-parts"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "fire",
+                     "reference": "ID-23"
                   },
-                  "right": {
-                     "$typename": "ParameterRef",
-                     "attribute": {
-                        "$typename": "PayoutRef",
-                        "name": "maximumPayOut"
-                     },
-                     "parameter": "part"
+                  {
+                     "resolveInfo": "breakingAndEntering",
+                     "reference": "ID-20"
+                  },
+                  {
+                     "resolveInfo": "flooding",
+                     "reference": "ID-26"
+                  },
+                  {
+                     "resolveInfo": "stormAndLightning",
+                     "reference": "ID-29"
                   }
-               },
-               "right": {
-                  "$typename": "ParameterRef",
-                  "attribute": null,
-                  "parameter": "adjustment"
-               }
+               ]
             },
-            "parameters": [
-               {
-                  "$typename": "Parameter",
-                  "name": "part",
-                  "declaredType": {
-                     "$typename": "TypeRef",
-                     "type": "InsurancePart"
-                  }
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsuranceProduct-basedOn"
                },
-               {
-                  "$typename": "Parameter",
-                  "name": "adjustment",
-                  "declaredType": {
-                     "$typename": "TypeRef",
-                     "type": "Percentage"
+               "targets": [
+                  {
+                     "resolveInfo": "home1",
+                     "reference": "ID-19"
                   }
-               }
-            ]
-         }
-      ],
-      "themes": [
-         "HomeTheme"
-      ],
-      "nrPremiumDays": "Month",
-      "parts": [
-         "fire",
-         "breakingAndEntering",
-         "flooding",
-         "stormAndLightning"
-      ],
-      "basedOn": [
-         "home1"
-      ]
-   }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      },
+      {
+         "id": "ID-107",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-EuroLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-euros"
+               },
+               "value": "200"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-EuroLiteral-cents"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-106"
+      },
+      {
+         "id": "ID-108",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-PercentageLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-PercentageLiteral-value"
+               },
+               "value": "5"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-106"
+      },
+      {
+         "id": "ID-109",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-PlusExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-110"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-113"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-106"
+      },
+      {
+         "id": "ID-110",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-FunctionCallExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-FunctionCallExpression-args"
+               },
+               "children": [
+                  "ID-111",
+                  "ID-112"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-FunctionCallExpression-funcDefinition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "adjust",
+                     "reference": "ID-118"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-109"
+      },
+      {
+         "id": "ID-111",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-InsurancePartRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePartRef-part"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "fire",
+                     "reference": "ID-23"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-110"
+      },
+      {
+         "id": "ID-112",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-RiskAdjustmentRef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-RiskAdjustmentRef-name"
+               },
+               "value": "riskAdjustment"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-110"
+      },
+      {
+         "id": "ID-113",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-FunctionCallExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-FunctionCallExpression-args"
+               },
+               "children": [
+                  "ID-114",
+                  "ID-115"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-FunctionCallExpression-funcDefinition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "adjust",
+                     "reference": "ID-118"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-109"
+      },
+      {
+         "id": "ID-114",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-InsurancePartRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-InsurancePartRef-part"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "breakingAndEntering",
+                     "reference": "ID-20"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-113"
+      },
+      {
+         "id": "ID-115",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-PlusExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-116"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-117"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-113"
+      },
+      {
+         "id": "ID-116",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-RiskAdjustmentRef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-RiskAdjustmentRef-name"
+               },
+               "value": "riskAdjustment"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-115"
+      },
+      {
+         "id": "ID-117",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-PercentageLiteral"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-PercentageLiteral-value"
+               },
+               "value": "1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-115"
+      },
+      {
+         "id": "ID-118",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-CalcFunction"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-CalcFunction-name"
+               },
+               "value": "adjust"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-CalcFunction-declaredType"
+               },
+               "children": [
+                  "ID-119"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-CalcFunction-body"
+               },
+               "children": [
+                  "ID-120"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-CalcFunction-parameters"
+               },
+               "children": [
+                  "ID-127",
+                  "ID-129"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-106"
+      },
+      {
+         "id": "ID-119",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-TypeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-TypeRef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "EUR",
+                     "reference": "ID-8"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-118"
+      },
+      {
+         "id": "ID-120",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-MultiplyExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-121"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-126"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-118"
+      },
+      {
+         "id": "ID-121",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-MultiplyExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-122"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-124"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-120"
+      },
+      {
+         "id": "ID-122",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-ParameterRef-attribute"
+               },
+               "children": [
+                  "ID-123"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "part",
+                     "reference": "ID-127"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-121"
+      },
+      {
+         "id": "ID-123",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-RiskRef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-RiskRef-name"
+               },
+               "value": "statisticalRisk"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-122"
+      },
+      {
+         "id": "ID-124",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-ParameterRef-attribute"
+               },
+               "children": [
+                  "ID-125"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "part",
+                     "reference": "ID-127"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-121"
+      },
+      {
+         "id": "ID-125",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-PayoutRef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-PayoutRef-name"
+               },
+               "value": "maximumPayOut"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-124"
+      },
+      {
+         "id": "ID-126",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "adjustment",
+                     "reference": "ID-129"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-120"
+      },
+      {
+         "id": "ID-127",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "part"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "children": [
+                  "ID-128"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-118"
+      },
+      {
+         "id": "ID-128",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-TypeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-TypeRef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "InsurancePart",
+                     "reference": "ID-5"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-127"
+      },
+      {
+         "id": "ID-129",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "adjustment"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "children": [
+                  "ID-130"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-118"
+      },
+      {
+         "id": "ID-130",
+         "classifier": {
+            "language": "-default-key-DocuProject",
+            "version": "2023.1",
+            "key": "-default-key-TypeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-TypeRef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Percentage",
+                     "reference": "ID-6"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-129"
+      }
+   ]
 }

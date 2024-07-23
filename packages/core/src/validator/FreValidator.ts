@@ -34,6 +34,7 @@ export class FreError {
         this.message = message;
         this.reportedOn = node;
         this.locationdescription = locationdescription;
+        // TODO Check typeof
         if (typeof(severity) !== 'undefined') {
             this.severity = severity;
         } else {
