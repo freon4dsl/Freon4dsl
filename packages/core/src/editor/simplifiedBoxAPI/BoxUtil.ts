@@ -6,7 +6,6 @@ import {
     NumberControlBox,
     Box,
     BoxFactory,
-    // CharAllowed,
     EmptyLineBox,
     HorizontalListBox,
     NumberDisplayInfo,

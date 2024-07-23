@@ -1,4 +1,4 @@
-import { Box } from "./Box";
+import {Box} from "./internal";
 import {FreNode} from "../../ast";
 import {FreLogger} from "../../logging";
 import {FreUtils} from "../../util";
