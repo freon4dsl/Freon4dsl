@@ -472,7 +472,7 @@ export class BoxUtil {
         let result: Box;
         result = !!property
             ? boxProviderCache.getBoxProvider(property).box
-            : BoxFactory.action(element, roleName, "[add]", { propertyName: propertyName, conceptName: conceptName });
+            : BoxFactory.action(element, roleName, `<${propertyName}>`, { propertyName: propertyName, conceptName: conceptName });
         result.propertyName = propertyName;
         // result.propertyIndex = ??? todo
         return result;

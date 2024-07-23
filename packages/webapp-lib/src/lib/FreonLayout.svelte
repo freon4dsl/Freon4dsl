@@ -93,11 +93,10 @@
 
 	onMount(async () => {
 		// get list of models from server
-		await WebappConfigurator.getInstance().serverCommunication.loadModelList((names: string[]) => {
-			if (names.length > 0) {
-				$modelNames = names;
-			}
-		});
+		const names = await WebappConfigurator.getInstance().serverCommunication.loadModelList()
+		if (names.length > 0) {
+			$modelNames = names;
+		}
 		// If a model is given as parameter, open this model
 		// A new model is created when this model does not exist
 		const urlParams = new URLSearchParams(window.location.search);

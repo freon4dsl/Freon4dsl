@@ -3,7 +3,7 @@ import {
     IMainInterpreter,
     InterpreterContext,
     InterpreterTracer,
-    MainInterpreter, OwningPropertyFunction, PiElement
+    MainInterpreter, OwningPropertyFunction
 } from "@freon4dsl/core";
 import { initMainInterpreter } from "./InitMainInterpreter";
 

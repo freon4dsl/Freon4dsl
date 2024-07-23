@@ -1,5 +1,5 @@
 {
-  "name": "@freon4dsl/samples-rules-language",
+  "name": "@freon4dsl/samples-rules-language-old",
   "version": "0.7.0-beta",
   "license": "MIT",
   "type": "module",
@@ -10,7 +10,7 @@
     "clean": "rm -rf node_modules/",
     "build": "npm run generate && tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
-    "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs -o src/",
+    "generate": "bash ../../../../scripts/freon-unused-dev.sh -v all -d src/defs -o src/",
     "clean-gen": "bash ../../scripts/freon-samples-dev.sh clean-it -d src/defs -o src/",
     "clean-config": "rm */config/FreonConfiguration.ts",
     "clean-custom": "rm */*/Custom*.ts",

@@ -33,7 +33,7 @@
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-	{$currentUnitName}
+	{$currentUnitName?.name ?? "<no unit>"}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon tag=svg viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>

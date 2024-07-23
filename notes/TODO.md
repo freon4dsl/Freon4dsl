@@ -40,11 +40,11 @@
 - [ ] Add more styling options in Svelte components. (J)
 - [x] Reference shortcut fixed. (naar dev)
 - [ ] When opening a model, some references are not found (ref to Fraction10 from Flow in edu-example) (J)
-- [ ] Custom action trigger /0-9/ for number literal does not work anymore (J)
+- [x] Custom action trigger /0-9/ for number literal does not work anymore (J)
 - [ ] Expression editing is broken: Typing + or / at end of number literal (J)
   - shows menu instead of directly adding the operator
   - Adds operator to the left instead of the right: At GOTO_NEXT next leaf is binary post, which is incorrect and console says: it is NOT an action box. (J)
-- [ ] Cursor is incorrectly placed after adding/creaating a binary expression. It is on the whole, it should be on one of the placeholders (left or right).(J)
+- [x] Cursor is incorrectly placed after adding/creaating a binary expression. It is on the whole, it should be on one of the placeholders (left or right).(J)
   - 24/12/2022 selectElement(in PiEditor) chnaged signature, create bin expr command not changeed accordingly)! (A)
 
 # Expressions
@@ -122,8 +122,6 @@
     - Need generated and custom code for reuse, hard to setup in JS/TS environment.
       - Especially if certain concepts are not used. Should the custom code for these also be removed?
     - Need to package reused language as npm package?
-
-ProjectitConfiguration => "Langauge"Configuration
 
 Make Scoper composite
 

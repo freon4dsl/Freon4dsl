@@ -3,9 +3,9 @@
 - [ ] Convert MPS language to Freon .ast files using one of:
     - [ ] Use existing MPS plugin?
     - [ ] Convert MPS Languages => LionWeb Metamodels => Freon .ast
-- [ ] Deserializer for LionWeb JSON
-- [ ] Serializer for LionWeb JSON format
-- [ ] Adapt Freon ModdelServer to use LionWeb JSON format
+- [x] Deserializer for LionWeb JSON
+- [x] Serializer for LionWeb JSON format
+- [x] Adapt Freon ModdelServer to use LionWeb JSON format
 - [ ] Define editor for Clario Forms
 - [ ] Make model server pluggable, so we can use LionWeb/Modelix
 - [ ] 

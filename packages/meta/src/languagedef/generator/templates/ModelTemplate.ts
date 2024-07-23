@@ -41,23 +41,15 @@ export class ModelTemplate {
                  */
                 findUnit(name: string, metatype?: ${metaType} ): ${Names.modelunit()} {
                     let result: ${Names.modelunit()} = null;
-                    ${modelDescription.parts().map(p =>
-            `${p.isList ?
-                `result = this.${p.name}.find(mod => mod.name === name);`
-                :
-                `if (this.${p.name}.name === name ) { result = this.${p.name}; }`
-            }`
-        ).join("\n")}
-                    if (!!result && !!metatype) {
-                        if (${Names.FreLanguage}.getInstance().metaConformsToType(result, metatype)) {
-                            return result;
-                        }
-                    } else {
+                    const checkType = metatype !== undefined
+                    result = this.getUnits().find((mod) => mod.name === name && 
+                        (checkType ? FreLanguage.getInstance().metaConformsToType(mod, metatype): true));
+                    if (!!result) {
                         return result;
                     }
                     return null;
-                }
-
+                }                 
+                
                 /**
                  * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
                  * Returns false if the replacement could not be done, e.g. because 'oldUnit' is not a child of this object.
