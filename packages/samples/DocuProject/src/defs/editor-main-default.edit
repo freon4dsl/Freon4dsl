@@ -4,7 +4,6 @@ editor default
 
 defaults {
     boolean inner-switch [YES | NO] // the strings used to display a boolean value, all booleans will default be displayed as an inner switch control
-    number slider
     limited radio
     limited[] checkbox
     referenceSeparator [:] // the string that separates the names in a path name, e.g. pack1:cls3:part
@@ -22,7 +21,7 @@ BaseProduct {[
         is approved level3: ${self.isApprovedLevel3 checkbox}
         yields profit: ${self.yieldsProfit text [Plenty | Little]}
         expected nr of use: ${self.nrOfUse}
-        range: ${self.range}
+        range: ${self.range slider}
 
 
         ${parts}

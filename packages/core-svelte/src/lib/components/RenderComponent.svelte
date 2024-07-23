@@ -52,7 +52,7 @@
     import NumericSliderComponent from "$lib/components/NumericSliderComponent.svelte";
     import LimitedCheckboxComponent from "$lib/components/LimitedCheckboxComponent.svelte";
     import LimitedRadioComponent from "$lib/components/LimitedRadioComponent.svelte";
-    import {isLimitedControlBox, LimitedDisplay} from "@freon4dsl/core/src/editor/boxes/LimitedControlBox.js";
+    import {isLimitedControlBox, LimitedDisplay} from "@freon4dsl/core";
 
     const LOGGER = new FreLogger("RenderComponent");
 

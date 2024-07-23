@@ -42,6 +42,7 @@ export class ProjectionTemplate {
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
     private stdBoolDisplayType: string = "text";
+    private stdNumberDisplayType: string = "text";
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
     private modelImports: string[] = [];    // imports from ../language/gen
@@ -52,7 +53,7 @@ export class ProjectionTemplate {
     private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
     private supersUsed: FreMetaClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
 
-    setStandardBooleanKeywords(editorDef: FreEditUnit) {
+    setStandardDisplays(editorDef: FreEditUnit) {
         // get the standard labels for true and false, and the standard display type (checkbox, radio, text, etc.) for boolean values
         const defProjGroup: FreEditProjectionGroup | undefined = editorDef.getDefaultProjectiongroup();
         if (!!defProjGroup) {
@@ -62,10 +63,16 @@ export class ProjectionTemplate {
                 this.trueKeyword = stdLabels.trueKeyword;
                 this.falseKeyword = stdLabels.falseKeyword ? stdLabels.falseKeyword : "false";
             }
-            const displayType: string | undefined = standardBoolProj?.displayType;
-            if (!!displayType) {
-                this.stdBoolDisplayType = displayType;
+            const boolDisplayType: string | undefined = standardBoolProj?.displayType;
+            if (!!boolDisplayType) {
+                this.stdBoolDisplayType = boolDisplayType;
             }
+            const numberDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.Number)?.displayType;
+            console.log("BEFORE stdNumberDisplayType: " + this.stdNumberDisplayType)
+            if (!!numberDisplayType) {
+                this.stdNumberDisplayType = numberDisplayType;
+            }
+            console.log("AFTER stdNumberDisplayType: " + this.stdNumberDisplayType)
         }
     }
 
@@ -552,7 +559,7 @@ export class ProjectionTemplate {
         }
     }
 
-    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolDisplayType?: string, boolInfo?: BoolKeywords): string {
+    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, displayType?: string, boolKeywords?: BoolKeywords): string {
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type) {
@@ -560,46 +567,58 @@ export class ProjectionTemplate {
             case FreMetaPrimitiveType.identifier:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
             case FreMetaPrimitiveType.number:
+                // get the right displayType
+                let displayTypeToUse1: string = this.getTypeScriptForDisplayType(this.stdNumberDisplayType);
+                if (!!displayType) {
+                    displayTypeToUse1 = this.getTypeScriptForDisplayType(displayType);
+                }
+                console.log("IN GEN stdNumberDisplayType: " + this.stdNumberDisplayType);
                 ListUtil.addIfNotPresent(this.coreImports, "NumberDisplay");
-                return `BoxUtil.numberBox(${element}, "${property.name}"${listAddition}, NumberDisplay.SELECT)`;
+                return `BoxUtil.numberBox(${element}, "${property.name}"${listAddition}, NumberDisplay.${displayTypeToUse1})`;
             case FreMetaPrimitiveType.boolean:
+                // get the right keywords
                 let trueKeyword: string = this.trueKeyword;
                 let falseKeyword: string = this.falseKeyword;
-                let displayType: string = '';
-                displayType = this.getDisplayTypeFrom(this.stdBoolDisplayType);
-                if (!!boolInfo) {
-                    trueKeyword = boolInfo.trueKeyword;
-                    falseKeyword = boolInfo.falseKeyword ? boolInfo.falseKeyword : "undefined";
-                    displayType = this.getDisplayTypeFrom(boolDisplayType);
+                if (!!boolKeywords) {
+                    trueKeyword = boolKeywords.trueKeyword;
+                    falseKeyword = boolKeywords.falseKeyword ? boolKeywords.falseKeyword : "undefined";
+                }
+                // get the right displayType
+                let displayTypeToUse2: string = this.getTypeScriptForDisplayType(this.stdBoolDisplayType);
+                if (!!displayType) {
+                    displayTypeToUse2 = this.getTypeScriptForDisplayType(displayType);
                 }
                 ListUtil.addIfNotPresent(this.coreImports, "BoolDisplay");
-                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, ${displayType})`;
+                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, BoolDisplay.${displayTypeToUse2})`;
             default:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
         }
     }
 
-    private getDisplayTypeFrom(inType: string | undefined): string {
+    private getTypeScriptForDisplayType(inType: string | undefined): string {
         let result: string;
         switch (inType) {
-            // "text" / "checkbox" / "radio" / "switch" / "inner-switch"
+            // possible values: "text" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
             case "text":
-                result = "BoolDisplay.SELECT";
+                result = "SELECT";
                 break;
             case "checkbox":
-                result = "BoolDisplay.CHECKBOX";
+                result = "CHECKBOX";
                 break;
             case "radio":
-                result = "BoolDisplay.RADIO_BUTTON";
+                result = "RADIO_BUTTON";
                 break;
             case "switch":
-                result = "BoolDisplay.SWITCH";
+                result = "SWITCH";
                 break;
             case "inner-switch":
-                result = "BoolDisplay.INNER_SWITCH";
+                result = "INNER_SWITCH";
+                break;
+            case "slider":
+                result = "SLIDER";
                 break;
             default:
-                result = "BoolDisplay.SELECT";
+                result = "SELECT";
         }
         return result;
     }

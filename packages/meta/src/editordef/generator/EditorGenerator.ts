@@ -43,7 +43,7 @@ export class EditorGenerator {
         const customActions:CustomActionsTemplate = new CustomActionsTemplate();
         const actions: ActionsTemplate = new ActionsTemplate();
         const projection: ProjectionTemplate = new ProjectionTemplate();
-        projection.setStandardBooleanKeywords(editDef); // initiate the template with the standard boolean keywords
+        projection.setStandardDisplays(editDef); // initiate the template with the standard boolean keywords
         const customProjectiontemplate: CustomProjectionTemplate = new CustomProjectionTemplate();
         const editorIndexTemplate: EditorIndexTemplate = new EditorIndexTemplate();
         // const stylesTemplate = new StylesTemplate();

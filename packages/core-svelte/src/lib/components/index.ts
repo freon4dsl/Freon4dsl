@@ -1,9 +1,12 @@
-import CheckBoxComponent from "$lib/components/BooleanCheckboxComponent.svelte";
+import BooleanCheckboxComponent from "$lib/components/BooleanCheckboxComponent.svelte";
+import BooleanRadioComponent from "$lib/components/BooleanRadioComponent.svelte";
 import DropdownComponent from '$lib/components/DropdownComponent.svelte';
 import EmptyLineComponent from '$lib/components/EmptyLineComponent.svelte';
 import FreonComponent from '$lib/components/FreonComponent.svelte';
 import IndentComponent from '$lib/components/IndentComponent.svelte';
+import InnerSwitchComponent from '$lib/components/InnerSwitchComponent.svelte';
 import LabelComponent from '$lib/components/LabelComponent.svelte';
+import LayoutComponent from '$lib/components/LayoutComponent.svelte';
 import ListComponent from '$lib/components/ListComponent.svelte';
 import NumSlider2 from "$lib/components/NumericSliderComponent.svelte";
 import OptionalComponent from '$lib/components/OptionalComponent.svelte';
@@ -18,12 +21,15 @@ import TextDropdownComponent from '$lib/components/TextDropdownComponent.svelte'
 import SvgComponent from '$lib/components/SvgComponent.svelte';
 
 export {
-    CheckBoxComponent,
+    BooleanCheckboxComponent,
+    BooleanRadioComponent,
     DropdownComponent,
     EmptyLineComponent,
     FreonComponent,
     IndentComponent,
+    InnerSwitchComponent,
     LabelComponent,
+    LayoutComponent,
     ListComponent,
     NumSlider2,
     OptionalComponent,
