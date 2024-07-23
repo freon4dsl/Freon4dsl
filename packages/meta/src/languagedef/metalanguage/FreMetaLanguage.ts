@@ -556,7 +556,7 @@ export class FreMetaProperty extends FreMetaLangElement {
         this.$type.owner = this;
     }
     toFreString(): string {
-        return this.name + ": " + this.$type.name;
+        return this.name + ": " + this.$type.name + `${this.isList ? `[]` : ``}`;
     }
 }
 

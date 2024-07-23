@@ -1,15 +1,23 @@
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import {Checker, MetaLogger, Names} from "../../utils";
-import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
-    ListJoinType,
+    FreMetaBinaryExpressionConcept,
+    FreMetaClassifier,
+    FreMetaLanguage,
+    FreMetaLimitedConcept
+} from "../../languagedef/metalanguage";
+import {LanguageParser} from "../../languagedef/parser/LanguageParser";
+import {Checker, MetaLogger, Names} from "../../utils";
+import {FreEditParser} from "../../editordef/parser/FreEditParser";
+import {
+    ForType,
     FreEditClassifierProjection,
-    FreEditProjection, FreEditProjectionDirection,
+    FreEditProjection,
+    FreEditProjectionDirection,
+    FreEditProjectionGroup,
     FreEditPropertyProjection,
-    FreEditUnit, FreEditProjectionGroup
+    FreEditUnit,
+    ListJoinType
 } from "../../editordef/metalanguage";
-import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
+import {DefaultEditorGenerator} from "../../editordef/metalanguage/DefaultEditorGenerator";
 
 describe("Checking FretEditUnit: ", () => {
     const testdir: string = "src/__tests__/editor-tests/correctDefFiles/";
@@ -234,6 +242,20 @@ describe("Checking FretEditUnit: ", () => {
             expect(myBoolProjection!.boolKeywords!.trueKeyword).toBe("aap");
             expect(myBoolProjection!.boolKeywords!.falseKeyword).toBe("noot");
         }
+    });
+
+    test("the reference separator has the right value", () => {
+        const editor = readFile(testdir + "test4.edit");
+        expect(language).not.toBeNull();
+        expect(language).not.toBeUndefined();
+        const defProjGroup: FreEditProjectionGroup | undefined = editor.getDefaultProjectiongroup();
+        expect(defProjGroup).not.toBeNull();
+        expect(defProjGroup).not.toBeUndefined();
+        // get the reference separator and check it
+        let myRef: string | undefined = defProjGroup!.findStandardProjFor(ForType.ReferenceSeparator)?.separator;
+        expect(myRef).not.toBeNull();
+        expect(myRef).not.toBeUndefined();
+        expect(myRef).toBe(":::");
     });
 
     // TODO add tests for projections on interfaces

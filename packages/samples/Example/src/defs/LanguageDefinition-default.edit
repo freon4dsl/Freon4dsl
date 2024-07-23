@@ -1,8 +1,10 @@
 editor default
 
-boolean [RIGHT | WRONG] // are the strings used to display a boolean value
+defaults {
+    boolean [RIGHT | WRONG] // are the strings used to display a boolean value
+    referenceSeparator [.] // is the string that separates the names in a path name, e.g. pack1.cls3.part
+}
 
-referenceSeparator [.] // is the string that separates the names in a path name, e.g. pack1.cls3.part
 
 Attribute {
     [ ${name} : ${declaredType} ]

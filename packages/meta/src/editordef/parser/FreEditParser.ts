@@ -40,21 +40,12 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                             const found = projectionGroupsByName.get(group.name);
                             if (!!found) {
                                 found.projections.push(...group.projections);
+                                found.standardProjections.push(...group.standardProjections);
                                 if (!!group.extras) {
                                     if (!found.extras) {
                                         found.extras = [];
                                     }
                                     found.extras.push(...group.extras);
-                                }
-                                if (!!group.standardProjections) {
-                                    if (!!found.standardProjections) {
-                                        // todo remove this check?
-                                        if (group.standardProjections !== found.standardProjections) {
-                                            this.checker.errors.push(`Reference separator in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
-                                        }
-                                    } else {
-                                        found.standardProjections = group.standardProjections;
-                                    }
                                 }
                                 if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
                                     if (found.precedence !== null && found.precedence !== undefined) {

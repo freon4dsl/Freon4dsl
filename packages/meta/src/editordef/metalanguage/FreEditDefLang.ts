@@ -191,7 +191,7 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
  */
 export class FreEditStandardProjection extends  FreMetaDefinitionElement {
     for: string = '';
-    displayType: string | undefined; // Possible values: 'text', 'checkbox', 'radio', 'switch', 'inner-switch'. See BooleanBox.ts from core.
+    displayType: DisplayType | undefined; // Possible values: 'text', 'checkbox', 'radio', 'switch', 'inner-switch'. See BooleanBox.ts from core.
     keywords: BoolKeywords | undefined;
     separator: string | undefined;
 
@@ -343,7 +343,7 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
     // projection info if the referred property is a list
     listInfo?: ListInfo = undefined;
     // projection info about display
-    displayType?: string = undefined;
+    displayType?: DisplayType = undefined;
     // projection info if the referred property is a primitive of boolean type
     boolKeywords?: BoolKeywords = undefined;
     // projection to be used for this property

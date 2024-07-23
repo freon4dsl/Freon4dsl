@@ -563,6 +563,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                                 }
                             });
                         }
+                        this.checkDisplayType(item, myProp!);
                     }
                 });
             }
@@ -586,6 +587,28 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         return result;
     }
 
+    private checkDisplayType(item: FreEditPropertyProjection, myProp: FreMetaProperty) {
+        if (myProp.isList) {
+            if (myProp.type instanceof FreMetaLimitedConcept) {
+                this.checkLimitedListDisplayType(item.displayType, item);
+            } else {
+                this.runner.simpleCheck( !item.displayType || item.displayType.length === 0,
+                    `A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type '${myProp.type.name}[]' ${ParseLocationUtil.location(item)}.`)
+            }
+        } else {
+            if (myProp instanceof FreMetaPrimitiveProperty && myProp.type === FreMetaPrimitiveType.boolean ) {
+                this.checkBooleanDisplayType(item.displayType, item);
+            } else if (myProp instanceof FreMetaPrimitiveProperty && myProp.type === FreMetaPrimitiveType.number) {
+                this.checkNumberDisplayType(item.displayType, item);
+            } else if (myProp.type instanceof FreMetaLimitedConcept ) {
+                this.checkSingleLimitedDisplayType(item.displayType, item);
+            } else {
+                this.runner.simpleCheck(!item.displayType || item.displayType.length === 0,
+                    `A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]' ${ParseLocationUtil.location(item)}.`)
+            }
+        }
+    }
+
     private checkStandardProjections(standardProjections: FreEditStandardProjection[]) {
         // console.log("Found standard projections: " + standardProjections.map(proj => proj.toString()))
         for(let proj of standardProjections) {
@@ -596,10 +619,9 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         proj.for === ForType.Limited ||
                         proj.for === ForType.LimitedList ||
                         proj.for === ForType.ReferenceSeparator,
-                error: `A standard projection may only be defined for 'boolean', 'number', 'limited', 'limited[]', or 'referenceSeparator' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
+                error: `A standard projection may only be defined for types 'boolean', 'number', 'limited', 'limited[]', or for 'referenceSeparator' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
                 whenOk: () => {
-                    if (proj.for === ForType.Boolean) {
-                        // boolean standard projection:
+                    if (proj.for === ForType.Boolean) { // boolean standard projection
                         // check keywords
                         this.runner.nestedCheck({
                             check: proj.keywords !== undefined && proj.keywords !== null,
@@ -611,35 +633,13 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                             }
                         });
                         // check display type
-                        this.runner.simpleCheck(
-                            proj.displayType == DisplayType.Text ||
-                                proj.displayType === DisplayType.Checkbox ||
-                                proj.displayType === DisplayType.Radio ||
-                                proj.displayType === DisplayType.InnerSwitch ||
-                                proj.displayType === DisplayType.Switch,
-                            `A boolean value may only be displayed as 'text', 'checkbox', 'radio', 'switch', or 'inner-switch' ${ParseLocationUtil.location(proj)}.`
-                        );
-                    } else if (proj.for === ForType.Number) {
-                        // number standard projection, check display type
-                        this.runner.simpleCheck(
-                            proj.displayType === DisplayType.Text ||
-                            proj.displayType === DisplayType.Slider,
-                            `A number value may only be displayed as 'text', or 'slider' ${ParseLocationUtil.location(proj)}.`
-                        );
-                    } else if (proj.for === ForType.Limited) {
-                        // limited standard projection, check display type
-                        this.runner.simpleCheck(
-                            proj.displayType === DisplayType.Text ||
-                            proj.displayType === DisplayType.Radio,
-                            `A limited (enum) value may only be displayed as 'text', or 'radio' ${ParseLocationUtil.location(proj)}.`
-                        );
-                    } else if (proj.for === ForType.LimitedList) {
-                        // limited-list standard projection, check display type
-                        this.runner.simpleCheck(
-                            proj.displayType === DisplayType.Text ||
-                            proj.displayType === DisplayType.Checkbox,
-                            `A list of limited (enum) values may only be displayed as 'text', or 'checkbox' ${ParseLocationUtil.location(proj)}.`
-                        );
+                        this.checkBooleanDisplayType(proj.displayType, proj);
+                    } else if (proj.for === ForType.Number) { // number standard projection, check display type
+                        this.checkNumberDisplayType(proj.displayType, proj);
+                    } else if (proj.for === ForType.Limited) { // limited standard projection, check display type
+                        this.checkSingleLimitedDisplayType(proj.displayType, proj);
+                    } else if (proj.for === ForType.LimitedList) { // limited-list standard projection, check display type
+                        this.checkLimitedListDisplayType(proj.displayType, proj);
                     } else if (proj.for === ForType.ReferenceSeparator) {
                         // reference separator standard projection, check separator
                         this.runner.nestedCheck({
@@ -654,6 +654,48 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     }
                 }
             });
+        }
+    }
+
+    private checkLimitedListDisplayType(displayType: DisplayType | undefined, elem: FreMetaDefinitionElement) {
+        if (!!displayType && displayType.length > 0) {
+            this.runner.simpleCheck(
+                displayType === DisplayType.Text ||
+                displayType === DisplayType.Checkbox,
+                `A list of limited (enum) values may only be displayed as 'text', or 'checkbox' ${ParseLocationUtil.location(elem)}.`
+            );
+        }
+    }
+
+    private checkSingleLimitedDisplayType(displayType: DisplayType | undefined, elem: FreMetaDefinitionElement) {
+        if (!!displayType && displayType.length > 0) {
+            this.runner.simpleCheck(
+                displayType === DisplayType.Text ||
+                displayType === DisplayType.Radio,
+                `A limited (enum) value may only be displayed as 'text', or 'radio' ${ParseLocationUtil.location(elem)}.`
+            );
+        }
+    }
+
+    private checkNumberDisplayType(displayType: DisplayType | undefined, elem: FreMetaDefinitionElement) {
+        if (!!displayType && displayType.length > 0) {
+            this.runner.simpleCheck(
+                displayType === DisplayType.Text || displayType === DisplayType.Slider,
+                `A number value may only be displayed as 'text', or 'slider' ${ParseLocationUtil.location(elem)}.`
+            );
+        }
+    }
+
+    private checkBooleanDisplayType(displayType: DisplayType | undefined,  elem: FreMetaDefinitionElement) {
+        if (!!displayType && displayType.length > 0) {
+            this.runner.simpleCheck(
+                displayType == DisplayType.Text ||
+                displayType === DisplayType.Checkbox ||
+                displayType === DisplayType.Radio ||
+                displayType === DisplayType.InnerSwitch ||
+                displayType === DisplayType.Switch,
+                `A boolean value may only be displayed as 'text', 'checkbox', 'radio', 'switch', or 'inner-switch' ${ParseLocationUtil.location(elem)}.`
+            );
         }
     }
 }

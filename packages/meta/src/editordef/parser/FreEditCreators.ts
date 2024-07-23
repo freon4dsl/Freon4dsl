@@ -30,7 +30,6 @@ import { MetaElementReference } from "../../languagedef/metalanguage";
 let currentFileName: string = "SOME_FILENAME";
 const classifiersUsedInSuperProjection: string[] = []; // remember these to add this list to the overall FreEditUnit
 export function setCurrentFileName(newName: string) {
-    // console.log("Curent file name: " + newName)
     currentFileName = newName;
 }
 
@@ -109,8 +108,8 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
         result.precedence = data.precedence;
     }
     if (!!data.standardProjections) {
-        // console.log("Creators: found standard projections: " + data.standardProjections.map(proj => proj.toString()))
         result.standardProjections = data.standardProjections;
+        // console.log("Creators: found standard projections: " + result.standardProjections.map(proj => proj.toString()))
     }
     if (!!data.projections) {
         // data.projections is a list of FreEditParsedClassifier

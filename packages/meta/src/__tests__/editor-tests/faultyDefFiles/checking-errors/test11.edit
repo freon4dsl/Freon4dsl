@@ -1,0 +1,29 @@
+editor default
+BB {[
+    ${BBprop3 text}             // number, correct
+    ${BBprop3 slider}           // number, correct
+    ${BBprop3 checkbox}         // number, incorrect
+    ${BBprop4 radio}            // number list, incorrect
+
+    ${BBprop5 slider}           // boolean, incorrect
+    ${BBprop5 text}             // boolean, correct
+    ${BBprop5 switch}           // boolean, correct
+    ${BBprop5 inner-switch}     // boolean, correct
+    ${BBprop5 checkbox}         // boolean, correct
+    ${BBprop5 radio}            // boolean, correct
+    ${BBprop6 text}             // boolean list, incorrect
+
+    ${BBprop7 switch}           // concept, incorrect
+    ${BBprop8 switch}           // concept, incorrect
+    ${BBprop9 inner-switch}     // concept reference, incorrect
+
+    ${BBprop15 text}            // limited, correct
+    ${BBprop15 radio}           // limited, correct
+    ${BBprop15 checkbox}        // limited, incorrect
+    ${BBprop15 switch}          // limited, incorrect
+
+    ${BBprop16 text}            // limited list, correct
+    ${BBprop16 checkbox}        // limited list, correct
+    ${BBprop16 inner-switch}    // limited list, incorrect
+    ${BBprop16 slider}          // limited list, incorrect
+]}

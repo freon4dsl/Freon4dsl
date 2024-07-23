@@ -28,7 +28,7 @@ export class GrammarGenerator {
             grammar.trueValue = stdBoolKeywords.trueKeyword ? stdBoolKeywords.trueKeyword : 'true';
             grammar.falseValue = stdBoolKeywords.falseKeyword ? stdBoolKeywords.falseKeyword : 'false';
         }
-        if (!!refSeparator) {
+        if (!!refSeparator && refSeparator.length > 0) {
             grammar.refSeparator = refSeparator;
         }
         // console.log("Grammar generator, stdBoolKeywords:" + stdBoolKeywords?.toString() + ", refSeparator: " + refSeparator);

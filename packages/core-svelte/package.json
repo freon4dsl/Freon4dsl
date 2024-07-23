@@ -15,7 +15,7 @@
   "svelte": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf node_modules/ && rm -rf dist/",
-    "dev": "tsc --noEmit --watch && vite dev",
+    "dev": "vite dev",
     "build": "tsc --noEmit && vite build && npm run package",
     "build-dev": "tsc --noEmit && vite build && npm run package",
     "preview": "vite preview",
