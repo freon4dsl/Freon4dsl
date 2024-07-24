@@ -38,9 +38,14 @@ concept RepeatCondition implements RepeatExpression {
     until: FirstScheduledExpression;
 }
 
-expression EventReference base FirstScheduledExpression {
+concept TimeAmount   {
+    value: number;
+    unit: TimeUnit = TimeUnit:days;
+}
+
+expression EventReference base TimeExpression {
     reference event: Event;
-    eventState: EventState = EventState:completed;
+    eventState: EventState;
 }
 
 concept RepeatCount implements RepeatExpression {

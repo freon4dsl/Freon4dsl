@@ -26,6 +26,7 @@ import { setUserMessage } from "../components/stores/UserMessageStore.js";
 import { modelErrors } from "../components/stores/InfoPanelStore.js";
 import { runInAction } from "mobx";
 import {WebappConfigurator} from "../WebappConfigurator.js";
+import {StudyConfigurationModel} from "@freon4dsl/samples-study-configuration";
 
 const LOGGER = new FreLogger("EditorState"); // .mute();
 
@@ -58,6 +59,14 @@ export class EditorState {
         this.resetGlobalVariables();
         // create a new model
         this.currentModel = this.langEnv.newModel(modelName);
+        // Initialize
+        let newModel: StudyConfigurationModel = this.currentModel;
+        this.createNewUnit("Availability", "Availability");
+        this.saveCurrentUnit();
+        this.createNewUnit(modelName, "StudyConfiguration");
+        this.saveCurrentUnit();
+        // newModel.periods.push(newModel.newPeriod());
+
         currentModelName.set(this.currentModel.name);
         editorProgressShown.set(false);
     }

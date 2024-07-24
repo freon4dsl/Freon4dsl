@@ -60,7 +60,7 @@ EventSchedule {
 
 
 EventReference {
-    [${event} ${eventState} ]
+    [${event} ${eventState} ${operator} ${timeAmount}]
     referenceShortcut = ${event}}
 
 Days {
