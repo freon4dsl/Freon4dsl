@@ -63,7 +63,7 @@ export class EditorState {
         let newModel: StudyConfigurationModel = this.currentModel;
         this.createNewUnit("Availability", "Availability");
         this.saveCurrentUnit();
-        this.createNewUnit(modelName, "StudyConfiguration");
+        this.createNewUnit("StudyConfiguration", "StudyConfiguration");
         this.saveCurrentUnit();
         // newModel.periods.push(newModel.newPeriod());
 
@@ -189,6 +189,34 @@ export class EditorState {
             if (!!this.currentModel?.name && this.currentModel?.name.length) {
                 if (!!unit.name && unit.name.length > 0) {
                     await this.serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
+                    currentUnitName.set(unit.name); // just in case the user has changed the name in the editor
+                    EditorState.getInstance().setUnitLists();
+                    this.hasChanges = false;
+                } else {
+                    setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
+                }
+            } else {
+                LOGGER.log("Internal error: cannot save unit because current model is unknown.");
+            }
+        } else {
+            LOGGER.log("No current model unit");
+        }
+    }
+
+    /**
+     * Pushes the current unit to the server
+     */
+    async saveStudyUnits() {
+        LOGGER.log("EditorState.saveCurrentUnit: " + get(currentUnitName));
+        const unit: FreNamedNode = this.langEnv.editor.rootElement as FreNamedNode;
+        if (!!unit) {
+            if (!!this.currentModel?.name && this.currentModel?.name.length) {
+                if (!!unit.name && unit.name.length > 0) {
+                    // await this.serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit); MV
+                    await this.serverCommunication.putModelUnit(this.currentModel.name, "StudyConfiguration", this.currentModel.findUnit("StudyConfiguration") );
+                    LOGGER.log("Unit saved: StudyConfiguration");
+                    await this.serverCommunication.putModelUnit(this.currentModel.name, "Availability", this.currentModel.findUnit("Availability"));
+                    LOGGER.log("Unit saved: Availability");
                     currentUnitName.set(unit.name); // just in case the user has changed the name in the editor
                     EditorState.getInstance().setUnitLists();
                     this.hasChanges = false;

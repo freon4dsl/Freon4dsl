@@ -4,7 +4,7 @@ boolean [YES | NO] // are the strings used to display a boolean value
 
 StudyConfiguration {
     [
-        STUDY NAME: ${name}
+        //STUDY NAME: ${name}
             Options:
                 ${showActivityDetails} Also Show Task Details
                 ${showSystems} Also Show Systems
