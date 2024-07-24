@@ -61,11 +61,13 @@ export class EditorState {
         this.currentModel = this.langEnv.newModel(modelName);
         // Initialize
         let newModel: StudyConfigurationModel = this.currentModel;
-        this.createNewUnit("Availability", "Availability");
-        this.saveCurrentUnit();
         this.createNewUnit("StudyConfiguration", "StudyConfiguration");
         this.saveCurrentUnit();
+        this.createNewUnit("Availability", "Availability");
+        this.saveCurrentUnit();
         // newModel.periods.push(newModel.newPeriod());
+        currentUnitName.set("StudyConfiguration"); 
+        this.setUnitLists();
 
         currentModelName.set(this.currentModel.name);
         editorProgressShown.set(false);
@@ -213,10 +215,10 @@ export class EditorState {
             if (!!this.currentModel?.name && this.currentModel?.name.length) {
                 if (!!unit.name && unit.name.length > 0) {
                     // await this.serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit); MV
-                    await this.serverCommunication.putModelUnit(this.currentModel.name, "StudyConfiguration", this.currentModel.findUnit("StudyConfiguration") );
-                    LOGGER.log("Unit saved: StudyConfiguration");
                     await this.serverCommunication.putModelUnit(this.currentModel.name, "Availability", this.currentModel.findUnit("Availability"));
                     LOGGER.log("Unit saved: Availability");
+                    await this.serverCommunication.putModelUnit(this.currentModel.name, "StudyConfiguration", this.currentModel.findUnit("StudyConfiguration") );
+                    LOGGER.log("Unit saved: StudyConfiguration");
                     currentUnitName.set(unit.name); // just in case the user has changed the name in the editor
                     EditorState.getInstance().setUnitLists();
                     this.hasChanges = false;
