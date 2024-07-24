@@ -66,8 +66,6 @@ export class EditorState {
         this.createNewUnit("Availability", "Availability");
         this.saveCurrentUnit();
         // newModel.periods.push(newModel.newPeriod());
-        currentUnitName.set("StudyConfiguration"); 
-        this.setUnitLists();
 
         currentModelName.set(this.currentModel.name);
         editorProgressShown.set(false);
