@@ -1,7 +1,7 @@
-import { FretExp } from "./FretExp";
-import { FreMetaClassifier } from "../../../languagedef/metalanguage";
-import { FretVarDecl } from "../FretVarDecl";
-import { FretBinaryExp } from "./FretBinaryExp";
+import { FretExp } from "./FretExp.js";
+import { FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
+import { FretVarDecl } from "../FretVarDecl.js";
+import { FretBinaryExp } from "./FretBinaryExp.js";
 
 export class FretWhereExp extends FretExp {
     /**

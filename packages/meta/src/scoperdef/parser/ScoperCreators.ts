@@ -1,5 +1,5 @@
-import { ScopeDef, ScopeConceptDef, FreNamespaceAddition, FreAlternativeScope } from "../metalanguage";
-import { MetaLogger } from "../../utils/MetaLogger";
+import { ScopeDef, ScopeConceptDef, FreNamespaceAddition, FreAlternativeScope } from "../metalanguage/index.js";
+import { MetaLogger } from "../../utils/MetaLogger.js";
 
 const LOGGER = new MetaLogger("ScoperCreator").mute();
 

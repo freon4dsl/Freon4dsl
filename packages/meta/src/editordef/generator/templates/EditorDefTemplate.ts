@@ -4,7 +4,7 @@ import {
     FreMetaLanguage,
     FreMetaLimitedConcept,
     FreMetaProperty
-} from "../../../languagedef/metalanguage";
+} from "../../../languagedef/metalanguage/index.js";
 import {
     CONFIGURATION_FOLDER,
     EDITOR_GEN_FOLDER,
@@ -13,7 +13,7 @@ import {
     ListUtil,
     Names,
     FREON_CORE, LOG2USER
-} from "../../../utils";
+} from "../../../utils/index.js";
 import {
     ExtraClassifierInfo, FreEditClassifierProjection,
     FreEditProjection,
@@ -21,7 +21,7 @@ import {
     FreEditPropertyProjection,
     FreEditTableProjection,
     FreEditUnit
-} from "../../metalanguage";
+} from "../../metalanguage/index.js";
 
 export class EditorDefTemplate {
 

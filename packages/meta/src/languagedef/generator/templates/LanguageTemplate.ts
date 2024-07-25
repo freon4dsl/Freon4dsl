@@ -1,5 +1,5 @@
-import { FreMetaLanguage } from "../../metalanguage";
-import { Names, FREON_CORE, LangUtil, GenerationUtil, STDLIB_GEN_FOLDER } from "../../../utils";
+import { FreMetaLanguage } from "../../metalanguage/index.js";
+import { Names, FREON_CORE, LangUtil, GenerationUtil, STDLIB_GEN_FOLDER } from "../../../utils/index.js";
 
 export class LanguageTemplate {
 

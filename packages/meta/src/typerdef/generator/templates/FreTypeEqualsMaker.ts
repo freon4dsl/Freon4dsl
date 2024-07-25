@@ -2,11 +2,11 @@ import {
     FretExp,
     FretWhereExp,
     TyperDef
-} from "../../metalanguage";
-import { Names, GenerationUtil } from "../../../utils";
-import { FreTyperGenUtils } from "./FreTyperGenUtils";
-import { FretEqualsRule } from "../../metalanguage/FretEqualsRule";
-import { FreMetaClassifier } from "../../../languagedef/metalanguage";
+} from "../../metalanguage/index.js";
+import { Names, GenerationUtil } from "../../../utils/index.js";
+import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
+import { FretEqualsRule } from "../../metalanguage/FretEqualsRule.js";
+import { FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 
 /**
  * This class generates the code for the 'equalsto' entries in the .type file.

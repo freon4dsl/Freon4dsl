@@ -4,8 +4,8 @@ import {
     FreEditProjection,
     FreEditProjectionLine,
     FreOptionalPropertyProjection
-} from "../metalanguage";
-import { EditorDefaults } from "../metalanguage/EditorDefaults";
+} from "../metalanguage/index.js";
+import { EditorDefaults } from "../metalanguage/EditorDefaults.js";
 
 export class FreEditParseUtil {
 

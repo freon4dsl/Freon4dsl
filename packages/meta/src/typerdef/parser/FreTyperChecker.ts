@@ -1,7 +1,7 @@
-import {Checker, CheckRunner, ParseLocationUtil} from "../../utils";
-import { FreTyperCheckerPhase1 } from "./FreTyperCheckerPhase1";
-import { FreTyperCheckerPhase2 } from "./FreTyperCheckerPhase2";
-import { TyperDef } from "../metalanguage";
+import {Checker, CheckRunner, ParseLocationUtil} from "../../utils/index.js";
+import { FreTyperCheckerPhase1 } from "./FreTyperCheckerPhase1.js";
+import { FreTyperCheckerPhase2 } from "./FreTyperCheckerPhase2.js";
+import { TyperDef } from "../metalanguage/index.js";
 
 export class FreTyperChecker extends Checker<TyperDef> {
     runner: CheckRunner = new CheckRunner(this.errors, this.warnings);

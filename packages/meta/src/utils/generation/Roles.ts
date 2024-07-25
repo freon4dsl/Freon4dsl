@@ -3,8 +3,8 @@ import {
     FreMetaClassifier,
     FreMetaConceptProperty,
     FreMetaProperty
-} from "../../languagedef/metalanguage";
-import { Names } from "./Names";
+} from "../../languagedef/metalanguage/index.js";
+import { Names } from "./Names.js";
 
 export class Roles {
 

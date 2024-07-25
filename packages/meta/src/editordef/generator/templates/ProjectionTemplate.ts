@@ -13,7 +13,7 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection,
     ExtraClassifierInfo, BoolKeywords, FreEditProjectionGroup, ForType, FreEditStandardProjection
-} from "../../metalanguage";
+} from "../../metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
@@ -22,7 +22,7 @@ import {
     FreMetaLanguage,
     FreMetaPrimitiveProperty, FreMetaPrimitiveType,
     FreMetaProperty
-} from "../../../languagedef/metalanguage";
+} from "../../../languagedef/metalanguage/index.js";
 import {
     CONFIGURATION_GEN_FOLDER,
     EDITOR_GEN_FOLDER,
@@ -32,8 +32,8 @@ import {
     Names,
     FREON_CORE,
     Roles
-} from "../../../utils";
-import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
+} from "../../../utils/index.js";
+import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil.js";
 
 export class ProjectionTemplate {
     // To be able to add a projections for showing/hiding brakets to binary expression, this dummy projection is used.

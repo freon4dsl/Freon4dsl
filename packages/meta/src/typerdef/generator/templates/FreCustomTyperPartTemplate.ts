@@ -1,5 +1,5 @@
-import { FreMetaLanguage } from "../../../languagedef/metalanguage";
-import { Names, FREON_CORE } from "../../../utils";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import { Names, FREON_CORE } from "../../../utils/index.js";
 
 export class FreCustomTyperPartTemplate {
     generateCustomTyperPart(language: FreMetaLanguage): string {

@@ -1,9 +1,9 @@
 import * as fs from "fs";
-import { FreMetaLanguage } from "../languagedef/metalanguage";
-import { GenerationStatus, FileUtil, DIAGRAM_FOLDER, MetaLogger, DIAGRAM_GEN_FOLDER } from "../utils";
-import { HtmlTemplate } from "./diagramTemplates/HtmlTemplate";
-import { MarkDownTemplate } from "./diagramTemplates/MarkDownTemplate";
-import { DiagramTemplate } from "./diagramTemplates/DiagramTemplate";
+import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
+import { GenerationStatus, FileUtil, DIAGRAM_FOLDER, MetaLogger, DIAGRAM_GEN_FOLDER } from "../utils/index.js";
+import { HtmlTemplate } from "./diagramTemplates/HtmlTemplate.js";
+import { MarkDownTemplate } from "./diagramTemplates/MarkDownTemplate.js";
+import { DiagramTemplate } from "./diagramTemplates/DiagramTemplate.js";
 
 const LOGGER = new MetaLogger("DiagramGenerator").mute();
 

@@ -1,8 +1,9 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../utils";
+import { Checker, MetaLogger } from "../../utils/index.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
-import { FreEditUnit } from "../../editordef/metalanguage";
+import { FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { describe, test, expect, beforeEach } from "vitest"
 
 describe("Checking editor definition ", () => {
     const testdir = "src/__tests__/editor-tests/faultyDefFiles/checking-errors/";

@@ -3,10 +3,10 @@ import {
     FretConformanceRule, FretConformsExp, FretEqualsExp, FretExp,
     FretPropertyCallExp, FretWhereExp,
     TyperDef, FretBinaryExp, FretEqualsRule
-} from "../../metalanguage";
-import { FreTyperGenUtils } from "./FreTyperGenUtils";
-import { ListUtil, Names, GenerationUtil } from "../../../utils";
-import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage";
+} from "../../metalanguage/index.js";
+import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
+import { ListUtil, Names, GenerationUtil } from "../../../utils/index.js";
+import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
 
 /**
  * This class generates the code for all 'conformsto' entries in the .type file.

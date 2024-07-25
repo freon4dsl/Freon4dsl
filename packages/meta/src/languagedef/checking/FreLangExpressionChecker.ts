@@ -1,5 +1,5 @@
-import { Checker, MetaLogger, CheckRunner, ParseLocationUtil } from "../../utils";
-import { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester";
+import { Checker, MetaLogger, CheckRunner, ParseLocationUtil } from "../../utils/index.js";
+import { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester.js";
 import { FreMetaLanguage, FreMetaClassifier, FreMetaLimitedConcept, FreMetaInstance, FreLangExp,
     FreLangSelfExp,
     FreLangAppliedFeatureExp,
@@ -9,8 +9,8 @@ import { FreMetaLanguage, FreMetaClassifier, FreMetaLimitedConcept, FreMetaInsta
     FreLangSimpleExp,
     FreMetaEnvironment,
     MetaElementReference
-} from "../metalanguage";
-import { CommonChecker } from "./CommonChecker";
+} from "../metalanguage/index.js";
+import { CommonChecker } from "./CommonChecker.js";
 
 const LOGGER = new MetaLogger("FreLangExpressionChecker").mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof", "commonSuperTypeOf", "ancestor"];

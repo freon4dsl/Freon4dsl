@@ -4,9 +4,9 @@ import {
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType, FreMetaProperty
-} from "../../languagedef/metalanguage";
-import { Checker, CheckRunner, LangUtil, Names, FreMetaDefinitionElement, ParseLocationUtil } from "../../utils";
-import { FreEditParseUtil } from "../parser/FreEditParseUtil";
+} from "../../languagedef/metalanguage/index.js";
+import { Checker, CheckRunner, LangUtil, Names, FreMetaDefinitionElement, ParseLocationUtil } from "../../utils/index.js";
+import { FreEditParseUtil } from "../parser/FreEditParseUtil.js";
 import {
     ListInfo,
     FreEditClassifierProjection,
@@ -19,12 +19,17 @@ import {
     FreOptionalPropertyProjection,
     ExtraClassifierInfo,
     FreEditProjectionLine,
-    ListJoinType, FreEditProjectionText, FreEditProjectionItem, FreEditStandardProjection, ForType, DisplayType
-} from "./FreEditDefLang";
-import { EditorDefaults } from "./EditorDefaults";
-import { MetaLogger } from "../../utils";
-import { MetaElementReference } from "../../languagedef/metalanguage";
-import { FreLangExpressionChecker } from "../../languagedef/checking";
+    ListJoinType,
+    FreEditProjectionText,
+    FreEditProjectionItem,
+    FreEditStandardProjection,
+    ForType,
+    DisplayType
+} from "./FreEditDefLang.js";
+import { EditorDefaults } from "./EditorDefaults.js";
+import { MetaLogger } from "../../utils/index.js";
+import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
+import { FreLangExpressionChecker } from "../../languagedef/checking/index.js";
 
 const LOGGER: MetaLogger = new MetaLogger("FreEditChecker").mute();
 

@@ -3,9 +3,9 @@ import {
     FreMetaClassifier,
     FreMetaLanguage,
     FreMetaLimitedConcept
-} from "../../languagedef/metalanguage";
+} from "../../languagedef/metalanguage/index.js";
 import {LanguageParser} from "../../languagedef/parser/LanguageParser";
-import {Checker, MetaLogger, Names} from "../../utils";
+import {Checker, MetaLogger} from "../../utils/index.js";
 import {FreEditParser} from "../../editordef/parser/FreEditParser";
 import {
     ForType,
@@ -16,8 +16,9 @@ import {
     FreEditPropertyProjection,
     FreEditUnit,
     ListJoinType
-} from "../../editordef/metalanguage";
-import {DefaultEditorGenerator} from "../../editordef/metalanguage/DefaultEditorGenerator";
+} from "../../editordef/metalanguage/index.js";
+import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
+import { describe, test, expect } from "vitest";
 
 describe("Checking FretEditUnit: ", () => {
     const testdir: string = "src/__tests__/editor-tests/correctDefFiles/";

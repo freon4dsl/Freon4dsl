@@ -1,4 +1,4 @@
-import { FreMetaConcept, FreMetaModelDescription, FreMetaProperty, FreMetaUnitDescription } from "../../metalanguage";
+import { FreMetaConcept, FreMetaModelDescription, FreMetaProperty, FreMetaUnitDescription } from "../../metalanguage/index.js";
 
 export class ClassifierUtil {
     public static findMobxImportsForConcept(hasSuper: boolean, concept: FreMetaConcept): string[] {

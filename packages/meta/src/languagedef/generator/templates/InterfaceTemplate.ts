@@ -2,8 +2,8 @@ import {
     FreMetaConceptProperty,
     FreMetaPrimitiveProperty,
     FreMetaInterface
-} from "../../metalanguage";
-import { Names, FREON_CORE, GenerationUtil } from "../../../utils";
+} from "../../metalanguage/index.js";
+import { Names, FREON_CORE, GenerationUtil } from "../../../utils/index.js";
 
 export class InterfaceTemplate {
 

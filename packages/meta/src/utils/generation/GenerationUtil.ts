@@ -6,10 +6,10 @@ import {
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
     FreMetaProperty
-} from "../../languagedef/metalanguage";
-import { FreInstanceExp, FreLangAppliedFeatureExp, FreLangExp, FreLangFunctionCallExp, FreLangSelfExp, MetaElementReference, FreMetaPrimitiveType } from "../../languagedef/metalanguage";
-import { Names } from "./Names";
-import { LangUtil } from "./LangUtil";
+} from "../../languagedef/metalanguage/index.js";
+import { FreInstanceExp, FreLangAppliedFeatureExp, FreLangExp, FreLangFunctionCallExp, FreLangSelfExp, MetaElementReference, FreMetaPrimitiveType } from "../../languagedef/metalanguage/index.js";
+import { Names } from "./Names.js";
+import { LangUtil } from "./LangUtil.js";
 
 export class GenerationUtil {
 

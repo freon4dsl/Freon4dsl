@@ -1,4 +1,4 @@
-import { Names } from "../../../utils";
+import { Names } from "../../../utils/index.js";
 
 export class ListUtilTemplate {
 

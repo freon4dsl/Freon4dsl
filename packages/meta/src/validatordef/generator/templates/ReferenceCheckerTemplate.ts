@@ -1,6 +1,6 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils";
-import { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage";
-import { ValidationUtils } from "../ValidationUtils";
+import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils/index.js";
+import { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
+import { ValidationUtils } from "../ValidationUtils.js";
 
 export class ReferenceCheckerTemplate {
     imports: string[] = [];

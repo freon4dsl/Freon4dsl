@@ -1,7 +1,7 @@
-import { FreMetaClassifier, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
-import { Names } from "../../utils";
-import { GrammarRule } from "./grammarModel/GrammarRule";
-import { LimitedRule } from "./grammarModel/LimitedRule";
+import { FreMetaClassifier, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js";
+import { Names } from "../../utils/index.js";
+import { GrammarRule } from "./grammarModel/GrammarRule.js";
+import { LimitedRule } from "./grammarModel/LimitedRule.js";
 
 /**
  * Generates the parse rule and syntax analysis method for limited concepts. A

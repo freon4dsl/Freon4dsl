@@ -10,8 +10,8 @@ import {
     WRITER_GEN_FOLDER,
     READER_GEN_FOLDER,
     INTERPRETER_FOLDER
-} from "../../../utils/";
-import { FreMetaLanguage } from "../../metalanguage";
+} from "../../../utils/index.js";
+import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class EnvironmentTemplate {
 

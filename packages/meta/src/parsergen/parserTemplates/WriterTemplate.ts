@@ -1,4 +1,10 @@
-import {FREON_CORE, GenerationUtil, LANGUAGE_GEN_FOLDER, ListUtil, Names} from "../../utils";
+import {
+    LANGUAGE_GEN_FOLDER,
+    Names,
+    FREON_CORE,
+    ListUtil,
+    GenerationUtil
+} from "../../utils/index.js";
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
@@ -9,7 +15,7 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
     FreMetaProperty
-} from "../../languagedef/metalanguage";
+} from "../../languagedef/metalanguage/index.js";
 import {
     BoolKeywords,
     ExtraClassifierInfo,
@@ -26,8 +32,8 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection,
     ListJoinType
-} from "../../editordef/metalanguage";
-import {ParserGenUtil} from "./ParserGenUtil";
+} from "../../editordef/metalanguage/index.js";
+import { ParserGenUtil } from "./ParserGenUtil.js";
 
 // TODO more preconditions should be added to avoid null pointer errors
 

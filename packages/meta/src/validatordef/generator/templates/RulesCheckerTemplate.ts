@@ -8,8 +8,8 @@ import {
     Names,
     FreErrorSeverity,
     FREON_CORE
-} from "../../../utils";
-import {FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty} from "../../../languagedef/metalanguage";
+} from "../../../utils/index.js";
+import {FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty} from "../../../languagedef/metalanguage/index.js";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -23,8 +23,8 @@ import {
     ValidationMessageText,
     ValidationRule,
     ValidNameRule
-} from "../../metalanguage";
-import { ValidationUtils } from "../ValidationUtils";
+} from "../../metalanguage/index.js";
+import { ValidationUtils } from "../ValidationUtils.js";
 
 export class RulesCheckerTemplate {
 

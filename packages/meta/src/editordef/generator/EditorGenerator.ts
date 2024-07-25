@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import { ListUtil, MetaLogger } from "../../utils";
-import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
+import { ListUtil, MetaLogger } from "../../utils/index.js";
+import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js";
 import {
     EDITOR_FOLDER,
     EDITOR_GEN_FOLDER,
@@ -9,12 +9,12 @@ import {
     isNullOrUndefined,
     Names,
     STYLES_FOLDER
-} from "../../utils";
-import { FreEditUnit } from "../metalanguage";
-import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates";
-import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate } from "./templates";
-import { EditorDefTemplate } from "./templates";
-import { LOG2USER } from "../../utils";
+} from "../../utils/index.js";
+import { FreEditUnit } from "../metalanguage/index.js";
+import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates/index.js";
+import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate } from "./templates/index.js";
+import { EditorDefTemplate } from "./templates/index.js";
+import { LOG2USER } from "../../utils/index.js";
 
 const LOGGER = new MetaLogger("EditorGenerator").mute();
 
