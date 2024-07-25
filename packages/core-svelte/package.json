@@ -57,7 +57,6 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.12",
     "jest-transform-stub": "^2.0.0",
-    "svelte-jester": "^3.0.0",
     "tslib": "^2.6.3",
     "@sveltejs/adapter-auto": "^3.2.1",
     "@sveltejs/kit": "^2.5.10",
