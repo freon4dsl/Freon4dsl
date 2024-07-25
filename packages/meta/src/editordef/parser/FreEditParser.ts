@@ -19,6 +19,8 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
     protected merge(submodels: FreEditUnit[]): FreEditUnit | undefined {
         if (submodels.length > 0) {
             const result: FreEditUnit = submodels[0];
+            // remember the files where we encountered standard projections, in order to give a good warning
+            const filesWithStdProj: string[] = [];
 
             // we merge all edit files based on the name of the 'editor'
             // same name => all info is stored in the same group
@@ -27,6 +29,9 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             // add the groups from the first submodel (should be a single group)
             result.projectiongroups.forEach(group => {
                 projectionGroupsByName.set(group.name, group);
+                if (group.standardProjections.length > 0) {
+                    filesWithStdProj.push(ParseLocationUtil.location(group.standardProjections[0]));
+                }
             });
 
             // now merge the other submodels
@@ -39,10 +44,8 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                             const found = projectionGroupsByName.get(group.name);
                             if (!!found) {
                                 found.projections.push(...group.projections);
-                                if (found.standardProjections.length > 0 && group.standardProjections.length > 0) {
-                                    console.log("Yes, found one: " + ParseLocationUtil.location(group) + ", " + ParseLocationUtil.location(found));
-                                    this.checker.warnings.push(`Found multiple definitions for standard projections, please note that the ones in '${found.location.filename}' take precedence ${ParseLocationUtil.location(group)}.`);
-                                    console.log("Warnings: " + this.checker.warnings.map(w => w));
+                                if (group.standardProjections.length > 0) {
+                                    filesWithStdProj.push(ParseLocationUtil.location(group.standardProjections[0]));
                                 }
                                 found.standardProjections.push(...group.standardProjections);
                                 if (!!group.extras) {
@@ -71,6 +74,10 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                     });
                 }
             });
+
+            if (filesWithStdProj.length > 1) {
+                this.checker.warnings.push(`Found multiple definitions for standard projections, please note that they may be overridden ${filesWithStdProj}.`);
+            }
 
             // place extra classifier information always in the default projection group
             this.mergeExtraInformation(result);

@@ -214,7 +214,7 @@ describe("Checking editor definition ", () => {
                 expect(checker.hasWarnings()).toBeTruthy;
                 // console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
                 expect(checker.warnings.length).toBe(1);
-                expect(checker.warnings.includes("Found multiple definitions for standard projections, please note that the ones in 'src/__tests__/editor-tests/faultyDefFiles/checking-errors/test11.edit' take precedence [file: test12.edit:1:1].")).toBeTruthy();
+                expect(checker.warnings.includes("Found multiple definitions for standard projections, please note that they may be overridden [file: test11.edit:4:5],[file: test12.edit:4:5].")).toBeTruthy();
              }
         }
     });
