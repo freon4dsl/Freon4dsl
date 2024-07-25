@@ -12,7 +12,7 @@
   //$on-primary: #ffffb0,
   //$on-primary: purple,     // a slighter darker version of 'secondary'
   $on-secondary: #4f9a94,   // a slighter darker version of 'primary'
-  //$on-surface: black,
+  $on-surface: white,
   //$on-error: black,
   //accessible-ink-color,
   //contrast,
@@ -85,7 +85,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
   /* Boolean Controls */
   --freon-boolean-switch-color: rgba(211, 227, 253, 255);
-  --freon-boolean-unselected-track: #{theme.$grey-500};
+  --freon-boolean-switch-unselected-track: #{theme.$grey-500};
   --freon-boolean-background-color: black;
   --freon-boolean-checkbox-color: rgba(211, 227, 253, 255);
   --freon-boolean-radio-color: rgba(211, 227, 253, 255);

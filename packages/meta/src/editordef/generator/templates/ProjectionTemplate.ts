@@ -68,11 +68,9 @@ export class ProjectionTemplate {
                 this.stdBoolDisplayType = boolDisplayType;
             }
             const numberDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.Number)?.displayType;
-            console.log("BEFORE stdNumberDisplayType: " + this.stdNumberDisplayType)
             if (!!numberDisplayType) {
                 this.stdNumberDisplayType = numberDisplayType;
             }
-            console.log("AFTER stdNumberDisplayType: " + this.stdNumberDisplayType)
         }
     }
 
@@ -572,7 +570,6 @@ export class ProjectionTemplate {
                 if (!!displayType) {
                     displayTypeToUse1 = this.getTypeScriptForDisplayType(displayType);
                 }
-                console.log("IN GEN stdNumberDisplayType: " + this.stdNumberDisplayType);
                 ListUtil.addIfNotPresent(this.coreImports, "NumberDisplay");
                 return `BoxUtil.numberBox(${element}, "${property.name}"${listAddition}, NumberDisplay.${displayTypeToUse1})`;
             case FreMetaPrimitiveType.boolean:

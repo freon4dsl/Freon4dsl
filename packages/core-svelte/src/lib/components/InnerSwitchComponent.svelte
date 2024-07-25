@@ -70,7 +70,7 @@
     .freon-inner-switch button {
         padding: 0.3em;
         background-color: var(--freon-boolean-background-color, var(--mdc-theme-background));
-        border: 1px solid var(--freon-boolean-unselected-track, var(--mdc-theme-on-surface));
+        border: 1px solid var(--freon-boolean-switch-unselected-track, var(--mdc-theme-on-surface));
         /* it seems that the md control resets a number of common variables, therefore we reset them here */
         font-weight: var(--freon-text-component-font-weight, normal);
         font-size: var(--freon-text-component-font-size, 14px);

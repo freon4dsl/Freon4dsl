@@ -77,7 +77,7 @@
         height: 1.6em;
         position: relative;
         margin: 0 0 0 0.5em;
-        background: var(--freon-boolean-unselected-track, var(--mdc-theme-on-surface));
+        background: var(--freon-boolean-switch-unselected-track, var(--mdc-theme-on-surface));
         border: none;
     }
 

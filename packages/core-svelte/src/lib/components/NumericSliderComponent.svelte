@@ -89,4 +89,7 @@
     .freon-slider {
         --md-sys-color-primary: var(--freon-boolean-slider-color, var(--mdc-theme-primary));
     }
+    .freon-slider:focus-within {
+        box-shadow: 0px 0px 10px var(--freon-boolean-slider-color, var(--mdc-theme-primary));
+    }
 </style>

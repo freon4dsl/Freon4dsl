@@ -11,7 +11,7 @@
   $error: #B00020,
   //$on-primary: color-palette.$orange-50,
   $on-secondary: #00695c,   // a slighter darker version of 'primary'
-  $on-surface: color-palette.$grey-400,
+  $on-surface: color-palette.$grey-600,
   //$on-error: black,
   //accessible-ink-color,
   //contrast,
@@ -227,10 +227,11 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
   /* Boolean Controls */
   --freon-boolean-switch-color: #{theme.$blue-900};
-  --freon-boolean-unselected-track: #{theme.$grey-500};
+  --freon-boolean-switch-unselected-track: #{theme.$grey-500};
   --freon-boolean-background-color: white;
   --freon-boolean-checkbox-color: #{theme.$blue-900};
   --freon-boolean-radio-color: #{theme.$blue-900};
+  --freon-boolean-slider-color: #{theme.$blue-900};
 
   ///* Numeric Controls */
   //--freon-numeric-slider-color: #{theme.$blue-900};

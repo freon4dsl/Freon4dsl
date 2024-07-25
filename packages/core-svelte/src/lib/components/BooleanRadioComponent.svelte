@@ -134,6 +134,6 @@
     }
 
     .radiogroup:focus-within {
-      box-shadow: 0px 0px 10px var(--freon-boolean-checkbox-color, var(--mdc-theme-primary));
+      box-shadow: 0px 0px 10px var(--freon-boolean-radio-color, var(--mdc-theme-primary));
     }
 </style>
