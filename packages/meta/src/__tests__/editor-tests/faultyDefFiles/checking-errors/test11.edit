@@ -1,4 +1,9 @@
 editor default
+
+defaults {
+    referenceSeparator [:::]
+}
+
 BB {[
     ${BBprop3 text}             // number, correct
     ${BBprop3 slider}           // number, correct

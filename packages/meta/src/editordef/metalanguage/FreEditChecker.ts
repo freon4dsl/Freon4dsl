@@ -531,7 +531,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         if (item instanceof FreOptionalPropertyProjection) {
             this.checkOptionalProjection(item, cls, editor);
         } else {
-            if (item.expression !== null || item.expression !== undefined) {
+            if (item.expression !== null && item.expression !== undefined) {
                 const myProp:FreMetaProperty | undefined = cls.allProperties().find(prop => prop.name === item.expression!.appliedfeature?.sourceName);
                 this.runner.nestedCheck({
                     check: !!myProp,
@@ -628,15 +628,11 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 whenOk: () => {
                     if (proj.for === ForType.Boolean) { // boolean standard projection
                         // check keywords
-                        this.runner.nestedCheck({
-                            check: proj.keywords !== undefined && proj.keywords !== null,
-                            error: `A standard projection for booleans must include a keyword definition ${ParseLocationUtil.location(proj)}.`,
-                            whenOk: () => {
-                                this.runner.simpleCheck(
-                                    !FreEditChecker.includesWhitespace(proj.keywords!.trueKeyword),
-                                    `The text for a keyword projection should not include any whitespace ${ParseLocationUtil.location(proj)}.`);
-                            }
-                        });
+                        if (proj.keywords !== undefined && proj.keywords !== null) {
+                            this.runner.simpleCheck(
+                                !FreEditChecker.includesWhitespace(proj.keywords!.trueKeyword),
+                                `The text for a keyword projection should not include any whitespace ${ParseLocationUtil.location(proj)}.`);
+                        }
                         // check display type
                         this.checkBooleanDisplayType(proj.displayType, proj);
                     } else if (proj.for === ForType.Number) { // number standard projection, check display type

@@ -5,7 +5,7 @@ import {
     FreMetaLimitedConcept
 } from "../../languagedef/metalanguage/index.js";
 import {LanguageParser} from "../../languagedef/parser/LanguageParser";
-import {Checker, MetaLogger} from "../../utils/index.js";
+import {Checker, MetaLogger, Names} from "../../utils/index.js";
 import {FreEditParser} from "../../editordef/parser/FreEditParser";
 import {
     ForType,

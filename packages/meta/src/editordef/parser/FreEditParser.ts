@@ -39,6 +39,11 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                             const found = projectionGroupsByName.get(group.name);
                             if (!!found) {
                                 found.projections.push(...group.projections);
+                                if (found.standardProjections.length > 0 && group.standardProjections.length > 0) {
+                                    console.log("Yes, found one: " + ParseLocationUtil.location(group) + ", " + ParseLocationUtil.location(found));
+                                    this.checker.warnings.push(`Found multiple definitions for standard projections, please note that the ones in '${found.location.filename}' take precedence ${ParseLocationUtil.location(group)}.`);
+                                    console.log("Warnings: " + this.checker.warnings.map(w => w));
+                                }
                                 found.standardProjections.push(...group.standardProjections);
                                 if (!!group.extras) {
                                     if (!found.extras) {
