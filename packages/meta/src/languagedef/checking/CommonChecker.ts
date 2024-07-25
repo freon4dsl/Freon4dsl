@@ -7,9 +7,9 @@ import {
     FreMetaPrimitiveValue,
     FreMetaProperty,
     FreMetaLimitedConcept, FreMetaEnumValue
-} from "../metalanguage";
-import { CheckRunner, MetaLogger, Names, ParseLocationUtil } from "../../utils";
-import { CommonSuperTypeUtil } from "./common-super/CommonSuperTypeUtil";
+} from "../metalanguage/index.js";
+import { CheckRunner, MetaLogger, Names, ParseLocationUtil } from "../../utils/index.js";
+import { CommonSuperTypeUtil } from "./common-super/CommonSuperTypeUtil.js";
 
 const LOGGER = new MetaLogger("CommonChecker").mute();
 

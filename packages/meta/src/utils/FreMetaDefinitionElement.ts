@@ -1,4 +1,4 @@
-import { ParseLocation, FreParseLocation } from "./parsingAndChecking/FreGenericParser";
+import { ParseLocation, FreParseLocation } from "./parsingAndChecking/FreGenericParser.js";
 
 // root of the inheritance structure of all elements that can be present in any of the definitions
 export class FreMetaDefinitionElement {

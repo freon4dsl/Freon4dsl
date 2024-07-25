@@ -1,5 +1,5 @@
-import { FreMetaClassifier, FreLangExp, FreMetaLanguage, FreMetaProperty, MetaElementReference } from "../../languagedef/metalanguage";
-import { Names, FreMetaDefinitionElement } from "../../utils";
+import { FreMetaClassifier, FreLangExp, FreMetaLanguage, FreMetaProperty, MetaElementReference } from "../../languagedef/metalanguage/index.js";
+import { Names, FreMetaDefinitionElement } from "../../utils/index.js";
 
 /**
  * Super type of all elements that may be part of a projection definition

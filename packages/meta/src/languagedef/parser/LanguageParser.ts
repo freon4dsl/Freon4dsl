@@ -1,14 +1,15 @@
 import fs from "fs";
-import { IdMap } from "../../commandline/IdMap";
-import { FreMetaLanguage } from "../metalanguage/";
-import { FreGenericParser, LOG2USER } from "../../utils";
-import * as pegjsParser from "./LanguageGrammar";
+import { IdMap } from "../../commandline/IdMap.js";
+import { FreMetaLanguage } from "../metalanguage/index.js";
+import { FreGenericParser, LOG2USER } from "../../utils/index.js";
+import { parser } from "./LanguageGrammar.js";
+
 import {
     cleanNonFatalParseErrors,
     getNonFatalParseErrors,
     setCurrentFileName, setIdMap
-} from "./LanguageCreators";
-import { FreLangChecker } from "../checking/FreLangChecker";
+} from "./LanguageCreators.js";
+import { FreLangChecker } from "../checking/FreLangChecker.js";
 
 // const LOGGER = new MetaLogger("LanguageParser").mute();
 
@@ -18,11 +19,12 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     constructor(idFile?: string) {
         super();
         this.idFile = idFile ? idFile : undefined;
-        this.parser = pegjsParser;
+        this.parser = parser;
         this.checker = new FreLangChecker(undefined);
     }
 
     parse(definitionFile: string): FreMetaLanguage | undefined {
+        console.log("ParseFile: " + definitionFile)
         if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);

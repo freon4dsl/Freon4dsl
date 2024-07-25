@@ -6,10 +6,10 @@ import {
     FretPropertyCallExp, FretPropInstance,
     FretSelfExp, FretTypeConcept,
     FretWhereExp
-} from "../../metalanguage";
-import { ListUtil, Names } from "../../../utils";
-import { FreMetaClassifier, FreMetaProperty } from "../../../languagedef/metalanguage";
-import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../../metalanguage/expressions";
+} from "../../metalanguage/index.js";
+import { ListUtil, Names } from "../../../utils/index.js";
+import { FreMetaClassifier, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
+import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../../metalanguage/expressions/index.js";
 
 const inferFunctionName: string = "inferType";
 const typeofName: string = "typeof";

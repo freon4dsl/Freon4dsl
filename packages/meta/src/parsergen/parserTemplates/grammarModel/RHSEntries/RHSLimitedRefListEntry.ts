@@ -1,8 +1,8 @@
-import { RHSPropEntry } from "./RHSPropEntry";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage";
-import { getTypeCall, makeIndent } from "../GrammarUtils";
-import { GenerationUtil, Names } from "../../../../utils";
-import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil";
+import { RHSPropEntry } from "./RHSPropEntry.js";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import { getTypeCall, makeIndent } from "../GrammarUtils.js";
+import { GenerationUtil, Names } from "../../../../utils/index.js";
+import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSLimitedRefListEntry extends RHSPropEntry {
     constructor(prop: FreMetaProperty) {

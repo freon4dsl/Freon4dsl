@@ -12,4 +12,4 @@ export {
     FreTyperCheckerPhase1,
     FreTyperCheckerPhase2,
     FreTyperMerger
-} from "./internal";
+} from "./internal.js";

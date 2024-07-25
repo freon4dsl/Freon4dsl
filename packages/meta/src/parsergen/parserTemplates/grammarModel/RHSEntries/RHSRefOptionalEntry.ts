@@ -1,8 +1,8 @@
-import { RHSPropEntry } from "./RHSPropEntry";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage";
-import { GenerationUtil } from "../../../../utils";
-import { makeIndent, refRuleName } from "../GrammarUtils";
-import { ParserGenUtil } from "../../ParserGenUtil";
+import { RHSPropEntry } from "./RHSPropEntry.js";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import { GenerationUtil } from "../../../../utils/index.js";
+import { makeIndent, refRuleName } from "../GrammarUtils.js";
+import { ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSRefOptionalEntry extends RHSPropEntry {
     constructor(prop: FreMetaProperty) {

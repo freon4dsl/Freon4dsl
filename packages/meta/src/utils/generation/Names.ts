@@ -1,7 +1,7 @@
 import {
     FreMetaClassifier, FreMetaConcept, FreMetaInstance, FreMetaInterface, FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty, FreMetaModelDescription, FreMetaUnitDescription
-} from "../../languagedef/metalanguage";
-import { FreEditClassifierProjection, FreEditProjectionGroup, FreEditTableProjection } from "../../editordef/metalanguage";
+} from "../../languagedef/metalanguage/index.js";
+import { FreEditClassifierProjection, FreEditProjectionGroup, FreEditTableProjection } from "../../editordef/metalanguage/index.js";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical

@@ -4,8 +4,8 @@ import {
     FretLimitedInstanceExp, FretProperty,
     FretPropertyCallExp, FretWhereExp,
     TyperDef, FreTyperElement
-} from "../metalanguage";
-import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../metalanguage/expressions";
+} from "../metalanguage/index.js";
+import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../metalanguage/expressions/index.js";
 
 /**
  * This class sets the 'owner' property of all nodes in a parsed TyperDef.

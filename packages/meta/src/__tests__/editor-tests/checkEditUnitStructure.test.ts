@@ -1,6 +1,6 @@
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../utils";
+import { Checker, MetaLogger } from "../../utils/index.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
     ListJoinType,
@@ -8,8 +8,9 @@ import {
     FreEditProjection, FreEditProjectionDirection,
     FreEditPropertyProjection,
     FreEditUnit, FreEditProjectionGroup
-} from "../../editordef/metalanguage";
+} from "../../editordef/metalanguage/index.js";
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
+import { describe, test, expect } from "vitest"
 
 describe("Checking FretEditUnit: ", () => {
     const testdir = "src/__tests__/editor-tests/correctDefFiles/";

@@ -1,8 +1,8 @@
-import { FreMetaClassifier, FreMetaConcept } from "../../languagedef/metalanguage";
-import { Names } from "../../utils";
-import { GrammarRule } from "./grammarModel/GrammarRule";
-import { ChoiceRule } from "./grammarModel/ChoiceRule";
-import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule";
+import { FreMetaClassifier, FreMetaConcept } from "../../languagedef/metalanguage/index.js";
+import { Names } from "../../utils/index.js";
+import { GrammarRule } from "./grammarModel/GrammarRule.js";
+import { ChoiceRule } from "./grammarModel/ChoiceRule.js";
+import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule.js";
 
 export class ChoiceRuleMaker {
     static specialSuperName = `__fre_super_`;

@@ -1,6 +1,6 @@
 import * as fs from "fs";
 
-const constFile = __dirname + "/ReservedWords.ts";
+const constFile = import.meta.dirname + "/ReservedWords.ts";
 
 export class ReservedWordsTemplate {
 

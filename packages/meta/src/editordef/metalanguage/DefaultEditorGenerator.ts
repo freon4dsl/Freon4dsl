@@ -1,11 +1,11 @@
-import { MetaElementReference, FreMetaInterface, FreMetaLanguage } from "../../languagedef/metalanguage";
+import { MetaElementReference, FreMetaInterface, FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
     FreMetaProperty
-} from "../../languagedef/metalanguage";
+} from "../../languagedef/metalanguage/index.js";
 import {
     BoolDisplayType,
     ExtraClassifierInfo,
@@ -17,9 +17,9 @@ import {
     FreEditProjectionText,
     FreEditPropertyProjection,
     FreEditUnit, FreOptionalPropertyProjection, BoolKeywords
-} from "../metalanguage";
-import {LOG2USER, Names} from "../../utils";
-import { EditorDefaults } from "./EditorDefaults";
+} from "../metalanguage/index.js";
+import {LOG2USER, Names} from "../../utils/index.js";
+import { EditorDefaults } from "./EditorDefaults.js";
 
 export class DefaultEditorGenerator {
     private static interfacesUsed: FreMetaInterface[] = []; // holds all interfaces that are used as type of a property

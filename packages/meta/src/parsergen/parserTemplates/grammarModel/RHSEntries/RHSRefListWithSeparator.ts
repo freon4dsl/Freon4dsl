@@ -1,8 +1,8 @@
-import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage";
-import { GenerationUtil, Names } from "../../../../utils";
-import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil";
-import { makeIndent, refRuleName } from "../GrammarUtils";
+import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import { GenerationUtil, Names } from "../../../../utils/index.js";
+import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil.js";
+import { makeIndent, refRuleName } from "../GrammarUtils.js";
 
 export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
     constructor(prop: FreMetaProperty, separatorText: string) {

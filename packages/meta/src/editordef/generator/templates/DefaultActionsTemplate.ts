@@ -1,15 +1,15 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER } from "../../../utils";
+import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER } from "../../../utils/index.js";
 import {
     FreMetaLanguage,
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier, FreMetaProperty, FreMetaPrimitiveType
-} from "../../../languagedef/metalanguage";
-import { Roles } from "../../../utils";
+} from "../../../languagedef/metalanguage/index.js";
+import { Roles } from "../../../utils/index.js";
 import {
     FreEditProjection,
     FreEditUnit,
     FreOptionalPropertyProjection
-} from "../../metalanguage";
+} from "../../metalanguage/index.js";
 
 export class DefaultActionsTemplate {
 

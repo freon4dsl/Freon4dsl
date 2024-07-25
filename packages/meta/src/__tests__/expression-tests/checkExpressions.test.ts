@@ -1,8 +1,9 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
-import { FreMetaInstance, FreLangFunctionCallExp, FreLangSelfExp, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage";
-import { MetaLogger } from "../../utils";
+import { FreMetaInstance, FreLangFunctionCallExp, FreLangSelfExp, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js";
+import { MetaLogger } from "../../utils/index.js";
 import {LanguageExpressionTester} from "../../languagedef/parser/LanguageExpressionTester";
+import { describe, test, expect, beforeEach } from "vitest"
 
 describe("Checking expression on referredElement", () => {
     const testdir = "src/__tests__/expression-tests/expressionDefFiles/";

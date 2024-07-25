@@ -7,7 +7,7 @@ import {
     ParseLocationUtil,
     reservedWordsInTypescript,
     freReservedWords
-} from "../../utils";
+} from "../../utils/index.js";
 import {
     FreMetaClassifier,
     FreMetaConcept,
@@ -18,7 +18,7 @@ import {
     FreMetaPrimitiveType,
     FreMetaProperty,
     MetaElementReference
-} from "../../languagedef/metalanguage";
+} from "../../languagedef/metalanguage/index.js";
 import {
     FretAnytypeExp,
     FretAnyTypeSpec,
@@ -40,10 +40,10 @@ import {
     FretVarCallExp,
     FretWhereExp,
     TyperDef
-} from "../metalanguage";
-import { FretScoper } from "./FretScoper";
-import { FretOwnerSetter } from "./FretOwnerSetter";
-import { CommonChecker, CommonSuperTypeUtil } from "../../languagedef/checking";
+} from "../metalanguage/index.js";
+import { FretScoper } from "./FretScoper.js";
+import { FretOwnerSetter } from "./FretOwnerSetter.js";
+import { CommonChecker, CommonSuperTypeUtil } from "../../languagedef/checking/index.js";
 
 // const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];

@@ -1,8 +1,9 @@
 import { FreTyperMerger } from "../../typerdef/parser";
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { MetaLogger } from "../../utils";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { MetaLogger } from "../../utils/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import {FretClassifierSpec, FretInferenceRule, FretTypeRule, TyperDef} from "../../typerdef/metalanguage";
+import {FretClassifierSpec, FretInferenceRule, FretTypeRule, TyperDef} from "../../typerdef/metalanguage/index.js";
+import { describe, test, expect, beforeEach } from "vitest"
 
 function testTypeUnit(typeUnit: TyperDef) {
     expect(typeUnit).not.toBeNull();

@@ -1,5 +1,6 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../utils";
+import { MetaLogger } from "../../utils/index.js";
+import { describe, test, expect } from "vitest"
 
 // The same tests as in property-inheritance1, only now some property types are lists
 describe("Checking property inheritance on lists", () => {

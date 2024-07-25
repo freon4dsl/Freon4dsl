@@ -40,7 +40,7 @@ gen/
 packages/docs/.jekyll-cache/*
 packages/docs/*/_site/*
 packages/docs/src/tutorial-language/*/gen/*
-packages/meta/src/languagedef/parser/LanguageGrammar.js
+packages/meta/src/languagedef/parser/LanguageGrammar2.js
 packages/meta/src/scoperdef/parser/ScoperGrammar.js
 packages/meta/src/editordef/parser/EditorGrammar.js
 packages/meta/src/editordef/parser/FreEditGrammar.js

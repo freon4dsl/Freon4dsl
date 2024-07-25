@@ -1,5 +1,5 @@
-import { FreMetaConcept, FreMetaInterface, FreMetaLanguage, FreMetaLimitedConcept, FreMetaProperty } from "../../languagedef/metalanguage";
-import { ListUtil } from "../../utils";
+import { FreMetaConcept, FreMetaInterface, FreMetaLanguage, FreMetaLimitedConcept, FreMetaProperty } from "../../languagedef/metalanguage/index.js";
+import { ListUtil } from "../../utils/index.js";
 
 export class DiagramTemplate {
     withHtml: boolean;

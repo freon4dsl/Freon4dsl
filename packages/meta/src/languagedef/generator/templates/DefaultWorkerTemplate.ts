@@ -1,5 +1,5 @@
-import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils";
-import { FreMetaLanguage } from "../../metalanguage";
+import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils/index.js";
+import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class DefaultWorkerTemplate {
 

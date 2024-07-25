@@ -5,9 +5,9 @@ import {
     NotEmptyRule,
     ValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText, ValidationRule, ValidationSeverity,
     ValidNameRule
-} from "../metalanguage";
-import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage";
-import {FreMetaDefinitionElement, ParseLocationUtil} from "../../utils";
+} from "../metalanguage/index.js";
+import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
+import {FreMetaDefinitionElement, ParseLocationUtil} from "../../utils/index.js";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang)
 // from the parsed data objects (from ValidatorGrammar.pegjs).

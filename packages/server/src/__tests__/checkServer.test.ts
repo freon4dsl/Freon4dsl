@@ -2,6 +2,7 @@ const SERVER_URL = "http://127.0.0.1:8001/";
 
 import request from "supertest";
 import { app } from "../server/server-def";
+import { describe, test, expect } from "vitest"
 
 const modelUnitInterfacePostfix: string = "Public";
 const modelName: string = "__TEST__";

@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { MetaLogger, LOG2USER, COMMAND_LINE_FOLDER } from "../../utils";
+import { MetaLogger, LOG2USER, COMMAND_LINE_FOLDER } from "../../utils/index.js";
 import {
     CONFIGURATION_FOLDER,
     CONFIGURATION_GEN_FOLDER,
@@ -12,8 +12,8 @@ import {
     Names,
     STDLIB_FOLDER,
     STDLIB_GEN_FOLDER
-} from "../../utils";
-import { FreMetaLanguage } from "../metalanguage";
+} from "../../utils/index.js";
+import { FreMetaLanguage } from "../metalanguage/index.js";
 import {
     // AllConceptsTemplate,
     ConceptTemplate,
@@ -25,12 +25,12 @@ import {
     DefaultWorkerTemplate,
     InterfaceTemplate,
     StdlibTemplate
-} from "./templates";
-import { CommandLineTemplate } from "./templates/CommandLineTemplate";
-import { ConfigurationTemplate } from "./templates/ConfigurationTemplate";
-import { ModelTemplate } from "./templates/ModelTemplate";
-import { UnitTemplate } from "./templates/UnitTemplate";
-import { ListUtilTemplate } from "./templates/ListUtilTemplate";
+} from "./templates/index.js";
+import { CommandLineTemplate } from "./templates/CommandLineTemplate.js";
+import { ConfigurationTemplate } from "./templates/ConfigurationTemplate.js";
+import { ModelTemplate } from "./templates/ModelTemplate.js";
+import { UnitTemplate } from "./templates/UnitTemplate.js";
+import { ListUtilTemplate } from "./templates/ListUtilTemplate.js";
 
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
 export class LanguageGenerator {

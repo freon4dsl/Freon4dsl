@@ -1,2 +1,2 @@
-export * from "./FreEditChecker";
-export * from "./FreEditDefLang";
+export * from "./FreEditChecker.js";
+export * from "./FreEditDefLang.js";

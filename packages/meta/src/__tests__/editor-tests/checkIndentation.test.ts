@@ -1,13 +1,14 @@
-import {FreMetaClassifier, FreMetaConcept, FreMetaLanguage} from "../../languagedef/metalanguage";
+import {FreMetaClassifier, FreMetaConcept, FreMetaLanguage} from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker } from "../../utils";
+import { Checker } from "../../utils/index.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
     FreEditProjection, FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditUnit,
     FreOptionalPropertyProjection
-} from "../../editordef/metalanguage";
+} from "../../editordef/metalanguage/index.js";
+import { describe, test, expect, beforeEach } from "vitest"
 
 function getAndTestProjection(editDef: FreEditUnit, classifier: FreMetaClassifier) {
     const defProjGroup: FreEditProjectionGroup | undefined = editDef.getDefaultProjectiongroup();

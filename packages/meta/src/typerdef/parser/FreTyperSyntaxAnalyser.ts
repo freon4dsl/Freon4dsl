@@ -5,9 +5,9 @@ import SharedPackedParseTree = net.akehurst.language.api.sppt.SharedPackedParseT
 import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;
 import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
 import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
-import { FreTyperDefSyntaxAnalyserPart } from ".";
-import { MetaElementReference, FreMetaLangElement } from "../../languagedef/metalanguage";
-import { FreParseLocation } from "../../utils";
+import { FreTyperDefSyntaxAnalyserPart } from "./index.js";
+import { MetaElementReference, FreMetaLangElement } from "../../languagedef/metalanguage/index.js";
+import { FreParseLocation } from "../../utils/index.js";
 
 /**
  *   Class MetaTyperSyntaxAnalyser is the main syntax analyser.

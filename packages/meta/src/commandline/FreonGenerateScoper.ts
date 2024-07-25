@@ -1,8 +1,8 @@
-import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator";
-import { ScoperParser } from "../scoperdef/parser/ScoperParser";
-import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
-import { MetaLogger } from "../utils/MetaLogger";
-import {ScopeDef} from "../scoperdef/metalanguage";
+import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator.js";
+import { ScoperParser } from "../scoperdef/parser/ScoperParser.js";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
+import { MetaLogger } from "../utils/MetaLogger.js";
+import {ScopeDef} from "../scoperdef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateScoper"); // .mute();
 export class FreonGenerateScoper extends FreonGeneratePartAction {

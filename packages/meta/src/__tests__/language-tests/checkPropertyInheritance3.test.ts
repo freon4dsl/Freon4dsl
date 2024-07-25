@@ -1,13 +1,13 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../utils";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
+import { MetaLogger } from "../../utils/index.js";
 import {
     FreMetaConcept,
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
     FreMetaProperty
-} from "../../languagedef/metalanguage";
-import { parseCorrectModel} from "./utils";
-
+} from "../../languagedef/metalanguage/index.js";
+import { parseCorrectModel} from "./utils.js";
+import { describe, test, expect } from "vitest"
 
 // The same tests as in property-inheritance1, only now all property types are interfaces
 describe("Checking generation of virtual props", () => {
@@ -24,6 +24,9 @@ describe("Checking generation of virtual props", () => {
         const parseFile: string = testdir + "prop_test7.ast";
         const model: FreMetaLanguage | undefined = parseCorrectModel(parser, parseFile);
         // check the one primitive property
+        model?.concepts.forEach((concept) => {
+            console.log("Concept " + concept.name)
+        })
         const rightOne: FreMetaConcept | undefined = model?.concepts.find(concept => concept.name === "Right");
         expect(rightOne).not.toBeNull();
         expect(rightOne).not.toBeUndefined();

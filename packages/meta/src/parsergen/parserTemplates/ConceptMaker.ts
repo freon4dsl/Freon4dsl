@@ -6,9 +6,9 @@ import {
     FreEditProjectionText,
     FreEditPropertyProjection, FreEditSuperProjection,
     FreOptionalPropertyProjection
-} from "../../editordef/metalanguage";
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLimitedConcept, FreMetaPrimitiveProperty, FreMetaPrimitiveType, FreMetaProperty } from "../../languagedef/metalanguage";
-import { ParserGenUtil } from "./ParserGenUtil";
+} from "../../editordef/metalanguage/index.js";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLimitedConcept, FreMetaPrimitiveProperty, FreMetaPrimitiveType, FreMetaProperty } from "../../languagedef/metalanguage/index.js";
+import { ParserGenUtil } from "./ParserGenUtil.js";
 import {
     GrammarRule,
     ConceptRule,
@@ -42,9 +42,9 @@ import {
     RHSBinExpList,
     RHSBinExpListWithInitiator,
     RHSBinExpListWithSeparator, RHSBinExpListWithTerminator
-} from "./grammarModel";
-import { LOG2USER, ListUtil } from "../../utils";
-import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator";
+} from "./grammarModel/index.js";
+import { LOG2USER, ListUtil } from "../../utils/index.js";
+import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator.js";
 
 export class ConceptMaker {
     imports: FreMetaClassifier[] = [];

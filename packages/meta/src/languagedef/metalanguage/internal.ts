@@ -4,9 +4,9 @@
  * in order to avoid problem with circular imports.
  */
 
-export * from "./FreLangEveryConcept";
-export * from "./MetaElementReference";
-export * from "./FreMetaLanguage";
-export * from "./FreLangExpressions";
-export * from "./FreLangScoper";
-export * from "./FreMetaEnvironment";
+export * from "./FreLangEveryConcept.js";
+export * from "./MetaElementReference.js";
+export * from "./FreMetaLanguage.js";
+export * from "./FreLangExpressions.js";
+export * from "./FreLangScoper.js";
+export * from "./FreMetaEnvironment.js";

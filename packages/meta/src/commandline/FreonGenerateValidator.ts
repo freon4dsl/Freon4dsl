@@ -1,9 +1,9 @@
-import { LOG2USER } from "../utils/index";
-import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator";
-import { ValidatorParser } from "../validatordef/parser/ValidatorParser";
-import { FreonGeneratePartAction } from "./FreonGeneratePartAction";
-import { MetaLogger } from "../utils/MetaLogger";
-import {ValidatorDef} from "../validatordef/metalanguage";
+import { LOG2USER } from "../utils/index.js";
+import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator.js";
+import { ValidatorParser } from "../validatordef/parser/ValidatorParser.js";
+import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
+import { MetaLogger } from "../utils/MetaLogger.js";
+import {ValidatorDef} from "../validatordef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateValidator"); // .mute();
 
