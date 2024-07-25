@@ -17,4 +17,4 @@ export {
     FretVarCallExp,
     FretCreateExp,
     FretBinaryExp
-} from "./internal";
+} from "./internal.js";

@@ -1,9 +1,9 @@
-import { GrammarRule } from "./GrammarRule";
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier } from "../../../languagedef/metalanguage";
-import { getTypeCall } from "./GrammarUtils";
-import { BinaryExpMaker } from "../BinaryExpMaker";
-import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil";
-import { Names } from "../../../utils";
+import { GrammarRule } from "./GrammarRule.js";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
+import { getTypeCall } from "./GrammarUtils.js";
+import { BinaryExpMaker } from "../BinaryExpMaker.js";
+import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil.js";
+import { Names } from "../../../utils/index.js";
 
 export class ChoiceRule extends GrammarRule {
     implementors: FreMetaClassifier[];

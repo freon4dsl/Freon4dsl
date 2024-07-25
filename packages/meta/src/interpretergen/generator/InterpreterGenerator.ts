@@ -1,14 +1,14 @@
 import * as fs from "fs";
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import {
     GenerationStatus,
     FileUtil,
     MetaLogger,
     INTERPRETER_FOLDER, INTERPRETER_GEN_FOLDER, Names
-} from "../../utils";
-import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef";
-import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate";
-import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate";
+} from "../../utils/index.js";
+import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef.js";
+import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate.js";
+import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate.js";
 
 const LOGGER = new MetaLogger("InterpreterGenerator").mute();
 

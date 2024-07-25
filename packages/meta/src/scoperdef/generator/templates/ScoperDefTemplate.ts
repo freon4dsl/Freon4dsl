@@ -1,10 +1,10 @@
-import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage } from "../../../languagedef/metalanguage";
+import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import {
     Names,
     FREON_CORE,
     GenerationUtil, CONFIGURATION_FOLDER
-} from "../../../utils";
-import { ScopeDef } from "../../metalanguage";
+} from "../../../utils/index.js";
+import { ScopeDef } from "../../metalanguage/index.js";
 
 export class ScoperDefTemplate {
 

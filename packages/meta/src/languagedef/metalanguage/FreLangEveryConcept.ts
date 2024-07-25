@@ -16,7 +16,7 @@ import {
     FreMetaInstanceProperty,
     FreMetaClassifier,
     FreMetaLangElement
-} from "./internal";
+} from "./internal.js";
 
 export type FreLangEveryConcept =
     | FreMetaLangElement

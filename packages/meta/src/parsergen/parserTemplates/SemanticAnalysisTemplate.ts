@@ -1,7 +1,7 @@
-import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage, FreMetaPrimitiveProperty } from "../../languagedef/metalanguage";
-import { LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names } from "../../utils";
-import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/FreMetaLanguage";
-import { UnitAnalyser } from "./UnitAnalyser";
+import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage, FreMetaPrimitiveProperty } from "../../languagedef/metalanguage/index.js";
+import { LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names } from "../../utils/index.js";
+import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/FreMetaLanguage.js";
+import { UnitAnalyser } from "./UnitAnalyser.js";
 
 // first call 'analyse' then the other methods as they depend on the global variables to be set
 

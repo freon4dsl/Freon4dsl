@@ -1,7 +1,7 @@
-import { FreEditProjection, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage";
-import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults";
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage";
-import { GenerationUtil } from "../../utils";
+import { FreEditProjection, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults.js";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage/index.js";
+import { GenerationUtil } from "../../utils/index.js";
 
 export class ParserGenUtil {
 

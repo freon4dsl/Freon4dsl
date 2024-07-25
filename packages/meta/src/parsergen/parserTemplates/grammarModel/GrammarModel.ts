@@ -1,14 +1,14 @@
-import { FreMetaLanguage } from "../../../languagedef/metalanguage";
-import { Names } from "../../../utils";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import { Names } from "../../../utils/index.js";
 import {
     internalTransformBranch,
     internalTransformLeaf,
     internalTransformList,
     internalTransformNode,
     internalTransformRefList
-} from "../ParserGenUtil";
-import { refRuleName } from "./GrammarUtils";
-import { GrammarPart } from "./GrammarPart";
+} from "../ParserGenUtil.js";
+import { refRuleName } from "./GrammarUtils.js";
+import { GrammarPart } from "./GrammarPart.js";
 
 export class GrammarModel {
     constructor(language: FreMetaLanguage) {

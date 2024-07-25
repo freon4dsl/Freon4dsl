@@ -1,14 +1,14 @@
 // Note that the following import cannot be from "@freon4dsl/core", because
-import { FreLangExp, FreMetaConcept } from "../../languagedef/metalanguage";
+import { FreLangExp, FreMetaConcept } from "../../languagedef/metalanguage/index.js";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference";
-import { FreMetaDefinitionElement } from "../../utils";
+import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference.js";
+import { FreMetaDefinitionElement } from "../../utils/index.js";
 // this leads to a load error
 // import { FreErrorSeverity } from "@freon4dsl/core"; // todo remove this bug
-import { FreErrorSeverity } from "../../utils/generation/FreErrorSeverity";
+import { FreErrorSeverity } from "../../utils/generation/FreErrorSeverity.js";
 
 export class ValidatorDef extends FreMetaDefinitionElement {
     validatorName: string = '';

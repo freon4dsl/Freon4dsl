@@ -1,5 +1,5 @@
-import { FreMetaLanguage } from "../../metalanguage";
-import { GenerationUtil, Names } from "../../../utils";
+import { FreMetaLanguage } from "../../metalanguage/index.js";
+import { GenerationUtil, Names } from "../../../utils/index.js";
 
 export class MetaTypeTemplate {
 

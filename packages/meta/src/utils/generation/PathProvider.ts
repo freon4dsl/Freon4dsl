@@ -1,5 +1,5 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/FreMetaLanguage";
-import { Names } from "./Names";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/FreMetaLanguage.js";
+import { Names } from "./Names.js";
 
 // files need to be generated into folders ...
 export const LANGUAGE_FOLDER = "language";

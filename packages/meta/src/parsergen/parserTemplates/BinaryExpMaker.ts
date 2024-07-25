@@ -1,7 +1,7 @@
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage";
-import {ExtraClassifierInfo, FreEditProjectionGroup} from "../../editordef/metalanguage";
-import { GrammarRule, BinaryExpressionRule } from "./grammarModel";
-import { GenerationUtil } from "../../utils";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage/index.js";
+import {ExtraClassifierInfo, FreEditProjectionGroup} from "../../editordef/metalanguage/index.js";
+import { GrammarRule, BinaryExpressionRule } from "./grammarModel/index.js";
+import { GenerationUtil } from "../../utils/index.js";
 
 export class BinaryExpMaker {
     private static specialBinaryRuleName = `__fre_binary_`;

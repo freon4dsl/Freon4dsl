@@ -8,6 +8,7 @@
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/freon4dsl/Freon4dsl"
@@ -18,13 +19,19 @@
   "scripts": {
     "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
-    "lang-parser": "peggy src/languagedef/parser/LanguageGrammar.pegjs",
-    "scop-parser": "peggy src/scoperdef/parser/ScoperGrammar.pegjs",
-    "edit-parser": "peggy src/editordef/parser/FreEditGrammar.pegjs",
-    "valid-parser": "peggy src/validatordef/parser/ValidatorGrammar.pegjs",
-    "lang-exp-parser": "peggy src/languagedef/parser/ExpressionGrammar.pegjs",
+    "lang-parser1": "peggy src/languagedef/parser/LanguageGrammar.part.pegjs src/languagedef/parser/BasicGrammar.part.pegjs",
+    "lang-parser": "peggy src/languagedef/parser/LanguageGrammar.pegjs && npm run patch-language",
+    "scop-parser": "peggy src/scoperdef/parser/ScoperGrammar.pegjs && npm run patch-scoper",
+    "edit-parser": "peggy src/editordef/parser/FreEditGrammar.pegjs && npm run patch-editor",
+    "valid-parser": "peggy src/validatordef/parser/ValidatorGrammar.pegjs && npm run patch-validator",
+    "lang-exp-parser": "peggy src/languagedef/parser/ExpressionGrammar.pegjs && npm run patch-expressions",
     "start": "echo Starting meta",
     "pegjs-concat-language": "cd src/languagedef/parser && bash ./concat.sh",
+    "patch-language": "cd src/languagedef/parser && bash ./patch-language.sh",
+    "patch-expressions": "cd src/languagedef/parser && bash ./patch-expressions.sh",
+    "patch-scoper": "cd src/scoperdef/parser && bash ./patch.sh",
+    "patch-validator": "cd src/validatordef/parser && bash ./patch.sh",
+    "patch-editor": "cd src/editordef/parser && bash ./patch.sh",
     "pegjs-concat-editor": "cd src/editordef/parser && bash ./concat.sh",
     "pegjs-concat-scoper": "cd src/scoperdef/parser && bash ./concat.sh",
     "pegjs-concat-validator": "cd src/validatordef/parser && bash ./concat.sh",
@@ -37,8 +44,14 @@
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
-    "test": "jest",
+    "test": "vitest run",
     "build-release": "npm run build && npm run copy-validtemplates"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.3",
+    "@vitest/ui": "^2.0.3",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest-tsconfig-paths": "^3.4.1"
   },
   "dependencies": {
     "@rushstack/ts-command-line": "^4.22.0",

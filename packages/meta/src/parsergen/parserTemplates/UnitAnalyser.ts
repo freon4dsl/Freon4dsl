@@ -4,10 +4,10 @@ import {
     FreMetaConcept,
     FreMetaInterface,
     FreMetaLimitedConcept
-} from "../../languagedef/metalanguage";
-import { LangUtil } from "../../utils";
-import { FreMetaPrimitiveType, FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage";
-import { FreAnalyser } from "./LanguageAnalyser";
+} from "../../languagedef/metalanguage/index.js";
+import { LangUtil } from "../../utils/index.js";
+import { FreMetaPrimitiveType, FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage.js";
+import { FreAnalyser } from "./LanguageAnalyser.js";
 
 export class UnitAnalyser implements FreAnalyser {
     unit: FreMetaUnitDescription | undefined = undefined;

@@ -1,2 +1,2 @@
-export * from "./FreScopeDefLang";
-export * from "./ScoperChecker";
+export * from "./FreScopeDefLang.js";
+export * from "./ScoperChecker.js";

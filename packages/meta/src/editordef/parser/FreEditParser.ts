@@ -1,11 +1,10 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { Names, ParseLocationUtil, FreGenericParser } from "../../utils";
-import { setCurrentFileName as editFileName } from "./FreEditCreators";
-import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
-import { ExtraClassifierInfo, FreEditProjectionGroup, FreEditUnit } from "../metalanguage/FreEditDefLang";
-import { FreEditChecker } from "../metalanguage/FreEditChecker";
-
-const editorParser = require("./FreEditGrammar");
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { Names, ParseLocationUtil, FreGenericParser } from "../../utils/index.js";
+import { setCurrentFileName as editFileName } from "./FreEditCreators.js";
+import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
+import { ExtraClassifierInfo, FreEditProjectionGroup, FreEditUnit } from "../metalanguage/FreEditDefLang.js";
+import { FreEditChecker } from "../metalanguage/FreEditChecker.js";
+import { parser } from "./FreEditGrammar.js";
 
 export class FreEditParser extends FreGenericParser<FreEditUnit> {
     language: FreMetaLanguage;
@@ -13,7 +12,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
     constructor(language: FreMetaLanguage) {
         super();
         this.language = language;
-        this.parser = editorParser;
+        this.parser = parser;
         this.checker = new FreEditChecker(language);
     }
 

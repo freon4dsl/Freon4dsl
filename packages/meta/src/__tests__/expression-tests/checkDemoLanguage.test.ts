@@ -1,7 +1,8 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
-import { MetaLogger } from "../../utils";
-import {FreMetaLanguage} from "../../languagedef/metalanguage";
+import { MetaLogger } from "../../utils/index.js";
+import {FreMetaLanguage} from "../../languagedef/metalanguage/index.js";
+import { describe, test, expect } from "vitest"
 
 describe("Checking expression parser on syntax errors", () => {
     const testdir = "src/__tests__/expression-tests/expressionDefFiles/";

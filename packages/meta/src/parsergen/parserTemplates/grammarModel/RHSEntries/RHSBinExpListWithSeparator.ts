@@ -1,9 +1,9 @@
-import { RHSPropEntry } from "./RHSPropEntry";
-import { FreMetaBinaryExpressionConcept, FreMetaProperty } from "../../../../languagedef/metalanguage";
-import { makeIndent } from "../GrammarUtils";
-import { BinaryExpMaker } from "../../BinaryExpMaker";
-import { GenerationUtil, Names } from "../../../../utils";
-import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil";
+import { RHSPropEntry } from "./RHSPropEntry.js";
+import { FreMetaBinaryExpressionConcept, FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import { makeIndent } from "../GrammarUtils.js";
+import { BinaryExpMaker } from "../../BinaryExpMaker.js";
+import { GenerationUtil, Names } from "../../../../utils/index.js";
+import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSBinExpListWithSeparator extends RHSPropEntry {
     type: FreMetaBinaryExpressionConcept;

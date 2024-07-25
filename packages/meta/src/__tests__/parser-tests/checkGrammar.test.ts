@@ -1,10 +1,11 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { FileUtil, MetaLogger } from "../../utils";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { FileUtil, MetaLogger } from "../../utils/index.js";
 import { ReaderWriterGenerator } from "../../parsergen/ReaderWriterGenerator";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import * as fs from "fs";
-import { FreEditUnit } from "../../editordef/metalanguage";
+import { FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { describe, test, expect, afterAll } from "vitest"
 
 /* These incomplete tests only test whether the generated grammar is equal
 to the previously generated grammar. A true test of the parser must be

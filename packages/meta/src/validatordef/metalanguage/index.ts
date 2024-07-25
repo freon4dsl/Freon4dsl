@@ -1,2 +1,2 @@
-export * from "./ValidatorChecker";
-export * from "./ValidatorDefLang";
+export * from "./ValidatorChecker.js";
+export * from "./ValidatorDefLang.js";

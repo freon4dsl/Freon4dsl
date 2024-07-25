@@ -1,5 +1,5 @@
-import { FreMetaLanguage } from "../../metalanguage";
-import { Names, CONFIGURATION_GEN_FOLDER } from "../../../utils";
+import { FreMetaLanguage } from "../../metalanguage/index.js";
+import { Names, CONFIGURATION_GEN_FOLDER } from "../../../utils/index.js";
 
 export class CommandLineTemplate {
 

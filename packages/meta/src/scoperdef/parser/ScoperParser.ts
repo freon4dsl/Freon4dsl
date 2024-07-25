@@ -1,17 +1,17 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { FreGenericParser } from "../../utils";
-import { ScopeDef, ScoperChecker } from "../metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { FreGenericParser } from "../../utils/index.js";
+import { ScopeDef, ScoperChecker } from "../metalanguage/index.js";
 // import { setCurrentFileName } from "./ScoperCreators";
-import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
+import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
 
-import scoperParser from "./ScoperGrammar";
+import { parser } from "./ScoperGrammar.js";
 
 export class ScoperParser extends FreGenericParser<ScopeDef> {
     public language: FreMetaLanguage;
 
     constructor(language: FreMetaLanguage) {
         super();
-        this.parser = scoperParser;
+        this.parser = parser;
         this.language = language;
         this.checker = new ScoperChecker(language);
     }

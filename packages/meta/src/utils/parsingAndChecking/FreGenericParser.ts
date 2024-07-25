@@ -1,9 +1,9 @@
 import * as fs from "fs";
-import { Checker } from "./Checker";
+import { Checker } from "./Checker.js";
 import { Parser, parser } from "pegjs";
-import { LOG2USER } from "../UserLogger";
-import { FreMetaDefinitionElement } from "../FreMetaDefinitionElement";
-import { ParseLocationUtil } from "./ParseLocationUtil";
+import { LOG2USER } from "../UserLogger.js";
+import { FreMetaDefinitionElement } from "../FreMetaDefinitionElement.js";
+import { ParseLocationUtil } from "./ParseLocationUtil.js";
 
 // The following two types are used to store the location information from the PEGJS parser
 // todo rethink how to adjust the errors from the PegJs parser
@@ -57,13 +57,15 @@ export class FreGenericParser<DEFINITION> {
     checker: Checker<DEFINITION>;
 
     parse(definitionFile: string): DEFINITION | undefined {
+        console.log("FreGenericParser.Parse: " + definitionFile)
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
             throw new Error("file '" + definitionFile + "' not found.");
         }
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "utf8" });
-
+        // console.log("FreGenericParser.Parse langSpec: " + langSpec)
+        
         // clean the error list from the creator functions
         this.cleanNonFatalParseErrors();
         // parse definition file
@@ -71,8 +73,10 @@ export class FreGenericParser<DEFINITION> {
         try {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
             model = this.parser.parse(langSpec);
+            // console.log("FreGenericParser.Parse model: " + langSpec)
         } catch (e: unknown) {
             if (isPegjsError(e)) {
+                console.error("isPegjsError " + e?.message)
                 // syntax error
                 const errorLoc: ParseLocation = { filename: definitionFile, start: e.location.start, end: e.location.end };
                 const errorstr: string = `${e}
@@ -82,6 +86,8 @@ export class FreGenericParser<DEFINITION> {
                     ``}`;
                 LOG2USER.error(errorstr);
                 throw new Error("syntax error: " + errorstr);
+            } else {
+                    console.error("FreGenericParser.Parse unknown error: " + e)
             }
         }
 

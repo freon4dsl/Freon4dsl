@@ -3,8 +3,8 @@ import {
     FREON_CORE,
     EDITOR_FOLDER,
     VALIDATOR_GEN_FOLDER, TYPER_FOLDER, VALIDATOR_FOLDER, STDLIB_FOLDER, SCOPER_FOLDER
-} from "../../../utils/";
-import { FreMetaLanguage } from "../../metalanguage";
+} from "../../../utils/index.js";
+import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class ConfigurationTemplate {
 

@@ -1,5 +1,5 @@
-import { FreMetaClassifier, FreMetaConcept, MetaElementReference, FreMetaInterface, FreMetaProperty } from "../../languagedef/metalanguage";
-import { GenerationUtil } from "./GenerationUtil";
+import { FreMetaClassifier, FreMetaConcept, MetaElementReference, FreMetaInterface, FreMetaProperty } from "../../languagedef/metalanguage/index.js";
+import { GenerationUtil } from "./GenerationUtil.js";
 
 /**
  * This class contains a series of helper functions over the language.

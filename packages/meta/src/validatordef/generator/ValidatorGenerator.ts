@@ -1,14 +1,14 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/MetaLogger";
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { GenerationStatus, FileUtil, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils";
-import { ValidatorDef } from "../metalanguage";
-import { RulesCheckerTemplate } from "./templates/RulesCheckerTemplate";
-import { ValidatorTemplate } from "./templates/ValidatorTemplate";
-import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate";
-import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate";
-import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate";
-import { LOG2USER } from "../../utils/UserLogger";
+import { MetaLogger } from "../../utils/MetaLogger.js";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { GenerationStatus, FileUtil, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils/index.js";
+import { ValidatorDef } from "../metalanguage/index.js";
+import { RulesCheckerTemplate } from "./templates/RulesCheckerTemplate.js";
+import { ValidatorTemplate } from "./templates/ValidatorTemplate.js";
+import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate.js";
+import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate.js";
+import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate.js";
+import { LOG2USER } from "../../utils/UserLogger.js";
 
 // TODO use new AstWalker and AstWorker
 
