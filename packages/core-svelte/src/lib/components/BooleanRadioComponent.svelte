@@ -127,6 +127,7 @@
       /*--md-focus-ring-width: 0px;*/
     }
     .radiolabel {
+      color: var(--freon-boolean-background-color, var(--mdc-theme-background));
       /* it seems that the md control resets a number of common variables, therefore we reset them here */
       font-weight: var(--freon-text-component-font-weight, normal);
       font-size: var(--freon-text-component-font-size, 14px);

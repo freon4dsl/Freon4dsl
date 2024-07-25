@@ -83,11 +83,10 @@
 </span>
 
 <style>
-    span {
-        display: flex;
-    }
     .freon-slider {
+        display: flex;
         --md-sys-color-primary: var(--freon-boolean-slider-color, var(--mdc-theme-primary));
+        --md-slider-inactive-track-color: var(--freon-boolean-inactive-slider-color, var(--mdc-theme-text-icon-on-background));
     }
     .freon-slider:focus-within {
         box-shadow: 0px 0px 10px var(--freon-boolean-slider-color, var(--mdc-theme-primary));
