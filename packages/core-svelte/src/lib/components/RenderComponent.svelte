@@ -26,7 +26,8 @@
         Box,
         BoolDisplay, isBooleanControlBox,
         isNumberControlBox,
-        isElementBox, isOptionalBox2, isMultiLineTextBox
+        isElementBox, isOptionalBox2, isMultiLineTextBox,
+        isLimitedControlBox, LimitedDisplay
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
@@ -47,12 +48,12 @@
     import ElementComponent from "./ElementComponent.svelte";
     import BooleanCheckboxComponent from "$lib/components/BooleanCheckboxComponent.svelte";
     import BooleanRadioComponent from "$lib/components/BooleanRadioComponent.svelte";
-    import SwitchComponent from "$lib/components/SwitchComponent.svelte";
+    // import MaterialSwitchComponent from "$lib/components/MaterialSwitchComponent.svelte";
     import InnerSwitchComponent from "$lib/components/InnerSwitchComponent.svelte";
     import NumericSliderComponent from "$lib/components/NumericSliderComponent.svelte";
     import LimitedCheckboxComponent from "$lib/components/LimitedCheckboxComponent.svelte";
     import LimitedRadioComponent from "$lib/components/LimitedRadioComponent.svelte";
-    import {isLimitedControlBox, LimitedDisplay} from "@freon4dsl/core";
+    import SwitchComponent from "$lib/components/SwitchComponent.svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 

@@ -11,7 +11,7 @@
   $error: #B00020,
   //$on-primary: color-palette.$orange-50,
   $on-secondary: #00695c,   // a slighter darker version of 'primary'
-  //$on-surface: black,
+  $on-surface: color-palette.$grey-400,
   //$on-error: black,
   //accessible-ink-color,
   //contrast,
@@ -226,10 +226,12 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-verticallist-component-margin: 2px;
 
   /* Boolean Controls */
-  //--freon-boolean-switch-color: #{theme.$blue-900};
-  //--freon-boolean-checkbox-color: #{theme.$blue-900};
-  //--freon-boolean-radio-color: #{theme.$blue-900};
-  //
+  --freon-boolean-switch-color: #{theme.$blue-900};
+  --freon-boolean-unselected-track: #{theme.$grey-500};
+  --freon-boolean-background-color: white;
+  --freon-boolean-checkbox-color: #{theme.$blue-900};
+  --freon-boolean-radio-color: #{theme.$blue-900};
+
   ///* Numeric Controls */
   //--freon-numeric-slider-color: #{theme.$blue-900};
 }

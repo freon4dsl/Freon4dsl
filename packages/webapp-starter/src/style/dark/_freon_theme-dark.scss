@@ -83,8 +83,15 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-horizontallist-component-padding: 0px;
   --freon-verticallist-component-padding: 0px;
 
-  /* Boolean components */
-  --freon-accent-color: #{theme.$yellow-200};
+  /* Boolean Controls */
+  --freon-boolean-switch-color: rgba(211, 227, 253, 255);
+  --freon-boolean-unselected-track: #{theme.$grey-500};
+  --freon-boolean-background-color: black;
+  --freon-boolean-checkbox-color: rgba(211, 227, 253, 255);
+  --freon-boolean-radio-color: rgba(211, 227, 253, 255);
+
+  ///* Numeric Controls */
+  //--freon-numeric-slider-color: #{theme.$blue-900};
 }
 
 html,

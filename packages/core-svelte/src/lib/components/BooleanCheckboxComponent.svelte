@@ -69,5 +69,8 @@
         padding: 1px;
         --md-sys-color-primary: var(--freon-boolean-checkbox-color, var(--mdc-theme-primary));
     }
+    .fre-checkbox:focus-within {
+        box-shadow: 0px 0px 10px var(--freon-boolean-checkbox-color, var(--mdc-theme-primary));
+    }
 </style>
 

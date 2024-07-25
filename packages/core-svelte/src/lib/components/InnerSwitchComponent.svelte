@@ -46,7 +46,7 @@
     }
 </script>
 
-<div class="innerswitch">
+<div class="freon-inner-switch">
     <md-focus-ring for="{id}" style="--md-focus-ring-shape: 2px"></md-focus-ring>
     <button
             id="{id}"
@@ -61,16 +61,16 @@
 </div>
 
 <style>
-    .innerswitch {
+    .freon-inner-switch {
         /* these two are needed for md-focus-ring */
         display: inline-block;
         position: relative;
     }
-    /* Inner Design Option */
-    .innerswitch button {
+    /* From here different */
+    .freon-inner-switch button {
         padding: 0.3em;
-        background-color: var(--mdc-theme-background, #fff);
-        border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);
+        background-color: var(--freon-boolean-background-color, var(--mdc-theme-background));
+        border: 1px solid var(--freon-boolean-unselected-track, var(--mdc-theme-on-surface));
         /* it seems that the md control resets a number of common variables, therefore we reset them here */
         font-weight: var(--freon-text-component-font-weight, normal);
         font-size: var(--freon-text-component-font-size, 14px);
@@ -78,29 +78,21 @@
     }
     [role='switch'][aria-checked='true'] :first-child,
     [role='switch'][aria-checked='false'] :last-child {
-        display: none;
-        color: #fff;
-    }
-
-    .innerswitch button span {
-        user-select: none;
-        pointer-events:none;
-        padding: 0.25em;
-    }
-
-    .innerswitch button:focus {
-        outline: var(--freon-boolean-switch-color, var(--mdc-theme-primary)) solid 1px;
-    }
-
-    [role='switch'][aria-checked='true'] :first-child,
-    [role='switch'][aria-checked='false'] :last-child {
+        color: var(--freon-boolean-background-color, var(--mdc-theme-background));
         border-radius: 0.25em;
         background: var(--freon-boolean-switch-color, var(--mdc-theme-primary));
         display: inline-block;
     }
 
-    .innerswitch button:focus {
-        /*box-shadow: 0 0px 8px var(--freon-boolean-accent-color);*/
+    .freon-inner-switch button span {
+        user-select: none;
+        pointer-events:none;
+        padding: 0.25em;
+    }
+
+    .freon-inner-switch button:focus {
+        outline: var(--freon-boolean-switch-color, var(--mdc-theme-primary)) solid 1px;
+        box-shadow: 0 0px 8px var(--freon-boolean-switch-color, var(--mdc-theme-primary));
         border-radius: 0.1em;
     }
 </style>

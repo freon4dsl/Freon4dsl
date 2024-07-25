@@ -1,17 +1,24 @@
 <script lang="ts">
-    import "@material/web/switch/switch.js";
-    import {MdSwitch} from "@material/web/all.js";
+    // adapted for Freon from https://svelte.dev/repl/d65a4e9f0ae74d1eb1b08d13e428af32?version=3.35.0
+
+    // original comments
+    // based on suggestions from:
+    // Inclusive Components by Heydon Pickering https://inclusive-components.design/toggle-button/
+    // On Designing and Building Toggle Switches by Sara Soueidan https://www.sarasoueidan.com/blog/toggle-switch-design/
+    // and this example by Scott O'hara https://codepen.io/scottohara/pen/zLZwNv
+
     import {BooleanControlBox, FreEditor, FreLogger} from "@freon4dsl/core";
     import {componentId} from "$lib/index.js";
     import {afterUpdate, onMount} from "svelte";
+
+    const LOGGER = new FreLogger("SwitchComponent");
+    
     export let box: BooleanControlBox;
     export let editor: FreEditor;			// the editor
 
-    const LOGGER = new FreLogger("SwitchBoxComponent");
-
-    let id: string = !!box ? componentId(box) : 'switchbox-for-unknown-box';
+    let id: string = !!box ? componentId(box) : 'switch-for-unknown-box';
     let value = box.getBoolean();
-    let switchElement: MdSwitch;
+    let switchElement: HTMLButtonElement;
 
     /**
      * This function sets the focus on this element programmatically.
@@ -35,10 +42,9 @@
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
-    const onChange = (event: Event) => {
-        // At on:click switchElement.checked is not yet changed, therefore we use a negation.
-        // We use on:click instead of on:change because we need to stop propagation.
-        value = !switchElement.selected;
+    function handleClick(event){
+        const target = event.target;
+        value = target.getAttribute('aria-checked') !== 'true';
         box.setBoolean(value);
         if (box.selectable) {
             editor.selectElementForBox(box);
@@ -48,12 +54,63 @@
     }
 </script>
 
-<span class="freon-switch" id="{id}">
-    <md-switch id="switch" show-only-selected-icon selected={value} on:click={onChange} bind:this={switchElement} ></md-switch>
+
+<span class="freon-switch">
+    <button
+            id="{id}"
+            bind:this={switchElement}
+            role="switch"
+            aria-checked={value}
+            aria-labelledby={`switch-${id}`}
+            on:click={handleClick}>
+    </button>
 </span>
 
 <style>
     .freon-switch {
-        --md-sys-color-primary: var(--freon-boolean-switch-color, var(--mdc-theme-primary));
+        display: flex;
+        align-items: center;
+    }
+
+    .freon-switch button {
+        width: 3em;
+        height: 1.6em;
+        position: relative;
+        margin: 0 0 0 0.5em;
+        background: var(--freon-boolean-unselected-track, var(--mdc-theme-on-surface));
+        border: none;
+    }
+
+    .freon-switch button::before {
+        content: '';
+        position: absolute;
+        width: 1.3em;
+        height: 1.3em;
+        background: var(--freon-boolean-background-color, var(--mdc-theme-background));
+        top: 0.13em;
+        right: 1.5em;
+        transition: transform 0.3s;
+    }
+
+    .freon-switch button[aria-checked='true']{
+        background-color: var(--freon-boolean-switch-color, var(--mdc-theme-primary))
+    }
+
+    .freon-switch button[aria-checked='true']::before{
+        transform: translateX(1.3em);
+        transition: transform 0.3s;
+    }
+
+    .freon-switch button:focus {
+        box-shadow: 0 0px 8px var(--freon-boolean-switch-color, var(--mdc-theme-primary));
+        border-radius: 1.5em;
+    }
+
+    .freon-switch button {
+        border-radius: 1.5em;
+    }
+
+    .freon-switch button::before {
+        border-radius: 100%;
     }
 </style>

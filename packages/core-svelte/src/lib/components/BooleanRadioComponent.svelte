@@ -132,4 +132,8 @@
       font-size: var(--freon-text-component-font-size, 14px);
       font-family: var(--freon-text-component-font-family, "Arial");
     }
+
+    .radiogroup:focus-within {
+      box-shadow: 0px 0px 10px var(--freon-boolean-checkbox-color, var(--mdc-theme-primary));
+    }
 </style>
