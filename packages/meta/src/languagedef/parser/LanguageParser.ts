@@ -24,7 +24,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     }
 
     parse(definitionFile: string): FreMetaLanguage | undefined {
-        console.log("ParseFile: " + definitionFile)
+        LOG2USER.log("ParseFile: " + definitionFile)
         if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);
@@ -87,7 +87,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     }
 
     private parseIds(json: any): IdMap {
-        console.log("PARSE IDS")
+        LOG2USER.log("PARSE IDS")
         const idMap = new IdMap();
 
         const jsonLanguages = json["languages"];
@@ -99,7 +99,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
         }
         const languageId = json["id"];
         if (typeof languageId === "string") {
-            console.log("Language has id " + languageId);
+            LOG2USER.log("Language has id " + languageId);
         }
         const concepts = json["concepts"];
         if (!Array.isArray(concepts)) {
