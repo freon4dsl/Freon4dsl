@@ -60,7 +60,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                     ])
                 ), undefined, undefined, true
             ),
-            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-3", "h-8"),
+            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-3", "h-2"),
             ...(element.showPeriods === true? [                    
                 BoxUtil.listGroupBox(element, "STUDY PERIODS", 0, "study-periods-group",
                     BoxUtil.indentBox(element, 4, true, "9",
@@ -75,21 +75,21 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 ),
             ]),
             ...(element.showActivityDetails === true? [
-                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-4", "h-4"),
+                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-4", "h-2"),
                     BoxUtil.listGroupBox(element, "TASK DETAILS", 0, "task-details-group",
                         BoxUtil.indentBox(element, 4, true, "13",
                             BoxUtil.verticalPartListBox(element, (element).taskDetails, "taskDetails", null, this.handler)
                         ),
                     undefined, "app-uppercase"),
                     ...(element.showSystems === true? [
-                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-5", "h-4"),
+                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-5", "h-2"),
                     BoxUtil.listGroupBox(element, "SYSTEM ACCESS DEFINITIONS", 0, "sys-defs-group",
                         BoxUtil.indentBox(element, 4, true, "17",
                             BoxUtil.verticalPartListBox(element, (element).systemAccesses, "systemAccesses", null,  this.handler)
                         ),
                     undefined, "app-uppercase"),
                     ] : []),
-                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6", "h-4"),
+                    BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-6", "h-2"),
                     BoxUtil.listGroupBox(element, "STAFFING", 0, "staffing-group",
                         BoxUtil.indentBox(element, 4, true, "21",
                             BoxUtil.getBoxOrAction(element, "staffing", "Staffing", this.handler)
@@ -112,7 +112,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                             BoxUtil.labelBox(period, "Description:", "top-1-line-2-item-0",undefined, "app-small-caps"),
                             BoxUtil.getBoxOrAction(period, "description", "Description", this.handler)
                         ],
-                        { selectable: false }, "w-full"
+                        { selectable: false }, "w-full mt-1"
                     ),
                     BoxUtil.listGroupBox(period, "EVENTS", 0, "group-1-line-2-item-0",
                         BoxUtil.indentBox(period, 4, true, "4",
@@ -169,7 +169,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                             BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps"),
                             BoxUtil.getBoxOrAction(event, "description", "Description", this.handler)
                         ],
-                        { selectable: false }, "w-full"
+                        { selectable: false }, "w-full mt-1"
                     ),
                     ...(showScheduling === true? [                    
                         BoxUtil.labelBox(event, "Schedule:", "top-1-line-4-item-0"),

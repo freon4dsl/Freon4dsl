@@ -29,6 +29,7 @@ export default {
     {
       pattern: /py-(1|2|2.5|3|4|5|6|7|8|9)/
     },
+    'focus:ring',
   ],
   theme: {
     extend: {
@@ -46,6 +47,9 @@ export default {
           800: '#5567A8',
           900: '#4C5C96'
         },
+      },
+      ringColor: {
+        DEFAULT: '#32cd3275'
       },
       width: {
         '4.5': '1.125rem'

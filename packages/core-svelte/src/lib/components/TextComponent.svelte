@@ -37,7 +37,7 @@
 
     										// Note that 'from <= to' always holds.
 	let placeHolderStyle: string;
-	$: placeHolderStyle = (partOfActionBox ? "actionPlaceholder" : "placeholder");
+	$: placeHolderStyle = (partOfActionBox ? "textcomponent-actionPlaceholder" : "textcomponent-placeholder");
     let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
     $: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
 
@@ -495,7 +495,7 @@
 			}
 			// Ensure that HTML tags in value are encoded, otherwise they will be seen as HTML.
 			widthSpan.innerHTML = replaceHTML(value);
-			const width = widthSpan.offsetWidth + "px";
+			const width = widthSpan.offsetWidth + 2 + "px";
 			inputElement.style.width = width;
 			// LOGGER.log("setInputWidth mirror [" + value + "] input [" + inputElement.value + "] placeholder [" + placeholder + "] w: " + width + " " + widthSpan.clientWidth + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
 		} else {
@@ -528,9 +528,9 @@
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 <span id="{id}" on:click={onClick} role="none" class="{cssClass}">
 	{#if isEditing}
-		<span id="{id}" class="inputtext">
+		<span id="{id}">
 			<input type="text"
-                   class="inputtext"
+                   class="textcomponent-inputtext"
 				   id="{id}-input"
                    bind:this={inputElement}
 				   on:input={onInput}
@@ -540,14 +540,14 @@
 				   draggable="true"
 				   on:dragstart={onDragStart}
                    placeholder="{placeholder}"/>
-			<span class="inputttext width" bind:this={widthSpan}></span>
+			<span class="textcomponent-inputttext textcomponent-width" bind:this={widthSpan}></span>
 		</span>
 	{:else}
 		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
 		     But ... this is only a problem when this component is inside a draggable element (like List or table)
 		-->
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-		<span class="{box.role} text-box-{boxType} text"
+		<span class="{box.role} text-box-{boxType} textcomponent-text"
               on:click={startEditing}
               bind:this={spanElement}
 			  contenteditable=true
@@ -564,72 +564,4 @@
 </span>
 
 <style>
-	.width {
-		position: absolute;
-		left: -9999px;
-		display: inline-block;
-		line-height: 6px;
-		margin: var(--freon-text-component-margin, 1px);
-		border: none;
-		box-sizing: border-box;
-		padding: var(--freon-text-component-padding, 1px);
-		font-family: var(--freon-text-component-font-family, "Roboto");
-		font-size: var(--freon-text-component-font-size, 14pt);
-		font-weight: var(--freon-text-component-font-weight, inherit);
-		font-style: var(--freon-text-component-font-style, inherit);
-	}
-
-    .inputtext {
-        /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
-		color: var(--freon-text-component-color, blue);
-		padding: var(--freon-text-component-padding, 1px);
-        line-height: 6px;
-        width: 100%;
-        box-sizing: border-box;
-		margin: var(--freon-text-component-margin, 1px);
-        border: none;
-        background: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
-        font-family: var(--freon-text-component-font-family, "Roboto");
-        font-size: var(--freon-text-component-font-size, 14pt);
-        font-weight: var(--freon-text-component-font-weight, inherit);
-        font-style: var(--freon-text-component-font-style, inherit);
-    }
-
-    .text {
-        color: var(--freon-text-component-color, blue);
-        background: var(--freon-text-component-background-color, inherit);
-        font-family: var(--freon-text-component-font-family, "Roboto");
-        font-size: var(--freon-text-component-font-size, 14pt);
-        font-weight: var(--freon-text-component-font-weight, inherit);
-        font-style: var(--freon-text-component-font-style, inherit);
-        padding: var(--freon-text-component-padding, 1px);
-        margin: var(--freon-text-component-margin, 1px);
-        white-space: normal;
-        display: inline-block;
-    }
-
-	.placeholder {
-		color: var(--freon-text-component-placeholder-color, blue);
-		background: var(--freon-text-component-background-color, inherit);
-		font-family: var(--freon-text-component-font-family, "Roboto");
-		font-size: var(--freon-text-component-font-size, 14pt);
-		font-weight: var(--freon-text-component-font-weight, inherit);
-		font-style: var(--freon-text-component-font-style, inherit);
-		padding: var(--freon-text-component-padding, 1px);
-		margin: var(--freon-text-component-margin, 1px);
-		white-space: normal;
-		display: inline-block;
-	}
-	.actionPlaceholder {
-		color: var(--freon-text-component-actionplaceholder-color, darkgrey);
-		background: var(--freon-text-component-background-color, inherit);
-		font-family: var(--freon-text-component-font-family, "Roboto");
-		font-size: var(--freon-text-component-font-size, 14pt);
-		font-weight: var(--freon-text-component-font-weight, inherit);
-		font-style: var(--freon-text-component-font-style, inherit);
-		padding: var(--freon-text-component-padding, 1px);
-		margin: var(--freon-text-component-margin, 1px);
-		white-space: normal;
-		display: inline-block;
-	}
 </style>

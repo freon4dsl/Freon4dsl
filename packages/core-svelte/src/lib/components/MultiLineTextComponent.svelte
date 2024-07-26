@@ -16,7 +16,7 @@
 
     // Parameters
     export let box: MultiLineTextBox;		// the accompanying box
-    export let editor: FreEditor;			// the editor
+    export const editor: FreEditor = null;			// the editor
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
     // Local variables

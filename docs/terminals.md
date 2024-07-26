@@ -1,4 +1,4 @@
-1. Core (red)
+1. root (red)
 > cd Freon4dsl
 > npm run build
 

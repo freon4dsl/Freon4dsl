@@ -7,7 +7,7 @@ const LOGGER: FreLogger = new FreLogger("MultiLineTextBox2");
 
 export class MultiLineTextBox2 extends Box {
     kind: string = "MultiLineTextBox2";
-    placeHolder: string = "type text";
+    placeHolder: string = "[enter]";
     $getText: () => string;
     $setText: (newValue: string) => void;
 
@@ -25,11 +25,12 @@ export class MultiLineTextBox2 extends Box {
         return this.$getText();
     }
 
-    constructor(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<MultiLineTextBox2>) {
+    constructor(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<MultiLineTextBox2>, cssClass?: string) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.$getText = getText;
         this.$setText = setText;
+        this.cssClass = cssClass;
     }
 
     override isEditable(): boolean {

@@ -73,18 +73,11 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-selected-outline-width: 0px;
   --freon-selected-outline-style: solid;
 
-  /* Normal text colors */
-  //--freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
-  --freon-editor-component-background-color: #{gc.$mac-gray-900};             /* The background color of the editor */
-  --freon-editor-component-color: #{gc.$mac-gray-200};        /* The color of the text, unless set otherwise by the projection */
-  --freon-editor-component-margin: 1px;
-  --freon-editor-component-padding: 1px;
-  --freon-editor-component-font-family: "Roboto";    /* The font family of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-size: 14px;          /* The font size of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-style: normal;       /* The font style of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-weight: normal; 
-  
-  /* Dropdown colors */
+  /* Editor Component */
+  --freon-editor-component-background-color: #{gc.$mac-gray-900};
+  --freon-editor-component-color: #{gc.$mac-gray-200};
+
+  /* Dropdown Component */
   --freon-dropdown-component-border-color: #{gc.$mac-primary-900};
   --freon-dropdown-component-background-color: #{gc.$mac-primary-300};
   --freon-dropdown-component-color: #{gc.$mac-primary-900};
@@ -97,35 +90,16 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-dropdownitem-component-hover-color: inherit;
   --freon-dropdownitem-component-hover-background-color: inherit;
 
-   /* Text colors */
+   /* Text Component */
   --freon-text-component-color: #{gc.$mac-primary-200};
-  --freon-text-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-text-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-text-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
-  --freon-text-component-font-family: "Roboto";	/* The font size of the text, unless set otherwise by the projection */
-  --freon-text-component-padding: 0px 1px 0px 1px;
-  --freon-text-component-margin: 0px 1px 0px 2px;
   --freon-text-component-placeholder-color: #{gc.$mac-primary-200};
   --freon-text-component-actionplaceholder-color: #{gc.$mac-gray-100};
 
-  /* Label colors */
+  /* Label Component */
   --freon-label-component-color: #{gc.$mac-gray-400};
   --freon-label-component-background-color: inherit;
-  --freon-label-component-font-size: 14px;
-  --freon-label-component-font-style: normal;	
-  --freon-label-component-font-weight: normal;	
-  --freon-label-component-font-family: "Roboto";	
-  --freon-label-component-font-variant: normal;
-  --freon-label-component-padding: 0px 1px 0px 1px;
-  --freon-label-component-margin: 0px 0px 0px 4px;
 
-  /* Group colors */
-  --freon-group-component-font-style: normal; 
-  --freon-group-component-font-weight: normal;
-  --freon-group-component-font-family: "Roboto";
-  --freon-group-component-font-size: 0.875rem;
-  --freon-group-component-margin: 0px;
-  --freon-group-component-padding: 0px;
+  /* Group Component */
   --freon-group-component-color: #{gc.$mac-white};
   --freon-group-component-background-color: #{gc.$mac-primary-900t};
  
@@ -135,6 +109,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
   /* Boolean components */
   --freon-boolean-accent-color: #{gc.$mac-primary-900};
+  --freon-boolean-focus-color: #32cd3275;
 }
 .gridcellOdd {
   //--freon-gridcell-component-justify-left: right;

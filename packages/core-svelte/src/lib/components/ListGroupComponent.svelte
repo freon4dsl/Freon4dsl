@@ -64,17 +64,17 @@
     }
 </script>
 
-<div id="{id}" class="group {cssClass}" style="{style}">
+<div id="{id}" class="list-group {cssClass}" style="{style}">
     {#key isExpanded}
         <Button pill={true} class="w-7 h-7 p-0" color="none" size="xs" on:click={toggleExpanded}>
             <FontAwesomeIcon class="w-3 h-3" icon={isExpanded ? faChevronUp : faChevronDown} />
         </Button>
     {/key}
-    <span class="group-label">{label}</span>
-    <Button pill={true} size="xs" class="w-7 h-7 p-0 button-transparent" outline>
+    <span class="list-group-label">{label}</span>
+    <Button pill={true} size="xs" class="w-7 h-7 p-0" outline>
         <FontAwesomeIcon class="w-3 h-3" icon={faPlus} />
     </Button>
-    <Button pill={true} size="xs" class="w-7 h-7 p-0 button-transparent" outline>
+    <Button pill={true} size="xs" class="w-7 h-7 p-0" outline>
         <FontAwesomeIcon class="w-3 h-3" icon={faEllipsis} />
     </Button> 
 </div>
@@ -83,31 +83,3 @@
         <RenderComponent box={child} editor={editor}/>
     </div>
 {/key}
-
-<style>
-    .group:empty:before {
-        content: attr(data-placeholdertext);
-        margin: var(--freon-group-component-margin, 1px);
-        padding: var(--freon-group-component-padding, 1px);
-        background-color: var(--freon-group-component-background-color, inherit);
-    }
-    .group {
-        display: inline-block;
-        height: 36px;
-        background-color: var(--freon-group-component-background-color, inherit);
-    }
-    .group-label {
-        color: var(--freon-group-component-color, inherit);
-        font-style: var(--freon-group-component-font-style, inherit);
-        font-weight: var(--freon-group-component-font-weight, normal);
-        font-size: var(--freon-group-component-font-size, inherit);
-        font-family: var(--freon-group-component-font-family, "inherit");
-        padding: var(--freon-group-component-padding, 1px);
-        margin: var(--freon-group-component-margin, 1px);
-        white-space: normal;
-    }
-    .button-transparent {
-        background-color: transparent !important;
-        border-color: transparent !important;
-    }
-</style>
