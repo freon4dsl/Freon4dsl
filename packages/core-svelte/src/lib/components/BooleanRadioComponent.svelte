@@ -9,7 +9,7 @@
       CONTROL,
       FreEditor,
       FreLogger,
-      SHIFT
+      SHIFT, SPACEBAR
     } from "@freon4dsl/core";
     import {afterUpdate, onMount} from "svelte";
     import {MdRadio} from "@material/web/all.js";
@@ -77,7 +77,7 @@
 </script>
 
 <span role="radiogroup" aria-labelledby={ariaLabel} class="radiogroup" id="{id}">
-  <span>
+  <span class="single">
     <md-radio
             id="trueOne"
             name="group"
@@ -94,7 +94,7 @@
     ></md-radio>
     <label for="trueOne" class="radiolabel">{box.labels.yes}</label>
   </span>
-  <span>
+  <span class="single">
     <md-radio
             id="falseOne"
             name="group"
@@ -109,32 +109,38 @@
             on:keydown={onKeyDown}
             bind:this={falseElement}
     ></md-radio>
-    <label for="falseOne" class="radiolabel">{box.labels.no}</label>
+    <label for="falseOne">{box.labels.no}</label>
   </span>
 </span>
 
 <style>
     .radiogroup {
-      padding: 0.3em;
-      padding-top: 0.5em;
-      background-color: var(--mdc-theme-background);
-      border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);
-      --md-sys-color-primary: var(--freon-boolean-radio-color, var(--mdc-theme-primary));
+      font-size: var(--freon-boolean-font-size);
+      font-style: var(--freon-boolean-font-style);
+      font-weight: var(--freon-boolean-font-weight);
+      font-family: var(--freon-boolean-font-family),sans-serif;
+      margin: var(--freon-boolean-margin);
+      padding: var(--freon-boolean-padding);
+      padding-top: 2px;
+      border: none;
+      color: var(--freon-boolean-text-color, var(--mdc-theme-primary));
+      background-color: var(--freon-boolean-background-color, var(--mdc-theme-background));
+      /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
+      --md-sys-color-primary: var(--freon-boolean-color, var(--mdc-theme-primary));
       /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
       /* the following three variables determine the manner in which the focus-ring is shown */
-      /*--md-focus-ring-duration: 0s; !* disabled animation *!*/
-      /*--md-focus-ring-active-width: 0px;*/
-      /*--md-focus-ring-width: 0px;*/
+      --md-focus-ring-duration: 0s; /* disabled animation */
+      --md-focus-ring-active-width: 0px;
+      --md-focus-ring-width: 0px;
     }
-    .radiolabel {
-      color: var(--freon-boolean-background-color, var(--mdc-theme-background));
-      /* it seems that the md control resets a number of common variables, therefore we reset them here */
-      font-weight: var(--freon-text-component-font-weight, normal);
-      font-size: var(--freon-text-component-font-size, 14px);
-      font-family: var(--freon-text-component-font-family, "Arial");
-    }
-
+    .radiogroup:hover,
     .radiogroup:focus-within {
-      box-shadow: 0px 0px 10px var(--freon-boolean-radio-color, var(--mdc-theme-primary));
+      border-radius: 0.1em;
+      outline: var(--freon-boolean-color, var(--mdc-theme-primary)) solid 1px;
+      box-shadow: 0px 0px 10px var(--freon-boolean-color, var(--mdc-theme-primary));
+    }
+    .single {
+      padding-top: 0.2em;
+      padding-bottom: 0.2em;
     }
 </style>

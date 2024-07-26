@@ -68,20 +68,20 @@
 
 <style>
     .freon-switch {
-        display: flex;
-        align-items: center;
+        margin: var(--freon-boolean-margin);
+        padding: var(--freon-boolean-padding);
+        display: inline-flex;
+        width: max-content;
     }
-
     .freon-switch button {
         width: 3em;
         height: 1.6em;
         position: relative;
-        margin: 0 0 0 0.5em;
-        background: var(--freon-boolean-switch-unselected-track, var(--mdc-theme-on-surface));
+        background: var(--freon-boolean-unselected-track, var(--mdc-theme-on-surface));
         border: none;
     }
 
-    .freon-switch button::before {
+    .freon-switch button::before { /* defines the knob */
         content: '';
         position: absolute;
         width: 1.3em;
@@ -93,7 +93,7 @@
     }
 
     .freon-switch button[aria-checked='true']{
-        background-color: var(--freon-boolean-switch-color, var(--mdc-theme-primary))
+        background-color: var(--freon-boolean-color, var(--mdc-theme-primary))
     }
 
     .freon-switch button[aria-checked='true']::before{
@@ -101,8 +101,9 @@
         transition: transform 0.3s;
     }
 
+    .freon-switch button:hover,
     .freon-switch button:focus {
-        box-shadow: 0 0px 8px var(--freon-boolean-switch-color, var(--mdc-theme-primary));
+        box-shadow: 0 0px 8px var(--freon-boolean-color, var(--mdc-theme-primary));
         border-radius: 1.5em;
     }
 
@@ -112,5 +113,4 @@
 
     .freon-switch button::before {
         border-radius: 100%;
-    }
-</style>
+    }</style>

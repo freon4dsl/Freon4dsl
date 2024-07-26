@@ -115,7 +115,6 @@
 };
 
 .divider {
-  color: red;
   fill: #ff11ac;
   color: green;
   stroke-width: 2px;
@@ -171,8 +170,8 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-selected-outline-width: 1px;
   --freon-selected-outline-style: solid;
   /* Normal text colors */
-  //--freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
-  --freon-editor-component-background-color: #{theme.$surface};              /* The background color of the editor */
+  //--freon-colors-inverse_color: #{theme.$on-secondary};       /* Text color on non_normal background */
+  --freon-editor-component-background-color: #{theme.$surface}; /* The background color of the editor */
   --freon-editor-component-color: #{--mdc-theme-primary};       /* The color of the text, unless set otherwise by the projection */
   --freon-editor-component-margin: 1px;
   --freon-editor-component-padding: 1px;
@@ -209,7 +208,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-label-component-color: black;
   --freon-label-component-background-color: inherit;
   --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-style: normal;	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-padding: 0px 1px 0px 1px;
@@ -226,15 +225,23 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-verticallist-component-margin: 2px;
 
   /* Boolean Controls */
-  --freon-boolean-switch-color: #{theme.$blue-900};
-  --freon-boolean-switch-unselected-track: #{theme.$grey-500};
-  --freon-boolean-background-color: white;
-  --freon-boolean-checkbox-color: #{theme.$blue-900};
-  --freon-boolean-radio-color: #{theme.$blue-900};
-  --freon-boolean-slider-color: #{theme.$blue-900};
+  --freon-boolean-color: #{theme.$blue-900};            /* The main color of the control */
+  --freon-boolean-unselected-track: #{theme.$grey-500}; /* The color of the unselected track in a boolean switch */
+  --freon-boolean-background-color: #{theme.$surface};  /* The background and secondary colors */
+  --freon-boolean-text-color: black;
+  --freon-boolean-font-size: 14px;		                /* The font size of the text */
+  --freon-boolean-font-style: normal;	                /* The font size of the text */
+  --freon-boolean-font-weight: normal;	                /* The font size of the text */
+  --freon-boolean-font-family: "Arial";	                /* The font size of the text */
+  --freon-boolean-padding: 0px 1px 0px 1px;
+  --freon-boolean-margin: 1px;
 
-  ///* Numeric Controls */
-  //--freon-numeric-slider-color: #{theme.$blue-900};
+  /* Numeric Controls */
+  --freon-numeric-slider-color: #{theme.$blue-900};            /* The main color of the control */
+  --freon-numeric-slider-inactive-track: #{theme.$grey-500}; /* The color of the unselected track in a numeric-slider switch */
+  --freon-numeric-slider-background-color: #{theme.$surface};  /* The background and secondary colors */
+  --freon-numeric-slider-padding: 0px 1px 0px 1px;
+  --freon-numeric-slider-margin: 1px;
 }
 
 .gridcellOdd {

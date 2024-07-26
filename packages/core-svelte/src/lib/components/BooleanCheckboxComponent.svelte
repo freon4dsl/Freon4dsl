@@ -67,10 +67,17 @@
 <style>
     .fre-checkbox {
         padding: 1px;
-        --md-sys-color-primary: var(--freon-boolean-checkbox-color, var(--mdc-theme-primary));
+        --md-sys-color-primary: var(--freon-boolean-color, var(--mdc-theme-primary));
+        /* the following three variables determine the manner in which the focus-ring is shown */
+        --md-focus-ring-duration: 0s; /* disabled animation */
+        --md-focus-ring-active-width: 0px;
+        --md-focus-ring-width: 0px;
     }
+    .fre-checkbox:hover,
     .fre-checkbox:focus-within {
-        box-shadow: 0px 0px 10px var(--freon-boolean-checkbox-color, var(--mdc-theme-primary));
+        border-radius: 0.1em;
+        outline: var(--freon-boolean-color, var(--mdc-theme-primary)) solid 1px;
+        box-shadow: 0px 0px 10px var(--freon-boolean-color, var(--mdc-theme-primary));
     }
 </style>
 
