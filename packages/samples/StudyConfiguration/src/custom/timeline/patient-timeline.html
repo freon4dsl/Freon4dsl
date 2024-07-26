@@ -30,6 +30,7 @@
     .vis-item.any-day  { background-color: #95a89a; }
     .vis-item.staff  { background-color: #d0e14f; }
     .vis-item.patient  { background-color: #f90000; }
+    .vis-label.patient, .vis-label.staff  {background-color: #ececec;}
     .vis-item.actual { background-color: #000000; }
     .vis-item.actual-in-window {
       background-image: repeating-linear-gradient(
@@ -63,7 +64,7 @@
     {"content": "V5", "id": "V5"},
     {"content": "V6", "id": "V6"},
     {"content": "Patient", "id": "Patient", className:'patient'},    
-    {"content": "Staff (4)", "id": "Staff", className:'staff'},    
+    {"content": "Staff (4)", "id": "Staff", className:'staff'},
   ]);
 
   var items = new vis.DataSet([
@@ -188,7 +189,7 @@
   timeline.setItems(items);
 
 </script>
-  <div>
+  <div style="padding-top: 120px">
     <br>
     <p>
       Viewing the timeline:

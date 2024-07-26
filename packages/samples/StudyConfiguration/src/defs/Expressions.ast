@@ -3,17 +3,18 @@ language StudyConfigurationModel
 abstract expression FirstScheduledExpression {
 }
 
+abstract expression TimeExpression {}
+
 expression PreviousVisit base FirstScheduledExpression {
 }
 
-expression Time base FirstScheduledExpression   {
-    value: number;
+expression Time base TimeExpression   {
+    value: string;
     unit: TimeUnit = TimeUnit:days;
 }
 
 expression StartDay base FirstScheduledExpression {
 }
-
 
 abstract expression LiteralExpression base FirstScheduledExpression {}
 
@@ -35,9 +36,16 @@ expression BooleanLiteralExpression base LiteralExpression {
 ///////////////////////////////////
 //    Binary Expressions
 ////////////////////////////////////
-abstract binary expression BinaryExpression base FirstScheduledExpression {
-    left: FirstScheduledExpression;
-    right: FirstScheduledExpression;
+
+abstract binary expression BinaryTimeExpression base TimeExpression {
+    left: TimeExpression;
+    right: TimeExpression;
+}
+
+
+abstract binary expression BinaryExpression base TimeExpression {
+    left: TimeExpression;
+    right: TimeExpression;
 }
 
 binary expression MultiplyExpression base BinaryExpression {

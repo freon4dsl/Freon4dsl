@@ -2,7 +2,7 @@
     <Group>
         {#each $unitTypes as name}
             <Separator/>
-            <Subtitle>{name}</Subtitle>
+            <!-- <Subtitle>{name}</Subtitle> -->
             <List class="demo-list" dense>
                 {#if !!myUnits}
                     {#each myUnits as unit, index}
@@ -25,7 +25,7 @@
                                         <Item on:SMUI:action={() => (openUnit(index))}>
                                             <Text>Open</Text>
                                         </Item>
-                                        <Item on:SMUI:action={() => (saveUnit(index))}>
+                                        <!-- <Item on:SMUI:action={() => (saveUnit(index))}>
                                             <Text>Save</Text>
                                         </Item>
                                         <Item on:SMUI:action={() => (renameUnit(index))}>
@@ -37,7 +37,7 @@
                                         <Separator/>
                                         <Item on:SMUI:action={() => (exportUnit(index))}>
                                             <Text>Export</Text>
-                                        </Item>
+                                        </Item> -->
                                     </List>
                                 </Menu>
                             </div>
@@ -90,12 +90,13 @@
     // end positioning
 
     let myUnits = [];
+
     $: myUnits = !!$units && $units.length > 0
         ? $units.sort((u1, u2) => {
-            if (u1.name > u2.name) {
+            if (u1.name < u2.name) {
                 return 1;
             }
-            if (u1.name < u2.name) {
+            if (u1.name > u2.name) {
                 return -1;
             }
             return 0;

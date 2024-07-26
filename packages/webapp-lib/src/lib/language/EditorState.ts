@@ -26,6 +26,7 @@ import { setUserMessage } from "../components/stores/UserMessageStore.js";
 import { modelErrors } from "../components/stores/InfoPanelStore.js";
 import { runInAction } from "mobx";
 import {WebappConfigurator} from "../WebappConfigurator.js";
+import {StudyConfigurationModel} from "@freon4dsl/samples-study-configuration";
 
 const LOGGER = new FreLogger("EditorState"); // .mute();
 
@@ -58,6 +59,14 @@ export class EditorState {
         this.resetGlobalVariables();
         // create a new model
         this.currentModel = this.langEnv.newModel(modelName);
+        // Initialize
+        let newModel: StudyConfigurationModel = this.currentModel;
+        this.createNewUnit("StudyConfiguration", "StudyConfiguration");
+        this.saveCurrentUnit();
+        this.createNewUnit("Availability", "Availability");
+        this.saveCurrentUnit();
+        // newModel.periods.push(newModel.newPeriod());
+
         currentModelName.set(this.currentModel.name);
         editorProgressShown.set(false);
     }
@@ -180,6 +189,34 @@ export class EditorState {
             if (!!this.currentModel?.name && this.currentModel?.name.length) {
                 if (!!unit.name && unit.name.length > 0) {
                     await this.serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit);
+                    currentUnitName.set(unit.name); // just in case the user has changed the name in the editor
+                    EditorState.getInstance().setUnitLists();
+                    this.hasChanges = false;
+                } else {
+                    setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
+                }
+            } else {
+                LOGGER.log("Internal error: cannot save unit because current model is unknown.");
+            }
+        } else {
+            LOGGER.log("No current model unit");
+        }
+    }
+
+    /**
+     * Pushes the current unit to the server
+     */
+    async saveStudyUnits() {
+        LOGGER.log("EditorState.saveCurrentUnit: " + get(currentUnitName));
+        const unit: FreNamedNode = this.langEnv.editor.rootElement as FreNamedNode;
+        if (!!unit) {
+            if (!!this.currentModel?.name && this.currentModel?.name.length) {
+                if (!!unit.name && unit.name.length > 0) {
+                    // await this.serverCommunication.putModelUnit(this.currentModel.name, unit.name, unit); MV
+                    await this.serverCommunication.putModelUnit(this.currentModel.name, "Availability", this.currentModel.findUnit("Availability"));
+                    LOGGER.log("Unit saved: Availability");
+                    await this.serverCommunication.putModelUnit(this.currentModel.name, "StudyConfiguration", this.currentModel.findUnit("StudyConfiguration") );
+                    LOGGER.log("Unit saved: StudyConfiguration");
                     currentUnitName.set(unit.name); // just in case the user has changed the name in the editor
                     EditorState.getInstance().setUnitLists();
                     this.hasChanges = false;

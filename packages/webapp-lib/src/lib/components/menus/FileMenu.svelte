@@ -110,7 +110,7 @@
     // save unit menuitem
     const saveUnit = () => {
         // console.log("FileMenu.saveUnit: " + $currentUnitName);
-        EditorState.getInstance().saveCurrentUnit();
+        EditorState.getInstance().saveStudyUnits();
 		setUserMessage(`Unit '${$currentUnitName}' saved.`);
     }
 
@@ -142,9 +142,9 @@
 	let menuItems: MenuItem[] = [
 		{title: "New or Open Model", action: changeModel, id: 1},
 		{title: 'Delete Model', action: deleteModel, id: 2},
-		{title: 'New Unit', action: newUnit, id: 3},
-		{title: 'Save Current Unit', action: saveUnit, id: 4},
-		{title: 'Import Unit(s)...', action: importUnit, id: 5},
+		// {title: 'New Unit', action: newUnit, id: 3},
+		{title: 'Save', action: saveUnit, id: 4},
+		// {title: 'Import Unit(s)...', action: importUnit, id: 5},
 	];
 </script>
 

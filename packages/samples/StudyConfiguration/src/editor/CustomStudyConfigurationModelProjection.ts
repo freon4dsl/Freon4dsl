@@ -39,14 +39,14 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
     ////////////////////////////////////////////////////////////////////
     createStudyConfiguration (element: StudyConfiguration): Box {
         return BoxFactory.verticalLayout(element, "StudyConfiguration-overall", "", [
-            BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-0", "h-4"),
-            BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-1", "", "top",
-                [
-                    BoxUtil.labelBox(element, "STUDY NAME:", "top-1-line-1-item-0", undefined, "app-uppercase"),
-                    BoxUtil.textBox(element, "name")
-                ],
-                { selectable: false },
-            ), 
+            // BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-0", "h-4"),
+            // BoxFactory.horizontalLayout(element, "StudyConfiguration-hlist-line-1", "", "top",
+            //     [
+            //         BoxUtil.labelBox(element, "STUDY NAME:", "top-1-line-1-item-0", undefined, "app-uppercase"),
+            //         BoxUtil.textBox(element, "name")
+            //     ],
+            //     { selectable: false },
+            // ), 
             BoxUtil.emptyLineBox(element, "StudyConfiguration-empty-line-1", "h-2"),
             BoxUtil.listGroupBox(element, "OPTIONS:", 0, "study-periods-group",
                 BoxUtil.indentBox(element, 4, true, "3",

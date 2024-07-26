@@ -37,14 +37,6 @@ export const MANUAL_CUSTOM_ACTIONS: FreCustomAction[] = [
     FreCustomAction.create({
 
         activeInBoxRoles: [
-            "Method-body",
-            "AbsExpression-expr",
-            "SumExpression-from",
-            "SumExpression-to",
-            "SumExpression-body",
-            "IfExpression-condition",
-            "IfExpression-whenTrue",
-            "IfExpression-whenFalse",
             "FreBinaryExpression-left",
             "FreBinaryExpression-right",
             "MultiplyExpression-left",

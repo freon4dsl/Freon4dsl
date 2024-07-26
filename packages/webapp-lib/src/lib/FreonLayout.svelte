@@ -56,7 +56,7 @@
 	import RenameUnitDialog from "./components/dialogs/file-dialogs/RenameUnitDialog.svelte";
 	import {WebappConfigurator} from "./WebappConfigurator.js";
 
-	muteLogs();
+	// muteLogs(); MV
 
 	// Theming
 	let topAppBar: TopAppBarComponentDev;
