@@ -7,17 +7,15 @@
     const LOGGER = new FreLogger("LimitedRadioComponent");
 
     let id: string = box.id;
-    let myEnum = ["red", "yellow", "green"]
+    let myEnum = box.getPossibleNames();
     let ariaLabel: string = "toBeDone";
 
-    let currentValue = 2;
+    let currentValue: string = box.getNames[0];
     const onChange = (event: MouseEvent) => {
         console.log("RadioComponent.onChange, value: " + event.target["value"]);
         currentValue = event.target["value"];
-        // box.setBoolean(value);
-        // if (box.selectable) {
-        //     editor.selectElementForBox(box);
-        // }
+        box.setNames([currentValue]);
+        editor.selectElementForBox(box);
         event.stopPropagation();
         console.log("currentValue set to: " + currentValue);
     }
@@ -30,7 +28,7 @@
             id="{i}"
             name="group"
             value={i}
-            checked={currentValue === i}
+            checked={currentValue === nn}
             aria-label="radio-control-{nn}"
             on:change={onChange}
     ></md-radio>

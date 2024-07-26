@@ -3,6 +3,7 @@ import {Box} from "./internal";
 import {FreNode} from "../../ast";
 import {FreUtils} from "../../util";
 
+// TODO This Box and its component are not used yet, first we need to include more info on limited concepts into the language information
 const LOGGER: FreLogger = new FreLogger("LimitedControlBox").mute();
 
 export enum LimitedDisplay {
@@ -14,33 +15,40 @@ export enum LimitedDisplay {
 export class LimitedControlBox extends Box {
     kind: string = "LimitedControlBox";
     showAs: LimitedDisplay = LimitedDisplay.RADIO_BUTTON;
-    $getBoolean: () => boolean;
-    $setBoolean: (newValue: boolean) => void;
+    $getNames: () => string[];
+    $setNames: (newValue: string[]) => void;
+    possibleNames: string[] = [];
 
     /**
      * Run the setBoolean() as defined by the user of this box inside a mobx action.
      * @param newValue
      */
-    setBoolean(newValue: boolean): void {
+    setNames(newValue: string[]): void {
         LOGGER.log("setBoolean to " + newValue);
-        this.$setBoolean(newValue);
+        this.$setNames(newValue);
         this.isDirty();
     }
 
-    getBoolean(): boolean {
-        return this.$getBoolean();
+    getNames(): string[] {
+        return this.$getNames();
+    }
+
+    getPossibleNames(): string[] {
+        return this.$getNames();
     }
 
     constructor(node: FreNode,
                 role: string,
-                getBoolean: () => boolean,
-                setBoolean: (newValue: boolean) => void,
+                getValues: () => string[],
+                setValues: (newValue: string[]) => void,
+                possibleValues: string[],
                 initializer?: Partial<LimitedControlBox>
     ) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
-        this.$getBoolean = getBoolean;
-        this.$setBoolean = setBoolean;
+        this.$getNames = getValues;
+        this.$setNames = setValues;
+        this.possibleNames = possibleValues;
     }
 }
 

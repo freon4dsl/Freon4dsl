@@ -643,7 +643,7 @@ export class BoxUtil {
 
     private static getPropertyInfo(element: FreNode, propertyName: string) {
         const property = element[propertyName];
-        const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
+        const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
         const isPart: PropertyKind = propInfo.propertyKind;
         return { property, isList, isPart };

@@ -3,13 +3,6 @@ These definitions are not taken into account in the actual language. */
 
 editor default
 
-defaults {
-    boolean inner-switch [YES | NO] // the strings used to display a boolean value, all booleans will default be displayed as an inner switch control
-    number slider
-    limited radio
-    limited[] checkbox
-    referenceSeparator [:] // the string that separates the names in a path name, e.g. pack1:cls3:part
-}
 Text {
 [
 This is
