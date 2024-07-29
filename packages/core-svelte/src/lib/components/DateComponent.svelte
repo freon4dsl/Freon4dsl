@@ -5,32 +5,26 @@
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
 	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils/index.js";
-	import { ActionBox, ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE, CONTROL, DELETE, ENTER, ESCAPE, isActionBox, isActionTextBox, isSelectBox, FreCaret, FreCaretPosition, FreEditor, FreLogger, SelectBox, FreErrorSeverity, SHIFT, TAB, ItemGroupBox, Box, isRegExp, triggerTypeToString, type FrePostAction } from "@freon4dsl/core";
+	import { ActionBox, ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE, CONTROL, DELETE, ENTER, ESCAPE, isActionBox, isSelectBox, FreCaret, FreCaretPosition, FreEditor, FreLogger, SelectBox, FreErrorSeverity, SHIFT, TAB, DateBox, isRegExp, triggerTypeToString, type FrePostAction } from "@freon4dsl/core";
 	import { CharAllowed} from "@freon4dsl/core";
-	import RenderComponent from "./RenderComponent.svelte";
 
 	import { runInAction } from "mobx";
 	import { replaceHTML } from "./svelte-utils/index.js";
 
-    import { Button } from 'flowbite-svelte';
-	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-    import { faGripVertical, faChevronDown, faChevronUp, faEllipsis, faXmark } from '@fortawesome/free-solid-svg-icons';
+	import { Datepicker } from 'flowbite-svelte';
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
-    const LOGGER = new FreLogger("ItemGroupComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
-    const dispatcher = createEventDispatcher();
-    type BoxType = "action" | "select" | "text";
+    const LOGGER = new FreLogger("DateComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
 
     // Parameters
-    export let box: ItemGroupBox;				// the accompanying textbox
+    export let box: DateBox;				// the accompanying textbox
     export let editor: FreEditor;			// the editor
 	export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user, needs to be exported for binding in TextDropdownComponent
-	export let partOfActionBox: boolean = false; // indication whether this text component is part of an TextDropdownComponent
-	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
+	export let text: string;    			// the text to be displayed
 
     // Local variables
     let id: string;                         // an id for the html element
-    id = !!box ? componentId(box) : 'texitemgroup-with-unknown-box';
+    id = !!box ? componentId(box) : 'text-with-unknown-box';
     let spanElement: HTMLSpanElement;       // the <span> element on the screen
     let inputElement: HTMLInputElement; 	// the <input> element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
@@ -39,23 +33,7 @@
     let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
     let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
 	let cssClass: string = '';
-	let style: string;
-
-	// let element: HTMLDivElement = null;
-    let contentElement: HTMLDivElement = null;
-    	
-    let label: string;
-    let level: number;
-    let child: Box;
-    let isExpanded: boolean = false; 
-    let contentStyle: string = 'display: none';
-    let isDraggable: boolean = true;	
-	
-	// Note that 'from <= to' always holds.
-	let placeHolderStyle: string;
-	$: placeHolderStyle = (partOfActionBox ? "textcomponent-actionPlaceholder" : "textcomponent-placeholder");
-    let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
-    $: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
+	let placeHolderStyle: string = "datecomponent-placeholder";
 
     /**
      * This function sets the focus on this element programmatically.
@@ -136,7 +114,6 @@
 		setFromAndTo(anchorOffset, focusOffset);
 	    event.preventDefault();
         event.stopPropagation();
-        dispatcher('startEditing', {content: text, caret: from}); // tell the TextDropdown that the edit has started
     }
 
     /**
@@ -150,10 +127,6 @@
 			LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 			setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
 		}
-		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
-            LOGGER.log('dispatching from on click');
-            dispatcher('textUpdate', {content: text, caret: from});
-        }
         event.stopPropagation();
     }
 
@@ -169,20 +142,16 @@
 			from = -1;
 			to = -1;
 
-			if (!partOfActionBox) {
-				// store the current value in the textbox, or delete the box, if appropriate
-				LOGGER.log(`   save text using box.setText(${text})`)
-				runInAction(() => {
-					if (box.deleteWhenEmpty && text.length === 0) {
-						editor.deleteBox(box);
-					} else if (text !== box.getText()) {
-						LOGGER.log(`   text is new value`)
-						box.setText(text);
-					}
-				});
-			} else {
-				dispatcher('endEditing');
-			}
+			// store the current value in the textbox, or delete the box, if appropriate
+			LOGGER.log(`   save text using box.setDate(${text})`)
+			runInAction(() => {
+				if (box.deleteWhenEmpty && text.length === 0) {
+					editor.deleteBox(box);
+				} else if (text !== box.getDate()) {
+					LOGGER.log(`   text is new value`)
+					box.setDate(text);
+				}
+			});
 		}
     }
 
@@ -208,7 +177,7 @@
         // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
         // stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
         // preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
-        //LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+        LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
 		if (event.altKey || event.ctrlKey) {  // No shift, because that is handled as normal text
 			// first check if this event has a command defined for it
@@ -228,12 +197,12 @@
 				// COPY
 				event.stopPropagation();
 				navigator.clipboard.writeText(text) // TODO get only the selected text from document.getSelection
-					.then(() => {
-						editor.setUserMessage('Text copied to clipboard', FreErrorSeverity.Info);
-					})
-					.catch(err => {
-						editor.setUserMessage('Error in copying text: ' + err.message);
-					});
+						.then(() => {
+							editor.setUserMessage('Text copied to clipboard', FreErrorSeverity.Info);
+						})
+						.catch(err => {
+							editor.setUserMessage('Error in copying text: ' + err.message);
+						});
 			} else if (event.ctrlKey && !event.altKey && event.key === 'v') { // ctrl-v
 				// PASTE
 				event.stopPropagation();
@@ -259,10 +228,9 @@
 					// todo Maybe this option could be completely handled by TextDropDown and Freon,
 					// this would avoid a second call to endEditing when the selection is changed.
 					LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
-					if (!partOfActionBox && isEditing) {
+					if (isEditing) {
 						endEditing();
-						// do not switch selection, this will be done by FreonComponent
-					} // else, let TextDropDownComponent handle this
+					}
 					break;
 				}
 				case ARROW_LEFT: {
@@ -270,12 +238,8 @@
 					LOGGER.log("Arrow-left: Caret at: " + from);
 					if (from !== 0) { // when the arrow key can stay within the text, do not let the parent handle it
 						event.stopPropagation();
-						// note: caret is set to one less because getCaretPosition is calculated before the event is executed
-						LOGGER.log('dispatching from arrow-left')
-						dispatcher('textUpdate', {content: text, caret: from - 1});
 					} else { // the key will cause this element to lose focus, its content should be saved
 						endEditing();
-						// let the parent take care of handling the event
 					}
 					break;
 				}
@@ -284,9 +248,6 @@
 					LOGGER.log("Arrow-right: Caret at: " + from);
 					if (from !== text.length) { // when the arrow key can stay within the text, do not let the parent handle it
 						event.stopPropagation();
-						// note: caret is set to one more because getCaretPosition is calculated before the event is executed
-						LOGGER.log('dispatching from arrow-right')
-						dispatcher('textUpdate', {content: text, caret: from + 1});
 					} else { // the key will cause this element to lose focus, its content should be saved
 						endEditing();
 						// let the parent take care of handling the event
@@ -347,37 +308,8 @@
 					getCaretPosition(event);
 					switch (box.isCharAllowed(text, event.key, from)) {
 						case CharAllowed.OK: // add to text, handled by browser
-							//LOGGER.log('CharAllowed');
+							LOGGER.log('CharAllowed');
 							event.stopPropagation();
-							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
-							if (editor.selectedBox.kind === "ActionBox") {
-								// TODO This matches one character regular expressions only
-								const matchingOption = (editor.selectedBox as ActionBox).getOptions(editor).find(option => {
-									if (isRegExp(option.action.trigger) ){
-										if (option.action.trigger.test(event.key)) {
-											LOGGER.log("Matching regexp" + triggerTypeToString(option.action.trigger))
-											return true
-										}
-										return false
-									}
-								})
-								if (!!matchingOption) {
-									let execresult: FrePostAction = null;
-									runInAction(() => {
-										runInAction(() => {
-											const command = matchingOption.action.command();
-											execresult = command.execute(box, event.key, editor, 0);
-										});
-										if (!!execresult) {
-											execresult();
-										}
-									})
-									event.preventDefault();
-									event.stopPropagation();
-								}
-							} else {
-								//LOGGER.log("     is NOT an action box, but: " + editor.selectedBox.kind);
-							}
 							break;
 						case CharAllowed.NOT_OK: // ignore
 							// ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
@@ -395,12 +327,6 @@
 								// todo break the textbox in two, if possible
 							}
 							LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
-							if (isActionTextBox(editor.selectedBox)) {
-								LOGGER.log("     is an action box");
-								(editor.selectedBox.parent as ActionBox).triggerKeyPressEvent(event.key);
-							} else {
-								LOGGER.log("     is NOT an action box");
-							}
 							event.preventDefault();
 							event.stopPropagation();
 							break;
@@ -414,12 +340,9 @@
      * When this component loses focus, do everything that is needed to end the editing state.
      */
 	const onFocusOut = (e) => {
-		LOGGER.log("onFocusOut " + id + " partof:" + partOfActionBox + " isEditing:" + isEditing)
-		if (!partOfActionBox && isEditing) {
+		LOGGER.log("onFocusOut " + id + " isEditing:" + isEditing)
+		if (isEditing) {
 			endEditing();
-		} else {
-			// let TextDropdownComponent handle it
-			dispatcher("onFocusOutText")
 		}
 	}
 
@@ -428,13 +351,10 @@
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		if (!isEditing) {
-			text = box.getText();
+			text = box.getDate();
 		}
-		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
 		setInputWidth();
 		cssClass = box.cssClass;
-		label = box.getLabel();
-		child = box?.child;
 	}
 
 	/**
@@ -467,13 +387,6 @@
 			inputElement.focus();
             editStart = false;
         }
-        if (isEditing && partOfActionBox) {
-			if (text !== originalText) {
-				// send event to parent
-				LOGGER.log('dispatching event with text ' + text + ' from afterUpdate');
-				dispatcher('textUpdate', {content: text, caret: from + 1});
-			}
-        }
 		// Always set the input width explicitly.
 		setInputWidth();
 		placeholder = box.placeHolder
@@ -489,18 +402,12 @@
      */
     onMount(() => {
         LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")");
-		if (!!box) {
-			originalText = text = box.getText();
-			placeholder = box.placeHolder;
-			isExpanded = box.$isExpanded;
-			contentStyle = isExpanded ? 'display:block;' : 'display:none;';
-			
-			setInputWidth();
-			box.setFocus = setFocus;
-			box.setCaret = setCaret;
-			box.refreshComponent = refresh;
-		}
-
+        originalText = text = box.getDate();
+		placeholder = box.placeHolder;
+		setInputWidth();
+		box.setFocus = setFocus;
+		box.setCaret = setCaret;
+		box.refreshComponent = refresh;
     });
 
 	/**
@@ -546,72 +453,52 @@
 	}
 
 	refresh();
-
-	function toggleExpanded() {
-    	contentElement.style.display = contentElement.style.display === "block" ? "none" : "block";
-        isExpanded = !isExpanded;
-		contentStyle = isExpanded ? 'display:block;' : 'display:none;';
-    }
 </script>
 
 <!-- todo there is a double selection here: two borders are showing -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-<div id="{id}-group" class="item-group {cssClass}" style="{style}">
-	{#key isDraggable}
-		<FontAwesomeIcon class="w-3 h-3" style="cursor: grab;" icon={faGripVertical} />
-	{/key}
-	{#key isExpanded}
-		<Button pill={true} class="w-7 h-7 p-0" color="none" size="xs" on:click={toggleExpanded}>
-			<FontAwesomeIcon class="w-3 h-3" icon={isExpanded ? faChevronUp : faChevronDown} />
-		</Button>
-	{/key}
-    <span class="item-group-label">{label}</span>
-	<span id="{id}" on:click={onClick} role="none" class="{cssClass}">
-		{#if isEditing}
-			<span id="{id}">
-				<input type="text"
-					class="textcomponent-inputtext"
-					id="{id}-input"
-					bind:this={inputElement}
-					on:input={onInput}
-					bind:value={text}
-					on:focusout={onFocusOut}
-					on:keydown={onKeyDown}
-					draggable="true"
-					on:dragstart={onDragStart}
-					placeholder="{placeholder}"/>
-				<span class="textcomponent-inputttext textcomponent-width" bind:this={widthSpan}></span>
-			</span>
-		{:else}
-			<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
-				But ... this is only a problem when this component is inside a draggable element (like List or table)
-			-->
-			<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-			<span class="{box.role} text-box-{boxType} textcomponent-text"
-				on:click={startEditing}
-				bind:this={spanElement}
-				contenteditable=true
-				spellcheck=false
-				id="{id}-span"
-				role="none">
-				{#if !!text && text.length > 0}
-					{text}
-				{:else}
+<span id="{id}" on:click={onClick} role="none" class="{cssClass}">
+	{#if isEditing}
+		<span id="{id}">
+			<!-- <input type="text"
+                   class="textcomponent-inputtext"
+				   id="{id}-input"
+                   bind:this={inputElement}
+				   on:input={onInput}
+                   bind:value={text}
+                   on:focusout={onFocusOut}
+                   on:keydown={onKeyDown}
+				   draggable="true"
+				   on:dragstart={onDragStart}
+                   placeholder="{placeholder}"/> -->
+			<Datepicker name="start" 
+				id="{id}-input"
+				datepickerButtons 
+				inputClass="datecomponent-inputtext" 
+				on:focusout={onFocusOut}
+				/>
+			<span class="datecomponent-inputttext datecomponent-width" bind:this={widthSpan}></span>
+		</span>
+	{:else}
+		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
+		     But ... this is only a problem when this component is inside a draggable element (like List or table)
+		-->
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
+		<span class="{box.role} date-box datecomponent-text"
+              on:click={startEditing}
+              bind:this={spanElement}
+			  contenteditable=true
+			  spellcheck=false
+              id="{id}-span"
+			  role="none">
+			{#if !!text && text.length > 0}
+				{text}
+			{:else}
 				<span class="{placeHolderStyle}">{placeholder}</span>
-				{/if}
-			</span>
-		{/if}
-	</span>
-	<Button pill={true} size="xs" class="w-7 h-7 p-0" outline>
-        <FontAwesomeIcon class="w-3 h-3" icon={faEllipsis} />
-    </Button>
-    <Button pill={true} size="xs" class="w-7 h-7 p-0" outline>
-        <FontAwesomeIcon class="w-3 h-3" icon={faXmark} />
-    </Button> 
-</div>
-{#key contentStyle}
-    <div bind:this={contentElement} style="{contentStyle}">
-        <RenderComponent box={child} editor={editor}/>
-    </div>
-{/key}
+			{/if}
+		</span>
+	{/if}
+</span>
 
+<style>
+</style>

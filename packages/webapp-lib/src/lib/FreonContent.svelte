@@ -49,7 +49,7 @@
         </Label>
         <Button slot="actions">Dismiss</Button>
     </Banner>
-    <EditorPart slot='a'/>
+    <EditorPart />
     <!-- <SplitPane type='horizontal' pos={80}>
             <EditorPart slot='a'/>
             <InfoPanel  slot='b'/> 

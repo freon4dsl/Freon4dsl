@@ -67,7 +67,7 @@
 </script>
 
 <span id="{id}" class="layout-component {cssClass}"
-    class:horizontal="{isHorizontal}" class:vertical="{!isHorizontal}"
+    class:layout-component-horizontal="{isHorizontal}" class:layout-component-vertical="{!isHorizontal}"
     tabIndex={0} bind:this={element} style="{style}">
     {#if isHorizontal }
         {#each children as child (child.id)}
@@ -79,23 +79,3 @@
         {/each}
     {/if}
 </span>
-
-<style>
-    .layout-component {
-        background: transparent;
-        box-sizing: border-box;
-    }
-
-    .horizontal {
-        white-space: nowrap;
-        display: flex;
-        padding: var(--freon-horizontallayout-component-padding, 1px);
-        margin: var(--freon-horizontallayout-component-margin, 1px);
-    }
-
-    .vertical {
-        width: 100%;
-        padding: var(--freon-verticallayout-component-padding, 1px);
-        margin: var(--freon-verticallayout-component-margin, 1px);
-    }
-</style>

@@ -60,8 +60,8 @@
       id="{id}"
 
 >
-    <input bind:this={inputElement1} checked={value===true} on:click={onClick} on:change={onChange} type="radio" name="trueOne" /> <label>{box.labels.yes} </label>
-    <input checked={value===false} on:click={onClick} on:change={onChange} type="radio" name="falseOne" /> <label>{box.labels.no} </label>
+    <input bind:this={inputElement1} checked={value===true} on:click={onClick} on:change={onChange} type="radio" name="trueOne" /> <label for="trueOne" >{box.labels.yes} </label>
+    <input checked={value===false} on:click={onClick} on:change={onChange} type="radio" name="falseOne" /> <label for="falseOne">{box.labels.no} </label>
 </span>
 
 <style>

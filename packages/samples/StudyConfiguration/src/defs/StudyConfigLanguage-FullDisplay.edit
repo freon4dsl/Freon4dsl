@@ -27,6 +27,7 @@ Period {
     [
         Period: ${name}
         Description: ${description}
+        Date: ${date}
         EVENTS
             ${events}
     ]

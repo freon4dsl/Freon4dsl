@@ -19,6 +19,8 @@ import TextDropdownComponent from '$lib/components/TextDropdownComponent.svelte'
 import SvgComponent from '$lib/components/SvgComponent.svelte';
 import MultiLineTextComponent from '$lib/components/MultiLineTextComponent.svelte';
 import MultiLineTextComponent2 from '$lib/components/MultiLineTextComponent2.svelte';
+import DateComponent from '$lib/components/DateComponent.svelte';
+import TimeComponent from '$lib/components/TimeComponent.svelte';
 
 export {
     CheckBoxComponent,
@@ -41,7 +43,9 @@ export {
     SvgComponent,
     IconComponent,
     MultiLineTextComponent,
-    MultiLineTextComponent2
+    MultiLineTextComponent2,
+    DateComponent,
+    TimeComponent
 }
 
 export * from "$lib/components/svelte-utils/index.js";

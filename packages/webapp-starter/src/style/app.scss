@@ -16,7 +16,7 @@ main {
   height: 100%;
 }
 
-/* Application Classes */
+/* #region APPLICATION SETTINGS */
 .app-small-caps {
   font-variant: all-small-caps !important;
 }
@@ -45,54 +45,498 @@ main {
   width: 100%;
 }
 
-/* Generic Settings */
+/* #endregion */
+
+/* #region FREON SETTINGS */
 .editor-part {
   box-sizing: border-box;
-    /* Horizontal list - trbl */
-    --freon-horizontallist-component-padding: 0 0 10px 0;
-    --freon-horizontallist-component-margin: 0;
-    --freon-horizontallist-component-align-items: top;
 
-    /* Vertical list - trbl */
-    --freon-verticallist-component-padding: 0 0 1px 0;
-    --freon-verticallist-component-margin: 0px;
+  /* General */
+  --freon-placeholder-font-family: "Roboto"; 
+  --freon-placeholder-font-size: 14px;
+  --freon-placeholder-font-style: normal;
+  --freon-placeholder-font-weight: light; 
 
-    /* Horizontal layout - trbl */
-    --freon-horizontallayout-component-padding: 0 0 0 0;
-    --freon-horizontallayout-component-margin: 0px;
-    --freon-horizontallayout-component-align-items: top;
+  /* Editor Component */
+  --freon-editor-component-margin: 1px;
+  --freon-editor-component-padding: 1px;
+  --freon-editor-component-font-family: "Roboto"; 
+  --freon-editor-component-font-size: 14px;
+  --freon-editor-component-font-style: normal;
+  --freon-editor-component-font-weight: normal; 
 
-    /* Vertical layout - trbl */
-    --freon-verticallayout-component-padding: 0 0 5px 0;
-    --freon-verticallayout-component-margin: 0;
+  /* Horizontal list - trbl */
+  --freon-horizontallist-component-padding: 0 0 10px 0;
+  --freon-horizontallist-component-margin: 0;
+  --freon-horizontallist-component-align-items: top;
+
+  /* Vertical list - trbl */
+  --freon-verticallist-component-padding: 0 0 1px 0;
+  --freon-verticallist-component-margin: 0px;
+
+  /* Horizontal layout - trbl */
+  --freon-horizontallayout-component-padding: 0 0 0 0;
+  --freon-horizontallayout-component-margin: 0px;
+  --freon-horizontallayout-component-align-items: top;
+
+  /* Vertical layout - trbl */
+  --freon-verticallayout-component-padding: 0 0 5px 0;
+  --freon-verticallayout-component-margin: 0;
+
+  /* Label Component */
+  --freon-label-component-font-size: 14px;
+  --freon-label-component-font-style: normal;	
+  --freon-label-component-font-weight: normal;	
+  --freon-label-component-font-family: "Roboto";	
+  --freon-label-component-font-variant: normal;
+  --freon-label-component-padding: 0px 1px 0px 1px;
+  --freon-label-component-margin: 0px 0px 0px 4px;
+
+  /* Text Component */
+   --freon-text-component-font-size: 14px;
+   --freon-text-component-font-style: normal;		
+   --freon-text-component-font-weight: normal;	
+   --freon-text-component-font-family: "Roboto";
+   --freon-text-component-padding: 0px 0px 0px 2px;
+   --freon-text-component-margin: 0px 1px 0px 3px;
+
+   --freon-text-component-ro-padding: 0px 1px 0px 2px;
+   --freon-text-component-ro-margin: 0px 2px 0px 3px;
+
+  /* Group Component */
+  --freon-group-component-font-style: normal; 
+  --freon-group-component-font-weight: normal;
+  --freon-group-component-font-family: "Roboto";
+  --freon-group-component-font-size: 0.875rem;
+  --freon-group-component-margin: 0;
+  --freon-group-component-padding: 4px 0;
+
+  /* Date Component */
+  --freon-date-component-font-size: 14px;
+  --freon-date-component-font-style: normal;		
+  --freon-date-component-font-weight: normal;	
+  --freon-date-component-font-family: "Roboto";
+  --freon-date-component-padding: 1px 1px 1px 1px;
+  --freon-date-component-margin: 0px 1px 0px 2px;
 
 }
 
+/* #endregion */
 
-span:has(> .tinymce-wrapper) {
-  width: 100%;
-}
+/* #region FREON COMPONENTS */
 
-.tinymce-wrapper textarea {
-  visibility: visible !important;
-  width: 100%;
-  padding-right: 0.25rem;
-}
+  /* #region Label Component */
+  .label-component:empty:before {
+    content: attr(data-placeholdertext);
+    margin: var(--freon-label-component-margin, 1px);
+    padding: var(--freon-label-component-padding, 1px);
+    background-color: var(--freon-label-component-background-color, inherit);
+  }
+  
+  .label-component {
+    color: var(--freon-label-component-color, inherit) !important;
+    background-color: var(--freon-label-component-background-color, inherit) !important;
+    font-style: var(--freon-label-component-font-style, inherit) !important;
+    font-weight: var(--freon-label-component-font-weight, normal) !important;
+    font-size: var(--freon-label-component-font-size, inherit) !important;
+    font-family: var(--freon-label-component-font-family, "inherit") !important;
+    font-variant: var(--freon-label-component-font-variant, "normal") !important;
+    margin: var(--freon-label-component-margin, 1px) !important;
+    padding: var(--freon-label-component-padding, 1px) !important;
+    padding-inline: 0px !important;
+    white-space: normal !important;
+    display: inline-block !important;
 
-.tinymce-wrapper {
-  width: 100%;
-  padding-right: 0.25rem;
-}
+  }
+    /* #endregion */ 
+  
+  /* #region Text Component */
+  .textcomponent-width {
+    position: absolute !important;
+    left: -9999px !important;
+    display: inline-block !important;
+    line-height: 6px !important;
+    margin: var(--freon-text-component-margin, 1px) !important;
+    padding: var(--freon-text-component-padding, 1px) !important;
+    border: none !important;
+    box-sizing: border-box !important;   
+    font-family: var(--freon-text-component-font-family, "Roboto") !important;
+    font-size: var(--freon-text-component-font-size, 14pt) !important;
+    font-weight: var(--freon-text-component-font-weight, inherit) !important;
+    font-style: var(--freon-text-component-font-style, inherit) !important;
+  }
+  
+  .textcomponent-inputtext {
+    color: var(--freon-text-component-color, blue) !important;
+    border-width: 0px !important;
+    line-height: 6px !important;
+    box-sizing: border-box !important;
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow) !important;
+    margin: var(--freon-text-component-margin, 1px) !important;
+    padding: var(--freon-text-component-padding, 1px) !important;
+    background: var(--freon-selected-background-color, rgba(211, 227, 253, 255)) !important;
+    font-family: var(--freon-text-component-font-family, "Roboto") !important;
+    font-size: var(--freon-text-component-font-size, 14pt) !important;
+    font-weight: var(--freon-text-component-font-weight, inherit) !important;
+    font-style: var(--freon-text-component-font-style, inherit) !important;
+    padding-block: 0px !important;
+  }
+  
+  .textcomponent-text {
+    color: var(--freon-text-component-color, blue) !important;
+    background: var(--freon-text-component-background-color, inherit) !important;
+    font-family: var(--freon-text-component-font-family, "Roboto") !important;
+    font-size: var(--freon-text-component-font-size, 14pt) !important;
+    font-weight: var(--freon-text-component-font-weight, inherit) !important;
+    font-style: var(--freon-text-component-font-style, inherit) !important;
+    padding: var(--freon-text-component-ro-padding, 1px) !important;
+    margin: var(--freon-text-component-ro-margin, 1px) !important;
+    white-space: normal !important;
+    display: inline-block !important;
+  }
+  
+  .textcomponent-placeholder {
+    color: var(--freon-text-component-placeholder-color, blue) !important;
+    background: var(--freon-text-component-background-color, inherit) !important;
+    font-family: var(--freon-placeholder-font-family, "Roboto") !important;
+    font-size: var(--freon-placeholder-font-size, 14pt) !important;
+    font-weight: var(--freon-placeholder-font-weight, inherit) !important;
+    font-style: var(--freon-placeholder-font-style, inherit) !important;
+    white-space: normal !important;
+    display: inline-block !important;
+  }
+  
+  .textcomponent-actionPlaceholder {
+    color: var(--freon-text-component-actionplaceholder-color, darkgrey) !important;
+    background: var(--freon-text-component-background-color, inherit) !important;
+    font-family: var(--freon-placeholder-font-family, "Roboto") !important;
+    font-size: var(--freon-placeholder-font-size, 14pt) !important;
+    font-weight: var(--freon-placeholder-font-weight, inherit) !important;
+    font-style: var(--freon-placeholder-font-style, inherit) !important;
+    white-space: normal !important;
+    display: inline-block !important;
+  }
+    /* #endregion */ 
+  
+    /* #region Switch Component */
+  
+  .switchcomponent--inner button {
+    padding: 0.5em !important;
+    background-color: #fff !important;
+    border: 1px solid #747474 !important;
+  }
+  
+  [role='switch'][aria-checked='true'] :first-child,
+  [role='switch'][aria-checked='false'] :last-child {
+    display: none !important;
+    color: #fff !important;
+  }
+  
+  .switchcomponent--inner button span {
+      user-select: none;
+      pointer-events:none;
+      padding: 0.25em;
+  }
+  
+  .switchcomponent--inner button:focus {
+      outline: var(--freon-boolean-accent-color) solid 1px;
+  }
+  
+  .switchcomponent--slider {
+      display: flex;
+      align-items: center;
+  }
+  
+  .switchcomponent--slider button {
+      width: 2.4em;
+      height: 1.2em;
+      position: relative;
+      margin: 0 0 0 0;
+      background: #747474;
+      border: none;
+  }
+  
+  .switchcomponent--slider button::before {
+      content: '';
+      position: absolute;
+      width: 0.9em;
+      height: 0.9em;
+      background: #fff;
+      top: 0.13em;
+      right: 1.4em;
+      transition: transform 0.3s;
+  }
+  
+  .switchcomponent--slider button[aria-checked='true']{
+      background-color: var(--freon-boolean-accent-color)
+  }
+  
+  .switchcomponent--slider button[aria-checked='true']::before{
+      transform: translateX(1.2em);
+      transition: transform 0.3s;
+  }
+  
+  .switchcomponent--slider button:focus {
+      box-shadow: inset 0 0px 0px 1px var(--freon-boolean-focus-color);
+  }
+  
+  [role='switch'][aria-checked='true'] :first-child,
+  [role='switch'][aria-checked='false'] :last-child {
+      border-radius: 0.25em;
+      background: var(--freon-boolean-accent-color);
+      display: inline-block;
+  }
+  
+  .switchcomponent--inner button:focus {
+      border-radius: 0.1em;
+  }
+  
+  .switchcomponent--slider button {
+      border-radius: 1.5em;
+  }
+  
+  .switchcomponent--slider button::before {
+      border-radius: 100%;
+  }
+  
+  .switchcomponent--slider button:focus {
+      box-shadow: 0 0px 0px 1px var(--freon-boolean-focus-color);
+      border-radius: 1.5em;
+  }
+  
+    /* #endregion */ 
+  
+    /* #region List Group Component */
+  .list-group:empty:before {
+      content: attr(data-placeholdertext);
+      margin: var(--freon-group-component-margin, 1px);
+      padding: var(--freon-group-component-padding, 1px);
+      background-color: var(--freon-group-component-background-color, inherit);
+  }
+  .list-group {
+      display: inline-block;
+      height: 36px;
+      margin: var(--freon-group-component-margin, 1px);
+      padding: var(--freon-group-component-padding, 1px);
+      background-color: var(--freon-group-component-background-color, inherit);
+  }
+  .list-group-label {
+      color: var(--freon-group-component-color, inherit);
+      font-style: var(--freon-group-component-font-style, inherit);
+      font-weight: var(--freon-group-component-font-weight, normal);
+      font-size: var(--freon-group-component-font-size, inherit);
+      font-family: var(--freon-group-component-font-family, "inherit");
+      padding: var(--freon-group-component-padding, 1px);
+      margin: var(--freon-group-component-margin, 1px);
+      white-space: normal;
+  }
+    /* #endregion */ 
+  
+    /* #region Item Group Component */
+    .item-group:empty:before {
+      content: attr(data-placeholdertext) !important;
+      margin: var(--freon-group-component-margin, 1px) !important;
+      padding: var(--freon-group-component-padding, 1px) !important;
+      background-color: var(--freon-group-component-background-color, inherit) !important;
+    }
+  
+    .item-group {
+      display: inline-block !important;
+      height: 32px !important;
+      background-color: inherit !important;
+    }
+  
+    .item-group-label {
+      color: var(--freon-group-component-color, inherit) !important;
+      font-style: var(--freon-group-component-font-style, inherit) !important;
+      font-weight: var(--freon-group-component-font-weight, normal) !important;
+      font-size: var(--freon-group-component-font-size, inherit) !important;
+      font-family: var(--freon-group-component-font-family, "inherit") !important;
+      padding: var(--freon-group-component-padding, 1px) !important;
+      margin: var(--freon-group-component-margin, 1px) !important;
+      white-space: normal !important;
+    }
+    /* #endregion */ 
+  
+    /* #region Layout Component */
+  .layout-component {
+    background: transparent !important;
+    box-sizing: border-box !important;
+  }
+  
+  .layout-component-horizontal {
+    white-space: nowrap !important;
+    display: flex !important;
+    padding: var(--freon-horizontallayout-component-padding, 1px) !important;
+    margin: var(--freon-horizontallayout-component-margin, 1px) !important;
+  }
+  
+  .layout-component-vertical {
+    width: 100% !important;
+    padding: var(--freon-verticallayout-component-padding, 1px) !important;
+    margin: var(--freon-verticallayout-component-margin, 1px) !important;
+  }
+    /* #endregion */
+  
+    /* #region MultlineText Component */
+   .multiline-text {
+      color: var(--freon-text-component-color, blue) !important;
+      background: var(--freon-text-component-background-color, inherit) !important;
+      font-family: var(--freon-text-component-font-family, "Roboto") !important;
+      font-size: var(--freon-text-component-font-size, 14pt) !important;
+      font-weight: var(--freon-text-component-font-weight, inherit) !important;
+      font-style: var(--freon-text-component-font-style, inherit) !important;
+      padding: var(--freon-text-component-padding, 1px) !important;
+      margin: 4px 4px 4px 6px !important;
+      white-space: normal !important;
+      height: auto !important;
+    }
+  
+    .multiline-editor {
+      outline: 1px solid transparent !important;
+      outline-offset: 1px !important;
+      --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-color: #32cd3275;
+      --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+      --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+      box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow) !important;
+      border-color: #ffffff00;
+      margin: 4px 4px 4px 4px !important;
+    }
+  
+    .tinymce-wrapper {
+      width: 100% !important;
+      padding: 0 .2rem 0 .2rem !important;
+      min-height: 1rem !important;
+    }
+  
+    span:has(> .tinymce-wrapper) {
+      width: 100% !important;
+    }
+    /* #endregion */ 
+  
+    /* #region Date Component */
+    .datecomponent-width {
+      position: absolute !important;
+      left: -9999px !important;
+      display: inline-block !important;
+      line-height: 6px !important;
+      margin: var(--freon-text-component-margin, 1px) !important;
+      border: none !important;
+      box-sizing: border-box !important;
+      padding: var(--freon-text-component-padding, 1px) !important;
+      font-family: var(--freon-text-component-font-family, "Roboto") !important;
+      font-size: var(--freon-text-component-font-size, 14pt) !important;
+      font-weight: var(--freon-text-component-font-weight, inherit) !important;
+      font-style: var(--freon-text-component-font-style, inherit) !important;
+    }
+    
+    .datecomponent-inputtext {
+      color: var(--freon-text-component-color, blue) !important;
+      line-height: 6px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      margin: var(--freon-date-component-margin, 1px) !important;
+      padding: var(--freon-date-component-padding, 1px) !important;
+      background: var(--freon-selected-background-color, rgba(211, 227, 253, 255)) !important;
+      font-family: var(--freon-date-component-font-family, "Roboto") !important;
+      font-size: var(--freon-date-component-font-size, 14pt) !important;
+      font-weight: var(--freon-date-component-font-weight, inherit) !important;
+      font-style: var(--freon-date-component-font-style, inherit) !important;
+      padding-inline: 2px !important;
+    }
+    
+    .datecomponent-text {
+      color: var(--freon-text-component-color, blue);
+      background: var(--freon-text-component-background-color, inherit);
+      font-family: var(--freon-text-component-font-family, "Roboto");
+      font-size: var(--freon-text-component-font-size, 14pt);
+      font-weight: var(--freon-text-component-font-weight, inherit);
+      font-style: var(--freon-text-component-font-style, inherit);
+      padding: var(--freon-text-component-padding, 1px);
+      padding-left: 2px !important;
+      margin: var(--freon-text-component-margin, 1px);
+      margin-right: 2.5px !important;
+      white-space: normal;
+      display: inline-block;
+    }
+    
+    .datecomponent-placeholder {
+      color: var(--freon-text-component-placeholder-color, blue);
+      background: var(--freon-text-component-background-color, inherit);
+      font-family: var(--freon-placeholder-font-family, "Roboto");
+      font-size: var(--freon-placeholder-font-size, 14pt);
+      font-weight: var(--freon-placeholder-font-weight, inherit);
+      font-style: var(--freon-placeholder-font-style, inherit);
+      white-space: normal;
+      display: inline-block;
+    }
+    /* #endregion */ 
+  
+    /* #region Time Component */
+    .timecomponent-width {
+      position: absolute !important;
+      left: -9999px !important;
+      display: inline-block !important;
+      line-height: 6px !important;
+      margin: var(--freon-text-component-margin, 1px) !important;
+      border: none !important;
+      box-sizing: border-box !important;
+      padding: var(--freon-text-component-padding, 1px) !important;
+      font-family: var(--freon-text-component-font-family, "Roboto") !important;
+      font-size: var(--freon-text-component-font-size, 14pt) !important;
+      font-weight: var(--freon-text-component-font-weight, inherit) !important;
+      font-style: var(--freon-text-component-font-style, inherit) !important;
+    }
+    
+    .timecomponent-inputtext {
+      color: var(--freon-text-component-color, blue) !important;  
+      line-height: 6px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      margin: var(--freon-text-component-margin, 1px) !important;
+      padding: var(--freon-text-component-padding, 1px) !important;
+      padding-inline: 2px !important;
+      background: var(--freon-selected-background-color, rgba(211, 227, 253, 255)) !important;
+      font-family: var(--freon-text-component-font-family, "Roboto") !important;
+      font-size: var(--freon-text-component-font-size, 14pt) !important;
+      font-weight: var(--freon-text-component-font-weight, inherit) !important;
+      font-style: var(--freon-text-component-font-style, inherit) !important;
 
-.tox-statusbar {
-  display: none !important;
-}
+    }
+    
+    .timecomponent-text {
+      color: var(--freon-text-component-color, blue) !important;
+      background: var(--freon-text-component-background-color, inherit) !important;
+      font-family: var(--freon-text-component-font-family, "Roboto") !important;
+      font-size: var(--freon-text-component-font-size, 14pt) !important;
+      font-weight: var(--freon-text-component-font-weight, inherit) !important;
+      font-style: var(--freon-text-component-font-style, inherit) !important;
+      padding: var(--freon-text-component-padding, 1px) !important;
+      padding-left: 2px !important;
+      margin: var(--freon-text-component-margin, 1px) !important;
+      margin-right: 2.5px !important;
+      white-space: normal !important;
+      display: inline-block !important;
+    }
+    
+    .timecomponent-placeholder {
+      color: var(--freon-text-component-placeholder-color, blue) !important;
+      background: var(--freon-text-component-background-color, inherit) !important;
+      font-family: var(--freon-placeholder-font-family, "Roboto") !important;
+      font-size: var(--freon-placeholder-font-size, 14pt) !important;
+      font-weight: var(--freon-placeholder-font-weight, inherit) !important;
+      font-style: var(--freon-placeholder-font-style, inherit) !important;
+      white-space: normal !important;
+      display: inline-block !important;
+    }
+    /* #endregion */ 
 
-// .mce-content-body {
-//   background: #000000 !important;
-//   color: white !important;
-// }
+  /* #endregion */ 
 
+/* #region TAILWIND LIKE */
 .pb-1 {
   padding-bottom: 0.25rem !important;
 }
@@ -108,3 +552,50 @@ span:has(> .tinymce-wrapper) {
 .pb-4 {
   padding-bottom: 1rem !important;
 }
+
+.mt-1 {
+  margin-top: 0.25rem !important;
+}
+
+.mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.mt-3 {
+  margin-top: 0.75rem !important;
+}
+
+.mt-4 {
+  margin-top: 1rem !important;
+}
+
+/* #endregion */ 
+
+/* #region TAILWIND OVERRIDES */
+
+[type='text']:focus, 
+[type='email']:focus, 
+[type='url']:focus, 
+[type='password']:focus, 
+[type='number']:focus, 
+[type='date']:focus, 
+[type='datetime-local']:focus, 
+[type='month']:focus, 
+[type='search']:focus, 
+[type='tel']:focus,
+[type='time']:focus, 
+[type='week']:focus, 
+[multiple]:focus, textarea:focus, select:focus {
+  outline: 1px solid transparent !important;
+  outline-offset: 2px !important;
+  --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/) !important;
+  --tw-ring-offset-width: 0px !important;
+  --tw-ring-offset-color: #fff !important;
+  --tw-ring-color: #32cd3275 !important;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color) !important;
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color) !important;
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow) !important;
+  border-color: #ffffff00;
+}
+
+/* #endregion */

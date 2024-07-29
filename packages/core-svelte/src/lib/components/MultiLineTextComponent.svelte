@@ -16,14 +16,14 @@
 
     // Parameters
     export let box: MultiLineTextBox;		// the accompanying box
-    export let editor: FreEditor;			// the editor
+    export const editor: FreEditor = null;			// the editor
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
     // Local variables
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
     let textArea: HTMLTextAreaElement; 		// the text area element on the screen
-    let placeholder: string = '<..>';       // the placeholder when value of text component is not present
+    let placeholder: string = '<enter>';       // the placeholder when value of text component is not present
 
 	/**
 	 * When this component is mounted, the setFocus and setCaret functions are
