@@ -11,7 +11,7 @@ import {
     SelectOption,
     TextBox,
     VerticalListBox,
-    BoolDisplay
+    BoolDisplay, LimitedControlBox
 } from "../boxes";
 import { FreUtils } from "../../util";
 import { BehaviorExecutionResult } from "../util";
@@ -312,6 +312,68 @@ export class BoxUtil {
 
         let result: SelectBox;
         result = BoxFactory.select(
+            node,
+            roleName,
+            `<${propertyName}>`,
+            () => {
+                return scoper.getVisibleNames(node, propType)
+                    .filter(name => !!name && name !== "")
+                    .map(name => ({
+                        id: name,
+                        label: name
+                    }));
+            },
+            () => {
+                // console.log("==> get selected option for property " + propertyName + " of " + element["name"] + " is " + property.name )
+                if (!!property) {
+                    return { id: property.name, label: property.name };
+                } else {
+                    return null;
+                }
+            },
+            // @ts-ignore
+            (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
+                // L.log("==> SET selected option for property " + propertyName + " of " + element["name"] + " to " + option?.label);
+                if (!!option) {
+                    // console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
+                    runInAction(() => {
+                        setFunc(option.label);
+                    });
+                } else {
+                    runInAction(() => {
+                        node[propertyName] = null;
+                    });
+                }
+                return BehaviorExecutionResult.EXECUTED;
+            },
+            {}
+        );
+        result.propertyName = propertyName;
+        result.propertyIndex = index;
+        return result;
+    }
+
+    static limitedBox(
+        node: FreNode,
+        propertyName: string,
+        setFunc: (selected: string) => void,
+        scoper: FreScoper,
+        index?: number
+    ): Box {
+        const propType: string = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
+        if (!propType) {
+            throw new Error("Cannot find property type '" + propertyName + "'");
+        }
+        // console.log("referenceBox for type: " + propType)
+        let property = node[propertyName];
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "referencebox", index);
+        // set the value for use in lists
+        if (index !== null && index !== undefined && index >= 0) {
+            property = property[index];
+        }
+
+        let result: LimitedControlBox;
+        result = BoxFactory.limited(
             node,
             roleName,
             `<${propertyName}>`,

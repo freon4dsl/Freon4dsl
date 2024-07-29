@@ -31,12 +31,12 @@ import {
     LOG2USER,
     Names,
     FREON_CORE,
-    Roles, ParseLocationUtil
+    Roles
 } from "../../../utils/index.js";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil.js";
 
 export class ProjectionTemplate {
-    // To be able to add a projections for showing/hiding brakets to binary expression, this dummy projection is used.
+    // To be able to add a projections for showing/hiding brackets to binary expression, this dummy projection is used.
     private static dummyProjection: FreEditProjection = new FreEditProjection();
     // The values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords').
     private trueKeyword: string = "true";
@@ -228,7 +228,7 @@ export class ProjectionTemplate {
         return `
                 /**
                  * This method returns the content for one of the superconcepts or interfaces of 'this._element'.
-                 * Based on the name of the susperconcept/interface, a tempory BoxProvider is created. This BoxProvider
+                 * Based on the name of the superconcept/interface, a temporary BoxProvider is created. This BoxProvider
                  * then returns the result of its 'getContent' method, using 'projectionName' as parameter.
                  *
                  * @param superName         The name of the superconcept or interface for which the projection is requested.
@@ -420,9 +420,6 @@ export class ProjectionTemplate {
         const property: FreMetaProperty | undefined = item.property?.referred;
         if (property === null || property === undefined) {
             return '';
-        }
-        if (property.name === "yieldsProfit") {
-            console.log("yieldsProfit is in projection: " + ParseLocationUtil.location(item));
         }
         if (property instanceof FreMetaPrimitiveProperty) {
             result += this.primitivePropertyProjection(property, elementVarName, item.boolInfo, item.listInfo);

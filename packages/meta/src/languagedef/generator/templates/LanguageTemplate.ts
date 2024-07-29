@@ -1,4 +1,4 @@
-import { FreMetaLanguage } from "../../metalanguage/index.js";
+import {FreMetaLanguage, FreMetaLimitedConcept} from "../../metalanguage/index.js";
 import { Names, FREON_CORE, LangUtil, GenerationUtil, STDLIB_GEN_FOLDER } from "../../../utils/index.js";
 
 export class LanguageTemplate {
@@ -149,6 +149,8 @@ export class LanguageTemplate {
                         key: "${concept.key}",
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
+                        isLimited: ${concept instanceof FreMetaLimitedConcept},
+                        instanceNames: ${concept instanceof FreMetaLimitedConcept ? `[${concept.instances.map(inst => `"${inst.name}"`)}]` : "[]"},
                         language: "${concept.originalOwningLanguage.key}",
                         isNamedElement: ${concept.allPrimProperties().some(p => p.name === "name")},
                         trigger: "${Names.concept(concept)}",

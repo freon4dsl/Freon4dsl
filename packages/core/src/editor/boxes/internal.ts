@@ -16,6 +16,7 @@ export * from "./BooleanControlBox";
 export * from "./GridBox";
 export * from "./IndentBox";
 export * from "./LabelBox";
+export * from "./LimitedControlBox";
 export * from "./ListBox";
 export * from "./LayoutBox";
 export * from "./ActionBox";
