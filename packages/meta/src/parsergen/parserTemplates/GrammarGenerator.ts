@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { BoolDisplayType, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { BoolKeywords, ForType, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
 import { LimitedMaker } from "./LimitedMaker.js";
 import { BinaryExpMaker } from "./BinaryExpMaker.js";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker.js";
@@ -18,19 +18,20 @@ export class GrammarGenerator {
 
         // add the standard option from the editor definition
         const defProjGroup: FreEditProjectionGroup | undefined = editUnit.getDefaultProjectiongroup();
-        let stdBoolKeywords: BoolDisplayType | undefined;
+        let stdBoolKeywords: BoolKeywords | undefined;
         let refSeparator: string | undefined;
         if (!!defProjGroup) {
-            stdBoolKeywords = defProjGroup.standardBooleanProjection;
-            refSeparator = defProjGroup.standardReferenceSeparator;
+            stdBoolKeywords = defProjGroup.findStandardProjFor(ForType.Boolean)?.keywords;
+            refSeparator = defProjGroup.findStandardProjFor(ForType.ReferenceSeparator)?.separator;
         }
         if (!!stdBoolKeywords) {
-            grammar.trueValue = stdBoolKeywords.keywords?.trueKeyword ? stdBoolKeywords.keywords.trueKeyword : 'true';
-            grammar.falseValue = stdBoolKeywords.keywords?.falseKeyword ? stdBoolKeywords.keywords.falseKeyword : '';
+            grammar.trueValue = stdBoolKeywords.trueKeyword ? stdBoolKeywords.trueKeyword : 'true';
+            grammar.falseValue = stdBoolKeywords.falseKeyword ? stdBoolKeywords.falseKeyword : 'false';
         }
-        if (!!refSeparator) {
+        if (!!refSeparator && refSeparator.length > 0) {
             grammar.refSeparator = refSeparator;
         }
+        // console.log("Grammar generator, stdBoolKeywords:" + stdBoolKeywords?.toString() + ", refSeparator: " + refSeparator);
         // find the projection group that can be used for the parser and unparser
         const projectionGroup:FreEditProjectionGroup | undefined = ParserGenUtil.findParsableProjectionGroup(editUnit);
         // if no projection group found, return

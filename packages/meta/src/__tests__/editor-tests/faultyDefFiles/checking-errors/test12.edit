@@ -1,0 +1,9 @@
+editor default
+
+defaults {
+    boolean radio
+    number slider
+    limited text
+    limited[] checkbox
+    referenceSeparator [xxx]
+}

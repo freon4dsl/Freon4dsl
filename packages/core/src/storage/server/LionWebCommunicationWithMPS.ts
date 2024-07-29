@@ -8,7 +8,7 @@ import process from 'process';
 
 const LOGGER = new FreLogger("LionWebCommunication"); // .mute();
 
-const lionWebPort = process.env.LIONWEB_PORT || 63320;
+const lionWebPort = process?.env.LIONWEB_PORT || 63320;
 const SERVER_URL = `http://127.0.0.1:${lionWebPort}`;
 // console.log("NODE_PORT:" + lionWebPort+ "  env " + JSON.stringify(process.env));
 

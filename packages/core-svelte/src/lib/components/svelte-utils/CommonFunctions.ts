@@ -24,6 +24,13 @@ export function focusAndScrollIntoView(element: HTMLElement) {
     }
 }
 
+export function classMap(classObj: { [k: string]: any }): string {
+    return Object.entries(classObj)
+        .filter(([name, value]) => name !== '' && value)
+        .map(([name]) => name)
+        .join(' ');
+}
+
 export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: FreEditor) {
     const cmd: FreCommand = FreEditorUtil.findKeyboardShortcutCommand(toFreKey(event), box, editor);
     if (cmd !== PI_NULL_COMMAND) {

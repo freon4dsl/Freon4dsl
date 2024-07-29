@@ -65,7 +65,8 @@ export class FreGenericParser<DEFINITION> {
         }
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "utf8" });
         // console.log("FreGenericParser.Parse langSpec: " + langSpec)
-        
+        // remove warnings from previous runs
+        this.checker.warnings = [];
         // clean the error list from the creator functions
         this.cleanNonFatalParseErrors();
         // parse definition file
@@ -103,7 +104,8 @@ export class FreGenericParser<DEFINITION> {
     parseMulti(filePaths: string[]): DEFINITION | undefined {
         let model: DEFINITION | undefined;
         const submodels: DEFINITION[] = [];
-
+        // remove warnings from previous runs
+        this.checker.warnings = [];
         // clean the error list from the creator functions used by this.parser
         this.cleanNonFatalParseErrors();
         // read the files and parse them separately
@@ -149,7 +151,6 @@ export class FreGenericParser<DEFINITION> {
     private runChecker(model: DEFINITION) {
         if (model !== undefined && model !== null) {
             this.checker.errors = [];
-            this.checker.warnings = [];
             this.checker.check(model);
             // this.checker.check makes errorlist empty, thus we must
             // add the non-fatal parse errors after the call
@@ -180,6 +181,7 @@ export class FreGenericParser<DEFINITION> {
         throw Error("FreParser.setCurrentFileName should be implemented by its subclasses.");
     }
 
+    // todo are the methods getNonFatalParseErrors and cleanNonFatalParseErrors useful?
     protected getNonFatalParseErrors(): string[] {
         throw Error("FreParser.getNonFatalParseErrors should be implemented by its subclasses.");
     }

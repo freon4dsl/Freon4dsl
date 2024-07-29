@@ -4,16 +4,14 @@
 
 // Freon Colors!!
 @use '@material/theme/index' as theme with (
-  //$primary: #80cbc4,
   $primary: #4f9a94,
-  //$secondary: #ce93d8,
   $secondary: #ffcc80,
   $surface: #eeeeee,
   $background: #fff,
   $error: #B00020,
   //$on-primary: color-palette.$orange-50,
   $on-secondary: #00695c,   // a slighter darker version of 'primary'
-  //$on-surface: black,
+  $on-surface: color-palette.$grey-600,
   //$on-error: black,
   //accessible-ink-color,
   //contrast,
@@ -21,7 +19,6 @@
   //luminance,
   //text-emphasis,
   //tone
-
 );
 
 // Include all the global styles that do not involve dark/light modes.
@@ -118,7 +115,6 @@
 };
 
 .divider {
-  color: red;
   fill: #ff11ac;
   color: green;
   stroke-width: 2px;
@@ -174,8 +170,8 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-selected-outline-width: 1px;
   --freon-selected-outline-style: solid;
   /* Normal text colors */
-  //--freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
-  --freon-editor-component-background-color: #{theme.$surface};              /* The background color of the editor */
+  //--freon-colors-inverse_color: #{theme.$on-secondary};       /* Text color on non_normal background */
+  --freon-editor-component-background-color: #{theme.$surface}; /* The background color of the editor */
   --freon-editor-component-color: #{--mdc-theme-primary};       /* The color of the text, unless set otherwise by the projection */
   --freon-editor-component-margin: 1px;
   --freon-editor-component-padding: 1px;
@@ -212,7 +208,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-label-component-color: black;
   --freon-label-component-background-color: inherit;
   --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
+  --freon-label-component-font-style: normal;	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
   --freon-label-component-padding: 0px 1px 0px 1px;
@@ -228,8 +224,24 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-verticallist-component-padding: 2px;
   --freon-verticallist-component-margin: 2px;
 
-  /* Boolean components */
-  --freon-boolean-accent-color: #{theme.$blue-800};
+  /* Boolean Controls */
+  --freon-boolean-color: #{theme.$blue-900};            /* The main color of the control */
+  --freon-boolean-unselected-track: #{theme.$grey-500}; /* The color of the unselected track in a boolean switch */
+  --freon-boolean-background-color: #{theme.$surface};  /* The background and secondary colors */
+  --freon-boolean-text-color: black;
+  --freon-boolean-font-size: 14px;		                /* The font size of the text */
+  --freon-boolean-font-style: normal;	                /* The font size of the text */
+  --freon-boolean-font-weight: normal;	                /* The font size of the text */
+  --freon-boolean-font-family: "Arial";	                /* The font size of the text */
+  --freon-boolean-padding: 0px 1px 0px 1px;
+  --freon-boolean-margin: 1px;
+
+  /* Numeric Controls */
+  --freon-numeric-slider-color: #{theme.$blue-900};            /* The main color of the control */
+  --freon-numeric-slider-inactive-track: #{theme.$grey-500}; /* The color of the unselected track in a numeric-slider switch */
+  --freon-numeric-slider-background-color: #{theme.$surface};  /* The background and secondary colors */
+  --freon-numeric-slider-padding: 0px 1px 0px 1px;
+  --freon-numeric-slider-margin: 1px;
 }
 
 .gridcellOdd {

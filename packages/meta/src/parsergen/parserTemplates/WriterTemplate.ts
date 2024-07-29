@@ -6,27 +6,34 @@ import {
     GenerationUtil
 } from "../../utils/index.js";
 import {
-    FreMetaBinaryExpressionConcept, FreMetaClassifier,
-    FreMetaConcept, FreMetaInterface,
-    FreMetaLanguage, FreMetaLimitedConcept,
+    FreMetaBinaryExpressionConcept,
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaInterface,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
+    FreMetaPrimitiveType,
     FreMetaProperty
 } from "../../languagedef/metalanguage/index.js";
 import {
-    FreEditUnit,
+    BoolKeywords,
+    ExtraClassifierInfo,
+    ForType,
+    FreEditClassifierProjection,
+    FreEditProjection,
+    FreEditProjectionDirection,
+    FreEditProjectionGroup,
+    FreEditProjectionItem,
+    FreEditProjectionLine,
     FreEditProjectionText,
     FreEditPropertyProjection,
-    FreEditProjectionDirection,
-    ListJoinType,
-    FreEditProjectionLine,
-    FreEditProjectionItem,
-    FreEditProjection,
-    FreEditClassifierProjection,
-    FreOptionalPropertyProjection, ExtraClassifierInfo, FreEditSuperProjection, BoolDisplayType
+    FreEditSuperProjection,
+    FreEditUnit,
+    FreOptionalPropertyProjection,
+    ListJoinType
 } from "../../editordef/metalanguage/index.js";
-import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/index.js";
 import { ParserGenUtil } from "./ParserGenUtil.js";
-import { FreEditProjectionGroup } from "../../editordef/metalanguage/index.js";
 
 // TODO more preconditions should be added to avoid null pointer errors
 
@@ -50,15 +57,15 @@ export class WriterTemplate {
         this.currentProjectionGroup = ParserGenUtil.findParsableProjectionGroup(editDef);
 
         const defProjGroup: FreEditProjectionGroup | undefined = editDef.getDefaultProjectiongroup();
-        let stdBoolKeywords: BoolDisplayType | undefined;
+        let stdBoolKeywords: BoolKeywords | undefined;
         let refSeparator: string | undefined;
         if (!!defProjGroup) {
-            stdBoolKeywords = defProjGroup.standardBooleanProjection;
-            refSeparator = defProjGroup.standardReferenceSeparator;
+            stdBoolKeywords = defProjGroup.findStandardProjFor(ForType.Boolean)?.keywords;
+            refSeparator = defProjGroup.findStandardProjFor(ForType.ReferenceSeparator)?.separator;
         }
         if (!!stdBoolKeywords) {
-            this.trueValue = stdBoolKeywords.keywords?.trueKeyword ? stdBoolKeywords.keywords.trueKeyword : 'true';
-            this.falseValue = stdBoolKeywords.keywords?.falseKeyword ? stdBoolKeywords.keywords.falseKeyword : '';
+            this.trueValue = stdBoolKeywords.trueKeyword ? stdBoolKeywords.trueKeyword : 'true';
+            this.falseValue = stdBoolKeywords.falseKeyword ? stdBoolKeywords.falseKeyword : '';
         }
         if (!!refSeparator) {
             this.refSeparator = refSeparator;
@@ -647,10 +654,10 @@ export class WriterTemplate {
                 // or from 'item', and add escapes to the keywords
                 let myTrueKeyword: string = ParserGenUtil.escapeRelevantChars(this.trueValue);
                 let myFalseKeyword: string = ParserGenUtil.escapeRelevantChars(this.falseValue);
-                if (!!item.boolInfo && !!item.boolInfo.keywords) {
-                    myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.keywords.trueKeyword);
-                    if (!!item.boolInfo.keywords.falseKeyword) {
-                        myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolInfo.keywords.falseKeyword);
+                if (!!item.boolKeywords) {
+                    myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolKeywords.trueKeyword);
+                    if (!!item.boolKeywords.falseKeyword) {
+                        myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolKeywords.falseKeyword);
                     } else {
                         myFalseKeyword = '';
                     }
