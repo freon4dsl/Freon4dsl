@@ -50,7 +50,6 @@
     // Local variables
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
-    let spanElement: HTMLSpanElement;       // the <span> element on the screen
     let inputElement: HTMLInputElement; 	// the <input> element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
     let originalText: string;               // variable to remember the text that was in the box previously
@@ -68,7 +67,7 @@
      * It is called from the box.
      */
 	export async function setFocus(): Promise<void> {
-		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
+		// LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
@@ -168,7 +167,7 @@
      * the <span> element, and stores the current text in the textbox.
      */
     function endEditing() {
-        LOGGER.log(' endEditing ' + id);
+        LOGGER.log(`${id}:  endEditing text is '${text}'` );
 		if (isEditing) {
 			// reset the local variables
 			isEditing = false;
@@ -362,7 +361,9 @@
 							event.stopPropagation();
 							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
 							if (editor.selectedBox.kind === "ActionBox") {
-								dispatcher('textUpdate', {content: text, caret: from - 1});
+
+								LOGGER.log(`${id}: TEXT UPDATE text '${text} key: '${event.key} from: ${from}`)
+								dispatcher('textUpdate', {content: text.concat(event.key), caret: from - 1});
 							}
 							break;
 						case CharAllowed.NOT_OK: // ignore
@@ -400,7 +401,7 @@
      * When this component loses focus, do everything that is needed to end the editing state.
      */
 	const onFocusOut = (e) => {
-		LOGGER.log("onFocusOut " + id + " partof:" + partOfActionBox + " isEditing:" + isEditing)
+		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfActionBox + " isEditing:" + isEditing)
 		if (!partOfActionBox && isEditing) {
 			endEditing();
 		} else {
@@ -410,7 +411,7 @@
 	}
 
 	const refresh = () => {
-		// LOGGER.log("REFRESH " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
+		LOGGER.log(`${id}: REFRESH ` + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")" + " original '" + box.getText() + "'")
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		if (!isEditing) {
@@ -426,7 +427,7 @@
  	 */
 	beforeUpdate(() => {
 		if (editStart && !!inputElement) {
-			LOGGER.log('Before update : ' + id + ", " + inputElement);
+			LOGGER.log(`${id}: Before update : ${inputElement}`);
 			setInputWidth();
 			inputElement.focus();
 			editStart = false;
@@ -443,7 +444,7 @@
     afterUpdate(() => {
         // LOGGER.log("Start afterUpdate  " + from + ", " + to + " id: " + id);
 		if (editStart && !!inputElement) {
-			LOGGER.log('    editStart in afterupdate for ' + id)
+			LOGGER.log(`${id}:  editStart in afterupdate text '${text}' `)
             inputElement.selectionStart = from >= 0 ? from : 0;
             inputElement.selectionEnd = to >= 0 ? to : 0;
 			setInputWidth();
@@ -453,7 +454,7 @@
         if (isEditing && partOfActionBox) {
 			if (text !== originalText) {
 				// send event to parent
-				LOGGER.log('dispatching event with text ' + text + ' from afterUpdate');
+				LOGGER.log(`${id}: dispatching event with text ` + text + ' from afterUpdate');
 				dispatcher('textUpdate', {content: text, caret: from + 1});
 			}
         }
@@ -471,7 +472,7 @@
      * are set.
      */
     onMount(() => {
-        // LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")");
+        LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")" + " originaltext: '" + box.getText() + "'");
         originalText = text = box.getText();
 		placeholder = box.placeHolder;
 		setInputWidth();
@@ -550,7 +551,6 @@
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 		<span class="{box.role} text-box-{boxType} text"
               on:click={startEditing}
-              bind:this={spanElement}
 			  contenteditable=true
 			  spellcheck=false
               id="{id}-span"

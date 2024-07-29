@@ -17,7 +17,7 @@
         FreEditor,
         FreLogger,
         type SelectOption,
-        TextBox, isRegExp, triggerTypeToString, isActionBox, type FrePostAction
+        TextBox, isRegExp, triggerTypeToString, isActionBox, type FrePostAction, FreCaretPosition, FreCaret
     } from "@freon4dsl/core"
 
     import { runInAction } from "mobx"
@@ -61,7 +61,7 @@
      * It is called from the RenderComponent.
      */
     const setFocus = () => {
-        LOGGER.log("setFocus " + box.kind + id);
+        // LOGGER.log("setFocus " + box.kind + id);
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
@@ -118,15 +118,19 @@
     const textUpdate = (event: CustomEvent) => {
         LOGGER.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail));
         dropdownShown = true;
-        setText(event.detail.content);
+        // ?????
+        // setText(event.detail.content);
         allOptions = getOptions();
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
         makeUnique();
         if (isActionBox(box)) {
             // Onlhy one option and has been fully typed in
-            LOGGER.log(`(${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
+            LOGGER.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
             if (filteredOptions.length === 1 && filteredOptions[0].label === event.detail.content && filteredOptions[0].label.length === event.detail.caret ) {
-                storeAndExecute(filteredOptions[0])
+                LOGGER.log("STOP 1 !!")
+                event.preventDefault()
+                storeAndExecute(filteredOptions[0], event)
+                // event.stopPropagation()
                 // Done
                 return
             }
@@ -135,14 +139,18 @@
             const matchingOption = box.getOptions(editor).find(option => {
                 if (isRegExp(option.action.trigger) ){
                     if (option.action.trigger.test(event.detail.content)) {
-                        LOGGER.log("Matching regexp" + triggerTypeToString(option.action.trigger) + " for '" + event.detail.content + "'")
+                        LOGGER.log("Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + event.detail.content + "'")
                         return true
                     }
                     return false
                 }
             })
             if (!!matchingOption) {
+                event.preventDefault()
                 LOGGER.log(`Matching regexp ${matchingOption.label}`)
+                LOGGER.log("STOP 2 !!")
+                clearText() 
+                // event.stopPropagation()
                 let execresult: FrePostAction = null;
                 runInAction(() => {
                     runInAction(() => {
@@ -153,7 +161,6 @@
                         execresult();
                     }
                 })
-
             }
         }
     };
@@ -350,10 +357,13 @@
      * by these changes.
      * @param selected
      */
-    function storeAndExecute(selected: SelectOption) {
+    function storeAndExecute(selected: SelectOption, event?: CustomEvent) {
         LOGGER.log('executing option ' + selected.label);
         isEditing = false;
         dropdownShown = false;
+        if (isActionBox(box)) {
+            clearText()
+        }
         runInAction(() => {
             // TODO set the new cursor through the editor
             box.selectOption(editor, selected); // TODO the result of the execution is ignored
@@ -365,6 +375,10 @@
             } else {
                 // ActionBox, action done, clear input text
                 clearText();
+            }
+            if (event !== undefined) {
+                event.preventDefault()
+                event.stopPropagation()
             }
         });
     }
