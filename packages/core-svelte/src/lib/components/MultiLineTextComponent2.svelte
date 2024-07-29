@@ -38,9 +38,9 @@
 	let boxType: BoxType = "text";  
 	let ed: TinyEditor;
 
-	let placeholder: string = '<..>';       // the placeholder when value of text component is not present
+	let placeholder: string = '<enter>';       // the placeholder when value of text component is not present
 	let placeHolderStyle: string;
-	$: placeHolderStyle = "placeholder";
+	$: placeHolderStyle = "textcomponent-placeholder";
 
 	let conf = {
 		plugins: 'lists searchreplace',

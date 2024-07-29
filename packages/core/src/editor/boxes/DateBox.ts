@@ -5,10 +5,10 @@ import { Box } from "./Box";
 import { FreLogger } from "../../logging";
 import { CharAllowed } from "./CharAllowed";
 
-const LOGGER: FreLogger = new FreLogger("TextBox");
+const LOGGER: FreLogger = new FreLogger("DateBox");
 
-export class TextBox extends Box {
-    kind: string = "TextBox";
+export class DateBox extends Box {
+    kind: string = "DateBox";
     /**
      * If true, the element will be deleted when the text becomes
      * empty because of removing the last character in the text.
@@ -23,32 +23,32 @@ export class TextBox extends Box {
 
     placeHolder: string = "<enter>";
     caretPosition: number = -1;
-    $getText: () => string;
-    $setText: (newValue: string) => void;
+    $getDate: () => string;
+    $setDate: (newValue: string) => void;
 
     /**
-     * Run the setText() as defined by the user of this box inside a mobx action.
+     * Run the setDate() as defined by the user of this box inside a mobx action.
      * @param newValue
      */
-    setText(newValue: string): void {
-        LOGGER.log("setText to " + newValue);
-        this.$setText(newValue);
+    setDate(newValue: string): void {
+        LOGGER.log("setDate to " + newValue);
+        this.$setDate(newValue);
         this.isDirty();
     }
 
-    getText(): string {
-        return this.$getText();
+    getDate(): string {
+        return this.$getDate();
     }
 
     isCharAllowed: (currentText: string, key: string, index: number) => CharAllowed = () => {
         return CharAllowed.OK;
     };
 
-    constructor(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>, cssClass?: string) {
+    constructor(node: FreNode, role: string, getDate: () => string, setDate: (text: string) => void, initializer?: Partial<DateBox>, cssClass?: string) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
-        this.$getText = getText;
-        this.$setText = setText;
+        this.$getDate = getDate;
+        this.$setDate = setDate;
         this.cssClass = cssClass;
     }
 
@@ -62,12 +62,12 @@ export class TextBox extends Box {
      */
     setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
         LOGGER.log("setCaret: " + caret.position);
-        /* To be overwritten by `TextComponent` */
+        /* To be overwritten by `DateComponent` */
         // TODO The followimng is needed to keep the cursor at the end when creating a nu8mberliteral in example
         //     Check in new components whether this is needed.
         switch (caret.position) {
             case FreCaretPosition.RIGHT_MOST:
-                this.caretPosition = this.getText().length;
+                this.caretPosition = this.getDate().length;
                 break;
             case FreCaretPosition.LEFT_MOST:
                 this.caretPosition = 0;
@@ -87,7 +87,7 @@ export class TextBox extends Box {
      * It ensures that the SelectableComponent will calculate the new coordinates.
      */
     update: () => void = () => {
-        /* To be overwritten by `TextComponent` */
+        /* To be overwritten by `DateComponent` */
     };
 
     isEditable(): boolean {
@@ -95,6 +95,6 @@ export class TextBox extends Box {
     }
 }
 
-export function isTextBox(b: Box): b is TextBox {
-    return !!b && b.kind === "TextBox"; // b instanceof TextBox;
+export function isDateBox(b: Box): b is DateBox {
+    return !!b && b.kind === "DateBox"; // b instanceof DateBox;
 }

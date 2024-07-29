@@ -92,8 +92,8 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
    /* Text Component */
   --freon-text-component-color: #{gc.$mac-primary-200};
-  --freon-text-component-placeholder-color: #{gc.$mac-primary-200};
-  --freon-text-component-actionplaceholder-color: #{gc.$mac-gray-100};
+  --freon-text-component-placeholder-color: #{gc.$mac-gray-600};
+  --freon-text-component-actionplaceholder-color: #{gc.$mac-gray-600};
 
   /* Label Component */
   --freon-label-component-color: #{gc.$mac-gray-400};

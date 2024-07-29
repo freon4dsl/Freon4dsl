@@ -8,7 +8,7 @@
     // Note also that this component has no 'setFocus' method because it is not
     // strongly coupled to a box. Each box is coupled to the corresponding
     // component in the if-statement.
-    import { isActionBox, isEmptyLineBox, isGridBox, isItemGroupBox, isListGroupBox, isIconBox, isTableBox, isIndentBox, isLabelBox, isLayoutBox, isListBox, isOptionalBox, isSelectBox, isTextBox, isSvgBox, isBooleanControlBox, FreEditor, FreLogger, Box, BoolDisplay,  isElementBox, isOptionalBox2, isMultiLineTextBox, isMultiLineTextBox2 } from "@freon4dsl/core";
+    import { isActionBox, isEmptyLineBox, isGridBox, isItemGroupBox, isListGroupBox, isIconBox, isTableBox, isIndentBox, isLabelBox, isLayoutBox, isListBox, isOptionalBox, isSelectBox, isTextBox, isSvgBox, isBooleanControlBox, FreEditor, FreLogger, Box, BoolDisplay,  isElementBox, isOptionalBox2, isMultiLineTextBox, isMultiLineTextBox2, isDateBox, isTimeBox } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
     import MultiLineTextComponent2 from "./MultiLineTextComponent2.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
@@ -33,6 +33,8 @@
     import CheckBoxComponent from "$lib/components/CheckBoxComponent.svelte";
     import RadioComponent from "$lib/components/RadioComponent.svelte";
     import SwitchComponent from "$lib/components/SwitchComponent.svelte";
+    import DateComponent from "$lib/components/DateComponent.svelte";
+    import TimeComponent from "$lib/components/TimeComponent.svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -135,6 +137,10 @@
                 <MultiLineTextComponent box={box} editor={editor} text=""/>
             {:else if isMultiLineTextBox2(box) }
                 <MultiLineTextComponent2 box={box} editor={editor} text=""/>
+            {:else if isDateBox(box) }
+                <DateComponent box={box} editor={editor} text=""/>
+            {:else if isTimeBox(box) }
+                <TimeComponent box={box} editor={editor} text=""/>
             {:else if isActionBox(box) || isSelectBox(box)}
                 <TextDropdownComponent box={box} editor={editor}/>
             {:else}

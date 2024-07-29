@@ -109,11 +109,19 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxFactory.verticalLayout(period, "period-detail", "", [
                     BoxFactory.horizontalLayout(period, "period-hlist-line-1", "","top",
                         [
-                            BoxUtil.labelBox(period, "Description:", "top-1-line-2-item-0",undefined, "app-small-caps"),
+                            BoxUtil.labelBox(period, "Description:", "top-1-line-2-item-0",undefined, "app-small-caps mt-1"),
                             BoxUtil.getBoxOrAction(period, "description", "Description", this.handler)
                         ],
                         { selectable: false }, "w-full mt-1"
                     ),
+                    BoxFactory.horizontalLayout(period, "Period-hlist-line-1", "", "top",
+                        [
+                            BoxUtil.labelBox(period, "Date:", "top-1-line-1-item-0"),
+                            BoxUtil.dateBox(period, "date"),
+                        ],
+                        { selectable: false }, "w-full mt-1"
+                    ),
+
                     BoxUtil.listGroupBox(period, "EVENTS", 0, "group-1-line-2-item-0",
                         BoxUtil.indentBox(period, 4, true, "4",
                             BoxUtil.verticalPartListBox(period, period.events, "events", null, this.handler)
@@ -166,7 +174,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxFactory.verticalLayout(event, "Event-detail", "", [
                     BoxFactory.horizontalLayout(event, "Event-hlist-line-2", "","top",
                         [
-                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps"),
+                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1"),
                             BoxUtil.getBoxOrAction(event, "description", "Description", this.handler)
                         ],
                         { selectable: false }, "w-full mt-1"

@@ -23,7 +23,7 @@
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
     let textArea: HTMLTextAreaElement; 		// the text area element on the screen
-    let placeholder: string = '<..>';       // the placeholder when value of text component is not present
+    let placeholder: string = '<enter>';       // the placeholder when value of text component is not present
 
 	/**
 	 * When this component is mounted, the setFocus and setCaret functions are

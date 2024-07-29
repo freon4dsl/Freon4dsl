@@ -3,10 +3,7 @@ import { BehaviorExecutionResult } from "../util";
 import { FreLogger } from "../../logging";
 import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreEditor } from "../FreEditor";
-import { Box, BooleanControlBox, ActionBox, LabelBox, TextBox, SelectOption, SelectBox, IndentBox, ItemGroupBox, ListGroupBox, OptionalBox,
-    HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
-    HorizontalLayoutBox, VerticalLayoutBox,
-    TableCellBox, OptionalBox2
+import { Box, BooleanControlBox, ActionBox, LabelBox, TextBox, SelectOption, SelectBox, IndentBox, ItemGroupBox, ListGroupBox, OptionalBox, HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox, HorizontalLayoutBox, VerticalLayoutBox, TableCellBox, OptionalBox2, DateBox, TimeBox
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -36,6 +33,8 @@ let horizontalListCache: BoxCache<HorizontalListBox> = {};
 let verticalListCache: BoxCache<VerticalListBox> = {};
 let gridcellCache: BoxCache<GridCellBox> = {};
 let tableCellCache: BoxCache<TableCellBox> = {};
+let timeCache: BoxCache<TimeBox> = {}
+let dateCache: BoxCache<DateBox> = {};
 
 let cacheActionOff: boolean = false;
 let cacheLabelOff: boolean = false;
@@ -50,6 +49,8 @@ let cacheHorizontalLayoutOff: boolean = false;
 let cacheVerticalLayoutOff: boolean = false;
 let cacheHorizontalListOff: boolean = false;
 let cacheVerticalListOff: boolean = false;
+let cacheDateOff: boolean = false;
+let cacheTimeOff: boolean = false;
 const cacheGridcellOff = true;
 const cacheTablecellOff = true;
 
@@ -75,6 +76,8 @@ export class BoxFactory {
         verticalListCache = {};
         gridcellCache = {};
         tableCellCache = {};
+        dateCache = {};
+        timeCache = {};
     }
 
     public static cachesOff() {
@@ -91,6 +94,8 @@ export class BoxFactory {
         cacheVerticalLayoutOff = true;
         cacheHorizontalListOff = true;
         cacheVerticalListOff = true;
+        cacheTimeOff = true;
+        cacheDateOff = true;
     }
 
     public static cachesOn() {
@@ -182,6 +187,36 @@ export class BoxFactory {
         // 2. Apply the other arguments in case they have changed
         result.$getText = getText;
         result.$setText = setText;
+        FreUtils.initializeObject(result, initializer);
+        return result;
+    }
+
+    static date(element: FreNode, role: string, getDate: () => string, setDate: (text: string) => void, initializer?: Partial<TextBox>, cssClass?: string): DateBox {
+        if (cacheDateOff) {
+            return new DateBox(element, role, getDate, setDate, initializer, cssClass);
+        }
+        // 1. Create the text box, or find the one that already exists for this element and role
+        const creator = () => new DateBox(element, role, getDate, setDate, initializer, cssClass);
+        const result: DateBox = this.find<DateBox>(element, role, creator, dateCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.$getDate = getDate;
+        result.$setDate = setDate;
+        FreUtils.initializeObject(result, initializer);
+        return result;
+    }
+
+    static time(element: FreNode, role: string, getTime: () => string, setTime: (text: string) => void, initializer?: Partial<TextBox>, cssClass?: string): TimeBox {
+        if (cacheTimeOff) {
+            return new TimeBox(element, role, getTime, setTime, initializer, cssClass);
+        }
+        // 1. Create the text box, or find the one that already exists for this element and role
+        const creator = () => new TimeBox(element, role, getTime, setTime, initializer, cssClass);
+        const result: TimeBox = this.find<TimeBox>(element, role, creator, timeCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.$getTime = getTime;
+        result.$setTime = setTime;
         FreUtils.initializeObject(result, initializer);
         return result;
     }

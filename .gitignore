@@ -86,3 +86,7 @@ packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-
 /packages/core-svelte/.svelte-kit/
 
 *storybook.log
+packages/server/modelstore/x/Availability.json
+packages/server/modelstore/x/AvailabilityPublic.json
+packages/server/modelstore/x/StudyConfiguration.json
+packages/server/modelstore/x/StudyConfigurationPublic.json

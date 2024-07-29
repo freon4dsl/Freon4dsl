@@ -7,8 +7,8 @@ import { CharAllowed } from "./CharAllowed";
 
 const LOGGER: FreLogger = new FreLogger("TextBox");
 
-export class TextBox extends Box {
-    kind: string = "TextBox";
+export class TimeBox extends Box {
+    kind: string = "TimeBox";
     /**
      * If true, the element will be deleted when the text becomes
      * empty because of removing the last character in the text.
@@ -23,32 +23,32 @@ export class TextBox extends Box {
 
     placeHolder: string = "<enter>";
     caretPosition: number = -1;
-    $getText: () => string;
-    $setText: (newValue: string) => void;
+    $getTime: () => string;
+    $setTime: (newValue: string) => void;
 
     /**
      * Run the setText() as defined by the user of this box inside a mobx action.
      * @param newValue
      */
-    setText(newValue: string): void {
+    setTime(newValue: string): void {
         LOGGER.log("setText to " + newValue);
-        this.$setText(newValue);
+        this.$setTime(newValue);
         this.isDirty();
     }
 
-    getText(): string {
-        return this.$getText();
+    getTime(): string {
+        return this.$getTime();
     }
 
     isCharAllowed: (currentText: string, key: string, index: number) => CharAllowed = () => {
         return CharAllowed.OK;
     };
 
-    constructor(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>, cssClass?: string) {
+    constructor(node: FreNode, role: string, getTime: () => string, setTime: (text: string) => void, initializer?: Partial<TimeBox>, cssClass?: string) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
-        this.$getText = getText;
-        this.$setText = setText;
+        this.$getTime = getTime;
+        this.$setTime = setTime;
         this.cssClass = cssClass;
     }
 
@@ -67,7 +67,7 @@ export class TextBox extends Box {
         //     Check in new components whether this is needed.
         switch (caret.position) {
             case FreCaretPosition.RIGHT_MOST:
-                this.caretPosition = this.getText().length;
+                this.caretPosition = this.getTime().length;
                 break;
             case FreCaretPosition.LEFT_MOST:
                 this.caretPosition = 0;
@@ -95,6 +95,6 @@ export class TextBox extends Box {
     }
 }
 
-export function isTextBox(b: Box): b is TextBox {
-    return !!b && b.kind === "TextBox"; // b instanceof TextBox;
+export function isTimeBox(b: Box): b is TimeBox {
+    return !!b && b.kind === "TimeBox"; // b instanceof TimeBox;
 }
