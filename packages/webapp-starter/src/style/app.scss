@@ -93,15 +93,24 @@ main {
   --freon-label-component-margin: 0px 0px 0px 4px;
 
   /* Text Component */
-   --freon-text-component-font-size: 14px;
-   --freon-text-component-font-style: normal;		
-   --freon-text-component-font-weight: normal;	
-   --freon-text-component-font-family: "Roboto";
-   --freon-text-component-padding: 0px 0px 0px 2px;
-   --freon-text-component-margin: 0px 1px 0px 3px;
+  --freon-text-component-font-size: 14px;
+  --freon-text-component-font-style: normal;		
+  --freon-text-component-font-weight: normal;	
+  --freon-text-component-font-family: "Roboto";
+  --freon-text-component-padding: 0px 0px 0px 2px;
+  --freon-text-component-margin: 0px 1px 0px 3px;
 
-   --freon-text-component-ro-padding: 0px 1px 0px 2px;
-   --freon-text-component-ro-margin: 0px 2px 0px 3px;
+  --freon-text-component-ro-padding: 0px 1px 0px 2px;
+  --freon-text-component-ro-margin: 0px 2px 0px 3px;
+
+  /* MultilineText Component */
+  --freon-multilinetext-component-font-size: 14px;
+  --freon-multilinetext-component-font-style: normal;		
+  --freon-multilinetext-component-font-weight: normal;	
+  --freon-multilinetext-component-font-family: "Roboto";
+  --freon-multilinetext-component-padding: 0px 0px 0px 2px;
+  --freon-multilinetext-component-margin: 4px 4px 4px 6px;
+
 
   /* Group Component */
   --freon-group-component-font-style: normal; 
@@ -380,16 +389,13 @@ main {
   
     /* #region MultlineText Component */
    .multiline-text {
-      color: var(--freon-text-component-color, blue) !important;
+      color: var(--freon-editor-component-color, rgb(129, 129, 129)) !important;
       background: var(--freon-text-component-background-color, inherit) !important;
-      font-family: var(--freon-text-component-font-family, "Roboto") !important;
-      font-size: var(--freon-text-component-font-size, 14pt) !important;
-      font-weight: var(--freon-text-component-font-weight, inherit) !important;
-      font-style: var(--freon-text-component-font-style, inherit) !important;
-      padding: var(--freon-text-component-padding, 1px) !important;
-      margin: 4px 4px 4px 6px !important;
+      padding: var(--freon-multilinetext-component-padding, 1px) !important;
+      margin: var(--freon-multilinetext-component-margin, 1px) !important;
       white-space: normal !important;
       height: auto !important;
+      min-height: 3rem;
     }
   
     .multiline-editor {
@@ -408,8 +414,13 @@ main {
   
     .tinymce-wrapper {
       width: 100% !important;
-      padding: 0 .2rem 0 .2rem !important;
-      min-height: 1rem !important;
+      min-height: 3rem !important;
+      all: unset;
+    }
+
+    .tinymce-wrapper > div {
+      margin-left: 0.25rem;
+      min-height: 3rem;
     }
   
     span:has(> .tinymce-wrapper) {
@@ -537,37 +548,47 @@ main {
   /* #endregion */ 
 
 /* #region TAILWIND LIKE */
-.pb-1 {
-  padding-bottom: 0.25rem !important;
-}
 
-.pb-2 {
-  padding-bottom: 0.5rem !important;
-}
+.pb-1 { padding-bottom: 0.25rem !important; }
+.pb-2 { padding-bottom: 0.5rem !important; }
+.pb-3 { padding-bottom: 0.75rem !important; }
+.pb-4 { padding-bottom: 1rem !important; }
 
-.pb-3 {
-  padding-bottom: 0.75rem !important;
-}
+.mt-1 { margin-top: 0.25rem !important; }
+.mt-2 { margin-top: 0.5rem !important; }
+.mt-3 { margin-top: 0.75rem !important; }
+.mt-4 { margin-top: 1rem !important; }
+.mt-5 { margin-top: 1.25rem !important; }
+.mt-6 { margin-top: 1.5rem !important; }
+.mt-7 { margin-top: 1.75rem !important; }
+.mt-8 { margin-top: 2rem !important; }
 
-.pb-4 {
-  padding-bottom: 1rem !important;
-}
+.mb-1 { margin-bottom: 0.25rem !important; }
+.mb-2 { margin-bottom: 0.5rem !important; }
+.mb-3 { margin-bottom: 0.75rem !important; }
+.mb-4 { margin-bottom: 1rem !important; }
+.mb-5 { margin-bottom: 1.25rem !important; }
+.mb-6 { margin-bottom: 1.5rem !important; }
+.mb-7 { margin-bottom: 1.75rem !important; }
+.mb-8 { margin-bottom: 2rem !important; }
 
-.mt-1 {
-  margin-top: 0.25rem !important;
-}
+.mr-1 { margin-right: 0.25rem !important; }
+.mr-2 { margin-right: 0.5rem !important; }
+.mr-3 { margin-right: 0.75rem !important; }
+.mr-4 { margin-right: 1rem !important; }
+.mr-5 { margin-right: 1.25rem !important; }
+.mr-6 { margin-right: 1.5rem !important; }
+.mr-7 { margin-right: 1.75rem !important; }
+.mr-8 { margin-right: 2rem !important; }
 
-.mt-2 {
-  margin-top: 0.5rem !important;
-}
-
-.mt-3 {
-  margin-top: 0.75rem !important;
-}
-
-.mt-4 {
-  margin-top: 1rem !important;
-}
+.ml-1 { margin-left: 0.25rem !important; }
+.ml-2 { margin-left: 0.5rem !important; }
+.ml-3 { margin-left: 0.75rem !important; }
+.ml-4 { margin-left: 1rem !important; }
+.ml-5 { margin-left: 1.25rem !important; }
+.ml-6 { margin-left: 1.5rem !important; }
+.ml-7 { margin-left: 1.75rem !important; }
+.ml-8 { margin-left: 2rem !important; }
 
 /* #endregion */ 
 

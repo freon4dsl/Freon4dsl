@@ -100,7 +100,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
     }
 
     createDescription (desc: Description): Box {
-        return new MultiLineTextBox2(desc, "study-part-description", () => { return desc.text}, (t: string) => { desc.text = t});
+        return new MultiLineTextBox2(desc, "study-part-description", () => { return desc.text}, (t: string) => { desc.text = t}, undefined, "mr-2");
     }
 
     createPeriod (period: Period): Box {
@@ -109,7 +109,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxFactory.verticalLayout(period, "period-detail", "", [
                     BoxFactory.horizontalLayout(period, "period-hlist-line-1", "","top",
                         [
-                            BoxUtil.labelBox(period, "Description:", "top-1-line-2-item-0",undefined, "app-small-caps mt-1"),
+                            BoxUtil.labelBox(period, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
                             BoxUtil.getBoxOrAction(period, "description", "Description", this.handler)
                         ],
                         { selectable: false }, "w-full mt-1"
@@ -174,7 +174,7 @@ export class CustomStudyConfigurationModelProjection implements FreProjection {
                 BoxFactory.verticalLayout(event, "Event-detail", "", [
                     BoxFactory.horizontalLayout(event, "Event-hlist-line-2", "","top",
                         [
-                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1"),
+                            BoxUtil.labelBox(event, "Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
                             BoxUtil.getBoxOrAction(event, "description", "Description", this.handler)
                         ],
                         { selectable: false }, "w-full mt-1"
