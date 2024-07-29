@@ -24,6 +24,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: F
     let partialMatch: boolean = false;
     const index = -1; // todo get the correct index
 
+    // search for a matching action in the global actions table.
     for (const action of editor.newFreActions) {
         const trigger = action.trigger;
         LOGGER.log("  executeBehavior trigger " + trigger + "  roles " + action.activeInBoxRoles);

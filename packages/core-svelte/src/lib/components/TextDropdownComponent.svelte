@@ -17,10 +17,10 @@
         FreEditor,
         FreLogger,
         type SelectOption,
-        TextBox
-    } from "@freon4dsl/core";
+        TextBox, isRegExp, triggerTypeToString, isActionBox, type FrePostAction
+    } from "@freon4dsl/core"
 
-    import { runInAction } from "mobx";
+    import { runInAction } from "mobx"
     import { afterUpdate, onMount } from "svelte";
 
     const LOGGER = new FreLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -74,7 +74,7 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
-        LOGGER.log("refresh: " + why)
+        // LOGGER.log("refresh: " + why)
         if (isSelectBox(box)) {
             // TODO see todo in 'storeOrExecute'
             let selectedOption = box.getSelectedOption();
@@ -90,13 +90,21 @@
     afterUpdate( () => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        box.triggerKeyPressEvent = triggerKeyPressEvent
     });
 
     onMount(() => {
-        LOGGER.log("onMount for role [" + box.role + "]");
+        // LOGGER.log("onMount for role [" + box.role + "]");
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        box.triggerKeyPressEvent = triggerKeyPressEvent
     });
+    
+    const triggerKeyPressEvent = (key: string) => {
+        // TODO Implement this
+        console.log("!!!!!!!!!!!!!!! " + key)
+
+    }
 
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!
 
@@ -108,12 +116,46 @@
      * @param event
      */
     const textUpdate = (event: CustomEvent) => {
-        LOGGER.log('textUpdate: ' + JSON.stringify(event.detail));
+        LOGGER.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail));
         dropdownShown = true;
         setText(event.detail.content);
         allOptions = getOptions();
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
         makeUnique();
+        if (isActionBox(box)) {
+            // Onlhy one option and has been fully typed in
+            LOGGER.log(`(${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
+            if (filteredOptions.length === 1 && filteredOptions[0].label === event.detail.content && filteredOptions[0].label.length === event.detail.caret ) {
+                storeAndExecute(filteredOptions[0])
+                // Done
+                return
+            }
+
+            // Try to find a regular expression
+            const matchingOption = box.getOptions(editor).find(option => {
+                if (isRegExp(option.action.trigger) ){
+                    if (option.action.trigger.test(event.detail.content)) {
+                        LOGGER.log("Matching regexp" + triggerTypeToString(option.action.trigger) + " for '" + event.detail.content + "'")
+                        return true
+                    }
+                    return false
+                }
+            })
+            if (!!matchingOption) {
+                LOGGER.log(`Matching regexp ${matchingOption.label}`)
+                let execresult: FrePostAction = null;
+                runInAction(() => {
+                    runInAction(() => {
+                        const command = matchingOption.action.command();
+                        execresult = command.execute(box, event.detail.content, editor, 0);
+                    });
+                    if (!!execresult) {
+                        execresult();
+                    }
+                })
+
+            }
+        }
     };
 
     function makeUnique() {

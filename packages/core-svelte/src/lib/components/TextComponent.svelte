@@ -351,38 +351,18 @@
 				}
 				default: { // the event.key is SHIFT or a printable character
 					getCaretPosition(event);
+					if (event.shiftKey && event.key === "Shift") {
+						// shift key pressed, ignore
+						event.stopPropagation();
+						break
+					}
 					switch (box.isCharAllowed(text, event.key, from)) {
 						case CharAllowed.OK: // add to text, handled by browser
-							LOGGER.log('CharAllowed');
+							LOGGER.log('CharAllowed ' + JSON.stringify(event.key));
 							event.stopPropagation();
 							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
 							if (editor.selectedBox.kind === "ActionBox") {
-								// TODO This matches one character regular expressions only
-								const matchingOption = (editor.selectedBox as ActionBox).getOptions(editor).find(option => {
-									if (isRegExp(option.action.trigger) ){
-										if (option.action.trigger.test(event.key)) {
-											LOGGER.log("Matching regexp" + triggerTypeToString(option.action.trigger))
-											return true
-										}
-										return false
-									}
-								})
-								if (!!matchingOption) {
-									let execresult: FrePostAction = null;
-									runInAction(() => {
-										runInAction(() => {
-											const command = matchingOption.action.command();
-											execresult = command.execute(box, event.key, editor, 0);
-										});
-										if (!!execresult) {
-											execresult();
-										}
-									})
-									event.preventDefault();
-									event.stopPropagation();
-								}
-							} else {
-								LOGGER.log("     is NOT an action box, but: " + editor.selectedBox.kind);
+								dispatcher('textUpdate', {content: text, caret: from - 1});
 							}
 							break;
 						case CharAllowed.NOT_OK: // ignore
@@ -392,18 +372,18 @@
 							event.stopPropagation();
 							break;
 						case CharAllowed.GOTO_NEXT: // try in previous or next box
-							LOGGER.log("KeyPressAction.GOTO_NEXT");
+							LOGGER.log("KeyPressAction.GOTO_NEXT FROM IS " + from);
 							if (from === 0) {
-								editor.selectNextLeaf();
-							} else if (to === text.length) {
 								editor.selectPreviousLeaf();
+							} else if (to === text.length) {
+								editor.selectNextLeaf();
 							} else {
 								// todo break the textbox in two, if possible
 							}
 							LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
-							if (isActionTextBox(editor.selectedBox)) {
+							if (isActionBox(editor.selectedBox)) {
 								LOGGER.log("     is an action box");
-								(editor.selectedBox.parent as ActionBox).triggerKeyPressEvent(event.key);
+								editor.selectedBox.triggerKeyPressEvent(event.key);
 							} else {
 								LOGGER.log("     is NOT an action box");
 							}
@@ -430,7 +410,7 @@
 	}
 
 	const refresh = () => {
-		LOGGER.log("REFRESH " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
+		// LOGGER.log("REFRESH " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		if (!isEditing) {
@@ -491,7 +471,7 @@
      * are set.
      */
     onMount(() => {
-        LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")");
+        // LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")");
         originalText = text = box.getText();
 		placeholder = box.placeHolder;
 		setInputWidth();
