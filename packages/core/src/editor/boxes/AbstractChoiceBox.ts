@@ -33,6 +33,7 @@ export abstract class AbstractChoiceBox extends Box {
                 placeHolder: placeHolder
             }
         );
+        this.textHelper.box = this._textBox
     }
 
     get textBox(): TextBox {
