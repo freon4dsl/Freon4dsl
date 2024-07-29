@@ -26,7 +26,7 @@ import { setUserMessage } from "../components/stores/UserMessageStore.js";
 import { modelErrors } from "../components/stores/InfoPanelStore.js";
 import { runInAction } from "mobx";
 import {WebappConfigurator} from "../WebappConfigurator.js";
-import {StudyConfigurationModel} from "@freon4dsl/samples-study-configuration";
+import {StudyConfigurationModel, Period, StudyConfiguration} from "@freon4dsl/samples-study-configuration";
 
 const LOGGER = new FreLogger("EditorState"); // .mute();
 
@@ -65,7 +65,11 @@ export class EditorState {
         this.saveCurrentUnit();
         this.createNewUnit("Availability", "Availability");
         this.saveCurrentUnit();
-        // newModel.periods.push(newModel.newPeriod());
+        let defaultPeriod = new Period("Default");
+        let config: StudyConfiguration = newModel.configuration;
+        LOGGER.log("before push periods length:"+config.periods.length);
+        config.periods.push(defaultPeriod);
+        LOGGER.log("config.periods length after:"+config.periods.length)
 
         currentModelName.set(this.currentModel.name);
         editorProgressShown.set(false);
