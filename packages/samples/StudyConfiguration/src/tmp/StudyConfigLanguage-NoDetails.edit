@@ -1,4 +1,4 @@
-editor FullDisplay precedence 1
+editor NoDetails precedence 5
 
 boolean [YES | NO] // are the strings used to display a boolean value
 
@@ -12,12 +12,6 @@ StudyConfiguration {
         STUDY PERIODS
             ${periods}
 
-        TASK DETAILS
-            ${taskDetails}
-
-        SYSTEM ACCESS DEFINITIONS
-            ${systemAccesses}
-
          STAFFING
             ${staffing}
     ]
@@ -26,8 +20,6 @@ StudyConfiguration {
 Period {
     [
         Period: ${name}
-        Description: ${description}
-        Date: ${date}
         EVENTS
             ${events}
     ]
@@ -40,10 +32,11 @@ Event {
             Schedule: 
                 ${schedule}
 
-            Checklist:    ${showSequenced} Allow Sequencing
+            Checklist:   
+            // Checklist:    ${showSequenced} Allow Sequencing
                 ${checkList }
 
-    ]  trigger = "Event"
+    ]  
 }
 
 CheckList {
@@ -54,13 +47,13 @@ CheckList {
 
 Task {
     table [
-             Task    | Details | Notes / Decisions / Branches 
-             ${name} | ${taskDetails} | ${decision}
+             Task    | Notes / Decisions / Branches 
+             ${name} | ${decision}
         ]
 
 }
 
-TaskDetail {
+InlineTaskDetail {
     [
         ${name} TASK
             Intro: ${description}
@@ -166,7 +159,6 @@ WorkflowDescription {
     [
     Description: ${text}
     ]
-    trigger = "Description"
 }
 
 WorkflowBranch {

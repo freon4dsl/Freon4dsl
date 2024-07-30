@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { FreModelUnit, FreModel, FreNode, FreLanguage, LwChunk, FreLogger, FreLionwebSerializer } from "@freon4dsl/core";
 import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
-import {StudyConfiguration, WorkflowDescription, Event } from "../../language/gen/index";  
+import {StudyConfiguration, WorkflowDescription, Event, Task, Description } from "../../language/gen/index";  
 import * as path from 'path';
 
 export class WebformTemplate {
@@ -74,7 +74,7 @@ ${activities.map ((a, counter) => `<#list steps?values as step>
         - step-content
     step${counter}_instructions:
       '#type': processed_text
-      '#text': '<div id="container" class="step-detail"><div id="definition" class="step-detail-definition"><ul><li>${((a.decision as WorkflowDescription).text)}</li></ul></div></div>'
+      '#text': '<div id="container" class="step-detail"><div id="definition" class="step-detail-definition"><ul><li>${(((a as Task).description as Description).text)}</li></ul></div></div>'
       '#format': full_html`
 )}
   submit_buttons:

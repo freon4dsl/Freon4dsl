@@ -1,6 +1,6 @@
 <div>
     <Group>
-        {#each $unitTypes as name}
+        {#each $unitTypes.toReversed() as name}
             <Separator/>
             <!-- <Subtitle>{name}</Subtitle> -->
             <List class="demo-list" dense>

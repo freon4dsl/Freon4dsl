@@ -1,25 +1,12 @@
-editor NoDetails precedence 5
+editor default
 
 boolean [YES | NO] // are the strings used to display a boolean value
-
-StudyConfiguration {
-    [
-        //XSTUDY NAME: ${name}
-            Options:
-                ${showActivityDetails} Also Show Task Details
-                ${showSystems} Also Show Systems
-         
-        STUDY PERIODS
-            ${periods}
-
-         STAFFING
-            ${staffing}
-    ]
-}
 
 Period {
     [
         Period: ${name}
+        Description: ${description}
+        Date: ${date}
         EVENTS
             ${events}
     ]
@@ -32,11 +19,10 @@ Event {
             Schedule: 
                 ${schedule}
 
-            Checklist:   
-            // Checklist:    ${showSequenced} Allow Sequencing
+            Checklist of Tasks:    ${showSequenced} Allow Sequencing
                 ${checkList }
 
-    ]  
+    ]  trigger = "Event"
 }
 
 CheckList {
@@ -47,22 +33,27 @@ CheckList {
 
 Task {
     table [
-             Task    | Notes / Decisions / Branches 
-             ${name} | ${decision}
+             Name    | Show Details   | Description   | # the Steps      | Steps
+             ${name} | ${showDetails} |${description} | ${numberedSteps} | ${steps}
+
         ]
 
 }
 
-TaskDetail {
-    [
-        ${name} TASK
-            Intro: ${description}
-            Decision: ${decision}
-                ${numberedSteps} Number the Steps when the Task is shown.
+ReferenceToTask {
+    table [
+             Name    | Show Details   | Description   | # the Steps      | Steps
+             ${task} | ${showDetails} |${description} | ${numberedSteps} | ${steps}
 
-            Steps
-                ${steps}
-    ]
+        ]
+}
+
+ContainedTask {
+    table [
+             Name    | Show Details   | Description   | # the Steps      | Steps
+             ${name} | ${showDetails} |${description} | ${numberedSteps} | ${steps}
+
+        ]
 }
 
 Step {
@@ -159,6 +150,7 @@ WorkflowDescription {
     [
     Description: ${text}
     ]
+    trigger = "Description"
 }
 
 WorkflowBranch {

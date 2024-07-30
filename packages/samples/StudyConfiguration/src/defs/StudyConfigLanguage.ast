@@ -14,7 +14,7 @@ modelunit StudyConfiguration {
     periods: Period[];
     defaultPeriod: Period;
     events: Event[];
-    taskDetails: TaskDetail[];
+    tasks: Task[];
     systemAccesses: SystemAccess[];
     staffing: Staffing;
 }
@@ -24,19 +24,6 @@ concept Period {
     description: Description;
     date: identifier;
     events: Event[];
-}
-
-// How model something needed in model and in other concepts?
-concept TaskDetailDef {
-    taskDetails: TaskDetail;
-}
-
- concept TaskDetail {
-    name: identifier;
-    numberedSteps: boolean;
-    description: Description;
-    decision: FirstScheduledExpression;
-    steps: Step[];
 }
 
 concept Staffing {
@@ -69,14 +56,21 @@ concept CheckList {
 
 concept Task {
     name: identifier;
-    sequenced: boolean;
-    decision: WorkflowDecision;
-    reference taskDetails: TaskDetail;
+    description: Description;
+    reference task: Task;
+    numberedSteps: boolean;
+    showDetails: boolean;
+    steps: Step[];
 }
+
+concept ReferenceToTask base Task {}
+
+concept ContainedTask base Task {}
 
 concept Step {
     title: string;
-    detailsDescription: string;
+    detailsDescription: Description;
+    //TODO: rename to something other than references: Reference to avoid confusion with Freon reference.
     references: Reference[];
     people: Person[];
     systems: SystemAccessReference[];

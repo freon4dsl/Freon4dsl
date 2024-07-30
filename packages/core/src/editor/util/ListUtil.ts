@@ -234,6 +234,9 @@ function addListElement(editor: FreEditor, listParent: FreNode, propertyName: st
         return;
     } else if (isList && FreLanguage.getInstance().metaConformsToType(newElement, type)) { // allow subtyping
         // LOGGER.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+        if (typeof newElement["initializeInstance"] === 'function') {
+            newElement["initializeInstance"]();
+        } 
         runInAction(() => {
             property.splice(index, 0, newElement);
         });
