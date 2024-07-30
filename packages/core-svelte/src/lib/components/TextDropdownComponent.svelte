@@ -105,7 +105,8 @@
     const triggerKeyPressEvent = (key: string) => {
         // TODO Implement this
         console.log("!!!!!!!!!!!!!!! " + key)
-
+        box.textHelper.setText(key)
+        textUpdateFunction({content: key, caret: 1})
     }
 
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!

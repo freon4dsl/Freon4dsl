@@ -388,19 +388,24 @@
 							break;
 						case CharAllowed.GOTO_NEXT: // try in previous or next box
 							LOGGER.log("KeyPressAction.GOTO_NEXT FROM IS " + from);
-							if (from === 0) {
-								editor.selectPreviousLeaf();
-							} else if (to === text.length) {
-								editor.selectNextLeaf();
-							} else {
-								// todo break the textbox in two, if possible
-							}
+							editor.selectNextLeaf();
 							LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
 							if (isActionBox(editor.selectedBox)) {
 								LOGGER.log("     is an action box");
 								editor.selectedBox.triggerKeyPressEvent(event.key);
-							} else {
-								LOGGER.log("     is NOT an action box");
+								editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
+							}
+							event.preventDefault();
+							event.stopPropagation();
+							break;
+						case CharAllowed.GOTO_PREVIOUS: // try in previous or next box
+							LOGGER.log("KeyPressAction.GOTO_PREVIOUS FROM IS " + from);
+							editor.selectPreviousLeaf();
+							LOGGER.log("    PREVIOUS LEAF IS " + editor.selectedBox.role);
+							if (isActionBox(editor.selectedBox)) {
+								LOGGER.log("     is an action box");
+								editor.selectedBox.triggerKeyPressEvent(event.key);
+								// editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
 							}
 							event.preventDefault();
 							event.stopPropagation();
