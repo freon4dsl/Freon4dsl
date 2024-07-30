@@ -47,6 +47,7 @@
 	export let partOfActionBox: boolean = false; // indication whether this text component is part of an TextDropdownComponent
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
+	export let textUpdateFunction = undefined
     // Local variables
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
@@ -157,7 +158,8 @@
 		}
 		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
             LOGGER.log('dispatching from on click');
-            dispatcher('textUpdate', {content: text, caret: from});
+			textUpdateFunction({content: text, caret: from})
+            // dispatcher('textUpdate', {content: text, caret: from});
         }
         event.stopPropagation();
     }
@@ -358,13 +360,25 @@
 					switch (box.isCharAllowed(text, event.key, from)) {
 						case CharAllowed.OK: // add to text, handled by browser
 							LOGGER.log('CharAllowed ' + JSON.stringify(event.key));
-							event.stopPropagation();
 							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
 							if (editor.selectedBox.kind === "ActionBox") {
+								LOGGER.log(`${id}: TEXT UPDATE text '${text}' key: '${event.key}' from: ${from}`)
 
-								LOGGER.log(`${id}: TEXT UPDATE text '${text} key: '${event.key} from: ${from}`)
-								dispatcher('textUpdate', {content: text.concat(event.key), caret: from - 1});
+								if (textUpdateFunction !== undefined) {
+									LOGGER.log(`${id}: TRY TO MATCH text `)
+									const executed = textUpdateFunction({content: text.concat(event.key), caret: from - 1})
+										LOGGER.log("Executed is " + executed)
+									if (executed) {
+										LOGGER.log("Stop propagation and preventDefault in onKeyDown")
+										event.stopPropagation()
+										event.preventDefault()
+									}
+								} else {
+									LOGGER.log(`${id} no textupdatefunction`)
+								}
+								// dispatcher('textUpdate', {content: text.concat(event.key), caret: from - 1});
 							}
+							event.stopPropagation()
 							break;
 						case CharAllowed.NOT_OK: // ignore
 							// ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
@@ -411,12 +425,12 @@
 	}
 
 	const refresh = () => {
-		LOGGER.log(`${id}: REFRESH ` + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")" + " original '" + box.getText() + "'")
+		LOGGER.log(`${id}: REFRESH  ${id} (${box?.element?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
-		if (!isEditing) {
+		// if (!isEditing) {
 			text = box.getText();
-		}
+		// }
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
 		setInputWidth();
 	}
@@ -456,6 +470,7 @@
 				// send event to parent
 				LOGGER.log(`${id}: dispatching event with text ` + text + ' from afterUpdate');
 				dispatcher('textUpdate', {content: text, caret: from + 1});
+				// textUpdateFunction({content: text, caret: from + 1})
 			}
         }
 		// Always set the input width explicitly.

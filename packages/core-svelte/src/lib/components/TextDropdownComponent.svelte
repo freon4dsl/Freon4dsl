@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { isNumber } from "lodash"
+
     // This component is a combination of a TextComponent and a DropdownComponent.
     // The TextComponent is shown in non-editable state until it gets focus,
     // then the Dropdown also appears. When the text in the TextComponent alters,
@@ -108,6 +110,67 @@
 
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!
 
+    
+    const textUpdateFunction = (data: {content: string, caret: number}): boolean => {
+        LOGGER.log(`textUpdateFunction for ${box.kind}: ` + JSON.stringify(data));
+        dropdownShown = true;
+        // ?????
+        // setText(data.content);
+        allOptions = getOptions();
+        filteredOptions = allOptions.filter(o => o.label.startsWith(data.content.substring(0, data.caret)));
+        makeUnique();
+        LOGGER.log(`FilteredOptions are ${filteredOptions.map(o => o.label)}`)
+        if (isActionBox(box)) {
+            // Only one option and has been fully typed in
+            LOGGER.log(`textUpdateFunction: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length})`)
+            if (filteredOptions.length === 1 && filteredOptions[0].label === data.content && filteredOptions[0].label.length === data.caret ) {
+                LOGGER.log("STOP 12 !!")
+                storeAndExecute(filteredOptions[0])
+                // event.stopPropagation()
+                // Done
+                clearText()
+                isEditing = false;
+                dropdownShown = false;
+                return true
+            }
+
+            // Try to find a regular expression
+            const matchingOption = box.getOptions(editor).find(option => {
+                if (isRegExp(option.action.trigger) ){
+                    if (option.action.trigger.test(data.content)) {
+                        LOGGER.log(".    Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + data.content + "'")
+                        return true
+                    }
+                    return false
+                }
+            })
+            if (!!matchingOption) {
+                event.preventDefault()
+                LOGGER.log(`.    Matching regexp ${matchingOption.label}`)
+                LOGGER.log("STOP 22!!")
+                clearText()
+                // event.stopPropagation()
+                let execresult: FrePostAction = null;
+                runInAction(() => {
+                    runInAction(() => {
+                        const command = matchingOption.action.command();
+                        execresult = command.execute(box, data.content, editor, 0);
+                    });
+                    if (!!execresult) {
+                        execresult();
+                    }
+                })
+                clearText()
+                isEditing = false;
+                dropdownShown = false;
+                return true;
+            }
+        } else {
+            LOGGER.log("Not an ActionBox, continue")
+        }
+        return false
+    }
+    
     /**
      * This custom event is triggered when the text in the textComponent is altered or when the
      * caret position is changed.
@@ -129,9 +192,13 @@
             if (filteredOptions.length === 1 && filteredOptions[0].label === event.detail.content && filteredOptions[0].label.length === event.detail.caret ) {
                 LOGGER.log("STOP 1 !!")
                 event.preventDefault()
-                storeAndExecute(filteredOptions[0], event)
+                clearText()
+                storeAndExecute(filteredOptions[0])
                 // event.stopPropagation()
                 // Done
+                clearText()
+                isEditing = false;
+                dropdownShown = false;
                 return
             }
 
@@ -161,6 +228,9 @@
                         execresult();
                     }
                 })
+                clearText()
+                isEditing = false;
+                dropdownShown = false;
             }
         }
     };
@@ -171,7 +241,7 @@
         const result: SelectOption[] = [];
         filteredOptions.forEach( option => {
             if (seen.includes(option.label)) {
-                LOGGER.error("Option " + JSON.stringify(option) + " is a duplicate");
+                LOGGER.log("Option " + JSON.stringify(option) + " is a duplicate");
             } else {
                 seen.push(option.label);
                 result.push(option)
@@ -300,8 +370,9 @@
 
     function clearText() {
         // todo find out whether we can do without this textHelper
+        LOGGER.log(`clearText for ${id} from text '${text}' & boxtext '${box.textHelper.getText()}' `)
         box.textHelper.setText("");
-        setText("");
+        // setText("");
     }
 
     /**
@@ -357,7 +428,7 @@
      * by these changes.
      * @param selected
      */
-    function storeAndExecute(selected: SelectOption, event?: CustomEvent) {
+    function storeAndExecute(selected: SelectOption) {
         LOGGER.log('executing option ' + selected.label);
         isEditing = false;
         dropdownShown = false;
@@ -375,10 +446,6 @@
             } else {
                 // ActionBox, action done, clear input text
                 clearText();
-            }
-            if (event !== undefined) {
-                event.preventDefault()
-                event.stopPropagation()
             }
         });
     }
@@ -419,7 +486,7 @@
     };
 
     const onFocusOutText = () => {
-        LOGGER.log("onFocusOutText " + id);
+        LOGGER.log(`onFocusOutText ${id} text '${text}'`);
         if (isEditing) {
             isEditing = false;
         }
@@ -454,6 +521,7 @@
             partOfActionBox={true}
             box={textBox}
             editor={editor}
+            textUpdateFunction={textUpdateFunction}
             on:textUpdate={textUpdate}
             on:startEditing={startEditing}
             on:endEditing={endEditing}
