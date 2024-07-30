@@ -366,7 +366,7 @@
 
 								if (textUpdateFunction !== undefined) {
 									LOGGER.log(`${id}: TRY TO MATCH text `)
-									const executed = textUpdateFunction({content: text.concat(event.key), caret: from - 1})
+									const executed = textUpdateFunction({content: text.concat(event.key), caret: from + 1})
 										LOGGER.log("Executed is " + executed)
 									if (executed) {
 										LOGGER.log("Stop propagation and preventDefault in onKeyDown")
@@ -461,18 +461,18 @@
 			LOGGER.log(`${id}:  editStart in afterupdate text '${text}' `)
             inputElement.selectionStart = from >= 0 ? from : 0;
             inputElement.selectionEnd = to >= 0 ? to : 0;
-			setInputWidth();
+			// setInputWidth();
 			inputElement.focus();
             editStart = false;
         }
-        if (isEditing && partOfActionBox) {
-			if (text !== originalText) {
+        // if (isEditing && partOfActionBox) {
+			// 	if (text !== originalText) {
 				// send event to parent
-				LOGGER.log(`${id}: dispatching event with text ` + text + ' from afterUpdate');
-				dispatcher('textUpdate', {content: text, caret: from + 1});
+				// LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
+				// dispatcher('textUpdate', {content: text, caret: from + 1});
 				// textUpdateFunction({content: text, caret: from + 1})
-			}
-        }
+			// }
+        // }
 		// Always set the input width explicitly.
 		setInputWidth();
 		placeholder = box.placeHolder

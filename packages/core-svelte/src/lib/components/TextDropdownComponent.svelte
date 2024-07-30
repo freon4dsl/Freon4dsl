@@ -291,33 +291,37 @@
                         break;
                     }
                     case ARROW_DOWN: {
-                        if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
-                            selectFirstOption();
-                        } else {
-                            const index = filteredOptions.findIndex(o => o.id === selectedId);
-                            if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
-                                selectedId = filteredOptions[index + 1].id;
-                            } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
+                        if (dropdownShown) {
+                            if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
                                 selectFirstOption();
+                            } else {
+                                const index = filteredOptions.findIndex(o => o.id === selectedId);
+                                if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
+                                    selectedId = filteredOptions[index + 1].id;
+                                } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
+                                    selectFirstOption();
+                                }
                             }
+                            event.preventDefault();
+                            event.stopPropagation();
                         }
-                        event.preventDefault();
-                        event.stopPropagation();
                         break;
                     }
                     case ARROW_UP: {
-                        if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
-                            selectLastOption();
-                        } else {
-                            const index = filteredOptions.findIndex(o => o.id === selectedId);
-                            if (index > 0) { // the 'normal' case: go one up
-                                selectedId = filteredOptions[index - 1].id;
-                            } else if (index === 0) { // the beginning of the options reached: go to the last
+                        if (dropdownShown) {
+                            if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
                                 selectLastOption();
+                            } else {
+                                const index = filteredOptions.findIndex(o => o.id === selectedId);
+                                if (index > 0) { // the 'normal' case: go one up
+                                    selectedId = filteredOptions[index - 1].id;
+                                } else if (index === 0) { // the beginning of the options reached: go to the last
+                                    selectLastOption();
+                                }
                             }
+                            event.preventDefault();
+                            event.stopPropagation();
                         }
-                        event.preventDefault();
-                        event.stopPropagation();
                         break;
                     }
                     case ENTER: { // user wants current selection
