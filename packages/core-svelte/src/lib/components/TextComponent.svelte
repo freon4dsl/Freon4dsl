@@ -405,7 +405,7 @@
 							if (isActionBox(editor.selectedBox)) {
 								LOGGER.log("     is an action box");
 								editor.selectedBox.triggerKeyPressEvent(event.key);
-								// editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
+								editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
 							}
 							event.preventDefault();
 							event.stopPropagation();
