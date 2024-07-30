@@ -34,7 +34,7 @@
 	let editorContainer: HTMLDivElement; 		// the text area element on the screen
 	let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
     let to = -1;
-	let cssClass: string;
+	let cssClass: string = '';
 	let boxType: BoxType = "text";  
 	let ed: TinyEditor;
 
@@ -99,7 +99,6 @@
 		if (ed) {
 			setCaret();
 		}
-
 	}
 
     /**
@@ -251,6 +250,7 @@
 		LOGGER.log("REFRESH " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
 		placeholder = box.placeHolder;
 		text = box.getText();
+		cssClass = box.cssClass;
 	}
 
 	refresh();
