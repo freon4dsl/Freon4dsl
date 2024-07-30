@@ -56,6 +56,8 @@ export type FreLanguageConcept = {
     key?: string;// used for LionWeb
     isAbstract: boolean;
     isPublic: boolean;
+    isLimited: boolean,
+    instanceNames: string[],
     isNamespace?: boolean;
     isNamedElement?: boolean;
     language: string;
@@ -81,6 +83,7 @@ export type FreLanguageInterface = {
     properties: Map<string, FreLanguageProperty>;
     constructor?: (id?: string) => FreNode | undefined;
     creator?: (data: Partial<FreNode>) => FreNode | undefined;
+    language: string;
     referenceShortcut?: ReferenceShortcut;
 };
 

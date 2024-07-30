@@ -242,6 +242,17 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-numeric-slider-background-color: #{theme.$surface};  /* The background and secondary colors */
   --freon-numeric-slider-padding: 0px 1px 0px 1px;
   --freon-numeric-slider-margin: 1px;
+
+  /* Limited Controls */
+  --freon-limited-color: #{theme.$blue-900};            /* The main color of the control */
+  --freon-limited-background-color: #{theme.$surface};  /* The background and secondary colors */
+  --freon-limited-text-color: black;
+  --freon-limited-font-size: 14px;		                /* The font size of the text */
+  --freon-limited-font-style: normal;	                /* The font size of the text */
+  --freon-limited-font-weight: normal;	                /* The font size of the text */
+  --freon-limited-font-family: "Arial";	                /* The font size of the text */
+  --freon-limited-padding: 0px 1px 0px 1px;
+  --freon-limited-margin: 1px;
 }
 
 .gridcellOdd {

@@ -35,7 +35,7 @@ export class LanguageTemplate {
             }
 
             function describe${Names.classifier(language.modelConcept)}(): FreLanguageModel {
-                    const model =             {
+                    const model: FreLanguageModel =             {
                         typeName: "${Names.classifier(language.modelConcept)}",
                         id: "${language.modelConcept.id}",
                         key: "${language.modelConcept.key}",
@@ -87,7 +87,7 @@ export class LanguageTemplate {
             ${language.units.map(modelunit =>
             `
                 function describe${Names.classifier(modelunit)}(): FreLanguageModelUnit {
-                    const modelunit =             {
+                    const modelunit: FreLanguageModelUnit =             {
                         typeName: "${Names.classifier(modelunit)}",
                         id: "${modelunit.id}",
                         key: "${modelunit.key}",
@@ -143,7 +143,7 @@ export class LanguageTemplate {
             ${language.concepts.map(concept =>
             `
                 function describe${Names.concept(concept)}(): FreLanguageConcept {
-                    const concept =             {
+                    const concept: FreLanguageConcept =             {
                         typeName: "${Names.concept(concept)}",
                         id: "${concept.id}",
                         key: "${concept.key}",
@@ -202,7 +202,7 @@ export class LanguageTemplate {
             ${language.interfaces.map(intface =>
             `
                 function describe${Names.interface(intface)}(): FreLanguageInterface {
-                    const intface =             {
+                    const intface: FreLanguageInterface =             {
                         typeName: "${Names.interface(intface)}",
                         id: "${intface.id}",
                         key: "${intface.key}",
