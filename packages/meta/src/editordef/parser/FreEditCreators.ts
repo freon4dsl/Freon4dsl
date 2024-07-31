@@ -16,7 +16,7 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection,
     BoolKeywords,
-    FreEditStandardProjection
+    FreEditStandardProjection, FreEditButtonDef
 } from "../metalanguage/index.js";
 import { ListUtil } from "../../utils/index.js";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
@@ -411,6 +411,22 @@ export function createListInfo(data: Partial<ListInfo>): ListInfo {
 
 export function createNewline(): FreEditParsedNewline {
     return new FreEditParsedNewline();
+}
+
+export function createButtonDef(data: Partial<FreEditButtonDef>): FreEditButtonDef {
+    const result: FreEditButtonDef = new FreEditButtonDef();
+    if (!!data.text) {
+        result.text = data.text;
+    }
+    if (!!data.boxRole) {
+        result.boxRole = data.boxRole;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    // console.log("Creators.createButtonDef: <<" + result.toString() + ">>")
+    return result;
 }
 
 export function createSelfExp(data: string): FreLangSelfExp {

@@ -213,12 +213,12 @@ tableProjection = "table" ws projection_begin ws
     return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
 }
 
-lineWithOptional = items:(templateSpace / textItem / optionalProjection / property_projection / superProjection / newline )+
+lineWithOptional = items:(templateSpace / textItem / optionalProjection / property_projection / superProjection / button_projection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
 
-lineWithOutOptional = items:(templateSpace / textItem / property_projection / superProjection / newline )+
+lineWithOutOptional = items:(templateSpace / textItem / property_projection / superProjection / button_projection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
@@ -274,6 +274,15 @@ superProjection = projection_begin "=>" ws superRef:classifierReference projName
         "projectionName"    : projName,
         "location"          : location()
     });
+}
+
+button_projection = projection_begin "button" ws "text" equals_separator "\"" t:textBut "\"" ws "boxRole" equals_separator "\"" role:textBut "\"" ws projection_end
+{
+    return creator.createButtonDef({
+        "text"          : t,
+        "boxRole"       : role,
+        "location"      : location()
+    })
 }
 
 keywordDecl = projection_begin text1:textBut text2:(projection_separator t2:textBut {return t2;})? projection_end

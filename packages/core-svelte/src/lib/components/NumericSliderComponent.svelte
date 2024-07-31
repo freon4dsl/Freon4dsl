@@ -23,7 +23,7 @@
     let sliderElement: MdSlider;
 
     const onChange = (event: Event) => {
-        console.log("NumericSliderComponent.onChange for box " + box.role + ", value:" + sliderElement.value);
+        LOGGER.log("NumericSliderComponent.onChange for box " + box.role + ", value:" + sliderElement.value);
         value = (sliderElement.value !== null && sliderElement.value !== undefined) ? sliderElement.value : 0;
         box.setNumber(value);
         if (box.selectable) {

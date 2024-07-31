@@ -460,6 +460,15 @@ export class FreEditParsedNewline {
     }
 }
 
+export class FreEditButtonDef extends FreMetaDefinitionElement {
+    text: string = 'BUTTON';
+    boxRole: string = 'unknown-box-role';
+
+    toString(): string {
+        return `[button text="${this.text}" boxRole="${this.boxRole}"]`;
+    }
+}
+
 /**
  * This class is only used by the parser and removed from the edit model after normalization.
  */
