@@ -9,7 +9,7 @@
       CONTROL,
       FreEditor,
       FreLogger,
-      SHIFT, SPACEBAR
+      SHIFT
     } from "@freon4dsl/core";
     import {afterUpdate, onMount} from "svelte";
     import {MdRadio} from "@material/web/all.js";
@@ -23,7 +23,8 @@
     let trueElement: MdRadio;
     let falseElement: MdRadio;
     let currentValue = box.getBoolean();
-    let ariaLabel = "toBedone"; // todo create useful aria-label
+    let ariaLabel = "toBeDone"; // todo create useful aria-label
+    let isHorizontal: boolean = false; // todo expose horizontal/vertical to user
 
     /**
      * This function sets the focus on this element programmatically.
@@ -52,7 +53,7 @@
         box.refreshComponent = refresh;
     });
     const onChange = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
-        LOGGER.log("RadioComponent.onChange for box " + box.role + ", value:" + event.target["value"]);
+        LOGGER.log("BooleanRadioComponent.onChange for box " + box.role + ", value:" + event.target["value"]);
         currentValue = event.target["value"];
         box.setBoolean(currentValue);
         editor.selectElementForBox(box);
@@ -76,11 +77,11 @@
     }
 </script>
 
-<span role="radiogroup" aria-labelledby={ariaLabel} class="radiogroup" id="{id}">
+<span role="radiogroup" aria-labelledby={ariaLabel} class="radiogroup" class:vertical="{!isHorizontal}" id="{id}">
   <span class="single">
     <md-radio
-            id="trueOne"
-            name="group"
+            id="{id}-trueOne"
+            name="{id}-group"
             role="radio"
             tabindex="0"
             aria-checked={currentValue === true}
@@ -92,12 +93,12 @@
             on:keydown={onKeyDown}
             bind:this={trueElement}
     ></md-radio>
-    <label for="trueOne" class="radiolabel">{box.labels.yes}</label>
+    <label for="{id}-trueOne" class="radio-label">{box.labels.yes}</label>
   </span>
   <span class="single">
     <md-radio
-            id="falseOne"
-            name="group"
+            id="{id}-falseOne"
+            name="{id}-group"
             role="radio"
             tabindex="0"
             aria-checked={currentValue === false}
@@ -109,7 +110,7 @@
             on:keydown={onKeyDown}
             bind:this={falseElement}
     ></md-radio>
-    <label for="falseOne">{box.labels.no}</label>
+    <label class="radio-label" for="{id}-falseOne">{box.labels.no}</label>
   </span>
 </span>
 
@@ -137,10 +138,18 @@
     .radiogroup:focus-within {
       border-radius: 0.1em;
       outline: var(--freon-boolean-color, var(--mdc-theme-primary)) solid 1px;
-      box-shadow: 0px 0px 10px var(--freon-boolean-color, var(--mdc-theme-primary));
+      box-shadow: 0 0 10px var(--freon-boolean-color, var(--mdc-theme-primary));
     }
     .single {
       padding-top: 0.2em;
       padding-bottom: 0.2em;
+      display: flex;
+    }
+    .vertical {
+      display: inline-block;
+    }
+    .radio-label {
+      margin-left: 4px;
+      margin-top: 2px;
     }
 </style>

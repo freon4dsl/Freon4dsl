@@ -3,13 +3,12 @@ import {Box} from "./internal";
 import {FreNode} from "../../ast";
 import {FreUtils} from "../../util";
 
-// TODO This Box and its component are not used yet, first we need to include more info on limited concepts into the language information
 const LOGGER: FreLogger = new FreLogger("LimitedControlBox").mute();
 
 export enum LimitedDisplay {
     SELECT,         // a dropdown menu with selections for each limited value
     RADIO_BUTTON,   // a RadioButton (group) which allows only one value
-    CHECKBOX_GROUP  // a group of checkboxes which allows multiple values
+    CHECKBOX        // a group of checkboxes which allows multiple values
 }
 
 export class LimitedControlBox extends Box {
@@ -24,17 +23,18 @@ export class LimitedControlBox extends Box {
      * @param newValue
      */
     setNames(newValue: string[]): void {
-        LOGGER.log("setBoolean to " + newValue);
+        LOGGER.log("set Limited to " + newValue);
         this.$setNames(newValue);
         this.isDirty();
     }
 
     getNames(): string[] {
+        // console.log("LimitedControlBox.getNames() current value is " + this.$getNames());
         return this.$getNames();
     }
 
     getPossibleNames(): string[] {
-        return this.$getNames();
+        return this.possibleNames;
     }
 
     constructor(node: FreNode,
@@ -45,10 +45,12 @@ export class LimitedControlBox extends Box {
                 initializer?: Partial<LimitedControlBox>
     ) {
         super(node, role);
+        // console.log("Created limited box: [" + possibleValues + "]")
         FreUtils.initializeObject(this, initializer);
         this.$getNames = getValues;
         this.$setNames = setValues;
         this.possibleNames = possibleValues;
+        // console.log("LimitedControlBox.constructor current value is " + this.$getNames());
     }
 }
 

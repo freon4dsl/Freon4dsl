@@ -1,4 +1,3 @@
-export * from "./AllConceptsTemplate.js";
 export * from "./ConceptTemplate.js";
 export * from "./DefaultWorkerTemplate.js";
 export * from "./EnvironmentTemplate.js";
