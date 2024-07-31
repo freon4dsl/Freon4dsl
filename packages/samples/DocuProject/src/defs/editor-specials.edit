@@ -15,6 +15,6 @@ BaseProduct {[
 ]}
 
 Entity {[
-    <button text="Don't push me!" role="MyButton-role"/>
+    [button text="Don't push me!" boxRole="MyButton-role"]
     ${self.isCompany inner-switch [COMPANY | PERSON]} ${self.name}
 ]}

@@ -5,8 +5,8 @@ editor tables precedence 4
 
 InsurancePart{
 table [
-    Name    | risk               | pay out          | is approved
-    ${name} | ${statisticalRisk} | ${maximumPayOut} | ${isApproved}
+    Name    | risk               | pay out          | is approved.  | action
+    ${name} | ${statisticalRisk} | ${maximumPayOut} | ${isApproved} | [button ...]
 ]
 }
 
