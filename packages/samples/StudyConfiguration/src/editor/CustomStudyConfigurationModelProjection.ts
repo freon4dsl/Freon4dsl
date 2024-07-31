@@ -20,14 +20,22 @@ import { TaskBoxProvider } from "./gen/TaskBoxProvider";
 // Step 1: Define the new implementation for TaskBoxProvider.getTableRowFor_default
 function newGetTableRowFor_defaultImplementation(this: TaskBoxProvider): TableRowBox {
     const cells: Box[] = [];
-    let showDetails = (this._element as Task).showDetails;
-    cells.push(BoxUtil.textBox(this._element as Task, "name"));
-    cells.push(BoxUtil.switchElement(this._element as Task, "showDetails", "")), 
-    cells.push(BoxUtil.getBoxOrAction(this._element as Task, "description", "Description", this.mainHandler));
+    let task = this._element as Task;
+    let showDetails = task.showDetails;
+    let innerCells: Box[] = [];
+
+    innerCells.push(BoxFactory.horizontalLayout(task, "period-hlist-line-1", "","top",[
+        BoxUtil.textBox(task, "name"),
+        BoxUtil.labelBox(task, " Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
+        BoxUtil.getBoxOrAction(task, "description", "Description", this.mainHandler),
+        BoxUtil.labelBox(task, " Expand:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
+        BoxUtil.switchElement(task, "showDetails", "")], { selectable: false }));
     if (showDetails === true) {
-        cells.push(BoxUtil.booleanBox(this._element as Task, "numberedSteps", { yes: "YES", no: "NO" }, BoolDisplay.SELECT));
-        cells.push(BoxUtil.verticalPartListBox(this._element as Task, (this._element as Task).steps, "steps", null, this.mainHandler));
-        }
+        innerCells.push(BoxFactory.verticalLayout(task, "tasks-optionally1", "", [
+            BoxUtil.booleanBox(task, "numberedSteps", { yes: "YES", no: "NO" }, BoolDisplay.SELECT),
+            BoxUtil.verticalPartListBox(task, task.steps, "steps", null, this.mainHandler)]));
+    } 
+    cells.push(BoxFactory.verticalLayout(task, "tasks-optionally2", "", innerCells));
     return TableUtil.rowBox(
         this._element,
         this._element.freOwnerDescriptor().propertyName,

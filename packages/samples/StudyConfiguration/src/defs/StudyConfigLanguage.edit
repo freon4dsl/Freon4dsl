@@ -33,8 +33,8 @@ CheckList {
 
 Task {
     table [
-             Name    | Show Details   | Description   | # the Steps      | Steps
-             ${name} | ${showDetails} |${description} | ${numberedSteps} | ${steps}
+             Tasks    
+             ${name}
 
         ]
 

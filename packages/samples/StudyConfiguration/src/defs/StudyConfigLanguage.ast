@@ -63,9 +63,9 @@ concept Task {
     steps: Step[];
 }
 
-concept ReferenceToTask base Task {}
+// concept ReferenceToTask base Task {}
 
-concept ContainedTask base Task {}
+// concept ContainedTask base Task {}
 
 concept Step {
     title: string;
