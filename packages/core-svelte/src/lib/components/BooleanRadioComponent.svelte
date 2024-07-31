@@ -93,7 +93,7 @@
             on:keydown={onKeyDown}
             bind:this={trueElement}
     ></md-radio>
-    <label for="{id}-trueOne" class="radiolabel">{box.labels.yes}</label>
+    <label for="{id}-trueOne" class="radio-label">{box.labels.yes}</label>
   </span>
   <span class="single">
     <md-radio
@@ -110,7 +110,7 @@
             on:keydown={onKeyDown}
             bind:this={falseElement}
     ></md-radio>
-    <label for="{id}-falseOne">{box.labels.no}</label>
+    <label class="radio-label" for="{id}-falseOne">{box.labels.no}</label>
   </span>
 </span>
 
@@ -147,5 +147,9 @@
     }
     .vertical {
       display: inline-block;
+    }
+    .radio-label {
+      margin-left: 4px;
+      margin-top: 2px;
     }
 </style>

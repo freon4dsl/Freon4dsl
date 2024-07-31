@@ -100,7 +100,7 @@
                 on:keydown={onKeyDown}
                 bind:this={allElements[i]}
         ></md-radio>
-        <label for="{id}-{nn}-{i}">{nn}</label>
+        <label class="freon-radio-label" for="{id}-{nn}-{i}">{nn}</label>
       </span>
 	{/each}
 </span>
@@ -139,5 +139,9 @@
     }
     .vertical {
         display: inline-block;
+    }
+    .freon-radio-label {
+        margin-left: 4px;
+        margin-top: 2px;
     }
 </style>
