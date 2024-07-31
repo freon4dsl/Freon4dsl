@@ -43,7 +43,7 @@ Task {
 ReferenceToTask {
     table [
              Name    | Show Details   | Description   | # the Steps      | Steps
-             ${task} | ${showDetails} |${description} | ${numberedSteps} | ${steps}
+             ${referencedTask} | ${showDetails} |${description} | ${numberedSteps} | ${steps}
 
         ]
 }

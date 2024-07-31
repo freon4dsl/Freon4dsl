@@ -57,9 +57,10 @@ concept CheckList {
 concept Task {
     name: identifier;
     description: Description;
-    reference task: Task;
+    reference referencedTask: Task;
     numberedSteps: boolean;
     showDetails: boolean;
+    isSharedTask: boolean;
     steps: Step[];
 }
 

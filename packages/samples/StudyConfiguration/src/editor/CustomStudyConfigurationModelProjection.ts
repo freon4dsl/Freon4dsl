@@ -21,20 +21,56 @@ import { TaskBoxProvider } from "./gen/TaskBoxProvider";
 function newGetTableRowFor_defaultImplementation(this: TaskBoxProvider): TableRowBox {
     const cells: Box[] = [];
     let task = this._element as Task;
-    let showDetails = task.showDetails;
     let innerCells: Box[] = [];
 
-    innerCells.push(BoxFactory.horizontalLayout(task, "period-hlist-line-1", "","top",[
-        BoxUtil.textBox(task, "name"),
-        BoxUtil.labelBox(task, " Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
-        BoxUtil.getBoxOrAction(task, "description", "Description", this.mainHandler),
-        BoxUtil.labelBox(task, " Expand:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
-        BoxUtil.switchElement(task, "showDetails", "")], { selectable: false }));
-    if (showDetails === true) {
-        innerCells.push(BoxFactory.verticalLayout(task, "tasks-optionally1", "", [
-            BoxUtil.booleanBox(task, "numberedSteps", { yes: "YES", no: "NO" }, BoolDisplay.SELECT),
-            BoxUtil.verticalPartListBox(task, task.steps, "steps", null, this.mainHandler)]));
-    } 
+    if (task.isSharedTask === true) {
+        if(task.referencedTask === null) {
+            let studyConfig = task.freOwner().freOwner().freOwner() as StudyConfiguration;
+            let ref = FreNodeReference.create(task.name, "Task") as FreNodeReference<Task>;
+            let copyOfTask = task.copy();
+            ref.referred = copyOfTask;
+            task.referencedTask = ref;
+            studyConfig.tasks.push(copyOfTask);
+        }
+        innerCells.push(BoxFactory.horizontalLayout(task, "period-hlist-line-1", "","top",[
+                BoxUtil.referenceBox(
+                        task,
+                        "referencedTask",
+                        (selected: string) => {
+                            (task).referencedTask = FreNodeReference.create<Task>(
+                                StudyConfigurationModelEnvironment.getInstance().scoper.getFromVisibleElements(
+                                    task,
+                                    selected,
+                                    "Task",
+                                ) as Task,
+                                "Task",
+                            );
+                        },
+                        StudyConfigurationModelEnvironment.getInstance().scoper,
+                    ),
+                BoxUtil.labelBox(task.referencedTask.referred, " Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
+                BoxUtil.getBoxOrAction(task.referencedTask.referred, "description", "Description", this.mainHandler),    
+            ],
+            { selectable: false })
+        );
+        console.log("Task is shared");
+    } else {
+        console.log("Task is not shared");
+        innerCells.push(BoxFactory.horizontalLayout(task, "period-hlist-line-1", "","top",[
+                BoxUtil.textBox(task, "name"),
+                BoxUtil.labelBox(task, " Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
+                BoxUtil.getBoxOrAction(task, "description", "Description", this.mainHandler),
+                BoxUtil.labelBox(task, " Shared:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
+                BoxUtil.switchElement(task, "isSharedTask", ""),
+                BoxUtil.labelBox(task, " Expand:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
+                BoxUtil.switchElement(task, "showDetails", "")],
+            { selectable: false }));
+        if (task.showDetails === true) {
+            innerCells.push(BoxFactory.verticalLayout(task, "tasks-optionally1", "", [
+                BoxUtil.booleanBox(task, "numberedSteps", { yes: "YES", no: "NO" }, BoolDisplay.SELECT),
+                BoxUtil.verticalPartListBox(task, task.steps, "steps", null, this.mainHandler)]));
+        } 
+    }
     cells.push(BoxFactory.verticalLayout(task, "tasks-optionally2", "", innerCells));
     return TableUtil.rowBox(
         this._element,
