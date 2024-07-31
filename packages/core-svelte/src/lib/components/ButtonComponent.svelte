@@ -41,7 +41,7 @@
 
 
 <style>
-    /* Copied from CSS-only part of https://css-tricks.com/how-to-recreate-the-ripple-effect-of-material-design-buttons/ */
+    /* Copied from https://svelte.dev/repl/hello-world?version=4.2.18 */
     /* Ripple effect */
     .ripple {
         background-position: center;

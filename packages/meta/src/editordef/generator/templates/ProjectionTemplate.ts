@@ -12,7 +12,7 @@ import {
     FreEditTableProjection,
     FreEditUnit,
     FreOptionalPropertyProjection,
-    ExtraClassifierInfo, BoolKeywords, FreEditProjectionGroup, ForType, FreEditStandardProjection
+    ExtraClassifierInfo, BoolKeywords, FreEditProjectionGroup, ForType, FreEditStandardProjection, FreEditButtonDef
 } from "../../metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
@@ -375,6 +375,9 @@ export class ProjectionTemplate {
         if (item instanceof FreEditProjectionText) {
             ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
             result += ` BoxUtil.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "top-${topIndex}-line-${lineIndex}-item-${itemIndex}") `;
+        } else if (item instanceof FreEditButtonDef) {
+            ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
+            result += ` BoxUtil.buttonBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "${ParserGenUtil.escapeRelevantChars(item.boxRole.trim())}") `;
         } else if (item instanceof FreOptionalPropertyProjection) {
             result += this.generateOptionalProjection(item, elementVarName, mainBoxLabel, language);
         } else if (item instanceof FreEditPropertyProjection) {
