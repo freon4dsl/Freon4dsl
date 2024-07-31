@@ -14,7 +14,7 @@ export enum BoolDisplay {
 }
 
 export class BooleanControlBox extends Box {
-    kind: string = "BooleanControlBox";
+    readonly kind: string = "BooleanControlBox";
     showAs: BoolDisplay = BoolDisplay.RADIO_BUTTON;
     labels: { yes: string; no: string } = { yes: "true", no: "false" }
     $getBoolean: () => boolean;

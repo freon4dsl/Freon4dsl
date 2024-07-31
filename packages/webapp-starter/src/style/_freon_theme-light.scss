@@ -249,7 +249,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-gridcell-component-background-color: #{theme.$grey-300};
 }
 .gridcellEven {
-  --freon-gridcell-component-background-color: transparent;
+  --freon-gridcell-component-background-color: transparent ;
 }
 .gridcell-header {
   --freon-gridcell-component-background-color: #{theme.$grey-500};

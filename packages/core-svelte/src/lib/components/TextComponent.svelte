@@ -4,7 +4,7 @@
 
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
-	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils/index.js";
+	import { componentId, executeCustomKeyboardShortCut } from "./svelte-utils/index.js";
 	import {
 		ActionBox,
 		ALT,

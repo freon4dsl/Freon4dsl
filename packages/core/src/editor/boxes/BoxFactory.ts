@@ -16,7 +16,7 @@ import {
     OptionalBox,
     HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
     HorizontalLayoutBox, VerticalLayoutBox,
-    TableCellBox, OptionalBox2
+    TableCellBox, OptionalBox2, ButtonBox
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -33,6 +33,7 @@ let actionCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
 let boolCache: BoxCache<BooleanControlBox> = {};
+let buttonCache: BoxCache<ButtonBox> = {};
 let numberCache: BoxCache<NumberControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
@@ -50,6 +51,7 @@ let cacheActionOff: boolean = false;
 let cacheLabelOff: boolean = false;
 let cacheTextOff: boolean = false;
 let cacheBooleanOff: boolean = false;
+let cacheButtonOff: boolean = false;
 let cacheNumberOff: boolean = false;
 let cacheSelectOff: boolean = false;
 // let cacheIndentOff: boolean = false;
@@ -70,6 +72,7 @@ export class BoxFactory {
         labelCache = {};
         textCache = {};
         boolCache = {};
+        buttonCache = {};
         numberCache = {};
         selectCache = {};
         // indentCache = {};
@@ -89,6 +92,7 @@ export class BoxFactory {
         cacheLabelOff = true;
         cacheTextOff = true;
         cacheBooleanOff = true;
+        cacheButtonOff = true;
         cacheNumberOff = true;
         cacheSelectOff = true;
         // cacheIndentOff = true;
@@ -104,6 +108,7 @@ export class BoxFactory {
         cacheLabelOff = false;
         cacheTextOff = false;
         cacheBooleanOff = false;
+        cacheButtonOff = false;
         cacheNumberOff = false;
         cacheSelectOff = false;
         // cacheIndentOff = false;
@@ -434,6 +439,17 @@ export class BoxFactory {
 
         // 2. Apply the other arguments in case they have changed
         FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static button(element: FreNode, text: string, roleName: string) {
+        if (cacheButtonOff) {
+            return new ButtonBox(element, text, roleName);
+        }
+        // 1. Create the Boolean box, or find the one that already exists for this element and role
+        const creator = () => new ButtonBox(element, text, roleName);
+        const result: ButtonBox = this.find<ButtonBox>(element, roleName, creator, buttonCache);
 
         return result;
     }

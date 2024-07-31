@@ -50,7 +50,7 @@
             editor.selectElementForBox(box);
         }
         event.stopPropagation();
-        console.log("SwitchComponent.onChange for box " + box.role + ", box value: " + box.getBoolean());
+        LOGGER.log("SwitchComponent.onChange for box " + box.role + ", box value: " + box.getBoolean());
     }
 </script>
 

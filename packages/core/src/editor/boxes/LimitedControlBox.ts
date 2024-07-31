@@ -13,7 +13,7 @@ export enum LimitedDisplay {
 }
 
 export class LimitedControlBox extends Box {
-    kind: string = "LimitedControlBox";
+    readonly kind: string = "LimitedControlBox";
     showAs: LimitedDisplay = LimitedDisplay.RADIO_BUTTON;
     $getNames: () => string[];
     $setNames: (newValue: string[]) => void;

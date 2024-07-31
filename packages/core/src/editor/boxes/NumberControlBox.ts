@@ -18,7 +18,7 @@ export enum NumberDisplay {
 }
 
 export class NumberControlBox extends Box {
-    kind: string = "NumberControlBox";
+    readonly kind: string = "NumberControlBox";
     showAs: NumberDisplay = NumberDisplay.SLIDER;
     displayInfo: NumberDisplayInfo | undefined;
 

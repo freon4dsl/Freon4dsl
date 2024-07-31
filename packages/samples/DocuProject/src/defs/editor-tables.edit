@@ -5,8 +5,8 @@ editor tables precedence 4
 
 InsurancePart{
 table [
-    Name    | risk               | pay out          | is approved.  | action
-    ${name} | ${statisticalRisk} | ${maximumPayOut} | ${isApproved} | [button ...]
+    Name    | risk               | pay out          | is approved.
+    ${name} | ${statisticalRisk} | ${maximumPayOut} | ${isApproved}
 ]
 }
 
@@ -14,3 +14,7 @@ BaseProduct {[
     Base Products ${name} for ${theme}
         ${parts table rows}
 ]}
+/*
+    Name    | risk               | pay out          | is approved.  | action
+    ${name} | ${statisticalRisk} | ${maximumPayOut} | ${isApproved} | [button ...]
+    */

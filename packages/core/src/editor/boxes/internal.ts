@@ -12,6 +12,7 @@ export * from "./EmptyLineBox";
 
 // the following classes directly inherit from Box
 export * from "./AbstractChoiceBox";
+export * from "./ButtonBox";
 export * from "./BooleanControlBox";
 export * from "./NumberControlBox";
 export * from "./LimitedControlBox";
