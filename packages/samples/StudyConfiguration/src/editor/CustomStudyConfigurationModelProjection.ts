@@ -24,7 +24,9 @@ function newGetTableRowFor_defaultImplementation(this: TaskBoxProvider): TableRo
     let innerCells: Box[] = [];
 
     if (task.isSharedTask === true) {
+        console.log("SHARED: Task is shared");
         if(task.referencedTask === null) {
+            console.log("SHARED: referencedTask is null so task is just becoming shared");
             let studyConfig = task.freOwner().freOwner().freOwner() as StudyConfiguration;
             let ref = FreNodeReference.create(task.name, "Task") as FreNodeReference<Task>;
             let copyOfTask = task.copy();
@@ -32,6 +34,8 @@ function newGetTableRowFor_defaultImplementation(this: TaskBoxProvider): TableRo
             task.referencedTask = ref;
             studyConfig.tasks.push(copyOfTask);
         }
+        console.log("SHARED: Task description  : " + task.description.text);
+        console.log("SHARED: Shared description: " + task.referencedTask.referred.description.text);
         innerCells.push(BoxFactory.horizontalLayout(task, "period-hlist-line-1", "","top",[
                 BoxUtil.referenceBox(
                         task,
@@ -49,13 +53,13 @@ function newGetTableRowFor_defaultImplementation(this: TaskBoxProvider): TableRo
                         StudyConfigurationModelEnvironment.getInstance().scoper,
                     ),
                 BoxUtil.labelBox(task.referencedTask.referred, " Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),
-                BoxUtil.getBoxOrAction(task.referencedTask.referred, "description", "Description", this.mainHandler),    
+                BoxUtil.getBoxOrAction(task.referencedTask.referred, "description", "Description", this.mainHandler),
+                BoxUtil.booleanBox(task.referencedTask.referred, "numberedSteps", { yes: "YES", no: "NO" }, BoolDisplay.SELECT),    
             ],
             { selectable: false })
         );
-        console.log("Task is shared");
     } else {
-        console.log("Task is not shared");
+        console.log("SHARED: Task is not shared");
         innerCells.push(BoxFactory.horizontalLayout(task, "period-hlist-line-1", "","top",[
                 BoxUtil.textBox(task, "name"),
                 BoxUtil.labelBox(task, " Description:", "top-1-line-2-item-0", undefined, "app-small-caps mt-1 mr-1"),

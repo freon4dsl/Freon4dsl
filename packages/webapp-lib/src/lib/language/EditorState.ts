@@ -65,6 +65,8 @@ export class EditorState {
         this.saveCurrentUnit();
         this.createNewUnit("StudyConfiguration", "StudyConfiguration");
         this.saveCurrentUnit();
+        EditorState.getInstance().currentUnit = newModel.findUnit("StudyConfiguration");
+        currentUnitName.set("StudyConfiguration");
         let defaultPeriod = new Period("Default");
         let config: StudyConfiguration = newModel.configuration;
         LOGGER.log("before push periods length:"+config.periods.length);
