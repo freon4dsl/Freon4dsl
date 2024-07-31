@@ -132,7 +132,7 @@
             <NumericSliderComponent box={box} editor={editor}/>
         {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.RADIO_BUTTON}
             <LimitedRadioComponent box={box} editor={editor}/>
-        {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.CHECKBOX_GROUP}
+        {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.CHECKBOX}
             <LimitedCheckboxComponent box={box} editor={editor}/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>

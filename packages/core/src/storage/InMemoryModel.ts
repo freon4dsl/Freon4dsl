@@ -6,7 +6,7 @@ import { IServerCommunication, ModelUnitIdentifier } from "./server/index.js"
 
 export type ModelChangedCallbackFunction = (m: InMemoryModel) => void;
 
-const LOGGER = new FreLogger("InMemoryModel");
+const LOGGER: FreLogger = new FreLogger("InMemoryModel").mute();
 
 export class InMemoryModel {
     private languageEnvironment: FreEnvironment

@@ -50,6 +50,62 @@
                   "key": "-default-key-BaseProduct-name"
                },
                "value": "home1"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-isUnderConstruction"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-isApprovedLevel1"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-isApprovedLevel2"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-isApprovedLevel3"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-yieldsProfit"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-range"
+               },
+               "value": "0"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-nrOfUse"
+               },
+               "value": "0"
             }
          ],
          "containments": [
@@ -76,8 +132,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "HomeTheme",
-                     "reference": "ID-9"
+                     "resolveInfo": "LegalTheme",
+                     "reference": "ID-12"
                   }
                ]
             }

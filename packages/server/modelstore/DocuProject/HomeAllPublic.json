@@ -111,8 +111,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "HomeTheme",
-                     "reference": "ID-9"
+                     "resolveInfo": "LegalTheme",
+                     "reference": "ID-12"
                   }
                ]
             },
@@ -125,7 +125,7 @@
                "targets": [
                   {
                      "resolveInfo": "Month",
-                     "reference": "ID-13"
+                     "reference": "ID-14"
                   }
                ]
             },
@@ -562,7 +562,7 @@
                "targets": [
                   {
                      "resolveInfo": "EUR",
-                     "reference": "ID-8"
+                     "reference": "ID-9"
                   }
                ]
             }
