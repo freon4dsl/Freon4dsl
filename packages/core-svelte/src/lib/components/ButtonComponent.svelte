@@ -31,8 +31,8 @@
         box.refreshComponent = refresh;
     });
     const onClick = (event: MouseEvent & {currentTarget: EventTarget & HTMLButtonElement; }) => {
+        box.executeAction(editor);
         event.stopPropagation();
-        box.executeAction();
     }
 </script>
 
@@ -48,10 +48,11 @@
         transition: background 0.8s;
     }
     .ripple:hover {
-        background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) center/15000%;
+        background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) no-repeat center/15000%;
+        background-color: var(--freon-button-ripple-color, var(--mdc-theme-background));
     }
     .ripple:active {
-        background-color: #6eb9f7;
+        background-color: var(--freon-button-ripple-color, var(--mdc-theme-background));
         background-size: 100%;
         transition: background 0s;
     }
@@ -60,13 +61,18 @@
     button {
         border: none;
         border-radius: 2px;
-        padding: 12px 18px;
-        font-size: 16px;
         text-transform: uppercase;
         cursor: pointer;
-        color: white;
-        background-color: #2196f3;
         box-shadow: 0 0 4px #999;
         outline: none;
+        font-size: var(--freon-button-font-size);
+        font-style: var(--freon-button-font-style);
+        font-weight: var(--freon-button-font-weight);
+        font-family: var(--freon-button-font-family),sans-serif;
+        margin: var(--freon-button-margin);
+        padding: var(--freon-button-padding);
+        padding-top: 2px;
+        color: var(--freon-button-text-color, var(--mdc-theme-primary));
+        background-color: var(--freon-button-background-color, var(--mdc-theme-background));
     }
 </style>
