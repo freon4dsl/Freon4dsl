@@ -256,7 +256,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
 
   /* Buttons */
   --freon-button-ripple-color: red;            /* The main color of the control */
-  --freon-button-background-color: #{theme.$surface};  /* The background and secondary colors */
+  --freon-button-background-color: #{theme.$amber-400};  /* The background and secondary colors */
   --freon-button-text-color: #{theme.$blue-900};
   --freon-button-font-size: 14px;		                /* The font size of the text */
   --freon-button-font-style: normal;	                /* The font size of the text */
