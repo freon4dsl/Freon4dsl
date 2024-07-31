@@ -16,7 +16,7 @@ import {
     OptionalBox,
     HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
     HorizontalLayoutBox, VerticalLayoutBox,
-    TableCellBox, OptionalBox2, ButtonBox
+    TableCellBox, OptionalBox2, LimitedControlBox, ButtonBox
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -35,6 +35,7 @@ let textCache: BoxCache<TextBox> = {};
 let boolCache: BoxCache<BooleanControlBox> = {};
 let buttonCache: BoxCache<ButtonBox> = {};
 let numberCache: BoxCache<NumberControlBox> = {};
+let limitedCache: BoxCache<LimitedControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
@@ -53,6 +54,7 @@ let cacheTextOff: boolean = false;
 let cacheBooleanOff: boolean = false;
 let cacheButtonOff: boolean = false;
 let cacheNumberOff: boolean = false;
+let cacheLimitedOff: boolean = false;
 let cacheSelectOff: boolean = false;
 // let cacheIndentOff: boolean = false;
 // let cacheOptionalOff: boolean = false;
@@ -74,6 +76,7 @@ export class BoxFactory {
         boolCache = {};
         buttonCache = {};
         numberCache = {};
+        limitedCache = {};
         selectCache = {};
         // indentCache = {};
         optionalCache = {};
@@ -94,6 +97,7 @@ export class BoxFactory {
         cacheBooleanOff = true;
         cacheButtonOff = true;
         cacheNumberOff = true;
+        cacheLimitedOff = true;
         cacheSelectOff = true;
         // cacheIndentOff = true;
         // cacheOptionalOff = true;
@@ -110,6 +114,7 @@ export class BoxFactory {
         cacheBooleanOff = false;
         cacheButtonOff = false;
         cacheNumberOff = false;
+        cacheLimitedOff = false;
         cacheSelectOff = false;
         // cacheIndentOff = false;
         // cacheOptionalOff = false;
@@ -341,6 +346,30 @@ export class BoxFactory {
             result.replaceChildren(children);
         }
         FreUtils.initializeObject(result, initializer);
+        return result;
+    }
+
+    static limited(element: FreNode,
+                  role: string,
+                  getValues: () => string[],
+                  setValues: (newValue: string[]) => void,
+                  possibleValues: string[],
+                  initializer?: Partial<LimitedControlBox>): LimitedControlBox {
+        if (cacheLimitedOff) {
+            return new LimitedControlBox(element, role, getValues, setValues, possibleValues, initializer);
+        }
+        // 1. Create the select box, or find the one that already exists for this element and role
+        const creator = () => new LimitedControlBox(element, role, getValues, setValues, possibleValues, initializer);
+        const result: LimitedControlBox = this.find<LimitedControlBox>(element, role, creator, limitedCache);
+
+        // todo see whether we need the following statements
+        // 2. Apply the other arguments in case they have changed
+        // result.placeholder = placeHolder;
+        // result.getOptions = getOptions;
+        // result.getSelectedOption = getSelectedOption;
+        // result.selectOption = selectOption;
+        // FreUtils.initializeObject(result, initializer);
+
         return result;
     }
 

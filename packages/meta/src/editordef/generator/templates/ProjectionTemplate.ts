@@ -19,7 +19,7 @@ import {
     FreMetaClassifier,
     FreMetaConceptProperty,
     FreMetaExpressionConcept,
-    FreMetaLanguage,
+    FreMetaLanguage, FreMetaLimitedConcept,
     FreMetaPrimitiveProperty, FreMetaPrimitiveType,
     FreMetaProperty
 } from "../../../languagedef/metalanguage/index.js";
@@ -35,14 +35,17 @@ import {
 } from "../../../utils/index.js";
 import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil.js";
 
+
 export class ProjectionTemplate {
-    // To be able to add a projections for showing/hiding brakets to binary expression, this dummy projection is used.
+    // To be able to add a projections for showing/hiding brackets to binary expression, this dummy projection is used.
     private static dummyProjection: FreEditProjection = new FreEditProjection();
     // The values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords').
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
     private stdBoolDisplayType: string = "text";
     private stdNumberDisplayType: string = "text";
+    private stdLimitedSingleDisplayType: string = "text";
+    private stdLimitedListDisplayType: string = "text";
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
     private modelImports: string[] = [];    // imports from ../language/gen
@@ -70,6 +73,14 @@ export class ProjectionTemplate {
             const numberDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.Number)?.displayType;
             if (!!numberDisplayType) {
                 this.stdNumberDisplayType = numberDisplayType;
+            }
+            const limitedSingleDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.Limited)?.displayType;
+            if (!!limitedSingleDisplayType) {
+                this.stdLimitedSingleDisplayType = limitedSingleDisplayType;
+            }
+            const limitedListDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.LimitedList)?.displayType;
+            if (!!limitedListDisplayType) {
+                this.stdLimitedListDisplayType = limitedListDisplayType;
             }
         }
     }
@@ -234,7 +245,7 @@ export class ProjectionTemplate {
         return `
                 /**
                  * This method returns the content for one of the superconcepts or interfaces of 'this._element'.
-                 * Based on the name of the susperconcept/interface, a tempory BoxProvider is created. This BoxProvider
+                 * Based on the name of the superconcept/interface, a temporary BoxProvider is created. This BoxProvider
                  * then returns the result of its 'getContent' method, using 'projectionName' as parameter.
                  *
                  * @param superName         The name of the superconcept or interface for which the projection is requested.
@@ -446,14 +457,22 @@ export class ProjectionTemplate {
                 }
             } else { // reference
                 if (property.isList) {
-                    if (!!item.listInfo && item.listInfo.isTable) { // if there is information on how to project the property as a table, make it a table
+                    if (property.type instanceof FreMetaLimitedConcept && (item.displayType === "checkbox" || this.stdLimitedListDisplayType === "checkbox")) {
+                        // use limited control
+                        result += this.generateLimitedListProjection(property, elementVarName, "checkbox");
+                    } else if (!!item.listInfo && item.listInfo.isTable) { // if there is information on how to project the property as a table, make it a table
                         // no table projection for references - for now
                         result += this.generateReferenceAsList(language, item.listInfo, property, elementVarName);
                     } else if (!!item.listInfo) { // if there is information on how to project the property as a list, make it a list
                         result += this.generateReferenceAsList(language, item.listInfo, property, elementVarName);
                     }
                 } else { // single element
-                    result += this.generateReferenceProjection(language, property, elementVarName);
+                    if (property.type instanceof FreMetaLimitedConcept && (item.displayType === "radio" || this.stdLimitedListDisplayType === "radio")) {
+                        // use limited control
+                        result += this.generateLimitedSingleProjection(property, elementVarName, "radio");
+                    } else {
+                        result += this.generateReferenceProjection(language, property, elementVarName);
+                    }
                 }
             }
         } else {
@@ -513,6 +532,73 @@ export class ProjectionTemplate {
         }
     }
 
+    private generateLimitedSingleProjection(appliedFeature: FreMetaConceptProperty, element: string, displayType: string) {
+        const featureType: string = Names.classifier(appliedFeature.type);
+        ListUtil.addIfNotPresent(this.modelImports, featureType);
+        ListUtil.addIfNotPresent(this.coreImports, Names.FreNodeReference);
+        ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
+        ListUtil.addIfNotPresent(this.coreImports, "LimitedDisplay");
+        // get the right displayType
+        let displayTypeToUse: string = this.getTypeScriptForDisplayType(this.stdLimitedSingleDisplayType);
+        if (!!displayType) {
+            displayTypeToUse = this.getTypeScriptForDisplayType(displayType);
+        }
+        return `BoxUtil.limitedBox(
+                                ${element},
+                                "${appliedFeature.name}",
+                                (selected: string) => {
+                                    ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
+                                               selected, "${featureType}" );
+                                },
+                                LimitedDisplay.${displayTypeToUse}
+               )`;
+    }
+
+    private generateLimitedListProjection(appliedFeature: FreMetaConceptProperty, element: string, displayType: string) {
+        const featureType: string = Names.classifier(appliedFeature.type);
+        ListUtil.addIfNotPresent(this.modelImports, featureType);
+        ListUtil.addIfNotPresent(this.coreImports, Names.FreNodeReference);
+        ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
+        ListUtil.addIfNotPresent(this.coreImports, "LimitedDisplay");
+        // get the right displayType
+        let displayTypeToUse: string = this.getTypeScriptForDisplayType(this.stdLimitedListDisplayType);
+        if (!!displayType) {
+            displayTypeToUse = this.getTypeScriptForDisplayType(displayType);
+        }
+        // for (let i: number = 0; i < (this._element as InsuranceProduct).themes.length; i++) {
+        //     if (!selected.includes((this._element as InsuranceProduct).themes[i].name)) {
+        //         (this._element as InsuranceProduct).themes.splice(i, 1);
+        //     }
+        // }
+        // const existingNames: string[] = (this._element as InsuranceProduct).themes.map((n) => n.name);
+        // for (let i: number = 0; i < selected.length; i++) {
+        //     if (!existingNames.includes(selected[i])) {
+        //         (this._element as InsuranceProduct).themes.push(
+        //             FreNodeReference.create<InsuranceTheme>(selected, "InsuranceTheme"),
+        //         );
+        //     }
+        // }
+        return `BoxUtil.limitedListBox(
+                                ${element},
+                                "${appliedFeature.name}",
+                                (selected: string[]) => {
+                                        for (let i: number = 0; i < ${element}.${appliedFeature.name}.length; i++) {
+                                            if (!selected.includes(${element}.${appliedFeature.name}[i].name)) {
+                                                ${element}.${appliedFeature.name}.splice(i, 1);
+                                            }
+                                        }
+                                        const existingNames: string[] = ${element}.${appliedFeature.name}.map((n) => n.name);
+                                        for (let i: number = 0; i < selected.length; i++) {
+                                            if (!existingNames.includes(selected[i])) {
+                                                ${element}.${appliedFeature.name}.push(${Names.FreNodeReference}.create<${featureType}>(
+                                               selected, "${featureType}" ));
+                                            }
+                                        }
+                                },
+                                LimitedDisplay.${displayTypeToUse}
+               )`;
+    }
+
     private generateReferenceProjection(language: FreMetaLanguage, appliedFeature: FreMetaConceptProperty, element: string) {
         const featureType = Names.classifier(appliedFeature.type);
         ListUtil.addIfNotPresent(this.modelImports, featureType);
@@ -524,11 +610,7 @@ export class ProjectionTemplate {
                                 "${appliedFeature.name}",
                                 (selected: string) => {
                                     ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
-                                       ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
-                                            ${element},
-                                            selected,
-                                            "${featureType}"
-                                       ) as ${featureType}, "${featureType}");
+                                               selected, "${featureType}" );
                                 },
                                 ${Names.environment(language)}.getInstance().scoper
                )`;

@@ -112,7 +112,7 @@
                "targets": [
                   {
                      "resolveInfo": "HealthTheme",
-                     "reference": "ID-10"
+                     "reference": "ID-11"
                   }
                ]
             },
@@ -125,7 +125,7 @@
                "targets": [
                   {
                      "resolveInfo": "Month",
-                     "reference": "ID-13"
+                     "reference": "ID-14"
                   }
                ]
             },
@@ -1048,7 +1048,7 @@
                "targets": [
                   {
                      "resolveInfo": "EUR",
-                     "reference": "ID-8"
+                     "reference": "ID-9"
                   }
                ]
             }

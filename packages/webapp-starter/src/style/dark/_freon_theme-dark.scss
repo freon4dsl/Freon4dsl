@@ -96,11 +96,22 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-boolean-margin: 1px;
 
   /* Numeric Controls */
-  --freon-numeric-slider-color: #{theme.$blue-900};            /* The main color of the control */
+  --freon-numeric-slider-color: rgba(211, 227, 253, 255);            /* The main color of the control */
   --freon-numeric-slider-inactive-track: #{theme.$grey-500}; /* The color of the unselected track in a numeric-slider switch */
   --freon-numeric-slider-background-color: #{theme.$surface};  /* The background and secondary colors */
   --freon-numeric-slider-padding: 0px 1px 0px 1px;
   --freon-numeric-slider-margin: 1px;
+
+  /* Limited Controls */
+  --freon-limited-color: rgba(211, 227, 253, 255);            /* The main color of the control */
+  --freon-limited-background-color: #{theme.$surface};  /* The background and secondary colors */
+  --freon-limited-text-color: white;
+  --freon-limited-font-size: 14px;		                /* The font size of the text */
+  --freon-limited-font-style: normal;	                /* The font size of the text */
+  --freon-limited-font-weight: normal;	                /* The font size of the text */
+  --freon-limited-font-family: "Arial";	                /* The font size of the text */
+  --freon-limited-padding: 0px 1px 0px 1px;
+  --freon-limited-margin: 1px;
 }
 
 html,

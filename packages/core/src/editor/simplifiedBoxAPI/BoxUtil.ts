@@ -3,17 +3,20 @@ import {FreNamedNode, FreNode, FreNodeReference} from "../../ast";
 import {
     BoolDisplay,
     BooleanControlBox,
-    NumberControlBox,
     Box,
     BoxFactory,
+    CharAllowed,
     EmptyLineBox,
     HorizontalListBox,
-    NumberDisplayInfo,
+    LimitedControlBox,
+    LimitedDisplay,
+    NumberControlBox,
     NumberDisplay,
+    NumberDisplayInfo,
     SelectBox,
     SelectOption,
     TextBox,
-    VerticalListBox, CharAllowed
+    VerticalListBox
 } from "../boxes";
 import {FreUtils} from "../../util";
 import {BehaviorExecutionResult} from "../util";
@@ -394,6 +397,108 @@ export class BoxUtil {
         result.propertyName = propertyName;
         result.propertyIndex = index;
         return result;
+    }
+
+    /**
+     *
+     * @param node
+     * @param propertyName
+     * @param setFunc           a function to make a reference to a single limited value/instance
+     * @param display
+     */
+    static limitedBox(
+        node: FreNode,
+        propertyName: string,
+        setFunc: (selected: string) => void,
+        display: LimitedDisplay,
+    ): Box {
+        // find the information on the property to be shown
+        const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
+        if (propInfo.isList) {
+            throw new Error("Cannot create a Limited box for '" + propertyName + "', because the set function is not correct");
+        } else if (display === LimitedDisplay.CHECKBOX) {
+            throw new Error("Cannot create a Checkbox Group box for '" + propertyName + "', because it is not a list value");
+        }
+        const possibleValues: string[] = this.checkLimitedType(propInfo, propertyName);
+
+        // console.log("BoxUtil.limitedBox current value is " + [node[propertyName].name] + ", possibleValues: [" + possibleValues + "]");
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "limitedcontrolbox");
+        let result: LimitedControlBox = BoxFactory.limited(
+            node,
+            roleName,
+            () => [node[propertyName].name],
+            (v: string[]) => runInAction(() => {
+                if (!!v[0]) {
+                    // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + v[0]);
+                    runInAction(() => {
+                        setFunc(v[0]);
+                    });
+                } else {
+                    runInAction(() => {
+                        node[propertyName] = null;
+                    });
+                }
+            }),
+            possibleValues
+        );
+        result.showAs = LimitedDisplay.RADIO_BUTTON;
+        result.propertyName = propertyName;
+        return result;
+    }
+
+    /**
+     *
+     * @param node
+     * @param propertyName
+     * @param setFunc           a function to make a reference to a single limited value/instance
+     * @param display
+     */
+    static limitedListBox(
+        node: FreNode,
+        propertyName: string,
+        setFunc: (selected: string[]) => void,
+        display: LimitedDisplay,
+    ): Box {
+        // find the information on the property to be shown
+        // find the information on the property to be shown
+        const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
+        if (!propInfo.isList) {
+            throw new Error("Cannot create a Limited box for '" + propertyName + "', because the set function is not correct");
+        } else if (display === LimitedDisplay.RADIO_BUTTON) {
+            throw new Error("Cannot create a Radio Button box for '" + propertyName + "', because it is not a single value");
+        }
+        const possibleValues: string[] = this.checkLimitedType(propInfo, propertyName);
+
+        // console.log("BoxUtil.limitedListBox current value is " + [node[propertyName].name] + ", possibleValues: [" + possibleValues + "]");
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "limitedcontrolbox");
+        let result: LimitedControlBox = BoxFactory.limited(
+            node,
+            roleName,
+            () => node[propertyName].map(n => n.name), // node[propertyName] is a list of references, therefore we need to get their names
+            (v: string[]) => runInAction(() => {
+                // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + v);
+                setFunc(v);
+            }),
+            possibleValues
+        );
+        result.showAs = LimitedDisplay.CHECKBOX;
+        result.propertyName = propertyName;
+        return result;
+    }
+
+    private static checkLimitedType(propInfo: FreLanguageProperty, propertyName: string) {
+        // check whether this type is really a limited type
+        const propType: string = propInfo?.type;
+        if (!propType) {
+            throw new Error("Cannot find type of '" + propertyName + "'");
+        }
+        const isLimited: boolean = FreLanguage.getInstance().concept(propType).isLimited;
+        if (!isLimited) {
+            throw new Error("Type of '" + propertyName + "' is not a limited concept");
+        }
+
+        // get all names of the instances of the limited concept
+        return FreLanguage.getInstance().concept(propType).instanceNames;
     }
 
     /**
