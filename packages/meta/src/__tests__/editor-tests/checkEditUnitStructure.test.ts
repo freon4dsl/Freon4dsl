@@ -1,19 +1,27 @@
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js";
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../utils/index.js";
-import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
-    ListJoinType,
+    FreMetaBinaryExpressionConcept,
+    FreMetaClassifier,
+    FreMetaLanguage,
+    FreMetaLimitedConcept
+} from "../../languagedef/metalanguage/index.js";
+import {LanguageParser} from "../../languagedef/parser/LanguageParser";
+import {Checker, MetaLogger, Names} from "../../utils/index.js";
+import {FreEditParser} from "../../editordef/parser/FreEditParser";
+import {
+    ForType,
     FreEditClassifierProjection,
-    FreEditProjection, FreEditProjectionDirection,
+    FreEditProjection,
+    FreEditProjectionDirection,
+    FreEditProjectionGroup,
     FreEditPropertyProjection,
-    FreEditUnit, FreEditProjectionGroup
+    FreEditUnit,
+    ListJoinType
 } from "../../editordef/metalanguage/index.js";
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 describe("Checking FretEditUnit: ", () => {
-    const testdir = "src/__tests__/editor-tests/correctDefFiles/";
+    const testdir: string = "src/__tests__/editor-tests/correctDefFiles/";
     let parser: FreEditParser;
     let language: FreMetaLanguage | undefined;
     let checker: Checker<FreEditUnit>;
@@ -44,10 +52,17 @@ describe("Checking FretEditUnit: ", () => {
             }
         }
         if (editor !== null && editor !== undefined) {
+            let defaultGroup: FreEditProjectionGroup | undefined = editor.getDefaultProjectiongroup();
+            if (defaultGroup === null || defaultGroup === undefined) { // no default group, create one
+                console.log("Creating new default group")
+                defaultGroup = new FreEditProjectionGroup();
+                defaultGroup.name = Names.defaultProjectionName;
+                editor.projectiongroups.push(defaultGroup);
+                defaultGroup.owningDefinition = editor;
+            }
             DefaultEditorGenerator.addDefaults(editor);
         } else {
             throw new Error("No editor!!");
-            // console.log("No editor!!")
         }
         return editor;
     }
@@ -196,10 +211,9 @@ describe("Checking FretEditUnit: ", () => {
             });
             expect(myBoolProjection).not.toBeNull();
             expect(myBoolProjection).not.toBeUndefined();
-            expect(myBoolProjection!.boolInfo).not.toBeUndefined();
-            expect(myBoolProjection!.boolInfo!.keywords).not.toBeUndefined();
-            expect(myBoolProjection!.boolInfo!.keywords!.trueKeyword).toBe("xxxx");
-            expect(myBoolProjection!.boolInfo!.keywords!.falseKeyword).toBeUndefined();
+            expect(myBoolProjection!.boolKeywords).not.toBeUndefined();
+            expect(myBoolProjection!.boolKeywords!.trueKeyword).toBe("xxxx");
+            expect(myBoolProjection!.boolKeywords!.falseKeyword).toBeUndefined();
         }
 
         // test the second boolean prop, with two keywords present
@@ -224,12 +238,25 @@ describe("Checking FretEditUnit: ", () => {
             });
             expect(myBoolProjection).not.toBeNull();
             expect(myBoolProjection).not.toBeUndefined();
-            expect(myBoolProjection!.boolInfo).not.toBeNull();
-            expect(myBoolProjection!.boolInfo).not.toBeUndefined();
-            expect(myBoolProjection!.boolInfo!.keywords).not.toBeUndefined();
-            expect(myBoolProjection!.boolInfo!.keywords!.trueKeyword).toBe("aap");
-            expect(myBoolProjection!.boolInfo!.keywords!.falseKeyword).toBe("noot");
+            expect(myBoolProjection!.boolKeywords).not.toBeNull();
+            expect(myBoolProjection!.boolKeywords).not.toBeUndefined();
+            expect(myBoolProjection!.boolKeywords!.trueKeyword).toBe("aap");
+            expect(myBoolProjection!.boolKeywords!.falseKeyword).toBe("noot");
         }
+    });
+
+    test("the reference separator has the right value", () => {
+        const editor = readFile(testdir + "test4.edit");
+        expect(language).not.toBeNull();
+        expect(language).not.toBeUndefined();
+        const defProjGroup: FreEditProjectionGroup | undefined = editor.getDefaultProjectiongroup();
+        expect(defProjGroup).not.toBeNull();
+        expect(defProjGroup).not.toBeUndefined();
+        // get the reference separator and check it
+        let myRef: string | undefined = defProjGroup!.findStandardProjFor(ForType.ReferenceSeparator)?.separator;
+        expect(myRef).not.toBeNull();
+        expect(myRef).not.toBeUndefined();
+        expect(myRef).toBe(":::");
     });
 
     // TODO add tests for projections on interfaces

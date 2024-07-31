@@ -1,11 +1,12 @@
 import { FreNode } from "../../ast";
 import { BehaviorExecutionResult } from "../util";
-import { FreLogger } from "../../logging";
+// import { FreLogger } from "../../logging";
 import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreEditor } from "../FreEditor";
 import {
     Box,
     BooleanControlBox,
+    NumberControlBox,
     ActionBox,
     LabelBox,
     TextBox,
@@ -25,13 +26,14 @@ type BoxCache<T extends Box> = {
     [id: string]: RoleCache<T>;
 };
 
-const LOGGER: FreLogger = new FreLogger("BoxFactory").mute();
+// const LOGGER: FreLogger = new FreLogger("BoxFactory").mute();
 
 // The box caches
 let actionCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
 let boolCache: BoxCache<BooleanControlBox> = {};
+let numberCache: BoxCache<NumberControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
@@ -48,6 +50,7 @@ let cacheActionOff: boolean = false;
 let cacheLabelOff: boolean = false;
 let cacheTextOff: boolean = false;
 let cacheBooleanOff: boolean = false;
+let cacheNumberOff: boolean = false;
 let cacheSelectOff: boolean = false;
 // let cacheIndentOff: boolean = false;
 // let cacheOptionalOff: boolean = false;
@@ -67,6 +70,7 @@ export class BoxFactory {
         labelCache = {};
         textCache = {};
         boolCache = {};
+        numberCache = {};
         selectCache = {};
         // indentCache = {};
         optionalCache = {};
@@ -85,6 +89,7 @@ export class BoxFactory {
         cacheLabelOff = true;
         cacheTextOff = true;
         cacheBooleanOff = true;
+        cacheNumberOff = true;
         cacheSelectOff = true;
         // cacheIndentOff = true;
         // cacheOptionalOff = true;
@@ -99,6 +104,7 @@ export class BoxFactory {
         cacheLabelOff = false;
         cacheTextOff = false;
         cacheBooleanOff = false;
+        cacheNumberOff = false;
         cacheSelectOff = false;
         // cacheIndentOff = false;
         // cacheOptionalOff = false;
@@ -117,22 +123,28 @@ export class BoxFactory {
      * @param cache   The cache to use
      */
     private static find<T extends Box>(element: FreNode, role: string, creator: () => T, cache: BoxCache<T>): T {
-        // 1. Create the alias box, or find the one that already exists for this element and role
+        // 1. Create the box, or find the one that already exists for this element and role
         const elementId = element.freId();
         if (!!cache[elementId]) {
             const box = cache[elementId][role];
             if (!!box) {
-                LOGGER.log(":: EXISTS " + box.kind + " for entity " + elementId + " role " + role + " already exists");
+                // if (isNumberControlBox(box)) {
+                //     console.log(":: EXISTS " + box.kind + " for entity " + elementId + " role " + role + " already exists");
+                // }
                 return box;
             } else {
                 const newBox = creator();
-                LOGGER.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "            CREATED");
+                // if (isNumberControlBox(newBox)) {
+                //     console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "            CREATED");
+                // }
                 cache[elementId][role] = newBox;
                 return newBox;
             }
         } else {
             const newBox = creator();
-            LOGGER.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "               CREATED");
+            // if (isNumberControlBox(newBox)) {
+            //     console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "               CREATED");
+            // }
             cache[elementId] = {};
             cache[elementId][role] = newBox;
             return newBox;
@@ -189,7 +201,7 @@ export class BoxFactory {
     static bool(element: FreNode,
                 role: string,
                 getBoolean: () => boolean,
-                setBoolean: (text: boolean) => void,
+                setBoolean: (value: boolean) => void,
                 initializer?: Partial<BooleanControlBox>
                 ): BooleanControlBox {
         if (cacheBooleanOff) {
@@ -203,6 +215,29 @@ export class BoxFactory {
         result.$getBoolean = getBoolean;
         result.$setBoolean = setBoolean;
         FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static number(element: FreNode,
+                role: string,
+                getNumber: () => number,
+                setNumber: (value: number) => void,
+                initializer?: Partial<NumberControlBox>
+    ): NumberControlBox {
+        if (cacheNumberOff) {
+            console.log("Retruning new NumberControlBox: ")
+            return new NumberControlBox(element, role, getNumber, setNumber, initializer);
+        }
+        // 1. Create the Boolean box, or find the one that already exists for this element and role
+        const creator = () => new NumberControlBox(element, role, getNumber, setNumber, initializer);
+        const result: NumberControlBox = this.find<NumberControlBox>(element, role, creator, numberCache);
+        // console.log(`Returning existing NumberControlBox: "` + result)
+
+        // 2. Apply the other arguments in case they have changed
+        // result.$getNumber = getNumber;
+        // result.$setNumber = setNumber;
+        // FreUtils.initializeObject(result, initializer);
 
         return result;
     }

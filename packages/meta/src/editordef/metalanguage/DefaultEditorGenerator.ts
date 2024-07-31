@@ -7,7 +7,6 @@ import {
     FreMetaProperty
 } from "../../languagedef/metalanguage/index.js";
 import {
-    BoolDisplayType,
     ExtraClassifierInfo,
     ListInfo,
     FreEditClassifierProjection,
@@ -16,7 +15,12 @@ import {
     FreEditProjectionLine,
     FreEditProjectionText,
     FreEditPropertyProjection,
-    FreEditUnit, FreOptionalPropertyProjection, BoolKeywords
+    FreEditUnit,
+    FreOptionalPropertyProjection,
+    BoolKeywords,
+    FreEditStandardProjection,
+    DisplayType,
+    ForType
 } from "../metalanguage/index.js";
 import {LOG2USER, Names} from "../../utils/index.js";
 import { EditorDefaults } from "./EditorDefaults.js";
@@ -53,10 +57,6 @@ export class DefaultEditorGenerator {
             // create a default projection group
             defaultGroup = new FreEditProjectionGroup();
             defaultGroup.name = Names.defaultProjectionName;
-            defaultGroup.standardBooleanProjection = new BoolDisplayType();
-            defaultGroup.standardBooleanProjection.keywords = new BoolKeywords();
-            defaultGroup.standardBooleanProjection.keywords.falseKeyword = "false";
-            defaultGroup.standardReferenceSeparator = EditorDefaults.standardReferenceSeparator;
             editor.projectiongroups.push(defaultGroup);
             defaultGroup.owningDefinition = editor;
         }
@@ -66,6 +66,9 @@ export class DefaultEditorGenerator {
         if (!defaultGroup.precedence) {
             defaultGroup.precedence = 0;
         }
+
+        // add the standard projections
+        DefaultEditorGenerator.defaultsForStandardProjections(defaultGroup);
 
         // add defaults for binary expressions
         DefaultEditorGenerator.defaultsForBinaryExpressions(editor.language, defaultGroup);
@@ -81,6 +84,54 @@ export class DefaultEditorGenerator {
 
         // add defaults for classifiers that are used within a super projection, iff not already present
         DefaultEditorGenerator.defaultsForSupers(editor.language, defaultGroup, editor.classifiersUsedInSuperProjection);
+    }
+
+    private static defaultsForStandardProjections(defaultGroup: FreEditProjectionGroup) {
+        if (!defaultGroup.standardProjections) {
+            defaultGroup.standardProjections = [];
+        }
+        let yy: FreEditStandardProjection = new FreEditStandardProjection();
+        let myStandard: FreEditStandardProjection | undefined = defaultGroup.findStandardProjFor(ForType.Boolean);
+        if (!myStandard) {
+            // create the standard for the boolean projection
+            yy.for = ForType.Boolean;
+            yy.keywords = new BoolKeywords();
+            yy.keywords.falseKeyword = "false";
+            yy.displayType = DisplayType.Text;
+            defaultGroup.standardProjections.push(yy);
+        }
+        myStandard = defaultGroup.findStandardProjFor(ForType.Number);
+        if (!myStandard) {
+            // create the standard for the number projection
+            yy = new FreEditStandardProjection();
+            yy.for = ForType.Number;
+            yy.displayType = DisplayType.Text;
+            defaultGroup.standardProjections.push(yy);
+        }
+        myStandard = defaultGroup.findStandardProjFor(ForType.Limited);
+        if (!myStandard) {
+            // create the standard for the single limited projection
+            yy = new FreEditStandardProjection();
+            yy.for = ForType.Limited;
+            yy.displayType = DisplayType.Text;
+            defaultGroup.standardProjections.push(yy);
+        }
+        myStandard = defaultGroup.findStandardProjFor(ForType.LimitedList);
+        if (!myStandard) {
+            // create the standard for the limited list projection
+            yy = new FreEditStandardProjection();
+            yy.for = ForType.LimitedList;
+            yy.displayType = DisplayType.Text;
+            defaultGroup.standardProjections.push(yy);
+        }
+        myStandard = defaultGroup.findStandardProjFor(ForType.ReferenceSeparator);
+        if (!myStandard) {
+            // create the standard for the reference separator
+            yy = new FreEditStandardProjection();
+            yy.for = ForType.ReferenceSeparator;
+            yy.separator = EditorDefaults.standardReferenceSeparator;
+            defaultGroup.standardProjections.push(yy);
+        }
     }
 
     private static defaultsForBinaryExpressions(language: FreMetaLanguage, defaultGroup: FreEditProjectionGroup) {

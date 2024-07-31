@@ -1,5 +1,5 @@
 /* This file holds the same projections as the default projection set,
-but every proejction is augmented with comments on what the elements of
+but every projection is augmented with comments on what the elements of
 the language mean. */
 
 editor comments precedence 10

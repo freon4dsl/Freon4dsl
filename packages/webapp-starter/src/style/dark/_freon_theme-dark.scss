@@ -12,7 +12,7 @@
   //$on-primary: #ffffb0,
   //$on-primary: purple,     // a slighter darker version of 'secondary'
   $on-secondary: #4f9a94,   // a slighter darker version of 'primary'
-  //$on-surface: black,
+  $on-surface: color-palette.$grey-300,
   //$on-error: black,
   //accessible-ink-color,
   //contrast,
@@ -47,7 +47,7 @@
   --freon-colors-slider: #{theme.$on-secondary};    /* The color of the slider between the error/search pane and the editor */
 }
 
-/* The follwoing are CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
+/* The following are CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
 /* Change the values as you like. */
 /* Note that we need to use a different syntax to be able to use SCSS variables as value
 for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/css-vars */
@@ -83,8 +83,24 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-horizontallist-component-padding: 0px;
   --freon-verticallist-component-padding: 0px;
 
-  /* Boolean components */
-  --freon-accent-color: #{theme.$yellow-200};
+  /* Boolean Controls */
+  --freon-boolean-color: rgba(211, 227, 253, 255);      /* The main color of the control */
+  --freon-boolean-unselected-track: #{theme.$grey-500}; /* The color of the unselected track in a boolean switch */
+  --freon-boolean-background-color: #{theme.$surface};  /* The background and secondary colors */
+  --freon-boolean-text-color: white;
+  --freon-boolean-font-size: 14px;		                /* The font size of the text */
+  --freon-boolean-font-style: normal;	                /* The font size of the text */
+  --freon-boolean-font-weight: normal;	                /* The font size of the text */
+  --freon-boolean-font-family: "Arial";	                /* The font size of the text */
+  --freon-boolean-padding: 0px 1px 0px 1px;
+  --freon-boolean-margin: 1px;
+
+  /* Numeric Controls */
+  --freon-numeric-slider-color: #{theme.$blue-900};            /* The main color of the control */
+  --freon-numeric-slider-inactive-track: #{theme.$grey-500}; /* The color of the unselected track in a numeric-slider switch */
+  --freon-numeric-slider-background-color: #{theme.$surface};  /* The background and secondary colors */
+  --freon-numeric-slider-padding: 0px 1px 0px 1px;
+  --freon-numeric-slider-margin: 1px;
 }
 
 html,

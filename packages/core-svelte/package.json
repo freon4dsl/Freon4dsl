@@ -15,7 +15,7 @@
   "svelte": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf node_modules/ && rm -rf dist/",
-    "dev": "tsc --noEmit --watch && vite dev",
+    "dev": "vite dev",
     "build": "tsc --noEmit && vite build && npm run package",
     "build-dev": "tsc --noEmit && vite build && npm run package",
     "preview": "vite preview",
@@ -44,11 +44,6 @@
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*"
   ],
-  "dependencies": {
-    "svelte": "^4.2.17",
-    "@freon4dsl/core": "^0.7.0-beta",
-    "mobx": "^6.12.3"
-  },
   "devDependencies": {
     "@freon4dsl/core": "^0.7.0-beta",
     "mobx": "^6.12.3",
@@ -68,5 +63,14 @@
     "typescript": "^5.4.5",
     "vite": "^5.2.12",
     "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "@material/web": "^1.5.1",
+    "@material/slider": "^14.0.0",
+    "@material/switch": "^14.0.0",
+    "@smui/ripple": "^7.0.0",
+    "svelte": "^4.2.17",
+    "@freon4dsl/core": "^0.7.0-beta",
+    "mobx": "^6.12.3"
   }
 }

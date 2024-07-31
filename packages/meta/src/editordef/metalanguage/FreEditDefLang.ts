@@ -31,6 +31,29 @@ export enum ListJoinType {
 }
 
 /**
+ * The different displayTypes
+ */
+export enum DisplayType {
+    Text = "text",
+    Checkbox = "checkbox",
+    Radio = "radio",
+    Switch = "switch",
+    InnerSwitch = "inner-switch",
+    Slider = "slider"
+}
+
+/**
+ * The different strings that may be used as 'for' in a FreEditStandardProjection
+ */
+export enum ForType {
+    Boolean = "boolean",
+    Number = "number",
+    Limited = "limited",
+    LimitedList = "limitedList",
+    ReferenceSeparator = "referenceSeparator"
+}
+
+/**
  * The root of the complete editor definition
  */
 export class FreEditUnit extends FreMetaDefinitionElement {
@@ -106,23 +129,13 @@ export class BoolKeywords extends FreMetaDefinitionElement {
     }
 }
 
-export class BoolDisplayType extends FreMetaDefinitionElement {
-    displayType: string = "text"; // Possible values: 'text', 'checkbox', 'radio', 'switch', 'inner-switch'. See BooleanBox.ts from core.
-    keywords: BoolKeywords | undefined;
-
-    toString(): string {
-        return `StdBooleanProjection ${this.displayType} ${this.keywords?.toString()}`;
-    }
-}
-
 /**
  * A group of projection definitions that share the same name
  */
 export class FreEditProjectionGroup extends FreMetaDefinitionElement {
     name: string = '';
     projections: FreEditClassifierProjection[] = [];
-    standardBooleanProjection?: BoolDisplayType = undefined;    // may only be present in default group
-    standardReferenceSeparator?: string = undefined;            // may only be present in default group
+    standardProjections: FreEditStandardProjection[] = [];      // may only be present in default group
     extras: ExtraClassifierInfo[] = [];                         // may only be present in default group, todo change type to ... | undefined
     owningDefinition: FreEditUnit | undefined;
     precedence: number | undefined;
@@ -161,12 +174,29 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
 
     toString(): string {
         return `editor ${this.name}
-        ${this.standardBooleanProjection ? `boolean ${this.standardBooleanProjection}` : ``}
-        ${this.standardReferenceSeparator ? `referenceSeparator [ ${this.standardReferenceSeparator} ]` : ``}
+        ${this.standardProjections?.map( pr => pr.toString()).join("\n")}
 
         ${this.projections?.map(gr => gr.toString()).join("\n")}
 
         ${this.extras?.map(gr => gr.toString()).join("\n")}`;
+    }
+
+    findStandardProjFor(kind: ForType): FreEditStandardProjection |undefined {
+        return this.standardProjections.find(con => con.for === kind);
+    }
+}
+
+/**
+ * A single definition of the standard for properties with primitive type, or the reference separator
+ */
+export class FreEditStandardProjection extends  FreMetaDefinitionElement {
+    for: string = '';
+    displayType: DisplayType | undefined; // Possible values: 'text', 'checkbox', 'radio', 'switch', 'inner-switch'. See BooleanBox.ts from core.
+    keywords: BoolKeywords | undefined;
+    separator: string | undefined;
+
+    toString(): string {
+        return `${this.for}${this.displayType ? ` ${this.displayType}` : ''}${this.keywords ? ` ${this.keywords.toString()}` : ''}${this.separator ? ` [${this.separator}]` : ''}`
     }
 }
 
@@ -312,19 +342,27 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
     expression?: FreLangExp = undefined;
     // projection info if the referred property is a list
     listInfo?: ListInfo = undefined;
+    // projection info about display
+    displayType?: DisplayType = undefined;
     // projection info if the referred property is a primitive of boolean type
-    boolInfo?: BoolDisplayType = undefined;
+    boolKeywords?: BoolKeywords = undefined;
     // projection to be used for this property
     // TODO Only used in parser?
     projectionName: string = '';
 
     toString(): string {
         let extraText: string = '';
+        if (!!this.projectionName && this.projectionName.length > 0) {
+            extraText = `\n/* projectionName */ ${this.projectionName}`;
+        }
         if (!!this.listInfo) {
             extraText = `\n/* list */ ${this.listInfo}`;
         }
-        if (!!this.boolInfo ) {
-            extraText = `\n/* boolean */ ${this.boolInfo}`;
+        if (!!this.displayType ) {
+            extraText = `\n/* displayType */ ${this.displayType}`;
+        }
+        if (!!this.boolKeywords ) {
+            extraText = `\n/* boolean */ ${this.boolKeywords}`;
         }
         return `\${ ${this.expression ? this.expression.toFreString() : ``} }${extraText}`;
     }
