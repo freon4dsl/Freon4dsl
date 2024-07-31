@@ -61,9 +61,9 @@ export class EditorState {
         this.currentModel = this.langEnv.newModel(modelName);
         // Initialize
         let newModel: StudyConfigurationModel = this.currentModel;
-        this.createNewUnit("StudyConfiguration", "StudyConfiguration");
-        this.saveCurrentUnit();
         this.createNewUnit("Availability", "Availability");
+        this.saveCurrentUnit();
+        this.createNewUnit("StudyConfiguration", "StudyConfiguration");
         this.saveCurrentUnit();
         let defaultPeriod = new Period("Default");
         let config: StudyConfiguration = newModel.configuration;
