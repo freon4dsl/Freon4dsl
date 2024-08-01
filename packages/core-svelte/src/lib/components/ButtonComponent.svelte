@@ -36,8 +36,9 @@
     }
 </script>
 
-
-<button class="ripple" id="{id}" on:click={onClick} bind:this={thisButton}>{box.text}</button>
+<button class="ripple" id="{id}" on:click={onClick} bind:this={thisButton}>
+    <span class="{box.role}">{box.text}</span>
+</button>
 
 
 <style>

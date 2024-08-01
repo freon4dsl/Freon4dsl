@@ -10,7 +10,11 @@ exact same **boxRole** as the one that has been supplied with the button in the 
 3. Implement the action to be taken in this custom action. You can use '**box.element**' to get the node in the ast associated with the button.
 In this example that will be an instance of **BaseProduct**.
 
+This works the same in the table definition. (See Samples/DocuProject/defs/editor-tables.edit, line 9.)
+
+You can add an icon before or after the text using css. For an example see _freon_theme-light.scss, from line 30.
+At the moment the text is still mandatory.
+
 ### Notes
-1. This is not yet implemented in tables.
-2. We are working on exposing the in-built actions in the editor core.
-3. At the moment we cannot change the text for an icon.
+1. We are working on exposing the in-built actions in the editor core.
+
