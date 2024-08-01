@@ -11,7 +11,7 @@ const LOGGER: FreLogger = new FreLogger("ButtonBox"); //.mute();
 
 export class ButtonBox extends Box {
     readonly kind: string = "ButtonBox";
-    text: string = "BUTTON";
+    text: string = "";
 
     constructor(node: FreNode,
                 text: string,
