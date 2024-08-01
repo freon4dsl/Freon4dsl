@@ -36,8 +36,8 @@
     }
 </script>
 
-<button class="ripple" id="{id}" on:click={onClick} bind:this={thisButton}>
-    <span class="{box.role}">{box.text}</span>
+<button class="ripple b {box.role}" class:empty="{box.text.length === 0}" id="{id}" on:click={onClick} bind:this={thisButton} >
+    <span>{box.text}</span>
 </button>
 
 
@@ -57,9 +57,14 @@
         background-size: 100%;
         transition: background 0s;
     }
+    .empty {
+        min-height: 1em;
+        min-width: 1.5em;
+        display: inline-block;
+    }
 
     /* Button style */
-    button {
+    .b {
         border: none;
         border-radius: 2px;
         text-transform: uppercase;

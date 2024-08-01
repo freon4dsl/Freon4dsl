@@ -277,10 +277,10 @@ superProjection = projection_begin "=>" ws superRef:classifierReference projName
     });
 }
 
-button_projection = projection_begin "button" ws "text" equals_separator "\"" t:textBut "\"" ws "boxRole" equals_separator "\"" role:textBut "\"" ws projection_end
+button_projection = projection_begin "button" ws text:("text" equals_separator "\"" t:textBut "\"" ws {return t})? "boxRole" equals_separator "\"" role:textBut "\"" ws projection_end
 {
     return creator.createButtonDef({
-        "text"          : t,
+        "text"          : text,
         "boxRole"       : role,
         "location"      : location()
     })

@@ -6,7 +6,7 @@ editor tables precedence 4
 InsurancePart{
 table [
     Name    | risk               | pay out          | is approved   | action
-    ${name} | ${statisticalRisk} | ${maximumPayOut} | ${isApproved} | [button text="Don't push me!" boxRole="MyTableButton-role"]
+    ${name} | ${statisticalRisk} | ${maximumPayOut} | ${isApproved} | [button boxRole="MyTableButton-role"]
 ]
 }
 

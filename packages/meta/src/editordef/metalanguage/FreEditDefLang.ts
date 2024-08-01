@@ -461,11 +461,11 @@ export class FreEditParsedNewline {
 }
 
 export class FreEditButtonDef extends FreMetaDefinitionElement {
-    text: string = 'BUTTON';
+    text: string = '';
     boxRole: string = 'unknown-box-role';
 
     toString(): string {
-        return `[button text="${this.text}" boxRole="${this.boxRole}"]`;
+        return `[button ${!!this.text && this.text.length > 0 ? `text="${this.text}" ` : ``}boxRole="${this.boxRole}"]`;
     }
 }
 

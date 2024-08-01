@@ -13,7 +13,7 @@ In this example that will be an instance of **BaseProduct**.
 This works the same in the table definition. (See Samples/DocuProject/defs/editor-tables.edit, line 9.)
 
 You can add an icon before or after the text using css. For an example see _freon_theme-light.scss, from line 30.
-At the moment the text is still mandatory.
+The text for the Button is optional.
 
 ### Notes
 1. We are working on exposing the in-built actions in the editor core.
