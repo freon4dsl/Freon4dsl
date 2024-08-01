@@ -48,6 +48,7 @@
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
 	export let textUpdateFunction = undefined
+	export let endEditingParentFunction = undefined
     // Local variables
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
@@ -188,7 +189,11 @@
 					}
 				});
 			} else {
-				dispatcher('endEditing');
+				if (!!endEditingParentFunction) {
+					endEditingParentFunction();
+				} else {
+					LOGGER.error("No parent endEditing function")
+				}
 			}
 		}
     }

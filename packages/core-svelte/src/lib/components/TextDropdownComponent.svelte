@@ -525,6 +525,7 @@
             box={textBox}
             editor={editor}
             textUpdateFunction={textUpdateFunction}
+            endEditingParentFunction={endEditing}
             on:textUpdate={textUpdate}
             on:startEditing={startEditing}
             on:endEditing={endEditing}
