@@ -27,7 +27,7 @@
         BoolDisplay, isBooleanControlBox,
         isNumberControlBox,
         isElementBox, isOptionalBox2, isMultiLineTextBox,
-        isLimitedControlBox, LimitedDisplay
+        isLimitedControlBox, LimitedDisplay, isButtonBox
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
@@ -54,6 +54,7 @@
     import LimitedCheckboxComponent from "$lib/components/LimitedCheckboxComponent.svelte";
     import LimitedRadioComponent from "$lib/components/LimitedRadioComponent.svelte";
     import SwitchComponent from "$lib/components/SwitchComponent.svelte";
+    import ButtonComponent from "$lib/components/ButtonComponent.svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -134,6 +135,8 @@
             <LimitedRadioComponent box={box} editor={editor}/>
         {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.CHECKBOX}
             <LimitedCheckboxComponent box={box} editor={editor}/>
+        {:else if isButtonBox(box) }
+            <ButtonComponent box={box} editor={editor}/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>
         {:else if isGridBox(box) }

@@ -4,6 +4,7 @@ BaseProduct {[
     /* In this projection 'self.parts' is always shown according to the projection */
     /* defined for concept InsurancePart in the editor 'specials'.                 */
     Base Products ${self.name} for ${self.theme radio}
+        [button text="Don't push me!" boxRole="MyButton-role"]
         is still under construction: ${self.isUnderConstruction switch}
         is approved level1: ${self.isApprovedLevel1 radio}
         is approved level2: ${self.isApprovedLevel2 inner-switch}

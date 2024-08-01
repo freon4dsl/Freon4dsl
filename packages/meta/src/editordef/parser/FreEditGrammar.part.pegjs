@@ -235,6 +235,7 @@ textItem = chars:anythingBut+
 
 property_projection = s:singleProperty {return s;}
     / l:listProperty {return l;}
+    / b:button_projection {return b;}
 
 singleProperty = propProjectionStart ws
                          "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:displayType? ws kw:keywordDecl? ws
@@ -274,6 +275,15 @@ superProjection = projection_begin "=>" ws superRef:classifierReference projName
         "projectionName"    : projName,
         "location"          : location()
     });
+}
+
+button_projection = projection_begin "button" ws text:("text" equals_separator "\"" t:textBut "\"" ws {return t})? "boxRole" equals_separator "\"" role:textBut "\"" ws projection_end
+{
+    return creator.createButtonDef({
+        "text"          : text,
+        "boxRole"       : role,
+        "location"      : location()
+    })
 }
 
 keywordDecl = projection_begin text1:textBut text2:(projection_separator t2:textBut {return t2;})? projection_end

@@ -528,6 +528,10 @@ export class BoxUtil {
         );
     }
 
+    static buttonBox(element: FreNode, text: string, roleName: string): Box {
+        return BoxFactory.button(element, text, roleName);
+    }
+
     static verticalPartListBox(element: FreNode,
                                list: FreNode[],
                                propertyName: string,

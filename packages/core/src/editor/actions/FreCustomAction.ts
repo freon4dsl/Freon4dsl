@@ -13,7 +13,7 @@ export class FreCustomAction extends FreAction {
         return result;
     }
     /**
-     * The action function taht will be performed
+     * The action function that will be performed
      */
     action: CustomAction;
 
