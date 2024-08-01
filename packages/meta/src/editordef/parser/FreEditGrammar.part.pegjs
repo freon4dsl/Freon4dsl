@@ -213,12 +213,12 @@ tableProjection = "table" ws projection_begin ws
     return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
 }
 
-lineWithOptional = items:(templateSpace / textItem / optionalProjection / property_projection / superProjection / button_projection / newline )+
+lineWithOptional = items:(templateSpace / textItem / optionalProjection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
 
-lineWithOutOptional = items:(templateSpace / textItem / property_projection / superProjection / button_projection / newline )+
+lineWithOutOptional = items:(templateSpace / textItem / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
@@ -235,6 +235,7 @@ textItem = chars:anythingBut+
 
 property_projection = s:singleProperty {return s;}
     / l:listProperty {return l;}
+    / b:button_projection {return b;}
 
 singleProperty = propProjectionStart ws
                          "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:displayType? ws kw:keywordDecl? ws

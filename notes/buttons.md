@@ -13,3 +13,4 @@ In this example that will be an instance of **BaseProduct**.
 ### Notes
 1. This is not yet implemented in tables.
 2. We are working on exposing the in-built actions in the editor core.
+3. At the moment we cannot change the text for an icon.
