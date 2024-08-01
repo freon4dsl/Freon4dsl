@@ -46,6 +46,8 @@ concept TimeAmount   {
 expression EventReference base TimeExpression {
     reference event: Event;
     eventState: EventState;
+    operator: string;
+    timeAmount: TimeAmount;
 }
 
 concept RepeatCount implements RepeatExpression {

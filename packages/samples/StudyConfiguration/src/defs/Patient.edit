@@ -22,7 +22,8 @@ PatientNotAvailable {
 
 StaffLevel {
   [ 
-    # Staff: ${staffAvailable} on: ${dateOrRange}]
+    # Staff: ${staffAvailable} on: ${dateOrRange}
+  ]
 }
 
 DateRange {

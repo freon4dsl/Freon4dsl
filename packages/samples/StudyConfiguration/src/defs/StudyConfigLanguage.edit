@@ -1,6 +1,6 @@
 editor default
 
-boolean [YES | NO] // are the strings used to display a boolean value
+//boolean [YES | NO] // are the strings used to display a boolean value
 
 Period {
     [
@@ -40,21 +40,6 @@ Task {
 
 }
 
-ReferenceToTask {
-    table [
-             Name    | Show Details   | Description   | # the Steps      | Steps
-             ${referencedTask} | ${showDetails} |${description} | ${numberedSteps} | ${steps}
-
-        ]
-}
-
-ContainedTask {
-    table [
-             Name    | Show Details   | Description   | # the Steps      | Steps
-             ${name} | ${showDetails} |${description} | ${numberedSteps} | ${steps}
-
-        ]
-}
 
 Step {
     [

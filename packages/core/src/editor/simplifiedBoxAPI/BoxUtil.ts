@@ -5,7 +5,6 @@ import {
     BooleanControlBox,
     Box,
     BoxFactory,
-    CharAllowed,
     EmptyLineBox,
     HorizontalListBox,
     LimitedControlBox,
@@ -486,7 +485,7 @@ export class BoxUtil {
         }
         const roleName: string = RoleProvider.label(node, uid) + "-" + content;
         return BoxFactory.label(node, roleName, content, {
-            selectable: _selectable
+            selectable: _selectable, cssClass
         });
     }
 

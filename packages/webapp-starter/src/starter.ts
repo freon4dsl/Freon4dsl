@@ -11,6 +11,7 @@ WebappConfigurator.getInstance().setEditorEnvironment(StudyConfigurationModelEnv
  */
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
 // WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommunication.getInstance());
+import { ServerCommunication } from "@freon4dsl/core";
 WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
 // export const serverCommunication: IServerCommunication = MpsServerCommunication.getInstance();
 

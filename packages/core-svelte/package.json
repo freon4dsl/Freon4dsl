@@ -75,7 +75,7 @@
   "dependencies": {
     "@tinymce/tinymce-svelte": "^3.0.0",
     "flowbite": "^2.4.1",
-    "svelte-cursor": "^0.1.1"
+    "svelte-cursor": "^0.1.1",
     "@material/web": "^1.5.1",
     "@material/slider": "^14.0.0",
     "@material/switch": "^14.0.0",

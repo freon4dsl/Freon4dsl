@@ -71,7 +71,7 @@ concept Task {
 concept Step {
     title: string;
     detailsDescription: Description;
-    //TODO: rename to something other than references: Reference to avoid confusion with Freon reference.
+    // TODO: rename to something other than references: Reference to avoid confusion with Freon reference.
     references: Reference[];
     people: Person[];
     systems: SystemAccessReference[];

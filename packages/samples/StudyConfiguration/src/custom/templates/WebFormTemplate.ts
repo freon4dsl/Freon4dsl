@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { FreModelUnit, FreModel, FreNode, FreLanguage, LwChunk, FreLogger, FreLionwebSerializer } from "@freon4dsl/core";
+import { FreModelUnit, FreModel, FreNode, FreLanguage, FreLogger, FreLionwebSerializer } from "@freon4dsl/core";
 import { StudyConfigurationModelEnvironment } from "../../config/gen/StudyConfigurationModelEnvironment";  
 import {StudyConfiguration, WorkflowDescription, Event, Task, Description } from "../../language/gen/index";  
 import * as path from 'path';
@@ -12,7 +12,7 @@ export class WebformTemplate {
       const serializer = new FreLionwebSerializer();
       const studyFolderPath: string = path.resolve(__dirname, '..','__tests__', 'modelstore', 'StudyConfiguration');
       console.log("studyFolderPath (TODO: move from tests folder):"+studyFolderPath);
-      let metaModel: LwChunk = JSON.parse(fs.readFileSync(`${studyFolderPath}/${modelName}.json`).toString());
+      let metaModel = JSON.parse(fs.readFileSync(`${studyFolderPath}/${modelName}.json`).toString());
       const ts = serializer.toTypeScriptInstance(metaModel);
       let model: StudyConfiguration = ts as StudyConfiguration;
       return model;
