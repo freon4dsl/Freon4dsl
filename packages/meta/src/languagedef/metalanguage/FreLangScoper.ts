@@ -4,9 +4,9 @@ import {
     FreMetaLanguage,
     FreLangAppliedFeatureExp,
     FreMetaPrimitiveType, FreMetaLimitedConcept
-} from "./internal";
-import { MetaLogger } from "../../utils/MetaLogger";
-import { FreMetaDefinitionElement } from "../../utils";
+} from "./internal.js";
+import { MetaLogger } from "../../utils/MetaLogger.js";
+import { FreMetaDefinitionElement } from "../../utils/index.js";
 
 const LOGGER = new MetaLogger("FreLangScoper"); // .mute();
 // const anyElement = "_$anyElement";

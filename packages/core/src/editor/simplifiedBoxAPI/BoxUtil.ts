@@ -1,15 +1,31 @@
-import { runInAction } from "mobx";
-import { FreNode, FreNamedNode, FreNodeReference } from "../../ast";
-import { Box, BooleanControlBox, BoxFactory, EmptyLineBox, HorizontalListBox, SelectBox, SelectOption, TextBox, VerticalListBox, BoolDisplay, ItemGroupBox, ListGroupBox, DateBox, TimeBox } from "../boxes";
+import {runInAction} from "mobx";
+import {FreNamedNode, FreNode, FreNodeReference} from "../../ast";
+import {
+    BoolDisplay,
+    BooleanControlBox,
+    Box,
+    BoxFactory,
+    CharAllowed,
+    EmptyLineBox,
+    HorizontalListBox,
+    LimitedControlBox,
+    LimitedDisplay,
+    NumberControlBox,
+    NumberDisplay,
+    NumberDisplayInfo,
+    SelectBox,
+    SelectOption,
+    TextBox,
+    VerticalListBox, ItemGroupBox, ListGroupBox, DateBox, TimeBox 
+} from "../boxes";
+import {FreUtils} from "../../util";
+import {BehaviorExecutionResult} from "../util";
+import {FreLanguage, FreLanguageProperty, PropertyKind} from "../../language";
+import {FreEditor} from "../FreEditor";
+import {FreScoper} from "../../scoper";
+import {RoleProvider} from "./RoleProvider";
+import {FreBoxProvider, FreProjectionHandler} from "../projections";
 import { CharAllowed } from "../boxes/CharAllowed";
-import { FreUtils } from "../../util";
-import { BehaviorExecutionResult } from "../util";
-import { FreLanguage, FreLanguageProperty, PropertyKind } from "../../language";
-import { FreEditor } from "../FreEditor";
-import { FreScoper } from "../../scoper";
-import { RoleProvider } from "./RoleProvider";
-import { FreBoxProvider, FreProjectionHandler } from "../projections";
-// import { BlobOptions } from "buffer";
 
 export class FreListInfo {
     text: string;
@@ -124,23 +140,27 @@ export class BoxUtil {
      * called for each item in the list. In that case an index to the item needs to be provided.
      * @param node the owning FreNode of the displayed property
      * @param propertyName the name of the displayed property
+     * @param display
      * @param index the index of the item in the list, if the property is a list
+     * @param displayInfo
      * @param cssClass
      */
-    static numberBox(node: FreNode, propertyName: string, index?: number, cssClass?: string): TextBox {
-        let result: TextBox = null;
+    // static numberBox(node: FreNode, propertyName: string, index?: number): Box {
+    static numberBox(node: FreNode, propertyName: string, display: NumberDisplay, index?: number, displayInfo?: NumberDisplayInfo): Box {
+        let result: TextBox | NumberControlBox = null;
         // find the information on the property to be shown
-        const propInfo = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
+        const propInfo:FreLanguageProperty = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
         const property = node[propertyName];
         const isList: boolean = propInfo.isList;
         // create the box
         if (property !== undefined && property !== null && typeof property === "number") {
             const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "numberbox", index);
-            if (isList && this.checkList(isList, index, propertyName)) {
-                result = BoxFactory.text( node, roleName, () => node[propertyName][index].toString(), (v: string) => runInAction(() => { (node[propertyName][index] = Number.parseInt(v, 10)); }), { placeHolder: `<enter>`, isCharAllowed: (currentText: string, key: string, innerIndex: number) => { return isNumber(currentText, key, innerIndex); } }, cssClass);
+            if (display !== NumberDisplay.SELECT) {
+                result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, display, displayInfo);
             } else {
-                result = BoxFactory.text( node, roleName, () => node[propertyName].toString(), (v: string) => runInAction(() => { (node[propertyName] = Number.parseInt(v, 10)); }), { placeHolder: `<enter>`, isCharAllowed: (currentText: string, key: string, innerIndex: number) => { return isNumber(currentText, key, innerIndex); } }, cssClass);
+                result = this.makeNumberSelectBox(isList, index, propertyName, node, roleName);
             }
+            // result = this.makeNumberControlBox(isList, index, propertyName, node, roleName, NumberDisplay.HORIZONTAL_SLIDER, {min: 10, max: 210, step: 5, showMarks: true, discrete: true});
             result.propertyName = propertyName;
             result.propertyIndex = index;
         } else {
@@ -149,6 +169,67 @@ export class BoxUtil {
         return result;
     }
 
+    private static makeNumberSelectBox(isList: boolean, index: number, propertyName: string, node: FreNode, roleName: string): TextBox {
+        if (isList && this.checkList(isList, index, propertyName)) {
+            return BoxFactory.text(
+                node,
+                roleName,
+                () => node[propertyName][index].toString(),
+                (v: string) => runInAction(() => {
+                    (node[propertyName][index] = Number.parseInt(v, 10));
+                }),
+                {
+                    placeHolder: `<${propertyName}>`,
+                    isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
+                        return isNumber(currentText, key, innerIndex);
+                    }
+                });
+        } else {
+            return BoxFactory.text(
+                node,
+                roleName,
+                () => node[propertyName].toString(),
+                (v: string) => runInAction(() => {
+                    (node[propertyName] = Number.parseInt(v, 10));
+                }),
+                {
+                    placeHolder: `<${propertyName}>`,
+                    isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
+                        return isNumber(currentText, key, innerIndex);
+                    }
+                });
+        }
+    }
+
+    private static makeNumberControlBox(isList: boolean, index: number, propertyName: string, node: FreNode, roleName: string, display: NumberDisplay, displayInfo: NumberDisplayInfo): NumberControlBox {
+        let result: NumberControlBox;
+        if (isList && this.checkList(isList, index, propertyName)) {
+            result = BoxFactory.number(
+                node,
+                roleName,
+                () => node[propertyName][index],
+                (v: number) => runInAction(() => {
+                    (node[propertyName][index] = v);}),
+                {
+                    showAs: display,
+                    displayInfo: displayInfo
+                }
+            );
+        } else {
+            result = BoxFactory.number(
+                node,
+                roleName,
+                () => node[propertyName],
+                (v: number) => runInAction(() => {
+                    (node[propertyName] = v);}),
+                {
+                    showAs: display,
+                    displayInfo: displayInfo
+                }
+            );
+        }
+        return result;
+    }
     /**
      * Returns a textBox that holds a property of type 'boolean'.
      * When the property is a list (the type is "boolean[]"), this method can be
@@ -288,6 +369,108 @@ export class BoxUtil {
     }
 
     /**
+     *
+     * @param node
+     * @param propertyName
+     * @param setFunc           a function to make a reference to a single limited value/instance
+     * @param display
+     */
+    static limitedBox(
+        node: FreNode,
+        propertyName: string,
+        setFunc: (selected: string) => void,
+        display: LimitedDisplay,
+    ): Box {
+        // find the information on the property to be shown
+        const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
+        if (propInfo.isList) {
+            throw new Error("Cannot create a Limited box for '" + propertyName + "', because the set function is not correct");
+        } else if (display === LimitedDisplay.CHECKBOX) {
+            throw new Error("Cannot create a Checkbox Group box for '" + propertyName + "', because it is not a list value");
+        }
+        const possibleValues: string[] = this.checkLimitedType(propInfo, propertyName);
+
+        // console.log("BoxUtil.limitedBox current value is " + [node[propertyName].name] + ", possibleValues: [" + possibleValues + "]");
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "limitedcontrolbox");
+        let result: LimitedControlBox = BoxFactory.limited(
+            node,
+            roleName,
+            () => [node[propertyName].name],
+            (v: string[]) => runInAction(() => {
+                if (!!v[0]) {
+                    // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + v[0]);
+                    runInAction(() => {
+                        setFunc(v[0]);
+                    });
+                } else {
+                    runInAction(() => {
+                        node[propertyName] = null;
+                    });
+                }
+            }),
+            possibleValues
+        );
+        result.showAs = LimitedDisplay.RADIO_BUTTON;
+        result.propertyName = propertyName;
+        return result;
+    }
+
+    /**
+     *
+     * @param node
+     * @param propertyName
+     * @param setFunc           a function to make a reference to a single limited value/instance
+     * @param display
+     */
+    static limitedListBox(
+        node: FreNode,
+        propertyName: string,
+        setFunc: (selected: string[]) => void,
+        display: LimitedDisplay,
+    ): Box {
+        // find the information on the property to be shown
+        // find the information on the property to be shown
+        const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
+        if (!propInfo.isList) {
+            throw new Error("Cannot create a Limited box for '" + propertyName + "', because the set function is not correct");
+        } else if (display === LimitedDisplay.RADIO_BUTTON) {
+            throw new Error("Cannot create a Radio Button box for '" + propertyName + "', because it is not a single value");
+        }
+        const possibleValues: string[] = this.checkLimitedType(propInfo, propertyName);
+
+        // console.log("BoxUtil.limitedListBox current value is " + [node[propertyName].name] + ", possibleValues: [" + possibleValues + "]");
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "limitedcontrolbox");
+        let result: LimitedControlBox = BoxFactory.limited(
+            node,
+            roleName,
+            () => node[propertyName].map(n => n.name), // node[propertyName] is a list of references, therefore we need to get their names
+            (v: string[]) => runInAction(() => {
+                // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + v);
+                setFunc(v);
+            }),
+            possibleValues
+        );
+        result.showAs = LimitedDisplay.CHECKBOX;
+        result.propertyName = propertyName;
+        return result;
+    }
+
+    private static checkLimitedType(propInfo: FreLanguageProperty, propertyName: string) {
+        // check whether this type is really a limited type
+        const propType: string = propInfo?.type;
+        if (!propType) {
+            throw new Error("Cannot find type of '" + propertyName + "'");
+        }
+        const isLimited: boolean = FreLanguage.getInstance().concept(propType).isLimited;
+        if (!isLimited) {
+            throw new Error("Type of '" + propertyName + "' is not a limited concept");
+        }
+
+        // get all names of the instances of the limited concept
+        return FreLanguage.getInstance().concept(propType).instanceNames;
+    }
+
+    /**
      * Returns a labelBox for 'content' within 'element'.
      * @param node
      * @param content
@@ -302,7 +485,13 @@ export class BoxUtil {
             _selectable = true;
         }
         const roleName: string = RoleProvider.label(node, uid) + "-" + content;
-        return BoxFactory.label(node, roleName, content, { selectable: _selectable }, cssClass);
+        return BoxFactory.label(node, roleName, content, {
+            selectable: _selectable
+        });
+    }
+
+    static buttonBox(element: FreNode, text: string, roleName: string): Box {
+        return BoxFactory.button(element, text, roleName);
     }
 
     static listGroupBox(node: FreNode, label: string, level: number, uid: string, childBox: Box, selectable?: boolean, cssClass?: string, isExpanded?: boolean): Box {
@@ -565,7 +754,7 @@ export class BoxUtil {
 
     private static getPropertyInfo(element: FreNode, propertyName: string) {
         const property = element[propertyName];
-        const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
+        const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
         const isList: boolean = propInfo.isList;
         const isPart: PropertyKind = propInfo.propertyKind;
         return { property, isList, isPart };

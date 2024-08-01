@@ -1,0 +1,9 @@
+editor default
+
+defaults {
+    boolean slider
+    number radio
+    limited checkbox
+    limited[] inner-switch
+    referenceSeparator [: xxx]
+}

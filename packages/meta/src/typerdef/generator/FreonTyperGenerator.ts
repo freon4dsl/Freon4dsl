@@ -1,14 +1,14 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/MetaLogger";
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { TyperDef } from "../metalanguage";
-import { GenerationStatus, FileUtil, Names, TYPER_FOLDER, TYPER_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../utils";
-import { FreTyperTemplate } from "./templates/FreTyperTemplate";
-import { FreTyperPartTemplate } from "./templates/FreTyperPartTemplate";
-import { FreCustomTyperPartTemplate } from "./templates/FreCustomTyperPartTemplate";
-import { LOG2USER } from "../../utils/UserLogger";
-import { FreTypeConceptMaker } from "./templates/FreTypeConceptMaker";
-import { TyperDefTemplate } from "./templates/TyperDefTemplate";
+import { MetaLogger } from "../../utils/MetaLogger.js";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { TyperDef } from "../metalanguage/index.js";
+import { GenerationStatus, FileUtil, Names, TYPER_FOLDER, TYPER_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../utils/index.js";
+import { FreTyperTemplate } from "./templates/FreTyperTemplate.js";
+import { FreTyperPartTemplate } from "./templates/FreTyperPartTemplate.js";
+import { FreCustomTyperPartTemplate } from "./templates/FreCustomTyperPartTemplate.js";
+import { LOG2USER } from "../../utils/UserLogger.js";
+import { FreTypeConceptMaker } from "./templates/FreTypeConceptMaker.js";
+import { TyperDefTemplate } from "./templates/TyperDefTemplate.js";
 
 const LOGGER = new MetaLogger("FreonTyperGenerator");
 

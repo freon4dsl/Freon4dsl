@@ -1,4 +1,4 @@
-import { Checker, FreErrorSeverity, MetaLogger, ParseLocationUtil, CheckRunner } from "../../utils";
+import { Checker, FreErrorSeverity, MetaLogger, ParseLocationUtil, CheckRunner } from "../../utils/index.js";
 import {
     FreMetaClassifier,
     FreMetaConcept,
@@ -8,7 +8,7 @@ import {
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
     FreMetaProperty
-} from "../../languagedef/metalanguage";
+} from "../../languagedef/metalanguage/index.js";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -22,9 +22,9 @@ import {
     ValidationRule,
     ValidationSeverity,
     ValidNameRule
-} from "./ValidatorDefLang";
-import { FreMetaPrimitiveType } from "../../languagedef/metalanguage";
-import { CommonChecker, FreLangExpressionChecker } from "../../languagedef/checking";
+} from "./ValidatorDefLang.js";
+import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/index.js";
+import { CommonChecker, FreLangExpressionChecker } from "../../languagedef/checking/index.js";
 
 const LOGGER: MetaLogger = new MetaLogger("ValidatorChecker");
 const equalsTypeName: string = "equalsType";

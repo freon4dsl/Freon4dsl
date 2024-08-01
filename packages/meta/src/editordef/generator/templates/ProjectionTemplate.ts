@@ -12,17 +12,17 @@ import {
     FreEditTableProjection,
     FreEditUnit,
     FreOptionalPropertyProjection,
-    ExtraClassifierInfo, BoolKeywords, FreEditProjectionGroup, BoolDisplayType
-} from "../../metalanguage";
+    ExtraClassifierInfo, BoolKeywords, FreEditProjectionGroup, ForType, FreEditStandardProjection, FreEditButtonDef
+} from "../../metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
     FreMetaConceptProperty,
     FreMetaExpressionConcept,
-    FreMetaLanguage,
+    FreMetaLanguage, FreMetaLimitedConcept,
     FreMetaPrimitiveProperty, FreMetaPrimitiveType,
     FreMetaProperty
-} from "../../../languagedef/metalanguage";
+} from "../../../languagedef/metalanguage/index.js";
 import {
     CONFIGURATION_GEN_FOLDER,
     EDITOR_GEN_FOLDER,
@@ -31,17 +31,21 @@ import {
     LOG2USER,
     Names,
     FREON_CORE,
-    Roles, ParseLocationUtil
-} from "../../../utils";
-import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil";
+    Roles
+} from "../../../utils/index.js";
+import { ParserGenUtil } from "../../../parsergen/parserTemplates/ParserGenUtil.js";
+
 
 export class ProjectionTemplate {
-    // To be able to add a projections for showing/hiding brakets to binary expression, this dummy projection is used.
+    // To be able to add a projections for showing/hiding brackets to binary expression, this dummy projection is used.
     private static dummyProjection: FreEditProjection = new FreEditProjection();
     // The values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords').
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
     private stdBoolDisplayType: string = "text";
+    private stdNumberDisplayType: string = "text";
+    private stdLimitedSingleDisplayType: string = "text";
+    private stdLimitedListDisplayType: string = "text";
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
     private modelImports: string[] = [];    // imports from ../language/gen
@@ -52,18 +56,31 @@ export class ProjectionTemplate {
     private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
     private supersUsed: FreMetaClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
 
-    setStandardBooleanKeywords(editorDef: FreEditUnit) {
+    setStandardDisplays(editorDef: FreEditUnit) {
         // get the standard labels for true and false, and the standard display type (checkbox, radio, text, etc.) for boolean values
         const defProjGroup: FreEditProjectionGroup | undefined = editorDef.getDefaultProjectiongroup();
         if (!!defProjGroup) {
-            const stdLabels: BoolKeywords | undefined = defProjGroup.standardBooleanProjection?.keywords;
+            const standardBoolProj: FreEditStandardProjection | undefined = defProjGroup.findStandardProjFor(ForType.Boolean);
+            const stdLabels: BoolKeywords | undefined = standardBoolProj?.keywords;
             if (!!stdLabels) {
                 this.trueKeyword = stdLabels.trueKeyword;
                 this.falseKeyword = stdLabels.falseKeyword ? stdLabels.falseKeyword : "false";
             }
-            const displayType: string | undefined = defProjGroup.standardBooleanProjection?.displayType;
-            if (!!displayType) {
-                this.stdBoolDisplayType = displayType;
+            const boolDisplayType: string | undefined = standardBoolProj?.displayType;
+            if (!!boolDisplayType) {
+                this.stdBoolDisplayType = boolDisplayType;
+            }
+            const numberDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.Number)?.displayType;
+            if (!!numberDisplayType) {
+                this.stdNumberDisplayType = numberDisplayType;
+            }
+            const limitedSingleDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.Limited)?.displayType;
+            if (!!limitedSingleDisplayType) {
+                this.stdLimitedSingleDisplayType = limitedSingleDisplayType;
+            }
+            const limitedListDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.LimitedList)?.displayType;
+            if (!!limitedListDisplayType) {
+                this.stdLimitedListDisplayType = limitedListDisplayType;
             }
         }
     }
@@ -228,7 +245,7 @@ export class ProjectionTemplate {
         return `
                 /**
                  * This method returns the content for one of the superconcepts or interfaces of 'this._element'.
-                 * Based on the name of the susperconcept/interface, a tempory BoxProvider is created. This BoxProvider
+                 * Based on the name of the superconcept/interface, a temporary BoxProvider is created. This BoxProvider
                  * then returns the result of its 'getContent' method, using 'projectionName' as parameter.
                  *
                  * @param superName         The name of the superconcept or interface for which the projection is requested.
@@ -369,6 +386,9 @@ export class ProjectionTemplate {
         if (item instanceof FreEditProjectionText) {
             ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
             result += ` BoxUtil.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "top-${topIndex}-line-${lineIndex}-item-${itemIndex}") `;
+        } else if (item instanceof FreEditButtonDef) {
+            ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
+            result += ` BoxUtil.buttonBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "${ParserGenUtil.escapeRelevantChars(item.boxRole.trim())}") `;
         } else if (item instanceof FreOptionalPropertyProjection) {
             result += this.generateOptionalProjection(item, elementVarName, mainBoxLabel, language);
         } else if (item instanceof FreEditPropertyProjection) {
@@ -421,11 +441,8 @@ export class ProjectionTemplate {
         if (property === null || property === undefined) {
             return '';
         }
-        if (property.name === "yieldsProfit") {
-            console.log("yieldsProfit is in projection: " + ParseLocationUtil.location(item));
-        }
         if (property instanceof FreMetaPrimitiveProperty) {
-            result += this.primitivePropertyProjection(property, elementVarName, item.boolInfo, item.listInfo);
+            result += this.primitivePropertyProjection(property, elementVarName, item.displayType, item.boolKeywords, item.listInfo);
         } else if (property instanceof FreMetaConceptProperty) {
             if (property.isPart) {
                 if (property.isList) {
@@ -440,14 +457,22 @@ export class ProjectionTemplate {
                 }
             } else { // reference
                 if (property.isList) {
-                    if (!!item.listInfo && item.listInfo.isTable) { // if there is information on how to project the property as a table, make it a table
+                    if (property.type instanceof FreMetaLimitedConcept && (item.displayType === "checkbox" || this.stdLimitedListDisplayType === "checkbox")) {
+                        // use limited control
+                        result += this.generateLimitedListProjection(property, elementVarName, "checkbox");
+                    } else if (!!item.listInfo && item.listInfo.isTable) { // if there is information on how to project the property as a table, make it a table
                         // no table projection for references - for now
                         result += this.generateReferenceAsList(language, item.listInfo, property, elementVarName);
                     } else if (!!item.listInfo) { // if there is information on how to project the property as a list, make it a list
                         result += this.generateReferenceAsList(language, item.listInfo, property, elementVarName);
                     }
                 } else { // single element
-                    result += this.generateReferenceProjection(language, property, elementVarName);
+                    if (property.type instanceof FreMetaLimitedConcept && (item.displayType === "radio" || this.stdLimitedListDisplayType === "radio")) {
+                        // use limited control
+                        result += this.generateLimitedSingleProjection(property, elementVarName, "radio");
+                    } else {
+                        result += this.generateReferenceProjection(language, property, elementVarName);
+                    }
                 }
             }
         } else {
@@ -507,6 +532,73 @@ export class ProjectionTemplate {
         }
     }
 
+    private generateLimitedSingleProjection(appliedFeature: FreMetaConceptProperty, element: string, displayType: string) {
+        const featureType: string = Names.classifier(appliedFeature.type);
+        ListUtil.addIfNotPresent(this.modelImports, featureType);
+        ListUtil.addIfNotPresent(this.coreImports, Names.FreNodeReference);
+        ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
+        ListUtil.addIfNotPresent(this.coreImports, "LimitedDisplay");
+        // get the right displayType
+        let displayTypeToUse: string = this.getTypeScriptForDisplayType(this.stdLimitedSingleDisplayType);
+        if (!!displayType) {
+            displayTypeToUse = this.getTypeScriptForDisplayType(displayType);
+        }
+        return `BoxUtil.limitedBox(
+                                ${element},
+                                "${appliedFeature.name}",
+                                (selected: string) => {
+                                    ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
+                                               selected, "${featureType}" );
+                                },
+                                LimitedDisplay.${displayTypeToUse}
+               )`;
+    }
+
+    private generateLimitedListProjection(appliedFeature: FreMetaConceptProperty, element: string, displayType: string) {
+        const featureType: string = Names.classifier(appliedFeature.type);
+        ListUtil.addIfNotPresent(this.modelImports, featureType);
+        ListUtil.addIfNotPresent(this.coreImports, Names.FreNodeReference);
+        ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
+        ListUtil.addIfNotPresent(this.coreImports, "LimitedDisplay");
+        // get the right displayType
+        let displayTypeToUse: string = this.getTypeScriptForDisplayType(this.stdLimitedListDisplayType);
+        if (!!displayType) {
+            displayTypeToUse = this.getTypeScriptForDisplayType(displayType);
+        }
+        // for (let i: number = 0; i < (this._element as InsuranceProduct).themes.length; i++) {
+        //     if (!selected.includes((this._element as InsuranceProduct).themes[i].name)) {
+        //         (this._element as InsuranceProduct).themes.splice(i, 1);
+        //     }
+        // }
+        // const existingNames: string[] = (this._element as InsuranceProduct).themes.map((n) => n.name);
+        // for (let i: number = 0; i < selected.length; i++) {
+        //     if (!existingNames.includes(selected[i])) {
+        //         (this._element as InsuranceProduct).themes.push(
+        //             FreNodeReference.create<InsuranceTheme>(selected, "InsuranceTheme"),
+        //         );
+        //     }
+        // }
+        return `BoxUtil.limitedListBox(
+                                ${element},
+                                "${appliedFeature.name}",
+                                (selected: string[]) => {
+                                        for (let i: number = 0; i < ${element}.${appliedFeature.name}.length; i++) {
+                                            if (!selected.includes(${element}.${appliedFeature.name}[i].name)) {
+                                                ${element}.${appliedFeature.name}.splice(i, 1);
+                                            }
+                                        }
+                                        const existingNames: string[] = ${element}.${appliedFeature.name}.map((n) => n.name);
+                                        for (let i: number = 0; i < selected.length; i++) {
+                                            if (!existingNames.includes(selected[i])) {
+                                                ${element}.${appliedFeature.name}.push(${Names.FreNodeReference}.create<${featureType}>(
+                                               selected, "${featureType}" ));
+                                            }
+                                        }
+                                },
+                                LimitedDisplay.${displayTypeToUse}
+               )`;
+    }
+
     private generateReferenceProjection(language: FreMetaLanguage, appliedFeature: FreMetaConceptProperty, element: string) {
         const featureType = Names.classifier(appliedFeature.type);
         ListUtil.addIfNotPresent(this.modelImports, featureType);
@@ -518,11 +610,7 @@ export class ProjectionTemplate {
                                 "${appliedFeature.name}",
                                 (selected: string) => {
                                     ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
-                                       ${Names.environment(language)}.getInstance().scoper.getFromVisibleElements(
-                                            ${element},
-                                            selected,
-                                            "${featureType}"
-                                       ) as ${featureType}, "${featureType}");
+                                               selected, "${featureType}" );
                                 },
                                 ${Names.environment(language)}.getInstance().scoper
                )`;
@@ -546,15 +634,15 @@ export class ProjectionTemplate {
         return joinEntry;
     }
 
-    private primitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType, listInfo?: ListInfo): string {
+    private primitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolDisplayType?: string, boolInfo?: BoolKeywords, listInfo?: ListInfo): string {
         if (property.isList) {
-            return this.listPrimitivePropertyProjection(property, element, boolInfo, listInfo);
+            return this.listPrimitivePropertyProjection(property, element, boolDisplayType, boolInfo, listInfo);
         } else {
-            return this.singlePrimitivePropertyProjection(property, element, boolInfo);
+            return this.singlePrimitivePropertyProjection(property, element, boolDisplayType, boolInfo);
         }
     }
 
-    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType): string {
+    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, displayType?: string, boolKeywords?: BoolKeywords): string {
         ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type) {
@@ -562,55 +650,62 @@ export class ProjectionTemplate {
             case FreMetaPrimitiveType.identifier:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
             case FreMetaPrimitiveType.number:
-                return `BoxUtil.numberBox(${element}, "${property.name}"${listAddition})`;
+                // get the right displayType
+                let displayTypeToUse1: string = this.getTypeScriptForDisplayType(this.stdNumberDisplayType);
+                if (!!displayType) {
+                    displayTypeToUse1 = this.getTypeScriptForDisplayType(displayType);
+                }
+                ListUtil.addIfNotPresent(this.coreImports, "NumberDisplay");
+                return `BoxUtil.numberBox(${element}, "${property.name}"${listAddition}, NumberDisplay.${displayTypeToUse1})`;
             case FreMetaPrimitiveType.boolean:
+                // get the right keywords
                 let trueKeyword: string = this.trueKeyword;
                 let falseKeyword: string = this.falseKeyword;
-                let displayType: string = '';
-                displayType = this.getDisplayTypeFrom(this.stdBoolDisplayType);
-                if (property.name === "yieldsProfit") {
-                    console.log("yieldsProfit.boolInfo: " + boolInfo?.toString());
+                if (!!boolKeywords) {
+                    trueKeyword = boolKeywords.trueKeyword;
+                    falseKeyword = boolKeywords.falseKeyword ? boolKeywords.falseKeyword : "undefined";
                 }
-                if (!!boolInfo) {
-                    if (!!boolInfo.keywords) {
-                        trueKeyword = boolInfo.keywords.trueKeyword;
-                        falseKeyword = boolInfo.keywords.falseKeyword ? boolInfo.keywords.falseKeyword : "undefined";
-                    }
-                    displayType = this.getDisplayTypeFrom(boolInfo.displayType);
+                // get the right displayType
+                let displayTypeToUse2: string = this.getTypeScriptForDisplayType(this.stdBoolDisplayType);
+                if (!!displayType) {
+                    displayTypeToUse2 = this.getTypeScriptForDisplayType(displayType);
                 }
                 ListUtil.addIfNotPresent(this.coreImports, "BoolDisplay");
-                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, ${displayType})`;
+                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, BoolDisplay.${displayTypeToUse2})`;
             default:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
         }
     }
 
-    private getDisplayTypeFrom(inType: string): string {
+    private getTypeScriptForDisplayType(inType: string | undefined): string {
         let result: string;
         switch (inType) {
-            // "text" / "checkbox" / "radio" / "switch" / "inner-switch"
+            // possible values: "text" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
             case "text":
-                result = "BoolDisplay.SELECT";
+                result = "SELECT";
                 break;
             case "checkbox":
-                result = "BoolDisplay.CHECKBOX";
+                result = "CHECKBOX";
                 break;
             case "radio":
-                result = "BoolDisplay.RADIO_BUTTON";
+                result = "RADIO_BUTTON";
                 break;
             case "switch":
-                result = "BoolDisplay.SWITCH";
+                result = "SWITCH";
                 break;
             case "inner-switch":
-                result = "BoolDisplay.INNER_SWITCH";
+                result = "INNER_SWITCH";
+                break;
+            case "slider":
+                result = "SLIDER";
                 break;
             default:
-                result = "BoolDisplay.SELECT";
+                result = "SELECT";
         }
         return result;
     }
 
-    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolInfo?: BoolDisplayType, listInfo?: ListInfo): string {
+    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolDisplayType?: string, boolInfo?: BoolKeywords, listInfo?: ListInfo): string {
         let direction: string = "verticalList";
         let alignment: string = "";
         if (!!listInfo && listInfo.direction === FreEditProjectionDirection.Horizontal) {
@@ -623,7 +718,7 @@ export class ProjectionTemplate {
         // TODO Create Action for the role to actually add an element.
         return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist", "", ${alignment} 
                             (${element}.${property.name}.map( (item, index)  =>
-                                ${this.singlePrimitivePropertyProjection(property, element, boolInfo)}
+                                ${this.singlePrimitivePropertyProjection(property, element, boolDisplayType, boolInfo)}
                             ) as Box[]).concat( [
                                 BoxFactory.action(${element}, "new-${Roles.property(property)}-hlist", "<+ ${property.name}>")
                             ])

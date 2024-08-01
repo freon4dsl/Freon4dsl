@@ -1,11 +1,11 @@
-import {Names, FREON_CORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER, LOG2USER} from "../../../utils";
-import { FreMetaConcept, FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage";
-import { TyperDef } from "../../metalanguage";
-import { ListUtil } from "../../../utils";
-import { FreTypeEqualsMaker } from "./FreTypeEqualsMaker";
-import { FreTypeInferMaker } from "./FreTypeInferMaker";
-import { FreSuperTypeMaker } from "./FreSuperTypeMaker";
-import { FreTyperGenUtils } from "./FreTyperGenUtils";
+import {Names, FREON_CORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER, LOG2USER} from "../../../utils/index.js";
+import { FreMetaConcept, FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
+import { TyperDef } from "../../metalanguage/index.js";
+import { ListUtil } from "../../../utils/index.js";
+import { FreTypeEqualsMaker } from "./FreTypeEqualsMaker.js";
+import { FreTypeInferMaker } from "./FreTypeInferMaker.js";
+import { FreSuperTypeMaker } from "./FreSuperTypeMaker.js";
+import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
 
 export class FreTyperPartTemplate {
     // @ts-ignore Property is set in the only public method 'generateTyperPart'.

@@ -86,6 +86,7 @@
 	--freon-horizontallist-component-border-width: inherited;
 	--freon-horizontallist-component-border-style: inherited;
 
+	--freon-boolean-checkbox-color: orange;
 }
 
 html, body {

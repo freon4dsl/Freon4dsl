@@ -1,8 +1,9 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../utils";
+import { Checker, MetaLogger } from "../../utils/index.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
-import { FreEditUnit } from "../../editordef/metalanguage";
+import { FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { describe, test, expect, beforeEach } from "vitest"
 
 describe("Checking editor definition ", () => {
     const testdir = "src/__tests__/editor-tests/faultyDefFiles/checking-errors/";
@@ -160,6 +161,61 @@ describe("Checking editor definition ", () => {
                 expect(checker.errors.includes("Property 'AAprop6' may not have a keyword projection, because it is a list [file: test9.edit:5:5].")).toBeTruthy();
                 expect(checker.errors.includes("Property 'BBprop6' may not have a keyword projection, because it is a list [file: test9.edit:11:5].")).toBeTruthy();
             }
+        }
+    });
+
+    test("on standard displays for primitives and limiteds", () => {
+        try {
+            parser.parse(testdir + "test10.edit");
+        } catch (e: unknown) {
+            console.log(e);
+            if (e instanceof Error) {
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                expect(e.message).toBe(`checking errors (5).`);
+                expect(checker.errors.includes("A boolean value may only be displayed as 'text', 'checkbox', 'radio', 'switch', or 'inner-switch' [file: test10.edit:4:5].")).toBeTruthy();
+                expect(checker.errors.includes("A number value may only be displayed as 'text', or 'slider' [file: test10.edit:5:5].")).toBeTruthy();
+                expect(checker.errors.includes("A limited (enum) value may only be displayed as 'text', or 'radio' [file: test10.edit:6:5].")).toBeTruthy();
+                expect(checker.errors.includes("A list of limited (enum) values may only be displayed as 'text', or 'checkbox' [file: test10.edit:7:5].")).toBeTruthy();
+                expect(checker.errors.includes("The text for a separator should not include any whitespace [file: test10.edit:8:5].")).toBeTruthy();
+            }
+        }
+    });
+
+    test("on display types for limiteds", () => {
+        try {
+            parser.parse(testdir + "test11.edit");
+        } catch (e: unknown) {
+            console.log(e);
+            if (e instanceof Error) {
+                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                expect(e.message).toBe(`checking errors (11).`);
+                expect(checker.errors.includes("A number value may only be displayed as 'text', or 'slider' [file: test11.edit:10:5].")).toBeTruthy();
+                expect(checker.errors.includes("A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'number[]' [file: test11.edit:11:5].")).toBeTruthy();
+                expect(checker.errors.includes("A boolean value may only be displayed as 'text', 'checkbox', 'radio', 'switch', or 'inner-switch' [file: test11.edit:13:5].")).toBeTruthy();
+                expect(checker.errors.includes("A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'boolean[]' [file: test11.edit:19:5].")).toBeTruthy();
+                expect(checker.errors.includes("A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:21:5].")).toBeTruthy();
+                expect(checker.errors.includes("A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'BB[]' [file: test11.edit:22:5].")).toBeTruthy();
+                expect(checker.errors.includes("A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:23:5].")).toBeTruthy();
+                expect(checker.errors.includes("A limited (enum) value may only be displayed as 'text', or 'radio' [file: test11.edit:27:5].")).toBeTruthy();
+                expect(checker.errors.includes("A limited (enum) value may only be displayed as 'text', or 'radio' [file: test11.edit:28:5].")).toBeTruthy();
+                expect(checker.errors.includes("A list of limited (enum) values may only be displayed as 'text', or 'checkbox' [file: test11.edit:32:5].")).toBeTruthy();
+                expect(checker.errors.includes("A list of limited (enum) values may only be displayed as 'text', or 'checkbox' [file: test11.edit:33:5].")).toBeTruthy();
+            }
+        }
+    });
+
+    test("on multiple standard definitions", () => {
+        try {
+            parser.parseMulti([testdir + "test11.edit", testdir + "test12.edit"]);
+        } catch (e: unknown) {
+            console.log(e);
+            if (e instanceof Error) {
+                expect(e.message).toBe(`checking errors (11).`); // these are checked in the previous test
+                expect(checker.hasWarnings()).toBeTruthy;
+                // console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
+                expect(checker.warnings.length).toBe(1);
+                expect(checker.warnings.includes("Found multiple definitions for standard projections, please note that they may be overridden [file: test11.edit:4:5],[file: test12.edit:4:5].")).toBeTruthy();
+             }
         }
     });
 });

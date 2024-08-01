@@ -1,14 +1,15 @@
 import fs from "fs";
-import { IdMap } from "../../commandline/IdMap";
-import { FreMetaLanguage } from "../metalanguage/";
-import { FreGenericParser, LOG2USER } from "../../utils";
-import * as pegjsParser from "./LanguageGrammar";
+import { IdMap } from "../../commandline/IdMap.js";
+import { FreMetaLanguage } from "../metalanguage/index.js";
+import { FreGenericParser, LOG2USER } from "../../utils/index.js";
+import { parser } from "./LanguageGrammar.js";
+
 import {
     cleanNonFatalParseErrors,
     getNonFatalParseErrors,
     setCurrentFileName, setIdMap
-} from "./LanguageCreators";
-import { FreLangChecker } from "../checking/FreLangChecker";
+} from "./LanguageCreators.js";
+import { FreLangChecker } from "../checking/FreLangChecker.js";
 
 // const LOGGER = new MetaLogger("LanguageParser").mute();
 
@@ -18,18 +19,19 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     constructor(idFile?: string) {
         super();
         this.idFile = idFile ? idFile : undefined;
-        this.parser = pegjsParser;
+        this.parser = parser;
         this.checker = new FreLangChecker(undefined);
     }
 
     parse(definitionFile: string): FreMetaLanguage | undefined {
+        LOG2USER.log("ParseFile: " + definitionFile)
         if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);
             const idMap = this.parseIds(idJson);
             setIdMap(idMap);
         } else {
-            LOG2USER.info("No id.json found")
+            LOG2USER.log("No id.json found")
         }
         return super.parse(definitionFile);
     }
@@ -41,7 +43,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
             const idMap = this.parseIds(idJson);
             setIdMap(idMap);
         } else {
-            LOG2USER.info("No id.json found")
+            LOG2USER.log("No id.json found")
         }
         return super.parseMulti(filePaths);
     }
@@ -85,7 +87,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     }
 
     private parseIds(json: any): IdMap {
-        console.log("PARSE IDS")
+        LOG2USER.log("PARSE IDS")
         const idMap = new IdMap();
 
         const jsonLanguages = json["languages"];
@@ -97,7 +99,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
         }
         const languageId = json["id"];
         if (typeof languageId === "string") {
-            console.log("Language has id " + languageId);
+            LOG2USER.log("Language has id " + languageId);
         }
         const concepts = json["concepts"];
         if (!Array.isArray(concepts)) {

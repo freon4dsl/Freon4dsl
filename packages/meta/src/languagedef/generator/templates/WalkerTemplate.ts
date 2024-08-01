@@ -1,5 +1,5 @@
-import { FreMetaClassifier, FreMetaLanguage } from "../../metalanguage";
-import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil, FREON_CORE } from "../../../utils";
+import { FreMetaClassifier, FreMetaLanguage } from "../../metalanguage/index.js";
+import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil, FREON_CORE } from "../../../utils/index.js";
 
 export class WalkerTemplate {
 

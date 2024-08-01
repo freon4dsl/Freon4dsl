@@ -4,10 +4,10 @@ import {
     FreMetaConcept,
     FreMetaLanguage,
     FreMetaLimitedConcept
-} from "../../languagedef/metalanguage";
-import { UnitAnalyser } from "./UnitAnalyser";
-import { FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage";
-import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate";
+} from "../../languagedef/metalanguage/index.js";
+import { UnitAnalyser } from "./UnitAnalyser.js";
+import { FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage.js";
+import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate.js";
 
 export interface FreAnalyser {
     // name of the unit

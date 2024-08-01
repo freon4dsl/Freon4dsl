@@ -1,5 +1,6 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { MetaLogger } from "../../utils";
+import { MetaLogger } from "../../utils/index.js";
+import { describe, test, expect } from "vitest"
 
 describe("Checking language parser on syntax errors", () => {
     const parser = new LanguageParser();

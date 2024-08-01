@@ -3,6 +3,7 @@ import { UndoUnit } from "./change-model/UndoUnit";
 import { UndoPart } from "./change-model/UndoPart";
 import { FreDelta, FreTransactionDelta, FreUndoManager } from "../../change-manager";
 import { FreModelUnit } from "../../ast";
+import { describe, it, expect, beforeEach } from "vitest"
 
 // expose the private parts of the undo manager for testing purposes only
 function getUndoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreDelta[] {
@@ -32,7 +33,7 @@ describe("Change and Undo Manager", () => {
     // let model: UndoModel = null;
     const manager = FreUndoManager.getInstance();
 
-    beforeEach(done => {
+    beforeEach(() => {
         manager.cleanAllStacks();
         // create a simple model where some actions cannot be un-done and re-done
         part1 = UndoPart.create({ name: "part1" });
@@ -49,7 +50,6 @@ describe("Change and Undo Manager", () => {
             partlist: [part2, part3, part4, part5, part6]
         });
         UndoModel.create({ unit: unit });
-        done();
     });
 
     it("create model", () => {

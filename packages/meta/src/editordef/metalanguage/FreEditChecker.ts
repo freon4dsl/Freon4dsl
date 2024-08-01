@@ -4,9 +4,9 @@ import {
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType, FreMetaProperty
-} from "../../languagedef/metalanguage";
-import { Checker, CheckRunner, LangUtil, Names, FreMetaDefinitionElement, ParseLocationUtil } from "../../utils";
-import { FreEditParseUtil } from "../parser/FreEditParseUtil";
+} from "../../languagedef/metalanguage/index.js";
+import { Checker, CheckRunner, LangUtil, Names, FreMetaDefinitionElement, ParseLocationUtil } from "../../utils/index.js";
+import { FreEditParseUtil } from "../parser/FreEditParseUtil.js";
 import {
     ListInfo,
     FreEditClassifierProjection,
@@ -19,12 +19,17 @@ import {
     FreOptionalPropertyProjection,
     ExtraClassifierInfo,
     FreEditProjectionLine,
-    ListJoinType, FreEditProjectionText, FreEditProjectionItem
-} from "./FreEditDefLang";
-import { EditorDefaults } from "./EditorDefaults";
-import { MetaLogger } from "../../utils";
-import { MetaElementReference } from "../../languagedef/metalanguage";
-import { FreLangExpressionChecker } from "../../languagedef/checking";
+    ListJoinType,
+    FreEditProjectionText,
+    FreEditProjectionItem,
+    FreEditStandardProjection,
+    ForType,
+    DisplayType
+} from "./FreEditDefLang.js";
+import { EditorDefaults } from "./EditorDefaults.js";
+import { MetaLogger } from "../../utils/index.js";
+import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
+import { FreLangExpressionChecker } from "../../languagedef/checking/index.js";
 
 const LOGGER: MetaLogger = new MetaLogger("FreEditChecker").mute();
 
@@ -34,6 +39,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         return keyword.includes(" ") || keyword.includes("\n") || keyword.includes("\r") || keyword.includes("\t");
     }
 
+    // @ts-ignore runner gets its value in the 'check' method
     runner: CheckRunner;
     private myExpressionChecker: FreLangExpressionChecker | undefined;
     private propsWithTableProjection: FreEditPropertyProjection[] = [];
@@ -43,8 +49,6 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         if (!!this.language) {
             this.myExpressionChecker = new FreLangExpressionChecker(this.language);
         }
-        // this instance is never used
-        this.runner = new CheckRunner(this.errors, this.warnings);
     }
 
     /**
@@ -58,8 +62,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             throw new Error(`Editor definition checker does not known the language, exiting ` +
                 `${ParseLocationUtil.location(editUnit)}.`);
         }
-        // // create a check runner
-        // this.runner = new CheckRunner(this.errors, this.warnings);
+        // create a check runner
+        this.runner = new CheckRunner(this.errors, this.warnings);
         // reset global(s)
         this.propsWithTableProjection = [];
 
@@ -144,15 +148,14 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
         // special requirements for the 'default' projectionGroup
         if (group.name !== Names.defaultProjectionName) {
-            this.runner.simpleCheck(!group.standardBooleanProjection,
-                `Only the 'default' projectionGroup may define a standard Boolean projection ${ParseLocationUtil.location(group.standardBooleanProjection)}.`);
-            this.runner.simpleCheck(!group.standardReferenceSeparator,
-                `Only the 'default' projectionGroup may define a standard reference separator ${ParseLocationUtil.location(group)}.`);
+            this.runner.simpleCheck(!!group.standardProjections,
+                `Only the 'default' projectionGroup may define standard projections ${ParseLocationUtil.location(group.standardProjections[0])}.`);
             if (group.precedence !== null && group.precedence !== undefined) {
                 this.runner.simpleCheck(group.precedence !== 0,
                     `Only the 'default' projectionGroup may have precedence 0 ${ParseLocationUtil.location(group)}.`);
             }
         } else {
+            this.checkStandardProjections(group.standardProjections);
             if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
                 this.runner.simpleCheck(group.precedence === 0, `The 'default' projectionGroup must have precedence 0 ${ParseLocationUtil.location(group)}.`);
             }
@@ -355,7 +358,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     error: `Property '${myProp.name}' may not have a keyword projection, because it is a list ${ParseLocationUtil.location(item)}.`,
                     whenOk: () => {
                         this.runner.simpleCheck(
-                            !FreEditChecker.includesWhitespace(item.boolInfo && item.boolInfo.keywords? item.boolInfo.keywords.trueKeyword : ''),
+                            !FreEditChecker.includesWhitespace(item.boolKeywords? item.boolKeywords.trueKeyword : ''),
                             `The text for a keyword projection should not include any whitespace ${ParseLocationUtil.location(item)}.`);
                     }
                 });
@@ -450,8 +453,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                             if (myprop.isPrimitive && myprop.type === FreMetaPrimitiveType.boolean) {
                                 // when a primitive property is in an optional group, it will not be shown when it has the default value for that property
                                 // a property of boolean type with one keyword should not be within optional group
-                                if (!!propProjections[0].boolInfo) {
-                                    this.runner.simpleCheck(!!propProjections[0].boolInfo.keywords?.falseKeyword,
+                                if (!!propProjections[0].boolKeywords) {
+                                    this.runner.simpleCheck(!!propProjections[0].boolKeywords.falseKeyword,
                                         `An optional boolean property is not allowed within an optional projection ${ParseLocationUtil.location(propProjections[0])}.`);
                                 }
                             }
@@ -528,7 +531,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         if (item instanceof FreOptionalPropertyProjection) {
             this.checkOptionalProjection(item, cls, editor);
         } else {
-            if (item.expression !== null || item.expression !== undefined) {
+            if (item.expression !== null && item.expression !== undefined) {
                 const myProp:FreMetaProperty | undefined = cls.allProperties().find(prop => prop.name === item.expression!.appliedfeature?.sourceName);
                 this.runner.nestedCheck({
                     check: !!myProp,
@@ -539,7 +542,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         item.property.owner = this.language!;
                         item.expression = undefined;
                         // check the rest
-                        if (!!item.boolInfo) {
+                        if (!!item.boolKeywords) {
                             // check whether the boolInfo is appropriate
                             this.checkBooleanPropertyProjection(item, myProp!);
                         } else if (!!item.listInfo) {
@@ -565,6 +568,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                                 }
                             });
                         }
+                        this.checkDisplayType(item, myProp!);
                     }
                 });
             }
@@ -586,5 +590,113 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         const result: MetaElementReference<FreMetaProperty> = MetaElementReference.create<FreMetaProperty>(reference.referred, "FreProperty");
         result.owner = this.language!;
         return result;
+    }
+
+    private checkDisplayType(item: FreEditPropertyProjection, myProp: FreMetaProperty) {
+        if (myProp.isList) {
+            if (myProp.type instanceof FreMetaLimitedConcept) {
+                this.checkLimitedListDisplayType(item.displayType, item);
+            } else {
+                this.runner.simpleCheck( !item.displayType || item.displayType.length === 0,
+                    `A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type '${myProp.type.name}[]' ${ParseLocationUtil.location(item)}.`)
+            }
+        } else {
+            if (myProp instanceof FreMetaPrimitiveProperty && myProp.type === FreMetaPrimitiveType.boolean ) {
+                this.checkBooleanDisplayType(item.displayType, item);
+            } else if (myProp instanceof FreMetaPrimitiveProperty && myProp.type === FreMetaPrimitiveType.number) {
+                this.checkNumberDisplayType(item.displayType, item);
+            } else if (myProp.type instanceof FreMetaLimitedConcept ) {
+                this.checkSingleLimitedDisplayType(item.displayType, item);
+            } else {
+                this.runner.simpleCheck(!item.displayType || item.displayType.length === 0,
+                    `A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]' ${ParseLocationUtil.location(item)}.`)
+            }
+        }
+    }
+
+    private checkStandardProjections(standardProjections: FreEditStandardProjection[]) {
+        // console.log("Found standard projections: " + standardProjections.map(proj => proj.toString()))
+        for(let proj of standardProjections) {
+            // first check whether the string that represents the 'for' type is correct
+            this.runner.nestedCheck({
+                check:  proj.for === ForType.Boolean ||
+                        proj.for === ForType.Number ||
+                        proj.for === ForType.Limited ||
+                        proj.for === ForType.LimitedList ||
+                        proj.for === ForType.ReferenceSeparator,
+                error: `A standard projection may only be defined for types 'boolean', 'number', 'limited', 'limited[]', or for 'referenceSeparator' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
+                whenOk: () => {
+                    if (proj.for === ForType.Boolean) { // boolean standard projection
+                        // check keywords
+                        if (proj.keywords !== undefined && proj.keywords !== null) {
+                            this.runner.simpleCheck(
+                                !FreEditChecker.includesWhitespace(proj.keywords!.trueKeyword),
+                                `The text for a keyword projection should not include any whitespace ${ParseLocationUtil.location(proj)}.`);
+                        }
+                        // check display type
+                        this.checkBooleanDisplayType(proj.displayType, proj);
+                    } else if (proj.for === ForType.Number) { // number standard projection, check display type
+                        this.checkNumberDisplayType(proj.displayType, proj);
+                    } else if (proj.for === ForType.Limited) { // limited standard projection, check display type
+                        this.checkSingleLimitedDisplayType(proj.displayType, proj);
+                    } else if (proj.for === ForType.LimitedList) { // limited-list standard projection, check display type
+                        this.checkLimitedListDisplayType(proj.displayType, proj);
+                    } else if (proj.for === ForType.ReferenceSeparator) {
+                        // reference separator standard projection, check separator
+                        this.runner.nestedCheck({
+                            check: proj.separator !== undefined && proj.separator !== null && proj.separator.length > 0,
+                            error: `A standard projection for reference separator must include a separator ${ParseLocationUtil.location(proj)}.`,
+                            whenOk: () => {
+                                this.runner.simpleCheck(
+                                    !FreEditChecker.includesWhitespace(proj.separator!),
+                                    `The text for a separator should not include any whitespace ${ParseLocationUtil.location(proj)}.`);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    private checkLimitedListDisplayType(displayType: DisplayType | undefined, elem: FreMetaDefinitionElement) {
+        if (!!displayType && displayType.length > 0) {
+            this.runner.simpleCheck(
+                displayType === DisplayType.Text ||
+                displayType === DisplayType.Checkbox,
+                `A list of limited (enum) values may only be displayed as 'text', or 'checkbox' ${ParseLocationUtil.location(elem)}.`
+            );
+        }
+    }
+
+    private checkSingleLimitedDisplayType(displayType: DisplayType | undefined, elem: FreMetaDefinitionElement) {
+        if (!!displayType && displayType.length > 0) {
+            this.runner.simpleCheck(
+                displayType === DisplayType.Text ||
+                displayType === DisplayType.Radio,
+                `A limited (enum) value may only be displayed as 'text', or 'radio' ${ParseLocationUtil.location(elem)}.`
+            );
+        }
+    }
+
+    private checkNumberDisplayType(displayType: DisplayType | undefined, elem: FreMetaDefinitionElement) {
+        if (!!displayType && displayType.length > 0) {
+            this.runner.simpleCheck(
+                displayType === DisplayType.Text || displayType === DisplayType.Slider,
+                `A number value may only be displayed as 'text', or 'slider' ${ParseLocationUtil.location(elem)}.`
+            );
+        }
+    }
+
+    private checkBooleanDisplayType(displayType: DisplayType | undefined,  elem: FreMetaDefinitionElement) {
+        if (!!displayType && displayType.length > 0) {
+            this.runner.simpleCheck(
+                displayType == DisplayType.Text ||
+                displayType === DisplayType.Checkbox ||
+                displayType === DisplayType.Radio ||
+                displayType === DisplayType.InnerSwitch ||
+                displayType === DisplayType.Switch,
+                `A boolean value may only be displayed as 'text', 'checkbox', 'radio', 'switch', or 'inner-switch' ${ParseLocationUtil.location(elem)}.`
+            );
+        }
     }
 }

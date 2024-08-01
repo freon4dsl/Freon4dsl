@@ -1,4 +1,4 @@
-import { FreMetaLangElement } from "../../metalanguage";
+import { FreMetaLangElement } from "../../metalanguage/index.js";
 
 interface InternalElement<T> {
     name: string;
@@ -22,6 +22,10 @@ export class OrderedList<T extends FreMetaLangElement> implements Iterable<T> {
         for (const t of list) {
             this.add(t.name, t);
         }
+    }
+    
+    includes(elem: T): boolean {
+        return this.getByName(elem.name) !== undefined
     }
 
     /**

@@ -8,7 +8,27 @@
     // Note also that this component has no 'setFocus' method because it is not
     // strongly coupled to a box. Each box is coupled to the corresponding
     // component in the if-statement.
-    import { isActionBox, isEmptyLineBox, isGridBox, isItemGroupBox, isListGroupBox, isIconBox, isTableBox, isIndentBox, isLabelBox, isLayoutBox, isListBox, isOptionalBox, isSelectBox, isTextBox, isSvgBox, isBooleanControlBox, FreEditor, FreLogger, Box, BoolDisplay,  isElementBox, isOptionalBox2, isMultiLineTextBox, isMultiLineTextBox2, isDateBox, isTimeBox } from "@freon4dsl/core";
+    import {
+        isActionBox,
+        isEmptyLineBox,
+        isGridBox,
+        isTableBox,
+        isIndentBox,
+        isLabelBox,
+        isLayoutBox,
+        isListBox,
+        isOptionalBox,
+        isSelectBox,
+        isTextBox,
+        isSvgBox,
+        FreEditor,
+        FreLogger,
+        Box,
+        BoolDisplay, isBooleanControlBox,
+        isNumberControlBox,
+        isElementBox, isOptionalBox2, isMultiLineTextBox,
+        isLimitedControlBox, LimitedDisplay, isButtonBox, isItemGroupBox, isListGroupBox, isIconBox, isMultiLineTextBox2, isDateBox, isTimeBox
+    } from "@freon4dsl/core";
     import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
     import MultiLineTextComponent2 from "./MultiLineTextComponent2.svelte";
     import EmptyLineComponent from "./EmptyLineComponent.svelte";
@@ -30,9 +50,15 @@
     import { selectedBoxes } from "$lib/index.js";
     import { componentId, setBoxSizes } from "$lib/index.js";
     import ElementComponent from "./ElementComponent.svelte";
-    import CheckBoxComponent from "$lib/components/CheckBoxComponent.svelte";
-    import RadioComponent from "$lib/components/RadioComponent.svelte";
+    import BooleanCheckboxComponent from "$lib/components/BooleanCheckboxComponent.svelte";
+    import BooleanRadioComponent from "$lib/components/BooleanRadioComponent.svelte";
+    // import MaterialSwitchComponent from "$lib/components/MaterialSwitchComponent.svelte";
+    import InnerSwitchComponent from "$lib/components/InnerSwitchComponent.svelte";
+    import NumericSliderComponent from "$lib/components/NumericSliderComponent.svelte";
+    import LimitedCheckboxComponent from "$lib/components/LimitedCheckboxComponent.svelte";
+    import LimitedRadioComponent from "$lib/components/LimitedRadioComponent.svelte";
     import SwitchComponent from "$lib/components/SwitchComponent.svelte";
+    import ButtonComponent from "$lib/components/ButtonComponent.svelte";
     import DateComponent from "$lib/components/DateComponent.svelte";
     import TimeComponent from "$lib/components/TimeComponent.svelte";
 
@@ -58,7 +84,11 @@
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
         LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.freId() + '=' + b?.element?.freLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
-        className = (isSelected ? "selected" : "unSelected");
+        if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
+            // do not set extra class, the control itself handles being selected
+        } else {
+            className = (isSelected ? "selected" : "unSelected");
+        }
         if (!!element) { // upon initialization the element might be null
             setBoxSizes(box, element.getBoundingClientRect());
         } else {
@@ -87,7 +117,7 @@
 -->
 {#if isElementBox(box) }
     <ElementComponent box={box} editor={editor}/>
-{:else}
+    {:else}
     {#if isListGroupBox(box)}
         <span id={id} class="render-component {className} vertical-group" bind:this={element} role="group">
             <ListGroupComponent box={box} editor={editor}/>
@@ -99,55 +129,63 @@
     {:else}
        <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
        <span id={id} class="render-component {className}" on:click={onClick} bind:this={element} role="group">
-            {#if box === null || box === undefined }
-                <p class="error">[BOX IS NULL OR UNDEFINED]</p>
-            {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.CHECKBOX}
-                <CheckBoxComponent box={box} editor={editor}/>
-            {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.RADIO_BUTTON}
-                <RadioComponent box={box} editor={editor}/>
-            {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.SWITCH}
-                <SwitchComponent box={box} editor={editor} design="slider"/>
-            {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
-                <SwitchComponent box={box} editor={editor} design="inner"/>              
-            {:else if isEmptyLineBox(box) }
-                <EmptyLineComponent box={box}/>
-            {:else if isGridBox(box) }
-                <GridComponent box={box} editor={editor} />
-            {:else if isIndentBox(box) }
-                <IndentComponent box={box} editor={editor}/>
-            {:else if isLabelBox(box)}
-                <LabelComponent box={box}/>
-            {:else if isLayoutBox(box) }
-                <LayoutComponent box={box} editor={editor}/>
-            {:else if isListBox(box) }
-                <ListComponent box={box} editor={editor}/>
-            {:else if isOptionalBox(box) }
-                <OptionalComponent box={box} editor={editor}/>
-            {:else if isOptionalBox2(box) }
-                <OptionalComponentNew box={box} editor={editor}/>
-            {:else if isSvgBox(box) }
-                <SvgComponent box={box}/>
-            {:else if isIconBox(box) }
-                <IconComponent box={box}/>
-            {:else if isTableBox(box) }
-                <TableComponent box={box} editor={editor} />
-            {:else if isTextBox(box) }
-                <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
-            {:else if isMultiLineTextBox(box) }
-                <MultiLineTextComponent box={box} editor={editor} text=""/>
-            {:else if isMultiLineTextBox2(box) }
-                <MultiLineTextComponent2 box={box} editor={editor} text=""/>
-            {:else if isDateBox(box) }
-                <DateComponent box={box} editor={editor} text=""/>
-            {:else if isTimeBox(box) }
-                <TimeComponent box={box} editor={editor} text=""/>
-            {:else if isActionBox(box) || isSelectBox(box)}
-                <TextDropdownComponent box={box} editor={editor}/>
-            {:else}
-                <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
-                <p class="error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
-            {/if}
-        </span>
+        {#if box === null || box === undefined }
+            <p class="error">[BOX IS NULL OR UNDEFINED]</p>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.CHECKBOX}
+            <BooleanCheckboxComponent box={box} editor={editor}/>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.RADIO_BUTTON}
+            <BooleanRadioComponent box={box} editor={editor}/>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.SWITCH}
+            <SwitchComponent box={box} editor={editor}/>
+        {:else if isBooleanControlBox(box) && box.showAs === BoolDisplay.INNER_SWITCH}
+            <InnerSwitchComponent box={box} editor={editor}/>
+        {:else if isNumberControlBox(box) }
+            <NumericSliderComponent box={box} editor={editor}/>
+        {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.RADIO_BUTTON}
+            <LimitedRadioComponent box={box} editor={editor}/>
+        {:else if isLimitedControlBox(box) && box.showAs === LimitedDisplay.CHECKBOX}
+            <LimitedCheckboxComponent box={box} editor={editor}/>
+        {:else if isButtonBox(box) }
+            <ButtonComponent box={box} editor={editor}/>
+        {:else if isEmptyLineBox(box) }
+            <EmptyLineComponent box={box}/>
+        {:else if isGridBox(box) }
+            <GridComponent box={box} editor={editor} />
+        {:else if isIndentBox(box) }
+            <IndentComponent box={box} editor={editor}/>
+        {:else if isLabelBox(box)}
+            <LabelComponent box={box}/>
+        {:else if isLayoutBox(box) }
+            <LayoutComponent box={box} editor={editor}/>
+        {:else if isListBox(box) }
+            <ListComponent box={box} editor={editor}/>
+        {:else if isOptionalBox(box) }
+            <OptionalComponent box={box} editor={editor}/>
+        {:else if isOptionalBox2(box) }
+            <OptionalComponentNew box={box} editor={editor}/>
+        {:else if isSvgBox(box) }
+            <SvgComponent box={box}/>
+        {:else if isIconBox(box) }
+            <IconComponent box={box}/>
+        {:else if isTableBox(box) }
+            <TableComponent box={box} editor={editor} />
+        {:else if isTextBox(box) }
+            <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
+        {:else if isMultiLineTextBox(box) }
+            <MultiLineTextComponent box={box} editor={editor} text=""/>
+        {:else if isMultiLineTextBox2(box) }
+            <MultiLineTextComponent2 box={box} editor={editor} text=""/>
+        {:else if isDateBox(box) }
+            <DateComponent box={box} editor={editor} text=""/>
+        {:else if isTimeBox(box) }
+            <TimeComponent box={box} editor={editor} text=""/>
+        {:else if isActionBox(box) || isSelectBox(box)}
+            <TextDropdownComponent box={box} editor={editor}/>
+        {:else}
+            <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
+            <p class="error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
+        {/if}
+    </span>
     {/if}
 {/if}
 
@@ -164,7 +202,7 @@
         border: none;
     }
     .selected {
-        background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
+        /*background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));*/
         outline-color: var(--freon-selected-outline-color, darkblue);
         outline-style: var(--freon-selected-outline-style, solid);
         outline-width: var(--freon-selected-outline-width, 1px);

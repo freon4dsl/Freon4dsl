@@ -1,20 +1,20 @@
 import { CommandLineParser, CommandLineFlagParameter } from "@rushstack/ts-command-line";
-import { FreonGenerateInterpreter } from "./FreonGenerateInterpreter";
-import { FreonGenerateLanguage } from "./FreonGenerateLanguage";
-import { FreonGenerateAllAction } from "./FreonGenerateAllAction";
-import { FreonGenerateEditor } from "./FreonGenerateEditor";
-import { FreonGenerateScoper } from "./FreonGenerateScoper";
-import { FreonGenerateValidator } from "./FreonGenerateValidator";
-import { FreonGenerateTyper } from "./FreonGenerateTyper";
-import { MetaLogger } from "../utils";
-import { FreonGenerateParser } from "./FreonGenerateParser";
-import { FreonGenerateDiagrams } from "./FreonGenerateDiagrams";
-import { FreonCleanAction } from "./FreonCleanAction";
+import { FreonGenerateInterpreter } from "./FreonGenerateInterpreter.js";
+import { FreonGenerateLanguage } from "./FreonGenerateLanguage.js";
+import { FreonGenerateAllAction } from "./FreonGenerateAllAction.js";
+import { FreonGenerateEditor } from "./FreonGenerateEditor.js";
+import { FreonGenerateScoper } from "./FreonGenerateScoper.js";
+import { FreonGenerateValidator } from "./FreonGenerateValidator.js";
+import { FreonGenerateTyper } from "./FreonGenerateTyper.js";
+import { MetaLogger } from "../utils/index.js";
+import { FreonGenerateParser } from "./FreonGenerateParser.js";
+import { FreonGenerateDiagrams } from "./FreonGenerateDiagrams.js";
+import { FreonCleanAction } from "./FreonCleanAction.js";
 
 // require('source-map-support').install();
 // import sm_support from 'source-map-support';
 // sm_support.install();
-import 'source-map-support/register'
+import 'source-map-support/register.js'
 
 const LOGGER = new MetaLogger("Freon").mute();
 
@@ -105,7 +105,7 @@ export class Freon extends CommandLineParser {
         return Promise.resolve();
     }
 }
-
-// Run this as the main program.
-const freon: Freon = new Freon();
-freon.executeAsync();
+//
+// // Run this as the main program.
+// const freon: Freon = new Freon();
+// freon.executeAsync();

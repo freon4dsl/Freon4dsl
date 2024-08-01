@@ -6,9 +6,9 @@ import {
     FreEditProjectionText,
     FreEditPropertyProjection, FreEditSuperProjection,
     FreOptionalPropertyProjection
-} from "../../editordef/metalanguage";
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLimitedConcept, FreMetaPrimitiveProperty, FreMetaPrimitiveType, FreMetaProperty } from "../../languagedef/metalanguage";
-import { ParserGenUtil } from "./ParserGenUtil";
+} from "../../editordef/metalanguage/index.js";
+import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLimitedConcept, FreMetaPrimitiveProperty, FreMetaPrimitiveType, FreMetaProperty } from "../../languagedef/metalanguage/index.js";
+import { ParserGenUtil } from "./ParserGenUtil.js";
 import {
     GrammarRule,
     ConceptRule,
@@ -42,9 +42,9 @@ import {
     RHSBinExpList,
     RHSBinExpListWithInitiator,
     RHSBinExpListWithSeparator, RHSBinExpListWithTerminator
-} from "./grammarModel";
-import { LOG2USER, ListUtil } from "../../utils";
-import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator";
+} from "./grammarModel/index.js";
+import { LOG2USER, ListUtil } from "../../utils/index.js";
+import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator.js";
 
 export class ConceptMaker {
     imports: FreMetaClassifier[] = [];
@@ -265,12 +265,12 @@ export class ConceptMaker {
                                   propType: FreMetaClassifier,
                                   item: FreEditPropertyProjection,
                                   inOptionalGroup: boolean): RHSPropEntry | undefined {
-        if (propType === FreMetaPrimitiveType.boolean && !!item.boolInfo?.keywords) {
+        if (propType === FreMetaPrimitiveType.boolean && !!item.boolKeywords) {
             // note that lists of booleans can never have a boolean keyword projection
-            if (!item.boolInfo.keywords.falseKeyword) {
-                return new RHSBooleanWithSingleKeyWord(prop, item.boolInfo.keywords.trueKeyword);
+            if (!item.boolKeywords.falseKeyword) {
+                return new RHSBooleanWithSingleKeyWord(prop, item.boolKeywords.trueKeyword);
             } else {
-                return new RHSBooleanWithDoubleKeyWord(prop, item.boolInfo.keywords.trueKeyword, item.boolInfo.keywords.falseKeyword);
+                return new RHSBooleanWithDoubleKeyWord(prop, item.boolKeywords.trueKeyword, item.boolKeywords.falseKeyword);
             }
         } else if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {

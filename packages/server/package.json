@@ -15,7 +15,7 @@
     "model-server": "./dist/bin/start-server.js"
   },
   "scripts": {
-    "clean": "rm -rf node_modules/",
+    "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
     "build": "tsc --build",
@@ -27,7 +27,11 @@
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
-    "test": "jest"
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.3",
+    "@vitest/ui": "^2.0.3"
   },
   "dependencies": {
     "@types/koa": "^2.13.4",

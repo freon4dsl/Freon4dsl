@@ -1,9 +1,22 @@
 import { FreNode } from "../../ast";
 import { BehaviorExecutionResult } from "../util";
-import { FreLogger } from "../../logging";
+// import { FreLogger } from "../../logging";
 import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreEditor } from "../FreEditor";
-import { Box, BooleanControlBox, ActionBox, LabelBox, TextBox, SelectOption, SelectBox, IndentBox, ItemGroupBox, ListGroupBox, OptionalBox, HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox, HorizontalLayoutBox, VerticalLayoutBox, TableCellBox, OptionalBox2, DateBox, TimeBox
+import {
+    Box,
+    BooleanControlBox,
+    NumberControlBox,
+    ActionBox,
+    LabelBox,
+    TextBox,
+    SelectOption,
+    SelectBox,
+    IndentBox,
+    OptionalBox,
+    HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
+    HorizontalLayoutBox, VerticalLayoutBox,
+    TableCellBox, OptionalBox2, LimitedControlBox, ButtonBox, DateBox, TimeBox, ItemGroupBox, ListGroupBox,
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -13,13 +26,16 @@ type BoxCache<T extends Box> = {
     [id: string]: RoleCache<T>;
 };
 
-const LOGGER: FreLogger = new FreLogger("BoxFactory").mute();
+// const LOGGER: FreLogger = new FreLogger("BoxFactory").mute();
 
 // The box caches
 let actionCache: BoxCache<ActionBox> = {};
 let labelCache: BoxCache<LabelBox> = {};
 let textCache: BoxCache<TextBox> = {};
 let boolCache: BoxCache<BooleanControlBox> = {};
+let buttonCache: BoxCache<ButtonBox> = {};
+let numberCache: BoxCache<NumberControlBox> = {};
+let limitedCache: BoxCache<LimitedControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
 let listGroupCache: BoxCache<ListGroupBox> = {};
 let itemGroupCache: BoxCache<ItemGroupBox> = {};
@@ -40,6 +56,9 @@ let cacheActionOff: boolean = false;
 let cacheLabelOff: boolean = false;
 let cacheTextOff: boolean = false;
 let cacheBooleanOff: boolean = false;
+let cacheButtonOff: boolean = false;
+let cacheNumberOff: boolean = false;
+let cacheLimitedOff: boolean = false;
 let cacheSelectOff: boolean = false;
 let cacheListGroupOff: boolean = false;
 let cacheItemGroupOff: boolean = false;
@@ -63,6 +82,9 @@ export class BoxFactory {
         labelCache = {};
         textCache = {};
         boolCache = {};
+        buttonCache = {};
+        numberCache = {};
+        limitedCache = {};
         selectCache = {};
         listGroupCache = {};
         itemGroupCache = {};
@@ -85,6 +107,9 @@ export class BoxFactory {
         cacheLabelOff = true;
         cacheTextOff = true;
         cacheBooleanOff = true;
+        cacheButtonOff = true;
+        cacheNumberOff = true;
+        cacheLimitedOff = true;
         cacheSelectOff = true;
         cacheListGroupOff = true;
         cacheItemGroupOff = true;
@@ -103,6 +128,9 @@ export class BoxFactory {
         cacheLabelOff = false;
         cacheTextOff = false;
         cacheBooleanOff = false;
+        cacheButtonOff = false;
+        cacheNumberOff = false;
+        cacheLimitedOff = false;
         cacheSelectOff = false;
         cacheListGroupOff = false;
         cacheItemGroupOff = false;
@@ -123,22 +151,28 @@ export class BoxFactory {
      * @param cache   The cache to use
      */
     private static find<T extends Box>(element: FreNode, role: string, creator: () => T, cache: BoxCache<T>): T {
-        // 1. Create the alias box, or find the one that already exists for this element and role
+        // 1. Create the box, or find the one that already exists for this element and role
         const elementId = element.freId();
         if (!!cache[elementId]) {
             const box = cache[elementId][role];
             if (!!box) {
-                LOGGER.log(":: EXISTS " + box.kind + " for entity " + elementId + " role " + role + " already exists");
+                // if (isNumberControlBox(box)) {
+                //     console.log(":: EXISTS " + box.kind + " for entity " + elementId + " role " + role + " already exists");
+                // }
                 return box;
             } else {
                 const newBox = creator();
-                LOGGER.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "            CREATED");
+                // if (isNumberControlBox(newBox)) {
+                //     console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "            CREATED");
+                // }
                 cache[elementId][role] = newBox;
                 return newBox;
             }
         } else {
             const newBox = creator();
-            LOGGER.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "               CREATED");
+            // if (isNumberControlBox(newBox)) {
+            //     console.log(":: new " + newBox.kind + " for entity " + elementId + " role " + role + "               CREATED");
+            // }
             cache[elementId] = {};
             cache[elementId][role] = newBox;
             return newBox;
@@ -233,6 +267,29 @@ export class BoxFactory {
         result.$getBoolean = getBoolean;
         result.$setBoolean = setBoolean;
         FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static number(element: FreNode,
+                role: string,
+                getNumber: () => number,
+                setNumber: (value: number) => void,
+                initializer?: Partial<NumberControlBox>
+    ): NumberControlBox {
+        if (cacheNumberOff) {
+            console.log("Retruning new NumberControlBox: ")
+            return new NumberControlBox(element, role, getNumber, setNumber, initializer);
+        }
+        // 1. Create the Boolean box, or find the one that already exists for this element and role
+        const creator = () => new NumberControlBox(element, role, getNumber, setNumber, initializer);
+        const result: NumberControlBox = this.find<NumberControlBox>(element, role, creator, numberCache);
+        // console.log(`Returning existing NumberControlBox: "` + result)
+
+        // 2. Apply the other arguments in case they have changed
+        // result.$getNumber = getNumber;
+        // result.$setNumber = setNumber;
+        // FreUtils.initializeObject(result, initializer);
 
         return result;
     }
@@ -354,6 +411,30 @@ export class BoxFactory {
         return result;
     }
 
+    static limited(element: FreNode,
+                  role: string,
+                  getValues: () => string[],
+                  setValues: (newValue: string[]) => void,
+                  possibleValues: string[],
+                  initializer?: Partial<LimitedControlBox>): LimitedControlBox {
+        if (cacheLimitedOff) {
+            return new LimitedControlBox(element, role, getValues, setValues, possibleValues, initializer);
+        }
+        // 1. Create the select box, or find the one that already exists for this element and role
+        const creator = () => new LimitedControlBox(element, role, getValues, setValues, possibleValues, initializer);
+        const result: LimitedControlBox = this.find<LimitedControlBox>(element, role, creator, limitedCache);
+
+        // todo see whether we need the following statements
+        // 2. Apply the other arguments in case they have changed
+        // result.placeholder = placeHolder;
+        // result.getOptions = getOptions;
+        // result.getSelectedOption = getSelectedOption;
+        // result.selectOption = selectOption;
+        // FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
     static select(element: FreNode,
                   role: string,
                   placeHolder: string,
@@ -449,6 +530,17 @@ export class BoxFactory {
 
         // 2. Apply the other arguments in case they have changed
         FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static button(element: FreNode, text: string, roleName: string) {
+        if (cacheButtonOff) {
+            return new ButtonBox(element, text, roleName);
+        }
+        // 1. Create the Boolean box, or find the one that already exists for this element and role
+        const creator = () => new ButtonBox(element, text, roleName);
+        const result: ButtonBox = this.find<ButtonBox>(element, roleName, creator, buttonCache);
 
         return result;
     }

@@ -1,8 +1,9 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { FreMetaConcept, FreMetaExpressionConcept, FreMetaLanguage, FreMetaLimitedConcept, FreMetaPrimitiveProperty } from "../../languagedef/metalanguage";
-import { LangUtil, MetaLogger } from "../../utils";
+import { FreMetaConcept, FreMetaExpressionConcept, FreMetaLanguage, FreMetaLimitedConcept, FreMetaPrimitiveProperty } from "../../languagedef/metalanguage/index.js";
+import { LangUtil, MetaLogger } from "../../utils/index.js";
 import {net} from "net.akehurst.language-agl-processor";
 import language = net.akehurst.language;
+import { describe, test, expect } from "vitest"
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
 describe("Checking internal structure of language", () => {

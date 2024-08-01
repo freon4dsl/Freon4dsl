@@ -45,7 +45,7 @@
         {/each}
     {:else}
         <div class="dropdownerror">
-            Invalid input!
+            No selection available
         </div>
     {/if}
 </nav>

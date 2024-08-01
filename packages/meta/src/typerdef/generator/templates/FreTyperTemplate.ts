@@ -5,9 +5,9 @@ import {
     CONFIGURATION_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
     LOG2USER
-} from "../../../utils";
-import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage";
-import { TyperDef } from "../../metalanguage";
+} from "../../../utils/index.js";
+import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import { TyperDef } from "../../metalanguage/index.js";
 
 /**
  * This class generates the main typer, the one that hanldes the switch between the generated typer and the custom

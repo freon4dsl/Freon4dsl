@@ -1,11 +1,11 @@
-import {FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept} from "../../metalanguage";
+import {FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept} from "../../metalanguage/index.js";
 import {
     LANGUAGE_GEN_FOLDER,
     Names,
     FREON_CORE,
     CONFIGURATION_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER
-} from "../../../utils";
+} from "../../../utils/index.js";
 
 export class StdlibTemplate {
     limitedConceptNames: string[] = [];

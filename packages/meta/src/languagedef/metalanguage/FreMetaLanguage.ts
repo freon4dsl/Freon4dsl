@@ -1,7 +1,7 @@
-import { LangUtil, ParseLocation } from "../../utils/index";
-import { MetaElementReference } from "./internal";
+import { LangUtil, ParseLocation } from "../../utils/index.js";
+import { MetaElementReference } from "./internal.js";
 // This import cannot be shortened. Importing "../../utils" results in circular dependencies
-import { FreMetaDefinitionElement } from "../../utils/FreMetaDefinitionElement";
+import { FreMetaDefinitionElement } from "../../utils/FreMetaDefinitionElement.js";
 
 // Some properties of the classes defined here are marked @ts-ignore to avoid the error:
 // TS2564: ... has no initializer and is not definitely assigned in the constructor.
@@ -502,6 +502,10 @@ export class FreMetaLimitedConcept extends FreMetaConcept {
         }
         return result;
     }
+    
+    toString(): string {
+        return this.name
+    }
 }
 
 export class FreMetaProperty extends FreMetaLangElement {
@@ -552,7 +556,7 @@ export class FreMetaProperty extends FreMetaLangElement {
         this.$type.owner = this;
     }
     toFreString(): string {
-        return this.name + ": " + this.$type.name;
+        return this.name + ": " + this.$type.name + `${this.isList ? `[]` : ``}`;
     }
 }
 
@@ -629,6 +633,10 @@ export class FreMetaEnumValue extends FreMetaDefinitionElement {
         this.sourceName = limitedConceptName
         this.instanceName = limitedInstanceName
         this.location = location
+    }
+    
+    toString(): string {
+        return this.sourceName + ":" + this.instanceName;
     }
 }
 // the basic types in the Fre-languages

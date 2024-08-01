@@ -4,9 +4,33 @@
 
 <script lang="ts">
 	import { afterUpdate, beforeUpdate, createEventDispatcher, onMount } from "svelte";
-	import { componentId, executeCustomKeyboardShortCut, setBoxSizes } from "./svelte-utils/index.js";
-	import { ActionBox, ALT, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BACKSPACE, CONTROL, DELETE, ENTER, ESCAPE, isActionBox, isActionTextBox, isSelectBox, FreCaret, FreCaretPosition, FreEditor, FreLogger, SelectBox, FreErrorSeverity, SHIFT, TAB, TextBox, isRegExp, triggerTypeToString, type FrePostAction } from "@freon4dsl/core";
-	import { CharAllowed} from "@freon4dsl/core";
+	import { componentId, executeCustomKeyboardShortCut } from "./svelte-utils/index.js";
+	import {
+		ActionBox,
+		ALT,
+		ARROW_DOWN,
+		ARROW_LEFT,
+		ARROW_RIGHT,
+		ARROW_UP,
+		BACKSPACE,
+		CharAllowed,
+		CONTROL,
+		DELETE,
+		ENTER,
+		ESCAPE,
+		isActionBox,
+		isActionTextBox,
+		isSelectBox,
+		FreCaret,
+		FreCaretPosition,
+		FreEditor,
+		FreLogger,
+		SelectBox,
+		FreErrorSeverity,
+		SHIFT,
+		TAB,
+		TextBox, isRegExp, triggerTypeToString, type FrePostAction
+	} from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";
 	import { replaceHTML } from "./svelte-utils/index.js";

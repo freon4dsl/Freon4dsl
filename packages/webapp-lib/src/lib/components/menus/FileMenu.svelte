@@ -30,6 +30,7 @@
 <input class:file_selector bind:this={file_selector} {...file_selector_props} on:change={process_files}>
 
 <script lang="ts">
+	import { type ModelUnitIdentifier } from "@freon4dsl/core";
 	import MenuComponentDev from "@smui/menu";
 	import Menu from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
@@ -81,27 +82,25 @@
     };
 
     // new model menuitem
-    const changeModel = () => {
+    const changeModel = async () => {
 		// console.log("FileMenu.changeModel");
         // get list of models from server
-        WebappConfigurator.getInstance().serverCommunication.loadModelList((names: string[]) => {
-            if (names.length > 0) {
-                $modelNames = names;
-            }
-            $openModelDialogVisible = true;
-        });
+        const names = await WebappConfigurator.getInstance().serverCommunication.loadModelList()
+		if (names.length > 0) {
+			$modelNames = names;
+		}
+		$openModelDialogVisible = true;
     }
 
     // new unit menuitem
-    const newUnit = () => {
+    const newUnit = async () => {
 		// console.log("FileMenu.newUnit");
 		if (!!$currentModelName && $currentModelName.length > 0) {
 			// get list of units from server, because new unit may not have the same name as an existing one
-			WebappConfigurator.getInstance().serverCommunication.loadUnitList($currentModelName, (names: string[]) => {
-				// list may be empty => this is the first unit to be stored
-				$unitNames = names;
-				$newUnitDialogVisible = true;
-			});
+			const names: ModelUnitIdentifier[] = await WebappConfigurator.getInstance().serverCommunication.loadUnitList($currentModelName);
+			// list may be empty => this is the first unit to be stored
+			$unitNames = names;
+			$newUnitDialogVisible = true;
 		} else {
 			setUserMessage("Please, select or create a model first.");
 		}
@@ -111,21 +110,20 @@
     const saveUnit = () => {
         // console.log("FileMenu.saveUnit: " + $currentUnitName);
         EditorState.getInstance().saveStudyUnits();
-		setUserMessage(`Unit '${$currentUnitName}' saved.`);
+				setUserMessage(`Unit '${$currentUnitName}' saved.`);
     }
 
     // delete model menuitem
-    const deleteModel = () => {
+    const deleteModel = async () => {
         // console.log("FileMenu.deleteModel");
         // get list of models from server
-		WebappConfigurator.getInstance().serverCommunication.loadModelList((names: string[]) => {
-            // if list not empty, show dialog
-            if (names.length > 0) {
-                $modelNames = names;
-                $deleteModelDialogVisible = true;
-                // console.log("dialog visible is true")
-            }
-        });
+		const names = await WebappConfigurator.getInstance().serverCommunication.loadModelList()
+		// if list not empty, show dialog
+		if (names.length > 0) {
+			$modelNames = names;
+			$deleteModelDialogVisible = true;
+			// console.log("dialog visible is true")
+		}
     }
 
     // import model unit menuitem

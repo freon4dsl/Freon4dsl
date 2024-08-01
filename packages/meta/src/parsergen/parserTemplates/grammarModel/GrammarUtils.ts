@@ -1,6 +1,6 @@
-import { FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage";
-import { Names } from "../../../utils";
-import { ChoiceRuleMaker } from "../ChoiceRuleMaker";
+import { FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
+import { Names } from "../../../utils/index.js";
+import { ChoiceRuleMaker } from "../ChoiceRuleMaker.js";
 
 export function getPrimCall(propType: FreMetaClassifier): string {
     switch (propType) {

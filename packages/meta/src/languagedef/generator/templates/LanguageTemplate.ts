@@ -1,5 +1,5 @@
-import { FreMetaLanguage } from "../../metalanguage";
-import { Names, FREON_CORE, LangUtil, GenerationUtil, STDLIB_GEN_FOLDER } from "../../../utils";
+import {FreMetaLanguage, FreMetaLimitedConcept} from "../../metalanguage/index.js";
+import { Names, FREON_CORE, LangUtil, GenerationUtil, STDLIB_GEN_FOLDER } from "../../../utils/index.js";
 
 export class LanguageTemplate {
 
@@ -35,7 +35,7 @@ export class LanguageTemplate {
             }
 
             function describe${Names.classifier(language.modelConcept)}(): FreLanguageModel {
-                    const model =             {
+                    const model: FreLanguageModel =             {
                         typeName: "${Names.classifier(language.modelConcept)}",
                         id: "${language.modelConcept.id}",
                         key: "${language.modelConcept.key}",
@@ -87,7 +87,7 @@ export class LanguageTemplate {
             ${language.units.map(modelunit =>
             `
                 function describe${Names.classifier(modelunit)}(): FreLanguageModelUnit {
-                    const modelunit =             {
+                    const modelunit: FreLanguageModelUnit =             {
                         typeName: "${Names.classifier(modelunit)}",
                         id: "${modelunit.id}",
                         key: "${modelunit.key}",
@@ -143,12 +143,14 @@ export class LanguageTemplate {
             ${language.concepts.map(concept =>
             `
                 function describe${Names.concept(concept)}(): FreLanguageConcept {
-                    const concept =             {
+                    const concept: FreLanguageConcept =             {
                         typeName: "${Names.concept(concept)}",
                         id: "${concept.id}",
                         key: "${concept.key}",
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
+                        isLimited: ${concept instanceof FreMetaLimitedConcept},
+                        instanceNames: ${concept instanceof FreMetaLimitedConcept ? `[${concept.instances.map(inst => `"${inst.name}"`)}]` : "[]"},
                         language: "${concept.originalOwningLanguage.key}",
                         isNamedElement: ${concept.allPrimProperties().some(p => p.name === "name")},
                         trigger: "${Names.concept(concept)}",
@@ -200,7 +202,7 @@ export class LanguageTemplate {
             ${language.interfaces.map(intface =>
             `
                 function describe${Names.interface(intface)}(): FreLanguageInterface {
-                    const intface =             {
+                    const intface: FreLanguageInterface =             {
                         typeName: "${Names.interface(intface)}",
                         id: "${intface.id}",
                         key: "${intface.key}",

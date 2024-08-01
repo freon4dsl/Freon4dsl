@@ -1,4 +1,4 @@
-import { LanguageExpressionTester, TestExpressionsForConcept } from "./LanguageExpressionTester";
+import { LanguageExpressionTester, TestExpressionsForConcept } from "./LanguageExpressionTester.js";
 import {
     FreLangSelfExp,
     FreLangAppliedFeatureExp,
@@ -6,15 +6,15 @@ import {
     FreLangFunctionCallExp,
     FreInstanceExp,
     FreLangConceptExp, FreLangSimpleExp
-} from "../metalanguage/FreLangExpressions";
-import { MetaLogger } from "../../utils/MetaLogger";
-import { Names } from "../../utils";
-import { FreMetaClassifier } from "../metalanguage/FreMetaLanguage";
+} from "../metalanguage/FreLangExpressions.js";
+import { MetaLogger } from "../../utils/MetaLogger.js";
+import { Names } from "../../utils/index.js";
+import { FreMetaClassifier } from "../metalanguage/FreMetaLanguage.js";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference } from "../metalanguage/MetaElementReference";
+import { MetaElementReference } from "../metalanguage/MetaElementReference.js";
 
 const LOGGER = new MetaLogger("FreLanguageExpressionCreator").mute();
 

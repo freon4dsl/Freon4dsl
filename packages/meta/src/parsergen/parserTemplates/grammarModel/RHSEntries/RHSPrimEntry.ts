@@ -1,7 +1,7 @@
-import { RHSPropEntry } from "./RHSPropEntry";
-import { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage";
-import { getPrimCall, makeIndent } from "../GrammarUtils";
-import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil";
+import { RHSPropEntry } from "./RHSPropEntry.js";
+import { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage/index.js";
+import { getPrimCall, makeIndent } from "../GrammarUtils.js";
+import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSPrimEntry extends RHSPropEntry {
     constructor(prop: FreMetaPrimitiveProperty) {

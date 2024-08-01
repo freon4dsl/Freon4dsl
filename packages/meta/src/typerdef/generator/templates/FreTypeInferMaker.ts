@@ -1,8 +1,8 @@
-import { FretInferenceRule, TyperDef } from "../../metalanguage";
-import { Names, GenerationUtil } from "../../../utils";
-import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage";
-import { FreTyperGenUtils } from "./FreTyperGenUtils";
-import { FretEqualsRule } from "../../metalanguage/FretEqualsRule";
+import { FretInferenceRule, TyperDef } from "../../metalanguage/index.js";
+import { Names, GenerationUtil } from "../../../utils/index.js";
+import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
+import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
+import { FretEqualsRule } from "../../metalanguage/FretEqualsRule.js";
 
 /**
  * This class generates the code for all 'infertype' entries in the .type file.

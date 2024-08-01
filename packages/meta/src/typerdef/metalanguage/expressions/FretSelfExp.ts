@@ -1,4 +1,4 @@
-import { FretExp } from "./FretExp";
+import { FretExp } from "./FretExp.js";
 
 export class FretSelfExp extends FretExp {
     /**

@@ -6,8 +6,7 @@ import {
     FreTableDefinition,
     GridCellBox,
     HorizontalLayoutBox,
-    LabelBox, SvgBox, HorizontalListBox, GridBox, createDefaultExpressionBox, BoxUtil,
-    FreProjectionHandler
+    LabelBox, SvgBox, HorizontalListBox, GridBox, createDefaultExpressionBox, BoxUtil, NumberDisplay
 } from "@freon4dsl/core";
 import { FractionLiteralExpression } from "../language/gen/index";
 
@@ -44,7 +43,7 @@ export class CustomEducationProjection implements FreProjection {
     createFractionBox(fraction: FractionLiteralExpression): Box {
         const cells: GridCellBox[] = [
             new GridCellBox(fraction, "numerator", 1, 1,
-                BoxUtil.numberBox(fraction, "numerator"),
+                BoxUtil.numberBox(fraction, "numerator", NumberDisplay.SELECT),
                 {
                     columnSpan: 1,
                     cssClass: "mycell"
@@ -61,7 +60,7 @@ export class CustomEducationProjection implements FreProjection {
                 { cssClass: "mysvgcell" }
             ),
             new GridCellBox(fraction, "sum-to-cell", 3, 1,
-                BoxUtil.numberBox(fraction, "denominator"),
+                BoxUtil.numberBox(fraction, "denominator", NumberDisplay.SELECT),
                 {
                     columnSpan: 1,
                     cssClass: "mycell"

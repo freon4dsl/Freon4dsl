@@ -1,9 +1,9 @@
-import { Box } from "./Box";
+import {Box} from "./internal";
 import {FreNode} from "../../ast";
 import {FreLogger} from "../../logging";
 import {FreUtils} from "../../util";
 
-const LOGGER: FreLogger = new FreLogger("BooleanBox");
+const LOGGER: FreLogger = new FreLogger("BooleanControlBox").mute();
 
 export enum BoolDisplay {
     SELECT,         // a dropdown menu with selections for True and False
@@ -14,7 +14,7 @@ export enum BoolDisplay {
 }
 
 export class BooleanControlBox extends Box {
-    kind: string = "BooleanControlBox";
+    readonly kind: string = "BooleanControlBox";
     showAs: BoolDisplay = BoolDisplay.RADIO_BUTTON;
     labels: { yes: string; no: string } = { yes: "true", no: "false" }
     $getBoolean: () => boolean;

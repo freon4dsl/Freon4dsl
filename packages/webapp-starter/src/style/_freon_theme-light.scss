@@ -21,7 +21,6 @@
   //luminance,
   //text-emphasis,
   //tone
-
 );
 
 // Include all the global styles that do not involve dark/light modes.
@@ -120,7 +119,6 @@
 };
 
 .divider {
-  color: red;
   fill: #ff11ac;
   color: green;
   stroke-width: 2px;
@@ -219,7 +217,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-gridcell-component-background-color: #{theme.$grey-300};
 }
 .gridcellEven {
-  --freon-gridcell-component-background-color: transparent;
+  --freon-gridcell-component-background-color: transparent ;
 }
 .gridcell-header {
   --freon-gridcell-component-background-color: #{theme.$grey-500};

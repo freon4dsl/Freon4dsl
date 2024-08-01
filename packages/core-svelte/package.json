@@ -14,8 +14,8 @@
   "type": "module",
   "svelte": "./dist/index.js",
   "scripts": {
-    "clean": "rm -rf node_modules/",
-    "dev": "tsc --noEmit --watch && vite dev",
+    "clean": "rm -rf node_modules/ && rm -rf dist/",
+    "dev": "vite dev",
     "build": "tsc --noEmit && vite build && npm run package",
     "build:css": "postcss src/tailwind.css -o dist/tailwind.css",
     "build-dev": "tsc --noEmit && vite build && npm run package",
@@ -70,11 +70,18 @@
     "vitest": "^1.6.0"
   },
   "peerDependencies": {
-    "svelte": "^4.2.17"
+      "svelte": "^4.2.17"
   },
   "dependencies": {
     "@tinymce/tinymce-svelte": "^3.0.0",
     "flowbite": "^2.4.1",
     "svelte-cursor": "^0.1.1"
+    "@material/web": "^1.5.1",
+    "@material/slider": "^14.0.0",
+    "@material/switch": "^14.0.0",
+    "@smui/ripple": "^7.0.0",
+    "svelte": "^4.2.17",
+    "@freon4dsl/core": "^0.7.0-beta",
+    "mobx": "^6.12.3"
   }
 }

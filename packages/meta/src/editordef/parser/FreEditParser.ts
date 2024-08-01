@@ -1,11 +1,10 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { Names, ParseLocationUtil, FreGenericParser } from "../../utils";
-import { setCurrentFileName as editFileName } from "./FreEditCreators";
-import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators";
-import { ExtraClassifierInfo, FreEditProjectionGroup, FreEditUnit } from "../metalanguage/FreEditDefLang";
-import { FreEditChecker } from "../metalanguage/FreEditChecker";
-
-const editorParser = require("./FreEditGrammar");
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { Names, ParseLocationUtil, FreGenericParser } from "../../utils/index.js";
+import { setCurrentFileName as editFileName } from "./FreEditCreators.js";
+import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
+import { ExtraClassifierInfo, FreEditProjectionGroup, FreEditUnit } from "../metalanguage/FreEditDefLang.js";
+import { FreEditChecker } from "../metalanguage/FreEditChecker.js";
+import { parser } from "./FreEditGrammar.js";
 
 export class FreEditParser extends FreGenericParser<FreEditUnit> {
     language: FreMetaLanguage;
@@ -13,13 +12,15 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
     constructor(language: FreMetaLanguage) {
         super();
         this.language = language;
-        this.parser = editorParser;
+        this.parser = parser;
         this.checker = new FreEditChecker(language);
     }
 
     protected merge(submodels: FreEditUnit[]): FreEditUnit | undefined {
         if (submodels.length > 0) {
             const result: FreEditUnit = submodels[0];
+            // remember the files where we encountered standard projections, in order to give a good warning
+            const filesWithStdProj: string[] = [];
 
             // we merge all edit files based on the name of the 'editor'
             // same name => all info is stored in the same group
@@ -28,6 +29,9 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             // add the groups from the first submodel (should be a single group)
             result.projectiongroups.forEach(group => {
                 projectionGroupsByName.set(group.name, group);
+                if (group.standardProjections.length > 0) {
+                    filesWithStdProj.push(ParseLocationUtil.location(group.standardProjections[0]));
+                }
             });
 
             // now merge the other submodels
@@ -40,29 +44,15 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                             const found = projectionGroupsByName.get(group.name);
                             if (!!found) {
                                 found.projections.push(...group.projections);
+                                if (group.standardProjections.length > 0) {
+                                    filesWithStdProj.push(ParseLocationUtil.location(group.standardProjections[0]));
+                                }
+                                found.standardProjections.push(...group.standardProjections);
                                 if (!!group.extras) {
                                     if (!found.extras) {
                                         found.extras = [];
                                     }
                                     found.extras.push(...group.extras);
-                                }
-                                if (group.standardReferenceSeparator) {
-                                    if (found.standardReferenceSeparator) {
-                                        if (group.standardReferenceSeparator !== found.standardReferenceSeparator) {
-                                            this.checker.errors.push(`Reference separator in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
-                                        }
-                                    } else {
-                                        found.standardReferenceSeparator = group.standardReferenceSeparator;
-                                    }
-                                }
-                                if (group.standardBooleanProjection) {
-                                    if (found.standardBooleanProjection) {
-                                        if (group.standardBooleanProjection !== found.standardBooleanProjection) {
-                                            this.checker.errors.push(`Boolean projection in ${ParseLocationUtil.location(group.standardBooleanProjection)} is not equal to the one found in ${ParseLocationUtil.location(found.standardBooleanProjection)}.`);
-                                        }
-                                    } else {
-                                        found.standardBooleanProjection = group.standardBooleanProjection;
-                                    }
                                 }
                                 if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
                                     if (found.precedence !== null && found.precedence !== undefined) {
@@ -84,6 +74,10 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                     });
                 }
             });
+
+            if (filesWithStdProj.length > 1) {
+                this.checker.warnings.push(`Found multiple definitions for standard projections, please note that they may be overridden ${filesWithStdProj}.`);
+            }
 
             // place extra classifier information always in the default projection group
             this.mergeExtraInformation(result);

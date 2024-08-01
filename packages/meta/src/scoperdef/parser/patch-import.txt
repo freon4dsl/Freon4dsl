@@ -1,0 +1,5 @@
+/**
+  * Patch to import in ESM style, because peggy only generates commonjs style
+  */
+import * as create from "./ScoperCreators.js"
+import * as expCreate from "../../languagedef/parser/ExpressionCreators.js"

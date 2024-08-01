@@ -102,9 +102,7 @@
         LOGGER.log('textUpdate: ' + JSON.stringify(event.detail));
         dropdownShown = true;
         setText(event.detail.content);
-        if (!allOptions) {
-            allOptions = getOptions();
-        }
+        allOptions = getOptions();
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
         makeUnique();
     };
@@ -278,9 +276,7 @@
         isEditing = true;
         dropdownShown = true;
         editor.selectElementForBox(box);
-        if (!allOptions) {
-            allOptions = getOptions();
-        }
+        allOptions = getOptions();
         if (!!event) {
             if ( text === undefined || text === null) {
                 filteredOptions = allOptions.filter(o => true);
@@ -339,10 +335,7 @@
             return;
         }
         if (dropdownShown) {
-            // check whether the current text is a valid option
-            if (allOptions === undefined || allOptions === null) {
-                allOptions = getOptions();
-            }
+            allOptions = getOptions();
             let validOption = allOptions.find(o => o.label === text);
             if (!!validOption && validOption.id !== noOptionsId) {
                 storeAndExecute(validOption);

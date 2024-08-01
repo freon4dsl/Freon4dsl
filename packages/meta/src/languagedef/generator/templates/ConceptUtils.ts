@@ -1,4 +1,4 @@
-import { Names, FREON_CORE, GenerationUtil, ListUtil } from "../../../utils";
+import { Names, FREON_CORE, GenerationUtil, ListUtil } from "../../../utils/index.js";
 import {
     FreMetaClassifier,
     FreMetaConcept,
@@ -7,7 +7,7 @@ import {
     FreMetaProperty,
     FreMetaPrimitiveType,
     FreMetaInterface, FreMetaEnumValue
-} from "../../metalanguage";
+} from "../../metalanguage/index.js";
 
 export class ConceptUtils {
 

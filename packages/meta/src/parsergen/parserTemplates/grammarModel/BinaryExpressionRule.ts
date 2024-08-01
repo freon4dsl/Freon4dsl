@@ -1,8 +1,8 @@
-import { GrammarRule } from "./GrammarRule";
-import { FreMetaClassifier, FreMetaExpressionConcept } from "../../../languagedef/metalanguage";
-import { Names } from "../../../utils";
-import { internalTransformNode } from "../ParserGenUtil";
-import { getTypeCall } from "./GrammarUtils";
+import { GrammarRule } from "./GrammarRule.js";
+import { FreMetaClassifier, FreMetaExpressionConcept } from "../../../languagedef/metalanguage/index.js";
+import { Names } from "../../../utils/index.js";
+import { internalTransformNode } from "../ParserGenUtil.js";
+import { getTypeCall } from "./GrammarUtils.js";
 
 export class BinaryExpressionRule extends GrammarRule {
     expressionBase: FreMetaExpressionConcept;

@@ -1,5 +1,5 @@
-import { RightHandSideEntry } from "./RightHandSideEntry";
-import { FreMetaProperty } from "../../../../languagedef/metalanguage";
+import { RightHandSideEntry } from "./RightHandSideEntry.js";
+import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 
 export abstract class RHSPropEntry extends RightHandSideEntry {
     property: FreMetaProperty;

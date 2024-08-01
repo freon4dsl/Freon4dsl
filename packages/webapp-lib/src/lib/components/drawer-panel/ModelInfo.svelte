@@ -12,7 +12,7 @@
                                     use:Anchor={{addClass: addClass, removeClass: removeClass}}
                                     bind:this={anchor[index]}
                             >
-                                <Item activated={(unit.name === $currentUnitName)}
+                                <Item activated={(unit.name === $currentUnitName?.name)}
                                       on:SMUI:action={() => menus[index].setOpen(true)}>
                                     <Text>{unit.name}</Text>
                                 </Item>
@@ -68,8 +68,8 @@
     import { setUserMessage } from "../stores/UserMessageStore.js";
     import { ImportExportHandler } from "../../language/ImportExportHandler.js";
     import { Anchor } from "@smui/menu-surface";
-    import { FreErrorSeverity } from "@freon4dsl/core";
-
+    import { FreErrorSeverity, type FreModelUnit } from "@freon4dsl/core";
+    
     // TODO add rename option to context menu
     let menus: MenuComponentDev[] = [];
     // following is used to position the menu
@@ -89,8 +89,7 @@
     }
     // end positioning
 
-    let myUnits = [];
-
+    let myUnits: FreModelUnit[] = [];
     $: myUnits = !!$units && $units.length > 0
         ? $units.sort((u1, u2) => {
             if (u1.name < u2.name) {
@@ -115,7 +114,7 @@
 
     const saveUnit = (index: number) => {
         // console.log("ModelInfo.saveUnit: " + $units[index].name);
-        if ($units[index].name === $currentUnitName) {
+        if ($units[index].name === $currentUnitName.name) {
             EditorState.getInstance().saveCurrentUnit();
             setUserMessage(`Unit '${$units[index].name}' saved.`, FreErrorSeverity.Warning);
         } else {
@@ -131,7 +130,7 @@
 
     const exportUnit = (index: number) => {
         // TODO Only allow export of current unit, may be extended to other units.
-        if ($units[index].name !== $currentUnitName) {
+        if ($units[index].name !== $currentUnitName.name) {
             // TODO make error message more clear
             setUserMessage('Can only export unit in editor', FreErrorSeverity.Warning);
         } else {

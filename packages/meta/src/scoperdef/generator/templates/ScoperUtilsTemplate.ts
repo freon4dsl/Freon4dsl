@@ -1,6 +1,6 @@
-import { LANGUAGE_GEN_FOLDER, Names, GenerationUtil } from "../../../utils";
-import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage";
-import { ScopeDef } from "../../metalanguage";
+import { LANGUAGE_GEN_FOLDER, Names, GenerationUtil } from "../../../utils/index.js";
+import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import { ScopeDef } from "../../metalanguage/index.js";
 
 export class ScoperUtilsTemplate {
 

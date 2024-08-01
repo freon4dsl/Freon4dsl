@@ -1,5 +1,5 @@
-import { Names, FREON_CORE } from "../../../utils";
-import { FreMetaLanguage } from "../../../languagedef/metalanguage";
+import { Names, FREON_CORE } from "../../../utils/index.js";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 
 export class CustomActionsTemplate {
 

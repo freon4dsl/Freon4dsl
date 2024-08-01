@@ -1,5 +1,5 @@
-import { FreMetaClassifier, MetaElementReference, FreMetaLanguage } from "../../../languagedef/metalanguage";
-import { FreTyperElement } from "../FreTyperElement";
+import { FreMetaClassifier, MetaElementReference, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import { FreTyperElement } from "../FreTyperElement.js";
 
 export abstract class FretExp extends FreTyperElement {
     // @ts-ignore Property is set during parsing and checking phases

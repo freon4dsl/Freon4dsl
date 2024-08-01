@@ -1,5 +1,5 @@
-import { Names } from "../../../utils";
-import { FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../../languagedef/metalanguage";
+import { Names } from "../../../utils/index.js";
+import { FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
 
 export class EditorIndexTemplate {
 

@@ -1,5 +1,5 @@
-import { OrderedList } from "./OrderedList";
-import { FreMetaClassifier, FreMetaConcept, FreMetaInterface } from "../../metalanguage";
+import { OrderedList } from "./OrderedList.js";
+import { FreMetaClassifier, FreMetaConcept, FreMetaInterface } from "../../metalanguage/index.js";
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
 // 1. Breath First Search of each class hierarchy going "upwards" - result into OrderedList (preserve order + no duplicates).
@@ -36,7 +36,7 @@ export class CommonSuperTypeUtil {
      * @param inCls
      * @private
      */
-    private static getSupers(inCls: FreMetaClassifier): OrderedList<FreMetaClassifier> {
+    public static getSupers(inCls: FreMetaClassifier): OrderedList<FreMetaClassifier> {
         const classes: OrderedList<FreMetaClassifier> = new OrderedList<FreMetaClassifier>();
         if (!!inCls) {
             let nextLevel: OrderedList<FreMetaClassifier> = new OrderedList<FreMetaClassifier>();

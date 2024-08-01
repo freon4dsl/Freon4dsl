@@ -1,19 +1,19 @@
-import { CheckRunner, Checker, ParseLocationUtil } from "../../utils";
+import { CheckRunner, Checker, ParseLocationUtil } from "../../utils/index.js";
 import {
     FreMetaConcept,
     FreMetaLanguage,
     FreMetaProperty,
     FreMetaClassifier
-} from "../../languagedef/metalanguage";
-import { FreAlternativeScope, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang";
-import { LangUtil, MetaLogger } from "../../utils";
+} from "../../languagedef/metalanguage/index.js";
+import { FreAlternativeScope, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang.js";
+import { LangUtil, MetaLogger } from "../../utils/index.js";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference, FreMetaUnitDescription } from "../../languagedef/metalanguage";
-import { FreLangExpressionChecker } from "../../languagedef/checking";
-import { CommonChecker } from "../../languagedef/checking";
+import { MetaElementReference, FreMetaUnitDescription } from "../../languagedef/metalanguage/index.js";
+import { FreLangExpressionChecker } from "../../languagedef/checking/index.js";
+import { CommonChecker } from "../../languagedef/checking/index.js";
 
 const LOGGER = new MetaLogger("ScoperChecker").mute();
 
