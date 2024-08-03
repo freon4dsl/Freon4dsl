@@ -8,8 +8,16 @@ import { Names } from "./Names.js";
 
 export class Roles {
 
-    public static elementVarName(concept: FreMetaClassifier): string {
-        return Names.classifier(concept).toLowerCase();
+    // public static elementVarName(concept: FreMetaClassifier): string {
+    //     return Names.classifier(concept).toLowerCase();
+    // }
+
+    public static customClassifierRole(owningConceptName: string, boxType: string): string {
+        let roleName: string = Roles.startWithUpperCase(owningConceptName) + "-custom-";
+        if (boxType !== null && boxType !== undefined && boxType.length >= 0) {
+            roleName += "-" + boxType;
+        }
+        return roleName;
     }
 
     // NB Identical to RoleProvider in core package!!

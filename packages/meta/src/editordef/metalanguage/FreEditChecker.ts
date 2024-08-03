@@ -24,7 +24,7 @@ import {
     FreEditProjectionItem,
     FreEditStandardProjection,
     ForType,
-    DisplayType
+    DisplayType, FreEditCustomProjection, FreEditExternal
 } from "./FreEditDefLang.js";
 import { EditorDefaults } from "./EditorDefaults.js";
 import { MetaLogger } from "../../utils/index.js";
@@ -326,6 +326,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 this.checkPropProjection(item, cls, editor);
             } else if (item instanceof FreEditSuperProjection) {
                 this.checkSuperProjection(editor, item, cls);
+            } else if (item instanceof FreEditCustomProjection) {
+                this.checkCustomProjection(editor, item);
             }
         });
     }
@@ -623,8 +625,9 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         proj.for === ForType.Number ||
                         proj.for === ForType.Limited ||
                         proj.for === ForType.LimitedList ||
-                        proj.for === ForType.ReferenceSeparator,
-                error: `A standard projection may only be defined for types 'boolean', 'number', 'limited', 'limited[]', or for 'referenceSeparator' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
+                        proj.for === ForType.ReferenceSeparator ||
+                        proj.for === ForType.Externals,
+                error: `A standard projection may only be defined for types 'boolean', 'number', 'limited', 'limited[]', or for 'referenceSeparator' or 'externals' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
                 whenOk: () => {
                     if (proj.for === ForType.Boolean) { // boolean standard projection
                         // check keywords
@@ -698,5 +701,17 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 `A boolean value may only be displayed as 'text', 'checkbox', 'radio', 'switch', or 'inner-switch' ${ParseLocationUtil.location(elem)}.`
             );
         }
+    }
+
+    private checkCustomProjection(editor: FreEditUnit, item: FreEditCustomProjection) {
+        const externalList: Map<string, FreEditExternal> | undefined = editor.getDefaultProjectiongroup()?.findStandardProjFor(ForType.Externals)?.externals;
+        this.runner.nestedCheck({
+            check: !!externalList,
+            error: ``,
+            whenOk: () => {
+                this.runner.simpleCheck(externalList!.has(item.boxName),
+                    `Custom projection '${item.boxName}' is not imported ${ParseLocationUtil.location(item)}.`);
+            }
+        })
     }
 }

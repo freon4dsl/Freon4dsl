@@ -16,7 +16,7 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection,
     BoolKeywords,
-    FreEditStandardProjection, FreEditButtonDef
+    FreEditStandardProjection, FreEditButtonDef, FreEditExternal, FreEditCustomProjection
 } from "../metalanguage/index.js";
 import { ListUtil } from "../../utils/index.js";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
@@ -125,6 +125,30 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
     return result;
 }
 
+export function createExternal(data: Partial<FreEditExternal>): FreEditExternal {
+    const result: FreEditExternal = new FreEditExternal();
+    if (!!data.boxName) {
+        result.boxName = data.boxName;
+    }
+    if (!!data.boxPath) {
+        result.boxPath = data.boxPath;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    console.log("Creators.createExternal: " + result.toString())
+    return result;
+}
+
+export function makeMapFromArray(list: FreEditExternal[]): Map<string, FreEditExternal> {
+    const result = new Map<string, FreEditExternal>();
+    list.forEach(elem => {
+        result.set(elem.boxName, elem);
+    });
+    return result;
+}
+
 export function createStandard(data: Partial<FreEditStandardProjection>): FreEditStandardProjection {
     const result: FreEditStandardProjection = new FreEditStandardProjection();
     if (!!data.for) {
@@ -136,6 +160,9 @@ export function createStandard(data: Partial<FreEditStandardProjection>): FreEdi
     if (!!data.keywords) {
         result.keywords = data.keywords;
     }
+    if (!!data.externals) {
+        result.externals = data.externals;
+    }
     if (!!data.separator) {
         result.separator = data.separator;
     }
@@ -144,6 +171,19 @@ export function createStandard(data: Partial<FreEditStandardProjection>): FreEdi
         result.location.filename = currentFileName;
     }
     // console.log("Creators.createStandard: " + result.toString())
+    return result;
+}
+
+export function createCustomProjection(data: Partial<FreEditCustomProjection>): FreEditCustomProjection {
+    const result: FreEditCustomProjection = new FreEditCustomProjection();
+    if (!!data.boxName) {
+        result.boxName = data.boxName;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    console.log("Creators.createCustomProjection: " + result.toString())
     return result;
 }
 

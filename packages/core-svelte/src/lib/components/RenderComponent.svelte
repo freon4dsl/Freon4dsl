@@ -42,19 +42,19 @@
     import TextComponent from "./TextComponent.svelte";
     import TextDropdownComponent from "./TextDropdownComponent.svelte";
     import SvgComponent from "./SvgComponent.svelte";
-    import { afterUpdate } from "svelte";
+    import {afterUpdate} from "svelte";
     import { selectedBoxes } from "$lib/index.js";
     import { componentId, setBoxSizes } from "$lib/index.js";
     import ElementComponent from "./ElementComponent.svelte";
     import BooleanCheckboxComponent from "$lib/components/BooleanCheckboxComponent.svelte";
     import BooleanRadioComponent from "$lib/components/BooleanRadioComponent.svelte";
-    // import MaterialSwitchComponent from "$lib/components/MaterialSwitchComponent.svelte";
     import InnerSwitchComponent from "$lib/components/InnerSwitchComponent.svelte";
     import NumericSliderComponent from "$lib/components/NumericSliderComponent.svelte";
     import LimitedCheckboxComponent from "$lib/components/LimitedCheckboxComponent.svelte";
     import LimitedRadioComponent from "$lib/components/LimitedRadioComponent.svelte";
     import SwitchComponent from "$lib/components/SwitchComponent.svelte";
     import ButtonComponent from "$lib/components/ButtonComponent.svelte";
+    import {findCustomComponent, isCustomComponent} from "$lib/components/svelte-utils/Externals.js";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -100,7 +100,6 @@
         refresh((first ? "first" : "later") + "   " + box?.id);
         first = false;
     // }
-
 </script>
 
 <!-- TableRows are not included here, because they use the CSS grid and table cells must in HTML
@@ -163,8 +162,10 @@
             <MultiLineTextComponent box={box} editor={editor} text=""/>
         {:else if isActionBox(box) || isSelectBox(box)}
             <TextDropdownComponent box={box} editor={editor}/>
+        <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
+        {:else if isCustomComponent(box["kind"])}
+            <svelte:component this={findCustomComponent(box["kind"])} box={box} />
         {:else}
-            <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
             <p class="error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
         {/if}
     </span>

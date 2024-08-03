@@ -50,7 +50,8 @@ export enum ForType {
     Number = "number",
     Limited = "limited",
     LimitedList = "limitedList",
-    ReferenceSeparator = "referenceSeparator"
+    ReferenceSeparator = "referenceSeparator",
+    Externals = "externals"
 }
 
 /**
@@ -189,17 +190,53 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
 /**
  * A single definition of the standard for properties with primitive type, or the reference separator
  */
-export class FreEditStandardProjection extends  FreMetaDefinitionElement {
+export class FreEditCustomProjection extends FreMetaDefinitionElement {
+    boxName: string = '';
+
+    toString(): string {
+        return `[custom = ${this.boxName} ]`
+    }
+}
+
+/**
+ * A single definition of the standard for properties with primitive type, or the reference separator
+ */
+export class FreEditStandardProjection extends FreMetaDefinitionElement {
     for: string = '';
     displayType: DisplayType | undefined; // Possible values: 'text', 'checkbox', 'radio', 'switch', 'inner-switch'. See BooleanBox.ts from core.
     keywords: BoolKeywords | undefined;
     separator: string | undefined;
+    externals: Map<string, FreEditExternal> = new Map<string, FreEditExternal>;
 
     toString(): string {
-        return `${this.for}${this.displayType ? ` ${this.displayType}` : ''}${this.keywords ? ` ${this.keywords.toString()}` : ''}${this.separator ? ` [${this.separator}]` : ''}`
+        const displayTypeStr: string = `${this.displayType ? ` ${this.displayType}` : ''}`;
+        const keywordsStr: string = `${this.keywords ? ` ${this.keywords.toString()}` : ''}`;
+        const separatorStr: string = `${this.separator ? ` [${this.separator}]` : ''}`;
+        let externalsStr: string = '';
+        if (this.externals.size > 0) {
+            externalsStr += '{\n';
+            // @ts-ignore 'key' is necessary for value to have the right type
+            for (let [key, value] of this.externals.entries()) {
+                externalsStr += `${value.toString()}\n`;
+            }
+            externalsStr += '}';
+        }
+
+        return `${this.for}${displayTypeStr}${keywordsStr}${separatorStr}${externalsStr}`;
     }
 }
 
+/**
+ * A single definition of the standard for properties with primitive type, or the reference separator
+ */
+export class FreEditExternal extends FreMetaDefinitionElement {
+    boxName: string = '';
+    boxPath: string = '';
+
+    toString(): string {
+        return `${this.boxName} from "${this.boxPath}"`
+    }
+}
 /**
  * A single projection definition for a single concept or interface
  */
