@@ -2,7 +2,7 @@
 
 editor default
 
-defaults {
+global {
     boolean [YES | NO] // the strings used to display a boolean value
 
     referenceSeparator [:] // the string that separates the names in a path name, e.g. pack1:cls3:part
