@@ -84,114 +84,110 @@
   --freon-colors-slider: #{theme.$on-secondary};    /* The color of the slider between the error/search pane and the editor */
 }
 
-.gridCellOr {
-  padding: 4px;
-  --freon-gridcell-component-color: blue;
-  --freon-label-component-color: blue;
-  --freon-label-component-font-style: bold;
-  --freon-label-component-font-weight: bold;
-  display: flex;
-  align-items: center;
-  border: lightgrey;
-  border-style: solid;
-  border-width: 1px;
-  --freon-gridcell-component-background-color: lightblue;
-};
+//.gridCellOr {
+//  padding: 4px;
+//  --freon-gridcell-component-color: blue;
+//  --freon-label-component-color: blue;
+//  --freon-label-component-font-style: bold;
+//  --freon-label-component-font-weight: bold;
+//  display: flex;
+//  align-items: center;
+//  border: lightgrey;
+//  border-style: solid;
+//  border-width: 1px;
+//  --freon-gridcell-component-background-color: lightblue;
+//};
 
-.or_gridcellFirst {
-  // padding: 4px;
-  border: red;
-  border-style: solid;
-  border-width: 1px;
-};
+//.or_gridcellFirst {
+//  // padding: 4px;
+//  border: red;
+//  border-style: solid;
+//  border-width: 1px;
+//};
 
-.gridcell {
-  // padding: 4px;
-  border-left: lightgrey;
-  border-left-style: solid;
-  border-left-width: 1px;
-  border-right: lightgrey;
-  border-right-style: solid;
-  border-right-width: 1px;
-  border-bottom: lightgrey;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-};
+//.gridcell {
+//  // padding: 4px;
+//  border-left: lightgrey;
+//  border-left-style: solid;
+//  border-left-width: 1px;
+//  border-right: lightgrey;
+//  border-right-style: solid;
+//  border-right-width: 1px;
+//  border-bottom: lightgrey;
+//  border-bottom-style: solid;
+//  border-bottom-width: 1px;
+//};
 
-.gridcellLast {
-  padding: 4px;
-  border-left: lightgrey;
-  border-left-style: solid;
-  border-left-width: 1px;
-  border-right: lightgrey;
-  border-right-style: solid;
-  border-right-width: 1px;
-  border-bottom: lightgrey;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-}
+//.gridcellLast {
+//  padding: 4px;
+//  border-left: lightgrey;
+//  border-left-style: solid;
+//  border-left-width: 1px;
+//  border-right: lightgrey;
+//  border-right-style: solid;
+//  border-right-width: 1px;
+//  border-bottom: lightgrey;
+//  border-bottom-style: solid;
+//  border-bottom-width: 1px;
+//}
 
-.grid {
-  display: inline-grid;
-  grid-gap: 0px;
-  align-items: center;
-  align-content: center;
-  justify-items: stretch;
-  --freon-grid-component-border-color: orange;
-  --freon-grid-component-border-width: 3pt;
-  --freon-grid-component-border-style: dotted;
-}
+//.grid {
+//  display: inline-grid;
+//  grid-gap: 0px;
+//  align-items: center;
+//  align-content: center;
+//  justify-items: stretch;
+//  --freon-grid-component-border-color: orange;
+//  --freon-grid-component-border-width: 3pt;
+//  --freon-grid-component-border-style: dotted;
+//}
 
-.mygrid {
-  padding: 0px;
-  grid-gap: -1px;
-  border: 2px;
-  border-style: solid;
-};
-
-.divider {
-  fill: #ff11ac;
-  color: green;
-  stroke-width: 2px;
-  stroke: blue;
-}
-
-.fraction-all {
-  --freon-horizontallist-component-align-items: center;
-}
-.fraction-exp {
-  --freon-horizontallist-component-align-items: center;
-}
-.mysvgcell {
-  //--freon-gridcell-component-background-color: #{theme.$surface};
-  display: flex;
-  // justifySelf: stretch;
-  padding: 0px;
-  grid-gap: 1px;
-  border: 0px;
-  border-style: hidden;
-};
-
-.mycell {
-  //--freon-gridcell-component-background-color: #{theme.$surface};
-  display: flex;
-  // justifySelf: stretch;
-  padding: 0px;
-  grid-gap: -1px;
-  border: 0px;
-  border-style: hidden;
-};
+//.mygrid {
+//  padding: 0px;
+//  grid-gap: -1px;
+//  border: 2px;
+//  border-style: solid;
+//};
 
 
-.text-box-action {
-  --freon-text-component-color: gray;
-}
-.text-box-select {
-  --freon-text-component-color: green;
-}
-.text-box-text {
-  --freon-text-component-color: blue;
-}
+//.fraction-all {
+//  --freon-horizontallist-component-align-items: center;
+//}
+
+//.fraction-exp {
+//  --freon-horizontallist-component-align-items: center;
+//}
+
+//.mysvgcell {
+//  //--freon-gridcell-component-background-color: #{theme.$surface};
+//  display: flex;
+//  // justifySelf: stretch;
+//  padding: 0px;
+//  grid-gap: 1px;
+//  border: 0px;
+//  border-style: hidden;
+//};
+
+//.mycell {
+//  //--freon-gridcell-component-background-color: #{theme.$surface};
+//  display: flex;
+//  // justifySelf: stretch;
+//  padding: 0px;
+//  grid-gap: -1px;
+//  border: 0px;
+//  border-style: hidden;
+//};
+
+
+//.text-box-action {
+//  --freon-text-component-color: gray;
+//}
+//.text-box-select {
+//  --freon-text-component-color: green;
+//}
+//.text-box-text {
+//  --freon-text-component-color: blue;
+//}
 
 /* The following are CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
 /* Change the values as you like. */
@@ -204,17 +200,6 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-selected-outline-color: #{theme.$blue-900};
   --freon-selected-outline-width: 1px;
   --freon-selected-outline-style: solid;
-  /* Normal text colors */
-  //--freon-colors-inverse_color: #{theme.$on-secondary};       /* Text color on non_normal background */
-  --freon-editor-component-background-color: #{theme.$surface}; /* The background color of the editor */
-  --freon-editor-component-color: #{--mdc-theme-primary};       /* The color of the text, unless set otherwise by the projection */
-  --freon-editor-component-margin: 1px;
-  --freon-editor-component-padding: 1px;
-  /* Fonts */
-  --freon-editor-component-font-family: "Roboto";    /* The font family of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-size: 14px;          /* The font size of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-style: bold;       /* The font style of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-weight: bold;      /* The font weight of the text, unless set otherwise by the projection */
   /* Dropdown colors */
   --freon-dropdown-component-border-color: #{theme.$blue-900};
   --freon-dropdown-component-background-color: #{theme.$surface};
@@ -240,24 +225,8 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-text-component-placeholder-color: #{theme.$blue-900};
   --freon-text-component-actionplaceholder-color: darkgrey;
 
-  --freon-label-component-color: black;
-  --freon-label-component-background-color: inherit;
-  --freon-label-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-style: normal;	/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
-  --freon-label-component-padding: 0px 1px 0px 1px;
-  --freon-label-component-margin: 1px;
-
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-
-  --freon-horizontallist-component-padding: 1px;
-  --freon-horizontallist-component-margin: 1px;
-  --freon-horizontallist-component-align-items: center;
-
-  --freon-verticallist-component-padding: 2px;
-  --freon-verticallist-component-margin: 2px;
 
   /* Boolean Controls */
   --freon-boolean-color: #{theme.$blue-900};            /* The main color of the control */
@@ -277,92 +246,78 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   --freon-numeric-slider-background-color: #{theme.$surface};  /* The background and secondary colors */
   --freon-numeric-slider-padding: 0px 1px 0px 1px;
   --freon-numeric-slider-margin: 1px;
-
-  /* Limited Controls */
-  --freon-limited-color: #{theme.$blue-900};            /* The main color of the control */
-  --freon-limited-background-color: #{theme.$surface};  /* The background and secondary colors */
-  --freon-limited-text-color: black;
-  --freon-limited-font-size: 14px;		                /* The font size of the text */
-  --freon-limited-font-style: normal;	                /* The font size of the text */
-  --freon-limited-font-weight: normal;	                /* The font size of the text */
-  --freon-limited-font-family: "Arial";	                /* The font size of the text */
-  --freon-limited-padding: 4px 6px 4px 6px;
-  --freon-limited-margin: 2px;
-
-  /* Buttons */
-  --freon-button-ripple-color: red;            /* The main color of the control */
-  --freon-button-background-color: #{theme.$amber-400};  /* The background and secondary colors */
-  --freon-button-text-color: #{theme.$blue-900};
-  --freon-button-font-size: 14px;		                /* The font size of the text */
-  --freon-button-font-style: normal;	                /* The font size of the text */
-  --freon-button-font-weight: normal;	                /* The font size of the text */
-  --freon-button-font-family: "Arial";	                /* The font size of the text */
-  --freon-button-padding: 4px 6px 4px 6px;
-  --freon-button-margin: 2px;
 }
 
-.gridcellOdd {
-  //--freon-gridcell-component-justify-left: right;
-  --freon-gridcell-component-background-color: #{theme.$grey-300};
-}
-.gridcellEven {
-  --freon-gridcell-component-background-color: transparent ;
-}
-.gridcell-header {
-  --freon-gridcell-component-background-color: #{theme.$grey-500};
-}
+//.gridcellOdd {
+//  //--freon-gridcell-component-justify-left: right;
+//  --freon-gridcell-component-background-color: #{theme.$grey-300};
+//}
+//.gridcellEven {
+//  --freon-gridcell-component-background-color: transparent ;
+//}
+//.gridcell-header {
+//  --freon-gridcell-component-background-color: #{theme.$grey-500};
+//}
 
-.\/\*, .\*\/ {
-  //--freon-label-component-font-weight: lighter;
-  --freon-label-component-font-style: italic;
-  --freon-label-component-color: #{theme.$grey-500};
-}
-.\{ {
-  --freon-label-component-font-weight: bold;
-}
-.using.entity\: , .Validation {
-  --freon-label-component-font-weight: bold;
-  --freon-label-component-color: red;
-}
-.unit {
-  --freon-label-component-font-weight: bold;
-  --freon-label-component-color: darkmagenta;
-}
-.alias-SetValue-attribute-referencebox-textbox {
-  --freon-text-component-color: #{color-palette.$brown-600};
-  //--freon-text-component-background-color: #{color-palette.$yellow-300};
-}
+//.\/\*, .\*\/ {
+//  //--freon-label-component-font-weight: lighter;
+//  --freon-label-component-font-style: italic;
+//  --freon-label-component-color: #{theme.$grey-500};
+//}
 
-.\,, .\%, .\. {
-  --freon-label-component-margin: 0px 0px 0px 0px;
-  --freon-label-component-padding: 0px 0px 0px 0px;
-}
+//.\{ {
+//  --freon-label-component-font-weight: bold;
+//}
 
-.\/\*, .\*\/ {
-  //--freon-label-component-font-weight: lighter;
-  --freon-label-component-font-style: italic;
-  --freon-label-component-color: #{theme.$grey-500};
-}
-.\{ {
-  --freon-label-component-font-weight: bold;
-}
-.using.entity\: , .Validation {
-  --freon-label-component-font-weight: bold;
-  --freon-label-component-color: red;
-}
-.action-SetValue-attribute-referencebox-textbox {
-  --freon-text-component-background-color: orange;
-}
+//.using.entity\: , .Validation {
+//  --freon-label-component-font-weight: bold;
+//  --freon-label-component-color: red;
+//}
 
-.\,, .\%, .\. {
-  --freon-label-component-margin: 0px 0px 0px 0px;
-  --freon-label-component-padding: 0px 0px 0px 0px;
-}
+//.unit {
+//  --freon-label-component-font-weight: bold;
+//  --freon-label-component-color: darkmagenta;
+//}
 
-.action-binary-pre-textbox, .action-binary-post-textbox, .action-exp-left-textbox, .action-exp-right-textbox {
-  --freon-text-component-margin: 0px;
-  --freon-text-component-padding: -1px 1px 0px 1px;
-}
+//.alias-SetValue-attribute-referencebox-textbox {
+//  --freon-text-component-color: #{color-palette.$brown-600};
+//  //--freon-text-component-background-color: #{color-palette.$yellow-300};
+//}
+
+//.\,, .\%, .\. {
+//  --freon-label-component-margin: 0px 0px 0px 0px;
+//  --freon-label-component-padding: 0px 0px 0px 0px;
+//}
+
+//.\/\*, .\*\/ {
+//  //--freon-label-component-font-weight: lighter;
+//  --freon-label-component-font-style: italic;
+//  --freon-label-component-color: #{theme.$grey-500};
+//}
+
+//.\{ {
+//  --freon-label-component-font-weight: bold;
+//}
+
+//.using.entity\: , .Validation {
+//  --freon-label-component-font-weight: bold;
+//  --freon-label-component-color: red;
+//}
+
+//.action-SetValue-attribute-referencebox-textbox {
+//  --freon-text-component-background-color: orange;
+//}
+
+//.\,, .\%, .\. {
+//  --freon-label-component-margin: 0px 0px 0px 0px;
+//  --freon-label-component-padding: 0px 0px 0px 0px;
+//}
+
+//.action-binary-pre-textbox, .action-binary-post-textbox, .action-exp-left-textbox, .action-exp-right-textbox {
+//  --freon-text-component-margin: 0px;
+//  --freon-text-component-padding: -1px 1px 0px 1px;
+//}
+
 html,
 body {
   background-color: theme.$surface;
@@ -372,18 +327,9 @@ body {
   --mdc-theme-primary: #{theme.$primary};
 }
 
-//.Pages\: {
-//  --freon-label-component-font-weight: bold;
-//  --freon-label-component-color: darkmagenta;
-//}
-//.Video, .Theory, .Worksheet {
-//  --freon-label-component-font-weight: bold;
-//  --freon-label-component-color: darkmagenta;
-//}
-//.Questions\:, .Score {
-//  --freon-label-component-font-weight: bold;
-//}
-//.result.of.page, .number.of.correct.answers {
-//  --freon-label-component-font-weight: bold;
-//  --freon-label-component-color: darkgreen;
-//}
+.divider {
+  fill: #ff11ac;
+  color: green;
+  stroke-width: 2px;
+  stroke: blue;
+}

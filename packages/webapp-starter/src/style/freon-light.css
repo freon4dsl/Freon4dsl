@@ -1,0 +1,105 @@
+/*********************************************
+ * 
+ * Styles for Freon Svelte components.
+ * 
+ *********************************************/
+
+.freon-component {
+    color: darkblue;
+    background-color: white;
+    --md-sys-color-primary: darkblue;
+
+}
+
+.label-component:empty:before {
+}
+
+.label-component {
+}
+
+.list-component-horizontal {
+    border-color: darkgreen;
+}
+
+.list-component-vertical {
+    border-color: red;
+}
+
+.layout-component {
+}
+
+.layout-component-horizontal {
+}
+
+.layout-component-vertical {
+    /*width: 100%;*/
+}
+
+.limited-checkbox-component-group {
+    /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
+    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
+    /* the following three variables determine the manner in which the focus-ring is shown */
+}
+.limited-checkbox-component-group:hover,
+.limited-checkbox-component-group:focus-within {
+    outline: #0d47a1 solid 1px;
+    box-shadow: 0 0 10px #0d47a1;
+}
+.limited-checkbox-component-label {
+}
+.limited-checkbox-component-single {
+}
+
+.limited-radio-component-group {
+    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
+}
+.limited-radio-component-group:hover,
+.limited-radio-component-group:focus-within {
+    outline: blue solid 1px;
+    box-shadow: 0 0 10px blue;
+}
+.limited-radio-component-single {
+}
+.limited-radio-component-vertical {
+}
+.limited-radio-component-label {
+}
+.contextmenu {
+    border: solid 1px #c5c5c5;
+    background: #e5e5e5;
+    box-shadow: 1.5px 1.5px 5px grey;
+}
+.contextmenu-button {
+    background: none;
+    border: none;
+}
+
+.contextmenu-button:hover {
+    background: #f4f4f4;
+}
+
+.contextmenu-shortcut {
+    color: #666;
+}
+
+.contextmenu-hr {
+    border-top: solid 1px #c5c5c5;
+}
+
+.button-component-ripple {
+}
+.button-component-ripple:hover {
+    background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) no-repeat center/15000%;
+    background-color: red;
+}
+.button-component-ripple:active {
+    background-color: red;
+}
+.button-component-empty {
+}
+
+/* Button style */
+.button-component {
+    box-shadow: 0 0 4px #999;
+    background-color: #ffca28; /*  $amber-400:  */
+}

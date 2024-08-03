@@ -56,8 +56,8 @@
 
 <span class="layout-component"
       id="{id}"
-      class:horizontal="{isHorizontal}"
-      class:vertical="{!isHorizontal}"
+      class:layout-component-horizontal="{isHorizontal}"
+      class:layout-component-vertical="{!isHorizontal}"
       tabIndex={0}
       bind:this={element}
 >
@@ -75,23 +75,3 @@
         {/each}
     {/if}
 </span>
-
-<style>
-    .layout-component {
-        background: transparent;
-        padding: var(--freon-horizontallist-component-padding, 1px);
-        margin: var(--freon-horizontallist-component-margin, 1px);
-        box-sizing: border-box;
-    }
-
-    .horizontal {
-        white-space: nowrap;
-        /*display: inline-block; !* maybe use display: flex; ?? *!*/
-        display: flex;
-        align-items: var(--freon-horizontallist-component-align-items, baseline);
-    }
-
-    .vertical {
-        /*width: 100%;*/
-    }
-</style>

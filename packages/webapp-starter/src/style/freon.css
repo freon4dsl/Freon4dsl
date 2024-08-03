@@ -1,0 +1,180 @@
+/*********************************************
+ * 
+ * Styles for Freon Svelte components.
+ * 
+ *********************************************/
+
+.freon-component {
+    height: 100%;
+    width: 100%;
+    overflow-x: auto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: normal;
+    font-family: "Arial";
+    margin: 1px;
+    padding: 1px;
+}
+
+.label-component:empty:before {
+    content: attr(data-placeholdertext);
+    margin: 1px;
+    padding: 0px 1px 0px 1px;
+}
+
+.label-component {
+    padding: 0px 1px 0px 1px;
+    margin: 1px;
+    white-space: normal;
+    display: inline-block;
+}
+
+.list-component-horizontal {
+    white-space: nowrap;
+    display: grid;
+    padding: 1px;
+    border-width: 0pt;
+    border-style: none;
+    margin: 1px;
+    box-sizing: border-box;
+}
+
+.list-component-vertical {
+    padding: 1px;
+    border-width: 0pt;
+    border-style: none;
+    margin: 1px;
+    box-sizing: border-box;
+}
+
+.layout-component {
+    padding:1px;
+    margin: 1px;
+    box-sizing: border-box;
+}
+
+.layout-component-horizontal {
+    white-space: nowrap;
+    display: flex;
+    align-items: baseline;
+}
+
+.layout-component-vertical {
+    /*width: 100%;*/
+}
+
+
+.limited-checkbox-component-group {
+    margin: 2px;
+    padding: 4px 6px 4px 6px;
+    border: none;
+    /* the following three variables determine the manner in which the focus-ring is shown */
+    --md-focus-ring-duration: 0s; /* disabled animation */
+    /*--md-focus-ring-active-width: 0px;*/
+    /*--md-focus-ring-width: 0px;*/
+}
+.limited-checkbox-component-group:hover,
+.limited-checkbox-component-group:focus-within {
+    border-radius: 0.1em;
+}
+.limited-checkbox-component-label {
+    padding: 2px;
+}
+.limited-checkbox-component-single {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    display: flex;
+}
+.limited-checkbox-component-vertical {
+    display: inline-block;
+}
+
+
+.limited-radio-component-group {
+    margin: 2px;
+    padding: 4px 6px 4px 6px;
+    border: none;
+    /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
+    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
+    /* the following three variables determine the manner in which the focus-ring is shown */
+    --md-focus-ring-duration: 0s; /* disabled animation */
+    --md-focus-ring-active-width: 0px;
+    --md-focus-ring-width: 0px;
+}
+.limited-radio-component-group:hover,
+.limited-radio-component-group:focus-within {
+    border-radius: 0.1em;
+}
+.limited-radio-component-single {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    display: flex;
+}
+.limited-radio-component-vertical {
+    display: inline-block;
+}
+.limited-radio-component-label {
+    margin-left: 4px;
+    margin-top: 2px;
+}
+
+.contextmenu {
+    display: flex;
+    flex-direction: column;
+    border-radius: 3px;
+    gap: 2px;
+    position: absolute; /* relative to a 'relative' parent */
+    min-width: 120px;
+}
+.contextmenu-button {
+    border-radius: 2px;
+    padding: 4px;
+    margin: 3px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    gap: 2px;
+    place-items: center;
+}
+
+.contextmenu-button:hover {
+}
+
+.contextmenu-shortcut {
+    font-size: 0.7em;
+}
+
+.contextmenu-hr {
+    width: 100%;
+    margin: 0;
+}
+
+/* Copied from https://svelte.dev/repl/hello-world?version=4.2.18 */
+/* Ripple effect */
+.button-component-ripple {
+    background-position: center;
+    transition: background 0.8s;
+}
+.button-component-ripple:hover {
+}
+.button-component-ripple:active {
+    background-size: 100%;
+    transition: background 0s;
+}
+.button-component-empty {
+    min-height: 1em;
+    min-width: 1.5em;
+    display: inline-block;
+}
+
+/* Button style */
+.button-component {
+    border: none;
+    border-radius: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    outline: none;
+    padding: 4px 6px 4px 6px;
+    margin: 2px;
+}

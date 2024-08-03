@@ -1,0 +1,104 @@
+/*********************************************
+ * 
+ * Styles for Freon Svelte components.
+ * 
+ *********************************************/
+
+.freon-component {
+    color: whitesmoke;
+    background-color: blue;
+    --md-sys-color-primary: darkgrey;
+}
+
+.label-component:empty:before {
+}
+
+.label-component {
+}
+
+.list-component-horizontal {
+    border-color: lightgreen;
+}
+
+.list-component-vertical {
+    border-color: red;
+}
+
+.layout-component {
+    background-color: darkgray;
+}
+
+.layout-component-horizontal {
+}
+
+.layout-component-vertical {
+}
+
+
+.limited-checkbox-component-group {
+    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
+}
+.limited-checkbox-component-group:hover,
+.limited-checkbox-component-group:focus-within {
+    outline: rgba(211, 227, 253, 255) solid 1px;
+    box-shadow: 0 0 10px rgba(211, 227, 253, 255);
+}
+.limited-checkbox-component-label {
+}
+.limited-checkbox-component-single {
+}
+
+.limited-radio-component-group {
+    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
+}
+.limited-radio-component-group:hover,
+.limited-radio-component-group:focus-within {
+    outline: whitesmoke solid 1px;
+    box-shadow: 0 0 10px whitesmoke;
+}
+.limited-radio-component-single {
+}
+.limited-radio-component-vertical {
+}
+.limited-radio-component-label {
+}
+
+.contextmenu {
+    border: solid 1px #c5c5c5;
+    background: #e5e5e5;
+    box-shadow: 1.5px 1.5px 5px grey;
+}
+.contextmenu-button {
+    background: none;
+    border: none;
+}
+
+.contextmenu-button:hover {
+    background: #f4f4f4;
+}
+
+.contextmenu-shortcut {
+    color: #666;
+}
+
+.contextmenu-hr {
+    border-top: solid 1px #c5c5c5;
+}
+
+.button-component-ripple {
+}
+.button-component-ripple:hover {
+    background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) no-repeat center/15000%;
+    background-color: red;
+}
+.button-component-ripple:active {
+    background-color: red;
+}
+.button-component-empty {
+}
+
+/* Button style */
+.button-component {
+    box-shadow: 0 0 4px #999;
+    background-color: #ffca28; /*  $amber-400:  */
+}

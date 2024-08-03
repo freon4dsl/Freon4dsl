@@ -51,14 +51,23 @@
 /* Change the values as you like. */
 /* Note that we need to use a different syntax to be able to use SCSS variables as value
 for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/css-vars */
-.editor-part {
-  /* Normal text colors */
-  --freon-editor-component-color: #{--mdc-theme-text-primary-on-dark};       /* The color of the text, unless set otherwise by the projection */
-  --freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
-  --freon-editor-component-background-color: #{theme.$surface};              /* The background color of the editor */
+.freon-component {
+  color: #{--mdc-theme-text-primary-on-dark};       /* The color of the text, unless set otherwise by the projection */
+  background-color: #{theme.$surface};              /* The background color of the editor */
+}
 
+.limited-checkbox-component-group {
+  //color: inherit; // #{--mdc-theme-text-primary-on-dark};
+  //background-color: #{theme.$surface};
+  /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
+  //--md-sys-color-primary: rgba(211, 227, 253, 255);
+  /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
+  /* the following three variables determine the manner in which the focus-ring is shown */
+}
+
+.editor-part {
   /* Dropdown colors */
-  --freon-dropdownitem-component-color: #{theme.$blue-900};
+  --freon-dropdownitem-component-color: #{theme.$blue-50};
   --freon-dropdown-component-background-color: #{theme.$surface};
   --freon-dropdown-component-color: inherit;
   --freon-dropdown-component-border-color: #{theme.$blue-900};
@@ -79,7 +88,7 @@ for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/
   /* Popup */
   --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
   --freon-text-component-padding: 0px;
-  --freon-label-component-padding: 0px;
+  //--freon-label-component-padding: 0px;
   --freon-horizontallist-component-padding: 0px;
   --freon-verticallist-component-padding: 0px;
 

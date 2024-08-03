@@ -83,9 +83,9 @@
     }
 </script>
 
-<span role="radiogroup" aria-labelledby={ariaLabel} id={id} class="radiogroup" class:vertical="{!isHorizontal}">
+<span role="radiogroup" aria-labelledby={ariaLabel} id={id} class="limited-radio-component-group" class:limited-radio-component-vertical="{!isHorizontal}">
 	{#each myEnum as nn, i}
-      <span class="single">
+      <span class="limited-radio-component-single">
         <md-radio
                 id="{id}-{nn}-{i}"
                 name="{id}-group"
@@ -100,48 +100,7 @@
                 on:keydown={onKeyDown}
                 bind:this={allElements[i]}
         ></md-radio>
-        <label class="freon-radio-label" for="{id}-{nn}-{i}">{nn}</label>
+        <label class="limited-radio-component-label" for="{id}-{nn}-{i}">{nn}</label>
       </span>
 	{/each}
 </span>
-
-<style>
-    .radiogroup {
-        font-size: var(--freon-limited-font-size);
-        font-style: var(--freon-limited-font-style);
-        font-weight: var(--freon-limited-font-weight);
-        font-family: var(--freon-limited-font-family),sans-serif;
-        margin: var(--freon-limited-margin);
-        padding: var(--freon-limited-padding);
-        padding-top: 2px;
-        padding-bottom: 2px;
-        border: none;
-        color: var(--freon-limited-text-color, var(--mdc-theme-primary));
-        background-color: var(--freon-limited-background-color, var(--mdc-theme-background));
-        /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
-        --md-sys-color-primary: var(--freon-limited-color, var(--mdc-theme-primary));
-        /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
-        /* the following three variables determine the manner in which the focus-ring is shown */
-        --md-focus-ring-duration: 0s; /* disabled animation */
-        --md-focus-ring-active-width: 0px;
-        --md-focus-ring-width: 0px;
-    }
-    .radiogroup:hover,
-    .radiogroup:focus-within {
-        border-radius: 0.1em;
-        outline: var(--freon-limited-color, var(--mdc-theme-primary)) solid 1px;
-        box-shadow: 0 0 10px var(--freon-limited-color, var(--mdc-theme-primary));
-    }
-    .single {
-        padding-top: 0.2em;
-        padding-bottom: 0.2em;
-        display: flex;
-    }
-    .vertical {
-        display: inline-block;
-    }
-    .freon-radio-label {
-        margin-left: 4px;
-        margin-top: 2px;
-    }
-</style>

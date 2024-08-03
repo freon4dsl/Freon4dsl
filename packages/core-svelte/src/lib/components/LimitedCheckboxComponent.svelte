@@ -144,9 +144,9 @@
 
 </script>
 
-<span role="group" aria-labelledby={ariaLabel} id={id} class="checkbox-group" class:vertical="{!isHorizontal}">
+<span role="group" aria-labelledby={ariaLabel} id={id} class="limited-checkbox-component-group" class:limited-checkbox-component-vertical="{!isHorizontal}">
 	{#each myEnum as nn, i}
-  <span class="single">
+  <span class="limited-checkbox-component-single">
     <md-checkbox
             id="{id}-{nn}-{i}"
             value={nn}
@@ -160,47 +160,8 @@
             on:keydown={onKeyDown}
             bind:this={allElements[i]}
     ></md-checkbox>
-    <label for="{id}-{nn}-{i}" class="checkbox-label">{nn}</label>
+    <label for="{id}-{nn}-{i}" class="limited-checkbox-component-label">{nn}</label>
   </span>
 	{/each}
 </span>
 
-<style>
-    .checkbox-group {
-        font-size: var(--freon-limited-font-size);
-        font-style: var(--freon-limited-font-style);
-        font-weight: var(--freon-limited-font-weight);
-        font-family: var(--freon-limited-font-family),sans-serif;
-        margin: var(--freon-limited-margin);
-        padding: var(--freon-limited-padding);
-        padding-top: 2px;
-        padding-bottom: 2px;
-        border: none;
-        color: var(--freon-limited-color, var(--mdc-theme-primary));
-        background-color: var(--freon-limited-background-color, var(--mdc-theme-background));
-        /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
-        --md-sys-color-primary: var(--freon-limited-color, var(--mdc-theme-primary));
-        /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
-        /* the following three variables determine the manner in which the focus-ring is shown */
-        --md-focus-ring-duration: 0s; /* disabled animation */
-        /*--md-focus-ring-active-width: 0px;*/
-        /*--md-focus-ring-width: 0px;*/
-    }
-    .checkbox-group:hover,
-    .checkbox-group:focus-within {
-        border-radius: 0.1em;
-        outline: var(--freon-limited-color, var(--mdc-theme-primary)) solid 1px;
-        box-shadow: 0 0 10px var(--freon-limited-color, var(--mdc-theme-primary));
-    }
-    .checkbox-label {
-        padding: 2px;
-    }
-    .single {
-        padding-top: 0.2em;
-        padding-bottom: 0.2em;
-        display: flex;
-    }
-    .vertical {
-        display: inline-block;
-    }
-</style>

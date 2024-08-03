@@ -170,12 +170,13 @@
 
 <!-- include the material design styling -->
 <svelte:head>
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet"/>
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    
 </svelte:head>
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-<div class={"freon"}
+<div class={"freon-component"}
      on:keydown={onKeyDown}
      on:scroll={onScroll}
      bind:this={element}
@@ -189,19 +190,3 @@
 <!-- Here the only instance of ContextMenu is defined -->
 <!-- TODO make some default items for the context menu -->
 <ContextMenu bind:this={$contextMenu} items={[]} editor={editor}/>
-
-<style>
-    .freon {
-        height: 100%;
-        width: 100%;
-        overflow-x: auto;
-        font-size: var(--freon-editor-component-font-size, 14px);
-        font-style: var(--freon-editor-component-font-style, italic);
-        font-weight: var(--freon-editor-component-font-weight, normal);
-        font-family: var(--freon-editor-component-font-family, "Arial");
-        color: var(--freon-editor-component-color, darkblue);
-        background-color: var(--freon-editor-component-background-color, white);
-        margin: var(--freon-editor-component-margin, 1px);
-        padding: var(--freon-editor-component-padding, 1px);
-    }
-</style>
