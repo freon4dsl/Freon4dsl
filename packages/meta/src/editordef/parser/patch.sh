@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Patch JS file generated from Peggy to use ESM mopdule syntax (import and export) instead of commonjs
+# Patch JS file generated from Peggy to use ESM module syntax (import and export) instead of commonjs
 
 LINES=$(wc -l <FreEditGrammar.js)
 LAST_KEEP_LINE=$((LINES-6))
