@@ -1,6 +1,6 @@
 editor default
 
-defaults {
+global {
     boolean radio
     number slider
     limited text
