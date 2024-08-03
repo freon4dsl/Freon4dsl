@@ -9,7 +9,7 @@ Editor_Definition = group:projectionGroup
 }
 
 projectionGroup = ws "editor" ws name:var ws num:("precedence" ws n:numberliteral ws {return n;})?
-        standard:("defaults" ws "{" ws list:singleStandardProjection* ws "}" ws {return list;})?
+        standard:("global" ws "{" ws list:singleStandardProjection* ws "}" ws {return list;})?
         projections:classifierProjection* ws
 {
     return creator.createProjectionGroup({
@@ -33,7 +33,7 @@ displayType             = "text" / "checkbox" / "radio" / "switch" / "inner-swit
 //    console.log("list: " + list + ", " + location().start.line)
 //    return { list: list };
 //}
-                                                 
+
 singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 {
     return creator.createStandard({
@@ -75,6 +75,28 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
         "location"      : location()
     });
 }
+/ "externals" ws "{" ws list:singleExternal* ws "}" ws
+  {
+    return creator.createStandard({
+        "for"           : "externals",
+        "externals"     : creator.makeMapFromArray(list),
+        "location"      : location()
+    });
+  }
+
+singleExternal = boxName:var ws "from" ws "\"" boxPath:text "\""
+  {
+      return creator.createExternal({
+          "boxName"     : boxName,
+          "boxPath"     : boxPath,
+          "location"    : location()
+      })
+  }
+
+text = chars:anythingBut+
+  {
+      return chars.join("");
+  }
 
 classifierProjection =
             classifier:classifierReference curly_begin ws
@@ -213,14 +235,22 @@ tableProjection = "table" ws projection_begin ws
     return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
 }
 
-lineWithOptional = items:(templateSpace / textItem / optionalProjection / property_projection / superProjection / newline )+
+lineWithOptional = items:(templateSpace / textItem / optionalProjection / custom_projection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
 
-lineWithOutOptional = items:(templateSpace / textItem / property_projection / superProjection / newline )+
+lineWithOutOptional = items:(templateSpace / textItem / custom_projection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
+}
+
+custom_projection = projection_begin "custom" equals_separator name:var ws projection_end
+{
+     return creator.createCustomProjection({
+        "boxName"   : name,
+        "location"  : location()
+     })
 }
 
 templateSpace = s:[ \t]+
