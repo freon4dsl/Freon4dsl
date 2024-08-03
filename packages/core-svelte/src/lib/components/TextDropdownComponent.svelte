@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { isNumber } from "lodash"
+
     // This component is a combination of a TextComponent and a DropdownComponent.
     // The TextComponent is shown in non-editable state until it gets focus,
     // then the Dropdown also appears. When the text in the TextComponent alters,
@@ -17,10 +19,10 @@
         FreEditor,
         FreLogger,
         type SelectOption,
-        TextBox
-    } from "@freon4dsl/core";
+        TextBox, isRegExp, triggerTypeToString, isActionBox, type FrePostAction, FreCaretPosition, FreCaret
+    } from "@freon4dsl/core"
 
-    import { runInAction } from "mobx";
+    import { runInAction } from "mobx"
     import { afterUpdate, onMount } from "svelte";
 
     const LOGGER = new FreLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -61,7 +63,7 @@
      * It is called from the RenderComponent.
      */
     const setFocus = () => {
-        LOGGER.log("setFocus " + box.kind + id);
+        // LOGGER.log("setFocus " + box.kind + id);
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
@@ -74,7 +76,7 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
-        LOGGER.log("refresh: " + why)
+        // LOGGER.log("refresh: " + why)
         if (isSelectBox(box)) {
             // TODO see todo in 'storeOrExecute'
             let selectedOption = box.getSelectedOption();
@@ -90,16 +92,84 @@
     afterUpdate( () => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        box.triggerKeyPressEvent = triggerKeyPressEvent
     });
 
     onMount(() => {
-        LOGGER.log("onMount for role [" + box.role + "]");
+        // LOGGER.log("onMount for role [" + box.role + "]");
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        box.triggerKeyPressEvent = triggerKeyPressEvent
     });
+    
+    const triggerKeyPressEvent = (key: string) => {
+        textUpdateFunction({content: key, caret: 1})
+        box.textHelper.setText(key)
+    }
 
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!
 
+    
+    const textUpdateFunction = (data: {content: string, caret: number}): boolean => {
+        LOGGER.log(`textUpdateFunction for ${box.kind}: ` + JSON.stringify(data));
+        dropdownShown = true;
+        // ?????
+        // setText(data.content);
+        allOptions = getOptions();
+        filteredOptions = allOptions.filter(o => o.label.startsWith(data.content.substring(0, data.caret)));
+        makeUnique();
+        LOGGER.log(`FilteredOptions are ${filteredOptions.map(o => o.label)}`)
+        if (isActionBox(box)) {
+            // Only one option and has been fully typed in
+            LOGGER.log(`textUpdateFunction: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length})`)
+            if (filteredOptions.length === 1 && filteredOptions[0].label === data.content && filteredOptions[0].label.length === data.caret ) {
+                LOGGER.log("STOP 12 !!")
+                storeAndExecute(filteredOptions[0])
+                // event.stopPropagation()
+                // Done
+                clearText()
+                isEditing = false;
+                dropdownShown = false;
+                return true
+            }
+
+            // Try to find a regular expression
+            const matchingOption = box.getOptions(editor).find(option => {
+                if (isRegExp(option.action.trigger) ){
+                    if (option.action.trigger.test(data.content)) {
+                        LOGGER.log(".    Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + data.content + "'")
+                        return true
+                    }
+                    return false
+                }
+            })
+            if (!!matchingOption) {
+                event.preventDefault()
+                LOGGER.log(`.    Matching regexp ${matchingOption.label}`)
+                LOGGER.log("STOP 22!!")
+                clearText()
+                // event.stopPropagation()
+                let execresult: FrePostAction = null;
+                runInAction(() => {
+                    runInAction(() => {
+                        const command = matchingOption.action.command();
+                        execresult = command.execute(box, data.content, editor, 0);
+                    });
+                    if (!!execresult) {
+                        execresult();
+                    }
+                })
+                clearText()
+                isEditing = false;
+                dropdownShown = false;
+                return true;
+            }
+        } else {
+            LOGGER.log("Not an ActionBox, continue")
+        }
+        return false
+    }
+    
     /**
      * This custom event is triggered when the text in the textComponent is altered or when the
      * caret position is changed.
@@ -108,12 +178,60 @@
      * @param event
      */
     const textUpdate = (event: CustomEvent) => {
-        LOGGER.log('textUpdate: ' + JSON.stringify(event.detail));
+        LOGGER.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail));
         dropdownShown = true;
-        setText(event.detail.content);
+        // ?????
+        // setText(event.detail.content);
         allOptions = getOptions();
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
         makeUnique();
+        if (isActionBox(box)) {
+            // Onlhy one option and has been fully typed in
+            LOGGER.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
+            if (filteredOptions.length === 1 && filteredOptions[0].label === event.detail.content && filteredOptions[0].label.length === event.detail.caret ) {
+                LOGGER.log("STOP 1 !!")
+                event.preventDefault()
+                clearText()
+                storeAndExecute(filteredOptions[0])
+                // event.stopPropagation()
+                // Done
+                clearText()
+                isEditing = false;
+                dropdownShown = false;
+                return
+            }
+
+            // Try to find a regular expression
+            const matchingOption = box.getOptions(editor).find(option => {
+                if (isRegExp(option.action.trigger) ){
+                    if (option.action.trigger.test(event.detail.content)) {
+                        LOGGER.log("Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + event.detail.content + "'")
+                        return true
+                    }
+                    return false
+                }
+            })
+            if (!!matchingOption) {
+                event.preventDefault()
+                LOGGER.log(`Matching regexp ${matchingOption.label}`)
+                LOGGER.log("STOP 2 !!")
+                clearText() 
+                // event.stopPropagation()
+                let execresult: FrePostAction = null;
+                runInAction(() => {
+                    runInAction(() => {
+                        const command = matchingOption.action.command();
+                        execresult = command.execute(box, event.detail.content, editor, 0);
+                    });
+                    if (!!execresult) {
+                        execresult();
+                    }
+                })
+                clearText()
+                isEditing = false;
+                dropdownShown = false;
+            }
+        }
     };
 
     function makeUnique() {
@@ -122,7 +240,7 @@
         const result: SelectOption[] = [];
         filteredOptions.forEach( option => {
             if (seen.includes(option.label)) {
-                LOGGER.error("Option " + JSON.stringify(option) + " is a duplicate");
+                LOGGER.log("Option " + JSON.stringify(option) + " is a duplicate");
             } else {
                 seen.push(option.label);
                 result.push(option)
@@ -172,33 +290,37 @@
                         break;
                     }
                     case ARROW_DOWN: {
-                        if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
-                            selectFirstOption();
-                        } else {
-                            const index = filteredOptions.findIndex(o => o.id === selectedId);
-                            if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
-                                selectedId = filteredOptions[index + 1].id;
-                            } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
+                        if (dropdownShown) {
+                            if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
                                 selectFirstOption();
+                            } else {
+                                const index = filteredOptions.findIndex(o => o.id === selectedId);
+                                if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
+                                    selectedId = filteredOptions[index + 1].id;
+                                } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
+                                    selectFirstOption();
+                                }
                             }
+                            event.preventDefault();
+                            event.stopPropagation();
                         }
-                        event.preventDefault();
-                        event.stopPropagation();
                         break;
                     }
                     case ARROW_UP: {
-                        if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
-                            selectLastOption();
-                        } else {
-                            const index = filteredOptions.findIndex(o => o.id === selectedId);
-                            if (index > 0) { // the 'normal' case: go one up
-                                selectedId = filteredOptions[index - 1].id;
-                            } else if (index === 0) { // the beginning of the options reached: go to the last
+                        if (dropdownShown) {
+                            if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
                                 selectLastOption();
+                            } else {
+                                const index = filteredOptions.findIndex(o => o.id === selectedId);
+                                if (index > 0) { // the 'normal' case: go one up
+                                    selectedId = filteredOptions[index - 1].id;
+                                } else if (index === 0) { // the beginning of the options reached: go to the last
+                                    selectLastOption();
+                                }
                             }
+                            event.preventDefault();
+                            event.stopPropagation();
                         }
-                        event.preventDefault();
-                        event.stopPropagation();
                         break;
                     }
                     case ENTER: { // user wants current selection
@@ -251,8 +373,9 @@
 
     function clearText() {
         // todo find out whether we can do without this textHelper
+        LOGGER.log(`clearText for ${id} from text '${text}' & boxtext '${box.textHelper.getText()}' `)
         box.textHelper.setText("");
-        setText("");
+        // setText("");
     }
 
     /**
@@ -312,6 +435,9 @@
         LOGGER.log('executing option ' + selected.label);
         isEditing = false;
         dropdownShown = false;
+        if (isActionBox(box)) {
+            clearText()
+        }
         runInAction(() => {
             // TODO set the new cursor through the editor
             box.selectOption(editor, selected); // TODO the result of the execution is ignored
@@ -363,7 +489,7 @@
     };
 
     const onFocusOutText = () => {
-        LOGGER.log("onFocusOutText " + id);
+        LOGGER.log(`onFocusOutText ${id} text '${text}'`);
         if (isEditing) {
             isEditing = false;
         }
@@ -398,6 +524,8 @@
             partOfActionBox={true}
             box={textBox}
             editor={editor}
+            textUpdateFunction={textUpdateFunction}
+            endEditingParentFunction={endEditing}
             on:textUpdate={textUpdate}
             on:startEditing={startEditing}
             on:endEditing={endEditing}
