@@ -47,10 +47,11 @@
 	export let partOfActionBox: boolean = false; // indication whether this text component is part of an TextDropdownComponent
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
+	export let textUpdateFunction = undefined
+	export let endEditingParentFunction = undefined
     // Local variables
     let id: string;                         // an id for the html element
     id = !!box ? componentId(box) : 'text-with-unknown-box';
-    let spanElement: HTMLSpanElement;       // the <span> element on the screen
     let inputElement: HTMLInputElement; 	// the <input> element on the screen
     let placeholder: string = '<..>';       // the placeholder when value of text component is not present
     let originalText: string;               // variable to remember the text that was in the box previously
@@ -68,7 +69,7 @@
      * It is called from the box.
      */
 	export async function setFocus(): Promise<void> {
-		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
+		// LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
@@ -158,7 +159,8 @@
 		}
 		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
             LOGGER.log('dispatching from on click');
-            dispatcher('textUpdate', {content: text, caret: from});
+			textUpdateFunction({content: text, caret: from})
+            // dispatcher('textUpdate', {content: text, caret: from});
         }
         event.stopPropagation();
     }
@@ -168,7 +170,7 @@
      * the <span> element, and stores the current text in the textbox.
      */
     function endEditing() {
-        LOGGER.log(' endEditing ' + id);
+        LOGGER.log(`${id}:  endEditing text is '${text}'` );
 		if (isEditing) {
 			// reset the local variables
 			isEditing = false;
@@ -187,7 +189,11 @@
 					}
 				});
 			} else {
-				dispatcher('endEditing');
+				if (!!endEditingParentFunction) {
+					endEditingParentFunction();
+				} else {
+					LOGGER.error("No parent endEditing function")
+				}
 			}
 		}
     }
@@ -351,39 +357,33 @@
 				}
 				default: { // the event.key is SHIFT or a printable character
 					getCaretPosition(event);
+					if (event.shiftKey && event.key === "Shift") {
+						// shift key pressed, ignore
+						event.stopPropagation();
+						break
+					}
 					switch (box.isCharAllowed(text, event.key, from)) {
 						case CharAllowed.OK: // add to text, handled by browser
-							LOGGER.log('CharAllowed');
-							event.stopPropagation();
+							LOGGER.log('CharAllowed ' + JSON.stringify(event.key));
 							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
 							if (editor.selectedBox.kind === "ActionBox") {
-								// TODO This matches one character regular expressions only
-								const matchingOption = (editor.selectedBox as ActionBox).getOptions(editor).find(option => {
-									if (isRegExp(option.action.trigger) ){
-										if (option.action.trigger.test(event.key)) {
-											LOGGER.log("Matching regexp" + triggerTypeToString(option.action.trigger))
-											return true
-										}
-										return false
+								LOGGER.log(`${id}: TEXT UPDATE text '${text}' key: '${event.key}' from: ${from}`)
+
+								if (textUpdateFunction !== undefined) {
+									LOGGER.log(`${id}: TRY TO MATCH text `)
+									const executed = textUpdateFunction({content: text.concat(event.key), caret: from + 1})
+										LOGGER.log("Executed is " + executed)
+									if (executed) {
+										LOGGER.log("Stop propagation and preventDefault in onKeyDown")
+										event.stopPropagation()
+										event.preventDefault()
 									}
-								})
-								if (!!matchingOption) {
-									let execresult: FrePostAction = null;
-									runInAction(() => {
-										runInAction(() => {
-											const command = matchingOption.action.command();
-											execresult = command.execute(box, event.key, editor, 0);
-										});
-										if (!!execresult) {
-											execresult();
-										}
-									})
-									event.preventDefault();
-									event.stopPropagation();
+								} else {
+									LOGGER.log(`${id} no textupdatefunction`)
 								}
-							} else {
-								LOGGER.log("     is NOT an action box, but: " + editor.selectedBox.kind);
+								// dispatcher('textUpdate', {content: text.concat(event.key), caret: from - 1});
 							}
+							event.stopPropagation()
 							break;
 						case CharAllowed.NOT_OK: // ignore
 							// ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
@@ -392,20 +392,25 @@
 							event.stopPropagation();
 							break;
 						case CharAllowed.GOTO_NEXT: // try in previous or next box
-							LOGGER.log("KeyPressAction.GOTO_NEXT");
-							if (from === 0) {
-								editor.selectNextLeaf();
-							} else if (to === text.length) {
-								editor.selectPreviousLeaf();
-							} else {
-								// todo break the textbox in two, if possible
-							}
+							LOGGER.log("KeyPressAction.GOTO_NEXT FROM IS " + from);
+							editor.selectNextLeaf();
 							LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
-							if (isActionTextBox(editor.selectedBox)) {
+							if (isActionBox(editor.selectedBox)) {
 								LOGGER.log("     is an action box");
-								(editor.selectedBox.parent as ActionBox).triggerKeyPressEvent(event.key);
-							} else {
-								LOGGER.log("     is NOT an action box");
+								editor.selectedBox.triggerKeyPressEvent(event.key);
+								editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
+							}
+							event.preventDefault();
+							event.stopPropagation();
+							break;
+						case CharAllowed.GOTO_PREVIOUS: // try in previous or next box
+							LOGGER.log("KeyPressAction.GOTO_PREVIOUS FROM IS " + from);
+							editor.selectPreviousLeaf();
+							LOGGER.log("    PREVIOUS LEAF IS " + editor.selectedBox.role);
+							if (isActionBox(editor.selectedBox)) {
+								LOGGER.log("     is an action box");
+								editor.selectedBox.triggerKeyPressEvent(event.key);
+								editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
 							}
 							event.preventDefault();
 							event.stopPropagation();
@@ -420,7 +425,7 @@
      * When this component loses focus, do everything that is needed to end the editing state.
      */
 	const onFocusOut = (e) => {
-		LOGGER.log("onFocusOut " + id + " partof:" + partOfActionBox + " isEditing:" + isEditing)
+		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfActionBox + " isEditing:" + isEditing)
 		if (!partOfActionBox && isEditing) {
 			endEditing();
 		} else {
@@ -430,12 +435,12 @@
 	}
 
 	const refresh = () => {
-		LOGGER.log("REFRESH " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
+		LOGGER.log(`${id}: REFRESH  ${id} (${box?.element?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
-		if (!isEditing) {
+		// if (!isEditing) {
 			text = box.getText();
-		}
+		// }
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
 		setInputWidth();
 	}
@@ -446,7 +451,7 @@
  	 */
 	beforeUpdate(() => {
 		if (editStart && !!inputElement) {
-			LOGGER.log('Before update : ' + id + ", " + inputElement);
+			LOGGER.log(`${id}: Before update : ${inputElement}`);
 			setInputWidth();
 			inputElement.focus();
 			editStart = false;
@@ -463,20 +468,21 @@
     afterUpdate(() => {
         // LOGGER.log("Start afterUpdate  " + from + ", " + to + " id: " + id);
 		if (editStart && !!inputElement) {
-			LOGGER.log('    editStart in afterupdate for ' + id)
+			LOGGER.log(`${id}:  editStart in afterupdate text '${text}' `)
             inputElement.selectionStart = from >= 0 ? from : 0;
             inputElement.selectionEnd = to >= 0 ? to : 0;
-			setInputWidth();
+			// setInputWidth();
 			inputElement.focus();
             editStart = false;
         }
-        if (isEditing && partOfActionBox) {
-			if (text !== originalText) {
+        // if (isEditing && partOfActionBox) {
+			// 	if (text !== originalText) {
 				// send event to parent
-				LOGGER.log('dispatching event with text ' + text + ' from afterUpdate');
-				dispatcher('textUpdate', {content: text, caret: from + 1});
-			}
-        }
+				// LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
+				// dispatcher('textUpdate', {content: text, caret: from + 1});
+				// textUpdateFunction({content: text, caret: from + 1})
+			// }
+        // }
 		// Always set the input width explicitly.
 		setInputWidth();
 		placeholder = box.placeHolder
@@ -491,7 +497,7 @@
      * are set.
      */
     onMount(() => {
-        LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")");
+        LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")" + " originaltext: '" + box.getText() + "'");
         originalText = text = box.getText();
 		placeholder = box.placeHolder;
 		setInputWidth();
@@ -570,7 +576,6 @@
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 		<span class="{box.role} text-box-{boxType} text"
               on:click={startEditing}
-              bind:this={spanElement}
 			  contenteditable=true
 			  spellcheck=false
               id="{id}-span"
