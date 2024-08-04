@@ -55,7 +55,7 @@
 </script>
 
 
-<span class="freon-switch">
+<span class="switch-component">
     <button
             id="{id}"
             bind:this={switchElement}
@@ -66,51 +66,3 @@
     </button>
 </span>
 
-<style>
-    .freon-switch {
-        margin: var(--freon-boolean-margin);
-        padding: var(--freon-boolean-padding);
-        display: inline-flex;
-        width: max-content;
-    }
-    .freon-switch button {
-        width: 3em;
-        height: 1.6em;
-        position: relative;
-        background: var(--freon-boolean-unselected-track, var(--mdc-theme-on-surface));
-        border: none;
-    }
-
-    .freon-switch button::before { /* defines the knob */
-        content: '';
-        position: absolute;
-        width: 1.3em;
-        height: 1.3em;
-        background: var(--freon-boolean-background-color, var(--mdc-theme-background));
-        top: 0.13em;
-        right: 1.5em;
-        transition: transform 0.3s;
-    }
-
-    .freon-switch button[aria-checked='true']{
-        background-color: var(--freon-boolean-color, var(--mdc-theme-primary))
-    }
-
-    .freon-switch button[aria-checked='true']::before{
-        transform: translateX(1.3em);
-        transition: transform 0.3s;
-    }
-
-    .freon-switch button:hover,
-    .freon-switch button:focus {
-        box-shadow: 0 0px 8px var(--freon-boolean-color, var(--mdc-theme-primary));
-        border-radius: 1.5em;
-    }
-
-    .freon-switch button {
-        border-radius: 1.5em;
-    }
-
-    .freon-switch button::before {
-        border-radius: 100%;
-    }</style>

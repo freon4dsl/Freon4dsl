@@ -38,7 +38,3 @@
 <svg class={css} width={portWidth} height={portHeight} viewBox="0 0 {viewBoxWidth} {viewBoxHeight}" id="{id}">
         <path d={svgPath}/>
 </svg>
-
-<style>
-
-</style>

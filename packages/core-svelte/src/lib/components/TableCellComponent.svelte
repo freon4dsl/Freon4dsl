@@ -99,7 +99,7 @@
         box.refreshComponent = refresh;
         // selection is handled here because TableCells are not included in the RenderComponent
         let isSelected: boolean = $selectedBoxes.includes(box);
-        cssClass = (isSelected ? "selected" : "unSelected");
+        cssClass = (isSelected ? "table-cell-component-selected" : "table-cell-component-unselected");
     });
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -202,7 +202,7 @@
 <span
         id="{id}"
         role="cell"
-        class="gridcellcomponent {orientation} {isHeader} {cssClass} "
+        class="table-cell-component {orientation} {isHeader} {cssClass} "
         style:grid-row="{row}"
         style:grid-column="{column}"
         style="{cssStyle}"
@@ -223,25 +223,3 @@
     <RenderComponent box={childBox} editor={editor}/>
 </span>
 
-
-<style>
-    .gridcellcomponent {
-        box-sizing: border-box;
-        align-self: baseline; /* isn't this the default? */
-        justify-self: var(--freon-gridcell-component-justify-left, baseline);
-        padding: var(--freon-gridcell-component-padding, 1px);
-        background-color: var(--freon-gridcell-component-background-color, transparent);
-        color: var(--freon-gridcell-component-color, inherit);
-    }
-
-    .unSelected {
-        background: transparent;
-        border: none;
-    }
-    .selected {
-        background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));
-        outline-color: var(--freon-selected-outline-color, darkblue);
-        outline-style: var(--freon-selected-outline-style, solid);
-        outline-width: var(--freon-selected-outline-width, 1px);
-    }
-</style>

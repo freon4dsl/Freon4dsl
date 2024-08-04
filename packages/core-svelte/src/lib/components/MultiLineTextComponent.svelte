@@ -87,7 +87,7 @@
 </script>
 
 <textarea
-	class="{box.role} multilinetext-box text"
+	class="{box.role} multilinetext-box multiline-text-component"
 	id="{id}"
 	on:focusout={onFocusOut}
 	on:keydown={onKeyDown}
@@ -97,20 +97,3 @@
 	bind:value={text}
 ></textarea>
 
-<style>
-    .text {
-        color: var(--freon-text-component-color, blue);
-        background: var(--freon-text-component-background-color, inherit);
-        font-family: var(--freon-text-component-font-family, "Arial");
-        font-size: var(--freon-text-component-font-size, 14pt);
-        font-weight: var(--freon-text-component-font-weight, inherit);
-        font-style: var(--freon-text-component-font-style, inherit);
-        padding: var(--freon-text-component-padding, 1px);
-        margin: var(--freon-text-component-margin, 1px);
-        white-space: normal;
-        display: inline-block;
-		height: auto;
-	}
-
-
-</style>

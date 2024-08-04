@@ -56,35 +56,17 @@
     }
 </script>
 
-<span class="optional2"
+<span class="optional-component-new"
       id="{id}"
 >
     {#if mustShow || showByCondition}
-        <span class="optionalShow2">
+        <span class="optional-component-show">
             <RenderComponent box={childBox} editor={editor} bind:this={contentComponent}/>
         </span>
     {:else}
-        <span class="optionalHide2">
+        <span class="optional-component-hide">
             <RenderComponent box={optionalBox} editor={editor} bind:this={placeholderComponent}/>
         </span>
     {/if}
 </span>
 
-<style>
-    .optional2:empty:before {
-        content: attr(data-placeholdertext);
-        background-color: purple;
-    }
-
-    .optionalShow2 {
-        padding: 3px;
-        white-space: normal;
-        display: inline-block;
-    }
-    .optionalHide2 {
-        padding: 3px;
-        white-space: normal;
-        display: inline-block;
-        color: lightgrey;
-    }
-</style>

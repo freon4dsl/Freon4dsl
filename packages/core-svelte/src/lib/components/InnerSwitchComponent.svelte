@@ -46,7 +46,7 @@
     }
 </script>
 
-<span class="freon-inner-switch">
+<span class="inner-switch-component">
     <button
             id="{id}"
             bind:this={switchElement}
@@ -58,37 +58,3 @@
         <span>{box.labels.no}</span>
     </button>
 </span>
-
-<style>
-    .freon-inner-switch button {
-        font-size: var(--freon-boolean-font-size);
-        font-style: var(--freon-boolean-font-style);
-        font-weight: var(--freon-boolean-font-weight);
-        font-family: var(--freon-boolean-font-family),sans-serif;
-        margin: var(--freon-boolean-margin);
-        padding: var(--freon-boolean-padding);
-        border: none;
-        color: var(--freon-boolean-text-color, var(--mdc-theme-primary));
-    }
-
-    [role='switch'][aria-checked='true'] :first-child,
-    [role='switch'][aria-checked='false'] :last-child {
-        color: var(--freon-boolean-background-color, var(--mdc-theme-background));
-        border-radius: 0.25em;
-        background: var(--freon-boolean-color, var(--mdc-theme-primary));
-        display: inline-block;
-    }
-
-    .freon-inner-switch button span {
-        user-select: none;
-        pointer-events:none;
-        padding: 0.25em;
-    }
-
-    .freon-inner-switch button:hover,
-    .freon-inner-switch button:focus {
-        outline: var(--freon-boolean-color, var(--mdc-theme-primary)) solid 1px;
-        box-shadow: 0 0 8px var(--freon-boolean-color, var(--mdc-theme-primary));
-        border-radius: 0.1em;
-    }
-</style>

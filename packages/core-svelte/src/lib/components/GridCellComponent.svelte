@@ -86,7 +86,7 @@
 </script>
 
 <div
-        class="gridcellcomponent {orientation} {isHeader} {cssClass}"
+        class="grid-cell-component {orientation} {isHeader} {cssClass}"
         style:grid-row="{row}"
         style:grid-column="{column}"
         style="{cssStyle}"
@@ -98,15 +98,3 @@
 >
     <RenderComponent box={contentBox} editor={editor}/>
 </div>
-
-<style>
-    .gridcellcomponent {
-        box-sizing: border-box;
-        align-self: baseline;
-        justify-self: var(--freon-gridcell-component-justify-left, baseline);
-        display: flex;
-        padding: var(--freon-gridcell-component-padding, 1px);
-        /*background-color: var(--freon-gridcell-component-background-color, white);*/
-        color: var(--freon-gridcell-component-color, inherit);
-    }
-</style>

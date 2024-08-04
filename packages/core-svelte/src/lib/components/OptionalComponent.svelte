@@ -54,7 +54,7 @@
     }
 </script>
 
-<span class="optional"
+<span class="optional-component"
       id="{id}"
 >
     {#if mustShow || showByCondition}
@@ -64,14 +64,3 @@
     {/if}
 </span>
 
-<style>
-    .optional:empty:before {
-        content: attr(data-placeholdertext);
-    }
-
-    .optional {
-        padding: 3px;
-        white-space: normal;
-        display: inline-block;
-    }
-</style>

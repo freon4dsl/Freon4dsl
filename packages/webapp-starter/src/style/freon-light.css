@@ -55,8 +55,8 @@
 }
 .limited-radio-component-group:hover,
 .limited-radio-component-group:focus-within {
-    outline: blue solid 1px;
-    box-shadow: 0 0 10px blue;
+    outline: darkblue solid 1px;
+    box-shadow: 0 0 10px darkblue;
 }
 .limited-radio-component-single {
 }
@@ -65,7 +65,7 @@
 .limited-radio-component-label {
 }
 .contextmenu {
-    border: solid 1px #c5c5c5;
+    border-color: #c5c5c5;
     background: #e5e5e5;
     box-shadow: 1.5px 1.5px 5px grey;
 }
@@ -102,4 +102,195 @@
 .button-component {
     box-shadow: 0 0 4px #999;
     background-color: #ffca28; /*  $amber-400:  */
+}
+
+.boolean-checkbox-component {
+    --md-sys-color-primary: darkblue;
+}
+.boolean-checkbox-component:hover,
+.boolean-checkbox-component:focus-within {
+    outline: darkblue solid 1px;
+    box-shadow: 0px 0px 10px darkblue;
+}
+
+.boolean-radio-component-group {
+    color: darkblue;
+    /*background-color: var(--freon-boolean-background-color, var(--mdc-theme-background));*/
+    /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
+    /*--md-sys-color-primary: var(--freon-boolean-color, var(--mdc-theme-primary));*/
+    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
+}
+.boolean-radio-component-group:hover,
+.boolean-radio-component-group:focus-within {
+    outline: darkblue solid 1px;
+    box-shadow: 0 0 10px darkblue;
+}
+.boolean-radio-component-single {
+}
+.boolean-radio-component-vertical {
+}
+.boolean-radio-component-label {
+}
+
+.text-component-width {
+}
+
+.text-component-input {
+    color: blue;
+    background: rgba(211, 227, 253, 255);
+}
+
+.text-component-text {
+    color: blue;
+    /*background: var(--freon-text-component-background-color, inherit);*/
+}
+
+.text-component-placeholder {
+    color: blue;
+    /*background: var(--freon-text-component-background-color, inherit);*/
+}
+.text-component-action-placeholder {
+    color: darkgrey;
+    /*background: var(--freon-text-component-background-color, inherit);*/
+}
+
+.multiline-text-component {
+    color: blue;
+    /*background: var(--freon-text-component-background-color, inherit);*/
+}
+
+.numeric-slider-component {
+    --md-slider-inactive-track-color: gray;
+}
+
+.numeric-slider-component:hover,
+.numeric-slider-component:focus-within {
+    outline: blue solid 1px;
+    box-shadow: 0 0 8px gray;
+    border-radius: 0.1em;
+}
+
+/*******************************************************
+ *  DropDownComponent
+ */
+.dropdown-component {
+    border-color: darkblue;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
+    background: #e5e5e5;
+}
+
+.dropdown-component-item {
+    color: darkblue;
+    background: none;
+}
+
+.dropdown-component-error {
+    color:red;
+    /*background-color: var(--freon-dropdownitem-component-error-bg-color, red);*/
+}
+
+.dropdown-component-item:hover {
+    color: darkblue;
+    background-color: #f4f4f4;
+}
+
+.dropdown-component-selected {
+    color: darkblue;
+    background-color: lightblue;
+}
+
+/******************************************************************
+ *
+ ******************************************************************/
+.inner-switch-component button {
+    color: darkblue;
+}
+
+[role='switch'][aria-checked='true'] :first-child,
+[role='switch'][aria-checked='false'] :last-child {
+    color: white;
+    background-color: darkblue;
+}
+
+.inner-switch-component button span {
+}
+
+.inner-switch-component button:hover,
+.inner-switch-component button:focus {
+    outline: darkblue solid 1px;
+    box-shadow: 0 0 8px darkblue;
+}
+
+.optional-component-new:empty:before {
+    background-color: purple;
+}
+
+.optional-component-show {
+}
+.optional-component-hide {
+    color: lightgrey;
+}
+
+.render-component {
+}
+.render-component-error {
+    color: red;
+}
+.render-component-unselected {
+    background: transparent;
+}
+.render-component-selected {
+    outline-color: darkblue;
+}
+
+.switch-component {
+}
+.switch-component button {
+    background: lightgray;
+}
+
+.switch-component button::before { /* defines the knob */
+    background: black;
+}
+
+.switch-component button[aria-checked='true']{
+    background-color: powderblue;
+}
+
+.switch-component button[aria-checked='true']::before{
+}
+
+.switch-component button:hover,
+.switch-component button:focus {
+    box-shadow: 0 0px 8px blue;
+}
+
+.switch-component button {
+}
+
+.switch-component button::before {
+}
+
+.table-component {
+    border-color: darkgreen;
+}
+
+.table-cell-component {
+    background-color: transparent;
+}
+
+.table-cell-component-unselected {
+    background: transparent;
+}
+.table-cell-component-selected {
+    /*background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));*/
+    outline-color: darkblue;
+}
+
+.grid-component {
+    border-color: darkgreen;
+}
+
+.grid-cell-component {
+    color: inherit;
 }

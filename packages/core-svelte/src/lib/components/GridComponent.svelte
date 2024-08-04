@@ -63,7 +63,7 @@
 <div
         style:grid-template-columns="{templateColumns}"
         style:grid-template-rows="{templateRows}"
-        class="maingridcomponent {cssClass}"
+        class="grid-component {cssClass}"
         id="{id}"
         tabIndex={0}
         bind:this={htmlElement}
@@ -73,16 +73,3 @@
     {/each}
 </div>
 
-<style>
-    .maingridcomponent {
-        display: inline-grid;
-        /*grid-gap: 2px;*/
-
-        align-items: center;
-        align-content: center;
-        justify-items: center;
-        border-color: var(--freon-grid-component-border-color, darkgreen);
-        border-width: var(--freon-grid-component-border-width, 1pt);
-        border-style: var(--freon-grid-component-border-style, dot-dot-dash);
-    }
-</style>

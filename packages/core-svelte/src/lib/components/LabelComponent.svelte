@@ -51,6 +51,3 @@
     {text}
 </span>
 
-<style>
-
-</style>
