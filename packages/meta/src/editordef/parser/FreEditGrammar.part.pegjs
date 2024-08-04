@@ -9,13 +9,13 @@ Editor_Definition = group:projectionGroup
 }
 
 projectionGroup = ws "editor" ws name:var ws num:("precedence" ws n:numberliteral ws {return n;})?
-        standard:("global" ws "{" ws list:singleStandardProjection* ws "}" ws {return list;})?
+        globals:("global" ws "{" ws list:singleGlobalProjection* ws "}" ws {return list;})?
         projections:classifierProjection* ws
 {
     return creator.createProjectionGroup({
         "name"                          : name,
         "precedence"                    : num !== undefined && num !== null ? Number.parseInt(num, 10) : undefined, // the standard for parseInt is not (!) the decimal system,
-        "standardProjections"           : standard,
+        "globalProjections"             : globals,
         "projections"                   : projections,
         "location"                      : location()
     });
@@ -28,15 +28,15 @@ projection_end          = "]"
 projection_separator    = "|"
 displayType             = "text" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
 
-//standardProjections = "defaults" ws "{" ws list:singleStandardProjection* ws "}"
+//globalProjections = "defaults" ws "{" ws list:singleGlobalProjection* ws "}"
 //{
 //    console.log("list: " + list + ", " + location().start.line)
 //    return { list: list };
 //}
 
-singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
+singleGlobalProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "boolean",
         "displayType"   : kind,
         "keywords"      : kw,
@@ -45,7 +45,7 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 }
 / "referenceSeparator" ws projection_begin t:textBut projection_end ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "referenceSeparator",
         "separator"     : t,
         "location"      : location()
@@ -53,7 +53,7 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 }
 / "number" ws kind:displayType? ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "number",
         "displayType"   : kind,
         "location"      : location()
@@ -61,7 +61,7 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 }
 / "limited" projection_begin projection_end ws kind:displayType? ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "limitedList",
         "displayType"   : kind,
         "location"      : location()
@@ -69,7 +69,7 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 }
 / "limited" ws kind:displayType? ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "limited",
         "displayType"   : kind,
         "location"      : location()
@@ -77,7 +77,7 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 }
 / "externals" ws "{" ws list:singleExternal* ws "}" ws
   {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "externals",
         "externals"     : creator.makeMapFromArray(list),
         "location"      : location()

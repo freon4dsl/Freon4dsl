@@ -137,8 +137,8 @@ export class FreEditParseUtil {
         for (const char of indent.indent) {
             if (char === "\t") {
                 // calculate based on spaces before the tab
-                const spacesBeforeTab: number = spaces % EditorDefaults.standardIndent;
-                spaces += EditorDefaults.standardIndent - spacesBeforeTab;
+                const spacesBeforeTab: number = spaces % EditorDefaults.globalIndent;
+                spaces += EditorDefaults.globalIndent - spacesBeforeTab;
             } else if (char === " ") {
                 spaces += 1;
             }

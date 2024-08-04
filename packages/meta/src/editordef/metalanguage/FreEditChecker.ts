@@ -22,7 +22,7 @@ import {
     ListJoinType,
     FreEditProjectionText,
     FreEditProjectionItem,
-    FreEditStandardProjection,
+    FreEditGlobalProjection,
     ForType,
     DisplayType, FreEditCustomProjection, FreEditExternal
 } from "./FreEditDefLang.js";
@@ -148,14 +148,14 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
         // special requirements for the 'default' projectionGroup
         if (group.name !== Names.defaultProjectionName) {
-            this.runner.simpleCheck(!!group.standardProjections,
-                `Only the 'default' projectionGroup may define standard projections ${ParseLocationUtil.location(group.standardProjections[0])}.`);
+            this.runner.simpleCheck(!!group.globalProjections,
+                `Only the 'default' projectionGroup may define global projections ${ParseLocationUtil.location(group.globalProjections[0])}.`);
             if (group.precedence !== null && group.precedence !== undefined) {
                 this.runner.simpleCheck(group.precedence !== 0,
                     `Only the 'default' projectionGroup may have precedence 0 ${ParseLocationUtil.location(group)}.`);
             }
         } else {
-            this.checkStandardProjections(group.standardProjections);
+            this.checkGlobalProjections(group.globalProjections);
             if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
                 this.runner.simpleCheck(group.precedence === 0, `The 'default' projectionGroup must have precedence 0 ${ParseLocationUtil.location(group)}.`);
             }
@@ -616,9 +616,9 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkStandardProjections(standardProjections: FreEditStandardProjection[]) {
-        // console.log("Found standard projections: " + standardProjections.map(proj => proj.toString()))
-        for(let proj of standardProjections) {
+    private checkGlobalProjections(globalProjections: FreEditGlobalProjection[]) {
+        // console.log("Found global projections: " + globalProjections.map(proj => proj.toString()))
+        for(let proj of globalProjections) {
             // first check whether the string that represents the 'for' type is correct
             this.runner.nestedCheck({
                 check:  proj.for === ForType.Boolean ||
@@ -627,9 +627,9 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         proj.for === ForType.LimitedList ||
                         proj.for === ForType.ReferenceSeparator ||
                         proj.for === ForType.Externals,
-                error: `A standard projection may only be defined for types 'boolean', 'number', 'limited', 'limited[]', or for 'referenceSeparator' or 'externals' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
+                error: `A global projection may only be defined for types 'boolean', 'number', 'limited', 'limited[]', or for 'referenceSeparator' or 'externals' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
                 whenOk: () => {
-                    if (proj.for === ForType.Boolean) { // boolean standard projection
+                    if (proj.for === ForType.Boolean) { // boolean global projection
                         // check keywords
                         if (proj.keywords !== undefined && proj.keywords !== null) {
                             this.runner.simpleCheck(
@@ -638,17 +638,17 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         }
                         // check display type
                         this.checkBooleanDisplayType(proj.displayType, proj);
-                    } else if (proj.for === ForType.Number) { // number standard projection, check display type
+                    } else if (proj.for === ForType.Number) { // number global projection, check display type
                         this.checkNumberDisplayType(proj.displayType, proj);
-                    } else if (proj.for === ForType.Limited) { // limited standard projection, check display type
+                    } else if (proj.for === ForType.Limited) { // limited global projection, check display type
                         this.checkSingleLimitedDisplayType(proj.displayType, proj);
-                    } else if (proj.for === ForType.LimitedList) { // limited-list standard projection, check display type
+                    } else if (proj.for === ForType.LimitedList) { // limited-list global projection, check display type
                         this.checkLimitedListDisplayType(proj.displayType, proj);
                     } else if (proj.for === ForType.ReferenceSeparator) {
-                        // reference separator standard projection, check separator
+                        // reference separator global projection, check separator
                         this.runner.nestedCheck({
                             check: proj.separator !== undefined && proj.separator !== null && proj.separator.length > 0,
-                            error: `A standard projection for reference separator must include a separator ${ParseLocationUtil.location(proj)}.`,
+                            error: `A global projection for reference separator must include a separator ${ParseLocationUtil.location(proj)}.`,
                             whenOk: () => {
                                 this.runner.simpleCheck(
                                     !FreEditChecker.includesWhitespace(proj.separator!),
@@ -704,7 +704,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     }
 
     private checkCustomProjection(editor: FreEditUnit, item: FreEditCustomProjection) {
-        const externalList: Map<string, FreEditExternal> | undefined = editor.getDefaultProjectiongroup()?.findStandardProjFor(ForType.Externals)?.externals;
+        const externalList: Map<string, FreEditExternal> | undefined = editor.getDefaultProjectiongroup()?.findGlobalProjFor(ForType.Externals)?.externals;
         this.runner.nestedCheck({
             check: !!externalList,
             error: ``,

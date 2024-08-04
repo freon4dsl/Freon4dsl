@@ -19,7 +19,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
     protected merge(submodels: FreEditUnit[]): FreEditUnit | undefined {
         if (submodels.length > 0) {
             const result: FreEditUnit = submodels[0];
-            // remember the files where we encountered standard projections, in order to give a good warning
+            // remember the files where we encountered global projections, in order to give a good warning
             const filesWithStdProj: string[] = [];
 
             // we merge all edit files based on the name of the 'editor'
@@ -29,8 +29,8 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             // add the groups from the first submodel (should be a single group)
             result.projectiongroups.forEach(group => {
                 projectionGroupsByName.set(group.name, group);
-                if (group.standardProjections.length > 0) {
-                    filesWithStdProj.push(ParseLocationUtil.location(group.standardProjections[0]));
+                if (group.globalProjections.length > 0) {
+                    filesWithStdProj.push(ParseLocationUtil.location(group.globalProjections[0]));
                 }
             });
 
@@ -44,10 +44,10 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                             const found = projectionGroupsByName.get(group.name);
                             if (!!found) {
                                 found.projections.push(...group.projections);
-                                if (group.standardProjections.length > 0) {
-                                    filesWithStdProj.push(ParseLocationUtil.location(group.standardProjections[0]));
+                                if (group.globalProjections.length > 0) {
+                                    filesWithStdProj.push(ParseLocationUtil.location(group.globalProjections[0]));
                                 }
-                                found.standardProjections.push(...group.standardProjections);
+                                found.globalProjections.push(...group.globalProjections);
                                 if (!!group.extras) {
                                     if (!found.extras) {
                                         found.extras = [];
@@ -76,7 +76,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             });
 
             if (filesWithStdProj.length > 1) {
-                this.checker.warnings.push(`Found multiple definitions for standard projections, please note that they may be overridden ${filesWithStdProj}.`);
+                this.checker.warnings.push(`Found multiple definitions for global projections, please note that they may be overridden ${filesWithStdProj}.`);
             }
 
             // place extra classifier information always in the default projection group

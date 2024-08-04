@@ -16,7 +16,7 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection,
     BoolKeywords,
-    FreEditStandardProjection, FreEditButtonDef, FreEditExternal, FreEditCustomProjection
+    FreEditGlobalProjection, FreEditButtonDef, FreEditExternal, FreEditCustomProjection
 } from "../metalanguage/index.js";
 import { ListUtil } from "../../utils/index.js";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
@@ -109,9 +109,9 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
     if (data.precedence !== null && data.precedence !== undefined) { // precedence may be 0, "!!data.precedence" would return false
         result.precedence = data.precedence;
     }
-    if (!!data.standardProjections) {
-        result.standardProjections = data.standardProjections;
-        // console.log("Creators: found standard projections: " + result.standardProjections.map(proj => proj.toString()))
+    if (!!data.globalProjections) {
+        result.globalProjections = data.globalProjections;
+        // console.log("Creators: found global projections: " + result.globalProjections.map(proj => proj.toString()))
     }
     if (!!data.projections) {
         // data.projections is a list of FreEditParsedClassifier
@@ -149,8 +149,8 @@ export function makeMapFromArray(list: FreEditExternal[]): Map<string, FreEditEx
     return result;
 }
 
-export function createStandard(data: Partial<FreEditStandardProjection>): FreEditStandardProjection {
-    const result: FreEditStandardProjection = new FreEditStandardProjection();
+export function createGlobal(data: Partial<FreEditGlobalProjection>): FreEditGlobalProjection {
+    const result: FreEditGlobalProjection = new FreEditGlobalProjection();
     if (!!data.for) {
         result.for = data.for;
     }
@@ -170,7 +170,7 @@ export function createStandard(data: Partial<FreEditStandardProjection>): FreEdi
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    // console.log("Creators.createStandard: " + result.toString())
+    // console.log("Creators.createGlobal: " + result.toString())
     return result;
 }
 

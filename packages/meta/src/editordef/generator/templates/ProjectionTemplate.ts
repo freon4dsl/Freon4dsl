@@ -12,7 +12,7 @@ import {
     FreEditProjectionLine,
     FreEditProjectionText,
     FreEditPropertyProjection,
-    FreEditStandardProjection,
+    FreEditGlobalProjection,
     FreEditSuperProjection,
     FreEditTableProjection,
     FreEditUnit,
@@ -47,7 +47,7 @@ import {ParserGenUtil} from "../../../parsergen/parserTemplates/ParserGenUtil.js
 export class ProjectionTemplate {
     // To be able to add a projections for showing/hiding brackets to binary expression, this dummy projection is used.
     private static dummyProjection: FreEditProjection = new FreEditProjection();
-    // The values for the boolean keywords are set on initialization (by a call to 'setStandardBooleanKeywords').
+    // The values for the boolean keywords are set on initialization (by a call to 'setGlobalBooleanKeywords').
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
     private stdBoolDisplayType: string = "text";
@@ -65,29 +65,29 @@ export class ProjectionTemplate {
     private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
     private supersUsed: FreMetaClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
 
-    setStandardDisplays(editorDef: FreEditUnit) {
-        // get the standard labels for true and false, and the standard display type (checkbox, radio, text, etc.) for boolean values
+    setGlobalDisplays(editorDef: FreEditUnit) {
+        // get the global labels for true and false, and the global display type (checkbox, radio, text, etc.) for boolean values
         const defProjGroup: FreEditProjectionGroup | undefined = editorDef.getDefaultProjectiongroup();
         if (!!defProjGroup) {
-            const standardBoolProj: FreEditStandardProjection | undefined = defProjGroup.findStandardProjFor(ForType.Boolean);
-            const stdLabels: BoolKeywords | undefined = standardBoolProj?.keywords;
+            const globalBoolProj: FreEditGlobalProjection | undefined = defProjGroup.findGlobalProjFor(ForType.Boolean);
+            const stdLabels: BoolKeywords | undefined = globalBoolProj?.keywords;
             if (!!stdLabels) {
                 this.trueKeyword = stdLabels.trueKeyword;
                 this.falseKeyword = stdLabels.falseKeyword ? stdLabels.falseKeyword : "false";
             }
-            const boolDisplayType: string | undefined = standardBoolProj?.displayType;
+            const boolDisplayType: string | undefined = globalBoolProj?.displayType;
             if (!!boolDisplayType) {
                 this.stdBoolDisplayType = boolDisplayType;
             }
-            const numberDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.Number)?.displayType;
+            const numberDisplayType: string | undefined = defProjGroup.findGlobalProjFor(ForType.Number)?.displayType;
             if (!!numberDisplayType) {
                 this.stdNumberDisplayType = numberDisplayType;
             }
-            const limitedSingleDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.Limited)?.displayType;
+            const limitedSingleDisplayType: string | undefined = defProjGroup.findGlobalProjFor(ForType.Limited)?.displayType;
             if (!!limitedSingleDisplayType) {
                 this.stdLimitedSingleDisplayType = limitedSingleDisplayType;
             }
-            const limitedListDisplayType: string | undefined = defProjGroup.findStandardProjFor(ForType.LimitedList)?.displayType;
+            const limitedListDisplayType: string | undefined = defProjGroup.findGlobalProjFor(ForType.LimitedList)?.displayType;
             if (!!limitedListDisplayType) {
                 this.stdLimitedListDisplayType = limitedListDisplayType;
             }
@@ -123,7 +123,7 @@ export class ProjectionTemplate {
             // add the projection to show/hide brackets
             ProjectionTemplate.dummyProjection.name = Names.brackets;
             myBoxProjections.splice(0, 0, ProjectionTemplate.dummyProjection);
-            // todo the current implementation does not work on non-standard projections, is this a problem?
+            // todo the current implementation does not work on non-global projections, is this a problem?
         }
 
         // start template
@@ -165,7 +165,7 @@ export class ProjectionTemplate {
                 ${!isBinExp ?
                     `${myBoxProjections.map(proj => `${this.generateProjectionForClassifier(language, concept, proj)}`).join("\n\n")}`
                 : ` /**
-                     *  Create a standard binary box to ensure binary expressions can be edited easily
+                     *  Create a global binary box to ensure binary expressions can be edited easily
                      */
                     private getDefault(): Box {
                         return createDefaultBinaryBox(
@@ -255,7 +255,7 @@ export class ProjectionTemplate {
 
     private findAllExternalImports(editDef: FreEditUnit) {
         let externalImportsStr: string = ''
-        const externals: Map<string, FreEditExternal> | undefined = editDef.getDefaultProjectiongroup()?.findStandardProjFor(ForType.Externals)?.externals;
+        const externals: Map<string, FreEditExternal> | undefined = editDef.getDefaultProjectiongroup()?.findGlobalProjFor(ForType.Externals)?.externals;
         if (!!externals) {
             for (let val of this.externalImports) {
                 let ext: FreEditExternal | undefined = externals.get(val);

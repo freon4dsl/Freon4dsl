@@ -21,8 +21,8 @@ WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getI
  * Make the custom components known to Freon before starting the app!
  */
 import {setCustomComponents} from "@freon4dsl/core-svelte";
-import DancingAstley from "./customComponents/DancingAstley.svelte";
-setCustomComponents([{component: DancingAstley, boxKind: "dancing"}])
+import ShowAnimatedGif from "./customComponents/ShowAnimatedGif.svelte";
+setCustomComponents([{component: ShowAnimatedGif, boxKind: "animatedGif"}]);
 
 /**
  * Now start the app ...

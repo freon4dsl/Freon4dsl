@@ -21,8 +21,8 @@ export class GrammarGenerator {
         let stdBoolKeywords: BoolKeywords | undefined;
         let refSeparator: string | undefined;
         if (!!defProjGroup) {
-            stdBoolKeywords = defProjGroup.findStandardProjFor(ForType.Boolean)?.keywords;
-            refSeparator = defProjGroup.findStandardProjFor(ForType.ReferenceSeparator)?.separator;
+            stdBoolKeywords = defProjGroup.findGlobalProjFor(ForType.Boolean)?.keywords;
+            refSeparator = defProjGroup.findGlobalProjFor(ForType.ReferenceSeparator)?.separator;
         }
         if (!!stdBoolKeywords) {
             grammar.trueValue = stdBoolKeywords.trueKeyword ? stdBoolKeywords.trueKeyword : 'true';

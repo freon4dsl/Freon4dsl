@@ -18,7 +18,7 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection,
     BoolKeywords,
-    FreEditStandardProjection,
+    FreEditGlobalProjection,
     DisplayType,
     ForType
 } from "../metalanguage/index.js";
@@ -67,8 +67,8 @@ export class DefaultEditorGenerator {
             defaultGroup.precedence = 0;
         }
 
-        // add the standard projections
-        DefaultEditorGenerator.defaultsForStandardProjections(defaultGroup);
+        // add the global projections
+        DefaultEditorGenerator.defaultsForGlobalProjections(defaultGroup);
 
         // add defaults for binary expressions
         DefaultEditorGenerator.defaultsForBinaryExpressions(editor.language, defaultGroup);
@@ -86,51 +86,51 @@ export class DefaultEditorGenerator {
         DefaultEditorGenerator.defaultsForSupers(editor.language, defaultGroup, editor.classifiersUsedInSuperProjection);
     }
 
-    private static defaultsForStandardProjections(defaultGroup: FreEditProjectionGroup) {
-        if (!defaultGroup.standardProjections) {
-            defaultGroup.standardProjections = [];
+    private static defaultsForGlobalProjections(defaultGroup: FreEditProjectionGroup) {
+        if (!defaultGroup.globalProjections) {
+            defaultGroup.globalProjections = [];
         }
-        let yy: FreEditStandardProjection = new FreEditStandardProjection();
-        let myStandard: FreEditStandardProjection | undefined = defaultGroup.findStandardProjFor(ForType.Boolean);
-        if (!myStandard) {
-            // create the standard for the boolean projection
+        let yy: FreEditGlobalProjection = new FreEditGlobalProjection();
+        let myGlobal: FreEditGlobalProjection | undefined = defaultGroup.findGlobalProjFor(ForType.Boolean);
+        if (!myGlobal) {
+            // create the global for the boolean projection
             yy.for = ForType.Boolean;
             yy.keywords = new BoolKeywords();
             yy.keywords.falseKeyword = "false";
             yy.displayType = DisplayType.Text;
-            defaultGroup.standardProjections.push(yy);
+            defaultGroup.globalProjections.push(yy);
         }
-        myStandard = defaultGroup.findStandardProjFor(ForType.Number);
-        if (!myStandard) {
-            // create the standard for the number projection
-            yy = new FreEditStandardProjection();
+        myGlobal = defaultGroup.findGlobalProjFor(ForType.Number);
+        if (!myGlobal) {
+            // create the global for the number projection
+            yy = new FreEditGlobalProjection();
             yy.for = ForType.Number;
             yy.displayType = DisplayType.Text;
-            defaultGroup.standardProjections.push(yy);
+            defaultGroup.globalProjections.push(yy);
         }
-        myStandard = defaultGroup.findStandardProjFor(ForType.Limited);
-        if (!myStandard) {
-            // create the standard for the single limited projection
-            yy = new FreEditStandardProjection();
+        myGlobal = defaultGroup.findGlobalProjFor(ForType.Limited);
+        if (!myGlobal) {
+            // create the global for the single limited projection
+            yy = new FreEditGlobalProjection();
             yy.for = ForType.Limited;
             yy.displayType = DisplayType.Text;
-            defaultGroup.standardProjections.push(yy);
+            defaultGroup.globalProjections.push(yy);
         }
-        myStandard = defaultGroup.findStandardProjFor(ForType.LimitedList);
-        if (!myStandard) {
-            // create the standard for the limited list projection
-            yy = new FreEditStandardProjection();
+        myGlobal = defaultGroup.findGlobalProjFor(ForType.LimitedList);
+        if (!myGlobal) {
+            // create the global for the limited list projection
+            yy = new FreEditGlobalProjection();
             yy.for = ForType.LimitedList;
             yy.displayType = DisplayType.Text;
-            defaultGroup.standardProjections.push(yy);
+            defaultGroup.globalProjections.push(yy);
         }
-        myStandard = defaultGroup.findStandardProjFor(ForType.ReferenceSeparator);
-        if (!myStandard) {
-            // create the standard for the reference separator
-            yy = new FreEditStandardProjection();
+        myGlobal = defaultGroup.findGlobalProjFor(ForType.ReferenceSeparator);
+        if (!myGlobal) {
+            // create the global for the reference separator
+            yy = new FreEditGlobalProjection();
             yy.for = ForType.ReferenceSeparator;
-            yy.separator = EditorDefaults.standardReferenceSeparator;
-            defaultGroup.standardProjections.push(yy);
+            yy.separator = EditorDefaults.globalReferenceSeparator;
+            defaultGroup.globalProjections.push(yy);
         }
     }
 
@@ -234,7 +234,7 @@ export class DefaultEditorGenerator {
 
     private static defaultSingleProperty(concept: FreMetaClassifier, prop: FreMetaProperty, projection: FreEditProjection | FreOptionalPropertyProjection): void {
         const line = new FreEditProjectionLine();
-        line.indent = EditorDefaults.standardIndent;
+        line.indent = EditorDefaults.globalIndent;
         line.items.push(FreEditProjectionText.create(prop.name));
         const sub = new FreEditPropertyProjection();
         sub.property = MetaElementReference.create<FreMetaProperty>(prop, "FreProperty");
@@ -257,12 +257,12 @@ export class DefaultEditorGenerator {
         // every list is projected as two lines
         // the first shows the property name
         const line1 = new FreEditProjectionLine();
-        line1.indent = EditorDefaults.standardIndent;
+        line1.indent = EditorDefaults.globalIndent;
         line1.items.push(FreEditProjectionText.create(prop.name));
 
         // the second shows the property itself
         const line2 = new FreEditProjectionLine();
-        line2.indent = EditorDefaults.standardIndent * 2;
+        line2.indent = EditorDefaults.globalIndent * 2;
         const sub = new FreEditPropertyProjection();
         sub.property = MetaElementReference.create<FreMetaProperty>(prop, "FreProperty");
         sub.property.owner = concept.language;

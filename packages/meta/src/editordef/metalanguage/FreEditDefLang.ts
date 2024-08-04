@@ -43,7 +43,7 @@ export enum DisplayType {
 }
 
 /**
- * The different strings that may be used as 'for' in a FreEditStandardProjection
+ * The different strings that may be used as 'for' in a FreEditGlobalProjection
  */
 export enum ForType {
     Boolean = "boolean",
@@ -136,7 +136,7 @@ export class BoolKeywords extends FreMetaDefinitionElement {
 export class FreEditProjectionGroup extends FreMetaDefinitionElement {
     name: string = '';
     projections: FreEditClassifierProjection[] = [];
-    standardProjections: FreEditStandardProjection[] = [];      // may only be present in default group
+    globalProjections: FreEditGlobalProjection[] = [];      // may only be present in default group
     extras: ExtraClassifierInfo[] = [];                         // may only be present in default group, todo change type to ... | undefined
     owningDefinition: FreEditUnit | undefined;
     precedence: number | undefined;
@@ -175,20 +175,20 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
 
     toString(): string {
         return `editor ${this.name}
-        ${this.standardProjections?.map( pr => pr.toString()).join("\n")}
+        ${this.globalProjections?.map( pr => pr.toString()).join("\n")}
 
         ${this.projections?.map(gr => gr.toString()).join("\n")}
 
         ${this.extras?.map(gr => gr.toString()).join("\n")}`;
     }
 
-    findStandardProjFor(kind: ForType): FreEditStandardProjection |undefined {
-        return this.standardProjections.find(con => con.for === kind);
+    findGlobalProjFor(kind: ForType): FreEditGlobalProjection |undefined {
+        return this.globalProjections.find(con => con.for === kind);
     }
 }
 
 /**
- * A single definition of the standard for properties with primitive type, or the reference separator
+ * A single definition of the global for properties with primitive type, or the reference separator
  */
 export class FreEditCustomProjection extends FreMetaDefinitionElement {
     boxName: string = '';
@@ -199,9 +199,9 @@ export class FreEditCustomProjection extends FreMetaDefinitionElement {
 }
 
 /**
- * A single definition of the standard for properties with primitive type, or the reference separator
+ * A single definition of the global for properties with primitive type, or the reference separator
  */
-export class FreEditStandardProjection extends FreMetaDefinitionElement {
+export class FreEditGlobalProjection extends FreMetaDefinitionElement {
     for: string = '';
     displayType: DisplayType | undefined; // Possible values: 'text', 'checkbox', 'radio', 'switch', 'inner-switch'. See BooleanBox.ts from core.
     keywords: BoolKeywords | undefined;
@@ -227,7 +227,7 @@ export class FreEditStandardProjection extends FreMetaDefinitionElement {
 }
 
 /**
- * A single definition of the standard for properties with primitive type, or the reference separator
+ * A single definition of the global for properties with primitive type, or the reference separator
  */
 export class FreEditExternal extends FreMetaDefinitionElement {
     boxName: string = '';
