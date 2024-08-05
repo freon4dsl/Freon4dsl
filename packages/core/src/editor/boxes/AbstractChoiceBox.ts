@@ -13,9 +13,9 @@ export abstract class AbstractChoiceBox extends Box {
 
     protected constructor(node: FreNode, role: string, placeHolder: string, initializer?: Partial<AbstractChoiceBox>) {
         super(node, role);
+        FreUtils.initializeObject(this, initializer);
         this.placeholder = placeHolder;
         this.textHelper = new ChoiceTextHelper();
-        FreUtils.initializeObject(this, initializer);
         this._textBox = BoxFactory.text(
             node,
             "action-" + role + "-textbox",

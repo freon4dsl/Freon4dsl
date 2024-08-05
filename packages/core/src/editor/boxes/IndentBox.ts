@@ -1,4 +1,5 @@
 import { FreNode } from "../../ast";
+import { FreUtils } from "../../util/index.js"
 import { Box } from "./Box";
 
 /**
@@ -21,8 +22,9 @@ export class IndentBox extends Box {
 
     indent: number = 4;
 
-    constructor(node: FreNode, role: string, indent: number, child: Box) {
+    constructor(node: FreNode, role: string, indent: number, child: Box, initializer?: Partial<IndentBox>) {
         super(node, role);
+        FreUtils.initializeObject(this, initializer)
         this.indent = indent;
         this.child = child;
         this.selectable = false;
