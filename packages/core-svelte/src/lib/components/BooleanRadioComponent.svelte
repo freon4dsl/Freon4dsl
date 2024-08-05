@@ -78,7 +78,7 @@
 </script>
 
 <span role="radiogroup" aria-labelledby={ariaLabel} class="boolean-radio-component-group" class:boolean-radio-component-vertical="{!isHorizontal}" id="{id}">
-  <span class="single">
+  <span class="boolean-radio-component-single">
     <md-radio
             id="{id}-trueOne"
             name="{id}-group"

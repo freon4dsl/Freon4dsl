@@ -6,8 +6,10 @@
 
 .freon-component {
     color: whitesmoke;
-    background-color: black;
-    --md-sys-color-primary: darkgrey;
+    background-color: darkslategray;
+    --md-sys-color-primary: whitesmoke;
+    --md-sys-color-on-surface-variant: whitesmoke; /* color for the one that is not checked */
+
 }
 
 .label-component:empty:before {
@@ -25,7 +27,6 @@
 }
 
 .layout-component {
-    /*background-color: black;*/
 }
 
 .layout-component-horizontal {
@@ -36,7 +37,9 @@
 
 
 .limited-checkbox-component-group {
-    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
+    --md-sys-color-primary: transparent;
+    --md-sys-color-on-surface-variant: whitesmoke; 
+    --md-sys-color-on-surface: whitesmoke; /* box color for the one that is not checked */
 }
 .limited-checkbox-component-group:hover,
 .limited-checkbox-component-group:focus-within {
@@ -49,8 +52,8 @@
 }
 
 .limited-radio-component-group {
-    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
 }
+.limited-radio-component-group:focus,
 .limited-radio-component-group:hover,
 .limited-radio-component-group:focus-within {
     outline: whitesmoke solid 1px;
@@ -89,18 +92,19 @@
 }
 .button-component-ripple:hover {
     background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) no-repeat center/15000%;
-    background-color: red;
+    background-color: antiquewhite;
 }
 .button-component-ripple:active {
-    background-color: red;
+    background-color: green;
 }
 .button-component-empty {
 }
 
 /* Button style */
 .button-component {
-    box-shadow: 0 0 4px #999;
-    background-color: #ffca28; /*  $amber-400:  */
+    box-shadow: 2px 2px 4px antiquewhite; 
+    background-color: whitesmoke;
+    color: darkblue;
 }
 
 boolean-checkbox-component {
@@ -113,9 +117,7 @@ boolean-checkbox-component {
 }
 
 .boolean-radio-component-group {
-    /*color: var(--freon-boolean-text-color, var(--mdc-theme-primary));*/
-    /*background-color: var(--freon-boolean-background-color, var(--mdc-theme-background));*/
-    /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
+    color: whitesmoke;
     /*--md-sys-color-primary: var(--freon-boolean-color, var(--mdc-theme-primary));*/
     /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
 }
@@ -203,10 +205,13 @@ dropdown-component {
     color: white;
 }
 
-[role='switch'][aria-checked='true'] :first-child,
-[role='switch'][aria-checked='false'] :last-child {
+.inner-switch-component button[role='switch'][aria-checked='false'] {
+    color: whitesmoke;
+    background-color: gray;
+}
+.inner-switch-component button[role='switch'][aria-checked='true'] {
     color: darkblue;
-    background-color: white;
+    background-color: lightgray;
 }
 
 .inner-switch-component button span {
@@ -244,15 +249,18 @@ dropdown-component {
 .switch-component {
 }
 .switch-component button {
-    background: gray;
+    background: darkslategray;
 }
 
 .switch-component button::before { /* defines the knob */
-    /*background: var(--freon-boolean-background-color, var(--mdc-theme-background));*/
+    background-color: whitesmoke;
 }
 
 .switch-component button[aria-checked='true']{
-    background-color: rgba(211, 227, 253, 255);
+    background-color: lightgray;
+}
+.switch-component button[aria-checked='false']{
+    background-color: dimgray;
 }
 
 .switch-component button[aria-checked='true']::before{
@@ -291,4 +299,8 @@ dropdown-component {
 
 .grid-cell-component {
     color: inherit;
+}
+
+.text-dropdown-component .text-component-text {
+    color: lightgreen;
 }

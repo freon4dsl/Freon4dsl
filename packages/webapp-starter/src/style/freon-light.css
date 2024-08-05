@@ -36,9 +36,6 @@
 }
 
 .limited-checkbox-component-group {
-    /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
-    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
-    /* the following three variables determine the manner in which the focus-ring is shown */
 }
 .limited-checkbox-component-group:hover,
 .limited-checkbox-component-group:focus-within {
@@ -51,7 +48,6 @@
 }
 
 .limited-radio-component-group {
-    /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
 }
 .limited-radio-component-group:hover,
 .limited-radio-component-group:focus-within {
@@ -90,18 +86,19 @@
 }
 .button-component-ripple:hover {
     background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) no-repeat center/15000%;
-    background-color: red;
+    background-color: cornflowerblue;
 }
 .button-component-ripple:active {
-    background-color: red;
+    background-color: lightgreen;
 }
 .button-component-empty {
 }
 
 /* Button style */
 .button-component {
-    box-shadow: 0 0 4px #999;
-    background-color: #ffca28; /*  $amber-400:  */
+    box-shadow: 2px 2px 4px cornflowerblue;
+    background-color: darkblue; 
+    color: whitesmoke;
 }
 
 .boolean-checkbox-component {
@@ -115,8 +112,6 @@
 
 .boolean-radio-component-group {
     color: darkblue;
-    /*background-color: var(--freon-boolean-background-color, var(--mdc-theme-background));*/
-    /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
     /*--md-sys-color-primary: var(--freon-boolean-color, var(--mdc-theme-primary));*/
     /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
 }
@@ -250,11 +245,11 @@
 }
 
 .switch-component button::before { /* defines the knob */
-    background: black;
+    background: darkblue;
 }
 
 .switch-component button[aria-checked='true']{
-    background-color: powderblue;
+    background-color: darkgray;
 }
 
 .switch-component button[aria-checked='true']::before{
@@ -262,7 +257,7 @@
 
 .switch-component button:hover,
 .switch-component button:focus {
-    box-shadow: 0 0px 8px blue;
+    box-shadow: 2px 2px 8px blue;
 }
 
 .switch-component button {
@@ -293,4 +288,8 @@
 
 .grid-cell-component {
     color: inherit;
+}
+
+.text-dropdown-component .text-component-text {
+    color: green;
 }
