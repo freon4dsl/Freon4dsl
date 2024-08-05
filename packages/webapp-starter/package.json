@@ -31,7 +31,10 @@
     "smui-theme": "^7.0.0",
     "svelte-check": "^3.8.0",
     "svelte-preprocess": "^5.1.4",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "flowbite": "^2.4.1",
+    "flowbite-svelte": "^0.46.15",
+    "flowbite-svelte-icons": "^1.6.1"
   },
   "dependencies": {
     "@freon4dsl/core": "0.7.0-beta",

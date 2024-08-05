@@ -22,7 +22,11 @@ WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getI
  */
 import {setCustomComponents} from "@freon4dsl/core-svelte";
 import ShowAnimatedGif from "./customComponents/ShowAnimatedGif.svelte";
-setCustomComponents([{component: ShowAnimatedGif, boxKind: "animatedGif"}]);
+import FbPopoverComponent from "./customComponents/FbPopoverComponent.svelte";
+setCustomComponents([
+	{component: ShowAnimatedGif, boxKind: "animatedGif"},
+	{component: FbPopoverComponent, boxKind: "FbPopover"}
+]);
 
 /**
  * Now start the app ...

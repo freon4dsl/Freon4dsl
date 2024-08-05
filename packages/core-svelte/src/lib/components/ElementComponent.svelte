@@ -44,4 +44,4 @@
     }
 </script>
 
-<RenderComponent box={childBox} editor={editor} />
+<RenderComponent box={childBox} editor={editor}/>

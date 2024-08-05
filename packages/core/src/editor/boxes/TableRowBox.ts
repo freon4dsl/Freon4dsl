@@ -4,7 +4,7 @@ import { FreUtils } from "../../util";
 import { TableCellBox } from "./TableCellBox";
 
 export class TableRowBox extends Box {
-    kind = "TableRowBox";
+    kind: string = "TableRowBox";
     rowIndex: number = -1;
     _cells: TableCellBox[] = [];
     _isHeader: boolean = false;

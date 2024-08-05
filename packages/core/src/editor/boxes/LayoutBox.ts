@@ -28,6 +28,7 @@ export abstract class LayoutBox extends Box {
      * @param child
      * @private
      */
+    //todo why 'return this'?
     private addChildNoDirty(child: Box | null): LayoutBox {
         if (!!child) {
             this._children.push(child);
