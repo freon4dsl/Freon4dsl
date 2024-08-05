@@ -138,7 +138,7 @@
 <span
         style:grid-template-columns="{templateColumns}"
         style:grid-template-rows="{templateRows}"
-        class="maingridcomponent {cssClass}"
+        class="table-component {cssClass}"
         id="{id}"
         tabIndex={0}
         bind:this={htmlElement}
@@ -154,17 +154,3 @@
     {/each}
 </span>
 
-
-<style>
-    .maingridcomponent {
-        display: inline-grid;
-        grid-gap: 2px;
-        align-items: center; /* place-items is an abbreviation for align-items and justify-items */
-        justify-items: center;
-        align-content: center;
-        border-color: var(--freon-grid-component-border-color, darkgreen);
-        border-width: var(--freon-grid-component-border-width, 1pt);
-        border-style: var(--freon-grid-component-border-style, dashed);
-        border-radius: 4px;
-    }
-</style>

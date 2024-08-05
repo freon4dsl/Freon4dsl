@@ -194,7 +194,7 @@
 
 <!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->
 <!-- Likewise on:blur is needed for on:mouseout -->
-<span class={isHorizontal ? "horizontalList" : "verticalList"}
+<span class={isHorizontal ? "list-component-horizontal" : "list-component-vertical"}
       id="{id}"
       bind:this={htmlElement}
       style:grid-template-columns="{!isHorizontal ? 1 : shownElements.length}"
@@ -225,41 +225,5 @@
 		</span>
     {/each}
 </span>
-
-
-<style>
-    /*.list-component {*/
-    /*    --fre-list-grid-template-columns: "";*/
-    /*    --fre-list-grid-template-rows: "";*/
-    /*}*/
-    .horizontalList {
-        /*grid-template-rows: var(--fre-list-grid-template-rows);*/
-        /*grid-template-columns: var(--fre-list-grid-template-columns);*/
-        white-space: nowrap;
-        display: grid;
-        padding: var(--freon-horizontallist-component-padding, 1px);
-        background-color: var(--freon-editor-component-background-color, white);
-        border-color: var(--freon-horizontallist-component-border-color, darkgreen);
-        border-width: var(--freon-horizontallist-component-border-width, 0pt);
-        border-style: var(--freon-horizontallist-component-border-style, solid);
-        margin: var(--freon-horizontallist-component-margin, 1px);
-        box-sizing: border-box;
-    }
-
-    .verticalList {
-        /*grid-template-rows: var(--fre-list-grid-template-rows);*/
-        /*grid-template-columns: var(--fre-list-grid-template-columns);*/
-        /*display: grid;*/
-        /*background-color: var(--freon-editor-component-background-color, white);*/
-        padding: var(--freon-verticallist-component-padding, 1px);
-        margin: var(--freon-verticallist-component-margin, 1px);
-        border-color: var(--freon-verticallist-component-border-color, red);
-        border-width: var(--freon-verticallist-component-border-width, 0pt);
-        border-style: var(--freon-verticallist-component-border-style, solid);
-
-        /*margin-top: 10px;*/
-        box-sizing: border-box;
-    }
-</style>
 
 

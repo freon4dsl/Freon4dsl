@@ -47,87 +47,15 @@
   --freon-colors-slider: #{theme.$on-secondary};    /* The color of the slider between the error/search pane and the editor */
 }
 
-/* The following are CSS variables that are used in the editor part of Freon, i.e. in the package 'core-svelte'. */
-/* Change the values as you like. */
-/* Note that we need to use a different syntax to be able to use SCSS variables as value
-for CSS variables, see https://www.sass-lang.com/documentation/breaking-changes/css-vars */
-.editor-part {
-  /* Normal text colors */
-  --freon-editor-component-color: #{--mdc-theme-text-primary-on-dark};       /* The color of the text, unless set otherwise by the projection */
-  --freon-colors-inverse_color: #{theme.$on-secondary};     /* Text color on non_normal background */
-  --freon-editor-component-background-color: #{theme.$surface};              /* The background color of the editor */
-
-  /* Dropdown colors */
-  --freon-dropdownitem-component-color: #{theme.$blue-900};
-  --freon-dropdown-component-background-color: #{theme.$surface};
-  --freon-dropdown-component-color: inherit;
-  --freon-dropdown-component-border-color: #{theme.$blue-900};
-  --freon-dropdownitem-component-border-color: #{theme.$blue-900};
-
-  /* Selectable */
-  --freon-selected-background-color: rgba(211, 227, 253, 255);
-  --freon-selected-outline-color: #{theme.$blue-900};
-  --freon-text-component-color: #{theme.$blue-900};
-
-
-  /* Fonts */
-  --freon-editor-component-font-family: "Arial";     /* The font family of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-size: 14px;          /* The font size of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-style: normal;       /* The font style of the text, unless set otherwise by the projection */
-  --freon-editor-component-font-weight: normal;      /* The font weight of the text, unless set otherwise by the projection */
-
-  /* Popup */
-  --freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-  --freon-text-component-padding: 0px;
-  --freon-label-component-padding: 0px;
-  --freon-horizontallist-component-padding: 0px;
-  --freon-verticallist-component-padding: 0px;
-
-  /* Boolean Controls */
-  --freon-boolean-color: rgba(211, 227, 253, 255);      /* The main color of the control */
-  --freon-boolean-unselected-track: #{theme.$grey-500}; /* The color of the unselected track in a boolean switch */
-  --freon-boolean-background-color: #{theme.$surface};  /* The background and secondary colors */
-  --freon-boolean-text-color: white;
-  --freon-boolean-font-size: 14px;		                /* The font size of the text */
-  --freon-boolean-font-style: normal;	                /* The font size of the text */
-  --freon-boolean-font-weight: normal;	                /* The font size of the text */
-  --freon-boolean-font-family: "Arial";	                /* The font size of the text */
-  --freon-boolean-padding: 0px 1px 0px 1px;
-  --freon-boolean-margin: 1px;
-
-  /* Numeric Controls */
-  --freon-numeric-slider-color: rgba(211, 227, 253, 255);            /* The main color of the control */
-  --freon-numeric-slider-inactive-track: #{theme.$grey-500}; /* The color of the unselected track in a numeric-slider switch */
-  --freon-numeric-slider-background-color: #{theme.$surface};  /* The background and secondary colors */
-  --freon-numeric-slider-padding: 0px 1px 0px 1px;
-  --freon-numeric-slider-margin: 1px;
-
-  /* Limited Controls */
-  --freon-limited-color: rgba(211, 227, 253, 255);            /* The main color of the control */
-  --freon-limited-background-color: #{theme.$surface};  /* The background and secondary colors */
-  --freon-limited-text-color: white;
-  --freon-limited-font-size: 14px;		                /* The font size of the text */
-  --freon-limited-font-style: normal;	                /* The font size of the text */
-  --freon-limited-font-weight: normal;	                /* The font size of the text */
-  --freon-limited-font-family: "Arial";	                /* The font size of the text */
-  --freon-limited-padding: 0px 1px 0px 1px;
-  --freon-limited-margin: 1px;
-
-  /* Buttons */
-  --freon-button-ripple-color: red;                     /* The main color of the control */
-  --freon-button-background-color: #{theme.$amber-400};  /* The background and secondary colors */
-  --freon-button-text-color: white;
-  --freon-button-font-size: 14px;		                /* The font size of the text */
-  --freon-button-font-style: normal;	                /* The font size of the text */
-  --freon-button-font-weight: normal;	                /* The font size of the text */
-  --freon-button-font-family: "Arial";	                /* The font size of the text */
-  --freon-button-padding: 4px 6px 4px 6px;
-  --freon-button-margin: 2px;
-}
-
 html,
 body {
   background-color: theme.$surface;
   color: theme.$on-surface;
   --mdc-theme-primary: #{theme.$primary};
+}
+
+.freon-component {
+  background-color: #111928; // #{gc.$mac-gray-900};
+  color: #EBEEF0; // #{gc.$mac-gray-200};
+
 }
