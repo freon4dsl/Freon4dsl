@@ -31,26 +31,26 @@
 	/* Others */
 	--freon-popup-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
 
-	--freon-text-component-font-size: 14px;		/* The font size of the text, unless set otherwise by the projection */
-	--freon-text-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
-	--freon-text-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
-	--freon-text-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
-	--freon-text-component-padding: 0px;
-	--freon-text-component-margin: 0px;
-	--freon-text-component-color: darkblue;
-	--freon-text-component-background-color: white;
-
-	--freon-text-component-placeholder-color: blue;
-	--freon-text-component-actionplaceholder-color: darkgrey;
-
-	--freon-label-component-font-style: normal;		/* The font size of the text, unless set otherwise by the projection */
-	--freon-label-component-font-weight: normal;	/* The font size of the text, unless set otherwise by the projection */
-	--freon-label-component-font-family: "Arial";	/* The font size of the text, unless set otherwise by the projection */
-	--freon-label-component-font-size: inherit;
-	--freon-label-component-margin: 0px;
-	--freon-label-component-padding: 0px;
-	--freon-label-component-color: black;
-	--freon-label-component-background-color: inherit;
+	/*--freon-text-component-font-size: 14px;		!* The font size of the text, unless set otherwise by the projection *!*/
+	/*--freon-text-component-font-style: normal;		!* The font size of the text, unless set otherwise by the projection *!*/
+	/*--freon-text-component-font-weight: normal;	!* The font size of the text, unless set otherwise by the projection *!*/
+	/*--freon-text-component-font-family: "Arial";	!* The font size of the text, unless set otherwise by the projection *!*/
+	/*--freon-text-component-padding: 0px;*/
+	/*--freon-text-component-margin: 0px;*/
+	/*--freon-text-component-color: darkblue;*/
+	/*--freon-text-component-background-color: white;*/
+	/**/
+	/*--freon-text-component-placeholder-color: blue;*/
+	/*--freon-text-component-actionplaceholder-color: darkgrey;*/
+	/**/
+	/*--freon-label-component-font-style: normal;		!* The font size of the text, unless set otherwise by the projection *!*/
+	/*--freon-label-component-font-weight: normal;	!* The font size of the text, unless set otherwise by the projection *!*/
+	/*--freon-label-component-font-family: "Arial";	!* The font size of the text, unless set otherwise by the projection *!*/
+	/*--freon-label-component-font-size: inherit;*/
+	/*--freon-label-component-margin: 0px;*/
+	/*--freon-label-component-padding: 0px;*/
+	/*--freon-label-component-color: black;*/
+	/*--freon-label-component-background-color: inherit;*/
 
 	--freon-grid-component-border-color: inherit;
 	--freon-grid-component-border-width: inherit;

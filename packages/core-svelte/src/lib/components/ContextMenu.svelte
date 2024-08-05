@@ -141,12 +141,12 @@
         >
             {#each items as item, index}
                 {#if item.label === '---'}
-                    <hr/>
+                    <hr class="contextmenu-hr"/>
                 {:else}
-                    <button on:click={(event) => onClick(event, item, index)} bind:clientHeight={itemHeight}>
+                    <button class="contextmenu-button" on:click={(event) => onClick(event, item, index)} bind:clientHeight={itemHeight}>
                         {item.label}
                         {#if item.shortcut}
-                            <span class="shortcut">{item.shortcut}</span>
+                            <span class="contextmenu-shortcut">{item.shortcut}</span>
                         {/if}
                     </button>
                 {/if}
@@ -159,12 +159,12 @@
             >
                 {#each submenuItems as item, index}
                     {#if item.label === '---'}
-                        <hr/>
+                        <hr class="contextmenu-hr"/>
                     {:else}
-                        <button on:click={(event) => onClick(event, item, index)}>
+                        <button class="contextmenu-button" on:click={(event) => onClick(event, item, index)}>
                             {item.label}
                             {#if item.shortcut}
-                                <span class="shortcut">{item.shortcut}</span>
+                                <span class="contextmenu-shortcut">{item.shortcut}</span>
                             {/if}
                         </button>
                     {/if}
@@ -174,46 +174,4 @@
     {/if}
 </div>
 
-<style>
-    .contextmenu {
-        display: flex;
-        flex-direction: column;
-        border: solid 1px #c5c5c5;
-        border-radius: 3px;
-        gap: 2px;
-        position: absolute; /* relative to a 'relative' parent */
-        background: #e5e5e5;
-        min-width: 120px;
-        box-shadow: 1.5px 1.5px 5px grey;
-    }
-
-    button {
-        background: none;
-        border: none;
-        border-radius: 2px;
-        padding: 4px;
-        margin: 3px;
-        cursor: pointer;
-        text-align: left;
-        display: flex;
-        justify-content: space-between;
-        gap: 2px;
-        place-items: center;
-    }
-
-    button:hover {
-        background: #f4f4f4;
-    }
-
-    .shortcut {
-        color: #666;
-        font-size: 0.7em;
-    }
-
-    hr {
-        border-top: solid 1px #c5c5c5;
-        width: 100%;
-        margin: 0;
-    }
-</style>
 

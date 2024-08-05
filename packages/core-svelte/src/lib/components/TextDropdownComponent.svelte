@@ -514,7 +514,7 @@
       on:click_outside={onClickOutside}
       on:blur={onBlur}
       on:contextmenu={(event) => endEditing()}
-      class="dropdown"
+      class="text-dropdown-component"
       role="none"
 >
     <TextComponent
@@ -539,10 +539,3 @@
     {/if}
 </span>
 
-<style>
-    /* The container styling - needed to position the dropdown content */
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-</style>

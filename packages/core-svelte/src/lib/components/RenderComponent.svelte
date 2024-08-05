@@ -81,7 +81,7 @@
         if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected
         } else {
-            className = (isSelected ? "selected" : "unSelected");
+            className = (isSelected ? "render-component-selected" : "render-component-unselected");
         }
         if (!!element) { // upon initialization the element might be null
             setBoxSizes(box, element.getBoundingClientRect());
@@ -166,27 +166,8 @@
         {:else if isCustomComponent(box["kind"])}
             <svelte:component this={findCustomComponent(box["kind"])} box={box} editor={editor}/>
         {:else}
-            <p class="error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
+            <p class="render-component-error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
         {/if}
     </span>
 {/if}
 
-<style>
-    .render-component {
-        box-sizing: border-box;
-        display: flex;
-    }
-    .error {
-        color: var(--freon-dropdownitem-component-error-bg-color, red);
-    }
-    .unSelected {
-        background: transparent;
-        border: none;
-    }
-    .selected {
-        /*background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));*/
-        outline-color: var(--freon-selected-outline-color, darkblue);
-        outline-style: var(--freon-selected-outline-style, solid);
-        outline-width: var(--freon-selected-outline-width, 1px);
-    }
-</style>

@@ -65,7 +65,7 @@
     }
 </script>
 
-<span class="freon-slider" id="{id}">
+<span class="numeric-slider-component" id="{id}">
     <md-slider labeled
                ticks="{showMarks}"
                min={min}
@@ -82,23 +82,3 @@
     </md-slider>
 </span>
 
-<style>
-    .freon-slider {
-        display: flex;
-        margin: var(--freon-numeric-slider-margin);
-        padding: var(--freon-numeric-slider-padding);
-        --md-sys-color-primary: var(--freon-numeric-slider-color, var(--mdc-theme-primary));
-        --md-slider-inactive-track-color: var(--freon-numeric-slider-inactive-track, var(--mdc-theme-text-icon-on-background));
-        /* the following three variables determine the manner in which the focus-ring is shown */
-        --md-focus-ring-duration: 0s; /* disabled animation */
-        --md-focus-ring-active-width: 0px;
-        --md-focus-ring-width: 0px;
-    }
-
-    .freon-slider:hover,
-    .freon-slider:focus-within {
-        outline: var(--freon-numeric-slider-color, var(--mdc-theme-primary)) solid 1px;
-        box-shadow: 0 0 8px var(--freon-numeric-slider-color, var(--mdc-theme-primary));
-        border-radius: 0.1em;
-    }
-</style>

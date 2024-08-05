@@ -77,8 +77,8 @@
     }
 </script>
 
-<span role="radiogroup" aria-labelledby={ariaLabel} class="radiogroup" class:vertical="{!isHorizontal}" id="{id}">
-  <span class="single">
+<span role="radiogroup" aria-labelledby={ariaLabel} class="boolean-radio-component-group" class:boolean-radio-component-vertical="{!isHorizontal}" id="{id}">
+  <span class="boolean-radio-component-single">
     <md-radio
             id="{id}-trueOne"
             name="{id}-group"
@@ -93,9 +93,9 @@
             on:keydown={onKeyDown}
             bind:this={trueElement}
     ></md-radio>
-    <label for="{id}-trueOne" class="radio-label">{box.labels.yes}</label>
+    <label for="{id}-trueOne" class="boolean-radio-component-label">{box.labels.yes}</label>
   </span>
-  <span class="single">
+  <span class="boolean-radio-component-single">
     <md-radio
             id="{id}-falseOne"
             name="{id}-group"
@@ -110,46 +110,7 @@
             on:keydown={onKeyDown}
             bind:this={falseElement}
     ></md-radio>
-    <label class="radio-label" for="{id}-falseOne">{box.labels.no}</label>
+    <label class="boolean-radio-component-label" for="{id}-falseOne">{box.labels.no}</label>
   </span>
 </span>
 
-<style>
-    .radiogroup {
-      font-size: var(--freon-boolean-font-size);
-      font-style: var(--freon-boolean-font-style);
-      font-weight: var(--freon-boolean-font-weight);
-      font-family: var(--freon-boolean-font-family),sans-serif;
-      margin: var(--freon-boolean-margin);
-      padding: var(--freon-boolean-padding);
-      padding-top: 2px;
-      border: none;
-      color: var(--freon-boolean-text-color, var(--mdc-theme-primary));
-      background-color: var(--freon-boolean-background-color, var(--mdc-theme-background));
-      /*border: 1px solid var(--mdc-theme-text-hint-on-background, #ccc);*/
-      --md-sys-color-primary: var(--freon-boolean-color, var(--mdc-theme-primary));
-      /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
-      /* the following three variables determine the manner in which the focus-ring is shown */
-      --md-focus-ring-duration: 0s; /* disabled animation */
-      --md-focus-ring-active-width: 0px;
-      --md-focus-ring-width: 0px;
-    }
-    .radiogroup:hover,
-    .radiogroup:focus-within {
-      border-radius: 0.1em;
-      outline: var(--freon-boolean-color, var(--mdc-theme-primary)) solid 1px;
-      box-shadow: 0 0 10px var(--freon-boolean-color, var(--mdc-theme-primary));
-    }
-    .single {
-      padding-top: 0.2em;
-      padding-bottom: 0.2em;
-      display: flex;
-    }
-    .vertical {
-      display: inline-block;
-    }
-    .radio-label {
-      margin-left: 4px;
-      margin-top: 2px;
-    }
-</style>
