@@ -19,8 +19,8 @@ export class ButtonBox extends Box {
                 initializer?: Partial<ButtonBox>
     ) {
         super(node, role);
-        this.text = text;
         FreUtils.initializeObject(this, initializer);
+        this.text = text;
         LOGGER.log("Creating a ButtonBox");
     }
 

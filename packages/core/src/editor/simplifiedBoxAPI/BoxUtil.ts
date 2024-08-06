@@ -4,10 +4,10 @@ import {
     BoolDisplay,
     BooleanControlBox,
     Box,
-    BoxFactory,
+    BoxFactory, ButtonBox,
     CharAllowed,
     EmptyLineBox,
-    HorizontalListBox,
+    HorizontalListBox, IndentBox, LabelBox,
     LimitedControlBox,
     LimitedDisplay,
     NumberControlBox,
@@ -17,7 +17,7 @@ import {
     SelectOption,
     TextBox,
     VerticalListBox
-} from "../boxes";
+} from "../boxes"
 import {FreUtils} from "../../util";
 import {BehaviorExecutionResult} from "../util";
 import {FreLanguage, FreLanguageProperty, PropertyKind} from "../../language";
@@ -508,35 +508,31 @@ export class BoxUtil {
      * @param uid
      * @param selectable when true this box can be selected, default is 'false'
      */
-    static labelBox(node: FreNode, content: string, uid: string, selectable?: boolean): Box {
-        let _selectable: boolean = false;
-        if (selectable !== undefined && selectable !== null && selectable) {
-            _selectable = true;
-        }
+    static labelBox(node: FreNode, content: string, uid: string, initializer?: Partial<LabelBox>): LabelBox {
         const roleName: string = RoleProvider.label(node, uid) + "-" + content;
-        return BoxFactory.label(node, roleName, content, {
-            selectable: _selectable
-        });
+        return BoxFactory.label(node, roleName, content, initializer);
     }
 
-    static indentBox(element: FreNode, indent: number, uid: string, childBox: Box): Box {
+    static indentBox(element: FreNode, indent: number, uid: string, childBox: Box, initializer?: Partial<IndentBox>): IndentBox {
         return BoxFactory.indent(
             element,
             RoleProvider.indent(element, uid),
             indent,
-            childBox
+            childBox,
+            initializer
         );
     }
 
-    static buttonBox(element: FreNode, text: string, roleName: string): Box {
-        return BoxFactory.button(element, text, roleName);
+    static buttonBox(element: FreNode, text: string, roleName: string, initializer?: Partial<ButtonBox>): ButtonBox {
+        return BoxFactory.button(element, text, roleName, initializer);
     }
 
     static verticalPartListBox(element: FreNode,
                                list: FreNode[],
                                propertyName: string,
                                listJoin: FreListInfo,
-                               boxProviderCache: FreProjectionHandler): VerticalListBox {
+                               boxProviderCache: FreProjectionHandler,
+                               initializer?: Partial<VerticalListBox>): VerticalListBox {
         // make the boxes for the children
         let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
         // add a placeholder where a new element can be added
@@ -544,12 +540,12 @@ export class BoxUtil {
         // determine the role
         const role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vpartlist");
         // return the box
-        const result = BoxFactory.verticalList(element, role, propertyName, children);
+        const result = BoxFactory.verticalList(element, role, propertyName, children, initializer);
         result.propertyName = propertyName;
         return result;
     }
 
-    static verticalReferenceListBox(element: FreNode, propertyName: string, scoper: FreScoper, listInfo?: FreListInfo): Box {
+    static verticalReferenceListBox(element: FreNode, propertyName: string, scoper: FreScoper, listInfo?: FreListInfo, initializer?: Partial<VerticalListBox>): Box {
         // find the information on the property to be shown
         const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
         // check whether the property is a reference list
@@ -563,7 +559,8 @@ export class BoxUtil {
                 element,
                 RoleProvider.property(element.freLanguageConcept(), propertyName, "vreflist"),
                 propertyName,
-                children
+                children,
+                initializer
             );
             result.propertyName = propertyName;
             return result;
@@ -577,7 +574,8 @@ export class BoxUtil {
                                  list: FreNode[],
                                  propertyName: string,
                                  listJoin: FreListInfo,
-                                 boxProviderCache: FreProjectionHandler): VerticalListBox {
+                                 boxProviderCache: FreProjectionHandler,
+                                 initializer?: Partial<VerticalListBox>): VerticalListBox {
         // make the boxes for the children
         let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
         // add a placeholder where a new element can be added
@@ -585,12 +583,12 @@ export class BoxUtil {
         // determine the role
         const role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vpartlist");
         // return the box
-        const result = BoxFactory.horizontalList(element, role, propertyName, children);
+        const result = BoxFactory.horizontalList(element, role, propertyName, children, initializer);
         result.propertyName = propertyName;
         return result;
     }
 
-    static horizontalReferenceListBox(element: FreNode, propertyName: string, scoper: FreScoper, listJoin?: FreListInfo): Box {
+    static horizontalReferenceListBox(element: FreNode, propertyName: string, scoper: FreScoper, listJoin?: FreListInfo, initializer?: Partial<HorizontalListBox>): HorizontalListBox {
         // TODO this one is not yet functioning correctly
         // find the information on the property to be shown
         const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
@@ -606,7 +604,8 @@ export class BoxUtil {
                 element,
                 RoleProvider.property(element.freLanguageConcept(), propertyName, "hlist"),
                 propertyName,
-                children
+                children,
+                initializer
             );
             result.propertyName = propertyName;
             return result;

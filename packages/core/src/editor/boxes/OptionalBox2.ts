@@ -1,5 +1,6 @@
 import { autorun } from "mobx";
 import { FreNode } from "../../ast";
+import { FreUtils } from "../../util/index.js"
 import { Box, BoolFunctie } from "./internal";
 
 /**
@@ -27,8 +28,9 @@ export class OptionalBox2 extends Box {
         this.isDirty();
     }
 
-    constructor(node: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, placeholder: Box) {
+    constructor(node: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, placeholder: Box, initializer?: Partial<OptionalBox2>) {
         super(node, role);
+        FreUtils.initializeObject(this, initializer);
         this.content = box;
         box.parent = this;
         // TODO question: should not the role be diff from role of this box? Where is the "action" prefix added?

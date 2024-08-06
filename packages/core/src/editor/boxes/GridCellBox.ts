@@ -14,13 +14,13 @@ export class GridCellBox extends Box {
 
     constructor(node: FreNode, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
         super(node, role);
+        FreUtils.initializeObject(this, initializer);
         this.row = row;
         this.column = column;
         this.content = box;
         if (!!box) {
             box.parent = this;
         }
-        FreUtils.initializeObject(this, initializer);
         this.selectable = false;
     }
 
