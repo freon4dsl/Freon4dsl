@@ -235,19 +235,19 @@ tableProjection = "table" ws projection_begin ws
     return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
 }
 
-lineWithOptional = items:(templateSpace / textItem / optionalProjection / custom_projection / property_projection / superProjection / newline )+
+lineWithOptional = items:(templateSpace / textItem / optionalProjection / external_projection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
 
-lineWithOutOptional = items:(templateSpace / textItem / custom_projection / property_projection / superProjection / newline )+
+lineWithOutOptional = items:(templateSpace / textItem / external_projection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
 
-custom_projection = projection_begin "custom" equals_separator name:var ws projection_end
+external_projection = projection_begin "external" equals_separator name:var ws projection_end
 {
-     return creator.createCustomProjection({
+     return creator.createExternalProjection({
         "boxName"   : name,
         "location"  : location()
      })

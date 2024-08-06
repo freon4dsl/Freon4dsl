@@ -22,10 +22,12 @@ WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getI
  */
 import {setCustomComponents} from "@freon4dsl/core-svelte";
 import ShowAnimatedGif from "./customComponents/ShowAnimatedGif.svelte";
-import FbPopoverComponent from "./customComponents/FbPopoverComponent.svelte";
+import SMUI_Card_Component from "./customComponents/SMUI_Card_Component.svelte";
+import SMUI_Accordion from "./customComponents/SMUI_Accordion.svelte";
 setCustomComponents([
-	{component: ShowAnimatedGif, boxKind: "animatedGif"},
-	{component: FbPopoverComponent, boxKind: "FbPopover"}
+	{component: ShowAnimatedGif, knownAs: "animatedGif"},
+	{component: SMUI_Card_Component, knownAs: "SMUI_Card"},
+	{component: SMUI_Accordion, knownAs: "SMUI_Accordion"}
 ]);
 
 /**

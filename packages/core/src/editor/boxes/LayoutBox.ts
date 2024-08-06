@@ -154,6 +154,6 @@ export function isVerticalBox(b: Box): b is VerticalLayoutBox {
     return b.kind === "VerticalLayoutBox"; // b instanceof VerticalLayoutBox;
 }
 
-export function isLayoutBox(b: Box): boolean {
+export function isLayoutBox(b: Box): b is LayoutBox {
     return (b.kind === "HorizontalLayoutBox" || b.kind === "VerticalLayoutBox");
 }

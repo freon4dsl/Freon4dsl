@@ -538,13 +538,13 @@ export class BoxUtil {
                                listJoin: FreListInfo,
                                boxProviderCache: FreProjectionHandler): VerticalListBox {
         // make the boxes for the children
-        let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
+        let children: Box[] = this.findPartItems(element, list, propertyName, boxProviderCache, listJoin);
         // add a placeholder where a new element can be added
         children = this.addPlaceholder(children, element, propertyName);
         // determine the role
         const role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vpartlist");
         // return the box
-        const result = BoxFactory.verticalList(element, role, propertyName, children);
+        const result:VerticalListBox = BoxFactory.verticalList(element, role, propertyName, children);
         result.propertyName = propertyName;
         return result;
     }
@@ -579,7 +579,7 @@ export class BoxUtil {
                                  listJoin: FreListInfo,
                                  boxProviderCache: FreProjectionHandler): VerticalListBox {
         // make the boxes for the children
-        let children: Box[] = this.findPartItems(list, element, propertyName, listJoin, boxProviderCache);
+        let children: Box[] = this.findPartItems(element, list, propertyName, boxProviderCache, listJoin);
         // add a placeholder where a new element can be added
         children = this.addPlaceholder(children, element, propertyName);
         // determine the role
@@ -676,8 +676,8 @@ export class BoxUtil {
         );
     }
 
-    private static findPartItems(property: FreNode[], element: FreNode, propertyName: string, listJoin: FreListInfo, boxProviderCache: FreProjectionHandler) {
-        const numberOfItems = property.length;
+    public static findPartItems(element: FreNode, property: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler, listJoin?: FreListInfo ) {
+        const numberOfItems: number = property.length;
         return property.map((listElem, index) => {
             const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(listElem);
             const roleName: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "list-item", index);

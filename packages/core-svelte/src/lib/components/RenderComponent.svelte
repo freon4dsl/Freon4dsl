@@ -27,25 +27,22 @@
         BoolDisplay, isBooleanControlBox,
         isNumberControlBox,
         isElementBox, isOptionalBox2, isMultiLineTextBox,
-        isLimitedControlBox, LimitedDisplay, isButtonBox
+        isLimitedControlBox, LimitedDisplay, isButtonBox, isExternalBox
     } from "@freon4dsl/core";
-    import MultiLineTextComponent from "./MultiLineTextComponent.svelte";
-    import EmptyLineComponent from "./EmptyLineComponent.svelte";
-    import GridComponent from "./GridComponent.svelte";
-    import IndentComponent from "./IndentComponent.svelte";
-    import LabelComponent from "./LabelComponent.svelte";
-    import LayoutComponent from "./LayoutComponent.svelte";
-    import ListComponent from "./ListComponent.svelte";
-    import OptionalComponent from "./OptionalComponent.svelte";
-    import OptionalComponentNew from "./OptionalComponentNew.svelte";
-    import TableComponent from "./TableComponent.svelte";
-    import TextComponent from "./TextComponent.svelte";
-    import TextDropdownComponent from "./TextDropdownComponent.svelte";
-    import SvgComponent from "./SvgComponent.svelte";
-    import {afterUpdate} from "svelte";
-    import { selectedBoxes } from "$lib/index.js";
-    import { componentId, setBoxSizes } from "$lib/index.js";
-    import ElementComponent from "./ElementComponent.svelte";
+    import MultiLineTextComponent from "$lib/components/MultiLineTextComponent.svelte";
+    import EmptyLineComponent from "$lib/components/EmptyLineComponent.svelte";
+    import GridComponent from "$lib/components/GridComponent.svelte";
+    import IndentComponent from "$lib/components/IndentComponent.svelte";
+    import LabelComponent from "$lib/components/LabelComponent.svelte";
+    import LayoutComponent from "$lib/components/LayoutComponent.svelte";
+    import ListComponent from "$lib/components/ListComponent.svelte";
+    import OptionalComponent from "$lib/components/OptionalComponent.svelte";
+    import OptionalComponentNew from "$lib/components/OptionalComponentNew.svelte";
+    import TableComponent from "$lib/components/TableComponent.svelte";
+    import TextComponent from "$lib/components/TextComponent.svelte";
+    import TextDropdownComponent from "$lib/components/TextDropdownComponent.svelte";
+    import SvgComponent from "$lib/components/SvgComponent.svelte";
+    import ElementComponent from "$lib/components//ElementComponent.svelte";
     import BooleanCheckboxComponent from "$lib/components/BooleanCheckboxComponent.svelte";
     import BooleanRadioComponent from "$lib/components/BooleanRadioComponent.svelte";
     import InnerSwitchComponent from "$lib/components/InnerSwitchComponent.svelte";
@@ -54,7 +51,9 @@
     import LimitedRadioComponent from "$lib/components/LimitedRadioComponent.svelte";
     import SwitchComponent from "$lib/components/SwitchComponent.svelte";
     import ButtonComponent from "$lib/components/ButtonComponent.svelte";
-    import {findCustomComponent, isCustomComponent} from "$lib/components/svelte-utils/Externals.js";
+    import { selectedBoxes, componentId, setBoxSizes, findCustomComponent} from "$lib/index.js";
+
+    import {afterUpdate, type ComponentType} from "svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -100,6 +99,7 @@
         refresh((first ? "first" : "later") + "   " + box?.id);
         first = false;
     // }
+
 </script>
 
 <!-- TableRows are not included here, because they use the CSS grid and table cells must in HTML
@@ -136,8 +136,8 @@
             <LimitedCheckboxComponent box={box} editor={editor}/>
         {:else if isButtonBox(box) }
             <ButtonComponent box={box} editor={editor}/>
-        {:else if isEmptyLineBox(box) }
-            <EmptyLineComponent box={box}/>
+        {:else if isExternalBox(box) && !!findCustomComponent(box.externalComponentName)}
+            <svelte:component this={findCustomComponent(box.externalComponentName)} box={box} editor={editor}/>
         {:else if isGridBox(box) }
             <GridComponent box={box} editor={editor} />
         {:else if isIndentBox(box) }
@@ -162,10 +162,10 @@
             <MultiLineTextComponent box={box} editor={editor} text=""/>
         {:else if isActionBox(box) || isSelectBox(box)}
             <TextDropdownComponent box={box} editor={editor}/>
-        <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
-        {:else if isCustomComponent(box["kind"])}
-            <svelte:component this={findCustomComponent(box["kind"])} box={box} editor={editor}/>
+        {:else if isEmptyLineBox(box) }
+            <EmptyLineComponent box={box}/>
         {:else}
+            <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
             <p class="render-component-error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
         {/if}
     </span>

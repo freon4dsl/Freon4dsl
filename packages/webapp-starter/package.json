@@ -14,10 +14,11 @@
     "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
     "install-local": "npm install --registry http://localhost:4873",
     "prepare-app": "npm run styles-light && npm run styles-dark",
-    "styles-light": "smui-theme compile public/site.css -i src/style",
-    "styles-dark": "smui-theme compile public/site-dark.css -i src/style/dark"
+    "styles-light": "smui-theme compile public/site.css -i style",
+    "styles-dark": "smui-theme compile public/site-dark.css -i style/dark"
   },
   "devDependencies": {
+    "@smui-extra/accordion": "^7.0.0",
     "@rollup/plugin-commonjs": "^25.0.8",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
@@ -31,10 +32,7 @@
     "smui-theme": "^7.0.0",
     "svelte-check": "^3.8.0",
     "svelte-preprocess": "^5.1.4",
-    "typescript": "5.4.5",
-    "flowbite": "^2.4.1",
-    "flowbite-svelte": "^0.46.15",
-    "flowbite-svelte-icons": "^1.6.1"
+    "typescript": "5.4.5"
   },
   "dependencies": {
     "@freon4dsl/core": "0.7.0-beta",

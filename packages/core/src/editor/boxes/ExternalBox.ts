@@ -1,11 +1,13 @@
 import {Box, FreNode, FreUtils} from "@freon4dsl/core";
 
 export class ExternalBox extends Box {
-    readonly kind: string = "FbPopover";
-    protected _children: Box[] = [];
+    readonly kind: string = "ExternalBox";
+    private _externalComponentName: string = "unknownComponent";
+    private _children: Box[] = [];
 
-    constructor(node: FreNode, role: string, children?: Box[], initializer?: Partial<ExternalBox>) {
+    constructor(externalComponentName: string, node: FreNode, role: string, children?: Box[], initializer?: Partial<ExternalBox>) {
         super(node, role);
+        this._externalComponentName = externalComponentName;
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
             children.forEach(b => this.addChildNoDirty(b));
@@ -28,5 +30,13 @@ export class ExternalBox extends Box {
         return this._children as ReadonlyArray<Box>;
     }
 
+    get externalComponentName(): string {
+        return this._externalComponentName;
+    }
+
     // todo do we need more of the replace children functionality like in LayoutComponent??
+}
+
+export function isExternalBox(b: Box): b is ExternalBox {
+    return b?.kind === "ExternalBox"; // b instanceof ExternalBox;
 }

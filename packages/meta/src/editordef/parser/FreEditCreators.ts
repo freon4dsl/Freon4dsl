@@ -174,7 +174,7 @@ export function createGlobal(data: Partial<FreEditGlobalProjection>): FreEditGlo
     return result;
 }
 
-export function createCustomProjection(data: Partial<FreEditCustomProjection>): FreEditCustomProjection {
+export function createExternalProjection(data: Partial<FreEditCustomProjection>): FreEditCustomProjection {
     const result: FreEditCustomProjection = new FreEditCustomProjection();
     if (!!data.boxName) {
         result.boxName = data.boxName;
@@ -183,7 +183,7 @@ export function createCustomProjection(data: Partial<FreEditCustomProjection>): 
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    console.log("Creators.createCustomProjection: " + result.toString())
+    console.log("Creators.createExternalProjection: " + result.toString())
     return result;
 }
 

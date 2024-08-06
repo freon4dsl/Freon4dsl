@@ -52,6 +52,6 @@ export function isVerticalList(b: Box): b is VerticalListBox {
     return b.kind === "VerticalListBox"; // b instanceof VerticalListBox;
 }
 
-export function isListBox(b: Box): boolean {
+export function isListBox(b: Box): b is ListBox {
     return (b.kind === "HorizontalListBox" || b.kind === "VerticalListBox");
 }
