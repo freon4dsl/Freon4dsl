@@ -3,7 +3,7 @@ editor specials
 BaseProduct {[
     /* In this projection 'self.parts' is always shown according to the projection */
     /* defined for concept InsurancePart in the editor 'comments'.                 */
-    Base Products ${self.name} for ${self.theme radio} [external=AnimatedGif]
+    Base Products ${self.name} for ${self.theme radio} [external=AnimatedGif number="1"]
         [external=SMUI_Card:First] [external=SMUI_Card:Second]
         ${self.parts:comments external=SMUI_Accordion multi="multiple"}
 ]
@@ -11,6 +11,7 @@ BaseProduct {[
         is still under construction: ${self.isUnderConstruction switch}
         is approved level1: ${self.isApprovedLevel1 radio}
         is approved level2: ${self.isApprovedLevel2 inner-switch}
+        [external=AnimatedGif number="2"]
         is approved level3: ${self.isApprovedLevel3 checkbox}
     ]
     external SMUI_Card:Second [

@@ -15,7 +15,6 @@
         }
     })
 
-
     let multipleStr: string = box.findParam("multi");
     let multiplePar: boolean = !!multipleStr && multipleStr.length > 0;
 

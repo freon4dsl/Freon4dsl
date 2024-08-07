@@ -773,7 +773,7 @@ export class ProjectionTemplate {
         // build the initializer with parameters to the external component
         let initializer: string = '';
         if (!!item.params && item.params.length > 0) {
-            initializer = `, {[${item.params.map(x => `key: "${x.key}", value: "${x.value}"`)}]}`;
+            initializer = `, { params: [${item.params.map(x => `{key: "${x.key}", value: "${x.value}"}`).join(", ")}] }`;
         }
         // see if there is a child projection and add it as child
         let childStr: string = '';
@@ -782,6 +782,10 @@ export class ProjectionTemplate {
         );
         if (!!myChildDef) {
             childStr = `, [${this.generateLines(myChildDef.childProjection.lines, elementVarName, myRole, language, 1000, externalChildDefs)}]`;
+        } else if (!!initializer && initializer.length > 0) {
+            // Because both 'child' and 'initializer' are optional in the constructor of ExternalBox
+            // we need to add an empty list
+            childStr = ', []';
         }
         return `new ExternalBox("${item.externalName}", ${element}, "${myRole}"${childStr}${initializer})`;
     }
