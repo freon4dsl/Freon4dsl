@@ -1,9 +1,15 @@
 import {Box, FreNode, FreUtils} from "@freon4dsl/core";
 
+export type KeyValuePair = {
+    key: string;
+    value: string;
+}
+
 export class ExternalBox extends Box {
     readonly kind: string = "ExternalBox";
     private _externalComponentName: string = "unknownComponent";
     private _children: Box[] = [];
+    params: KeyValuePair[] = [];
 
     constructor(externalComponentName: string, node: FreNode, role: string, children?: Box[], initializer?: Partial<ExternalBox>) {
         super(node, role);

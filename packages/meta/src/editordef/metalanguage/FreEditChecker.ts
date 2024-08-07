@@ -281,8 +281,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     }
                     if (!!projection.externalChildDefs && projection.externalChildDefs.length > 0) {
                         const myPositions: string[] = this.findAllPositionsOfExternalsIn(projection);
-                        projection.externalChildDefs.forEach(childDef =>
-                            this.checkExtChildDef(childDef, myPositions, myClassifier!, editor)
+                        projection.externalChildDefs.forEach(childDef => {
+                                this.checkExtChildDef(childDef, myPositions, myClassifier!, editor);
+                                childDef.belongsTo = projection;
+                            }
                         );
                     }
                 }

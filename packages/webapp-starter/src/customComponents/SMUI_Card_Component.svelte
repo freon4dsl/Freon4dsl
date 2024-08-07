@@ -7,10 +7,18 @@
 
 </script>
 
-<Card>
-        {#each box.children as childBox}
-            <div id="ssss">
-                <RenderComponent box={childBox} editor={editor} />
-            </div>
-        {/each}
-</Card>
+<span class="card-container">
+    <Card>
+            {#each box.children as childBox}
+                <div id="ssss">
+                    <RenderComponent box={childBox} editor={editor} />
+                </div>
+            {/each}
+    </Card>
+</span>
+
+<style>
+    .card-container {
+        padding: 10px;
+    }
+</style>

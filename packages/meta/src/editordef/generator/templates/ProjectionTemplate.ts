@@ -18,7 +18,7 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection,
     ListInfo,
-    ListJoinType
+    ListJoinType, FreEditExternalChildDefinition
 } from "../../metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
@@ -291,7 +291,7 @@ export class ProjectionTemplate {
             const cellDefs: string[] = [];
             projection.cells.forEach((cell, index) => { // because we need the index, this is done outside the template
                 ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-                cellDefs.push(this.generateItem(cell, `(this._element as ${Names.classifier(concept)})`, index, index, concept.name + "_table", language, 999));
+                cellDefs.push(this.generateItem(cell, `(this._element as ${Names.classifier(concept)})`, index, index, concept.name + "_table", language, 999, projection.externalChildDefs));
             });
             ListUtil.addIfNotPresent(this.coreImports, "TableRowBox");
             ListUtil.addIfNotPresent(this.coreImports, "TableUtil");
@@ -309,9 +309,8 @@ export class ProjectionTemplate {
     private generateProjectionForClassifier(language: FreMetaLanguage, concept: FreMetaClassifier, projection: FreEditClassifierProjection): string {
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
         if (projection instanceof FreEditProjection) {
-            // const elementVarName = Roles.elementVarName(concept);
-            const elementVarName = `(this._element as ${Names.classifier(concept)})`;
-            const result = this.generateLines(projection.lines, elementVarName, concept.name, language, 1);
+            const elementVarName: string = `(this._element as ${Names.classifier(concept)})`;
+            const result: string = this.generateLines(projection.lines, elementVarName, concept.name, language, 1, projection.externalChildDefs);
             if (concept instanceof FreMetaExpressionConcept) {
                 ListUtil.addIfNotPresent(this.coreImports, "createDefaultExpressionBox");
                 return `private ${Names.projectionMethod(projection)} () : Box {
@@ -331,11 +330,11 @@ export class ProjectionTemplate {
         return "";
     }
 
-    private generateLines(lines: FreEditProjectionLine[], elementVarName: string, boxLabel: string, language: FreMetaLanguage, topIndex: number) {
+    private generateLines(lines: FreEditProjectionLine[], elementVarName: string, boxLabel: string, language: FreMetaLanguage, topIndex: number, externalChildDefs: FreEditExternalChildDefinition[]) {
         let result: string = "";
         // do all lines, separate them with a comma
         lines.forEach((line, index) => {
-            result += this.generateLine(line, elementVarName, index, boxLabel, language, topIndex);
+            result += this.generateLine(line, elementVarName, index, boxLabel, language, topIndex, externalChildDefs);
             if (index !== lines.length - 1) { // add a comma
                 result += ",";
             }
@@ -353,12 +352,14 @@ export class ProjectionTemplate {
     }
 
     private generateLine(
-                        line: FreEditProjectionLine,
-                        elementVarName: string,
-                        index: number,
-                        boxLabel: string,
-                        language: FreMetaLanguage,
-                        topIndex: number): string {
+        line: FreEditProjectionLine,
+        elementVarName: string,
+        index: number,
+        boxLabel: string,
+        language: FreMetaLanguage,
+        topIndex: number,
+        externalChildDefs: FreEditExternalChildDefinition[]
+    ): string {
         let result: string = "";
         if (line.isEmpty()) {
             ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
@@ -366,7 +367,7 @@ export class ProjectionTemplate {
         } else {
             // do all projection items in the line, separate them with a comma
             line.items.forEach((item, itemIndex) => {
-                result += this.generateItem(item, elementVarName, index, itemIndex, boxLabel, language, topIndex);
+                result += this.generateItem(item, elementVarName, index, itemIndex, boxLabel, language, topIndex, externalChildDefs);
                 if (itemIndex < line.items.length - 1) {
                     result += ",";
                 }
@@ -390,7 +391,9 @@ export class ProjectionTemplate {
                          itemIndex: number,
                          mainBoxLabel: string,
                          language: FreMetaLanguage,
-                         topIndex: number): string {
+                         topIndex: number,
+                         externalChildDefs: FreEditExternalChildDefinition[]
+    ): string {
         let result: string = "";
         if (item instanceof FreEditProjectionText) {
             ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
@@ -399,7 +402,7 @@ export class ProjectionTemplate {
             ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
             result += ` BoxUtil.buttonBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "${ParserGenUtil.escapeRelevantChars(item.boxRole.trim())}") `;
         } else if (item instanceof FreOptionalPropertyProjection) {
-            result += this.generateOptionalProjection(item, elementVarName, mainBoxLabel, language);
+            result += this.generateOptionalProjection(item, elementVarName, mainBoxLabel, language, externalChildDefs);
         } else if (item instanceof FreEditPropertyProjection) {
             // Note: this condition must come after FreOptionalPropertyProjection,
             // because FreOptionalPropertyProjection is a subclass of FreEditPropertyProjection
@@ -407,20 +410,20 @@ export class ProjectionTemplate {
         } else if (item instanceof FreEditSuperProjection) {
             result += this.generateSuperProjection(item);
         } else if (item instanceof FreEditExternalProjection) {
-            result += this.generateCustomProjection(item, elementVarName, mainBoxLabel);
+            result += this.generateExternalProjection(item, elementVarName, mainBoxLabel, externalChildDefs, elementVarName, language);
         }
         return result;
     }
 
-    private generateOptionalProjection(optional: FreOptionalPropertyProjection, elementVarName: string, mainBoxLabel: string, language: FreMetaLanguage): string {
+    private generateOptionalProjection(optional: FreOptionalPropertyProjection, elementVarName: string, mainBoxLabel: string, language: FreMetaLanguage, externalChildDefs: FreEditExternalChildDefinition[]): string {
         const propertyProjection: FreEditPropertyProjection | undefined = optional.findPropertyProjection();
         const property: FreMetaProperty | undefined = optional.property?.referred;
         if (!!propertyProjection && !!property && !!propertyProjection.property) {
-            const optionalPropertyName = propertyProjection.property.name;
+            const optionalPropertyName: string = propertyProjection.property.name;
             const myLabel: string = `${mainBoxLabel}-optional-${optionalPropertyName}`;
 
             // reuse the general method to handle lines
-            let result = this.generateLines(optional.lines, elementVarName, myLabel, language, 2);
+            let result: string = this.generateLines(optional.lines, elementVarName, myLabel, language, 2, externalChildDefs);
 
             // surround with optional box, and add "BoxFactory" to imports
             ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
@@ -751,10 +754,30 @@ export class ProjectionTemplate {
         }
     }
 
-    private generateCustomProjection(item: FreEditExternalProjection, element: string, mainBoxLabel: string, ): string {
+    private generateExternalProjection(
+        item: FreEditExternalProjection,
+        element: string,
+        mainBoxLabel: string,
+        externalChildDefs: FreEditExternalChildDefinition[],
+        elementVarName: string,
+        language: FreMetaLanguage
+    ): string {
         ListUtil.addIfNotPresent(this.coreImports, "ExternalBox");
-        // todo make sure this is the right role
+        // create role todo make sure this is the right role
         const myRole: string = `${mainBoxLabel}-external-${item.roleString()}`;
-        return `new ExternalBox("${item.externalName}", ${element}, "${myRole}")`;
+        // build the initializer with parameters to the external component
+        let initializer: string = '';
+        if (!!item.params && item.params.length > 0) {
+            initializer = `, {[${item.params.map(x => `key: "${x.key}", value: "${x.value}"`)}]}`;
+        }
+        // see if there is a child projection and add it as child
+        let childStr: string = '';
+        const myChildDef: FreEditExternalChildDefinition | undefined = externalChildDefs.find(def =>
+            def.externalName === item.externalName && def.positionInProjection === item.positionInProjection
+        );
+        if (!!myChildDef) {
+            childStr = `, [${this.generateLines(myChildDef.childProjection.lines, elementVarName, myRole, language, 1000, externalChildDefs)}]`;
+        }
+        return `new ExternalBox("${item.externalName}", ${element}, "${myRole}"${childStr}${initializer})`;
     }
 }

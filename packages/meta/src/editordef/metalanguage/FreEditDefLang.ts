@@ -523,6 +523,8 @@ export class FreEditExternalChildDefinition extends FreMetaDefinitionElement {
     positionInProjection: string | undefined = undefined;
     // @ts-ignore this property is set during parsing
     childProjection: FreEditProjection;
+    // @ts-ignore this property is set during checking
+    belongsTo: FreEditClassifierProjection;
 
     toString(): string {
         const posInProjStr: string = `${!!this.positionInProjection ? `:${this.positionInProjection}` : ``}`;
