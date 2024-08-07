@@ -9,7 +9,7 @@ export type KeyValuePair = {
 
 export class ExternalBox extends Box {
     readonly kind: string = "ExternalBox";
-    private _externalComponentName: string = "unknownComponent";
+    private readonly _externalComponentName: string = "unknownComponent";
     private _children: Box[] = [];
     params: KeyValuePair[] = [];
 
@@ -40,6 +40,10 @@ export class ExternalBox extends Box {
 
     get externalComponentName(): string {
         return this._externalComponentName;
+    }
+
+    findParam(key: string): string {
+        return this.params.find(pair => pair.key === key).value;
     }
 
     // todo do we need more of the replace children functionality like in LayoutComponent??

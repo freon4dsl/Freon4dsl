@@ -408,7 +408,12 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     private checkListProperty(item: FreEditPropertyProjection, myProp: FreMetaProperty) {
         LOGGER.log("checking list property projection: " + myProp?.name);
-        if (!!item.listInfo) {
+        if (!!item.externalInfo) {
+            // Note that this check needs to be done first, because there is always a default listInfo
+            // todo check external info
+            // if all is well, we can remove the default list info
+            item.listInfo = undefined;
+        } else if (!!item.listInfo) {
             if (item.listInfo.isTable) {
                 if (myProp.isPart) {
                     // remember this property - there should be a table projection for it - to be checked later

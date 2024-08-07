@@ -463,7 +463,12 @@ export class ProjectionTemplate {
                     if (!!item.listInfo && item.listInfo.isTable) {  // if there is information on how to project the property as a table, make it a table
                         result += this.generatePropertyAsTable(item.listInfo.direction, property, elementVarName, language);
                     } else if (!!item.listInfo) { // if there is information on how to project the property as a list, make it a list
+                        if (property.name === "parts") {
+                            console.log("ListInfo: " + item.listInfo + ", EXternalInfo: " + item.externalInfo)
+                        }
                         result += this.generatePartAsList(item, property, elementVarName);
+                    } else if (!!item.externalInfo) { // if there is information on how to project the property as an external component
+                        result += this.generateListAsExternal(item, property, elementVarName);
                     }
                 } else { // single element
                     ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
@@ -536,7 +541,7 @@ export class ProjectionTemplate {
     private generatePartAsList(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string): string {
         if (!!item.listInfo && !!item.property) {
             ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
-            const joinEntry = this.getJoinEntry(item.listInfo);
+            const joinEntry: string = this.getJoinEntry(item.listInfo);
             if (item.listInfo.direction === FreEditProjectionDirection.Vertical) {
                 return `BoxUtil.verticalPartListBox(${elementVarName}, ${elementVarName}.${item.property.name}, "${propertyConcept.name}", ${joinEntry}, this.mainHandler)`;
             } // else
@@ -779,5 +784,24 @@ export class ProjectionTemplate {
             childStr = `, [${this.generateLines(myChildDef.childProjection.lines, elementVarName, myRole, language, 1000, externalChildDefs)}]`;
         }
         return `new ExternalBox("${item.externalName}", ${element}, "${myRole}"${childStr}${initializer})`;
+    }
+
+    private generateListAsExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string) {
+        // build the initializer with parameters to the external component
+        let initializer: string = '';
+        if (!!item.externalInfo!.params && item.externalInfo!.params.length > 0) {
+            initializer = `, { params: [${item.externalInfo!.params.map(x => `{key: "${x.key}", value: "${x.value}"}`).join(", ")}] }`;
+        }
+
+        // todo get the role correct
+        let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.externalName}`;
+        ListUtil.addListIfNotPresent(this.coreImports, ["BoxUtil", "ExternalBox"]);
+        return `new ExternalBox(
+                    "${item.externalInfo!.externalName}",
+                    ${elementVarName},
+                    "${myRole}",
+                    BoxUtil.findPartItems(${elementVarName}, ${elementVarName}.${propertyConcept.name}, "${propertyConcept.name}", this.mainHandler)
+                    ${initializer}
+                    )`;
     }
 }

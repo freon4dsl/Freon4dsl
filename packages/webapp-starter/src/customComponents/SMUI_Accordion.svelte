@@ -15,10 +15,14 @@
         }
     })
 
+
+    let multipleStr: string = box.findParam("multi");
+    let multiplePar: boolean = !!multipleStr && multipleStr.length > 0;
+
     // todo setFocus etc
 </script>
 
-<Accordion multiple>
+<Accordion multiple="{multiplePar}">
     {#each box.children as childBox, index}
         <Panel bind:open={panelOpen[index]}>
             <Header>
