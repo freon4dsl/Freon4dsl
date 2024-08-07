@@ -181,9 +181,9 @@ export class ProjectionTemplate {
                             isFreBinaryExpression(this._element.freOwnerDescriptor().owner)
                         ) {
                             return BoxFactory.horizontalLayout(this._element, "brackets", '', [
-                                BoxUtil.labelBox(this._element, "(", "bracket-open", true),
+                                BoxUtil.labelBox(this._element, "(", "bracket-open", {selectable: true} ),
                                 binBox,
-                                BoxUtil.labelBox(this._element, ")", "bracket-close", true)
+                                BoxUtil.labelBox(this._element, ")", "bracket-close", {selectable: true} )
                             ]);
                         } else {
                             return binBox;

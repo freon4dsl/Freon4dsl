@@ -1,4 +1,5 @@
 import { FreNode } from "../../ast";
+import { FreUtils } from "../../util/index.js"
 import { Box } from "./Box";
 
 export class ElementBox extends Box {
@@ -11,8 +12,9 @@ export class ElementBox extends Box {
         }
     };
 
-    constructor(element: FreNode, role: string) {
+    constructor(element: FreNode, role: string, initializer?: Partial<ElementBox>) {
         super(element, role);
+        FreUtils.initializeObject(this, initializer)
     }
 
     get content() {
