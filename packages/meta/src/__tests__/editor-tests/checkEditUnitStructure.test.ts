@@ -3,9 +3,9 @@ import {
     FreMetaClassifier,
     FreMetaLanguage,
     FreMetaLimitedConcept
-} from "../../languagedef/metalanguage/index.js";
+} from "../../languagedef/metalanguage";
 import {LanguageParser} from "../../languagedef/parser/LanguageParser";
-import {Checker, MetaLogger, Names} from "../../utils/index.js";
+import {Checker, MetaLogger, Names} from "../../utils";
 import {FreEditParser} from "../../editordef/parser/FreEditParser";
 import {
     ForType,
@@ -16,7 +16,7 @@ import {
     FreEditPropertyProjection,
     FreEditUnit,
     ListJoinType
-} from "../../editordef/metalanguage/index.js";
+} from "../../editordef/metalanguage";
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
 import { describe, test, expect } from "vitest";
 
@@ -253,7 +253,7 @@ describe("Checking FretEditUnit: ", () => {
         expect(defProjGroup).not.toBeNull();
         expect(defProjGroup).not.toBeUndefined();
         // get the reference separator and check it
-        let myRef: string | undefined = defProjGroup!.findStandardProjFor(ForType.ReferenceSeparator)?.separator;
+        let myRef: string | undefined = defProjGroup!.findGlobalProjFor(ForType.ReferenceSeparator)?.separator;
         expect(myRef).not.toBeNull();
         expect(myRef).not.toBeUndefined();
         expect(myRef).toBe(":::");

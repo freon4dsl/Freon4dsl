@@ -1,8 +1,8 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../utils/index.js";
+import { Checker, MetaLogger } from "../../utils";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
-import { FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { FreEditUnit } from "../../editordef/metalanguage";
 import { describe, test, expect, beforeEach } from "vitest"
 
 describe("Checking editor definition ", () => {
@@ -187,7 +187,7 @@ describe("Checking editor definition ", () => {
         } catch (e: unknown) {
             console.log(e);
             if (e instanceof Error) {
-                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 expect(e.message).toBe(`checking errors (11).`);
                 expect(checker.errors.includes("A number value may only be displayed as 'text', or 'slider' [file: test11.edit:10:5].")).toBeTruthy();
                 expect(checker.errors.includes("A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'number[]' [file: test11.edit:11:5].")).toBeTruthy();
@@ -212,9 +212,9 @@ describe("Checking editor definition ", () => {
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (11).`); // these are checked in the previous test
                 expect(checker.hasWarnings()).toBeTruthy;
-                // console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
+                console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
                 expect(checker.warnings.length).toBe(1);
-                expect(checker.warnings.includes("Found multiple definitions for standard projections, please note that they may be overridden [file: test11.edit:4:5],[file: test12.edit:4:5].")).toBeTruthy();
+                expect(checker.warnings.includes("Found multiple definitions for global projections, please note that they may be overridden [file: test11.edit:4:5],[file: test12.edit:4:5].")).toBeTruthy();
              }
         }
     });
