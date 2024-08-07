@@ -1,4 +1,6 @@
-import {Box, FreNode, FreUtils} from "@freon4dsl/core";
+import {Box} from "./Box";
+import {FreNode} from "../../ast";
+import {FreUtils} from "../../util";
 
 export type KeyValuePair = {
     key: string;
