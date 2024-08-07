@@ -5,7 +5,7 @@ BaseProduct {[
     /* defined for concept InsurancePart in the editor 'specials'.                 */
     Base Products ${self.name} for ${self.theme radio} [external=AnimatedGif]
         [external=SMUI_Card:First] [external=SMUI_Card:Second]
-        ${self.parts:comments external=SMUI_Accordion multi="multiple"}
+        ${self.parts external=SMUI_Accordion multi="multiple"}
 ]
     external SMUI_Card:First [
         is still under construction: ${self.isUnderConstruction switch}

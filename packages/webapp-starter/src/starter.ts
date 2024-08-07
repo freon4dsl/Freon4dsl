@@ -25,7 +25,7 @@ import ShowAnimatedGif from "./customComponents/ShowAnimatedGif.svelte";
 import SMUI_Card_Component from "./customComponents/SMUI_Card_Component.svelte";
 import SMUI_Accordion from "./customComponents/SMUI_Accordion.svelte";
 setCustomComponents([
-	{component: ShowAnimatedGif, knownAs: "animatedGif"},
+	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
 	{component: SMUI_Card_Component, knownAs: "SMUI_Card"},
 	{component: SMUI_Accordion, knownAs: "SMUI_Accordion"}
 ]);

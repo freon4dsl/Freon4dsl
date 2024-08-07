@@ -75,33 +75,23 @@ singleGlobalProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
         "location"      : location()
     });
 }
-/ "externals" ws "{" ws list:singleExternal* ws "}" ws
+/ "external" ws "{" ws list:listOfExternals ws "}" ws
   {
     return creator.createGlobal({
         "for"           : "externals",
-        "externals"     : creator.makeMapFromArray(list),
+        "externals"     : list,
         "location"      : location()
     });
   }
 
-singleExternal = boxName:var ws "from" ws "\"" boxPath:text "\""
-  {
-      return creator.createExternal({
-          "boxName"     : boxName,
-          "boxPath"     : boxPath,
-          "location"    : location()
-      })
-  }
-
-text = chars:anythingBut+
-  {
-      return chars.join("");
-  }
+listOfExternals = list:var|.., ws "," ws|
+{ return list; }
 
 classifierProjection =
             classifier:classifierReference curly_begin ws
                 projections:projectionChoice?
                 extras: extraClassifierInfo?
+                childDefs: external_child_def_single*
             curly_end
 {
     return creator.createParsedClassifier({
@@ -109,6 +99,7 @@ classifierProjection =
         "projection"       : !!projections ? projections["normal"] : null,
         "tableProjection"  : !!projections ? projections["table"] : null,
         "classifierInfo"   : extras,
+        "externalChildDefs": childDefs,
         "location"         : location()
     });
 }
@@ -213,6 +204,17 @@ extraChoiceSub3 = symbol:symbol
 }
 /* END of rules that make order of extra info flexible */
 
+// todo add table projection to the possibilities for 'child'
+external_child_def_single = "external" ws name:var pos:(colon_separator ws p:var {return p;})? child:projection
+{
+    return creator.createExternalChildDef({
+        "externalName"          : name,
+        "positionInProjection"  : pos,
+        "childProjection"       : child,
+        "location"              : location()
+    });
+}
+
 projection = ws projection_begin lines:lineWithOptional* projection_end ws
 {
     return creator.createProjection({
@@ -245,12 +247,22 @@ lineWithOutOptional = items:(templateSpace / textItem / external_projection / pr
     return creator.createLine( {"items": items} );
 }
 
-external_projection = projection_begin "external" equals_separator name:var ws projection_end
+external_projection = projection_begin ext:inner_external projection_end
+{ return ext;}
+
+inner_external = "external" equals_separator name:var pos:(colon_separator ws p:var {return p;})? ws params:key_value_pair*
 {
      return creator.createExternalProjection({
-        "boxName"   : name,
-        "location"  : location()
+        "externalName"          : name,
+        "positionInProjection"  : pos,
+        "params"                : params,
+        "location"              : location()
      })
+}
+
+key_value_pair = key:var equals_separator "\"" value:textBut "\""
+{
+    return creator.createKeyValuePair( { key: key, value: value});
 }
 
 templateSpace = s:[ \t]+
@@ -281,7 +293,7 @@ singleProperty = propProjectionStart ws
 }
 
 listProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws l:listInfo? ws kind:displayType? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws l:listInfo? ws kind:displayType? ws ext:inner_external? ws
                       propProjectionEnd
 {
     return creator.createListPropertyProjection( {
@@ -289,6 +301,7 @@ listProperty = propProjectionStart ws
         "projectionName"    : projName,
         "listInfo"          : l,
         "displayType"       : kind,
+        "externalInfo"      : ext,
         "location"          : location()
     });
 }

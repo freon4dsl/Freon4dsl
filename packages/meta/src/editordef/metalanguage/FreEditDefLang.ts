@@ -8,6 +8,7 @@ export type FreEditProjectionItem =
     FreEditParsedProjectionIndent    // removed after parsing, by FreEditParseUtil.normalize()
     | FreEditParsedNewline           // removed after parsing, by FreEditParseUtil.normalize()
     | FreEditProjectionText
+    | FreEditExternalProjection
     | FreEditPropertyProjection
     | FreEditSuperProjection ;
 
@@ -130,6 +131,15 @@ export class BoolKeywords extends FreMetaDefinitionElement {
     }
 }
 
+export class FreEditKeyValuePair extends FreMetaDefinitionElement {
+    key: string = '';
+    value: string = '';
+
+    toString(): string {
+        return `${this.key} = "${this.value}"`;
+    }
+}
+
 /**
  * A group of projection definitions that share the same name
  */
@@ -190,11 +200,22 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
 /**
  * A single definition of the global for properties with primitive type, or the reference separator
  */
-export class FreEditCustomProjection extends FreMetaDefinitionElement {
-    boxName: string = '';
+export class FreEditExternalProjection extends FreMetaDefinitionElement {
+    externalName: string = '';
+    positionInProjection: string | undefined;
+    params: FreEditKeyValuePair[] = [];
 
     toString(): string {
-        return `[custom = ${this.boxName} ]`
+        const posInProjStr: string = `${!!this.positionInProjection ? `:${this.positionInProjection}` : ``}`;
+        const paramsStr: string = `${this.params.length > 0 ? ` ${this.params.map(p => p.toString()).join(" ")}` : ``}`;
+        return `external = ${this.externalName}${posInProjStr}${paramsStr}`
+    }
+
+    /**
+     * To be used in ProjectionTemplate
+     */
+    roleString(): string {
+        return `${this.externalName}${!!this.positionInProjection ? `-${this.positionInProjection}` : ``}`;
     }
 }
 
@@ -206,43 +227,40 @@ export class FreEditGlobalProjection extends FreMetaDefinitionElement {
     displayType: DisplayType | undefined; // Possible values: 'text', 'checkbox', 'radio', 'switch', 'inner-switch'. See BooleanBox.ts from core.
     keywords: BoolKeywords | undefined;
     separator: string | undefined;
-    externals: Map<string, FreEditExternal> = new Map<string, FreEditExternal>;
+    externals: string[] = [];
 
     toString(): string {
         const displayTypeStr: string = `${this.displayType ? ` ${this.displayType}` : ''}`;
         const keywordsStr: string = `${this.keywords ? ` ${this.keywords.toString()}` : ''}`;
         const separatorStr: string = `${this.separator ? ` [${this.separator}]` : ''}`;
         let externalsStr: string = '';
-        if (this.externals.size > 0) {
-            externalsStr += '{\n';
-            // @ts-ignore 'key' is necessary for value to have the right type
-            for (let [key, value] of this.externals.entries()) {
-                externalsStr += `${value.toString()}\n`;
-            }
-            externalsStr += '}';
-        }
+        externalsStr = `${this.externals.length > 0 ? ` { ${this.externals} }` : ''}`;
 
         return `${this.for}${displayTypeStr}${keywordsStr}${separatorStr}${externalsStr}`;
     }
 }
 
 /**
- * A single definition of the global for properties with primitive type, or the reference separator
- */
-export class FreEditExternal extends FreMetaDefinitionElement {
-    boxName: string = '';
-    boxPath: string = '';
-
-    toString(): string {
-        return `${this.boxName} from "${this.boxPath}"`
-    }
-}
-/**
  * A single projection definition for a single concept or interface
  */
 export abstract class FreEditClassifierProjection extends FreMetaDefinitionElement {
     name: string = '';
     classifier: MetaElementReference<FreMetaClassifier> | undefined;
+    externalChildDefs: FreEditExternalChildDefinition[] = [];
+
+    /**
+     * Find all projections or parts.
+     */
+    findAllPartProjections(): FreEditPropertyProjection[] {
+        console.error(`FreEditClassifierProjection.findAllPartProjections() CALLED, IT SHOULD BE IMPLEMENTED BY ALL SUBCLASSES.`);
+        return [];
+    }
+
+    findAllExternalProjections(): FreEditExternalProjection[] {
+        console.error(`FreEditClassifierProjection.findAllExternalProjections() CALLED, IT SHOULD BE IMPLEMENTED BY ALL SUBCLASSES.`);
+        return [];
+    }
+
     toString(): string {
         return `TO BE IMPLEMENTED BY SUBCLASSES`;
     }
@@ -277,6 +295,18 @@ export class FreEditProjection extends FreEditClassifierProjection {
         return result;
     }
 
+    findAllExternalProjections(): FreEditExternalProjection[] {
+        const result: FreEditExternalProjection[] = [];
+        this.lines.forEach(line => {
+            line.items.forEach(item => {
+                if (item instanceof FreEditExternalProjection) {
+                    result.push(item);
+                }
+            });
+        });
+        return result;
+    }
+
     toString() {
         return `${this.classifier?.name} {
         [ // #lines: ${this.lines.length}
@@ -297,6 +327,11 @@ export class FreEditTableProjection extends FreEditClassifierProjection {
      */
     findAllPartProjections(): FreEditPropertyProjection[] {
         return this.cells;
+    }
+
+    findAllExternalProjections(): FreEditExternalProjection[] {
+        console.error(`FreEditTableProjection.findAllExternalProjections() CALLED, TO BE IMPLEMENTED.`);
+        return [];
     }
 
     toString() {
@@ -379,12 +414,13 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
     expression?: FreLangExp = undefined;
     // projection info if the referred property is a list
     listInfo?: ListInfo = undefined;
+    // projection info if the referred property is to be displayed by an external component
+    externalInfo?: FreEditExternalProjection = undefined;
     // projection info about display
     displayType?: DisplayType = undefined;
     // projection info if the referred property is a primitive of boolean type
     boolKeywords?: BoolKeywords = undefined;
     // projection to be used for this property
-    // TODO Only used in parser?
     projectionName: string = '';
 
     toString(): string {
@@ -395,13 +431,20 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
         if (!!this.listInfo) {
             extraText = `\n/* list */ ${this.listInfo}`;
         }
+        if (!!this.externalInfo) {
+            extraText = `\n/* external */ ${this.externalInfo}`;
+        }
         if (!!this.displayType ) {
             extraText = `\n/* displayType */ ${this.displayType}`;
         }
         if (!!this.boolKeywords ) {
             extraText = `\n/* boolean */ ${this.boolKeywords}`;
         }
-        return `\${ ${this.expression ? this.expression.toFreString() : ``} }${extraText}`;
+        let nameText: string | undefined = this.expression?.toFreString();
+        if (!nameText || nameText.length === 0) {
+            nameText = this.property?.name;
+        }
+        return `\${ ${nameText} }${extraText}`;
     }
 }
 
@@ -475,25 +518,15 @@ export class FreEditSuperProjection extends FreMetaDefinitionElement {
     }
 }
 
-////////////////////////////////////
+export class FreEditExternalChildDefinition extends FreMetaDefinitionElement {
+    externalName: string = '';
+    positionInProjection: string | undefined = undefined;
+    // @ts-ignore this property is set during parsing
+    childProjection: FreEditProjection;
 
-/**
- * This class is only used during parsing. It is removed from the model in the creation phase.
- */
-export class FreEditParsedClassifier extends FreEditClassifierProjection {
-    projection?: FreEditProjection = undefined;
-    tableProjection?: FreEditTableProjection = undefined;
-    classifierInfo?: ExtraClassifierInfo = undefined;
     toString(): string {
-        return `ParsedClassifier ${this.classifier?.name}`;
-    }
-}
-/**
- * This class is only used by the parser and removed from the edit model after normalization.
- */
-export class FreEditParsedNewline {
-    toString(): string {
-        return "\n";
+        const posInProjStr: string = `${!!this.positionInProjection ? `:${this.positionInProjection}` : ``}`;
+        return `external = ${this.externalName}${posInProjStr} [${this.childProjection}]`
     }
 }
 
@@ -506,8 +539,30 @@ export class FreEditButtonDef extends FreMetaDefinitionElement {
     }
 }
 
+////////////////////////////////////
+
 /**
- * This class is only used by the parser and removed from the edit model after normalization.
+ * This class is only used during parsing. It is removed from the model in the creation phase (in FreEditCreators.extractProjections).
+ */
+export class FreEditParsedClassifier extends FreEditClassifierProjection {
+    projection?: FreEditProjection = undefined;
+    tableProjection?: FreEditTableProjection = undefined;
+    classifierInfo?: ExtraClassifierInfo = undefined;
+    toString(): string {
+        return `ParsedClassifier ${this.classifier?.name}`;
+    }
+}
+/**
+ * This class is only used by the parser and removed from the edit model after normalization in FreEditChecker.normalize.
+ */
+export class FreEditParsedNewline {
+    toString(): string {
+        return "\n";
+    }
+}
+
+/**
+ * This class is only used by the parser and removed from the edit model after normalization in FreEditChecker.normalize.
  */
 export class FreEditParsedProjectionIndent extends FreMetaDefinitionElement {
     indent: string = "";

@@ -1,35 +1,47 @@
 import {
-    FreMetaClassifier, FreMetaConcept, FreMetaInterface,
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaInterface,
     FreMetaLanguage,
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
-    FreMetaPrimitiveType, FreMetaProperty
+    FreMetaPrimitiveType,
+    FreMetaProperty,
+    MetaElementReference
 } from "../../languagedef/metalanguage/index.js";
-import { Checker, CheckRunner, LangUtil, Names, FreMetaDefinitionElement, ParseLocationUtil } from "../../utils/index.js";
-import { FreEditParseUtil } from "../parser/FreEditParseUtil.js";
 import {
-    ListInfo,
+    Checker,
+    CheckRunner,
+    FreMetaDefinitionElement,
+    LangUtil,
+    MetaLogger,
+    Names,
+    ParseLocationUtil
+} from "../../utils/index.js";
+import {FreEditParseUtil} from "../parser/FreEditParseUtil.js";
+import {
+    DisplayType,
+    ExtraClassifierInfo,
+    ForType,
     FreEditClassifierProjection,
+    FreEditExternalProjection,
+    FreEditExternalChildDefinition,
+    FreEditGlobalProjection,
     FreEditProjection,
     FreEditProjectionGroup,
+    FreEditProjectionItem,
+    FreEditProjectionLine,
+    FreEditProjectionText,
     FreEditPropertyProjection,
     FreEditSuperProjection,
     FreEditTableProjection,
     FreEditUnit,
     FreOptionalPropertyProjection,
-    ExtraClassifierInfo,
-    FreEditProjectionLine,
-    ListJoinType,
-    FreEditProjectionText,
-    FreEditProjectionItem,
-    FreEditGlobalProjection,
-    ForType,
-    DisplayType, FreEditCustomProjection, FreEditExternal
+    ListInfo,
+    ListJoinType
 } from "./FreEditDefLang.js";
-import { EditorDefaults } from "./EditorDefaults.js";
-import { MetaLogger } from "../../utils/index.js";
-import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
-import { FreLangExpressionChecker } from "../../languagedef/checking/index.js";
+import {EditorDefaults} from "./EditorDefaults.js";
+import {FreLangExpressionChecker} from "../../languagedef/checking/index.js";
 
 const LOGGER: MetaLogger = new MetaLogger("FreEditChecker").mute();
 
@@ -267,9 +279,33 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     } else if (projection instanceof FreEditTableProjection) {
                         this.checkTableProjection(projection, myClassifier!, editor);
                     }
+                    if (!!projection.externalChildDefs && projection.externalChildDefs.length > 0) {
+                        const myPositions: string[] = this.findAllPositionsOfExternalsIn(projection);
+                        projection.externalChildDefs.forEach(childDef =>
+                            this.checkExtChildDef(childDef, myPositions, myClassifier!, editor)
+                        );
+                    }
                 }
             }
         });
+    }
+
+    private checkExtChildDef(childDef: FreEditExternalChildDefinition, myPositions: string[], cls: FreMetaClassifier, editor: FreEditUnit) {
+        // check externalName
+        const allKnownExternals: string[] | undefined = editor.getDefaultProjectiongroup()?.findGlobalProjFor(ForType.Externals)?.externals;
+        this.runner.simpleCheck(
+            !!allKnownExternals && allKnownExternals?.includes(childDef.externalName),
+            `External component "${childDef.externalName}" is unknown ${ParseLocationUtil.location(childDef)}.`
+        );
+        // check childDef.positionInProjection
+        if (!!childDef.positionInProjection) {
+            this.runner.simpleCheck(
+                !!myPositions && myPositions?.includes(childDef.positionInProjection),
+                `Position in projection "${childDef.positionInProjection}" is unknown ${ParseLocationUtil.location(childDef)}.`
+            );
+        }
+        // check the actual projection
+        this.checkNormalProjection(childDef.childProjection, cls, editor);
     }
 
     private checkNormalProjection(projection: FreEditProjection, cls: FreMetaClassifier, editor: FreEditUnit) {
@@ -326,7 +362,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 this.checkPropProjection(item, cls, editor);
             } else if (item instanceof FreEditSuperProjection) {
                 this.checkSuperProjection(editor, item, cls);
-            } else if (item instanceof FreEditCustomProjection) {
+            } else if (item instanceof FreEditExternalProjection) {
                 this.checkCustomProjection(editor, item);
             }
         });
@@ -703,15 +739,25 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkCustomProjection(editor: FreEditUnit, item: FreEditCustomProjection) {
-        const externalList: Map<string, FreEditExternal> | undefined = editor.getDefaultProjectiongroup()?.findGlobalProjFor(ForType.Externals)?.externals;
+    private checkCustomProjection(editor: FreEditUnit, item: FreEditExternalProjection) {
+        const externalList: string[] | undefined = editor.getDefaultProjectiongroup()?.findGlobalProjFor(ForType.Externals)?.externals;
         this.runner.nestedCheck({
             check: !!externalList,
             error: ``,
             whenOk: () => {
-                this.runner.simpleCheck(externalList!.has(item.boxName),
-                    `Custom projection '${item.boxName}' is not imported ${ParseLocationUtil.location(item)}.`);
+                this.runner.simpleCheck(externalList!.includes(item.externalName),
+                    `Custom projection '${item.externalName}' is not imported ${ParseLocationUtil.location(item)}.`);
             }
         })
+    }
+
+    private findAllPositionsOfExternalsIn(projection: FreEditClassifierProjection): string[] {
+        const result: string[] = [];
+        projection.findAllExternalProjections().forEach(ext => {
+            if (!!ext.positionInProjection) {
+                result.push(ext.positionInProjection);
+            }
+        });
+        return result;
     }
 }

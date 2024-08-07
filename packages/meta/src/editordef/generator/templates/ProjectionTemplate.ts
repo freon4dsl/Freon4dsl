@@ -4,7 +4,7 @@ import {
     ForType,
     FreEditButtonDef,
     FreEditClassifierProjection,
-    FreEditCustomProjection, FreEditExternal,
+    FreEditExternalProjection,
     FreEditProjection,
     FreEditProjectionDirection,
     FreEditProjectionGroup,
@@ -59,7 +59,6 @@ export class ProjectionTemplate {
     private modelImports: string[] = [];    // imports from ../language/gen
     private coreImports: string[] = [];     // imports from @freon4dsl/core
     private configImports: string[] = [];   // imports from ../config/gen
-    private externalImports: string[] = [];   // imports of externally defined boxes
     // Information about the use of projections from superconcepts or interfaces is also collected during the content
     // creation. This avoids the generation of unused classes and methods.
     private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
@@ -203,8 +202,6 @@ export class ProjectionTemplate {
         }
 
         // add the collected imports
-        let externalImportsStr: string = this.findAllExternalImports(editDef);
-
         const importsText: string = `
             ${this.coreImports.length > 0
             ? `import { ${this.coreImports.map(c => `${c}`).join(", ")} } from "${FREON_CORE}";`
@@ -222,7 +219,6 @@ export class ProjectionTemplate {
             ? `import { ${this.supersUsed.map(c => `${Names.boxProvider(c)}`).join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";`
             : ``}
             
-            ${this.externalImports.length > 0 ? `${externalImportsStr}` : ``}
             `;
 
         const classText: string = `
@@ -251,20 +247,6 @@ export class ProjectionTemplate {
 
         // return the generated text
         return classText;
-    }
-
-    private findAllExternalImports(editDef: FreEditUnit) {
-        let externalImportsStr: string = ''
-        const externals: Map<string, FreEditExternal> | undefined = editDef.getDefaultProjectiongroup()?.findGlobalProjFor(ForType.Externals)?.externals;
-        if (!!externals) {
-            for (let val of this.externalImports) {
-                let ext: FreEditExternal | undefined = externals.get(val);
-                if (!!ext && ext.boxPath.length > 0) {
-                    externalImportsStr += `import { ${val} } from "${ext.boxPath}"\n`;
-                }
-            }
-        }
-        return externalImportsStr;
     }
 
     private createdGetSuperMethod(supers: FreMetaClassifier[], elementVarName: string): string {
@@ -424,7 +406,7 @@ export class ProjectionTemplate {
             result += this.generatePropertyProjection(item, elementVarName, language);
         } else if (item instanceof FreEditSuperProjection) {
             result += this.generateSuperProjection(item);
-        } else if (item instanceof FreEditCustomProjection) {
+        } else if (item instanceof FreEditExternalProjection) {
             result += this.generateCustomProjection(item, elementVarName, mainBoxLabel);
         }
         return result;
@@ -769,9 +751,10 @@ export class ProjectionTemplate {
         }
     }
 
-    private generateCustomProjection(item: FreEditCustomProjection, element: string, mainBoxLabel: string, ): string {
-        ListUtil.addIfNotPresent(this.externalImports, item.boxName);
-        const myLabel: string = `${mainBoxLabel}-custom-${item.boxName}`;
-        return `new ${item.boxName}(${element}, "${myLabel}")`;
+    private generateCustomProjection(item: FreEditExternalProjection, element: string, mainBoxLabel: string, ): string {
+        ListUtil.addIfNotPresent(this.coreImports, "ExternalBox");
+        // todo make sure this is the right role
+        const myRole: string = `${mainBoxLabel}-external-${item.roleString()}`;
+        return `new ExternalBox("${item.externalName}", ${element}, "${myRole}")`;
     }
 }
