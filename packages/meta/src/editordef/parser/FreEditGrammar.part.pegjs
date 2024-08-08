@@ -248,11 +248,16 @@ lineWithOutOptional = items:(templateSpace / textItem / external_projection / pr
 }
 
 external_projection = projection_begin ext:inner_external projection_end
-{ return ext;}
+{
+     return creator.createExternalProjection({
+        "externalInfo"          : ext,
+        "location"              : location()
+     })
+}
 
 inner_external = "external" equals_separator name:var pos:(colon_separator ws p:var {return p;})? ws params:key_value_pair*
 {
-     return creator.createExternalProjection({
+     return creator.createExternalInfo({
         "externalName"          : name,
         "positionInProjection"  : pos,
         "params"                : params,

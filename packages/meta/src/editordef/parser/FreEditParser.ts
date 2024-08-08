@@ -1,9 +1,8 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { Names, ParseLocationUtil, FreGenericParser } from "../../utils/index.js";
-import { setCurrentFileName as editFileName } from "./FreEditCreators.js";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
-import { ExtraClassifierInfo, FreEditProjectionGroup, FreEditUnit } from "../metalanguage/FreEditDefLang.js";
-import { FreEditChecker } from "../metalanguage/FreEditChecker.js";
+import { Names, ParseLocationUtil, FreGenericParser } from "../../utils/index.js";
+import { FreEditExtraClassifierInfo, FreEditProjectionGroup, FreEditUnit, FreEditChecker } from "../metalanguage/index.js";
+import { setCurrentFileName as editFileName } from "./FreEditCreators.js";
 import { parser } from "./FreEditGrammar.js";
 
 export class FreEditParser extends FreGenericParser<FreEditUnit> {
@@ -57,7 +56,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
                                 if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
                                     if (found.precedence !== null && found.precedence !== undefined) {
                                         if (group.precedence !== found.precedence) {
-                                            this.checker.errors.push(`Precendence of ${group.name} in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
+                                            this.checker.errors.push(`Precedence of ${group.name} in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
                                         }
                                     } else {
                                         found.precedence = group.precedence;
@@ -96,7 +95,7 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             result.projectiongroups.push(defaultGroup);
         }
         // add all extra information to the default group
-        const allExtras: ExtraClassifierInfo[] = [];
+        const allExtras: FreEditExtraClassifierInfo[] = [];
         result.projectiongroups.forEach(group => {
             if (!!group.extras) {
                 allExtras.push(...group.extras);

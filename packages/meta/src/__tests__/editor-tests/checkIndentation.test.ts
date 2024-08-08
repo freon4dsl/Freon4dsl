@@ -3,7 +3,7 @@ import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker } from "../../utils/index.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
-    FreEditProjection, FreEditProjectionGroup,
+    FreEditNormalProjection, FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditUnit,
     FreOptionalPropertyProjection
@@ -13,7 +13,7 @@ import { describe, test, expect, beforeEach } from "vitest"
 function getAndTestProjection(editDef: FreEditUnit, classifier: FreMetaClassifier) {
     const defProjGroup: FreEditProjectionGroup | undefined = editDef.getDefaultProjectiongroup();
     expect(defProjGroup).not.toBeNull();
-    const myProj: FreEditProjection | undefined = defProjGroup!.findNonTableProjectionForType(classifier);
+    const myProj: FreEditNormalProjection | undefined = defProjGroup!.findNonTableProjectionForType(classifier);
     expect(myProj).not.toBeNull();
     expect(myProj).not.toBeUndefined();
     return myProj;
@@ -64,7 +64,7 @@ describe("Checking indentation ", () => {
         expect(myAAA).not.toBeUndefined();
         expect(editDef).not.toBeNull();
         expect(editDef).not.toBeUndefined();
-        let myProj: FreEditProjection | undefined = getAndTestProjection(editDef!, myAAA!);
+        let myProj: FreEditNormalProjection | undefined = getAndTestProjection(editDef!, myAAA!);
 
         expect(myProj).not.toBeNull();
         expect(myProj).not.toBeUndefined();
@@ -109,7 +109,7 @@ describe("Checking indentation ", () => {
         expect(editDef).not.toBeNull();
         expect(editDef).not.toBeUndefined();
         // expect(false).toBe(true);
-        let myProj: FreEditProjection | undefined= getAndTestProjection(editDef!, myAAA!);
+        let myProj: FreEditNormalProjection | undefined= getAndTestProjection(editDef!, myAAA!);
         expect(myProj).not.toBeNull();
         expect(myProj).not.toBeUndefined();
         expect(myProj!.lines[0].indent).toBe(0);
@@ -151,7 +151,7 @@ describe("Checking indentation ", () => {
         expect(myAAA).not.toBeUndefined();
         expect(editDef).not.toBeNull();
         expect(editDef).not.toBeUndefined();
-        let myProj: FreEditProjection | undefined = getAndTestProjection(editDef!, myAAA!);
+        let myProj: FreEditNormalProjection | undefined = getAndTestProjection(editDef!, myAAA!);
         expect(myProj).not.toBeNull();
         expect(myProj).not.toBeUndefined();
         expect(myProj!.lines[0].indent).toBe(0);

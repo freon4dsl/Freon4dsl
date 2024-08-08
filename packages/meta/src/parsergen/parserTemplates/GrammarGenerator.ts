@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { BoolKeywords, ForType, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { FreEditBoolKeywords, ForType, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
 import { LimitedMaker } from "./LimitedMaker.js";
 import { BinaryExpMaker } from "./BinaryExpMaker.js";
 import { ChoiceRuleMaker } from "./ChoiceRuleMaker.js";
@@ -18,7 +18,7 @@ export class GrammarGenerator {
 
         // add the standard option from the editor definition
         const defProjGroup: FreEditProjectionGroup | undefined = editUnit.getDefaultProjectiongroup();
-        let stdBoolKeywords: BoolKeywords | undefined;
+        let stdBoolKeywords: FreEditBoolKeywords | undefined;
         let refSeparator: string | undefined;
         if (!!defProjGroup) {
             stdBoolKeywords = defProjGroup.findGlobalProjFor(ForType.Boolean)?.keywords;

@@ -17,11 +17,11 @@ import {
     FreMetaProperty
 } from "../../languagedef/metalanguage/index.js";
 import {
-    BoolKeywords,
-    ExtraClassifierInfo,
+    FreEditBoolKeywords,
+    FreEditExtraClassifierInfo,
     ForType,
     FreEditClassifierProjection,
-    FreEditProjection,
+    FreEditNormalProjection,
     FreEditProjectionDirection,
     FreEditProjectionGroup,
     FreEditProjectionItem,
@@ -57,7 +57,7 @@ export class WriterTemplate {
         this.currentProjectionGroup = ParserGenUtil.findParsableProjectionGroup(editDef);
 
         const defProjGroup: FreEditProjectionGroup | undefined = editDef.getDefaultProjectiongroup();
-        let stdBoolKeywords: BoolKeywords | undefined;
+        let stdBoolKeywords: FreEditBoolKeywords | undefined;
         let refSeparator: string | undefined;
         if (!!defProjGroup) {
             stdBoolKeywords = defProjGroup.findGlobalProjFor(ForType.Boolean)?.keywords;
@@ -96,7 +96,7 @@ export class WriterTemplate {
             return projection === undefined || projection === null || projection.length === 0;
         });
 
-        const binaryExtras: ExtraClassifierInfo[] = [];
+        const binaryExtras: FreEditExtraClassifierInfo[] = [];
         if (!!this.currentProjectionGroup && this.currentProjectionGroup.extras) {
             for (const myExtra of this.currentProjectionGroup.extras) {
                 const myConcept: FreMetaClassifier | undefined = myExtra.classifier?.referred;
@@ -426,7 +426,7 @@ export class WriterTemplate {
     private makeConceptMethod (projection: FreEditClassifierProjection): string {
         const myConcept: FreMetaClassifier | undefined = projection.classifier?.referred;
         if (!!myConcept) {
-            if (projection instanceof FreEditProjection) {
+            if (projection instanceof FreEditNormalProjection) {
                 if (myConcept instanceof FreMetaBinaryExpressionConcept) {
                     // do nothing, binary expressions are treated differently
                 } else {
@@ -460,7 +460,7 @@ export class WriterTemplate {
                 }`;
     }
 
-    private makeNormalMethod(projection: FreEditProjection, myConcept: FreMetaClassifier) {
+    private makeNormalMethod(projection: FreEditNormalProjection, myConcept: FreMetaClassifier) {
         const name: string = Names.classifier(myConcept);
         const lines: FreEditProjectionLine[] = projection.lines;
         const comment = `/**
@@ -574,7 +574,7 @@ export class WriterTemplate {
             // take care of named projection
             if (!!item.projectionName && item.projectionName.length > 0 && !!this.currentProjectionGroup && item.projectionName !== this.currentProjectionGroup.name) {
                 // find the projection that we need and add it to the extra list
-                const foundProjection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
+                const foundProjection: FreEditNormalProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
                 if (!!foundProjection) {
                     ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, foundProjection);
                 }
@@ -714,7 +714,7 @@ export class WriterTemplate {
             // which is generated in 'makeNormalMethod'.
             if (!!item.projectionName && item.projectionName.length > 0 && !!this.currentProjectionGroup && item.projectionName !== this.currentProjectionGroup.name) {
                 // find the projection that we need and add it to the extra list
-                const foundProjection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, type, item.projectionName);
+                const foundProjection: FreEditNormalProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, type, item.projectionName);
                 if (!!foundProjection) {
                     ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, foundProjection);
                 }
@@ -817,7 +817,7 @@ export class WriterTemplate {
         }
     }
 
-    private makeBinaryExpMethod(myConcept: ExtraClassifierInfo) {
+    private makeBinaryExpMethod(myConcept: FreEditExtraClassifierInfo) {
         let xName: string = '<unknown>';
         if (!!myConcept.classifier) {
             xName = Names.classifier(myConcept.classifier.referred);

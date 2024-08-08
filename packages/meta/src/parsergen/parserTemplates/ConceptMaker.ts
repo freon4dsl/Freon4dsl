@@ -1,6 +1,6 @@
 import {
     ListJoinType,
-    FreEditProjection, FreEditProjectionGroup,
+    FreEditNormalProjection, FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditProjectionLine,
     FreEditProjectionText,
@@ -51,14 +51,14 @@ export class ConceptMaker {
     private currentProjectionGroup: FreEditProjectionGroup | undefined = undefined;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last to added
-    private namedProjections: FreEditProjection[] = [];
+    private namedProjections: FreEditNormalProjection[] = [];
 
     generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreMetaClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
         const rules: GrammarRule[] = [];
         for (const freConcept of conceptsUsed) {
             // all methods in this class depend on the fact that only non-table projections are passes as parameter!!
-            const projection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(projectionGroup, freConcept);
+            const projection: FreEditNormalProjection | undefined = ParserGenUtil.findNonTableProjection(projectionGroup, freConcept);
             if (!!projection) {
                 // generate a grammar rule entry
                 rules.push(this.generateProjection(freConcept, projection, false));
@@ -73,7 +73,7 @@ export class ConceptMaker {
         return rules;
     }
 
-    private generateProjection(freClassifier: FreMetaClassifier, projection: FreEditProjection, addName: boolean) {
+    private generateProjection(freClassifier: FreMetaClassifier, projection: FreEditNormalProjection, addName: boolean) {
         let rule: ConceptRule;
         if (addName) {
             rule = new ConceptRule(freClassifier, projection.name);
@@ -147,9 +147,9 @@ export class ConceptMaker {
             let myProjName: string = '';
             if (!!this.currentProjectionGroup) {
                 if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
-                    const xx: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName);
+                    const xx: FreEditNormalProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName);
                     if (!!xx) {
-                        ListUtil.addIfNotPresent<FreEditProjection>(this.namedProjections, xx);
+                        ListUtil.addIfNotPresent<FreEditNormalProjection>(this.namedProjections, xx);
                     }
                     myProjName = item.projectionName;
                 }
@@ -319,7 +319,7 @@ export class ConceptMaker {
         const subs: RightHandSideEntry[] = [];
         // find the projection that we need
         if (!!this.currentProjectionGroup && !!item.superRef) {
-            const myProjection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
+            const myProjection: FreEditNormalProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
             if (!!myProjection) {
                 const isSingleEntry: boolean = (myProjection.lines.length === 1);
                 myProjection.lines.forEach(line => {

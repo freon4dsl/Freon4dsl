@@ -1,4 +1,4 @@
-import { FreEditProjection, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { FreEditNormalProjection, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults.js";
 import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage/index.js";
 import { GenerationUtil } from "../../utils/index.js";
@@ -32,7 +32,7 @@ export class ParserGenUtil {
         return projectionGroup;
     }
 
-    static findNonTableProjection(projectionGroup: FreEditProjectionGroup, classifier: FreMetaClassifier, projectionName?: string): FreEditProjection | undefined {
+    static findNonTableProjection(projectionGroup: FreEditProjectionGroup, classifier: FreMetaClassifier, projectionName?: string): FreEditNormalProjection | undefined {
         let myGroup: FreEditProjectionGroup | undefined = projectionGroup;
         // take care of named projections: search the projection group with the right name
         if (!!projectionName && projectionName.length > 0) {
@@ -40,7 +40,7 @@ export class ParserGenUtil {
                 myGroup = projectionGroup.owningDefinition?.projectiongroups.find(group => group.name === projectionName);
             }
         }
-        let myProjection: FreEditProjection | undefined = undefined;
+        let myProjection: FreEditNormalProjection | undefined = undefined;
         if (!!myGroup) {
             myProjection = myGroup.findNonTableProjectionForType(classifier);
             if (!myProjection && projectionGroup !== myGroup) { // if not found, then try my 'own' projection group

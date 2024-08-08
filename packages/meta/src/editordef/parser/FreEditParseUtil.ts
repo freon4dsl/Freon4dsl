@@ -1,7 +1,7 @@
 import {
     FreEditParsedNewline,
     FreEditParsedProjectionIndent,
-    FreEditProjection,
+    FreEditNormalProjection,
     FreEditProjectionLine,
     FreOptionalPropertyProjection
 } from "../metalanguage/index.js";
@@ -15,7 +15,7 @@ export class FreEditParseUtil {
      * - set indent property per line and then remove all indent items
      * - all FreEditParseNewline and FreEditParseProjectionIndent instances are removed.
      */
-    public static normalize(projection: FreEditProjection): void {
+    public static normalize(projection: FreEditNormalProjection): void {
         // everything is parsed as one line, now break this line on ParsedNewLines and remove empty lines
 
         // find the indentation of the complete projection, which should be ignored

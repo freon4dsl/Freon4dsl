@@ -10,7 +10,7 @@ import {FreEditParser} from "../../editordef/parser/FreEditParser";
 import {
     ForType,
     FreEditClassifierProjection,
-    FreEditProjection,
+    FreEditNormalProjection,
     FreEditProjectionDirection,
     FreEditProjectionGroup,
     FreEditPropertyProjection,
@@ -96,7 +96,7 @@ describe("Checking FretEditUnit: ", () => {
             const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(c);
             expect(projections).not.toBe([]);
             projections.forEach(proj => {
-                if (proj instanceof FreEditProjection) {
+                if (proj instanceof FreEditNormalProjection) {
                     proj.lines.forEach(line => {
                         line.items.forEach(item => {
                             if (item instanceof FreEditPropertyProjection && item.property && item.property.referred.isList) {
@@ -129,7 +129,7 @@ describe("Checking FretEditUnit: ", () => {
             const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(c);
             expect(projections).not.toBe([]);
             projections.forEach(proj => {
-                if (proj instanceof FreEditProjection) {
+                if (proj instanceof FreEditNormalProjection) {
                     proj.lines.forEach(line => {
                         line.items.forEach(item => {
                             if (item instanceof FreEditPropertyProjection) {
@@ -172,7 +172,7 @@ describe("Checking FretEditUnit: ", () => {
                 const propType = prop.type;
                 if (!prop.isPrimitive && prop.isPart && !(propType instanceof FreMetaLimitedConcept)) {
                     const projections: FreEditClassifierProjection[] = editor.findProjectionsForType(propType);
-                    const xx = projections.find(proj => proj instanceof FreEditProjection);
+                    const xx = projections.find(proj => proj instanceof FreEditNormalProjection);
                     // if (!xx)
                     // console.log("for none for prop '" + prop.name);
                     expect(xx).not.toBeNull();
@@ -199,7 +199,7 @@ describe("Checking FretEditUnit: ", () => {
         let first: FreEditClassifierProjection = projections[0];
         expect(first).not.toBeNull();
         expect(first).not.toBeUndefined();
-        if (first instanceof FreEditProjection ) {
+        if (first instanceof FreEditNormalProjection ) {
             // find the projection of the boolean property
             let myBoolProjection: FreEditPropertyProjection | undefined = undefined;
             first.lines.forEach(line => {
@@ -226,7 +226,7 @@ describe("Checking FretEditUnit: ", () => {
         first = projections[0];
         expect(first).not.toBeNull();
         expect(first).not.toBeUndefined();
-        if (first instanceof FreEditProjection ) {
+        if (first instanceof FreEditNormalProjection ) {
             // find the projection of the boolean property
             let myBoolProjection: FreEditPropertyProjection | undefined = undefined;
             first.lines.forEach(line => {

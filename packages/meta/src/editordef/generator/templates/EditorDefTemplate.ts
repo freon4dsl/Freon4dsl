@@ -15,8 +15,8 @@ import {
     FREON_CORE, LOG2USER
 } from "../../../utils/index.js";
 import {
-    ExtraClassifierInfo, FreEditClassifierProjection,
-    FreEditProjection,
+    FreEditExtraClassifierInfo, FreEditClassifierProjection,
+    FreEditNormalProjection,
     FreEditProjectionGroup,
     FreEditPropertyProjection,
     FreEditTableProjection,
@@ -42,7 +42,7 @@ export class EditorDefTemplate {
         language.concepts.filter(c => !(c instanceof FreMetaLimitedConcept || c.isAbstract)).forEach(concept => {
             // TODO handle other sub types of FreClassifier
              // find the triggers for all concepts
-            const extras: ExtraClassifierInfo | undefined = defaultProjGroup.findExtrasForType(concept);
+            const extras: FreEditExtraClassifierInfo | undefined = defaultProjGroup.findExtrasForType(concept);
             if (!!extras) {
                 const trigger: string = extras.trigger;
                 if (!!trigger && trigger.length > 0) {
@@ -91,7 +91,7 @@ export class EditorDefTemplate {
         const conceptProjectionToPropertyProjection: Map<string, Map<string, Map<string, string>>> = new Map<string, Map<string, Map<string, string>>>();
         language.classifiers().forEach(concept => {
             editorDef.findProjectionsForType(concept).forEach((conceptProjection:FreEditClassifierProjection) => {
-                if (conceptProjection instanceof FreEditProjection) {
+                if (conceptProjection instanceof FreEditNormalProjection) {
                     const partProjections: FreEditPropertyProjection[] = conceptProjection.findAllPartProjections();
                     partProjections.filter((pp: FreEditPropertyProjection) => !isNullOrUndefined(pp.projectionName)).forEach((p:FreEditPropertyProjection) => {
                         let conceptMap = conceptProjectionToPropertyProjection.get(concept.name);

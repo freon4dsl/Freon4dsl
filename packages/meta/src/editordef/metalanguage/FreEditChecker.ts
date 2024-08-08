@@ -21,13 +21,13 @@ import {
 import {FreEditParseUtil} from "../parser/FreEditParseUtil.js";
 import {
     DisplayType,
-    ExtraClassifierInfo,
+    FreEditExtraClassifierInfo,
     ForType,
     FreEditClassifierProjection,
     FreEditExternalProjection,
     FreEditExternalChildDefinition,
     FreEditGlobalProjection,
-    FreEditProjection,
+    FreEditNormalProjection,
     FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditProjectionLine,
@@ -37,9 +37,9 @@ import {
     FreEditTableProjection,
     FreEditUnit,
     FreOptionalPropertyProjection,
-    ListInfo,
-    ListJoinType
-} from "./FreEditDefLang.js";
+    FreEditListInfo,
+    ListJoinType, FreEditExternalInfo
+} from "./editlanguage/index.js";
 import {EditorDefaults} from "./EditorDefaults.js";
 import {FreLangExpressionChecker} from "../../languagedef/checking/index.js";
 
@@ -183,7 +183,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     this.runner.simpleCheck(!classifiersWithTableProj.includes(myCls),
                         `There may be only one table projection for ${myCls.name} in a projection group ${ParseLocationUtil.location(proj)}.`);
                     classifiersWithTableProj.push(myCls);
-                } else if (proj instanceof FreEditProjection) {
+                } else if (proj instanceof FreEditNormalProjection) {
                     this.runner.simpleCheck(!classifiersWithNormalProj.includes(myCls),
                         `There may be only one 'normal' (non-table) projection for ${myCls.name} in a projection group ${ParseLocationUtil.location(proj)}.`);
                     classifiersWithNormalProj.push(myCls);
@@ -192,12 +192,12 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         });
     }
 
-    private checkAndMergeExtras(extras: ExtraClassifierInfo[]): ExtraClassifierInfo[] {
-        const allExtras: ExtraClassifierInfo[] = [];
+    private checkAndMergeExtras(extras: FreEditExtraClassifierInfo[]): FreEditExtraClassifierInfo[] {
+        const allExtras: FreEditExtraClassifierInfo[] = [];
         for (const extra of extras) {
             if (extra.classifier !== undefined && extra.classifier !== null) {
                 // first merge the extras for the same classifier
-                const knownOne: ExtraClassifierInfo | undefined = allExtras.find(ex => ex.classifier?.referred === extra.classifier!.referred);
+                const knownOne: FreEditExtraClassifierInfo | undefined = allExtras.find(ex => ex.classifier?.referred === extra.classifier!.referred);
                 // if already present, then merge the extra info
                 if (!!knownOne) {
                     if (!!extra.symbol) {
@@ -274,15 +274,15 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     this.runner.simpleCheck(false,
                         `A limited concept cannot have a projection, it can only be used as reference ${ParseLocationUtil.location(projection)}.`);
                 } else {
-                    if (projection instanceof FreEditProjection) {
+                    if (projection instanceof FreEditNormalProjection) {
                         this.checkNormalProjection(projection, myClassifier!, editor);
                     } else if (projection instanceof FreEditTableProjection) {
                         this.checkTableProjection(projection, myClassifier!, editor);
                     }
                     if (!!projection.externalChildDefs && projection.externalChildDefs.length > 0) {
-                        const myPositions: string[] = this.findAllPositionsOfExternalsIn(projection);
                         projection.externalChildDefs.forEach(childDef => {
-                                this.checkExtChildDef(childDef, myPositions, myClassifier!, editor);
+                                this.checkExtChildDef(childDef, projection, myClassifier!, editor);
+                                // Note that we finalize the edit unit model with the next statement
                                 childDef.belongsTo = projection;
                             }
                         );
@@ -292,25 +292,43 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         });
     }
 
-    private checkExtChildDef(childDef: FreEditExternalChildDefinition, myPositions: string[], cls: FreMetaClassifier, editor: FreEditUnit) {
-        // check externalName
+    /**
+     * Checks a part of a projection definition that defines the child of an external component, like:
+     *     external SMUI_Card:First [
+     *         is still under construction: ${self.isUnderConstruction switch}
+     *         is approved level1: ${self.isApprovedLevel1 radio}
+     *         is approved level2: ${self.isApprovedLevel2 inner-switch}
+     *         is approved level3: ${self.isApprovedLevel3 checkbox}
+     *     ]
+     * @param childDef
+     * @param projection
+     * @param cls
+     * @param editor
+     * @private
+     */
+    private checkExtChildDef(childDef: FreEditExternalChildDefinition, projection: FreEditClassifierProjection, cls: FreMetaClassifier, editor: FreEditUnit) {
+        // check externalName, it should be specified in the global projections
         const allKnownExternals: string[] | undefined = editor.getDefaultProjectiongroup()?.findGlobalProjFor(ForType.Externals)?.externals;
-        this.runner.simpleCheck(
-            !!allKnownExternals && allKnownExternals?.includes(childDef.externalName),
-            `External component "${childDef.externalName}" is unknown ${ParseLocationUtil.location(childDef)}.`
+        this.runner.nestedCheck({
+                check: !!allKnownExternals && allKnownExternals?.includes(childDef.externalName),
+                error: `External component "${childDef.externalName}" is unknown ${ParseLocationUtil.location(childDef)}.`,
+                whenOk: () => {
+                    // check childDef.positionInProjection
+                    if (!!childDef.positionInProjection) {
+                        const myPositions: string[] = projection.findPositionsOfExternal(childDef.externalName);
+                        this.runner.simpleCheck(
+                            !!myPositions && myPositions?.includes(childDef.positionInProjection),
+                            `Position in projection "${childDef.positionInProjection}" is unknown ${ParseLocationUtil.location(childDef)}.`
+                        );
+                    }
+                }
+            }
         );
-        // check childDef.positionInProjection
-        if (!!childDef.positionInProjection) {
-            this.runner.simpleCheck(
-                !!myPositions && myPositions?.includes(childDef.positionInProjection),
-                `Position in projection "${childDef.positionInProjection}" is unknown ${ParseLocationUtil.location(childDef)}.`
-            );
-        }
         // check the actual projection
         this.checkNormalProjection(childDef.childProjection, cls, editor);
     }
 
-    private checkNormalProjection(projection: FreEditProjection, cls: FreMetaClassifier, editor: FreEditUnit) {
+    private checkNormalProjection(projection: FreEditNormalProjection, cls: FreMetaClassifier, editor: FreEditUnit) {
         LOGGER.log("checking normal projection ");
         if (!!projection) {
             if (projection.lines.length > 1) {
@@ -365,7 +383,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             } else if (item instanceof FreEditSuperProjection) {
                 this.checkSuperProjection(editor, item, cls);
             } else if (item instanceof FreEditExternalProjection) {
-                this.checkCustomProjection(editor, item);
+                // apart from the 'externalInfo' in this projection, nothing needs to be checked
+                this.checkExternalInfo(editor, item.externalInfo);
             }
         });
     }
@@ -410,7 +429,8 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         LOGGER.log("checking list property projection: " + myProp?.name);
         if (!!item.externalInfo) {
             // Note that this check needs to be done first, because there is always a default listInfo
-            // todo check external info
+            // check external info
+            // this.checkExternalProjection(editor,item.externalInfo);
             // if all is well, we can remove the default list info
             item.listInfo = undefined;
         } else if (!!item.listInfo) {
@@ -438,7 +458,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             }
         } else {
             // create default
-            item.listInfo = new ListInfo();
+            item.listInfo = new FreEditListInfo();
             // the following are set upon creation of ListInfo
             // item.listInfo.isTable = false;
             // item.listInfo.direction = FreEditProjectionDirection.Vertical;
@@ -511,7 +531,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         });
     }
 
-    private checkExtras(classifierInfo: ExtraClassifierInfo) {
+    private checkExtras(classifierInfo: FreEditExtraClassifierInfo) {
         LOGGER.log("checking extra info on classifier " + classifierInfo.classifier?.name);
         if (!!classifierInfo.classifier?.referred) { // error message done elsewhere
             // check the reference shortcut and change the expression into a reference to a property
@@ -746,7 +766,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkCustomProjection(editor: FreEditUnit, item: FreEditExternalProjection) {
+    private checkExternalInfo(editor: FreEditUnit, item: FreEditExternalInfo) {
         const externalList: string[] | undefined = editor.getDefaultProjectiongroup()?.findGlobalProjFor(ForType.Externals)?.externals;
         this.runner.nestedCheck({
             check: !!externalList,
@@ -756,15 +776,5 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     `Custom projection '${item.externalName}' is not imported ${ParseLocationUtil.location(item)}.`);
             }
         })
-    }
-
-    private findAllPositionsOfExternalsIn(projection: FreEditClassifierProjection): string[] {
-        const result: string[] = [];
-        projection.findAllExternalProjections().forEach(ext => {
-            if (!!ext.positionInProjection) {
-                result.push(ext.positionInProjection);
-            }
-        });
-        return result;
     }
 }

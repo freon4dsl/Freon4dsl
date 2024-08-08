@@ -6,7 +6,7 @@ import {
 } from "../../../languagedef/metalanguage/index.js";
 import { Roles } from "../../../utils/index.js";
 import {
-    FreEditProjection,
+    FreEditNormalProjection,
     FreEditUnit,
     FreOptionalPropertyProjection
 } from "../../metalanguage/index.js";
@@ -98,7 +98,7 @@ export class DefaultActionsTemplate {
     private customActionsForOptional(editorDef: FreEditUnit): string {
         let result: string = "";
         editorDef.getDefaultProjectiongroup()?.projections.forEach( projection => {
-            if (!!projection && projection instanceof FreEditProjection) {
+            if (!!projection && projection instanceof FreEditNormalProjection) {
                 projection.lines.forEach(line => {
                     line.items.forEach(item => {
                         if (item instanceof FreOptionalPropertyProjection && !!item.property) {
