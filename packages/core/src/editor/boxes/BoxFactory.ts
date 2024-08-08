@@ -16,7 +16,7 @@ import {
     OptionalBox,
     HorizontalListBox, VerticalListBox, BoolFunctie, GridCellBox,
     HorizontalLayoutBox, VerticalLayoutBox,
-    TableCellBox, OptionalBox2, LimitedControlBox, ButtonBox
+    TableCellBox, OptionalBox2, LimitedControlBox, ButtonBox, NumberDisplay
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -248,7 +248,9 @@ export class BoxFactory {
         result.$getNumber = getNumber;
         result.$setNumber = setNumber;
         FreUtils.initializeObject(result, initializer);
-
+        if (result.showAs === NumberDisplay.SLIDER) {
+            result.completeDisplayInfo(result.getNumber());
+        }
         return result;
     }
 
@@ -364,11 +366,10 @@ export class BoxFactory {
 
         // todo see whether we need the following statements
         // 2. Apply the other arguments in case they have changed
-        // result.placeholder = placeHolder;
-        // result.getOptions = getOptions;
-        // result.getSelectedOption = getSelectedOption;
-        // result.selectOption = selectOption;
-        // FreUtils.initializeObject(result, initializer);
+        result.$getNames = getValues;
+        result.$setNames = setValues;
+        result.possibleNames = possibleValues;
+        FreUtils.initializeObject(result, initializer);
 
         return result;
     }

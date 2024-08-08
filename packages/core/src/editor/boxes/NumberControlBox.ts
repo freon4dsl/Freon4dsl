@@ -62,7 +62,7 @@ export class NumberControlBox extends Box {
      * Completes the display info with default values
      * @private
      */
-    private completeDisplayInfo(currentValue: number): void {
+    public completeDisplayInfo(currentValue: number): void {
         // check the current value, min must be equal or lower
         let myMin: number = 0;
         if (currentValue < myMin) {

@@ -421,12 +421,12 @@ export class BoxUtil {
         }
         const possibleValues: string[] = this.checkLimitedType(propInfo, propertyName);
 
-        // console.log("BoxUtil.limitedBox current value is " + [node[propertyName].name] + ", possibleValues: [" + possibleValues + "]");
+        // console.log(`BoxUtil.limitedBox for ${propertyName} current value is ` + [node[propertyName]] + ", possibleValues: [" + possibleValues + "]");
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "limitedcontrolbox");
         let result: LimitedControlBox = BoxFactory.limited(
             node,
             roleName,
-            () => [node[propertyName].name],
+            () => (node[propertyName] === null ? [] : [node[propertyName].name]),
             (v: string[]) => runInAction(() => {
                 if (!!v[0]) {
                     // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + v[0]);
