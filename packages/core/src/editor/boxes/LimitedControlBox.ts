@@ -14,6 +14,11 @@ export enum LimitedDisplay {
 export class LimitedControlBox extends Box {
     readonly kind: string = "LimitedControlBox";
     showAs: LimitedDisplay = LimitedDisplay.RADIO_BUTTON;
+    /**
+     * NB
+     * The following two functions are used for both single valued and list values limited properties.
+     * In case of a single value, only the 0-th element is used. 
+     */
     $getNames: () => string[];
     $setNames: (newValue: string[]) => void;
     possibleNames: string[] = [];
