@@ -22,6 +22,20 @@ export class FreEditNormalProjection extends FreEditClassifierProjection {
         return result;
     }
 
+    findAllExternals(): FreEditExternalInfo[] {
+        const result: FreEditExternalInfo[] = [];
+        this.lines.forEach(line => {
+            line.items.forEach(item => {
+                if (item instanceof FreEditPropertyProjection && !!item.externalInfo) {
+                    result.push(item.externalInfo);
+                } else if (item instanceof FreEditExternalProjection) {
+                    result.push(item.externalInfo);
+                }
+            });
+        });
+        return result;
+    }
+
     /**
      * Returns the 'positionInProjection' part of an expression like 'SMUI_Card:Second' (i.e. 'Second')
      * for all occurrences of external projections or property projections that are marked 'external',

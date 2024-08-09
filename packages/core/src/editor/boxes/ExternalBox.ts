@@ -13,8 +13,9 @@ export class ExternalBox extends Box {
     private _children: Box[] = [];
     params: KeyValuePair[] = [];
 
-    constructor(externalComponentName: string, node: FreNode, role: string, children?: Box[], initializer?: Partial<ExternalBox>) {
+    constructor(externalComponentName: string, node: FreNode, role: string, propertyName: string, children?: Box[], initializer?: Partial<ExternalBox>) {
         super(node, role);
+        this.propertyName = propertyName;
         this._externalComponentName = externalComponentName;
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
@@ -46,6 +47,18 @@ export class ExternalBox extends Box {
         return this.params.find(pair => pair.key === key).value;
     }
 
+    getPrimitivePropertyValue(): string | number | boolean {
+        // todo add check whether this property is of primitive type
+        console.log("this.element: " + this.element.freLanguageConcept() + ", this.propertyName: " + this.propertyName + ", this.element[this.propertyName]: " + this.element[this.propertyName])
+        console.log("this.element[\"name\"]: " + this.element["name"]);
+        return this.element[this.propertyName];
+    }
+
+    setPrimitivePropertyValue(newValue: string | number | boolean) {
+        // todo add check whether this property is of primitive type
+        this.element[this.propertyName] = newValue;
+        this.isDirty()
+    }
     // todo do we need more of the replace children functionality like in LayoutComponent??
 }
 

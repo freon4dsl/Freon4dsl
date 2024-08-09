@@ -6,4 +6,5 @@ global {
     limited checkbox
     limited[] inner-switch
     referenceSeparator [: xxx]
+    external {}
 }

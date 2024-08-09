@@ -534,7 +534,7 @@ export class BoxUtil {
                                boxProviderCache: FreProjectionHandler,
                                initializer?: Partial<VerticalListBox>): VerticalListBox {
         // make the boxes for the children
-        let children: Box[] = this.findPartItems(element, list, propertyName, boxProviderCache, listJoin);
+        let children: Box[] = this.makePartItems(element, list, propertyName, boxProviderCache, listJoin);
         // add a placeholder where a new element can be added
         children = this.addPlaceholder(children, element, propertyName);
         // determine the role
@@ -551,7 +551,7 @@ export class BoxUtil {
         // check whether the property is a reference list
         if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
             // find the children to show in this listBox
-            let children = this.makeRefItems(property as FreNodeReference<FreNamedNode>[], element, propertyName, scoper, listInfo);
+            let children: Box[] = this.makeRefItems(element, property as FreNodeReference<FreNamedNode>[], propertyName, scoper, listInfo);
             // add a placeholder where a new element can be added
             children = this.addReferencePlaceholder(children, element, propertyName);
             let result: VerticalListBox;
@@ -577,7 +577,7 @@ export class BoxUtil {
                                  boxProviderCache: FreProjectionHandler,
                                  initializer?: Partial<VerticalListBox>): VerticalListBox {
         // make the boxes for the children
-        let children: Box[] = this.findPartItems(element, list, propertyName, boxProviderCache, listJoin);
+        let children: Box[] = this.makePartItems(element, list, propertyName, boxProviderCache, listJoin);
         // add a placeholder where a new element can be added
         children = this.addPlaceholder(children, element, propertyName);
         // determine the role
@@ -595,7 +595,7 @@ export class BoxUtil {
         // check whether the property is a reference list
         if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
             // find the children to show in this listBox
-            let children: Box[] = this.makeRefItems(property, element, propertyName, scoper, listJoin);
+            let children: Box[] = this.makeRefItems(element, property as FreNodeReference<FreNamedNode>[], propertyName, scoper, listJoin);
             // add a placeholder where a new element can be added
             children = this.addReferencePlaceholder(children, element, propertyName);
             // return the box
@@ -675,7 +675,7 @@ export class BoxUtil {
         );
     }
 
-    public static findPartItems(element: FreNode, property: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler, listJoin?: FreListInfo ) {
+    public static makePartItems(element: FreNode, property: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler, listJoin?: FreListInfo ) {
         const numberOfItems: number = property.length;
         return property.map((listElem, index) => {
             const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(listElem);
@@ -708,7 +708,7 @@ export class BoxUtil {
         });
     }
 
-    private static makeRefItems(properties: FreNodeReference<FreNamedNode>[], element: FreNode, propertyName: string, scoper: FreScoper, listJoin?: FreListInfo): Box[] {
+    public static makeRefItems(element: FreNode, properties: FreNodeReference<FreNamedNode>[], propertyName: string, scoper: FreScoper, listJoin?: FreListInfo): Box[] {
         const result: Box[] = [];
         const numberOfItems = properties.length;
         properties.forEach((listElem, index) => {

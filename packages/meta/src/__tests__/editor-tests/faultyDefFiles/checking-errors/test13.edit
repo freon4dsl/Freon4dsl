@@ -1,0 +1,18 @@
+editor default
+
+global {
+    external { xx, yy, zz }
+}
+
+BB {[
+    something
+]
+external xx:one [
+    something else
+]
+}
+
+CC {[
+ [external=aap par="20" set="ww"]
+ ${self.CCprop7 external=yy}
+]}

@@ -313,6 +313,13 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 check: !!allKnownExternals && allKnownExternals?.includes(childDef.externalName),
                 error: `External component "${childDef.externalName}" is unknown ${ParseLocationUtil.location(childDef)}.`,
                 whenOk: () => {
+                    // check whether the external is used in this projection
+                    // @ts-ignore
+                    const yy: FreEditExternalInfo | undefined = projection.findAllExternals().find(ext => ext.externalName === childDef.externalName);
+                    this.runner.simpleWarning(
+                        !!yy,
+                        `External component "${childDef.externalName}" is unused in this projection ${ParseLocationUtil.location(childDef)}.`
+                    );
                     // check childDef.positionInProjection
                     if (!!childDef.positionInProjection) {
                         const myPositions: string[] = projection.findPositionsOfExternal(childDef.externalName);
@@ -427,13 +434,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     private checkListProperty(item: FreEditPropertyProjection, myProp: FreMetaProperty) {
         LOGGER.log("checking list property projection: " + myProp?.name);
-        if (!!item.externalInfo) {
-            // Note that this check needs to be done first, because there is always a default listInfo
-            // check external info
-            // this.checkExternalProjection(editor,item.externalInfo);
-            // if all is well, we can remove the default list info
-            item.listInfo = undefined;
-        } else if (!!item.listInfo) {
+        if (!!item.listInfo) {
             if (item.listInfo.isTable) {
                 if (myProp.isPart) {
                     // remember this property - there should be a table projection for it - to be checked later
@@ -498,7 +499,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         LOGGER.log("checking optional projection for " + cls?.name);
 
         const propProjections: FreEditPropertyProjection[] = [];
-        let nrOfItems = 0;
+        let nrOfItems: number = 0;
         this.runner.nestedCheck({ check: item.lines.length > 0,
             error: `No empty projections allowed ${ParseLocationUtil.location(item)}.`,
             whenOk: () => {
@@ -610,6 +611,11 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         if (!!item.boolKeywords) {
                             // check whether the boolInfo is appropriate
                             this.checkBooleanPropertyProjection(item, myProp!);
+                        } else if (!!item.externalInfo) {
+                            // Note that this check needs to be done first, because there is always a default listInfo
+                            this.checkExternalInfo(editor, item.externalInfo);
+                            // remove the default list info
+                            item.listInfo = undefined;
                         } else if (!!item.listInfo) {
                             this.runner.nestedCheck({check: myProp!.isList,
                                 error: `Only properties that are lists can be displayed as list or table ${ParseLocationUtil.location(item)}.`,
@@ -773,7 +779,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             error: ``,
             whenOk: () => {
                 this.runner.simpleCheck(externalList!.includes(item.externalName),
-                    `Custom projection '${item.externalName}' is not imported ${ParseLocationUtil.location(item)}.`);
+                    `External projection '${item.externalName}' is not declared in globals ${ParseLocationUtil.location(item)}.`);
             }
         })
     }

@@ -169,11 +169,11 @@
 </script>
 
 <!-- include the material design styling -->
-<svelte:head>
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet"/>
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-    
-</svelte:head>
+<!--<svelte:head>-->
+<!--    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet"/>-->
+<!--    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>-->
+<!--    -->
+<!--</svelte:head>-->
 
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 <div class={"freon-component"}

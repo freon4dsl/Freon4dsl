@@ -1,0 +1,83 @@
+language ExternalTester
+
+model ExternalModel {
+    parts: ExternalUnit[];
+}
+
+modelunit ExternalUnit {
+    content: AA;
+    file-extension = "ext";     // the file extension used by the parser
+}
+
+concept AA  {
+    name: identifier;
+    // the possibilities for primitive properties
+    stringProp: string;
+//    stringList: string[];
+    numberProp: number;
+//    numberList: number[];
+    booleanProp: boolean;
+//    booleanList: boolean[];
+    // properties with concept as type
+    conceptProp: BB;
+    conceptList: BB[];
+    reference referenceProp: CC;
+    reference referenceList: CC[];
+    // properties with interface as type
+    interfaceProp: DD;
+    interfaceList: DD[];
+    reference intfReferenceProp: DD;
+    reference intfReferenceList: DD[];
+}
+
+concept BB {
+    // the possibilities for primitive properties
+    stringProp: string;
+//    stringList: string[];
+    numberProp: number;
+//    numberList: number[];
+    booleanProp: boolean;
+//    booleanList: boolean[];
+    // properties with concept as type
+    conceptProp?: BB;
+    conceptList: BB[];
+    reference referenceProp: CC;
+    reference referenceList: CC[];
+    // properties with interface as type
+    interfaceProp: DD;
+    interfaceList: DD[];
+    reference intfReferenceProp: DD;
+    reference intfReferenceList: DD[];
+    // properties with limited concept as type
+    limitedProp: ZZ;
+    limitedList: ZZ[];
+}
+
+concept CC {
+    name: identifier; // so that this concept can be used as reference
+}
+
+limited ZZ {
+    name: identifier;
+    // the possibilities for primitive properties
+    ZZprop1: string;
+//    ZZprop2: string[];
+    ZZprop3: number;
+//    ZZprop4: number[];
+    ZZprop5: boolean;
+//    ZZprop6: boolean[];
+    ZZinstance1 = { name: "ZZinstance1", ZZprop1: "sometext" }
+    ZZinstance2 = { name: "ZZinstance2", ZZprop1: "sometext" }
+    ZZinstance3 = { name: "ZZinstance3", ZZprop1: "sometext" }
+}
+
+interface DD {
+    name: identifier;
+    // the possibilities for primitive properties
+    DDprop1: string;
+//    DDprop2: string[];
+    DDprop3: number;
+//    DDprop4: number[];
+    DDprop5: boolean;
+//    DDprop6: boolean[];
+}
