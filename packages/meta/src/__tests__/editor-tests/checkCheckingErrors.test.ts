@@ -185,7 +185,6 @@ describe("Checking editor definition ", () => {
         try {
             parser.parse(testdir + "test11.edit");
         } catch (e: unknown) {
-            console.log(e);
             if (e instanceof Error) {
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 expect(e.message).toBe(`checking errors (11).`);
@@ -216,6 +215,22 @@ describe("Checking editor definition ", () => {
                 expect(checker.warnings.length).toBe(1);
                 expect(checker.warnings.includes("Found multiple definitions for global projections, please note that they may be overridden [file: test11.edit:4:5],[file: test12.edit:4:5].")).toBeTruthy();
              }
+        }
+    });
+
+    test("on external component definitions", () => {
+        try {
+            parser.parse(testdir + "test13.edit");
+        } catch (e: unknown) {
+            console.log(e);
+            if (e instanceof Error) {
+                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
+                expect(e.message).toBe(`checking errors (11).`);
+                expect(checker.hasWarnings()).toBeTruthy;
+                expect(checker.warnings.length).toBe(1);
+                expect(checker.warnings.includes("Found multiple definitions for global projections, please note that they may be overridden [file: test11.edit:4:5],[file: test12.edit:4:5].")).toBeTruthy();
+            }
         }
     });
 });

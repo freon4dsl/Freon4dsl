@@ -265,7 +265,7 @@ inner_external = "external" equals_separator name:var pos:(colon_separator ws p:
      })
 }
 
-key_value_pair = key:var equals_separator "\"" value:textBut "\""
+key_value_pair = key:var equals_separator "\"" value:textBut "\"" ws
 {
     return creator.createKeyValuePair( { key: key, value: value});
 }

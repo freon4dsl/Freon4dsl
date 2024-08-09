@@ -1,0 +1,38 @@
+editor default
+
+global {
+    external {
+        AnimatedGif,
+        SMUI_Card,
+        SMUI_Accordion,
+        SMUI_Dialog
+    }
+}
+
+ExternalUnit {[ ${self.content} ]}
+
+AA {[
+    ${self.name external=SMUI_Card}
+    // the possibilities for primitive properties
+    ${self.stringProp}
+    ${self.numberProp}
+    ${self.booleanProp}
+    // properties with concept as type
+    ${self.conceptProp external=SMUI_Dialog buttonLabel="Show ConceptProp"}
+    ${self.conceptList}
+]}
+
+BB {[
+    This is concept BB ${self.stringProp}
+]}
+
+//    // properties with concept as type
+//    ${self.conceptProp}
+//    ${self.conceptList}
+//    ${self.referenceProp}
+//    ${self.referenceList}
+//    // properties with interface as type
+//    ${self.interfaceProp}
+//    ${self.interfaceList}
+//    ${self.intfReferenceProp}
+//    ${self.intfReferenceList}

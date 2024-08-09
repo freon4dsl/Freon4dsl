@@ -53,7 +53,7 @@
     import ButtonComponent from "$lib/components/ButtonComponent.svelte";
     import { selectedBoxes, componentId, setBoxSizes, findCustomComponent} from "$lib/index.js";
 
-    import {afterUpdate, type ComponentType} from "svelte";
+    import {afterUpdate} from "svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -136,8 +136,12 @@
             <LimitedCheckboxComponent box={box} editor={editor}/>
         {:else if isButtonBox(box) }
             <ButtonComponent box={box} editor={editor}/>
-        {:else if isExternalBox(box) && !!findCustomComponent(box.externalComponentName)}
-            <svelte:component this={findCustomComponent(box.externalComponentName)} box={box} editor={editor}/>
+        {:else if isExternalBox(box)}
+            {#if !!findCustomComponent(box.externalComponentName)}
+                <svelte:component this={findCustomComponent(box.externalComponentName)} box={box} editor={editor}/>
+            {:else}
+                <p class="render-component-error">[UNKNOWN EXTERNAL BOX TYPE: {box.externalComponentName}]</p>
+            {/if}
         {:else if isGridBox(box) }
             <GridComponent box={box} editor={editor} />
         {:else if isIndentBox(box) }

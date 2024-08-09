@@ -42,8 +42,8 @@ export class ExternalBox extends Box {
         return this._externalComponentName;
     }
 
-    findParam(key: string): string {
-        return this.params.find(pair => pair.key === key).value;
+    findParam(key: string): string | undefined {
+        return this.params?.find(pair => pair.key === key)?.value;
     }
 
     // todo do we need more of the replace children functionality like in LayoutComponent??

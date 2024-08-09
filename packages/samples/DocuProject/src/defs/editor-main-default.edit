@@ -10,7 +10,8 @@ global {
     external {
         AnimatedGif,
         SMUI_Card,
-        SMUI_Accordion
+        SMUI_Accordion,
+        SMUI_Dialog
     }
 }
 

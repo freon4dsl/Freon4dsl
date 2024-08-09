@@ -64,7 +64,7 @@ export class ProjectionTemplate {
     private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
     private supersUsed: FreMetaClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
 
-    setGlobalDisplays(editorDef: FreEditUnit) {
+    setGlobals(editorDef: FreEditUnit) {
         // get the global labels for true and false, and the global display type (checkbox, radio, text, etc.) for boolean values
         const defProjGroup: FreEditProjectionGroup | undefined = editorDef.getDefaultProjectiongroup();
         if (!!defProjGroup) {
@@ -456,7 +456,12 @@ export class ProjectionTemplate {
             return '';
         }
         if (property instanceof FreMetaPrimitiveProperty) {
-            result += this.primitivePropertyProjection(property, elementVarName, item.displayType, item.boolKeywords, item.listInfo);
+            let singleResult: string = this.primitivePropertyProjection(property, elementVarName, item.displayType, item.boolKeywords, item.listInfo);
+            if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
+                result += this.generateSingleAsExternal(item, property, elementVarName, singleResult);
+            } else {
+                result += singleResult;
+            }
         } else if (property instanceof FreMetaConceptProperty) {
             if (property.isPart) {
                 if (property.isList) {
@@ -464,12 +469,17 @@ export class ProjectionTemplate {
                         result += this.generatePropertyAsTable(item.listInfo.direction, property, elementVarName, language);
                     } else if (!!item.listInfo) { // if there is information on how to project the property as a list, make it a list
                         result += this.generatePartAsList(item, property, elementVarName);
-                    } else if (!!item.externalInfo) { // if there is information on how to project the property as an external component
+                    } else if (!!item.externalInfo) { // there is information on how to project the property as an external component
                         result += this.generateListAsExternal(item, property, elementVarName);
                     }
                 } else { // single element
                     ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
-                    result += `BoxUtil.getBoxOrAction(${elementVarName}, "${property.name}", "${property.type.name}", this.mainHandler) `;
+                    let singleResult: string = `BoxUtil.getBoxOrAction(${elementVarName}, "${property.name}", "${property.type.name}", this.mainHandler) `;
+                    if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
+                        result += this.generateSingleAsExternal(item, property, elementVarName, singleResult);
+                    } else {
+                        result += singleResult;
+                    }
                 }
             } else { // reference
                 if (property.isList) {
@@ -483,11 +493,17 @@ export class ProjectionTemplate {
                         result += this.generateReferenceAsList(language, item.listInfo, property, elementVarName);
                     }
                 } else { // single element
+                    let singleResult: string = '';
                     if (property.type instanceof FreMetaLimitedConcept && (item.displayType === "radio" || this.stdLimitedListDisplayType === "radio")) {
                         // use limited control
-                        result += this.generateLimitedSingleProjection(property, elementVarName, "radio");
+                        singleResult = this.generateLimitedSingleProjection(property, elementVarName, "radio");
                     } else {
-                        result += this.generateReferenceProjection(language, property, elementVarName);
+                        singleResult = this.generateReferenceProjection(language, property, elementVarName);
+                    }
+                    if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
+                        result += this.generateSingleAsExternal(item, property, elementVarName, singleResult);
+                    } else {
+                        result += singleResult;
                     }
                 }
             }
@@ -787,13 +803,17 @@ export class ProjectionTemplate {
         return `new ExternalBox("${item.externalInfo.externalName}", ${element}, "${myRole}"${childStr}${initializer})`;
     }
 
-    private generateListAsExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string) {
+    private buildInitializer(item: FreEditPropertyProjection) {
         // build the initializer with parameters to the external component
         let initializer: string = '';
         if (!!item.externalInfo!.params && item.externalInfo!.params.length > 0) {
             initializer = `, { params: [${item.externalInfo!.params.map(x => `{key: "${x.key}", value: "${x.value}"}`).join(", ")}] }`;
         }
+        return initializer;
+    }
 
+    private generateListAsExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string) {
+        let initializer: string = this.buildInitializer(item);
         // todo get the role correct
         let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.externalName}`;
         ListUtil.addListIfNotPresent(this.coreImports, ["BoxUtil", "ExternalBox"]);
@@ -801,8 +821,49 @@ export class ProjectionTemplate {
                     "${item.externalInfo!.externalName}",
                     ${elementVarName},
                     "${myRole}",
-                    BoxUtil.findPartItems(${elementVarName}, ${elementVarName}.${propertyConcept.name}, "${propertyConcept.name}", this.mainHandler)
+                    BoxUtil.makePartItems(${elementVarName}, ${elementVarName}.${propertyConcept.name}, "${propertyConcept.name}", this.mainHandler)
                     ${initializer}
                     )`;
     }
+
+    private generateSingleAsExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaProperty, elementVarName: string, childProjection: string): string {
+        let initializer: string = this.buildInitializer(item);
+        // todo get the role correct
+        let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.externalName}`;
+        ListUtil.addListIfNotPresent(this.coreImports, ["BoxUtil", "ExternalBox"]);
+        return `new ExternalBox(
+                    "${item.externalInfo!.externalName}",
+                    ${elementVarName},
+                    "${myRole}",
+                    [${childProjection}]
+                    ${initializer}
+                    )`;
+    }
+
+    // private generateRefListAsExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string): string {
+    //     let initializer: string = this.buildInitializer(item);        // todo get the role correct
+    //     let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.externalName}`;
+    //     ListUtil.addListIfNotPresent(this.coreImports, ["BoxUtil", "ExternalBox"]);
+    //     return `new ExternalBox(
+    //                 "${item.externalInfo!.externalName}",
+    //                 ${elementVarName},
+    //                 "${myRole}",
+    //                 BoxUtil.makeRefItems(element, property, propertyName, scoper)
+    //                 ${initializer}
+    //                 )`;
+    // }
+    //
+    // private generateSingleRefAsExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string) {
+    //     let initializer: string = this.buildInitializer(item);
+    //     // todo get the role correct
+    //     let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.externalName}`;
+    //     ListUtil.addListIfNotPresent(this.coreImports, ["BoxUtil", "ExternalBox"]);
+    //     return `new ExternalBox(
+    //                 "${item.externalInfo!.externalName}",
+    //                 ${elementVarName},
+    //                 "${myRole}",
+    //                 BoxUtil.getBoxOrAction(${elementVarName}, "${propertyConcept.name}", "${propertyConcept.type.name}", this.mainHandler)
+    //                 ${initializer}
+    //                 )`;
+    // }
 }
