@@ -154,8 +154,11 @@ export class FreEditor {
         if (this.checkParam(element)) {
             const box: ElementBox = this.projection.getBox(element);
             // check whether the box is shown in the current projection
-            if (isNullOrUndefined(box) || !this.isBoxInTree(box)) {
-                // element is not shown, try selecting its parent
+            if (isNullOrUndefined(box) || !this.isBoxInTree(box) ) {
+                if (!this.isBoxVisible(box)) {// todo use visibility here
+                    console.log("Box " + box.id + "is not visible")
+                }
+                // element is not shown, try selecting its parent todo maybe try selecting a sibling first?
                 this.selectElement(element.freOwner());
             } else {
                 // try and find the property to be selected
@@ -197,6 +200,21 @@ export class FreEditor {
             return true;
         }
         return this.isBoxInTree(box.parent);
+    }
+
+    /**
+     * Once the editor is running there may exist boxes, or small box trees that are not in the current projection.
+     * This method checks whether the given box is in the current box tree.
+     * @param box
+     */
+    isBoxVisible(box: Box): boolean {
+        if (isNullOrUndefined(box)) {
+            return false;
+        }
+        if (box.isVisible) {
+            return this.isBoxVisible(box.parent);
+        }
+        return false;
     }
 
     /**
@@ -389,7 +407,7 @@ export class FreEditor {
      * TODO what if there is no previous sibling?
      */
     selectPreviousLeaf() {
-        const previous = this.selectedBox?.nextLeafLeft;
+        const previous: Box = this.selectedBox?.nextLeafLeft;
         LOGGER.log("Select previous leaf is box " + previous?.role);
         if (!!previous) {
             this.selectElementForBox(previous, FreCaret.RIGHT_MOST);

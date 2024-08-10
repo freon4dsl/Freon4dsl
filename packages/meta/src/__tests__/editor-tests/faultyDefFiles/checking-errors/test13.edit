@@ -14,5 +14,5 @@ external xx:one [
 
 CC {[
  [external=aap par="20" set="ww"]
- ${self.CCprop7 external=yy}
+ ${self.CCprop7 external=yz}
 ]}

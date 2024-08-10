@@ -311,21 +311,21 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         const allKnownExternals: string[] | undefined = editor.getDefaultProjectiongroup()?.findGlobalProjFor(ForType.Externals)?.externals;
         this.runner.nestedCheck({
                 check: !!allKnownExternals && allKnownExternals?.includes(childDef.externalName),
-                error: `External component "${childDef.externalName}" is unknown ${ParseLocationUtil.location(childDef)}.`,
+                error: `External component '${childDef.externalName}' is unknown ${ParseLocationUtil.location(childDef)}.`,
                 whenOk: () => {
                     // check whether the external is used in this projection
                     // @ts-ignore
                     const yy: FreEditExternalInfo | undefined = projection.findAllExternals().find(ext => ext.externalName === childDef.externalName);
                     this.runner.simpleWarning(
                         !!yy,
-                        `External component "${childDef.externalName}" is unused in this projection ${ParseLocationUtil.location(childDef)}.`
+                        `External component '${childDef.externalName}' is unused in this projection ${ParseLocationUtil.location(childDef)}.`
                     );
                     // check childDef.positionInProjection
                     if (!!childDef.positionInProjection) {
                         const myPositions: string[] = projection.findPositionsOfExternal(childDef.externalName);
                         this.runner.simpleCheck(
                             !!myPositions && myPositions?.includes(childDef.positionInProjection),
-                            `Position in projection "${childDef.positionInProjection}" is unknown ${ParseLocationUtil.location(childDef)}.`
+                            `Position in projection '${childDef.positionInProjection}' is unknown ${ParseLocationUtil.location(childDef)}.`
                         );
                     }
                 }
@@ -476,7 +476,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         const myParent = item.superRef.referred;
         this.runner.nestedCheck({
             check: !!myParent,
-            error: `Cannot find "${item.superRef.name}" ${ParseLocationUtil.location(item)}`,
+            error: `Cannot find '${item.superRef.name}' ${ParseLocationUtil.location(item)}`,
             whenOk: () => {
                 // see if myParent is indeed one of the implemented interfaces or a super concept
                 if (myParent instanceof FreMetaConcept) {
@@ -601,7 +601,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 const myProp:FreMetaProperty | undefined = cls.allProperties().find(prop => prop.name === item.expression!.appliedfeature?.sourceName);
                 this.runner.nestedCheck({
                     check: !!myProp,
-                    error: `Cannot find property "${item.expression!.toFreString()}" ${ParseLocationUtil.location(item)}`,
+                    error: `Cannot find property '${item.expression!.toFreString()}' ${ParseLocationUtil.location(item)}`,
                     whenOk: () => {
                         // set the 'property' attribute of the projection
                         item.property = MetaElementReference.create<FreMetaProperty>(myProp!, "FreProperty");

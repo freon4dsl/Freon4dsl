@@ -11,9 +11,10 @@
     let open = false;
     let buttonLabel: string = 'OpenDialog';
 
-    function findButtonLabel() {
+    function initialize() {
         let tmpLabel: string | undefined = box.findParam('buttonLabel');
         buttonLabel = (!!tmpLabel && tmpLabel.length > 0) ? tmpLabel : 'Open Dialog';
+        box.children[0].isVisible = false;
     }
 
     // The following four functions need to be included for the editor to function properly.
@@ -27,18 +28,17 @@
             box.parent.firstEditableChild.setFocus();
         }
     }
-
     const refresh = (why?: string): void => {
         // do whatever needs to be done to refresh the elements that show information from the model
-        findButtonLabel();
+        initialize();
     };
     onMount(() => {
-        findButtonLabel();
+        initialize();
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
     afterUpdate(() => {
-        findButtonLabel();
+        initialize();
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });

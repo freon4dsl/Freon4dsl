@@ -12,6 +12,21 @@
     let multipleStr: string = box.findParam("multi");
     let multiplePar: boolean = !!multipleStr && multipleStr.length > 0;
 
+    function initialize() {
+        let multipleStr: string = box.findParam("multi");
+        multiplePar = !!multipleStr && multipleStr.length > 0;
+        for (let i = 0; i < box.children.length; i++) {
+            // this also sets the length of panelOpen!
+            panelOpen[i] = false;
+            box.children[i].isVisible = false; // the child boxes are not currently shown
+        }
+    }
+
+    function setHidden(index) {
+        box.children[index].isVisible = !box.children[index].isVisible;
+        console.log("setting " + box.children[index].id + " to " + box.children[index].isVisible )
+    }
+
     // The following four functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
@@ -23,14 +38,10 @@
     }
     const refresh = (why?: string): void => {
         // do whatever needs to be done to refresh the elements that show information from the model
-        let multipleStr: string = box.findParam("multi");
-        multiplePar = !!multipleStr && multipleStr.length > 0;
+        initialize();
     };
     onMount(() => {
-        for( let i=0; i < box.children.length; i++) {
-            // this also sets the length of panelOpen!
-            panelOpen[i] = false;
-        }
+        initialize();
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
@@ -45,7 +56,7 @@
         <Panel bind:open={panelOpen[index]}>
             <Header>
                 {childBox.element.freLanguageConcept()} {childBox.element["name"]}
-                <IconButton slot="icon" toggle pressed={panelOpen[index]}>
+                <IconButton slot="icon" toggle pressed={panelOpen[index]} on:click={() => setHidden(index)}>
                     <Icon class="material-icons" on>expand_less</Icon>
                     <Icon class="material-icons">expand_more</Icon>
                 </IconButton>

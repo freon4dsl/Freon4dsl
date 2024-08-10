@@ -25,6 +25,7 @@ export abstract class Box {
     cssStyle: string = "";      // Custom CSS Style class that will be added as inline style to the component rendering this box
     selectable: boolean = true; // Can this box be selected in the editor?
     // todo because most boxes are not selectable the default could be set to false
+    isVisible: boolean = true;  // Is this box currently not shown in the editor?
     parent: Box = null;
 
     refreshComponent: (why?: string) => void;   // The refresh method from the component that displays this box.
@@ -123,10 +124,10 @@ export abstract class Box {
         if (!this.parent) {
             return null;
         }
-        const thisIndex = this.parent.children.indexOf(this);
-        const rightSiblings = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
+        const thisIndex: number = this.parent.children.indexOf(this);
+        const rightSiblings: Box[] = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
         for (const sibling of rightSiblings) {
-            const siblingChild = sibling.firstLeaf;
+            const siblingChild: Box = sibling.firstLeaf;
             if (!!siblingChild) {
                 return siblingChild;
             }
@@ -145,10 +146,10 @@ export abstract class Box {
         if (this.parent === null || this.parent === undefined) {
             return null;
         }
-        const thisIndex = this.parent.children.indexOf(this);
-        const leftSiblings = this.parent.children.slice(0, thisIndex).reverse();
+        const thisIndex: number = this.parent.children.indexOf(this);
+        const leftSiblings: Box[] = this.parent.children.slice(0, thisIndex).reverse();
         for (const sibling of leftSiblings) {
-            const siblingChild = sibling.lastLeaf;
+            const siblingChild: Box = sibling.lastLeaf;
             if (!!siblingChild) {
                 return siblingChild;
             }
@@ -289,7 +290,7 @@ export abstract class Box {
         this.getEditableChildrenRecursive(editableChildren);
         if (editableChildren.length > 0) {
             // Prefer a left- or right-placeholder if possible
-            const binaryPlaceHolders = editableChildren.filter(box => 
+            const binaryPlaceHolders: Box[] = editableChildren.filter(box =>
                 box.role === FRE_BINARY_EXPRESSION_LEFT ||
                 box.role === FRE_BINARY_EXPRESSION_RIGHT
             )

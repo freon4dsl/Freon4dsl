@@ -225,11 +225,15 @@ describe("Checking editor definition ", () => {
             console.log(e);
             if (e instanceof Error) {
                 console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                expect(e.message).toBe(`checking errors (3).`);
+                expect(checker.errors.includes("Position in projection 'one' is unknown [file: test13.edit:10:1].")).toBeTruthy();
+                expect(checker.errors.includes("External projection 'aap' is not declared in globals [file: test13.edit:16:3].")).toBeTruthy();
+                expect(checker.errors.includes("External projection 'yz' is not declared in globals [file: test13.edit:17:17].")).toBeTruthy();
+
                 console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
-                expect(e.message).toBe(`checking errors (11).`);
                 expect(checker.hasWarnings()).toBeTruthy;
                 expect(checker.warnings.length).toBe(1);
-                expect(checker.warnings.includes("Found multiple definitions for global projections, please note that they may be overridden [file: test11.edit:4:5],[file: test12.edit:4:5].")).toBeTruthy();
+                expect(checker.warnings.includes("External component 'xx' is unused in this projection [file: test13.edit:10:1].")).toBeTruthy();
             }
         }
     });
