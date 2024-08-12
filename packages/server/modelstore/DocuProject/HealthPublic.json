@@ -106,6 +106,14 @@
                   "key": "-default-key-BaseProduct-nrOfUse"
                },
                "value": "0"
+            },
+            {
+               "property": {
+                  "language": "-default-key-DocuProject",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseProduct-date"
+               },
+               "value": ""
             }
          ],
          "containments": [

@@ -19,6 +19,7 @@ BaseProduct {[
         yields profit: ${self.yieldsProfit}
         expected nr of use: ${self.nrOfUse slider}
         range: ${self.range}
+        date: ${self.date external=DatePicker startDate="24/02/2024"}
     ]
 }
 

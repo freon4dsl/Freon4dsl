@@ -11,7 +11,8 @@ global {
         AnimatedGif,
         SMUI_Card,
         SMUI_Accordion,
-        SMUI_Dialog
+        SMUI_Dialog,
+        DatePicker
     }
 }
 

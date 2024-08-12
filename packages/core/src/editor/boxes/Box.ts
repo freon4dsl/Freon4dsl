@@ -80,6 +80,9 @@ export abstract class Box {
      * Get the first selectable leaf box in the tree with `this` as root.
      */
     get firstLeaf(): Box | null {
+        if (!this.isVisible) {
+            return null;
+        }
         if (this.isLeaf() && this.selectable) {
             return this;
         }
@@ -101,6 +104,9 @@ export abstract class Box {
      * Get the last selectable leaf box in the tree with `this` as root.
      */
     get lastLeaf(): Box | null {
+        if (!this.isVisible) {
+            return null;
+        }
         if (this.isLeaf() && this.selectable) {
             return this;
         }
@@ -131,7 +137,7 @@ export abstract class Box {
             if (!!siblingChild) {
                 return siblingChild;
             }
-            if (sibling.isLeaf() && sibling.selectable) {
+            if (sibling.isLeaf() && sibling.selectable && sibling.isVisible) {
                 return sibling;
             }
         }
@@ -153,7 +159,7 @@ export abstract class Box {
             if (!!siblingChild) {
                 return siblingChild;
             }
-            if (sibling.isLeaf() && sibling.selectable) {
+            if (sibling.isLeaf() && sibling.selectable && sibling.isVisible) {
                 return sibling;
             }
         }

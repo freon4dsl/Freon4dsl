@@ -31,7 +31,7 @@ export class ExternalBox extends Box {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
-            child.isVisible = false;
+            // child.isVisible = false;
         }
     }
 

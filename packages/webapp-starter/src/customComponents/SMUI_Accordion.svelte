@@ -49,6 +49,7 @@
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
+    initialize()
 </script>
 
 <Accordion multiple="{multiplePar}">
