@@ -21,10 +21,15 @@ Note that the childBox itself may be a vertical or horizontal layout containing 
     - To define the wrapped content the following must be included within the '{}' brackets of the projection 
   definition. It must be beneath the projection (the bit between '[]' brackets).
 ````
+MyConcept {
+    [
+        Here is a fragment [fragment=SMUI_Card]
+    ]
     fragment SMUI_Card [
         My First Card wrapping a property: ${self.isUnderConstruction}
         Great, isn't it!
     ]
+}
 ````        
 - BoxType: `ExternalFragmentBox`.
 - Interface:
