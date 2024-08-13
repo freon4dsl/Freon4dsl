@@ -4,35 +4,44 @@ global {
     external {
         AnimatedGif,
         SMUI_Card,
-        SMUI_Accordion,
         SMUI_Dialog
     }
 }
 
-ExternalUnit {[ ${self.content} ]}
+ExternalUnit {[
+    ${self.content}
+    A simple external component:
+    [external = AnimatedGif ]
+]}
 
 AA {[
-    ${self.name external=SMUI_Card}
-    // the possibilities for primitive properties
-    ${self.stringProp}
-    ${self.numberProp}
-    ${self.booleanProp}
+    This is concept AA ${self.name}
+    Wrap all properties:
+    stringProp ${self.stringProp wrap=SMUI_Card}
+    numberProp ${self.numberProp wrap=SMUI_Card}
+    booleanProp${self.booleanProp wrap=SMUI_Card}
     // properties with concept as type
-    ${self.conceptProp external=SMUI_Dialog buttonLabel="Show ConceptProp"}
-    ${self.conceptList}
+    conceptProp ${self.conceptProp wrap=SMUI_Card}
+    conceptList ${self.conceptList wrap=SMUI_Card}
+    referenceProp ${self.referenceProp wrap=SMUI_Card}
+    referenceList ${self.referenceList wrap=SMUI_Card}
 ]}
 
 BB {[
-    This is concept BB ${self.stringProp}
+    This is concept BB ${self.name}
+    Replace all properties:
+    // the possibilities for primitive properties
+    stringProp ${self.stringProp replace=SMUI_Dialog}
+    numberProp ${self.numberProp replace=SMUI_Dialog}
+    booleanProp ${self.booleanProp replace=SMUI_Dialog}
+    // properties with concept as type
+    conceptProp ${self.conceptProp replace=SMUI_Dialog}
+    conceptList ${self.conceptList replace=SMUI_Dialog}
+    // properties with reference as type
+    referenceProp ${self.referenceProp replace=SMUI_Dialog}
+    referenceList ${self.referenceList replace=SMUI_Dialog}
 ]}
 
-//    // properties with concept as type
-//    ${self.conceptProp}
-//    ${self.conceptList}
-//    ${self.referenceProp}
-//    ${self.referenceList}
-//    // properties with interface as type
-//    ${self.interfaceProp}
-//    ${self.interfaceList}
-//    ${self.intfReferenceProp}
-//    ${self.intfReferenceList}
+    // the possibilities for primitive properties
+
+// properties with wrap may have other display info, like ['YES', 'NO'], vertical, etc

@@ -113,7 +113,7 @@ export class FreProjectionHandler {
             LOGGER.log("getBoxProvider is null/undefined for type " + node.freLanguageConcept());
             boxProvider = this.conceptNameToProviderConstructor.get(node.freLanguageConcept())(this);
             this.elementToProvider.set(node.freId(), boxProvider);
-            boxProvider.element = node;
+            boxProvider.node = node;
         }
         return boxProvider;
     }

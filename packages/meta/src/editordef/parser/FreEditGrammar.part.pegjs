@@ -28,12 +28,6 @@ projection_end          = "]"
 projection_separator    = "|"
 displayType             = "text" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
 
-//globalProjections = "defaults" ws "{" ws list:singleGlobalProjection* ws "}"
-//{
-//    console.log("list: " + list + ", " + location().start.line)
-//    return { list: list };
-//}
-
 singleGlobalProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 {
     return creator.createGlobal({
@@ -91,7 +85,7 @@ classifierProjection =
             classifier:classifierReference curly_begin ws
                 projections:projectionChoice?
                 extras: extraClassifierInfo?
-                childDefs: external_child_def_single*
+                fragments: fragment_def_single*
             curly_end
 {
     return creator.createParsedClassifier({
@@ -99,7 +93,7 @@ classifierProjection =
         "projection"       : !!projections ? projections["normal"] : null,
         "tableProjection"  : !!projections ? projections["table"] : null,
         "classifierInfo"   : extras,
-        "externalChildDefs": childDefs,
+        "fragments"        : fragments,
         "location"         : location()
     });
 }
@@ -204,17 +198,6 @@ extraChoiceSub3 = symbol:symbol
 }
 /* END of rules that make order of extra info flexible */
 
-// todo add table projection to the possibilities for 'child'
-external_child_def_single = "external" ws name:var pos:(colon_separator ws p:var {return p;})? child:projection
-{
-    return creator.createExternalChildDef({
-        "externalName"          : name,
-        "positionInProjection"  : pos,
-        "childProjection"       : child,
-        "location"              : location()
-    });
-}
-
 projection = ws projection_begin lines:lineWithOptional* projection_end ws
 {
     return creator.createProjection({
@@ -237,32 +220,60 @@ tableProjection = "table" ws projection_begin ws
     return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
 }
 
-lineWithOptional = items:(templateSpace / textItem / optionalProjection / external_projection / property_projection / superProjection / newline )+
+lineWithOptional = items:(templateSpace / textItem / optionalProjection / simple_external / fragment_projection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
 
-lineWithOutOptional = items:(templateSpace / textItem / external_projection / property_projection / superProjection / newline )+
+lineWithOutOptional = items:(templateSpace / textItem / simple_external / fragment_projection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
 
-external_projection = projection_begin ext:inner_external projection_end
+simple_external = projection_begin "external" equals_separator name:var ws params:key_value_pair* projection_end
 {
-     return creator.createExternalProjection({
-        "externalInfo"          : ext,
-        "location"              : location()
-     })
+    return creator.createSimpleExternal({
+        "name"          : name,
+        "params"        : params,
+        "location"      : location()
+    });
 }
 
-inner_external = "external" equals_separator name:var pos:(colon_separator ws p:var {return p;})? ws params:key_value_pair*
+fragment_projection = projection_begin "fragment" ws name:var ws ext:external_info? projection_end
 {
-     return creator.createExternalInfo({
-        "externalName"          : name,
-        "positionInProjection"  : pos,
-        "params"                : params,
+    return creator.createFragmentProjection({
+        "name"          : name,
+        "wrapperInfo"   : ext,
+        "location"      : location()
+    });
+}
+
+external_info = "wrap" equals_separator wrap:var ws params:key_value_pair*
+{
+    return creator.createExternalInfo({
+        "wrapBy"        : wrap,
+        "params"        : params,
+        "location"      : location()
+    });
+}
+/ "replace" equals_separator replace:var ws params:key_value_pair*
+{
+    return creator.createExternalInfo({
+        "replaceBy"     : replace,
+        "params"        : params,
+        "location"      : location()
+    });
+}
+
+// todo add table projection to the possibilities for 'child'
+fragment_def_single = "fragment" ws name:var wrap:("wrap" equals_separator w:var {return w;})? child:projection
+{
+    return creator.createFragmentDef({
+        "name"                  : name,
+        "wrapperInfo"           : wrap,
+        "childProjection"       : child,
         "location"              : location()
-     })
+    });
 }
 
 key_value_pair = key:var equals_separator "\"" value:textBut "\"" ws
@@ -284,8 +295,9 @@ property_projection = s:singleProperty {return s;}
     / l:listProperty {return l;}
     / b:button_projection {return b;}
 
+// todo make order of displayType, keywordDecl, and external_info flexible
 singleProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:displayType? ws kw:keywordDecl? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:displayType? ws kw:keywordDecl? ws ext:external_info?
                       propProjectionEnd
 {
     return creator.createSinglePropertyProjection( {
@@ -293,12 +305,13 @@ singleProperty = propProjectionStart ws
         "projectionName"    : projName,
         "displayType"       : kind,
         "boolKeywords"      : kw,
+        "externalInfo"      : ext,
         "location"          : location()
     });
 }
 
 listProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws l:listInfo? ws kind:displayType? ws ext:inner_external? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws l:listInfo? ws kind:displayType? ws ext:external_info? ws
                       propProjectionEnd
 {
     return creator.createListPropertyProjection( {

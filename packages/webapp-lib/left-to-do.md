@@ -15,7 +15,7 @@ DONE:
 2. The error list and search results should not have a number, or perhaps they should have some ID.
 4. Delete model functionality should be added.
 6. When an item is selected in the info panel (error or search result), the cursor should jump to the corresponding
-   element.
+   node.
 7. Code to import a unit should be moved to other place.
 9. Add comments on changes in SplitPane.
 10. Split EditorCommunication in better to handle units, and address all todos.

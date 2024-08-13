@@ -12,22 +12,22 @@ import { LayoutBox, ListDirection } from "./LayoutBox";
  * as 'propName: conceptName[]' or 'reference propName: conceptName[]'.
  */
 export abstract class ListBox extends LayoutBox {
+    readonly kind: string = "ListBox";
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
 
     protected constructor(node: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<ListBox>) {
         super(node, role, children, initializer);
-        this.kind = "ListBox";
         this.propertyName = propertyName;
         this.conceptName = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
     }
 
     options(type: MenuOptionsType): MenuItem[] {
-        return getContextMenuOptions(this.conceptName, this.element, this.propertyName, type);
+        return getContextMenuOptions(this.conceptName, this.node, this.propertyName, type);
     }
 }
 
 export class HorizontalListBox extends ListBox {
-    kind: string = "HorizontalListBox";
+    readonly kind: string = "HorizontalListBox";
 
     constructor(element: FreNode, propertyName: string, role: string, children?: (Box | null)[], initializer?: Partial<HorizontalListBox>) {
         super(element, role, propertyName, children, initializer);
@@ -36,7 +36,7 @@ export class HorizontalListBox extends ListBox {
 }
 
 export class VerticalListBox extends ListBox {
-    kind = "VerticalListBox";
+    readonly kind: string = "VerticalListBox";
 
     constructor(node: FreNode, propertyName: string, role: string, children?: Box[], initializer?: Partial<HorizontalListBox>) {
         super(node, role, propertyName, children, initializer);

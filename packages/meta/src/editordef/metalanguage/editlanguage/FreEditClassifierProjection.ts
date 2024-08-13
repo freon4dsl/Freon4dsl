@@ -1,6 +1,6 @@
 import {FreMetaDefinitionElement} from "../../../utils/index.js";
 import {FreMetaClassifier, MetaElementReference} from "../../../languagedef/metalanguage/index.js";
-import {FreEditExternalChildDefinition, FreEditExternalInfo, FreEditPropertyProjection} from "./internal.js";
+import {FreEditFragmentDefinition, FreEditExternalInfo, FreEditPropertyProjection} from "./internal.js";
 
 /**
  * A single projection definition for a single concept or interface
@@ -8,7 +8,7 @@ import {FreEditExternalChildDefinition, FreEditExternalInfo, FreEditPropertyProj
 export abstract class FreEditClassifierProjection extends FreMetaDefinitionElement {
     name: string = '';
     classifier: MetaElementReference<FreMetaClassifier> | undefined;
-    externalChildDefs: FreEditExternalChildDefinition[] = [];
+    fragments: FreEditFragmentDefinition[] = [];
 
     /**
      * Find all projections or parts.
@@ -37,5 +37,9 @@ export abstract class FreEditClassifierProjection extends FreMetaDefinitionEleme
     findAllExternals(): FreEditExternalInfo[] {
         console.error(`FreEditClassifierProjection.findPositionsOfExternal() CALLED, IT SHOULD BE IMPLEMENTED BY ALL SUBCLASSES.`);
         return [];
+    }
+
+    getFragmentNames(): string[] {
+        return this.fragments.map(fr => fr.name);
     }
 }

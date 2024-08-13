@@ -48,7 +48,7 @@
     });
 
     afterUpdate(() => {
-        LOGGER.log("GridComponent afterUpdate for girdBox " + box.element.freLanguageConcept())
+        LOGGER.log("GridComponent afterUpdate for girdBox " + box.node.freLanguageConcept())
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
     });

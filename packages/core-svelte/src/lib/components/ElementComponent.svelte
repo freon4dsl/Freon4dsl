@@ -13,7 +13,7 @@
     let childBox: Box ;
 
     const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.element?.freLanguageConcept());
+        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.node?.freLanguageConcept());
         if (!!box) {
             id = componentId(box);
             childBox = box.content;

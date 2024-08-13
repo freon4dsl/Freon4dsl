@@ -106,10 +106,10 @@ class BTree {
     }
 
     insertBinaryExpression(newBinExp: FreBinaryExpression, box: Box, editor: FreEditor): Selected | null {
-        LOGGER.log("insertBinaryExpression for " + box.element);
+        LOGGER.log("insertBinaryExpression for " + box.node);
         let selectedElement: Selected | null = null;
-        FreUtils.CHECK(isFreExpression(box.element), "insertBinaryExpression: current element should be a FreExpressionNode, but it isn't");
-        const exp = box.element as FreExpressionNode;
+        FreUtils.CHECK(isFreExpression(box.node), "insertBinaryExpression: current element should be a FreExpressionNode, but it isn't");
+        const exp = box.node as FreExpressionNode;
         switch (box.role) {
             case LEFT_MOST:
                 selectedElement = { element: newBinExp, boxRoleToSelect: FRE_BINARY_EXPRESSION_LEFT };

@@ -88,7 +88,7 @@ export abstract class LayoutBox extends Box {
 
     addChildren(children?: Box[]): LayoutBox {
         if (!!children) {
-            children.forEach(child => this.addChild(child));
+            children.forEach(child => this.addChildNoDirty(child));
             // LOGGER.log("List addChildren dirty")
             this.isDirty();
         }

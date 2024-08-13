@@ -101,7 +101,7 @@ export class EditorRequestsHandler {
         const tobepasted = this.langEnv.editor.copiedElement;
         if (!!tobepasted) {
             const currentSelection: Box = this.langEnv.editor.selectedBox;
-            const element: FreNode = currentSelection.element;
+            const element: FreNode = currentSelection.node;
             if (!!currentSelection) {
                 if (isActionTextBox(currentSelection)) {
                     if (isActionBox(currentSelection.parent)) {

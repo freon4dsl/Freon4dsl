@@ -16,7 +16,7 @@ export abstract class Box {
     $id: string;
     kind: string = "";
     role: string = "";
-    element: FreNode = null;  // the model element to which this box is coupled
+    node: FreNode = null;  // the model element to which this box is coupled
     propertyName: string;       // the name of the property, if any, in 'element' which this box projects
     propertyIndex: number;      // the index within the property, if appropriate
     // todo make sure propertyName and index are correctly set
@@ -51,14 +51,14 @@ export abstract class Box {
 
     protected constructor(node: FreNode, role: string) {
         FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");
-        this.element = node;
+        this.node = node;
         this.role = role;
         this.$id = FreUtils.BOX_ID(); // uuid.v4();
     }
 
     get id(): string {
-        if (!!this.element) {
-            return this.element.freId() + (this.role === null ? "" : "-" + this.role);
+        if (!!this.node) {
+            return this.node.freId() + (this.role === null ? "" : "-" + this.role);
         } else {
             return "unknown-element-" + this.role;
         }
@@ -263,7 +263,7 @@ export abstract class Box {
                 return child;
             }
             const result = child.findChildBoxForProperty(propertyName, propertyIndex);
-            if (!isNullOrUndefined(result) && result.element === this.element) {
+            if (!isNullOrUndefined(result) && result.node === this.node) {
                 return result;
             }
         }

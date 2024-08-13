@@ -62,7 +62,7 @@ export class DefaultActionsTemplate {
                             AFTER_BINARY_OPERATOR
                         ],
                         expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
-                            const parent = box.element;
+                            const parent = box.node;
                             const newExpression = new ${Names.concept(c)}();
                             parent[(box as ActionBox).propertyName] = newExpression;
                             return newExpression;
@@ -78,7 +78,7 @@ export class DefaultActionsTemplate {
                             AFTER_BINARY_OPERATOR
                         ],
                         expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
-                            const parent = box.element;
+                            const parent = box.node;
                             const newExpression = new ${Names.concept(c)}();
                             parent[(box as ActionBox).propertyName] = newExpression;
                             return newExpression;
@@ -131,7 +131,7 @@ export class DefaultActionsTemplate {
                                         activeInBoxRoles: ["optional-${optionalPropertyName}"],
                                         action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
                                             ((box.parent) as OptionalBox).mustShow = true;
-                                            return box.element;
+                                            return box.node;
                                         },
                                         boxRoleToSelect: "${rolename}"
                                     })`;
@@ -158,7 +158,7 @@ export class DefaultActionsTemplate {
                     activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
                     trigger: "${trigger}",
                     action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
-                        const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
+                        const parent: ${Names.classifier(concept)} = box.node as ${Names.classifier(concept)};
                         const newBase: ${Names.FreNodeReference}<${Names.classifier(referredConcept)}> = ${Names.FreNodeReference}.create<${Names.classifier(referredConcept)}>("", null);
                         parent.${reference.name}.push(newBase);
                         return newBase.referred;

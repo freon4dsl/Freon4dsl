@@ -35,7 +35,7 @@
 
     function refresh(from? : string): void {
         if (!!cellBox) {
-            LOGGER.log("REFRESH GridCellComponent " + (!!from ? " from " + from + " " : "") + cellBox?.element?.freLanguageConcept() + "-" + cellBox?.element?.freId());
+            LOGGER.log("REFRESH GridCellComponent " + (!!from ? " from " + from + " " : "") + cellBox?.node?.freLanguageConcept() + "-" + cellBox?.node?.freId());
             LOGGER.log("GridCellComponent row/col " + cellBox.$id + ": " + cellBox.row + "," + cellBox.column + "  span " + cellBox.rowSpan + "," + cellBox.columnSpan + "  box " + cellBox.content.role + "--- " + int++);
             contentBox = cellBox.content;
             row = cellBox.row + (cellBox.rowSpan ? " / span " + cellBox.rowSpan : "");

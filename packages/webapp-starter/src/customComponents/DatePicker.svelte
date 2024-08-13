@@ -1,7 +1,7 @@
 <script lang="ts">
     import {afterUpdate, onMount} from "svelte";
-    import {ExternalBox, FreEditor} from "@freon4dsl/core";
-    export let box: ExternalBox;
+    import {ExternalStringBox, FreEditor} from "@freon4dsl/core";
+    export let box: ExternalStringBox;
     export let editor: FreEditor;
 
     let inputElement;
@@ -17,7 +17,7 @@
         let xx = getValidDate(value)
         if (xx !== undefined) {
             console.log("Changing value to: " + value)
-            box.children[0].element[box.children[0].propertyName] = value;
+            box.setPropertyValue(value);
         } else {
             console.log("Value: " + value + " is not a valid date")
         }
@@ -35,9 +35,12 @@
         }
     }
     function getValue() {
-        let startStr: string | undefined = box.children[0].element[box.children[0].propertyName];
-        value = (!!startStr && startStr.length > 0) ? startStr : "2024-02-24";
-        console.log("Value: " + value);
+        let startStr: string | boolean | number | undefined = box.getPropertyValue();
+        if (typeof startStr === "string" && !!startStr && startStr.length > 0) {
+            value = startStr;
+        } else {
+            value = "2024-02-24";
+        }
     }
 
     // The following four functions need to be included for the editor to function properly.
@@ -52,15 +55,11 @@
     onMount(() => {
         getValue();
         box.setFocus = setFocus;
-        box.children[0].setFocus = setFocus;
         box.refreshComponent = refresh;
-        box.children[0].refreshComponent = refresh;
     });
     afterUpdate(() => {
         box.setFocus = setFocus;
-        box.children[0].setFocus = setFocus;
         box.refreshComponent = refresh;
-        box.children[0].refreshComponent = refresh;
     });
 </script>
 <div class="datepicker">

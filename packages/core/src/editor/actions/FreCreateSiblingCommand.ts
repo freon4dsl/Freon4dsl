@@ -34,7 +34,7 @@ export class FreCreateSiblingCommand extends FreCommand {
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
         // todo make index optional and set the default value to -1;
         console.log("CreateSiblingCommand: trigger [" + triggerTypeToString(trigger) + "] part: " + this.conceptName + " refshort " + this.referenceShortcut);
-        const ownerDescriptor = box.element.freOwnerDescriptor();
+        const ownerDescriptor = box.node.freOwnerDescriptor();
         const ownerConcept: string = ownerDescriptor.owner.freLanguageConcept();
         const propName: string = ownerDescriptor.propertyName;
         let theModelElement = ownerDescriptor.owner[propName];

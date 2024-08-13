@@ -27,9 +27,9 @@ export class TableCellBox extends GridCellBox {
         let listParent: FreNode;
         if (type === MenuOptionsType.placeholder || type === MenuOptionsType.header) {
             // the element associated with this box is the listParent itself
-            listParent = this.element;
+            listParent = this.node;
         } else {
-            listParent = this.element.freOwner();
+            listParent = this.node.freOwner();
         }
         // console.log(`listParent ${listParent.freLanguageConcept()}, conceptName: ${this.conceptName}`);
         return getContextMenuOptions(this.conceptName, listParent, this.propertyName, type);

@@ -155,9 +155,6 @@ export class FreEditor {
             const box: ElementBox = this.projection.getBox(element);
             // check whether the box is shown in the current projection
             if (isNullOrUndefined(box) || !this.isBoxInTree(box) ) {
-                if (!this.isBoxVisible(box)) {// todo use visibility here
-                    console.log("Box " + box.id + "is not visible")
-                }
                 // element is not shown, try selecting its parent todo maybe try selecting a sibling first?
                 this.selectElement(element.freOwner());
             } else {
@@ -200,21 +197,6 @@ export class FreEditor {
             return true;
         }
         return this.isBoxInTree(box.parent);
-    }
-
-    /**
-     * Once the editor is running there may exist boxes, or small box trees that are not in the current projection.
-     * This method checks whether the given box is in the current box tree.
-     * @param box
-     */
-    isBoxVisible(box: Box): boolean {
-        if (isNullOrUndefined(box)) {
-            return false;
-        }
-        if (box.isVisible) {
-            return this.isBoxVisible(box.parent);
-        }
-        return false;
     }
 
     /**
@@ -287,10 +269,10 @@ export class FreEditor {
      */
     selectElementForBox(box: Box, caret?: FreCaret) {
         if (!isNullOrUndefined(box) && box !== this._selectedBox) { // only (re)set the local variables when the box can be found
-            this._selectedElement = box.element;
+            this._selectedElement = box.node;
             if (!box.selectable) {
                 // get the ElementBox for the selected element
-                this._selectedBox = this.projection.getBox(box.element);
+                this._selectedBox = this.projection.getBox(box.node);
                 // console.log('box not selectable: ' + box.kind)
             } else {
                 this._selectedBox = box;
@@ -330,7 +312,7 @@ export class FreEditor {
      */
     deleteBox(box: Box) {
         LOGGER.log("deleteBox");
-        const node: FreNode = box.element;
+        const node: FreNode = box.node;
         const ownerDescriptor: FreOwnerDescriptor = node.freOwnerDescriptor();
         if (ownerDescriptor !== null) {
             LOGGER.log("remove from parent splice " + [ownerDescriptor.propertyIndex] + ", 1");

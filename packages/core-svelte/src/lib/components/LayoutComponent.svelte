@@ -44,7 +44,7 @@
     });
 
     const refresh = (why?: string): void => {
-        LOGGER.log("REFRESH LayoutComponent (" + why +")" + box?.element?.freLanguageConcept());
+        LOGGER.log("REFRESH LayoutComponent (" + why +")" + box?.node?.freLanguageConcept());
         id = !!box ? componentId(box) : 'layout-for-unknown-box';
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;

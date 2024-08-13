@@ -120,10 +120,10 @@
         }
         if (data.componentId === id) { // dropping in the same grid
             // console.log("moving item within grid");
-            moveListElement(box.element, data.element, box.propertyName, targetIndex);
+            moveListElement(box.node, data.element, box.propertyName, targetIndex);
         } else { // dropping in another list
             // console.log("moving item to another grid, drop type: " + data.elementType + ", grid cell type: " + elementType);
-            dropListElement(editor, data, elementType, box.element, box.propertyName, targetIndex);
+            dropListElement(editor, data, elementType, box.node, box.propertyName, targetIndex);
         }
         // Everything is done, so reset the variables
         $draggedElem = null;

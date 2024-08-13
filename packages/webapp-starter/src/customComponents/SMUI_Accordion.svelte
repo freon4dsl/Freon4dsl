@@ -1,11 +1,11 @@
 <script lang="ts">
     import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
     import IconButton, { Icon } from '@smui/icon-button';
-    import {ExternalBox, FreEditor} from "@freon4dsl/core";
+    import {FragmentWrapperBox, FreEditor} from "@freon4dsl/core";
     import {RenderComponent} from "@freon4dsl/core-svelte";
     import {afterUpdate, onMount} from "svelte";
 
-    export let box: ExternalBox;
+    export let box: FragmentWrapperBox;
     export let editor: FreEditor;
 
     let panelOpen: boolean[] = [];
@@ -56,7 +56,7 @@
     {#each box.children as childBox, index}
         <Panel bind:open={panelOpen[index]}>
             <Header>
-                {childBox.element.freLanguageConcept()} {childBox.element["name"]}
+                {childBox.node.freLanguageConcept()} {childBox.node["name"]}
                 <IconButton slot="icon" toggle pressed={panelOpen[index]} on:click={() => setHidden(index)}>
                     <Icon class="material-icons" on>expand_less</Icon>
                     <Icon class="material-icons">expand_more</Icon>

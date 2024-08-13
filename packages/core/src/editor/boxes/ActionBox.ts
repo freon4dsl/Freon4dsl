@@ -82,9 +82,9 @@ export class ActionBox extends AbstractChoiceBox {
             });
         } else if (!!this.propertyName) {
             // Reference property
-            const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(this.element.freLanguageConcept(), this.propertyName);
-            LOGGER.log(`parent: ${this.element.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`);
-            this.addReferences(this.element, propDef, result, editor);
+            const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(this.node.freLanguageConcept(), this.propertyName);
+            LOGGER.log(`parent: ${this.node.freLanguageConcept()} prop ${propDef.name} kind: ${propDef?.propertyKind}`);
+            this.addReferences(this.node, propDef, result, editor);
         } else {
             LOGGER.log("No property and concept defined for action box " + this.role);
         }
@@ -134,7 +134,7 @@ export class ActionBox extends AbstractChoiceBox {
         const self: ActionBox = this;
         runInAction(() => {
             const newElement = concept.constructor();
-            newElement["$$owner"] = this.element;
+            newElement["$$owner"] = this.node;
             result.push(...
                 editor.environment
                     .scoper.getVisibleNames(newElement, concept.referenceShortcut.conceptName)

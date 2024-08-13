@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    import {ExternalBox, FreEditor} from "@freon4dsl/core";
+    import {FragmentWrapperBox, FreEditor} from "@freon4dsl/core";
     import {afterUpdate, onMount} from "svelte";
 
     let src1 = '/cats-kittens.gif';
@@ -11,7 +11,7 @@
     let name3 = 'Staring kitten';
 
     // Freon expects both of these to be present, even if they are not used.
-    export let box: ExternalBox;
+    export let box: FragmentWrapperBox;
     export let editor: FreEditor;
 
     let src: string = src1;

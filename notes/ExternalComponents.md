@@ -17,41 +17,26 @@ Fragment wrappers may appear anywhere in a projection. Fragment wrappers wrap a 
 Note that the childBox itself may be a vertical or horizontal layout containing many other elements. 
 - Syntax: 
     - To position the wrapper within the projection:
-    `[fragment=SMUI_Card]` 
+    `[fragment XX wrap=SMUI_Card]` 
     - To define the wrapped content the following must be included within the '{}' brackets of the projection 
   definition. It must be beneath the projection (the bit between '[]' brackets).
-````
-MyConcept {
-    [
-        Here is a fragment [fragment=SMUI_Card]
-    ]
-    fragment SMUI_Card [
-        My First Card wrapping a property: ${self.isUnderConstruction}
-        Great, isn't it!
-    ]
-}
-````        
-- BoxType: `ExternalFragmentBox`.
+- BoxType: `FragmentWrapperBox`.
 - Interface:
   - `getChildBox(): Box`
     - Use this method and the `RenderComponent` to show the childBox in the external component.
 
-#### Multiple simple wrappers of the same external component type in one projection
-When two or more external components of the same type are to be used within one projection, they can be distinguished 
-by a postfix. The postfix can be any identifier. There may not be a space between the component name and the ':', 
-or between ':' and the postfix.
-- Syntax: 
-  - To position the wrapper within the projection:
-    `[fragment=SMUI_Card:First] ... [fragment=SMUI_Card:Second]`
-  - To define the wrapped content the same postfix should be used.
+Example:
 ````
-    fragment SMUI_Card:First [
+MyConcept {
+    [
+        Here is a fragment [fragment XX wrap = SMUI_Card]
+    ]
+    fragment XX [
         My First Card wrapping a property: ${self.isUnderConstruction}
+        Great, isn't it!
     ]
-    fragment SMUI_Card:Second [
-        My Second Card is wrapping another property: ${self.isExpensive}
-    ]
-````   
+}
+````  
 
 ### Property Projections: Wrapping or Replacing
 A property projection may be wrapped in an external component, or the external component can replace the native 
@@ -60,7 +45,7 @@ get tabbing etc. working.
 
 ### Wrapping property projections of Primitive type
 - Syntax: `${self.name wrap=SMUI_Dialog}`
-- BoxType: `WrappedStringBox`, `WrappedNumberBox`, or `WrappedBooleanBox`
+- BoxType: `StringWrapperBox`, `NumberWrapperBox`, or `BooleanWrapperBox`
 - Interface:
     - `getPropertyName(): string` 
       - Returns the name of the wrapped property.
@@ -75,7 +60,7 @@ get tabbing etc. working.
 
 ### Wrapping property projections of Part List type
 - Syntax: `${self.parts wrap=SMUI_Accordion}`
-- BoxType: `WrappedPartListBox`
+- BoxType: `PartListWrapperBox`
 - Interface:
     - `getPropertyName(): string`
         - Returns the name of the wrapped property.
@@ -90,11 +75,11 @@ get tabbing etc. working.
 
 ### Wrapping property projections of Reference List type
 - Syntax: `${self.parts wrap=SMUI_Accordion}`
-- BoxType: `WrappedRefListBox`
+- BoxType: `RefListWrapperBox`
 - Interface:
     - `getPropertyName(): string`
         - Returns the name of the wrapped property.
-    - `getPropertyValue(): FreReferenceNode[]`
+    - `getPropertyValue(): FreNodeReference[]`
         - Type is `string` in case of an ExternalStringBox, `number` or `boolean` for the other box types.
     - `getChildBox(): Box`
         - Returns the projection for the property. Use this method and the `RenderComponent` to
@@ -105,7 +90,7 @@ get tabbing etc. working.
 
 ### Wrapping property projections of Part type
 - Syntax: `${self.part wrap=SMUI_Dialog}`
-- BoxType: `WrappedPartBox`
+- BoxType: `PartWrapperBox`
 - Interface:
     - `getPropertyName(): string`
        - Returns the name of the wrapped property.
@@ -117,7 +102,7 @@ get tabbing etc. working.
 
 ### Wrapping property projections of Reference type
 - Syntax: `${self.reference wrap=SMUI_Dialog}`
-- BoxType: `WrappedReferenceBox`
+- BoxType: `RefWrapperBox`
 - Interface:
     - `getPropertyName(): string`
         - Returns the name of the wrapped property.
@@ -135,10 +120,10 @@ get tabbing etc. working.
         - Returns the name of the wrapped property.
     - `getPropertyValue(): string`
       - Returns the value of the wrapped property.
-      Type is `string` in case of an ExternalStringBox, `number` or `boolean` for the other box types.
+      Type is `string` in case of an `ExternalStringBox`, `number` or `boolean` for the other box types.
     - `setPropertyValue(newValue: string)`
         - Sets the value of the property. 
-      Type is `string` in case of an ExternalStringBox, `number` or `boolean` for the other box types.
+      Type is `string` in case of an `ExternalStringBox`, `number` or `boolean` for the other box types.
 
 ### Replacing property projections of Part List type
 - Syntax: `${self.parts replace=SMUI_Accordion}`
@@ -159,9 +144,9 @@ get tabbing etc. working.
 - Interface:
     - `getPropertyName(): string`
         - Returns the name of the wrapped property.
-    - `getPropertyValue(): FreReferenceNode[]`
+    - `getPropertyValue(): FreNodeReference[]`
         - Returns the value of the wrapped property. You need to cast the returned value to the required type.
-    - `setPropertyValue(newValue: FreReferenceNode[])`
+    - `setPropertyValue(newValue: FreNodeReference[])`
         - Sets the value of the property.
     - `getChildren(): Box[]`
         - Returns a list of boxes that hold the projection for every item in the list.
@@ -179,7 +164,7 @@ get tabbing etc. working.
         
 ### Replacing property projections of Reference type
 - Syntax: `${self.reference replace=SMUI_Dialog}`
-- BoxType: `ExternalReferenceBox`
+- BoxType: `ExternalRefBox`
 - Interface:
     - `getPropertyName(): string`
         - Returns the name of the wrapped property.

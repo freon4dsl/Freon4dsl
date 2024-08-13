@@ -75,7 +75,7 @@
 
     afterUpdate(() => {
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
-        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.element?.freId() + '=' + b?.element?.freLanguageConcept() + '=' + b?.kind) + "]");
+        LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.node?.freId() + '=' + b?.node?.freLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
         if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected

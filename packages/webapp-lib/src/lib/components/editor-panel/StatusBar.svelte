@@ -51,7 +51,7 @@
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		elem: {currentBox?.element?.freId()} - {currentBox?.element?.freLanguageConcept()}
+		elem: {currentBox?.node?.freId()} - {currentBox?.node?.freLanguageConcept()}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon tag=svg viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>

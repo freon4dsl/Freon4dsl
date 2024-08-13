@@ -1,5 +1,5 @@
 import {
-    FreEditClassifierProjection, FreEditExternalInfo, FreEditExternalProjection,
+    FreEditClassifierProjection, FreEditExternalInfo, FreEditSimpleExternal,
     FreEditProjectionLine,
     FreEditPropertyProjection
 } from "./internal.js";
@@ -28,32 +28,9 @@ export class FreEditNormalProjection extends FreEditClassifierProjection {
             line.items.forEach(item => {
                 if (item instanceof FreEditPropertyProjection && !!item.externalInfo) {
                     result.push(item.externalInfo);
-                } else if (item instanceof FreEditExternalProjection) {
-                    result.push(item.externalInfo);
-                }
-            });
-        });
-        return result;
-    }
-
-    /**
-     * Returns the 'positionInProjection' part of an expression like 'SMUI_Card:Second' (i.e. 'Second')
-     * for all occurrences of external projections or property projections that are marked 'external',
-     * and have the name 'externalName'.
-     * @param externalName
-     */
-    findPositionsOfExternal(externalName: string): string[] {
-        const result: string[] = [];
-        this.lines.forEach(line => {
-            line.items.forEach(item => {
-                let foundOne: FreEditExternalInfo | undefined = undefined;
-                if (item instanceof FreEditPropertyProjection && !!item.externalInfo) {
-                    foundOne = item.externalInfo;
-                } else if (item instanceof FreEditExternalProjection) {
-                    foundOne = item.externalInfo;
-                }
-                if (!!foundOne && foundOne.externalName === externalName && !!foundOne.positionInProjection) {
-                    result.push(foundOne.positionInProjection);
+                } else if (item instanceof FreEditSimpleExternal) {
+                    // result.push(item.externalInfo);
+                    // todo
                 }
             });
         });

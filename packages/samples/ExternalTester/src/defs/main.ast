@@ -31,6 +31,7 @@ concept AA  {
 }
 
 concept BB {
+    name: identifier;
     // the possibilities for primitive properties
     stringProp: string;
 //    stringList: string[];

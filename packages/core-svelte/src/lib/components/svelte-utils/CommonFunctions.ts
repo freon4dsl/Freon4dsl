@@ -57,7 +57,7 @@ export function isEven(n: number): boolean {
     return (n & 1) === 0;
 }
 export function componentId(box: Box): string {
-    return `${box?.element?.freId()}-${box?.role}`;
+    return `${box?.node?.freId()}-${box?.role}`;
 }
 
 export function setBoxSizes(box: Box, rect: DOMRect) {

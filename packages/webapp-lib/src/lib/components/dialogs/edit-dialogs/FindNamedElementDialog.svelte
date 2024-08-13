@@ -4,7 +4,7 @@
         aria-describedby="event-content"
         on:SMUIDialog:closed={closeHandler}
 >
-    <Title id="event-title">Search for a named element</Title>
+    <Title id="event-title">Search for a named node</Title>
     <Content id="event-content">
         <div>
             <Textfield variant="outlined" bind:value={stringToFind} bind:invalid={nameInvalid} >

@@ -1,20 +1,38 @@
 <script lang="ts">
     import Dialog, { Title, Content, Actions } from '@smui/dialog';
     import Button, { Label } from '@smui/button';
-    import {RenderComponent} from "@freon4dsl/core-svelte";
-    import {ExternalBox, FreEditor} from "@freon4dsl/core";
+    import {ExternalStringBox, FreEditor} from "@freon4dsl/core";
     import {afterUpdate, onMount} from "svelte";
+    import Textfield from '@smui/textfield';
+    import Icon from '@smui/textfield/icon';
+    import HelperText from '@smui/textfield/helper-text';
 
-    export let box: ExternalBox;
+    export let box: ExternalStringBox;
     export let editor: FreEditor;
 
     let open = false;
     let buttonLabel: string = 'OpenDialog';
+    let value: string | number = '';
+    let inputElement;
 
     function initialize() {
         let tmpLabel: string | undefined = box.findParam('buttonLabel');
         buttonLabel = (!!tmpLabel && tmpLabel.length > 0) ? tmpLabel : 'Open Dialog';
-        box.children[0].isVisible = false;
+        let tmpValue = box.getPropertyValue();
+        if (typeof tmpValue === "boolean") {
+            if (tmpValue) value = "true";
+            if (!!tmpValue) value = "false";
+        } else {
+            value = tmpValue;
+        }
+    }
+
+    const onChange = () => {
+        box.setPropertyValue(value);
+    }
+
+    const onKeyDown = (event) => {
+        event.stopPropagation();
     }
 
     // The following four functions need to be included for the editor to function properly.
@@ -22,7 +40,7 @@
     async function setFocus(): Promise<void> {
         if (open) {
             console.log("OPEN: setting focus to child")
-            box.children[0].setFocus();
+            inputElement.focus();
         } else {
             console.log("CLOSED: setting focus to parent")
             box.parent.firstEditableChild.setFocus();
@@ -47,9 +65,10 @@
 <Dialog bind:open sheet aria-describedby="sheet-content">
     <Title id="simple-title">{buttonLabel}</Title>
     <Content id="simple-content">
-        {#each box.children as childBox}
-            <RenderComponent box={childBox} editor={editor}/>
-        {/each}
+        <Textfield bind:value={value} on:change={onChange} bind:this={inputElement} on:keydown={onKeyDown}>
+            <Icon class="material-icons" slot="leadingIcon">event</Icon>
+            <HelperText slot="helper">{buttonLabel}</HelperText>
+        </Textfield>
     </Content>
     <Actions>
         <Button>

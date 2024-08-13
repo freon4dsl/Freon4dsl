@@ -20,7 +20,7 @@ describe.skip("Indent component", () => {
         const result = render(IndentComponent, { box: myIndentBox, editor: myEditor });
         const myLabel = screen.getByText('LabelText');
         expect(myLabel).toBeVisible();
-        const indentComp = screen.getByTestId(`${myIndentBox.element.freId()}-${myIndentBox.role}`);
+        const indentComp = screen.getByTestId(`${myIndentBox.node.freId()}-${myIndentBox.role}`);
         // Cannot test the dynamic value of margin-left TODO find out how to
         // For now, we test the static value of margin-left
         // TODO: This seems to work now, probably newer versions

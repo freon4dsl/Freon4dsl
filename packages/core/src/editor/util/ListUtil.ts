@@ -9,7 +9,7 @@ import * as Keys from "./Keys";
 import { MetaKey } from "./Keys";
 import { FreLogger } from "../../logging";
 import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index";
-import { FreLanguage, PropertyKind } from "../../language";
+import {FreLanguage, FreLanguageClassifier, PropertyKind} from "../../language";
 import { FreNode } from "../../ast";
 import { runInAction } from "mobx";
 import { FreErrorSeverity } from "../../validator";
@@ -122,7 +122,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     propertyName: ${propertyName}
     optionsType ${optionsType}`);
     // do some checks
-    const clsOtIntf = FreLanguage.getInstance().classifier(conceptName);
+    const clsOtIntf: FreLanguageClassifier = FreLanguage.getInstance().classifier(conceptName);
     // @ts-ignore
     const errorItem: MenuItem = new MenuItem("No options available", "", (element: FreNode, index: number, editor: FreEditor) => {
     });
@@ -134,7 +134,7 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     // first create the items that depend upon the conceptName
     let addBefore: MenuItem;
     let addAfter: MenuItem;
-    const contextMsg = ""; // TODO Use this?: index !== undefined && (listParent[propertyName][index]["name"] !== undefined) ? listParent[propertyName][index]["name"] : ""
+    const contextMsg: string = ""; // TODO Use this?: index !== undefined && (listParent[propertyName][index]["name"] !== undefined) ? listParent[propertyName][index]["name"] : ""
     // the handler signature demands the use of certain parameters, therefore the ts-ignore-s
     if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
         // todo subclasses to be tested in different project than Example
