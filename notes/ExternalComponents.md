@@ -8,25 +8,25 @@ Simple additions may appear anywhere in the projection. Simple additions have no
 However, because they are present in the projection of a certain node, they are coupled to this node.
 - Syntax: `[external = AnimatedGif ]`
   - Note that there may be no space between `[` and `external`.
-- Generated BoxType: `ExternalSimpleBox`.
+- BoxType: `ExternalSimpleBox`.
 - Interface:
   - No specific interface.
 
-### Simple wrappers
-Simple wrappers may appear anywhere in a projection. Simple wrappers wrap a single projection. This is the `childBox`. 
+### Fragment wrappers
+Fragment wrappers may appear anywhere in a projection. Fragment wrappers wrap a single projection. This is the `childBox`. 
 Note that the childBox itself may be a vertical or horizontal layout containing many other elements. 
 - Syntax: 
     - To position the wrapper within the projection:
-    `[external=SMUI_Card]` 
+    `[fragment=SMUI_Card]` 
     - To define the wrapped content the following must be included within the '{}' brackets of the projection 
   definition. It must be beneath the projection (the bit between '[]' brackets).
 ````
-    external SMUI_Card [
+    fragment SMUI_Card [
         My First Card wrapping a property: ${self.isUnderConstruction}
         Great, isn't it!
     ]
 ````        
-- Generated BoxType: `ExternalFragmentBox`.
+- BoxType: `ExternalFragmentBox`.
 - Interface:
   - `getChildBox(): Box`
     - Use this method and the `RenderComponent` to show the childBox in the external component.
@@ -37,13 +37,13 @@ by a postfix. The postfix can be any identifier. There may not be a space betwee
 or between ':' and the postfix.
 - Syntax: 
   - To position the wrapper within the projection:
-    `[external=SMUI_Card:First] ... [external=SMUI_Card:Second]`
+    `[fragment=SMUI_Card:First] ... [fragment=SMUI_Card:Second]`
   - To define the wrapped content the same postfix should be used.
 ````
-    external SMUI_Card:First [
+    fragment SMUI_Card:First [
         My First Card wrapping a property: ${self.isUnderConstruction}
     ]
-    external SMUI_Card:Second [
+    fragment SMUI_Card:Second [
         My Second Card is wrapping another property: ${self.isExpensive}
     ]
 ````   
@@ -53,49 +53,135 @@ A property projection may be wrapped in an external component, or the external c
 projection. In the latter case it is up to the language engineer to get and set the value correctly, and to 
 get tabbing etc. working.
 
-### Wrapping property projections
-- Syntax: `${self.name wrap=SMUI_Card}`
-- Generated BoxType: `ExternalFragmentBox`
+### Wrapping property projections of Primitive type
+- Syntax: `${self.name wrap=SMUI_Dialog}`
+- BoxType: `WrappedStringBox`, `WrappedNumberBox`, or `WrappedBooleanBox`
 - Interface:
-  - `getChildBox(): Box` 
-    - Returns the projection for the property. Use this method and the `RenderComponent` to 
-    show the property projection in the external component. Note that when a list is wrapped, this method returns
-    a single Box that holds the native projection for the complete list, i.e. a horizontal list, vertical list, or 
-    table projection.
+    - `getPropertyName(): string` 
+      - Returns the name of the wrapped property.
+    - `getPropertyValue(): string`
+      - Returns the value of the wrapped property. Type is `string` in case of an ExternalStringBox, 
+      `number` or `boolean` for the other box types.
+    - `getChildBox(): Box`
+      - Returns the projection for the property. Use this method and the `RenderComponent` to
+        show the property projection in the external component. Note that when a list is wrapped, this method returns
+        a single Box that holds the native projection for the complete list, i.e. a horizontal list, vertical list, or
+        table projection.
+
+### Wrapping property projections of Part List type
+- Syntax: `${self.parts wrap=SMUI_Accordion}`
+- BoxType: `WrappedPartListBox`
+- Interface:
+    - `getPropertyName(): string`
+        - Returns the name of the wrapped property.
+    - `getPropertyValue(): FreNode[]`
+        - Returns the value of the wrapped property. You need to cast the returned value to the required type.
+    - `getChildBox(): Box`
+        - Returns the projection for the property. Use this method and the `RenderComponent` to
+          show the property projection in the external component. Note that this method returns
+          a single Box that holds the native projection for the complete list, i.e. a horizontal 
+          list, vertical list, or table projection.
 - Example:
 
+### Wrapping property projections of Reference List type
+- Syntax: `${self.parts wrap=SMUI_Accordion}`
+- BoxType: `WrappedRefListBox`
+- Interface:
+    - `getPropertyName(): string`
+        - Returns the name of the wrapped property.
+    - `getPropertyValue(): FreReferenceNode[]`
+        - Type is `string` in case of an ExternalStringBox, `number` or `boolean` for the other box types.
+    - `getChildBox(): Box`
+        - Returns the projection for the property. Use this method and the `RenderComponent` to
+          show the property projection in the external component. Note that this method returns
+          a single Box that holds the native projection for the complete list, i.e. a horizontal
+          list, vertical list, or table projection.
+- Example:
+
+### Wrapping property projections of Part type
+- Syntax: `${self.part wrap=SMUI_Dialog}`
+- BoxType: `WrappedPartBox`
+- Interface:
+    - `getPropertyName(): string`
+       - Returns the name of the wrapped property.
+    - `getPropertyValue(): FreNode`
+      - Returns the value of the wrapped property. You need to cast the returned value to the required type.
+  - `getChildBox(): Box`
+      - Returns the projection for the property. Use this method and the `RenderComponent` to
+        show the property projection in the external component. 
+
+### Wrapping property projections of Reference type
+- Syntax: `${self.reference wrap=SMUI_Dialog}`
+- BoxType: `WrappedReferenceBox`
+- Interface:
+    - `getPropertyName(): string`
+        - Returns the name of the wrapped property.
+  - `getPropertyValue(): FreNodeReference`
+      - Returns the value of the wrapped property. 
+  - `getChildBox(): Box`
+      - Returns the projection for the property. Use this method and the `RenderComponent` to
+        show the property projection in the external component.
+       
 ### Replacing property projections of Primitive type
 - Syntax: `${self.name replace=SMUI_Dialog}`
 - BoxType: `ExternalStringBox`, `ExternalNumberBox`, or `ExternalBooleanBox`
 - Interface:
-    - `getPropertyValue(): string` 
-      - Type is `string` in case of an ExternalStringBox, `number` or `boolean` for the other box types.
-    - `setPropertyValue(newValue: string)` 
-      - Type is `string` in case of an ExternalStringBox, `number` or `boolean` for the other box types.
+    - `getPropertyName(): string`
+        - Returns the name of the wrapped property.
+    - `getPropertyValue(): string`
+      - Returns the value of the wrapped property.
+      Type is `string` in case of an ExternalStringBox, `number` or `boolean` for the other box types.
+    - `setPropertyValue(newValue: string)`
+        - Sets the value of the property. 
+      Type is `string` in case of an ExternalStringBox, `number` or `boolean` for the other box types.
 
-### Replacing property projections of List type
+### Replacing property projections of Part List type
 - Syntax: `${self.parts replace=SMUI_Accordion}`
-- Generated BoxType: `ExternalListBox`
+- BoxType: `ExternalPartListBox`
 - Interface:
+  - `getPropertyName(): string`
+    - Returns the name of the wrapped property.
+  - `getPropertyValue(): FreNode[]`
+    - Returns the value of the wrapped property. You need to cast the returned value to the required type.
+  - `setPropertyValue(newValue: FreNode[])`
+    - Sets the value of the property.
+  - `getChildren(): Box[]`
+    - Returns a list of boxes that hold the projection for every item in the list.
+
+### Replacing property projections of Reference List type
+- Syntax: `${self.parts replace=SMUI_Accordion}`
+- BoxType: `ExternalRefListBox`
+- Interface:
+    - `getPropertyName(): string`
+        - Returns the name of the wrapped property.
+    - `getPropertyValue(): FreReferenceNode[]`
+        - Returns the value of the wrapped property. You need to cast the returned value to the required type.
+    - `setPropertyValue(newValue: FreReferenceNode[])`
+        - Sets the value of the property.
     - `getChildren(): Box[]`
         - Returns a list of boxes that hold the projection for every item in the list.
-- Example:
 
 ### Replacing property projections of Part type
 - Syntax: `${self.part replace=SMUI_Dialog}`
 - BoxType: `ExternalPartBox`
 - Interface:
+    - `getPropertyName(): string`
+        - Returns the name of the wrapped property.
     - `getPropertyValue(): FreNode`
-        - You need to cast the returned value to the required type.
+        - Returns the value of the wrapped property. You need to cast the returned value to the required type.
     - `setPropertyValue(newValue: FreNode)`
+        - Sets the value of the property.
         
 ### Replacing property projections of Reference type
 - Syntax: `${self.reference replace=SMUI_Dialog}`
 - BoxType: `ExternalReferenceBox`
 - Interface:
+    - `getPropertyName(): string`
+        - Returns the name of the wrapped property.
     - `getPropertyValue(): FreNodeReference`
-        - You need to cast the returned value to the required type.
+      - Returns the value of the wrapped property. 
     - `setPropertyValue(newValue: FreNodeReference)`
+      - Sets the value of the property.
 
 ## Wiring
 1. Create your Svelte components in the webapp package. Be sure to which type of box your component will be 
@@ -129,6 +215,7 @@ setCustomComponents([
    {component: DatePicker, knownAs: "DatePicker"}
 ]);
 ```
+
 ## Parameters to the external components
 You can set parameters to an external component in the .edit file. These are simple key-value pairs, both key 
 and value are strings. There can be a list of parameters. 
