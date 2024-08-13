@@ -293,3 +293,7 @@
 .text-dropdown-component .text-component-text {
     color: green;
 }
+
+.text-dropdown-component .text-component-input {
+    color: green;
+}

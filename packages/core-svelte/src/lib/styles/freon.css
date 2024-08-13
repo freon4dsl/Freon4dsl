@@ -144,7 +144,7 @@
 }
 
 .contextmenu-shortcut {
-    font-size: 0.7em;
+    /*font-size: 0.7em;*/
 }
 
 .contextmenu-hr {
@@ -244,6 +244,8 @@
 .text-component-text {
     padding: 0px;
     margin: 1px;
+    line-height: 6px;
+    width: 100%;
     white-space: normal;
     display: inline-block;
 }
