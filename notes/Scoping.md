@@ -4,7 +4,7 @@
 
   - Giving each PiElement a function `getChildren()` would make this much shorter.
   - Each function in the walker becomes smaller.
-  - Might rewrite walker (or have a second one) to execute the same function for every element would make it even really small.
+  - Might rewrite walker (or have a second one) to execute the same function for every node would make it even really small.
 
 - ExampleWalker.walk
 
