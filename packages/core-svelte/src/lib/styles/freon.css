@@ -13,7 +13,7 @@
     font-weight: normal;
     font-family: "Arial";
     margin: 1px;
-    padding: 1px;
+    padding: 0px;
 }
 
 .label-component:empty:before {
@@ -32,15 +32,15 @@
 .list-component-horizontal {
     white-space: nowrap;
     display: grid;
-    padding: 1px;
+    padding: 0px;
     border-width: 0pt;
     border-style: none;
-    margin: 1px;
+    margin: 0px;
     box-sizing: border-box;
 }
 
 .list-component-vertical {
-    padding: 1px;
+    padding: 0px;
     border-width: 0pt;
     border-style: none;
     margin: 1px;
@@ -48,7 +48,7 @@
 }
 
 .layout-component {
-    padding:1px;
+    padding: 0px;
     margin: 1px;
     box-sizing: border-box;
 }
@@ -89,7 +89,6 @@
     display: inline-block;
 }
 
-
 .limited-radio-component-group {
     margin: 2px;
     padding: 4px 6px 4px 6px;
@@ -101,6 +100,7 @@
     --md-focus-ring-active-width: 1px;
     --md-focus-ring-width: 0px;
 }
+
 .limited-radio-component-group:hover,
 .limited-radio-component-group:focus-within {
     border-radius: 0.1em;
@@ -130,7 +130,7 @@
 }
 .contextmenu-button {
     border-radius: 2px;
-    padding: 4px;
+    padding: 0px;
     margin: 3px;
     cursor: pointer;
     text-align: left;
@@ -177,12 +177,12 @@
     text-transform: uppercase;
     cursor: pointer;
     outline: none;
-    padding: 4px 6px 4px 6px;
-    margin: 2px;
+    /*margin: 4px 6px 4px 6px;*/
+    /*margin: 2px;*/
 }
 
 .boolean-checkbox-component {
-    padding: 1px;
+    padding: 0px;
     /* the following three variables determine the manner in which the focus-ring is shown */
     --md-focus-ring-duration: 0s; /* disabled animation */
     --md-focus-ring-active-width: 0px;
@@ -225,7 +225,7 @@
     left: -9999px;
     display: inline-block;
     line-height: 6px;
-    padding: 1px;
+    padding: 0px;
     margin: 1px;
     border: none;
     box-sizing: border-box;
@@ -233,7 +233,7 @@
 
 .text-component-input {
     /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
-    padding: 1px;
+    padding: 0px;
     margin: 1px;
     line-height: 6px;
     width: 100%;
@@ -242,20 +242,20 @@
 }
 
 .text-component-text {
-    padding: 1px;
+    padding: 0px;
     margin: 1px;
     white-space: normal;
     display: inline-block;
 }
 
 .text-component-placeholder {
-    padding: 1px;
+    padding: 0px;
     margin: 1px;
     white-space: normal;
     display: inline-block;
 }
 .text-component-action-placeholder {
-    padding: 1px;
+    padding: 0px;
     margin: 1px;
     white-space: normal;
     display: inline-block;
@@ -303,8 +303,8 @@
     white-space: nowrap;
     border: none;
     border-radius: 2px;
-    padding: 4px;
-    margin: 3px;
+    padding: 0px;
+    margin: 5px;
     cursor: pointer;
     text-align: left;
     display: flex;
@@ -327,8 +327,7 @@
 }
 
 .inner-switch-component button {
-    margin: 1px;
-    padding: 4px 6px 4px 6px;
+    margin: 4px 6px 4px 6px;
     border: none;
 }
 
@@ -341,7 +340,7 @@
 .inner-switch-component button span {
     user-select: none;
     pointer-events:none;
-    padding: 0.25em;
+    margin: 0.25em;
 }
 
 .inner-switch-component button:hover,
@@ -354,7 +353,7 @@
 }
 
 .optional-component {
-    padding: 3px;
+    margin: 3px;
     white-space: normal;
     display: inline-block;
 }
@@ -364,12 +363,12 @@
 }
 
 .optional-component-show {
-    padding: 3px;
+    margin: 3px;
     white-space: normal;
     display: inline-block;
 }
 .optional-component-hide {
-    padding: 3px;
+    margin: 3px;
     white-space: normal;
     display: inline-block;
 }
@@ -390,9 +389,10 @@
 
 .switch-component {
     margin: 1px;
-    padding: 2px 6px 4px 6px;
+    margin: 2px 6px 4px 6px;
     display: inline-flex;
     width: max-content;
+    align-content: baseline;
 }
 .switch-component button {
     width: 3em;
@@ -447,7 +447,7 @@
     box-sizing: border-box;
     align-self: baseline; /* isn't this the default? */
     justify-self: baseline;
-    padding: 1px;
+    margin: 1px;
 }
 
 .table-cell-component-unselected {
@@ -477,7 +477,7 @@
 .grid-cell-component {
     box-sizing: border-box;
     align-self: baseline;
-    justify-self: var(--freon-gridcell-component-justify-left, baseline);
+    justify-self: baseline;
     display: flex;
-    padding: var(--freon-gridcell-component-padding, 1px);
+    margin: 1px;
 }
