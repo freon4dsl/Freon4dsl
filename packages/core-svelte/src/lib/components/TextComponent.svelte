@@ -36,38 +36,38 @@
 	import { replaceHTML } from "./svelte-utils/index.js";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
-    const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
-    const dispatcher = createEventDispatcher();
-    type BoxType = "action" | "select" | "text";
+	const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
+	const dispatcher = createEventDispatcher();
+	type BoxType = "action" | "select" | "text";
 
-    // Parameters
-    export let box: TextBox;				// the accompanying textbox
-    export let editor: FreEditor;			// the editor
+	// Parameters
+	export let box: TextBox;				// the accompanying textbox
+	export let editor: FreEditor;			// the editor
 	export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user, needs to be exported for binding in TextDropdownComponent
 	export let partOfActionBox: boolean = false; // indication whether this text component is part of an TextDropdownComponent
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
 	export let textUpdateFunction = undefined
 	export let endEditingParentFunction = undefined
-    // Local variables
-    let id: string;                         // an id for the html element
-    id = !!box ? componentId(box) : 'text-with-unknown-box';
-    let inputElement: HTMLInputElement; 	// the <input> element on the screen
-    let placeholder: string = '<..>';       // the placeholder when value of text component is not present
-    let originalText: string;               // variable to remember the text that was in the box previously
-    let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
-    let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
-    let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
-    										// Note that 'from <= to' always holds.
+	// Local variables
+	let id: string;                         // an id for the html element
+	id = !!box ? componentId(box) : 'text-with-unknown-box';
+	let inputElement: HTMLInputElement; 	// the <input> element on the screen
+	let placeholder: string = '<..>';       // the placeholder when value of text component is not present
+	let originalText: string;               // variable to remember the text that was in the box previously
+	let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
+	let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
+	let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
+	// Note that 'from <= to' always holds.
 	let placeHolderStyle: string;
 	$: placeHolderStyle = (partOfActionBox ? "text-component-action-placeholder" : "text-component-placeholder");
-    let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
-    $: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
+	let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
+	$: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
 
-    /**
-     * This function sets the focus on this element programmatically.
-     * It is called from the box.
-     */
+	/**
+	 * This function sets the focus on this element programmatically.
+	 * It is called from the box.
+	 */
 	export async function setFocus(): Promise<void> {
 		// LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
@@ -81,96 +81,96 @@
 		}
 	}
 
-    /**
-     * This function ensures that 'from <= to' always holds.
-     * Should be called whenever these variables are set.
-     * @param inFrom
-     * @param inTo
-     */
-    function setFromAndTo(inFrom: number, inTo: number) {
-        if (inFrom < inTo) {
-            from = inFrom;
-            to = inTo;
-        } else {
-            from = inTo;
-            to = inFrom;
-        }
-    }
+	/**
+	 * This function ensures that 'from <= to' always holds.
+	 * Should be called whenever these variables are set.
+	 * @param inFrom
+	 * @param inTo
+	 */
+	function setFromAndTo(inFrom: number, inTo: number) {
+		if (inFrom < inTo) {
+			from = inFrom;
+			to = inTo;
+		} else {
+			from = inTo;
+			to = inFrom;
+		}
+	}
 
-    /**
-     * This function sets the caret position of the <input> element programmatically.
-     * It is called from setFocus, so indirectly by the editor.
-     * @param freCaret
-     */
-    const setCaret = (freCaret: FreCaret) => {
+	/**
+	 * This function sets the caret position of the <input> element programmatically.
+	 * It is called from setFocus, so indirectly by the editor.
+	 * @param freCaret
+	 */
+	const setCaret = (freCaret: FreCaret) => {
 		LOGGER.log(`setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]` );
-        switch (freCaret.position) {
-            case FreCaretPosition.RIGHT_MOST:  // type nr 2
-                from = to = text.length;
-                break;
-            case FreCaretPosition.LEFT_MOST:   // type nr 1
-            case FreCaretPosition.UNSPECIFIED: // type nr 0
-                from = to = 0;
-                break;
-            case FreCaretPosition.INDEX:       // type nr 3
+		switch (freCaret.position) {
+			case FreCaretPosition.RIGHT_MOST:  // type nr 2
+				from = to = text.length;
+				break;
+			case FreCaretPosition.LEFT_MOST:   // type nr 1
+			case FreCaretPosition.UNSPECIFIED: // type nr 0
+				from = to = 0;
+				break;
+			case FreCaretPosition.INDEX:       // type nr 3
 				setFromAndTo(freCaret.from, freCaret.to);
 				break;
-            default:
+			default:
 				from = to = 0;
-                break;
-        }
-        if (isEditing && !!inputElement) {
+				break;
+		}
+		if (isEditing && !!inputElement) {
 			inputElement.selectionStart = from >= 0 ? from : 0;
-            inputElement.selectionEnd = to >= 0 ? to : 0;
-            inputElement.focus();
-        }
-    };
+			inputElement.selectionEnd = to >= 0 ? to : 0;
+			inputElement.focus();
+		}
+	};
 
-    /**
-     * When the switch is made from <span> to <input> this function is called.
-     * It stores the caret position(s) to be used to set the selection of the <input>,
-     * and sets the selectedBox of the editor.
-     */
-    function startEditing(event: MouseEvent) {
-        LOGGER.log('startEditing ' + id);
-        // set the global selection
-        editor.selectElementForBox(box);
-        // set the local variables
-        isEditing = true;
-        editStart = true;
-        originalText = text;
-        let {anchorOffset, focusOffset} = document.getSelection();
+	/**
+	 * When the switch is made from <span> to <input> this function is called.
+	 * It stores the caret position(s) to be used to set the selection of the <input>,
+	 * and sets the selectedBox of the editor.
+	 */
+	function startEditing(event: MouseEvent) {
+		LOGGER.log('startEditing ' + id);
+		// set the global selection
+		editor.selectElementForBox(box);
+		// set the local variables
+		isEditing = true;
+		editStart = true;
+		originalText = text;
+		let {anchorOffset, focusOffset} = document.getSelection();
 		setFromAndTo(anchorOffset, focusOffset);
-	    event.preventDefault();
-        event.stopPropagation();
-        dispatcher('startEditing', {content: text, caret: from}); // tell the TextDropdown that the edit has started
-    }
+		event.preventDefault();
+		event.stopPropagation();
+		dispatcher('startEditing', {content: text, caret: from}); // tell the TextDropdown that the edit has started
+	}
 
-    /**
-     * This function is only called when the <input> element is shown. Then clicks should not be propagated.
-     * (Clicks either resize the element or set the caret position.)
-     * When this component is part of a TextDropdown Component, the dropdown options should also be altered.
-     * @param event
-     */
-    function onClick(event: MouseEvent) {
+	/**
+	 * This function is only called when the <input> element is shown. Then clicks should not be propagated.
+	 * (Clicks either resize the element or set the caret position.)
+	 * When this component is part of a TextDropdown Component, the dropdown options should also be altered.
+	 * @param event
+	 */
+	function onClick(event: MouseEvent) {
 		if (!!inputElement) {
 			LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 			setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
 		}
 		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
-            LOGGER.log('dispatching from on click');
+			LOGGER.log('dispatching from on click');
 			textUpdateFunction({content: text, caret: from})
-            // dispatcher('textUpdate', {content: text, caret: from});
-        }
-        event.stopPropagation();
-    }
+			// dispatcher('textUpdate', {content: text, caret: from});
+		}
+		event.stopPropagation();
+	}
 
-    /**
-     * When the <input> element loses focus the function is called. It switches the display back to
-     * the <span> element, and stores the current text in the textbox.
-     */
-    function endEditing() {
-        LOGGER.log(`${id}:  endEditing text is '${text}'` );
+	/**
+	 * When the <input> element loses focus the function is called. It switches the display back to
+	 * the <span> element, and stores the current text in the textbox.
+	 */
+	function endEditing() {
+		LOGGER.log(`${id}:  endEditing text is '${text}'` );
 		if (isEditing) {
 			// reset the local variables
 			isEditing = false;
@@ -196,31 +196,31 @@
 				}
 			}
 		}
-    }
+	}
 
-    /**
-     * When a keyboard event is triggered, this function stores the caret position(s).
-     * Note, this function is to be used from the <input> element only. It depends on the
-     * fact that the event target has a 'selectionStart' and a 'selectionEnd', which is the case
-     * only for <textarea> or <input> elements.
-     * @param event
-     */
-    function getCaretPosition(event: KeyboardEvent) {
-        // the following type cast satisfies the type checking, as the event can only be generated from the <input> element
-        const target = event.target as HTMLInputElement;
-        setFromAndTo(target.selectionStart, target.selectionEnd);
-    }
+	/**
+	 * When a keyboard event is triggered, this function stores the caret position(s).
+	 * Note, this function is to be used from the <input> element only. It depends on the
+	 * fact that the event target has a 'selectionStart' and a 'selectionEnd', which is the case
+	 * only for <textarea> or <input> elements.
+	 * @param event
+	 */
+	function getCaretPosition(event: KeyboardEvent) {
+		// the following type cast satisfies the type checking, as the event can only be generated from the <input> element
+		const target = event.target as HTMLInputElement;
+		setFromAndTo(target.selectionStart, target.selectionEnd);
+	}
 
-    /**
-     * This function handles any keyboard event that occurs within the <input> element.
-     * Note, we use onKeyDown, because onKeyPress is deprecated.
-     * @param event
-     */
-    const onKeyDown = (event: KeyboardEvent) => {
-        // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
-        // stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
-        // preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
-        LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+	/**
+	 * This function handles any keyboard event that occurs within the <input> element.
+	 * Note, we use onKeyDown, because onKeyPress is deprecated.
+	 * @param event
+	 */
+	const onKeyDown = (event: KeyboardEvent) => {
+		// see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
+		// stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
+		// preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
+		LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
 
 		if (event.altKey || event.ctrlKey) {  // No shift, because that is handled as normal text
 			// first check if this event has a command defined for it
@@ -240,12 +240,12 @@
 				// COPY
 				event.stopPropagation();
 				navigator.clipboard.writeText(text) // TODO get only the selected text from document.getSelection
-						.then(() => {
-							editor.setUserMessage('Text copied to clipboard', FreErrorSeverity.Info);
-						})
-						.catch(err => {
-							editor.setUserMessage('Error in copying text: ' + err.message);
-						});
+					.then(() => {
+						editor.setUserMessage('Text copied to clipboard', FreErrorSeverity.Info);
+					})
+					.catch(err => {
+						editor.setUserMessage('Error in copying text: ' + err.message);
+					});
 			} else if (event.ctrlKey && !event.altKey && event.key === 'v') { // ctrl-v
 				// PASTE
 				event.stopPropagation();
@@ -372,7 +372,7 @@
 								if (textUpdateFunction !== undefined) {
 									LOGGER.log(`${id}: TRY TO MATCH text `)
 									const executed = textUpdateFunction({content: text.concat(event.key), caret: from + 1})
-										LOGGER.log("Executed is " + executed)
+									LOGGER.log("Executed is " + executed)
 									if (executed) {
 										LOGGER.log("Stop propagation and preventDefault in onKeyDown")
 										event.stopPropagation()
@@ -419,11 +419,11 @@
 				}
 			}
 		}
-    };
+	};
 
-    /**
-     * When this component loses focus, do everything that is needed to end the editing state.
-     */
+	/**
+	 * When this component loses focus, do everything that is needed to end the editing state.
+	 */
 	const onFocusOut = (e) => {
 		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfActionBox + " isEditing:" + isEditing)
 		if (!partOfActionBox && isEditing) {
@@ -439,7 +439,7 @@
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		// if (!isEditing) {
-			text = box.getText();
+		text = box.getText();
 		// }
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
 		setInputWidth();
@@ -448,7 +448,7 @@
 	/**
 	 * When setting the focus programmatically, the 'inputElement' variable is not immediately set.
 	 * It may be null or undefined! Therefore, we need this check to set the focus.
- 	 */
+	 */
 	beforeUpdate(() => {
 		if (editStart && !!inputElement) {
 			LOGGER.log(`${id}: Before update : ${inputElement}`);
@@ -458,31 +458,31 @@
 		}
 	});
 
-    /**
-     * When the HTML is updated, and the switch is made from <span> to <input>,
-     * this function sets the caret position(s) on the <input>.
-     * Note that 'from <= to' always holds.
-     * When the switch from <input> to <span> is made, this function sets the
-     * box sizes in the textbox.
-     */
-    afterUpdate(() => {
-        // LOGGER.log("Start afterUpdate  " + from + ", " + to + " id: " + id);
+	/**
+	 * When the HTML is updated, and the switch is made from <span> to <input>,
+	 * this function sets the caret position(s) on the <input>.
+	 * Note that 'from <= to' always holds.
+	 * When the switch from <input> to <span> is made, this function sets the
+	 * box sizes in the textbox.
+	 */
+	afterUpdate(() => {
+		// LOGGER.log("Start afterUpdate  " + from + ", " + to + " id: " + id);
 		if (editStart && !!inputElement) {
 			LOGGER.log(`${id}:  editStart in afterupdate text '${text}' `)
-            inputElement.selectionStart = from >= 0 ? from : 0;
-            inputElement.selectionEnd = to >= 0 ? to : 0;
+			inputElement.selectionStart = from >= 0 ? from : 0;
+			inputElement.selectionEnd = to >= 0 ? to : 0;
 			// setInputWidth();
 			inputElement.focus();
-            editStart = false;
-        }
-        // if (isEditing && partOfActionBox) {
-			// 	if (text !== originalText) {
-				// send event to parent
-				// LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
-				// dispatcher('textUpdate', {content: text, caret: from + 1});
-				// textUpdateFunction({content: text, caret: from + 1})
-			// }
-        // }
+			editStart = false;
+		}
+		// if (isEditing && partOfActionBox) {
+		// 	if (text !== originalText) {
+		// send event to parent
+		// LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
+		// dispatcher('textUpdate', {content: text, caret: from + 1});
+		// textUpdateFunction({content: text, caret: from + 1})
+		// }
+		// }
 		// Always set the input width explicitly.
 		setInputWidth();
 		placeholder = box.placeHolder
@@ -491,20 +491,20 @@
 		box.refreshComponent = refresh;
 	});
 
-    /**
-     * When this component is mounted, the setFocus and setCaret functions are
-     * made available to the textbox, and the 'text' and 'originalText' variables
-     * are set.
-     */
-    onMount(() => {
-        LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")" + " originaltext: '" + box.getText() + "'");
-        originalText = text = box.getText();
+	/**
+	 * When this component is mounted, the setFocus and setCaret functions are
+	 * made available to the textbox, and the 'text' and 'originalText' variables
+	 * are set.
+	 */
+	onMount(() => {
+		LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")" + " originaltext: '" + box.getText() + "'");
+		originalText = text = box.getText();
 		placeholder = box.placeHolder;
 		setInputWidth();
 		box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
-    });
+	});
 
 	/**
 	 * Sets the inputwidth to match the text inside.
@@ -563,31 +563,31 @@
 <!-- todo there is a double selection here: two borders are showing -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 <span on:click={onClick} id="{id}" role="none">
-	{#if isEditing}
-		<span class="text-component-input">
+		<span class="text-component-input" class:hiding={!isEditing}>
 			<input type="text"
-                   class="text-component-input"
+				   class="text-component-input"
 				   id="{id}-input"
-                   bind:this={inputElement}
+				   bind:this={inputElement}
 				   on:input={onInput}
-                   bind:value={text}
-                   on:focusout={onFocusOut}
-                   on:keydown={onKeyDown}
+				   bind:value={text}
+				   on:focusout={onFocusOut}
+				   on:keydown={onKeyDown}
 				   draggable="true"
 				   on:dragstart={onDragStart}
-                   placeholder="{placeholder}"/>
+				   placeholder="{placeholder}"/>
 			<span class="text-component-width" bind:this={widthSpan}></span>
 		</span>
-	{:else}
-		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
-		     But ... this is only a problem when this component is inside a draggable element (like List or table)
-		-->
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
+
+	<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
+         But ... this is only a problem when this component is inside a draggable element (like List or table)
+    -->
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 		<span class="{box.role} text-box-{boxType} text-component-text"
-              on:click={startEditing}
+			  class:hiding={isEditing}
+			  on:click={startEditing}
 			  contenteditable=true
 			  spellcheck=false
-              id="{id}-span"
+			  id="{id}-span"
 			  role="none">
 			{#if !!text && text.length > 0}
 				{text}
@@ -595,6 +595,14 @@
 				<span class="{placeHolderStyle}">{placeholder}</span>
 			{/if}
 		</span>
-	{/if}
 </span>
+<style>
+	/** Hiding and showing the <input> or <span> by using Svelte #if did not work, because the
+	 *  CSS class for <input> was not applied anymore.
+	 *  Therefore we switched to using the CSS display: none property. 
+	 */
+	.hiding {
+		display: none;
+	}
+</style>
 
