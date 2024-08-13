@@ -563,38 +563,38 @@
 <!-- todo there is a double selection here: two borders are showing -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 <span on:click={onClick} id="{id}" role="none">
-		<span class="text-component-input" class:hiding={!isEditing}>
-			<input type="text"
-				   class="text-component-input"
-				   id="{id}-input"
-				   bind:this={inputElement}
-				   on:input={onInput}
-				   bind:value={text}
-				   on:focusout={onFocusOut}
-				   on:keydown={onKeyDown}
-				   draggable="true"
-				   on:dragstart={onDragStart}
-				   placeholder="{placeholder}"/>
-			<span class="text-component-width" bind:this={widthSpan}></span>
-		</span>
+	<span class="text-component-input" class:hiding={!isEditing}>
+		<input type="text"
+		   class="text-component-input"
+		   id="{id}-input"
+		   bind:this={inputElement}
+		   on:input={onInput}
+		   bind:value={text}
+		   on:focusout={onFocusOut}
+		   on:keydown={onKeyDown}
+		   draggable="true"
+		   on:dragstart={onDragStart}
+		   placeholder="{placeholder}"/>
+		<span class="text-component-width" bind:this={widthSpan}></span>
+	</span>
 
 	<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
          But ... this is only a problem when this component is inside a draggable element (like List or table)
     -->
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-		<span class="{box.role} text-box-{boxType} text-component-text"
-			  class:hiding={isEditing}
-			  on:click={startEditing}
-			  contenteditable=true
-			  spellcheck=false
-			  id="{id}-span"
-			  role="none">
-			{#if !!text && text.length > 0}
-				{text}
-			{:else}
-				<span class="{placeHolderStyle}">{placeholder}</span>
-			{/if}
-		</span>
+	<span class="{box.role} text-box-{boxType} text-component-text"
+		  class:hiding={isEditing}
+		  on:click={startEditing}
+		  contenteditable=true
+	 	 spellcheck=false
+	 	 id="{id}-span"
+	 	 role="none">
+		{#if !!text && text.length > 0}
+			{text}
+		{:else}
+			<span class="{placeHolderStyle}">{placeholder}</span>
+		{/if}
+	</span>
 </span>
 <style>
 	/** Hiding and showing the <input> or <span> by using Svelte #if did not work, because the
