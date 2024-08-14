@@ -11,7 +11,7 @@ import {
     STYLES_FOLDER
 } from "../../utils/index.js";
 import { FreEditUnit } from "../metalanguage/index.js";
-import { ActionsTemplate, EditorIndexTemplate, ProjectionTemplate } from "./templates/index.js";
+import { ActionsTemplate, EditorIndexTemplate, BoxProviderTemplate } from "./templates/index.js";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate } from "./templates/index.js";
 import { EditorDefTemplate } from "./templates/index.js";
 import { LOG2USER } from "../../utils/index.js";
@@ -42,8 +42,7 @@ export class EditorGenerator {
         const defaultActions:DefaultActionsTemplate = new DefaultActionsTemplate();
         const customActions:CustomActionsTemplate = new CustomActionsTemplate();
         const actions: ActionsTemplate = new ActionsTemplate();
-        const projection: ProjectionTemplate = new ProjectionTemplate();
-        projection.setGlobals(editDef); // initiate the template with the global boolean keywords
+        const projection: BoxProviderTemplate = new BoxProviderTemplate(editDef);
         const customProjectiontemplate: CustomProjectionTemplate = new CustomProjectionTemplate();
         const editorIndexTemplate: EditorIndexTemplate = new EditorIndexTemplate();
         // const stylesTemplate = new StylesTemplate();

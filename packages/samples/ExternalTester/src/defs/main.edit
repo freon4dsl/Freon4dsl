@@ -12,7 +12,20 @@ ExternalUnit {[
     ${self.content}
     A simple external component:
     [external = AnimatedGif ]
-]}
+    Some text in front of fragment XX [fragment xx].
+    Some text in front of fragment YY [fragment yy].
+]
+fragment xx [
+    This is fragment XX.
+    [fragment zz]
+]
+fragment yy [
+    This is fragment YY.
+]
+fragment zz [
+    This is fragment ZZ.
+]
+}
 
 AA {[
     This is concept AA ${self.name}
