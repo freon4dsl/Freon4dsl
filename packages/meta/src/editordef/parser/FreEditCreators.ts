@@ -205,11 +205,16 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
     if (!!data.classifierInfo) {
         result.classifierInfo = data.classifierInfo;
     }
+    if (!!data.classifier) {
+        result.classifier = data.classifier;
+    }
     if (!!data.fragments) {
         result.fragments = data.fragments;
     }
-    if (!!data.classifier) {
-        result.classifier = data.classifier;
+    if (!!result.classifier && !!result.fragments) {
+        result.fragments.forEach(frag =>
+            frag.childProjection.classifier = result.classifier
+        );
     }
     if (!!data.location) {
         result.location = data.location;

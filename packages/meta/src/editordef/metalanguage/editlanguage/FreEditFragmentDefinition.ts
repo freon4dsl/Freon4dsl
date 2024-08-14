@@ -11,6 +11,6 @@ export class FreEditFragmentDefinition extends FreMetaDefinitionElement {
 
     toString(): string {
         const wrapperInfoStr: string = `${!!this.wrapperInfo ? ` wrap = ${this.wrapperInfo}` : ``}`;
-        return `fragment ${this.name}${wrapperInfoStr} [${this.childProjection}]`
+        return `fragment ${this.name}${wrapperInfoStr} ${this.childProjection}`
     }
 }

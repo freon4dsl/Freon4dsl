@@ -827,8 +827,14 @@ export class ProjectionTemplate {
         let initializer: string = this.buildInitializer(item);
         // todo get the role correct
         let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.wrapBy}`;
-        ListUtil.addListIfNotPresent(this.coreImports, ["BoxUtil", "ExternalPrimitiveBox"]);
-        return `new ExternalPrimitiveBox(
+        let boxType: string = '';
+        switch (propertyConcept.type.name) {
+            case 'string'   : { boxType = 'ExternalStringBox'; break;}
+            case 'boolean'  : { boxType = 'ExternalBooleanBox'; break;}
+            case 'number'   : { boxType = 'ExternalNumberBox'; break;}
+        }
+        ListUtil.addListIfNotPresent(this.coreImports, ["BoxUtil", `${boxType}`]);
+        return `new ${boxType}(
                     "${item.externalInfo!.wrapBy}",
                     ${elementVarName},
                     "${myRole}",

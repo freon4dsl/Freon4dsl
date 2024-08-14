@@ -54,9 +54,13 @@ export class FreEditProjectionGroup extends FreMetaDefinitionElement {
     }
 
     toString(): string {
-        return `editor ${this.name}
-        ${this.globalProjections?.map( pr => pr.toString()).join("\n")}
-
+        let globalStr: string = '';
+        if (!!this.globalProjections && this.globalProjections.length > 0) {
+            globalStr = `\nglobals { 
+    ${this.globalProjections?.map( pr => pr.toString()).join("\n")}
+}`;
+        }
+        return `editor ${this.name}${globalStr}
         ${this.projections?.map(gr => gr.toString()).join("\n")}
 
         ${this.extras?.map(gr => gr.toString()).join("\n")}`;

@@ -268,7 +268,7 @@ external_info = "wrap" equals_separator wrap:var ws params:key_value_pair*
 // todo add table projection to the possibilities for 'child'
 fragment_def_single = "fragment" ws name:var wrap:("wrap" equals_separator w:var {return w;})? child:projection
 {
-    return creator.createFragmentDef({
+    return creator.createFragmentDefinition({
         "name"                  : name,
         "wrapperInfo"           : wrap,
         "childProjection"       : child,

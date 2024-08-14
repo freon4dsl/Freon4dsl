@@ -1,6 +1,7 @@
 import {FreMetaDefinitionElement} from "../../../utils/index.js";
 import {FreMetaClassifier, MetaElementReference} from "../../../languagedef/metalanguage/index.js";
 import {FreEditFragmentDefinition, FreEditExternalInfo, FreEditPropertyProjection} from "./internal.js";
+import {FreEditFragmentProjection} from "./FreEditFragmentProjection.js";
 
 /**
  * A single projection definition for a single concept or interface
@@ -19,14 +20,10 @@ export abstract class FreEditClassifierProjection extends FreMetaDefinitionEleme
     }
 
     /**
-     * Returns the 'positionInProjection' part of an expression like 'SMUI_Card:Second' (i.e. 'Second')
-     * for all occurrences of external projections or property projections that are marked 'external',
-     * and have the name 'externalName'.
-     * @param externalName
+     * Returns all fragment projections including those in fragment definitions.
      */
-    // @ts-ignore the param is used by subclasses that implement this function
-    findPositionsOfExternal(externalName: string): string[] {
-        console.error(`FreEditClassifierProjection.findPositionsOfExternal() CALLED, IT SHOULD BE IMPLEMENTED BY ALL SUBCLASSES.`);
+    findAllFragmentProjections(): FreEditFragmentProjection[] {
+        console.error(`FreEditClassifierProjection.findAllFragmentProjections() CALLED, IT SHOULD BE IMPLEMENTED BY ALL SUBCLASSES.`);
         return [];
     }
 
@@ -39,7 +36,15 @@ export abstract class FreEditClassifierProjection extends FreMetaDefinitionEleme
         return [];
     }
 
-    getFragmentNames(): string[] {
-        return this.fragments.map(fr => fr.name);
+    getUsedFragmentNames(): string[] {
+        return this.findAllFragmentProjections().map(fr => fr.name);
+    }
+
+    /**
+     * Returns only the fragment projections in the 'main' projection.
+     */
+    findMainFragmentProjections(): FreEditFragmentProjection[] {
+        console.error(`FreEditClassifierProjection.findMainFragmentProjections() CALLED, IT SHOULD BE IMPLEMENTED BY ALL SUBCLASSES.`);
+        return [];
     }
 }

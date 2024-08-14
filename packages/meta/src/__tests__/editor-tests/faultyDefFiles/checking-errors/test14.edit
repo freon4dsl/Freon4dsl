@@ -1,0 +1,17 @@
+editor default
+
+BB {[
+	 [? part ${BBprop11 wrap=aa}]
+	 [? partlist ${BBprop12 horizontal replace=bb} ]
+	 [fragment XX wrap=SMUI_Card]
+]
+fragment XX [
+    something else
+    	 [? part ${BBprop1 wrap=aa}]
+    	 [? partlist ${BBprop2 replace=bb} ]
+]
+}
+
+CC {[
+    ${self.CCprop7 replace=yz}
+]}
