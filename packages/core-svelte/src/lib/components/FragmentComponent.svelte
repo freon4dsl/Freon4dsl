@@ -1,4 +1,3 @@
-<svelte:options immutable={true}/>
 <script lang="ts">
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
@@ -8,22 +7,24 @@
     export let box: ElementBox;
     export let editor: FreEditor;
 
-    const LOGGER = new FreLogger("ElementComponent");
+    const LOGGER = new FreLogger("FragmentComponent");
     let id: string;
-    let childBox: Box ;
+    let childBox: Box;
+    let cssClass: string;
 
     const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.node?.freLanguageConcept());
+        LOGGER.log("REFRESH FragmentComponent (" + why +")" + box?.node?.freLanguageConcept());
         if (!!box) {
             id = componentId(box);
             childBox = box.content;
+            cssClass = box.cssClass;
         } else {
             id = 'element-for-unknown-box';
         }
     }
 
     async function setFocus(): Promise<void> {
-        LOGGER.log("ElementComponent.setFocus for box " + box.role);
+        LOGGER.log("FragmentComponent.setFocus for box " + box.role);
         if (!!box) {
             box.content.setFocus();
         }
@@ -44,4 +45,6 @@
     }
 </script>
 
-<RenderComponent box={childBox} editor={editor}/>
+<span class="fragment-component {cssClass}">
+    <RenderComponent box={childBox} editor={editor}/>
+</span>

@@ -2,6 +2,7 @@ import BooleanCheckboxComponent from "$lib/components/BooleanCheckboxComponent.s
 import BooleanRadioComponent from "$lib/components/BooleanRadioComponent.svelte";
 import DropdownComponent from '$lib/components/DropdownComponent.svelte';
 import EmptyLineComponent from '$lib/components/EmptyLineComponent.svelte';
+import FragmentComponent from '$lib/components/FragmentComponent.svelte';
 import FreonComponent from '$lib/components/FreonComponent.svelte';
 import IndentComponent from '$lib/components/IndentComponent.svelte';
 import InnerSwitchComponent from '$lib/components/InnerSwitchComponent.svelte';
@@ -25,6 +26,7 @@ export {
     BooleanRadioComponent,
     DropdownComponent,
     EmptyLineComponent,
+    FragmentComponent,
     FreonComponent,
     IndentComponent,
     InnerSwitchComponent,

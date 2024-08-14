@@ -27,7 +27,7 @@
         BoolDisplay, isBooleanControlBox,
         isNumberControlBox,
         isElementBox, isOptionalBox2, isMultiLineTextBox,
-        isLimitedControlBox, LimitedDisplay, isButtonBox, isExternalBox
+        isLimitedControlBox, LimitedDisplay, isButtonBox, isExternalBox, isFragmentBox
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "$lib/components/MultiLineTextComponent.svelte";
     import EmptyLineComponent from "$lib/components/EmptyLineComponent.svelte";
@@ -51,6 +51,7 @@
     import LimitedRadioComponent from "$lib/components/LimitedRadioComponent.svelte";
     import SwitchComponent from "$lib/components/SwitchComponent.svelte";
     import ButtonComponent from "$lib/components/ButtonComponent.svelte";
+    import FragmentComponent from "$lib/components/FragmentComponent.svelte";
     import { selectedBoxes, componentId, setBoxSizes, findCustomComponent} from "$lib/index.js";
 
     import {afterUpdate} from "svelte";
@@ -142,6 +143,8 @@
             {:else}
                 <p class="render-component-error">[UNKNOWN EXTERNAL BOX TYPE: {box.externalComponentName}]</p>
             {/if}
+        {:else if isFragmentBox(box) }
+            <FragmentComponent box={box} editor={editor} />
         {:else if isGridBox(box) }
             <GridComponent box={box} editor={editor} />
         {:else if isIndentBox(box) }
