@@ -10,8 +10,14 @@ fragment XX [
     	 [? part ${BBprop1 wrap=aa}]
     	 [? partlist ${BBprop2 replace=bb} ]
 ]
+fragment XX [
+    extra text
+    ]
 }
 
 CC {[
     ${self.CCprop7 replace=yz}
-]}
+]
+fragment XX [
+    extra text
+    ]}

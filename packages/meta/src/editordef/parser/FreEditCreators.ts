@@ -66,8 +66,8 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
                 if (!!proj.tableProjection.headers) {
                     myProj.headers = proj.tableProjection.headers;
                 }
-                if (!!proj.fragments) {
-                    myProj.fragments = proj.fragments;
+                if (!!proj.fragmentDefinitions) {
+                    myProj.fragmentDefinitions = proj.fragmentDefinitions;
                 }
                 if (!!proj.tableProjection.location) {
                     myProj.location = proj.tableProjection.location;
@@ -85,8 +85,8 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
                 if (!!proj.projection.lines) {
                     myProj.lines = proj.projection.lines;
                 }
-                if (!!proj.fragments) {
-                    myProj.fragments = proj.fragments;
+                if (!!proj.fragmentDefinitions) {
+                    myProj.fragmentDefinitions = proj.fragmentDefinitions;
                 }
                 if (!!proj.projection.location) {
                     myProj.location = proj.projection.location;
@@ -208,11 +208,11 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
     if (!!data.classifier) {
         result.classifier = data.classifier;
     }
-    if (!!data.fragments) {
-        result.fragments = data.fragments;
+    if (!!data.fragmentDefinitions) {
+        result.fragmentDefinitions = data.fragmentDefinitions;
     }
-    if (!!result.classifier && !!result.fragments) {
-        result.fragments.forEach(frag =>
+    if (!!result.classifier && !!result.fragmentDefinitions) {
+        result.fragmentDefinitions.forEach(frag =>
             frag.childProjection.classifier = result.classifier
         );
     }

@@ -20,7 +20,7 @@ export class FreEditNormalProjection extends FreEditClassifierProjection {
                 }
             });
         });
-        this.fragments.forEach(fragmentDef => {
+        this.fragmentDefinitions.forEach(fragmentDef => {
             result.push(...fragmentDef.childProjection.findAllPartProjections());
         });
         return result;
@@ -31,7 +31,7 @@ export class FreEditNormalProjection extends FreEditClassifierProjection {
      */
     findAllFragmentProjections(): FreEditFragmentProjection[] {
         const result: FreEditFragmentProjection[] = this.findMainFragmentProjections();
-        this.fragments.forEach(fragmentDef => {
+        this.fragmentDefinitions.forEach(fragmentDef => {
             result.push(...fragmentDef.childProjection.findAllFragmentProjections());
         });
         return result;

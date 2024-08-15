@@ -9,7 +9,7 @@ import {FreEditFragmentProjection} from "./FreEditFragmentProjection.js";
 export abstract class FreEditClassifierProjection extends FreMetaDefinitionElement {
     name: string = '';
     classifier: MetaElementReference<FreMetaClassifier> | undefined;
-    fragments: FreEditFragmentDefinition[] = [];
+    fragmentDefinitions: FreEditFragmentDefinition[] = [];
 
     /**
      * Find all projections or parts.

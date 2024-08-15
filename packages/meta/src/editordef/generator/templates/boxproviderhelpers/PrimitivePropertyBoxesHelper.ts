@@ -4,17 +4,20 @@ import {
     FreEditBoolKeywords,
     FreEditGlobalProjection,
     FreEditListInfo,
-    FreEditProjectionDirection, FreEditProjectionGroup
+    FreEditProjectionDirection, FreEditProjectionGroup, FreEditPropertyProjection
 } from "../../../metalanguage/index.js";
 import {ListUtil, Roles} from "../../../../utils/index.js";
 import {DisplayTypeHelper} from "./DisplayTypeHelper.js";
 import {BoxProviderTemplate} from "../BoxProviderTemplate.js";
+import {ExternalBoxesHelper} from "./ExternalBoxesHelper.js";
 
 export class PrimitivePropertyBoxesHelper {
-    private _myTemplate: BoxProviderTemplate;
+    private readonly _myTemplate: BoxProviderTemplate;
+    private readonly _myExternalHelper: ExternalBoxesHelper;
 
-    constructor(myTemplate: BoxProviderTemplate) {
+    constructor(myTemplate: BoxProviderTemplate, myExternalBoxesHelper: ExternalBoxesHelper) {
         this._myTemplate = myTemplate;
+        this._myExternalHelper = myExternalBoxesHelper;
     }
 
     // The values for the boolean keywords are set on initialization (by a call to 'setGlobalBooleanKeywords').
@@ -43,25 +46,17 @@ export class PrimitivePropertyBoxesHelper {
         }
     }
 
-    public listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolDisplayType?: string, boolInfo?: FreEditBoolKeywords, listInfo?: FreEditListInfo): string {
-        let direction: string = "verticalList";
-        if (!!listInfo && listInfo.direction === FreEditProjectionDirection.Horizontal) {
-            direction = "horizontalList";
+    public generatePrimitivePropery(property: FreMetaPrimitiveProperty, elementVarName: string, item: FreEditPropertyProjection, result: string): string {
+        let innerResult: string = this.primitivePropertyProjection(property, elementVarName, item.displayType, item.boolKeywords, item.listInfo);
+        if (!!item.externalInfo) { // there is information on how to project the property as an external component
+            result += this._myExternalHelper.generatePrimAsExternal(item, property, elementVarName, innerResult);
+        } else {
+            result += innerResult;
         }
-        // TODO also adjust role '..-hlist' to '..-vlist'?
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxFactory");
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "Box");
-        // TODO Create Action for the role to actually add an element.
-        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-hlist", "",
-                            (${element}.${property.name}.map( (item, index)  =>
-                                ${this.singlePrimitivePropertyProjection(property, element, boolDisplayType, boolInfo)}
-                            ) as Box[]).concat( [
-                                BoxFactory.action(${element}, "new-${Roles.property(property)}-hlist", "<+ ${property.name}>")
-                            ])
-                        )`;
+        return result;
     }
 
-    public primitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolDisplayType?: string, boolInfo?: FreEditBoolKeywords, listInfo?: FreEditListInfo): string {
+    private primitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolDisplayType?: string, boolInfo?: FreEditBoolKeywords, listInfo?: FreEditListInfo): string {
         if (property.isList) {
             return this.listPrimitivePropertyProjection(property, element, boolDisplayType, boolInfo, listInfo);
         } else {
@@ -69,7 +64,27 @@ export class PrimitivePropertyBoxesHelper {
         }
     }
 
-    public singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, displayType?: string, boolKeywords?: FreEditBoolKeywords): string {
+    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolDisplayType?: string, boolInfo?: FreEditBoolKeywords, listInfo?: FreEditListInfo): string {
+        let direction: string = "verticalList";
+        let roleDirection: string = "vList";
+        if (!!listInfo && listInfo.direction === FreEditProjectionDirection.Horizontal) {
+            direction = "horizontalList";
+            roleDirection = "hList";
+        }
+        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxFactory");
+        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "Box");
+        // TODO Create Action for the role to actually add an element.
+        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-${roleDirection}", "",
+                            (${element}.${property.name}.map( (item, index)  =>
+                                ${this.singlePrimitivePropertyProjection(property, element, boolDisplayType, boolInfo)}
+                            ) as Box[]).concat( [
+                                BoxFactory.action(${element}, "new-${Roles.property(property)}-${roleDirection}", "<+ ${property.name}>")
+                            ])
+                        )`;
+    }
+
+
+    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, displayType?: string, boolKeywords?: FreEditBoolKeywords): string {
         ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type) {

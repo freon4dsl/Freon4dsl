@@ -19,8 +19,8 @@ export class TableBoxHelper {
 
     public generateTableProjection(language: FreMetaLanguage,
                                           concept: FreMetaClassifier,
-                                          projection: FreEditTableProjection) {
-        // TODO Check whether 999 argument to generateItem()n should be different.
+                                          projection: FreEditTableProjection,
+                                   topIndex: number) {
         if (!!projection) {
             let hasHeaders: boolean = false;
             if (!!projection.headers && projection.headers.length > 0) {
@@ -34,8 +34,8 @@ export class TableBoxHelper {
                     index,
                     index,
                     concept.name + "_table",
-                    language, 999,
-                    projection.fragments));
+                    language,
+                    topIndex));
             });
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "TableRowBox");
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "TableUtil");

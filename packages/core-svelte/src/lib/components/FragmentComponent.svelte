@@ -1,13 +1,13 @@
 <script lang="ts">
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
-    import { FreLogger, type FreEditor, ElementBox, Box } from "@freon4dsl/core";
-    import { componentId } from "./svelte-utils/index.js";
+    import {FreLogger, type FreEditor, Box, FragmentBox} from "@freon4dsl/core";
+    import { componentId } from "$lib/components/svelte-utils/index.js";
 
-    export let box: ElementBox;
+    export let box: FragmentBox;
     export let editor: FreEditor;
 
-    const LOGGER = new FreLogger("FragmentComponent");
+    const LOGGER = new FreLogger("FragmentComponent").mute();
     let id: string;
     let childBox: Box;
     let cssClass: string;
@@ -16,7 +16,7 @@
         LOGGER.log("REFRESH FragmentComponent (" + why +")" + box?.node?.freLanguageConcept());
         if (!!box) {
             id = componentId(box);
-            childBox = box.content;
+            childBox = box.childBox;
             cssClass = box.cssClass;
         } else {
             id = 'element-for-unknown-box';
@@ -26,7 +26,7 @@
     async function setFocus(): Promise<void> {
         LOGGER.log("FragmentComponent.setFocus for box " + box.role);
         if (!!box) {
-            box.content.setFocus();
+            box.childBox.setFocus();
         }
     }
 
@@ -45,6 +45,6 @@
     }
 </script>
 
-<span class="fragment-component {cssClass}">
+<span class="fragment-component {cssClass}" id="{id}">
     <RenderComponent box={childBox} editor={editor}/>
 </span>

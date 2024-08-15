@@ -38,11 +38,11 @@ import {
     FreEditUnit,
     FreOptionalPropertyProjection,
     FreEditListInfo,
-    ListJoinType
+    ListJoinType,
+    FreEditFragmentProjection
 } from "./editlanguage/index.js";
 import {EditorDefaults} from "./EditorDefaults.js";
 import {FreLangExpressionChecker} from "../../languagedef/checking/index.js";
-import {FreEditFragmentProjection} from "./editlanguage/FreEditFragmentProjection.js";
 
 const LOGGER: MetaLogger = new MetaLogger("FreEditChecker"); // .mute();
 
@@ -276,19 +276,19 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         `A limited concept cannot have a projection, it can only be used as reference ${ParseLocationUtil.location(projection)}.`);
                 } else {
                     if (projection instanceof FreEditNormalProjection) {
-                        const knownFragments: string[] = projection.fragments.map(fr => fr.name);
+                        const knownFragments: string[] = projection.fragmentDefinitions.map(fr => fr.name);
                         this.checkNormalProjection(projection, myClassifier!, editor, knownFragments);
                     } else if (projection instanceof FreEditTableProjection) {
                         this.checkTableProjection(projection, myClassifier!, editor);
                     }
-                    if (!!projection.fragments && projection.fragments.length > 0) {
-                        projection.fragments.forEach(childDef => {
+                    if (!!projection.fragmentDefinitions && projection.fragmentDefinitions.length > 0) {
+                        projection.fragmentDefinitions.forEach(childDef => {
                             this.checkFragmentDefinition(childDef, projection, myClassifier!, editor);
                             // Note that we finalize the edit unit model with the next statement
                             childDef.belongsTo = projection;
                         });
                         // check complex fragment recursion, e.g. f1 uses f2 and f2 uses f1
-                        projection.fragments.forEach(fragmentDef => {
+                        projection.fragmentDefinitions.forEach(fragmentDef => {
                             let namesInPath: string[] = [];
                             namesInPath.push(fragmentDef.name);
                             this.checkRecursionInFragments(fragmentDef, namesInPath, projection);
@@ -307,7 +307,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 whenOk: () => {
                     namesInPath.push(usedInnerInnerFragment);
                     let innerFragment: FreEditFragmentDefinition | undefined =
-                        projection.fragments.find(fragmentDef => fragmentDef.name === usedInnerInnerFragment);
+                        projection.fragmentDefinitions.find(fragmentDef => fragmentDef.name === usedInnerInnerFragment);
                     if (!!innerFragment) {
                         this.checkRecursionInFragments(innerFragment, namesInPath, projection);
                     }
@@ -332,8 +332,18 @@ export class FreEditChecker extends Checker<FreEditUnit> {
      */
     private checkFragmentDefinition(fragment: FreEditFragmentDefinition, projection: FreEditClassifierProjection, cls: FreMetaClassifier, editor: FreEditUnit) {
         LOGGER.log("checkFragmentDefinition")
+        // check unique names
+        let knownFragments: string[] = [];
+        projection.fragmentDefinitions.forEach(fr => {
+            this.runner.nestedCheck({
+                check: !knownFragments.includes(fr.name),
+                error: `Fragment named ${fragment.name} is already defined, please rename one of these ${ParseLocationUtil.location(fragment)}.`,
+                whenOk: () => {
+                    knownFragments.push(fr.name);
+                }
+            })
+        });
         // check the child projection
-        const knownFragments: string[] = projection.fragments.map(fr => fr.name);
         this.checkNormalProjection(fragment.childProjection, cls, editor, knownFragments);
         // check if fragment is used in top projection, give warning
         let usedFragments: string[] = projection.findMainFragmentProjections().map(frProj => frProj.name);
@@ -375,7 +385,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     this.runner.simpleCheck(!isEmpty,
                         `No empty projections allowed ${ParseLocationUtil.location(projection)}.`);
                     projection.lines.forEach(line => {
-                        this.checkLine(line, cls, editor, knownFragments);
+                        this.checkLine(line, cls, editor, knownFragments, projection);
                     });
                     const first: FreEditProjectionItem = projection.lines[0]?.items[0];
                     if (first instanceof FreEditProjectionText) {
@@ -388,17 +398,19 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkLine(line: FreEditProjectionLine, cls: FreMetaClassifier, editor: FreEditUnit, knownFragments: string[]) {
+    private checkLine(line: FreEditProjectionLine, cls: FreMetaClassifier, editor: FreEditUnit, knownFragments: string[], mainProjection: FreEditClassifierProjection) {
         LOGGER.log("checking line ");
         line.items.forEach(item => {
             if (item instanceof FreEditPropertyProjection) {
-                this.checkPropProjection(item, cls, editor, knownFragments);
+                this.checkPropProjection(item, cls, editor, knownFragments, mainProjection);
             } else if (item instanceof FreEditSuperProjection) {
                 this.checkSuperProjection(editor, item, cls);
             } else if (item instanceof FreEditSimpleExternal) {
                 this.checkExternalComponentName(editor, item.name!, ParseLocationUtil.location(item));
             } else if (item instanceof FreEditFragmentProjection) {
                 this.checkFragmentProjection(item, knownFragments, editor);
+                // we complete the edit model here
+                item.belongsTo = mainProjection;
             }
         });
     }
@@ -432,9 +444,9 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     this.runner.simpleCheck(projection.headers.length > 0 ? projection.cells.length === projection.headers.length : true,
                         `The number of headers should match the number of cells in table projection '${projection.name}' ${ParseLocationUtil.location(projection)}`
                     );
-                    const knownFragments: string[] = projection.fragments.map(fr => fr.name);
+                    const knownFragments: string[] = projection.fragmentDefinitions.map(fr => fr.name);
                     for (const prop of projection.cells) {
-                        this.checkPropProjection(prop, cls, editor, knownFragments);
+                        this.checkPropProjection(prop, cls, editor, knownFragments, projection);
                     }
                 }
             });
@@ -522,7 +534,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         });
     }
 
-    private checkOptionalProjection(item: FreOptionalPropertyProjection, cls: FreMetaClassifier, editor: FreEditUnit, knownFragments: string[]) {
+    private checkOptionalProjection(item: FreOptionalPropertyProjection, cls: FreMetaClassifier, editor: FreEditUnit, knownFragments: string[], mainProjection: FreEditClassifierProjection) {
         LOGGER.log("checking optional projection for " + cls?.name);
 
         const propProjections: FreEditPropertyProjection[] = [];
@@ -531,7 +543,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             error: `No empty projections allowed ${ParseLocationUtil.location(item)}.`,
             whenOk: () => {
                 item.lines.forEach(line => {
-                    this.checkLine(line, cls, editor, knownFragments);
+                    this.checkLine(line, cls, editor, knownFragments, mainProjection);
                     nrOfItems += line.items.length;
                     propProjections.push(...line.items.filter(innerItem => innerItem instanceof FreEditPropertyProjection) as FreEditPropertyProjection[]);
                 });
@@ -619,10 +631,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         }
     }
 
-    private checkPropProjection(item: FreEditPropertyProjection, cls: FreMetaClassifier, editor: FreEditUnit, knownFragments: string[]) {
+    private checkPropProjection(item: FreEditPropertyProjection, cls: FreMetaClassifier, editor: FreEditUnit, knownFragments: string[], mainProjection: FreEditClassifierProjection) {
         LOGGER.log("checking property projection for " + cls?.name);
         if (item instanceof FreOptionalPropertyProjection) {
-            this.checkOptionalProjection(item, cls, editor, knownFragments);
+            this.checkOptionalProjection(item, cls, editor, knownFragments, mainProjection);
         } else {
             if (item.expression !== null && item.expression !== undefined) {
                 const myProp:FreMetaProperty | undefined = cls.allProperties().find(prop => prop.name === item.expression!.appliedfeature?.sourceName);

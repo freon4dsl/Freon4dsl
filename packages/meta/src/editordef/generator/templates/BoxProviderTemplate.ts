@@ -5,8 +5,7 @@ import {
     FreEditProjectionGroup,
     FreEditProjectionLine,
     FreEditTableProjection,
-    FreEditUnit,
-    FreEditFragmentDefinition
+    FreEditUnit
 } from "../../metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
@@ -22,14 +21,16 @@ import {
     ListUtil,
     Names
 } from "../../../utils/index.js";
-import {PrimitivePropertyBoxesHelper} from "./boxproviderhelpers/PrimitivePropertyBoxesHelper.js";
-import {LimitedBoxHelper} from "./boxproviderhelpers/LimitedBoxHelper.js";
-import {BoxProviderCoreTextTemplate} from "./boxproviderhelpers/BoxProviderCoreTextTemplate.js";
-import {TableBoxHelper} from "./boxproviderhelpers/TableBoxHelper.js";
-import {ItemBoxHelper} from "./boxproviderhelpers/ItemBoxHelper.js";
-import {ListPropertyBoxHelper} from "./boxproviderhelpers/ListPropertyBoxHelper.js";
-import {PartPropertyBoxHelper} from "./boxproviderhelpers/PartPropertyBoxHelper.js";
-import {ExternalBoxesHelper} from "./boxproviderhelpers/ExternalBoxesHelper.js";
+import {
+    PrimitivePropertyBoxesHelper,
+    LimitedBoxHelper,
+    BoxProviderCoreTextTemplate,
+    TableBoxHelper,
+    ItemBoxHelper,
+    ListPropertyBoxHelper,
+    PartPropertyBoxHelper,
+    ExternalBoxesHelper
+} from "./boxproviderhelpers/index.js";
 
 export class BoxProviderTemplate {
     // To be able to add a projections for showing/hiding brackets to binary expression, this dummy projection is used.
@@ -39,21 +40,23 @@ export class BoxProviderTemplate {
     public modelImports: string[] = [];    // imports from ../language/gen
     public coreImports: string[] = [];     // imports from @freon4dsl/core
     public configImports: string[] = [];   // imports from ../config/gen
-    // Information about the use of projections from superconcepts or interfaces is also collected during the content
+    // Information about the use of projections from super concepts or interfaces is also collected during the content
     // creation. This avoids the generation of unused classes and methods.
     private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
     private supersUsed: FreMetaClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
     private readonly _myPrimitiveHelper: PrimitivePropertyBoxesHelper;
     private readonly _myItemHelper: ItemBoxHelper;
-    private readonly _myTabelBoxHelper: TableBoxHelper;
+    private readonly _myTableBoxHelper: TableBoxHelper;
     private readonly _myLimitedHelper: LimitedBoxHelper;
     private readonly _myListPropHelper: ListPropertyBoxHelper;
     private readonly _myPartPropHelper: PartPropertyBoxHelper;
 
     constructor(editorDef: FreEditUnit) {
+        // set up the configuration of all box provider generation helpers
         this._myListPropHelper = new ListPropertyBoxHelper(this);
-        this._myPrimitiveHelper = new PrimitivePropertyBoxesHelper(this);
+        let externalBoxesHelper: ExternalBoxesHelper = new ExternalBoxesHelper(this);
         this._myPartPropHelper = new PartPropertyBoxHelper(this);
+        this._myPrimitiveHelper = new PrimitivePropertyBoxesHelper(this, externalBoxesHelper);
         this._myLimitedHelper = new LimitedBoxHelper(this, this._myListPropHelper, this._myPartPropHelper);
         this._myItemHelper = new ItemBoxHelper(
             this,
@@ -61,9 +64,9 @@ export class BoxProviderTemplate {
             this._myLimitedHelper,
             this._myListPropHelper,
             this._myPartPropHelper,
-            new ExternalBoxesHelper(this));
-        this._myTabelBoxHelper = new TableBoxHelper(this, this._myItemHelper);
-        this._myItemHelper.tableBoxHelper = this._myTabelBoxHelper;
+            externalBoxesHelper);
+        this._myTableBoxHelper = new TableBoxHelper(this, this._myItemHelper);
+        this._myItemHelper.tableBoxHelper = this._myTableBoxHelper;
         // get the global labels for true and false, and the global display type (checkbox, radio, text, etc.) for boolean values
         const defProjGroup: FreEditProjectionGroup | undefined = editorDef.getDefaultProjectiongroup();
         if (!!defProjGroup) {
@@ -75,7 +78,7 @@ export class BoxProviderTemplate {
     generateBoxProvider(language: FreMetaLanguage, concept: FreMetaClassifier, editDef: FreEditUnit, extraClassifiers: FreMetaClassifier[], relativePath: string): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        ListUtil.addListIfNotPresent(this.coreImports, ["Box", "BoxUtil", "BoxFactory", Names.FreNode, "FreBoxProvider", "FreProjectionHandler", Names.FreLanguage]);
+        ListUtil.addListIfNotPresent(this.coreImports, ["Box", "BoxUtil", "BoxFactory", "FreBoxProvider", "FreProjectionHandler"]);
 
         // see which projections there are for this concept
         // myBoxProjections: all non table projections
@@ -94,7 +97,7 @@ export class BoxProviderTemplate {
         let tableText: string = '';
         if (myTableProjections.length > 0) {
             tableText = myTableProjections.map(proj =>
-                this._myTabelBoxHelper.generateTableProjection(language, concept, proj)
+                this._myTableBoxHelper.generateTableProjection(language, concept, proj, 1)
             ).join("\n\n")
         }
 
@@ -110,7 +113,7 @@ export class BoxProviderTemplate {
             boxText = myBoxProjections.map(proj => this.generateProjectionForClassifier(language, concept, proj)).join("\n\n");
         }
 
-        // If 'concept' extends a superconcept or implements interfaces, create the method to produce the box for the superprojection
+        // If 'concept' extends a super concept or implements interfaces, create the method to produce the box for the super projection
         // It is added to the generated class, only if it is used, which is indicated by 'this.useSuper'.
         // Note, this should be done after generating 'boxText', because during generation 'this.useSuper' and 'this.supersUsed' are set
         let superMethod: string = "";
@@ -214,11 +217,11 @@ export class BoxProviderTemplate {
         ListUtil.addIfNotPresent(this.coreImports, "FreBoxProvider");
         return `
                 /**
-                 * This method returns the content for one of the superconcepts or interfaces of 'this._node'.
-                 * Based on the name of the superconcept/interface, a temporary BoxProvider is created. This BoxProvider
+                 * This method returns the content for one of the super concepts or interfaces of 'this._node'.
+                 * Based on the name of the super concept/interface, a temporary BoxProvider is created. This BoxProvider
                  * then returns the result of its 'getContent' method, using 'projectionName' as parameter.
                  *
-                 * @param superName         The name of the superconcept or interface for which the projection is requested.
+                 * @param superName         The name of the super concept or interface for which the projection is requested.
                  * @param projectionName    The name of projection that is requested.
                  * @private
                  */
@@ -246,7 +249,7 @@ export class BoxProviderTemplate {
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
         if (projection instanceof FreEditNormalProjection) {
             const elementVarName: string = `(this._node as ${Names.classifier(concept)})`;
-            const result: string = this.generateLines(projection.lines, elementVarName, concept.name, language, 1, projection.fragments);
+            const result: string = this.generateLines(projection.lines, elementVarName, concept.name, language, 1);
             if (concept instanceof FreMetaExpressionConcept) {
                 ListUtil.addIfNotPresent(this.coreImports, "createDefaultExpressionBox");
                 return `private ${Names.projectionMethod(projection)} () : Box {
@@ -261,16 +264,24 @@ export class BoxProviderTemplate {
                     return ${result};
                 }`;
             }
-            // } else if (projection instanceof FreEditTableProjection) => should not occur. Filtered out of 'allClassifiersWithProjection'
+            // else if (projection instanceof FreEditTableProjection) => should not occur. Filtered out of 'allClassifiersWithProjection'
         }
         return "";
     }
 
-    public generateLines(lines: FreEditProjectionLine[], elementVarName: string, boxLabel: string, language: FreMetaLanguage, topIndex: number, externalChildDefs: FreEditFragmentDefinition[]) {
+    /**
+     *
+     * @param lines
+     * @param elementVarName
+     * @param boxLabel
+     * @param language
+     * @param topIndex
+     */
+    public generateLines(lines: FreEditProjectionLine[], elementVarName: string, boxLabel: string, language: FreMetaLanguage, topIndex: number) {
         let result: string = "";
         // do all lines, separate them with a comma
         lines.forEach((line, index) => {
-            result += this.generateLine(line, elementVarName, index, boxLabel, language, topIndex, externalChildDefs);
+            result += this.generateLine(line, elementVarName, index, boxLabel, language, topIndex);
             if (index !== lines.length - 1) { // add a comma
                 result += ",";
             }
@@ -293,8 +304,7 @@ export class BoxProviderTemplate {
         index: number,
         boxLabel: string,
         language: FreMetaLanguage,
-        topIndex: number,
-        externalChildDefs: FreEditFragmentDefinition[]
+        topIndex: number
     ): string {
         let result: string = "";
         if (line.isEmpty()) {
@@ -303,7 +313,7 @@ export class BoxProviderTemplate {
         } else {
             // do all projection items in the line, separate them with a comma
             line.items.forEach((item, itemIndex) => {
-                result += this._myItemHelper.generateItem(item, elementVarName, index, itemIndex, boxLabel, language, topIndex, externalChildDefs);
+                result += this._myItemHelper.generateItem(item, elementVarName, index, itemIndex, boxLabel, language, topIndex);
                 if (itemIndex < line.items.length - 1) {
                     result += ",";
                 }
@@ -326,5 +336,4 @@ export class BoxProviderTemplate {
         this.useSuper = true;
         ListUtil.addIfNotPresent(this.supersUsed, myClassifier);
     }
-
 }

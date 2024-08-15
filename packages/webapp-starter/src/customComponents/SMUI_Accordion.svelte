@@ -1,11 +1,11 @@
 <script lang="ts">
     import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
     import IconButton, { Icon } from '@smui/icon-button';
-    import {FragmentWrapperBox, FreEditor} from "@freon4dsl/core";
+    import {ExternalPartListBox, FreEditor} from "@freon4dsl/core";
     import {RenderComponent} from "@freon4dsl/core-svelte";
     import {afterUpdate, onMount} from "svelte";
 
-    export let box: FragmentWrapperBox;
+    export let box: ExternalPartListBox;
     export let editor: FreEditor;
 
     let panelOpen: boolean[] = [];

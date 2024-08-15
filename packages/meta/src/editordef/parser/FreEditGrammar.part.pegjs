@@ -89,12 +89,12 @@ classifierProjection =
             curly_end
 {
     return creator.createParsedClassifier({
-        "classifier"       : classifier,
-        "projection"       : !!projections ? projections["normal"] : null,
-        "tableProjection"  : !!projections ? projections["table"] : null,
-        "classifierInfo"   : extras,
-        "fragments"        : fragments,
-        "location"         : location()
+        "classifier"            : classifier,
+        "projection"            : !!projections ? projections["normal"] : null,
+        "tableProjection"       : !!projections ? projections["table"] : null,
+        "classifierInfo"        : extras,
+        "fragmentDefinitions"   : fragments,
+        "location"              : location()
     });
 }
 

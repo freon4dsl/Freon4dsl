@@ -266,17 +266,19 @@ describe("Checking editor definition ", () => {
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
             // console.log("Warnings [" + checker.warnings.length +"]:\n" + checker.warnings.map(err => `"${err}"`).join("\n"));
             if (e instanceof Error) {
-                expect(e.message).toBe(`checking errors (6).`);
+                expect(e.message).toBe(`checking errors (8).`);
                 expect(checker.errors.includes("External projection 'aa' is not declared in globals [file: test14.edit:4:22].")).toBeTruthy();
                 expect(checker.errors.includes("External projection 'bb' is not declared in globals [file: test14.edit:5:37].")).toBeTruthy();
                 expect(checker.errors.includes("External projection 'SMUI_Card' is not declared in globals [file: test14.edit:6:3].")).toBeTruthy();
                 expect(checker.errors.includes("External projection 'aa' is not declared in globals [file: test14.edit:10:25].")).toBeTruthy();
                 expect(checker.errors.includes("External projection 'bb' is not declared in globals [file: test14.edit:11:29].")).toBeTruthy();
-                expect(checker.errors.includes("External projection 'yz' is not declared in globals [file: test14.edit:16:20].")).toBeTruthy();
-
+                expect(checker.errors.includes("External projection 'yz' is not declared in globals [file: test14.edit:19:20].")).toBeTruthy();
+                expect(checker.errors.includes("Fragment named XX is already defined, please rename one of these [file: test14.edit:8:1].")).toBeTruthy();
+                expect(checker.errors.includes("Fragment named XX is already defined, please rename one of these [file: test14.edit:13:1].")).toBeTruthy();
                 expect(checker.hasWarnings()).toBeTruthy;
-                expect(checker.warnings.length).toBe(1);
+                expect(checker.warnings.length).toBe(2);
                 expect(checker.warnings.includes("Native component is replaced by external one, list settings are ignored [file: test14.edit:5:15].")).toBeTruthy();
+                expect(checker.warnings.includes("Fragment XX is defined, but not used [file: test14.edit:18:5].")).toBeTruthy();
             }
         }
     });
