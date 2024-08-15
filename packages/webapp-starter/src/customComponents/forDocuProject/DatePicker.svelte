@@ -35,7 +35,7 @@
         }
     }
     function getValue() {
-        let startStr: string | boolean | number | undefined = box.getPropertyValue();
+        let startStr: string | undefined = box.getPropertyValue();
         if (typeof startStr === "string" && !!startStr && startStr.length > 0) {
             value = startStr;
         } else {

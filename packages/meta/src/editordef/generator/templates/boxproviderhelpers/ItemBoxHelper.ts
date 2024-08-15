@@ -197,7 +197,7 @@ export class ItemBoxHelper {
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
             let innerResult: string = `BoxUtil.getBoxOrAction(${elementVarName}, "${property.name}", "${property.type.name}", this.mainHandler) `;
             if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
-                result += this._myExternalHelper.generateListAsExternal(item, property, elementVarName, innerResult);
+                result += this._myExternalHelper.generateSingleAsExternal(item, property, elementVarName, innerResult);
             } else {
                 result += innerResult;
             }

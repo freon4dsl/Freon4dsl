@@ -18,7 +18,6 @@ export class ExternalBoxesHelper {
 
     public generatePrimAsExternal(item: FreEditPropertyProjection, property: FreMetaPrimitiveProperty, elementVarName: string, innerResult: string): string {
         let result: string = '';
-        console.log("generatePrimAsExternal: prop type is " + property.type.name)
         if (!!item.externalInfo!.wrapBy && item.externalInfo!.wrapBy.length > 0) {
             // wrap the result in an ExternalBox
             result += this.wrapPrimByExternal(item, property, elementVarName, innerResult);
@@ -78,6 +77,7 @@ export class ExternalBoxesHelper {
                     "${item.externalInfo!.wrapBy}",
                     ${elementVarName},
                     "${myRole}",
+                    "${propertyConcept.name}",
                     ${innerResult},
                     ${initializer}
                     )`;
@@ -106,6 +106,7 @@ export class ExternalBoxesHelper {
                     "${item.externalInfo!.wrapBy}",
                     ${elementVarName},
                     "${myRole}",
+                    "${propertyConcept.name}",
                     ${innerResult}
                     ${initializer}
                     )`;
@@ -131,7 +132,6 @@ export class ExternalBoxesHelper {
         // todo get the role correct
         let myRole: string = `${propertyConcept.name}-external-wrap-${item.externalInfo!.wrapBy}`;
         let boxType: string = 'StringWrapperBox';
-        console.log("wrapPrimByExternal type is: " + propertyConcept.type.name);
         switch (propertyConcept.type.name) {
             case 'identifier'   : { boxType = 'StringWrapperBox'; break;}
             case 'string'       : { boxType = 'StringWrapperBox'; break;}
@@ -150,12 +150,10 @@ export class ExternalBoxesHelper {
     }
 
     private replacePrimByExternal(item: FreEditPropertyProjection, property: FreMetaPrimitiveProperty, elementVarName: string): string {
-        // todo
         let initializer: string = this.buildInitializer(item);
         // todo get the role correct
         let myRole: string = `${property.name}-external-replace-${item.externalInfo!.replaceBy}`;
         let boxType: string = 'ExternalStringBox';
-        console.log("replacePrimByExternal type is: " + property.type.name);
         switch (property.type.name) {
             case 'identifier'   : { boxType = 'ExternalStringBox'; break;}
             case 'string'       : { boxType = 'ExternalStringBox'; break;}

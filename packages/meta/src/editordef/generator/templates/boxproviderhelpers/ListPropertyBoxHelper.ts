@@ -45,9 +45,9 @@ export class ListPropertyBoxHelper {
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
             const joinEntry: string = this.getJoinEntry(item.listInfo);
             if (item.listInfo.direction === FreEditProjectionDirection.Vertical) {
-                return `BoxUtil.verticalPartListBox(${elementVarName}, ${elementVarName}.${item.property.name}, "${propertyConcept.name}", ${joinEntry}, this.mainHandler)`;
+                return `BoxUtil.verticalPartListBox(${elementVarName}, ${elementVarName}.${propertyConcept.name}, "${propertyConcept.name}", ${joinEntry}, this.mainHandler)`;
             } // else
-            return `BoxUtil.horizontalPartListBox(${elementVarName}, ${elementVarName}.${item.property.name}, "${propertyConcept.name}", ${joinEntry}, this.mainHandler)`;
+            return `BoxUtil.horizontalPartListBox(${elementVarName}, ${elementVarName}.${propertyConcept.name}, "${propertyConcept.name}", ${joinEntry}, this.mainHandler)`;
         } else {
             return '';
         }

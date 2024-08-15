@@ -264,7 +264,7 @@ describe("Checking editor definition ", () => {
         } catch (e: unknown) {
             // console.log("in test14: " + e);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            // console.log("Warnings [" + checker.warnings.length +"]:\n" + checker.warnings.map(err => `"${err}"`).join("\n"));
+            console.log("Warnings [" + checker.warnings.length +"]:\n" + checker.warnings.map(err => `"${err}"`).join("\n"));
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (8).`);
                 expect(checker.errors.includes("External projection 'aa' is not declared in globals [file: test14.edit:4:22].")).toBeTruthy();
@@ -276,8 +276,9 @@ describe("Checking editor definition ", () => {
                 expect(checker.errors.includes("Fragment named XX is already defined, please rename one of these [file: test14.edit:8:1].")).toBeTruthy();
                 expect(checker.errors.includes("Fragment named XX is already defined, please rename one of these [file: test14.edit:13:1].")).toBeTruthy();
                 expect(checker.hasWarnings()).toBeTruthy;
-                expect(checker.warnings.length).toBe(2);
+                expect(checker.warnings.length).toBe(3);
                 expect(checker.warnings.includes("Native component is replaced by external one, list settings are ignored [file: test14.edit:5:15].")).toBeTruthy();
+                expect(checker.warnings.includes("Native component is replaced by external one, list settings are ignored [file: test14.edit:11:19].")).toBeTruthy();
                 expect(checker.warnings.includes("Fragment XX is defined, but not used [file: test14.edit:18:5].")).toBeTruthy();
             }
         }

@@ -647,14 +647,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                         item.property.owner = this.language!;
                         item.expression = undefined;
                         // check the rest
-                        if (!!item.externalInfo) { // Note that this check needs to be done first, because there is always a default listInfo
-                            this.checkExternalInfo(item, editor);
-                        }
                         if (!!item.boolKeywords) {
                             // check whether the boolInfo is appropriate
                             this.checkBooleanPropertyProjection(item, myProp!);
-                        }
-                        if (!!item.listInfo) {
+                        } else if (!!item.listInfo) {
                             this.runner.nestedCheck({check: myProp!.isList,
                                 error: `Only properties that are lists can be displayed as list or table ${ParseLocationUtil.location(item)}.`,
                                 whenOk: () => {
@@ -663,10 +659,13 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                                 }
                             });
                         } else {
-                            if (myProp!.isList && !item.externalInfo) {
+                            if (myProp!.isList) {
                                 // either create a default list projection or check the user defined one
                                 this.checkListProperty(item, myProp!);
                             }
+                        }
+                        if (!!item.externalInfo) {
+                            this.checkExternalInfo(item, editor);
                         }
                         if (!!item.projectionName && item.projectionName.length > 0) {
                             this.runner.nestedCheck({
@@ -748,6 +747,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     private checkGlobalProjections(globalProjections: FreEditGlobalProjection[]) {
         // console.log("Found global projections: " + globalProjections.map(proj => proj.toString()))
         for(let proj of globalProjections) {
+            // todo check uniqueness of names in externals section
             // first check whether the string that represents the 'for' type is correct
             this.runner.nestedCheck({
                 check:  proj.for === ForType.Boolean ||

@@ -9,7 +9,12 @@ To change to a different language from the samples folder, do the following.
 E.g. change "@freon4dsl/samples-example": "0.7.0-beta" to "@freon4dsl/samples-calculator": "0.7.0-beta". Note that 
 you must use the name for the language that is specified in its package.json, as well as the correct version.
 
-2. In src/starter.ts change the import of the language environment into environment of the required sample 
+2. Change the name of the language in the command: 
+````
+   "build-dev": "cd ../../packages/samples/Calculator && npm run build",
+
+````
+3. In src/starter.ts change the import of the language environment into environment of the required sample 
 language. For example, change the following lines ...
 ```typescript
 /**
