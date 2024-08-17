@@ -1,0 +1,165 @@
+language Entity
+
+model EntityModel {
+    name: identifier;
+    units: EntityModelUnit[];
+    extraUnit: SomeOtherModelUnit;
+}
+
+modelunit SomeOtherModelUnit {
+    name: identifier;
+    somePart: Entity;
+}
+
+interface BaseType {
+    name: identifier;
+    baseInterface_attr?: number;
+}
+
+interface Type base BaseType {
+    simpleprop: string;
+    int_attrs: AttributeWithLimitedType[];
+    int_functions: EntityFunction[];
+    reference baseInterface: Entity;
+}
+
+concept Entity implements Type {
+    isCompany: boolean;
+    attributes: AttributeWithLimitedType[];
+    entAttributes: AttributeWithEntityType[];
+    functions: EntityFunction[];
+    reference baseEntity?: Entity;
+}
+
+limited AttributeType implements BaseType {
+    // if the 'name' property was not provided, it would have been generated
+    name: identifier;
+    extra: number;
+    String = { name: "String", extra: 199}
+    // notations 'name:' and '"name":' are both correct
+    Integer = { "name": "Integer", extra: 240261}
+    Boolean = { name: "Boolean", extra: 5479}
+    // the following instance gets the name "ANY"
+    ANY = { extra: 456}
+}
+
+limited MockEnumeration { EnumValue1; EnumValue2; EnumValue3; }
+
+expression AbsExpression base EntityExpression {
+    expr: EntityExpression;
+}
+
+binary expression MultiplyExpression base BinaryExpression {
+    priority = 8;
+}
+
+modelunit EntityModelUnit {
+    name: identifier;
+
+    functions: EntityFunction[];
+    entities: Entity[];
+}
+
+concept EntityFunction {
+    name: identifier;
+    aliases: string[];
+    expression: EntityExpression;
+    parameters: Variable[];
+    reference declaredType : Type;
+}
+
+concept AttributeWithLimitedType {
+    reference declaredType: AttributeType;
+    name: identifier;
+}
+
+concept Text {} // only defined to show that literal text can be part of a projection
+concept Text2 {} // only defined to show that literal text can be part of a projection
+concept Text3 {} // only defined to show that literal text can be part of a projection
+concept Text4 {} // only defined to show that literal text can be part of a projection
+concept AttributeWithEntityType {
+    reference declaredType: Entity;
+    name: identifier;
+}
+
+concept Variable {
+    name: identifier;
+    reference declaredType: Entity;
+}
+
+abstract expression EntityExpression {
+    appliedfeature?: AppliedFeature;
+}
+
+abstract concept AppliedFeature {
+    appliedfeature?: AppliedFeature;
+}
+
+concept AttributeRef base AppliedFeature {
+    reference attribute: AttributeWithEntityType;
+}
+
+expression VariableRef base EntityExpression {
+    reference variable: Variable;
+}
+
+abstract expression LiteralExpression base EntityExpression {}
+
+expression StringLiteralExpression base LiteralExpression {
+    value: string;
+}
+
+expression NumberLiteralExpression base LiteralExpression {
+    value: string; // TODO should be changed to type number
+}
+
+expression BooleanLiteralExpression base LiteralExpression {
+    value: string; // TODO should be changed to type boolean
+}
+
+abstract binary expression BinaryExpression base EntityExpression {
+    left: EntityExpression;
+    right: EntityExpression;
+}
+
+binary expression PlusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression AndExpression base BinaryExpression {
+    priority = 1;
+}
+
+binary expression OrExpression base BinaryExpression {
+    priority = 1;
+}
+
+abstract binary expression ComparisonExpression base BinaryExpression {
+}
+
+binary expression LessThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression GreaterThenExpression base ComparisonExpression {
+    priority = 10;
+}
+
+binary expression EqualsExpression base ComparisonExpression {
+    priority = 10;
+}
+
+expression FunctionCallExpression base EntityExpression {
+    reference functionDefinition: EntityFunction;
+}
+
+expression IfExpression base EntityExpression {
+    condition: EntityExpression;
+    whenTrue: EntityExpression;
+    whenFalse: EntityExpression;
+}
+

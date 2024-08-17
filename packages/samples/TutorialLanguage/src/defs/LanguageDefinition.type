@@ -1,0 +1,67 @@
+typer
+
+// 'BaseType' is the root of the type hierarchy
+istype { BaseType, Type, Entity, AttributeType }
+
+// Which concepts have a type?
+hastype { EntityExpression, AttributeWithLimitedType, EntityFunction, Variable, AppliedFeature }
+
+anytype {
+    conformsto AttributeType:ANY;
+    equalsto AttributeType:ANY;
+}
+
+Entity {
+    conformsto self.baseEntity;
+}
+StringLiteralExpression {
+    infertype AttributeType:String;
+}
+AttributeWithLimitedType {
+    infertype self.declaredType;
+}
+EntityFunction {
+    infertype self.declaredType;
+}
+NumberLiteralExpression {
+    infertype AttributeType:Integer;
+}
+BooleanLiteralExpression {
+    infertype AttributeType:Boolean;
+}
+AbsExpression {
+    infertype self.expr;
+}
+MultiplyExpression {
+    infertype self.left;
+}
+PlusExpression {
+    infertype self.left;
+}
+AndExpression {
+    infertype AttributeType:Boolean;
+}
+OrExpression {
+    infertype AttributeType:Boolean;
+}
+DivideExpression {
+    infertype self.left;
+}
+ComparisonExpression {
+    infertype AttributeType:Boolean;
+}
+FunctionCallExpression {
+    infertype self.functionDefinition;
+}
+IfExpression    {
+    infertype self.whenTrue;
+}
+Variable {
+    infertype self.declaredType;
+}
+VariableRef   {
+    infertype self.variable.declaredType;
+}
+AttributeRef   {
+    infertype self.attribute.declaredType;
+}
