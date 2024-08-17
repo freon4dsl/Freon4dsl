@@ -1,10 +1,11 @@
-StringWrapperComponent.svelte<script lang="ts">
+<script lang="ts">
     import {afterUpdate, onMount} from "svelte";
-    import {ExternalSimpleBox, FreEditor, StringWrapperBox} from "@freon4dsl/core";
-    import {RenderComponent} from "@freon4dsl/core-svelte";
+    import {ExternalSimpleBox, FreEditor} from "@freon4dsl/core";
     export let box: ExternalSimpleBox;
+    //@ts-ignore The RenderComponent assumes that every svelte component has 'box' and 'editor' as parameters
     export let editor: FreEditor;
-
+    let src = '/cats-kittens.gif';
+    let name1 = 'Two kittens licking';
     let inputElement;
 
     // The following four functions need to be included for the editor to function properly.
@@ -25,13 +26,6 @@ StringWrapperComponent.svelte<script lang="ts">
     });
 </script>
 
-<div class="wrapper">
-    <RenderComponent box={box.childBox} editor="{editor}"/>
+<div class="replacer">
+    <img {src} alt="{name1}" />
 </div>
-
-<style>
-    .wrapper {
-        border: 2px groove #666666;
-        border-radius: 8px;
-    }
-</style>

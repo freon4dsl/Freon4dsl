@@ -86,10 +86,10 @@ export class ExternalBoxesHelper {
     private replaceSingleByExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string): string {
         let initializer: string = this.buildInitializer(item);
         // todo get the role correct
-        let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.wrapBy}`;
+        let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.replaceBy}`;
         ListUtil.addIfNotPresent(this._myTemplate.coreImports, "ExternalPartBox");
         return `new ExternalPartBox(
-                    "${item.externalInfo!.wrapBy}",
+                    "${item.externalInfo!.replaceBy}",
                     ${elementVarName},
                     "${myRole}",
                     "${propertyConcept.name}",

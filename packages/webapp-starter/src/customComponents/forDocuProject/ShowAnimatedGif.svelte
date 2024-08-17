@@ -15,7 +15,7 @@
     export let editor: FreEditor;
 
     let src: string = src1;
-    let name: string;
+    let name: string = name1;
 
     function getSrc() {
         let nrOfSrc: number = Number.parseInt(box.findParam("number"));

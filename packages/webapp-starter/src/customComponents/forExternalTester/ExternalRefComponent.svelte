@@ -1,4 +1,4 @@
-StringWrapperComponent.svelte<script lang="ts">
+<script lang="ts">
     import {afterUpdate, onMount} from "svelte";
     import {ExternalRefBox, FreEditor, StringWrapperBox} from "@freon4dsl/core";
     import {RenderComponent} from "@freon4dsl/core-svelte";

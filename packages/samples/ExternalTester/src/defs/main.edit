@@ -2,57 +2,69 @@ editor default
 
 global {
     external {
-        AnimatedGif,
-        SMUI_Card,
-        SMUI_Dialog
+        booleanWrapper,
+        fragmentWrapper,
+        numberWrapper,
+        partWrapper,
+        partListWrapper,
+        refWrapper,
+        refListWrapper,
+        stringWrapper,
+        
+        booleanReplacer,
+        numberReplacer,
+        partReplacer,
+        partListReplacer,
+        refReplacer,
+        refListReplacer,
+        simple,
+        stringReplacer
     }
 }
 
 ExternalUnit {[
     ${self.content}
     A simple external component:
-    [external = AnimatedGif ]
-    Some text in front of fragment XX [fragment xx].
-    Some text in front of fragment YY [fragment yy].
+    [external = simple ]
+    Some text in front of fragment XX [fragment xx]
+    Some text in front of fragment YY [fragment yy]
 ]
 fragment xx [
-    This is fragment XX.
+    This is fragment XX
     [fragment zz]
 ]
 fragment yy [
-    This is fragment YY.
+    This is fragment YY
 ]
 fragment zz [
-    This is fragment ZZ.
+    This is fragment ZZ
 ]
 }
 
 AA {[
-    This is concept AA ${self.name}
-    Wrap all properties:
-    stringProp ${self.stringProp wrap=SMUI_Card}
-    numberProp ${self.numberProp wrap=SMUI_Card}
-    booleanProp${self.booleanProp wrap=SMUI_Card}
+    This is concept AA ${self.name} in which all properties are wrapped.
+    stringProp ${self.stringProp wrap=stringWrapper}
+    numberProp ${self.numberProp wrap=numberWrapper}
+    booleanProp${self.booleanProp wrap=booleanWrapper}
     // properties with concept as type
-    conceptProp ${self.conceptProp wrap=SMUI_Card}
-    conceptList ${self.conceptList wrap=SMUI_Card}
-    referenceProp ${self.referenceProp wrap=SMUI_Card}
-    referenceList ${self.referenceList wrap=SMUI_Card}
+    conceptProp ${self.conceptProp wrap=partWrapper}
+    conceptList ${self.conceptList wrap=partListWrapper}
+    referenceProp ${self.referenceProp wrap=refWrapper}
+    referenceList ${self.referenceList wrap=refListWrapper}
 ]}
 
 BB {[
-    This is concept BB ${self.name}
-    Replace all properties:
+    This is concept BB ${self.name} in which all properties are replaced.
     // the possibilities for primitive properties
-    stringProp ${self.stringProp replace=SMUI_Dialog}
-    numberProp ${self.numberProp replace=SMUI_Dialog}
-    booleanProp ${self.booleanProp replace=SMUI_Dialog}
+    stringProp ${self.stringProp replace=stringReplacer}
+    numberProp ${self.numberProp replace=numberReplacer}
+    booleanProp ${self.booleanProp replace=booleanReplacer}
     // properties with concept as type
-    conceptProp ${self.conceptProp replace=SMUI_Dialog}
-    conceptList ${self.conceptList replace=SMUI_Dialog}
+    conceptProp ${self.conceptProp replace=partReplacer}
+    conceptList ${self.conceptList replace=partListReplacer}
     // properties with reference as type
-    referenceProp ${self.referenceProp replace=SMUI_Dialog}
-    referenceList ${self.referenceList replace=SMUI_Dialog}
+    referenceProp ${self.referenceProp replace=refReplacer}
+    referenceList ${self.referenceList replace=refListReplacer}
 ]}
 
     // the possibilities for primitive properties

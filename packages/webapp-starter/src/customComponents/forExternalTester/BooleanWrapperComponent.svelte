@@ -1,4 +1,4 @@
-StringWrapperComponent.svelte<script lang="ts">
+<script lang="ts">
     import {afterUpdate, onMount} from "svelte";
     import {BooleanWrapperBox, FreEditor, StringWrapperBox} from "@freon4dsl/core";
     import {RenderComponent} from "@freon4dsl/core-svelte";
@@ -29,10 +29,3 @@ StringWrapperComponent.svelte<script lang="ts">
     Boolean wrapper
     <RenderComponent box={box.childBox} editor="{editor}"/>
 </div>
-
-<style>
-    .wrapper {
-        border: 2px groove #666666;
-        border-radius: 8px;
-    }
-</style>

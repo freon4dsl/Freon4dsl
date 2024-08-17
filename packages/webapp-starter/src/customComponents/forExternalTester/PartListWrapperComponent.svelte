@@ -30,9 +30,3 @@
     <RenderComponent box={box.childBox} editor="{editor}"/>
 </div>
 
-<style>
-    .wrapper {
-        border: 2px groove #666666;
-        border-radius: 8px;
-    }
-</style>

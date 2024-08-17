@@ -51,3 +51,25 @@ body {
 }
 
 // end example of adding icons to a button
+
+// styles for wrapping and replacing native components
+.wrapper {
+  border: 2px groove #666666;
+  border-radius: 8px;
+  background: whitesmoke;
+  padding: 2px;
+}
+
+.replacer {
+  border: 2px groove #666666;
+  border-radius: 8px;
+  background: whitesmoke;
+  padding: 2px;
+}
+
+.fragment-component {
+  border: 2px groove #666666;
+  border-radius: 8px;
+  background: blanchedalmond;
+  padding: 2px;
+}

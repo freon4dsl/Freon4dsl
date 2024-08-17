@@ -50,10 +50,3 @@
     Boolean Replacer
     <input bind:value={value} bind:this={inputElement} on:change={onChange}/>
 </div>
-
-<style>
-    .replacer {
-        border: 2px groove #666666;
-        border-radius: 8px;
-    }
-</style>
