@@ -11,26 +11,24 @@
     let value: FreNodeReference<CC>[];
 
     function getValue() {
-        let startVal: FreNodeReference<CC>[] | undefined = box.getPropertyValue();
-        if (!!startVal) {
+        let startVal: FreNodeReference<any>[] | undefined = box.getPropertyValue();
+        if (!!startVal && box.getPropertyType() === "CC") {
             value = startVal as FreNodeReference<CC>[];
         }
-        // You can work directly with list elements,
-        // but you also have access to the native boxes the project the elements in the list.
+        // You can work directly with the list elements,
+        // but you also have access to the native boxes that project the elements in the list.
         // We will be projecting the native boxes using the native RenderComponent.
     }
-    getValue();
+    // getValue();
 
     const addChild = () => {
-        console.log("adding reference to [" + value.map(v => v.name) + "]")
         let newRef: FreNodeReference<CC> = FreNodeReference.create<CC>("nameOfReferedNode", "CC");
         // Note that you need to put any changes to the actual model in a 'runInAction',
         // because all elements in the model are reactive using mobx.
         runInAction(() => {
-            box.getPropertyValue().push(newRef);
+            value.push(newRef);
+            // or use: box.getPropertyValue().push(newRef);
         });
-        box.isDirty();
-        console.log("box.children.length: " + box.children.length)
     }
 
     // The following four functions need to be included for the editor to function properly.
@@ -64,9 +62,6 @@
         {#each box.children as childBox}
             <li><RenderComponent box={childBox} editor={editor} /></li>
         {/each}
-    </ol>
-    <ol>
-        some tekst {box.children.length}
     </ol>
     <button on:click={addChild} bind:this={button}>Add reference</button>
 </div>

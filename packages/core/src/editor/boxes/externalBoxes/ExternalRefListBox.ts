@@ -28,7 +28,7 @@ export class ExternalRefListBox extends AbstractExternalPropertyBox {
         }
     }
 
-    getChildren(): ReadonlyArray<Box> {
+    get children(): ReadonlyArray<Box> {
         return this._children as ReadonlyArray<Box>;
     }
 

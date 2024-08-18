@@ -25,7 +25,6 @@ export class ExternalPartListBox extends AbstractExternalPropertyBox {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
-            // child.isVisible = false;
         }
     }
 

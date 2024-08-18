@@ -109,7 +109,6 @@
 
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!
 
-    
     const textUpdateFunction = (data: {content: string, caret: number}): boolean => {
         LOGGER.log(`textUpdateFunction for ${box.kind}: ` + JSON.stringify(data));
         dropdownShown = true;
@@ -247,7 +246,6 @@
             }
         });
         filteredOptions = result;
-
     }
 
     function selectLastOption() {

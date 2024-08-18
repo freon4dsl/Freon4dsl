@@ -6,7 +6,7 @@ import {
     Box,
     BoxFactory, ButtonBox,
     CharAllowed,
-    EmptyLineBox,
+    EmptyLineBox, ExternalRefListBox,
     HorizontalListBox, IndentBox, LabelBox,
     LimitedControlBox,
     LimitedDisplay,
@@ -539,7 +539,7 @@ export class BoxUtil {
         children = this.addPlaceholder(children, element, propertyName);
         // determine the role
         const role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vpartlist");
-        // return the box
+        // create and return the box
         const result: VerticalListBox = BoxFactory.verticalList(element, role, propertyName, children, initializer);
         result.propertyName = propertyName;
         return result;
@@ -554,10 +554,38 @@ export class BoxUtil {
             let children: Box[] = this.makeRefItems(element, property as FreNodeReference<FreNamedNode>[], propertyName, scoper, listInfo);
             // add a placeholder where a new element can be added
             children = this.addReferencePlaceholder(children, element, propertyName);
-            let result: VerticalListBox;
-            result = BoxFactory.verticalList(
+            // determine the role
+            const role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vreflist");
+            // create and return the box
+            const result: VerticalListBox = BoxFactory.verticalList(
                 element,
-                RoleProvider.property(element.freLanguageConcept(), propertyName, "vreflist"),
+                role,
+                propertyName,
+                children,
+                initializer
+            );
+            result.propertyName = propertyName;
+            return result;
+        } else {
+            FreUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a list or not a reference: " + property + "\"");
+            return null;
+        }
+    }
+
+    static externalReferenceListBox(element: FreNode, propertyName: string, scoper: FreScoper, initializer?: Partial<ExternalRefListBox>): Box {
+        // find the information on the property to be shown
+        const { property, isList, isPart } = this.getPropertyInfo(element, propertyName);
+        // check whether the property is a reference list
+        if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
+            // find the children to show in this listBox
+            let children: Box[] = this.makeRefItems(element, property as FreNodeReference<FreNamedNode>[], propertyName, scoper);
+            // determine the role
+            const role: string = RoleProvider.property(element.freLanguageConcept(), propertyName, "vreflist");
+            // create and return the box
+            const result: ExternalRefListBox = new ExternalRefListBox(
+                "refListReplacer",
+                element,
+                role,
                 propertyName,
                 children,
                 initializer
