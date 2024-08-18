@@ -2,11 +2,11 @@ import {
     FreEditPropertyProjection, FreEditSimpleExternal,
 } from "../../../metalanguage/index.js";
 import {
-    FreMetaConceptProperty,
+    FreMetaConceptProperty, FreMetaLanguage,
     FreMetaPrimitiveProperty,
     FreMetaProperty
 } from "../../../../languagedef/metalanguage/index.js";
-import {ListUtil} from "../../../../utils/index.js";
+import {ListUtil, Names} from "../../../../utils/index.js";
 import {BoxProviderTemplate} from "../BoxProviderTemplate.js";
 
 export class ExternalBoxesHelper {
@@ -20,6 +20,9 @@ export class ExternalBoxesHelper {
         let result: string = '';
         if (!!item.externalInfo!.wrapBy && item.externalInfo!.wrapBy.length > 0) {
             // wrap the result in an ExternalBox
+            if (!innerResult || innerResult.length === 0) {
+                innerResult = "null";
+            }
             result += this.wrapPrimByExternal(item, property, elementVarName, innerResult);
         } else {
             // replace the property box by an ExternalBox
@@ -30,24 +33,30 @@ export class ExternalBoxesHelper {
 
     public generateSingleAsExternal(item: FreEditPropertyProjection, property: FreMetaConceptProperty, elementVarName: string, innerResult: string): string {
         let result: string = '';
-        if (!!item.externalInfo!.wrapBy && item.externalInfo!.wrapBy.length > 0) {
-            // wrap the result in an ExternalBox
-            result += this.wrapSingleByExternal(item, property, elementVarName, innerResult);
-        } else {
-            // replace the property box by an ExternalBox
-            result += this.replaceSingleByExternal(item, property, elementVarName);
-        }
+            if (!!item.externalInfo!.wrapBy && item.externalInfo!.wrapBy.length > 0) {
+                // wrap the result in an ExternalBox
+                if (!innerResult || innerResult.length === 0) {
+                    innerResult = "null";
+                }
+                result += this.wrapSingleByExternal(item, property, elementVarName, innerResult);
+            } else {
+                // replace the property box by an ExternalBox
+                result += this.replaceSingleByExternal(item, property, elementVarName, innerResult);
+            }
         return result;
     }
 
-    public generateListAsExternal(item: FreEditPropertyProjection, property: FreMetaConceptProperty, elementVarName: string, innerResult: string): string {
+    public generateListAsExternal(item: FreEditPropertyProjection, property: FreMetaConceptProperty, elementVarName: string, innerResult: string, language: FreMetaLanguage): string {
         let result: string = '';
         if (!!item.externalInfo!.wrapBy && item.externalInfo!.wrapBy.length > 0) {
             // wrap the result in an ExternalBox
+            if (!innerResult || innerResult.length === 0) {
+                innerResult = "null";
+            }
             result += this.wrapListByExternal(item, property, elementVarName, innerResult);
         } else {
             // replace the property box by an ExternalBox
-            result += this.replaceListByExternal(item, property, elementVarName);
+            result += this.replaceListByExternal(item, property, elementVarName, language);
         }
         return result;
     }
@@ -68,61 +77,80 @@ export class ExternalBoxesHelper {
         return `new ExternalSimpleBox("${item.name}", ${element}, "${myRole}"${initializer})`;
     }
 
-    private wrapSingleByExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string, innerResult: string): string {
+    private wrapSingleByExternal(item: FreEditPropertyProjection, property: FreMetaConceptProperty, elementVarName: string, innerResult: string): string {
         let initializer: string = this.buildInitializer(item);
         // todo get the role correct
-        let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.wrapBy}`;
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "PartWrapperBox");
-        return `new PartWrapperBox(
+        let myRole: string = `${property.name}-external-${item.externalInfo!.wrapBy}`;
+        let clsName: string = "PartWrapperBox";
+        if (!property.isPart) {
+            clsName = "RefWrapperBox";
+        }
+        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `${clsName}`);
+        return `new ${clsName}(
                     "${item.externalInfo!.wrapBy}",
                     ${elementVarName},
                     "${myRole}",
-                    "${propertyConcept.name}",
+                    "${property.name}",
                     ${innerResult},
                     ${initializer}
                     )`;
     }
 
-    private replaceSingleByExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string): string {
+    private replaceSingleByExternal(item: FreEditPropertyProjection, property: FreMetaConceptProperty, elementVarName: string, innerResult: string): string {
         let initializer: string = this.buildInitializer(item);
         // todo get the role correct
-        let myRole: string = `${propertyConcept.name}-external-${item.externalInfo!.replaceBy}`;
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "ExternalPartBox");
-        return `new ExternalPartBox(
+        let myRole: string = `${property.name}-external-${item.externalInfo!.replaceBy}`;
+        let clsName: string = "ExternalPartBox";
+        if (!property.isPart) {
+            clsName = "ExternalRefBox";
+        }
+        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `${clsName}`);
+        return `new ${clsName}(
                     "${item.externalInfo!.replaceBy}",
                     ${elementVarName},
                     "${myRole}",
-                    "${propertyConcept.name}",
+                    "${property.name}",
+                    ${innerResult},
                     ${initializer}
                     )`;
     }
 
-    private wrapListByExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string, innerResult: string) {
+    private wrapListByExternal(item: FreEditPropertyProjection, property: FreMetaConceptProperty, elementVarName: string, innerResult: string) {
         let initializer: string = this.buildInitializer(item);
         // todo get the role correct
-        let myRole: string = `${propertyConcept.name}-external-wrap-by-${item.externalInfo!.wrapBy}`;
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "PartListWrapperBox");
-        return `new PartListWrapperBox(
+        let myRole: string = `${property.name}-external-wrap-by-${item.externalInfo!.wrapBy}`;
+        let clsName: string = "PartListWrapperBox";
+        if (!property.isPart) {
+            clsName = "RefListWrapperBox";
+        }
+        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `${clsName}`);
+        return `new ${clsName}(
                     "${item.externalInfo!.wrapBy}",
                     ${elementVarName},
                     "${myRole}",
-                    "${propertyConcept.name}",
+                    "${property.name}",
                     ${innerResult}
                     ${initializer}
                     )`;
     }
 
-    private replaceListByExternal(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string) {
+    private replaceListByExternal(item: FreEditPropertyProjection, property: FreMetaConceptProperty, elementVarName: string, language: FreMetaLanguage) {
         let initializer: string = this.buildInitializer(item);
         // todo get the role correct
-        let myRole: string = `${propertyConcept.name}-external-replace-by-${item.externalInfo!.replaceBy}`;
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "ExternalPartListBox");
-        return `new ExternalPartListBox(
+        let myRole: string = `${property.name}-external-replace-by-${item.externalInfo!.replaceBy}`;
+        let clsName: string = "ExternalPartListBox";
+        let boxUtilStr: string = `BoxUtil.makePartItems(${elementVarName}, ${elementVarName}.${property.name}, "${property.name}", this.mainHandler)`;
+        if (!property.isPart) {
+            clsName = "ExternalRefListBox";
+            boxUtilStr = `BoxUtil.makeRefItems(${elementVarName}, ${elementVarName}.${property.name}, "${property.name}", ${Names.environment(language)}.getInstance().scoper)`;
+        }
+        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `${clsName}`);
+        return `new ${clsName}(
                     "${item.externalInfo!.replaceBy}",
                     ${elementVarName},
                     "${myRole}",
-                    "${propertyConcept.name}",
-                    BoxUtil.makePartItems(${elementVarName}, ${elementVarName}.${propertyConcept.name}, "${propertyConcept.name}", this.mainHandler)
+                    "${property.name}",
+                    ${boxUtilStr}
                     ${initializer}
                     )`;
     }

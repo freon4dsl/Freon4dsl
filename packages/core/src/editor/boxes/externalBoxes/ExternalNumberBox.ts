@@ -24,12 +24,12 @@ export class ExternalNumberBox extends AbstractExternalPropertyBox {
     }
 
     setPropertyValue(newValue: number) {
-        if (typeof newValue === "number" && this.propertyClassifierName === "number") {
+        if (typeof newValue === "number" && this.getPropertyType() === "number") {
             runInAction(() => {
                 this.node[this.propertyName] = newValue;
             });
         } else {
-            console.log("ExternalNumberBox.setPropertyValue type error: trying to set property of type " + this.propertyClassifierName + " to a value of type " + typeof newValue )
+            console.log("ExternalNumberBox.setPropertyValue type error: trying to set property of type " + this.getPropertyType() + " to a value of type " + typeof newValue )
         }
     }
 }

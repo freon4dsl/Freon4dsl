@@ -25,7 +25,6 @@ export class ExternalRefListBox extends AbstractExternalPropertyBox {
         if (!!child) {
             this._children.push(child);
             child.parent = this;
-            // child.isVisible = false;
         }
     }
 
@@ -33,24 +32,9 @@ export class ExternalRefListBox extends AbstractExternalPropertyBox {
         return this._children as ReadonlyArray<Box>;
     }
 
-    getPropertyName(): string {
-        return this.propertyName;
-    }
-
     getPropertyValue(): FreNodeReference<any>[] {
-        const val = this.node[this.propertyName];
-        // if (typeof val === this.propertyClassifierName) {
-            return val;
-        // }
-        // return undefined;
+        return this.node[this.propertyName];
     }
-
-    setPropertyValue(newValue: FreNodeReference<any>[]) {
-        // todo add checks
-        this.node[this.propertyName] = newValue;
-    }
-
-    // todo do we need more of the replace children functionality like in LayoutComponent??
 }
 
 export function isExternalRefListBox(b: Box): b is ExternalRefListBox {

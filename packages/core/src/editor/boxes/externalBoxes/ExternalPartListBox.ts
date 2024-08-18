@@ -33,24 +33,9 @@ export class ExternalPartListBox extends AbstractExternalPropertyBox {
         return this._children as ReadonlyArray<Box>;
     }
 
-    getPropertyName(): string {
-        return this.propertyName;
-    }
-
     getPropertyValue(): FreNode[] {
-        const val = this.node[this.propertyName];
-        // if (typeof val === this.propertyClassifierName) {
-            return val;
-        // }
-        // return undefined;
+        return this.node[this.propertyName];
     }
-
-    setPropertyValue(newValue: FreNode[]) {
-        // todo add checks
-        this.node[this.propertyName] = newValue;
-    }
-
-    // todo do we need more of the replace children functionality like in LayoutComponent??
 }
 
 export function isExternalPartListBox(b: Box): b is ExternalPartListBox {

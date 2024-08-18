@@ -1,29 +1,36 @@
 <script lang="ts">
     import {afterUpdate, onMount} from "svelte";
-    import {ExternalRefListBox, FreEditor, FreNodeReference} from "@freon4dsl/core";
-    import {BB} from "@freon4dsl/samples-external-tester";
+    import {Box, ExternalRefListBox, FreEditor, FreNodeReference} from "@freon4dsl/core";
+    import {CC} from "@freon4dsl/samples-external-tester";
     import {RenderComponent} from "@freon4dsl/core-svelte";
+    import {runInAction} from "mobx";
     export let box: ExternalRefListBox;
     export let editor: FreEditor;
 
     let button;
-    let value: FreNodeReference<BB>[];
+    let value: FreNodeReference<CC>[];
 
     function getValue() {
-        let startVal: FreNodeReference<BB>[] | undefined = box.getPropertyValue();
+        let startVal: FreNodeReference<CC>[] | undefined = box.getPropertyValue();
         if (!!startVal) {
-            value = startVal;
-        } else {
-            value = [];
+            value = startVal as FreNodeReference<CC>[];
         }
         // You can work directly with list elements,
         // but you also have access to the native boxes the project the elements in the list.
-        // We will be projecting those using the native RenderComponent.
+        // We will be projecting the native boxes using the native RenderComponent.
     }
     getValue();
 
     const addChild = () => {
-        // todo
+        console.log("adding reference to [" + value.map(v => v.name) + "]")
+        let newRef: FreNodeReference<CC> = FreNodeReference.create<CC>("nameOfReferedNode", "CC");
+        // Note that you need to put any changes to the actual model in a 'runInAction',
+        // because all elements in the model are reactive using mobx.
+        runInAction(() => {
+            box.getPropertyValue().push(newRef);
+        });
+        box.isDirty();
+        console.log("box.children.length: " + box.children.length)
     }
 
     // The following four functions need to be included for the editor to function properly.
@@ -52,11 +59,14 @@
 </script>
 
 <div class="replacer">
-    The replacer is showing a list of children, each in their native boxes.
+    The replacer is showing a list of references, each in their native boxes.
     <ol>
         {#each box.children as childBox}
             <li><RenderComponent box={childBox} editor={editor} /></li>
         {/each}
     </ol>
-    <button on:click={addChild} bind:this={button}>Add child</button>
+    <ol>
+        some tekst {box.children.length}
+    </ol>
+    <button on:click={addChild} bind:this={button}>Add reference</button>
 </div>

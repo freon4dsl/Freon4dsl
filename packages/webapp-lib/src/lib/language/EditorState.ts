@@ -189,7 +189,9 @@ export class EditorState {
         await this.modelStore.deleteUnit(unit)
         // if the unit is shown in the editor, get rid of that one, as well
         if (this.currentUnit.freId() === unit.freId()) {
-            this.langEnv.editor.rootElement = null;
+            runInAction(() => {
+                this.langEnv.editor.rootElement = null;
+            });
             noUnitAvailable.set(true);
             modelErrors.set([]);
         }
@@ -294,12 +296,16 @@ export class EditorState {
         LOGGER.log("showUnitAndErrors called, unitName: " + newUnit?.name);
         if (!!newUnit) {
             noUnitAvailable.set(false);
-            this.langEnv.editor.rootElement = newUnit;
+            runInAction(() => {
+                this.langEnv.editor.rootElement = newUnit;
+            });
             this.currentUnit = newUnit;
             this.getErrors();
         } else {
             noUnitAvailable.set(true);
-            this.langEnv.editor.rootElement = null;
+            runInAction(() => {
+                this.langEnv.editor.rootElement = null;
+            });
             this.currentUnit = null;
         }
         editorProgressShown.set(false);

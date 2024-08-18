@@ -16,7 +16,7 @@ export class ExternalRefBox extends AbstractExternalPropertyBox {
 
     getPropertyValue(): FreNodeReference<any> {
         const val = this.node[this.propertyName];
-        if (typeof val === this.propertyClassifierName) { // todo check
+        if (typeof val === this.getPropertyType()) { // todo check
             return val;
         }
         return undefined;

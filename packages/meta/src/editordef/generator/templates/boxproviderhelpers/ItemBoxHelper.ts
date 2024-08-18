@@ -162,18 +162,24 @@ export class ItemBoxHelper {
             if (property.type instanceof FreMetaLimitedConcept) {
             result += this._myLimitedHelper.generateLimited(property, elementVarName, language, item.listInfo, item.displayType)
         } else if (property.isList) {
+            let innerResult: string = '';
             if (!!item.listInfo && item.listInfo.isTable) { // if there is information on how to project the property as a table, make it a table
                 // no table projection for references - for now
-                result += this._myListPropHelper.generateReferenceAsList(language, item.listInfo, property, elementVarName);
+                innerResult = this._myListPropHelper.generateReferenceAsList(language, item.listInfo, property, elementVarName);
             } else if (!!item.listInfo) { // if there is information on how to project the property as a list, make it a list
-                result += this._myListPropHelper.generateReferenceAsList(language, item.listInfo, property, elementVarName);
+                innerResult = this._myListPropHelper.generateReferenceAsList(language, item.listInfo, property, elementVarName);
+            }
+            if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
+                    result += this._myExternalHelper.generateListAsExternal(item, property, elementVarName, innerResult, language);
+            } else {
+                    result += innerResult;
             }
         } else { // single element
             let innerResult: string = this._myPartPropHelper.generateReferenceProjection(language, property, elementVarName);
             if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
                 result += this._myExternalHelper.generateSingleAsExternal(item, property, elementVarName, innerResult);
             } else {
-                result += innerResult
+                result += innerResult;
             }
         }
         return result;
@@ -189,7 +195,7 @@ export class ItemBoxHelper {
                 innerResult = this._myListPropHelper.generatePartAsList(item, property, elementVarName);
             }
             if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
-                result += this._myExternalHelper.generateListAsExternal(item, property, elementVarName, innerResult);
+                result += this._myExternalHelper.generateListAsExternal(item, property, elementVarName, innerResult, language);
             } else {
                 result += innerResult;
             }

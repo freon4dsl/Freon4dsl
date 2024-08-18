@@ -3,6 +3,7 @@
     import {ExternalPartListBox, FreEditor, FreNode} from "@freon4dsl/core";
     import {BB} from "@freon4dsl/samples-external-tester";
     import {RenderComponent} from "@freon4dsl/core-svelte";
+    import {runInAction} from "mobx";
     export let box: ExternalPartListBox;
     export let editor: FreEditor;
 
@@ -11,10 +12,8 @@
 
     function getValue() {
         let startVal: FreNode[] | undefined = box.getPropertyValue();
-        if (!!startVal && startVal.length > 0 && startVal[0].freLanguageConcept() === "BB") {
+        if (!!startVal && box.getPropertyType() === "BB") {
             value = startVal as BB[];
-        } else {
-            value = [];
         }
         // You can cast the startVal to the expected type, in this case "BB[]".
         // But you also have access to the native boxes the project the elements in the list,
@@ -24,8 +23,13 @@
 
     const addChild = () => {
         let newBB: BB = BB.create({name: "new element", numberProp: 100, booleanProp: true});
-        value.push(newBB);
-        box.setPropertyValue(value);
+        // Note that you need to put any changes to the actual model in a 'runInAction',
+        // because all elements in the model are reactive using mobx.
+        runInAction(() => {
+            value.push(newBB);
+        });
+        // box.isDirty();
+        console.log("box.childremn.length: " + box.children.length)
     }
 
     // The following four functions need to be included for the editor to function properly.

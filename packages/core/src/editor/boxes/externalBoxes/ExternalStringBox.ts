@@ -24,12 +24,12 @@ export class ExternalStringBox extends AbstractExternalPropertyBox {
     }
 
     setPropertyValue(newValue: string | boolean | number) {
-        if (typeof newValue === "string" && this.propertyClassifierName === "string") {
+        if (typeof newValue === "string" && this.getPropertyType() === "string") {
             runInAction(() => {
                 (this.node[this.propertyName] = newValue);
             });
         } else {
-            console.log("ExternalStringBox.setPropertyValue type error: trying to set property of type " + this.propertyClassifierName + " to a value of type " + typeof newValue )
+            console.log("ExternalStringBox.setPropertyValue type error: trying to set property of type " + this.getPropertyType() + " to a value of type " + typeof newValue )
         }
     }
 }

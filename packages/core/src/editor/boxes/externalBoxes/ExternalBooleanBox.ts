@@ -24,12 +24,12 @@ export class ExternalBooleanBox extends AbstractExternalPropertyBox {
     }
 
     setPropertyValue(newValue: boolean) {
-        if (typeof newValue === "boolean" && this.propertyClassifierName === "boolean") {
+        if (typeof newValue === "boolean" && this.getPropertyType() === "boolean") {
             runInAction(() => {
                 this.node[this.propertyName] = newValue;
             });
         } else {
-            console.log("ExternalBooleanBox.setPropertyValue type error: trying to set property of type " + this.propertyClassifierName + " to a value of type " + typeof newValue )
+            console.log("ExternalBooleanBox.setPropertyValue type error: trying to set property of type " + this.getPropertyType() + " to a value of type " + typeof newValue )
         }
     }
 }

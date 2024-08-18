@@ -16,7 +16,7 @@ export class ExternalPartBox extends AbstractExternalPropertyBox {
 
     getPropertyValue(): FreNode {
         const val = this.node[this.propertyName];
-        if (typeof val === this.propertyClassifierName) {
+        if (typeof val === this.getPropertyType()) {
             return val;
         }
         return undefined;

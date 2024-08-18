@@ -15,11 +15,7 @@ export class PartWrapperBox extends AbstractPropertyWrapperBox {
     }
 
     getPropertyValue(): FreNode {
-        const val = this.node[this.propertyName];
-        // if (typeof val === this.propertyClassifierName) {
-            return val;
-        // }
-        // return undefined;
+        return this.node[this.propertyName];
     }
 }
 

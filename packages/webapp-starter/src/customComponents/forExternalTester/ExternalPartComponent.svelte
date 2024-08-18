@@ -1,7 +1,6 @@
 <script lang="ts">
     import {afterUpdate, onMount} from "svelte";
-    import {ExternalPartBox, FreEditor, FreNode, StringWrapperBox} from "@freon4dsl/core";
-    import {RenderComponent} from "@freon4dsl/core-svelte";
+    import {ExternalPartBox, FreEditor, FreNode} from "@freon4dsl/core";
     import {BB} from "@freon4dsl/samples-external-tester";
     export let box: ExternalPartBox;
     export let editor: FreEditor;
@@ -23,7 +22,7 @@
             numberOfValue = value.numberProp.toString();
         } else { // the default
             value = null;
-            nameOfValue = "";
+            nameOfValue = "<unknown>";
             numberOfValue = "0";
         }
     }
@@ -37,8 +36,10 @@
         if (!!nameOfValue && nameOfValue.length > 0) {
             value.name = nameOfValue;
         }
-        // then communicate the new state to the box
-        box.setPropertyValue(value);
+        // Because we only change properties of the part, there is no need to communicate the
+        // new state to the box. If you want to change it to a completely different (new?) part,
+        // you should use:
+        // box.setPropertyValue(otherValue);
     }
 
     // The following four functions need to be included for the editor to function properly.
