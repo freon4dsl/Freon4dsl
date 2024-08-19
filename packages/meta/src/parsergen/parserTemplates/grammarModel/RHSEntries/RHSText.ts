@@ -32,7 +32,7 @@ import { RightHandSideEntry } from "./RightHandSideEntry.js";
 import { makeIndent } from "../GrammarUtils.js";
 
 export class RHSText extends RightHandSideEntry {
-    text: string = '';
+    text: string = "";
 
     constructor(str: string) {
         super();

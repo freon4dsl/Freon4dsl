@@ -20,8 +20,7 @@ class NamedNode implements FreNamedNode {
     /**
      * A private constructor, as demanded by the singleton pattern.
      */
-    private constructor() {
-    }
+    private constructor() {}
 
     freOwner(): FreNode | undefined {
         return undefined;
@@ -66,7 +65,6 @@ class NamedNode implements FreNamedNode {
 }
 
 export class AstType implements FreType {
-
     static create(data: Partial<AstType>): AstType {
         const result: AstType = new AstType();
         if (data.astElement) {
@@ -82,7 +80,7 @@ export class AstType implements FreType {
     readonly $typename: string = "AstType";
 
     toFreString(writer: FreWriter): string {
-        if (!!this.astElement ) {
+        if (!!this.astElement) {
             if (this.astElement === AstType.ANY) {
                 return "ANY";
             } else {

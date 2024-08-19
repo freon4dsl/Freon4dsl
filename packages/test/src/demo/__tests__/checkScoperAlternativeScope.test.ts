@@ -2,7 +2,7 @@ import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen";
 import { AppliedFeature, DemoAttributeRef, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { describe, it, test, expect, beforeEach } from "vitest"
+import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("testing Alternative Scopes", () => {
     describe("testing IsInScope", () => {
@@ -90,8 +90,13 @@ describe("testing Alternative Scopes", () => {
         test("isInscope 'name' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
             let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
             expect(model.models[0].functions[0].name).toBe("length");
-            expect((model.models[0].functions[0].expression.appliedfeature as DemoAttributeRef).attribute.name).toBe("attrFromPerson");
-            expect((model.models[0].functions[0].expression.appliedfeature.appliedfeature as DemoAttributeRef).attribute.name).toBe("attrFromCompany");
+            expect((model.models[0].functions[0].expression.appliedfeature as DemoAttributeRef).attribute.name).toBe(
+                "attrFromPerson",
+            );
+            expect(
+                (model.models[0].functions[0].expression.appliedfeature.appliedfeature as DemoAttributeRef).attribute
+                    .name,
+            ).toBe("attrFromCompany");
             // let testfeat = model.models[0].functions[0].expression.appliedfeature;
             // let type = DemoEnvironment.getInstance().typer.inferType(testfeat);
             // let names: string = "";

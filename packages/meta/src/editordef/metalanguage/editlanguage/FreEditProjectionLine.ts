@@ -1,9 +1,9 @@
-import {FreMetaDefinitionElement} from "../../../utils/index.js";
+import { FreMetaDefinitionElement } from "../../../utils/index.js";
 import {
     FreEditParsedNewline,
     FreEditParsedProjectionIndent,
     FreEditProjectionItem,
-    FreOptionalPropertyProjection
+    FreOptionalPropertyProjection,
 } from "./internal.js";
 
 /**
@@ -14,14 +14,17 @@ export class FreEditProjectionLine extends FreMetaDefinitionElement {
     indent: number = 0; // this number is calculated by FreEditParseUtil.normalize()
 
     isEmpty(): boolean {
-        return (this.items.every(i => i instanceof FreEditParsedNewline || i instanceof FreEditParsedProjectionIndent)) || this.items.length === 0 ;
+        return (
+            this.items.every((i) => i instanceof FreEditParsedNewline || i instanceof FreEditParsedProjectionIndent) ||
+            this.items.length === 0
+        );
     }
 
     isOptional(): boolean {
-        return this.items.every(i => i instanceof FreOptionalPropertyProjection);
+        return this.items.every((i) => i instanceof FreOptionalPropertyProjection);
     }
 
     toString(): string {
-        return "#indents: [" + this.indent + "] " + this.items.map(item => item.toString()).join("");
+        return "#indents: [" + this.indent + "] " + this.items.map((item) => item.toString()).join("");
     }
 }

@@ -27,7 +27,7 @@ import {
     NumberDisplay,
     AbstractExternalBox,
     ExternalPartListBox,
-    isExternalPartListBox
+    isExternalPartListBox,
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -193,7 +193,12 @@ export class BoxFactory {
         return result;
     }
 
-    static label(node: FreNode, role: string, getLabel: string | (() => string), initializer?: Partial<LabelBox>): LabelBox {
+    static label(
+        node: FreNode,
+        role: string,
+        getLabel: string | (() => string),
+        initializer?: Partial<LabelBox>,
+    ): LabelBox {
         if (cacheLabelOff) {
             return new LabelBox(node, role, getLabel, initializer);
         }
@@ -208,7 +213,13 @@ export class BoxFactory {
         return result;
     }
 
-    static text(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>): TextBox {
+    static text(
+        node: FreNode,
+        role: string,
+        getText: () => string,
+        setText: (text: string) => void,
+        initializer?: Partial<TextBox>,
+    ): TextBox {
         if (cacheTextOff) {
             return new TextBox(node, role, getText, setText, initializer);
         }
@@ -224,12 +235,13 @@ export class BoxFactory {
         return result;
     }
 
-    static bool(node: FreNode,
-                role: string,
-                getBoolean: () => boolean,
-                setBoolean: (value: boolean) => void,
-                initializer?: Partial<BooleanControlBox>
-                ): BooleanControlBox {
+    static bool(
+        node: FreNode,
+        role: string,
+        getBoolean: () => boolean,
+        setBoolean: (value: boolean) => void,
+        initializer?: Partial<BooleanControlBox>,
+    ): BooleanControlBox {
         if (cacheBooleanOff) {
             return new BooleanControlBox(node, role, getBoolean, setBoolean, initializer);
         }
@@ -245,14 +257,15 @@ export class BoxFactory {
         return result;
     }
 
-    static number(node: FreNode,
-                role: string,
-                getNumber: () => number,
-                setNumber: (value: number) => void,
-                initializer?: Partial<NumberControlBox>
+    static number(
+        node: FreNode,
+        role: string,
+        getNumber: () => number,
+        setNumber: (value: number) => void,
+        initializer?: Partial<NumberControlBox>,
     ): NumberControlBox {
         if (cacheNumberOff) {
-            console.log("Retruning new NumberControlBox: ")
+            console.log("Retruning new NumberControlBox: ");
             return new NumberControlBox(node, role, getNumber, setNumber, initializer);
         }
         // 1. Create the Boolean box, or find the one that already exists for this element and role
@@ -270,7 +283,13 @@ export class BoxFactory {
         return result;
     }
 
-    static indent(node: FreNode, role: string, indent: number, childBox: Box, initializer?: Partial<IndentBox>): IndentBox {
+    static indent(
+        node: FreNode,
+        role: string,
+        indent: number,
+        childBox: Box,
+        initializer?: Partial<IndentBox>,
+    ): IndentBox {
         return new IndentBox(node, role, indent, childBox, initializer);
         // 1. Create the  box, or find the one that already exists for this element and role
         // const creator = () => new IndentBox(element, role, indent, childBox);
@@ -284,18 +303,20 @@ export class BoxFactory {
     }
 
     static sameChildren(one: Box[], two: Box[]): boolean {
-        const oneOk: boolean = one.every(o => two.includes(o));
-        const twoOk = two.every(o => one.includes(o));
+        const oneOk: boolean = one.every((o) => two.includes(o));
+        const twoOk = two.every((o) => one.includes(o));
         return oneOk && twoOk;
     }
 
-    static horizontalLayout(node: FreNode,
-                            role: string,
-                            // @ts-expect-error
-                            // todo remove this parameter and adjust the generation in meta
-                            propertyName: string,
-                            children?: (Box | null)[],
-                            initializer?: Partial<HorizontalLayoutBox>): HorizontalLayoutBox {
+    static horizontalLayout(
+        node: FreNode,
+        role: string,
+        // @ts-expect-error
+        // todo remove this parameter and adjust the generation in meta
+        propertyName: string,
+        children?: (Box | null)[],
+        initializer?: Partial<HorizontalLayoutBox>,
+    ): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {
             return new HorizontalLayoutBox(node, role, children, initializer);
         }
@@ -311,12 +332,15 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalLayout(node: FreNode,
-                          role: string,
-                          // @ts-expect-error
-                          // todo remove this parameter and adjust the generation in meta
-                          propertyName: string,
-                          children?: (Box | null)[], initializer?: Partial<VerticalLayoutBox>): VerticalLayoutBox {
+    static verticalLayout(
+        node: FreNode,
+        role: string,
+        // @ts-expect-error
+        // todo remove this parameter and adjust the generation in meta
+        propertyName: string,
+        children?: (Box | null)[],
+        initializer?: Partial<VerticalLayoutBox>,
+    ): VerticalLayoutBox {
         if (cacheVerticalLayoutOff) {
             return new VerticalLayoutBox(node, role, children, initializer);
         }
@@ -330,11 +354,13 @@ export class BoxFactory {
         return result;
     }
 
-    static horizontalList(node: FreNode,
-                          role: string,
-                          propertyName: string,
-                          children?: (Box | null)[],
-                          initializer?: Partial<HorizontalListBox>): HorizontalListBox {
+    static horizontalList(
+        node: FreNode,
+        role: string,
+        propertyName: string,
+        children?: (Box | null)[],
+        initializer?: Partial<HorizontalListBox>,
+    ): HorizontalListBox {
         if (cacheHorizontalListOff) {
             return new HorizontalListBox(node, role, propertyName, children, initializer);
         }
@@ -349,11 +375,13 @@ export class BoxFactory {
         return result;
     }
 
-    static verticalList(element: FreNode,
-                        role: string,
-                        propertyName: string,
-                        children?: (Box | null)[],
-                        initializer?: Partial<VerticalListBox>): VerticalListBox {
+    static verticalList(
+        element: FreNode,
+        role: string,
+        propertyName: string,
+        children?: (Box | null)[],
+        initializer?: Partial<VerticalListBox>,
+    ): VerticalListBox {
         if (cacheVerticalListOff) {
             return new VerticalListBox(element, role, propertyName, children, initializer);
         }
@@ -367,12 +395,14 @@ export class BoxFactory {
         return result;
     }
 
-    static limited(node: FreNode,
-                  role: string,
-                  getValues: () => string[],
-                  setValues: (newValue: string[]) => void,
-                  possibleValues: string[],
-                  initializer?: Partial<LimitedControlBox>): LimitedControlBox {
+    static limited(
+        node: FreNode,
+        role: string,
+        getValues: () => string[],
+        setValues: (newValue: string[]) => void,
+        possibleValues: string[],
+        initializer?: Partial<LimitedControlBox>,
+    ): LimitedControlBox {
         if (cacheLimitedOff) {
             return new LimitedControlBox(node, role, getValues, setValues, possibleValues, initializer);
         }
@@ -390,13 +420,15 @@ export class BoxFactory {
         return result;
     }
 
-    static select(node: FreNode,
-                  role: string,
-                  placeHolder: string,
-                  getOptions: (editor: FreEditor) => SelectOption[],
-                  getSelectedOption: () => SelectOption | null,
-                  selectOption: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult,
-                  initializer?: Partial<SelectBox>): SelectBox {
+    static select(
+        node: FreNode,
+        role: string,
+        placeHolder: string,
+        getOptions: (editor: FreEditor) => SelectOption[],
+        getSelectedOption: () => SelectOption | null,
+        selectOption: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult,
+        initializer?: Partial<SelectBox>,
+    ): SelectBox {
         if (cacheSelectOff) {
             return new SelectBox(node, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
         }
@@ -414,8 +446,16 @@ export class BoxFactory {
         return result;
     }
 
-    static optional(node: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string, initializer?: Partial<OptionalBox>): OptionalBox {
-        // TODO This only works with cache on, should also work with cache off. 
+    static optional(
+        node: FreNode,
+        role: string,
+        condition: BoolFunctie,
+        box: Box,
+        mustShow: boolean,
+        actionText: string,
+        initializer?: Partial<OptionalBox>,
+    ): OptionalBox {
+        // TODO This only works with cache on, should also work with cache off.
         // if (cacheOptionalOff) {
         //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
         // }
@@ -429,8 +469,16 @@ export class BoxFactory {
         return result;
     }
 
-    static optional2(node: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, optional: Box, initializer?: Partial<OptionalBox2>): OptionalBox2 {
-        // TODO This only works with cache on, should also work with cache off. 
+    static optional2(
+        node: FreNode,
+        role: string,
+        condition: BoolFunctie,
+        box: Box,
+        mustShow: boolean,
+        optional: Box,
+        initializer?: Partial<OptionalBox2>,
+    ): OptionalBox2 {
+        // TODO This only works with cache on, should also work with cache off.
         // if (cacheOptionalOff) {
         //     return new OptionalBox(element, role, condition, box, mustShow, actionText);
         // }
@@ -444,15 +492,17 @@ export class BoxFactory {
         return result;
     }
 
-    static gridcell(node: FreNode,
-                    // @ts-expect-error
-                    // todo remove this parameter and adjust the generation in meta
-                    propertyName: string,
-                    role: string,
-                    row: number,
-                    column: number,
-                    box: Box,
-                    initializer?: Partial<GridCellBox>): GridCellBox {
+    static gridcell(
+        node: FreNode,
+        // @ts-expect-error
+        // todo remove this parameter and adjust the generation in meta
+        propertyName: string,
+        role: string,
+        row: number,
+        column: number,
+        box: Box,
+        initializer?: Partial<GridCellBox>,
+    ): GridCellBox {
         if (cacheGridcellOff) {
             return new GridCellBox(node, role, row, column, box, initializer);
         }
@@ -467,17 +517,29 @@ export class BoxFactory {
     }
 
     // todo this method is currently unused, maybe change TableUtil?
-    static tablecell(node: FreNode,
-                     propertyName: string,
-                     propertyIndex: number,
-                     conceptName: string,
-                     role: string,
-                     row: number,
-                     column: number,
-                     box: Box,
-                     initializer?: Partial<TableCellBox>): TableCellBox {
+    static tablecell(
+        node: FreNode,
+        propertyName: string,
+        propertyIndex: number,
+        conceptName: string,
+        role: string,
+        row: number,
+        column: number,
+        box: Box,
+        initializer?: Partial<TableCellBox>,
+    ): TableCellBox {
         if (cacheTablecellOff) {
-            return new TableCellBox(node, propertyName, propertyIndex, conceptName, role, row, column, box, initializer);
+            return new TableCellBox(
+                node,
+                propertyName,
+                propertyIndex,
+                conceptName,
+                role,
+                row,
+                column,
+                box,
+                initializer,
+            );
         }
         // 1. Create the table cell box, or find the one that already exists for this element and role
         const creator = () => new TableCellBox(node, propertyName, propertyIndex, conceptName, role, row, column, box);
@@ -498,11 +560,18 @@ export class BoxFactory {
         const result: ButtonBox = this.find<ButtonBox>(node, roleName, creator, buttonCache);
 
         // 2. Apply the other arguments in case they have changed
-        FreUtils.initializeObject(result, initializer)
+        FreUtils.initializeObject(result, initializer);
         return result;
     }
 
-    static externalPartList(node: FreNode, propertyName: string, externalComponentName: string, roleName: string, children: Box[], initializer: Partial<ExternalPartListBox>): ExternalPartListBox {
+    static externalPartList(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        roleName: string,
+        children: Box[],
+        initializer: Partial<ExternalPartListBox>,
+    ): ExternalPartListBox {
         if (cacheExternalsOff) {
             return new ExternalPartListBox(externalComponentName, node, roleName, propertyName, children);
         }
@@ -511,7 +580,7 @@ export class BoxFactory {
         const result: AbstractExternalBox = this.find<AbstractExternalBox>(node, roleName, creator, externalCache);
 
         // 2. Apply the other arguments in case they have changed
-        FreUtils.initializeObject(result, initializer)
+        FreUtils.initializeObject(result, initializer);
         if (isExternalPartListBox(result)) {
             return result;
         } else {
@@ -521,7 +590,7 @@ export class BoxFactory {
 }
 
 const equals = (a, b): boolean | any => {
-    if (isNullOrUndefined(a) && !isNullOrUndefined(b) || !isNullOrUndefined(a) && isNullOrUndefined(b)) {
+    if ((isNullOrUndefined(a) && !isNullOrUndefined(b)) || (!isNullOrUndefined(a) && isNullOrUndefined(b))) {
         return false;
     }
     if (isNullOrUndefined(a) && isNullOrUndefined(b)) {

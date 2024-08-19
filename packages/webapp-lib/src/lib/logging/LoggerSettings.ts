@@ -5,11 +5,11 @@ export function muteLogs() {
     // from ~/core-svelte:
     FreLogger.mute("ContextMenu");
     FreLogger.mute("DropdownComponent");
-    FreLogger.mute("EmptyLineComponent");     // currently, there is no LOGGER for EmptyLineComponent
+    FreLogger.mute("EmptyLineComponent"); // currently, there is no LOGGER for EmptyLineComponent
     FreLogger.mute("ElementComponent");
     FreLogger.mute("GridCellComponent");
     FreLogger.mute("GridComponent");
-    FreLogger.mute("IndentComponent");        // currently, there is no LOGGER for IndentComponent
+    FreLogger.mute("IndentComponent"); // currently, there is no LOGGER for IndentComponent
     FreLogger.mute("LabelComponent");
     FreLogger.mute("LayoutComponent");
     FreLogger.mute("ListComponent");

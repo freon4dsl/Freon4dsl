@@ -8,14 +8,14 @@ import { FreProjectionCalculator } from "./FreProjectionCalculator";
  * Base class for all box providers.
  */
 export abstract class FreBoxProvider {
-    mainHandler: FreProjectionHandler;               // Reference to the overall FreProjectionHandler, to avoid looking up often.
-    conceptName: string;                             // Name of the concept/interface for which this provider is defined.
-    protected _node: FreNode;                   // The node in the model which this provider is serving.
-    protected _mainBox: ElementBox = null;           // The box that is return by the method box(). Note that the initialization is needed for mobx!
-    public usedProjection: string = null;            // Name of the projection that currently is used to determine the contents of _mainBox.
-    public knownBoxProjections: string[] = [];       // The names of all generated projections, i.e. these are the projections for which this
+    mainHandler: FreProjectionHandler; // Reference to the overall FreProjectionHandler, to avoid looking up often.
+    conceptName: string; // Name of the concept/interface for which this provider is defined.
+    protected _node: FreNode; // The node in the model which this provider is serving.
+    protected _mainBox: ElementBox = null; // The box that is return by the method box(). Note that the initialization is needed for mobx!
+    public usedProjection: string = null; // Name of the projection that currently is used to determine the contents of _mainBox.
+    public knownBoxProjections: string[] = []; // The names of all generated projections, i.e. these are the projections for which this
     // provider itself has methods that can provide the contents of the _mainBox.
-    public knownTableProjections: string[] = [];     // The names of the generated table projections for this type of concept.
+    public knownTableProjections: string[] = []; // The names of the generated table projections for this type of concept.
 
     protected constructor(mainHandler: FreProjectionHandler) {
         this.mainHandler = mainHandler;
@@ -43,7 +43,10 @@ export abstract class FreBoxProvider {
         }
 
         if (this._mainBox === null || this._mainBox === undefined) {
-            this._mainBox = new ElementBox(this._node, "main-box-for-" + this._node.freLanguageConcept() + "-" + this._node.freId());
+            this._mainBox = new ElementBox(
+                this._node,
+                "main-box-for-" + this._node.freLanguageConcept() + "-" + this._node.freId(),
+            );
         }
 
         // the main box always stays the same for this element, but the content may differ
@@ -59,7 +62,11 @@ export abstract class FreBoxProvider {
      */
     // @ts-ignore parameter is to be overridden
     protected getContent(projectionName: string): Box {
-        return new LabelBox(this._node, "unknown-projection", () => "Content should be determined by the appropriate subclass of FreBoxProvider.");
+        return new LabelBox(
+            this._node,
+            "unknown-projection",
+            () => "Content should be determined by the appropriate subclass of FreBoxProvider.",
+        );
     }
 
     public getContentForSuper(projectionName: string): Box {
@@ -80,9 +87,19 @@ export abstract class FreBoxProvider {
      */
     protected findProjectionToUse(table: boolean): string {
         if (table) {
-            this.usedProjection = FreProjectionCalculator.findProjectionToUse(this.mainHandler, this.conceptName, this.knownTableProjections, table);
+            this.usedProjection = FreProjectionCalculator.findProjectionToUse(
+                this.mainHandler,
+                this.conceptName,
+                this.knownTableProjections,
+                table,
+            );
         } else {
-            this.usedProjection = FreProjectionCalculator.findProjectionToUse(this.mainHandler, this.conceptName, this.knownBoxProjections, table);
+            this.usedProjection = FreProjectionCalculator.findProjectionToUse(
+                this.mainHandler,
+                this.conceptName,
+                this.knownBoxProjections,
+                table,
+            );
         }
         return this.usedProjection;
     }
@@ -93,7 +110,7 @@ export abstract class FreBoxProvider {
     projection() {
         if (isNullOrUndefined(this.usedProjection)) {
             const ownerDescriptor = this?._node?.freOwnerDescriptor();
-            if (isNullOrUndefined(ownerDescriptor) || ownerDescriptor.owner.freIsModel() ) {
+            if (isNullOrUndefined(ownerDescriptor) || ownerDescriptor.owner.freIsModel()) {
                 // just find the first projection in the active list of projections
                 this.usedProjection = this.findProjectionToUse(false);
             } else {
@@ -101,7 +118,7 @@ export abstract class FreBoxProvider {
                 const ownerRequired = this.mainHandler.getRequiredProjection(
                     ownerDescriptor.owner.freLanguageConcept(),
                     ownerBoxProvider.projection(),
-                    ownerDescriptor.propertyName
+                    ownerDescriptor.propertyName,
                 );
                 // TODO ownerRequired === "" should never happen, so this is a hack and the sourcfe should be found.
                 if (ownerRequired === null || ownerRequired === undefined || ownerRequired === "") {

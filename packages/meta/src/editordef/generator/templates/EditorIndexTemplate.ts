@@ -2,15 +2,14 @@ import { Names } from "../../../utils/index.js";
 import { FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
 
 export class EditorIndexTemplate {
-
     generateGenIndex(language: FreMetaLanguage, extraClassifiers: FreMetaClassifier[]): string {
         const boxProviderConcepts: FreMetaClassifier[] = [];
-        language.concepts.forEach(concept => {
+        language.concepts.forEach((concept) => {
             if (!(concept instanceof FreMetaLimitedConcept) && !concept.isAbstract) {
                 boxProviderConcepts.push(concept);
             }
         });
-        language.units.forEach(concept => {
+        language.units.forEach((concept) => {
             boxProviderConcepts.push(concept);
         });
         boxProviderConcepts.push(...extraClassifiers);
@@ -30,5 +29,4 @@ export class EditorIndexTemplate {
         export * from "./${Names.customActions(language)}";
         `;
     }
-
 }

@@ -9,11 +9,11 @@ export class OrderedList<T extends FreMetaLangElement> implements Iterable<T> {
     protected elements: InternalElement<T>[] = [];
 
     toArray(): T[] {
-        return this.elements.map(elem => elem.element);
+        return this.elements.map((elem) => elem.element);
     }
 
     add(name: string, p: T) {
-        if (!this.elements.find(e => e.name === name)) {
+        if (!this.elements.find((e) => e.name === name)) {
             this.elements.push({ name: name, element: p });
         }
     }
@@ -23,9 +23,9 @@ export class OrderedList<T extends FreMetaLangElement> implements Iterable<T> {
             this.add(t.name, t);
         }
     }
-    
+
     includes(elem: T): boolean {
-        return this.getByName(elem.name) !== undefined
+        return this.getByName(elem.name) !== undefined;
     }
 
     /**
@@ -35,16 +35,16 @@ export class OrderedList<T extends FreMetaLangElement> implements Iterable<T> {
      * @private
      */
     retainAll(list: OrderedList<T>) {
-        const toBeRemoved: number [] = []; // the indexes of elements that need to be removed
+        const toBeRemoved: number[] = []; // the indexes of elements that need to be removed
         this.elements.forEach((old, index) => {
-           if (!list.getByName(old.name)) {
-               toBeRemoved.push(index);
-           }
+            if (!list.getByName(old.name)) {
+                toBeRemoved.push(index);
+            }
         });
         // console.log("Before removing: " + this.elements.map(elem => elem.name).join(", "));
         // In order to avoid errors because of the splice() method doing a re-indexing,
         // we loop over the list of indexes backwards
-        for (let i = toBeRemoved.length - 1; i >= 0 ; i--) {
+        for (let i = toBeRemoved.length - 1; i >= 0; i--) {
             this.elements.splice(toBeRemoved[i], 1);
             // console.log("After removing nr[" + toBeRemoved[i-1] + "] : " + this.elements.map(elem => elem.name).join(", "));
         }
@@ -59,13 +59,12 @@ export class OrderedList<T extends FreMetaLangElement> implements Iterable<T> {
     }
 
     getByName(name: string): InternalElement<T> | undefined {
-        return this.elements.find(p => p.name === name);
+        return this.elements.find((p) => p.name === name);
     }
 
     [Symbol.iterator](): Iterator<T> {
         return new OrderedListIterator<T>(this);
     }
-
 }
 
 export class OrderedListIterator<T extends FreMetaLangElement> implements Iterator<T> {
@@ -86,5 +85,4 @@ export class OrderedListIterator<T extends FreMetaLangElement> implements Iterat
             return { done: true, value: undefined };
         }
     }
-
 }

@@ -1,5 +1,5 @@
-import {FreMetaDefinitionElement} from "../../../utils/index.js";
-import {FreEditKeyValuePair} from "./FreEditKeyValuePair.js";
+import { FreMetaDefinitionElement } from "../../../utils/index.js";
+import { FreEditKeyValuePair } from "./FreEditKeyValuePair.js";
 
 /**
  * This class holds all the information that is needed to wrap or replace a property projection by
@@ -11,8 +11,8 @@ export class FreEditExternalInfo extends FreMetaDefinitionElement {
     params: FreEditKeyValuePair[] = [];
 
     toString(): string {
-        const paramsStr: string = `${this.params.length > 0 ? ` ${this.params.map(p => p.toString()).join(" ")}` : ``}`;
-        return `${this.wrapBy? `wrap = ${this.wrapBy}` : ``}${this.replaceBy? `replace = ${this.replaceBy}` : ``}${paramsStr}`
+        const paramsStr: string = `${this.params.length > 0 ? ` ${this.params.map((p) => p.toString()).join(" ")}` : ``}`;
+        return `${this.wrapBy ? `wrap = ${this.wrapBy}` : ``}${this.replaceBy ? `replace = ${this.replaceBy}` : ``}${paramsStr}`;
     }
 
     /**

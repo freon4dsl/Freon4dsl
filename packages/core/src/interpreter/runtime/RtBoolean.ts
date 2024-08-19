@@ -32,7 +32,7 @@ export class RtBoolean extends RtObject {
     }
 
     equals(other: RtObject): RtBoolean {
-        if ( isRtBoolean(other)) {
+        if (isRtBoolean(other)) {
             return RtBoolean.of(this._value === other.asBoolean());
         } else {
             return RtBoolean.FALSE;

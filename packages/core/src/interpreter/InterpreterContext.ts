@@ -39,14 +39,18 @@ export class InterpreterContext {
 
     toString(): string {
         let result = "{ ";
-        this.values.forEach( (value: Object, node: Object) => {
+        this.values.forEach((value: Object, node: Object) => {
             result += node["name"] + " == " + value + ", ";
         });
         // return result + "}";
-        return "{ " +
-        Array.from(this.values.entries()).map(
-            ([node, value]) => { return node["name"] + " == " + value; }
-        ).join(", ") +
-            " }";
+        return (
+            "{ " +
+            Array.from(this.values.entries())
+                .map(([node, value]) => {
+                    return node["name"] + " == " + value;
+                })
+                .join(", ") +
+            " }"
+        );
     }
 }

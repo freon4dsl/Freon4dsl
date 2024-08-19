@@ -4,7 +4,9 @@ import {
     GenerationStatus,
     FileUtil,
     MetaLogger,
-    INTERPRETER_FOLDER, INTERPRETER_GEN_FOLDER, Names
+    INTERPRETER_FOLDER,
+    INTERPRETER_GEN_FOLDER,
+    Names,
 } from "../../utils/index.js";
 import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef.js";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate.js";
@@ -17,8 +19,8 @@ const LOGGER = new MetaLogger("InterpreterGenerator").mute();
 export class InterpreterGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage | undefined;
-    private interpreterFolder: string = '';
-    private interpreterGenFolder: string = '';
+    private interpreterFolder: string = "";
+    private interpreterGenFolder: string = "";
     fileNames: string[] = [];
 
     generate(interpreterDef: FreInterpreterDef): void {
@@ -28,7 +30,9 @@ export class InterpreterGenerator {
         }
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
-        LOGGER.log("Generating interpreter in folder " + this.interpreterFolder + " for language " + this.language?.name);
+        LOGGER.log(
+            "Generating interpreter in folder " + this.interpreterFolder + " for language " + this.language?.name,
+        );
 
         const template = new InterpreterBaseTemplate();
         const mainTemplate = new InterpreterMainTemplate();
@@ -58,7 +62,7 @@ export class InterpreterGenerator {
 
     private makeFile(generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {
         LOGGER.log(`Generating: ${generatedFilePath}`);
-        const generated = FileUtil.pretty(generatedContent, "interpreter " , generationStatus);
+        const generated = FileUtil.pretty(generatedContent, "interpreter ", generationStatus);
         fs.writeFileSync(generatedFilePath, generated);
     }
 

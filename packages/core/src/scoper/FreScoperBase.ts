@@ -17,7 +17,12 @@ export abstract class FreScoperBase implements FreScoper {
     additionalNamespacesVisited: FreNodeReference<FreNamedNode>[] = [];
     protected currentRoleNames: string[] = [];
 
-    public resolvePathName(basePosition: FreNode, doNotSearch: string, pathname: string[], metatype?: string): FreNamedNode {
+    public resolvePathName(
+        basePosition: FreNode,
+        doNotSearch: string,
+        pathname: string[],
+        metatype?: string,
+    ): FreNamedNode {
         this.currentRoleNames.push(doNotSearch);
         // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
         const elementsFromBasePosition: FreNamedNode[] = this.getVisibleElements(basePosition);
@@ -32,7 +37,11 @@ export abstract class FreScoperBase implements FreScoper {
                 // search the next name of pathname in the namespace of 'previousFound'
                 // but do not use the metatype information, because only the element with the last of the pathname will have the correct type
                 found = this.getFromVisibleElements(previousFound, pathname[index]);
-                if (found === null || found === undefined || !FreLanguage.getInstance().classifier(found.freLanguageConcept()).isNamespace) {
+                if (
+                    found === null ||
+                    found === undefined ||
+                    !FreLanguage.getInstance().classifier(found.freLanguageConcept()).isNamespace
+                ) {
                     this.currentRoleNames.splice(this.currentRoleNames.indexOf(doNotSearch), 1);
                     return null;
                 }
@@ -89,11 +98,12 @@ export abstract class FreScoperBase implements FreScoper {
         result: FreNamedNode[],
         visitedNamespaces: FreNamespace[],
         metatype?: string,
-        excludeSurrounding?: boolean
+        excludeSurrounding?: boolean,
     ): void {
         if (!!node) {
             const origin: FreModelUnit = modelUnit(node);
-            let doSurrouding: boolean = excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
+            let doSurrouding: boolean =
+                excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
             let nearestNamespace: FreNamespace;
             // first, see if we need to use an alternative scope/namespace
             if (this.hasAlternativeScope(node)) {
@@ -107,7 +117,10 @@ export abstract class FreScoperBase implements FreScoper {
             while (!!nearestNamespace) {
                 // Second, get the elements from the found namespace
                 if (!visitedNamespaces.includes(nearestNamespace)) {
-                    FreNamespace.joinResultsWithShadowing(nearestNamespace.getVisibleElements(origin, metatype), result);
+                    FreNamespace.joinResultsWithShadowing(
+                        nearestNamespace.getVisibleElements(origin, metatype),
+                        result,
+                    );
                     visitedNamespaces.push(nearestNamespace);
                     for (const additionalNamespace of this.additionalNamespaces(nearestNamespace._myElem)) {
                         this.getVisibleElementsIntern(additionalNamespace, result, visitedNamespaces, metatype, true);
@@ -124,7 +137,12 @@ export abstract class FreScoperBase implements FreScoper {
     /**
      * See FreScoper.
      */
-    public getFromVisibleElements(node: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): FreNamedNode {
+    public getFromVisibleElements(
+        node: FreNode,
+        name: string,
+        metatype?: string,
+        excludeSurrounding?: boolean,
+    ): FreNamedNode {
         const visibleElements = this.getVisibleElements(node, metatype, excludeSurrounding);
         if (visibleElements !== null) {
             for (const element of visibleElements) {
@@ -178,8 +196,8 @@ export abstract class FreScoperBase implements FreScoper {
      */
     private getElementsFromStdlib(metatype?: string): FreNamedNode[] {
         if (!!metatype) {
-            return FreLanguage.getInstance().stdLib.elements.filter(elem =>
-                FreLanguage.getInstance().metaConformsToType(elem, metatype)
+            return FreLanguage.getInstance().stdLib.elements.filter((elem) =>
+                FreLanguage.getInstance().metaConformsToType(elem, metatype),
             );
         } else {
             return FreLanguage.getInstance().stdLib.elements;

@@ -1,5 +1,5 @@
-import {FreMetaDefinitionElement} from "../../../utils/index.js";
-import {FreEditProjectionDirection, ListJoinType} from "./internal.js";
+import { FreMetaDefinitionElement } from "../../../utils/index.js";
+import { FreEditProjectionDirection, ListJoinType } from "./internal.js";
 
 /**
  * Information on how a list property should be projected: as list or table;

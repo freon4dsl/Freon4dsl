@@ -5,20 +5,20 @@ type ChangedType = {
     path: string;
     oldValue: any;
     newValue: any;
-}
+};
 type AddedOrDeletedType = {
     path: string;
     value: any;
-}
+};
 type MatchedType = {
     path: string;
     value: any;
-}
+};
 type ResultType = {
-    matched: MatchedType[],
-    changed: ChangedType[],
-    added: AddedOrDeletedType[],
-    deleted: AddedOrDeletedType[]
+    matched: MatchedType[];
+    changed: ChangedType[];
+    added: AddedOrDeletedType[];
+    deleted: AddedOrDeletedType[];
 };
 
 function compareJSON1(obj1: any, obj2: any, path: string): ResultType {
@@ -85,26 +85,26 @@ function compareJSON1(obj1: any, obj2: any, path: string): ResultType {
 //
 // // Example usage
 var obj1 = {
-    name: 'John Doe',
+    name: "John Doe",
     age: 30,
     address: {
-        street: '123 Main St',
-        city: 'New York'
+        street: "123 Main St",
+        city: "New York",
     },
-    hobbies: ['reading', 'cooking'],
-    reversed: ['first', 'second']
+    hobbies: ["reading", "cooking"],
+    reversed: ["first", "second"],
 };
 
 var obj2 = {
-    name: 'John Smith',
+    name: "John Smith",
     age: 30,
     address: {
-        street: '123 Main St',
-        city: 'New York'
+        street: "123 Main St",
+        city: "New York",
     },
-    occupation: 'Developer',
-    hobbies: ['reading', 'painting'],
-    reversed: ['second', 'first']
+    occupation: "Developer",
+    hobbies: ["reading", "painting"],
+    reversed: ["second", "first"],
 };
 
 const file1 = process.argv[2];

@@ -1,6 +1,6 @@
-import {Box} from "./Box";
-import {FreNode} from "../../ast";
-import {FreUtils} from "../../util";
+import { Box } from "./Box";
+import { FreNode } from "../../ast";
+import { FreUtils } from "../../util";
 
 export class FragmentBox extends Box {
     readonly kind: string = "FragmentBox";

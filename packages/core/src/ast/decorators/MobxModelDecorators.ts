@@ -40,7 +40,7 @@ export const MODEL_NAME = MODEL_PREFIX + "Name";
 export function observablepart(target: DecoratedModelElement, propertyKey: string) {
     const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
 
-    const getter = function(this: any) {
+    const getter = function (this: any) {
         const storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         if (!!storedObserver) {
             return storedObserver.get();
@@ -50,7 +50,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
         }
     };
 
-    const setter = function(this: any, newValue: DecoratedModelElement) {
+    const setter = function (this: any, newValue: DecoratedModelElement) {
         let storedObserver = this[privatePropertyKey] as IObservableValue<DecoratedModelElement>;
         const storedValue = !!storedObserver ? storedObserver.get() : null;
         // console.log("newValue is " + JSON.stringify(newValue) );
@@ -70,7 +70,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
             storedValue.$$propertyIndex = undefined;
         }
         if (!!storedObserver) {
-            runInAction( () => {
+            runInAction(() => {
                 storedObserver.set(newValue);
             });
         } else {
@@ -99,7 +99,7 @@ export function observablepart(target: DecoratedModelElement, propertyKey: strin
     Reflect.defineProperty(target, propertyKey, {
         get: getter,
         set: setter,
-        configurable: true
+        configurable: true,
     });
 }
 
@@ -121,9 +121,9 @@ export function observablepartlist(target: Object, propertyKey: string) {
  * @param target        the owner of the property
  * @param propertyKey   the name of the property
  */
-export function observableprim(target: DecoratedModelElement, propertyKey: string ) {
+export function observableprim(target: DecoratedModelElement, propertyKey: string) {
     const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
-    const getter = function(this: any) {
+    const getter = function (this: any) {
         const storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean>;
         if (!!storedObserver) {
             return storedObserver.get();
@@ -133,13 +133,13 @@ export function observableprim(target: DecoratedModelElement, propertyKey: strin
         }
     };
 
-    const setter = function(this: any, newValue: string | number | boolean) {
+    const setter = function (this: any, newValue: string | number | boolean) {
         FreChangeManager.getInstance().setPrimitive(this, propertyKey, newValue);
 
         let storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean>;
 
         if (!!storedObserver) {
-            runInAction( () => {
+            runInAction(() => {
                 storedObserver.set(newValue);
             });
         } else {
@@ -152,7 +152,7 @@ export function observableprim(target: DecoratedModelElement, propertyKey: strin
     Reflect.defineProperty(target, propertyKey, {
         get: getter,
         set: setter,
-        configurable: true
+        configurable: true,
     });
 }
 
@@ -173,10 +173,10 @@ export function observableprimlist(target: Object, propertyKey: string) {
  * @param propertyKey
  * @param isPrimitive
  */
-function observablelist(target: Object, propertyKey: string, isPrimitive: boolean ) {
+function observablelist(target: Object, propertyKey: string, isPrimitive: boolean) {
     const privatePropertyKey = MODEL_PREFIX + propertyKey;
 
-    const getter = function(this: any) {
+    const getter = function (this: any) {
         return this[privatePropertyKey];
     };
 
@@ -187,14 +187,14 @@ function observablelist(target: Object, propertyKey: string, isPrimitive: boolea
     (array as any)[MODEL_CONTAINER] = target;
     (array as any)[MODEL_NAME] = propertyKey.toString();
     if (!isPrimitive) {
-        intercept(array, change => objectWillChange(change, propertyKey)); // Since mobx6
+        intercept(array, (change) => objectWillChange(change, propertyKey)); // Since mobx6
     } else {
-        intercept(array, change => primWillChange(change, target, propertyKey));
+        intercept(array, (change) => primWillChange(change, target, propertyKey));
     }
 
     Reflect.deleteProperty(target, propertyKey);
     Reflect.defineProperty(target, propertyKey, {
-        get: getter
+        get: getter,
     });
 }
 
@@ -245,8 +245,8 @@ function cleanOwner(oldValue: DecoratedModelElement) {
  */
 function objectWillChange(
     change: IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement>,
-    propertyKey: string): IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement> | null {
-
+    propertyKey: string,
+): IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement> | null {
     switch (change.type) {
         case "update":
             const newValue = change.newValue;
@@ -262,7 +262,9 @@ function objectWillChange(
             } else {
                 // instead of assigning, remove this element --- do not add to change manager, this will be done by the splice command
                 change.object.splice(change.index, 1);
-                LOGGER.info(`Attempt to assign null to element of observable list '${propertyKey}': element is removed.`);
+                LOGGER.info(
+                    `Attempt to assign null to element of observable list '${propertyKey}': element is removed.`,
+                );
                 // do not return this change - it should not be executed
                 return null;
             }
@@ -284,13 +286,13 @@ function objectWillChange(
 
             // change the owner info in the elements to be added, if any
             let i: number = 0;
-            added.forEach(element => {
+            added.forEach((element) => {
                 if (element !== null && element !== undefined) {
                     // cleanup old owner reference of new value, if present, and set the new owner info
                     resetOwner(element, listOwner, propertyName, index + Number(i++));
                 } else {
                     // remove any null values: we do not want any null values added to the list
-                    change.added.splice(i, 1);  // do not increase i !!!
+                    change.added.splice(i, 1); // do not increase i !!!
                     addedCount--;
                     LOGGER.info(`Ignored attempt to add null or undefined to observable list '${propertyKey}'.`);
                 }
@@ -324,7 +326,7 @@ function objectWillChange(
 function primWillChange(
     change: IArrayWillChange<PrimType> | IArrayWillSplice<PrimType>,
     target: any,
-    propertyKey: string
+    propertyKey: string,
 ): IArrayWillChange<PrimType> | IArrayWillSplice<PrimType> | null {
     // LOGGER.log("primWillChange [" + change.type + "]");
     switch (change.type) {
@@ -333,11 +335,19 @@ function primWillChange(
             const oldValue: PrimType = change.object[change.index];
             if (newValue !== null && newValue !== undefined) {
                 // console.log("change.object: " + target["name"] + ", propertyName: " + propertyKey);
-                FreChangeManager.getInstance().updatePrimListElement(target, propertyKey, newValue, oldValue, change.index);
+                FreChangeManager.getInstance().updatePrimListElement(
+                    target,
+                    propertyKey,
+                    newValue,
+                    oldValue,
+                    change.index,
+                );
             } else {
                 // instead of assigning, remove this element --- do not add to change manager, this will be done by the splice command
                 change.object.splice(change.index, 1);
-                LOGGER.info(`Attempt to assign null to element of observable list '${propertyKey}': element is removed.`);
+                LOGGER.info(
+                    `Attempt to assign null to element of observable list '${propertyKey}': element is removed.`,
+                );
                 // do not return this change - it should not be executed
                 return null;
             }

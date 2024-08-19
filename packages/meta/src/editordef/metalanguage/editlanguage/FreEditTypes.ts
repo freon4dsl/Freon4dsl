@@ -2,10 +2,11 @@ import {
     FreEditSimpleExternal,
     FreEditParsedNewline,
     FreEditParsedProjectionIndent,
-    FreEditProjectionText, FreEditPropertyProjection,
-    FreEditSuperProjection
+    FreEditProjectionText,
+    FreEditPropertyProjection,
+    FreEditSuperProjection,
 } from "./internal.js";
-import {FreEditFragmentProjection} from "./FreEditFragmentProjection.js";
+import { FreEditFragmentProjection } from "./FreEditFragmentProjection.js";
 
 /**
  * Super type of all elements that may be part of a projection definition.
@@ -13,10 +14,10 @@ import {FreEditFragmentProjection} from "./FreEditFragmentProjection.js";
  * after in the parsing/checking phase.
  */
 export type FreEditProjectionItem =
-    FreEditParsedProjectionIndent    // removed after parsing, by FreEditParseUtil.normalize()
-    | FreEditParsedNewline           // removed after parsing, by FreEditParseUtil.normalize()
+    | FreEditParsedProjectionIndent // removed after parsing, by FreEditParseUtil.normalize()
+    | FreEditParsedNewline // removed after parsing, by FreEditParseUtil.normalize()
     | FreEditProjectionText
     | FreEditSimpleExternal
     | FreEditFragmentProjection
     | FreEditPropertyProjection
-    | FreEditSuperProjection ;
+    | FreEditSuperProjection;

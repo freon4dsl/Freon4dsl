@@ -5,7 +5,7 @@ export type FreTriggerUse = string | FreKey; // the use, like argument
 
 export function isRegExp(a: FreTriggerType): a is RegExp {
     if (a === undefined) {
-        return false
+        return false;
     }
     return (a as any).exec !== undefined;
 }
@@ -30,7 +30,7 @@ export function triggerTypeToString(trigger: FreTriggerType): string {
     } else if (isRegExp(trigger)) {
         return "/" + trigger.source + "/";
     } else {
-        console.error("triggerToString() argument is not of FreTriggerType: " + typeof(trigger));
+        console.error("triggerToString() argument is not of FreTriggerType: " + typeof trigger);
         return "";
     }
 }

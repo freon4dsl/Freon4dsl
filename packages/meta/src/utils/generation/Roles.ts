@@ -2,12 +2,11 @@ import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
     FreMetaConceptProperty,
-    FreMetaProperty
+    FreMetaProperty,
 } from "../../languagedef/metalanguage/index.js";
 import { Names } from "./Names.js";
 
 export class Roles {
-
     // public static elementVarName(concept: FreMetaClassifier): string {
     //     return Names.classifier(concept).toLowerCase();
     // }
@@ -22,7 +21,12 @@ export class Roles {
 
     // NB Identical to RoleProvider in core package!!
     //
-    public static propertyRole(owningConceptName: string, propertyName: string, boxType?: string, index?: number): string {
+    public static propertyRole(
+        owningConceptName: string,
+        propertyName: string,
+        boxType?: string,
+        index?: number,
+    ): string {
         let roleName: string = Roles.startWithUpperCase(owningConceptName) + "-" + propertyName;
         if (index !== null && index !== undefined && index >= 0) {
             roleName += "-" + index;
@@ -43,9 +47,9 @@ export class Roles {
     }
 
     public static newConceptPart(concept: FreMetaClassifier, property: FreMetaProperty): string {
-        if ( concept instanceof FreMetaBinaryExpressionConcept) {
-            if ( !!(concept.base.referred) ) {
-                if ( !(concept.base.referred instanceof FreMetaBinaryExpressionConcept)) {
+        if (concept instanceof FreMetaBinaryExpressionConcept) {
+            if (!!concept.base.referred) {
+                if (!(concept.base.referred instanceof FreMetaBinaryExpressionConcept)) {
                     return "FreBinaryExpression" + "-" + property.name;
                 }
             }
@@ -63,5 +67,4 @@ export class Roles {
         }
         return "";
     }
-
 }

@@ -1,18 +1,29 @@
 import {
-    Box, FreProjectionHandler,
+    Box,
+    FreProjectionHandler,
     isActionBox,
-    isActionTextBox, isListBox, FreLanguage,
+    isActionTextBox,
+    isListBox,
+    FreLanguage,
     FreError,
     FreLogger,
     FreUndoManager,
     FreSearcher,
-    FreErrorSeverity, type FreEnvironment
+    FreErrorSeverity,
+    type FreEnvironment,
 } from "@freon4dsl/core";
 import type { FreNode } from "@freon4dsl/core";
-import { activeTab, errorsLoaded, errorTab, searchResultLoaded, searchResults, searchTab } from "../components/stores/InfoPanelStore.js";
+import {
+    activeTab,
+    errorsLoaded,
+    errorTab,
+    searchResultLoaded,
+    searchResults,
+    searchTab,
+} from "../components/stores/InfoPanelStore.js";
 import { EditorState } from "./EditorState.js";
 import { setUserMessage } from "../components/stores/UserMessageStore.js";
-import {WebappConfigurator} from "../WebappConfigurator.js";
+import { WebappConfigurator } from "../WebappConfigurator.js";
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
@@ -105,28 +116,45 @@ export class EditorRequestsHandler {
             if (!!currentSelection) {
                 if (isActionTextBox(currentSelection)) {
                     if (isActionBox(currentSelection.parent)) {
-                        if (FreLanguage.getInstance().metaConformsToType(tobepasted, currentSelection.parent.conceptName)) { // allow subtypes
+                        if (
+                            FreLanguage.getInstance().metaConformsToType(
+                                tobepasted,
+                                currentSelection.parent.conceptName,
+                            )
+                        ) {
+                            // allow subtypes
                             // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
-                            EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName );
+                            EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName);
                         } else {
-                            setUserMessage("Cannot paste an " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning);
+                            setUserMessage(
+                                "Cannot paste an " + tobepasted.freLanguageConcept() + " here.",
+                                FreErrorSeverity.Warning,
+                            );
                         }
                     }
                 } else if (isListBox(currentSelection.parent)) {
-                    if (FreLanguage.getInstance().metaConformsToType(tobepasted, element.freLanguageConcept())) { // allow subtypes
+                    if (FreLanguage.getInstance().metaConformsToType(tobepasted, element.freLanguageConcept())) {
+                        // allow subtypes
                         // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
-                        EditorState.getInstance().pasteInElement(element.freOwnerDescriptor().owner,
+                        EditorState.getInstance().pasteInElement(
+                            element.freOwnerDescriptor().owner,
                             currentSelection.parent.propertyName,
-                            element.freOwnerDescriptor().propertyIndex + 1
+                            element.freOwnerDescriptor().propertyIndex + 1,
                         );
                     } else {
-                        setUserMessage("Cannot paste an " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning);
+                        setUserMessage(
+                            "Cannot paste an " + tobepasted.freLanguageConcept() + " here.",
+                            FreErrorSeverity.Warning,
+                        );
                     }
                 } else {
                     // todo other pasting options ...
                 }
             } else {
-                setUserMessage("Cannot paste an " + tobepasted.freLanguageConcept() + " here.", FreErrorSeverity.Warning);
+                setUserMessage(
+                    "Cannot paste an " + tobepasted.freLanguageConcept() + " here.",
+                    FreErrorSeverity.Warning,
+                );
             }
         } else {
             setUserMessage("Nothing to be pasted", FreErrorSeverity.Warning);
@@ -148,7 +176,11 @@ export class EditorRequestsHandler {
         searchResultLoaded.set(false);
         activeTab.set(searchTab);
         const searcher = new FreSearcher();
-        const results: FreNode[] = searcher.findString(stringToFind, EditorState.getInstance().currentUnit, this.langEnv.writer);
+        const results: FreNode[] = searcher.findString(
+            stringToFind,
+            EditorState.getInstance().currentUnit,
+            this.langEnv.writer,
+        );
         this.showSearchResults(results, stringToFind);
     }
 
@@ -166,7 +198,11 @@ export class EditorRequestsHandler {
         searchResultLoaded.set(false);
         activeTab.set(searchTab);
         const searcher = new FreSearcher();
-        const results: FreNode[] = searcher.findNamedElement(nameToFind, EditorState.getInstance().currentUnit, metatypeSelected);
+        const results: FreNode[] = searcher.findNamedElement(
+            nameToFind,
+            EditorState.getInstance().currentUnit,
+            metatypeSelected,
+        );
         this.showSearchResults(results, nameToFind);
     }
 

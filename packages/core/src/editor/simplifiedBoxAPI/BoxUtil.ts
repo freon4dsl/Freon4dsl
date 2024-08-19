@@ -1,6 +1,7 @@
 import { FreNode } from "../../ast";
 import {
-    BoolDisplay, BooleanWrapperBox,
+    BoolDisplay,
+    BooleanWrapperBox,
     Box,
     BoxFactory,
     ButtonBox,
@@ -18,8 +19,14 @@ import {
     LimitedControlBox,
     LimitedDisplay,
     NumberDisplay,
-    NumberDisplayInfo, NumberWrapperBox, PartListWrapperBox, PartWrapperBox, RefListWrapperBox, RefWrapperBox,
-    SelectBox, StringWrapperBox,
+    NumberDisplayInfo,
+    NumberWrapperBox,
+    PartListWrapperBox,
+    PartWrapperBox,
+    RefListWrapperBox,
+    RefWrapperBox,
+    SelectBox,
+    StringWrapperBox,
     TextBox,
     VerticalListBox,
 } from "../boxes";
@@ -394,7 +401,7 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalStringBox>
+        initializer?: Partial<ExternalStringBox>,
     ): ExternalStringBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
         return new ExternalStringBox(externalComponentName, node, roleName, propertyName, initializer);
@@ -404,7 +411,7 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalNumberBox>
+        initializer?: Partial<ExternalNumberBox>,
     ): ExternalNumberBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
         return new ExternalNumberBox(externalComponentName, node, roleName, propertyName, initializer);
@@ -414,7 +421,7 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalBooleanBox>
+        initializer?: Partial<ExternalBooleanBox>,
     ): ExternalBooleanBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
         return new ExternalBooleanBox(externalComponentName, node, roleName, propertyName, initializer);
@@ -424,7 +431,7 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalPartBox>
+        initializer?: Partial<ExternalPartBox>,
     ): ExternalPartBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
         return new ExternalPartBox(externalComponentName, node, roleName, propertyName, initializer);
@@ -434,99 +441,85 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
-        initializer?: Partial<ExternalRefBox>
+        initializer?: Partial<ExternalRefBox>,
     ): ExternalRefBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
         return new ExternalRefBox(externalComponentName, node, roleName, propertyName, initializer);
     }
 
-    static stringWrapperBox(        node: FreNode,
-                                    propertyName: string,
-                                    externalComponentName: string,
-                                    childBox: Box,
-                                    initializer?: Partial<StringWrapperBox>): StringWrapperBox {
+    static stringWrapperBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<StringWrapperBox>,
+    ): StringWrapperBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
         return new StringWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
     }
 
-    static numberWrapperBox(        node: FreNode,
-                                    propertyName: string,
-                                    externalComponentName: string,
-                                    childBox: Box,
-                                    initializer?: Partial<NumberWrapperBox>): NumberWrapperBox {
+    static numberWrapperBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<NumberWrapperBox>,
+    ): NumberWrapperBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
         return new NumberWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
     }
 
-    static booleanWrapperBox(       node: FreNode,
-                                    propertyName: string,
-                                    externalComponentName: string,
-                                    childBox: Box,
-                                    initializer?: Partial<BooleanWrapperBox>): BooleanWrapperBox {
+    static booleanWrapperBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<BooleanWrapperBox>,
+    ): BooleanWrapperBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
         return new BooleanWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
     }
 
-    static partWrapperBox(node: FreNode,
-                          propertyName: string,
-                          externalComponentName: string,
-                          childBox: Box,
-                          initializer?: Partial<PartWrapperBox>): PartWrapperBox {
+    static partWrapperBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<PartWrapperBox>,
+    ): PartWrapperBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
-        return new PartWrapperBox(
-            externalComponentName,
-            node,
-            roleName,
-            propertyName,
-            childBox,
-            initializer
-        );
+        return new PartWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
     }
 
-    static partListWrapperBox(node: FreNode,
-                          propertyName: string,
-                          externalComponentName: string,
-                          childBox: Box,
-                          initializer?: Partial<PartListWrapperBox>): PartListWrapperBox {
+    static partListWrapperBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<PartListWrapperBox>,
+    ): PartListWrapperBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
-        return new PartListWrapperBox(
-            externalComponentName,
-            node,
-            roleName,
-            propertyName,
-            childBox,
-            initializer
-        );
+        return new PartListWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
     }
 
-    static refWrapperBox(node: FreNode,
-                          propertyName: string,
-                          externalComponentName: string,
-                          childBox: Box,
-                          initializer?: Partial<RefWrapperBox>): RefWrapperBox {
+    static refWrapperBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<RefWrapperBox>,
+    ): RefWrapperBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
-        return new RefWrapperBox(
-            externalComponentName,
-            node,
-            roleName,
-            propertyName,
-            childBox,
-            initializer
-        );
+        return new RefWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
     }
-    static refListWrapperBox(node: FreNode,
-                          propertyName: string,
-                          externalComponentName: string,
-                          childBox: Box,
-                          initializer?: Partial<RefListWrapperBox>): RefListWrapperBox {
+    static refListWrapperBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<RefListWrapperBox>,
+    ): RefListWrapperBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
-        return new RefListWrapperBox(
-            externalComponentName,
-            node,
-            roleName,
-            propertyName,
-            childBox,
-            initializer
-        );
+        return new RefListWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
     }
 }

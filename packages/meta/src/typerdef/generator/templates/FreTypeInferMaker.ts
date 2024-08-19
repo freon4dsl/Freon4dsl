@@ -18,15 +18,17 @@ export class FreTypeInferMaker {
         const result: string[] = [];
         // find all infertype rules
         const inferRules: FretInferenceRule[] = [];
-        typerDef.classifierSpecs.forEach(spec => {
-            inferRules.push(...(spec.rules.filter(r => r instanceof FretInferenceRule)));
+        typerDef.classifierSpecs.forEach((spec) => {
+            inferRules.push(...spec.rules.filter((r) => r instanceof FretInferenceRule));
         });
         // sort the types such that any type comes before its super type
         const sortedTypes = GenerationUtil.sortClassifiers(typerDef.conceptsWithType);
         // make an entry for all classifiers that have an infertype rule
-        sortedTypes.forEach( type => {
+        sortedTypes.forEach((type) => {
             // find the equalsRule, if present
-            const foundRule: FretEqualsRule | undefined = inferRules.find(conRule => conRule.owner.myClassifier === type);
+            const foundRule: FretEqualsRule | undefined = inferRules.find(
+                (conRule) => conRule.owner.myClassifier === type,
+            );
             if (!!foundRule && !!foundRule.owner.myClassifier) {
                 result.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(${varName}, "${Names.classifier(foundRule.owner.myClassifier)}")) {
                 result = ${FreTyperGenUtils.makeExpAsType(foundRule.exp, varName, false, imports)};
@@ -35,17 +37,19 @@ export class FreTypeInferMaker {
         });
 
         // add an entry for all limited concepts
-        const allLimited = typerDef.language.concepts.filter(con => con instanceof FreMetaLimitedConcept) as FreMetaLimitedConcept[];
-        allLimited.map(lim =>
+        const allLimited = typerDef.language.concepts.filter(
+            (con) => con instanceof FreMetaLimitedConcept,
+        ) as FreMetaLimitedConcept[];
+        allLimited.map((lim) =>
             result.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(${varName}, "${Names.classifier(lim)}")) {
                 result = AstType.create({ astElement: modelelement });
-             }`)
+             }`),
         );
         // add an entry for classifiers that do not have an inferType rule
         result.push(`if (this.mainTyper.isType(${varName})) {
                 result = AstType.create({ astElement: ${varName} });
             }`);
-        return result.map(r => r).join(" else ");
+        return result.map((r) => r).join(" else ");
     }
 
     // TODO see if there are parts that need to be copied, because when the container/owner changes, the link

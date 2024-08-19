@@ -50,5 +50,4 @@ export interface FreTyper {
      * @param type
      */
     getSuperTypes(type: FreType): FreType[] | null;
-
 }

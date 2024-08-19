@@ -1,14 +1,14 @@
-import {FreLogger} from "../../logging";
-import {Box} from "./internal";
-import {FreNode} from "../../ast";
-import {FreUtils} from "../../util";
+import { FreLogger } from "../../logging";
+import { Box } from "./internal";
+import { FreNode } from "../../ast";
+import { FreUtils } from "../../util";
 
 const LOGGER: FreLogger = new FreLogger("LimitedControlBox").mute();
 
 export enum LimitedDisplay {
-    SELECT,         // a dropdown menu with selections for each limited value
-    RADIO_BUTTON,   // a RadioButton (group) which allows only one value
-    CHECKBOX        // a group of checkboxes which allows multiple values
+    SELECT, // a dropdown menu with selections for each limited value
+    RADIO_BUTTON, // a RadioButton (group) which allows only one value
+    CHECKBOX, // a group of checkboxes which allows multiple values
 }
 
 export class LimitedControlBox extends Box {
@@ -17,7 +17,7 @@ export class LimitedControlBox extends Box {
     /**
      * NB
      * The following two functions are used for both single valued and list values limited properties.
-     * In case of a single value, only the 0-th element is used. 
+     * In case of a single value, only the 0-th element is used.
      */
     $getNames: () => string[];
     $setNames: (newValue: string[]) => void;
@@ -42,12 +42,13 @@ export class LimitedControlBox extends Box {
         return this.possibleNames;
     }
 
-    constructor(node: FreNode,
-                role: string,
-                getValues: () => string[],
-                setValues: (newValue: string[]) => void,
-                possibleValues: string[],
-                initializer?: Partial<LimitedControlBox>
+    constructor(
+        node: FreNode,
+        role: string,
+        getValues: () => string[],
+        setValues: (newValue: string[]) => void,
+        possibleValues: string[],
+        initializer?: Partial<LimitedControlBox>,
     ) {
         super(node, role);
         // console.log("Created limited box: [" + possibleValues + "]")

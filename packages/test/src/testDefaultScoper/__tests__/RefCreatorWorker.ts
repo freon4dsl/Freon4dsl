@@ -10,7 +10,6 @@ import { DSprivate, DSpublic, DSref, DSunit } from "../language/gen/index";
  * Creates _a_lot_ of references
  */
 export class RefCreatorWorker implements AstWorker {
-
     units: DSunit[];
 
     constructor(units: DSunit[]) {
@@ -18,17 +17,17 @@ export class RefCreatorWorker implements AstWorker {
     }
 
     execAfter(modelelement: FreNode): boolean {
-        switch( modelelement.freLanguageConcept()) {
+        switch (modelelement.freLanguageConcept()) {
             case "DSpublic": {
                 const elem: DSpublic = modelelement as DSpublic;
-                this.units.forEach(unit => {
+                this.units.forEach((unit) => {
                     const ref: FreNodeReference<DSref> = FreNodeReference.create<DSref>(elem.name, "DSref");
                     unit.dsRefs.push(ref);
-                    unit.dsPrivates.forEach(part => {
+                    unit.dsPrivates.forEach((part) => {
                         const ref: FreNodeReference<DSref> = FreNodeReference.create<DSref>(elem.name, "DSref");
                         part.conceptRefs.push(ref);
                     });
-                    unit.dsPublics.forEach(part => {
+                    unit.dsPublics.forEach((part) => {
                         const ref: FreNodeReference<DSref> = FreNodeReference.create<DSref>(elem.name, "DSref");
                         part.conceptRefs.push(ref);
                     });
@@ -38,14 +37,14 @@ export class RefCreatorWorker implements AstWorker {
             case "DSprivate": {
                 const elem: DSprivate = modelelement as DSprivate;
                 const ref: FreNodeReference<DSref> = FreNodeReference.create<DSref>(elem.name, "DSref");
-                this.units.forEach(unit => {
+                this.units.forEach((unit) => {
                     const ref: FreNodeReference<DSref> = FreNodeReference.create<DSref>(elem.name, "DSref");
                     unit.dsRefs.push(ref);
-                    unit.dsPrivates.forEach(part => {
+                    unit.dsPrivates.forEach((part) => {
                         const ref: FreNodeReference<DSref> = FreNodeReference.create<DSref>(elem.name, "DSref");
                         part.conceptRefs.push(ref);
                     });
-                    unit.dsPublics.forEach(part => {
+                    unit.dsPublics.forEach((part) => {
                         const ref: FreNodeReference<DSref> = FreNodeReference.create<DSref>(elem.name, "DSref");
                         part.conceptRefs.push(ref);
                     });
@@ -59,5 +58,4 @@ export class RefCreatorWorker implements AstWorker {
     execBefore(modelelement: FreNode): boolean {
         return false;
     }
-
 }

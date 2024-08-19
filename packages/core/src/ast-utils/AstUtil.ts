@@ -1,5 +1,13 @@
 import { FreLanguage } from "../language";
-import { FreBinaryExpression, FreNode, FreExpressionNode, FreModel, FreModelUnit, FreNamedNode, FreNodeReference } from "../ast";
+import {
+    FreBinaryExpression,
+    FreNode,
+    FreExpressionNode,
+    FreModel,
+    FreModelUnit,
+    FreNamedNode,
+    FreNodeReference,
+} from "../ast";
 
 export function isFreModel(node: FreNode): node is FreModel {
     return !!node && node.freIsModel && node.freIsModel();
@@ -10,7 +18,13 @@ export function isFreExpression(node: FreNode): node is FreExpressionNode {
 }
 
 export function isFreBinaryExpression(node: FreNode): node is FreBinaryExpression {
-    return !!node && node.freIsExpression && node.freIsExpression() && node.freIsBinaryExpression && node.freIsBinaryExpression();
+    return (
+        !!node &&
+        node.freIsExpression &&
+        node.freIsExpression() &&
+        node.freIsBinaryExpression &&
+        node.freIsBinaryExpression()
+    );
 }
 
 export function ownerOfType(node: FreNode, typename: string, exact?: boolean): FreNode | null {
@@ -86,7 +100,7 @@ export function matchElementList(list: FreNode[], toBeMatched: Partial<FreNode>[
  */
 export function matchReferenceList<T extends FreNamedNode>(
     list: FreNodeReference<T>[],
-    toBeMatched: Partial<FreNodeReference<T>>[]
+    toBeMatched: Partial<FreNodeReference<T>>[],
 ): boolean {
     // This code is the same as in matchElementList, but types do not conform,
     // therefore this code is duplicated. // todo improve
@@ -112,7 +126,10 @@ export function matchReferenceList<T extends FreNamedNode>(
  * @param list
  * @param toBeMatched
  */
-export function matchPrimitiveList(list: string[] | number[] | boolean[], toBeMatched: string[] | number[] | boolean[]): boolean {
+export function matchPrimitiveList(
+    list: string[] | number[] | boolean[],
+    toBeMatched: string[] | number[] | boolean[],
+): boolean {
     let foundMatch: boolean = true;
     for (const theirs of toBeMatched) {
         let xx: boolean = false;

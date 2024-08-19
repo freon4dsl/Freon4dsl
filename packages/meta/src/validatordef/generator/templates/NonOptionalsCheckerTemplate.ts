@@ -42,14 +42,12 @@ export class NonOptionalsCheckerTemplate {
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
-        ${classifiersToDo.map(concept =>
-            `${this.createChecksOnNonOptionalParts(concept)}`
-        ).join("\n\n")}
+        ${classifiersToDo.map((concept) => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}
         }`;
 
         return `
         import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.done.map(cls => Names.classifier(cls)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${this.done.map((cls) => Names.classifier(cls)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
         
@@ -71,14 +69,17 @@ export class NonOptionalsCheckerTemplate {
         let result: string = "";
         const locationdescription = ValidationUtils.findLocationDescription(concept);
 
-        concept.allProperties().forEach(prop => {
+        concept.allProperties().forEach((prop) => {
             // the following is added only for non-list properties
             // empty lists should be checked using one of the validation rules
             if (!prop.isOptional && !prop.isList) {
                 // if the property is of type `string`
                 // then add a check on the length of the string
-                let additionalStringCheck: string = '';
-                if (prop.isPrimitive && (prop.type === FreMetaPrimitiveType.string || prop.type === FreMetaPrimitiveType.identifier)) {
+                let additionalStringCheck: string = "";
+                if (
+                    prop.isPrimitive &&
+                    (prop.type === FreMetaPrimitiveType.string || prop.type === FreMetaPrimitiveType.identifier)
+                ) {
                     additionalStringCheck = `|| modelelement.${prop.name}?.length === 0`;
                 }
 
@@ -90,7 +91,7 @@ export class NonOptionalsCheckerTemplate {
             }
         });
 
-        if (result.length > 0 ) {
+        if (result.length > 0) {
             this.done.push(concept);
             return `${commentBefore}
                 public execBefore${Names.classifier(concept)}(modelelement: ${Names.classifier(concept)}): boolean {

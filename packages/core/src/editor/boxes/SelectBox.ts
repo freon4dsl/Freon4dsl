@@ -21,7 +21,7 @@ export class SelectBox extends AbstractChoiceBox {
         getOptions: (editor: FreEditor) => SelectOption[],
         getSelectedOption: () => SelectOption | null,
         selectOption: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult,
-        initializer?: Partial<SelectBox>
+        initializer?: Partial<SelectBox>,
     ) {
         super(node, role, placeHolder, initializer);
         this.getAllOptions = getOptions;

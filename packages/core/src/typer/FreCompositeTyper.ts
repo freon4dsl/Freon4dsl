@@ -96,43 +96,65 @@ export class FreCompositeTyper implements FreTyper {
     }
 
     commonSuperType(elemlist: FreNode[]): FreType {
-        if (!elemlist) { return null; }
-        if (elemlist.length === 0) { return null; }
+        if (!elemlist) {
+            return null;
+        }
+        if (elemlist.length === 0) {
+            return null;
+        }
 
         const $typelist: FreType[] = this.elementListToTypeList(elemlist);
-        if ($typelist.length === 0) { return null; }
+        if ($typelist.length === 0) {
+            return null;
+        }
 
         return this.commonSuper($typelist);
     }
 
     conformsListType(elemlist1: FreNode[], elemlist2: FreNode[]): boolean {
-        if (!elemlist1 || !elemlist2) { return false; }
-        if (elemlist1.length !== elemlist2.length) { return false; }
+        if (!elemlist1 || !elemlist2) {
+            return false;
+        }
+        if (elemlist1.length !== elemlist2.length) {
+            return false;
+        }
 
         const $typelist1: FreType[] = this.elementListToTypeList(elemlist1);
         const $typelist2: FreType[] = this.elementListToTypeList(elemlist2);
-        if ($typelist1.length === 0 || $typelist2.length === 0) { return false; }
-        if ($typelist1.length !== $typelist2.length) { return false; }
+        if ($typelist1.length === 0 || $typelist2.length === 0) {
+            return false;
+        }
+        if ($typelist1.length !== $typelist2.length) {
+            return false;
+        }
 
         return this.conformsList($typelist1, $typelist2);
     }
 
     conformsType(elem1: FreNode, elem2: FreNode): boolean {
-        if (!elem1 || !elem2) { return false; }
+        if (!elem1 || !elem2) {
+            return false;
+        }
 
         const $type1: FreType = this.inferType(elem1);
         const $type2: FreType = this.inferType(elem2);
-        if (!$type1 || !$type2) { return false; }
+        if (!$type1 || !$type2) {
+            return false;
+        }
 
         return this.conforms($type1, $type2);
     }
 
     equalsType(elem1: FreNode, elem2: FreNode): boolean {
-        if (!elem1 || !elem2) { return false; }
+        if (!elem1 || !elem2) {
+            return false;
+        }
 
         const $type1: FreType = this.inferType(elem1);
         const $type2: FreType = this.inferType(elem2);
-        if (!$type1 || !$type2) { return false; }
+        if (!$type1 || !$type2) {
+            return false;
+        }
 
         return this.equals($type1, $type2);
     }

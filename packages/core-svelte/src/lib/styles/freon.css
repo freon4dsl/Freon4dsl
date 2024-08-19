@@ -63,7 +63,6 @@
     /*width: 100%;*/
 }
 
-
 .limited-checkbox-component-group {
     margin: 2px;
     padding: 4px 6px 4px 6px;
@@ -331,15 +330,15 @@
     border: none;
 }
 
-[role='switch'][aria-checked='true'] :first-child,
-[role='switch'][aria-checked='false'] :last-child {
+[role="switch"][aria-checked="true"] :first-child,
+[role="switch"][aria-checked="false"] :last-child {
     border-radius: 0.25em;
     display: inline-block;
 }
 
 .inner-switch-component button span {
     user-select: none;
-    pointer-events:none;
+    pointer-events: none;
     margin: 0.25em;
 }
 
@@ -401,8 +400,9 @@
     border: none;
 }
 
-.switch-component button::before { /* defines the knob */
-    content: '';
+.switch-component button::before {
+    /* defines the knob */
+    content: "";
     position: absolute;
     width: 1.3em;
     height: 1.3em;
@@ -411,10 +411,10 @@
     transition: transform 0.3s;
 }
 
-.switch-component button[aria-checked='true']{
+.switch-component button[aria-checked="true"] {
 }
 
-.switch-component button[aria-checked='true']::before{
+.switch-component button[aria-checked="true"]::before {
     transform: translateX(1.3em);
     transition: transform 0.3s;
 }

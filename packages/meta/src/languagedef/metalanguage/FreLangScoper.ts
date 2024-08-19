@@ -3,7 +3,8 @@ import {
     FreMetaClassifier,
     FreMetaLanguage,
     FreLangAppliedFeatureExp,
-    FreMetaPrimitiveType, FreMetaLimitedConcept
+    FreMetaPrimitiveType,
+    FreMetaLimitedConcept,
 } from "./internal.js";
 import { MetaLogger } from "../../utils/MetaLogger.js";
 import { FreMetaDefinitionElement } from "../../utils/index.js";
@@ -12,7 +13,11 @@ const LOGGER = new MetaLogger("FreLangScoper"); // .mute();
 // const anyElement = "_$anyElement";
 
 export interface FreMetaScoper {
-    getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement | undefined;
+    getFromVisibleElements(
+        owner: FreMetaDefinitionElement,
+        name: string,
+        typeName: string,
+    ): FreMetaLangElement | undefined;
 }
 
 export class FreLangScoper {
@@ -20,37 +25,55 @@ export class FreLangScoper {
     public language: FreMetaLanguage;
     extraScopers: FreMetaScoper[] = [];
 
-    public getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement | undefined {
+    public getFromVisibleElements(
+        owner: FreMetaDefinitionElement,
+        name: string,
+        typeName: string,
+    ): FreMetaLangElement | undefined {
         let result: FreMetaLangElement | undefined;
-        if (typeName === "FrePrimitiveType" ) {
+        if (typeName === "FrePrimitiveType") {
             result = FreMetaPrimitiveType.find(name);
-        } else if (typeName === "FreConcept" || typeName === "FreLimitedConcept" || typeName === "FreExpressionConcept" || typeName === "FreBinaryExpressionConcept") {
+        } else if (
+            typeName === "FreConcept" ||
+            typeName === "FreLimitedConcept" ||
+            typeName === "FreExpressionConcept" ||
+            typeName === "FreBinaryExpressionConcept"
+        ) {
             result = this.language.findConcept(name);
-        } else if (typeName === "FreUnitDescription" ) {
+        } else if (typeName === "FreUnitDescription") {
             result = this.language.findUnitDescription(name);
-        } else if (typeName === "FreInterface" ) {
+        } else if (typeName === "FreInterface") {
             result = this.language.findInterface(name);
-        } else if (typeName === "FreClassifier" ) {
+        } else if (typeName === "FreClassifier") {
             result = this.language.findClassifier(name);
-        } else if (typeName === "FreProperty" || typeName === "FrePrimitiveProperty" || typeName === "FreConceptProperty") {
+        } else if (
+            typeName === "FreProperty" ||
+            typeName === "FrePrimitiveProperty" ||
+            typeName === "FreConceptProperty"
+        ) {
             if (owner instanceof FreLangAppliedFeatureExp) {
                 const xx = owner.sourceExp.$referredElement?.referred;
-                if (!(!!xx)) {
-                    LOGGER.error(`Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`);
+                if (!!!xx) {
+                    LOGGER.error(
+                        `Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`,
+                    );
                 }
                 if (!!xx && xx instanceof FreMetaClassifier) {
-                    result = xx.allProperties().filter(prop => prop.name === name)[0];
+                    result = xx.allProperties().filter((prop) => prop.name === name)[0];
                 }
             }
-        } else if (typeName === "FreInstance" ) {
-            this.language.concepts.filter(c => c instanceof FreMetaLimitedConcept).forEach(lim => {
-                const tmp = (lim as FreMetaLimitedConcept).findInstance(name);
-                if (!!tmp) {
-                    result = tmp;
-                }
-            });
+        } else if (typeName === "FreInstance") {
+            this.language.concepts
+                .filter((c) => c instanceof FreMetaLimitedConcept)
+                .forEach((lim) => {
+                    const tmp = (lim as FreMetaLimitedConcept).findInstance(name);
+                    if (!!tmp) {
+                        result = tmp;
+                    }
+                });
         }
-        if (!result) { // try the scoper for another meta language (e.g. typer)
+        if (!result) {
+            // try the scoper for another meta language (e.g. typer)
             for (const scoper of this.extraScopers) {
                 const xxx = scoper.getFromVisibleElements(owner, name, typeName);
                 if (!!xxx) {
@@ -60,5 +83,4 @@ export class FreLangScoper {
         }
         return result;
     }
-
 }

@@ -35,10 +35,10 @@ export class ModelRequests {
             }
             const dir = fs
                 .readdirSync(path.join(`${storeFolder}`, foldername))
-                .filter(f => f.endsWith(".json"))
-                .map(f => f.substring(0, f.length - 5));
+                .filter((f) => f.endsWith(".json"))
+                .map((f) => f.substring(0, f.length - 5));
             // FIXME A hack to return a specific unit as the ffirst, only for Education demo!!
-            const tmp = dir.findIndex(s => s === "Fractions10");
+            const tmp = dir.findIndex((s) => s === "Fractions10");
             if (tmp !== -1) {
                 dir.splice(tmp, 1);
                 dir.splice(0, 0, "Fractions10");
@@ -53,8 +53,7 @@ export class ModelRequests {
     public static async getModelList(ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            const dir = fs
-                .readdirSync(`${storeFolder}`);
+            const dir = fs.readdirSync(`${storeFolder}`);
             ctx.response.body = dir;
         } catch (e) {
             console.log(e.message);
@@ -67,18 +66,18 @@ export class ModelRequests {
             fs.unlinkSync(path.join(`${storeFolder}`, foldername, `${name}.json`));
         } catch (e) {
             console.log(e.message);
-            ctx.request.body = e.message
+            ctx.request.body = e.message;
         }
     }
 
     public static async deleteModel(foldername: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            console.log("Unlink: " + path.join(`${storeFolder}`, foldername))
+            console.log("Unlink: " + path.join(`${storeFolder}`, foldername));
             fs.rmdirSync(path.join(`${storeFolder}`, foldername), { recursive: true });
         } catch (e) {
             console.log(e.message);
-            ctx.request.body = e.message
+            ctx.request.body = e.message;
         }
     }
 

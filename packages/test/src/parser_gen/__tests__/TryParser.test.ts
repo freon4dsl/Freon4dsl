@@ -1,10 +1,10 @@
 import { Demo, DemoUnit } from "../language/gen";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 describe("Test the parser", () => {
-    test( ": read two units and create a model", () => {
+    test(": read two units and create a model", () => {
         const reader = DemoEnvironment.getInstance().reader;
         const writer = DemoEnvironment.getInstance().writer;
         const fileHandler = new FileHandler();
@@ -12,11 +12,11 @@ describe("Test the parser", () => {
         let input = fileHandler.stringFromFile("src/parser_gen/__tests__/ParserInput1.txt");
         const unit1: DemoUnit = reader.readFromString(input, "DemoUnit", new Demo()) as DemoUnit;
 
-        unit1.main?.baseEntity.forEach(ent => {
+        unit1.main?.baseEntity.forEach((ent) => {
             expect(ent).not.toBeUndefined();
             expect(ent).not.toBeNull();
         });
-        unit1.main?.attributes.forEach(attr => {
+        unit1.main?.attributes.forEach((attr) => {
             expect(attr.declaredType).not.toBeUndefined();
             expect(attr.declaredType).not.toBeNull();
         });
@@ -24,11 +24,11 @@ describe("Test the parser", () => {
         input = fileHandler.stringFromFile("src/parser_gen/__tests__/ParserInput2.txt");
         const unit2: DemoUnit = reader.readFromString(input, "DemoUnit", new Demo()) as DemoUnit;
         //
-        unit2.main?.baseEntity.forEach(ent => {
+        unit2.main?.baseEntity.forEach((ent) => {
             expect(ent).not.toBeUndefined();
             expect(ent).not.toBeNull();
         });
-        unit2.main?.attributes.forEach(attr => {
+        unit2.main?.attributes.forEach((attr) => {
             expect(attr.declaredType).not.toBeUndefined();
             expect(attr.declaredType).not.toBeNull();
         });

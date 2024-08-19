@@ -1,10 +1,5 @@
 import { FreNode } from "../../ast";
-import {
-    isNullOrUndefined,
-    FreUtils,
-    FRE_BINARY_EXPRESSION_LEFT,
-    FRE_BINARY_EXPRESSION_RIGHT
-} from "../../util";
+import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util";
 import { FreLogger } from "../../logging";
 
 const LOGGER = new FreLogger("Box");
@@ -16,19 +11,19 @@ export abstract class Box {
     $id: string;
     kind: string = "";
     role: string = "";
-    node: FreNode = null;  // the model element to which this box is coupled
-    propertyName: string;       // the name of the property, if any, in 'element' which this box projects
-    propertyIndex: number;      // the index within the property, if appropriate
+    node: FreNode = null; // the model element to which this box is coupled
+    propertyName: string; // the name of the property, if any, in 'element' which this box projects
+    propertyIndex: number; // the index within the property, if appropriate
     // todo make sure propertyName and index are correctly set
 
-    cssClass: string = "";      // Custom CSS class that will be added to the component rendering this box
-    cssStyle: string = "";      // Custom CSS Style class that will be added as inline style to the component rendering this box
+    cssClass: string = ""; // Custom CSS class that will be added to the component rendering this box
+    cssStyle: string = ""; // Custom CSS Style class that will be added as inline style to the component rendering this box
     selectable: boolean = true; // Can this box be selected in the editor?
     // todo because most boxes are not selectable the default could be set to false
-    isVisible: boolean = true;  // Is this box currently not shown in the editor?
+    isVisible: boolean = true; // Is this box currently not shown in the editor?
     parent: Box = null;
 
-    refreshComponent: (why?: string) => void;   // The refresh method from the component that displays this box.
+    refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
 
     /**
      *  Called when the box is dirty, refreshes the corresponding component.
@@ -244,7 +239,7 @@ export abstract class Box {
      */
     findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
         // if (propertyName === "value" && propertyIndex === undefined) {
-            console.log('findChildBoxForProperty ' + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        console.log("findChildBoxForProperty " + this.role + "[" + propertyName + ", " + propertyIndex + "]");
         // }
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
@@ -284,7 +279,9 @@ export abstract class Box {
      * AND this method is not overridden, then the focus will be set to the parent box.
      */
     setFocus: () => void = async () => {
-        console.log(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id + ", referring to parent");
+        console.log(
+            this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id + ", referring to parent",
+        );
         this.parent?.setFocus();
     };
 
@@ -296,10 +293,9 @@ export abstract class Box {
         this.getEditableChildrenRecursive(editableChildren);
         if (editableChildren.length > 0) {
             // Prefer a left- or right-placeholder if possible
-            const binaryPlaceHolders: Box[] = editableChildren.filter(box =>
-                box.role === FRE_BINARY_EXPRESSION_LEFT ||
-                box.role === FRE_BINARY_EXPRESSION_RIGHT
-            )
+            const binaryPlaceHolders: Box[] = editableChildren.filter(
+                (box) => box.role === FRE_BINARY_EXPRESSION_LEFT || box.role === FRE_BINARY_EXPRESSION_RIGHT,
+            );
             return binaryPlaceHolders.length > 0 ? binaryPlaceHolders[0] : editableChildren[0];
         } else {
             return this;
@@ -309,14 +305,14 @@ export abstract class Box {
     // TODO This will find all editable children, but not editable children of an editable child.
     //      Looking at the usage, we only need the first editable child, so maybe this could be simplified.
     private getEditableChildrenRecursive(result: Box[]) {
-        LOGGER.info( "getEditableChildrenRecursive for " + this.kind);
+        LOGGER.info("getEditableChildrenRecursive for " + this.kind);
         if (this.isEditable()) {
-            LOGGER.info( "Found editable: " + this.role);
+            LOGGER.info("Found editable: " + this.role);
             result.push(this);
             return;
         }
-        this.children.forEach(c => {
-            LOGGER.info( "child: " + c.kind);
+        this.children.forEach((c) => {
+            LOGGER.info("child: " + c.kind);
             c.getEditableChildrenRecursive(result);
         });
         // return this.children.filter(c => (isTextBox(c) || isActionBox(c) || isSelectBox(c)) || c.children.length);

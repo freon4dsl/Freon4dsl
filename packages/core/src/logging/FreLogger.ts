@@ -19,7 +19,7 @@ export class FreLogger {
     }
     static unmute(t: string): void {
         const index = this.mutedLogs.indexOf(t);
-        if ( index >= 0) {
+        if (index >= 0) {
             this.mutedLogs.splice(index, 1);
         }
     }
@@ -30,7 +30,7 @@ export class FreLogger {
 
     static unmuteAllLogs() {
         FreLogger.muteAll = false;
-        this.mutedLogs = []
+        this.mutedLogs = [];
     }
 
     static filter: string = null;
@@ -45,7 +45,7 @@ export class FreLogger {
         return !FreLogger.mutedLogs.includes(this.category);
     }
     set active(value: boolean) {
-        if ( value) {
+        if (value) {
             FreLogger.unmute(this.category);
         } else {
             FreLogger.mute(this.category);
@@ -57,7 +57,7 @@ export class FreLogger {
     }
 
     info(msg: LogMessage) {
-        if ((!FreLogger.muteAll) && this.active) {
+        if (!FreLogger.muteAll && this.active) {
             this.logToConsole(FreLogger.FG_BLUE, this.category + ": " + this.message(msg));
         }
     }
@@ -69,10 +69,10 @@ export class FreLogger {
     // }
 
     log(msg: LogMessage, tagOrTags?: string | string[]) {
-        if ((!FreLogger.muteAll) && this.active) {
+        if (!FreLogger.muteAll && this.active) {
             this.logToConsole(FreLogger.FG_BLACK, this.category + ": " + this.message(msg));
         } else if (tagOrTags !== undefined && tagOrTags !== null) {
-            const tags: string[] = (typeof tagOrTags === "string") ? [tagOrTags] : tagOrTags as string[];
+            const tags: string[] = typeof tagOrTags === "string" ? [tagOrTags] : (tagOrTags as string[]);
             for (const tag of tags) {
                 if (!FreLogger.mutedLogs.includes(tag)) {
                     this.logToConsole(FreLogger.FG_BLACK, this.category + "." + tag + ": " + this.message(msg));

@@ -22,26 +22,33 @@ export class SuperChoiceRule extends GrammarRule {
         let rule: string = "";
         if (this.implementors.length > 0) {
             // test to see if there is a binary expression concept here
-            const implementorsNoBinaries = this.implementors.filter(sub => !(sub instanceof FreMetaBinaryExpressionConcept));
-            if (this.implementors.length !== implementorsNoBinaries.length) { // there are binaries
+            const implementorsNoBinaries = this.implementors.filter(
+                (sub) => !(sub instanceof FreMetaBinaryExpressionConcept),
+            );
+            if (this.implementors.length !== implementorsNoBinaries.length) {
+                // there are binaries
                 // exclude binary expression concepts
-                rule = `${(this.ruleName)} = ${implementorsNoBinaries.map(implementor =>
-                    `${this.getTypeCallExcludeSelf(implementor)} `).join("\n    | ")}`;
+                rule = `${this.ruleName} = ${implementorsNoBinaries
+                    .map((implementor) => `${this.getTypeCallExcludeSelf(implementor)} `)
+                    .join("\n    | ")}`;
                 // add the special binary concept rule(s) as choice
                 const expBases = ParserGenUtil.findAllExpressionBases(
-                    this.implementors.filter(sub => sub instanceof FreMetaBinaryExpressionConcept) as FreMetaBinaryExpressionConcept[]
+                    this.implementors.filter(
+                        (sub) => sub instanceof FreMetaBinaryExpressionConcept,
+                    ) as FreMetaBinaryExpressionConcept[],
                 );
-                if (implementorsNoBinaries.length > 0) { // there are already choices present in the rule, so add a '|' as separator
+                if (implementorsNoBinaries.length > 0) {
+                    // there are already choices present in the rule, so add a '|' as separator
                     rule += "\n    | ";
                 }
-                expBases.forEach(base => {
+                expBases.forEach((base) => {
                     rule += `${BinaryExpMaker.getBinaryRuleName(base)} ;`;
                 });
-
             } else {
                 // normal choice rule
-                rule = `${(this.ruleName)} = ${this.implementors.map(implementor =>
-                    `${this.getTypeCallExcludeSelf(implementor)} `).join("\n    | ")} ;`;
+                rule = `${this.ruleName} = ${this.implementors
+                    .map((implementor) => `${this.getTypeCallExcludeSelf(implementor)} `)
+                    .join("\n    | ")} ;`;
             }
         } else {
             rule = `${this.ruleName} = 'ERROR' ; // there are no concepts that implement this interface or extend this abstract concept`;
@@ -64,6 +71,5 @@ export class SuperChoiceRule extends GrammarRule {
         } else {
             return getTypeCall(propType);
         }
-
     }
 }

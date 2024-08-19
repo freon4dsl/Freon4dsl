@@ -1,5 +1,5 @@
-import {FreMetaDefinitionElement} from "../../../utils/index.js";
-import {FreMetaClassifier, MetaElementReference} from "../../../languagedef/metalanguage/index.js";
+import { FreMetaDefinitionElement } from "../../../utils/index.js";
+import { FreMetaClassifier, MetaElementReference } from "../../../languagedef/metalanguage/index.js";
 
 /**
  * An element of a line in a projection definition that represents the projection of a superconcept or interface.

@@ -1,6 +1,6 @@
 import { CommandLineAction, CommandLineStringParameter } from "@rushstack/ts-command-line";
 import fs from "fs";
-import { cp } from 'fs/promises';
+import { cp } from "fs/promises";
 import path from "node:path";
 import { WebAppConfigTemplate } from "./WepAppConfigTemplate";
 
@@ -8,7 +8,7 @@ type Admin = {
     language: string;
     sourceFolder: string;
     targetFolder: string;
-}
+};
 
 export class CopyLanguage extends CommandLineAction {
     protected languageFolderArg: CommandLineStringParameter = null;
@@ -23,7 +23,7 @@ export class CopyLanguage extends CommandLineAction {
             actionName: "install",
             summary: "Installs a language in Playground",
             documentation:
-                "Saves the previous language back to its origin and copies the sample language to playground. "
+                "Saves the previous language back to its origin and copies the sample language to playground. ",
         });
     }
 
@@ -33,7 +33,7 @@ export class CopyLanguage extends CommandLineAction {
             parameterLongName: "--language-dir",
             parameterShortName: "-d",
             description: "Directory where your language definition files can be found",
-            required: true
+            required: true,
         });
         this.targetFolderArg = this.defineStringParameter({
             argumentName: "TARGET_DIR",
@@ -41,7 +41,7 @@ export class CopyLanguage extends CommandLineAction {
             parameterLongName: "--target",
             parameterShortName: "-t",
             description: "The directory to which the language files will be copied",
-            required: false
+            required: false,
         });
         this.languageNameArg = this.defineStringParameter({
             argumentName: "LANGUAGE_NAME",
@@ -49,7 +49,7 @@ export class CopyLanguage extends CommandLineAction {
             parameterLongName: "--language-name",
             parameterShortName: "-l",
             description: "The name of the language, if omitted default to directory name of language dir",
-            required: false
+            required: false,
         });
     }
 
@@ -59,7 +59,9 @@ export class CopyLanguage extends CommandLineAction {
         //
         const currentDirectory: string = path.basename(process.cwd());
         if (currentDirectory !== "playground") {
-            console.error("InstallLanguage: should be called in 'playground only, is now called in '" + currentDirectory + "'");
+            console.error(
+                "InstallLanguage: should be called in 'playground only, is now called in '" + currentDirectory + "'",
+            );
             process.exit(1);
         }
 
@@ -88,7 +90,7 @@ export class CopyLanguage extends CommandLineAction {
         for (const file of files) {
             const filePath = this.targetFolder + "/" + file;
             // ignore these
-            if( file === "webapp" || file === "util" ) {
+            if (file === "webapp" || file === "util") {
                 continue;
             }
             if (file === this.DOT_LANGUAGE_FILE) {
@@ -107,20 +109,33 @@ export class CopyLanguage extends CommandLineAction {
                     process.exit(1);
                 }
                 console.log(`COPY current language ${folder} TO ${languageAdmin.sourceFolder}`);
-                await cp(folder, languageAdmin.sourceFolder, {preserveTimestamps: true, recursive: true, force: true});
+                await cp(folder, languageAdmin.sourceFolder, {
+                    preserveTimestamps: true,
+                    recursive: true,
+                    force: true,
+                });
                 console.log(`RM current language ${folder}`);
-                await fs.rmSync(folder, {recursive: true});
+                await fs.rmSync(folder, { recursive: true });
             }
         }
 
         // const currentLanguageDir = fs.readFileSync(this.outputFolder + "./language-dir", {encoding: "utf8"}).toString();
-        await cp(this.sourceFolder, this.targetFolder + "/" + this.languageName, {preserveTimestamps: true, errorOnExist: true, recursive: true, force: false});
-        let x: Admin = { language: this.languageName, sourceFolder: this.sourceFolder, targetFolder: this.targetFolder + "/" + this.languageName};
-        fs.writeFileSync(this.targetFolder + "/" + this.DOT_LANGUAGE_FILE, JSON.stringify(x) ,{encoding: "utf8"});
+        await cp(this.sourceFolder, this.targetFolder + "/" + this.languageName, {
+            preserveTimestamps: true,
+            errorOnExist: true,
+            recursive: true,
+            force: false,
+        });
+        let x: Admin = {
+            language: this.languageName,
+            sourceFolder: this.sourceFolder,
+            targetFolder: this.targetFolder + "/" + this.languageName,
+        };
+        fs.writeFileSync(this.targetFolder + "/" + this.DOT_LANGUAGE_FILE, JSON.stringify(x), { encoding: "utf8" });
 
         const configTemplate: WebAppConfigTemplate = new WebAppConfigTemplate();
         const config = configTemplate.generate(this.languageName);
-        fs.writeFileSync(this.targetFolder + "/webapp/config/WebappConfiguration.ts", config, {encoding: "utf8"});
+        fs.writeFileSync(this.targetFolder + "/webapp/config/WebappConfiguration.ts", config, { encoding: "utf8" });
     }
 
     protected findLanguageName(folderPath: string): string {
@@ -128,17 +143,19 @@ export class CopyLanguage extends CommandLineAction {
     }
 
     protected isLanguageFolder(folderName: string): boolean {
-        return fs.lstatSync(folderName).isDirectory() && fs.readdirSync(folderName).includes(this.DOT_LANGUAGE_FILE)
+        return fs.lstatSync(folderName).isDirectory() && fs.readdirSync(folderName).includes(this.DOT_LANGUAGE_FILE);
     }
 
     protected onExecute(): Promise<void> {
         const self = this;
         self.targetFolder = this.targetFolderArg.value;
-        self.sourceFolder = this.languageFolderArg.value
-        self.languageName = (this.languageNameArg.value === "LanguageNameUnknown" ? this.findLanguageName(this.sourceFolder) : this.languageNameArg.value);
-        return new Promise(function(resolve, rejest) {
+        self.sourceFolder = this.languageFolderArg.value;
+        self.languageName =
+            this.languageNameArg.value === "LanguageNameUnknown"
+                ? this.findLanguageName(this.sourceFolder)
+                : this.languageNameArg.value;
+        return new Promise(function (resolve, rejest) {
             self.copy();
         });
     }
-
 }

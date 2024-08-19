@@ -1,8 +1,14 @@
 import {
     FretClassifierSpec,
-    FretConformanceRule, FretConformsExp, FretEqualsExp, FretExp,
-    FretPropertyCallExp, FretWhereExp,
-    TyperDef, FretBinaryExp, FretEqualsRule
+    FretConformanceRule,
+    FretConformsExp,
+    FretEqualsExp,
+    FretExp,
+    FretPropertyCallExp,
+    FretWhereExp,
+    TyperDef,
+    FretBinaryExp,
+    FretEqualsRule,
 } from "../../metalanguage/index.js";
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
 import { ListUtil, Names, GenerationUtil } from "../../../utils/index.js";
@@ -22,12 +28,12 @@ export class FreSuperTypeMaker {
         // and (2) all FretLimitedRules that have a 'FretConforms' statement.
         const conformanceRules: FretConformanceRule[] = [];
         const limitedSpecs: FretClassifierSpec[] = [];
-        typerdef.classifierSpecs.forEach(spec => {
-            conformanceRules.push(...spec.rules.filter(r => r instanceof FretConformanceRule));
+        typerdef.classifierSpecs.forEach((spec) => {
+            conformanceRules.push(...spec.rules.filter((r) => r instanceof FretConformanceRule));
         });
-        typerdef.classifierSpecs.forEach(spec => {
+        typerdef.classifierSpecs.forEach((spec) => {
             if (spec.myClassifier instanceof FreMetaLimitedConcept) {
-                if (spec.rules.filter(r => r.exp instanceof FretConformsExp)) {
+                if (spec.rules.filter((r) => r.exp instanceof FretConformsExp)) {
                     limitedSpecs.push(spec);
                 }
             }
@@ -36,10 +42,12 @@ export class FreSuperTypeMaker {
         const sortedTypes = GenerationUtil.sortClassifiers(typerdef.types);
         // make sub-entries for each rule defined for an ast-element
         const astSubRules: string[] = [];
-        sortedTypes.forEach( type => {
+        sortedTypes.forEach((type) => {
             // find the equalsRule, if present
             const myType: string = Names.classifier(type);
-            const foundRule: FretEqualsRule | undefined = conformanceRules.find(conRule => conRule.owner.myClassifier === type);
+            const foundRule: FretEqualsRule | undefined = conformanceRules.find(
+                (conRule) => conRule.owner.myClassifier === type,
+            );
             if (!!foundRule) {
                 if (!!foundRule.owner.myClassifier && !FreTyperGenUtils.isType(foundRule.owner.myClassifier)) {
                     astSubRules.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(elem, "${myType}")) {
@@ -47,11 +55,12 @@ export class FreSuperTypeMaker {
                     }`);
                 }
             } else {
-                const foundLimitedSpec = limitedSpecs.find(spec => spec.myClassifier === type);
+                const foundLimitedSpec = limitedSpecs.find((spec) => spec.myClassifier === type);
                 if (!!foundLimitedSpec) {
                     // make sub-entry for limited spec
                     const conformsExps: FretBinaryExp[] = foundLimitedSpec.rules
-                        .filter(r => r.exp instanceof FretConformsExp).map(r => r.exp as FretConformsExp);
+                        .filter((r) => r.exp instanceof FretConformsExp)
+                        .map((r) => r.exp as FretConformsExp);
                     astSubRules.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(elem, "${myType}")) {
                             ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
                         }`);
@@ -60,10 +69,12 @@ export class FreSuperTypeMaker {
             }
         });
         // make sub-entries for remaining limited specs
-        limitedSpecs.map(spec => {
+        limitedSpecs.map((spec) => {
             if (!!spec.myClassifier) {
                 const myType: string = Names.classifier(spec.myClassifier);
-                const conformsExps: FretBinaryExp[] = spec.rules.filter(r => r.exp instanceof FretConformsExp).map(r => r.exp as FretConformsExp);
+                const conformsExps: FretBinaryExp[] = spec.rules
+                    .filter((r) => r.exp instanceof FretConformsExp)
+                    .map((r) => r.exp as FretConformsExp);
                 astSubRules.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(elem, "${myType}")) {
                 ${this.makeSuperTypeForLimited(conformsExps, "elem", true, imports)}
             }`);
@@ -74,12 +85,12 @@ export class FreSuperTypeMaker {
         // combine the sub-entries into one
         allRules.push(`if (${typevarName}.$typename === "AstType") {
                         const elem: ${Names.FreNode} = (type as AstType).astElement;
-                        ${astSubRules.map(r => r).join(" else ")}${astSubRules.length > 0 ? `else {` : ``}
+                        ${astSubRules.map((r) => r).join(" else ")}${astSubRules.length > 0 ? `else {` : ``}
                             return [];
                         ${astSubRules.length > 0 ? `}` : ``}
                 } `);
         // make an entry for each rule that is defined for a type concept
-        conformanceRules.map(rule => {
+        conformanceRules.map((rule) => {
             if (!!rule.owner.myClassifier && FreTyperGenUtils.isType(rule.owner.myClassifier)) {
                 allRules.push(`if (${typevarName}.$typename === "${Names.classifier(rule.owner.myClassifier)}") {
                 ${this.makeSuperForExp(rule.exp, typevarName, imports)}
@@ -92,18 +103,26 @@ export class FreSuperTypeMaker {
             return [];
         }
         let result: ${Names.FreType}[] = [];
-        ${allRules.map(r => r).join(" else ")}
+        ${allRules.map((r) => r).join(" else ")}
         return result;`;
     }
 
-    private makeSuperTypeForLimited(binaryExps: FretBinaryExp[], varName: string, varIsType: boolean, imports: FreMetaClassifier[]): string {
+    private makeSuperTypeForLimited(
+        binaryExps: FretBinaryExp[],
+        varName: string,
+        varIsType: boolean,
+        imports: FreMetaClassifier[],
+    ): string {
         let result: string = "";
 
-        binaryExps.map(stat =>
-            result += `if (${varName} === ${FreTyperGenUtils.makeExpAsElement(stat.left, varName, varIsType, imports)} ){
+        binaryExps
+            .map(
+                (stat) =>
+                    (result += `if (${varName} === ${FreTyperGenUtils.makeExpAsElement(stat.left, varName, varIsType, imports)} ){
                 return [${FreTyperGenUtils.makeExpAsType(stat.right, varName, varIsType, imports)}];
-            }`
-        ).join(" else ");
+            }`),
+            )
+            .join(" else ");
         return result;
     }
 
@@ -134,23 +153,29 @@ export class FreSuperTypeMaker {
                 const propAToBeChanged: string = this.getPropNameFromExp(myConditions[i].left);
                 let propAisAstElement: boolean = true;
                 // const propAisAstElement: boolean = !FreTyperGenUtils.isType(myConditions[i].left.returnType);
-                let propAtypeName: string = '';
+                let propAtypeName: string = "";
                 if (!!myConditions[i].left.returnType) {
                     propAisAstElement = !FreTyperGenUtils.isType(myConditions[i].left.returnType!);
                     propAtypeName = Names.classifier(myConditions[i].left.returnType!);
                 }
-                const propsANotToBeChanged: string[] = cls.allProperties().map(prop => prop.name).filter(name => name !== propAToBeChanged);
+                const propsANotToBeChanged: string[] = cls
+                    .allProperties()
+                    .map((prop) => prop.name)
+                    .filter((name) => name !== propAToBeChanged);
                 for (let j = i + 1; j < myConditions.length; j++) {
                     if (FreTyperGenUtils.isType(cls)) {
                         const typeName = Names.classifier(cls);
                         const propBToBeChanged: string = this.getPropNameFromExp(myConditions[j].left);
                         let propBisAstElement: boolean = true;
-                        let propBtypeName: string = '';
+                        let propBtypeName: string = "";
                         if (!!myConditions[j].left.returnType) {
                             propBisAstElement = !FreTyperGenUtils.isType(myConditions[j].left.returnType!);
                             propBtypeName = Names.classifier(myConditions[j].left.returnType!);
                         }
-                        const propsBNotToBeChanged: string[] = cls.allProperties().map(prop => prop.name).filter(name => name !== propBToBeChanged);
+                        const propsBNotToBeChanged: string[] = cls
+                            .allProperties()
+                            .map((prop) => prop.name)
+                            .filter((name) => name !== propBToBeChanged);
                         result += `
                     /* do rhs${i} times rhs${j} */
                     for (const partA of rhs${i}) {
@@ -158,7 +183,7 @@ export class FreSuperTypeMaker {
                         result.push(
                             ${typeName}.create({
                                 ${propAToBeChanged}: ${this.makeCondition(myConditions[i].right, `${propAisAstElement ? `elemA` : `partA`}`, imports)},
-                                ${propsANotToBeChanged.map(name => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
+                                ${propsANotToBeChanged.map((name) => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
                             })
                         );
                         for (const partB of rhs${j}) {
@@ -168,7 +193,10 @@ export class FreSuperTypeMaker {
                                 ${typeName}.create({
                                     ${propAToBeChanged}: ${this.makeCondition(myConditions[i].right, `${propAisAstElement ? `elemA` : `partA`}`, imports)},
                                     ${propBToBeChanged}: ${this.makeCondition(myConditions[j].right, `${propBisAstElement ? `elemB` : `partB`}`, imports)},
-                                    ${propsANotToBeChanged.filter(name => name !== propBToBeChanged).map(name => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
+                                    ${propsANotToBeChanged
+                                        .filter((name) => name !== propBToBeChanged)
+                                        .map((name) => `${name}: (${varName} as ${typeName}).${name}`)
+                                        .join(",\n")}
                                 })
                             );
                         }
@@ -178,7 +206,7 @@ export class FreSuperTypeMaker {
                         result.push(
                             ${typeName}.create({
                                 ${propBToBeChanged}: ${this.makeCondition(myConditions[j].right, `${propBisAstElement ? `elemB` : `partB`}`, imports)},
-                                ${propsBNotToBeChanged.map(name => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
+                                ${propsBNotToBeChanged.map((name) => `${name}: (${varName} as ${typeName}).${name}`).join(",\n")}
                             })
                         );
                     }`;
@@ -205,7 +233,7 @@ export class FreSuperTypeMaker {
             ListUtil.addIfNotPresent(imports, right.returnType);
             return `(${partName} as ${Names.classifier(right.returnType)})`;
         } else {
-            return '';
+            return "";
         }
     }
 }

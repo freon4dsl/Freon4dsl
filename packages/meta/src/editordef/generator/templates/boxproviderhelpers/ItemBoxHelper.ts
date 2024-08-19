@@ -117,7 +117,7 @@ export class ItemBoxHelper {
 
             // surround with optional box, and add "BoxFactory" to imports
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxFactory");
-            const condition = property.isList
+            const condition: string = property.isList
                 ? `() => (!!${elementVarName}.${optionalPropertyName}) && (${elementVarName}.${optionalPropertyName}).length !== 0`
                 : `() => (!!${elementVarName}.${optionalPropertyName})`;
             result = `BoxFactory.optional2(${elementVarName}, "optional-${optionalPropertyName}", ${condition},

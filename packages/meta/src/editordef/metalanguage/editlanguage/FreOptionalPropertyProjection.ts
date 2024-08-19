@@ -1,4 +1,4 @@
-import {FreEditPropertyProjection, FreEditProjectionLine, FreEditProjectionText} from "./internal.js";
+import { FreEditPropertyProjection, FreEditProjectionLine, FreEditProjectionText } from "./internal.js";
 
 /**
  * An element of a line in a projection definition that represents the projection of a property that is optional.
@@ -8,9 +8,9 @@ export class FreOptionalPropertyProjection extends FreEditPropertyProjection {
 
     public findPropertyProjection(): FreEditPropertyProjection | undefined {
         let result: FreEditPropertyProjection | undefined = undefined;
-        this.lines.forEach(l => {
+        this.lines.forEach((l) => {
             if (!result) {
-                result = l.items.find(item => item instanceof FreEditPropertyProjection) as FreEditPropertyProjection;
+                result = l.items.find((item) => item instanceof FreEditPropertyProjection) as FreEditPropertyProjection;
             }
         });
         return result;
@@ -34,7 +34,7 @@ export class FreOptionalPropertyProjection extends FreEditPropertyProjection {
     toString(): string {
         return `[?
         // #lines ${this.lines.length}
-            ${this.lines.map(line => line.toString()).join("\n")}\`;
+            ${this.lines.map((line) => line.toString()).join("\n")}\`;
         ]`;
     }
 }

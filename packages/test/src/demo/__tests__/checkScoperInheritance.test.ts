@@ -2,7 +2,7 @@ import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoScoper } from "../scoper/gen";
 import { DemoEntity, Demo } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
-import { describe, it, test, expect, beforeEach } from "vitest"
+import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("testing Scoper", () => {
     let modelCreator = new DemoModelCreator();
@@ -18,7 +18,7 @@ describe("testing Scoper", () => {
         // when the property is not a list:
         if (!done.includes(ent) && !!ent.baseEntity) {
             // extra props should be visible
-            ent.baseEntity.referred.attributes.forEach(attr => {
+            ent.baseEntity.referred.attributes.forEach((attr) => {
                 expect(vis).toContain(attr.name);
             });
             done.push(ent);
@@ -35,10 +35,10 @@ describe("testing Scoper", () => {
     }
 
     test("inheritance on loop", () => {
-        modelCreator.createInheritanceWithLoop().models[0].entities.forEach(ent => {
+        modelCreator.createInheritanceWithLoop().models[0].entities.forEach((ent) => {
             let vis = scoper.getVisibleNames(ent);
             expect(vis).toContain(ent.name);
-            ent.attributes.forEach(attr => {
+            ent.attributes.forEach((attr) => {
                 expect(vis).toContain(attr.name);
             });
             let done: DemoEntity[] = [];
@@ -50,14 +50,14 @@ describe("testing Scoper", () => {
     });
 
     test("inheritance", () => {
-        inheritanceModel.models[0].entities.forEach(ent => {
+        inheritanceModel.models[0].entities.forEach((ent) => {
             let vis = scoper.getVisibleNames(ent);
             expect(vis).toContain(ent.name);
-            ent.attributes.forEach(attr => {
+            ent.attributes.forEach((attr) => {
                 expect(vis).toContain(attr.name);
             });
             if (!!ent.baseEntity) {
-                ent.baseEntity.referred.attributes.forEach(attr => {
+                ent.baseEntity.referred.attributes.forEach((attr) => {
                     expect(vis).toContain(attr.name);
                 });
             }

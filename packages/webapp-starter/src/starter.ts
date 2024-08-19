@@ -1,9 +1,9 @@
-import {FreonLayout, WebappConfigurator } from "@freon4dsl/webapp-lib";
-import {ServerCommunication} from "@freon4dsl/core";
+import { FreonLayout, WebappConfigurator } from "@freon4dsl/webapp-lib";
+import { ServerCommunication } from "@freon4dsl/core";
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
 // import {InsuranceModelEnvironment} from "@freon4dsl/samples-docuproject";
 
-import {setCustomComponents} from "@freon4dsl/core-svelte";
+import { setCustomComponents } from "@freon4dsl/core-svelte";
 // import ShowAnimatedGif from "./customComponents/forDocuProject/ShowAnimatedGif.svelte";
 // import SMUI_Card_Component from "./customComponents/forDocuProject/SMUI_Card_Component.svelte";
 // import SMUI_Accordion from "./customComponents/forDocuProject/SMUI_Accordion.svelte";
@@ -25,7 +25,7 @@ import PartWrapperComponent from "./customComponents/forExternalTester/PartWrapp
 import PartListWrapperComponent from "./customComponents/forExternalTester/PartListWrapperComponent.svelte";
 import RefWrapperComponent from "./customComponents/forExternalTester/RefWrapperComponent.svelte";
 import RefListWrapperComponent from "./customComponents/forExternalTester/RefListWrapperComponent.svelte";
-import {ExternalModelEnvironment} from "@freon4dsl/samples-external-tester";
+import { ExternalModelEnvironment } from "@freon4dsl/samples-external-tester";
 
 /**
  * The one and only reference to the actual language for which this editor runs
@@ -51,29 +51,29 @@ WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getI
 // ]);
 // For ExternalTester:
 setCustomComponents([
-	{component: BooleanWrapperComponent, knownAs: "booleanWrapper"},
-	{component: FragmentWrapperComponent, knownAs: "fragmentWrapper"},
-	{component: NumberWrapperComponent, knownAs: "numberWrapper"},
-	{component: PartWrapperComponent, knownAs: "partWrapper"},
-	{component: PartListWrapperComponent, knownAs: "partListWrapper"},
-	{component: RefWrapperComponent, knownAs: "refWrapper"},
-	{component: RefListWrapperComponent, knownAs: "refListWrapper"},
-	{component: StringWrapperComponent, knownAs: "stringWrapper"},
+    { component: BooleanWrapperComponent, knownAs: "booleanWrapper" },
+    { component: FragmentWrapperComponent, knownAs: "fragmentWrapper" },
+    { component: NumberWrapperComponent, knownAs: "numberWrapper" },
+    { component: PartWrapperComponent, knownAs: "partWrapper" },
+    { component: PartListWrapperComponent, knownAs: "partListWrapper" },
+    { component: RefWrapperComponent, knownAs: "refWrapper" },
+    { component: RefListWrapperComponent, knownAs: "refListWrapper" },
+    { component: StringWrapperComponent, knownAs: "stringWrapper" },
 
-	{component: ExternalBooleanComponent, knownAs: "booleanReplacer"},
-	{component: ExternalNumberComponent, knownAs: "numberReplacer"},
-	{component: ExternalPartComponent, knownAs: "partReplacer"},
-	{component: ExternalPartListComponent, knownAs: "partListReplacer"},
-	{component: ExternalRefComponent, knownAs: "refReplacer"},
-	{component: ExternalRefListComponent, knownAs: "refListReplacer"},
-	{component: ExternalSimpleComponent, knownAs: "simple"},
-	{component: ExternalStringComponent, knownAs: "stringReplacer"},
+    { component: ExternalBooleanComponent, knownAs: "booleanReplacer" },
+    { component: ExternalNumberComponent, knownAs: "numberReplacer" },
+    { component: ExternalPartComponent, knownAs: "partReplacer" },
+    { component: ExternalPartListComponent, knownAs: "partListReplacer" },
+    { component: ExternalRefComponent, knownAs: "refReplacer" },
+    { component: ExternalRefListComponent, knownAs: "refListReplacer" },
+    { component: ExternalSimpleComponent, knownAs: "simple" },
+    { component: ExternalStringComponent, knownAs: "stringReplacer" },
 ]);
 
 /**
  * Now start the app ...
  */
 const app = new FreonLayout({
-	target: document.body,
+    target: document.body,
 });
 export default app;

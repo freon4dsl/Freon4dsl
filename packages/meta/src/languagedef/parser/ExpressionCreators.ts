@@ -5,7 +5,8 @@ import {
     FreLangExp,
     FreLangFunctionCallExp,
     FreInstanceExp,
-    FreLangConceptExp, FreLangSimpleExp
+    FreLangConceptExp,
+    FreLangSimpleExp,
 } from "../metalanguage/FreLangExpressions.js";
 import { MetaLogger } from "../../utils/MetaLogger.js";
 import { Names } from "../../utils/index.js";
@@ -57,9 +58,11 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     return result;
 }
 
-export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> {
+export function createClassifierReference(
+    data: Partial<MetaElementReference<FreMetaClassifier>>,
+): MetaElementReference<FreMetaClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : '', "FreClassifier");
+    const result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : "", "FreClassifier");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;

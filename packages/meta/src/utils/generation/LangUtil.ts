@@ -1,4 +1,10 @@
-import { FreMetaClassifier, FreMetaConcept, MetaElementReference, FreMetaInterface, FreMetaProperty } from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaClassifier,
+    FreMetaConcept,
+    MetaElementReference,
+    FreMetaInterface,
+    FreMetaProperty,
+} from "../../languagedef/metalanguage/index.js";
 import { GenerationUtil } from "./GenerationUtil.js";
 
 /**
@@ -106,7 +112,7 @@ export class LangUtil {
     public static subConcepts(self: FreMetaClassifier): FreMetaConcept[] {
         const result: FreMetaConcept[] = [];
         if (self.language === undefined) {
-            return []
+            return [];
         }
         for (const cls of self.language.concepts) {
             if (LangUtil.superClassifiers(cls).includes(self)) {
@@ -123,7 +129,7 @@ export class LangUtil {
      */
     public static subConceptsIncludingSelf(self: FreMetaClassifier): FreMetaConcept[] {
         if (self === undefined) {
-            return []
+            return [];
         }
         const result = LangUtil.subConcepts(self);
         if (self instanceof FreMetaConcept) {
@@ -138,9 +144,13 @@ export class LangUtil {
      *
      * @param freInterface
      */
-    public static findImplementorsDirect(freInterface: FreMetaInterface | MetaElementReference<FreMetaInterface>): FreMetaConcept[] {
-        const myInterface = (freInterface instanceof MetaElementReference ? freInterface.referred : freInterface);
-        return myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === myInterface));
+    public static findImplementorsDirect(
+        freInterface: FreMetaInterface | MetaElementReference<FreMetaInterface>,
+    ): FreMetaConcept[] {
+        const myInterface = freInterface instanceof MetaElementReference ? freInterface.referred : freInterface;
+        return myInterface.language.concepts.filter((con) =>
+            con.interfaces.some((intf) => intf.referred === myInterface),
+        );
     }
 
     /**
@@ -149,13 +159,17 @@ export class LangUtil {
      *
      * @param freInterface
      */
-    public static findImplementorsRecursive(freInterface: FreMetaInterface | MetaElementReference<FreMetaInterface>): FreMetaConcept[] {
-        const myInterface = (freInterface instanceof MetaElementReference ? freInterface.referred : freInterface);
+    public static findImplementorsRecursive(
+        freInterface: FreMetaInterface | MetaElementReference<FreMetaInterface>,
+    ): FreMetaConcept[] {
+        const myInterface = freInterface instanceof MetaElementReference ? freInterface.referred : freInterface;
         const implementors: FreMetaConcept[] = this.findImplementorsDirect(myInterface);
 
         // add implementors of sub-interfaces
         for (const sub of myInterface.allSubInterfacesRecursive()) {
-            const extraImplementors = myInterface.language.concepts.filter(con => con.interfaces.some(intf => intf.referred === sub));
+            const extraImplementors = myInterface.language.concepts.filter((con) =>
+                con.interfaces.some((intf) => intf.referred === sub),
+            );
             for (const concept of extraImplementors) {
                 if (!implementors.includes(concept)) {
                     implementors.push(concept);
@@ -172,14 +186,18 @@ export class LangUtil {
      *
      * @param classifier
      */
-    public static findAllImplementorsAndSubs(classifier: MetaElementReference<FreMetaClassifier> | FreMetaClassifier): FreMetaClassifier[] {
+    public static findAllImplementorsAndSubs(
+        classifier: MetaElementReference<FreMetaClassifier> | FreMetaClassifier,
+    ): FreMetaClassifier[] {
         let result: FreMetaClassifier[] = [];
-        const myClassifier = (classifier instanceof MetaElementReference ? classifier.referred : classifier);
+        const myClassifier = classifier instanceof MetaElementReference ? classifier.referred : classifier;
         if (!!myClassifier) {
             result.push(myClassifier);
-            if (myClassifier instanceof FreMetaConcept) { // find all subclasses and mark them as namespace
+            if (myClassifier instanceof FreMetaConcept) {
+                // find all subclasses and mark them as namespace
                 result = result.concat(myClassifier.allSubConceptsRecursive());
-            } else if (myClassifier instanceof FreMetaInterface) { // find all implementors and their subclasses
+            } else if (myClassifier instanceof FreMetaInterface) {
+                // find all implementors and their subclasses
                 // we do not use findImplementorsRecursive(), because we not only add the implementing concepts,
                 // but the subinterfaces as well
                 for (const implementor of this.findImplementorsDirect(myClassifier)) {
@@ -239,7 +257,7 @@ export class LangUtil {
 
         const type1: FreMetaClassifier = firstProp.type;
         const type2: FreMetaClassifier = secondProp.type;
-        if (!type1 || !type2 ) {
+        if (!type1 || !type2) {
             console.log("INTERNAL ERROR: property types are not set: " + firstProp.name + ", " + secondProp.name);
             return false;
         }

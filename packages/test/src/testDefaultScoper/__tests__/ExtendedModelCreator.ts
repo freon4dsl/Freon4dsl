@@ -125,8 +125,8 @@ export class ExtendedModelCreator {
             const someReference: FreNodeReference<DSref> = FreNodeReference.create<DSref>(ref.pathname, "DSref");
             dSunit.dsRefs.push(someReference);
         }
-        dSunit.dsPrivates.forEach(part => this.addReferences(part));
-        dSunit.dsPublics.forEach(part => this.addReferences(part));
+        dSunit.dsPrivates.forEach((part) => this.addReferences(part));
+        dSunit.dsPublics.forEach((part) => this.addReferences(part));
     }
 
     private addReferences(part: DSprivate) {

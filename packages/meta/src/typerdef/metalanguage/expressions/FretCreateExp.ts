@@ -18,7 +18,7 @@ export class FretCreateExp extends FretExp {
     static create(data: Partial<FretCreateExp>): FretCreateExp {
         const result = new FretCreateExp();
         if (!!data.propertyDefs) {
-            data.propertyDefs.forEach(x => result.propertyDefs.push(x));
+            data.propertyDefs.forEach((x) => result.propertyDefs.push(x));
         }
         if (!!data.$type) {
             result.$type = data.$type;
@@ -35,11 +35,11 @@ export class FretCreateExp extends FretExp {
     // @ts-ignore Property is set during parsing and checking phases
     $type: MetaElementReference<FreMetaClassifier>; // implementation of reference 'type'
 
-     /**
-      * Convenience method for reference 'type'.
-      * Instead of returning a 'MetaElementReference<FreClassifier>' object,
-      * it returns the referred 'FreClassifier' object, if it can be found.
-      */
+    /**
+     * Convenience method for reference 'type'.
+     * Instead of returning a 'MetaElementReference<FreClassifier>' object,
+     * it returns the referred 'FreClassifier' object, if it can be found.
+     */
     get type(): FreMetaClassifier | undefined {
         if (!!this.$type) {
             return this.$type.referred;
@@ -47,6 +47,6 @@ export class FretCreateExp extends FretExp {
         return undefined;
     }
     toFreString(): string {
-        return this.$type.name + " {\n\t\t" + this.propertyDefs.map(p => p.toFreString()).join(",\n\t\t") + "\n\t} ";
+        return this.$type.name + " {\n\t\t" + this.propertyDefs.map((p) => p.toFreString()).join(",\n\t\t") + "\n\t} ";
     }
 }

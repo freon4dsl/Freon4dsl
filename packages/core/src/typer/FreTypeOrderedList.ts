@@ -10,8 +10,8 @@ export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
 
     add(p: T, typer: FreTyper) {
         // TODO Check: Why use typeof
-        if (typeof typer !== 'undefined') {
-            if (!this.elements.find(e => typer.equals(e, p))) {
+        if (typeof typer !== "undefined") {
+            if (!this.elements.find((e) => typer.equals(e, p))) {
                 this.elements.push(p);
             }
         }
@@ -61,7 +61,6 @@ export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
     [Symbol.iterator](): Iterator<T> {
         return new FrOrderedListIterator<T>(this);
     }
-
 }
 
 export class FrOrderedListIterator<T extends FreType> implements Iterator<T> {
@@ -82,5 +81,4 @@ export class FrOrderedListIterator<T extends FreType> implements Iterator<T> {
             return { done: true, value: undefined };
         }
     }
-
 }

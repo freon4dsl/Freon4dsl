@@ -1,9 +1,11 @@
 import {
-    FreEditClassifierProjection, FreEditExternalInfo, FreEditSimpleExternal,
+    FreEditClassifierProjection,
+    FreEditExternalInfo,
+    FreEditSimpleExternal,
     FreEditProjectionLine,
-    FreEditPropertyProjection
+    FreEditPropertyProjection,
 } from "./internal.js";
-import {FreEditFragmentProjection} from "./FreEditFragmentProjection.js";
+import { FreEditFragmentProjection } from "./FreEditFragmentProjection.js";
 
 /**
  * A 'normal', i.e. not a table projection, for a concept or interface
@@ -13,14 +15,14 @@ export class FreEditNormalProjection extends FreEditClassifierProjection {
 
     findAllPartProjections(): FreEditPropertyProjection[] {
         const result: FreEditPropertyProjection[] = [];
-        this.lines.forEach(line => {
-            line.items.forEach(item => {
+        this.lines.forEach((line) => {
+            line.items.forEach((item) => {
                 if (item instanceof FreEditPropertyProjection) {
                     result.push(item);
                 }
             });
         });
-        this.fragmentDefinitions.forEach(fragmentDef => {
+        this.fragmentDefinitions.forEach((fragmentDef) => {
             result.push(...fragmentDef.childProjection.findAllPartProjections());
         });
         return result;
@@ -31,7 +33,7 @@ export class FreEditNormalProjection extends FreEditClassifierProjection {
      */
     findAllFragmentProjections(): FreEditFragmentProjection[] {
         const result: FreEditFragmentProjection[] = this.findMainFragmentProjections();
-        this.fragmentDefinitions.forEach(fragmentDef => {
+        this.fragmentDefinitions.forEach((fragmentDef) => {
             result.push(...fragmentDef.childProjection.findAllFragmentProjections());
         });
         return result;
@@ -42,8 +44,8 @@ export class FreEditNormalProjection extends FreEditClassifierProjection {
      */
     findMainFragmentProjections(): FreEditFragmentProjection[] {
         const result: FreEditFragmentProjection[] = [];
-        this.lines.forEach(line => {
-            line.items.forEach(item => {
+        this.lines.forEach((line) => {
+            line.items.forEach((item) => {
                 if (item instanceof FreEditFragmentProjection) {
                     result.push(item);
                 }
@@ -54,8 +56,8 @@ export class FreEditNormalProjection extends FreEditClassifierProjection {
 
     findAllExternals(): FreEditExternalInfo[] {
         const result: FreEditExternalInfo[] = [];
-        this.lines.forEach(line => {
-            line.items.forEach(item => {
+        this.lines.forEach((line) => {
+            line.items.forEach((item) => {
                 if (item instanceof FreEditPropertyProjection && !!item.externalInfo) {
                     result.push(item.externalInfo);
                 } else if (item instanceof FreEditSimpleExternal) {
@@ -70,7 +72,7 @@ export class FreEditNormalProjection extends FreEditClassifierProjection {
     toString() {
         return `${this.classifier?.name ? `${this.classifier?.name}` : ``} {
         [ // #lines: ${this.lines.length}
-        ${this.lines.map(line => line.toString()).join("\n")}
+        ${this.lines.map((line) => line.toString()).join("\n")}
         ]}`;
     }
 }

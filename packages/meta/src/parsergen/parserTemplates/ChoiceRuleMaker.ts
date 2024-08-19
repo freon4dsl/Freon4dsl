@@ -12,7 +12,7 @@ export class ChoiceRuleMaker {
     // for interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
     // that either implement or extend the concept
     // because limited concepts can only be used as reference, these are excluded for this choice
-    generateChoiceRules(interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]> ): GrammarRule[] {
+    generateChoiceRules(interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]>): GrammarRule[] {
         const rules: GrammarRule[] = [];
         for (const [freClassifier, subs] of interfacesAndAbstractsUsed) {
             const branchName = Names.classifier(freClassifier);
@@ -24,7 +24,7 @@ export class ChoiceRuleMaker {
         return rules;
     }
 
-    generateSuperRules(conceptsWithSubs: Map<FreMetaConcept, FreMetaClassifier[]> ): GrammarRule[] {
+    generateSuperRules(conceptsWithSubs: Map<FreMetaConcept, FreMetaClassifier[]>): GrammarRule[] {
         const rules: GrammarRule[] = [];
         for (const [freConcept, subs] of conceptsWithSubs) {
             // make a special rule that is a choice between all subs and 'freClassifier' itself
@@ -51,7 +51,7 @@ export class ChoiceRuleMaker {
         const result: FreMetaClassifier[] = [];
         const withPrims: FreMetaClassifier[] = [];
         for (const concept of implementors) {
-            if (concept.primProperties.length > 0 ) {
+            if (concept.primProperties.length > 0) {
                 // there are primitive props, move this implementor to the end
                 withPrims.push(concept);
             } else {

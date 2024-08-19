@@ -27,4 +27,8 @@ export abstract class AbstractPropertyWrapperBox extends AbstractExternalBox {
     get childBox(): Box {
         return this._childBox;
     }
+
+    get children(): ReadonlyArray<Box> {
+        return [this._childBox] as ReadonlyArray<Box>;
+    }
 }

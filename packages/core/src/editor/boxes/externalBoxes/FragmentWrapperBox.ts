@@ -30,6 +30,10 @@ export class FragmentWrapperBox extends AbstractExternalBox {
     get childBox(): Box {
         return this._childBox;
     }
+
+    get children(): ReadonlyArray<Box> {
+        return [this._childBox] as ReadonlyArray<Box>;
+    }
 }
 
 export function isFragmentWrapperBox(b: Box): b is FragmentWrapperBox {

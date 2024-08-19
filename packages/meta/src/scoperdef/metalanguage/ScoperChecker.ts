@@ -3,7 +3,7 @@ import {
     FreMetaConcept,
     FreMetaLanguage,
     FreMetaProperty,
-    FreMetaClassifier
+    FreMetaClassifier,
 } from "../../languagedef/metalanguage/index.js";
 import { FreAlternativeScope, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang.js";
 import { LangUtil, MetaLogger } from "../../utils/index.js";
@@ -33,7 +33,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
 
     public check(definition: ScopeDef): void {
         LOGGER.log("Checking scope definition " + definition.scoperName);
-        if ( this.language === null || this.language === undefined ) {
+        if (this.language === null || this.language === undefined) {
             throw new Error(`Scoper definition checker does not known the language.`);
         }
         this.runner = new CheckRunner(this.errors, this.warnings);
@@ -41,7 +41,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
         this.myNamespaces = this.findAllNamespaces(definition.namespaces);
 
-        definition.scopeConceptDefs.forEach(def => {
+        definition.scopeConceptDefs.forEach((def) => {
             if (!!def.conceptRef) {
                 CommonChecker.checkClassifierReference(def.conceptRef, this.runner);
                 if (!!def.conceptRef.referred) {
@@ -66,22 +66,26 @@ export class ScoperChecker extends Checker<ScopeDef> {
             error: `Cannot add namespaces to concept ${enclosingConcept.name} that is not a namespace itself ${ParseLocationUtil.location(namespaceAddition)}.`,
             whenOk: () => {
                 if (!!this.myExpressionChecker) {
-                    namespaceAddition.expressions.forEach(exp => {
+                    namespaceAddition.expressions.forEach((exp) => {
                         this.myExpressionChecker!.checkLangExp(exp, enclosingConcept);
                         const xx: FreMetaProperty | undefined = exp.findRefOfLastAppliedFeature();
                         if (!!xx) {
                             this.runner.nestedCheck({
-                                check: (!!xx.type && (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription)),
+                                check:
+                                    !!xx.type &&
+                                    (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription),
                                 error: `A namespace addition should refer to a concept ${ParseLocationUtil.location(exp)}.`,
                                 whenOk: () => {
-                                    this.runner.simpleCheck(this.myNamespaces.includes(xx.type),
-                                        `A namespace addition should refer to a namespace concept ${ParseLocationUtil.location(exp)}.`);
-                                }
+                                    this.runner.simpleCheck(
+                                        this.myNamespaces.includes(xx.type),
+                                        `A namespace addition should refer to a namespace concept ${ParseLocationUtil.location(exp)}.`,
+                                    );
+                                },
                             });
                         }
                     });
                 }
-            }
+            },
         });
     }
 
@@ -94,10 +98,11 @@ export class ScoperChecker extends Checker<ScopeDef> {
 
     private findAllNamespaces(namespaces: MetaElementReference<FreMetaClassifier>[]): FreMetaClassifier[] {
         let result: FreMetaClassifier[] = [];
-        namespaces.forEach(ref => {
+        namespaces.forEach((ref) => {
             CommonChecker.checkClassifierReference(ref, this.runner);
             const myClassifier = ref.referred;
-            if (!!myClassifier) { // error message handled by checkClassifierReference()
+            if (!!myClassifier) {
+                // error message handled by checkClassifierReference()
                 result = result.concat(LangUtil.findAllImplementorsAndSubs(myClassifier));
             }
         });

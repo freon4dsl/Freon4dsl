@@ -8,7 +8,6 @@
     color: darkblue;
     background-color: white;
     --md-sys-color-primary: darkblue;
-
 }
 
 .label-component:empty:before {
@@ -97,7 +96,7 @@
 /* Button style */
 .button-component {
     box-shadow: 2px 2px 4px cornflowerblue;
-    background-color: darkblue; 
+    background-color: darkblue;
     color: whitesmoke;
 }
 
@@ -180,7 +179,7 @@
 }
 
 .dropdown-component-error {
-    color:red;
+    color: red;
     /*background-color: var(--freon-dropdownitem-component-error-bg-color, red);*/
 }
 
@@ -201,8 +200,8 @@
     color: darkblue;
 }
 
-[role='switch'][aria-checked='true'] :first-child,
-[role='switch'][aria-checked='false'] :last-child {
+[role="switch"][aria-checked="true"] :first-child,
+[role="switch"][aria-checked="false"] :last-child {
     color: white;
     background-color: darkblue;
 }
@@ -244,15 +243,16 @@
     background: lightgray;
 }
 
-.switch-component button::before { /* defines the knob */
+.switch-component button::before {
+    /* defines the knob */
     background: darkblue;
 }
 
-.switch-component button[aria-checked='true']{
+.switch-component button[aria-checked="true"] {
     background-color: darkgray;
 }
 
-.switch-component button[aria-checked='true']::before{
+.switch-component button[aria-checked="true"]::before {
 }
 
 .switch-component button:hover,

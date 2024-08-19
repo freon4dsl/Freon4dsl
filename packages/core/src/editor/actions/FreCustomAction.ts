@@ -6,7 +6,6 @@ import { FreCommand, FreCustomCommand } from "./FreCommand";
 // const LOGGER = new FreLogger("FreCustomAction");
 
 export class FreCustomAction extends FreAction {
-
     static create(initializer?: Partial<FreCustomAction>) {
         const result = new FreCustomAction();
         FreUtils.initializeObject(result, initializer);

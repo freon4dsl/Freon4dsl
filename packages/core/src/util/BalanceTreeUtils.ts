@@ -30,13 +30,12 @@ export type Selected = {
  * Class with functions to balance binary trees according to their priorities.
  */
 class BTree {
-
     constructor() {
         makeObservable(this, {
-           balanceTree: action,
-           setLeftExpression: action,
-           setRightExpression: action,
-           insertBinaryExpression: action
+            balanceTree: action,
+            setLeftExpression: action,
+            setRightExpression: action,
+            insertBinaryExpression: action,
         });
     }
     /**
@@ -108,7 +107,10 @@ class BTree {
     insertBinaryExpression(newBinExp: FreBinaryExpression, box: Box, editor: FreEditor): Selected | null {
         LOGGER.log("insertBinaryExpression for " + box.node);
         let selectedElement: Selected | null = null;
-        FreUtils.CHECK(isFreExpression(box.node), "insertBinaryExpression: current element should be a FreExpressionNode, but it isn't");
+        FreUtils.CHECK(
+            isFreExpression(box.node),
+            "insertBinaryExpression: current element should be a FreExpressionNode, but it isn't",
+        );
         const exp = box.node as FreExpressionNode;
         switch (box.role) {
             case LEFT_MOST:

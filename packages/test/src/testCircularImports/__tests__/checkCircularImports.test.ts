@@ -1,5 +1,5 @@
 import { ConceptA } from "../language/gen/internal";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 describe("Checking circular imports", () => {
     let concept1 = ConceptA.create({
@@ -8,7 +8,7 @@ describe("Checking circular imports", () => {
         conceptProp3: 120117,
         conceptProp4: [151012, 260888],
         conceptProp5: true,
-        conceptProp6: [true, false]
+        conceptProp6: [true, false],
     });
 
     test("does not matter what we test, it fails when imports are circular", () => {

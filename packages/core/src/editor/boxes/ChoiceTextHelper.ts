@@ -1,7 +1,7 @@
-import { TextBox } from "./TextBox.js"
+import { TextBox } from "./TextBox.js";
 
 export class ChoiceTextHelper {
-    box: TextBox
+    box: TextBox;
     $text: string = "";
 
     getText(): string {
@@ -9,6 +9,6 @@ export class ChoiceTextHelper {
     }
     setText(v: string): void {
         this.$text = v;
-        this.box?.isDirty()
+        this.box?.isDirty();
     }
 }

@@ -9,8 +9,7 @@ export class GeneratedClassExtensions implements IGeneratedClassExtensions {
     }
 
     customProp: string;
-    customMethod() {
-    }
+    customMethod() {}
 }
 //
 // export default GeneratedClass;

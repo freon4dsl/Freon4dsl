@@ -6,7 +6,7 @@ import {
     FreMetaClassifier,
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
-    FreMetaProperty
+    FreMetaProperty,
 } from "../../languagedef/metalanguage/index.js";
 import {
     FreEditExtraClassifierInfo,
@@ -23,9 +23,9 @@ import {
     FreEditGlobalProjection,
     DisplayType,
     ForType,
-    EditorDefaults
+    EditorDefaults,
 } from "../metalanguage/index.js";
-import {LOG2USER, Names} from "../../utils/index.js";
+import { LOG2USER, Names } from "../../utils/index.js";
 
 export class DefaultEditorGenerator {
     private static interfacesUsed: FreMetaInterface[] = []; // holds all interfaces that are used as type of a property
@@ -48,7 +48,7 @@ export class DefaultEditorGenerator {
     public static addDefaults(editor: FreEditUnit): void {
         // console.log("adding defaults: " + editor.projectiongroups.map(p => p.name).join(", "))
         if (editor.language === undefined || editor.language === null) {
-            LOG2USER.error("Cannot generate default editor, because language is unknown.")
+            LOG2USER.error("Cannot generate default editor, because language is unknown.");
             return;
         }
         // initialize
@@ -85,7 +85,11 @@ export class DefaultEditorGenerator {
         DefaultEditorGenerator.defaultsForInterfaces(editor.language, defaultGroup);
 
         // add defaults for classifiers that are used within a super projection, iff not already present
-        DefaultEditorGenerator.defaultsForSupers(editor.language, defaultGroup, editor.classifiersUsedInSuperProjection);
+        DefaultEditorGenerator.defaultsForSupers(
+            editor.language,
+            defaultGroup,
+            editor.classifiersUsedInSuperProjection,
+        );
     }
 
     private static defaultsForGlobalProjections(defaultGroup: FreEditProjectionGroup) {
@@ -137,22 +141,27 @@ export class DefaultEditorGenerator {
     }
 
     private static defaultsForBinaryExpressions(language: FreMetaLanguage, defaultGroup: FreEditProjectionGroup) {
-        for (const binConcept of language.concepts.filter(c => c instanceof FreMetaBinaryExpressionConcept)) {
+        for (const binConcept of language.concepts.filter((c) => c instanceof FreMetaBinaryExpressionConcept)) {
             DefaultEditorGenerator.addExtraDefaults(defaultGroup, binConcept, language);
         }
     }
 
     private static defaultsForOrdinaryClassifiers(language: FreMetaLanguage, defaultGroup: FreEditProjectionGroup) {
-        const classifiersToDo: FreMetaClassifier[] = language.concepts
-            .filter(c => !(c instanceof FreMetaLimitedConcept || c instanceof FreMetaBinaryExpressionConcept || c.isAbstract));
+        const classifiersToDo: FreMetaClassifier[] = language.concepts.filter(
+            (c) => !(c instanceof FreMetaLimitedConcept || c instanceof FreMetaBinaryExpressionConcept || c.isAbstract),
+        );
         // console.log("classifiersToDo: " + classifiersToDo.map(c => c.name).join(', '))
         for (const con of classifiersToDo) {
             // Find or create the projection, and its properties
-            const foundProjection: FreEditClassifierProjection | undefined = defaultGroup.findNonTableProjectionForType(con);
+            const foundProjection: FreEditClassifierProjection | undefined =
+                defaultGroup.findNonTableProjectionForType(con);
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);
-                const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(con, language);
+                const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(
+                    con,
+                    language,
+                );
                 defaultGroup.projections.push(projection);
             }
             // find or create the extra info
@@ -167,21 +176,33 @@ export class DefaultEditorGenerator {
         // console.log("defaultsForInterfaces done ");
     }
 
-    private static createClassifierDefault(defaultGroup: FreEditProjectionGroup, con: FreMetaClassifier, language: FreMetaLanguage) {
+    private static createClassifierDefault(
+        defaultGroup: FreEditProjectionGroup,
+        con: FreMetaClassifier,
+        language: FreMetaLanguage,
+    ) {
         // Find or create the projection, and its properties
-        const foundProjection: FreEditClassifierProjection | undefined = defaultGroup.findNonTableProjectionForType(con);
+        const foundProjection: FreEditClassifierProjection | undefined =
+            defaultGroup.findNonTableProjectionForType(con);
 
         if (!foundProjection) {
             // create a new projection
             // console.log("Adding default projection for " + con.name);
-            const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(con, language);
+            const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(
+                con,
+                language,
+            );
             defaultGroup.projections.push(projection);
         }
         // find or create the extra info
         DefaultEditorGenerator.addExtraDefaults(defaultGroup, con, language);
     }
 
-    private static defaultsForSupers(language: FreMetaLanguage, defaultGroup: FreEditProjectionGroup, classifiersUsedInSuperProjection: string[]) {
+    private static defaultsForSupers(
+        language: FreMetaLanguage,
+        defaultGroup: FreEditProjectionGroup,
+        classifiersUsedInSuperProjection: string[],
+    ) {
         for (const clsName of classifiersUsedInSuperProjection) {
             const con: FreMetaClassifier | undefined = language.findClassifier(clsName);
             if (con !== null || con !== undefined) {
@@ -191,7 +212,10 @@ export class DefaultEditorGenerator {
         // console.log("defaultsForSupers done ");
     }
 
-    private static defaultClassifierProjection(con: FreMetaClassifier, language: FreMetaLanguage): FreEditNormalProjection {
+    private static defaultClassifierProjection(
+        con: FreMetaClassifier,
+        language: FreMetaLanguage,
+    ): FreEditNormalProjection {
         const projection = new FreEditNormalProjection();
         projection.name = Names.defaultProjectionName;
         projection.classifier = MetaElementReference.create<FreMetaClassifier>(con.name, "FreClassifier");
@@ -210,7 +234,7 @@ export class DefaultEditorGenerator {
         startLine.items.push(FreEditProjectionText.create(EditorDefaults.startBracket)); // start bracket
         projection.lines.push(startLine);
         // add all properties on the next lines
-        for (const prop of con.allProperties().filter((p => p !== nameProp))) {
+        for (const prop of con.allProperties().filter((p) => p !== nameProp)) {
             // add the type if it is an interface to the list to be generated later
             const propType = prop.type;
             if (propType instanceof FreMetaInterface) {
@@ -223,7 +247,8 @@ export class DefaultEditorGenerator {
                 DefaultEditorGenerator.defaultOptionalListProperty(con, prop, projection);
             } else if (!prop.isList && !prop.isOptional) {
                 DefaultEditorGenerator.defaultSingleProperty(con, prop, projection);
-            } else { // prop.isList && prop.isOptional
+            } else {
+                // prop.isList && prop.isOptional
                 DefaultEditorGenerator.defaultOptionalSingleProperty(con, prop, projection);
             }
         }
@@ -234,7 +259,11 @@ export class DefaultEditorGenerator {
         return projection;
     }
 
-    private static defaultSingleProperty(concept: FreMetaClassifier, prop: FreMetaProperty, projection: FreEditNormalProjection | FreOptionalPropertyProjection): void {
+    private static defaultSingleProperty(
+        concept: FreMetaClassifier,
+        prop: FreMetaProperty,
+        projection: FreEditNormalProjection | FreOptionalPropertyProjection,
+    ): void {
         const line = new FreEditProjectionLine();
         line.indent = EditorDefaults.globalIndent;
         line.items.push(FreEditProjectionText.create(prop.name));
@@ -245,7 +274,11 @@ export class DefaultEditorGenerator {
         projection.lines.push(line);
     }
 
-    private static defaultOptionalSingleProperty(concept: FreMetaClassifier, prop: FreMetaProperty, projection: FreEditNormalProjection): void {
+    private static defaultOptionalSingleProperty(
+        concept: FreMetaClassifier,
+        prop: FreMetaProperty,
+        projection: FreEditNormalProjection,
+    ): void {
         const line = new FreEditProjectionLine();
         const optional = new FreOptionalPropertyProjection();
         optional.property = MetaElementReference.create<FreMetaProperty>(prop, "FreProperty");
@@ -255,7 +288,11 @@ export class DefaultEditorGenerator {
         projection.lines.push(line);
     }
 
-    private static defaultListProperty(concept: FreMetaClassifier, prop: FreMetaProperty, projection: FreEditNormalProjection | FreOptionalPropertyProjection): void {
+    private static defaultListProperty(
+        concept: FreMetaClassifier,
+        prop: FreMetaProperty,
+        projection: FreEditNormalProjection | FreOptionalPropertyProjection,
+    ): void {
         // every list is projected as two lines
         // the first shows the property name
         const line1 = new FreEditProjectionLine();
@@ -268,7 +305,7 @@ export class DefaultEditorGenerator {
         const sub = new FreEditPropertyProjection();
         sub.property = MetaElementReference.create<FreMetaProperty>(prop, "FreProperty");
         sub.property.owner = concept.language;
-        sub.listInfo = new FreEditListInfo();  // listInfo gets default values on initialization, but we change them here
+        sub.listInfo = new FreEditListInfo(); // listInfo gets default values on initialization, but we change them here
         sub.listInfo.joinType = EditorDefaults.listJoinType;
         sub.listInfo.joinText = EditorDefaults.listJoinText;
         line2.items.push(sub);
@@ -277,7 +314,11 @@ export class DefaultEditorGenerator {
         projection.lines.push(line2);
     }
 
-    private static defaultOptionalListProperty(concept: FreMetaClassifier, prop: FreMetaProperty, projection: FreEditNormalProjection): void {
+    private static defaultOptionalListProperty(
+        concept: FreMetaClassifier,
+        prop: FreMetaProperty,
+        projection: FreEditNormalProjection,
+    ): void {
         const line = new FreEditProjectionLine();
         const optional = new FreOptionalPropertyProjection();
         optional.property = MetaElementReference.create<FreMetaProperty>(prop, "FreProperty");
@@ -287,7 +328,11 @@ export class DefaultEditorGenerator {
         projection.lines.push(line);
     }
 
-    private static addExtraDefaults(defaultGroup: FreEditProjectionGroup, con: FreMetaClassifier, language: FreMetaLanguage) {
+    private static addExtraDefaults(
+        defaultGroup: FreEditProjectionGroup,
+        con: FreMetaClassifier,
+        language: FreMetaLanguage,
+    ) {
         const foundExtraInfo: FreEditExtraClassifierInfo | undefined = defaultGroup.findExtrasForType(con);
         if (!foundExtraInfo) {
             const extraInfo = new FreEditExtraClassifierInfo();
@@ -304,7 +349,8 @@ export class DefaultEditorGenerator {
     private static addExtras(foundExtraInfo: FreEditExtraClassifierInfo, con: FreMetaClassifier) {
         // default for referenceShortcut is not needed
         if (!foundExtraInfo.trigger) {
-            if (!!foundExtraInfo.symbol) { // if there is a symbol defined then the trigger is equal to the symbol
+            if (!!foundExtraInfo.symbol) {
+                // if there is a symbol defined then the trigger is equal to the symbol
                 foundExtraInfo.trigger = foundExtraInfo.symbol;
             } else {
                 foundExtraInfo.trigger = Names.classifier(con);
@@ -324,7 +370,10 @@ export class DefaultEditorGenerator {
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);
-                const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(con, language);
+                const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(
+                    con,
+                    language,
+                );
                 defaultGroup.projections.push(projection);
             }
         }

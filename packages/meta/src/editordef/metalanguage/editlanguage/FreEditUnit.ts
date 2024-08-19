@@ -1,6 +1,11 @@
 import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { Names, FreMetaDefinitionElement } from "../../../utils/index.js";
-import {FreEditProjectionGroup, FreEditClassifierProjection, FreEditTableProjection, FreEditExtraClassifierInfo} from "./internal.js";
+import {
+    FreEditProjectionGroup,
+    FreEditClassifierProjection,
+    FreEditTableProjection,
+    FreEditExtraClassifierInfo,
+} from "./internal.js";
 
 /**
  * The root of the complete editor definition
@@ -11,7 +16,7 @@ export class FreEditUnit extends FreMetaDefinitionElement {
     classifiersUsedInSuperProjection: string[] = []; // holds the names of all classifiers that are refered in an FreEditSuperProjection
 
     getDefaultProjectiongroup(): FreEditProjectionGroup | undefined {
-        return this.projectiongroups.find(group => group.name === Names.defaultProjectionName);
+        return this.projectiongroups.find((group) => group.name === Names.defaultProjectionName);
     }
 
     /**
@@ -19,8 +24,10 @@ export class FreEditUnit extends FreMetaDefinitionElement {
      * Lowest precedence first!
      */
     getAllNonDefaultProjectiongroups(): FreEditProjectionGroup[] {
-        const result: FreEditProjectionGroup[] = this.projectiongroups.filter((group: FreEditProjectionGroup): boolean => group.name !== Names.defaultProjectionName);
-        result.sort ( (a: FreEditProjectionGroup, b: FreEditProjectionGroup): number => {
+        const result: FreEditProjectionGroup[] = this.projectiongroups.filter(
+            (group: FreEditProjectionGroup): boolean => group.name !== Names.defaultProjectionName,
+        );
+        result.sort((a: FreEditProjectionGroup, b: FreEditProjectionGroup): number => {
             if (a.precedence !== undefined && b.precedence !== undefined) {
                 return a.precedence - b.precedence;
             } else {
@@ -61,7 +68,7 @@ export class FreEditUnit extends FreMetaDefinitionElement {
     }
 
     toString(): string {
-        return `${this.projectiongroups.map(pr => pr.toString()). join("\n")}`;
+        return `${this.projectiongroups.map((pr) => pr.toString()).join("\n")}`;
     }
 
     findExtrasForType(cls: FreMetaClassifier): FreEditExtraClassifierInfo | undefined {

@@ -9,7 +9,6 @@ import { FreCommand, FreCreateBinaryExpressionCommand } from "./FreCommand";
 // const LOGGER = new FreLogger("FreCreateBinaryExpressionAction");
 
 export class FreCreateBinaryExpressionAction extends FreAction {
-
     static create(initializer?: Partial<FreCreateBinaryExpressionAction>): FreCreateBinaryExpressionAction {
         const result = new FreCreateBinaryExpressionAction();
         FreUtils.initializeObject(result, initializer);
@@ -27,5 +26,4 @@ export class FreCreateBinaryExpressionAction extends FreAction {
     command(): FreCommand {
         return new FreCreateBinaryExpressionCommand(this.expressionBuilder);
     }
-
 }

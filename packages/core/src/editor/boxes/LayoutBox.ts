@@ -6,7 +6,7 @@ import { FreLogger } from "../../logging";
 const LOGGER: FreLogger = new FreLogger("LayoutBox");
 export enum ListDirection {
     HORIZONTAL = "Horizontal",
-    VERTICAL = "Vertical"
+    VERTICAL = "Vertical",
 }
 
 export abstract class LayoutBox extends Box {
@@ -18,7 +18,7 @@ export abstract class LayoutBox extends Box {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
-            children.forEach(b => this.addChildNoDirty(b));
+            children.forEach((b) => this.addChildNoDirty(b));
         }
         this.selectable = false;
     }
@@ -37,15 +37,16 @@ export abstract class LayoutBox extends Box {
         return this;
     }
 
-    get children(): ReadonlyArray<Box> { // TODO Jos: why the ReadOnlyArray?
+    get children(): ReadonlyArray<Box> {
+        // TODO Jos: why the ReadOnlyArray?
         return this._children as ReadonlyArray<Box>;
     }
 
     replaceChildren(children: Box[]): LayoutBox {
-        this._children.forEach(ch => ch.parent = null);
+        this._children.forEach((ch) => (ch.parent = null));
         this._children.splice(0, this._children.length);
         if (!!children) {
-            children.forEach(child => {
+            children.forEach((child) => {
                 if (!!child) {
                     this._children.push(child);
                     child.parent = this;
@@ -58,7 +59,7 @@ export abstract class LayoutBox extends Box {
     }
 
     clearChildren(): void {
-        const dirty = (this._children.length !== 0);
+        const dirty = this._children.length !== 0;
         this._children.splice(0, this._children.length);
         if (dirty) {
             LOGGER.log("Layout clearChildren dirty " + this.role);
@@ -88,7 +89,7 @@ export abstract class LayoutBox extends Box {
 
     addChildren(children?: Box[]): LayoutBox {
         if (!!children) {
-            children.forEach(child => this.addChildNoDirty(child));
+            children.forEach((child) => this.addChildNoDirty(child));
             // LOGGER.log("List addChildren dirty")
             this.isDirty();
         }
@@ -125,7 +126,6 @@ export abstract class LayoutBox extends Box {
         result += ">";
         return result;
     }
-
 }
 
 export class HorizontalLayoutBox extends LayoutBox {
@@ -155,5 +155,5 @@ export function isVerticalBox(b: Box): b is VerticalLayoutBox {
 }
 
 export function isLayoutBox(b: Box): b is LayoutBox {
-    return (b.kind === "HorizontalLayoutBox" || b.kind === "VerticalLayoutBox");
+    return b.kind === "HorizontalLayoutBox" || b.kind === "VerticalLayoutBox";
 }

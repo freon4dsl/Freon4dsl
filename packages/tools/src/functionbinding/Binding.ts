@@ -1,6 +1,4 @@
-
-
-function find<T>(n: string, prop:string, method: string): T {
+function find<T>(n: string, prop: string, method: string): T {
     for (const lang of this[prop]) {
         const result = lang[method]();
         if (result !== undefined) {
@@ -9,7 +7,7 @@ function find<T>(n: string, prop:string, method: string): T {
     }
     return undefined;
 }
-function find2<T, L>(n: string, list:L[], method: string): T {
+function find2<T, L>(n: string, list: L[], method: string): T {
     for (const lang of list) {
         const result = lang[method]() as T;
         if (result !== undefined) {
@@ -18,7 +16,7 @@ function find2<T, L>(n: string, list:L[], method: string): T {
     }
     return undefined;
 }
-function findSimple<T, L>(list:L[], method: (l: L) => T): T {
+function findSimple<T, L>(list: L[], method: (l: L) => T): T {
     for (const lang of list) {
         const result = method(lang);
         if (result !== undefined) {
@@ -27,7 +25,7 @@ function findSimple<T, L>(list:L[], method: (l: L) => T): T {
     }
     return undefined;
 }
-function findSimple2<T, L>(list:L[], method: () => T): T {
+function findSimple2<T, L>(list: L[], method: () => T): T {
     for (const lang of list) {
         const func: () => T = method.bind(lang);
         const result = func();
@@ -37,7 +35,7 @@ function findSimple2<T, L>(list:L[], method: () => T): T {
     }
     return undefined;
 }
-function findComplex<T, L>(par: string, list:L[], method: (l: L, s: string) => T): T {
+function findComplex<T, L>(par: string, list: L[], method: (l: L, s: string) => T): T {
     for (const lang of list) {
         const result = method(lang, par);
         if (result !== undefined) {
@@ -59,7 +57,6 @@ class Child {
     findSub(n: string): Sub {
         return this.subs.get(n);
     }
-    
 }
 
 class Sub {
@@ -79,8 +76,10 @@ class Generic {
 
     findSub(n: string): Sub {
         // return findComplex<Sub, Child>(n, this.children, (l: Child, s: string) => { return l.findSub(s)});
-        return this.lfindComplex<Sub>(n, (l: Child, s: string) => { return l.findSub(s)});
-        return this.lfindComplex2<Sub>(n,"findSub");
+        return this.lfindComplex<Sub>(n, (l: Child, s: string) => {
+            return l.findSub(s);
+        });
+        return this.lfindComplex2<Sub>(n, "findSub");
     }
 
     lfindComplex<T>(par: string, method: (l: Child, s: string) => T): T {
@@ -93,20 +92,19 @@ class Generic {
         return undefined;
     }
     lfindComplex2<T>(par: string, method: string): T {
-            for (const lang of this.children) {
-                // check whether `method` is a function, no way to test the number of parameters.
-                if (typeof lang[method] !== "function") {
-                    console.error(method + " is not a function");
-                    return undefined;
-                }
-                const result = lang[method](par);
-                if (result !== undefined) {
-                    return result;
-                }
+        for (const lang of this.children) {
+            // check whether `method` is a function, no way to test the number of parameters.
+            if (typeof lang[method] !== "function") {
+                console.error(method + " is not a function");
+                return undefined;
             }
-            return undefined;
+            const result = lang[method](par);
+            if (result !== undefined) {
+                return result;
+            }
+        }
+        return undefined;
     }
-
 }
 
 const g = new Generic();

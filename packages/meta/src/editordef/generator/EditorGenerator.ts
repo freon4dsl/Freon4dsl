@@ -1,6 +1,11 @@
 import * as fs from "fs";
 import { ListUtil, MetaLogger } from "../../utils/index.js";
-import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
+} from "../../languagedef/metalanguage/index.js";
 import {
     EDITOR_FOLDER,
     EDITOR_GEN_FOLDER,
@@ -8,7 +13,7 @@ import {
     FileUtil,
     isNullOrUndefined,
     Names,
-    STYLES_FOLDER
+    STYLES_FOLDER,
 } from "../../utils/index.js";
 import { FreEditUnit } from "../metalanguage/index.js";
 import { ActionsTemplate, EditorIndexTemplate, BoxProviderTemplate } from "./templates/index.js";
@@ -20,9 +25,9 @@ const LOGGER = new MetaLogger("EditorGenerator").mute();
 
 export class EditorGenerator {
     public outputfolder: string = ".";
-    protected editorGenFolder: string = '';
-    protected editorFolder: string = '';
-    protected stylesFolder: string = '';
+    protected editorGenFolder: string = "";
+    protected editorFolder: string = "";
+    protected stylesFolder: string = "";
     language?: FreMetaLanguage;
 
     generate(editDef: FreEditUnit): void {
@@ -39,8 +44,8 @@ export class EditorGenerator {
         LOGGER.log("Generating editor in folder " + this.editorGenFolder + " for language " + this.language?.name);
 
         const generationStatus: GenerationStatus = new GenerationStatus();
-        const defaultActions:DefaultActionsTemplate = new DefaultActionsTemplate();
-        const customActions:CustomActionsTemplate = new CustomActionsTemplate();
+        const defaultActions: DefaultActionsTemplate = new DefaultActionsTemplate();
+        const customActions: CustomActionsTemplate = new CustomActionsTemplate();
         const actions: ActionsTemplate = new ActionsTemplate();
         const projection: BoxProviderTemplate = new BoxProviderTemplate(editDef);
         const customProjectiontemplate: CustomProjectionTemplate = new CustomProjectionTemplate();
@@ -49,8 +54,8 @@ export class EditorGenerator {
         const editorDefTemplate: EditorDefTemplate = new EditorDefTemplate();
 
         // Prepare folders
-        FileUtil.createDirIfNotExisting(this.editorFolder);  // will not be overwritten
-        FileUtil.createDirIfNotExisting(this.stylesFolder);  // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.editorFolder); // will not be overwritten
+        FileUtil.createDirIfNotExisting(this.stylesFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.editorGenFolder);
         FileUtil.deleteFilesInDir(this.editorGenFolder, generationStatus);
 
@@ -60,30 +65,40 @@ export class EditorGenerator {
         // During generation, we may conclude that extra box providers classes need to be generated.
         // We keep the classifiers for which this is necessary in the list 'extraClassifiers'.
         let extraClassifiers: FreMetaClassifier[] = [];
-        this.language.concepts.forEach(concept => {
+        this.language.concepts.forEach((concept) => {
             if (!(concept instanceof FreMetaLimitedConcept) && !concept.isAbstract) {
-                const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language!, concept, editDef, extraClassifiers, relativePath),
-                    "Box provider " + concept.name, generationStatus);
+                const projectionfile = FileUtil.pretty(
+                    projection.generateBoxProvider(this.language!, concept, editDef, extraClassifiers, relativePath),
+                    "Box provider " + concept.name,
+                    generationStatus,
+                );
                 fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
             }
         });
 
-        this.language.units.forEach(concept => {
-            const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language!, concept, editDef, extraClassifiers, relativePath),
-                "Box provider " + concept.name, generationStatus);
+        this.language.units.forEach((concept) => {
+            const projectionfile = FileUtil.pretty(
+                projection.generateBoxProvider(this.language!, concept, editDef, extraClassifiers, relativePath),
+                "Box provider " + concept.name,
+                generationStatus,
+            );
             fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
         });
 
         const allExtraClassifiers: FreMetaClassifier[] = []; // remember these in order to add them to the index file
         ListUtil.addListIfNotPresent(allExtraClassifiers, extraClassifiers);
-        while (extraClassifiers.length > 0) { // super projections may call other super projections, make sure every one has a BoxProvider
+        while (extraClassifiers.length > 0) {
+            // super projections may call other super projections, make sure every one has a BoxProvider
             const newExtraClassifiers: FreMetaClassifier[] = [];
-            extraClassifiers.forEach(cls => {
+            extraClassifiers.forEach((cls) => {
                 if (cls instanceof FreMetaConcept && !cls.isAbstract) {
                     // do nothing, already generated
                 } else {
-                    const projectionfile = FileUtil.pretty(projection.generateBoxProvider(this.language!, cls, editDef, newExtraClassifiers, relativePath),
-                        "Box provider " + cls.name, generationStatus);
+                    const projectionfile = FileUtil.pretty(
+                        projection.generateBoxProvider(this.language!, cls, editDef, newExtraClassifiers, relativePath),
+                        "Box provider " + cls.name,
+                        generationStatus,
+                    );
                     fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(cls)}.ts`, projectionfile);
                 }
             });
@@ -93,11 +108,19 @@ export class EditorGenerator {
 
         // Generate the actions
         LOGGER.log(`Generating actions default: ${this.editorGenFolder}/${Names.defaultActions(this.language!)}.ts`);
-        const defaultActionsFile = FileUtil.pretty(defaultActions.generate(this.language!, editDef, relativePath), "DefaultActions", generationStatus);
+        const defaultActionsFile = FileUtil.pretty(
+            defaultActions.generate(this.language!, editDef, relativePath),
+            "DefaultActions",
+            generationStatus,
+        );
         fs.writeFileSync(`${this.editorGenFolder}/${Names.defaultActions(this.language!)}.ts`, defaultActionsFile);
 
         LOGGER.log(`Generating editor language definition: ${this.editorGenFolder}/index.ts`);
-        const editorDefFile = FileUtil.pretty(editorDefTemplate.generateEditorDef(this.language!, editDef, relativePath), "Editor Definition", generationStatus);
+        const editorDefFile = FileUtil.pretty(
+            editorDefTemplate.generateEditorDef(this.language!, editDef, relativePath),
+            "Editor Definition",
+            generationStatus,
+        );
         fs.writeFileSync(`${this.editorGenFolder}/EditorDef.ts`, editorDefFile);
 
         // the following do not need the relativePath for imports
@@ -106,24 +129,47 @@ export class EditorGenerator {
         fs.writeFileSync(`${this.editorGenFolder}/${Names.actions(this.language!)}.ts`, actionsFile);
 
         LOGGER.log(`Generating custom actions: ${this.editorFolder}${Names.customActions(this.language!)}.ts`);
-        const customActionsFile = FileUtil.pretty(customActions.generate(this.language!), "CustomActions", generationStatus);
-        FileUtil.generateManualFile(`${this.editorFolder}/${Names.customActions(this.language!)}.ts`, customActionsFile, "CustomActions");
+        const customActionsFile = FileUtil.pretty(
+            customActions.generate(this.language!),
+            "CustomActions",
+            generationStatus,
+        );
+        FileUtil.generateManualFile(
+            `${this.editorFolder}/${Names.customActions(this.language!)}.ts`,
+            customActionsFile,
+            "CustomActions",
+        );
 
         LOGGER.log(`Generating custom projection: ${this.editorFolder}${Names.customProjection(this.language!)}.ts`);
-        const customProjectionFile = FileUtil.pretty(customProjectiontemplate.generate(this.language!), "Custom Projection", generationStatus);
-        FileUtil.generateManualFile(`${this.editorFolder}/${Names.customProjection(this.language!)}.ts`, customProjectionFile, "Custom Projection");
+        const customProjectionFile = FileUtil.pretty(
+            customProjectiontemplate.generate(this.language!),
+            "Custom Projection",
+            generationStatus,
+        );
+        FileUtil.generateManualFile(
+            `${this.editorFolder}/${Names.customProjection(this.language!)}.ts`,
+            customProjectionFile,
+            "Custom Projection",
+        );
 
         // LOGGER.log(`Generating editor styles: ${this.stylesFolder}/CustomStyles.ts`);
         // const editorStylesConst = FileUtil.pretty(stylesTemplate.generateConst(), "Editor Styles constant", generationStatus);
         // FileUtil.generateManualFile(`${this.stylesFolder}/CustomStyles.ts`, editorStylesConst, "Editor Styles Constant");
 
         LOGGER.log(`Generating editor gen index: ${this.editorGenFolder}/index.ts`);
-        const editorIndexGenFile = FileUtil.pretty(editorIndexTemplate.generateGenIndex(this.language!, allExtraClassifiers),
-            "Editor Gen Index", generationStatus);
+        const editorIndexGenFile = FileUtil.pretty(
+            editorIndexTemplate.generateGenIndex(this.language!, allExtraClassifiers),
+            "Editor Gen Index",
+            generationStatus,
+        );
         fs.writeFileSync(`${this.editorGenFolder}/index.ts`, editorIndexGenFile);
 
         LOGGER.log(`Generating editor index: ${this.editorFolder}/index.ts`);
-        const editorIndexFile = FileUtil.pretty(editorIndexTemplate.generateIndex(this.language!), "Editor Index", generationStatus);
+        const editorIndexFile = FileUtil.pretty(
+            editorIndexTemplate.generateIndex(this.language!),
+            "Editor Index",
+            generationStatus,
+        );
         fs.writeFileSync(`${this.editorFolder}/index.ts`, editorIndexFile);
 
         if (generationStatus.numberOfErrors > 0) {
@@ -156,10 +202,14 @@ export class EditorGenerator {
         } else {
             if (this.language !== null && this.language !== undefined) {
                 // do not delete the following files, because these may contain user edits
-                LOG2USER.info(`Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
-                    "\n\t" + `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
-                    "\n\t" + `${this.editorFolder}/index.ts` +
-                    "\n\t" + `${this.stylesFolder}/styles.ts`
+                LOG2USER.info(
+                    `Not removed: ${this.editorFolder}/${Names.customActions(this.language)}.ts` +
+                        "\n\t" +
+                        `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
+                        "\n\t" +
+                        `${this.editorFolder}/index.ts` +
+                        "\n\t" +
+                        `${this.stylesFolder}/styles.ts`,
                 );
             }
         }

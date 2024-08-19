@@ -1,7 +1,15 @@
 import * as fs from "fs";
 import { MetaLogger } from "../utils/index.js";
 import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
-import { GenerationStatus, FileUtil, Names, READER_FOLDER, READER_GEN_FOLDER, WRITER_FOLDER, WRITER_GEN_FOLDER } from "../utils/index.js";
+import {
+    GenerationStatus,
+    FileUtil,
+    Names,
+    READER_FOLDER,
+    READER_GEN_FOLDER,
+    WRITER_FOLDER,
+    WRITER_GEN_FOLDER,
+} from "../utils/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
 import net from "net.akehurst.language-agl-processor";
@@ -21,19 +29,21 @@ const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
 export class ReaderWriterGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage | undefined;
-    private writerFolder: string = '';
-    private writerGenFolder: string = '';
-    private readerFolder: string = '';
-    private readerGenFolder: string = '';
+    private writerFolder: string = "";
+    private writerGenFolder: string = "";
+    private readerFolder: string = "";
+    private readerGenFolder: string = "";
 
     generate(editDef: FreEditUnit): void {
-        if (this.language === null  || this.language === undefined) {
+        if (this.language === null || this.language === undefined) {
             LOGGER.error("Cannot generate parser and unparser because language is not set.");
             return;
         }
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
-        LOGGER.log("Generating parser and unparser in folder " + this.writerGenFolder + " for language " + this.language?.name);
+        LOGGER.log(
+            "Generating parser and unparser in folder " + this.writerGenFolder + " for language " + this.language?.name,
+        );
 
         const unparserTemplate = new WriterTemplate();
         const readerTemplate = new ReaderTemplate();
@@ -85,11 +95,11 @@ export class ReaderWriterGenerator {
         this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus);
 
         // Write the syntax analysers for each unit to file
-        grammarModel.parts.forEach(grammarPart => {
+        grammarModel.parts.forEach((grammarPart) => {
             generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
             indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}";\n`;
             const analyserContent: string = grammarPart.toMethod(this.language!, relativePath);
-            let message: string = '';
+            let message: string = "";
             if (!!grammarPart.unit) {
                 message = `syntax analyser for unit ${grammarPart.unit?.name}`;
             } else {
@@ -121,7 +131,9 @@ export class ReaderWriterGenerator {
         this.makeFile(`reader index`, generatedFilePath, indexContent, generationStatus);
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(`Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(
+                `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`,
+            );
         } else {
             LOGGER.info(`Succesfully generated reader and writer.`);
         }
@@ -131,7 +143,7 @@ export class ReaderWriterGenerator {
         try {
             // strip generated content of stuff around the grammar
             let testContent = generatedContent.replace("export const", "// export const ");
-            testContent = testContent.replace("}\`; // end of grammar", "}");
+            testContent = testContent.replace("}`; // end of grammar", "}");
             testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
             Agl.processorFromString(testContent, null, null, null);
         } catch (e: unknown) {
@@ -149,7 +161,12 @@ export class ReaderWriterGenerator {
         this.readerGenFolder = this.outputfolder + "/" + READER_GEN_FOLDER;
     }
 
-    private makeFile(generationMessage: string, generatedFilePath: string, generatedContent: string, generationStatus: GenerationStatus) {
+    private makeFile(
+        generationMessage: string,
+        generatedFilePath: string,
+        generatedContent: string,
+        generationStatus: GenerationStatus,
+    ) {
         LOGGER.log(`Generating ${generationMessage}: ${generatedFilePath}`);
         generatedContent = FileUtil.pretty(generatedContent, `${generatedFilePath}`, generationStatus);
         fs.writeFileSync(`${generatedFilePath}`, generatedContent);

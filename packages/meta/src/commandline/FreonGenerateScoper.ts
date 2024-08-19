@@ -2,7 +2,7 @@ import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator.js";
 import { ScoperParser } from "../scoperdef/parser/ScoperParser.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/MetaLogger.js";
-import {ScopeDef} from "../scoperdef/metalanguage/index.js";
+import { ScopeDef } from "../scoperdef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateScoper"); // .mute();
 export class FreonGenerateScoper extends FreonGeneratePartAction {
@@ -13,7 +13,8 @@ export class FreonGenerateScoper extends FreonGeneratePartAction {
             actionName: "scope-it",
             summary: "Generates the TypeScript code for the scoper for your language",
             documentation:
-                "Generates TypeScript code for the scoper of language defined in the .ast files. " + "The scoper definition is found in the .scope files."
+                "Generates TypeScript code for the scoper of language defined in the .ast files. " +
+                "The scoper definition is found in the .scope files.",
         });
         this.scoperGenerator = new ScoperGenerator();
     }

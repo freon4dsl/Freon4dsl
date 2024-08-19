@@ -5,7 +5,7 @@ import {
     FreLanguageInterface,
     FreLanguageProperty,
     FreLanguageModel,
-    FreLanguageModelUnit
+    FreLanguageModelUnit,
 } from "./FreLanguage";
 
 /**
@@ -138,18 +138,17 @@ export class FreLanguageRegistry {
         return undefined;
     }
     getNamedElements() {
-        const result : string[] = [];
+        const result: string[] = [];
         for (const lang of this.languages) {
             result.push(...lang.getNamedElements());
         }
         return result;
     }
     getUnitNames() {
-        const result : string[] = [];
+        const result: string[] = [];
         for (const lang of this.languages) {
             result.push(...lang.getUnitNames());
         }
         return result;
     }
 }
-

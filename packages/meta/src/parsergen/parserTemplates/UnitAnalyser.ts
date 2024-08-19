@@ -3,7 +3,7 @@ import {
     FreMetaClassifier,
     FreMetaConcept,
     FreMetaInterface,
-    FreMetaLimitedConcept
+    FreMetaLimitedConcept,
 } from "../../languagedef/metalanguage/index.js";
 import { LangUtil } from "../../utils/index.js";
 import { FreMetaPrimitiveType, FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage.js";
@@ -16,7 +16,10 @@ export class UnitAnalyser implements FreAnalyser {
     // all binary concepts used in this unit
     binaryConceptsUsed: FreMetaBinaryExpressionConcept[] = [];
     // all interfaces and abstract concepts that are mentioned in this unit
-    interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]> = new Map<FreMetaClassifier, FreMetaClassifier[]>();
+    interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]> = new Map<
+        FreMetaClassifier,
+        FreMetaClassifier[]
+    >();
     // all limited concepts that are referred to (as type of properties)
     limitedsReferred: FreMetaLimitedConcept[] = [];
     // all concepts that are not abstract, but do have sub concepts
@@ -40,7 +43,7 @@ export class UnitAnalyser implements FreAnalyser {
         if (freClassifier instanceof FreMetaInterface) {
             this.interfacesAndAbstractsUsed.set(freClassifier, this.findChoices(freClassifier));
             // for interfaces analyse all implementors
-            LangUtil.findImplementorsRecursive(freClassifier).forEach(type => {
+            LangUtil.findImplementorsRecursive(freClassifier).forEach((type) => {
                 this.analyseUnitPriv(type, typesDone);
             });
         } else if (freClassifier instanceof FreMetaPrimitiveType) {
@@ -67,7 +70,7 @@ export class UnitAnalyser implements FreAnalyser {
                 }
             }
             // for any concept: add all direct subconcepts
-            freClassifier.allSubConceptsDirect().forEach(type => {
+            freClassifier.allSubConceptsDirect().forEach((type) => {
                 this.analyseUnitPriv(type, typesDone);
             });
             // for any non-abstract concept: include all types of parts
@@ -86,12 +89,12 @@ export class UnitAnalyser implements FreAnalyser {
     }
 
     private analyseProperties(freClassifier: FreMetaClassifier, typesDone: FreMetaClassifier[]) {
-        freClassifier.allParts().forEach(part => {
+        freClassifier.allParts().forEach((part) => {
             const type = part.type;
             this.analyseUnitPriv(type, typesDone);
         });
         // and add all types of references to typesReferred
-        freClassifier.allReferences().forEach(ref => {
+        freClassifier.allReferences().forEach((ref) => {
             const type = ref.type;
             if (type instanceof FreMetaLimitedConcept && !this.limitedsReferred.includes(type)) {
                 this.limitedsReferred.push(type);
@@ -113,7 +116,7 @@ export class UnitAnalyser implements FreAnalyser {
             implementors = freClassifier.allSubConceptsDirect();
         }
         // limited concepts can only be referenced, so exclude them
-        implementors = implementors.filter(sub => !(sub instanceof FreMetaLimitedConcept));
+        implementors = implementors.filter((sub) => !(sub instanceof FreMetaLimitedConcept));
         return implementors;
     }
 

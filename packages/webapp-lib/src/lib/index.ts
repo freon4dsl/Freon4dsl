@@ -1,6 +1,6 @@
 // Reexport of all library components
 import FreonLayout from "$lib/FreonLayout.svelte";
-import {WebappConfigurator} from "./WebappConfigurator.js"
+import { WebappConfigurator } from "./WebappConfigurator.js";
 
-export { FreonLayout }
-export { WebappConfigurator }
+export { FreonLayout };
+export { WebappConfigurator };

@@ -7,9 +7,9 @@ import {
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     FreErrorSeverity,
-    FREON_CORE
+    FREON_CORE,
 } from "../../../utils/index.js";
-import {FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty} from "../../../languagedef/metalanguage/index.js";
+import { FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -22,12 +22,11 @@ import {
     ValidationMessageReference,
     ValidationMessageText,
     ValidationRule,
-    ValidNameRule
+    ValidNameRule,
 } from "../../metalanguage/index.js";
 import { ValidationUtils } from "../ValidationUtils.js";
 
 export class RulesCheckerTemplate {
-
     generateRulesChecker(language: FreMetaLanguage, validdef: ValidatorDef, relativePath: string): string {
         const defaultWorkerName: string = Names.defaultWorker(language);
         const errorClassName: string = Names.FreError;
@@ -43,7 +42,7 @@ export class RulesCheckerTemplate {
         // the template starts here
         return `
         import { ${errorClassName}, ${Names.FreErrorSeverity}, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
         import { reservedWordsInTypescript } from "./ReservedWords";
@@ -62,14 +61,17 @@ export class RulesCheckerTemplate {
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
-        ${validdef.conceptRules.map(ruleSet =>
-            `${commentBefore}
+        ${validdef.conceptRules
+            .map(
+                (ruleSet) =>
+                    `${commentBefore}
             public execBefore${Names.concept(ruleSet.conceptRef?.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef?.referred)}): boolean {
                 let hasFatalError: boolean = false;
                 ${this.createRules(ruleSet)}
                 return hasFatalError;
-            }`
-        ).join("\n\n")}
+            }`,
+            )
+            .join("\n\n")}
 
         /**
          * Returns true if 'name' is a valid identifier
@@ -93,13 +95,26 @@ export class RulesCheckerTemplate {
     }
 
     private createImports(language: FreMetaLanguage): string {
-        return `${language.concepts?.map(concept => `
-                ${Names.concept(concept)}`).concat(
-                    language.interfaces?.map(intf => `
-                ${Names.interface(intf)}`).concat(
-                        language.units?.map(intf => `
-                ${Names.classifier(intf)}`).join(", ")))
-            }`;
+        return `${language.concepts
+            ?.map(
+                (concept) => `
+                ${Names.concept(concept)}`,
+            )
+            .concat(
+                language.interfaces
+                    ?.map(
+                        (intf) => `
+                ${Names.interface(intf)}`,
+                    )
+                    .concat(
+                        language.units
+                            ?.map(
+                                (intf) => `
+                ${Names.classifier(intf)}`,
+                            )
+                            .join(", "),
+                    ),
+            )}`;
     }
 
     private createRules(ruleSet: ConceptRuleSet): string {
@@ -174,11 +189,16 @@ export class RulesCheckerTemplate {
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
-            return "<error in makeExpressionRule>"
+            return "<error in makeExpressionRule>";
         }
     }
 
-    private makeValidNameRule(r: ValidNameRule, locationdescription: string, severity: string, message?: string): string {
+    private makeValidNameRule(
+        r: ValidNameRule,
+        locationdescription: string,
+        severity: string,
+        message?: string,
+    ): string {
         if (!!r.property) {
             if (!message || message.length === 0) {
                 message = `"'" + ${GenerationUtil.langExpToTypeScript(r.property)} + "' is not a valid identifier"`;
@@ -188,7 +208,7 @@ export class RulesCheckerTemplate {
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
-            return "<error in makeValidNameRule>"
+            return "<error in makeValidNameRule>";
         }
     }
 
@@ -202,11 +222,16 @@ export class RulesCheckerTemplate {
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
-            return "<error in makeNotEmptyRule>"
+            return "<error in makeNotEmptyRule>";
         }
     }
 
-    private makeConformsRule(r: CheckConformsRule, locationdescription: string, severity: string, message?: string): string {
+    private makeConformsRule(
+        r: CheckConformsRule,
+        locationdescription: string,
+        severity: string,
+        message?: string,
+    ): string {
         if (!!r.type1 && !!r.type2) {
             if (!message || message.length === 0) {
                 message = `"Type " + this.typer.inferType(${GenerationUtil.langExpToTypeScript(r.type1)})?.toFreString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) +
@@ -219,10 +244,15 @@ export class RulesCheckerTemplate {
         } else {
             return "<error in makeConformsRule>";
         }
-
     }
 
-    private makeEqualsTypeRule(r: CheckEqualsTypeRule, locationdescription: string, severity: string, index: number, message?: string): string {
+    private makeEqualsTypeRule(
+        r: CheckEqualsTypeRule,
+        locationdescription: string,
+        severity: string,
+        index: number,
+        message?: string,
+    ): string {
         // TODO change other methods similar to this one, i.e. first determine the types then call typer on types
         // TODO make sure alle errors message use the same format
         if (!!r.type1 && !!r.type2) {
@@ -245,14 +275,19 @@ export class RulesCheckerTemplate {
         }
     }
 
-    private makeIsuniqueRule(rule: IsUniqueRule, locationdescription: string, severity: string, message?: string): string {
+    private makeIsuniqueRule(
+        rule: IsUniqueRule,
+        locationdescription: string,
+        severity: string,
+        message?: string,
+    ): string {
         if (!!rule.listproperty && !!rule.list) {
             const listpropertyName: string = rule.listproperty.appliedfeature.toFreString();
             const listName: string = rule.list.appliedfeature.toFreString();
             const uniquelistName: string = `unique${Names.startWithUpperCase(listpropertyName)}In${Names.startWithUpperCase(listName)}`;
             const referredListproperty: FreMetaProperty | undefined = rule.listproperty.findRefOfLastAppliedFeature();
-            let listpropertyTypeName: string = '';
-            let listpropertyTypescript: string = '';
+            let listpropertyTypeName: string = "";
+            let listpropertyTypescript: string = "";
             if (!!referredListproperty) {
                 listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
                 listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
@@ -260,7 +295,8 @@ export class RulesCheckerTemplate {
             //
             let refAddition: string = "";
             let howToWriteName: string = "this.myWriter.writeNameOnly(elem)";
-            if (!!rule.list.findRefOfLastAppliedFeature() && !rule.list.findRefOfLastAppliedFeature()!.isPart) { // the elements in the list are all FreElementReferences
+            if (!!rule.list.findRefOfLastAppliedFeature() && !rule.list.findRefOfLastAppliedFeature()!.isPart) {
+                // the elements in the list are all FreElementReferences
                 refAddition += ".referred";
                 howToWriteName = "elem.name"; // if the list element is a reference there is no need to call the writer
             }
@@ -290,7 +326,7 @@ export class RulesCheckerTemplate {
             }
         });`;
         } else {
-            return "<error in makeIsuniqueRule>"
+            return "<error in makeIsuniqueRule>";
         }
     }
 
@@ -316,7 +352,7 @@ export class RulesCheckerTemplate {
             });
         }
         if (result.length > 0) {
-            result = "\`" + result + "\`";
+            result = "`" + result + "`";
         }
         return result;
     }

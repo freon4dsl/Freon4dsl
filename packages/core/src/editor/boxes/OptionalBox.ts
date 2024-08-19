@@ -18,8 +18,8 @@ export class OptionalBox extends Box {
 
     content: Box = null;
     placeholder: ActionBox = null;
-    _mustShow: boolean = false;  // is set to true by action that does not (yet) change the model, but causes part of the optional to be shown
-    condition: () => boolean;   // a condition based on the model that determines whether the optional is shown
+    _mustShow: boolean = false; // is set to true by action that does not (yet) change the model, but causes part of the optional to be shown
+    condition: () => boolean; // a condition based on the model that determines whether the optional is shown
 
     get mustShow() {
         return this._mustShow;
@@ -29,7 +29,14 @@ export class OptionalBox extends Box {
         this.isDirty();
     }
 
-    constructor(element: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, actionText: string) {
+    constructor(
+        element: FreNode,
+        role: string,
+        condition: BoolFunctie,
+        box: Box,
+        mustShow: boolean,
+        actionText: string,
+    ) {
         super(element, role);
         this.content = box;
         box.parent = this;
@@ -37,19 +44,19 @@ export class OptionalBox extends Box {
         this.placeholder = BoxFactory.action(element, role, actionText);
         this.placeholder.parent = this;
         this.mustShow = mustShow;
-        this.condition = condition;        
+        this.condition = condition;
         autorun(this.conditionChanged);
     }
 
     get showByCondition(): boolean {
         return this.condition();
     }
-    
+
     conditionChanged = () => {
-        console.log("AUTORUN showByCondition")
+        console.log("AUTORUN showByCondition");
         this.condition();
         this.isDirty();
-    }
+    };
 
     /**
      * Get the first selectable leaf box in the tree with `this` as root.

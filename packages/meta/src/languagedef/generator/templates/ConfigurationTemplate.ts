@@ -2,12 +2,15 @@ import {
     Names,
     FREON_CORE,
     EDITOR_FOLDER,
-    VALIDATOR_GEN_FOLDER, TYPER_FOLDER, VALIDATOR_FOLDER, STDLIB_FOLDER, SCOPER_FOLDER
+    VALIDATOR_GEN_FOLDER,
+    TYPER_FOLDER,
+    VALIDATOR_FOLDER,
+    STDLIB_FOLDER,
+    SCOPER_FOLDER,
 } from "../../../utils/index.js";
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class ConfigurationTemplate {
-
     generate(language: FreMetaLanguage, relativePath: string): string {
         const configurationName = Names.configuration;
         const workerName = Names.checkerInterface(language);
@@ -18,7 +21,7 @@ export class ConfigurationTemplate {
             import { ${Names.customTyper(language)} } from "${relativePath}${TYPER_FOLDER}";
             import { ${Names.customValidator(language)} } from "${relativePath}${VALIDATOR_FOLDER}";
             import { ${Names.customStdlib(language)} } from "${relativePath}${STDLIB_FOLDER}";
-            import { ${workerName } } from "${relativePath}${VALIDATOR_GEN_FOLDER}";
+            import { ${workerName} } from "${relativePath}${VALIDATOR_GEN_FOLDER}";
 
             /**
              * Class ${configurationName} is the place where you can add all your customisations.

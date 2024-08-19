@@ -2,20 +2,12 @@ import { FreMetaLanguage } from "../../metalanguage/index.js";
 import { Names, GenerationUtil } from "../../../utils/index.js";
 
 export class IndexTemplate {
-
     generateIndex(language: FreMetaLanguage): string {
-
         const tmp: string[] = [];
         tmp.push(Names.classifier(language.modelConcept));
-        language.units.map(c =>
-            tmp.push(Names.classifier(c))
-        );
-        language.concepts.map(c =>
-            tmp.push(Names.concept(c))
-        );
-        language.interfaces.map(c =>
-            tmp.push(Names.interface(c))
-        );
+        language.units.map((c) => tmp.push(Names.classifier(c)));
+        language.concepts.map((c) => tmp.push(Names.concept(c)));
+        language.interfaces.map((c) => tmp.push(Names.interface(c)));
         // tmp.push(Names.modelunit(language));
         // tmp.push("ModelUnitMetaType");
         // tmp.push(Names.allConcepts(language));
@@ -31,27 +23,22 @@ export class IndexTemplate {
          */
 
         export {
-        ${tmp.map(c =>
-            `${c}`
-        ).join(",\n")}
+        ${tmp.map((c) => `${c}`).join(",\n")}
         } from "./internal"`;
     }
 
     generateInternal(language: FreMetaLanguage): string {
-
         const tmp: string[] = [];
         tmp.push(Names.classifier(language.modelConcept));
-        language.units.map(c =>
-            tmp.push(Names.classifier(c))
-        );
+        language.units.map((c) => tmp.push(Names.classifier(c)));
         // The exports need to be sorted such that base concepts/interfaces are exported before the
         // concepts/interfaces that are extending them.
-        GenerationUtil.sortClassifiers(language.interfaces).reverse().map(c =>
-            tmp.push(Names.classifier(c))
-        );
-        GenerationUtil.sortConceptsOrRefs(language.concepts).reverse().map(c =>
-            tmp.push(Names.concept(c))
-        );
+        GenerationUtil.sortClassifiers(language.interfaces)
+            .reverse()
+            .map((c) => tmp.push(Names.classifier(c)));
+        GenerationUtil.sortConceptsOrRefs(language.concepts)
+            .reverse()
+            .map((c) => tmp.push(Names.concept(c)));
 
         // tmp.push(Names.allConcepts(language));
         // tmp.push(Names.metaType(language));
@@ -68,9 +55,7 @@ export class IndexTemplate {
          * concepts that are extending them.
          */
 
-        ${tmp.map(c =>
-            `export * from "./${c}";`
-        ).join("\n")}
+        ${tmp.map((c) => `export * from "./${c}";`).join("\n")}
         `;
     }
 
@@ -78,6 +63,5 @@ export class IndexTemplate {
         return `export * from "./${Names.workerInterface(language)}";
                 export * from "./${Names.walker(language)}";
                 export * from "./${Names.defaultWorker(language)}";`;
-
     }
 }

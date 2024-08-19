@@ -27,17 +27,17 @@ export class FreProjectionHandler {
         this.conceptToPropertyProjection = map;
     }
     // 'elementToProvider' stores the boxprovider that is servicing a certain node (of type FreNode).
-    private elementToProvider: Map<string, FreBoxProvider> =
-        new Map<string, FreBoxProvider>();
+    private elementToProvider: Map<string, FreBoxProvider> = new Map<string, FreBoxProvider>();
     // 'conceptNameToProviderConstructor' holds a list of box provider constructors,
     // such that the right box provider can be instantiated for a certain (type of) FreNode node.
-    private conceptNameToProviderConstructor: Map<string, (h: FreProjectionHandler) => FreBoxProvider> =
-        new Map<string, (h: FreProjectionHandler) => FreBoxProvider>([]);
+    private conceptNameToProviderConstructor: Map<string, (h: FreProjectionHandler) => FreBoxProvider> = new Map<
+        string,
+        (h: FreProjectionHandler) => FreBoxProvider
+    >([]);
     // 'headerProviders' holds all boxproviders that are responsible for the headers in a table.
     // Its key is <elementId, propertyName>, where elementId is the id of the element that holds the table,
     // and propertyName the name of the property that must be shown in the table.
-    private headerProviders: Map<string[], FreHeaderProvider> =
-        new Map<string[], FreHeaderProvider>();
+    private headerProviders: Map<string[], FreHeaderProvider> = new Map<string[], FreHeaderProvider>();
     // '_allProjections' holds the list of names of all available projections, including all custom ones
     private _allProjections: string[] = [];
     // '_enabledProjections' holds the list of names of all enabled projections
@@ -54,8 +54,7 @@ export class FreProjectionHandler {
          */
         makeObservable<FreProjectionHandler, "_enabledProjections">(this, {
             enableProjections: action,
-            _enabledProjections: observable
-
+            _enabledProjections: observable,
         });
     }
 
@@ -101,7 +100,7 @@ export class FreProjectionHandler {
      * @param node
      */
     getBoxProvider(node: FreNode): FreBoxProvider {
-        LOGGER.log("getBoxProvider for " + node.freId() + " (" + node.freLanguageConcept() + ")")
+        LOGGER.log("getBoxProvider for " + node.freId() + " (" + node.freLanguageConcept() + ")");
         if (isNullOrUndefined(node)) {
             console.error("FreProjectionHandler.getBoxProvider: node is null/undefined");
             return null;
@@ -203,7 +202,7 @@ export class FreProjectionHandler {
     executeCustomProjection(element: FreNode, projectionName: string): Box {
         let BOX: Box = null;
         let customFuction: (node: FreNode) => Box = null;
-        const customToUse = this.customProjections.find(cp => cp.name === projectionName);
+        const customToUse = this.customProjections.find((cp) => cp.name === projectionName);
         if (!!customToUse) {
             // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
             customFuction = customToUse.nodeTypeToBoxMethod.get(element.freLanguageConcept())?.bind(customToUse);

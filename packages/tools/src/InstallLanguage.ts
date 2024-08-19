@@ -11,7 +11,7 @@ export class InstallLanguage extends CommandLineParser {
     public constructor() {
         super({
             toolFilename: "InstallLanguage",
-            toolDescription: "Freon toolset for installing languages in playground."
+            toolDescription: "Freon toolset for installing languages in playground.",
         });
         this.languageAction = new CopyLanguage();
         this.saveAction = new SaveLanguage();
@@ -23,7 +23,7 @@ export class InstallLanguage extends CommandLineParser {
         this.verboseArg = this.defineFlagParameter({
             parameterLongName: "--verbose",
             parameterShortName: "-v",
-            description: "Show extra logging detail"
+            description: "Show extra logging detail",
         });
     }
 

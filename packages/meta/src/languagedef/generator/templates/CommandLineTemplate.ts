@@ -2,7 +2,6 @@ import { FreMetaLanguage } from "../../metalanguage/index.js";
 import { Names, CONFIGURATION_GEN_FOLDER } from "../../../utils/index.js";
 
 export class CommandLineTemplate {
-
     generateCommandLine(): string {
         return `import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
 
@@ -32,7 +31,7 @@ export class CommandLineTemplate {
                     }
                     return null;
                 }
-            }`
+            }`;
     }
 
     generateEmptyAction(): string {
@@ -71,17 +70,19 @@ export class CommandLineTemplate {
                     return "Hello World";
                 }
             
-            }`
+            }`;
     }
 
     generateCommandLineRunner(language: FreMetaLanguage): string {
         const configImports = [];
         configImports.push(Names.environment(language));
-        
-        return  `// Run this as the main program.
-            ${configImports.length > 0
-            ? configImports.map(c => `import { ${c} } from "../${CONFIGURATION_GEN_FOLDER}/${c}";`)
-            : ``}
+
+        return `// Run this as the main program.
+            ${
+                configImports.length > 0
+                    ? configImports.map((c) => `import { ${c} } from "../${CONFIGURATION_GEN_FOLDER}/${c}";`)
+                    : ``
+            }
             import { FreonCommandLine } from "./FreonCommandLine";
             import { DummyAction } from "./DummyAction";
             
@@ -96,6 +97,6 @@ export class CommandLineTemplate {
             cli.addAction(new DummyAction());
             
             // Run it
-            cli.execute();`
+            cli.execute();`;
     }
 }

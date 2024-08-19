@@ -11,8 +11,8 @@ import { FreMetaDefinitionElement } from "../../utils/index.js";
 import { FreErrorSeverity } from "../../utils/generation/FreErrorSeverity.js";
 
 export class ValidatorDef extends FreMetaDefinitionElement {
-    validatorName: string = '';
-    languageName: string = '';
+    validatorName: string = "";
+    languageName: string = "";
     conceptRules: ConceptRuleSet[] = [];
 }
 
@@ -24,21 +24,21 @@ export class ConceptRuleSet extends FreMetaDefinitionElement {
 export class ValidationSeverity extends FreMetaDefinitionElement {
     // 'value' is the string that the language engineer has provided in the .valid file
     // it will be disregarded after checking, instead 'severity' will be used
-    value: string = '';
+    value: string = "";
     severity: FreErrorSeverity | undefined; // is set by the checker
 }
 
 export class ValidationMessage extends FreMetaDefinitionElement {
     content: ValidationMessagePart[] = [];
     toFreString(): string {
-        return this.content.map(p => p.toFreString()).join(" ");
+        return this.content.map((p) => p.toFreString()).join(" ");
     }
 }
 
 export type ValidationMessagePart = ValidationMessageText | ValidationMessageReference;
 
 export class ValidationMessageText extends FreMetaDefinitionElement {
-    value: string = '';
+    value: string = "";
     toFreString(): string {
         return this.value;
     }
@@ -50,13 +50,13 @@ export class ValidationMessageReference extends FreMetaDefinitionElement {
         if (!!this.expression) {
             return this.expression.toFreString();
         } else {
-            return "<unknown expression in ValidationMessageReference>"
+            return "<unknown expression in ValidationMessageReference>";
         }
     }
 }
 
 export abstract class ValidationRule extends FreMetaDefinitionElement {
-    severity: ValidationSeverity ;
+    severity: ValidationSeverity;
     message: ValidationMessage | undefined;
 
     constructor() {
@@ -78,7 +78,7 @@ export class CheckEqualsTypeRule extends ValidationRule {
         if (!!this.type1 && !!this.type2) {
             return `@typecheck equalsType( ${this.type1.toFreString()}, ${this.type2.toFreString()} )`;
         } else {
-            return "<unknown check equals type rule>"
+            return "<unknown check equals type rule>";
         }
     }
 }
@@ -91,7 +91,7 @@ export class CheckConformsRule extends ValidationRule {
         if (!!this.type1 && !!this.type2) {
             return `@typecheck conformsTo( ${this.type1.toFreString()}, ${this.type2.toFreString()} )`;
         } else {
-            return "<unknown check conforms rule>"
+            return "<unknown check conforms rule>";
         }
     }
 }
@@ -105,7 +105,7 @@ export class ExpressionRule extends ValidationRule {
         if (!!this.exp1 && !!this.exp2) {
             return `${this.exp1.toFreString()} ${this.comparator} ${this.exp2.toFreString()}`;
         } else {
-            return "<unknown expression rule>"
+            return "<unknown expression rule>";
         }
     }
 }
@@ -152,5 +152,5 @@ export enum FreComparator {
     LargerThen = ">",
     LargerIncluding = ">=",
     SmallerThen = "<",
-    SmallerIncluding = "<="
+    SmallerIncluding = "<=",
 }

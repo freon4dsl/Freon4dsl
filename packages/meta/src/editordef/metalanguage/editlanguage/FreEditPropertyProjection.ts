@@ -1,11 +1,6 @@
-import {FreMetaDefinitionElement} from "../../../utils/index.js";
-import {FreLangExp, FreMetaProperty, MetaElementReference} from "../../../languagedef/metalanguage/index.js";
-import {
-    FreEditBoolKeywords,
-    DisplayType,
-    FreEditListInfo,
-    FreEditExternalInfo
-} from "./internal.js";
+import { FreMetaDefinitionElement } from "../../../utils/index.js";
+import { FreLangExp, FreMetaProperty, MetaElementReference } from "../../../languagedef/metalanguage/index.js";
+import { FreEditBoolKeywords, DisplayType, FreEditListInfo, FreEditExternalInfo } from "./internal.js";
 
 /**
  * An element of a line in a projection definition that represents the projection of a property.
@@ -25,10 +20,10 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
     // projection info if the referred property is a primitive of boolean type
     boolKeywords?: FreEditBoolKeywords = undefined;
     // projection to be used for this property
-    projectionName: string = '';
+    projectionName: string = "";
 
     toString(): string {
-        let extraText: string = '';
+        let extraText: string = "";
         if (!!this.projectionName && this.projectionName.length > 0) {
             extraText = `\n/* projectionName */ ${this.projectionName}`;
         }
@@ -38,10 +33,10 @@ export class FreEditPropertyProjection extends FreMetaDefinitionElement {
         if (!!this.externalInfo) {
             extraText = `\n/* external */ ${this.externalInfo}`;
         }
-        if (!!this.displayType ) {
+        if (!!this.displayType) {
             extraText = `\n/* displayType */ ${this.displayType}`;
         }
-        if (!!this.boolKeywords ) {
+        if (!!this.boolKeywords) {
             extraText = `\n/* boolean */ ${this.boolKeywords}`;
         }
         let nameText: string | undefined = this.expression?.toFreString();

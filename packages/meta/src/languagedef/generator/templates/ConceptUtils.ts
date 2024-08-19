@@ -6,11 +6,11 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaProperty,
     FreMetaPrimitiveType,
-    FreMetaInterface, FreMetaEnumValue
+    FreMetaInterface,
+    FreMetaEnumValue,
 } from "../../metalanguage/index.js";
 
 export class ConceptUtils {
-
     public static makeImportStatements(importsFromCore: string[], modelImports: string[]): string {
         // remove all empty strings and duplicates from the arrays
         const checkedCoreImports: string[] = [];
@@ -18,8 +18,8 @@ export class ConceptUtils {
         const checkedModelImports: string[] = [];
         ListUtil.addListIfNotPresent(checkedModelImports, modelImports);
         return `
-            ${ checkedCoreImports.length > 0 ? `import { ${checkedCoreImports.join(", ")} } from "${FREON_CORE}";` : ""}
-            ${ checkedModelImports.length > 0 ? `import { ${checkedModelImports.join(", ")} } from "./internal";` : ""}
+            ${checkedCoreImports.length > 0 ? `import { ${checkedCoreImports.join(", ")} } from "${FREON_CORE}";` : ""}
+            ${checkedModelImports.length > 0 ? `import { ${checkedModelImports.join(", ")} } from "./internal";` : ""}
             `;
     }
 
@@ -39,7 +39,7 @@ export class ConceptUtils {
         if (!!freProp.initial && freProp.initial instanceof FreMetaEnumValue) {
             return `this.${freProp.name} = FreNodeReference.create<${freProp.initial.sourceName}>(${freProp.initial.sourceName}.${freProp.initial.instanceName}, "${freProp.initial.sourceName}");`;
         } else {
-            return ""
+            return "";
         }
     }
     private static initializer(freProp: FreMetaPrimitiveProperty): string {
@@ -67,9 +67,9 @@ export class ConceptUtils {
         } else {
             if (!!freProp.initialValueList) {
                 if (myType === FreMetaPrimitiveType.string || myType === FreMetaPrimitiveType.identifier) {
-                    initializer = `${freProp.initialValueList.map(elem => `this.${freProp.name}.push(\"${elem}\")`).join("\n ")}`;
+                    initializer = `${freProp.initialValueList.map((elem) => `this.${freProp.name}.push(\"${elem}\")`).join("\n ")}`;
                 } else {
-                    initializer = `${freProp.initialValueList.map(elem => `this.${freProp.name}.push(${elem})`).join("\n ")}`;
+                    initializer = `${freProp.initialValueList.map((elem) => `this.${freProp.name}.push(${elem})`).join("\n ")}`;
                 }
             }
         }
@@ -135,55 +135,71 @@ export class ConceptUtils {
         // console.log("found overriding props: " + allProps.filter(p => p.isOverriding)
         // .map(p => `${p.name} of ${p.owningClassifier.name} [${p.location?.filename}]`).join("\n\t"))
         // console.log("found NON overriding props: " + allProps.filter(p => !p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
-        const allButPrimitiveProps: FreMetaConceptProperty[] = allProps.filter(p => !p.isPrimitive && !p.implementedInBase) as FreMetaConceptProperty[];
-        const allPrimitiveProps: FreMetaPrimitiveProperty[] = allProps.filter(p => p.isPrimitive && !p.implementedInBase) as FreMetaPrimitiveProperty[];
+        const allButPrimitiveProps: FreMetaConceptProperty[] = allProps.filter(
+            (p) => !p.isPrimitive && !p.implementedInBase,
+        ) as FreMetaConceptProperty[];
+        const allPrimitiveProps: FreMetaPrimitiveProperty[] = allProps.filter(
+            (p) => p.isPrimitive && !p.implementedInBase,
+        ) as FreMetaPrimitiveProperty[];
 
         // here we know that FreUtils needs to be imported => add to imports
         if (!hasSuper) {
             ListUtil.addIfNotPresent(importsFromCore, Names.FreUtils);
         }
         return `constructor(id?: string) {
-        ${!hasSuper ? `
+        ${
+            !hasSuper
+                ? `
                         super();
                         if (!!id) {
                             this.$id = id;
                         } else {
                             this.$id = ${Names.FreUtils}.ID(); // uuid.v4();
                         }`
-            : "super(id);"
+                : "super(id);"
         }
-        ${allPrimitiveProps.length !== 0 ?
-            `// Both 'observableprim' and 'observableprimlist' change the get and set of the attribute
+        ${
+            allPrimitiveProps.length !== 0
+                ? `// Both 'observableprim' and 'observableprimlist' change the get and set of the attribute
              // such that the part is observable. In lists no 'null' or 'undefined' values are allowed.
-            ${allPrimitiveProps.map(p =>
-                (p.isList ?
-                    `observableprimlist(this, "${p.name}");
+            ${allPrimitiveProps
+                .map((p) =>
+                    p.isList
+                        ? `observableprimlist(this, "${p.name}");
                      ${this.initializer(p)};`
-                    : `observableprim(this, "${p.name}");
-                       ${this.initializer(p)};`
+                        : `observableprim(this, "${p.name}");
+                       ${this.initializer(p)};`,
                 )
-            ).join("\n")}
+                .join("\n")}
                         `
-            : ``
+                : ``
         }
-        ${allButPrimitiveProps.length !== 0 ?
-            `// Both 'observablepart' and 'observablepartlist' change the get and set of the attribute
+        ${
+            allButPrimitiveProps.length !== 0
+                ? `// Both 'observablepart' and 'observablepartlist' change the get and set of the attribute
              // such that the parent-part relationship is consistently maintained,
              // and make sure the part is observable. In lists no 'null' or 'undefined' values are allowed.
-                        ${allButPrimitiveProps.map(p =>
-                (p.isList ?
-                        `observablepartlist(this, "${p.name}");`
-                        :
-                        `observablepart(this, "${p.name}");
-                        ${this.initEnumValue(p)}`
-                )
-            ).join("\n")}`
-            : ``
+                        ${allButPrimitiveProps
+                            .map((p) =>
+                                p.isList
+                                    ? `observablepartlist(this, "${p.name}");`
+                                    : `observablepart(this, "${p.name}");
+                        ${this.initEnumValue(p)}`,
+                            )
+                            .join("\n")}`
+                : ``
         }
             }`;
     }
 
-    public static makeBasicMethods(hasSuper: boolean, metaType: string, isModel: boolean, isUnit: boolean, isExpression: boolean, isBinaryExpression: boolean): string {
+    public static makeBasicMethods(
+        hasSuper: boolean,
+        metaType: string,
+        isModel: boolean,
+        isUnit: boolean,
+        isExpression: boolean,
+        isBinaryExpression: boolean,
+    ): string {
         return `
                 /**
                  * Returns the metatype of this instance in the form of a string.
@@ -192,14 +208,17 @@ export class ConceptUtils {
                     return this.$typename;
                 }
 
-                ${!hasSuper ? `
+                ${
+                    !hasSuper
+                        ? `
                 /**
                  * Returns the unique identifier of this instance.
                  */
                  freId(): string {
                     return this.$id;
                 }`
-            : ""}
+                        : ""
+                }
 
                 /**
                  * Returns true if this instance is a model concept.
@@ -231,7 +250,7 @@ export class ConceptUtils {
     }
 
     public static makeStaticCreateMethod(concept: FreMetaClassifier, myName: string): string {
-        const allPartsToInitialize = concept.allSingleNonOptionalPartsInitializers()
+        const allPartsToInitialize = concept.allSingleNonOptionalPartsInitializers();
 
         return `/**
                  * A convenience method that creates an instance of this class
@@ -240,24 +259,29 @@ export class ConceptUtils {
                  */
                 static create(data: Partial<${myName}>): ${myName} {
                     const result = new ${myName}(data.$id);
-                    ${concept.allProperties().map(freProp =>
-                        `${(freProp.isList) ?
-                            `if (!!data.${freProp.name}) {
+                    ${concept
+                        .allProperties()
+                        .map(
+                            (freProp) =>
+                                `${
+                                    freProp.isList
+                                        ? `if (!!data.${freProp.name}) {
                                 data.${freProp.name}.forEach(x =>
                                     result.${freProp.name}.push(x)
                                 );
                             }`
-                            :
-                            `if (!!data.${freProp.name}) {
+                                        : `if (!!data.${freProp.name}) {
                                 result.${freProp.name} = data.${freProp.name};
-                            ${allPartsToInitialize.find(ip => ip.part === freProp) ?
-                                    `} else {
-                                        result.${freProp.name} = ${Names.concept(allPartsToInitialize.find(ip => ip.part === freProp)?.concept)}.create({})`
-                                   : ``
-                               }   
+                            ${
+                                allPartsToInitialize.find((ip) => ip.part === freProp)
+                                    ? `} else {
+                                        result.${freProp.name} = ${Names.concept(allPartsToInitialize.find((ip) => ip.part === freProp)?.concept)}.create({})`
+                                    : ``
+                            }   
                             }`
-                        }`).join("\n")
-                    }
+                                }`,
+                        )
+                        .join("\n")}
                     if (!!data.parseLocation) {
                         result.parseLocation = data.parseLocation;
                     }
@@ -281,18 +305,22 @@ export class ConceptUtils {
                  */
                 copy(): ${myName} {
                     const result = new ${myName}();
-                    ${concept.allProperties().map(freProperty =>
-                        `if (!!this.${freProperty.name}) {
+                    ${concept
+                        .allProperties()
+                        .map(
+                            (freProperty) =>
+                                `if (!!this.${freProperty.name}) {
                             ${this.makeCopyProperty(freProperty)}
-                        }`).join("\n")
-                    }
+                        }`,
+                        )
+                        .join("\n")}
                     return result;
                 }`;
         }
     }
 
     private static makeCopyProperty(freProperty: FreMetaProperty): string {
-        let result: string = '';
+        let result: string = "";
         if (freProperty.isList) {
             if (freProperty.isPrimitive) {
                 result = `this.${freProperty.name}.forEach(x =>
@@ -313,7 +341,12 @@ export class ConceptUtils {
         return result;
     }
 
-    public static makeMatchMethod(hasSuper: boolean, concept: FreMetaClassifier, myName: string, importsFromCore: string[]): string {
+    public static makeMatchMethod(
+        hasSuper: boolean,
+        concept: FreMetaClassifier,
+        myName: string,
+        importsFromCore: string[],
+    ): string {
         let propsToDo: FreMetaProperty[];
         if (hasSuper && concept instanceof FreMetaConcept) {
             propsToDo = (concept as FreMetaConcept).implementedProperties();
@@ -329,15 +362,13 @@ export class ConceptUtils {
                  */
                 public match(toBeMatched: Partial<${myName}>): boolean {
                     ${hasSuper ? `let result: boolean = super.match(toBeMatched);` : `let result: boolean = true;`}
-                    ${propsToDo.map(freProp =>
-                        `${this.makeMatchEntry(freProp, importsFromCore)}`
-                    ).join("\n")}
+                    ${propsToDo.map((freProp) => `${this.makeMatchEntry(freProp, importsFromCore)}`).join("\n")}
                     return result;
                 }`;
     }
 
     private static makeMatchEntry(freProperty: FreMetaProperty, importsFromCore: string[]): string {
-        let result: string = '';
+        let result: string = "";
         if (freProperty.isPrimitive) {
             if (freProperty.isList) {
                 // here we know that matchPrimitiveList needs to be imported => add to imports
@@ -346,7 +377,10 @@ export class ConceptUtils {
                                 result = result && matchPrimitiveList(this.${freProperty.name}, toBeMatched.${freProperty.name});
                           }`;
             } else {
-                if (freProperty.type === FreMetaPrimitiveType.string || freProperty.type === FreMetaPrimitiveType.identifier) {
+                if (
+                    freProperty.type === FreMetaPrimitiveType.string ||
+                    freProperty.type === FreMetaPrimitiveType.identifier
+                ) {
                     result = `if (result && toBeMatched.${freProperty.name} !== null && toBeMatched.${freProperty.name} !== undefined && toBeMatched.${freProperty.name}.length > 0) {
                                 result = result && this.${freProperty.name} === toBeMatched.${freProperty.name};
                           }`;

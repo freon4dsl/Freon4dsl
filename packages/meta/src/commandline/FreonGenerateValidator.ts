@@ -3,7 +3,7 @@ import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/MetaLogger.js";
-import {ValidatorDef} from "../validatordef/metalanguage/index.js";
+import { ValidatorDef } from "../validatordef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateValidator"); // .mute();
 
@@ -15,7 +15,7 @@ export class FreonGenerateValidator extends FreonGeneratePartAction {
             actionName: "validate-it",
             summary: "Generates the TypeScript code for the validator for your language",
             documentation:
-                "Generates TypeScript code for the validator of language defined in the .ast file. The validator definition is found in the .valid file."
+                "Generates TypeScript code for the validator of language defined in the .ast file. The validator definition is found in the .valid file.",
         });
         this.validatorGenerator = new ValidatorGenerator();
     }
@@ -30,7 +30,7 @@ export class FreonGenerateValidator extends FreonGeneratePartAction {
         this.validatorGenerator.language = this.language;
         this.validatorGenerator.outputfolder = this.outputFolder;
 
-        const validator:ValidatorDef | undefined = new ValidatorParser(this.language).parseMulti(this.validFiles);
+        const validator: ValidatorDef | undefined = new ValidatorParser(this.language).parseMulti(this.validFiles);
         if (validator === null || validator === undefined) {
             throw new Error("Validator definition could not be parsed, cannot generate validator.");
         }

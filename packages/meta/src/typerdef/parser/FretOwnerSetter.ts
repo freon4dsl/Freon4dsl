@@ -1,9 +1,12 @@
 import {
     FretExp,
     FretFunctionCallExp,
-    FretLimitedInstanceExp, FretProperty,
-    FretPropertyCallExp, FretWhereExp,
-    TyperDef, FreTyperElement
+    FretLimitedInstanceExp,
+    FretProperty,
+    FretPropertyCallExp,
+    FretWhereExp,
+    TyperDef,
+    FreTyperElement,
 } from "../metalanguage/index.js";
 import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../metalanguage/expressions/index.js";
 
@@ -14,16 +17,16 @@ import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../metalanguage/ex
  */
 export class FretOwnerSetter {
     static setNodeOwners(typeDef: TyperDef) {
-        typeDef.typeConcepts.forEach(con => {
-            con.properties.forEach(prop => {
+        typeDef.typeConcepts.forEach((con) => {
+            con.properties.forEach((prop) => {
                 if (prop instanceof FretProperty) {
                     prop.owner = con;
                     prop.typeReference.owner = prop;
                 }
             });
         });
-        typeDef.classifierSpecs.forEach(spec => {
-            spec.rules.forEach(rule => {
+        typeDef.classifierSpecs.forEach((spec) => {
+            spec.rules.forEach((rule) => {
                 this.setOwner(rule.exp, rule);
                 rule.owner = spec;
             });
@@ -41,30 +44,30 @@ export class FretOwnerSetter {
             this.setOwner(exp.right, exp);
         } else if (exp instanceof FretCreateExp) {
             exp.$type.owner = exp;
-            exp.propertyDefs.forEach(propDef => {
+            exp.propertyDefs.forEach((propDef) => {
                 this.setOwner(propDef.value, propDef);
                 propDef.$property.owner = exp;
                 propDef.owner = exp;
             });
         } else if (exp instanceof FretFunctionCallExp) {
-            exp.actualParameters.forEach(par => {
-               this.setOwner(par, exp);
+            exp.actualParameters.forEach((par) => {
+                this.setOwner(par, exp);
             });
         } else if (exp instanceof FretLimitedInstanceExp) {
             exp.$myInstance.owner = exp;
             if (!!exp.$myLimited) {
                 exp.$myLimited.owner = exp;
             }
-        } else if (exp instanceof FretPropertyCallExp ) {
+        } else if (exp instanceof FretPropertyCallExp) {
             this.setOwner(exp.source, exp);
             exp.$property.owner = exp;
-        // } else if (exp instanceof FretSelfExp) {
+            // } else if (exp instanceof FretSelfExp) {
         } else if (exp instanceof FretVarCallExp) {
             exp.$variable.owner = exp;
         } else if (exp instanceof FretWhereExp) {
             exp.variable.owner = exp;
             exp.variable.$type.owner = exp.variable;
-            exp.conditions.forEach(cond => {
+            exp.conditions.forEach((cond) => {
                 this.setOwner(cond, exp);
             });
         }

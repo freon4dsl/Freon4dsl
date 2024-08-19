@@ -75,11 +75,11 @@ export class FreTyperMerger {
         if (model !== null) {
             this.checker.check(model);
             if (this.checker.hasErrors()) {
-                this.checker.errors.forEach(error => LOG2USER.error(`${error}`));
+                this.checker.errors.forEach((error) => LOG2USER.error(`${error}`));
                 throw new Error("checking errors (" + this.checker.errors.length + ").");
             }
             if (this.checker.hasWarnings()) {
-                this.checker.warnings.forEach(warn => LOG2USER.warning(`Warning: ${warn}`));
+                this.checker.warnings.forEach((warn) => LOG2USER.warning(`Warning: ${warn}`));
             }
         } else {
             throw new Error("parser does not return a language definition.");
@@ -98,7 +98,9 @@ export class FreTyperMerger {
                         if (!result.anyTypeSpec) {
                             result.anyTypeSpec = sub.anyTypeSpec;
                         } else {
-                            this.checker.errors.push(`Found a second anytype rule in ${ParseLocationUtil.location(sub.anyTypeSpec)}, the first one is in ${ParseLocationUtil.location(result.anyTypeSpec)}.`);
+                            this.checker.errors.push(
+                                `Found a second anytype rule in ${ParseLocationUtil.location(sub.anyTypeSpec)}, the first one is in ${ParseLocationUtil.location(result.anyTypeSpec)}.`,
+                            );
                         }
                     }
                     result.classifierSpecs.push(...sub.classifierSpecs);

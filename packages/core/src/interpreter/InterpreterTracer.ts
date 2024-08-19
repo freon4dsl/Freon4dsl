@@ -33,27 +33,34 @@ class TraceNode {
      */
     protected toIndentedString(indent: string, thisIsLast?: boolean): string {
         let result: string;
-        if ( this.node === undefined ) {
+        if (this.node === undefined) {
             // The root, no output string here
             result = "";
         } else {
-            result = indent + this.tracer.property(this.node) + ": " + this.tracer.concept(this.node)
-                + " = " + jsonAsString(this.value) + (this.idValid(this.ctx) ? " Ctx " + this.ctx.toString() : "") + "\n";
+            result =
+                indent +
+                this.tracer.property(this.node) +
+                ": " +
+                this.tracer.concept(this.node) +
+                " = " +
+                jsonAsString(this.value) +
+                (this.idValid(this.ctx) ? " Ctx " + this.ctx.toString() : "") +
+                "\n";
         }
         this.children.forEach((child: TraceNode, index: number) => {
             let baseIndent: string;
-            if ( !thisIsLast) {
-                baseIndent = (index === this.children.length ? indent : indent.replace(INDENT_DIRECT, INDENT_INDIRECT));
+            if (!thisIsLast) {
+                baseIndent = index === this.children.length ? indent : indent.replace(INDENT_DIRECT, INDENT_INDIRECT);
             } else {
-                baseIndent = (index === this.children.length ? indent : indent.replace(INDENT_DIRECT, INDENT));
+                baseIndent = index === this.children.length ? indent : indent.replace(INDENT_DIRECT, INDENT);
             }
-            result += child.toIndentedString(baseIndent + INDENT_DIRECT, (index === this.children.length - 1));
-        } );
+            result += child.toIndentedString(baseIndent + INDENT_DIRECT, index === this.children.length - 1);
+        });
         return result;
     }
 
     idValid(ctx: InterpreterContext) {
-        return !!ctx && (ctx !== InterpreterContext.EMPTY_CONTEXT);
+        return !!ctx && ctx !== InterpreterContext.EMPTY_CONTEXT;
     }
 }
 
@@ -80,7 +87,7 @@ export class InterpreterTracer {
         const newTrace = new TraceNode(this);
         newTrace.node = node;
         newTrace.parent = this.current;
-        if ( this.current.ctx !== ctx) {
+        if (this.current.ctx !== ctx) {
             newTrace.ctx = ctx;
         }
         this.current.children.push(newTrace);

@@ -34,14 +34,7 @@ export class FreHeaderProvider extends FreBoxProvider {
             this._hasContent = false;
         }
 
-        const result: TableRowBox = TableUtil.rowBox(
-            this._node,
-            this.propertyName,
-            this.conceptName,
-            cells,
-            0,
-            false
-        );
+        const result: TableRowBox = TableUtil.rowBox(this._node, this.propertyName, this.conceptName, cells, 0, false);
         result.isHeader = true;
         return result;
     }
@@ -62,7 +55,11 @@ export class FreHeaderProvider extends FreBoxProvider {
             // myProjection = myProjection.toLowerCase();
         }
         // console.log("   My projection  is " + myProjection)
-        const ownerRequired = this.mainHandler.getRequiredProjection(this._node.freLanguageConcept(), myProjection, this.propertyName);
+        const ownerRequired = this.mainHandler.getRequiredProjection(
+            this._node.freLanguageConcept(),
+            myProjection,
+            this.propertyName,
+        );
         if (isNullOrUndefined(ownerRequired)) {
             // console.error("SHOULD NOT HAPPEN");
             // No requirement from owner projection: just find the first projection in the active list of projections
@@ -79,5 +76,4 @@ export class FreHeaderProvider extends FreBoxProvider {
         // console.log("Header Provider Projection for " + this._node.freLanguageConcept() + " is " + this.usedProjection);
         return this.usedProjection;
     }
-
 }

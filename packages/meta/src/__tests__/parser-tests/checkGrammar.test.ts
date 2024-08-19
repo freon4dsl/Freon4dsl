@@ -5,7 +5,7 @@ import { ReaderWriterGenerator } from "../../parsergen/ReaderWriterGenerator";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import * as fs from "fs";
 import { FreEditUnit } from "../../editordef/metalanguage/index.js";
-import { describe, test, expect, afterAll } from "vitest"
+import { describe, test, expect, afterAll } from "vitest";
 
 /* These incomplete tests only test whether the generated grammar is equal
 to the previously generated grammar. A true test of the parser must be
@@ -35,7 +35,7 @@ describe("Checking parser generation", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log("Language could not be read: " + e.message);
-                console.log(langParser.checker.errors.map(e => e).join("\n"));
+                console.log(langParser.checker.errors.map((e) => e).join("\n"));
             }
         }
         expect(language).not.toBeNull();
@@ -67,7 +67,7 @@ describe("Checking parser generation", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log("Language could not be read: " + e.message);
-                console.log(langParser.checker.errors.map(e => e).join("\n"));
+                console.log(langParser.checker.errors.map((e) => e).join("\n"));
             }
         }
         expect(language).not.toBeNull();
@@ -77,11 +77,10 @@ describe("Checking parser generation", () => {
             let editor: FreEditUnit | undefined = undefined;
             try {
                 editor = editParser.parse(testdir + "test2.edit");
-
             } catch (e: unknown) {
                 if (e instanceof Error) {
                     console.log("Edit definition could not be read: " + e.message);
-                    console.log(editParser.checker.errors.map(e => e).join("\n"));
+                    console.log(editParser.checker.errors.map((e) => e).join("\n"));
                 }
             }
             if (!!editor) {
@@ -107,7 +106,7 @@ describe("Checking parser generation", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log("Language could not be read: " + e.message);
-                console.log(langParser.checker.errors.map(e => e).join("\n"));
+                console.log(langParser.checker.errors.map((e) => e).join("\n"));
             }
         }
         expect(language).not.toBeNull();
@@ -120,7 +119,7 @@ describe("Checking parser generation", () => {
             } catch (e: unknown) {
                 if (e instanceof Error) {
                     console.log("Edit definition could not be read: " + e.message);
-                    console.log(editParser.checker.errors.map(e => e).join("\n"));
+                    console.log(editParser.checker.errors.map((e) => e).join("\n"));
                 }
             }
             if (!!editor) {
@@ -146,7 +145,7 @@ describe("Checking parser generation", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log("Language could not be read: " + e.message);
-                console.log(langParser.checker.errors.map(e => e).join("\n"));
+                console.log(langParser.checker.errors.map((e) => e).join("\n"));
             }
         }
         expect(language).not.toBeNull();
@@ -159,7 +158,7 @@ describe("Checking parser generation", () => {
             } catch (e: unknown) {
                 if (e instanceof Error) {
                     console.log("Edit definition could not be read: " + e.message);
-                    console.log(editParser.checker.errors.map(e => e).join("\n"));
+                    console.log(editParser.checker.errors.map((e) => e).join("\n"));
                 }
             }
             if (!!editor) {
@@ -178,5 +177,4 @@ describe("Checking parser generation", () => {
             // TODO should projections for interfaces be taken into account??
         }
     });
-
 });

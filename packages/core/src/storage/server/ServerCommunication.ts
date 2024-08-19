@@ -3,7 +3,7 @@ import { FreLogger } from "../../logging/index";
 import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../index";
 import { FreErrorSeverity } from "../../validator/index";
 import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
-import process from 'process';
+import process from "process";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
@@ -38,7 +38,7 @@ export class ServerCommunication implements IServerCommunication {
     static instance: ServerCommunication;
 
     static getInstance(): ServerCommunication {
-        if (!(!!ServerCommunication.instance)) {
+        if (!!!ServerCommunication.instance) {
             ServerCommunication.instance = new ServerCommunication();
         }
         return ServerCommunication.instance;
@@ -56,7 +56,7 @@ export class ServerCommunication implements IServerCommunication {
     private _SERVER_IP = `http://127.0.0.1`;
     private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
 
-    onError(msg: string,  severity: FreErrorSeverity): void {
+    onError(msg: string, severity: FreErrorSeverity): void {
         // default implementation
         console.error(`ServerCommunication ${severity}: ${msg}`);
     }
@@ -64,9 +64,8 @@ export class ServerCommunication implements IServerCommunication {
     // @ts-ignore
     // parameters present to adhere to interface
     async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
-        return null
+        return null;
     }
-
 
     /**
      * Takes 'unit' and stores it as 'unitName' in the folder 'modelName' on the server at SERVER_URL.
@@ -81,28 +80,36 @@ export class ServerCommunication implements IServerCommunication {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
             const publicModel = ServerCommunication.lionweb_serial.convertToJSON(unit, true);
             let output = {
-                "serializationFormatVersion": "2023.1",
-                "languages": [],
+                serializationFormatVersion: "2023.1",
+                languages: [],
                 // "__version": "1234abcdef",
-                "nodes": model
-            }
+                nodes: model,
+            };
 
-            await this.putWithTimeout(`putModelUnit`, output, `folder=${modelName}&name=${unitId.name}` );
+            await this.putWithTimeout(`putModelUnit`, output, `folder=${modelName}&name=${unitId.name}`);
             let publicOutput = {
-                "serializationFormatVersion": "2023.1",
-                "languages": [],
+                serializationFormatVersion: "2023.1",
+                languages: [],
                 // "__version": "1234abcdef",
-                "nodes": publicModel
-            }
+                nodes: publicModel,
+            };
             await this.putWithTimeout(
                 `putModelUnit`,
                 publicOutput,
-                `folder=${modelName}&name=${unitId.name}${modelUnitInterfacePostfix}`
+                `folder=${modelName}&name=${unitId.name}${modelUnitInterfacePostfix}`,
             );
         } else {
-            LOGGER.error( "Name of Unit '" + unitId.name + "' may contain only characters, numbers, '_', or '-', and must start with a character.");
-            this.onError("Name of Unit '" + unitId.name
-                + "' may contain only characters, numbers, '_', or '-', and must start with a character.", FreErrorSeverity.NONE);
+            LOGGER.error(
+                "Name of Unit '" +
+                    unitId.name +
+                    "' may contain only characters, numbers, '_', or '-', and must start with a character.",
+            );
+            this.onError(
+                "Name of Unit '" +
+                    unitId.name +
+                    "' may contain only characters, numbers, '_', or '-', and must start with a character.",
+                FreErrorSeverity.NONE,
+            );
         }
     }
 
@@ -115,7 +122,10 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             await this.fetchWithTimeout<any>(`deleteModelUnit`, `folder=${modelName}&name=${unit.name}`);
-            await this.fetchWithTimeout<any>(`deleteModelUnit`, `folder=${modelName}&name=${unit.name}${modelUnitInterfacePostfix}`);
+            await this.fetchWithTimeout<any>(
+                `deleteModelUnit`,
+                `folder=${modelName}&name=${unit.name}${modelUnitInterfacePostfix}`,
+            );
         }
     }
 
@@ -123,7 +133,7 @@ export class ServerCommunication implements IServerCommunication {
      * Deletes the complete model named 'modelName'.
      * @param modelName
      */
-    async deleteModel(modelName: string ): Promise<void> {
+    async deleteModel(modelName: string): Promise<void> {
         LOGGER.log(`ServerCommunication.deleteModel ${modelName}`);
         if (!!modelName && modelName.length > 0) {
             await this.fetchWithTimeout<any>(`deleteModel`, `folder=${modelName}`);
@@ -138,7 +148,7 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.log(`ServerCommunication.loadModelList`);
         const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`);
         if (!!res) {
-            return res
+            return res;
         } else {
             return [];
         }
@@ -154,10 +164,12 @@ export class ServerCommunication implements IServerCommunication {
         let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `folder=${modelName}`);
         // filter out the modelUnitInterfaces
         if (!!modelUnits) {
-            modelUnits = modelUnits.filter( (name: string) => name.indexOf(modelUnitInterfacePostfix) === -1 );
-            return modelUnits.map(u => { return {name: u, id: u}});
+            modelUnits = modelUnits.filter((name: string) => name.indexOf(modelUnitInterfacePostfix) === -1);
+            return modelUnits.map((u) => {
+                return { name: u, id: u };
+            });
         } else {
-             return []
+            return [];
         }
     }
 
@@ -180,16 +192,16 @@ export class ServerCommunication implements IServerCommunication {
                     } else {
                         unit = ServerCommunication.serial.toTypeScriptInstance(res);
                     }
-                    return unit
+                    return unit;
                     // loadCallback(unit as FreNamedNode);
                 } catch (e) {
-                    LOGGER.error( "loadModelUnit, " + e.message);
+                    LOGGER.error("loadModelUnit, " + e.message);
                     this.onError(e.message, FreErrorSeverity.NONE);
                     console.log(e.stack);
                 }
             }
         }
-        return null
+        return null;
     }
 
     /**
@@ -199,10 +211,17 @@ export class ServerCommunication implements IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    async loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (piUnitInterface: FreModelUnit) => void) {
+    async loadModelUnitInterface(
+        modelName: string,
+        unit: ModelUnitIdentifier,
+        loadCallback: (piUnitInterface: FreModelUnit) => void,
+    ) {
         LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
-            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unit.name}${modelUnitInterfacePostfix}`);
+            const res = await this.fetchWithTimeout<Object>(
+                `getModelUnit`,
+                `folder=${modelName}&name=${unit.name}${modelUnitInterfacePostfix}`,
+            );
             if (!!res) {
                 try {
                     let unit: FreNode;
@@ -214,7 +233,7 @@ export class ServerCommunication implements IServerCommunication {
                     // const model = ServerCommunication.serial.toTypeScriptInstance(res);
                     loadCallback(unit as FreModelUnit);
                 } catch (e) {
-                    LOGGER.error( "loadModelUnitInterface, " + e.message);
+                    LOGGER.error("loadModelUnitInterface, " + e.message);
                     this.onError(e.message, FreErrorSeverity.NONE);
                 }
             }
@@ -227,18 +246,16 @@ export class ServerCommunication implements IServerCommunication {
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
-            LOGGER.log("Input: " + `${this._SERVER_URL}${method}${params}`)
-            const promise = await fetch(
-                `${this._SERVER_URL}${method}${params}`,
-                {
-                    signal: controller.signal,
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json"
-                }
+            LOGGER.log("Input: " + `${this._SERVER_URL}${method}${params}`);
+            const promise = await fetch(`${this._SERVER_URL}${method}${params}`, {
+                signal: controller.signal,
+                method: "get",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             });
             clearTimeout(timeoutId);
-            return await promise.json() ;
+            return await promise.json();
         } catch (e) {
             this.handleError(e);
         }
@@ -250,16 +267,14 @@ export class ServerCommunication implements IServerCommunication {
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
-            await fetch(
-                `${this._SERVER_URL}${method}${params}`,
-                {
-                    signal: controller.signal,
-                    method: "put",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                });
+            await fetch(`${this._SERVER_URL}${method}${params}`, {
+                signal: controller.signal,
+                method: "put",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
             clearTimeout(timeoutId);
         } catch (e) {
             this.handleError(e);
@@ -271,27 +286,23 @@ export class ServerCommunication implements IServerCommunication {
         if (e.message.includes("aborted")) {
             errorMess = `Time out: no response from ${this._SERVER_URL}.`;
         }
-        LOGGER.error( errorMess);
+        LOGGER.error(errorMess);
         this.onError(errorMess, FreErrorSeverity.NONE);
     }
 
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         // put the unit and its interface under the new name
-        this.putModelUnit(modelName, {name: newName, id: unit.freId()}, unit);
+        this.putModelUnit(modelName, { name: newName, id: unit.freId() }, unit);
         // remove the old unit and interface
-        this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId()});
+        this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId() });
     }
 
     // @ts-ignore
-    createModel(modelName: string): any {
-    }
+    createModel(modelName: string): any {}
 
     // @ts-ignore
     createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
-        return Promise.resolve(undefined)
+        return Promise.resolve(undefined);
     }
-    
-    
-
 }

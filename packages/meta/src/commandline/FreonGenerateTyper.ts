@@ -2,7 +2,7 @@ import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/MetaLogger.js";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
 import { FreTyperMerger } from "../typerdef/parser/FreTyperMerger.js";
-import {TyperDef} from "../typerdef/metalanguage/index.js";
+import { TyperDef } from "../typerdef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateTyper"); // .mute();
 export class FreonGenerateTyper extends FreonGeneratePartAction {
@@ -12,7 +12,8 @@ export class FreonGenerateTyper extends FreonGeneratePartAction {
         super({
             actionName: "type-it",
             summary: "Generates the TypeScript code for the typer for your language",
-            documentation: "Generates TypeScript code for the typer of language defined in the .ast file. The typer definition is found in the .type file."
+            documentation:
+                "Generates TypeScript code for the typer of language defined in the .ast file. The typer definition is found in the .type file.",
         });
         this.typerGenerator = new FreonTyperGenerator();
     }

@@ -19,7 +19,9 @@ import {
     FreEditGlobalProjection,
     FreEditButtonDef,
     FreEditKeyValuePair,
-    FreEditFragmentDefinition, FreEditExternalInfo, FreEditSimpleExternal
+    FreEditFragmentDefinition,
+    FreEditExternalInfo,
+    FreEditSimpleExternal,
 } from "../metalanguage/index.js";
 import { ListUtil } from "../../utils/index.js";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
@@ -29,7 +31,7 @@ import { FreEditParseUtil } from "./FreEditParseUtil.js";
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
-import {FreEditFragmentProjection} from "../metalanguage/editlanguage/FreEditFragmentProjection.js";
+import { FreEditFragmentProjection } from "../metalanguage/editlanguage/FreEditFragmentProjection.js";
 
 // const LOGGER = new MetaLogger("EditorCreators").mute();
 
@@ -53,12 +55,15 @@ export function createEditUnit(group: FreEditProjectionGroup): FreEditUnit {
 }
 
 function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEditProjectionGroup) {
-    data.projections?.forEach(proj => {
+    data.projections?.forEach((proj) => {
         if (proj instanceof FreEditParsedClassifier) {
             if (!!proj.tableProjection) {
                 const myProj: FreEditTableProjection = new FreEditTableProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(proj.classifier.name, "FreClassifier");
+                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(
+                        proj.classifier.name,
+                        "FreClassifier",
+                    );
                 }
                 if (!!proj.tableProjection.cells) {
                     myProj.cells = proj.tableProjection.cells;
@@ -80,7 +85,10 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
             if (!!proj.projection) {
                 const myProj: FreEditNormalProjection = new FreEditNormalProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(proj.classifier.name, "FreClassifier");
+                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(
+                        proj.classifier.name,
+                        "FreClassifier",
+                    );
                 }
                 if (!!proj.projection.lines) {
                     myProj.lines = proj.projection.lines;
@@ -115,7 +123,8 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
     if (!!data.name) {
         result.name = data.name;
     }
-    if (data.precedence !== null && data.precedence !== undefined) { // precedence may be 0, "!!data.precedence" would return false
+    if (data.precedence !== null && data.precedence !== undefined) {
+        // precedence may be 0, "!!data.precedence" would return false
         result.precedence = data.precedence;
     }
     if (!!data.globalProjections) {
@@ -212,9 +221,7 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
         result.fragmentDefinitions = data.fragmentDefinitions;
     }
     if (!!result.classifier && !!result.fragmentDefinitions) {
-        result.fragmentDefinitions.forEach(frag =>
-            frag.childProjection.classifier = result.classifier
-        );
+        result.fragmentDefinitions.forEach((frag) => (frag.childProjection.classifier = result.classifier));
     }
     if (!!data.location) {
         result.location = data.location;
@@ -259,7 +266,7 @@ export function createFragmentDefinition(data: Partial<FreEditFragmentDefinition
     return result;
 }
 
-export function createSimpleExternal (data: Partial<FreEditSimpleExternal>): FreEditSimpleExternal {
+export function createSimpleExternal(data: Partial<FreEditSimpleExternal>): FreEditSimpleExternal {
     const result: FreEditSimpleExternal = new FreEditSimpleExternal();
     if (!!data.name) {
         result.name = data.name;
@@ -275,7 +282,9 @@ export function createSimpleExternal (data: Partial<FreEditSimpleExternal>): Fre
     return result;
 }
 
-export function createClassifierInfo(data: Partial<FreEditExtraClassifierInfo>): FreEditExtraClassifierInfo | undefined {
+export function createClassifierInfo(
+    data: Partial<FreEditExtraClassifierInfo>,
+): FreEditExtraClassifierInfo | undefined {
     const result: FreEditExtraClassifierInfo = new FreEditExtraClassifierInfo();
     let hasContent: boolean = false;
     if (!!data.trigger) {
@@ -307,7 +316,7 @@ export function createProjection(data: Partial<FreEditNormalProjection>): FreEdi
         result.classifier = data.classifier;
     }
     if (!!data.lines) {
-        result.lines = FreEditParseUtil.normalizeLine( data.lines[0] );
+        result.lines = FreEditParseUtil.normalizeLine(data.lines[0]);
         // Now cleanup the parsed projection
         // FreEditParseUtil.normalizeLine(result);
     }
@@ -466,21 +475,21 @@ export function createBoolKeywords(data: Partial<FreEditBoolKeywords>): FreEditB
     return result;
 }
 
-export function createListDirection(data: {[direction: string]:any}): FreEditProjectionDirection {
+export function createListDirection(data: { [direction: string]: any }): FreEditProjectionDirection {
     const dir = data["direction"];
-    if ( dir === "horizontal" || dir === "rows" ) {
+    if (dir === "horizontal" || dir === "rows") {
         return FreEditProjectionDirection.Horizontal;
     }
     return FreEditProjectionDirection.Vertical;
 }
 
-export function createJoinType(data: {[type: string]:any}): ListJoinType {
+export function createJoinType(data: { [type: string]: any }): ListJoinType {
     const type: string = data["type"];
-    if ( type === "separator" ) {
+    if (type === "separator") {
         return ListJoinType.Separator;
-    } else if ( type === "terminator" ) {
+    } else if (type === "terminator") {
         return ListJoinType.Terminator;
-    } else if ( type === "initiator" ) {
+    } else if (type === "initiator") {
         return ListJoinType.Initiator;
     }
     return ListJoinType.NONE;

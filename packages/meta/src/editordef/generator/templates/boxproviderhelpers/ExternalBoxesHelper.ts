@@ -186,7 +186,7 @@ export class ExternalBoxesHelper {
                         "${item.externalInfo!.wrapBy}",
                         ${innerBoxStr}
                         ${initializer}
-                    )`
+                    )`;
     }
 
     private replacePrimByExternal(

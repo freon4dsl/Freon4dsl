@@ -4,7 +4,7 @@ import {
     LANGUAGE_GEN_FOLDER,
     CONFIGURATION_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
-    LOG2USER
+    LOG2USER,
 } from "../../../utils/index.js";
 import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../../metalanguage/index.js";
@@ -14,17 +14,16 @@ import { TyperDef } from "../../metalanguage/index.js";
  * typer(s). It also generates the indexes for the 'gen' folder and the folder with the custom typer.
  */
 export class FreTyperTemplate {
-
     generateTyper(language: FreMetaLanguage, typerdef: TyperDef, relativePath: string): string {
         if (language === undefined || language === null) {
             LOG2USER.error("Could not create typer, because language was not set.");
-            return '';
+            return "";
         }
         // const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.FreTyperPart;
-        let rootType: string = '';
+        let rootType: string = "";
         if (!!typerdef && !!typerdef.typeRoot()) {
             rootType = Names.classifier(typerdef.typeRoot() as FreMetaClassifier);
         }
@@ -251,7 +250,7 @@ export class FreTyperTemplate {
     generateGenIndex(language: FreMetaLanguage): string {
         if (language === undefined || language === null) {
             LOG2USER.error("Could not create gen/index, because language was not set.");
-            return '';
+            return "";
         }
         return `
         export * from "./${Names.typerPart(language)}";
@@ -262,7 +261,7 @@ export class FreTyperTemplate {
     generateIndex(language: FreMetaLanguage): string {
         if (language === undefined || language === null) {
             LOG2USER.error("Could not create index, because language was not set.");
-            return '';
+            return "";
         }
         return `
         export * from "./${Names.customTyper(language)}";

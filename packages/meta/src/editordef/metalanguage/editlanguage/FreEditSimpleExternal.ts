@@ -1,5 +1,5 @@
-import {FreMetaDefinitionElement} from "../../../utils/index.js";
-import {FreEditKeyValuePair} from "./internal.js";
+import { FreMetaDefinitionElement } from "../../../utils/index.js";
+import { FreEditKeyValuePair } from "./internal.js";
 
 /**
  * Represents a projection item that is not linked to the AST. It is used to introduce extra
@@ -11,9 +11,7 @@ export class FreEditSimpleExternal extends FreMetaDefinitionElement {
     params: FreEditKeyValuePair[] = [];
 
     toString(): string {
-        const paramsStr: string = `${this.params.length > 0 ? ` ${this.params.map(p => p.toString()).join(" ")}` : ``}`;
-        return `[external = ${this.name}${paramsStr}]`
+        const paramsStr: string = `${this.params.length > 0 ? ` ${this.params.map((p) => p.toString()).join(" ")}` : ``}`;
+        return `[external = ${this.name}${paramsStr}]`;
     }
 }
-
-

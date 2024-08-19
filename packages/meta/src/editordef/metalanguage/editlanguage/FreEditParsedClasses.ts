@@ -2,9 +2,9 @@ import {
     FreEditExtraClassifierInfo,
     FreEditClassifierProjection,
     FreEditNormalProjection,
-    FreEditTableProjection
+    FreEditTableProjection,
 } from "./internal.js";
-import {FreMetaDefinitionElement} from "../../../utils/index.js";
+import { FreMetaDefinitionElement } from "../../../utils/index.js";
 
 /**
  * This class is only used during parsing. It is removed from the model in the creation phase (in FreEditCreators.extractProjections).

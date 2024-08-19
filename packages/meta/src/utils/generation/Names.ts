@@ -1,7 +1,19 @@
 import {
-    FreMetaClassifier, FreMetaConcept, FreMetaInstance, FreMetaInterface, FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty, FreMetaModelDescription, FreMetaUnitDescription
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaInstance,
+    FreMetaInterface,
+    FreMetaLanguage,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty,
+    FreMetaModelDescription,
+    FreMetaUnitDescription,
 } from "../../languagedef/metalanguage/index.js";
-import { FreEditClassifierProjection, FreEditProjectionGroup, FreEditTableProjection } from "../../editordef/metalanguage/index.js";
+import {
+    FreEditClassifierProjection,
+    FreEditProjectionGroup,
+    FreEditTableProjection,
+} from "../../editordef/metalanguage/index.js";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
@@ -314,7 +326,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "SyntaxAnalyser";
     }
 
-    public static unitAnalyser(language: FreMetaLanguage, unit: FreMetaUnitDescription | FreMetaModelDescription | undefined): string {
+    public static unitAnalyser(
+        language: FreMetaLanguage,
+        unit: FreMetaUnitDescription | FreMetaModelDescription | undefined,
+    ): string {
         if (!!unit) {
             return this.startWithUpperCase(unit?.name) + "SyntaxAnalyserPart";
         } else {
@@ -369,5 +384,4 @@ export class Names {
     public static boxProvider(concept: FreMetaClassifier): string {
         return Names.startWithUpperCase(concept.name) + "BoxProvider";
     }
-
 }

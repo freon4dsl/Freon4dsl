@@ -1,4 +1,4 @@
-import {FreMetaDefinitionElement} from "../../../utils/index.js";
+import { FreMetaDefinitionElement } from "../../../utils/index.js";
 
 export class FreEditBoolKeywords extends FreMetaDefinitionElement {
     trueKeyword: string = "true";

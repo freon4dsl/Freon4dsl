@@ -11,7 +11,7 @@ export class FreonGenerateDiagrams extends FreonGeneratePartAction {
         super({
             actionName: "diagram-it",
             summary: "Generates Mermaid diagrams of the AST of your language",
-            documentation: "Generates Mermaid diagrams of the structure of the language defined in the .ast files."
+            documentation: "Generates Mermaid diagrams of the structure of the language defined in the .ast files.",
         });
     }
 

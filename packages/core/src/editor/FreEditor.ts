@@ -4,21 +4,13 @@ import { FreEnvironment } from "../environment";
 import { FreOwnerDescriptor, FreNode } from "../ast";
 import { FreLogger } from "../logging";
 import { FreAction } from "./actions";
-import {
-    Box,
-    FreCombinedActions,
-    FreCaret,
-    FreProjectionHandler,
-    wait,
-    isTextBox, ElementBox
-} from "./index";
+import { Box, FreCombinedActions, FreCaret, FreProjectionHandler, wait, isTextBox, ElementBox } from "./index";
 import { FreErrorSeverity } from "../validator";
 import { isNullOrUndefined } from "../util";
 
 const LOGGER = new FreLogger("FreEditor");
 
 export class FreEditor {
-
     private static isOnPreviousLine(ref: Box, other: Box): boolean {
         const margin = 5;
         return other.actualY + margin < ref.actualY;
@@ -34,23 +26,23 @@ export class FreEditor {
         return this.isOnPreviousLine(other, ref);
     }
 
-    readonly actions?: FreCombinedActions;      // All actions with which this editor is created.
-    readonly projection: FreProjectionHandler;  // The root projection with which this editor is created.
-    newFreActions: FreAction[] = [];            // List of FreActions composed of all the actions in 'actions'
-    environment: FreEnvironment;                // The generated language environment, needed to find reference shortcuts in the Action box.
-    copiedElement: FreNode;                     // The element that is currently handled in a cut/copy-paste situation.
+    readonly actions?: FreCombinedActions; // All actions with which this editor is created.
+    readonly projection: FreProjectionHandler; // The root projection with which this editor is created.
+    newFreActions: FreAction[] = []; // List of FreActions composed of all the actions in 'actions'
+    environment: FreEnvironment; // The generated language environment, needed to find reference shortcuts in the Action box.
+    copiedElement: FreNode; // The element that is currently handled in a cut/copy-paste situation.
     // todo are the scroll values needed? Do not the boundingRectable values for each HTML element depend on the page, not on the viewport?
-    scrollX: number = 0;                        // The amount of scrolling horizontally, to find the element above and under.
-    scrollY: number = 0;                        // The amount of scrolling vertically, to find the element above and under.
+    scrollX: number = 0; // The amount of scrolling horizontally, to find the element above and under.
+    scrollY: number = 0; // The amount of scrolling vertically, to find the element above and under.
 
-    private _rootElement: FreNode = null;       // The model element to be shown in this editor.
-    private _rootBox: Box | null = null;        // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
-    private _selectedElement: FreNode = null;   // The model element, or the parent element of the property, that is currently selected in the editor.
-    private _selectedProperty: string = "";     // The property that is currectly selected in the editor, if applicable.
-    private _selectedIndex: number = -1;        // The index within the property that is currectly selected in the editor, if applicable.
-    private _selectedBox: Box | null = null;    // The box defined for _selectedElement. Note that it is a 'slave' to _selectedElement.
-    private _selectedPosition: FreCaret = FreCaret.UNSPECIFIED;   // The caret position within the _selectedBox.
-    private NOSELECT: Boolean = false;          // Do not accept "select" actions, used e.g. when an undo is going to come.
+    private _rootElement: FreNode = null; // The model element to be shown in this editor.
+    private _rootBox: Box | null = null; // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
+    private _selectedElement: FreNode = null; // The model element, or the parent element of the property, that is currently selected in the editor.
+    private _selectedProperty: string = ""; // The property that is currectly selected in the editor, if applicable.
+    private _selectedIndex: number = -1; // The index within the property that is currectly selected in the editor, if applicable.
+    private _selectedBox: Box | null = null; // The box defined for _selectedElement. Note that it is a 'slave' to _selectedElement.
+    private _selectedPosition: FreCaret = FreCaret.UNSPECIFIED; // The caret position within the _selectedBox.
+    private NOSELECT: Boolean = false; // Do not accept "select" actions, used e.g. when an undo is going to come.
 
     /**
      * The constructor makes a number of private properties observable.
@@ -65,7 +57,7 @@ export class FreEditor {
         this.initializeActions(actions);
         makeObservable<FreEditor, "_rootElement">(this, {
             // theme: observable,
-            _rootElement: observable
+            _rootElement: observable,
         });
         autorun(this.auto);
     }
@@ -99,7 +91,7 @@ export class FreEditor {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
         }
-    }
+    };
 
     // Getters and Setters
 
@@ -131,9 +123,10 @@ export class FreEditor {
     }
 
     get selectedItem(): FreOwnerDescriptor {
-        return { owner: this._selectedElement,
+        return {
+            owner: this._selectedElement,
             propertyName: this._selectedProperty,
-            propertyIndex: this._selectedIndex
+            propertyIndex: this._selectedIndex,
         };
     }
 
@@ -150,11 +143,23 @@ export class FreEditor {
      * @param caretPosition
      */
     selectElement(element: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
-        LOGGER.log("selectElement " + element?.freLanguageConcept() + " with id " + element?.freId() + ", property: [" + propertyName + ", " + propertyIndex + "]" + " " + caretPosition);
+        LOGGER.log(
+            "selectElement " +
+                element?.freLanguageConcept() +
+                " with id " +
+                element?.freId() +
+                ", property: [" +
+                propertyName +
+                ", " +
+                propertyIndex +
+                "]" +
+                " " +
+                caretPosition,
+        );
         if (this.checkParam(element)) {
             const box: ElementBox = this.projection.getBox(element);
             // check whether the box is shown in the current projection
-            if (isNullOrUndefined(box) || !this.isBoxInTree(box) ) {
+            if (isNullOrUndefined(box) || !this.isBoxInTree(box)) {
                 // element is not shown, try selecting its parent todo maybe try selecting a sibling first?
                 this.selectElement(element.freOwner());
             } else {
@@ -173,7 +178,7 @@ export class FreEditor {
                     this._selectedIndex = -1;
                 }
                 if (!isNullOrUndefined(caretPosition)) {
-                    LOGGER.log("Set caretPosition to " + caretPosition)
+                    LOGGER.log("Set caretPosition to " + caretPosition);
                     this._selectedPosition = caretPosition;
                 } else {
                     this._selectedPosition = FreCaret.UNSPECIFIED;
@@ -207,7 +212,17 @@ export class FreEditor {
      * @param caretPosition
      */
     selectElementBox(element: FreNode, role: string, caretPosition?: FreCaret) {
-        LOGGER.log("selectElementBox " + element?.freLanguageConcept() + " with id " + element?.freId() + ", role: [" + role + "]" + " " + caretPosition);
+        LOGGER.log(
+            "selectElementBox " +
+                element?.freLanguageConcept() +
+                " with id " +
+                element?.freId() +
+                ", role: [" +
+                role +
+                "]" +
+                " " +
+                caretPosition,
+        );
         if (this.checkParam(element)) {
             const box = this.projection.getBox(element);
             const propBox = box.findBoxWithRole(role);
@@ -223,7 +238,7 @@ export class FreEditor {
                 this._selectedIndex = -1;
             }
             if (!isNullOrUndefined(caretPosition)) {
-                LOGGER.log("Set caretPosition to " +  caretPosition)
+                LOGGER.log("Set caretPosition to " + caretPosition);
                 this._selectedPosition = caretPosition;
             } else {
                 this._selectedPosition = FreCaret.UNSPECIFIED;
@@ -268,7 +283,8 @@ export class FreEditor {
      * @param caret
      */
     selectElementForBox(box: Box, caret?: FreCaret) {
-        if (!isNullOrUndefined(box) && box !== this._selectedBox) { // only (re)set the local variables when the box can be found
+        if (!isNullOrUndefined(box) && box !== this._selectedBox) {
+            // only (re)set the local variables when the box can be found
             this._selectedElement = box.node;
             if (!box.selectable) {
                 // get the ElementBox for the selected element
@@ -293,7 +309,8 @@ export class FreEditor {
         this.selectParentForBox(this.selectedBox);
     }
 
-    private selectParentForBox(box: Box) { // private method needed because of recursion
+    private selectParentForBox(box: Box) {
+        // private method needed because of recursion
         LOGGER.log("==> selectParent of " + box?.role + " of kind " + box?.kind);
         const parent = box?.parent;
         if (!!parent) {
@@ -324,7 +341,10 @@ export class FreEditor {
                 const length = arrayProperty.length;
                 if (length === 0) {
                     // TODO Maybe we should select the element (or leaf) just before the list.
-                    this.selectElementBox(parentElement, `${ownerDescriptor.owner.freLanguageConcept()}-${ownerDescriptor.propertyName}`);
+                    this.selectElementBox(
+                        parentElement,
+                        `${ownerDescriptor.owner.freLanguageConcept()}-${ownerDescriptor.propertyName}`,
+                    );
                 } else if (length <= propertyIndex) {
                     this.selectElement(arrayProperty[propertyIndex - 1]);
                 } else {
@@ -333,8 +353,12 @@ export class FreEditor {
             } else {
                 ownerDescriptor.owner[ownerDescriptor.propertyName] = null;
                 // TODO The rolename is identical to the one generated in Roles.ts,  should not be copied here
-                this.selectElementBox(ownerDescriptor.owner,
-                    (ownerDescriptor.owner.freIsBinaryExpression() ? `FreBinaryExpression-${ownerDescriptor.propertyName}` : `${ownerDescriptor.owner.freLanguageConcept()}-${ownerDescriptor.propertyName}`));
+                this.selectElementBox(
+                    ownerDescriptor.owner,
+                    ownerDescriptor.owner.freIsBinaryExpression()
+                        ? `FreBinaryExpression-${ownerDescriptor.propertyName}`
+                        : `${ownerDescriptor.owner.freLanguageConcept()}-${ownerDescriptor.propertyName}`,
+                );
             }
         }
         // }
@@ -350,11 +374,15 @@ export class FreEditor {
         // this.newFreActions.forEach(act => {
         //     LOGGER.log("   Trigger [" + triggerTypeToString(act.trigger) + "] [" + act.activeInBoxRoles + "]");
         // });
-        const alreadyThere = this.newFreActions.findIndex(action => {
-            return isEqual(action.trigger, freCustomAction.trigger) && isEqual(action.activeInBoxRoles, freCustomAction.activeInBoxRoles);
+        const alreadyThere = this.newFreActions.findIndex((action) => {
+            return (
+                isEqual(action.trigger, freCustomAction.trigger) &&
+                isEqual(action.activeInBoxRoles, freCustomAction.activeInBoxRoles)
+            );
         });
         // console.log("  alreadyThere: " + alreadyThere);
-        if (alreadyThere !== -1) { // found it
+        if (alreadyThere !== -1) {
+            // found it
             this.newFreActions.splice(alreadyThere, 1, freCustomAction);
         } else {
             this.newFreActions.splice(0, 0, freCustomAction);
@@ -370,8 +398,8 @@ export class FreEditor {
         if (actions === undefined || actions === null) {
             return;
         }
-        actions.customActions.forEach(ca => this.newFreActions.push(ca));
-        actions.binaryExpressionActions.forEach(ca => this.newFreActions.push(ca));
+        actions.customActions.forEach((ca) => this.newFreActions.push(ca));
+        actions.binaryExpressionActions.forEach((ca) => this.newFreActions.push(ca));
     }
 
     /**
@@ -381,7 +409,10 @@ export class FreEditor {
      * @param severityType  The severity of the message (information, hint, warning, or error).
      */
     setUserMessage(message: string, severityType?: FreErrorSeverity) {
-        console.log('This message should be shown elsewhere: "' + message + '", please override this method appropriately.', severityType);
+        console.log(
+            'This message should be shown elsewhere: "' + message + '", please override this method appropriately.',
+            severityType,
+        );
     }
 
     /**
@@ -428,10 +459,25 @@ export class FreEditor {
         const y = box.actualY + this.scrollY;
         let result: Box = box.nextLeafLeft;
         let tmpResult = result;
-        LOGGER.log("boxAbove " + box.role + ": " + Math.round(x) + ", " + Math.round(y) + " text: " +
-            (isTextBox(box) ? box.getText() : "NotTextBox"));
+        LOGGER.log(
+            "boxAbove " +
+                box.role +
+                ": " +
+                Math.round(x) +
+                ", " +
+                Math.round(y) +
+                " text: " +
+                (isTextBox(box) ? box.getText() : "NotTextBox"),
+        );
         while (result !== null) {
-            LOGGER.log("previous : " + result.role + "  " + Math.round(result.actualX + this.scrollX) + ", " + Math.round(result.actualY + this.scrollY));
+            LOGGER.log(
+                "previous : " +
+                    result.role +
+                    "  " +
+                    Math.round(result.actualX + this.scrollX) +
+                    ", " +
+                    Math.round(result.actualY + this.scrollY),
+            );
             if (FreEditor.isOnPreviousLine(tmpResult, result) && FreEditor.isOnPreviousLine(box, tmpResult)) {
                 return tmpResult;
             }
@@ -458,10 +504,25 @@ export class FreEditor {
         const y = box.actualY + this.scrollX;
         let result: Box = box.nextLeafRight;
         let tmpResult = result;
-        LOGGER.log("boxBelow " + box.role + ": " + Math.round(x) + ", " + Math.round(y) + " text: " +
-            (isTextBox(box) ? box.getText() : "NotTextBox"));
+        LOGGER.log(
+            "boxBelow " +
+                box.role +
+                ": " +
+                Math.round(x) +
+                ", " +
+                Math.round(y) +
+                " text: " +
+                (isTextBox(box) ? box.getText() : "NotTextBox"),
+        );
         while (result !== null) {
-            LOGGER.log("next : " + result.role + "  " + Math.round(result.actualX + this.scrollX) + ", " + Math.round(result.actualY + this.scrollY));
+            LOGGER.log(
+                "next : " +
+                    result.role +
+                    "  " +
+                    Math.round(result.actualX + this.scrollX) +
+                    ", " +
+                    Math.round(result.actualY + this.scrollY),
+            );
             if (FreEditor.isOnNextLine(tmpResult, result) && FreEditor.isOnNextLine(box, tmpResult)) {
                 LOGGER.log("Found box below 1 [" + (!!tmpResult ? tmpResult.role : "null") + "]");
                 return tmpResult;

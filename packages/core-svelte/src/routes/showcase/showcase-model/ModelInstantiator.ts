@@ -1,6 +1,6 @@
-import {ShowCasePart} from "./ShowCasePart.js";
-import {ShowCaseUnit} from "./ShowCaseUnit.js";
-import {ShowCaseModel} from "./ShowCaseModel.js";
+import { ShowCasePart } from "./ShowCasePart.js";
+import { ShowCaseUnit } from "./ShowCaseUnit.js";
+import { ShowCaseModel } from "./ShowCaseModel.js";
 
 export class ModelInstantiator {
     createModel(): ShowCaseModel {
@@ -16,7 +16,7 @@ export class ModelInstantiator {
             prim: "myPrimText",
             numlist: [100, 200, 300],
             part: part1,
-            partlist: [part2, part3, part4, part5, part6]
+            partlist: [part2, part3, part4, part5, part6],
         });
         let model: ShowCaseModel = ShowCaseModel.create({ name: "ShowCaseModel", unit: unit });
         return model;

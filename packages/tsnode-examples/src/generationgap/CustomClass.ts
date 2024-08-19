@@ -6,6 +6,5 @@ export class CustomClass extends GeneratedClass {
     }
 
     customProp: string;
-    customMethod() {
-    }
+    customMethod() {}
 }

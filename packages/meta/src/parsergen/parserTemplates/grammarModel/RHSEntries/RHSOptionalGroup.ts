@@ -17,7 +17,10 @@ export class RHSOptionalGroup extends RHSPropEntry {
     toGrammar(): string {
         if (this.subs.length > 1) {
             // no need for newline between subs and closing ')?'
-            return `( ${this.subs.map(sub => `${sub.toGrammar()}`).join(" ").trimEnd()} )?\n\t`;
+            return `( ${this.subs
+                .map((sub) => `${sub.toGrammar()}`)
+                .join(" ")
+                .trimEnd()} )?\n\t`;
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList || first instanceof RHSBooleanWithSingleKeyWord) {
@@ -31,12 +34,14 @@ export class RHSOptionalGroup extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         if (this.subs.length > 1) {
-            return `
+            return (
+                `
             if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
                 const _optGroup = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);` + // to avoid an extra newline
                 `const _propItem = this.${mainAnalyserName}.getChildren(_optGroup);` +
                 `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "_propItem", mainAnalyserName)}`).join("\n")}
-            }`;
+            }`
+            );
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList) {
@@ -57,6 +62,6 @@ export class RHSOptionalGroup extends RHSPropEntry {
 
     toString(depth: number): string {
         const indent = makeIndent(depth);
-        return indent + "RHSOptionalGroup: " + indent + this.subs.map(sub => sub.toString(depth + 1)).join(indent);
+        return indent + "RHSOptionalGroup: " + indent + this.subs.map((sub) => sub.toString(depth + 1)).join(indent);
     }
 }

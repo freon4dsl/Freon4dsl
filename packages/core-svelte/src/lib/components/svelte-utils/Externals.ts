@@ -1,4 +1,4 @@
-import {type ComponentType} from "svelte";
+import { type ComponentType } from "svelte";
 
 /**
  * The type 'FreExternal' couples a custom (or external) component to a certain box kind.
@@ -7,10 +7,10 @@ import {type ComponentType} from "svelte";
  */
 export type FreExternal = {
     component: ComponentType;
-    knownAs: string
+    knownAs: string;
 };
 
-const customMap = new Map<string, ComponentType>()
+const customMap = new Map<string, ComponentType>();
 
 /**
  * To be used in main part of starter package
@@ -18,7 +18,7 @@ const customMap = new Map<string, ComponentType>()
  */
 export function setCustomComponents(externals: FreExternal[]) {
     // todo add some checks on externals === empty and vars.boxKind not present
-    externals.forEach(ext => customMap.set(ext.knownAs, ext.component));
+    externals.forEach((ext) => customMap.set(ext.knownAs, ext.component));
 }
 
 /**

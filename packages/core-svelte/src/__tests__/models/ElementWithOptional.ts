@@ -2,7 +2,7 @@ import { observablepart, FreNodeBaseImpl, type FreNamedNode, FreUtils } from "@f
 import { SimpleElement } from "./SimpleElement.js";
 import { makeObservable, observable } from "mobx";
 
-export class ElementWithOptional extends FreNodeBaseImpl implements FreNamedNode  {
+export class ElementWithOptional extends FreNodeBaseImpl implements FreNamedNode {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.

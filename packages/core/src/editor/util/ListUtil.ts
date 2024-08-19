@@ -3,20 +3,24 @@
  * They support drag-and-drop and cut/copy-paste functionality.
  */
 
-import { jsonAsString } from "../../util/index";
+import { jsonAsString } from "../../util";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import * as Keys from "./Keys";
 import { MetaKey } from "./Keys";
 import { FreLogger } from "../../logging";
 import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index";
-import {FreLanguage, FreLanguageClassifier, PropertyKind} from "../../language";
+import { FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language";
 import { FreNode } from "../../ast";
 import { runInAction } from "mobx";
 import { FreErrorSeverity } from "../../validator";
 
 const LOGGER = new FreLogger("ListUtil");
 
-export enum MenuOptionsType { normal, placeholder, header }
+export enum MenuOptionsType {
+    normal,
+    placeholder,
+    header,
+}
 
 /**
  * When the user hits 'ENTER', this action is triggered.
@@ -25,14 +29,19 @@ export enum MenuOptionsType { normal, placeholder, header }
  * @param conceptName
  * @param roleToSelect
  */
-export function createKeyboardShortcutForList2(role: string, propertyName: string, conceptName: string, roleToSelect: string): FreCreatePartAction {
+export function createKeyboardShortcutForList2(
+    role: string,
+    propertyName: string,
+    conceptName: string,
+    roleToSelect: string,
+): FreCreatePartAction {
     LOGGER.log("LIST role [" + role + "]");
     return new FreCreatePartAction({
         trigger: { meta: MetaKey.None, key: Keys.ENTER, code: Keys.ENTER },
         activeInBoxRoles: [role, "action-" + role + "-textbox"],
         conceptName: conceptName,
         propertyName: propertyName,
-        boxRoleToSelect: roleToSelect
+        boxRoleToSelect: roleToSelect,
     });
 }
 
@@ -43,7 +52,12 @@ export function createKeyboardShortcutForList2(role: string, propertyName: strin
  * @param targetPropertyName
  * @param targetIndex
  */
-export function moveListElement(parentElement: FreNode, movedElement: FreNode, targetPropertyName: string, targetIndex: number) {
+export function moveListElement(
+    parentElement: FreNode,
+    movedElement: FreNode,
+    targetPropertyName: string,
+    targetIndex: number,
+) {
     runInAction(() => {
         // get info about the property that needs to be changed
         const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
@@ -77,17 +91,24 @@ export function moveListElement(parentElement: FreNode, movedElement: FreNode, t
  * @param targetPropertyName
  * @param targetIndex
  */
-export function dropListElement(editor: FreEditor,
-                                dropped: ListElementInfo,
-                                targetMetaType: string,
-                                targetElem: FreNode,
-                                targetPropertyName: string,
-                                targetIndex: number) {
-    if (!FreLanguage.getInstance().metaConformsToType(dropped.element, targetMetaType)) { // check if item may be dropped here
-        editor.setUserMessage("Drop is not allowed here, because the types do not match ("
-            + dropped.element.freLanguageConcept()
-            + " does not conform to "
-            + targetMetaType + ").", FreErrorSeverity.Error);
+export function dropListElement(
+    editor: FreEditor,
+    dropped: ListElementInfo,
+    targetMetaType: string,
+    targetElem: FreNode,
+    targetPropertyName: string,
+    targetIndex: number,
+) {
+    if (!FreLanguage.getInstance().metaConformsToType(dropped.element, targetMetaType)) {
+        // check if item may be dropped here
+        editor.setUserMessage(
+            "Drop is not allowed here, because the types do not match (" +
+                dropped.element.freLanguageConcept() +
+                " does not conform to " +
+                targetMetaType +
+                ").",
+            FreErrorSeverity.Error,
+        );
         return;
     }
     runInAction(() => {
@@ -115,7 +136,12 @@ export function dropListElement(editor: FreEditor,
  * @param propertyName      the name of the property in which the list is stored
  * @param optionsType       in case the options are created for a placeholder or header, we add lesser items (e.g. no DELETE)
  */
-export function getContextMenuOptions(conceptName: string, listParent: FreNode, propertyName: string, optionsType: MenuOptionsType): MenuItem[] {
+export function getContextMenuOptions(
+    conceptName: string,
+    listParent: FreNode,
+    propertyName: string,
+    optionsType: MenuOptionsType,
+): MenuItem[] {
     LOGGER.log(`getContextMenuOptions
     conceptname: ${conceptName}
     listparent: ${listParent.freId()}=${listParent.freLanguageConcept()}
@@ -123,9 +149,13 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     optionsType ${optionsType}`);
     // do some checks
     const clsOtIntf: FreLanguageClassifier = FreLanguage.getInstance().classifier(conceptName);
-    // @ts-ignore
-    const errorItem: MenuItem = new MenuItem("No options available", "", (element: FreNode, index: number, editor: FreEditor) => {
-    });
+
+    const errorItem: MenuItem = new MenuItem(
+        "No options available",
+        "",
+        // @ts-ignore
+        (element: FreNode, index: number, editor: FreEditor) => {},
+    );
     if (clsOtIntf === undefined || clsOtIntf === null) {
         console.log("Unexpected: Cannot find class or interface for [" + conceptName + "]");
         return [errorItem];
@@ -136,72 +166,121 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
     let addAfter: MenuItem;
     const contextMsg: string = ""; // TODO Use this?: index !== undefined && (listParent[propertyName][index]["name"] !== undefined) ? listParent[propertyName][index]["name"] : ""
     // the handler signature demands the use of certain parameters, therefore the ts-ignore-s
-    if (clsOtIntf.subConceptNames.length > 0) { // there are sub concepts, so create sub menu items
+    if (clsOtIntf.subConceptNames.length > 0) {
+        // there are sub concepts, so create sub menu items
         // todo subclasses to be tested in different project than Example
         const submenuItemsBefore: MenuItem[] = [];
         const submenuItemsAfter: MenuItem[] = [];
-        clsOtIntf.subConceptNames.filter(subName => !FreLanguage.getInstance().classifier(subName).isAbstract).forEach((creatableConceptname: string) => {
-            submenuItemsBefore.push(new MenuItem(creatableConceptname,
-                "",
-                // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, creatableConceptname, true)));
-            submenuItemsAfter.push(new MenuItem(creatableConceptname,
-                "",
-                // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, creatableConceptname, false)));
-        });
+        clsOtIntf.subConceptNames
+            .filter((subName) => !FreLanguage.getInstance().classifier(subName).isAbstract)
+            .forEach((creatableConceptname: string) => {
+                submenuItemsBefore.push(
+                    new MenuItem(
+                        creatableConceptname,
+                        "",
+                        // @ts-ignore
+                        (element: FreNode, index: number, editor: FreEditor) =>
+                            addListElement(editor, listParent, propertyName, index, creatableConceptname, true),
+                    ),
+                );
+                submenuItemsAfter.push(
+                    new MenuItem(
+                        creatableConceptname,
+                        "",
+                        // @ts-ignore
+                        (element: FreNode, index: number, editor: FreEditor) =>
+                            addListElement(editor, listParent, propertyName, index, creatableConceptname, false),
+                    ),
+                );
+            });
         // @ts-ignore
-        addBefore = new MenuItem(`Add before ${contextMsg}`, "Ctrl+A", (element: FreNode, index: number, editor: FreEditor) => {}, submenuItemsBefore);
-        // @ts-ignore
-        addAfter = new MenuItem(`Add after ${contextMsg}`, "Ctrl+I", (element: FreNode, index: number, editor: FreEditor) => {}, submenuItemsAfter);
-    } else {
-        addBefore = new MenuItem(`Add before ${contextMsg}`,
+        addBefore = new MenuItem(
+            `Add before ${contextMsg}`,
             "Ctrl+A",
             // @ts-ignore
-            (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, conceptName, true));
-        addAfter = new MenuItem(`Add after ${contextMsg}`,
+            (element: FreNode, index: number, editor: FreEditor) => {},
+            submenuItemsBefore,
+        );
+        // @ts-ignore
+        addAfter = new MenuItem(
+            `Add after ${contextMsg}`,
             "Ctrl+I",
             // @ts-ignore
-            (element: FreNode, index: number, editor: FreEditor) => addListElement(editor, listParent, propertyName, index, conceptName, false));
+            (element: FreNode, index: number, editor: FreEditor) => {},
+            submenuItemsAfter,
+        );
+    } else {
+        addBefore = new MenuItem(
+            `Add before ${contextMsg}`,
+            "Ctrl+A",
+            // @ts-ignore
+            (element: FreNode, index: number, editor: FreEditor) =>
+                addListElement(editor, listParent, propertyName, index, conceptName, true),
+        );
+        addAfter = new MenuItem(
+            `Add after ${contextMsg}`,
+            "Ctrl+I",
+            // @ts-ignore
+            (element: FreNode, index: number, editor: FreEditor) =>
+                addListElement(editor, listParent, propertyName, index, conceptName, false),
+        );
     }
-    const pasteBefore = new MenuItem("Paste before",
+    const pasteBefore = new MenuItem(
+        "Paste before",
         "",
         // @ts-ignore
-        (element: FreNode, index: number, editor: FreEditor) => pasteListElement(listParent, propertyName, index, editor, true));
-    const pasteAfter = new MenuItem("Paste after",
+        (element: FreNode, index: number, editor: FreEditor) =>
+            pasteListElement(listParent, propertyName, index, editor, true),
+    );
+    const pasteAfter = new MenuItem(
+        "Paste after",
         "",
         // @ts-ignore
-        (element: FreNode, index: number, editor: FreEditor) => pasteListElement(listParent, propertyName, index, editor, false));
+        (element: FreNode, index: number, editor: FreEditor) =>
+            pasteListElement(listParent, propertyName, index, editor, false),
+    );
 
     // now create the whole item list
-    if (optionsType === MenuOptionsType.placeholder) { // add lesser items for a placeholder
+    if (optionsType === MenuOptionsType.placeholder) {
+        // add lesser items for a placeholder
         items = [addBefore, pasteBefore];
-    } else if (optionsType === MenuOptionsType.header) { // add lesser items for a header
+    } else if (optionsType === MenuOptionsType.header) {
+        // add lesser items for a header
         items = [addAfter, pasteAfter];
     } else {
         // In the following some parameters are only present to adhere to signature of super class
-        items = [addBefore,
+        items = [
+            addBefore,
             addAfter,
             new MenuItem(
                 "Delete",
                 "",
                 // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) => deleteListElement(listParent, propertyName, index, element)),
+                (element: FreNode, index: number, editor: FreEditor) =>
+                    deleteListElement(listParent, propertyName, index, element),
+            ),
             new MenuItem(
                 "---",
                 "",
                 // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) => console.log("this is not an option")),
+                (element: FreNode, index: number, editor: FreEditor) => console.log("this is not an option"),
+            ),
             new MenuItem(
                 "Cut",
                 "",
                 // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) => cutListElement(listParent, propertyName, element, editor)),
+                (element: FreNode, index: number, editor: FreEditor) =>
+                    cutListElement(listParent, propertyName, element, editor),
+            ),
             new MenuItem(
                 "Copy",
                 "",
                 // @ts-ignore
-                (element: FreNode, index: number, editor: FreEditor) => copyListElement(element, editor)), pasteBefore, pasteAfter];
+                (element: FreNode, index: number, editor: FreEditor) => copyListElement(element, editor),
+            ),
+            pasteBefore,
+            pasteAfter,
+        ];
     }
     return items;
 }
@@ -215,7 +294,14 @@ export function getContextMenuOptions(conceptName: string, listParent: FreNode, 
  * @param typeOfAdded
  * @param before
  */
-function addListElement(editor: FreEditor, listParent: FreNode, propertyName: string, index: number, typeOfAdded: string, before: boolean) {
+function addListElement(
+    editor: FreEditor,
+    listParent: FreNode,
+    propertyName: string,
+    index: number,
+    typeOfAdded: string,
+    before: boolean,
+) {
     LOGGER.log(`addListElement of type: ${typeOfAdded} index: ${index}`);
     // get info about the property that needs to be changed
     const { property, isList, type } = getPropertyInfo(listParent, propertyName);
@@ -230,13 +316,14 @@ function addListElement(editor: FreEditor, listParent: FreNode, propertyName: st
     if (newElement === undefined || newElement === null) {
         console.error("New element undefined"); // TODO Find out why this happens sometimes
         return;
-    } else if (isList && FreLanguage.getInstance().metaConformsToType(newElement, type)) { // allow subtyping
+    } else if (isList && FreLanguage.getInstance().metaConformsToType(newElement, type)) {
+        // allow subtyping
         // LOGGER.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
         runInAction(() => {
             property.splice(index, 0, newElement);
         });
-        editor.selectElement(newElement)
-        editor.selectFirstEditableChildBox(newElement)
+        editor.selectElement(newElement);
+        editor.selectFirstEditableChildBox(newElement);
         // LOGGER.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
     }
 }
@@ -254,12 +341,12 @@ function deleteListElement(listParent: FreNode, propertyName: string, index: num
     // get info about the property that needs to be changed
     // const parentElement: FreNode = element.freOwnerDescriptor().owner;
     // const targetPropertyName: string = element.freOwnerDescriptor().propertyName;
-    const targetIndex: number = index;//  element.freOwnerDescriptor().propertyIndex;
+    const targetIndex: number = index; //  element.freOwnerDescriptor().propertyIndex;
     // console.log(`deleteListElement=> listParent: ${listParent.freLanguageConcept()},
     // propertyName ${propertyName}, index: ${targetIndex}`);
 
     LOGGER.log("   index of element " + element.freLanguageConcept() + "." + element.freId() + " is " + targetIndex);
-    LOGGER.log(jsonAsString(element, 2))
+    LOGGER.log(jsonAsString(element, 2));
     const { property, isList } = getPropertyInfo(listParent, propertyName);
     // make the change
     if (isList) {
@@ -304,7 +391,13 @@ function copyListElement(element: FreNode, editor: FreEditor) {
  * @param editor
  * @param before
  */
-function pasteListElement(listParent: FreNode, propertyName: string, index: number, editor: FreEditor, before: boolean) {
+function pasteListElement(
+    listParent: FreNode,
+    propertyName: string,
+    index: number,
+    editor: FreEditor,
+    before: boolean,
+) {
     LOGGER.log(`pasteListElement index: ${index}`);
 
     // first, do some checks
@@ -323,27 +416,32 @@ function pasteListElement(listParent: FreNode, propertyName: string, index: numb
     // check whether the pasted element has the correct type
     if (!FreLanguage.getInstance().metaConformsToType(editor.copiedElement, type)) {
         editor.setUserMessage(
-            "Types do not conform (" + editor.copiedElement.freLanguageConcept() + " does not conform to " + type + ").",
-            FreErrorSeverity.Error);
+            "Types do not conform (" +
+                editor.copiedElement.freLanguageConcept() +
+                " does not conform to " +
+                type +
+                ").",
+            FreErrorSeverity.Error,
+        );
         return;
     }
 
     // make the change
     if (isList) {
-        LOGGER.log("List before: [" + property.map(x => x.freId()).join(", ") + "]");
-        let insertedElement = editor.copiedElement
+        LOGGER.log("List before: [" + property.map((x) => x.freId()).join(", ") + "]");
+        let insertedElement = editor.copiedElement;
         runInAction(() => {
             if (targetIndex <= property.length) {
                 property.splice(targetIndex, 0, editor.copiedElement);
             }
             // make sure the element can be pasted elsewhere
-            insertedElement = editor.copiedElement
+            insertedElement = editor.copiedElement;
             editor.copiedElement = insertedElement.copy();
         });
-        editor.selectElement(insertedElement)
-        editor.selectFirstEditableChildBox(insertedElement)
+        editor.selectElement(insertedElement);
+        editor.selectFirstEditableChildBox(insertedElement);
 
-        LOGGER.log("List after: [" + property.map(x => x.freId()).join(", ") + "]");
+        LOGGER.log("List after: [" + property.map((x) => x.freId()).join(", ") + "]");
     }
 }
 
@@ -352,7 +450,7 @@ export type PropertyInfo = {
     isList: boolean;
     isPart: PropertyKind;
     type: string;
-}
+};
 /**
  * This function returns information on the property within 'element' with name 'propertyName',
  * as it is available in 'Language.getInstance()'.

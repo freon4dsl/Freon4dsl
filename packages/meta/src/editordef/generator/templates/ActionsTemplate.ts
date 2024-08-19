@@ -2,7 +2,6 @@ import { Names, FREON_CORE } from "../../../utils/index.js";
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/FreMetaLanguage.js";
 
 export class ActionsTemplate {
-
     generate(language: FreMetaLanguage): string {
         return `
             import {

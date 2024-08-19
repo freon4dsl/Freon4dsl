@@ -27,10 +27,9 @@ export class CheckRunner {
 
     public nestedCheck(check: NestedCheck | NestedCheck[]): void {
         if (Array.isArray(check)) {
-            check.forEach(chk =>
-            {
+            check.forEach((chk) => {
                 if (this.simpleCheck(chk.check, chk.error)) {
-                    if (!!(chk.whenOk)) {
+                    if (!!chk.whenOk) {
                         chk.whenOk();
                     }
                 }
@@ -54,7 +53,7 @@ export class CheckRunner {
 
     public nestedWarning(check: NestedCheck | NestedCheck[]): void {
         if (Array.isArray(check)) {
-            check.forEach(chk => this.simpleWarning(chk.check, chk.error));
+            check.forEach((chk) => this.simpleWarning(chk.check, chk.error));
         } else {
             if (this.simpleWarning(check.check, check.error)) {
                 if (!!check.whenOk) {

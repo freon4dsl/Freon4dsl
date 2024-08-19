@@ -4,7 +4,7 @@
 export enum FreEditProjectionDirection {
     NONE = "NONE",
     Horizontal = "Horizontal",
-    Vertical = "Vertical"
+    Vertical = "Vertical",
 }
 
 /**
@@ -12,9 +12,9 @@ export enum FreEditProjectionDirection {
  */
 export enum ListJoinType {
     NONE = "NONE",
-    Terminator = "Terminator",  // the accompanying string is placed after each list element
-    Separator = "Separator",    // the accompanying string is placed between list elements
-    Initiator = "Initiator"     // the accompanying string is placed before each list element
+    Terminator = "Terminator", // the accompanying string is placed after each list element
+    Separator = "Separator", // the accompanying string is placed between list elements
+    Initiator = "Initiator", // the accompanying string is placed before each list element
 }
 
 /**
@@ -26,7 +26,7 @@ export enum DisplayType {
     Radio = "radio",
     Switch = "switch",
     InnerSwitch = "inner-switch",
-    Slider = "slider"
+    Slider = "slider",
 }
 
 /**
@@ -38,5 +38,5 @@ export enum ForType {
     Limited = "limited",
     LimitedList = "limitedList",
     ReferenceSeparator = "referenceSeparator",
-    Externals = "externals"
+    Externals = "externals",
 }

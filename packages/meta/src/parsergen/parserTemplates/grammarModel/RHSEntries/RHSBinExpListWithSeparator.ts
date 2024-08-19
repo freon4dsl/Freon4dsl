@@ -17,7 +17,10 @@ export class RHSBinExpListWithSeparator extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        return `[ ${BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type))} / '${this.separatorText}' ]*` + this.doNewline();
+        return (
+            `[ ${BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type))} / '${this.separatorText}' ]*` +
+            this.doNewline()
+        );
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

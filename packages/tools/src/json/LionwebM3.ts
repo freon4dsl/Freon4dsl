@@ -9,13 +9,11 @@ export type LwMetaPointer = {
     language: Id;
     version: string;
     key: Id;
-}
+};
 
 export function isLwMetaPointer(node: any): node is LwMetaPointer {
     const metaPointer = node as LwMetaPointer;
-    return metaPointer.key !== undefined &&
-        metaPointer.version !== undefined &&
-        metaPointer.language !== undefined;
+    return metaPointer.key !== undefined && metaPointer.version !== undefined && metaPointer.language !== undefined;
 }
 
 function isEqualMetaPointer(p1: LwMetaPointer, p2: LwMetaPointer): boolean {
@@ -26,24 +24,21 @@ export type LwChunk = {
     serializationFormatVersion: string;
     languages: LwUsedLanguage[];
     nodes: LwNode[];
-}
+};
 
 export function isLwChunk(box: any): box is LwChunk {
     const cnk = box as LwChunk;
-    return cnk.serializationFormatVersion !== undefined &&
-        cnk.languages !== undefined &&
-        cnk.nodes !== undefined;
+    return cnk.serializationFormatVersion !== undefined && cnk.languages !== undefined && cnk.nodes !== undefined;
 }
 
 export type LwUsedLanguage = {
     key: Id;
     version: string;
-}
+};
 
 export function isLwUsedLanguage(obj: any): obj is LwUsedLanguage {
     const lwUsedLanguage = obj as LwUsedLanguage;
-    return lwUsedLanguage.key !== undefined &&
-        lwUsedLanguage.version !== undefined
+    return lwUsedLanguage.key !== undefined && lwUsedLanguage.version !== undefined;
 }
 
 export type LwNode = {
@@ -53,16 +48,18 @@ export type LwNode = {
     children: LwChild[];
     references: LwReference[];
     parent: string;
-}
+};
 
 export function isLwNode(box: any): box is LwNode {
     const lwNode = box as LwNode;
-    return lwNode.id !== undefined &&
+    return (
+        lwNode.id !== undefined &&
         lwNode.concept !== undefined &&
         lwNode.properties !== undefined &&
         lwNode.children !== undefined &&
         lwNode.references !== undefined &&
-        lwNode.parent !== undefined;
+        lwNode.parent !== undefined
+    );
 }
 
 export function createLwNode(): LwNode {
@@ -72,65 +69,61 @@ export function createLwNode(): LwNode {
         properties: [],
         children: [],
         references: [],
-        parent: null
-    }
+        parent: null,
+    };
 }
 
 export type LwProperty = {
     property: LwMetaPointer;
     value: string;
-}
+};
 
 export function isLwProperty(obj: any): obj is LwProperty {
     const lwProperty = obj as LwProperty;
-    return lwProperty.property !== undefined &&
-        lwProperty.value !== undefined;
+    return lwProperty.property !== undefined && lwProperty.value !== undefined;
 }
 
 export type LwChild = {
     containment: LwMetaPointer;
     children: string[];
-}
+};
 
 export function isLwChild(obj: any): obj is LwChild {
     const lwChild = obj as LwChild;
-    return lwChild.containment !== undefined &&
-        lwChild.children !== undefined;
+    return lwChild.containment !== undefined && lwChild.children !== undefined;
 }
 
 export type LwReference = {
     reference: LwMetaPointer;
     targets: LwReferenceTarget[];
-}
+};
 
 export function isLwReference(obj: any): obj is LwReference {
     const lwReference = obj as LwReference;
-    return lwReference.reference !== undefined &&
-        lwReference.targets !== undefined;
+    return lwReference.reference !== undefined && lwReference.targets !== undefined;
 }
 
 export type LwReferenceTarget = {
     resolveInfo: string;
     reference: Id;
-}
+};
 
-export function isLwReferenceTarget (obj: any): obj is  LwReferenceTarget {
+export function isLwReferenceTarget(obj: any): obj is LwReferenceTarget {
     const lwReferenceTarget = obj as LwReferenceTarget;
-    return lwReferenceTarget.reference !== undefined &&
-        lwReferenceTarget.resolveInfo !== undefined;
+    return lwReferenceTarget.reference !== undefined && lwReferenceTarget.resolveInfo !== undefined;
 }
 
 export type LwError = {
     errors: string[];
-}
+};
 
 export class LwDiff {
-    errors: string[]  = []; 
+    errors: string[] = [];
 
     error(msg: string) {
         this.errors.push(msg + "\n");
     }
-    
+
     check(b: boolean, message: string): void {
         if (!b) {
             this.error("Check error: " + message);
@@ -187,10 +180,13 @@ export class LwDiff {
         return null;
     }
 
-    findLwReferenceTarget(lwReferenceTargets: LwReferenceTarget[], target: LwReferenceTarget): LwReferenceTarget | null {
+    findLwReferenceTarget(
+        lwReferenceTargets: LwReferenceTarget[],
+        target: LwReferenceTarget,
+    ): LwReferenceTarget | null {
         for (const refTarget of lwReferenceTargets) {
             if (refTarget.reference === target.reference && refTarget.resolveInfo === target.resolveInfo) {
-                return refTarget
+                return refTarget;
             }
         }
         return null;
@@ -204,7 +200,9 @@ export class LwDiff {
     diffLwNode(obj1: LwNode, obj2: LwNode): void {
         // console.log("Comparing nodes")
         if (!isEqualMetaPointer(obj1.concept, obj2.concept)) {
-            this.error(`Object ${obj1.id} has concept ${JSON.stringify(obj1.concept)} vs ${JSON.stringify(obj2.concept)}`);
+            this.error(
+                `Object ${obj1.id} has concept ${JSON.stringify(obj1.concept)} vs ${JSON.stringify(obj2.concept)}`,
+            );
         }
         if (obj1.parent !== obj2.parent) {
             this.error(`Object ${obj1.id} has parent ${obj1.parent} vs ${obj2.parent}`);
@@ -244,9 +242,11 @@ export class LwDiff {
     }
 
     diffLwChunk(chunk1: LwChunk, chunk2: LwChunk): void {
-        console.log("Comparing chuncks")
+        console.log("Comparing chuncks");
         if (chunk1.serializationFormatVersion !== chunk2.serializationFormatVersion) {
-            this.error(`Serialization versions do not match: ${chunk1.serializationFormatVersion} vs ${chunk2.serializationFormatVersion}`);
+            this.error(
+                `Serialization versions do not match: ${chunk1.serializationFormatVersion} vs ${chunk2.serializationFormatVersion}`,
+            );
         }
         // TODO check languages other wway around
         for (const language of chunk1.languages) {
@@ -259,7 +259,7 @@ export class LwDiff {
             const tmp = this.lwDiff(language, otherLanguage);
         }
         for (const language of chunk2.languages) {
-            console.log("Comparing languages")
+            console.log("Comparing languages");
             const otherLanguage = this.findLwUsedLanguage(chunk1.languages, language.key);
             if (otherLanguage === null) {
                 // return { isEqual: false, diffMessage: `Node with concept key ${id} does not exist in second object`};
@@ -291,7 +291,9 @@ export class LwDiff {
     diffLwChild(obj1: LwChild, obj2: LwChild): void {
         if (!isEqualMetaPointer(obj1.containment, obj2.containment)) {
             // return { isEqual: false, diffMessage: `Property Object has concept ${JSON.stringify(obj1.property)} vs ${JSON.stringify(obj2.property)}`}
-            this.error(`Child Object has concept ${JSON.stringify(obj1.containment)} vs ${JSON.stringify(obj2.containment)}`);
+            this.error(
+                `Child Object has concept ${JSON.stringify(obj1.containment)} vs ${JSON.stringify(obj2.containment)}`,
+            );
         }
         // Check whether children exist in both objects (two for loops)
         for (const childId1 of obj1.children) {
@@ -314,16 +316,16 @@ export class LwDiff {
         for (const target of ref1.targets) {
             const otherTarget = this.findLwReferenceTarget(ref2.targets, target);
             if (otherTarget === null) {
-                console.error(`REFERENCE Target ${JSON.stringify(target)} missing in second `)
+                console.error(`REFERENCE Target ${JSON.stringify(target)} missing in second `);
             } else {
                 if (target.reference !== otherTarget.reference || target.resolveInfo !== otherTarget.resolveInfo) {
-                    this.error(`REFERENCE target ${JSON.stringify(target)} vs ${JSON.stringify(otherTarget)}`)
+                    this.error(`REFERENCE target ${JSON.stringify(target)} vs ${JSON.stringify(otherTarget)}`);
                 }
             }
         }
         for (const target of ref2.targets) {
             if (this.findLwReferenceTarget(ref1.targets, target) === null) {
-                this.error(`REFERENCE Target ${JSON.stringify(target)} missing in first `)
+                this.error(`REFERENCE Target ${JSON.stringify(target)} missing in first `);
             }
         }
     }
@@ -335,7 +337,9 @@ export class LwDiff {
             this.diffLwNode(obj1, obj2);
         } else if (isLwProperty(obj1) && isLwProperty(obj2)) {
             if (!isEqualMetaPointer(obj1.property, obj2.property)) {
-                this.error(`Property Object has concept ${JSON.stringify(obj1.property)} vs ${JSON.stringify(obj2.property)}`)
+                this.error(
+                    `Property Object has concept ${JSON.stringify(obj1.property)} vs ${JSON.stringify(obj2.property)}`,
+                );
             }
             if (obj1.value !== obj2.value) {
                 this.error(`Property ${obj1.property.key} has value ${obj1.value} vs ${obj2.value}`);

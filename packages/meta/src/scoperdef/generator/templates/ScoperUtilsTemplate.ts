@@ -3,13 +3,14 @@ import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalan
 import { ScopeDef } from "../../metalanguage/index.js";
 
 export class ScoperUtilsTemplate {
-
     generateScoperUtils(language: FreMetaLanguage, scopedef: ScopeDef, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts();
-        const concreteNamespaces: FreMetaClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scopedef.namespaces);
+        const concreteNamespaces: FreMetaClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(
+            scopedef.namespaces,
+        );
         const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
         // also process the units that are not explicitly marked as namespace
-        language.units.forEach(unit => {
+        language.units.forEach((unit) => {
             // TODO check this and change the documentation
             if (!concreteNamespaces.includes(unit)) {
                 concreteNamespaces.push(unit);
@@ -19,11 +20,9 @@ export class ScoperUtilsTemplate {
         // Template starts here
         return `
         import { 
-                    ${includeRoot ?
-                        `${Names.classifier(language.modelConcept)},`
-                    : ``}
-                    ${concreteNamespaces.map(ref => `${Names.classifier(ref)}`).join(", ")}
-                } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+                    ${includeRoot ? `${Names.classifier(language.modelConcept)},` : ``}
+                    ${concreteNamespaces.map((ref) => `${Names.classifier(ref)}`).join(", ")}
+                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
         /**
          * Returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition.
@@ -33,9 +32,8 @@ export class ScoperUtilsTemplate {
          */
         export function isNameSpace(modelelement: ${allLangConcepts}): boolean {
             ${includeRoot ? `if (modelelement instanceof ${Names.classifier(language.modelConcept)}) { return true; }` : ``}
-            ${concreteNamespaces.map(ref => `if (modelelement instanceof ${Names.classifier(ref)}) { return true; }`).join("\n")}
+            ${concreteNamespaces.map((ref) => `if (modelelement instanceof ${Names.classifier(ref)}) { return true; }`).join("\n")}
                 return false;
         }`;
     }
-
 }

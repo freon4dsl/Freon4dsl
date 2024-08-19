@@ -153,8 +153,7 @@ function toPartialMatchRegex(re: RegExp) {
                                 break;
 
                             case "<":
-                                switch (source[i + 3])
-                                {
+                                switch (source[i + 3]) {
                                     case "=":
                                     case "!":
                                         tmp = i;

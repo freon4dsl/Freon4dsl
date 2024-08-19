@@ -1,7 +1,6 @@
 import * as fs from "fs";
 
 export class FileHandler {
-
     /**
      * Reads a string from the file located at 'filepath'. If the
      * file is not present an Error will be thrown.

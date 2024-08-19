@@ -5,7 +5,7 @@ import {
     FreEditProjectionGroup,
     FreEditProjectionLine,
     FreEditTableProjection,
-    FreEditUnit
+    FreEditUnit,
 } from "../../metalanguage/index.js";
 import {
     FreMetaBinaryExpressionConcept,
@@ -19,7 +19,7 @@ import {
     FREON_CORE,
     LANGUAGE_GEN_FOLDER,
     ListUtil,
-    Names
+    Names,
 } from "../../../utils/index.js";
 import {
     PrimitivePropertyBoxesHelper,
@@ -29,7 +29,7 @@ import {
     ItemBoxHelper,
     ListPropertyBoxHelper,
     PartPropertyBoxHelper,
-    ExternalBoxesHelper
+    ExternalBoxesHelper,
 } from "./boxproviderhelpers/index.js";
 
 export class BoxProviderTemplate {
@@ -37,13 +37,13 @@ export class BoxProviderTemplate {
     private static dummyProjection: FreEditNormalProjection = new FreEditNormalProjection();
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
-    public modelImports: string[] = [];    // imports from ../language/gen
-    public coreImports: string[] = [];     // imports from @freon4dsl/core
-    public configImports: string[] = [];   // imports from ../config/gen
+    public modelImports: string[] = []; // imports from ../language/gen
+    public coreImports: string[] = []; // imports from @freon4dsl/core
+    public configImports: string[] = []; // imports from ../config/gen
     // Information about the use of projections from super concepts or interfaces is also collected during the content
     // creation. This avoids the generation of unused classes and methods.
-    private useSuper: boolean = false;  // indicates whether one or more super projection(s) are being used
-    private supersUsed: FreMetaClassifier[] = [];  // holds the names of the supers (concepts/interfaces) that are being used
+    private useSuper: boolean = false; // indicates whether one or more super projection(s) are being used
+    private supersUsed: FreMetaClassifier[] = []; // holds the names of the supers (concepts/interfaces) that are being used
     private readonly _myPrimitiveHelper: PrimitivePropertyBoxesHelper;
     private readonly _myItemHelper: ItemBoxHelper;
     private readonly _myTableBoxHelper: TableBoxHelper;
@@ -64,7 +64,8 @@ export class BoxProviderTemplate {
             this._myLimitedHelper,
             this._myListPropHelper,
             this._myPartPropHelper,
-            externalBoxesHelper);
+            externalBoxesHelper,
+        );
         this._myTableBoxHelper = new TableBoxHelper(this, this._myItemHelper);
         this._myItemHelper.tableBoxHelper = this._myTableBoxHelper;
         // get the global labels for true and false, and the global display type (checkbox, radio, text, etc.) for boolean values
@@ -75,30 +76,47 @@ export class BoxProviderTemplate {
         }
     }
 
-    generateBoxProvider(language: FreMetaLanguage, concept: FreMetaClassifier, editDef: FreEditUnit, extraClassifiers: FreMetaClassifier[], relativePath: string): string {
+    generateBoxProvider(
+        language: FreMetaLanguage,
+        concept: FreMetaClassifier,
+        editDef: FreEditUnit,
+        extraClassifiers: FreMetaClassifier[],
+        relativePath: string,
+    ): string {
         // init the imports
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        ListUtil.addListIfNotPresent(this.coreImports, ["Box", "BoxUtil", "BoxFactory", "FreBoxProvider", "FreProjectionHandler"]);
+        ListUtil.addListIfNotPresent(this.coreImports, [
+            "Box",
+            "BoxUtil",
+            "FreBoxProvider",
+            "FreProjectionHandler",
+        ]);
 
         // see which projections there are for this concept
         // myBoxProjections: all non table projections
         // myTableProjections: all table projections
-        const myBoxProjections: FreEditClassifierProjection[] = editDef.findProjectionsForType(concept)
-            .filter(proj => !(proj instanceof FreEditTableProjection));
+        const myBoxProjections: FreEditClassifierProjection[] = editDef
+            .findProjectionsForType(concept)
+            .filter((proj) => !(proj instanceof FreEditTableProjection));
         const myTableProjections: FreEditTableProjection[] = editDef.findTableProjectionsForType(concept);
         const allProjections: FreEditClassifierProjection[] = [];
         ListUtil.addListIfNotPresent(allProjections, myBoxProjections);
         ListUtil.addListIfNotPresent(allProjections, myTableProjections);
 
         // build the core of the box provider class, to be used in the template
-        const coreText: string = new BoxProviderCoreTextTemplate().generateCoreTemplate(myBoxProjections, myTableProjections, allProjections, concept);
+        const coreText: string = new BoxProviderCoreTextTemplate().generateCoreTemplate(
+            myBoxProjections,
+            myTableProjections,
+            allProjections,
+            concept,
+        );
 
         // build the text for any table projections
-        let tableText: string = '';
+        let tableText: string = "";
         if (myTableProjections.length > 0) {
-            tableText = myTableProjections.map(proj =>
-                this._myTableBoxHelper.generateTableProjection(language, concept, proj, 1)
-            ).join("\n\n")
+            tableText = myTableProjections
+                .map((proj) => this._myTableBoxHelper.generateTableProjection(language, concept, proj, 1))
+                .join("\n\n");
         }
 
         // build the text for the box projections or the special text for the binary expressions
@@ -110,7 +128,9 @@ export class BoxProviderTemplate {
             myBoxProjections.splice(0, 0, BoxProviderTemplate.dummyProjection);
             boxText = this.generateForBinExp(language, editDef.getDefaultProjectiongroup()?.findExtrasForType(concept));
         } else {
-            boxText = myBoxProjections.map(proj => this.generateProjectionForClassifier(language, concept, proj)).join("\n\n");
+            boxText = myBoxProjections
+                .map((proj) => this.generateProjectionForClassifier(language, concept, proj))
+                .join("\n\n");
         }
 
         // If 'concept' extends a super concept or implements interfaces, create the method to produce the box for the super projection
@@ -125,21 +145,31 @@ export class BoxProviderTemplate {
 
         // create a string for the collected imports
         const importsText: string = `
-            ${this.coreImports.length > 0
-            ? `import { ${this.coreImports.map(c => `${c}`).join(", ")} } from "${FREON_CORE}";`
-            : ``}
+            ${
+                this.coreImports.length > 0
+                    ? `import { ${this.coreImports.map((c) => `${c}`).join(", ")} } from "${FREON_CORE}";`
+                    : ``
+            }
 
-            ${this.modelImports.length > 0
-            ? `import { ${this.modelImports.map(c => `${c}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`
-            : ``}
+            ${
+                this.modelImports.length > 0
+                    ? `import { ${this.modelImports.map((c) => `${c}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`
+                    : ``
+            }
 
-            ${this.configImports.length > 0
-            ? this.configImports.map(c => `import { ${c} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${c}";`)
-            : ``}
+            ${
+                this.configImports.length > 0
+                    ? this.configImports.map(
+                          (c) => `import { ${c} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${c}";`,
+                      )
+                    : ``
+            }
 
-            ${this.supersUsed.length > 0
-            ? `import { ${this.supersUsed.map(c => `${Names.boxProvider(c)}`).join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";`
-            : ``}
+            ${
+                this.supersUsed.length > 0
+                    ? `import { ${this.supersUsed.map((c) => `${Names.boxProvider(c)}`).join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";`
+                    : ``
+            }
             
             `;
 
@@ -182,7 +212,7 @@ export class BoxProviderTemplate {
         if (!!extras) {
             symbol = extras.symbol;
         }
-        this.coreImports.push(...["createDefaultBinaryBox", "isFreBinaryExpression", Names.FreBinaryExpression]);
+        this.coreImports.push(...["createDefaultBinaryBox", "isFreBinaryExpression", Names.FreBinaryExpression, "BoxFactory"]);
         this.configImports.push(Names.environment(language));
         // todo the current implementation does not work on non-global projections, is this a problem?
         return ` /**
@@ -210,7 +240,7 @@ export class BoxProviderTemplate {
                         } else {
                             return binBox;
                         }
-                    }`
+                    }`;
     }
 
     private createdGetSuperMethod(supers: FreMetaClassifier[], elementVarName: string): string {
@@ -228,10 +258,14 @@ export class BoxProviderTemplate {
                 private getSuper(superName: string, projectionName?: string): Box {
                     let superBoxProvider: FreBoxProvider = null;
                     switch (superName) {
-                        ${supers.map(s => `case "${s.name}": {
+                        ${supers
+                            .map(
+                                (s) => `case "${s.name}": {
                             superBoxProvider = new ${Names.boxProvider(s)}(this.mainHandler);
                             break;
-                        }`).join("\n")}
+                        }`,
+                            )
+                            .join("\n")}
                     }
                     if (!!superBoxProvider) {
                         superBoxProvider.node = ${elementVarName};
@@ -245,7 +279,11 @@ export class BoxProviderTemplate {
                 }`;
     }
 
-    private generateProjectionForClassifier(language: FreMetaLanguage, concept: FreMetaClassifier, projection: FreEditClassifierProjection): string {
+    private generateProjectionForClassifier(
+        language: FreMetaLanguage,
+        concept: FreMetaClassifier,
+        projection: FreEditClassifierProjection,
+    ): string {
         ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
         if (projection instanceof FreEditNormalProjection) {
             const elementVarName: string = `(this._node as ${Names.classifier(concept)})`;
@@ -253,11 +291,7 @@ export class BoxProviderTemplate {
             if (concept instanceof FreMetaExpressionConcept) {
                 ListUtil.addIfNotPresent(this.coreImports, "createDefaultExpressionBox");
                 return `private ${Names.projectionMethod(projection)} () : Box {
-                    return createDefaultExpressionBox( ${elementVarName}, "default-expression-box", [
-                            ${result}
-                        ],
-                        { selectable: false }
-                    );
+                    return createDefaultExpressionBox( ${elementVarName}, [${result}], { selectable: false } );
                 }`;
             } else {
                 return `private ${Names.projectionMethod(projection)} () : Box {
@@ -277,16 +311,24 @@ export class BoxProviderTemplate {
      * @param language
      * @param topIndex
      */
-    public generateLines(lines: FreEditProjectionLine[], elementVarName: string, boxLabel: string, language: FreMetaLanguage, topIndex: number) {
+    public generateLines(
+        lines: FreEditProjectionLine[],
+        elementVarName: string,
+        boxLabel: string,
+        language: FreMetaLanguage,
+        topIndex: number,
+    ) {
         let result: string = "";
         // do all lines, separate them with a comma
         lines.forEach((line, index) => {
             result += this.generateLine(line, elementVarName, index, boxLabel, language, topIndex);
-            if (index !== lines.length - 1) { // add a comma
+            if (index !== lines.length - 1) {
+                // add a comma
                 result += ",";
             }
         });
-        if (lines.length > 1) { // multi-line projection, so surround with vertical box
+        if (lines.length > 1) {
+            // multi-line projection, so surround with vertical box
             ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
             result = `BoxFactory.verticalLayout(${elementVarName}, "${boxLabel}-overall", '', [
                 ${result}
@@ -304,7 +346,7 @@ export class BoxProviderTemplate {
         index: number,
         boxLabel: string,
         language: FreMetaLanguage,
-        topIndex: number
+        topIndex: number,
     ): string {
         let result: string = "";
         if (line.isEmpty()) {
@@ -313,17 +355,27 @@ export class BoxProviderTemplate {
         } else {
             // do all projection items in the line, separate them with a comma
             line.items.forEach((item, itemIndex) => {
-                result += this._myItemHelper.generateItem(item, elementVarName, index, itemIndex, boxLabel, language, topIndex);
+                result += this._myItemHelper.generateItem(
+                    item,
+                    elementVarName,
+                    index,
+                    itemIndex,
+                    boxLabel,
+                    language,
+                    topIndex,
+                );
                 if (itemIndex < line.items.length - 1) {
                     result += ",";
                 }
             });
-            if (line.items.length > 1) { // surround with horizontal box
+            if (line.items.length > 1) {
+                // surround with horizontal box
                 // TODO Too many things are now selectable, but if false, you cannot select e.g. an attribute
                 ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
                 result = `BoxFactory.horizontalLayout(${elementVarName}, "${boxLabel}-hlist-line-${index}", '', [ ${result} ], { selectable: false } ) `;
             }
-            if (line.indent > 0) { // surround with indentBox
+            if (line.indent > 0) {
+                // surround with indentBox
                 ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
                 result = `BoxUtil.indentBox(${elementVarName}, ${line.indent}, "${index}", ${result} )`;
             }

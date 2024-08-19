@@ -15,7 +15,8 @@ import {
     FreMetaPrimitiveType,
     FreMetaProperty,
     FreMetaUnitDescription,
-    MetaElementReference, FreMetaEnumValue
+    MetaElementReference,
+    FreMetaEnumValue,
 } from "../metalanguage/index.js";
 import { ParseLocation, ParseLocationUtil } from "../../utils/index.js";
 
@@ -118,8 +119,8 @@ export function createModel(data: Partial<FreMetaModelDescription>): FreMetaMode
 export function createUnit(data: Partial<FreMetaUnitDescription>): FreMetaUnitDescription {
     // console.log("createUnit " + data.name);
     const result = new FreMetaUnitDescription();
-    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name :  '');
-    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name :  '');
+    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name : "");
+    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name : "");
     if (!!data.name) {
         result.name = data.name;
     }
@@ -154,23 +155,27 @@ export function createUnit(data: Partial<FreMetaUnitDescription>): FreMetaUnitDe
 export function createConcept(data: Partial<FreMetaConcept>): FreMetaConcept {
     // console.log("createConceptOrUnit " + data.name);
     const result = new FreMetaConcept();
-    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name :  '');
-    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name :  '');
+    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name : "");
+    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name : "");
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
 }
 
-export function createEnumValue(data: {sourceName: string, instanceName: string, location: ParseLocation}): FreMetaEnumValue {
-    const result = new FreMetaEnumValue(data.sourceName, data.instanceName, data.location)
-    return result
+export function createEnumValue(data: {
+    sourceName: string;
+    instanceName: string;
+    location: ParseLocation;
+}): FreMetaEnumValue {
+    const result = new FreMetaEnumValue(data.sourceName, data.instanceName, data.location);
+    return result;
 }
 
 export function createLimitedConcept(data: Partial<FreMetaLimitedConcept>): FreMetaLimitedConcept {
     // console.log("createLimitedConcept " + data.name);
     const result = new FreMetaLimitedConcept();
-    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name :  '');
-    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name :  '');
+    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name : "");
+    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name : "");
     result.isAbstract = !!data.isAbstract;
     if (!!data.instances) {
         result.instances = data.instances;
@@ -186,8 +191,8 @@ export function createLimitedConcept(data: Partial<FreMetaLimitedConcept>): FreM
 export function createInterface(data: Partial<FreMetaInterface>): FreMetaInterface {
     // console.log("createInterface " + data.name);
     const result = new FreMetaInterface();
-    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name :  '');
-    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name :  '');
+    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name : "");
+    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name : "");
     if (!!data.name) {
         result.name = data.name;
     }
@@ -239,13 +244,15 @@ function createCommonConceptProps(data: Partial<FreMetaExpressionConcept>, resul
     }
 }
 
-export function createBinaryExpressionConcept(data: Partial<FreMetaBinaryExpressionConcept>): FreMetaBinaryExpressionConcept {
+export function createBinaryExpressionConcept(
+    data: Partial<FreMetaBinaryExpressionConcept>,
+): FreMetaBinaryExpressionConcept {
     // console.log("createBinaryExpressionConcept " + data.name);
     const result = new FreMetaBinaryExpressionConcept();
-    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name :  '');
-    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name :  '');
+    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name : "");
+    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name : "");
     result.isAbstract = !!data.isAbstract;
-    if ( !!data.priority ) {
+    if (!!data.priority) {
         result.priority = data.priority;
     }
     createCommonConceptProps(data, result);
@@ -255,8 +262,8 @@ export function createBinaryExpressionConcept(data: Partial<FreMetaBinaryExpress
 export function createExpressionConcept(data: Partial<FreMetaExpressionConcept>): FreMetaExpressionConcept {
     // console.log("createExpressionConcept " + data.name);
     const result = new FreMetaExpressionConcept();
-    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name :  '');
-    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name :  '');
+    result.id = LanguageCreators_idMap.getConceptId(data.name ? data.name : "");
+    result.key = LanguageCreators_idMap.getConceptKey(data.name ? data.name : "");
     result.isAbstract = !!data.isAbstract;
     createCommonConceptProps(data, result);
     return result;
@@ -310,7 +317,7 @@ export function createPartOrPrimProperty(data: Partial<FreMetaPrimitiveProperty>
                 // We have an initail value, this should be an enum value, because it isn't a primitive
                 // console.warn(`A non-primitive property may not have an initial value ${ParseLocationUtil.locationPlus(currentFileName, data.location)}.`);
                 // if (data.initialValue instanceof FreMetaEnumValue) {
-                    conceptProperty.initial = data.initialValue
+                conceptProperty.initial = data.initialValue;
                 // } else {
                 //     nonFatalParseErrors.push(`Property '${data.name}' with concept type must have a limited literal as initial value  ${ParseLocationUtil.locationPlus(currentFileName, data.location)}.`);
                 // }
@@ -337,7 +344,9 @@ export function createReferenceProperty(data: Partial<FreMetaConceptProperty>): 
     return result;
 }
 
-export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> | undefined {
+export function createClassifierReference(
+    data: Partial<MetaElementReference<FreMetaClassifier>>,
+): MetaElementReference<FreMetaClassifier> | undefined {
     // console.log("createClassifierReference " + data.name);
     let result: MetaElementReference<FreMetaClassifier> | undefined = undefined;
     if (!!data.name) {
@@ -345,11 +354,17 @@ export function createClassifierReference(data: Partial<MetaElementReference<Fre
         if (type === "string") {
             result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.string, "FrePrimitiveType");
         } else if (type === "boolean") {
-            result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.boolean, "FrePrimitiveType");
+            result = MetaElementReference.create<FreMetaPrimitiveType>(
+                FreMetaPrimitiveType.boolean,
+                "FrePrimitiveType",
+            );
         } else if (type === "number") {
             result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.number, "FrePrimitiveType");
         } else if (type === "identifier") {
-            result = MetaElementReference.create<FreMetaPrimitiveType>(FreMetaPrimitiveType.identifier, "FrePrimitiveType");
+            result = MetaElementReference.create<FreMetaPrimitiveType>(
+                FreMetaPrimitiveType.identifier,
+                "FrePrimitiveType",
+            );
         } else {
             result = MetaElementReference.create<FreMetaClassifier>(data.name, "FreClassifier");
         }
@@ -362,9 +377,11 @@ export function createClassifierReference(data: Partial<MetaElementReference<Fre
     return result;
 }
 
-export function createInterfaceReference(data: Partial<MetaElementReference<FreMetaInterface>>): MetaElementReference<FreMetaInterface> {
+export function createInterfaceReference(
+    data: Partial<MetaElementReference<FreMetaInterface>>,
+): MetaElementReference<FreMetaInterface> {
     // console.log("createInterfaceReference " + data.name);
-    const result = MetaElementReference.create<FreMetaInterface>(data.name ? data.name : '', "FreInterface");
+    const result = MetaElementReference.create<FreMetaInterface>(data.name ? data.name : "", "FreInterface");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
@@ -386,24 +403,26 @@ export function createInstance(data: Partial<FreMetaInstance>): FreMetaInstance 
     // if the user has not provided a value for the 'name' property,
     // or the instance was defined using the shorthand that simulates enumeration
     // create a value for the 'name' property based on 'data.name'
-    if (!(!!data.props) || !data.props.some(prop => prop.name === "name")) {
+    if (!!!data.props || !data.props.some((prop) => prop.name === "name")) {
         const prop = new FreMetaInstanceProperty();
         prop.name = "name";
-        prop.value = data.name ? data.name: '';
+        prop.value = data.name ? data.name : "";
         prop.owningInstance = MetaElementReference.create<FreMetaInstance>(result, "FreInstance");
-        prop.location = data.location ? data.location : {
-            filename: '',
-            end: {
-                offset: 0,
-                line: 0,
-                column: 0
-            },
-            start: {
-                offset: 0,
-                line: 0,
-                column: 0
-            }
-        };
+        prop.location = data.location
+            ? data.location
+            : {
+                  filename: "",
+                  end: {
+                      offset: 0,
+                      line: 0,
+                      column: 0,
+                  },
+                  start: {
+                      offset: 0,
+                      line: 0,
+                      column: 0,
+                  },
+              };
         result.props.push(prop);
     }
     if (!!data.location) {
