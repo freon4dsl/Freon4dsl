@@ -1,12 +1,12 @@
-import {FreEditProjectionDirection, FreEditTableProjection} from "../../../metalanguage/index.js";
+import { FreEditProjectionDirection, FreEditTableProjection } from "../../../metalanguage/index.js";
 import {
     FreMetaClassifier,
     FreMetaConceptProperty,
-    FreMetaLanguage
+    FreMetaLanguage,
 } from "../../../../languagedef/metalanguage/index.js";
-import {ListUtil, Names} from "../../../../utils/index.js";
-import {ItemBoxHelper} from "./ItemBoxHelper.js";
-import {BoxProviderTemplate} from "../BoxProviderTemplate.js";
+import { ListUtil, Names } from "../../../../utils/index.js";
+import { ItemBoxHelper } from "./ItemBoxHelper.js";
+import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class TableBoxHelper {
     private _myTemplate: BoxProviderTemplate;
@@ -17,31 +17,38 @@ export class TableBoxHelper {
         this._myItemHelper = myItemHelper;
     }
 
-    public generateTableProjection(language: FreMetaLanguage,
-                                          concept: FreMetaClassifier,
-                                          projection: FreEditTableProjection,
-                                   topIndex: number) {
+    public generateTableProjection(
+        language: FreMetaLanguage,
+        concept: FreMetaClassifier,
+        projection: FreEditTableProjection,
+        topIndex: number,
+    ) {
         if (!!projection) {
             let hasHeaders: boolean = false;
             if (!!projection.headers && projection.headers.length > 0) {
                 hasHeaders = true;
             }
             const cellDefs: string[] = [];
-            projection.cells.forEach((cell, index) => { // because we need the index, this is done outside the template
+            projection.cells.forEach((cell, index) => {
+                // because we need the index, this is done outside the template
                 ListUtil.addIfNotPresent(this._myTemplate.modelImports, Names.classifier(concept));
-                cellDefs.push(this._myItemHelper.generateItem(cell,
-                    `(this._node as ${Names.classifier(concept)})`,
-                    index,
-                    index,
-                    concept.name + "_table",
-                    language,
-                    topIndex));
+                cellDefs.push(
+                    this._myItemHelper.generateItem(
+                        cell,
+                        `(this._node as ${Names.classifier(concept)})`,
+                        index,
+                        index,
+                        concept.name + "_table",
+                        language,
+                        topIndex,
+                    ),
+                );
             });
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "TableRowBox");
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "TableUtil");
             return `private ${Names.tableProjectionMethod(projection)}(): TableRowBox {
                         const cells: Box[] = [];
-                        ${cellDefs.map(cellDef => `cells.push(${cellDef})`).join(";\n")}
+                        ${cellDefs.map((cellDef) => `cells.push(${cellDef})`).join(";\n")}
                         return TableUtil.rowBox(this._node, this._node.freOwnerDescriptor().propertyName, "${Names.classifier(concept)}", cells, this._node.freOwnerDescriptor().propertyIndex, ${hasHeaders});
                     }`;
         } else {
@@ -49,7 +56,6 @@ export class TableBoxHelper {
             return "";
         }
     }
-
 
     /**
      * Returns the text string that projects 'property' as a table.
@@ -60,10 +66,12 @@ export class TableBoxHelper {
      * @param coreImports
      * @param configImports
      */
-    public generatePropertyAsTable(orientation: FreEditProjectionDirection,
-                                          property: FreMetaConceptProperty,
-                                          elementVarName: string,
-                                          language: FreMetaLanguage): string {
+    public generatePropertyAsTable(
+        orientation: FreEditProjectionDirection,
+        property: FreMetaConceptProperty,
+        elementVarName: string,
+        language: FreMetaLanguage,
+    ): string {
         ListUtil.addIfNotPresent(this._myTemplate.coreImports, "TableUtil");
         ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));
         // return the projection based on the orientation of the table

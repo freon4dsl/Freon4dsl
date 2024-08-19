@@ -1,12 +1,10 @@
-import {
-    FreMetaConceptProperty, FreMetaLanguage
-} from "../../../../languagedef/metalanguage/index.js";
-import {ListUtil, Names} from "../../../../utils/index.js";
-import {DisplayTypeHelper} from "./DisplayTypeHelper.js";
-import {ForType, FreEditListInfo, FreEditProjectionGroup} from "../../../metalanguage/index.js";
-import {ListPropertyBoxHelper} from "./ListPropertyBoxHelper.js";
-import {PartPropertyBoxHelper} from "./PartPropertyBoxHelper.js";
-import {BoxProviderTemplate} from "../BoxProviderTemplate.js";
+import { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
+import { ListUtil, Names } from "../../../../utils/index.js";
+import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
+import { ForType, FreEditListInfo, FreEditProjectionGroup } from "../../../metalanguage/index.js";
+import { ListPropertyBoxHelper } from "./ListPropertyBoxHelper.js";
+import { PartPropertyBoxHelper } from "./PartPropertyBoxHelper.js";
+import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class LimitedBoxHelper {
     private stdLimitedSingleDisplayType: string = "text";
@@ -15,7 +13,11 @@ export class LimitedBoxHelper {
     private _myListPropHelper: ListPropertyBoxHelper;
     private readonly _myPartPropHelper: PartPropertyBoxHelper;
 
-    constructor(myTemplate: BoxProviderTemplate, myListPropHelper: ListPropertyBoxHelper, myPartPropHelper: PartPropertyBoxHelper) {
+    constructor(
+        myTemplate: BoxProviderTemplate,
+        myListPropHelper: ListPropertyBoxHelper,
+        myPartPropHelper: PartPropertyBoxHelper,
+    ) {
         this._myTemplate = myTemplate;
         this._myListPropHelper = myListPropHelper;
         this._myPartPropHelper = myPartPropHelper;
@@ -24,41 +26,68 @@ export class LimitedBoxHelper {
     public setGlobals(defProjGroup: FreEditProjectionGroup) {
         // get the global labels for true and false, and the global display type (checkbox, radio, text, etc.) for boolean values
         if (!!defProjGroup) {
-            const limitedSingleDisplayType: string | undefined = defProjGroup.findGlobalProjFor(ForType.Limited)?.displayType;
+            const limitedSingleDisplayType: string | undefined = defProjGroup.findGlobalProjFor(
+                ForType.Limited,
+            )?.displayType;
             if (!!limitedSingleDisplayType) {
                 this.stdLimitedSingleDisplayType = limitedSingleDisplayType;
             }
-            const limitedListDisplayType: string | undefined = defProjGroup.findGlobalProjFor(ForType.LimitedList)?.displayType;
+            const limitedListDisplayType: string | undefined = defProjGroup.findGlobalProjFor(
+                ForType.LimitedList,
+            )?.displayType;
             if (!!limitedListDisplayType) {
                 this.stdLimitedListDisplayType = limitedListDisplayType;
             }
         }
     }
 
-    public generateLimited(property: FreMetaConceptProperty, elementVarName: string, language: FreMetaLanguage, listInfo: FreEditListInfo | undefined, displayType: string | undefined): string {
-        let result: string = '';
+    public generateLimited(
+        property: FreMetaConceptProperty,
+        elementVarName: string,
+        language: FreMetaLanguage,
+        listInfo: FreEditListInfo | undefined,
+        displayType: string | undefined,
+    ): string {
+        let result: string = "";
         if (property.isList) {
-            if (displayType === "checkbox" || this.stdLimitedListDisplayType === "checkbox") { // use limited control
+            if (displayType === "checkbox" || this.stdLimitedListDisplayType === "checkbox") {
+                // use limited control
                 result += this.generateLimitedListProjection(property, elementVarName, "checkbox");
-            } else { // make 'normal' reference list
+            } else {
+                // make 'normal' reference list
                 if (!!listInfo) {
-                    result += this._myListPropHelper.generateReferenceAsList(language, listInfo, property, elementVarName);
+                    result += this._myListPropHelper.generateReferenceAsList(
+                        language,
+                        listInfo,
+                        property,
+                        elementVarName,
+                    );
                 }
             }
         } else {
-            if (displayType === "radio" || this.stdLimitedListDisplayType === "radio") { // use limited control
+            if (displayType === "radio" || this.stdLimitedListDisplayType === "radio") {
+                // use limited control
                 result += this.generateLimitedSingleProjection(property, elementVarName, "radio");
-            } else { // make 'normal' reference
+            } else {
+                // make 'normal' reference
                 result += this._myPartPropHelper.generateReferenceProjection(language, property, elementVarName);
             }
         }
         return result;
     }
 
-    private generateLimitedSingleProjection(appliedFeature: FreMetaConceptProperty, element: string, displayType: string) {
+    private generateLimitedSingleProjection(
+        appliedFeature: FreMetaConceptProperty,
+        element: string,
+        displayType: string,
+    ) {
         const featureType: string = Names.classifier(appliedFeature.type);
         ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
-        ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [Names.FreNodeReference, "BoxUtil", "LimitedDisplay"]);
+        ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [
+            Names.FreNodeReference,
+            "BoxUtil",
+            "LimitedDisplay",
+        ]);
         // get the right displayType
         let displayTypeToUse: string = DisplayTypeHelper.getTypeScriptForDisplayType(this.stdLimitedSingleDisplayType);
         if (!!displayType) {
@@ -75,10 +104,18 @@ export class LimitedBoxHelper {
                )`;
     }
 
-    private generateLimitedListProjection(appliedFeature: FreMetaConceptProperty, element: string, displayType: string) {
+    private generateLimitedListProjection(
+        appliedFeature: FreMetaConceptProperty,
+        element: string,
+        displayType: string,
+    ) {
         const featureType: string = Names.classifier(appliedFeature.type);
         ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
-        ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [Names.FreNodeReference, "BoxUtil", "LimitedDisplay"]);
+        ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [
+            Names.FreNodeReference,
+            "BoxUtil",
+            "LimitedDisplay",
+        ]);
         // get the right displayType
         let displayTypeToUse: string = DisplayTypeHelper.getTypeScriptForDisplayType(this.stdLimitedListDisplayType);
         if (!!displayType) {
@@ -104,6 +141,4 @@ export class LimitedBoxHelper {
                                 LimitedDisplay.${displayTypeToUse}
                )`;
     }
-
-
 }

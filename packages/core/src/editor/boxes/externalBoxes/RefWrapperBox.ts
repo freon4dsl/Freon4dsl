@@ -1,7 +1,7 @@
-import {Box} from "../Box";
-import {FreNode, FreNodeReference} from "../../../ast";
-import {FreUtils} from "../../../util";
-import {AbstractPropertyWrapperBox} from "./AbstractPropertyWrapperBox";
+import { Box } from "../Box";
+import { FreNode, FreNodeReference } from "../../../ast";
+import { FreUtils } from "../../../util";
+import { AbstractPropertyWrapperBox } from "./AbstractPropertyWrapperBox";
 
 /**
  * This class represents an external component that replaces the native projection of a list of model properties, like "notes: NoteConcept[]".
@@ -9,7 +9,14 @@ import {AbstractPropertyWrapperBox} from "./AbstractPropertyWrapperBox";
 export class RefWrapperBox extends AbstractPropertyWrapperBox {
     readonly kind: string = "RefWrapperBox";
 
-    constructor(externalComponentName: string, node: FreNode, role: string, propertyName: string, childBox: Box, initializer?: Partial<RefWrapperBox>) {
+    constructor(
+        externalComponentName: string,
+        node: FreNode,
+        role: string,
+        propertyName: string,
+        childBox: Box,
+        initializer?: Partial<RefWrapperBox>,
+    ) {
         super(externalComponentName, node, role, propertyName, childBox);
         FreUtils.initializeObject(this, initializer);
     }
@@ -17,7 +24,7 @@ export class RefWrapperBox extends AbstractPropertyWrapperBox {
     getPropertyValue(): FreNodeReference<any> {
         const val = this.node[this.propertyName];
         // if (typeof val === this.propertyClassifierName) {
-            return val;
+        return val;
         // }
         // return undefined;
     }

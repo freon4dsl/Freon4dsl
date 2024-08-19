@@ -1,7 +1,7 @@
-import {Box} from "../Box";
-import {FreNode} from "../../../ast";
-import {FreUtils} from "../../../util";
-import {AbstractPropertyWrapperBox} from "./AbstractPropertyWrapperBox";
+import { Box } from "../Box";
+import { FreNode } from "../../../ast";
+import { FreUtils } from "../../../util";
+import { AbstractPropertyWrapperBox } from "./AbstractPropertyWrapperBox";
 
 /**
  * This class represent an external box wrapping a single property of primitive type.
@@ -9,8 +9,14 @@ import {AbstractPropertyWrapperBox} from "./AbstractPropertyWrapperBox";
 export class NumberWrapperBox extends AbstractPropertyWrapperBox {
     readonly kind: string = "NumberWrapperBox";
 
-
-    constructor(externalComponentName: string, node: FreNode, role: string, propertyName: string, childBox: Box, initializer?: Partial<NumberWrapperBox>) {
+    constructor(
+        externalComponentName: string,
+        node: FreNode,
+        role: string,
+        propertyName: string,
+        childBox: Box,
+        initializer?: Partial<NumberWrapperBox>,
+    ) {
         super(externalComponentName, node, role, propertyName, childBox);
         FreUtils.initializeObject(this, initializer);
     }

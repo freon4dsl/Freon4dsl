@@ -1,5 +1,5 @@
-import {Box} from "../Box";
-import {FreNode} from "../../../ast";
+import { Box } from "../Box";
+import { FreNode } from "../../../ast";
 
 /**
  * This type represents any parameter that may be passed from the .edit file
@@ -8,7 +8,7 @@ import {FreNode} from "../../../ast";
 export type ExternalParameter = {
     key: string;
     value: string;
-}
+};
 
 /**
  * All external boxes inherit from this box. It holds information on the external
@@ -29,7 +29,7 @@ export abstract class AbstractExternalBox extends Box {
     }
 
     findParam(key: string): string | undefined {
-        return this.params?.find(pair => pair.key === key)?.value;
+        return this.params?.find((pair) => pair.key === key)?.value;
     }
 }
 

@@ -166,6 +166,7 @@ export class UtilRefHelpers {
     public static externalReferenceListBox(
         node: FreNode,
         propertyName: string,
+        externalComponentName: string,
         scoper: FreScoper,
         initializer?: Partial<ExternalRefListBox>,
     ): ExternalRefListBox {
@@ -181,10 +182,10 @@ export class UtilRefHelpers {
                 scoper,
             );
             // determine the role
-            const role: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "vreflist");
+            const role: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "xreflist");
             // create and return the box
             const result: ExternalRefListBox = new ExternalRefListBox(
-                "refListReplacer",
+                externalComponentName,
                 node,
                 role,
                 propertyName,

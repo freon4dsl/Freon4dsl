@@ -59,12 +59,18 @@ body {
   background: whitesmoke;
   padding: 2px;
 }
+.wrapper:focus {
+  background: lightblue;
+}
 
 .replacer {
   border: 2px groove #666666;
   border-radius: 8px;
   background: whitesmoke;
   padding: 2px;
+}
+.replacer:focus {
+  background: lightblue;
 }
 
 .fragment-component {

@@ -1,7 +1,7 @@
-import {Box} from "../Box";
-import {FreNode} from "../../../ast";
-import {FreUtils} from "../../../util";
-import {AbstractExternalBox} from "./AbstractExternalBox";
+import { Box } from "../Box";
+import { FreNode } from "../../../ast";
+import { FreUtils } from "../../../util";
+import { AbstractExternalBox } from "./AbstractExternalBox";
 
 /**
  * This class represents an external component that may have a Freon native component as child projection.
@@ -14,7 +14,13 @@ export class FragmentWrapperBox extends AbstractExternalBox {
     readonly kind: string = "FragmentWrapperBox";
     private _childBox: Box;
 
-    constructor(externalComponentName: string, node: FreNode, role: string, childBox: Box, initializer?: Partial<FragmentWrapperBox>) {
+    constructor(
+        externalComponentName: string,
+        node: FreNode,
+        role: string,
+        childBox: Box,
+        initializer?: Partial<FragmentWrapperBox>,
+    ) {
         super(externalComponentName, node, role);
         FreUtils.initializeObject(this, initializer);
         this._childBox = childBox;

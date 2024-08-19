@@ -1,4 +1,4 @@
-import {Box, BoxFactory, HorizontalListBox, VerticalListBox} from "../../boxes";
+import { Box, BoxFactory, ExternalPartListBox, HorizontalListBox, VerticalListBox } from "../../boxes";
 import { FreNode } from "../../../ast";
 import { RoleProvider } from "../RoleProvider";
 import { FreLanguage } from "../../../language";
@@ -16,7 +16,7 @@ export class UtilPartHelpers {
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
         // make the boxes for the children
-        let children: Box[] = UtilPartHelpers.makePartItems(node, list, propertyName, boxProviderCache, listJoin);
+        let children: Box[] = this.makePartItems(node, list, propertyName, boxProviderCache, listJoin);
         // add a placeholder where a new element can be added
         children = UtilPartHelpers.addPlaceholder(children, node, propertyName);
         // determine the role
@@ -45,6 +45,22 @@ export class UtilPartHelpers {
         const result: HorizontalListBox = BoxFactory.horizontalList(node, role, propertyName, children, initializer);
         result.propertyName = propertyName;
         return result;
+    }
+
+    public static externalPartListBox(
+        node: FreNode,
+        list: FreNode[],
+        propertyName: string,
+        externalComponentName: string,
+        boxProviderCache: FreProjectionHandler,
+        initializer?: Partial<ExternalPartListBox>,
+    ): ExternalPartListBox {
+        // make the boxes for the children
+        let children: Box[] = this.makePartItems(node, list, propertyName, boxProviderCache);
+        // determine the role
+        const role: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "vpartlist");
+        // create and return the box
+        return BoxFactory.externalPartList(node, propertyName, externalComponentName, role, children, initializer);
     }
 
     private static addPlaceholder(children: Box[], element: FreNode, propertyName: string) {

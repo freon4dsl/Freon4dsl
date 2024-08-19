@@ -1,8 +1,8 @@
-import {Box} from "../Box";
-import {FreNode} from "../../../ast";
-import {FreUtils} from "../../../util";
-import {AbstractExternalPropertyBox} from "./AbstractExternalPropertyBox";
-import {runInAction} from "mobx";
+import { Box } from "../Box";
+import { FreNode } from "../../../ast";
+import { FreUtils } from "../../../util";
+import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox";
+import { runInAction } from "mobx";
 
 /**
  * This class represent an external box replacing the native projection of a single property of primitive type.
@@ -10,7 +10,13 @@ import {runInAction} from "mobx";
 export class ExternalNumberBox extends AbstractExternalPropertyBox {
     readonly kind: string = "ExternalNumberBox";
 
-    constructor(externalComponentName: string, node: FreNode, role: string, propertyName: string, initializer?: Partial<ExternalNumberBox>) {
+    constructor(
+        externalComponentName: string,
+        node: FreNode,
+        role: string,
+        propertyName: string,
+        initializer?: Partial<ExternalNumberBox>,
+    ) {
         super(externalComponentName, node, role, propertyName);
         FreUtils.initializeObject(this, initializer);
     }
@@ -29,7 +35,12 @@ export class ExternalNumberBox extends AbstractExternalPropertyBox {
                 this.node[this.propertyName] = newValue;
             });
         } else {
-            console.log("ExternalNumberBox.setPropertyValue type error: trying to set property of type " + this.getPropertyType() + " to a value of type " + typeof newValue )
+            console.log(
+                "ExternalNumberBox.setPropertyValue type error: trying to set property of type " +
+                    this.getPropertyType() +
+                    " to a value of type " +
+                    typeof newValue,
+            );
         }
     }
 }

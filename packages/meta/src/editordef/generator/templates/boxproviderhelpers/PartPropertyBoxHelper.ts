@@ -1,6 +1,6 @@
-import {FreMetaConceptProperty, FreMetaLanguage} from "../../../../languagedef/metalanguage/index.js";
-import {ListUtil, Names} from "../../../../utils/index.js";
-import {BoxProviderTemplate} from "../BoxProviderTemplate.js";
+import { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
+import { ListUtil, Names } from "../../../../utils/index.js";
+import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class PartPropertyBoxHelper {
     private _myTemplate: BoxProviderTemplate;
@@ -9,7 +9,11 @@ export class PartPropertyBoxHelper {
         this._myTemplate = myTemplate;
     }
 
-    public generateReferenceProjection(language: FreMetaLanguage, appliedFeature: FreMetaConceptProperty, element: string) {
+    public generateReferenceProjection(
+        language: FreMetaLanguage,
+        appliedFeature: FreMetaConceptProperty,
+        element: string,
+    ) {
         const featureType = Names.classifier(appliedFeature.type);
         ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
         ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));

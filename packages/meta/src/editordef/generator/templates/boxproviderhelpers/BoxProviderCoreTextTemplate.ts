@@ -1,18 +1,19 @@
-import {Names} from "../../../../utils/index.js";
-import {FreMetaClassifier} from "../../../../languagedef/metalanguage/index.js";
-import {FreEditClassifierProjection, FreEditTableProjection} from "../../../metalanguage/index.js";
+import { Names } from "../../../../utils/index.js";
+import { FreMetaClassifier } from "../../../../languagedef/metalanguage/index.js";
+import { FreEditClassifierProjection, FreEditTableProjection } from "../../../metalanguage/index.js";
 
 export class BoxProviderCoreTextTemplate {
-    public generateCoreTemplate(myBoxProjections: FreEditClassifierProjection[],
-                         myTableProjections: FreEditTableProjection[],
-                         allProjections: FreEditClassifierProjection[],
-                         concept: FreMetaClassifier
+    public generateCoreTemplate(
+        myBoxProjections: FreEditClassifierProjection[],
+        myTableProjections: FreEditTableProjection[],
+        allProjections: FreEditClassifierProjection[],
+        concept: FreMetaClassifier,
     ): string {
         return `
                 constructor(mainHandler: FreProjectionHandler) {
                     super(mainHandler);
-                    this.knownBoxProjections = [${myBoxProjections.length > 0 ? myBoxProjections.map(p => `"${p.name}"`) : `"default"`}];
-                    this.knownTableProjections = [${myTableProjections.length > 0 ? myTableProjections.map(p => `"${p.name}"`) : `"default"`}];
+                    this.knownBoxProjections = [${myBoxProjections.length > 0 ? myBoxProjections.map((p) => `"${p.name}"`) : `"default"`}];
+                    this.knownTableProjections = [${myTableProjections.length > 0 ? myTableProjections.map((p) => `"${p.name}"`) : `"default"`}];
                     this.conceptName = '${Names.classifier(concept)}';
                 }
 
@@ -24,15 +25,20 @@ export class BoxProviderCoreTextTemplate {
                         if (!!BOX) { // found one, so return it
                             return BOX;
                         }
-                    ${allProjections.length > 0 ?
-            `} else { // select the box to return based on the projectionName
-                            ${allProjections.map(proj => `if (projectionName === '${proj.name}') {
+                    ${
+                        allProjections.length > 0
+                            ? `} else { // select the box to return based on the projectionName
+                            ${allProjections
+                                .map(
+                                    (proj) => `if (projectionName === '${proj.name}') {
                                 return this.${Names.projectionMethod(proj)}();
-                            }`).join(" else ")}
+                            }`,
+                                )
+                                .join(" else ")}
                             }
                             // in all other cases, return the default`
-            : `}`
-        }
+                            : `}`
+                    }
                     return this.getDefault();
                 }`;
     }

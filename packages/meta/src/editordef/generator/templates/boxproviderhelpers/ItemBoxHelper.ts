@@ -7,27 +7,27 @@ import {
     FreEditSimpleExternal,
     FreEditSuperProjection,
     FreOptionalPropertyProjection,
-    FreEditFragmentProjection
+    FreEditFragmentProjection,
 } from "../../../metalanguage/index.js";
 import {
     FreMetaClassifier,
     FreMetaConceptProperty,
-    FreMetaLanguage, FreMetaLimitedConcept,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
-    FreMetaProperty
+    FreMetaProperty,
 } from "../../../../languagedef/metalanguage/index.js";
-import {ListUtil, LOG2USER, Names} from "../../../../utils/index.js";
-import {ParserGenUtil} from "../../../../parsergen/parserTemplates/ParserGenUtil.js";
+import { ListUtil, LOG2USER, Names } from "../../../../utils/index.js";
+import { ParserGenUtil } from "../../../../parsergen/parserTemplates/ParserGenUtil.js";
 import {
     PrimitivePropertyBoxesHelper,
     ExternalBoxesHelper,
     TableBoxHelper,
     ListPropertyBoxHelper,
     LimitedBoxHelper,
-    PartPropertyBoxHelper
+    PartPropertyBoxHelper,
 } from "./index.js";
-import {BoxProviderTemplate} from "../BoxProviderTemplate.js";
-
+import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class ItemBoxHelper {
     set tableBoxHelper(value: TableBoxHelper) {
@@ -41,18 +41,20 @@ export class ItemBoxHelper {
     private readonly _myPartPropHelper: PartPropertyBoxHelper;
     // @ts-ignore
     private _tableBoxHelper: TableBoxHelper;
-    
-    constructor(myTemplate: BoxProviderTemplate,
-                myPrimitiveHelper: PrimitivePropertyBoxesHelper,
-                myLimitedHelper: LimitedBoxHelper,
-                myListPropHelper: ListPropertyBoxHelper,
-                myPartPropHelper: PartPropertyBoxHelper,
-                myExternalBoxesHelper: ExternalBoxesHelper) {
+
+    constructor(
+        myTemplate: BoxProviderTemplate,
+        myPrimitiveHelper: PrimitivePropertyBoxesHelper,
+        myLimitedHelper: LimitedBoxHelper,
+        myListPropHelper: ListPropertyBoxHelper,
+        myPartPropHelper: PartPropertyBoxHelper,
+        myExternalBoxesHelper: ExternalBoxesHelper,
+    ) {
         this._myTemplate = myTemplate;
         this._myPrimitiveHelper = myPrimitiveHelper;
         this._myLimitedHelper = myLimitedHelper;
         this._myListPropHelper = myListPropHelper;
-        this. _myPartPropHelper = myPartPropHelper;
+        this._myPartPropHelper = myPartPropHelper;
         this._myExternalHelper = myExternalBoxesHelper;
     }
 
@@ -66,13 +68,14 @@ export class ItemBoxHelper {
      * @param language
      * @param topIndex              used to generate a box label
      */
-    public generateItem(item: FreEditProjectionItem,
-                               elementVarName: string,
-                               lineIndex: number,
-                               itemIndex: number,
-                               mainBoxLabel: string,
-                               language: FreMetaLanguage,
-                               topIndex: number
+    public generateItem(
+        item: FreEditProjectionItem,
+        elementVarName: string,
+        lineIndex: number,
+        itemIndex: number,
+        mainBoxLabel: string,
+        language: FreMetaLanguage,
+        topIndex: number,
     ): string {
         let result: string = "";
         if (item instanceof FreEditProjectionText) {
@@ -97,10 +100,11 @@ export class ItemBoxHelper {
         return result;
     }
 
-    private generateOptionalProjection(optional: FreOptionalPropertyProjection, 
-                                              elementVarName: string, 
-                                              mainBoxLabel: string, 
-                                              language: FreMetaLanguage
+    private generateOptionalProjection(
+        optional: FreOptionalPropertyProjection,
+        elementVarName: string,
+        mainBoxLabel: string,
+        language: FreMetaLanguage,
     ): string {
         const propertyProjection: FreEditPropertyProjection | undefined = optional.findPropertyProjection();
         const property: FreMetaProperty | undefined = optional.property?.referred;
@@ -113,8 +117,9 @@ export class ItemBoxHelper {
 
             // surround with optional box, and add "BoxFactory" to imports
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxFactory");
-            const condition = property.isList   ? `() => (!!${elementVarName}.${optionalPropertyName}) && (${elementVarName}.${optionalPropertyName}).length !== 0`
-                : `() => (!!${elementVarName}.${optionalPropertyName})`
+            const condition = property.isList
+                ? `() => (!!${elementVarName}.${optionalPropertyName}) && (${elementVarName}.${optionalPropertyName}).length !== 0`
+                : `() => (!!${elementVarName}.${optionalPropertyName})`;
             result = `BoxFactory.optional2(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
                 ${result},
                 false, 
@@ -135,20 +140,23 @@ export class ItemBoxHelper {
      * @param language
      * @private
      */
-    private generatePropertyProjection(item: FreEditPropertyProjection,
-                                       elementVarName: string,
-                                       language: FreMetaLanguage) {
+    private generatePropertyProjection(
+        item: FreEditPropertyProjection,
+        elementVarName: string,
+        language: FreMetaLanguage,
+    ) {
         let result: string = "";
         const property: FreMetaProperty | undefined = item.property?.referred;
         if (property === null || property === undefined) {
-            return '';
+            return "";
         }
         if (property instanceof FreMetaPrimitiveProperty) {
             result = this._myPrimitiveHelper.generatePrimitivePropery(property, elementVarName, item, result);
         } else if (property instanceof FreMetaConceptProperty) {
             if (property.isPart) {
                 result = this.generatePartProperty(property, item, elementVarName, language);
-            } else { // reference
+            } else {
+                // reference
                 result = this.generateRefProperty(property, elementVarName, language, item);
             }
         } else {
@@ -157,26 +165,62 @@ export class ItemBoxHelper {
         return result;
     }
 
-    private generateRefProperty(property: FreMetaConceptProperty, elementVarName: string, language: FreMetaLanguage, item: FreEditPropertyProjection): string {
-        let result: string = '';
-            if (property.type instanceof FreMetaLimitedConcept) {
-            result += this._myLimitedHelper.generateLimited(property, elementVarName, language, item.listInfo, item.displayType)
+    private generateRefProperty(
+        property: FreMetaConceptProperty,
+        elementVarName: string,
+        language: FreMetaLanguage,
+        item: FreEditPropertyProjection,
+    ): string {
+        let result: string = "";
+        if (property.type instanceof FreMetaLimitedConcept) {
+            result += this._myLimitedHelper.generateLimited(
+                property,
+                elementVarName,
+                language,
+                item.listInfo,
+                item.displayType,
+            );
         } else if (property.isList) {
-            let innerResult: string = '';
-            if (!!item.listInfo && item.listInfo.isTable) { // if there is information on how to project the property as a table, make it a table
+            let innerResult: string = "";
+            if (!!item.listInfo && item.listInfo.isTable) {
+                // if there is information on how to project the property as a table, make it a table
                 // no table projection for references - for now
-                innerResult = this._myListPropHelper.generateReferenceAsList(language, item.listInfo, property, elementVarName);
-            } else if (!!item.listInfo) { // if there is information on how to project the property as a list, make it a list
-                innerResult = this._myListPropHelper.generateReferenceAsList(language, item.listInfo, property, elementVarName);
+                innerResult = this._myListPropHelper.generateReferenceAsList(
+                    language,
+                    item.listInfo,
+                    property,
+                    elementVarName,
+                );
+            } else if (!!item.listInfo) {
+                // if there is information on how to project the property as a list, make it a list
+                innerResult = this._myListPropHelper.generateReferenceAsList(
+                    language,
+                    item.listInfo,
+                    property,
+                    elementVarName,
+                );
             }
-            if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
-                    result += this._myExternalHelper.generateListAsExternal(item, property, elementVarName, innerResult, language);
+            if (!!item.externalInfo) {
+                // there is information on how to project the property as an external component, wrap the result in an ExternalBox
+                result += this._myExternalHelper.generateListAsExternal(
+                    item,
+                    property,
+                    elementVarName,
+                    innerResult,
+                    language,
+                );
             } else {
-                    result += innerResult;
+                result += innerResult;
             }
-        } else { // single element
-            let innerResult: string = this._myPartPropHelper.generateReferenceProjection(language, property, elementVarName);
-            if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
+        } else {
+            // single element
+            let innerResult: string = this._myPartPropHelper.generateReferenceProjection(
+                language,
+                property,
+                elementVarName,
+            );
+            if (!!item.externalInfo) {
+                // there is information on how to project the property as an external component, wrap the result in an ExternalBox
                 result += this._myExternalHelper.generateSingleAsExternal(item, property, elementVarName, innerResult);
             } else {
                 result += innerResult;
@@ -185,24 +229,45 @@ export class ItemBoxHelper {
         return result;
     }
 
-    private generatePartProperty(property: FreMetaConceptProperty, item: FreEditPropertyProjection, elementVarName: string, language: FreMetaLanguage): string {
-        let result: string = '';
+    private generatePartProperty(
+        property: FreMetaConceptProperty,
+        item: FreEditPropertyProjection,
+        elementVarName: string,
+        language: FreMetaLanguage,
+    ): string {
+        let result: string = "";
         if (property.isList) {
-            let innerResult: string = '';
-            if (!!item.listInfo && item.listInfo.isTable) {  // if there is information on how to project the property as a table, make it a table
-                innerResult = this._tableBoxHelper.generatePropertyAsTable(item.listInfo.direction, property, elementVarName, language);
-            } else if (!!item.listInfo) { // if there is information on how to project the property as a list, make it a list
+            let innerResult: string = "";
+            if (!!item.listInfo && item.listInfo.isTable) {
+                // if there is information on how to project the property as a table, make it a table
+                innerResult = this._tableBoxHelper.generatePropertyAsTable(
+                    item.listInfo.direction,
+                    property,
+                    elementVarName,
+                    language,
+                );
+            } else if (!!item.listInfo) {
+                // if there is information on how to project the property as a list, make it a list
                 innerResult = this._myListPropHelper.generatePartAsList(item, property, elementVarName);
             }
-            if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
-                result += this._myExternalHelper.generateListAsExternal(item, property, elementVarName, innerResult, language);
+            if (!!item.externalInfo) {
+                // there is information on how to project the property as an external component, wrap the result in an ExternalBox
+                result += this._myExternalHelper.generateListAsExternal(
+                    item,
+                    property,
+                    elementVarName,
+                    innerResult,
+                    language,
+                );
             } else {
                 result += innerResult;
             }
-        } else { // single element
+        } else {
+            // single element
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
             let innerResult: string = `BoxUtil.getBoxOrAction(${elementVarName}, "${property.name}", "${property.type.name}", this.mainHandler) `;
-            if (!!item.externalInfo) { // there is information on how to project the property as an external component, wrap the result in an ExternalBox
+            if (!!item.externalInfo) {
+                // there is information on how to project the property as an external component, wrap the result in an ExternalBox
                 result += this._myExternalHelper.generateSingleAsExternal(item, property, elementVarName, innerResult);
             } else {
                 result += innerResult;
@@ -214,7 +279,7 @@ export class ItemBoxHelper {
     private generateSuperProjection(item: FreEditSuperProjection): string {
         const myClassifier: FreMetaClassifier | undefined = item.superRef?.referred; // to avoid the lookup by '.referred' to happen more than once
         if (myClassifier === undefined || myClassifier === null) {
-            return '';
+            return "";
         }
         // indicate that the super method must be added and remember that a box provider for the super concept/interface must be created
         this._myTemplate.useSuperFor(myClassifier);
@@ -227,16 +292,30 @@ export class ItemBoxHelper {
         }
     }
 
-    private generateFragmentProjection(item: FreEditFragmentProjection, elementVarName: string, mainBoxLabel: string, language: FreMetaLanguage, topIndex: number): string {
-        let fragmentDefinition: FreEditFragmentDefinition | undefined = item.belongsTo.fragmentDefinitions.find(def => def.name === item.name);
+    private generateFragmentProjection(
+        item: FreEditFragmentProjection,
+        elementVarName: string,
+        mainBoxLabel: string,
+        language: FreMetaLanguage,
+        topIndex: number,
+    ): string {
+        let fragmentDefinition: FreEditFragmentDefinition | undefined = item.belongsTo.fragmentDefinitions.find(
+            (def) => def.name === item.name,
+        );
         if (!!fragmentDefinition) {
             // create role todo make sure this is the right role
             const myRole: string = `${mainBoxLabel}-fragment-${item.name!}`;
-            const fragmentDefinitionStr: string = this._myTemplate.generateLines(fragmentDefinition.childProjection.lines, elementVarName, myRole, language, topIndex);
+            const fragmentDefinitionStr: string = this._myTemplate.generateLines(
+                fragmentDefinition.childProjection.lines,
+                elementVarName,
+                myRole,
+                language,
+                topIndex,
+            );
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "FragmentBox");
-            return `new FragmentBox(${elementVarName}, "${myRole}", ${fragmentDefinitionStr})`
+            return `new FragmentBox(${elementVarName}, "${myRole}", ${fragmentDefinitionStr})`;
         } else {
-            return '';
+            return "";
         }
     }
 }

@@ -26,6 +26,6 @@
     });
 </script>
 
-<div class="replacer">
+<div class="replacer" bind:this={inputElement}>
     <img {src} alt="{name1}" />
 </div>

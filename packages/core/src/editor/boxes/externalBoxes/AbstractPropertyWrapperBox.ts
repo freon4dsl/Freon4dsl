@@ -1,7 +1,7 @@
-import {AbstractExternalBox} from "./AbstractExternalBox";
-import {FreNode} from "../../../ast";
-import {FreLanguage} from "../../../language";
-import {Box} from "../Box";
+import { AbstractExternalBox } from "./AbstractExternalBox";
+import { FreNode } from "../../../ast";
+import { FreLanguage } from "../../../language";
+import { Box } from "../Box";
 
 export abstract class AbstractPropertyWrapperBox extends AbstractExternalBox {
     // the following two are inherit from Box
@@ -14,7 +14,10 @@ export abstract class AbstractPropertyWrapperBox extends AbstractExternalBox {
         super(externalComponentName, node, role);
         this.propertyName = propertyName;
         this._childBox = childBox;
-        this.propertyClassifierName = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName)?.type;
+        this.propertyClassifierName = FreLanguage.getInstance().classifierProperty(
+            node.freLanguageConcept(),
+            propertyName,
+        )?.type;
     }
 
     getPropertyName(): string {

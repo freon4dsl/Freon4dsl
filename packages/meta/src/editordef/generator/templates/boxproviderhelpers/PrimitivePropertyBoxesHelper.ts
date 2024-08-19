@@ -1,15 +1,17 @@
-import {FreMetaPrimitiveProperty, FreMetaPrimitiveType} from "../../../../languagedef/metalanguage/index.js";
+import { FreMetaPrimitiveProperty, FreMetaPrimitiveType } from "../../../../languagedef/metalanguage/index.js";
 import {
     ForType,
     FreEditBoolKeywords,
     FreEditGlobalProjection,
     FreEditListInfo,
-    FreEditProjectionDirection, FreEditProjectionGroup, FreEditPropertyProjection
+    FreEditProjectionDirection,
+    FreEditProjectionGroup,
+    FreEditPropertyProjection,
 } from "../../../metalanguage/index.js";
-import {ListUtil, Roles} from "../../../../utils/index.js";
-import {DisplayTypeHelper} from "./DisplayTypeHelper.js";
-import {BoxProviderTemplate} from "../BoxProviderTemplate.js";
-import {ExternalBoxesHelper} from "./ExternalBoxesHelper.js";
+import { ListUtil, Roles } from "../../../../utils/index.js";
+import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
+import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
+import { ExternalBoxesHelper } from "./ExternalBoxesHelper.js";
 
 export class PrimitivePropertyBoxesHelper {
     private readonly _myTemplate: BoxProviderTemplate;
@@ -46,9 +48,21 @@ export class PrimitivePropertyBoxesHelper {
         }
     }
 
-    public generatePrimitivePropery(property: FreMetaPrimitiveProperty, elementVarName: string, item: FreEditPropertyProjection, result: string): string {
-        let innerResult: string = this.primitivePropertyProjection(property, elementVarName, item.displayType, item.boolKeywords, item.listInfo);
-        if (!!item.externalInfo) { // there is information on how to project the property as an external component
+    public generatePrimitivePropery(
+        property: FreMetaPrimitiveProperty,
+        elementVarName: string,
+        item: FreEditPropertyProjection,
+        result: string,
+    ): string {
+        let innerResult: string = this.primitivePropertyProjection(
+            property,
+            elementVarName,
+            item.displayType,
+            item.boolKeywords,
+            item.listInfo,
+        );
+        if (!!item.externalInfo) {
+            // there is information on how to project the property as an external component
             result += this._myExternalHelper.generatePrimAsExternal(item, property, elementVarName, innerResult);
         } else {
             result += innerResult;
@@ -56,7 +70,13 @@ export class PrimitivePropertyBoxesHelper {
         return result;
     }
 
-    private primitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolDisplayType?: string, boolInfo?: FreEditBoolKeywords, listInfo?: FreEditListInfo): string {
+    private primitivePropertyProjection(
+        property: FreMetaPrimitiveProperty,
+        element: string,
+        boolDisplayType?: string,
+        boolInfo?: FreEditBoolKeywords,
+        listInfo?: FreEditListInfo,
+    ): string {
         if (property.isList) {
             return this.listPrimitivePropertyProjection(property, element, boolDisplayType, boolInfo, listInfo);
         } else {
@@ -64,7 +84,13 @@ export class PrimitivePropertyBoxesHelper {
         }
     }
 
-    private listPrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, boolDisplayType?: string, boolInfo?: FreEditBoolKeywords, listInfo?: FreEditListInfo): string {
+    private listPrimitivePropertyProjection(
+        property: FreMetaPrimitiveProperty,
+        element: string,
+        boolDisplayType?: string,
+        boolInfo?: FreEditBoolKeywords,
+        listInfo?: FreEditListInfo,
+    ): string {
         let direction: string = "verticalList";
         let roleDirection: string = "vList";
         if (!!listInfo && listInfo.direction === FreEditProjectionDirection.Horizontal) {
@@ -83,8 +109,12 @@ export class PrimitivePropertyBoxesHelper {
                         )`;
     }
 
-
-    private singlePrimitivePropertyProjection(property: FreMetaPrimitiveProperty, element: string, displayType?: string, boolKeywords?: FreEditBoolKeywords): string {
+    private singlePrimitivePropertyProjection(
+        property: FreMetaPrimitiveProperty,
+        element: string,
+        displayType?: string,
+        boolKeywords?: FreEditBoolKeywords,
+    ): string {
         ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type) {
@@ -93,7 +123,9 @@ export class PrimitivePropertyBoxesHelper {
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
             case FreMetaPrimitiveType.number:
                 // get the right displayType
-                let displayTypeToUse1: string = DisplayTypeHelper.getTypeScriptForDisplayType(this.stdNumberDisplayType);
+                let displayTypeToUse1: string = DisplayTypeHelper.getTypeScriptForDisplayType(
+                    this.stdNumberDisplayType,
+                );
                 if (!!displayType) {
                     displayTypeToUse1 = DisplayTypeHelper.getTypeScriptForDisplayType(displayType);
                 }
@@ -118,5 +150,4 @@ export class PrimitivePropertyBoxesHelper {
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
         }
     }
-
 }

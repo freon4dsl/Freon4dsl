@@ -1,12 +1,12 @@
-import {FreMetaConceptProperty, FreMetaLanguage} from "../../../../languagedef/metalanguage/index.js";
+import { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
 import {
     FreEditListInfo,
     FreEditProjectionDirection,
     FreEditPropertyProjection,
-    ListJoinType
+    ListJoinType,
 } from "../../../metalanguage/index.js";
-import {ListUtil, Names} from "../../../../utils/index.js";
-import {BoxProviderTemplate} from "../BoxProviderTemplate.js";
+import { ListUtil, Names } from "../../../../utils/index.js";
+import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class ListPropertyBoxHelper {
     private _myTemplate: BoxProviderTemplate;
@@ -15,7 +15,12 @@ export class ListPropertyBoxHelper {
         this._myTemplate = myTemplate;
     }
 
-    public generateReferenceAsList(language: FreMetaLanguage, listJoin: FreEditListInfo, reference: FreMetaConceptProperty, element: string) {
+    public generateReferenceAsList(
+        language: FreMetaLanguage,
+        listJoin: FreEditListInfo,
+        reference: FreMetaConceptProperty,
+        element: string,
+    ) {
         ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
         ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));
         const joinEntry = this.getJoinEntry(listJoin);
@@ -40,7 +45,11 @@ export class ListPropertyBoxHelper {
      * @param elementVarName    The name of the element parameter of the getBox projection method.
      * @param coreImports
      */
-    public generatePartAsList(item: FreEditPropertyProjection, propertyConcept: FreMetaConceptProperty, elementVarName: string): string {
+    public generatePartAsList(
+        item: FreEditPropertyProjection,
+        propertyConcept: FreMetaConceptProperty,
+        elementVarName: string,
+    ): string {
         if (!!item.listInfo && !!item.property) {
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
             const joinEntry: string = this.getJoinEntry(item.listInfo);
@@ -49,8 +58,7 @@ export class ListPropertyBoxHelper {
             } // else
             return `BoxUtil.horizontalPartListBox(${elementVarName}, ${elementVarName}.${propertyConcept.name}, "${propertyConcept.name}", ${joinEntry}, this.mainHandler)`;
         } else {
-            return '';
+            return "";
         }
     }
-
 }

@@ -1,19 +1,25 @@
 import { FreNode } from "../../ast";
 import {
-    BoolDisplay,
+    BoolDisplay, BooleanWrapperBox,
     Box,
     BoxFactory,
     ButtonBox,
     EmptyLineBox,
+    ExternalBooleanBox,
+    ExternalNumberBox,
+    ExternalPartBox,
+    ExternalPartListBox,
+    ExternalRefBox,
     ExternalRefListBox,
+    ExternalStringBox,
     HorizontalListBox,
     IndentBox,
     LabelBox,
     LimitedControlBox,
     LimitedDisplay,
     NumberDisplay,
-    NumberDisplayInfo,
-    SelectBox,
+    NumberDisplayInfo, NumberWrapperBox, PartListWrapperBox, PartWrapperBox, RefListWrapperBox, RefWrapperBox,
+    SelectBox, StringWrapperBox,
     TextBox,
     VerticalListBox,
 } from "../boxes";
@@ -305,20 +311,52 @@ export class BoxUtil {
     /**
      * Returns an ExternalRefListBox for a property named 'propertyName' within 'node' that is a list of references
      * (the type is "reference SOME_CONCEPT_OR_INTERFACE[]").
-     * For every element in the list a referenceBox is created. Based on the listInfo, separators, etc. are added.
-     * All these boxes are added to the 'children' of the returned box. No placeholder ActionBox is added.
+     * For every element in the list a normal box is created. All these boxes are added to the 'children' of the
+     * returned box. No separators, etc., or placeholder ActionBox are added.
      * @param node
      * @param propertyName
+     * @param externalComponentName
      * @param scoper
      * @param initializer
      */
     public static externalReferenceListBox(
         node: FreNode,
         propertyName: string,
+        externalComponentName: string,
         scoper: FreScoper,
         initializer?: Partial<ExternalRefListBox>,
     ): ExternalRefListBox {
-        return UtilRefHelpers.externalReferenceListBox(node, propertyName, scoper, initializer);
+        return UtilRefHelpers.externalReferenceListBox(node, propertyName, externalComponentName, scoper, initializer);
+    }
+
+    /**
+     * Returns an ExternalPartListBox for a property named 'propertyName' within 'node' that is a list of parts
+     * (the type is "SOME_CONCEPT_OR_INTERFACE[]").
+     * For every element in the list a normal box is created. All these boxes are added to the 'children' of the
+     * returned box. No separators, etc., or placeholder ActionBox are added.
+     * @param node
+     * @param list
+     * @param propertyName
+     * @param externalComponentName
+     * @param boxProviderCache
+     * @param initializer
+     */
+    public static externalPartListBox(
+        node: FreNode,
+        list: FreNode[],
+        propertyName: string,
+        externalComponentName: string,
+        boxProviderCache: FreProjectionHandler,
+        initializer?: Partial<ExternalPartListBox>,
+    ): ExternalPartListBox {
+        return UtilPartHelpers.externalPartListBox(
+            node,
+            list,
+            propertyName,
+            externalComponentName,
+            boxProviderCache,
+            initializer,
+        );
     }
 
     /**
@@ -348,5 +386,147 @@ export class BoxUtil {
         result.propertyName = propertyName;
         // result.propertyIndex = ??? todo
         return result;
+    }
+
+    // TODO get the role names correct in the following methods
+    // TODO use caches for following methods
+    static externalStringBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        initializer?: Partial<ExternalStringBox>
+    ): ExternalStringBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
+        return new ExternalStringBox(externalComponentName, node, roleName, propertyName, initializer);
+    }
+
+    static externalNumberBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        initializer?: Partial<ExternalNumberBox>
+    ): ExternalNumberBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
+        return new ExternalNumberBox(externalComponentName, node, roleName, propertyName, initializer);
+    }
+
+    static externalBooleanBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        initializer?: Partial<ExternalBooleanBox>
+    ): ExternalBooleanBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
+        return new ExternalBooleanBox(externalComponentName, node, roleName, propertyName, initializer);
+    }
+
+    static externalPartBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        initializer?: Partial<ExternalPartBox>
+    ): ExternalPartBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
+        return new ExternalPartBox(externalComponentName, node, roleName, propertyName, initializer);
+    }
+
+    static externalRefBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        initializer?: Partial<ExternalRefBox>
+    ): ExternalRefBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-external";
+        return new ExternalRefBox(externalComponentName, node, roleName, propertyName, initializer);
+    }
+
+    static stringWrapperBox(        node: FreNode,
+                                    propertyName: string,
+                                    externalComponentName: string,
+                                    childBox: Box,
+                                    initializer?: Partial<StringWrapperBox>): StringWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
+        return new StringWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
+    }
+
+    static numberWrapperBox(        node: FreNode,
+                                    propertyName: string,
+                                    externalComponentName: string,
+                                    childBox: Box,
+                                    initializer?: Partial<NumberWrapperBox>): NumberWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
+        return new NumberWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
+    }
+
+    static booleanWrapperBox(       node: FreNode,
+                                    propertyName: string,
+                                    externalComponentName: string,
+                                    childBox: Box,
+                                    initializer?: Partial<BooleanWrapperBox>): BooleanWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
+        return new BooleanWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
+    }
+
+    static partWrapperBox(node: FreNode,
+                          propertyName: string,
+                          externalComponentName: string,
+                          childBox: Box,
+                          initializer?: Partial<PartWrapperBox>): PartWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
+        return new PartWrapperBox(
+            externalComponentName,
+            node,
+            roleName,
+            propertyName,
+            childBox,
+            initializer
+        );
+    }
+
+    static partListWrapperBox(node: FreNode,
+                          propertyName: string,
+                          externalComponentName: string,
+                          childBox: Box,
+                          initializer?: Partial<PartListWrapperBox>): PartListWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
+        return new PartListWrapperBox(
+            externalComponentName,
+            node,
+            roleName,
+            propertyName,
+            childBox,
+            initializer
+        );
+    }
+
+    static refWrapperBox(node: FreNode,
+                          propertyName: string,
+                          externalComponentName: string,
+                          childBox: Box,
+                          initializer?: Partial<RefWrapperBox>): RefWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
+        return new RefWrapperBox(
+            externalComponentName,
+            node,
+            roleName,
+            propertyName,
+            childBox,
+            initializer
+        );
+    }
+    static refListWrapperBox(node: FreNode,
+                          propertyName: string,
+                          externalComponentName: string,
+                          childBox: Box,
+                          initializer?: Partial<RefListWrapperBox>): RefListWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
+        return new RefListWrapperBox(
+            externalComponentName,
+            node,
+            roleName,
+            propertyName,
+            childBox,
+            initializer
+        );
     }
 }

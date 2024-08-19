@@ -1,7 +1,7 @@
-import {Box} from "../Box";
-import {FreNode, FreNodeReference} from "../../../ast";
-import {FreUtils} from "../../../util";
-import {AbstractExternalPropertyBox} from "./AbstractExternalPropertyBox";
+import { Box } from "../Box";
+import { FreNode, FreNodeReference } from "../../../ast";
+import { FreUtils } from "../../../util";
+import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox";
 
 /**
  * This class represents an external component that replaces the native projection of a list of references, like "reference notes: NoteConcept[]".
@@ -10,10 +10,17 @@ export class ExternalRefListBox extends AbstractExternalPropertyBox {
     readonly kind: string = "ExternalRefListBox";
     private _children: Box[] = [];
 
-    constructor(externalComponentName: string, node: FreNode, role: string, propertyName: string, children: Box[], initializer?: Partial<ExternalRefListBox>) {
+    constructor(
+        externalComponentName: string,
+        node: FreNode,
+        role: string,
+        propertyName: string,
+        children: Box[],
+        initializer?: Partial<ExternalRefListBox>,
+    ) {
         super(externalComponentName, node, role, propertyName);
         FreUtils.initializeObject(this, initializer);
-        children.forEach(b => this.addChildNoDirty(b));
+        children.forEach((b) => this.addChildNoDirty(b));
     }
 
     /**

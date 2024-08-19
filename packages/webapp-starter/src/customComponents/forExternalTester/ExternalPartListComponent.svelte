@@ -28,8 +28,6 @@
         runInAction(() => {
             value.push(newBB);
         });
-        // box.isDirty();
-        console.log("box.childremn.length: " + box.children.length)
     }
 
     // The following four functions need to be included for the editor to function properly.
