@@ -389,11 +389,15 @@ export class FreEditChecker extends Checker<FreEditUnit> {
         });
         // check the child projection
         this.checkNormalProjection(fragment.childProjection, cls, editor, knownFragments);
-        // check if fragment is used in top projection, give warning
-        let usedFragments: string[] = projection.findMainFragmentProjections().map((frProj) => frProj.name);
+        // we complete the edit model here
+        let usedFragments: FreEditFragmentProjection[] = projection.findAllFragmentProjections();
+        usedFragments.forEach(fr => fr.belongsTo = projection);
+
+        // check if fragment is not used in top projection, or any other fragment that itself is used in the main projection, give warning
+        let usedFragmentNames: string[] = usedFragments.map((frProj) => frProj.name);
         this.runner.simpleWarning(
-            usedFragments.includes(fragment.name),
-            `Fragment ${fragment.name} is defined, but not used ${ParseLocationUtil.location(projection)}.`,
+            usedFragmentNames.includes(fragment.name),
+            `Fragment '${fragment.name}' is defined, but not used ${ParseLocationUtil.location(fragment)}.`,
         );
     }
 
@@ -471,8 +475,6 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 this.checkExternalComponentName(editor, item.name!, ParseLocationUtil.location(item));
             } else if (item instanceof FreEditFragmentProjection) {
                 this.checkFragmentProjection(item, knownFragments, editor);
-                // we complete the edit model here
-                item.belongsTo = mainProjection;
             }
         });
     }

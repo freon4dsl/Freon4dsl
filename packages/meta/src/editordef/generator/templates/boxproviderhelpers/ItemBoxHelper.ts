@@ -93,7 +93,10 @@ export class ItemBoxHelper {
         } else if (item instanceof FreEditSuperProjection) {
             result += this.generateSuperProjection(item);
         } else if (item instanceof FreEditFragmentProjection) {
-            result += this.generateFragmentProjection(item, elementVarName, mainBoxLabel, language, topIndex);
+            console.log("generating fragment: " + item.name + ", which belongs to " + item.belongsTo.classifier?.name)
+             let innerResult = this.generateFragmentProjection(item, elementVarName, mainBoxLabel, language, topIndex);
+            console.log("result of generation: " + innerResult)
+            result += innerResult;
         } else if (item instanceof FreEditSimpleExternal) {
             result += this._myExternalHelper.generateSimpleExternal(item, elementVarName, mainBoxLabel);
         }
@@ -299,12 +302,14 @@ export class ItemBoxHelper {
         language: FreMetaLanguage,
         topIndex: number,
     ): string {
+        console.log("all fragments in \n[[" + item.belongsTo + "]]\n: " + item.belongsTo.fragmentDefinitions.map(fr => fr.name))
         let fragmentDefinition: FreEditFragmentDefinition | undefined = item.belongsTo.fragmentDefinitions.find(
             (def) => def.name === item.name,
         );
         if (!!fragmentDefinition) {
             // create role todo make sure this is the right role
             const myRole: string = `${mainBoxLabel}-fragment-${item.name!}`;
+            console.log("Lines: "+ fragmentDefinition.childProjection.lines)
             const fragmentDefinitionStr: string = this._myTemplate.generateLines(
                 fragmentDefinition.childProjection.lines,
                 elementVarName,

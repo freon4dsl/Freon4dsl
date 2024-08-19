@@ -476,9 +476,9 @@ describe("Checking editor definition ", () => {
         } catch (e: unknown) {
             // console.log("in test14: " + e);
             // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            console.log(
-                "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
-            );
+            // console.log(
+            //     "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
+            // );
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (8).`);
                 expect(
@@ -535,6 +535,38 @@ describe("Checking editor definition ", () => {
                 ).toBeTruthy();
                 expect(
                     checker.warnings.includes("Fragment XX is defined, but not used [file: test14.edit:18:5]."),
+                ).toBeTruthy();
+            }
+        }
+    });
+
+    test("on fragment definitions", () => {
+        try {
+            parser.parse(testdir + "test15.edit");
+        } catch (e: unknown) {
+            console.log("in test15: " + e);
+            console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            console.log(
+                "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
+            );
+            if (e instanceof Error) {
+                expect(e.message).toBe(`checking errors (1).`);
+                expect(
+                    checker.errors.includes(
+                        "No empty projections allowed [file: test15.edit:3:5].",
+                    ),
+                ).toBeTruthy();
+                expect(checker.hasWarnings()).toBeTruthy;
+                expect(checker.warnings.length).toBe(2);
+                expect(
+                    checker.warnings.includes(
+                        "Fragment 'xx' is defined, but not used [file: test15.edit:5:1].",
+                    ),
+                ).toBeTruthy();
+                expect(
+                    checker.warnings.includes(
+                        "Fragment 'yy' is defined, but not used [file: test15.edit:9:1].",
+                    ),
                 ).toBeTruthy();
             }
         }
