@@ -204,6 +204,9 @@ export class BoxProviderTemplate {
         this.coreImports = [];
         this.configImports = [];
 
+        // reset the fragmentMethods
+        this.fragmentMethods = [];
+
         // reset the variables for super projections
         this.useSuper = false;
         this.supersUsed = [];
