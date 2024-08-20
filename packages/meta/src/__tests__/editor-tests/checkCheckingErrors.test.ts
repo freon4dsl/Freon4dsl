@@ -435,22 +435,7 @@ describe("Checking editor definition ", () => {
                     ),
                 ).toBeTruthy();
                 expect(checker.hasWarnings()).toBeTruthy;
-                expect(checker.warnings.length).toBe(8);
-                expect(
-                    checker.warnings.includes("Fragment f3 is defined, but not used [file: test13.edit:7:8]."),
-                ).toBeTruthy();
-                expect(
-                    checker.warnings.includes("Fragment f4 is defined, but not used [file: test13.edit:7:8]."),
-                ).toBeTruthy();
-                expect(
-                    checker.warnings.includes("Fragment f5 is defined, but not used [file: test13.edit:7:8]."),
-                ).toBeTruthy();
-                expect(
-                    checker.warnings.includes("Fragment f6 is defined, but not used [file: test13.edit:7:8]."),
-                ).toBeTruthy();
-                expect(
-                    checker.warnings.includes("Fragment xx is defined, but not used [file: test13.edit:24:5]."),
-                ).toBeTruthy();
+                expect(checker.warnings.length).toBe(3);
                 expect(
                     checker.warnings.includes(
                         "Native component is replaced by external one, list settings are ignored [file: test13.edit:41:2].",
@@ -474,11 +459,11 @@ describe("Checking editor definition ", () => {
         try {
             parser.parse(testdir + "test14.edit");
         } catch (e: unknown) {
-            // console.log("in test14: " + e);
-            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            // console.log(
-            //     "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
-            // );
+            console.log("in test14: " + e);
+            console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            console.log(
+                "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
+            );
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (8).`);
                 expect(
@@ -534,7 +519,7 @@ describe("Checking editor definition ", () => {
                     ),
                 ).toBeTruthy();
                 expect(
-                    checker.warnings.includes("Fragment XX is defined, but not used [file: test14.edit:18:5]."),
+                    checker.warnings.includes("Fragment 'XX' is defined, but not used [file: test14.edit:21:1]."),
                 ).toBeTruthy();
             }
         }

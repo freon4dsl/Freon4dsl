@@ -10,7 +10,7 @@ import {
     FreMetaUnitDescription,
 } from "../../languagedef/metalanguage/index.js";
 import {
-    FreEditClassifierProjection,
+    FreEditClassifierProjection, FreEditFragmentDefinition,
     FreEditProjectionGroup,
     FreEditTableProjection,
 } from "../../editordef/metalanguage/index.js";
@@ -383,5 +383,9 @@ export class Names {
 
     public static boxProvider(concept: FreMetaClassifier): string {
         return Names.startWithUpperCase(concept.name) + "BoxProvider";
+    }
+
+    static fragment(fragmentDefinition: FreEditFragmentDefinition) {
+        return "getFragmentBox_" + fragmentDefinition.name;
     }
 }

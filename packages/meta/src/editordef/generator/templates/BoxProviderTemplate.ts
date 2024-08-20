@@ -40,6 +40,9 @@ export class BoxProviderTemplate {
     public modelImports: string[] = []; // imports from ../language/gen
     public coreImports: string[] = []; // imports from @freon4dsl/core
     public configImports: string[] = []; // imports from ../config/gen
+    // Fragments are generated as two strings: a separate method and a call to this method in the box provider method(s).
+    // The methods are stored in 'fragmentMethods'.
+    public fragmentMethods: string[] = [];
     // Information about the use of projections from super concepts or interfaces is also collected during the content
     // creation. This avoids the generation of unused classes and methods.
     private useSuper: boolean = false; // indicates whether one or more super projection(s) are being used
@@ -192,6 +195,8 @@ export class BoxProviderTemplate {
                 ${boxText}
                 
                 ${this.useSuper ? superMethod : ""}
+                
+                ${this.fragmentMethods.map((meth: string) => meth).join("\n\n")}
             }`;
 
         // reset the imports
