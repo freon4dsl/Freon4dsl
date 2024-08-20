@@ -513,7 +513,7 @@
 	 */
 	function setInputWidth() {
 		if (box.getText().startsWith("home")) {
-			console.log(`setInputWidth for value '${inputElement?.value}'`)
+			console.log(`setInputWidth box ${box.$id} for value '${inputElement?.value}' isEditing ${isEditing}`)
 		}
 		if(!!widthSpan && !!inputElement) {
 			let value = inputElement.value;
@@ -533,7 +533,7 @@
 			}
 		} else {
 			if (box.getText().startsWith("home")) {
-				console.log("    setInputWidth not calculated")
+				console.log(`    setInputWidth ${box.$id} not calculated`)
 			}
 			// LOGGER.log("SetInputWidth do nothing for element " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ") " + widthSpan + "::" + inputElement + "::" + spanElement);
 		}
@@ -563,38 +563,39 @@
 <!-- todo there is a double selection here: two borders are showing -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 <span on:click={onClick} id="{id}" role="none">
-	<span class="text-component-input" class:hiding={!isEditing}>
-		<input type="text"
-		   class="text-component-input"
-		   id="{id}-input"
-		   bind:this={inputElement}
-		   on:input={onInput}
-		   bind:value={text}
-		   on:focusout={onFocusOut}
-		   on:keydown={onKeyDown}
-		   draggable="true"
-		   on:dragstart={onDragStart}
-		   placeholder="{placeholder}"/>
-		<span class="text-component-width" bind:this={widthSpan}></span>
-	</span>
-
-	<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
-         But ... this is only a problem when this component is inside a draggable element (like List or table)
-    -->
-	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-	<span class="{box.role} text-box-{boxType} text-component-text"
-		  class:hiding={isEditing}
-		  on:click={startEditing}
-		  contenteditable=true
-	 	 spellcheck=false
-	 	 id="{id}-span"
-	 	 role="none">
-		{#if !!text && text.length > 0}
-			{text}
-		{:else}
-			<span class="{placeHolderStyle}">{placeholder}</span>
-		{/if}
-	</span>
+	{#if isEditing}
+		<span class="text-component-input">
+			<input type="text"
+				   class="text-component-input"
+				   id="{id}-input"
+				   bind:this={inputElement}
+				   on:input={onInput}
+				   bind:value={text}
+				   on:focusout={onFocusOut}
+				   on:keydown={onKeyDown}
+				   draggable="true"
+				   on:dragstart={onDragStart}
+				   placeholder="{placeholder}"/>
+			<span class="text-component-width" bind:this={widthSpan}></span>
+		</span>
+	{:else}
+		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
+		     But ... this is only a problem when this component is inside a draggable element (like List or table)
+		-->
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
+		<span class="{box.role} text-box-{boxType} text-component-text"
+			  on:click={startEditing}
+			  contenteditable=true
+			  spellcheck=false
+			  id="{id}-span"
+			  role="none">
+			{#if !!text && text.length > 0}
+				{text}
+			{:else}
+				<span class="{placeHolderStyle}">{placeholder}</span>
+			{/if}
+		</span>
+	{/if}
 </span>
 <style>
 	/** Hiding and showing the <input> or <span> by using Svelte #if did not work, because the

@@ -1,4 +1,4 @@
-# Adding buttons to the Freon editor
+### Adding buttons to the Freon editor
 
 1. Add a button by adding the following line in one of the .edit files. (See Samples/DocuProject/defs/editor-specials.edit, line 7.)
 ``` 
@@ -15,6 +15,6 @@ This works the same in the table definition. (See Samples/DocuProject/defs/edito
 You can add an icon before or after the text using css. For an example see _freon_theme-light.scss, from line 30.
 The text for the Button is optional.
 
-### Notes
+#### Notes
 1. We are working on exposing the in-built actions in the editor core.
 

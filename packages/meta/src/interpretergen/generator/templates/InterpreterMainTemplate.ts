@@ -57,9 +57,13 @@ export class InterpreterMainTemplate {
             }
 
             evaluate(node: Object): RtObject {
+                return this.evaluateWithContext(node, InterpreterContext.EMPTY_CONTEXT)
+            }
+            
+            evaluateWithContext(node: Object, ctx: InterpreterContext): RtObject {
                 ${Names.interpreterName(language)}.main.reset();
                 try {
-                    return ${Names.interpreterName(language)}.main.evaluate(node, InterpreterContext.EMPTY_CONTEXT);
+                    return ${Names.interpreterName(language)}.main.evaluate(node, ctx);
                 } catch (e: any) {
                     return new RtError(e.message);
                 }
