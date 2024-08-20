@@ -42,5 +42,4 @@ export class FreLanguageEnvironment implements FreEnvironment {
     public newModel(modelName: string): FreModel {
         return undefined;
     }
-
 }

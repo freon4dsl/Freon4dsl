@@ -21,12 +21,12 @@ export class ReferenceCheckerTemplate {
         const allClassifiers: FreMetaClassifier[] = [];
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
-        const allMethods: string = `${allClassifiers.map(concept => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}`;
+        const allMethods: string = `${allClassifiers.map((concept) => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}`;
 
         // the template starts here
         return `
         import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.FreNodeReference}, ${Names.FreNamedNode}, ${Names.FreNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.imports.map(imp => `${imp}` ).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${this.imports.map((imp) => `${imp}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
         import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
 
@@ -72,7 +72,7 @@ export class ReferenceCheckerTemplate {
         let result: string = "";
         // todo check location description, I (A) think that too often 'unnamed' is the result
         const locationdescription = ValidationUtils.findLocationDescription(concept);
-        concept.allProperties().forEach(prop => {
+        concept.allProperties().forEach((prop) => {
             if (!prop.isPart) {
                 if (prop.isList) {
                     result += `for (const referredElem of modelelement.${prop.name} ) {

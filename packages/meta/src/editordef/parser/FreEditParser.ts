@@ -1,9 +1,13 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { Names, ParseLocationUtil, FreGenericParser } from "../../utils/index.js";
-import { setCurrentFileName as editFileName } from "./FreEditCreators.js";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
-import { ExtraClassifierInfo, FreEditProjectionGroup, FreEditUnit } from "../metalanguage/FreEditDefLang.js";
-import { FreEditChecker } from "../metalanguage/FreEditChecker.js";
+import { Names, ParseLocationUtil, FreGenericParser } from "../../utils/index.js";
+import {
+    FreEditExtraClassifierInfo,
+    FreEditProjectionGroup,
+    FreEditUnit,
+    FreEditChecker,
+} from "../metalanguage/index.js";
+import { setCurrentFileName as editFileName } from "./FreEditCreators.js";
 import { parser } from "./FreEditGrammar.js";
 
 export class FreEditParser extends FreGenericParser<FreEditUnit> {
@@ -19,45 +23,52 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
     protected merge(submodels: FreEditUnit[]): FreEditUnit | undefined {
         if (submodels.length > 0) {
             const result: FreEditUnit = submodels[0];
-            // remember the files where we encountered standard projections, in order to give a good warning
+            // remember the files where we encountered global projections, in order to give a good warning
             const filesWithStdProj: string[] = [];
 
             // we merge all edit files based on the name of the 'editor'
             // same name => all info is stored in the same group
             // therefore we build a map of projection groups by name
-            const projectionGroupsByName: Map<string, FreEditProjectionGroup> = new Map<string, FreEditProjectionGroup>();
+            const projectionGroupsByName: Map<string, FreEditProjectionGroup> = new Map<
+                string,
+                FreEditProjectionGroup
+            >();
             // add the groups from the first submodel (should be a single group)
-            result.projectiongroups.forEach(group => {
+            result.projectiongroups.forEach((group) => {
                 projectionGroupsByName.set(group.name, group);
-                if (group.standardProjections.length > 0) {
-                    filesWithStdProj.push(ParseLocationUtil.location(group.standardProjections[0]));
+                if (group.globalProjections.length > 0) {
+                    filesWithStdProj.push(ParseLocationUtil.location(group.globalProjections[0]));
                 }
             });
 
             // now merge the other submodels
             submodels.forEach((sub, index) => {
-                if (index > 0) { // we have already added submodels[0] to the result
-                    sub.projectiongroups.forEach(group => {
+                if (index > 0) {
+                    // we have already added submodels[0] to the result
+                    sub.projectiongroups.forEach((group) => {
                         if (projectionGroupsByName.has(group.name)) {
                             // there is already a group with this name in the definition, so
                             // merge all info into this group
                             const found = projectionGroupsByName.get(group.name);
                             if (!!found) {
                                 found.projections.push(...group.projections);
-                                if (group.standardProjections.length > 0) {
-                                    filesWithStdProj.push(ParseLocationUtil.location(group.standardProjections[0]));
+                                if (group.globalProjections.length > 0) {
+                                    filesWithStdProj.push(ParseLocationUtil.location(group.globalProjections[0]));
                                 }
-                                found.standardProjections.push(...group.standardProjections);
+                                found.globalProjections.push(...group.globalProjections);
                                 if (!!group.extras) {
                                     if (!found.extras) {
                                         found.extras = [];
                                     }
                                     found.extras.push(...group.extras);
                                 }
-                                if (group.precedence !== null && group.precedence !== undefined) { // precedence may be 0, "!!group.precedence" would return false
+                                if (group.precedence !== null && group.precedence !== undefined) {
+                                    // precedence may be 0, "!!group.precedence" would return false
                                     if (found.precedence !== null && found.precedence !== undefined) {
                                         if (group.precedence !== found.precedence) {
-                                            this.checker.errors.push(`Precendence of ${group.name} in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`);
+                                            this.checker.errors.push(
+                                                `Precedence of ${group.name} in ${ParseLocationUtil.location(group)} is not equal to the one found in ${ParseLocationUtil.location(found)}.`,
+                                            );
                                         }
                                     } else {
                                         found.precedence = group.precedence;
@@ -76,7 +87,9 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             });
 
             if (filesWithStdProj.length > 1) {
-                this.checker.warnings.push(`Found multiple definitions for standard projections, please note that they may be overridden ${filesWithStdProj}.`);
+                this.checker.warnings.push(
+                    `Found multiple definitions for global projections, please note that they may be overridden ${filesWithStdProj}.`,
+                );
             }
 
             // place extra classifier information always in the default projection group
@@ -96,8 +109,8 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
             result.projectiongroups.push(defaultGroup);
         }
         // add all extra information to the default group
-        const allExtras: ExtraClassifierInfo[] = [];
-        result.projectiongroups.forEach(group => {
+        const allExtras: FreEditExtraClassifierInfo[] = [];
+        result.projectiongroups.forEach((group) => {
             if (!!group.extras) {
                 allExtras.push(...group.extras);
             }

@@ -31,7 +31,7 @@
 	 * are set.
 	 */
 	onMount(() => {
-		LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")");
+		LOGGER.log("onMount" + " for element "  + box?.node?.freId() + " (" + box?.node?.freLanguageConcept() + ")");
 		placeholder = box.placeHolder;
 		box.setFocus = setFocus;
 		box.refreshComponent = refresh;
@@ -73,7 +73,7 @@
 	}
 
 	const refresh = () => {
-		LOGGER.log("REFRESH " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
+		LOGGER.log("REFRESH " + box?.node?.freId() + " (" + box?.node?.freLanguageConcept() + ")")
 		placeholder = box.placeHolder;
 		text = box.getText();
 	}

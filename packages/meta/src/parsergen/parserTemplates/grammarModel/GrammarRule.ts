@@ -1,5 +1,5 @@
 export abstract class GrammarRule {
-    ruleName: string = '';
+    ruleName: string = "";
 
     toGrammar(): string {
         return `GrammarRule.toGrammar() should be implemented by its subclasses.`;

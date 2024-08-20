@@ -12,8 +12,8 @@ export const app = new Koa();
 // No 'Access-Control-Allow-Origin' header is present on the requ
 app.use(
     cors({
-        origin: "*"
-    })
+        origin: "*",
+    }),
 );
 // Ensure access to the body of the request.
 app.use(bodyParser());

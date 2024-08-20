@@ -9,7 +9,7 @@ import { WebappConfigurator } from "../WebappConfigurator.js";
 export class ImportExportHandler {
     private langEnv: FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
 
-    importUnits(fileList: FileList){
+    importUnits(fileList: FileList) {
         editorProgressShown.set(true);
         let showIt: boolean = true; // only show the first of the imported units
         for (let file of fileList) {
@@ -27,17 +27,22 @@ export class ImportExportHandler {
         // if the right extension has been found, continue
         if (metaType.length > 0) {
             await reader.readAsText(file);
-            reader.onload = function() {
+            reader.onload = function () {
                 const text = reader.result;
                 if (typeof text == "string") {
                     try {
-                        EditorState.getInstance().unitFromFile(file.name.split(".").shift(), reader.result as string, metaType, showIt);
+                        EditorState.getInstance().unitFromFile(
+                            file.name.split(".").shift(),
+                            reader.result as string,
+                            metaType,
+                            showIt,
+                        );
                     } catch (e) {
                         setUserMessage(`${e.message}`);
                     }
                 }
             };
-            reader.onerror = function() {
+            reader.onerror = function () {
                 setUserMessage(reader.error.message);
             };
         } else {
@@ -52,7 +57,7 @@ export class ImportExportHandler {
         //     this._exportUnit(completeUnit);
         // });
         // TODO: now only export current unit, could be extended to export other units as well.
-        //       the code above runs into an error because the loaded modelunit is not placed into a model. 
+        //       the code above runs into an error because the loaded modelunit is not placed into a model.
         this._exportUnit(unit);
     }
 
@@ -62,7 +67,7 @@ export class ImportExportHandler {
         // TODO Only allow export of current unit for now.
         if (list.length > 0) {
             setUserMessage(`Cannot export a unit that has errors (found ${list.length}).`);
-            console.log("Errors: " + list.map(l => l.message).join(", "))
+            console.log("Errors: " + list.map((l) => l.message).join(", "));
             return;
         }
         // create a text string from the unit
@@ -90,20 +95,21 @@ export class ImportExportHandler {
         document.body.appendChild(link);
 
         // wait for the link to be added to the document
-        window.requestAnimationFrame(function() {
+        window.requestAnimationFrame(function () {
             var event = new MouseEvent("click");
             link.dispatchEvent(event);
             document.body.removeChild(link);
         });
     }
 
-    private allExtensionsToString() : string {
-        let result: string = '';
+    private allExtensionsToString(): string {
+        let result: string = "";
         const size: number = this.langEnv.fileExtensions.size;
         let i: number = 0;
         for (let [key, value] of this.langEnv.fileExtensions) {
             result += value;
-            if (i < size - 1) { // only add a comma between, not after, the extensions.
+            if (i < size - 1) {
+                // only add a comma between, not after, the extensions.
                 result += ", ";
                 i++;
             }
@@ -111,10 +117,9 @@ export class ImportExportHandler {
         return result;
     }
 
-    private metaTypeForExtension (extension: string) {
+    private metaTypeForExtension(extension: string) {
         for (let [key, value] of this.langEnv.fileExtensions) {
-            if (value === extension)
-                return key;
+            if (value === extension) return key;
         }
         return "";
     }

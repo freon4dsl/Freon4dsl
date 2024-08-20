@@ -1,0 +1,15 @@
+editor default
+
+BB {[
+]
+fragment xx [
+    This is fragment XX
+    [fragment zz]
+]
+fragment yy [
+    This is fragment YY
+]
+fragment zz [
+    This is fragment ZZ
+]
+}

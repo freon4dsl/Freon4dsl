@@ -7,15 +7,14 @@ export type OnError = (errorMsg: string, severity: FreErrorSeverity) => void;
  * Needs both name and id, as the Freon server uses the name, and the LionWeb server uses the id.
  */
 export type ModelUnitIdentifier = {
-    name: string
-    id: string
-}
+    name: string;
+    id: string;
+};
 
 /**
  *  Takes care of the communication with the server at SERVER_URL from WebappConfiguration.
  */
 export interface IServerCommunication {
-
     onError: OnError;
 
     /**
@@ -50,14 +49,14 @@ export interface IServerCommunication {
      * @param newName
      * @param unit
      */
-    renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): void ;
+    renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): void;
 
     /**
      * Create a new model with name _modelName_.
      * @param modelName
      */
     createModel(modelName: string): any;
-    
+
     /**
      * Deletes the complete model with name 'modelName', including all its modelunits
      * @param modelName
@@ -68,14 +67,14 @@ export interface IServerCommunication {
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      * @param modelListCallback
      */
-    loadModelList(): Promise<string[]>
+    loadModelList(): Promise<string[]>;
 
     /**
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
      * @param modelName
      * @param modelListCallback
      */
-    loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]>
+    loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]>;
 
     /**
      * Reads the model unit according to the data in 'modelInfo' from the server and
@@ -101,8 +100,8 @@ export interface IServerCommunication {
      * @param modelName
      * @param unit
      */
-    createModelUnit(modelName: string, unit: FreModelUnit): void
-    
+    createModelUnit(modelName: string, unit: FreModelUnit): void;
+
     /**
      * Reads all interfaces for all available units of model 'modelName' and calls loadCallback for each.
      * @param languageName

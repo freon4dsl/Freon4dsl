@@ -29,5 +29,5 @@ export {
     FretEqualsRule,
     FretBinaryExp,
     FretCreateExp,
-    FretVarCallExp
+    FretVarCallExp,
 } from "./internal.js";

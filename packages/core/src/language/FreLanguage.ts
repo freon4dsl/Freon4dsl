@@ -13,7 +13,7 @@ export type FreLanguageProperty = {
     name: string;
     type: string;
     id?: string;
-    key?: string;// used for LionWeb
+    key?: string; // used for LionWeb
     isList: boolean;
     isPublic: boolean;
     language: string;
@@ -22,7 +22,7 @@ export type FreLanguageProperty = {
 export type FreLanguageModel = {
     typeName: string;
     id?: string;
-    key?: string;// used for LionWeb
+    key?: string; // used for LionWeb
     isNamespace?: boolean;
     isNamedElement?: boolean;
     isAbstract?: boolean;
@@ -36,7 +36,7 @@ export type FreLanguageModel = {
 export type FreLanguageModelUnit = {
     typeName: string;
     id?: string;
-    key?: string;// used for LionWeb
+    key?: string; // used for LionWeb
     // isPublic?: boolean;
     isNamespace?: boolean;
     isNamedElement?: boolean;
@@ -53,11 +53,11 @@ export type FreLanguageModelUnit = {
 export type FreLanguageConcept = {
     typeName: string;
     id?: string;
-    key?: string;// used for LionWeb
+    key?: string; // used for LionWeb
     isAbstract: boolean;
     isPublic: boolean;
-    isLimited: boolean,
-    instanceNames: string[],
+    isLimited: boolean;
+    instanceNames: string[];
     isNamespace?: boolean;
     isNamedElement?: boolean;
     language: string;
@@ -74,7 +74,7 @@ export type FreLanguageConcept = {
 export type FreLanguageInterface = {
     typeName: string;
     id?: string;
-    key?: string;// used for LionWeb
+    key?: string; // used for LionWeb
     isPublic: boolean;
     isNamespace?: boolean;
     isNamedElement?: boolean;
@@ -113,15 +113,14 @@ export class FreLanguage {
         return this._stdLib;
     }
 
-    private constructor() {
-    }
+    private constructor() {}
 
     model(): FreLanguageModel {
         return this.pmodel;
     }
 
     modelOfType(typeName: string) {
-        if (!!this.pmodel && (this.pmodel.typeName === typeName)) {
+        if (!!this.pmodel && this.pmodel.typeName === typeName) {
             return this.pmodel;
         } else {
             return null;
@@ -145,9 +144,12 @@ export class FreLanguage {
         return this.helperByKey(this.concepts, conceptKey) as FreLanguageConcept;
     }
 
-    private helperByKey(map: Map<string, FreLanguageClassifier>, conceptKey: string): FreLanguageClassifier | undefined {
-        for ( const concept of map.values()) {
-            if ( concept.key === conceptKey) {
+    private helperByKey(
+        map: Map<string, FreLanguageClassifier>,
+        conceptKey: string,
+    ): FreLanguageClassifier | undefined {
+        for (const concept of map.values()) {
+            if (concept.key === conceptKey) {
                 return concept;
             }
         }
@@ -176,7 +178,7 @@ export class FreLanguage {
                     return unit1;
                 } else {
                     const model = this.modelOfType(typeName);
-                    if (!! model) {
+                    if (!!model) {
                         return model;
                     }
                 }
@@ -201,7 +203,7 @@ export class FreLanguage {
                 } else {
                     // TODO By Id for models
                     const model = this.modelOfType(key);
-                    if (!! model) {
+                    if (!!model) {
                         return model;
                     }
                 }
@@ -220,8 +222,8 @@ export class FreLanguage {
     // }
 
     helperPropByKey(map: Map<string, FreLanguageProperty>, key: string): FreLanguageProperty | undefined {
-        for ( const prop of map.values()) {
-            if ( prop.key === key) {
+        for (const prop of map.values()) {
+            if (prop.key === key) {
                 return prop;
             }
         }
@@ -329,14 +331,18 @@ export class FreLanguage {
      * Return all named concept in the language.
      */
     public getNamedConcepts(): string[] {
-        return Array.from(this.concepts.values()).filter( concept => concept.isNamedElement).map(concept => concept.typeName);
+        return Array.from(this.concepts.values())
+            .filter((concept) => concept.isNamedElement)
+            .map((concept) => concept.typeName);
     }
 
     /**
      * Return all named interfaces in the language.
      */
     public getNamedInterfaces(): string[] {
-        return Array.from(this.interfaces.values()).filter( intfc => intfc.isNamedElement).map(intfc => intfc.typeName);
+        return Array.from(this.interfaces.values())
+            .filter((intfc) => intfc.isNamedElement)
+            .map((intfc) => intfc.typeName);
     }
 
     /**
@@ -350,7 +356,7 @@ export class FreLanguage {
      * Return the names of all model unit types.
      */
     public getUnitNames(): string[] {
-        return Array.from(this.units.values()).map(unit => unit.typeName);
+        return Array.from(this.units.values()).map((unit) => unit.typeName);
     }
 
     createModel(id?: string): FreModel {
@@ -375,7 +381,12 @@ export class FreLanguage {
 
     addModel(model: FreLanguageModel) {
         if (!!this.pmodel) {
-            console.error("Language: adding model of type " + model?.typeName + " while there is already a model of type " + this.pmodel.typeName);
+            console.error(
+                "Language: adding model of type " +
+                    model?.typeName +
+                    " while there is already a model of type " +
+                    this.pmodel.typeName,
+            );
         }
         this.pmodel = model;
     }

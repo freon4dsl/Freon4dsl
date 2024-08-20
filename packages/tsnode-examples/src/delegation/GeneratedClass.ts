@@ -1,5 +1,5 @@
 import { IGeneratedClassExtensions } from "./GeneratedInterface";
-import { GeneratedClassExtensions } from "./CustomClass"
+import { GeneratedClassExtensions } from "./CustomClass";
 
 export class GeneratedClass {
     prop: string;
@@ -12,4 +12,3 @@ export class GeneratedClass {
         this.extensions = new GeneratedClassExtensions(this);
     }
 }
-

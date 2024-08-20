@@ -1,10 +1,5 @@
 import { FreNode } from "../../ast";
-import {
-    isNullOrUndefined,
-    FreUtils,
-    FRE_BINARY_EXPRESSION_LEFT,
-    FRE_BINARY_EXPRESSION_RIGHT
-} from "../../util";
+import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util";
 import { FreLogger } from "../../logging";
 
 const LOGGER = new FreLogger("Box");
@@ -16,18 +11,19 @@ export abstract class Box {
     $id: string;
     kind: string = "";
     role: string = "";
-    element: FreNode = null;  // the model element to which this box is coupled
-    propertyName: string;       // the name of the property, if any, in 'element' which this box projects
-    propertyIndex: number;      // the index within the property, if appropriate
+    node: FreNode = null; // the model element to which this box is coupled
+    propertyName: string; // the name of the property, if any, in 'element' which this box projects
+    propertyIndex: number; // the index within the property, if appropriate
     // todo make sure propertyName and index are correctly set
 
-    cssClass: string = "";      // Custom CSS class that will be added to the component rendering this box
-    cssStyle: string = "";      // Custom CSS Style class that will be added as inline style to the component rendering this box
+    cssClass: string = ""; // Custom CSS class that will be added to the component rendering this box
+    cssStyle: string = ""; // Custom CSS Style class that will be added as inline style to the component rendering this box
     selectable: boolean = true; // Can this box be selected in the editor?
     // todo because most boxes are not selectable the default could be set to false
+    isVisible: boolean = true; // Is this box currently not shown in the editor?
     parent: Box = null;
 
-    refreshComponent: (why?: string) => void;   // The refresh method from the component that displays this box.
+    refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
 
     /**
      *  Called when the box is dirty, refreshes the corresponding component.
@@ -50,14 +46,14 @@ export abstract class Box {
 
     protected constructor(node: FreNode, role: string) {
         FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");
-        this.element = node;
+        this.node = node;
         this.role = role;
         this.$id = FreUtils.BOX_ID(); // uuid.v4();
     }
 
     get id(): string {
-        if (!!this.element) {
-            return this.element.freId() + (this.role === null ? "" : "-" + this.role);
+        if (!!this.node) {
+            return this.node.freId() + (this.role === null ? "" : "-" + this.role);
         } else {
             return "unknown-element-" + this.role;
         }
@@ -79,6 +75,9 @@ export abstract class Box {
      * Get the first selectable leaf box in the tree with `this` as root.
      */
     get firstLeaf(): Box | null {
+        if (!this.isVisible) {
+            return null;
+        }
         if (this.isLeaf() && this.selectable) {
             return this;
         }
@@ -100,6 +99,9 @@ export abstract class Box {
      * Get the last selectable leaf box in the tree with `this` as root.
      */
     get lastLeaf(): Box | null {
+        if (!this.isVisible) {
+            return null;
+        }
         if (this.isLeaf() && this.selectable) {
             return this;
         }
@@ -123,14 +125,14 @@ export abstract class Box {
         if (!this.parent) {
             return null;
         }
-        const thisIndex = this.parent.children.indexOf(this);
-        const rightSiblings = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
+        const thisIndex: number = this.parent.children.indexOf(this);
+        const rightSiblings: Box[] = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
         for (const sibling of rightSiblings) {
-            const siblingChild = sibling.firstLeaf;
+            const siblingChild: Box = sibling.firstLeaf;
             if (!!siblingChild) {
                 return siblingChild;
             }
-            if (sibling.isLeaf() && sibling.selectable) {
+            if (sibling.isLeaf() && sibling.selectable && sibling.isVisible) {
                 return sibling;
             }
         }
@@ -145,14 +147,14 @@ export abstract class Box {
         if (this.parent === null || this.parent === undefined) {
             return null;
         }
-        const thisIndex = this.parent.children.indexOf(this);
-        const leftSiblings = this.parent.children.slice(0, thisIndex).reverse();
+        const thisIndex: number = this.parent.children.indexOf(this);
+        const leftSiblings: Box[] = this.parent.children.slice(0, thisIndex).reverse();
         for (const sibling of leftSiblings) {
-            const siblingChild = sibling.lastLeaf;
+            const siblingChild: Box = sibling.lastLeaf;
             if (!!siblingChild) {
                 return siblingChild;
             }
-            if (sibling.isLeaf() && sibling.selectable) {
+            if (sibling.isLeaf() && sibling.selectable && sibling.isVisible) {
                 return sibling;
             }
         }
@@ -237,7 +239,7 @@ export abstract class Box {
      */
     findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
         // if (propertyName === "value" && propertyIndex === undefined) {
-            console.log('findChildBoxForProperty ' + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        console.log("findChildBoxForProperty " + this.role + "[" + propertyName + ", " + propertyIndex + "]");
         // }
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
@@ -256,7 +258,7 @@ export abstract class Box {
                 return child;
             }
             const result = child.findChildBoxForProperty(propertyName, propertyIndex);
-            if (!isNullOrUndefined(result) && result.element === this.element) {
+            if (!isNullOrUndefined(result) && result.node === this.node) {
                 return result;
             }
         }
@@ -277,7 +279,9 @@ export abstract class Box {
      * AND this method is not overridden, then the focus will be set to the parent box.
      */
     setFocus: () => void = async () => {
-        console.log(this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id + ", referring to parent");
+        console.log(
+            this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id + ", referring to parent",
+        );
         this.parent?.setFocus();
     };
 
@@ -289,10 +293,9 @@ export abstract class Box {
         this.getEditableChildrenRecursive(editableChildren);
         if (editableChildren.length > 0) {
             // Prefer a left- or right-placeholder if possible
-            const binaryPlaceHolders = editableChildren.filter(box => 
-                box.role === FRE_BINARY_EXPRESSION_LEFT ||
-                box.role === FRE_BINARY_EXPRESSION_RIGHT
-            )
+            const binaryPlaceHolders: Box[] = editableChildren.filter(
+                (box) => box.role === FRE_BINARY_EXPRESSION_LEFT || box.role === FRE_BINARY_EXPRESSION_RIGHT,
+            );
             return binaryPlaceHolders.length > 0 ? binaryPlaceHolders[0] : editableChildren[0];
         } else {
             return this;
@@ -302,14 +305,14 @@ export abstract class Box {
     // TODO This will find all editable children, but not editable children of an editable child.
     //      Looking at the usage, we only need the first editable child, so maybe this could be simplified.
     private getEditableChildrenRecursive(result: Box[]) {
-        LOGGER.info( "getEditableChildrenRecursive for " + this.kind);
+        LOGGER.info("getEditableChildrenRecursive for " + this.kind);
         if (this.isEditable()) {
-            LOGGER.info( "Found editable: " + this.role);
+            LOGGER.info("Found editable: " + this.role);
             result.push(this);
             return;
         }
-        this.children.forEach(c => {
-            LOGGER.info( "child: " + c.kind);
+        this.children.forEach((c) => {
+            LOGGER.info("child: " + c.kind);
             c.getEditableChildrenRecursive(result);
         });
         // return this.children.filter(c => (isTextBox(c) || isActionBox(c) || isSelectBox(c)) || c.children.length);

@@ -12,10 +12,10 @@ const LOGGER = new MetaLogger("DiagramGenerator").mute();
 export class DiagramGenerator {
     public outputfolder: string = ".";
     public language?: FreMetaLanguage;
-    private diagramFolder: string = '';
-    private diagramGenFolder: string = '';
+    private diagramFolder: string = "";
+    private diagramGenFolder: string = "";
     fileNames: string[] = [];
-    private diagramAstFolder: string = '';
+    private diagramAstFolder: string = "";
 
     generate(): void {
         if (this.language === null || this.language === undefined) {
@@ -71,10 +71,10 @@ export class DiagramGenerator {
         // Generate diagrams for all .ast files
         for (const name of this.fileNames) {
             let tmpName: string | undefined = name.split(FileUtil.separator()).pop();
-            if ( !!tmpName && tmpName.length > 0) {
+            if (!!tmpName && tmpName.length > 0) {
                 tmpName = tmpName.split(".").shift();
             }
-            if ( !!tmpName && tmpName.length > 0) {
+            if (!!tmpName && tmpName.length > 0) {
                 const fName: string = tmpName as string;
                 title = `Class diagram for file ${fName}`;
                 //  Generate the html version of the inheritance diagram
@@ -92,7 +92,9 @@ export class DiagramGenerator {
         }
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(`Generated diagrams for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(
+                `Generated diagrams for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`,
+            );
         } else {
             LOGGER.info(`Succesfully generated diagrams.`);
         }

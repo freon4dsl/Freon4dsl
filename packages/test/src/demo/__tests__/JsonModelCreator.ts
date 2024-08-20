@@ -9,28 +9,34 @@ export class JsonModelCreator {
     }
 
     public createCorrectModel(): DemoModel {
-        let correctModel: DemoModel = DemoModel.create({name: "DemoModel_1"});
+        let correctModel: DemoModel = DemoModel.create({ name: "DemoModel_1" });
 
-        const personEnt = DemoEntity.create({name: "Person"});
-        const age = DemoAttribute.create({name: "age"});
+        const personEnt = DemoEntity.create({ name: "Person" });
+        const age = DemoAttribute.create({ name: "age" });
         age.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         // age.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
-        const personName = DemoAttribute.create({name: "name"});
-        personName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        const personName = DemoAttribute.create({ name: "name" });
+        personName.declaredType = FreNodeReference.create<DemoAttributeType>(
+            DemoAttributeType.String,
+            "DemoAttributeType",
+        );
         // personName.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
         personEnt.attributes.push(age);
         personEnt.attributes.push(personName);
 
-        const companyEnt = DemoEntity.create({name: "Company"});
-        const companyName = DemoAttribute.create({name: "name"});
-        const VAT_Number = DemoAttribute.create({name: "VAT_Number"});
+        const companyEnt = DemoEntity.create({ name: "Company" });
+        const companyName = DemoAttribute.create({ name: "name" });
+        const VAT_Number = DemoAttribute.create({ name: "VAT_Number" });
         companyEnt.attributes.push(companyName);
         companyEnt.attributes.push(VAT_Number);
 
         correctModel.entities.push(personEnt);
         correctModel.entities.push(companyEnt);
 
-        const aFunction = DemoFunction.create({name: "SomeFunction", declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType")});
+        const aFunction = DemoFunction.create({
+            name: "SomeFunction",
+            declaredType: FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType"),
+        });
         correctModel.functions.push(aFunction);
 
         return correctModel;

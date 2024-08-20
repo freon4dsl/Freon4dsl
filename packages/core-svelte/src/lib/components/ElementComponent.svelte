@@ -13,7 +13,7 @@
     let childBox: Box ;
 
     const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.element?.freLanguageConcept());
+        LOGGER.log("REFRESH ElementComponent (" + why +")" + box?.node?.freLanguageConcept());
         if (!!box) {
             id = componentId(box);
             childBox = box.content;
@@ -23,7 +23,7 @@
     }
 
     async function setFocus(): Promise<void> {
-        LOGGER.log("ListComponent.setFocus for box " + box.role);
+        LOGGER.log("ElementComponent.setFocus for box " + box.role);
         if (!!box) {
             box.content.setFocus();
         }
@@ -44,4 +44,4 @@
     }
 </script>
 
-<RenderComponent box={childBox} editor={editor} />
+<RenderComponent box={childBox} editor={editor}/>

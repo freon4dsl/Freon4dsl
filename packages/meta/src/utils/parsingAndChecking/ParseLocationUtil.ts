@@ -3,15 +3,17 @@ import { ParseLocation } from "./FreGenericParser.js";
 
 export class ParseLocationUtil {
     static defaultParseLocation: ParseLocation = {
-        filename: 'filename unknown',
+        filename: "filename unknown",
         start: {
             offset: 1,
             line: 1,
-            column: 1 },
+            column: 1,
+        },
         end: {
             offset: 1,
             line: 1,
-            column: 1 }
+            column: 1,
+        },
     };
     static location(elem: FreMetaDefinitionElement | undefined): string {
         if (!!elem) {

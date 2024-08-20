@@ -9,7 +9,9 @@ export class FreTypeConceptMaker {
     generateTypeConcept(concept: FretTypeConcept, relativePath: string): string {
         const myName: string = Names.classifier(concept);
         const hasSuper = !!concept.base;
-        const extendsClass = hasSuper ? `extends ${Names.classifier(concept.base.referred)}` : `implements ${this.freTypeName}`;
+        const extendsClass = hasSuper
+            ? `extends ${Names.classifier(concept.base.referred)}`
+            : `implements ${this.freTypeName}`;
         const coreImports: string[] = [Names.FreUtils, Names.FreWriter, Names.FreParseLocation];
         if (!hasSuper) {
             coreImports.push(this.freTypeName);
@@ -29,8 +31,14 @@ export class FreTypeConceptMaker {
                 ${ConceptUtils.makeStaticCreateMethod(concept, myName)}
 
                 ${ConceptUtils.makeBasicProperties("string", myName, hasSuper)}
-                ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
-                ${concept.implementedParts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
+                ${concept
+                    .implementedPrimProperties()
+                    .map((p) => ConceptUtils.makePrimitiveProperty(p))
+                    .join("\n")}
+                ${concept
+                    .implementedParts()
+                    .map((p) => ConceptUtils.makePartProperty(p))
+                    .join("\n")}
 
                 ${this.makeConstructor(hasSuper)}
                 ${ConceptUtils.makeCopyMethod(concept, myName, false)}
@@ -40,16 +48,20 @@ export class FreTypeConceptMaker {
                     return ${this.makeToFreString(myName, concept)};
                 }
 
-                ${!hasSuper ? `toAstElement(): ${Names.FreNode} {
+                ${
+                    !hasSuper
+                        ? `toAstElement(): ${Names.FreNode} {
                     return null;
-                }` : ``}
+                }`
+                        : ``
+                }
             }
         `;
     }
 
     private makeToFreString(myName: string, concept: FretTypeConcept): string {
         const props: string[] = [];
-        concept.allProperties().forEach(prop => {
+        concept.allProperties().forEach((prop) => {
             if (prop.type instanceof FreMetaPrimitiveType) {
                 props.push(`${prop.name}: \${this.${prop.name}}`);
             } else if (prop.type instanceof FretTypeConcept) {
@@ -60,29 +72,36 @@ export class FreTypeConceptMaker {
         });
         // take into account indentation
         let result: string = `${myName} [
-    ${props.map(p => `${p}`).join(",\n\t")}
+    ${props.map((p) => `${p}`).join(",\n\t")}
 ]`;
-        result = "\`" + result + "\`";
+        result = "`" + result + "`";
         return result;
     }
 
-    private makeImportStatements(relativePath: string, importsFromCore: string[], modelImports: string[], typeImports: string[]): string {
+    private makeImportStatements(
+        relativePath: string,
+        importsFromCore: string[],
+        modelImports: string[],
+        typeImports: string[],
+    ): string {
         return `
             ${importsFromCore.length > 0 ? `import { ${importsFromCore.join(",")} } from "${FREON_CORE}";` : ``}
             ${modelImports.length > 0 ? `import { ${modelImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
-            ${typeImports.length > 0 ? `import { ${typeImports.join(", ")} } from "./internal";` : `` }
+            ${typeImports.length > 0 ? `import { ${typeImports.join(", ")} } from "./internal";` : ``}
             `;
     }
 
     private makeConstructor(hasSuper: boolean): string {
         return `constructor(id?: string) {
-                    ${!hasSuper ? `
+                    ${
+                        !hasSuper
+                            ? `
                         if (!!id) {
                             this.$id = id;
                         } else {
                             this.$id = ${Names.FreUtils}.ID(); // uuid.v4();
                         }`
-                        : "super(id);"
+                            : "super(id);"
                     }
                 }`;
     }
@@ -90,8 +109,12 @@ export class FreTypeConceptMaker {
     private findModelImports(concept: FretTypeConcept): string[] {
         // return the names of all property types that are not FretTypeConcepts
         const result: string[] = [];
-        concept.implementedParts().forEach(part => {
-            if (!(part.type instanceof FretTypeConcept) && part.type.name !== this.freTypeName && !(part.type instanceof FreMetaPrimitiveType)) {
+        concept.implementedParts().forEach((part) => {
+            if (
+                !(part.type instanceof FretTypeConcept) &&
+                part.type.name !== this.freTypeName &&
+                !(part.type instanceof FreMetaPrimitiveType)
+            ) {
                 result.push(Names.classifier(part.type));
             }
         });
@@ -104,7 +127,7 @@ export class FreTypeConceptMaker {
         if (hasSuper) {
             result.push(Names.classifier(concept.base.referred));
         }
-        concept.implementedParts().forEach(part => {
+        concept.implementedParts().forEach((part) => {
             if (part.type instanceof FretTypeConcept && part.type.name !== Names.FreType) {
                 result.push(Names.classifier(part.type));
             }
@@ -113,9 +136,7 @@ export class FreTypeConceptMaker {
     }
 
     public makeIndexFile(typerdef: TyperDef) {
-        const tmp: string[] = typerdef.typeConcepts.map(con =>
-            Names.classifier(con)
-        );
+        const tmp: string[] = typerdef.typeConcepts.map((con) => Names.classifier(con));
         return `
         /**
          * This index deploys the pattern from Michael Weststrate
@@ -124,19 +145,17 @@ export class FreTypeConceptMaker {
          */
 
         export {
-        ${tmp.map(c =>
-            `${c}`
-        ).join(",\n")}
+        ${tmp.map((c) => `${c}`).join(",\n")}
         } from "./internal"`;
     }
 
     public makeInternalFile(typerdef: TyperDef) {
         const tmp: string[] = [];
 
-        this.sortConcepts(typerdef.typeConcepts).reverse().map(c =>
-            tmp.push(Names.concept(c))
-        );
-        typerdef.typeConcepts.forEach(con => {
+        this.sortConcepts(typerdef.typeConcepts)
+            .reverse()
+            .map((c) => tmp.push(Names.concept(c)));
+        typerdef.typeConcepts.forEach((con) => {
             if (!!con.base) {
                 ListUtil.addIfNotPresent(tmp, Names.classifier(con.base.referred));
             }
@@ -152,18 +171,20 @@ export class FreTypeConceptMaker {
          * concepts that are extending them.
          */
 
-        ${tmp.map(c =>
-            `export * from "./${c}";`
-        ).join("\n")}
+        ${tmp.map((c) => `export * from "./${c}";`).join("\n")}
         `;
     }
 
     // TODO test this method and see if it is better than the one in GenerationHelpers
     private sortConcepts(list: FreMetaConcept[]): FreMetaConcept[] {
-        const result: (FreMetaConcept | undefined)[] = list.map(con => !con.base ? con : undefined).filter(el => el !== undefined);
-        const conceptsWithBase: (FreMetaConcept | undefined)[] = list.map(con => con.base ? con : undefined).filter(el => el !== undefined);
+        const result: (FreMetaConcept | undefined)[] = list
+            .map((con) => (!con.base ? con : undefined))
+            .filter((el) => el !== undefined);
+        const conceptsWithBase: (FreMetaConcept | undefined)[] = list
+            .map((con) => (con.base ? con : undefined))
+            .filter((el) => el !== undefined);
         if (conceptsWithBase.length > 0) {
-            ListUtil.addListIfNotPresent(result, this.sortConcepts(conceptsWithBase.map(con => con!.base.referred)));
+            ListUtil.addListIfNotPresent(result, this.sortConcepts(conceptsWithBase.map((con) => con!.base.referred)));
         }
         if (result.length > 0) {
             return result as FreMetaConcept[];

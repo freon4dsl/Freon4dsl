@@ -4,7 +4,6 @@ import { FreLangCheckerPhase2 } from "./FreLangCheckerPhase2.js";
 import { FreLangCheckerPhase1 } from "./FreLangCheckerPhase1.js";
 
 export class FreLangChecker extends Checker<FreMetaLanguage> {
-
     check(language: FreMetaLanguage): void {
         const runner = new CheckRunner(this.errors, this.warnings);
         const phase1: FreLangCheckerPhase1 = new FreLangCheckerPhase1(language);

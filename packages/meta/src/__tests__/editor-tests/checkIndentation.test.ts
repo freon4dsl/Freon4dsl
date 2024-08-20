@@ -1,19 +1,20 @@
-import {FreMetaClassifier, FreMetaConcept, FreMetaLanguage} from "../../languagedef/metalanguage/index.js";
+import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { Checker } from "../../utils/index.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
-    FreEditProjection, FreEditProjectionGroup,
+    FreEditNormalProjection,
+    FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditUnit,
-    FreOptionalPropertyProjection
+    FreOptionalPropertyProjection,
 } from "../../editordef/metalanguage/index.js";
-import { describe, test, expect, beforeEach } from "vitest"
+import { describe, test, expect, beforeEach } from "vitest";
 
 function getAndTestProjection(editDef: FreEditUnit, classifier: FreMetaClassifier) {
     const defProjGroup: FreEditProjectionGroup | undefined = editDef.getDefaultProjectiongroup();
     expect(defProjGroup).not.toBeNull();
-    const myProj: FreEditProjection | undefined = defProjGroup!.findNonTableProjectionForType(classifier);
+    const myProj: FreEditNormalProjection | undefined = defProjGroup!.findNonTableProjectionForType(classifier);
     expect(myProj).not.toBeNull();
     expect(myProj).not.toBeUndefined();
     return myProj;
@@ -59,18 +60,18 @@ describe("Checking indentation ", () => {
                 expect(e.message).toBeNull();
             }
         }
-        const myAAA: FreMetaClassifier | undefined = language!.units.find(c => c.name === "AAAAAA");
+        const myAAA: FreMetaClassifier | undefined = language!.units.find((c) => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
         expect(myAAA).not.toBeUndefined();
         expect(editDef).not.toBeNull();
         expect(editDef).not.toBeUndefined();
-        let myProj: FreEditProjection | undefined = getAndTestProjection(editDef!, myAAA!);
+        let myProj: FreEditNormalProjection | undefined = getAndTestProjection(editDef!, myAAA!);
 
         expect(myProj).not.toBeNull();
         expect(myProj).not.toBeUndefined();
         expect(myProj!.lines[1].indent).toBe(0);
         //
-        const myBB: FreMetaConcept | undefined = language!.concepts.find(c => c.name === "BB");
+        const myBB: FreMetaConcept | undefined = language!.concepts.find((c) => c.name === "BB");
         expect(myBB).not.toBeNull();
         expect(myBB).not.toBeUndefined();
         myProj = getAndTestProjection(editDef!, myBB!);
@@ -79,7 +80,7 @@ describe("Checking indentation ", () => {
         expect(myProj!.lines[0].indent).toBe(2);
         expect(myProj!.lines[1].indent).toBe(0);
         //
-        const myCC: FreMetaConcept | undefined = language!.concepts.find(c => c.name === "CC");
+        const myCC: FreMetaConcept | undefined = language!.concepts.find((c) => c.name === "CC");
         expect(myCC).not.toBeNull();
         expect(myCC).not.toBeUndefined();
         myProj = getAndTestProjection(editDef!, myCC!);
@@ -103,25 +104,25 @@ describe("Checking indentation ", () => {
                 expect(e.message).toBeNull();
             }
         }
-        const myAAA: FreMetaClassifier | undefined = language!.units.find(c => c.name === "AAAAAA");
+        const myAAA: FreMetaClassifier | undefined = language!.units.find((c) => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
         expect(myAAA).not.toBeUndefined();
         expect(editDef).not.toBeNull();
         expect(editDef).not.toBeUndefined();
         // expect(false).toBe(true);
-        let myProj: FreEditProjection | undefined= getAndTestProjection(editDef!, myAAA!);
+        let myProj: FreEditNormalProjection | undefined = getAndTestProjection(editDef!, myAAA!);
         expect(myProj).not.toBeNull();
         expect(myProj).not.toBeUndefined();
         expect(myProj!.lines[0].indent).toBe(0);
         //
-        const myBB: FreMetaConcept | undefined = language!.concepts.find(c => c.name === "BB");
+        const myBB: FreMetaConcept | undefined = language!.concepts.find((c) => c.name === "BB");
         expect(myBB).not.toBeNull();
         expect(myBB).not.toBeUndefined();
         myProj = getAndTestProjection(editDef!, myBB!);
         expect(myProj!.lines[0].indent).toBe(2);
         expect(myProj!.lines[1].indent).toBe(0);
         //
-        const myCC: FreMetaConcept | undefined = language!.concepts.find(c => c.name === "CC");
+        const myCC: FreMetaConcept | undefined = language!.concepts.find((c) => c.name === "CC");
         expect(myCC).not.toBeNull();
         expect(myCC).not.toBeUndefined();
         myProj = getAndTestProjection(editDef!, myCC!);
@@ -129,7 +130,6 @@ describe("Checking indentation ", () => {
         expect(myProj!.lines[1].indent).toBe(1);
         expect(myProj!.lines[2].indent).toBe(0);
         expect(myProj!.lines[3].indent).toBe(5);
-
     });
 
     test("without optionals with equal, indented []", () => {
@@ -146,24 +146,24 @@ describe("Checking indentation ", () => {
                 expect(e.message).toBeNull();
             }
         }
-        const myAAA: FreMetaClassifier | undefined = language!.units.find(c => c.name === "AAAAAA");
+        const myAAA: FreMetaClassifier | undefined = language!.units.find((c) => c.name === "AAAAAA");
         expect(myAAA).not.toBeNull();
         expect(myAAA).not.toBeUndefined();
         expect(editDef).not.toBeNull();
         expect(editDef).not.toBeUndefined();
-        let myProj: FreEditProjection | undefined = getAndTestProjection(editDef!, myAAA!);
+        let myProj: FreEditNormalProjection | undefined = getAndTestProjection(editDef!, myAAA!);
         expect(myProj).not.toBeNull();
         expect(myProj).not.toBeUndefined();
         expect(myProj!.lines[0].indent).toBe(0);
         //
-        const myBB: FreMetaConcept| undefined = language!.concepts.find(c => c.name === "BB");
+        const myBB: FreMetaConcept | undefined = language!.concepts.find((c) => c.name === "BB");
         expect(myBB).not.toBeNull();
         expect(myBB).not.toBeUndefined();
         myProj = getAndTestProjection(editDef!, myBB!);
         expect(myProj!.lines[0].indent).toBe(2);
         expect(myProj!.lines[1].indent).toBe(0);
         //
-        const myCC = language!.concepts.find(c => c.name === "CC");
+        const myCC = language!.concepts.find((c) => c.name === "CC");
         expect(myCC).not.toBeNull();
         expect(myCC).not.toBeUndefined();
         myProj = getAndTestProjection(editDef!, myCC!);
@@ -190,7 +190,7 @@ describe("Checking indentation ", () => {
         }
         expect(editDef).not.toBeNull();
         expect(editDef).not.toBeUndefined();
-        const myCC = language!.concepts.find(c => c.name === "CC");
+        const myCC = language!.concepts.find((c) => c.name === "CC");
         expect(myCC).not.toBeNull();
         expect(myCC).not.toBeUndefined();
         const myProj = getAndTestProjection(editDef!, myCC!);
@@ -218,7 +218,7 @@ describe("Checking indentation ", () => {
         }
         expect(editDef).not.toBeNull();
         expect(editDef).not.toBeUndefined();
-        const myCC = language!.concepts.find(c => c.name === "CC");
+        const myCC = language!.concepts.find((c) => c.name === "CC");
         expect(myCC).not.toBeNull();
         expect(myCC).not.toBeUndefined();
         const myProj = getAndTestProjection(editDef!, myCC!);
@@ -230,9 +230,9 @@ describe("Checking indentation ", () => {
         expect(myProj!.lines[3].indent).toBe(5);
         const myOptional: FreEditProjectionItem = myProj!.lines[3].items[0];
         expect(myOptional instanceof FreOptionalPropertyProjection).toBe(true);
-        expect((myOptional as FreOptionalPropertyProjection).lines[1].indent).toBe(9);   // line with 'text'
-        expect((myOptional as FreOptionalPropertyProjection).lines[2].indent).toBe(11);   // line with CCprop10
-        expect((myOptional as FreOptionalPropertyProjection).lines[3].indent).toBe(13);   // line with 'more text'
+        expect((myOptional as FreOptionalPropertyProjection).lines[1].indent).toBe(9); // line with 'text'
+        expect((myOptional as FreOptionalPropertyProjection).lines[2].indent).toBe(11); // line with CCprop10
+        expect((myOptional as FreOptionalPropertyProjection).lines[3].indent).toBe(13); // line with 'more text'
     });
 
     test("with multi line optionals less than other indents", () => {
@@ -251,19 +251,19 @@ describe("Checking indentation ", () => {
         }
         expect(editDef).not.toBeNull();
         expect(editDef).not.toBeUndefined();
-        const myCC = language!.concepts.find(c => c.name === "CC");
+        const myCC = language!.concepts.find((c) => c.name === "CC");
         expect(myCC).not.toBeNull();
         expect(myCC).not.toBeUndefined();
         const myProj = getAndTestProjection(editDef!, myCC!);
         expect(myProj).not.toBeNull();
         expect(myProj).not.toBeUndefined();
-        expect(myProj!.lines[0].indent).toBe(16);    // line with 'text1'
-        expect(myProj!.lines[1].indent).toBe(8);     // line with 'CCprop8'
-        expect(myProj!.lines[2].indent).toBe(7);     // line with 'text2'
+        expect(myProj!.lines[0].indent).toBe(16); // line with 'text1'
+        expect(myProj!.lines[1].indent).toBe(8); // line with 'CCprop8'
+        expect(myProj!.lines[2].indent).toBe(7); // line with 'text2'
         const myOptional: FreEditProjectionItem = myProj!.lines[3].items[0];
         expect(myOptional instanceof FreOptionalPropertyProjection).toBe(true);
-        expect((myOptional as FreOptionalPropertyProjection).lines[1].indent).toBe(7);   // line with 'innertext'
-        expect((myOptional as FreOptionalPropertyProjection).lines[2].indent).toBe(1);   // line with CCprop10
-        expect((myOptional as FreOptionalPropertyProjection).lines[3].indent).toBe(0);   // line with 'more text'
+        expect((myOptional as FreOptionalPropertyProjection).lines[1].indent).toBe(7); // line with 'innertext'
+        expect((myOptional as FreOptionalPropertyProjection).lines[2].indent).toBe(1); // line with CCprop10
+        expect((myOptional as FreOptionalPropertyProjection).lines[3].indent).toBe(0); // line with 'more text'
     });
 });

@@ -1,4 +1,9 @@
-import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage, FreMetaPrimitiveProperty } from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaLanguage,
+    FreMetaPrimitiveProperty,
+} from "../../languagedef/metalanguage/index.js";
 import { LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names } from "../../utils/index.js";
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/FreMetaLanguage.js";
 import { UnitAnalyser } from "./UnitAnalyser.js";
@@ -11,13 +16,16 @@ export class SemanticAnalysisTemplate {
     imports: FreMetaClassifier[] = [];
     possibleProblems: FreMetaConcept[] = [];
     supersOfProblems: FreMetaClassifier[] = [];
-    private exprWithBooleanProp: Map<FreMetaClassifier, FreMetaPrimitiveProperty> = new Map<FreMetaClassifier, FreMetaPrimitiveProperty>();
+    private exprWithBooleanProp: Map<FreMetaClassifier, FreMetaPrimitiveProperty> = new Map<
+        FreMetaClassifier,
+        FreMetaPrimitiveProperty
+    >();
 
     analyse(analyser: UnitAnalyser) {
         // this.reset();
         // find which classifiers have possible problems
         for (const [classifier, subs] of analyser.interfacesAndAbstractsUsed) {
-            if (!((classifier as FreMetaConcept).base)) {
+            if (!(classifier as FreMetaConcept).base) {
                 let hasProblems: boolean = false;
                 const subsWithSingleReference: FreMetaConcept[] = [];
                 for (const sub of subs) {
@@ -31,7 +39,7 @@ export class SemanticAnalysisTemplate {
                         // find all concepts that have a single non-optional reference, and possibly other optional props
                         // the parsing will render a rule thatmatches when only one reference is present
                         // these references need to be checked against their expected (meta)types.
-                        const nonOptionals = sub.allProperties().filter(prop => !prop.isOptional);
+                        const nonOptionals = sub.allProperties().filter((prop) => !prop.isOptional);
                         if (nonOptionals.length === 1 && !nonOptionals[0].isPart) {
                             subsWithSingleReference.push(sub);
                         }
@@ -42,8 +50,9 @@ export class SemanticAnalysisTemplate {
                         }
                     }
                 }
-                if (subsWithSingleReference.length > 1) { // a single one will not result in problems
-                    subsWithSingleReference.forEach(sub => {
+                if (subsWithSingleReference.length > 1) {
+                    // a single one will not result in problems
+                    subsWithSingleReference.forEach((sub) => {
                         // console.log("adding problem for " + sub.name);
                         this.addProblem(sub);
                     });
@@ -57,13 +66,13 @@ export class SemanticAnalysisTemplate {
     }
 
     private addSuper(classifier: FreMetaClassifier) {
-        if ( !this.supersOfProblems.includes(classifier)) {
+        if (!this.supersOfProblems.includes(classifier)) {
             this.supersOfProblems.push(classifier);
         }
     }
 
     private addProblem(sub: FreMetaConcept) {
-        if ( !this.possibleProblems.includes(sub)) {
+        if (!this.possibleProblems.includes(sub)) {
             this.possibleProblems.push(sub);
         }
     }
@@ -76,7 +85,7 @@ export class SemanticAnalysisTemplate {
         // TODO rethink the replacement of all properties of an object and test it
 
         // start Template
-        return `import { ${this.imports.map(concept => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        return `import { ${this.imports.map((concept) => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
                 import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
                 import { ${refWalkerName} } from "./${refWalkerName}";
                 import { FreLanguageConcept, ${Names.FreLanguage}, ${Names.FreNode}, ${Names.FreNodeReference} } from "@freon4dsl/core";
@@ -136,7 +145,7 @@ export class SemanticAnalysisTemplate {
 
         return `
             import {
-              ${this.imports.map(concept => Names.classifier(concept)).join(", ")}
+              ${this.imports.map((concept) => Names.classifier(concept)).join(", ")}
             } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
             import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
             import { ${Names.FreNamedNode}, ${Names.FreLanguage}, ${Names.LanguageEnvironment}, ${Names.FreNodeReference}, ${Names.FreNode} } from "@freon4dsl/core";
@@ -149,7 +158,7 @@ export class SemanticAnalysisTemplate {
                     this.changesToBeMade = changesToBeMade;
                 }
 
-                ${this.possibleProblems.map(poss => `${this.makeVistorMethod(poss)}`).join("\n")}
+                ${this.possibleProblems.map((poss) => `${this.makeVistorMethod(poss)}`).join("\n")}
 
                 private findReplacement(modelelement: ${Names.allConcepts()}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
                     const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
@@ -178,7 +187,7 @@ export class SemanticAnalysisTemplate {
         for (const poss of this.possibleProblems) {
             if (!poss.isAbstract) {
                 const toBeCreated: string = Names.classifier(poss);
-                for (const ref of poss.allReferences().filter(prop => !prop.isList)) {
+                for (const ref of poss.allReferences().filter((prop) => !prop.isList)) {
                     const type: FreMetaClassifier = ref.type;
                     const metatype: string = Names.classifier(type);
                     this.addToImports(type);
@@ -205,11 +214,17 @@ export class SemanticAnalysisTemplate {
              */
             public execBefore${Names.concept(freConcept)}(modelelement: ${Names.concept(freConcept)}): boolean {
                 let referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>;
-                ${freConcept.allReferences().filter(prop => !prop.isList).map(prop =>
-                `referredElem = modelelement.${prop.name};
+                ${freConcept
+                    .allReferences()
+                    .filter((prop) => !prop.isList)
+                    .map(
+                        (prop) =>
+                            `referredElem = modelelement.${prop.name};
                 if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
                     this.findReplacement(modelelement, referredElem);
-                }`).join("\n")}
+                }`,
+                    )
+                    .join("\n")}
                 return false;
             }`;
     }

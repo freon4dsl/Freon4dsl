@@ -1,7 +1,6 @@
 import { Names } from "../../../utils/index.js";
 
 export class ListUtilTemplate {
-
     generateListUtil(): string {
         const generatedClassName: String = Names.listUtil;
 

@@ -37,34 +37,42 @@ export class ConceptRule extends GrammarRule {
         //     }
         // });
         // end check
-        const rule = `${this.ruleName} = ${this.ruleParts.map(part => `${part.toGrammar()}`).join(" ")}`;
+        const rule = `${this.ruleName} = ${this.ruleParts.map((part) => `${part.toGrammar()}`).join(" ")}`;
         return rule.trimEnd() + " ;";
     }
 
     toMethod(mainAnalyserName: string): string {
         if (!this.concept) {
-            return '';
+            return "";
         }
         const myProperties = this.propsToSet();
         // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
-        return `${ParserGenUtil.makeComment(this.toGrammar())}
+        return (
+            `${ParserGenUtil.makeComment(this.toGrammar())}
                 public transform${this.ruleName} (branch: SPPTBranch) : ${Names.classifier(this.concept)} {
                     // console.log('transform${this.ruleName} called: ' + branch.name);
-                    ${myProperties.map(prop => `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)}`).join(";\n")}
-                    const children = this.${mainAnalyserName}.getChildren(branch);` +  // to avoid an extra newline in the result
+                    ${myProperties.map((prop) => `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)}`).join(";\n")}
+                    const children = this.${mainAnalyserName}.getChildren(branch);` + // to avoid an extra newline in the result
             `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}
                     return ${Names.classifier(this.concept)}.create({
-                        ${myProperties.map(prop => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}
+                        ${myProperties.map((prop) => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}
                         ${myProperties.length > 0 ? "," : ""} parseLocation: this.${mainAnalyserName}.location(branch)
                     });
-                }`;
+                }`
+        );
     }
 
     toString(): string {
         if (!this.concept) {
-            return '';
+            return "";
         }
         const indent: string = "\n\t";
-        return indent + "ConceptRule: " + this.concept.name + indent + this.ruleParts.map(sub => sub.toString(2)).join(indent);
+        return (
+            indent +
+            "ConceptRule: " +
+            this.concept.name +
+            indent +
+            this.ruleParts.map((sub) => sub.toString(2)).join(indent)
+        );
     }
 }

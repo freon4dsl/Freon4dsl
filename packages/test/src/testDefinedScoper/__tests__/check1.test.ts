@@ -1,7 +1,7 @@
 import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./ModelCreator";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";
@@ -55,7 +55,8 @@ describe("Testing Defined Scoper, where unit is namespace", () => {
                 if (anyName.includes(myUnit.name)) {
                     expect(visibleNames).toContain(anyName);
                 } else {
-                    if (visibleUnitNames.includes(anyName)) { // partName is the name of another unit
+                    if (visibleUnitNames.includes(anyName)) {
+                        // partName is the name of another unit
                         expect(visibleNames).toContain(anyName);
                     } else {
                         expect(visibleNames).not.toContain(anyName);

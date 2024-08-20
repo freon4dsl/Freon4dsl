@@ -17,7 +17,7 @@ import { FreParseLocation } from "../../utils/index.js";
  */
 export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     locationMap: any;
-    filename: string = '';
+    filename: string = "";
     private _unit_TyperDef_analyser: FreTyperDefSyntaxAnalyserPart = new FreTyperDefSyntaxAnalyserPart(this);
 
     clear(): void {
@@ -41,7 +41,10 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
-                if (e.message.startsWith("Syntax error in ") || e.message.startsWith("Error in MetaTyperSyntaxAnalyser")) {
+                if (
+                    e.message.startsWith("Syntax error in ") ||
+                    e.message.startsWith("Error in MetaTyperSyntaxAnalyser")
+                ) {
                     throw e;
                 } else {
                     // add more info to the error message
@@ -192,9 +195,17 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
         }
     }
 
-    private makeFreElementReferenceWithLocation<T extends FreMetaLangElement>(referred: string | T, typeName: string, branch: SPPTBranch) {
+    private makeFreElementReferenceWithLocation<T extends FreMetaLangElement>(
+        referred: string | T,
+        typeName: string,
+        branch: SPPTBranch,
+    ) {
         const result = MetaElementReference.create<T>(referred, typeName);
-        const location = FreParseLocation.create({ filename: this.filename, line: branch.location.line, column: branch.location.column });
+        const location = FreParseLocation.create({
+            filename: this.filename,
+            line: branch.location.line,
+            column: branch.location.column,
+        });
         result.aglParseLocation = location;
         return result;
     }
@@ -228,7 +239,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
     public transformSharedPackedParseTreeRefList<T extends FreMetaLangElement>(
         branch: SPPTBranch,
         typeName: string,
-        separator?: string
+        separator?: string,
     ): MetaElementReference<T>[] {
         const result: MetaElementReference<T>[] = [];
         const children = this.getChildren(branch);
@@ -253,7 +264,7 @@ export class FreTyperSyntaxAnalyser implements SyntaxAnalyser {
         return FreParseLocation.create({
             filename: this.filename,
             line: branch.location.line,
-            column: branch.location.column
+            column: branch.location.column,
         });
     }
 }

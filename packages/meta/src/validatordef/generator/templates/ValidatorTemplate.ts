@@ -3,7 +3,7 @@ import {
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     FREON_CORE,
-    LANGUAGE_GEN_FOLDER
+    LANGUAGE_GEN_FOLDER,
 } from "../../../utils/index.js";
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { ValidatorDef } from "../../metalanguage/index.js";
@@ -78,13 +78,16 @@ export class ValidatorTemplate {
                 myChecker.errorList = errorlist;
                 // and add the checker to the walker
                 myWalker.myWorkers.push( myChecker );
-                ${doValidDef ? `
+                ${
+                    doValidDef
+                        ? `
                     // create the checker based on the rules in the validation definition (.valid file)
                     myChecker = new ${rulesChecker}();
                     myChecker.errorList = errorlist;
                     // and add the checker to the walker
                     myWalker.myWorkers.push( myChecker );`
-                : `` }
+                        : ``
+                }
 
                 // add any custom validations
                 for (let checker of freonConfiguration.customValidations) {

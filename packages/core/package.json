@@ -22,7 +22,6 @@
     "build-dev": "rollup -c",
     "clean": "rm -rf node_modules/ && rm -rf dist/",
     "build-release": "npm run build",
-    "clean": "rm -rf node_modules/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "test": "vitest run",
     "start": "echo Start core",

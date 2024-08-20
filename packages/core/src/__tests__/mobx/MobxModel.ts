@@ -13,7 +13,7 @@ export class ModelContext {
     constructor() {
         this.root = null;
         makeObservable(this, {
-            root: observable
+            root: observable,
         });
     }
 }
@@ -25,7 +25,7 @@ export class MobxTestElement extends FreNodeBaseImpl {
         super();
         this.name = name;
         makeObservable(this, {
-            name: observable
+            name: observable,
         });
     }
 

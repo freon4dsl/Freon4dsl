@@ -9,12 +9,11 @@ import {
     STDLIB_GEN_FOLDER,
     WRITER_GEN_FOLDER,
     READER_GEN_FOLDER,
-    INTERPRETER_FOLDER
+    INTERPRETER_FOLDER,
 } from "../../../utils/index.js";
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class EnvironmentTemplate {
-
     generateEnvironment(language: FreMetaLanguage, relativePath: string): string {
         return `
         import { ${Names.FreEditor}, ${Names.FreEnvironment}, ${Names.FreReader},
@@ -87,7 +86,7 @@ export class EnvironmentTemplate {
             interpreter: ${Names.FreInterpreter} = new ${Names.interpreterName(language)};
             languageName: string = "${language.name}";
             fileExtensions: Map<string, string> = new Map([
-                ${language.modelConcept.unitTypes().map(unit => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
+                ${language.modelConcept.unitTypes().map((unit) => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
             ]);
         }`;
         // todo find out why we cannot use EDITOR_FOLDER to import "${Names.actions(language)}, initializeEditorDef, initializeProjections"

@@ -38,7 +38,7 @@ export async function logger(ctx: Koa.Context, next: () => Promise<any>) {
         query: ctx.query,
         remoteAddress: ctx.request.ip,
         host: ctx.headers["host"],
-        userAgent: ctx.headers["user-agent"]
+        userAgent: ctx.headers["user-agent"],
     };
 
     let errorThrown: any = null;

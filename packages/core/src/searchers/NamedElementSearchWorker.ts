@@ -3,7 +3,7 @@ import { FreSearchWorker } from "./FreSearchWorker";
 
 export class NamedElementSearchWorker implements FreSearchWorker {
     private readonly nameToFind: string;
-    private readonly metatype: string | undefined ;
+    private readonly metatype: string | undefined;
     private readonly caseSensitive: boolean;
     private $result: FreNode[] = [];
 
@@ -37,7 +37,12 @@ export class NamedElementSearchWorker implements FreSearchWorker {
 
     private checkElement(node: FreNode) {
         const valueOfNameProp = node["name"];
-        if (valueOfNameProp !== null && valueOfNameProp !== undefined && typeof valueOfNameProp === "string" && valueOfNameProp.length > 0) {
+        if (
+            valueOfNameProp !== null &&
+            valueOfNameProp !== undefined &&
+            typeof valueOfNameProp === "string" &&
+            valueOfNameProp.length > 0
+        ) {
             if (!this.caseSensitive) {
                 if (valueOfNameProp.toLowerCase().includes(this.nameToFind.toLowerCase())) {
                     this.result.push(node);

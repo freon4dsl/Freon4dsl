@@ -1,4 +1,4 @@
-import {Checker, CheckRunner, ParseLocationUtil} from "../../utils/index.js";
+import { Checker, CheckRunner, ParseLocationUtil } from "../../utils/index.js";
 import { FreTyperCheckerPhase1 } from "./FreTyperCheckerPhase1.js";
 import { FreTyperCheckerPhase2 } from "./FreTyperCheckerPhase2.js";
 import { TyperDef } from "../metalanguage/index.js";
@@ -7,9 +7,11 @@ export class FreTyperChecker extends Checker<TyperDef> {
     runner: CheckRunner = new CheckRunner(this.errors, this.warnings);
 
     check(definition: TyperDef): void {
-        if ( this.language === null || this.language === undefined ) {
-            throw new Error(`Editor definition checker does not known the language, exiting ` +
-                `${ParseLocationUtil.location(definition)}.`);
+        if (this.language === null || this.language === undefined) {
+            throw new Error(
+                `Editor definition checker does not known the language, exiting ` +
+                    `${ParseLocationUtil.location(definition)}.`,
+            );
         }
         const phase1: FreTyperCheckerPhase1 = new FreTyperCheckerPhase1(this.language);
         phase1.check(definition, this.runner);

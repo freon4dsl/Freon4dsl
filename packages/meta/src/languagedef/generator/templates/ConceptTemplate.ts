@@ -8,7 +8,7 @@ import {
     FreMetaProperty,
     FreMetaInstanceProperty,
     FreMetaClassifier,
-    FreMetaPrimitiveType
+    FreMetaPrimitiveType,
 } from "../../metalanguage/index.js";
 import { ConceptUtils } from "./ConceptUtils.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
@@ -31,19 +31,18 @@ export class ConceptTemplate {
         const hasReferences = concept.implementedReferences().length > 0;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const isAbstract = concept.isAbstract;
-        const isExpression = (concept instanceof FreMetaBinaryExpressionConcept) || (concept instanceof FreMetaExpressionConcept);
-        const abstract = (concept.isAbstract ? "abstract" : "");
-        const hasName = concept.implementedPrimProperties().some(p => p.name === "name");
-        const implementsFre = (isExpression ? Names.FreExpressionNode : (hasName ? Names.FreNamedNode : Names.FreNode));
+        const isExpression =
+            concept instanceof FreMetaBinaryExpressionConcept || concept instanceof FreMetaExpressionConcept;
+        const abstract = concept.isAbstract ? "abstract" : "";
+        const hasName = concept.implementedPrimProperties().some((p) => p.name === "name");
+        const implementsFre = isExpression ? Names.FreExpressionNode : hasName ? Names.FreNamedNode : Names.FreNode;
         const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
-            .concat(implementsFre).concat([Names.FreParseLocation]).concat(hasReferences ? (Names.FreNodeReference) : "");
+            .concat(implementsFre)
+            .concat([Names.FreParseLocation])
+            .concat(hasReferences ? Names.FreNodeReference : "");
         const metaType = Names.metaType();
         const modelImports = this.findModelImports(concept, myName);
-        const intfaces = Array.from(
-            new Set(
-                concept.interfaces.map(i => Names.interface(i.referred))
-            )
-        );
+        const intfaces = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
@@ -52,15 +51,23 @@ export class ConceptTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
              * to the changes in the state of its properties.
              */
-            export ${abstract} class ${myName} extends ${extendsClass} implements ${implementsFre}${intfaces.map(imp => `, ${imp}`).join("")}
+            export ${abstract} class ${myName} extends ${extendsClass} implements ${implementsFre}${intfaces.map((imp) => `, ${imp}`).join("")}
             {
-                ${(!isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
-                : ""}
+                ${!isAbstract ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}` : ""}
 
                 ${ConceptUtils.makeBasicProperties(metaType, myName, hasSuper)}
-                ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
-                ${concept.implementedParts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
-                ${concept.implementedReferences().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}
+                ${concept
+                    .implementedPrimProperties()
+                    .map((p) => ConceptUtils.makePrimitiveProperty(p))
+                    .join("\n")}
+                ${concept
+                    .implementedParts()
+                    .map((p) => ConceptUtils.makePartProperty(p))
+                    .join("\n")}
+                ${concept
+                    .implementedReferences()
+                    .map((p) => ConceptUtils.makeReferenceProperty(p))
+                    .join("\n")}
 
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), coreImports)}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, isExpression, false)}
@@ -83,18 +90,16 @@ export class ConceptTemplate {
         const isAbstract = concept.isAbstract;
         const baseExpressionName = Names.concept(GenerationUtil.findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
-            .concat([Names.FreBinaryExpression, Names.FreParseLocation]);
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([
+            Names.FreBinaryExpression,
+            Names.FreParseLocation,
+        ]);
         const metaType = Names.metaType();
         let modelImports = this.findModelImports(concept, myName);
         if (!modelImports.includes(baseExpressionName)) {
             modelImports = modelImports.concat(baseExpressionName);
         }
-        const intfaces = Array.from(
-            new Set(
-                concept.interfaces.map(i => Names.interface(i.referred))
-            )
-        );
+        const intfaces = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
@@ -103,14 +108,22 @@ export class ConceptTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
              * to any changes in the state of its properties.
              */
-            export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.FreBinaryExpression}${intfaces.map(imp => `, ${imp}`).join("")} {
-                ${(!isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
-                : ""}
+            export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.FreBinaryExpression}${intfaces.map((imp) => `, ${imp}`).join("")} {
+                ${!isAbstract ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}` : ""}
 
                 ${ConceptUtils.makeBasicProperties(metaType, myName, hasSuper)}
-                ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
-                ${concept.implementedParts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
-                ${concept.implementedReferences().map(p => ConceptUtils.makeReferenceProperty(p)).join("\n")}
+                ${concept
+                    .implementedPrimProperties()
+                    .map((p) => ConceptUtils.makePrimitiveProperty(p))
+                    .join("\n")}
+                ${concept
+                    .implementedParts()
+                    .map((p) => ConceptUtils.makePartProperty(p))
+                    .join("\n")}
+                ${concept
+                    .implementedReferences()
+                    .map((p) => ConceptUtils.makeReferenceProperty(p))
+                    .join("\n")}
 
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), coreImports)}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, true, true)}
@@ -160,7 +173,7 @@ export class ConceptTemplate {
             ${result}`;
     }
 
-// the folowing template is based on assumptions about a limited concept.
+    // the folowing template is based on assumptions about a limited concept.
     // a limited does not have any non-prim properties
     // a limited does not have any references
     private generateLimited(concept: FreMetaLimitedConcept): string {
@@ -168,15 +181,14 @@ export class ConceptTemplate {
         const myName = Names.concept(concept);
         const hasSuper = !!concept.base;
         const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
-        const abstract = (concept.isAbstract ? "abstract" : "");
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([Names.FreNamedNode, Names.FreParseLocation]);
+        const abstract = concept.isAbstract ? "abstract" : "";
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([
+            Names.FreNamedNode,
+            Names.FreParseLocation,
+        ]);
         const metaType = Names.metaType();
         const imports = this.findModelImports(concept, myName);
-        const intfaces = Array.from(
-            new Set(
-                concept.interfaces.map(i => Names.interface(i.referred))
-            )
-        );
+        const intfaces = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
@@ -185,17 +197,20 @@ export class ConceptTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
              * to any changes in the state of its properties.
              */
-            export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.FreNamedNode}${intfaces.map(imp => `, ${imp}`).join("")}
+            export ${abstract} class ${myName} extends ${extendsClass} implements ${Names.FreNamedNode}${intfaces.map((imp) => `, ${imp}`).join("")}
             {
-                ${(!concept.isAbstract) ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}`
-                : ""}
+                ${!concept.isAbstract ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}` : ""}
 
-                ${concept.instances.map(predef =>
-                    `static ${predef.name}: ${myName};  // implementation of instance ${predef.name}`).join("\n")}
+                ${concept.instances
+                    .map((predef) => `static ${predef.name}: ${myName};  // implementation of instance ${predef.name}`)
+                    .join("\n")}
                      static $freANY : ${myName};        // default predefined instance
 
                 ${ConceptUtils.makeBasicProperties(metaType, myName, hasSuper)}
-                ${concept.implementedPrimProperties().map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
+                ${concept
+                    .implementedPrimProperties()
+                    .map((p) => ConceptUtils.makePrimitiveProperty(p))
+                    .join("\n")}
 
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), coreImports)}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, false, false)}
@@ -205,10 +220,14 @@ export class ConceptTemplate {
 
             // Because of mobx we need to generate the initialisations outside of the class,
             // otherwise the state of properties with primitive type will not be kept correctly.
-            ${concept.instances.map(predef =>
-                `${myName}.${predef.name} = ${myName}.create({
-                        ${predef.props.map(prop => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}
-                    });` ). join(" ")}`;
+            ${concept.instances
+                .map(
+                    (predef) =>
+                        `${myName}.${predef.name} = ${myName}.create({
+                        ${predef.props.map((prop) => `${prop.name}: ${this.createInstancePropValue(prop)}`).join(", ")}
+                    });`,
+                )
+                .join(" ")}`;
 
         return `
             ${ConceptUtils.makeImportStatements(coreImports, imports)}
@@ -219,27 +238,32 @@ export class ConceptTemplate {
     private findModelImports(concept: FreMetaConcept, myName: string): string[] {
         return Array.from(
             new Set(
-                concept.interfaces.map(i => Names.interface(i.referred))
-                    .concat((concept.base ? Names.concept(concept.base.referred) : ''))
-                    .concat(concept.implementedParts().map(part => Names.classifier(part.type)))
-                    .concat(concept.implementedReferences().map(part => Names.classifier(part.type)))
+                concept.interfaces
+                    .map((i) => Names.interface(i.referred))
+                    .concat(concept.base ? Names.concept(concept.base.referred) : "")
+                    .concat(concept.implementedParts().map((part) => Names.classifier(part.type)))
+                    .concat(concept.implementedReferences().map((part) => Names.classifier(part.type)))
                     // .concat(Names.metaType(concept.language))
-                    .filter(name => !(name === myName))
-                    .filter(r => (r !== null) && (r.length > 0))
-            )
-        ).concat(concept.allSingleNonOptionalPartsInitializers().map(pi => Names.concept(pi.concept)));
+                    .filter((name) => !(name === myName))
+                    .filter((r) => r !== null && r.length > 0),
+            ),
+        ).concat(concept.allSingleNonOptionalPartsInitializers().map((pi) => Names.concept(pi.concept)));
     }
 
     private createInstancePropValue(property: FreMetaInstanceProperty): string {
         const refProperty: FreMetaProperty = property.property?.referred;
-        if (!!refProperty && refProperty instanceof FreMetaPrimitiveProperty) { // should always be the case
+        if (!!refProperty && refProperty instanceof FreMetaPrimitiveProperty) {
+            // should always be the case
             const type: FreMetaClassifier = refProperty.type;
             if (refProperty.isList) {
-                return `[ ${property.valueList.map(value =>
-                    `${(type === FreMetaPrimitiveType.string || type === FreMetaPrimitiveType.identifier) ? `"${value}"` : `${value}` }`
-                ).join(", ")} ]`;
+                return `[ ${property.valueList
+                    .map(
+                        (value) =>
+                            `${type === FreMetaPrimitiveType.string || type === FreMetaPrimitiveType.identifier ? `"${value}"` : `${value}`}`,
+                    )
+                    .join(", ")} ]`;
             } else {
-                return `${(type === FreMetaPrimitiveType.string || type === FreMetaPrimitiveType.identifier) ? `"${property.value}"` : `${property.value}` }`;
+                return `${type === FreMetaPrimitiveType.string || type === FreMetaPrimitiveType.identifier ? `"${property.value}"` : `${property.value}`}`;
             }
         }
         return ``;

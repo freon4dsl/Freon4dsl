@@ -16,12 +16,17 @@ export class FretScoper implements FreMetaScoper {
         this.definition = definition;
     }
 
-    getFromVisibleElements(owner: FreMetaDefinitionElement, name: string, typeName: string): FreMetaLangElement | undefined {
+    getFromVisibleElements(
+        owner: FreMetaDefinitionElement,
+        name: string,
+        typeName: string,
+    ): FreMetaLangElement | undefined {
         let result: FreMetaLangElement | undefined;
         // if (name === "base2" ) {
         //     console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
         // }
-        if (owner instanceof FretProperty || owner instanceof FreTyperElement ) { // FretProperty does not inherit from FretTyperElement!!
+        if (owner instanceof FretProperty || owner instanceof FreTyperElement) {
+            // FretProperty does not inherit from FretTyperElement!!
             if (typeName === "FreProperty") {
                 let nameSpace: FreMetaClassifier | undefined;
                 if (owner instanceof FretCreateExp) {
@@ -29,7 +34,7 @@ export class FretScoper implements FreMetaScoper {
                 } else if (owner instanceof FretPropertyCallExp) {
                     nameSpace = owner.source.returnType;
                 }
-                result = nameSpace?.allProperties().find(prop => prop.name === name);
+                result = nameSpace?.allProperties().find((prop) => prop.name === name);
             } else if (typeName === "FretVarDecl") {
                 if (owner instanceof FretVarCallExp) {
                     // find the only place in the typer definition where a variable can be declared: a FretWhereExp
@@ -41,8 +46,9 @@ export class FretScoper implements FreMetaScoper {
             } else if (typeName === "FretTypeConcept" || typeName === "FreClassifier") {
                 if (name === Names.FreType || name === "FreonType") {
                     result = TyperDef.freonType;
-                } else { // search the typeConcepts only, 'normal' classifiers will have been found already by FreLangScoper
-                    result = this.definition.typeConcepts.find(con => con.name === name);
+                } else {
+                    // search the typeConcepts only, 'normal' classifiers will have been found already by FreLangScoper
+                    result = this.definition.typeConcepts.find((con) => con.name === name);
                 }
             }
         }

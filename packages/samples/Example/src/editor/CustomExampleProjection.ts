@@ -108,7 +108,7 @@ export class CustomExampleProjection implements FreProjection {
         const result = new GridBox(sum, "sum-all", cells, {
             cssClass: "mygrid"
         });
-        return createDefaultExpressionBox(sum, "sum-exp", [result]);
+        return createDefaultExpressionBox(sum, [result]);
     }
 
     public createOrBoxGrid(exp: OrExpression): Box {

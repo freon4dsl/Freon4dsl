@@ -13,7 +13,7 @@ export let modelErrors: Writable<FreError[]> = writable<FreError[]>([]);
 export let interpreterTrace: Writable<string> = writable<string>("no trace");
 
 // the currently active tab and constants to indicate the tabs
-export const errorTab = 'Errors';
-export const searchTab = 'Search';
-export const interpreterTab = 'Interpreter';
+export const errorTab = "Errors";
+export const searchTab = "Search";
+export const interpreterTab = "Interpreter";
 export let activeTab: Writable<string> = writable<string>(errorTab);

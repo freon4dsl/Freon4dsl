@@ -5,13 +5,9 @@ import {
     TableBoxColumnOriented,
     TableBoxRowOriented,
     TableCellBox,
-    TableRowBox
+    TableRowBox,
 } from "../boxes";
-import {
-    Box, FreBoxProvider,
-    FreProjectionHandler,
-    GridOrientation
-} from "../index";
+import { Box, FreBoxProvider, FreProjectionHandler, GridOrientation } from "../index";
 import { FreNode } from "../../ast";
 import { isNullOrUndefined, FreUtils } from "../../util";
 import { FreLanguage } from "../../language";
@@ -35,7 +31,12 @@ export class TableUtil {
      * @param propertyName  The name of the list property to be shown.
      * @param boxProviderCache
      */
-    public static tableBoxRowOriented(node: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
+    public static tableBoxRowOriented(
+        node: FreNode,
+        list: FreNode[],
+        propertyName: string,
+        boxProviderCache: FreProjectionHandler,
+    ): Box {
         return this.tableBox("row", node, list, propertyName, boxProviderCache);
     }
 
@@ -49,11 +50,23 @@ export class TableUtil {
      * @param propertyName  The name of the list property to be shown.
      * @param boxProviderCache
      */
-    public static tableBoxColumnOriented(node: FreNode, list: FreNode[], propertyName: string, boxProviderCache: FreProjectionHandler): Box {
+    public static tableBoxColumnOriented(
+        node: FreNode,
+        list: FreNode[],
+        propertyName: string,
+        boxProviderCache: FreProjectionHandler,
+    ): Box {
         return this.tableBox("column", node, list, propertyName, boxProviderCache);
     }
 
-    public static rowBox(node: FreNode, propertyName: string, conceptName: string, cells: Box[], rowIndex: number, hasHeaders: boolean): TableRowBox {
+    public static rowBox(
+        node: FreNode,
+        propertyName: string,
+        conceptName: string,
+        cells: Box[],
+        rowIndex: number,
+        hasHeaders: boolean,
+    ): TableRowBox {
         if (isNullOrUndefined(rowIndex)) {
             console.log("NO rowIndex for TableRowBox! " + node.freLanguageConcept() + node.freId());
         }
@@ -65,8 +78,22 @@ export class TableUtil {
             gridIndex = rowIndex + 1;
         }
         const myContent = cells.map((cell, index) => {
-            const cellRoleName: string = RoleProvider.cell(node.freLanguageConcept(), propertyName, gridIndex, index + 1);
-            return new TableCellBox(node, propertyName, rowIndex, conceptName, cellRoleName, gridIndex, index + 1, cell);
+            const cellRoleName: string = RoleProvider.cell(
+                node.freLanguageConcept(),
+                propertyName,
+                gridIndex,
+                index + 1,
+            );
+            return new TableCellBox(
+                node,
+                propertyName,
+                rowIndex,
+                conceptName,
+                cellRoleName,
+                gridIndex,
+                index + 1,
+                cell,
+            );
         });
         const role: string = RoleProvider.row(node.freLanguageConcept(), propertyName, gridIndex);
         const result = new TableRowBox(node, role, myContent, gridIndex);
@@ -75,28 +102,37 @@ export class TableUtil {
         return result;
     }
 
-    private static tableBox(orientation: GridOrientation,
-                            node: FreNode,
-                            list: FreNode[],
-                            propertyName: string,
-                            boxProviderCache: FreProjectionHandler): TableBox {
+    private static tableBox(
+        orientation: GridOrientation,
+        node: FreNode,
+        list: FreNode[],
+        propertyName: string,
+        boxProviderCache: FreProjectionHandler,
+    ): TableBox {
         // console.log('calling tableBox')
         // Find the information on the property to be shown and check it.
         const propInfo = FreLanguage.getInstance().classifierProperty(node.freLanguageConcept(), propertyName);
-        FreUtils.CHECK(propInfo.isList, `Cannot create a table for property '${node.freLanguageConcept()}.${propertyName}' because it is not a list.`);
+        FreUtils.CHECK(
+            propInfo.isList,
+            `Cannot create a table for property '${node.freLanguageConcept()}.${propertyName}' because it is not a list.`,
+        );
         // Create the TableRowBoxes.
         const children: Box[] = [];
         let hasHeaders: boolean = false;
         let nrOfColumns: number = 0;
         if (!isNullOrUndefined(list) && list.length > 0) {
             // Add the headers, an empty TableRowBox if there are none.
-            const headerProvider: FreHeaderProvider = boxProviderCache.getHeaderProvider(node, propertyName, propInfo.type);
+            const headerProvider: FreHeaderProvider = boxProviderCache.getHeaderProvider(
+                node,
+                propertyName,
+                propInfo.type,
+            );
             children.push(headerProvider.box);
             if (headerProvider.hasContent()) {
                 hasHeaders = true;
             }
             // Add the children for each element of the list.
-            list.forEach(item => {
+            list.forEach((item) => {
                 const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(item);
                 const itemBox = myProvider.box;
                 if (nrOfColumns === 0 && isTableRowBox(itemBox)) {
@@ -118,17 +154,17 @@ export class TableUtil {
         }
     }
 
-    private static createPlaceHolder(node: FreNode, propertyName: string, conceptName: string, orientation: GridOrientation): TableRowBox {
-        const content = BoxFactory.action(node, "alias-add-row-or-column", `<add new ${orientation}>`,
-            { propertyName: propertyName, conceptName: conceptName });
+    private static createPlaceHolder(
+        node: FreNode,
+        propertyName: string,
+        conceptName: string,
+        orientation: GridOrientation,
+    ): TableRowBox {
+        const content = BoxFactory.action(node, "alias-add-row-or-column", `<add new ${orientation}>`, {
+            propertyName: propertyName,
+            conceptName: conceptName,
+        });
         // Note that a placeholder is only added when there are no other elements in the table, therefore its index is always 0.
-        return TableUtil.rowBox(
-            node,
-            propertyName,
-            conceptName,
-            [content],
-            0,
-            false
-        );
+        return TableUtil.rowBox(node, propertyName, conceptName, [content], 0, false);
     }
 }

@@ -11,5 +11,5 @@ export abstract class RtObject implements IRtObject {
         return this._type;
     }
 
-    abstract equals(other: RtObject): RtBoolean ;
+    abstract equals(other: RtObject): RtBoolean;
 }

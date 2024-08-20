@@ -1,5 +1,4 @@
 export class WebAppConfigTemplate {
-
     generate(languageName: string): string {
         const name = this.toFirstUpper(languageName);
         return `import type { FreEnvironment, IServerCommunication } from "@freon4dsl/core";
@@ -18,7 +17,7 @@ LanguageInitializer.initialize();
  */
 export const serverCommunication: IServerCommunication = ServerCommunication.getInstance();
 // export const serverCommunication: IServerCommunication = MpsServerCommunication.getInstance();
-`
+`;
     }
 
     protected toFirstUpper(text: string): string {

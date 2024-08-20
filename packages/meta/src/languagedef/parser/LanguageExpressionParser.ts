@@ -2,7 +2,7 @@ import { FreMetaLanguage } from "../metalanguage/FreMetaLanguage.js";
 import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker.js";
 import { FreGenericParser } from "../../utils/parsingAndChecking/FreGenericParser.js";
 import { LanguageExpressionTester } from "./LanguageExpressionTester.js";
-import { parser }  from "./ExpressionGrammar.js";
+import { parser } from "./ExpressionGrammar.js";
 import { setCurrentFileName } from "./ExpressionCreators.js";
 
 export class LanguageExpressionParser extends FreGenericParser<LanguageExpressionTester> {
@@ -18,7 +18,7 @@ export class LanguageExpressionParser extends FreGenericParser<LanguageExpressio
     // @ts-ignore
     // error TS6133: 'submodels' is declared but its value is never read.
     // This error is ignored because this class is only used for tests.
-    protected merge(submodels: LanguageExpressionTester[]): LanguageExpressionTester | undefined{
+    protected merge(submodels: LanguageExpressionTester[]): LanguageExpressionTester | undefined {
         // no need to merge submodels, LanguageExpressionTester is only used for tests
         return undefined;
     }
@@ -31,6 +31,5 @@ export class LanguageExpressionParser extends FreGenericParser<LanguageExpressio
         return [];
     }
 
-    protected cleanNonFatalParseErrors() {
-    }
+    protected cleanNonFatalParseErrors() {}
 }

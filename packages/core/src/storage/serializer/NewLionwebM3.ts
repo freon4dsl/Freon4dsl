@@ -4,9 +4,7 @@ import { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/validation";
 
 export function isLionWebJsonChunk(object: any): object is LionWebJsonChunk {
     const cnk = object as LionWebJsonChunk;
-    return cnk.serializationFormatVersion !== undefined &&
-        cnk.languages !== undefined &&
-        cnk.nodes !== undefined;
+    return cnk.serializationFormatVersion !== undefined && cnk.languages !== undefined && cnk.nodes !== undefined;
 }
 
 export function createLionWebJsonNode(): LionWebJsonNode {
@@ -17,8 +15,8 @@ export function createLionWebJsonNode(): LionWebJsonNode {
         containments: [],
         references: [],
         annotations: [],
-        parent: null
-    }
+        parent: null,
+    };
 }
 /**
  * The types defining the structure of the lionweb JSON format.
@@ -134,4 +132,3 @@ export function createLionWebJsonNode(): LionWebJsonNode {
 //     return lwReferenceTarget.reference !== undefined &&
 //         lwReferenceTarget.resolveInfo !== undefined;
 // }
-

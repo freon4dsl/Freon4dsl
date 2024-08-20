@@ -10,12 +10,11 @@ export function focusAndScrollIntoView(element: HTMLElement) {
         // check if the element is already within the editor viewport
         let rect = element.getBoundingClientRect();
 
-        let elemIsVisible = (
+        let elemIsVisible =
             rect.top >= get(viewport).top &&
             rect.left >= get(viewport).left &&
             rect.bottom <= get(viewport).height &&
-            rect.right <= get(viewport).width
-        );
+            rect.right <= get(viewport).width;
 
         // if the element is not visible then scroll to it
         if (!elemIsVisible) {
@@ -26,9 +25,9 @@ export function focusAndScrollIntoView(element: HTMLElement) {
 
 export function classMap(classObj: { [k: string]: any }): string {
     return Object.entries(classObj)
-        .filter(([name, value]) => name !== '' && value)
+        .filter(([name, value]) => name !== "" && value)
         .map(([name]) => name)
-        .join(' ');
+        .join(" ");
 }
 
 export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: FreEditor) {
@@ -57,7 +56,7 @@ export function isEven(n: number): boolean {
     return (n & 1) === 0;
 }
 export function componentId(box: Box): string {
-    return `${box?.element?.freId()}-${box?.role}`;
+    return `${box?.node?.freId()}-${box?.role}`;
 }
 
 export function setBoxSizes(box: Box, rect: DOMRect) {
@@ -77,5 +76,5 @@ export function setBoxSizes(box: Box, rect: DOMRect) {
  * "<"   => &lt;
  */
 export function replaceHTML(s: string): string {
-    return s.replace(/\s/g, '&nbsp;').replace(/\</, "&lt;");
+    return s.replace(/\s/g, "&nbsp;").replace(/\</, "&lt;");
 }

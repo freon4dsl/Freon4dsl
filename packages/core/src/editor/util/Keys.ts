@@ -1,4 +1,3 @@
-
 export enum MetaKey {
     None,
     Ctrl,
@@ -7,7 +6,7 @@ export enum MetaKey {
     CtrlAlt,
     CtrlShift,
     AltShift,
-    CtrlAltShift
+    CtrlAltShift,
 }
 
 export type FreKey = {
@@ -20,7 +19,7 @@ export function toFreKey(e: KeyboardEvent): FreKey {
     return {
         meta: meta(e),
         key: e.key,
-        code: e.code
+        code: e.code,
     };
 }
 
@@ -68,7 +67,8 @@ export const DELETE = "Delete";
 
 export function isNumeric(event: KeyboardEvent): boolean {
     const key = event.key;
-    if (!event.altKey && !event.shiftKey && !event.ctrlKey) { // no meta keys
+    if (!event.altKey && !event.shiftKey && !event.ctrlKey) {
+        // no meta keys
         switch (key) {
             case "0":
             case "1":
@@ -96,10 +96,10 @@ export function isPrintable(event: KeyboardEvent): boolean {
     return (
         (!event.altKey &&
             !event.ctrlKey &&
-            ((keyCode >= 48 && keyCode <= 90) ||        // 0-9 plus a-Z
-                (keyCode >= 96 && keyCode <= 111) ||    // the numpad keys
+            ((keyCode >= 48 && keyCode <= 90) || // 0-9 plus a-Z
+                (keyCode >= 96 && keyCode <= 111) || // the numpad keys
                 (keyCode >= 186 && keyCode <= 222))) || // quotes and brackets
-                    keyCode === 32                      // spacebar
+        keyCode === 32 // spacebar
     );
 }
 

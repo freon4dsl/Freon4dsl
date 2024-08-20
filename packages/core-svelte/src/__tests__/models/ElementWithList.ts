@@ -2,7 +2,7 @@ import { matchElementList, observablepartlist, FreNodeBaseImpl, type FreNamedNod
 import { SimpleElement } from "./SimpleElement.js";
 import { makeObservable, observable } from "mobx";
 
-export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode  {
+export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode {
     /**
      * A convenience method that creates an instance of this class
      * based on the properties defined in 'data'.
@@ -14,7 +14,7 @@ export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode  {
             result.name = data.name;
         }
         if (!!data.myList) {
-            data.myList.forEach(x => result.myList.push(x));
+            data.myList.forEach((x) => result.myList.push(x));
         }
         return result;
     }
@@ -90,7 +90,7 @@ export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode  {
             result.name = this.name;
         }
         if (!!this.myList) {
-            this.myList.forEach(x => result.myList.push(x.copy()));
+            this.myList.forEach((x) => result.myList.push(x.copy()));
         }
         return result;
     }

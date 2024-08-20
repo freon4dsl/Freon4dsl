@@ -7,8 +7,12 @@ global {
     limited radio
     limited[] checkbox
     referenceSeparator [:] // the string that separates the names in a path name, e.g. pack1:cls3:part
-    externals {
-        DancingBox from "../customBoxes/DancingBox"
+    external {
+        AnimatedGif,
+        SMUI_Card,
+        SMUI_Accordion,
+        SMUI_Dialog,
+        DatePicker
     }
 }
 

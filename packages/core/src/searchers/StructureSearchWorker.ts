@@ -36,5 +36,4 @@ export class StructureSearchWorker implements FreSearchWorker {
         }
         return true; // is irrelevant, there are no other workers in this search
     }
-
 }

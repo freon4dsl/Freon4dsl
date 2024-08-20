@@ -1,4 +1,3 @@
-
 import { observablepart, FreNodeBaseImpl, FreModel } from "../../../ast";
 import { FreUtils } from "../../../util";
 import { FreLanguage } from "../../../language";
@@ -125,7 +124,9 @@ export class UndoModel extends FreNodeBaseImpl implements FreModel {
      */
     findUnit(name: string, metatype?: string): UndoUnit {
         let result: UndoUnit = null;
-        if (this.unit.name === name) { result = this.unit; }
+        if (this.unit.name === name) {
+            result = this.unit;
+        }
         if (!!result && !!metatype) {
             if (FreLanguage.getInstance().metaConformsToType(result, metatype)) {
                 return result;

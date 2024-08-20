@@ -13,20 +13,18 @@ export function clickOutsideConditional(node, { enabled: boolean }) {
      * onClick callback method, dispatches a new event when clicked outside the `node`.
      * @param event
      */
-    const handleClick = event => {
+    const handleClick = (event) => {
         if (node && !node.contains(event.target) && !event.defaultPrevented) {
-            node.dispatchEvent(
-                new CustomEvent('click_outside', node)
-            )
+            node.dispatchEvent(new CustomEvent("click_outside", node));
         }
-    }
-    function update({enabled}) {
+    };
+    function update({ enabled }) {
         if (enabled) {
-            document.addEventListener('click', handleClick, true);
-            document.addEventListener('contextmenu', handleClick, true);
+            document.addEventListener("click", handleClick, true);
+            document.addEventListener("contextmenu", handleClick, true);
         } else {
-            document.removeEventListener('click', handleClick, true);
-            document.removeEventListener('contextmenu', handleClick, true);
+            document.removeEventListener("click", handleClick, true);
+            document.removeEventListener("contextmenu", handleClick, true);
         }
     }
 
@@ -34,8 +32,8 @@ export function clickOutsideConditional(node, { enabled: boolean }) {
     return {
         update,
         destroy() {
-            document.removeEventListener( 'click', handleClick, true );
-            document.removeEventListener( 'contextmenu', handleClick, true );
-        }
+            document.removeEventListener("click", handleClick, true);
+            document.removeEventListener("contextmenu", handleClick, true);
+        },
     };
 }

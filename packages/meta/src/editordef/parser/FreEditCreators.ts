@@ -1,11 +1,11 @@
 import {
-    ExtraClassifierInfo,
-    ListInfo,
+    FreEditExtraClassifierInfo,
+    FreEditListInfo,
     ListJoinType,
     FreEditParsedClassifier,
     FreEditParsedNewline,
     FreEditParsedProjectionIndent,
-    FreEditProjection,
+    FreEditNormalProjection,
     FreEditProjectionDirection,
     FreEditProjectionGroup,
     FreEditProjectionLine,
@@ -15,8 +15,13 @@ import {
     FreEditTableProjection,
     FreEditUnit,
     FreOptionalPropertyProjection,
-    BoolKeywords,
-    FreEditStandardProjection, FreEditButtonDef, FreEditExternal, FreEditCustomProjection
+    FreEditBoolKeywords,
+    FreEditGlobalProjection,
+    FreEditButtonDef,
+    FreEditKeyValuePair,
+    FreEditFragmentDefinition,
+    FreEditExternalInfo,
+    FreEditSimpleExternal,
 } from "../metalanguage/index.js";
 import { ListUtil } from "../../utils/index.js";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
@@ -26,6 +31,7 @@ import { FreEditParseUtil } from "./FreEditParseUtil.js";
 // See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
 // and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
+import { FreEditFragmentProjection } from "../metalanguage/editlanguage/FreEditFragmentProjection.js";
 
 // const LOGGER = new MetaLogger("EditorCreators").mute();
 
@@ -44,24 +50,29 @@ export function createEditUnit(group: FreEditProjectionGroup): FreEditUnit {
     if (!!group) {
         result.projectiongroups.push(group);
     }
-
     result.classifiersUsedInSuperProjection = classifiersUsedInSuperProjection;
     return result;
 }
 
 function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEditProjectionGroup) {
-    data.projections?.forEach(proj => {
+    data.projections?.forEach((proj) => {
         if (proj instanceof FreEditParsedClassifier) {
             if (!!proj.tableProjection) {
                 const myProj: FreEditTableProjection = new FreEditTableProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(proj.classifier.name, "FreClassifier");
+                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(
+                        proj.classifier.name,
+                        "FreClassifier",
+                    );
                 }
                 if (!!proj.tableProjection.cells) {
                     myProj.cells = proj.tableProjection.cells;
                 }
                 if (!!proj.tableProjection.headers) {
                     myProj.headers = proj.tableProjection.headers;
+                }
+                if (!!proj.fragmentDefinitions) {
+                    myProj.fragmentDefinitions = proj.fragmentDefinitions;
                 }
                 if (!!proj.tableProjection.location) {
                     myProj.location = proj.tableProjection.location;
@@ -72,12 +83,18 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
                 result.projections.push(myProj);
             }
             if (!!proj.projection) {
-                const myProj: FreEditProjection = new FreEditProjection();
+                const myProj: FreEditNormalProjection = new FreEditNormalProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(proj.classifier.name, "FreClassifier");
+                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(
+                        proj.classifier.name,
+                        "FreClassifier",
+                    );
                 }
                 if (!!proj.projection.lines) {
                     myProj.lines = proj.projection.lines;
+                }
+                if (!!proj.fragmentDefinitions) {
+                    myProj.fragmentDefinitions = proj.fragmentDefinitions;
                 }
                 if (!!proj.projection.location) {
                     myProj.location = proj.projection.location;
@@ -106,12 +123,13 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
     if (!!data.name) {
         result.name = data.name;
     }
-    if (data.precedence !== null && data.precedence !== undefined) { // precedence may be 0, "!!data.precedence" would return false
+    if (data.precedence !== null && data.precedence !== undefined) {
+        // precedence may be 0, "!!data.precedence" would return false
         result.precedence = data.precedence;
     }
-    if (!!data.standardProjections) {
-        result.standardProjections = data.standardProjections;
-        // console.log("Creators: found standard projections: " + result.standardProjections.map(proj => proj.toString()))
+    if (!!data.globalProjections) {
+        result.globalProjections = data.globalProjections;
+        // console.log("Creators: found global projections: " + result.globalProjections.map(proj => proj.toString()))
     }
     if (!!data.projections) {
         // data.projections is a list of FreEditParsedClassifier
@@ -125,32 +143,8 @@ export function createProjectionGroup(data: Partial<FreEditProjectionGroup>): Fr
     return result;
 }
 
-export function createExternal(data: Partial<FreEditExternal>): FreEditExternal {
-    const result: FreEditExternal = new FreEditExternal();
-    if (!!data.boxName) {
-        result.boxName = data.boxName;
-    }
-    if (!!data.boxPath) {
-        result.boxPath = data.boxPath;
-    }
-    if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
-    }
-    console.log("Creators.createExternal: " + result.toString())
-    return result;
-}
-
-export function makeMapFromArray(list: FreEditExternal[]): Map<string, FreEditExternal> {
-    const result = new Map<string, FreEditExternal>();
-    list.forEach(elem => {
-        result.set(elem.boxName, elem);
-    });
-    return result;
-}
-
-export function createStandard(data: Partial<FreEditStandardProjection>): FreEditStandardProjection {
-    const result: FreEditStandardProjection = new FreEditStandardProjection();
+export function createGlobal(data: Partial<FreEditGlobalProjection>): FreEditGlobalProjection {
+    const result: FreEditGlobalProjection = new FreEditGlobalProjection();
     if (!!data.for) {
         result.for = data.for;
     }
@@ -170,20 +164,42 @@ export function createStandard(data: Partial<FreEditStandardProjection>): FreEdi
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    // console.log("Creators.createStandard: " + result.toString())
+    // console.log("Creators.createGlobal: " + result.toString())
     return result;
 }
 
-export function createCustomProjection(data: Partial<FreEditCustomProjection>): FreEditCustomProjection {
-    const result: FreEditCustomProjection = new FreEditCustomProjection();
-    if (!!data.boxName) {
-        result.boxName = data.boxName;
+export function createExternalInfo(data: Partial<FreEditExternalInfo>): FreEditExternalInfo {
+    const result: FreEditExternalInfo = new FreEditExternalInfo();
+    if (!!data.wrapBy) {
+        result.wrapBy = data.wrapBy;
+    }
+    if (!!data.replaceBy) {
+        result.replaceBy = data.replaceBy;
+    }
+    if (!!data.params) {
+        result.params = data.params;
     }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    console.log("Creators.createCustomProjection: " + result.toString())
+    // console.log("Creators.createExternalInfo: " + result.toString())
+    return result;
+}
+
+export function createKeyValuePair(data: Partial<FreEditKeyValuePair>): FreEditKeyValuePair {
+    const result: FreEditKeyValuePair = new FreEditKeyValuePair();
+    if (!!data.key) {
+        result.key = data.key;
+    }
+    if (!!data.value) {
+        result.value = data.value;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    // console.log("Creators.createKeyValuePair: " + result.toString())
     return result;
 }
 
@@ -201,6 +217,12 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
     if (!!data.classifier) {
         result.classifier = data.classifier;
     }
+    if (!!data.fragmentDefinitions) {
+        result.fragmentDefinitions = data.fragmentDefinitions;
+    }
+    if (!!result.classifier && !!result.fragmentDefinitions) {
+        result.fragmentDefinitions.forEach((frag) => (frag.childProjection.classifier = result.classifier));
+    }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
@@ -209,21 +231,61 @@ export function createParsedClassifier(data: Partial<FreEditParsedClassifier>): 
     return result;
 }
 
-// export function createClassifierReference(data: Partial<MetaElementReference<FreMetaClassifier>>): MetaElementReference<FreMetaClassifier> {
-//     let result: MetaElementReference<FreMetaClassifier>;
-//     if (!!data.name) {
-//         result = MetaElementReference.create<FreMetaClassifier>(data.name, "FreClassifier");
-//         if (!!data.location) {
-//             result.location = data.location;
-//             result.location.filename = currentFileName;
-//         }
-//     }
-//     result = MetaElementReference.create<FreMetaClassifier>("unknown", "FreClassifier");
-//     return result;
-// }
+export function createFragmentProjection(data: Partial<FreEditFragmentProjection>): FreEditFragmentProjection {
+    const result: FreEditFragmentProjection = new FreEditFragmentProjection();
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.wrapperInfo) {
+        result.wrapperInfo = data.wrapperInfo;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    // console.log("Creators.createFragmentProjection: " + result.toString())
+    return result;
+}
 
-export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraClassifierInfo | undefined {
-    const result: ExtraClassifierInfo = new ExtraClassifierInfo();
+export function createFragmentDefinition(data: Partial<FreEditFragmentDefinition>): FreEditFragmentDefinition {
+    const result: FreEditFragmentDefinition = new FreEditFragmentDefinition();
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.wrapperInfo) {
+        result.wrapperInfo = data.wrapperInfo;
+    }
+    if (!!data.childProjection) {
+        result.childProjection = data.childProjection;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    // console.log("Creators.FreEditFragmentDefinition: " + result.toString())
+    return result;
+}
+
+export function createSimpleExternal(data: Partial<FreEditSimpleExternal>): FreEditSimpleExternal {
+    const result: FreEditSimpleExternal = new FreEditSimpleExternal();
+    if (!!data.name) {
+        result.name = data.name;
+    }
+    if (!!data.params) {
+        result.params = data.params;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    // console.log("Creators.createSimpleExternal: " + result.toString())
+    return result;
+}
+
+export function createClassifierInfo(
+    data: Partial<FreEditExtraClassifierInfo>,
+): FreEditExtraClassifierInfo | undefined {
+    const result: FreEditExtraClassifierInfo = new FreEditExtraClassifierInfo();
     let hasContent: boolean = false;
     if (!!data.trigger) {
         result.trigger = data.trigger;
@@ -248,13 +310,13 @@ export function createClassifierInfo(data: Partial<ExtraClassifierInfo>): ExtraC
     }
 }
 
-export function createProjection(data: Partial<FreEditProjection>): FreEditProjection {
-    const result = new FreEditProjection();
+export function createProjection(data: Partial<FreEditNormalProjection>): FreEditNormalProjection {
+    const result = new FreEditNormalProjection();
     if (!!data.classifier) {
         result.classifier = data.classifier;
     }
     if (!!data.lines) {
-        result.lines = FreEditParseUtil.normalizeLine( data.lines[0] );
+        result.lines = FreEditParseUtil.normalizeLine(data.lines[0]);
         // Now cleanup the parsed projection
         // FreEditParseUtil.normalizeLine(result);
     }
@@ -267,7 +329,7 @@ export function createProjection(data: Partial<FreEditProjection>): FreEditProje
 }
 
 export function createTableProjection(data: Partial<FreEditTableProjection>): FreEditTableProjection {
-    const result = new FreEditTableProjection();
+    const result: FreEditTableProjection = new FreEditTableProjection();
     if (!!data.name) {
         result.name = data.name;
     }
@@ -286,7 +348,7 @@ export function createTableProjection(data: Partial<FreEditTableProjection>): Fr
 }
 
 export function createLine(data: Partial<FreEditProjectionLine>): FreEditProjectionLine {
-    const result = new FreEditProjectionLine();
+    const result: FreEditProjectionLine = new FreEditProjectionLine();
     if (!!data.items) {
         result.items = data.items;
     }
@@ -298,7 +360,7 @@ export function createLine(data: Partial<FreEditProjectionLine>): FreEditProject
 }
 
 export function createOptionalProjection(data: Partial<FreOptionalPropertyProjection>): FreOptionalPropertyProjection {
-    const result = new FreOptionalPropertyProjection();
+    const result: FreOptionalPropertyProjection = new FreOptionalPropertyProjection();
     if (!!data.lines) {
         result.lines = data.lines;
     }
@@ -311,7 +373,7 @@ export function createOptionalProjection(data: Partial<FreOptionalPropertyProjec
 }
 
 export function createIndent(data: Partial<FreEditParsedProjectionIndent>): FreEditParsedProjectionIndent {
-    const result = new FreEditParsedProjectionIndent();
+    const result: FreEditParsedProjectionIndent = new FreEditParsedProjectionIndent();
     if (!!data.indent) {
         result.indent = data.indent;
     }
@@ -331,7 +393,7 @@ export function createTextItem(data: string): FreEditProjectionText {
 }
 
 export function createSuperProjection(data: Partial<FreEditSuperProjection>): FreEditSuperProjection {
-    const result = new FreEditSuperProjection();
+    const result: FreEditSuperProjection = new FreEditSuperProjection();
     if (!!data.superRef) {
         result.superRef = data.superRef;
         ListUtil.addIfNotPresent(classifiersUsedInSuperProjection, data.superRef.name);
@@ -360,6 +422,9 @@ export function createSinglePropertyProjection(data: Partial<FreEditPropertyProj
     if (!!data.boolKeywords) {
         result.boolKeywords = data.boolKeywords;
     }
+    if (!!data.externalInfo) {
+        result.externalInfo = data.externalInfo;
+    }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
@@ -383,6 +448,9 @@ export function createListPropertyProjection(data: Partial<FreEditPropertyProjec
     if (!!data.listInfo) {
         result.listInfo = data.listInfo;
     }
+    if (!!data.externalInfo) {
+        result.externalInfo = data.externalInfo;
+    }
     if (!!data["location"]) {
         result.location = data["location"];
         result.location.filename = currentFileName;
@@ -391,8 +459,8 @@ export function createListPropertyProjection(data: Partial<FreEditPropertyProjec
     return result;
 }
 
-export function createBoolKeywords(data: Partial<BoolKeywords>): BoolKeywords {
-    const result: BoolKeywords = new BoolKeywords();
+export function createBoolKeywords(data: Partial<FreEditBoolKeywords>): FreEditBoolKeywords {
+    const result: FreEditBoolKeywords = new FreEditBoolKeywords();
     if (!!data.trueKeyword) {
         result.trueKeyword = data.trueKeyword;
     }
@@ -407,28 +475,28 @@ export function createBoolKeywords(data: Partial<BoolKeywords>): BoolKeywords {
     return result;
 }
 
-export function createListDirection(data: {[direction: string]:any}): FreEditProjectionDirection {
+export function createListDirection(data: { [direction: string]: any }): FreEditProjectionDirection {
     const dir = data["direction"];
-    if ( dir === "horizontal" || dir === "rows" ) {
+    if (dir === "horizontal" || dir === "rows") {
         return FreEditProjectionDirection.Horizontal;
     }
     return FreEditProjectionDirection.Vertical;
 }
 
-export function createJoinType(data: {[type: string]:any}): ListJoinType {
+export function createJoinType(data: { [type: string]: any }): ListJoinType {
     const type: string = data["type"];
-    if ( type === "separator" ) {
+    if (type === "separator") {
         return ListJoinType.Separator;
-    } else if ( type === "terminator" ) {
+    } else if (type === "terminator") {
         return ListJoinType.Terminator;
-    } else if ( type === "initiator" ) {
+    } else if (type === "initiator") {
         return ListJoinType.Initiator;
     }
     return ListJoinType.NONE;
 }
 
-export function createListInfo(data: Partial<ListInfo>): ListInfo {
-    const result = new ListInfo();
+export function createListInfo(data: Partial<FreEditListInfo>): FreEditListInfo {
+    const result: FreEditListInfo = new FreEditListInfo();
     if (!!data.direction) {
         result.direction = data.direction;
     }
@@ -470,7 +538,7 @@ export function createButtonDef(data: Partial<FreEditButtonDef>): FreEditButtonD
 }
 
 export function createSelfExp(data: string): FreLangSelfExp {
-    const result = new FreLangSelfExp();
+    const result: FreLangSelfExp = new FreLangSelfExp();
     // we cannot set the sourceName of result, this should be done during checking
     result.appliedfeature = new FreLangAppliedFeatureExp();
     result.appliedfeature.sourceName = data;

@@ -9,8 +9,11 @@ export class ModelTemplate {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
-        const coreImports = ClassifierUtil.findMobxImports(modelDescription)
-            .concat([Names.FreModel, Names.FreLanguage, Names.FreParseLocation]);
+        const coreImports = ClassifierUtil.findMobxImports(modelDescription).concat([
+            Names.FreModel,
+            Names.FreLanguage,
+            Names.FreParseLocation,
+        ]);
         const modelImports = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType();
 
@@ -26,8 +29,11 @@ export class ModelTemplate {
                 ${ConceptUtils.makeStaticCreateMethod(modelDescription, myName)}
 
                 ${ConceptUtils.makeBasicProperties(metaType, myName, false)}
-                ${modelDescription.primProperties.map(p => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
-                ${modelDescription.parts().map(p => ConceptUtils.makePartProperty(p)).join("\n")}
+                ${modelDescription.primProperties.map((p) => ConceptUtils.makePrimitiveProperty(p)).join("\n")}
+                ${modelDescription
+                    .parts()
+                    .map((p) => ConceptUtils.makePartProperty(p))
+                    .join("\n")}
 
                 ${ConceptUtils.makeConstructor(false, modelDescription.properties, coreImports)}
                 ${ConceptUtils.makeBasicMethods(false, metaType, true, false, false, false)}
@@ -64,15 +70,20 @@ export class ModelTemplate {
                         return false;
                     }
                     // we must store the interface in the same place as the old unit, which info is held in FreContainer()
-                    ${modelDescription.parts().map(part =>
-            `if ( oldUnit.freLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.freOwnerDescriptor().propertyName === "${part.name}" ) {
-                                ${part.isList ?
-                `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)});
+                    ${modelDescription
+                        .parts()
+                        .map(
+                            (part) =>
+                                `if ( oldUnit.freLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.freOwnerDescriptor().propertyName === "${part.name}" ) {
+                                ${
+                                    part.isList
+                                        ? `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)});
                                 this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type)});`
-                :
-                `this.${part.name} = newUnit as ${Names.classifier(part.type)};`}
-                            } else`
-        ).join(" ")}
+                                        : `this.${part.name} = newUnit as ${Names.classifier(part.type)};`
+                                }
+                            } else`,
+                        )
+                        .join(" ")}
                     {
                         return false;
                     }
@@ -88,15 +99,20 @@ export class ModelTemplate {
                         if (!!newUnit) {
                             const myMetatype = newUnit.freLanguageConcept();
                             switch (myMetatype) {
-                            ${language.modelConcept.allParts().map(part =>
-            `case "${Names.classifier(part.type)}": {
-                                    ${part.isList ?
-                `this.${part.name}.push(newUnit as ${Names.classifier(part.type)});`
-                :
-                `this.${part.name} = newUnit as ${Names.classifier(part.type)}`
-            }
+                            ${language.modelConcept
+                                .allParts()
+                                .map(
+                                    (part) =>
+                                        `case "${Names.classifier(part.type)}": {
+                                    ${
+                                        part.isList
+                                            ? `this.${part.name}.push(newUnit as ${Names.classifier(part.type)});`
+                                            : `this.${part.name} = newUnit as ${Names.classifier(part.type)}`
+                                    }
                                     return true;
-                                }`).join("\n")}
+                                }`,
+                                )
+                                .join("\n")}
                             }
                         }
                         return false;
@@ -111,15 +127,20 @@ export class ModelTemplate {
                         if (!!oldUnit) {
                             const myMetatype = oldUnit.freLanguageConcept();
                             switch (myMetatype) {
-                            ${language.modelConcept.allParts().map(part =>
-            `case "${Names.classifier(part.type)}": {
-                                    ${part.isList ?
-                `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)}), 1);`
-                :
-                `this.${part.name} = null;`
-            }
+                            ${language.modelConcept
+                                .allParts()
+                                .map(
+                                    (part) =>
+                                        `case "${Names.classifier(part.type)}": {
+                                    ${
+                                        part.isList
+                                            ? `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)}), 1);`
+                                            : `this.${part.name} = null;`
+                                    }
                                     return true;
-                                }`).join("\n")}
+                                }`,
+                                )
+                                .join("\n")}
                             }
                         }
                         return false;
@@ -132,18 +153,21 @@ export class ModelTemplate {
                  */
                 newUnit(typename: ${Names.metaType()}) : ${Names.modelunit()}  {
                     switch (typename) {
-                        ${language.modelConcept.allParts().map(part =>
-                            `case "${Names.classifier(part.type)}": {
+                        ${language.modelConcept
+                            .allParts()
+                            .map(
+                                (part) =>
+                                    `case "${Names.classifier(part.type)}": {
                                 const unit: ${Names.classifier(part.type)} = ${Names.classifier(part.type)}.create({});
-                                ${part.isList ?
-                                   `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
-                                   :
-                                  `this.${part.name} = unit as ${Names.classifier(part.type)}`
-                                 }
+                                ${
+                                    part.isList
+                                        ? `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
+                                        : `this.${part.name} = unit as ${Names.classifier(part.type)}`
+                                }
                                 return unit;
-                            }`
-        ).join("\n")
-        }
+                            }`,
+                            )
+                            .join("\n")}
                     }
                     return null;
                 }
@@ -153,14 +177,19 @@ export class ModelTemplate {
                      */
                     getUnits(): ${Names.modelunit()}[] {
                         let result : ${Names.modelunit()}[] = [];
-                        ${language.modelConcept.allParts().map(part =>
-            `${part.isList ?
-                `result = result.concat(this.${part.name});`
-                :
-                `if (!!this.${part.name}) {
+                        ${language.modelConcept
+                            .allParts()
+                            .map(
+                                (part) =>
+                                    `${
+                                        part.isList
+                                            ? `result = result.concat(this.${part.name});`
+                                            : `if (!!this.${part.name}) {
                     result.push(this.${part.name});
                  }`
-            }`).join("\n")}
+                                    }`,
+                            )
+                            .join("\n")}
                         return result;
                     }
 
@@ -169,18 +198,23 @@ export class ModelTemplate {
                      */
                     getUnitsForType(type: string): ${Names.modelunit()}[] {
                         switch (type) {
-                        ${language.modelConcept.allParts().map(part =>
-            `${part.isList ?
-                `case "${Names.classifier(part.type)}": {
+                        ${language.modelConcept
+                            .allParts()
+                            .map(
+                                (part) =>
+                                    `${
+                                        part.isList
+                                            ? `case "${Names.classifier(part.type)}": {
                                     return this.${part.name};
                                 }`
-                :
-                `case "${Names.classifier(part.type)}": {
+                                            : `case "${Names.classifier(part.type)}": {
                                     let result : ${Names.modelunit()}[] = [];
                                     result.push(this.${part.name});
                                     return result;
                                 }`
-            }`).join("\n")}
+                                    }`,
+                            )
+                            .join("\n")}
                         }
                         return [];
                     }
@@ -196,12 +230,13 @@ export class ModelTemplate {
     private findModelImports(modelDescription: FreMetaModelDescription, myName: string): string[] {
         return Array.from(
             new Set(
-                modelDescription.parts().map(part => Names.classifier(part.type))
+                modelDescription
+                    .parts()
+                    .map((part) => Names.classifier(part.type))
                     // .concat(Names.metaType(modelDescription.language))
-                    .filter(name => !(name === myName))
-                    .filter(r => (r !== null) && (r.length > 0))
-            )
+                    .filter((name) => !(name === myName))
+                    .filter((r) => r !== null && r.length > 0),
+            ),
         );
     }
-
 }

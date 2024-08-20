@@ -1,5 +1,10 @@
 import { FreTyperElement } from "./FreTyperElement.js";
-import { FreMetaClassifier, MetaElementReference, FreMetaLanguage, FreMetaProperty } from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaClassifier,
+    MetaElementReference,
+    FreMetaLanguage,
+    FreMetaProperty,
+} from "../../languagedef/metalanguage/index.js";
 import { FretTypeConcept } from "./FretTypeConcept.js";
 import { FretClassifierSpec } from "./FretClassifierSpec.js";
 import { FretAnyTypeSpec } from "./FretAnyTypeSpec.js";
@@ -20,25 +25,25 @@ export class TyperDef extends FreTyperElement {
             result.location = data.location;
         }
         if (!!data.typeConcepts) {
-            data.typeConcepts.forEach(x => result.typeConcepts.push(x));
+            data.typeConcepts.forEach((x) => result.typeConcepts.push(x));
         }
         if (!!data.anyTypeSpec) {
             result.anyTypeSpec = data.anyTypeSpec;
         }
         if (!!data.classifierSpecs) {
-            data.classifierSpecs.forEach(x => result.classifierSpecs.push(x));
+            data.classifierSpecs.forEach((x) => result.classifierSpecs.push(x));
         }
         if (!!data.types) {
-            data.types.forEach(x => result.types.push(x));
+            data.types.forEach((x) => result.types.push(x));
         }
         if (!!data.conceptsWithType) {
-            data.conceptsWithType.forEach(x => result.conceptsWithType.push(x));
+            data.conceptsWithType.forEach((x) => result.conceptsWithType.push(x));
         }
         if (!!data.$types) {
-            data.$types.forEach(x => result.$types.push(x));
+            data.$types.forEach((x) => result.$types.push(x));
         }
         if (!!data.$conceptsWithType) {
-            data.$conceptsWithType.forEach(x => result.$conceptsWithType.push(x));
+            data.$conceptsWithType.forEach((x) => result.$conceptsWithType.push(x));
         }
         return result;
     }
@@ -80,7 +85,7 @@ export class TyperDef extends FreTyperElement {
 
     set types(newTypes: FreMetaClassifier[]) {
         this.$types = [];
-        newTypes.forEach(t => {
+        newTypes.forEach((t) => {
             const xx = MetaElementReference.create<FreMetaClassifier>(t, "FreClassifier");
             xx.owner = this.language;
             this.$types.push(xx);
@@ -99,7 +104,7 @@ export class TyperDef extends FreTyperElement {
 
     set conceptsWithType(newTypes: FreMetaClassifier[]) {
         this.$conceptsWithType = [];
-        newTypes.forEach(t => {
+        newTypes.forEach((t) => {
             const xx = MetaElementReference.create<FreMetaClassifier>(t, "FreClassifier");
             xx.owner = this.language;
             this.$conceptsWithType.push(xx);
@@ -117,10 +122,10 @@ export class TyperDef extends FreTyperElement {
 
     toFreString(): string {
         return `typer
-istype { ${this.$types.map(t => t.name).join(", ")} }
-${this.typeConcepts.map(con => con.toFreString()).join("\n")}
-hastype { ${this.$conceptsWithType.map(t => t.name).join(", ")} }
+istype { ${this.$types.map((t) => t.name).join(", ")} }
+${this.typeConcepts.map((con) => con.toFreString()).join("\n")}
+hastype { ${this.$conceptsWithType.map((t) => t.name).join(", ")} }
 ${this.anyTypeSpec?.toFreString()}
-${this.classifierSpecs.map(con => con.toFreString()).join("\n")}`;
+${this.classifierSpecs.map((con) => con.toFreString()).join("\n")}`;
     }
 }

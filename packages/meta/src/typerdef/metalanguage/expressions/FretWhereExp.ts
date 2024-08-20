@@ -15,7 +15,7 @@ export class FretWhereExp extends FretExp {
             result.variable = data.variable;
         }
         if (!!data.conditions) {
-            data.conditions.forEach(x => result.conditions.push(x));
+            data.conditions.forEach((x) => result.conditions.push(x));
         }
         if (data.aglParseLocation) {
             result.aglParseLocation = data.aglParseLocation;
@@ -30,10 +30,10 @@ export class FretWhereExp extends FretExp {
 
     toFreString(): string {
         return `${this.variable.toFreString()} where {
-        ${this.conditions.map(cond => cond.toFreString()).join("\n\t\t")}
+        ${this.conditions.map((cond) => cond.toFreString()).join("\n\t\t")}
     }`;
     }
-    get type(): FreMetaClassifier |undefined {
+    get type(): FreMetaClassifier | undefined {
         return this.variable.type;
     }
 }

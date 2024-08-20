@@ -6,7 +6,7 @@ export class ListUtil {
     }
 
     static addListIfNotPresent<T>(list: T[], additionsList: T[]) {
-        additionsList.forEach(extra => {
+        additionsList.forEach((extra) => {
             ListUtil.addIfNotPresent<T>(list, extra);
         });
     }

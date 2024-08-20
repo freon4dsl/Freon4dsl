@@ -10,7 +10,7 @@ export class FreonGenerateLanguage extends FreonGeneratePartAction {
         super({
             actionName: "ast-it",
             summary: "Generates the TypeScript code for your language",
-            documentation: "Generates TypeScript code for the language defined in the .ast files."
+            documentation: "Generates TypeScript code for the language defined in the .ast files.",
         });
     }
 

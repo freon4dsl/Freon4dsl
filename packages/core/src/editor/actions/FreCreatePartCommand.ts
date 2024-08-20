@@ -15,9 +15,9 @@ const LOGGER = new FreLogger("FreCommand");
  * type `conceptName`.
  */
 export class FreCreatePartCommand extends FreCommand {
-    propertyName: string;                   // The name of the property in which the created element will be stored.
-    conceptName: string;                    // The name of the concept that will be created.
-    referenceShortcut: ReferenceShortcut;   // todo
+    propertyName: string; // The name of the property in which the created element will be stored.
+    conceptName: string; // The name of the concept that will be created.
+    referenceShortcut: ReferenceShortcut; // todo
 
     constructor(propertyName: string, conceptName: string, referenceShortcut: ReferenceShortcut) {
         super();
@@ -38,18 +38,19 @@ export class FreCreatePartCommand extends FreCommand {
         // todo make index optional and set the default value to -1;
         LOGGER.log(
             "CreatePartCommand: trigger [" +
-            triggerTypeToString(trigger) +
-            "] part: " +
-            this.conceptName +
-            " in " +
-            this.propertyName +
-            " refshort " +
-            this.referenceShortcut +
-            " parentbox " + box?.element?.freLanguageConcept()
+                triggerTypeToString(trigger) +
+                "] part: " +
+                this.conceptName +
+                " in " +
+                this.propertyName +
+                " refshort " +
+                this.referenceShortcut +
+                " parentbox " +
+                box?.node?.freLanguageConcept(),
         );
-        const ownerConcept: string = box.element.freLanguageConcept();
+        const ownerConcept: string = box.node.freLanguageConcept();
         const propName: string = this.propertyName;
-        const theModelElement = box.element[propName];
+        const theModelElement = box.node[propName];
 
         const newElement: FreNode = FreLanguage.getInstance().classifier(this.conceptName)?.creator({});
         if (newElement === undefined || newElement === null) {
@@ -57,7 +58,9 @@ export class FreCreatePartCommand extends FreCommand {
             console.error("ActionBox action: Unexpected new element undefined");
             return EMPTY_POST_ACTION;
         }
-        LOGGER.log(`FreCreatePartCommand: setting/adding to ${propName} of ${box.element.freId()} (${box.element.freLanguageConcept()}) to ${newElement.freId()} (${newElement.freLanguageConcept()})`);
+        LOGGER.log(
+            `FreCreatePartCommand: setting/adding to ${propName} of ${box.node.freId()} (${box.node.freLanguageConcept()}) to ${newElement.freId()} (${newElement.freLanguageConcept()})`,
+        );
         if (FreLanguage.getInstance().classifierProperty(ownerConcept, propName).isList) {
             if (index >= 0) {
                 theModelElement.splice(index, 0, newElement);
@@ -65,24 +68,38 @@ export class FreCreatePartCommand extends FreCommand {
                 theModelElement.push(newElement);
             }
         } else {
-            box.element[propName] = newElement;
+            box.node[propName] = newElement;
         }
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
-            newElement[this.referenceShortcut.propertyName] = FreLanguage.getInstance().referenceCreator(trigger, this.referenceShortcut.conceptName);
+            newElement[this.referenceShortcut.propertyName] = FreLanguage.getInstance().referenceCreator(
+                trigger,
+                this.referenceShortcut.conceptName,
+            );
         }
         // Always rebalance for a binary expression
         if (newElement.freIsBinaryExpression()) {
-            BTREE.balanceTree(newElement as FreBinaryExpression, editor)
+            BTREE.balanceTree(newElement as FreBinaryExpression, editor);
         }
         return function () {
             // editor.selectElement(newElement);
             // tslint:disable-next-line:max-line-length
-            LOGGER.log("CreatePartCommand: newElement:" + newElement.freId() + " " + newElement.freLanguageConcept() + ", selected element: " + editor.selectedBox.element.freId() + " of kind " + editor.selectedBox.kind);
+            LOGGER.log(
+                "CreatePartCommand: newElement:" +
+                    newElement.freId() +
+                    " " +
+                    newElement.freLanguageConcept() +
+                    ", selected element: " +
+                    editor.selectedBox.node.freId() +
+                    " of kind " +
+                    editor.selectedBox.kind,
+            );
             editor.selectFirstEditableChildBox(newElement);
         };
     }
 
     // @ts-ignore
     // parameters present to adhere to base class signature
-    undo(box: Box, editor: FreEditor) { /* to be done */ }
+    undo(box: Box, editor: FreEditor) {
+        /* to be done */
+    }
 }

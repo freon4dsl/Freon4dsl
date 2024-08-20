@@ -1,5 +1,4 @@
 export class HtmlTemplate {
-
     // TODO make direction available to lang eng
 
     generate(title: string, codeToInclude: string): string {
@@ -33,5 +32,4 @@ export class HtmlTemplate {
 </style>
 `;
     }
-
 }

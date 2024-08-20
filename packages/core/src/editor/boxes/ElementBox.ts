@@ -1,5 +1,5 @@
 import { FreNode } from "../../ast";
-import { FreUtils } from "../../util/index.js"
+import { FreUtils } from "../../util/index.js";
 import { Box } from "./Box";
 
 export class ElementBox extends Box {
@@ -7,14 +7,14 @@ export class ElementBox extends Box {
     private _content: Box = null;
 
     refreshComponent = (w?: string) => {
-        if ( this._content !== undefined && this._content.refreshComponent !== undefined) {
+        if (this._content !== undefined && this._content.refreshComponent !== undefined) {
             this._content.refreshComponent(w);
         }
     };
 
     constructor(element: FreNode, role: string, initializer?: Partial<ElementBox>) {
         super(element, role);
-        FreUtils.initializeObject(this, initializer)
+        FreUtils.initializeObject(this, initializer);
     }
 
     get content() {
@@ -22,7 +22,7 @@ export class ElementBox extends Box {
     }
 
     set content(v: Box) {
-        if (!!(this?._content)) {
+        if (!!this?._content) {
             this._content.parent = null;
         }
         this._content = v;
@@ -38,5 +38,5 @@ export class ElementBox extends Box {
 }
 
 export function isElementBox(b: Box): b is ElementBox {
-    return (!!b) && b.kind === "ElementBox"; // b instanceof ElementBox;
+    return !!b && b.kind === "ElementBox"; // b instanceof ElementBox;
 }

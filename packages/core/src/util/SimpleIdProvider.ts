@@ -12,7 +12,7 @@ export class SimpleIdProvider implements IdProvider {
     newId(): string {
         this.latest++;
         let result = this.prefix + this.latest;
-        while( this.usedIds.includes(result)) {
+        while (this.usedIds.includes(result)) {
             this.latest++;
             result = this.prefix + this.latest;
         }
@@ -21,6 +21,6 @@ export class SimpleIdProvider implements IdProvider {
     }
 
     usedId(id: string) {
-        this.usedIds.push(id)
+        this.usedIds.push(id);
     }
 }

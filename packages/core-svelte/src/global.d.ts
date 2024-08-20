@@ -13,6 +13,6 @@
 //       Property 'onclick_outside' does not exist on type 'HTMLProps<HTMLDivElement>'. (ts)
 declare namespace svelte.JSX {
     interface HTMLProps<T> {
-        onclick_outside?: () => void
+        onclick_outside?: () => void;
     }
 }

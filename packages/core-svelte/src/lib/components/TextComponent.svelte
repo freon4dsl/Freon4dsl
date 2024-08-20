@@ -435,7 +435,7 @@
 	}
 
 	const refresh = () => {
-		LOGGER.log(`${id}: REFRESH  ${id} (${box?.element?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
+		LOGGER.log(`${id}: REFRESH  ${id} (${box?.node?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		// if (!isEditing) {
@@ -497,7 +497,7 @@
 	 * are set.
 	 */
 	onMount(() => {
-		LOGGER.log("onMount" + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")" + " originaltext: '" + box.getText() + "'");
+		LOGGER.log("onMount" + " for element "  + box?.node?.freId() + " (" + box?.node?.freLanguageConcept() + ")" + " originaltext: '" + box.getText() + "'");
 		originalText = text = box.getText();
 		placeholder = box.placeHolder;
 		setInputWidth();
@@ -597,4 +597,13 @@
 		</span>
 	{/if}
 </span>
+<style>
+	/** Hiding and showing the <input> or <span> by using Svelte #if did not work, because the
+	 *  CSS class for <input> was not applied anymore.
+	 *  Therefore we switched to using the CSS display: none property.
+	 */
+	.hiding {
+		display: none;
+	}
+</style>
 

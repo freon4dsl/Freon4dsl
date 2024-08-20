@@ -2,7 +2,11 @@ import { InterpreterContext } from "./InterpreterContext";
 import { InterpreterError } from "./InterpreterException";
 import { InterpreterTracer } from "./InterpreterTracer";
 import {
-    ConceptFunction, EvaluateFunction, IMainInterpreter, InitFunction, OwningPropertyFunction
+    ConceptFunction,
+    EvaluateFunction,
+    IMainInterpreter,
+    InitFunction,
+    OwningPropertyFunction,
 } from "./IMainInterpreter";
 import { isRtError, RtObject } from "./runtime";
 
@@ -18,7 +22,11 @@ export class MainInterpreter implements IMainInterpreter {
      * @param getConceptFunction  Function that gets the typeName from an object
      * @param getPropertyFunction Function that gets the property name in which an object is stored in its parent
      */
-    public static instance(init: InitFunction, getConceptFunction: ConceptFunction, getPropertyFunction: OwningPropertyFunction): IMainInterpreter {
+    public static instance(
+        init: InitFunction,
+        getConceptFunction: ConceptFunction,
+        getPropertyFunction: OwningPropertyFunction,
+    ): IMainInterpreter {
         if (MainInterpreter.privateInstance === undefined) {
             MainInterpreter.privateInstance = new MainInterpreter(init, getConceptFunction, getPropertyFunction);
         }

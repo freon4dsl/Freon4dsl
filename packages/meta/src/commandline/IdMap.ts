@@ -1,4 +1,3 @@
-
 type PropertyData = {
     id: string;
     key: string;
@@ -9,7 +8,7 @@ type LanguageData = PropertyData;
 type ClassifierData = {
     id: string;
     key: string;
-    properties: Map<string, PropertyData>
+    properties: Map<string, PropertyData>;
 };
 export class IdMap {
     idAndKeyStore = new Map<string, ClassifierData>();
@@ -17,7 +16,7 @@ export class IdMap {
 
     setLanguageIdAndKey(language: string, id: string, key: string): void {
         // console.log("IdMap.setLanguageIdAndKey " + language + " id " + id + " key " + key);
-        this.languageStore.set(language, {id: id, key: key});
+        this.languageStore.set(language, { id: id, key: key });
     }
 
     getLanguageId(language: string): string {
@@ -40,14 +39,14 @@ export class IdMap {
 
     setClassifierIdAndKey(classifier: string, id: string, key: string): void {
         // console.log("IdMap.setClassifierIdAndKey " + classifier + " id " + id + " key " + key);
-        this.idAndKeyStore.set(classifier, {id: id, key: key, properties: new Map<string, PropertyData>()});
+        this.idAndKeyStore.set(classifier, { id: id, key: key, properties: new Map<string, PropertyData>() });
     }
 
     setPropertyIdAndKey(classifier: string, property: string, id: string, key: string): void {
         // console.log("    IdMap.setPropertyIdAndKey " + classifier + "." + property + " id " + id + " key " + key);
         const classifierData = this.idAndKeyStore.get(classifier);
         if (!!classifierData) {
-            classifierData.properties.set(property, {id: id, key: key});
+            classifierData.properties.set(property, { id: id, key: key });
         }
     }
 
@@ -56,7 +55,7 @@ export class IdMap {
         if (classifierData === undefined || classifierData.id === undefined) {
             return "-default-id-" + concept;
         } else {
-            return classifierData.id
+            return classifierData.id;
         }
     }
 
@@ -65,7 +64,7 @@ export class IdMap {
         if (classifierData === undefined || classifierData.key === undefined) {
             return "-default-key-" + concept;
         } else {
-            return classifierData.key
+            return classifierData.key;
         }
     }
 
@@ -76,7 +75,7 @@ export class IdMap {
         } else {
             const prop = classifierData.properties.get(property);
             if (prop === undefined || prop.id === undefined) {
-                return "-default-id-" + concept + "-" + property
+                return "-default-id-" + concept + "-" + property;
             } else {
                 return prop.id;
             }
@@ -90,7 +89,7 @@ export class IdMap {
         } else {
             const prop = classifierData.properties.get(property);
             if (prop === undefined || prop.key === undefined) {
-                return "-default-key-" + concept + "-" + property
+                return "-default-key-" + concept + "-" + property;
             } else {
                 return prop.key;
             }

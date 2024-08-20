@@ -2,7 +2,14 @@ import * as fs from "fs";
 import { MetaLogger } from "../../utils/MetaLogger.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../metalanguage/index.js";
-import { GenerationStatus, FileUtil, Names, TYPER_FOLDER, TYPER_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "../../utils/index.js";
+import {
+    GenerationStatus,
+    FileUtil,
+    Names,
+    TYPER_FOLDER,
+    TYPER_GEN_FOLDER,
+    TYPER_CONCEPTS_FOLDER,
+} from "../../utils/index.js";
 import { FreTyperTemplate } from "./templates/FreTyperTemplate.js";
 import { FreTyperPartTemplate } from "./templates/FreTyperPartTemplate.js";
 import { FreCustomTyperPartTemplate } from "./templates/FreCustomTyperPartTemplate.js";
@@ -19,9 +26,9 @@ const LOGGER = new MetaLogger("FreonTyperGenerator");
 export class FreonTyperGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage | undefined;
-    protected typerGenFolder: string = '';
-    protected typerConceptsFolder: string = '';
-    protected typerFolder: string = '';
+    protected typerGenFolder: string = "";
+    protected typerConceptsFolder: string = "";
+    protected typerFolder: string = "";
 
     generate(typerdef: TyperDef | undefined): void {
         if (this.language === undefined || this.language === null) {
@@ -33,7 +40,7 @@ export class FreonTyperGenerator {
         LOGGER.log("Generating typer in folder " + this.typerGenFolder);
 
         const typer: FreTyperTemplate = new FreTyperTemplate();
-        const typerDef: TyperDefTemplate= new TyperDefTemplate();
+        const typerDef: TyperDefTemplate = new TyperDefTemplate();
         const typeConceptMaker: FreTypeConceptMaker = new FreTypeConceptMaker();
         const customPart: FreCustomTyperPartTemplate = new FreCustomTyperPartTemplate();
         const typerPart: FreTyperPartTemplate = new FreTyperPartTemplate();
@@ -53,20 +60,31 @@ export class FreonTyperGenerator {
         let relativePath: string = "../../";
 
         //  Generate typer
-        if (!!typerdef && typerdef.typeConcepts.length > 0 ) {
-            typerdef.typeConcepts.forEach(con => {
+        if (!!typerdef && typerdef.typeConcepts.length > 0) {
+            typerdef.typeConcepts.forEach((con) => {
                 LOGGER.log(`Generating type concept: ${this.typerConceptsFolder}/${Names.classifier(con)}.ts`);
                 const typeConceptFile = FileUtil.pretty(
-                    typeConceptMaker.generateTypeConcept(con, relativePath + "../"), "Type Concept", generationStatus);
+                    typeConceptMaker.generateTypeConcept(con, relativePath + "../"),
+                    "Type Concept",
+                    generationStatus,
+                );
                 fs.writeFileSync(`${this.typerConceptsFolder}/${Names.classifier(con)}.ts`, typeConceptFile);
             });
 
             LOGGER.log(`Generating type concept index: ${this.typerConceptsFolder}/index.ts`);
-            const typeConceptIndexFile = FileUtil.pretty(typeConceptMaker.makeIndexFile(typerdef), "Type Concept Index", generationStatus);
+            const typeConceptIndexFile = FileUtil.pretty(
+                typeConceptMaker.makeIndexFile(typerdef),
+                "Type Concept Index",
+                generationStatus,
+            );
             fs.writeFileSync(`${this.typerConceptsFolder}/index.ts`, typeConceptIndexFile);
 
             LOGGER.log(`Generating type concept index: ${this.typerConceptsFolder}/internal.ts`);
-            const typeConceptInternalFile = FileUtil.pretty(typeConceptMaker.makeInternalFile(typerdef), "Type Concept Internal", generationStatus);
+            const typeConceptInternalFile = FileUtil.pretty(
+                typeConceptMaker.makeInternalFile(typerdef),
+                "Type Concept Internal",
+                generationStatus,
+            );
             fs.writeFileSync(`${this.typerConceptsFolder}/internal.ts`, typeConceptInternalFile);
         }
 
@@ -75,23 +93,43 @@ export class FreonTyperGenerator {
         // fs.writeFileSync(`${this.typerGenFolder}/${Names.typer(this.language)}.ts`, typerFile);
 
         LOGGER.log(`Generating typerPart: ${this.typerGenFolder}/${Names.typerPart(this.language)}.ts`);
-        const checkerFile: string = FileUtil.pretty(typerPart.generateTyperPart(this.language, typerdef, relativePath), "TyperPart Class", generationStatus);
+        const checkerFile: string = FileUtil.pretty(
+            typerPart.generateTyperPart(this.language, typerdef, relativePath),
+            "TyperPart Class",
+            generationStatus,
+        );
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typerPart(this.language)}.ts`, checkerFile);
 
         LOGGER.log(`Generating typer gen index: ${this.typerGenFolder}/index.ts`);
-        const typerIndexGenFile = FileUtil.pretty(typer.generateGenIndex(this.language), "Typer Gen Index", generationStatus);
+        const typerIndexGenFile = FileUtil.pretty(
+            typer.generateGenIndex(this.language),
+            "Typer Gen Index",
+            generationStatus,
+        );
         fs.writeFileSync(`${this.typerGenFolder}/index.ts`, typerIndexGenFile);
 
         LOGGER.log(`Generating typer init: ${this.typerGenFolder}/${Names.typerDef(this.language)}.ts`);
-        const typerDefFile = FileUtil.pretty(typerDef.generateTyperDef(this.language, relativePath), "Typer Init", generationStatus);
+        const typerDefFile = FileUtil.pretty(
+            typerDef.generateTyperDef(this.language, relativePath),
+            "Typer Init",
+            generationStatus,
+        );
         fs.writeFileSync(`${this.typerGenFolder}/${Names.typerDef(this.language)}.ts`, typerDefFile);
 
         // change relative path to get the imports right
         relativePath = "../";
 
         LOGGER.log(`Generating custom typerPart: ${this.typerFolder}/index.ts`);
-        const customTyperFile = FileUtil.pretty(customPart.generateCustomTyperPart(this.language), "Custom TyperPart", generationStatus);
-        FileUtil.generateManualFile(`${this.typerFolder}/${Names.customTyper(this.language)}.ts`, customTyperFile, "Custom TyperPart");
+        const customTyperFile = FileUtil.pretty(
+            customPart.generateCustomTyperPart(this.language),
+            "Custom TyperPart",
+            generationStatus,
+        );
+        FileUtil.generateManualFile(
+            `${this.typerFolder}/${Names.customTyper(this.language)}.ts`,
+            customTyperFile,
+            "Custom TyperPart",
+        );
 
         LOGGER.log(`Generating typer index: ${this.typerFolder}/index.ts`);
         const typerIndexFile = FileUtil.pretty(typer.generateIndex(this.language), "Typer Index", generationStatus);
@@ -126,8 +164,11 @@ export class FreonTyperGenerator {
             FileUtil.deleteDirIfEmpty(this.typerFolder);
         } else {
             // do not delete the following files, because these may contain user edits
-            LOG2USER.info(`Not removed: ${this.typerFolder}/${!!this.language ? Names.customTyper(this.language): "<Custom Typer>"}.ts` +
-            "\n\t" + `${this.typerFolder}/index.ts`);
+            LOG2USER.info(
+                `Not removed: ${this.typerFolder}/${!!this.language ? Names.customTyper(this.language) : "<Custom Typer>"}.ts` +
+                    "\n\t" +
+                    `${this.typerFolder}/index.ts`,
+            );
         }
     }
 }

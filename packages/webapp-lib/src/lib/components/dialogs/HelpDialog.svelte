@@ -27,13 +27,13 @@
         <div class="mdc-typography--headline6">Context menu</div>
         <div class="mdc-typography--body2">
         Using the right mouse button a context menu can be shown for elements that are
-        part of a list. This menu offers some functionality on the selected list element, like cut/copy/paste.
+        part of a list. This menu offers some functionality on the selected list node, like cut/copy/paste.
         </div>
 
         <div class="mdc-typography--headline6">Drag and drop</div>
         <div class="mdc-typography--body2">
-        Drag and drop functionality is provided for list elements. An element can be dragged from a list (or table),
-        and dropped in a list (or table). Note that you should click outside of any editable text to grab the element.
+        Drag and drop functionality is provided for list elements. An node can be dragged from a list (or table),
+        and dropped in a list (or table). Note that you should click outside of any editable text to grab the node.
         </div>
 
         <div class="mdc-typography--headline6">Keybindings</div>
@@ -53,10 +53,10 @@
                 <Text>TAB key moves to next place where the user can type something</Text>
             </Item>
             <Item>
-                <Text>Ctrl-UP selects the parent element in the AST</Text>
+                <Text>Ctrl-UP selects the parent node in the AST</Text>
             </Item>
             <Item>
-                <Text>Ctrl-DOWN selects the first child element in the AST</Text>
+                <Text>Ctrl-DOWN selects the first child node in the AST</Text>
             </Item>
             <Item>
                 <Text>Ctrl-SPACE shows popup menu of possible options</Text>

@@ -84,5 +84,4 @@ export class FreScoperComposite implements FreScoper {
         }
         return null; // TODO or undefined?
     }
-
 }

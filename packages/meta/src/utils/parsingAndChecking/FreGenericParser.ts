@@ -20,14 +20,13 @@ export type Location = {
 };
 
 function isPegjsError(object: any): object is parser.SyntaxError {
-    return 'location' in object;
+    return "location" in object;
 }
 
 /**
  * This class is used to store the location information from the AGL parser.
  */
 export class FreParseLocation {
-
     static create(data: Partial<FreParseLocation>): FreParseLocation {
         const result = new FreParseLocation();
         if (!!data.filename) {
@@ -41,7 +40,7 @@ export class FreParseLocation {
         }
         return result;
     }
-    filename: string = '';
+    filename: string = "";
     line: number = 0;
     column: number = 0;
 }
@@ -57,7 +56,7 @@ export class FreGenericParser<DEFINITION> {
     checker: Checker<DEFINITION>;
 
     parse(definitionFile: string): DEFINITION | undefined {
-        LOG2USER.log("FreGenericParser.Parse: " + definitionFile)
+        LOG2USER.log("FreGenericParser.Parse: " + definitionFile);
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
@@ -77,18 +76,19 @@ export class FreGenericParser<DEFINITION> {
             // console.log("FreGenericParser.Parse model: " + langSpec)
         } catch (e: unknown) {
             if (isPegjsError(e)) {
-                LOG2USER.error("isPegjsError " + e?.message)
+                LOG2USER.error("isPegjsError " + e?.message);
                 // syntax error
-                const errorLoc: ParseLocation = { filename: definitionFile, start: e.location.start, end: e.location.end };
+                const errorLoc: ParseLocation = {
+                    filename: definitionFile,
+                    start: e.location.start,
+                    end: e.location.end,
+                };
                 const errorstr: string = `${e}
-                ${e.location && e.location.start ?
-                    ParseLocationUtil.locationPlus(definitionFile, errorLoc)
-                    :
-                    ``}`;
+                ${e.location && e.location.start ? ParseLocationUtil.locationPlus(definitionFile, errorLoc) : ``}`;
                 LOG2USER.error(errorstr);
                 throw new Error("syntax error: " + errorstr);
             } else {
-                LOG2USER.error("FreGenericParser.Parse unknown error: " + e)
+                LOG2USER.error("FreGenericParser.Parse unknown error: " + e);
             }
         }
 
@@ -123,7 +123,11 @@ export class FreGenericParser<DEFINITION> {
                     if (isPegjsError(e)) {
                         // throw syntax error, but adjust the location first
                         // to avoid a newline in the output, we do not put this if-stat in a smart string
-                        const errorLoc: ParseLocation = { filename: file, start: e.location.start, end: e.location.end };
+                        const errorLoc: ParseLocation = {
+                            filename: file,
+                            start: e.location.start,
+                            end: e.location.end,
+                        };
                         let location: string = "";
                         if (!!e.location && !!e.location.start) {
                             location = ParseLocationUtil.locationPlus(file, errorLoc);
@@ -156,11 +160,11 @@ export class FreGenericParser<DEFINITION> {
             // add the non-fatal parse errors after the call
             this.checker.errors.push(...this.getNonFatalParseErrors());
             if (this.checker.hasErrors()) {
-                this.checker.errors.forEach(error => LOG2USER.error(`${error}`));
+                this.checker.errors.forEach((error) => LOG2USER.error(`${error}`));
                 throw new Error("checking errors (" + this.checker.errors.length + ").");
             }
             if (this.checker.hasWarnings()) {
-                this.checker.warnings.forEach(warn => LOG2USER.warning(`Warning: ${warn}`));
+                this.checker.warnings.forEach((warn) => LOG2USER.warning(`Warning: ${warn}`));
             }
         } else {
             throw new Error("parser does not return a language definition.");

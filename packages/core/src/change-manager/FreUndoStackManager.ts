@@ -1,4 +1,11 @@
-import { FreDelta, FrePartDelta, FrePartListDelta, FrePrimDelta, FrePrimListDelta, FreTransactionDelta } from "./FreDelta";
+import {
+    FreDelta,
+    FrePartDelta,
+    FrePartListDelta,
+    FrePrimDelta,
+    FrePrimListDelta,
+    FreTransactionDelta,
+} from "./FreDelta";
 import { FreModelUnit } from "../ast";
 import { modelUnit } from "../ast-utils";
 import { FreLogger } from "../logging";
@@ -11,7 +18,6 @@ const LOGGER: FreLogger = new FreLogger("FreUndoStackManager");
  * The information is stored per model unit; one stack for undo info, one for redo info.
  */
 export class FreUndoStackManager {
-
     private static hasIndex(delta: FreDelta): boolean {
         return delta.index !== null && delta.index !== undefined;
     }
@@ -29,7 +35,7 @@ export class FreUndoStackManager {
     private inUndo: boolean = false;
 
     constructor(unit: FreModelUnit) {
-       this.changeSource = unit;
+        this.changeSource = unit;
     }
 
     public startTransaction() {
@@ -90,7 +96,12 @@ export class FreUndoStackManager {
     private addUndo(delta: FreDelta) {
         if (this.inTransaction) {
             if (this.currentTransaction === null || this.currentTransaction === undefined) {
-                this.currentTransaction = new FreTransactionDelta(modelUnit(delta.owner), delta.owner, delta.propertyName, delta.index);
+                this.currentTransaction = new FreTransactionDelta(
+                    modelUnit(delta.owner),
+                    delta.owner,
+                    delta.propertyName,
+                    delta.index,
+                );
                 this.undoStack.push(this.currentTransaction);
             }
             this.currentTransaction.internalDeltas.push(delta);
@@ -104,7 +115,12 @@ export class FreUndoStackManager {
     private addRedo(delta: FreDelta) {
         if (this.inTransaction) {
             if (this.currentTransaction === null || this.currentTransaction === undefined) {
-                this.currentTransaction = new FreTransactionDelta(modelUnit(delta.owner), delta.owner, delta.propertyName, delta.index);
+                this.currentTransaction = new FreTransactionDelta(
+                    modelUnit(delta.owner),
+                    delta.owner,
+                    delta.propertyName,
+                    delta.index,
+                );
                 this.redoStack.push(this.currentTransaction);
             }
             this.currentTransaction.internalDeltas.push(delta);
@@ -129,10 +145,10 @@ export class FreUndoStackManager {
             }
         } else if (delta instanceof FrePartListDelta || delta instanceof FrePrimListDelta) {
             if (delta.removed.length > 0) {
-                delta.owner[delta.propertyName].splice(delta.index, 0, ...delta.removed );
+                delta.owner[delta.propertyName].splice(delta.index, 0, ...delta.removed);
             }
             if (delta.added.length > 0) {
-                delta.owner[delta.propertyName].splice(delta.index, delta.added.length );
+                delta.owner[delta.propertyName].splice(delta.index, delta.added.length);
             }
         } else if (delta instanceof FreTransactionDelta) {
             // TODO when multiple sources of change are present, then a check is needed whether the state of the unit is such that this delta can be reversed

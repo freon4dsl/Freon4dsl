@@ -10,7 +10,12 @@ export class RHSBinExpListWithInitiator extends RHSPropEntry {
     private readonly separatorText: string = "";
     entry: RHSPropEntry;
 
-    constructor(prop: FreMetaProperty, type: FreMetaBinaryExpressionConcept, entry: RHSPropEntry, separatorText: string) {
+    constructor(
+        prop: FreMetaProperty,
+        type: FreMetaBinaryExpressionConcept,
+        entry: RHSPropEntry,
+        separatorText: string,
+    ) {
         super(prop);
         this.entry = entry;
         this.type = type;
@@ -19,7 +24,10 @@ export class RHSBinExpListWithInitiator extends RHSPropEntry {
     }
 
     toGrammar(): string {
-        return `( '${this.separatorText}' ${BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type))} )*` + this.doNewline();
+        return (
+            `( '${this.separatorText}' ${BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type))} )*` +
+            this.doNewline()
+        );
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

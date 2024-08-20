@@ -2,7 +2,6 @@ import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils/index
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class DefaultWorkerTemplate {
-
     generateDefaultWorker(language: FreMetaLanguage, relativePath: string): string {
         const workerInterfaceName = Names.workerInterface(language);
         const defaultWorkerClassName = Names.defaultWorker(language);
@@ -39,8 +38,10 @@ export class DefaultWorkerTemplate {
             return false;
         }
 
-        ${language.units.map(unit =>
-            `${commentBefore}
+        ${language.units
+            .map(
+                (unit) =>
+                    `${commentBefore}
             public execBefore${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean {
                 return false;
             }
@@ -48,11 +49,14 @@ export class DefaultWorkerTemplate {
             ${commentAfter}
             public execAfter${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean {
                 return false;
-            }`
-        ).join("\n\n")}
+            }`,
+            )
+            .join("\n\n")}
 
-        ${language.concepts.map(concept =>
-            `${commentBefore}
+        ${language.concepts
+            .map(
+                (concept) =>
+                    `${commentBefore}
             public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
                 return false;
             }
@@ -60,9 +64,9 @@ export class DefaultWorkerTemplate {
             ${commentAfter}
             public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
                 return false;
-            }`
-        ).join("\n\n")}
+            }`,
+            )
+            .join("\n\n")}
         }`;
     }
-
 }

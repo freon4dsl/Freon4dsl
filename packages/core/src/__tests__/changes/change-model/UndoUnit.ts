@@ -3,10 +3,17 @@
  * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
  * to the changes in the state of its properties.
  */
-import { observablepart, observablepartlist, observableprim, observableprimlist, FreNodeBaseImpl, FreModelUnit } from "../../../ast";
+import {
+    observablepart,
+    observablepartlist,
+    observableprim,
+    observableprimlist,
+    FreNodeBaseImpl,
+    FreModelUnit,
+} from "../../../ast";
 import { UndoPart } from "./UndoPart";
 import { FreUtils } from "../../../util";
-import {FreLogger} from "../../../logging";
+import { FreLogger } from "../../../logging";
 
 const LOGGER = new FreLogger("UndoUnit");
 
@@ -22,7 +29,7 @@ export class UndoUnit extends FreNodeBaseImpl implements FreModelUnit {
             result.prim = data.prim;
         }
         if (!!data.numlist) {
-            data.numlist.forEach(x => result.numlist.push(x));
+            data.numlist.forEach((x) => result.numlist.push(x));
         }
         if (!!data.name) {
             result.name = data.name;
@@ -31,7 +38,7 @@ export class UndoUnit extends FreNodeBaseImpl implements FreModelUnit {
             result.part = data.part;
         }
         if (!!data.partlist) {
-            data.partlist.forEach(x => result.partlist.push(x));
+            data.partlist.forEach((x) => result.partlist.push(x));
         }
         if (!!data.parseLocation) {
             result.parseLocation = data.parseLocation;
@@ -120,7 +127,7 @@ export class UndoUnit extends FreNodeBaseImpl implements FreModelUnit {
             result.prim = this.prim;
         }
         if (!!this.numlist) {
-            this.numlist.forEach(x => result.numlist.push(x));
+            this.numlist.forEach((x) => result.numlist.push(x));
         }
         if (!!this.name) {
             result.name = this.name;
@@ -129,7 +136,7 @@ export class UndoUnit extends FreNodeBaseImpl implements FreModelUnit {
             result.part = this.part.copy();
         }
         if (!!this.partlist) {
-            this.partlist.forEach(x => result.partlist.push(x.copy()));
+            this.partlist.forEach((x) => result.partlist.push(x.copy()));
         }
         return result;
     }

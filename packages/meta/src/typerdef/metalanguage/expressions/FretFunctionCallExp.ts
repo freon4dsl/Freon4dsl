@@ -12,7 +12,7 @@ export class FretFunctionCallExp extends FretExp {
             result.calledFunction = data.calledFunction;
         }
         if (!!data.actualParameters) {
-            data.actualParameters.forEach(x => result.actualParameters.push(x));
+            data.actualParameters.forEach((x) => result.actualParameters.push(x));
         }
         if (!!data.$returnType) {
             result.$returnType = data.$returnType;
@@ -27,11 +27,11 @@ export class FretFunctionCallExp extends FretExp {
     }
     readonly $typename: string = "FretFunctionCallExp"; // holds the metatype in the form of a string
 
-    calledFunction: string = '';
+    calledFunction: string = "";
     actualParameters: FretExp[] = [];
 
     toFreString(): string {
-        return `${this.calledFunction}( ${this.actualParameters.map((arg => arg.toFreString())).join(", ")} )`;
+        return `${this.calledFunction}( ${this.actualParameters.map((arg) => arg.toFreString()).join(", ")} )`;
     }
 
     baseSource(): FretExp {

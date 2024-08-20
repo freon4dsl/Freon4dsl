@@ -12,12 +12,12 @@ import { FreTyperElement } from "./FreTyperElement.js";
  */
 export abstract class FretTypeRule extends FreTyperElement {
     readonly $typename: string = "FretTypeRule"; // holds the metatype in the form of a string
-    $id: string = ''; // a unique identifier
+    $id: string = ""; // a unique identifier
 
     // @ts-ignore Property is set during parsing and checking phases
     exp: FretExp; // implementation of part 'exp'
     // @ts-ignore Property is set during parsing and checking phases
-    $returnType: MetaElementReference<FreMetaClassifier>;    // to be set by the checker
+    $returnType: MetaElementReference<FreMetaClassifier>; // to be set by the checker
     // @ts-ignore Property is set during parsing and checking phases
     owner: FretClassifierSpec;
 

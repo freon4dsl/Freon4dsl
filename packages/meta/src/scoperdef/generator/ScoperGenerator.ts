@@ -1,7 +1,14 @@
 import * as fs from "fs";
 import { MetaLogger } from "../../utils/index.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { GenerationStatus, FileUtil, isNullOrUndefined, Names, SCOPER_FOLDER, SCOPER_GEN_FOLDER } from "../../utils/index.js";
+import {
+    GenerationStatus,
+    FileUtil,
+    isNullOrUndefined,
+    Names,
+    SCOPER_FOLDER,
+    SCOPER_GEN_FOLDER,
+} from "../../utils/index.js";
 import { ScopeDef } from "../metalanguage/index.js";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate.js";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate.js";
@@ -12,8 +19,8 @@ const LOGGER: MetaLogger = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
     public outputfolder: string = ".";
     public language: FreMetaLanguage | undefined;
-    protected scoperGenFolder: string = '';
-    protected scoperFolder: string = '';
+    protected scoperGenFolder: string = "";
+    protected scoperFolder: string = "";
 
     generate(scopedef: ScopeDef | undefined): void {
         if (this.language === null || this.language === undefined) {
@@ -25,7 +32,9 @@ export class ScoperGenerator {
             scopedef = new ScopeDef();
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
-            scopedef.namespaces.push(MetaElementReference.create<FreMetaModelDescription>(this.language.modelConcept, "FreModelDescription"));
+            scopedef.namespaces.push(
+                MetaElementReference.create<FreMetaModelDescription>(this.language.modelConcept, "FreModelDescription"),
+            );
         }
 
         const generationStatus: GenerationStatus = new GenerationStatus();
@@ -47,23 +56,41 @@ export class ScoperGenerator {
 
         //  Generate it
         LOGGER.log(`Generating scoper: ${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`);
-        const scoperFile = FileUtil.pretty(scoper.generateScoper(this.language, scopedef, relativePath), "Scoper Class" , generationStatus);
+        const scoperFile = FileUtil.pretty(
+            scoper.generateScoper(this.language, scopedef, relativePath),
+            "Scoper Class",
+            generationStatus,
+        );
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoper(this.language)}.ts`, scoperFile);
 
-        LOGGER.log(`Generating scope language definition: ${this.scoperGenFolder}/${Names.scoperDef(this.language)}.ts`);
+        LOGGER.log(
+            `Generating scope language definition: ${this.scoperGenFolder}/${Names.scoperDef(this.language)}.ts`,
+        );
         const scoperDefFile = FileUtil.pretty(
             scoperDefTemplate.generateScoperDef(this.language, scopedef, relativePath),
             "Scoper Definition",
-            generationStatus
+            generationStatus,
         );
         fs.writeFileSync(`${this.scoperGenFolder}/${Names.scoperDef(this.language)}.ts`, scoperDefFile);
 
         LOGGER.log(`Generating custom scoper: ${this.scoperGenFolder}/${Names.customScoper(this.language)}.ts`);
-        const scoperCustomFile = FileUtil.pretty(customScoperTemplate.generateCustomScoperPart(this.language), "Custom Scoper", generationStatus);
-        FileUtil.generateManualFile(`${this.scoperFolder}/${Names.customScoper(this.language)}.ts`, scoperCustomFile, "Custom Scoper");
+        const scoperCustomFile = FileUtil.pretty(
+            customScoperTemplate.generateCustomScoperPart(this.language),
+            "Custom Scoper",
+            generationStatus,
+        );
+        FileUtil.generateManualFile(
+            `${this.scoperFolder}/${Names.customScoper(this.language)}.ts`,
+            scoperCustomFile,
+            "Custom Scoper",
+        );
 
         LOGGER.log(`Generating scoper gen index: ${this.scoperGenFolder}/index.ts`);
-        const scoperGenIndexFile = FileUtil.pretty(scoper.generateGenIndex(this.language), "Scoper Gen Index", generationStatus);
+        const scoperGenIndexFile = FileUtil.pretty(
+            scoper.generateGenIndex(this.language),
+            "Scoper Gen Index",
+            generationStatus,
+        );
         fs.writeFileSync(`${this.scoperGenFolder}/index.ts`, scoperGenIndexFile);
 
         LOGGER.log(`Generating scoper index: ${this.scoperFolder}/index.ts`);

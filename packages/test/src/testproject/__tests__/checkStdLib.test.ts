@@ -2,7 +2,7 @@ import { FreLanguage, jsonAsString } from "@freon4dsl/core";
 import { KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
 import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 describe("Checking stdlib for Demo", () => {
     TestStartEnvironment.getInstance();
@@ -61,5 +61,4 @@ describe("Checking stdlib for Demo", () => {
         expect(stdlib.find("EXTRA1", "BB")).not.toBeNull();
         expect(stdlib.find("EXTRA2", "BB")).not.toBeNull();
     });
-
 });

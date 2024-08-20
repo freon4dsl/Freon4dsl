@@ -18,5 +18,4 @@ export interface AstWorker {
      * @return When returns true, no other workers will be called for this modelElement.
      */
     execAfter(node: FreNode): boolean;
-
 }

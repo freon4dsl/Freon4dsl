@@ -2,14 +2,16 @@ import { FreNode, FreSearcher, FreNodeReference, FreModelUnit } from "@freon4dsl
 import { FileHandler } from "../../utils/FileHandler";
 import {
     AssociationClass,
-    AssociationEnd, Attribute, IClassifier,
+    AssociationEnd,
+    Attribute,
+    IClassifier,
     MultiplicityKind,
     OctopusModel,
     UmlClass,
-    UmlPart
+    UmlPart,
 } from "../language/gen";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 const writer = OctopusModelEnvironment.getInstance().writer;
 const reader = OctopusModelEnvironment.getInstance().reader;
@@ -28,12 +30,11 @@ function readFile(filepath: string): FreModelUnit {
 }
 
 describe("Testing Search Structure", () => {
-
     test("search all associations in Book", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             const found: FreNode[] = searcher.findStructure({}, myUnit, "Association");
-            expect (found.length).toBe(5);
+            expect(found.length).toBe(5);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");
@@ -44,10 +45,13 @@ describe("Testing Search Structure", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // make the partial to be found
-            const toBeFound: FreNode = AssociationEnd.create({ name: "prevChap", multiplicity: MultiplicityKind.create({ lowerBound: 1})});
+            const toBeFound: FreNode = AssociationEnd.create({
+                name: "prevChap",
+                multiplicity: MultiplicityKind.create({ lowerBound: 1 }),
+            });
             // search for it
             const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "AssociationEnd");
-            expect (found.length).toBe(1);
+            expect(found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");
@@ -58,10 +62,10 @@ describe("Testing Search Structure", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // make the partial to be found
-            const toBeFound: FreNode = AssociationClass.create({ name: 'ChapterDependency' });
+            const toBeFound: FreNode = AssociationClass.create({ name: "ChapterDependency" });
             // search for it
             const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
-            expect (found.length).toBe(1);
+            expect(found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");
@@ -76,7 +80,7 @@ describe("Testing Search Structure", () => {
             const toBeFound: FreNode = AssociationClass.create({ attributes: [attrToBeFound] });
             // search for it
             const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
-            expect (found.length).toBe(1);
+            expect(found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");
@@ -87,12 +91,15 @@ describe("Testing Search Structure", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // make the partial to be found
-            const refToBeFound: FreNodeReference<IClassifier> = FreNodeReference.create<IClassifier>("Chapter", "IClassifier");
+            const refToBeFound: FreNodeReference<IClassifier> = FreNodeReference.create<IClassifier>(
+                "Chapter",
+                "IClassifier",
+            );
             const endToBeFound: AssociationEnd = AssociationEnd.create({ baseType: refToBeFound });
             const toBeFound: FreNode = AssociationClass.create({ end1: endToBeFound });
             // search for it
             const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "AssociationClass");
-            expect (found.length).toBe(1);
+            expect(found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");
@@ -106,7 +113,7 @@ describe("Testing Search Structure", () => {
             const toBeFound: FreNode = UmlClass.create({ name: "Chapter" });
             // search for it
             const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "UmlClass");
-            expect (found.length).toBe(1);
+            expect(found.length).toBe(1);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");
@@ -121,7 +128,7 @@ describe("Testing Search Structure", () => {
             const toBeFound: FreNode = UmlClass.create({ name: "Chapter", attributes: [attrToBeFound] });
             // search for it
             const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "UmlClass");
-            expect (found.length).toBe(0);
+            expect(found.length).toBe(0);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");
@@ -132,11 +139,14 @@ describe("Testing Search Structure", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             // make the partial to be found
-            const refToBeFound: FreNodeReference<IClassifier> = FreNodeReference.create<IClassifier>("Boolean", "IClassifier");
+            const refToBeFound: FreNodeReference<IClassifier> = FreNodeReference.create<IClassifier>(
+                "Boolean",
+                "IClassifier",
+            );
             const toBeFound: Attribute = Attribute.create({ type: refToBeFound });
             // search for it
             const found: FreNode[] = searcher.findStructure(toBeFound, myUnit, "Attribute");
-            expect (found.length).toBe(3);
+            expect(found.length).toBe(3);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");

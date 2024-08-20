@@ -2,7 +2,7 @@ import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoEntity, DemoFunction, DemoModel } from "../language/gen";
 import { FreModelSerializer } from "@freon4dsl/core";
 import { JsonModelCreator } from "./JsonModelCreator";
-import { describe, it, test, expect, beforeEach } from "vitest"
+import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("Checking Serializer on Demo", () => {
     DemoEnvironment.getInstance();
@@ -64,4 +64,3 @@ describe("Checking Serializer on Demo", () => {
         }
     });
 });
-

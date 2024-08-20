@@ -7,8 +7,7 @@ export class LionwebIdProvider implements IdProvider {
 
     // @ts-ignore
     // parameter present to adhere to interface
-    usedId(id: string): void {
-    }
+    usedId(id: string): void {}
 
     availableIds: string[];
 }

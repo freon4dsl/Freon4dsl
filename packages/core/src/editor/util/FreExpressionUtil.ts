@@ -5,7 +5,9 @@ import {
     SelectBox,
     SelectOption,
     FreEditor,
-    triggerTypeToString, BoxFactory, FreProjectionHandler
+    triggerTypeToString,
+    BoxFactory,
+    FreProjectionHandler,
 } from "../index";
 import { FreBinaryExpression, FreExpressionNode } from "../../ast";
 import { FreLanguage } from "../../language";
@@ -20,7 +22,7 @@ import {
     EXPRESSION_SYMBOL,
     LEFT_MOST,
     RIGHT_MOST,
-    FreUtils
+    FreUtils,
 } from "../../util";
 import { NBSP } from "../index";
 import { BehaviorExecutionResult } from "./BehaviorUtils";
@@ -28,9 +30,7 @@ import { BehaviorExecutionResult } from "./BehaviorUtils";
 // const LOGGER = new FreLogger("FreExpressionNodeHelpers");
 // todo maybe moved these functions to BoxUtils?
 
-// @ts-ignore
-// todo remove param initializer and change generation in meta accordingly
-export function createDefaultExpressionBox(exp: FreExpressionNode, role: string, children: Box[], initializer?: Partial<HorizontalLayoutBox>): Box {
+export function createDefaultExpressionBox(exp: FreExpressionNode, children: Box[], initializer?: Partial<HorizontalLayoutBox>): Box {
     const isLeftMost: Boolean = BTREE.isLeftMostChild(exp);
     const isRightMost: Boolean = BTREE.isRightMostChild(exp);
     if (isLeftMost || isRightMost) {
@@ -50,6 +50,7 @@ export function createDefaultExpressionBox(exp: FreExpressionNode, role: string,
             // result.addChild(new ActionBox(exp, RIGHT_MOST, NBSP, { style: STYLES.aliasExpression }));
             result.addChild(BoxFactory.action(exp, RIGHT_MOST, NBSP));
         }
+        FreUtils.initializeObject(result, initializer);
         return result;
     } else {
         if (children.length === 1) {
@@ -69,32 +70,43 @@ export function createDefaultExpressionBox(exp: FreExpressionNode, role: string,
  * @param boxProviderCache
  * @param style
  */
-export function createDefaultBinaryBox(exp: FreBinaryExpression,
-                                       symbol: string,
-                                       editor: FreEditor,
-                                       boxProviderCache: FreProjectionHandler
-                                                            ): HorizontalLayoutBox {
+export function createDefaultBinaryBox(
+    exp: FreBinaryExpression,
+    symbol: string,
+    editor: FreEditor,
+    boxProviderCache: FreProjectionHandler,
+): HorizontalLayoutBox {
     // TODO move this method to BoxUtils
     const result = BoxFactory.horizontalLayout(exp, BINARY_EXPRESSION, "");
     // const projection = editor.projection;
     // const projectionToUse = !!projection.rootProjection ? projection.rootProjection : projection;
 
-    const rightConceptName = FreLanguage.getInstance().classifier(exp.freLanguageConcept())?.properties.get("right")?.type;
-    const leftConceptName = FreLanguage.getInstance().classifier(exp.freLanguageConcept())?.properties.get("left")?.type;
+    const rightConceptName = FreLanguage.getInstance()
+        .classifier(exp.freLanguageConcept())
+        ?.properties.get("right")?.type;
+    const leftConceptName = FreLanguage.getInstance()
+        .classifier(exp.freLanguageConcept())
+        ?.properties.get("left")?.type;
     // console.log("RIGHT CONCEPT for "+ exp.freLanguageConcept()  + " is " + Language.getInstance().classifier(exp.freLanguageConcept()) );
     // console.log("            ===> " + Language.getInstance().classifier(exp.freLanguageConcept())?.properties.get("right") + " is " + rightConceptName);
     result.addChildren([
-        (!!exp.freLeft() ? boxProviderCache.getBoxProvider(exp.freLeft()).box : BoxFactory.action(exp, FRE_BINARY_EXPRESSION_LEFT, "[add-left]", { propertyName: "left", conceptName: leftConceptName })),
+        !!exp.freLeft()
+            ? boxProviderCache.getBoxProvider(exp.freLeft()).box
+            : BoxFactory.action(exp, FRE_BINARY_EXPRESSION_LEFT, "[add-left]", {
+                  propertyName: "left",
+                  conceptName: leftConceptName,
+              }),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         BoxFactory.action(exp, BEFORE_BINARY_OPERATOR, NBSP),
         createOperatorBox(editor, exp, symbol),
         // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         BoxFactory.action(exp, AFTER_BINARY_OPERATOR, NBSP),
-        (!!exp.freRight() ?
-            boxProviderCache.getBoxProvider(exp.freRight()).box
-            :
-            BoxFactory.action(exp, FRE_BINARY_EXPRESSION_RIGHT, "[add-right]", { propertyName: "right", conceptName: rightConceptName })
-        )
+        !!exp.freRight()
+            ? boxProviderCache.getBoxProvider(exp.freRight()).box
+            : BoxFactory.action(exp, FRE_BINARY_EXPRESSION_RIGHT, "[add-right]", {
+                  propertyName: "right",
+                  conceptName: rightConceptName,
+              }),
     ]);
     return result;
 }
@@ -114,13 +126,13 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
         () => {
             if (!!editor.actions && editor.actions.binaryExpressionActions) {
                 return editor.actions.binaryExpressionActions
-                    .filter(e => !e.isApplicable || e.isApplicable(operatorBox))
-                    .map(e => ({
+                    .filter((e) => !e.isApplicable || e.isApplicable(operatorBox))
+                    .map((e) => ({
                         id: e.trigger as string,
                         label: e.trigger as string,
                         description: "empty description for operator",
                         icon: null,
-                        hideInList: false
+                        hideInList: false,
                     }));
             } else {
                 return [];
@@ -129,9 +141,15 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
         () => null,
         (innerEditor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
             if (innerEditor.actions && innerEditor.actions.binaryExpressionActions) {
-                const action = innerEditor.actions.binaryExpressionActions.filter(e => (e.trigger as string) === option.id)[0];
+                const action = innerEditor.actions.binaryExpressionActions.filter(
+                    (e) => (e.trigger as string) === option.id,
+                )[0];
                 if (!!action) {
-                    const newExp = action.expressionBuilder(operatorBox, triggerTypeToString(action.trigger), innerEditor);
+                    const newExp = action.expressionBuilder(
+                        operatorBox,
+                        triggerTypeToString(action.trigger),
+                        innerEditor,
+                    );
                     newExp.freSetLeft(exp.freLeft());
                     newExp.freSetRight(exp.freRight());
                     FreUtils.replaceExpression(exp, newExp, innerEditor);
@@ -145,8 +163,8 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
             return BehaviorExecutionResult.NO_MATCH;
         },
         {
-            cssStyle: cssStyle
-        }
+            cssStyle: cssStyle,
+        },
     );
 
     operatorBox.getSelectedOption = () => {

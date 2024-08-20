@@ -34,4 +34,3 @@ export class MockVariables {
         MockVariables.keydownValues.push(toFreKey(k));
     }
 }
-

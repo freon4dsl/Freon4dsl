@@ -10,7 +10,7 @@ export class FretAnyTypeSpec extends FreTyperElement {
     static create(data: Partial<FretAnyTypeSpec>): FretAnyTypeSpec {
         const result = new FretAnyTypeSpec();
         if (!!data.rules) {
-            data.rules.forEach(x => result.rules.push(x));
+            data.rules.forEach((x) => result.rules.push(x));
         }
         if (data.aglParseLocation) {
             result.aglParseLocation = data.aglParseLocation;
@@ -22,6 +22,6 @@ export class FretAnyTypeSpec extends FreTyperElement {
     rules: FretTypeRule[] = []; // implementation of part 'rules'
 
     toFreString(): string {
-        return `anytype { ${this.rules.map( t => t.toFreString() ).join("\n")} }`;
+        return `anytype { ${this.rules.map((t) => t.toFreString()).join("\n")} }`;
     }
 }

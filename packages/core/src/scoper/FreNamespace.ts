@@ -36,7 +36,7 @@ export class FreNamespace {
      * @param result
      */
     public static joinResultsWithShadowing(list: FreNamedNode[], result: FreNamedNode[]) {
-        list.forEach(elem => {
+        list.forEach((elem) => {
             // shadow name in outer namespace if it is already present
             if (!result.includes(elem)) {
                 result.push(elem);
@@ -86,13 +86,28 @@ export class FreNamespace {
 
         // collect the elements from the namespace, but not from any child namespace
         myWalker.walk(this._myElem, (elem: FreNode) => {
-            const sameModelUnit = (modelUnit(elem) === origin);
-            const visit = !FreLanguage.getInstance().classifier(elem.freLanguageConcept()).isNamespace &&
-                (sameModelUnit || (!!elem.freOwner() && FreLanguage.getInstance().classifierProperty(
-                    elem.freOwner().freLanguageConcept(),
-                    elem.freOwnerDescriptor().propertyName).isPublic
-                ));
-            LOGGER.log("Namespace::Visit " + elem.freLanguageConcept() + "(" + elem["name"] + ")" + " ==> " + visit + "   same modelunit? " + sameModelUnit + "  _elem " + this._myElem.freLanguageConcept());
+            const sameModelUnit = modelUnit(elem) === origin;
+            const visit =
+                !FreLanguage.getInstance().classifier(elem.freLanguageConcept()).isNamespace &&
+                (sameModelUnit ||
+                    (!!elem.freOwner() &&
+                        FreLanguage.getInstance().classifierProperty(
+                            elem.freOwner().freLanguageConcept(),
+                            elem.freOwnerDescriptor().propertyName,
+                        ).isPublic));
+            LOGGER.log(
+                "Namespace::Visit " +
+                    elem.freLanguageConcept() +
+                    "(" +
+                    elem["name"] +
+                    ")" +
+                    " ==> " +
+                    visit +
+                    "   same modelunit? " +
+                    sameModelUnit +
+                    "  _elem " +
+                    this._myElem.freLanguageConcept(),
+            );
             return visit;
         });
         return result;

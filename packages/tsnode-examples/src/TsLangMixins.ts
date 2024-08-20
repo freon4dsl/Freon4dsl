@@ -1,11 +1,11 @@
 type SpriteIntf = {
     name: string;
     x: number;
-    y : number;
+    y: number;
 
     setPos(x: number, y: number): void;
-}
-class Sprite implements SpriteIntf{
+};
+class Sprite implements SpriteIntf {
     name = "default";
     x = 0;
     y = 0;

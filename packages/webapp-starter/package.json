@@ -7,17 +7,18 @@
     "clean": "rm -rf node_modules/",
     "build": "echo No build for webapp-starter",
     "build-app": "rollup -c",
-    "build-dev": "cd ../../packages/samples/DocuProject && npm run build",
+    "build-dev": "cd ../../packages/samples/ExternalTester && npm run build",
     "dev": "cross-env NODE_PORT=8001 rollup -c -w",
     "start": "sirv public --port 8000",
     "validate": "svelte-check --tsconfig ./tsconfig.json",
     "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
     "install-local": "npm install --registry http://localhost:4873",
     "prepare-app": "npm run styles-light && npm run styles-dark",
-    "styles-light": "smui-theme compile public/site.css -i src/style",
-    "styles-dark": "smui-theme compile public/site-dark.css -i src/style/dark"
+    "styles-light": "smui-theme compile public/site.css -i style",
+    "styles-dark": "smui-theme compile public/site-dark.css -i style/dark"
   },
   "devDependencies": {
+    "@smui-extra/accordion": "^7.0.0",
     "@rollup/plugin-commonjs": "^25.0.8",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
@@ -36,7 +37,7 @@
   "dependencies": {
     "@freon4dsl/core": "0.7.0-beta",
     "@freon4dsl/core-svelte": "0.7.0-beta",
-    "@freon4dsl/samples-docuproject": "0.7.0-beta",
+    "@freon4dsl/samples-external-tester": "0.7.0-beta",
     "@freon4dsl/webapp-lib": "0.7.0-beta",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",

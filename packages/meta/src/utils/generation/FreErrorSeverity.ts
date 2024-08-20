@@ -3,5 +3,5 @@ export enum FreErrorSeverity {
     Improvement = "Improvement",
     ToDo = "TODO",
     Info = "Info",
-    NONE = "NONE"
+    NONE = "NONE",
 }

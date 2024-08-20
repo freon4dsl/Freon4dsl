@@ -12,7 +12,7 @@ export class FreonGenerateInterpreter extends FreonGeneratePartAction {
         super({
             actionName: "interpret-it",
             summary: "Generates interpreter for your language",
-            documentation: "Generates boilerplate code for a language interpreter from .eval files."
+            documentation: "Generates boilerplate code for a language interpreter from .eval files.",
         });
     }
 

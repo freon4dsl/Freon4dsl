@@ -2,8 +2,8 @@ import { FreTyperMerger } from "../../typerdef/parser";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { MetaLogger } from "../../utils/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import {FretClassifierSpec, FretInferenceRule, FretTypeRule, TyperDef} from "../../typerdef/metalanguage/index.js";
-import { describe, test, expect, beforeEach } from "vitest"
+import { FretClassifierSpec, FretInferenceRule, FretTypeRule, TyperDef } from "../../typerdef/metalanguage/index.js";
+import { describe, test, expect, beforeEach } from "vitest";
 
 function testTypeUnit(typeUnit: TyperDef) {
     expect(typeUnit).not.toBeNull();
@@ -14,20 +14,24 @@ function testTypeUnit(typeUnit: TyperDef) {
     // console.log(typeUnit.conceptsWithType.map(t => t.name).join(", "))
     expect(typeUnit.anyTypeSpec).not.toBeNull();
 
-    const stringLitRule:FretClassifierSpec | undefined = typeUnit.classifierSpecs.find(rule => rule.myClassifier?.name === "StringLiteral");
+    const stringLitRule: FretClassifierSpec | undefined = typeUnit.classifierSpecs.find(
+        (rule) => rule.myClassifier?.name === "StringLiteral",
+    );
     expect(stringLitRule).not.toBeNull();
     expect(stringLitRule).not.toBeUndefined();
     expect(stringLitRule).toBeTruthy();
-    const inferOfStringLit:FretTypeRule | undefined = (stringLitRule as FretClassifierSpec).rules.find(r => r instanceof FretInferenceRule);
+    const inferOfStringLit: FretTypeRule | undefined = (stringLitRule as FretClassifierSpec).rules.find(
+        (r) => r instanceof FretInferenceRule,
+    );
     expect(inferOfStringLit).not.toBeNull();
     expect(inferOfStringLit).not.toBeUndefined();
     // expect(inferOfStringLit.returnType).not.toBeNull();
     // expect(inferOfStringLit.returnType.name).toBe(predefType.name);
 
-    const plusExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier?.name === "PlusExp");
+    const plusExpRule = typeUnit.classifierSpecs.find((rule) => rule.myClassifier?.name === "PlusExp");
     expect(plusExpRule).not.toBeNull();
     expect(plusExpRule instanceof FretClassifierSpec).toBeTruthy();
-    const inferOfPlusExp = (plusExpRule as FretClassifierSpec).rules.find(r => r instanceof FretInferenceRule);
+    const inferOfPlusExp = (plusExpRule as FretClassifierSpec).rules.find((r) => r instanceof FretInferenceRule);
     expect(inferOfPlusExp).not.toBeNull();
     // expect(inferOfPlusExp.returnType).not.toBeNull();
     // expect(inferOfPlusExp.returnType.name).toBe(predefType.name);
@@ -58,11 +62,11 @@ describe("Checking new typer", () => {
 
     test(" on projectY.type file", () => {
         if (!!language) {
-            const predefType = language.concepts.find(x => x.name === "PredefinedType");
+            const predefType = language.concepts.find((x) => x.name === "PredefinedType");
             expect(predefType).not.toBeNull();
             expect(predefType).not.toBeUndefined();
 
-            const namedType = language.conceptsAndInterfaces().find(x => x.name === "NamedType");
+            const namedType = language.conceptsAndInterfaces().find((x) => x.name === "NamedType");
             expect(namedType).not.toBeNull();
             expect(namedType).not.toBeUndefined();
 
@@ -89,20 +93,21 @@ describe("Checking new typer", () => {
 
     test(" on multiple type files", () => {
         if (!!language) {
-            const predefType = language.concepts.find(x => x.name === "PredefinedType");
+            const predefType = language.concepts.find((x) => x.name === "PredefinedType");
             expect(predefType).not.toBeNull();
             expect(predefType).not.toBeUndefined();
 
-            const namedType = language.conceptsAndInterfaces().find(x => x.name === "NamedType");
+            const namedType = language.conceptsAndInterfaces().find((x) => x.name === "NamedType");
             expect(namedType).not.toBeNull();
             expect(namedType).not.toBeUndefined();
 
             let typeUnit: TyperDef | undefined;
             try {
                 if (!!parser) {
-                    typeUnit = parser.parseMulti(
-                        [testdir + "multiFileInput/projectY-part1.type",
-                            testdir + "multiFileInput/projectY-part2.type"]);
+                    typeUnit = parser.parseMulti([
+                        testdir + "multiFileInput/projectY-part1.type",
+                        testdir + "multiFileInput/projectY-part2.type",
+                    ]);
                 }
             } catch (e: unknown) {
                 if (e instanceof Error) {

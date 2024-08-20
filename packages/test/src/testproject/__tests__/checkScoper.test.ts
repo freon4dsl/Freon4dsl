@@ -3,7 +3,7 @@ import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
 import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestStartScoper } from "../scoper/gen";
 import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
-import { describe, test, expect, beforeEach } from "vitest"
+import { describe, test, expect, beforeEach } from "vitest";
 
 describe("Checking stdlib for Demo", () => {
     TestStartEnvironment.getInstance();
@@ -64,8 +64,7 @@ describe("Checking scoper for testproject", () => {
     let stdlib: TestStartStdlib = FreLanguage.getInstance().stdLib as TestStartStdlib;
     let ZZinstance1: ZZ = stdlib.find("ZZinstance1", "ZZ") as ZZ;
 
-    beforeEach( ()=> {
-
+    beforeEach(() => {
         model = new BB();
 
         super1 = new AA();
@@ -148,5 +147,4 @@ describe("Checking scoper for testproject", () => {
         expect(vi).not.toContain(super2.AAprop21); // myCC2
         expect(vi).toContain(ZZinstance1);
     });
-
 });

@@ -14,7 +14,7 @@ import { FreonCleanAction } from "./FreonCleanAction.js";
 // require('source-map-support').install();
 // import sm_support from 'source-map-support';
 // sm_support.install();
-import 'source-map-support/register.js'
+import "source-map-support/register.js";
 
 const LOGGER = new MetaLogger("Freon").mute();
 
@@ -36,7 +36,7 @@ export class Freon extends CommandLineParser {
     public constructor() {
         super({
             toolFilename: "freon",
-            toolDescription: "Freon toolset for generating languages, scopers, editors, etc."
+            toolDescription: "Freon toolset for generating languages, scopers, editors, etc.",
         });
 
         this.allAction = new FreonGenerateAllAction();
@@ -61,14 +61,14 @@ export class Freon extends CommandLineParser {
         this.addAction(this.cleanAction);
 
         this.verboseArg = this.defineFlagParameter({
-            parameterLongName: '--verbose',
-            parameterShortName: '-v',
-            description: 'Show extra logging detail'
+            parameterLongName: "--verbose",
+            parameterShortName: "-v",
+            description: "Show extra logging detail",
         });
         this.watchArg = this.defineFlagParameter({
             parameterLongName: "--watch",
             parameterShortName: "-w",
-            description: "Start generator in watch mode (only in combination with 'all')"
+            description: "Start generator in watch mode (only in combination with 'all')",
         });
     }
 

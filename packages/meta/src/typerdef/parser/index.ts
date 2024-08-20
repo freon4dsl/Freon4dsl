@@ -11,5 +11,5 @@ export {
     FreTyperReader,
     FreTyperCheckerPhase1,
     FreTyperCheckerPhase2,
-    FreTyperMerger
+    FreTyperMerger,
 } from "./internal.js";

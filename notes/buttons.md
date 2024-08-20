@@ -7,7 +7,7 @@
 The **text** is the text that will be shown on the button. The **boxRole** is the manner in which the button is coupled to an action.
 2. Create a custom action. (See Samples/DocuProject/editor/CustomInsuranceModelActions.ts, line 30.) In this action you need to specify the
 exact same **boxRole** as the one that has been supplied with the button in the .edit file. (See line 31.)
-3. Implement the action to be taken in this custom action. You can use '**box.element**' to get the node in the ast associated with the button.
+3. Implement the action to be taken in this custom action. You can use '**box.node**' to get the node in the ast associated with the button.
 In this example that will be an instance of **BaseProduct**.
 
 This works the same in the table definition. (See Samples/DocuProject/defs/editor-tables.edit, line 9.)
