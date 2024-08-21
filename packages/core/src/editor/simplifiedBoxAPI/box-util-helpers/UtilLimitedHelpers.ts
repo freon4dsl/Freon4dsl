@@ -18,7 +18,6 @@ export class UtilLimitedHelpers {
         scoper?: FreScoper,
         index?: number
     ): LimitedControlBox | SelectBox {
-        console.log("UtilLimitedHelpers.limitedBox called for " + propertyName + ", display type: " + display);
         // find the information on the property to be shown
         const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(
             node.freLanguageConcept(),
@@ -34,10 +33,8 @@ export class UtilLimitedHelpers {
             );
         }
         if (display === LimitedDisplay.RADIO_BUTTON) {
-            console.log("displaytype is: RADIO_BUTTON")
             return this.limitedControlBox(node, propertyName, setFunc, propInfo);
         } else if (display === LimitedDisplay.SELECT) {
-            console.log("displaytype is: SELECT")
             return this.limitedSelectBox(node, propertyName, setFunc, scoper, index);
         } else {
             // should never occur
@@ -137,7 +134,6 @@ export class UtilLimitedHelpers {
         if (!propType) {
             throw new Error("Cannot find property type '" + propertyName + "'");
         }
-        console.log("limited select Box for type: " + propType)
         let property = node[propertyName];
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "referencebox", index);
         // set the value for use in lists

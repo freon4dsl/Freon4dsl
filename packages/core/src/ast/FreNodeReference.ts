@@ -11,7 +11,7 @@ const LOGGER = new FreLogger("FreElementReference").mute();
  */
 export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementImpl {
     /**
-     * Returns a new instance which refers to an node named 'name' of type T, or
+     * Returns a new instance which refers to a node named 'name' of type T, or
      * to the node 'name' itself.
      * Param 'typeName' should be equal to T.constructor.name.
      * @param name

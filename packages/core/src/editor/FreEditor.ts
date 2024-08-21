@@ -38,8 +38,8 @@ export class FreEditor {
     private _rootElement: FreNode = null; // The model element to be shown in this editor.
     private _rootBox: Box | null = null; // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
     private _selectedElement: FreNode = null; // The model element, or the parent element of the property, that is currently selected in the editor.
-    private _selectedProperty: string = ""; // The property that is currectly selected in the editor, if applicable.
-    private _selectedIndex: number = -1; // The index within the property that is currectly selected in the editor, if applicable.
+    private _selectedProperty: string = ""; // The property that is currently selected in the editor, if applicable.
+    private _selectedIndex: number = -1; // The index within the property that is currently selected in the editor, if applicable.
     private _selectedBox: Box | null = null; // The box defined for _selectedElement. Note that it is a 'slave' to _selectedElement.
     private _selectedPosition: FreCaret = FreCaret.UNSPECIFIED; // The caret position within the _selectedBox.
     private NOSELECT: Boolean = false; // Do not accept "select" actions, used e.g. when an undo is going to come.
@@ -143,25 +143,17 @@ export class FreEditor {
      * @param caretPosition
      */
     selectElement(element: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
-        LOGGER.log(
-            "selectElement " +
-                element?.freLanguageConcept() +
-                " with id " +
-                element?.freId() +
-                ", property: [" +
-                propertyName +
-                ", " +
-                propertyIndex +
-                "]" +
-                " " +
-                caretPosition,
+        console.log(
+            `selectElement ${element?.freLanguageConcept()} with id ${element?.freId()}, property: ${propertyName}${propertyIndex? `[${propertyIndex}]` : ``}, caretPosition: ${caretPosition}`
         );
         if (this.checkParam(element)) {
             const box: ElementBox = this.projection.getBox(element);
             // check whether the box is shown in the current projection
-            if (isNullOrUndefined(box) || !this.isBoxInTree(box)) {
+            if (isNullOrUndefined(box)) {
+                this.setUserMessage(`Unable to find node ' ${propertyName}${propertyIndex ? `[${propertyIndex}]` : ``}'.`)
+            } else if (!this.isBoxInTree(box)) {
                 // element is not shown, try selecting its parent todo maybe try selecting a sibling first?
-                this.selectElement(element.freOwner());
+                this.selectElement(element.freOwner(), element.freOwnerDescriptor()?.propertyName, element.freOwnerDescriptor()?.propertyIndex);
             } else {
                 // try and find the property to be selected
                 let propBox: Box | undefined = undefined;

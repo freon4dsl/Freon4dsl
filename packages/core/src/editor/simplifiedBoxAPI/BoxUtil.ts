@@ -177,7 +177,6 @@ export class BoxUtil {
         scoper?: FreScoper,
         index?: number
     ): LimitedControlBox | SelectBox {
-        console.log("BoxUtil.limitedBox called for " + propertyName  + ", display type: " + display)
         return UtilLimitedHelpers.limitedBox(node, propertyName, setFunc, display, scoper, index);
     }
 
@@ -271,7 +270,6 @@ export class BoxUtil {
         scoper: FreScoper,
         index?: number,
     ): ReferenceBox {
-        console.log("BoxUtil.referenceBox called for " + propertyName)
         if (propertyName === "theme") {
             throw new Error("What is the stacktrace here?")
         }

@@ -6,7 +6,7 @@
     // within the text.
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
-    import {clickOutsideConditional, componentId, contextMenu, selectedBoxes} from "./svelte-utils/index.js";
+    import {clickOutsideConditional, componentId, selectedBoxes} from "./svelte-utils/index.js";
     import {
         type AbstractChoiceBox,
         ARROW_DOWN,
@@ -14,7 +14,6 @@
         ENTER,
         ESCAPE,
         FreEditor,
-        FreErrorSeverity,
         FreLogger,
         type FrePostAction,
         isActionBox,
@@ -56,6 +55,7 @@
     const noOptionsId = 'noOptions';            // constant for when the editor has no options
     let getOptions = (): SelectOption[] => {    // the function used to calculate all_options, called by onClick and setFocus
         let result = box?.getOptions(editor);
+        console.log("Options: " + result.map(opt => opt.label));
         if (result === null || result === undefined) {
             result = [{id: noOptionsId, label: '<no known options>'}];
         }
@@ -505,13 +505,15 @@
         endEditing();
     };
 
-    const showContextMenu = (event) => {
+    const selectReferred = (event) => {
         if (isReferenceBox(box)) {
-            $contextMenu.items = box.contextMenuOptions()
-            $contextMenu.show(event, 0); // this function sets $contextMenuVisible to true
+            if (box.isReferredInSameUnit()) {
+                box.selectReferred(editor);
+            } else {
+                editor.setUserMessage("Referred element is not in same unit. Cannot select!");
+            }
             event.stopPropagation();
-        } else {
-            editor.setUserMessage("contextMenu", FreErrorSeverity.Info);
+            event.preventDefault();
         }
     };
 
@@ -550,7 +552,7 @@
                 on:freItemSelected={itemSelected}/>
     {/if}
     {#if isReferenceBox(box)}
-        <button on:click={(event) => showContextMenu(event)}>...</button>
+        <button on:click={(event) => selectReferred(event)}>-></button>
     {/if}
 </span>
 

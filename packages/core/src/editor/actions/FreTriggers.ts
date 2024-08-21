@@ -11,11 +11,11 @@ export function isRegExp(a: FreTriggerType): a is RegExp {
 }
 
 /**
- * Returns true if 'a' is a FreKey with its meta atrribute set.
+ * Returns true if 'a' is a FreKey with its meta attribute set.
  * @param a
  */
 export function isProKey(a: FreTriggerType): a is FreKey {
-    return (a as any).meta !== undefined;
+    return !!a && (a as any).meta !== undefined;
 }
 
 export function isString(a: FreTriggerType): a is string {
