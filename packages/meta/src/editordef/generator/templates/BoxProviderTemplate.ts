@@ -325,7 +325,7 @@ export class BoxProviderTemplate {
         boxLabel: string,
         language: FreMetaLanguage,
         topIndex: number,
-    ) {
+    ): string {
         let result: string = "";
         // do all lines, separate them with a comma
         lines.forEach((line, index) => {

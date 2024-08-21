@@ -2,7 +2,7 @@ import { FreLanguage, FreLanguageProperty } from "../../../language";
 import { FreUtils } from "../../../util";
 
 export class UtilCheckers {
-    public static checkLimitedType(propInfo: FreLanguageProperty, propertyName: string) {
+    public static checkLimitedType(propInfo: FreLanguageProperty, propertyName: string): string[] {
         // check whether this type is really a limited type
         const propType: string = propInfo?.type;
         if (!propType) {

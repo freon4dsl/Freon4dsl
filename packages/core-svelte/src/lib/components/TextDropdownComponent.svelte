@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { isNumber } from "lodash"
-
     // This component is a combination of a TextComponent and a DropdownComponent.
     // The TextComponent is shown in non-editable state until it gets focus,
     // then the Dropdown also appears. When the text in the TextComponent alters,
@@ -8,22 +6,28 @@
     // within the text.
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
-    import { clickOutsideConditional, componentId, selectedBoxes } from "./svelte-utils/index.js";
+    import {clickOutsideConditional, componentId, contextMenu, selectedBoxes} from "./svelte-utils/index.js";
     import {
         type AbstractChoiceBox,
         ARROW_DOWN,
         ARROW_UP,
         ENTER,
         ESCAPE,
-        isSelectBox,
         FreEditor,
+        FreErrorSeverity,
         FreLogger,
+        type FrePostAction,
+        isActionBox,
+        isRegExp,
+        isSelectBox,
         type SelectOption,
-        TextBox, isRegExp, triggerTypeToString, isActionBox, type FrePostAction, FreCaretPosition, FreCaret
+        TextBox,
+        triggerTypeToString
     } from "@freon4dsl/core"
 
-    import { runInAction } from "mobx"
-    import { afterUpdate, onMount } from "svelte";
+    import {runInAction} from "mobx"
+    import {afterUpdate, onMount} from "svelte";
+    import {isReferenceBox} from "@freon4dsl/core";
 
     const LOGGER = new FreLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
 
@@ -35,7 +39,7 @@
     let id: string;                             // an id for the html element
     id = !!box ? componentId(box) : 'textdropdown-with-unknown-box';
     let isEditing: boolean = false;             // becomes true when the text field gets focus
-    let dropdownShown: boolean = false;         // when true the dropdwon element is shown
+    let dropdownShown: boolean = false;         // when true the dropdown element is shown
     let text: string = "";		                // the text in the text field
     let selectedId: string;		                // the id of the selected option in the dropdown
     let filteredOptions: SelectOption[];        // the list of filtered options that are shown in the dropdown
@@ -501,6 +505,16 @@
         endEditing();
     };
 
+    const showContextMenu = (event) => {
+        if (isReferenceBox(box)) {
+            $contextMenu.items = box.contextMenuOptions()
+            $contextMenu.show(event, 0); // this function sets $contextMenuVisible to true
+            event.stopPropagation();
+        } else {
+            editor.setUserMessage("contextMenu", FreErrorSeverity.Info);
+        }
+    };
+
     refresh();
 
 </script>
@@ -534,6 +548,9 @@
                 bind:selectedId={selectedId}
                 bind:options={filteredOptions}
                 on:freItemSelected={itemSelected}/>
+    {/if}
+    {#if isReferenceBox(box)}
+        <button on:click={(event) => showContextMenu(event)}>...</button>
     {/if}
 </span>
 
