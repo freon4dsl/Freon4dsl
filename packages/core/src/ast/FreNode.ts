@@ -1,5 +1,6 @@
 import { FreOwnerDescriptor } from "./FreOwnerDescriptor";
 import { FreParseLocation } from "../reader";
+import { FreModel } from "./FreModel";
 
 /**
  * You can either directly implement these interfaces, or use `Module Augmentation`,
@@ -23,6 +24,10 @@ export interface FreNode {
     freIsBinaryExpression(): boolean;
 
     copy(): FreNode;
+
+    getModel(): FreModel;
+
+    getPath(): string[];
 
     match(toBeMatched: Partial<FreNode>): boolean;
 
