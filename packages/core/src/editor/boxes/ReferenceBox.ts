@@ -36,26 +36,32 @@ export class ReferenceBox extends SelectBox {
 
     isReferredInSameUnit(): boolean {
         this.findReference();
-        // find the unit where the reference resides
-        let myUnit: FreModelUnit = this.findUnit(this._myReference?.freOwnerDescriptor().owner);
+        if (!!this._myReference) {
+            // find the unit where the reference resides
+            let myUnit: FreModelUnit = this.findUnit(this._myReference?.freOwnerDescriptor().owner);
 
-        let node: FreNode = this._myReference.referred;
-        // find the unit where node resides
-        let nodeUnit: FreModelUnit;
-        if (!!node) {
-            nodeUnit = this.findUnit(node);
-        }
-        if (!!myUnit && !!nodeUnit && myUnit === nodeUnit) {
-            return true;
+            let node: FreNode = this._myReference.referred;
+            // find the unit where node resides
+            let nodeUnit: FreModelUnit;
+            if (!!node) {
+                nodeUnit = this.findUnit(node);
+            }
+            if (!!myUnit && !!nodeUnit && myUnit === nodeUnit) {
+                return true;
+            }
         }
         return false;
     }
 
     findUnit(xx: FreNode): FreModelUnit {
-        if (!!xx && xx.freIsUnit()) {
-            return xx as FreModelUnit;
+        if (!!xx) {
+            if (xx.freIsUnit()) {
+                return xx as FreModelUnit;
+            } else {
+                return this.findUnit(xx.freOwnerDescriptor()?.owner)
+            }
         } else {
-            return this.findUnit(xx.freOwnerDescriptor().owner)
+            return undefined;
         }
     }
 }

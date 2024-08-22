@@ -161,7 +161,9 @@ export class ConceptUtils {
                 let result: string[] = [];
                 if (!!this.name) {
                     result.push(this.name);
-                    result.push(...this.freOwner().getPath());
+                    if (!!this.freOwner()) {
+                        result.push(...this.freOwner().getPath());
+                    }
                 }
                 return result;
             }`
