@@ -216,7 +216,6 @@ export class ItemBoxHelper {
             }
         } else {
             // single element
-            console.log("Doing single element for: "+ property.type.name)
             let innerResult: string = this._myPartPropHelper.generateReferenceProjection(
                 language,
                 property,

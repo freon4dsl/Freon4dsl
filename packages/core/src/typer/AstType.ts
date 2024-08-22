@@ -1,4 +1,4 @@
-import { FreOwnerDescriptor, FreNode, FreNamedNode } from "../ast";
+import {FreOwnerDescriptor, FreNode, FreNamedNode, FreModel} from "../ast";
 import { FreWriter } from "../writer";
 import { FreType } from "./FreType";
 import { FreParseLocation } from "../reader";
@@ -57,6 +57,13 @@ class NamedNode implements FreNamedNode {
     copy(): NamedNode {
         return this;
     }
+    getModel(): FreModel {
+        return undefined;
+    }
+    getPath(): string[] {
+        return [this.name]; // todo see if this can be added to
+    }
+
     match(toBeMatched: Partial<NamedNode>): boolean {
         return toBeMatched.name === this.name;
     }

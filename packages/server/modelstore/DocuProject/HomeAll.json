@@ -138,19 +138,19 @@
                "targets": [
                   {
                      "resolveInfo": "fire",
-                     "reference": "ID-23"
+                     "reference": "ID-96"
                   },
                   {
                      "resolveInfo": "breakingAndEntering",
-                     "reference": "ID-20"
+                     "reference": "ID-93"
                   },
                   {
                      "resolveInfo": "flooding",
-                     "reference": "ID-26"
+                     "reference": "ID-99"
                   },
                   {
                      "resolveInfo": "stormAndLightning",
-                     "reference": "ID-29"
+                     "reference": "ID-102"
                   }
                ]
             },
@@ -163,7 +163,7 @@
                "targets": [
                   {
                      "resolveInfo": "home1",
-                     "reference": "ID-19"
+                     "reference": "ID-92"
                   }
                ]
             }
@@ -315,7 +315,7 @@
                "targets": [
                   {
                      "resolveInfo": "fire",
-                     "reference": "ID-23"
+                     "reference": "ID-96"
                   }
                ]
             }
@@ -403,7 +403,7 @@
                "targets": [
                   {
                      "resolveInfo": "breakingAndEntering",
-                     "reference": "ID-20"
+                     "reference": "ID-93"
                   }
                ]
             }

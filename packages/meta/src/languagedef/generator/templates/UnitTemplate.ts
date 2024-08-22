@@ -52,6 +52,7 @@ export class UnitTemplate {
                 ${ConceptUtils.makeBasicMethods(false, metaType, false, true, false, false)}
                 ${ConceptUtils.makeCopyMethod(unitDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, unitDescription, myName, coreImports)}
+                ${ConceptUtils.makeModelAndPathMethods(unitDescription, coreImports)}
             }
             `;
 

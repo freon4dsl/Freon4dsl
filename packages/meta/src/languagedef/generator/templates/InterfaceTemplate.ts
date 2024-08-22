@@ -46,6 +46,7 @@ export class InterfaceTemplate {
                     .join("\n")}
 
                 copy(): ${myName};
+                getPath(): string[];
             }`;
     }
 

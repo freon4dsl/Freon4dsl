@@ -1,5 +1,5 @@
 import { makeObservable, observable } from "mobx";
-import { FreOwnerDescriptor, FreNode } from "..";
+import {FreOwnerDescriptor, FreNode, FreModel} from "..";
 
 /**
  *  An element using the decorators should implement this interface.
@@ -42,6 +42,16 @@ export class MobxModelElementImpl implements DecoratedModelElement {
                   propertyIndex: this.$$propertyIndex,
               }
             : null;
+    }
+    /**
+     * A convenience method that returns the model object.
+     */
+    getModel(): FreModel {
+        if (!!this.freOwner() && this.freOwner().freIsModel()) {
+            return this.freOwner() as FreModel;
+        } else {
+            return this.freOwner().getModel();
+        }
     }
 }
 

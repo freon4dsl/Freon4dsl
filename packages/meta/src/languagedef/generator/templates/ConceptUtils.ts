@@ -124,11 +124,60 @@ export class ConceptUtils {
                     }
                 }
                 return result;
-            }`;
+            }
+
+
+        `;
                 }
             }
         }
         return result;
+    }
+
+    public static makeModelAndPathMethods(concept: FreMetaClassifier, coreImports: string[]): string {
+
+        ListUtil.addIfNotPresent(coreImports, Names.FreModel);
+        let modelMethod: string = `
+        /**
+             * A convenience method that returns the model object.
+             */
+            getModel(): ${Names.FreModel} {
+                if (!!this.freOwner() && this.freOwner().freIsModel()) {
+                    return this.freOwner() as ${Names.FreModel};
+                } else {
+                    return this.freOwner().getModel();
+                }
+            }`;
+
+        let pathMethod: string;
+        if (GenerationUtil.hasNameProperty(concept)) {
+            pathMethod = `
+            /**
+             * A convenience method that returns the names of all named parents of this node,
+             * as well as the name of this node.
+             * Note that the order is child name first, then parent name, next grandparent name. 
+             */
+            getPath(): string[] {
+                let result: string[] = [];
+                if (!!this.name) {
+                    result.push(this.name);
+                    result.push(...this.freOwner().getPath());
+                }
+                return result;
+            }`
+        } else {
+            pathMethod = ` 
+            /**
+             * A convenience method that returns the names of all named parents of this node,
+             * as well as the name of this node.
+             * Note that the order is child name first, then parent name, next grandparent name. 
+             */   
+            getPath(): string[] {
+                return [];
+            }`
+        }
+
+        return modelMethod + pathMethod;
     }
 
     public static makeConstructor(hasSuper: boolean, allProps: FreMetaProperty[], importsFromCore: string[]): string {

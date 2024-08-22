@@ -1,6 +1,7 @@
-import { FreNode } from "..";
-import { FreParseLocation } from "../reader";
-import { MobxModelElementImpl } from "./decorators";
+import {MobxModelElementImpl} from "./decorators";
+import {FreNode} from "./FreNode";
+import {FreParseLocation} from "../reader";
+
 
 /**
  * An abstract implementation of a decorated FreNode.
@@ -39,6 +40,10 @@ export abstract class FreNodeBaseImpl extends MobxModelElementImpl implements Fr
     }
 
     freLanguageConcept(): string {
+        throw new Error("Method should be implemented by subclasses of FreElementBaseImpl.");
+    }
+
+    getPath(): string[] {
         throw new Error("Method should be implemented by subclasses of FreElementBaseImpl.");
     }
 }

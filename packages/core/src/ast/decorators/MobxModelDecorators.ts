@@ -25,7 +25,7 @@ const LOGGER: FreLogger = new FreLogger("MobxDecorators").mute();
  */
 
 export const MODEL_PREFIX = "_FRE_";
-export const MODEL_PREFIX_LENGTH = MODEL_PREFIX.length;
+// export const MODEL_PREFIX_LENGTH = MODEL_PREFIX.length;
 export const MODEL_CONTAINER = MODEL_PREFIX + "Container";
 export const MODEL_NAME = MODEL_PREFIX + "Name";
 
