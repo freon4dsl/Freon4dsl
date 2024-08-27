@@ -5,7 +5,6 @@ export function rename(node: FreNamedNode, newName: string): boolean {
     runInAction(() => {
         if (!!node.name) {
             node.getModel().findAllReferencesTo(node).forEach(ref => {
-
                 ref.name = newName;
             })
             node.name = newName;

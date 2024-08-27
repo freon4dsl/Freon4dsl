@@ -10,7 +10,7 @@ entities
 
         Attribute attr4 { declaredType entity1 }
 
-        Attribute attr5 { declaredType ent24 }
+        Attribute attrA { declaredType ent24 }
     methods
         Method meth1 {
             body ParameterRef { parameter par2 }
@@ -18,6 +18,16 @@ entities
                 Parameter par1 { declaredType entity1 }
                 Parameter par2 { declaredType entityNoAttrs }
             declaredType entityNoAttrs
+        }
+        Method meth2 {
+            body AttributeRef {
+                attribute attrA
+            }
+            parameters
+                Parameter par1 {
+                    declaredType entityNoAttrs
+                }
+            declaredType entityNoMeths
         }
     baseEntity entityNoAttrs
     }
@@ -50,6 +60,16 @@ entities
 
         Attribute attrB { declaredType entityNoMeths }
     methods
+            Method meth24 {
+                body AttributeRef {
+                         attribute attrA
+                     }
+                parameters
+                    Parameter par1 {
+                        declaredType entityNoAttrs
+                    }
+                declaredType entityNoMeths
+            }
     }
 
 methods

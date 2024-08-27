@@ -1,0 +1,11 @@
+Rules someRules {
+	 rules
+	 CheckingRule firstRule {
+     	 description "some text"
+     	 check 
+             AttributeRef {
+                 attribute attrA
+             }
+     	 }
+	 forEntity entityNoMeths
+	 }

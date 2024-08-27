@@ -1,0 +1,17 @@
+scoper RulesScope for language Refactoring
+
+isnamespace { Rules, Method, Entity }
+
+Rules {
+    namespace_addition = self.forEntity;
+}
+
+Entity {
+    namespace_addition = self.baseEntity;
+}
+
+AppliedFeature {
+	scope = typeof( container );
+}
+
+

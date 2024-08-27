@@ -1,199 +1,1307 @@
 {
-   "$typename": "Rules",
-   "name": "rules1",
-   "rules": [
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
       {
-         "$typename": "CheckingRule",
-         "name": "V1",
-         "description": "This validation will fail",
-         "check": {
-            "$typename": "EqualsExpression",
-            "left": {
-               "$typename": "PlusExpression",
-               "left": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 10,
-                  "appliedfeature": null
+         "id": "ID-18",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Rules"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rules-name"
                },
-               "right": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 12,
-                  "appliedfeature": null
+               "value": "rules1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rules-rules"
                },
-               "appliedfeature": null
-            },
-            "right": {
-               "$typename": "NumberLiteralExpression",
-               "value": 32,
-               "appliedfeature": null
-            },
-            "appliedfeature": null
-         }
+               "children": [
+                  "ID-19",
+                  "ID-25",
+                  "ID-34",
+                  "ID-38",
+                  "ID-75"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rules-forEntity"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Person",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": null
       },
       {
-         "$typename": "IfThenElseRule",
-         "name": "R1",
-         "description": "Conditional rule folllows:",
-         "IfStatement": {
-            "$typename": "IfStatement",
-            "Condition": {
-               "$typename": "EqualsExpression",
-               "left": {
-                  "$typename": "DirectAttributeRef",
-                  "appliedfeature": null,
-                  "attribute": "insures"
+         "id": "ID-19",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-CheckingRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-name"
                },
-               "right": {
-                  "$typename": "DirectAttributeRef",
-                  "appliedfeature": null,
-                  "attribute": "livesIn"
-               },
-               "appliedfeature": null
+               "value": "V1"
             },
-            "ThenStatements": [
-               {
-                  "$typename": "SetValue",
-                  "value": {
-                     "$typename": "NumberLiteralExpression",
-                     "value": 10,
-                     "appliedfeature": null
-                  },
-                  "attribute": "length"
-               }
-            ],
-            "ElseStatements": [
-               {
-                  "$typename": "SetValue",
-                  "value": {
-                     "$typename": "NumberLiteralExpression",
-                     "value": 20,
-                     "appliedfeature": null
-                  },
-                  "attribute": "length"
-               }
-            ]
-         }
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-description"
+               },
+               "value": "This validation will fail"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-CheckingRule-check"
+               },
+               "children": [
+                  "ID-20"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
       },
       {
-         "$typename": "CheckingRule",
-         "name": "Insure",
-         "description": "Can only insure home",
-         "check": {
-            "$typename": "EqualsExpression",
-            "left": {
-               "$typename": "DirectAttributeRef",
-               "appliedfeature": null,
-               "attribute": "insures"
+         "id": "ID-20",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-21"
+               ]
             },
-            "right": {
-               "$typename": "DirectAttributeRef",
-               "appliedfeature": null,
-               "attribute": "livesIn"
-            },
-            "appliedfeature": null
-         }
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-24"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-19"
       },
       {
-         "$typename": "CheckingRule",
-         "name": "Yes",
-         "description": "sum",
-         "check": {
-            "$typename": "EqualsExpression",
-            "left": {
-               "$typename": "SumExpression",
-               "variable": {
-                  "$typename": "LoopVariable",
-                  "name": "index"
+         "id": "ID-21",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-PlusExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
                },
-               "from": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 1,
-                  "appliedfeature": null
-               },
-               "to": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 12,
-                  "appliedfeature": null
-               },
-               "body": {
-                  "$typename": "MultiplyExpression",
-                  "left": {
-                     "$typename": "LoopVariableRef",
-                     "appliedfeature": null,
-                     "variable": "index"
-                  },
-                  "right": {
-                     "$typename": "NumberLiteralExpression",
-                     "value": 22,
-                     "appliedfeature": null
-                  },
-                  "appliedfeature": null
-               },
-               "appliedfeature": null
+               "children": [
+                  "ID-22"
+               ]
             },
-            "right": {
-               "$typename": "NumberLiteralExpression",
-               "value": 167,
-               "appliedfeature": null
-            },
-            "appliedfeature": null
-         }
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-23"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-20"
       },
       {
-         "$typename": "CheckingRule",
-         "name": "Or",
-         "description": "or",
-         "check": {
-            "$typename": "OrExpression",
-            "left": {
-               "$typename": "OrExpression",
-               "left": {
-                  "$typename": "GreaterThenExpression",
-                  "left": {
-                     "$typename": "NumberLiteralExpression",
-                     "value": 12,
-                     "appliedfeature": null
-                  },
-                  "right": {
-                     "$typename": "DirectAttributeRef",
-                     "appliedfeature": null,
-                     "attribute": "age"
-                  },
-                  "appliedfeature": null
+         "id": "ID-22",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
                },
-               "right": {
-                  "$typename": "EqualsExpression",
-                  "left": {
-                     "$typename": "DirectAttributeRef",
-                     "appliedfeature": null,
-                     "attribute": "name"
-                  },
-                  "right": {
-                     "$typename": "StringLiteralExpression",
-                     "value": "Jos",
-                     "appliedfeature": null
-                  },
-                  "appliedfeature": null
+               "value": "10"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-21"
+      },
+      {
+         "id": "ID-23",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
                },
-               "appliedfeature": null
+               "value": "12"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-21"
+      },
+      {
+         "id": "ID-24",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "32"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-20"
+      },
+      {
+         "id": "ID-25",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-IfThenElseRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-name"
+               },
+               "value": "R1"
             },
-            "right": {
-               "$typename": "LessThenExpression",
-               "left": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 10,
-                  "appliedfeature": null
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-description"
                },
-               "right": {
-                  "$typename": "NumberLiteralExpression",
-                  "value": 90,
-                  "appliedfeature": null
+               "value": "Conditional rule folllows:"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-IfThenElseRule-IfStatement"
                },
-               "appliedfeature": null
+               "children": [
+                  "ID-26"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-26",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-IfStatement"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-IfStatement-Condition"
+               },
+               "children": [
+                  "ID-27"
+               ]
             },
-            "appliedfeature": null
-         }
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-IfStatement-ThenStatements"
+               },
+               "children": [
+                  "ID-30"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-IfStatement-ElseStatements"
+               },
+               "children": [
+                  "ID-32"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-25"
+      },
+      {
+         "id": "ID-27",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-28"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-29"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-26"
+      },
+      {
+         "id": "ID-28",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-DirectAttributeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-DirectAttributeRef-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "insures",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-27"
+      },
+      {
+         "id": "ID-29",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-DirectAttributeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-DirectAttributeRef-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "livesIn",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-27"
+      },
+      {
+         "id": "ID-30",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-SetValue"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-SetValue-value"
+               },
+               "children": [
+                  "ID-31"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-SetValue-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "length",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-26"
+      },
+      {
+         "id": "ID-31",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "10"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-32",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-SetValue"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-SetValue-value"
+               },
+               "children": [
+                  "ID-33"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-SetValue-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "length",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-26"
+      },
+      {
+         "id": "ID-33",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "20"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-32"
+      },
+      {
+         "id": "ID-34",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-CheckingRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-name"
+               },
+               "value": "Insure"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-description"
+               },
+               "value": "Can only insure home"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-CheckingRule-check"
+               },
+               "children": [
+                  "ID-35"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-35",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-36"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-37"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-34"
+      },
+      {
+         "id": "ID-36",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-DirectAttributeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-DirectAttributeRef-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "insures",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-35"
+      },
+      {
+         "id": "ID-37",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-DirectAttributeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-DirectAttributeRef-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "livesIn",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-35"
+      },
+      {
+         "id": "ID-38",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-CheckingRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-name"
+               },
+               "value": "Yes"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-description"
+               },
+               "value": "sum"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-CheckingRule-check"
+               },
+               "children": [
+                  "ID-39"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-39",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-40"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-74"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-38"
+      },
+      {
+         "id": "ID-40",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-SumExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-SumExpression-variable"
+               },
+               "children": [
+                  "ID-41"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-SumExpression-from"
+               },
+               "children": [
+                  "ID-42"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-SumExpression-to"
+               },
+               "children": [
+                  "ID-43"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-SumExpression-body"
+               },
+               "children": [
+                  "ID-44"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-39"
+      },
+      {
+         "id": "ID-41",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-LoopVariable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-LoopVariable-name"
+               },
+               "value": "index"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-40"
+      },
+      {
+         "id": "ID-42",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-40"
+      },
+      {
+         "id": "ID-43",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "12"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-40"
+      },
+      {
+         "id": "ID-44",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-MultiplyExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-47"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-73"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-40"
+      },
+      {
+         "id": "ID-47",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-LoopVariableRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-LoopVariableRef-variable"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "index",
+                     "reference": "ID-41"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-44"
+      },
+      {
+         "id": "ID-73",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "22"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-44"
+      },
+      {
+         "id": "ID-74",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "167"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-39"
+      },
+      {
+         "id": "ID-75",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-CheckingRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-name"
+               },
+               "value": "Or"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Rule-description"
+               },
+               "value": "or"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-CheckingRule-check"
+               },
+               "children": [
+                  "ID-76"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-76",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-OrExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-77"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-84"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-75"
+      },
+      {
+         "id": "ID-77",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-OrExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-78"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-81"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-76"
+      },
+      {
+         "id": "ID-78",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-GreaterThenExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-79"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-80"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-77"
+      },
+      {
+         "id": "ID-79",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "12"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-78"
+      },
+      {
+         "id": "ID-80",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-DirectAttributeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-DirectAttributeRef-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "age",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-78"
+      },
+      {
+         "id": "ID-81",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-82"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-83"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-77"
+      },
+      {
+         "id": "ID-82",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-DirectAttributeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-DirectAttributeRef-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "name",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-81"
+      },
+      {
+         "id": "ID-83",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-StringLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-StringLiteralExpression-value"
+               },
+               "value": "Jos"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-81"
+      },
+      {
+         "id": "ID-84",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-LessThenExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-85"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-86"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-76"
+      },
+      {
+         "id": "ID-85",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "10"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-84"
+      },
+      {
+         "id": "ID-86",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "90"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-84"
       }
-   ],
-   "forEntity": "Person"
+   ]
 }

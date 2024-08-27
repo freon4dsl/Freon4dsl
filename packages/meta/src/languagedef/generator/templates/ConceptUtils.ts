@@ -206,12 +206,12 @@ export class ConceptUtils {
         allRefs.forEach(prop => {
             if (prop.isList) {
                 result += `this.${prop.name}.forEach(item => {
-                    if (item.name === node.name) { // extend to equal path
+                    if (item.referred === node) { 
                         result.push(item);
                     }
                 });`
             } else {
-                result += `if (this.${prop.name}?.name === node.name) { // extend to equal path
+                result += `if (this.${prop.name}?.referred === node) { 
                     result.push(this.${prop.name});
                 }`
             }
