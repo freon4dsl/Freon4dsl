@@ -1,6 +1,8 @@
 import { FreOwnerDescriptor } from "./FreOwnerDescriptor";
 import { FreParseLocation } from "../reader";
 import { FreModel } from "./FreModel";
+import {FreNamedNode} from "./FreNamedNode";
+import {FreNodeReference} from "./FreNodeReference";
 
 /**
  * You can either directly implement these interfaces, or use `Module Augmentation`,
@@ -28,6 +30,8 @@ export interface FreNode {
     getModel(): FreModel;
 
     getPath(): string[];
+
+    findAllReferencesTo(node: FreNamedNode): FreNodeReference<FreNamedNode>[];
 
     match(toBeMatched: Partial<FreNode>): boolean;
 

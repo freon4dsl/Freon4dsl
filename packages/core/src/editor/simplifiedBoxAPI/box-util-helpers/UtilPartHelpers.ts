@@ -1,4 +1,4 @@
-import { Box, BoxFactory, ExternalPartListBox, HorizontalListBox, VerticalListBox } from "../../boxes";
+import {Box, BoxFactory, ElementBox, ExternalPartListBox, HorizontalListBox, VerticalListBox} from "../../boxes";
 import { FreNode } from "../../../ast";
 import { RoleProvider } from "../RoleProvider";
 import { FreLanguage } from "../../../language";
@@ -86,9 +86,10 @@ export class UtilPartHelpers {
         propertyName: string,
         boxProviderCache: FreProjectionHandler,
         listJoin?: FreListInfo,
-    ) {
+    ): Box[] {
+        const result: Box[] = [];
         const numberOfItems: number = property.length;
-        return property.map((listElem, index) => {
+        property.forEach((listElem, index) => {
             const myProvider: FreBoxProvider = boxProviderCache.getBoxProvider(listElem);
             const roleName: string = RoleProvider.property(
                 element.freLanguageConcept(),
@@ -96,31 +97,14 @@ export class UtilPartHelpers {
                 "list-item",
                 index,
             );
+            let innerBox: ElementBox = myProvider.box;
             if (listJoin !== null && listJoin !== undefined) {
-                if (listJoin.type === UtilCommon.separatorName) {
-                    if (index < numberOfItems - 1) {
-                        return BoxFactory.horizontalLayout(element, roleName, propertyName, [
-                            myProvider.box,
-                            BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                        ]);
-                    } else {
-                        return myProvider.box;
-                    }
-                } else if (listJoin.type === UtilCommon.terminatorName) {
-                    return BoxFactory.horizontalLayout(element, roleName, propertyName, [
-                        myProvider.box,
-                        BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                    ]);
-                } else if (listJoin.type === UtilCommon.initiatorName) {
-                    return BoxFactory.horizontalLayout(element, roleName, propertyName, [
-                        BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                        myProvider.box,
-                    ]);
-                }
+                result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, element, roleName, propertyName, innerBox));
             } else {
-                return myProvider.box;
+                result.push(innerBox);
             }
             return null;
         });
+        return result;
     }
 }

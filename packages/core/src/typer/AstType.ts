@@ -1,4 +1,4 @@
-import {FreOwnerDescriptor, FreNode, FreNamedNode, FreModel} from "../ast";
+import {FreOwnerDescriptor, FreNode, FreNamedNode, FreModel, FreNodeReference} from "../ast";
 import { FreWriter } from "../writer";
 import { FreType } from "./FreType";
 import { FreParseLocation } from "../reader";
@@ -66,6 +66,10 @@ class NamedNode implements FreNamedNode {
 
     match(toBeMatched: Partial<NamedNode>): boolean {
         return toBeMatched.name === this.name;
+    }
+    //@ts-ignore
+    findAllReferencesTo(node: FreNamedNode): FreNodeReference<FreNamedNode>[] {
+        return [];
     }
 
     parseLocation: FreParseLocation;

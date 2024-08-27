@@ -42,6 +42,7 @@ export class ConceptUtils {
             return "";
         }
     }
+
     private static initializer(freProp: FreMetaPrimitiveProperty): string {
         let initializer = "";
         const myType: FreMetaClassifier = freProp.type;
@@ -135,18 +136,20 @@ export class ConceptUtils {
     }
 
     public static makeModelAndPathMethods(concept: FreMetaClassifier, coreImports: string[]): string {
-
         ListUtil.addIfNotPresent(coreImports, Names.FreModel);
         let modelMethod: string = `
         /**
              * A convenience method that returns the model object.
              */
             getModel(): ${Names.FreModel} {
-                if (!!this.freOwner() && this.freOwner().freIsModel()) {
-                    return this.freOwner() as ${Names.FreModel};
+                if (this.freIsModel()) {
+                    return this as unknown as ${Names.FreModel};
                 } else {
-                    return this.freOwner().getModel();
+                    if (!!this.freOwner()) {
+                        return this.freOwner().getModel();
+                    }
                 }
+                return undefined;
             }`;
 
         let pathMethod: string;
@@ -178,8 +181,49 @@ export class ConceptUtils {
                 return [];
             }`
         }
-
         return modelMethod + pathMethod;
+    }
+
+    public static makeAllReferencesMethod(allParts: FreMetaConceptProperty[], allRefs: FreMetaConceptProperty[], importsFromCore: string[]): string {
+        let result: string = '';
+        allParts.forEach(prop => {
+            if (!prop.isPrimitive) {
+                if (prop.isList) {
+                    result += `this.${prop.name}.forEach(item => {
+                        result.push(...item.findAllReferencesTo(node));
+                    });`
+                } else {
+                    if (prop.isOptional) {
+                        result += `if (!!this.${prop.name}) {
+                            result.push(...this.${prop.name}.findAllReferencesTo(node));
+                        }`
+                    } else {
+                        result += `result.push(...this.${prop.name}.findAllReferencesTo(node));`
+                    }
+                }
+            }
+        });
+        allRefs.forEach(prop => {
+            if (prop.isList) {
+                result += `this.${prop.name}.forEach(item => {
+                    if (item.name === node.name) { // extend to equal path
+                        result.push(item);
+                    }
+                });`
+            } else {
+                result += `if (this.${prop.name}?.name === node.name) { // extend to equal path
+                    result.push(this.${prop.name});
+                }`
+            }
+        });
+        ListUtil.addIfNotPresent(importsFromCore, Names.FreNamedNode);
+        ListUtil.addIfNotPresent(importsFromCore, Names.FreNodeReference);
+        return `
+        findAllReferencesTo(node: FreNamedNode): FreNodeReference<FreNamedNode>[] {
+            const result: FreNodeReference<FreNamedNode>[] = [];
+            ${result}
+            return result;
+        }`
     }
 
     public static makeConstructor(hasSuper: boolean, allProps: FreMetaProperty[], importsFromCore: string[]): string {

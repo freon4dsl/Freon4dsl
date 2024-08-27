@@ -1,6 +1,8 @@
 import {MobxModelElementImpl} from "./decorators";
 import {FreNode} from "./FreNode";
 import {FreParseLocation} from "../reader";
+import {FreNamedNode} from "./FreNamedNode";
+import {FreNodeReference} from "./FreNodeReference";
 
 
 /**
@@ -44,6 +46,11 @@ export abstract class FreNodeBaseImpl extends MobxModelElementImpl implements Fr
     }
 
     getPath(): string[] {
+        throw new Error("Method should be implemented by subclasses of FreElementBaseImpl.");
+    }
+
+    //@ts-ignore
+    findAllReferencesTo(node: FreNamedNode): FreNodeReference<FreNamedNode>[] {
         throw new Error("Method should be implemented by subclasses of FreElementBaseImpl.");
     }
 }

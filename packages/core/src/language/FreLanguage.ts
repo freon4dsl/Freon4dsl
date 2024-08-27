@@ -440,9 +440,9 @@ export class FreLanguage {
         return [];
     }
 
-    referenceCreator: (name: string, type: string) => any;
+    referenceCreator: (name: string | string[], type: string) => any;
 
-    addReferenceCreator(creator: (name: string, type: string) => any) {
+    addReferenceCreator(creator: (name: string | string[], type: string) => any) {
         this.referenceCreator = creator;
     }
 

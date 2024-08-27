@@ -266,13 +266,10 @@ export class BoxUtil {
     public static referenceBox(
         node: FreNode,
         propertyName: string,
-        setFunc: (selected: string) => void,
+        setFunc: (selected: string | string[]) => void,
         scoper: FreScoper,
         index?: number,
     ): ReferenceBox {
-        if (propertyName === "theme") {
-            throw new Error("What is the stacktrace here?")
-        }
         return UtilRefHelpers.referenceBox(node, propertyName, setFunc, scoper, index);
     }
 

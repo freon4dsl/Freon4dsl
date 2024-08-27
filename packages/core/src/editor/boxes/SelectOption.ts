@@ -12,6 +12,10 @@ export interface SelectOption {
      * The text as shown to the user, usually also the text that the user needs to type.
      */
     label: string;
+    /**
+     * If this option handles a reference to a model node, the path of that node within the model.
+     */
+    path?: string[];
 
     action?: FreAction;
     /**

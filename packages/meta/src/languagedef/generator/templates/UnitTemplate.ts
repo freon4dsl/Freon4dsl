@@ -53,6 +53,7 @@ export class UnitTemplate {
                 ${ConceptUtils.makeCopyMethod(unitDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, unitDescription, myName, coreImports)}
                 ${ConceptUtils.makeModelAndPathMethods(unitDescription, coreImports)}
+                ${ConceptUtils.makeAllReferencesMethod(unitDescription.allParts(), unitDescription.allReferences(), coreImports)}
             }
             `;
 

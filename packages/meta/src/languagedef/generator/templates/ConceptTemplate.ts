@@ -75,6 +75,7 @@ export class ConceptTemplate {
                 ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, coreImports)}
                 ${ConceptUtils.makeConvenienceMethods(concept.references())}
                 ${ConceptUtils.makeModelAndPathMethods(concept, coreImports)}
+                ${ConceptUtils.makeAllReferencesMethod(concept.implementedParts(), concept.implementedReferences(), coreImports)}
             }
         `;
 
@@ -217,6 +218,7 @@ export class ConceptTemplate {
                 ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}
                 ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, coreImports)}
                 ${ConceptUtils.makeModelAndPathMethods(concept, coreImports)}
+                ${ConceptUtils.makeAllReferencesMethod([], [], coreImports)}
             }
 
             // Because of mobx we need to generate the initialisations outside of the class,

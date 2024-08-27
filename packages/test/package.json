@@ -30,6 +30,7 @@
     "noparser1": "bash ../../scripts/freon-test-dev.sh validate-it -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
     "noparser": "bash ../../scripts/freon-test-dev.sh all -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
     "prim-gen": "bash ../../scripts/freon-test-dev.sh all -d src/testPrimPropsGeneration/defs -o src/testPrimPropsGeneration",
+    "refactoring": "bash ../../scripts/freon-test-dev.sh all -d src/testRefactoring/defs -o src/testRefactoring",
     "storage": "bash ../../scripts/freon-test-dev.sh all -d src/storage/defs -o src/storage",
     "testproject": "bash ../../scripts/freon-test-dev.sh all -d src/testproject/defs -o src/testproject",
     "typer-test8": "bash ../../scripts/freon-test-dev.sh all -d src/typer-test8/defs -o src/typer-test8",

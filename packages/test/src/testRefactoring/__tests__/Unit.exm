@@ -1,0 +1,69 @@
+Unit LargeUnit {
+entities
+    Entity entity1 {
+    attributes
+        Attribute attr1 { declaredType entity1 }
+
+        Attribute attr2 { declaredType entityNoAttrs }
+
+        Attribute attr3 { declaredType entityNoMeths }
+
+        Attribute attr4 { declaredType entity1 }
+
+        Attribute attr5 { declaredType ent24 }
+    methods
+        Method meth1 {
+            body ParameterRef { parameter par2 }
+            parameters
+                Parameter par1 { declaredType entity1 }
+                Parameter par2 { declaredType entityNoAttrs }
+            declaredType entityNoAttrs
+        }
+    baseEntity entityNoAttrs
+    }
+
+    Entity entityNoAttrs { 
+    attributes
+
+    methods
+        Method meth21 {
+            body ParameterRef { parameter parA }
+            parameters
+                Parameter parA { declaredType entityNoAttrs }
+                Parameter parB { declaredType entityNoMeths }
+            declaredType ent24
+        }
+    }
+
+    Entity entityNoMeths { 
+    attributes
+        Attribute attrA { declaredType ent24 }
+
+        Attribute attrB { declaredType entityNoAttrs }
+    methods
+    }
+
+
+    Entity ent24 {
+    attributes
+        Attribute attrA { declaredType entityNoMeths }
+
+        Attribute attrB { declaredType entityNoMeths }
+    methods
+    }
+
+methods
+    Method AA {
+        body ParameterRef { parameter par1 }
+        parameters
+            Parameter par1 { declaredType entityNoAttrs }
+        declaredType entityNoMeths
+    }
+    Method meth21 {
+        body ParameterRef { parameter parA }
+        parameters
+            Parameter parA { declaredType entityNoAttrs }
+            Parameter parB { declaredType entityNoMeths }
+            declaredType ent24
+    }
+}

@@ -23,7 +23,7 @@ export class UtilRefHelpers {
     public static referenceBox(
         node: FreNode,
         propertyName: string,
-        setFunc: (selected: string) => void,
+        setFunc: (selected: string | string[]) => void,
         scoper: FreScoper,
         index?: number,
     ): ReferenceBox {
@@ -49,12 +49,20 @@ export class UtilRefHelpers {
             roleName,
             `<${propertyName}>`,
             () => {
+                // return scoper
+                //     .getVisibleNames(node, propType)
+                //     .filter((name) => !!name && name !== "")
+                //     .map((name) => ({
+                //         id: name,
+                //         label: name,
+                //     }));
                 return scoper
-                    .getVisibleNames(node, propType)
-                    .filter((name) => !!name && name !== "")
-                    .map((name) => ({
-                        id: name,
-                        label: name,
+                    .getVisibleElements(node, propType)
+                    .filter((element) => !!element.name && element.name !== "")
+                    .map((element) => ({
+                        id: element.name,
+                        label: element.name,
+                        path: element.getPath().reverse()
                     }));
             },
             () => {
@@ -71,7 +79,8 @@ export class UtilRefHelpers {
                 if (!!option) {
                     // console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
                     runInAction(() => {
-                        setFunc(option.label);
+                        setFunc(option.path);
+                        console.log("setting to path: " + option.path)
                     });
                 } else {
                     runInAction(() => {
@@ -241,8 +250,12 @@ export class UtilRefHelpers {
                 "list-item",
                 index,
             );
-            const setFunc = (selected: string) => {
-                listElem.name = selected;
+            const setFunc = (selected: string | string[]) => {
+                if (Array.isArray(selected)){
+                    listElem.pathname = selected;
+                } else {
+                    listElem.name = selected;
+                }
                 return BehaviorExecutionResult.EXECUTED;
             };
             let innerBox: Box;
@@ -252,37 +265,12 @@ export class UtilRefHelpers {
                 innerBox = BoxUtil.referenceBox(element, propertyName, setFunc, scoper, index);
             }
             if (listJoin !== null && listJoin !== undefined) {
-                if (listJoin.type === UtilCommon.separatorName) {
-                    if (index < numberOfItems - 1) {
-                        result.push(
-                            BoxFactory.horizontalList(element, roleName, propertyName, [
-                                innerBox,
-                                BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                            ]),
-                        );
-                    } else {
-                        result.push(innerBox);
-                    }
-                } else if (listJoin.type === UtilCommon.terminatorName) {
-                    result.push(
-                        BoxFactory.horizontalList(element, roleName, propertyName, [
-                            innerBox,
-                            BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                        ]),
-                    );
-                } else if (listJoin.type === UtilCommon.initiatorName) {
-                    // TODO test this code
-                    result.push(
-                        BoxFactory.horizontalList(element, roleName, propertyName, [
-                            BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                            innerBox,
-                        ]),
-                    );
-                }
+                result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, element, roleName, propertyName, innerBox));
             } else {
                 result.push(innerBox);
             }
         });
         return result;
     }
+
 }

@@ -1,0 +1,157 @@
+language Refactoring
+
+model Refactoring {
+    name: identifier;
+    units: Unit[];
+    rules: Rules[];
+}
+
+modelunit Unit {
+    name: identifier;
+    entities: Entity[];
+    methods: Method[];
+    file-extension = "exm";
+}
+
+concept Entity {
+    name: identifier;
+    attributes: Attribute[];
+    methods: Method[];
+    reference baseEntity?: Entity;
+}
+
+concept Method {
+    name: identifier;
+    reference declaredType: Entity;
+    body: Expression;
+    parameters: Parameter[];
+}
+
+concept Attribute {
+    name: identifier;
+    reference declaredType: Entity;
+}
+
+concept Parameter  {
+    name: identifier;
+    reference declaredType: Entity;
+}
+
+////////////////////////////////////
+//       Expressions
+////////////////////////////////////
+
+expression AttributeRef base Expression {
+    reference attribute: Attribute;
+}
+
+expression ParameterRef base Expression {
+    reference parameter: Parameter;
+}
+
+expression MethodCallExpression base Expression {
+    reference methodDefinition: Method;
+    args: Expression[];
+}
+
+abstract expression Expression {
+    appliedfeature?: AppliedFeature;
+}
+
+expression StringLiteralExpression base Expression {
+    value: string;
+}
+
+abstract concept AppliedFeature {
+    appliedfeature?: AppliedFeature;
+}
+
+expression IfExpression base Expression {
+    condition: Expression;
+    whenTrue: Expression;
+    whenFalse: Expression;
+}
+
+////////////////////////////////////
+//    Binary Expressions
+////////////////////////////////////
+abstract binary expression BinaryExpression base Expression {
+    left: Expression;
+    right: Expression;
+}
+
+binary expression PlusExpression base BinaryExpression {
+    priority = 4;
+}
+
+////////////////////////////////////////////////////
+// Rules
+////////////////////////////////////////////////////
+modelunit Rules {
+    name: identifier;
+    reference forEntity: Entity;
+    rules: Rule[];
+    file-extension = "rules";
+}
+
+abstract concept Rule {
+    name: identifier;
+    description: string;
+}
+
+abstract concept Statement {
+}
+
+concept CheckingRule base Rule {
+    check: Expression;
+}
+
+concept IfThenElseRule base Rule {
+    IfStatement: IfStatement;
+}
+
+concept IfStatement base Statement {
+    Condition: Expression;
+    ThenStatements: Statement[];
+    ElseStatements: Statement[];
+}
+
+concept SetValue base Statement {
+    reference attribute: Attribute;
+    value: Expression;
+}
+
+expression HasNoValue base Expression {
+    reference attribute: Attribute;
+}
+
+expression HasAnyValue base Expression {
+    reference attribute: Attribute;
+}
+
+//////////////////// Literal expressions ////////////////////////
+
+expression DateLiteral base Expression {
+    day: string;
+    month: Month;
+    year: string;
+}
+
+limited Month {
+    name: identifier;
+    nr: number;
+
+    January   = { name: "January",   nr: 1 }
+    February  = { name: "February",  nr:  2 }
+    March     = { name: "March",     nr:  3 }
+    April     = { name: "April",     nr:  4 }
+    May       = { name: "May",       nr:  5 }
+    June      = { name: "June",      nr:  6 }
+    July      = { name: "July",      nr:  7 }
+    August    = { name: "August",    nr:  8 }
+    September = { name: "September", nr:  9 }
+    October   = { name: "October",   nr:  10 }
+    November  = { name: "November",  nr:  11 }
+    December  = { name: "December",  nr:  12 }
+}
+

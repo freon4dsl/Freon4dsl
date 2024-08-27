@@ -40,6 +40,7 @@ export class ModelTemplate {
                 ${ConceptUtils.makeCopyMethod(modelDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, modelDescription, myName, coreImports)}
                 ${ConceptUtils.makeModelAndPathMethods(modelDescription, coreImports)}
+                ${ConceptUtils.makeAllReferencesMethod(modelDescription.parts(), modelDescription.references(), coreImports)}
 
                 /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.
