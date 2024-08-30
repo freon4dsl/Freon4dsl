@@ -225,6 +225,7 @@
 		if (event.altKey || event.ctrlKey) {  // No shift, because that is handled as normal text
 			// first check if this event has a command defined for it
 			executeCustomKeyboardShortCut(event, 0, box, editor); // this method will stop the event from propagating, but does not prevent default!!
+			// todo if the event is a custom keyboard shortcut, the rest should not execute!!
 			// next handle any key that should have a special effect within the text
 			if (event.ctrlKey && !event.altKey && event.key === 'z') { // ctrl-z
 				// UNDO handled by browser
@@ -391,19 +392,19 @@
 							event.preventDefault();
 							event.stopPropagation();
 							break;
-						case CharAllowed.GOTO_NEXT: // try in previous or next box
+						case CharAllowed.GOTO_NEXT: // try in next box
 							LOGGER.log("KeyPressAction.GOTO_NEXT FROM IS " + from);
 							editor.selectNextLeaf();
 							LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
 							if (isActionBox(editor.selectedBox)) {
 								LOGGER.log("     is an action box");
 								editor.selectedBox.triggerKeyPressEvent(event.key);
-								editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
+								editor.selectedBox.setCaret(FreCaret.RIGHT_MOST) // todo why not LEFT_MOST?
 							}
 							event.preventDefault();
 							event.stopPropagation();
 							break;
-						case CharAllowed.GOTO_PREVIOUS: // try in previous or next box
+						case CharAllowed.GOTO_PREVIOUS: // try in previous box
 							LOGGER.log("KeyPressAction.GOTO_PREVIOUS FROM IS " + from);
 							editor.selectPreviousLeaf();
 							LOGGER.log("    PREVIOUS LEAF IS " + editor.selectedBox.role);
