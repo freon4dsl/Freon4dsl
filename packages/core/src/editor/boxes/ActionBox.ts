@@ -169,6 +169,8 @@ export class ActionBox extends AbstractChoiceBox {
 
     /**
      * Get all referable elements for the property
+     * @param parentNode
+     * @param property
      * @param result  The array where the resulting actions should be added to
      * @param editor  The editor context
      * @private
@@ -200,7 +202,6 @@ export class ActionBox extends AbstractChoiceBox {
                         action: FreCustomAction.create({
                             activeInBoxRoles: [],
                             // @ts-ignore
-                            // todo check whether param 'ed' can be removed
                             action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
                                 parentNode[property.name].push(FreNodeReference.create(name, null));
                                 return null;

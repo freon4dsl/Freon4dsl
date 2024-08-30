@@ -8,7 +8,7 @@ import { FreCommand } from "./FreCommand";
 
 /**
  * Command to create a part (child) of a FreElement.
- * The FreElement of the box on which this command is executed shpould have a property with `propertyName` of
+ * The FreElement of the box on which this command is executed should have a property with `propertyName` of
  * type `conceptName`.
  */
 export class FreCreateSiblingCommand extends FreCommand {
@@ -29,10 +29,8 @@ export class FreCreateSiblingCommand extends FreCommand {
      * @param box
      * @param trigger
      * @param editor
-     * @param index If the property is a list, the index in the list at which the created element will be stored.
      */
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
-        // todo make index optional and set the default value to -1;
         console.log(
             "CreateSiblingCommand: trigger [" +
                 triggerTypeToString(trigger) +

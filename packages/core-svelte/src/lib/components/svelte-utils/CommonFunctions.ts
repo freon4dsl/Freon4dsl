@@ -1,5 +1,5 @@
 import type { Box } from "@freon4dsl/core";
-import { PI_NULL_COMMAND, FreCommand, FreEditor, FreEditorUtil, type FrePostAction, toFreKey } from "@freon4dsl/core";
+import { FRE_NULL_COMMAND, FreCommand, FreEditor, FreEditorUtil, type FrePostAction, toFreKey } from "@freon4dsl/core";
 import { runInAction } from "mobx";
 import { viewport } from "./EditorViewportStore.js";
 import { get } from "svelte/store";
@@ -32,7 +32,7 @@ export function classMap(classObj: { [k: string]: any }): string {
 
 export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: FreEditor) {
     const cmd: FreCommand = FreEditorUtil.findKeyboardShortcutCommand(toFreKey(event), box, editor);
-    if (cmd !== PI_NULL_COMMAND) {
+    if (cmd !== FRE_NULL_COMMAND) {
         let postAction: FrePostAction;
         runInAction(() => {
             const action = event["action"];

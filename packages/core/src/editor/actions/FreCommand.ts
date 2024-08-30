@@ -10,7 +10,7 @@ import { FreLogger } from "../../logging";
 const LOGGER = new FreLogger("FreCommand"); // .mute();
 
 /**
- * Abstract supercass for all commands in Freon.
+ * Abstract superclass for all commands in Freon.
  * FreCommand is the only place where actual changes (coming from the editor) to the model should be made.
  *
  * The `undo()` function is not always implemented yet.
@@ -54,7 +54,7 @@ class FreNullCommand extends FreCommand {
     }
 }
 
-export const PI_NULL_COMMAND: FreCommand = new FreNullCommand();
+export const FRE_NULL_COMMAND: FreCommand = new FreNullCommand();
 
 export type FreBinaryExpressionBuilder = (box: Box, text: string, editor: FreEditor) => FreBinaryExpression;
 
@@ -83,7 +83,7 @@ export class FreCreateBinaryExpressionCommand extends FreCommand {
                     selected.element.freLanguageConcept() +
                     " ID " +
                     selected.element.freId() +
-                    " rolr " +
+                    " role " +
                     childProperty,
             );
             editor.selectElement(selected.element, childProperty);
