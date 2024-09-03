@@ -40,6 +40,7 @@ Most boxes will only have a common set of menu items/options, like copy, paste, 
 should be added.
 3. Maybe some common functionality can be removed from `TextComponent`.
 4. Drag and drop should be implemented using the common functionality from the editor. (There should be a drag handle!)
+5. In context menu on hover over an item, the description should be visible.
 
 ### Core:
 1. `Action` should be redefined. It should merge the attributes of `MenuItem` and `Action`. There should be some 'category' attribute 
