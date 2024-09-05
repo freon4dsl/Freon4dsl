@@ -7,6 +7,8 @@
 
 - [ ] The generated Walker goes through all children explicitly, this does become rather long (874 lines for Example). 
 
+### Ideas
+
   - Giving each FreNode a function `getChildren()` would make this much shorter.
   - Each function in the walker becomes smaller.
   - Might rewrite walker (or have a second one) to execute the same function for every node would make it even really small.
