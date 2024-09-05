@@ -66,26 +66,26 @@ describe("Test renaming of node", () => {
         expect(errors.length).toBe(0);
         // all is well
         // find a node and do a rename of that node
-        let toBeRenamed: Entity = unit1!.entities.find(ent => ent.name === 'ent24');
+        let toBeRenamed: Entity = unit1!.entities.find(ent => ent.name === 'entityNoMeths');
         expect(toBeRenamed).not.toBeNull();
         expect(toBeRenamed).not.toBeUndefined();
         // get all references to this node
-        let refsToEnt24: FreNodeReference<FreNamedNode>[] = model.findAllReferencesTo(toBeRenamed);
+        let refsToEntNoMeths: FreNodeReference<FreNamedNode>[] = model.findAllReferencesTo(toBeRenamed);
 
         rename(toBeRenamed, 'Peter');
         // unparse unit2 to a string and write it to File
-        fileHandler.stringToFile("./unparsedUnit2.exm", unparser.writeToString(unit2));
+        fileHandler.stringToFile("./unparsedRules.rules", unparser.writeToString(unit2));
         // the entity should not have the old name
         let shouldBeNull: Entity = null;
         model.units.forEach(unt => {
-            let found = unt.entities.find(ent => ent.name === 'ent24');
+            let found = unt.entities.find(ent => ent.name === 'entityNoMeths');
             if (!!found) {
                 shouldBeNull = found;
             }
         });
         expect(shouldBeNull).toBeNull();
         // all references should have been replaced with the new name
-        refsToEnt24.forEach(ref => {
+        refsToEntNoMeths.forEach(ref => {
             expect(ref.name).toBe('Peter');
         })
     });
@@ -104,6 +104,8 @@ describe("Test renaming of node", () => {
             console.log(e.message)
         }
         expect(unit1).not.toBeNull();
+        expect(unit2).not.toBeNull();
+        expect(unit1).not.toBeUndefined();
         expect(unit2).not.toBeUndefined();
         const errors: FreError[] = validator.validate(model,true);
         console.log(errors.map(err => err.message));
@@ -141,7 +143,7 @@ describe("Test renaming of node", () => {
         });
         expect(unRenamed.attribute?.name).toBe('attrA');
         // the reference in unit2 should also be replaced
-        unit2.rules.forEach(r => {
+        unit2!.rules.forEach(r => {
             if (r instanceof CheckingRule && r.check instanceof AttributeRef) {
                 console.log(r.check.attribute.name)
                 expect(r.check.attribute.name).toBe("John")
