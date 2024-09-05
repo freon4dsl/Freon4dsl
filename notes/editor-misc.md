@@ -1,6 +1,7 @@
 ### Editor Misc
 
-- [ ] Filter current parent from dropdown in reference.
+- [x] Filter current parent from dropdown in reference.
+  - Fixed by custom scoper
 - [ ] DEletion does niot work very well at all, need to revisit how this is done.
 - [ ] When using reference shortcuts (like Event V1, S1 in Mike’s example) do not show concept “EventReference”
 - [x] Howto add your own editor components to Freon
@@ -15,7 +16,6 @@
 
 - [ ] add custom tables
 
-- [ ] Question: use 'all: unset;' in the css for the component that will (eventually) show a custom box/component
 - [ ] maybe add the option to include a vertical line left to an indent component
 - [ ] tinymce editor => have a look at MultiLineComponent2.svelte in M&G's stuff
 
@@ -29,7 +29,7 @@
 - [ ] Enable special projection per element (selectable by the user)
 
 - [ ] Collections as tabbed box (so the elements are stacked upon each other)
-    - [ ]  Covered by external components
+    - [x]  Covered by external components
 - [ ] Non-textual Box/Component e.g. bodypart picture with click to point to pain areas.
 
 - [ ] How to show for a single word boolean that something can be added/changed

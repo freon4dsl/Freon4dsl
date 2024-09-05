@@ -5,7 +5,9 @@
   - [x] Fixed for concepts
   - [ ] but need to be done for subinterfaces as well. (A)
 
-- The generated Walker goes through all children explicitly, this does become rather long (874 lines for Example). 
+- [ ] The generated Walker goes through all children explicitly, this does become rather long (874 lines for Example). 
+
+### Ideas
 
   - Giving each FreNode a function `getChildren()` would make this much shorter.
   - Each function in the walker becomes smaller.
@@ -28,7 +30,7 @@
 
   - Isnamespace also use switch insgtead of list of ifs?
 
-- Scoper should also work when multiple complete untis are in memory
+- [ ] Scoper should also work when multiple complete units are in memory
   - Right now other units _must_ have the interface loaded.
   - Solutions:
     - Take into account that a full unit might be searched for names
