@@ -1,5 +1,5 @@
 import { CommandLineAction, CommandLineStringParameter, ICommandLineActionOptions } from "@rushstack/ts-command-line";
-import {GenerationStatus, FileUtil, LOG2USER} from "../utils/index.js";
+import { GenerationStatus, FileUtil, LOG2USER } from "../utils/index.js";
 
 /**
  * Generic generator action. The only option defined here is the -o flag for the output folder.
@@ -8,7 +8,7 @@ import {GenerationStatus, FileUtil, LOG2USER} from "../utils/index.js";
 // TODO subclasses do not call super.onDefineParameters(): is comment wrong or something else?
 export abstract class FreonGenerateAction extends CommandLineAction {
     private outputFolderArg: CommandLineStringParameter;
-    protected outputFolder: string = '';
+    protected outputFolder: string = "";
 
     protected defFolder: CommandLineStringParameter;
     protected languageFiles: string[] = [];
@@ -16,7 +16,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
     protected validFiles: string[] = [];
     protected scopeFiles: string[] = [];
     protected typerFiles: string[] = [];
-    protected idFile: string = '';
+    protected idFile: string = "";
 
     protected constructor(options: ICommandLineActionOptions) {
         super(options);
@@ -25,7 +25,7 @@ export abstract class FreonGenerateAction extends CommandLineAction {
             defaultValue: "defs",
             parameterLongName: "--definitions",
             parameterShortName: "-d",
-            description: "Folder where your language definition files can be found"
+            description: "Folder where your language definition files can be found",
         });
         this.outputFolderArg = this.defineStringParameter({
             argumentName: "OUTPUT_DIR",
@@ -33,18 +33,18 @@ export abstract class FreonGenerateAction extends CommandLineAction {
             parameterLongName: "--output",
             parameterShortName: "-o",
             description: "The directory where the files are generated",
-            required: false
+            required: false,
         });
     }
 
     protected onExecute(): Promise<void> {
         const self = this;
-        self.outputFolder = this.outputFolderArg.value ? this.outputFolderArg.value : '';
+        self.outputFolder = this.outputFolderArg.value ? this.outputFolderArg.value : "";
         // @ts-ignore
         // error TS6133: 'resolve' is declared but its value is never read.
         // error TS6133: 'reject' is declared but its value is never read.
         // The parameters are expected by the constructor of Promise.
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             self.generate();
         });
     }

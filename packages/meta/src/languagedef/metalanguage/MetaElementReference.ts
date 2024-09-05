@@ -6,7 +6,6 @@ import { ParseLocation, FreMetaDefinitionElement, FreParseLocation } from "../..
  * Reference can be set with either a referred object, or with a unitName.
  */
 export class MetaElementReference<T extends FreMetaLangElement> {
-
     public static create<T extends FreMetaLangElement>(name: string | T, typeName: string): MetaElementReference<T> {
         const result: MetaElementReference<T> = new MetaElementReference<T>(undefined, typeName);
         if (typeof name === "string") {
@@ -29,7 +28,7 @@ export class MetaElementReference<T extends FreMetaLangElement> {
     public aglParseLocation: FreParseLocation;
 
     // Need for the scoper to work
-    private typeName: string = '';
+    private typeName: string = "";
     private scoper = FreMetaEnvironment.metascoper;
 
     private constructor(referredElement: T | undefined, typeName: string) {
@@ -54,11 +53,7 @@ export class MetaElementReference<T extends FreMetaLangElement> {
         if (!!this._FRE_referred) {
             return this._FRE_referred;
         } else {
-            this._FRE_referred = this.scoper.getFromVisibleElements(
-                this.owner,
-                this._FRE_name,
-                this.typeName
-            ) as T;
+            this._FRE_referred = this.scoper.getFromVisibleElements(this.owner, this._FRE_name, this.typeName) as T;
         }
         return this._FRE_referred;
     }

@@ -1,0 +1,124 @@
+editor StartEditor
+
+Text {
+[
+This is
+        literal text
+      that is projected in the
+                editor
+  for every concept of type Text.
+]
+}
+Text2 {
+            [
+            This is
+                    literal text
+                  that is projected in the
+
+                            editor
+              for every concept of type Text.
+            ]
+}
+Text3 {
+    [
+                 This is
+               literal text
+          that is projected in the
+                  editor
+       for every concept of type Text.
+            ]
+}
+Text4 {
+    [
+                 This is
+               literal text
+          that is projected in the
+                  editor
+       for every concept of type Text.
+    ]
+}
+NumberLiteralExpression {
+        [${self.value}]
+}
+StringLiteralExpression {
+        [
+        '${self.value}'
+        ]
+}
+AttributeWithLimitedType {
+// in this projection the indentation is taken into account
+// the property 'name' will be indented by 4 spaces
+        [
+    ${self.name} : ${self.declaredType}
+]
+}
+IfExpression {
+    [
+    if ${self.condition} then
+        ${self.whenTrue}
+    else
+        ${self.whenFalse}
+    endif
+    ]
+    trigger = "if"
+}
+PlusExpression {
+    symbol = "+"
+}
+
+MultiplyExpression {
+    symbol = "*"
+}
+
+DivideExpression {
+    symbol = "/"
+}
+LessThenExpression {
+    symbol = "<"
+}
+OrExpression {
+    symbol = "or"
+}
+
+Entity {
+    [
+        ${self.isCompany [COMPANY]}
+        entity ${self.name} [? base ${self.baseEntity}] {
+            ${self.attributes vertical }      // this list is projected as a vertical list without separator or terminator
+            ${self.functions  table columns } // this list is projected as a column based table
+        }
+    ]
+}
+/*
+FunctionCallExpression {
+        [
+        ${self.name} (  )
+        ]
+    trigger "function2"
+}
+*/
+FunctionCallExpression {
+        [
+        CALL ${self.functionDefinition} (  )
+        ]
+    trigger = "function"
+}
+EntityModelUnit {
+        [
+        model ${self.name} {
+        entities:
+            ${self.entities
+                vertical
+                terminator [ && ]
+            }
+        model wide functions:
+            ${self.functions horizontal separator [; ] }
+        }
+        ]
+}
+EntityFunction {
+    table [
+        Name         | parameters                | type                 | body
+        ${self.name} | ${self.parameters table } | ${self.declaredType} | ${self.expression}
+    ]
+}

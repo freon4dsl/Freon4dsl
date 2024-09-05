@@ -1,0 +1,23 @@
+editor default
+
+global {
+    external {
+        booleanWrapper,
+        fragmentWrapper,
+        numberWrapper,
+        partWrapper,
+        partListWrapper,
+        refWrapper,
+        refListWrapper,
+        stringWrapper,
+
+        booleanReplacer,
+        numberReplacer,
+        partReplacer,
+        partListReplacer,
+        refReplacer,
+        refListReplacer,
+        simple,
+        stringReplacer
+    }
+}

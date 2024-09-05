@@ -1,8 +1,7 @@
 import { BB } from "../language/gen";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 describe("Checking generation of primitive properties", () => {
-
     test("initial values in def files should be preserved", () => {
         const concept1: BB = new BB();
         expect(concept1.BBprop1).toBe("prop1Value");

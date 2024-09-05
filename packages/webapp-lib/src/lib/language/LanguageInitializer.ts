@@ -3,20 +3,19 @@ import {
     languageName,
     projectionNames,
     projectionsShown,
-    unitTypes
+    unitTypes,
 } from "../components/stores/LanguageStore.js";
-import {FreProjectionHandler, FreLanguage, FreUndoManager, type FreEnvironment} from "@freon4dsl/core";
+import { FreProjectionHandler, FreLanguage, FreUndoManager, type FreEnvironment } from "@freon4dsl/core";
 import { setUserMessage } from "../components/stores/UserMessageStore.js";
-import {WebappConfigurator} from "$lib/WebappConfigurator.js";
+import { WebappConfigurator } from "$lib/WebappConfigurator.js";
 
 export class LanguageInitializer {
-
     /**
      * Fills the Webapp Stores with initial values that describe the language,
      * and make sure that the editor is able to get user message to the webapp.
      */
     static initialize(): void {
-        let langEnv : FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
+        let langEnv: FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
         // the language name
         languageName.set(langEnv.languageName);
 
@@ -34,7 +33,7 @@ export class LanguageInitializer {
 
         // the names of the projections / views
         const proj = langEnv.editor.projection;
-        let nameList: string[] = proj instanceof FreProjectionHandler ? proj.projectionNames() : ['default'];
+        let nameList: string[] = proj instanceof FreProjectionHandler ? proj.projectionNames() : ["default"];
         projectionNames.set(nameList);
         projectionsShown.set(nameList); // initialy, all projections are shown
 

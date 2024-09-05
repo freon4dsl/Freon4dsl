@@ -1,5 +1,5 @@
-import {type FreEnvironment, type IServerCommunication} from "@freon4dsl/core";
-import {LanguageInitializer} from "./language/LanguageInitializer.js";
+import { type FreEnvironment, type IServerCommunication } from "@freon4dsl/core";
+import { LanguageInitializer } from "./language/LanguageInitializer.js";
 
 export class WebappConfigurator {
     private static instance: WebappConfigurator = null;

@@ -30,6 +30,7 @@ concept BaseProduct {
     yieldsProfit: boolean;
     range: number;
     nrOfUse: number;
+    date: string;
     theme: InsuranceTheme;          // the 'kind' of insurance
     parts: InsurancePart[];         // all parts of this product
 }

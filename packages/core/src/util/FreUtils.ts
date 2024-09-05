@@ -15,7 +15,7 @@ import { SimpleIdProvider } from "./SimpleIdProvider";
 
 export class FreUtils {
     // Default generators initialized below the class declaration
-    static nodeIdProvider: IdProvider= new SimpleIdProvider("ID-");
+    static nodeIdProvider: IdProvider = new SimpleIdProvider("ID-");
     static boxIdProvider: IdProvider;
 
     /**
@@ -44,7 +44,7 @@ export class FreUtils {
         if (!(target && source)) {
             return;
         }
-        Object.keys(source).forEach(key => {
+        Object.keys(source).forEach((key) => {
             if (source.hasOwnProperty(key)) {
                 (target as any)[key] = (source as any)[key];
             }
@@ -60,7 +60,7 @@ export class FreUtils {
     static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
         runInAction(() => {
             // TODO Check typeof
-            if (typeof freOwnerDescriptor !== 'undefined') {
+            if (typeof freOwnerDescriptor !== "undefined") {
                 if (freOwnerDescriptor.propertyIndex === undefined) {
                     freOwnerDescriptor.owner[freOwnerDescriptor.propertyName] = exp;
                 } else {
@@ -73,8 +73,14 @@ export class FreUtils {
     }
 
     static replaceExpression(oldExpression: FreExpressionNode, newExpression: FreExpressionNode, editor: FreEditor) {
-        FreUtils.CHECK(isFreExpression(oldExpression), "replaceExpression: old element should be a FreExpressionNode, but it isn't");
-        FreUtils.CHECK(isFreExpression(newExpression), "replaceExpression: new element should be a FreExpressionNode, but it isn't");
+        FreUtils.CHECK(
+            isFreExpression(oldExpression),
+            "replaceExpression: old element should be a FreExpressionNode, but it isn't",
+        );
+        FreUtils.CHECK(
+            isFreExpression(newExpression),
+            "replaceExpression: new element should be a FreExpressionNode, but it isn't",
+        );
         runInAction(() => {
             FreUtils.setContainer(newExpression, oldExpression.freOwnerDescriptor(), editor);
         });

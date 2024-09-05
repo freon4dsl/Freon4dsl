@@ -30,5 +30,4 @@ export abstract class RightHandSideEntry {
     toString(depth: number): string {
         return `RightHandSideEntry.toString() should be implemented by its subclasses.`;
     }
-
 }

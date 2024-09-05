@@ -18,7 +18,8 @@ export class LimitedRule extends GrammarRule {
 
     toGrammar(): string {
         let result: string;
-        if (!!this.myMap && this.myMap.size > 0) { // found a limited concept with a special projection
+        if (!!this.myMap && this.myMap.size > 0) {
+            // found a limited concept with a special projection
             // note that this rule cannot be prefixed with 'leaf'; this would cause the syntax analysis to fail
             result = `${this.ruleName} = `;
             let first = true;
@@ -32,14 +33,16 @@ export class LimitedRule extends GrammarRule {
                 }
                 result += `\'${value}\'`;
             }
-        } else { // make a 'normal' reference rule
+        } else {
+            // make a 'normal' reference rule
             result = `${this.ruleName} = identifier`;
         }
         return result + " ;";
     }
 
     toMethod(): string {
-        if (!!this.myMap && this.myMap.size > 0) { // found a limited concept with a special projection
+        if (!!this.myMap && this.myMap.size > 0) {
+            // found a limited concept with a special projection
             let ifStat: string = "";
             for (const [key, value] of this.myMap) {
                 ifStat += `if (choice === '${value}') {
@@ -56,7 +59,8 @@ export class LimitedRule extends GrammarRule {
                     const choice = branch.nonSkipMatchedText;
                     ${ifStat}
                 }`;
-        } else { // make a 'normal' reference method
+        } else {
+            // make a 'normal' reference method
             return `
                     ${ParserGenUtil.makeComment(this.toGrammar())}
                     public transform${this.ruleName}(branch: SPPTBranch): string {

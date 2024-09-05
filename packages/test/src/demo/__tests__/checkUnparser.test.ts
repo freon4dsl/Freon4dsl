@@ -8,15 +8,14 @@ import {
     DemoAttribute,
     DemoFunction,
     DemoVariable,
-    DemoAttributeType
+    DemoAttributeType,
 } from "../language/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
 import { DemoValidator } from "../validator/gen";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 // import { FileHandler } from "../../utils/FileHandler";
-import { describe, it, test, expect, beforeEach } from "vitest"
-
+import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
@@ -72,7 +71,7 @@ describe("Testing Unparser", () => {
             const divideExpression = MakePlusExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
             result = unparser.writeToString(multiplyExpression, 0, false);
-            result = result.replace(new RegExp("\\s+","gm"), " ");
+            result = result.replace(new RegExp("\\s+", "gm"), " ");
             expect(result).toBe("1 + 2 * Person");
         });
 
@@ -81,9 +80,12 @@ describe("Testing Unparser", () => {
             const determine = DemoFunction.create({ name: "determine" });
             const AAP = DemoVariable.create({ name: "AAP" });
             determine.parameters.push(AAP);
-            AAP.declaredType = FreNodeReference.create<DemoEntity>(DemoEntity.create({name: "TEST1"}), "DemoEntity");
+            AAP.declaredType = FreNodeReference.create<DemoEntity>(DemoEntity.create({ name: "TEST1" }), "DemoEntity");
             determine.expression = MakePlusExp("Hello Demo", "Goodbye");
-            determine.declaredType = FreNodeReference.create<DemoEntity>(DemoEntity.create({name: "TEST2"}), "DemoEntity");
+            determine.declaredType = FreNodeReference.create<DemoEntity>(
+                DemoEntity.create({ name: "TEST2" }),
+                "DemoEntity",
+            );
             // determine(AAP: TEST1) : TEST2 = "Hello Demo" + "Goodbye" has been created
             // unparse using a short notation
             result = unparser.writeToString(determine, 0, true);
@@ -113,27 +115,29 @@ describe("Testing Unparser", () => {
 
             result = unparser.writeToString(personEnt, 0, false);
             // console.log(result)
-            expect(result).toBe("DemoEntity Person {\n" +
-                "    baseInterface_attr 0\n" +
-                "    simpleprop \"\"\n" +
-                "    x \"\"\n" +
-                "    attributes\n" +
-                "        age : Boolean\n" +
-                "        name : String\n" +
-                "    entAttributes\n" +
-                "\n" +
-                "    functions\n" +
-                "        DemoFunction first {\n" +
-                "            expression 5 + 24\n" +
-                "            parameters\n" +
-                "                Resultvar : someOtherEntity\n" +
-                "            declaredType Boolean\n" +
-                "        }\n" +
-                "    int_attrs\n" +
-                "\n" +
-                "    int_functions\n" +
-                "\n" +
-                "}");
+            expect(result).toBe(
+                "DemoEntity Person {\n" +
+                    "    baseInterface_attr 0\n" +
+                    '    simpleprop ""\n' +
+                    '    x ""\n' +
+                    "    attributes\n" +
+                    "        age : Boolean\n" +
+                    "        name : String\n" +
+                    "    entAttributes\n" +
+                    "\n" +
+                    "    functions\n" +
+                    "        DemoFunction first {\n" +
+                    "            expression 5 + 24\n" +
+                    "            parameters\n" +
+                    "                Resultvar : someOtherEntity\n" +
+                    "            declaredType Boolean\n" +
+                    "        }\n" +
+                    "    int_attrs\n" +
+                    "\n" +
+                    "    int_functions\n" +
+                    "\n" +
+                    "}",
+            );
         });
 
         test("complete example model with simple attribute types", () => {

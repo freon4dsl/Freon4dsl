@@ -5,8 +5,8 @@ import { DemoModelCreator } from "./DemoModelCreator";
 export class DemoUnitCreator {
     serializer: FreModelSerializer = new FreModelSerializer();
 
-    modelToJsonToModel() : Demo {
-        let result : Demo = Demo.create({name: "ReadFromJson"});
+    modelToJsonToModel(): Demo {
+        let result: Demo = Demo.create({ name: "ReadFromJson" });
         const model = new DemoModelCreator().createModelWithMultipleUnits();
         // convert first unit as complete unit
         let unit1Json = this.serializer.convertToJSON(model.models[0], false);

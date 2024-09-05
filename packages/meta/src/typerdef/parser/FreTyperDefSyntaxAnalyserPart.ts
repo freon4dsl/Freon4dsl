@@ -6,7 +6,9 @@ import {
     MetaElementReference,
     FreMetaClassifier,
     FreMetaLimitedConcept,
-    FreMetaInstance, FreMetaProperty, FreMetaConcept
+    FreMetaInstance,
+    FreMetaProperty,
+    FreMetaConcept,
 } from "../../languagedef/metalanguage/index.js";
 import {
     TyperDef,
@@ -22,7 +24,7 @@ import {
     FretExp,
     FretProperty,
     FretEqualsExp,
-    FretConformsExp
+    FretConformsExp,
 } from "../metalanguage/index.js";
 import { FreTyperSyntaxAnalyser } from "./FreTyperSyntaxAnalyser.js";
 import {
@@ -35,7 +37,7 @@ import {
     FretPropInstance,
     FretBinaryExp,
     FretConformanceRule,
-    FretEqualsRule
+    FretEqualsRule,
 } from "../metalanguage/index.js";
 import SPPTBranchFromInput = net.akehurst.language.agl.sppt.SPPTBranchFromInput;
 
@@ -76,7 +78,11 @@ export class FreTyperDefSyntaxAnalyserPart {
             const _optGroup = this.mainAnalyser.getGroup(children[1]);
             const _propItem = this.mainAnalyser.getChildren(_optGroup);
 
-            __types = this.mainAnalyser.transformSharedPackedParseTreeRefList<FreMetaClassifier>(_propItem[2], "FreClassifier", ","); // RHSRefListWithSeparator
+            __types = this.mainAnalyser.transformSharedPackedParseTreeRefList<FreMetaClassifier>(
+                _propItem[2],
+                "FreClassifier",
+                ",",
+            ); // RHSRefListWithSeparator
         } // RHSPartListEntry
         if (children[2].name !== "FretTypeConcept") {
             __typeConcepts = this.mainAnalyser.transformSharedPackedParseTreeList<FretTypeConcept>(children[2]);
@@ -95,7 +101,8 @@ export class FreTyperDefSyntaxAnalyserPart {
             __conceptsWithType = this.mainAnalyser.transformSharedPackedParseTreeRefList<FreMetaClassifier>(
                 _propItem[2],
                 "FreClassifier",
-                ","); // RHSRefListWithSeparator
+                ",",
+            ); // RHSRefListWithSeparator
         }
         if (!children[4].isEmptyMatch) {
             // RHSOptionalGroup
@@ -118,7 +125,7 @@ export class FreTyperDefSyntaxAnalyserPart {
             $conceptsWithType: __conceptsWithType,
             anyTypeSpec: __anyTypeSpec,
             classifierSpecs: __classifierSpecs,
-            aglParseLocation: this.mainAnalyser.location(branch)
+            aglParseLocation: this.mainAnalyser.location(branch),
         });
     }
 
@@ -148,12 +155,19 @@ export class FreTyperDefSyntaxAnalyserPart {
         __properties = [];
         const _myList = this.mainAnalyser.getChildren(children[4]);
         _myList.forEach((subNode: SPPTBranchFromInput) => {
-            const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(subNode.nonSkipChildren?.toArray()[0]);
+            const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(
+                subNode.nonSkipChildren?.toArray()[0],
+            );
             if (!!_transformed) {
                 __properties.push(_transformed);
             }
         });
-        return FretTypeConcept.create({ name: __name, base: __base, properties: __properties, aglParseLocation: this.mainAnalyser.location(branch) });
+        return FretTypeConcept.create({
+            name: __name,
+            base: __base,
+            properties: __properties,
+            aglParseLocation: this.mainAnalyser.location(branch),
+        });
     }
 
     /**
@@ -207,7 +221,11 @@ export class FreTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __source = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPartEntry
         __property = this.mainAnalyser.freNodeRef<FreMetaProperty>(children[2], "FreProperty"); // RHSRefEntry
-        return FretPropertyCallExp.create({ source: __source, $property: __property, aglParseLocation: this.mainAnalyser.location(branch) });
+        return FretPropertyCallExp.create({
+            source: __source,
+            $property: __property,
+            aglParseLocation: this.mainAnalyser.location(branch),
+        });
     }
 
     /**
@@ -263,7 +281,11 @@ export class FreTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __type = this.mainAnalyser.freNodeRef<FreMetaClassifier>(children[0], "FreClassifier"); // RHSRefEntry
         __propertyDefs = this.mainAnalyser.transformSharedPackedParseTreeList<FretPropInstance>(children[2], ","); // RHSPartListWithSeparator
-        return FretCreateExp.create({ $type: __type, propertyDefs: __propertyDefs, aglParseLocation: this.mainAnalyser.location(branch) });
+        return FretCreateExp.create({
+            $type: __type,
+            propertyDefs: __propertyDefs,
+            aglParseLocation: this.mainAnalyser.location(branch),
+        });
     }
 
     /**
@@ -279,7 +301,11 @@ export class FreTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __property = this.mainAnalyser.freNodeRef<FreMetaProperty>(children[0], "FreProperty"); // RHSRefEntry
         __value = this.mainAnalyser.transformSharedPackedParseTreeNode(children[2]); // RHSPartEntry
-        return FretPropInstance.create({ $property: __property, value: __value, aglParseLocation: this.mainAnalyser.location(branch) });
+        return FretPropInstance.create({
+            $property: __property,
+            value: __value,
+            aglParseLocation: this.mainAnalyser.location(branch),
+        });
     }
 
     /**
@@ -298,7 +324,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         return FretFunctionCallExp.create({
             calledFunction: __calledFunction,
             actualParameters: __arguments,
-            aglParseLocation: this.mainAnalyser.location(branch)
+            aglParseLocation: this.mainAnalyser.location(branch),
         });
     }
 
@@ -321,7 +347,11 @@ export class FreTyperDefSyntaxAnalyserPart {
             __myLimited = this.mainAnalyser.freNodeRef<FreMetaLimitedConcept>(_propItem[0], "FreLimitedConcept"); // RHSRefEntry
         }
         __myInstance = this.mainAnalyser.freNodeRef<FreMetaInstance>(children[1], "FreInstance"); // RHSRefEntry
-        return FretLimitedInstanceExp.create({ $myLimited: __myLimited, $myInstance: __myInstance, aglParseLocation: this.mainAnalyser.location(branch) });
+        return FretLimitedInstanceExp.create({
+            $myLimited: __myLimited,
+            $myInstance: __myInstance,
+            aglParseLocation: this.mainAnalyser.location(branch),
+        });
     }
 
     /**
@@ -342,12 +372,18 @@ export class FreTyperDefSyntaxAnalyserPart {
         __conditions = [];
         const _myList = this.mainAnalyser.getChildren(children[3]);
         _myList.forEach((subNode: SPPTBranchFromInput) => {
-            const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(subNode.nonSkipChildren?.toArray()[0]);
+            const _transformed = this.mainAnalyser.transformSharedPackedParseTreeNode(
+                subNode.nonSkipChildren?.toArray()[0],
+            );
             if (!!_transformed) {
                 __conditions.push(_transformed);
             }
         });
-        return FretWhereExp.create({ variable: __variable, conditions: __conditions, aglParseLocation: this.mainAnalyser.location(branch) });
+        return FretWhereExp.create({
+            variable: __variable,
+            conditions: __conditions,
+            aglParseLocation: this.mainAnalyser.location(branch),
+        });
     }
 
     /**
@@ -363,7 +399,11 @@ export class FreTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
         __type = this.mainAnalyser.freNodeRef<FreMetaClassifier>(children[2], "FreClassifier"); // RHSRefEntry
-        return FretVarDecl.create({ name: __name, $type: __type, aglParseLocation: this.mainAnalyser.location(branch) });
+        return FretVarDecl.create({
+            name: __name,
+            $type: __type,
+            aglParseLocation: this.mainAnalyser.location(branch),
+        });
     }
 
     /**
@@ -432,7 +472,11 @@ export class FreTyperDefSyntaxAnalyserPart {
                 __rules.push(this.mainAnalyser.transformSharedPackedParseTreeNode(child));
             }
         }
-        return FretClassifierSpec.create({ $myClassifier: __myClassifier, rules: __rules, aglParseLocation: this.mainAnalyser.location(branch) });
+        return FretClassifierSpec.create({
+            $myClassifier: __myClassifier,
+            rules: __rules,
+            aglParseLocation: this.mainAnalyser.location(branch),
+        });
     }
 
     /**
@@ -448,7 +492,11 @@ export class FreTyperDefSyntaxAnalyserPart {
         const children = this.mainAnalyser.getChildren(branch);
         __name = this.mainAnalyser.transformSharedPackedParseTreeNode(children[0]); // RHSPrimEntry
         __type = this.mainAnalyser.freNodeRef<FreMetaClassifier>(children[2], "FreClassifier"); // RHSRefEntry
-        return FretProperty.create({ name: __name, typeReference: __type, aglParseLocation: this.mainAnalyser.location(branch) });
+        return FretProperty.create({
+            name: __name,
+            typeReference: __type,
+            aglParseLocation: this.mainAnalyser.location(branch),
+        });
     }
 
     /**
@@ -507,11 +555,19 @@ export class FreTyperDefSyntaxAnalyserPart {
 
             switch (operator) {
                 case "equalsto": {
-                    combined = FretEqualsExp.create({ left: first, right: second, aglParseLocation: this.mainAnalyser.location(branch) });
+                    combined = FretEqualsExp.create({
+                        left: first,
+                        right: second,
+                        aglParseLocation: this.mainAnalyser.location(branch),
+                    });
                     break;
                 }
                 case "conformsto": {
-                    combined = FretConformsExp.create({ left: first, right: second, aglParseLocation: this.mainAnalyser.location(branch) });
+                    combined = FretConformsExp.create({
+                        left: first,
+                        right: second,
+                        aglParseLocation: this.mainAnalyser.location(branch),
+                    });
                     break;
                 }
                 default: {

@@ -73,9 +73,7 @@ export class FreUndoManager {
     }
 
     public cleanAllStacks() {
-        this.undoManagerPerUnit.forEach(val =>
-            val.cleanStacks()
-        );
+        this.undoManagerPerUnit.forEach((val) => val.cleanStacks());
         this.modelUndoManager.cleanStacks();
     }
 
@@ -122,18 +120,10 @@ export class FreUndoManager {
      * Constructor subscribes to all changes in the model.
      */
     private constructor() {
-        FreChangeManager.getInstance().changePrimCallbacks.push(
-            (delta: FreDelta) => this.addDelta(delta)
-        );
-        FreChangeManager.getInstance().changePartCallbacks.push(
-            (delta: FreDelta) => this.addDelta(delta)
-        );
-        FreChangeManager.getInstance().changeListElemCallbacks.push(
-            (delta: FreDelta) => this.addDelta(delta)
-        );
-        FreChangeManager.getInstance().changeListCallbacks.push(
-            (delta: FreDelta) => this.addDelta(delta)
-        );
+        FreChangeManager.getInstance().changePrimCallbacks.push((delta: FreDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().changePartCallbacks.push((delta: FreDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().changeListElemCallbacks.push((delta: FreDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().changeListCallbacks.push((delta: FreDelta) => this.addDelta(delta));
     }
 
     private addDelta(delta: FreDelta) {

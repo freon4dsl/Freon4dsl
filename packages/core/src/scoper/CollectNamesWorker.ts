@@ -23,16 +23,26 @@ export class CollectNamesWorker implements AstWorker {
     private isVisible(freNode: FreNode, property: FreLanguageProperty): boolean {
         // return true;
         const owningUnit = modelUnit(freNode);
-        const result = (owningUnit === null) || (this.origin === owningUnit) || property.isPublic;
+        const result = owningUnit === null || this.origin === owningUnit || property.isPublic;
         if (!result) {
-            LOGGER.log("isVisible fale for " + freNode.freLanguageConcept() + "." + freNode["name"] + " property " + property.name);
+            LOGGER.log(
+                "isVisible fale for " +
+                    freNode.freLanguageConcept() +
+                    "." +
+                    freNode["name"] +
+                    " property " +
+                    property.name,
+            );
         }
         return result;
     }
 
     execBefore(modelelement: FreNode): boolean {
         // find child properties
-        const partProperties: FreLanguageProperty[] = FreLanguage.getInstance().getPropertiesOfKind(modelelement.freLanguageConcept(), "part");
+        const partProperties: FreLanguageProperty[] = FreLanguage.getInstance().getPropertiesOfKind(
+            modelelement.freLanguageConcept(),
+            "part",
+        );
         // walk children
         for (const childProp of partProperties) {
             // get the concept of the child and see if that one has a 'name' property

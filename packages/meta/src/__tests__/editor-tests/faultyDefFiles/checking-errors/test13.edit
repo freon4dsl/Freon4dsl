@@ -1,0 +1,44 @@
+editor default
+
+global {
+    external { xx, yy, zz }
+}
+
+AAAAAA{[
+    text
+]
+fragment f3 [
+text [fragment f4]
+]
+fragment f4 [
+text [fragment f5]
+]
+fragment f5 [
+text [fragment f6]
+]
+fragment f6 [
+text [fragment f3]
+]
+}
+
+BB {[
+    something [fragment yy replace=zz]
+    something [fragment yy wrap=zz]
+]
+fragment xx [
+    something else
+    [fragment xx]
+]
+fragment yy [
+    more text
+]
+}
+
+CC {[
+ [external=aap par="20" set="ww"]
+ [fragment noot]
+ ${self.CCprop7 wrap=yz}
+ ${self.CCprop8 horizontal replace=zz}
+ ${self.CCprop5 [ JA | NEE ] replace=zz}
+ ${self.CCprop3 slider replace=zz}
+]}

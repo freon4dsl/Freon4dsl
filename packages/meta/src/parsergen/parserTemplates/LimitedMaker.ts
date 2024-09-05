@@ -20,7 +20,7 @@ export class LimitedMaker {
             // find the mapping of keywords to predef instances
             // first is the name of the instance, second is the keyword
             const myMap: Map<string, string> = new Map<string, string>();
-            limitedConcept.instances.forEach(item => {
+            limitedConcept.instances.forEach((item) => {
                 const myTypeScript: string = `${Names.classifier(limitedConcept)}.${Names.instance(item)}`;
                 // set the string to be used to the value of the name property, iff present
                 // else use the typescript name of the instance

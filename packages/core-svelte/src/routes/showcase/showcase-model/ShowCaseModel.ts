@@ -1,6 +1,5 @@
-
 import { observablepart, FreNodeBaseImpl, FreUtils, FreLanguage } from "@freon4dsl/core";
-import type {FreModel} from "@freon4dsl/core";
+import type { FreModel } from "@freon4dsl/core";
 import { ShowCaseUnit } from "./ShowCaseUnit.js";
 
 /**
@@ -40,7 +39,7 @@ export class ShowCaseModel extends FreNodeBaseImpl implements FreModel {
         } else {
             this.$id = FreUtils.ID(); // uuid.v4();
         }
-        this.name = '';
+        this.name = "";
         this.unit = null;
 
         // Both 'observablepart' and 'observablepartlist' change the get and set of the attribute
@@ -126,7 +125,9 @@ export class ShowCaseModel extends FreNodeBaseImpl implements FreModel {
      */
     findUnit(name: string, metatype?: string): ShowCaseUnit {
         let result: ShowCaseUnit = null;
-        if (this.unit.name === name) { result = this.unit; }
+        if (this.unit.name === name) {
+            result = this.unit;
+        }
         if (!!result && !!metatype) {
             if (FreLanguage.getInstance().metaConformsToType(result, metatype)) {
                 return result;

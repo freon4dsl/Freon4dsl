@@ -10,12 +10,12 @@ import {
     DemoAttribute,
     DemoFunction,
     DemoVariable,
-    Demo
+    Demo,
 } from "../language/gen";
 import { DemoValidator } from "../validator/gen";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
-import { describe, test, expect, beforeEach } from "vitest"
+import { describe, test, expect, beforeEach } from "vitest";
 
 describe("Testing Validator", () => {
     const model: Demo = new DemoModelCreator().createIncorrectModel();
@@ -41,7 +41,7 @@ describe("Testing Validator", () => {
         mult.right = makeLiteralExp("temp");
         errors = validator.validate(mult);
         expect(errors.length).toBe(1);
-        errors.forEach(e => {
+        errors.forEach((e) => {
             expect(e.reportedOn).toBe(mult.right);
             // console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
         });
@@ -57,7 +57,7 @@ describe("Testing Validator", () => {
         mult.right = makeLiteralExp("temp");
         errors = validator.validate(mult);
         expect(errors.length).toBe(1);
-        errors.forEach(e => {
+        errors.forEach((e) => {
             expect(e.reportedOn).toBe(mult.right);
             // console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
         });
@@ -97,7 +97,7 @@ describe("Testing Validator", () => {
         errors = validator.validate(multiplyExpression);
         expect(errors.length).toBe(1);
         // Type of 'DemoVariableRef' should be equal to (the type of) 'DemoAttributeType Integer' in unnamed
-        errors.forEach(e => {
+        errors.forEach((e) => {
             // console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
             expect(e.reportedOn === multiplyExpression);
         });
@@ -110,7 +110,7 @@ describe("Testing Validator", () => {
 
         errors = validator.validate(expression);
         expect(errors.length).toBe(2);
-        errors.forEach(e => {
+        errors.forEach((e) => {
             expect(e.reportedOn === expression);
             // console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
         });
@@ -137,7 +137,7 @@ describe("Testing Validator", () => {
 
     test("Person { unitName, age, first(Resultvar): Boolean = 5 + 24 } should have 1 error", () => {
         let errors: FreError[];
-        const personEnt = DemoEntity.create({  name: "Person", x: "xxx", simpleprop: "simple" });
+        const personEnt = DemoEntity.create({ name: "Person", x: "xxx", simpleprop: "simple" });
         const age = DemoAttribute.create({ name: "age" });
         const personName = DemoAttribute.create({ name: "name" });
         personEnt.attributes.push(age);
@@ -153,7 +153,10 @@ describe("Testing Validator", () => {
         // age.declaredType = DemoAttributeType.Boolean;
         // first.declaredType = DemoAttributeType.Boolean;
         // Resultvar.declaredType = DemoAttributeType.Boolean;
-        personName.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.String, "DemoAttributeType");
+        personName.declaredType = FreNodeReference.create<DemoAttributeType>(
+            DemoAttributeType.String,
+            "DemoAttributeType",
+        );
         age.declaredType = FreNodeReference.create<DemoAttributeType>(DemoAttributeType.Integer, "DemoAttributeType");
         first.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
         Resultvar.declaredType = FreNodeReference.create<DemoEntity>(personEnt, "DemoEntity");
@@ -161,14 +164,14 @@ describe("Testing Validator", () => {
         // Person { unitName, age, first(Resultvar) = 5 + 24 }
 
         errors = validator.validate(personEnt, true);
-        errors.forEach(e => {
+        errors.forEach((e) => {
             // console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity);
             expect(e.reportedOn === personEnt);
         });
         expect(errors.length).toBe(2);
     });
 
-    test ("test isUnique rule for model entities", () => {
+    test("test isUnique rule for model entities", () => {
         let model1 = new DemoModelCreator().createModelWithIsUniqueError();
         let errors: FreError[];
         errors = validator.validate(model1, true);
@@ -178,7 +181,7 @@ describe("Testing Validator", () => {
         expect(errors.length).toBe(10);
     });
 
-    test ("test correct model", () => {
+    test("test correct model", () => {
         let correctModel = new DemoModelCreator().createCorrectModel();
         let errors: FreError[];
         errors = validator.validate(correctModel, true);

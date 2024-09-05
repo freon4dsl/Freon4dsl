@@ -2,9 +2,10 @@ import { RtBoolean } from "./RtBoolean";
 import { isRtError, RtError } from "./RtError";
 import { RtObject } from "./RtObject";
 import { isRtString } from "./RtString";
-import { isRtEmpty} from "./RtEmpty";
+import { isRtEmpty } from "./RtEmpty";
 
-export class RtNumber extends RtObject { // } implements RtHasPlus  {
+export class RtNumber extends RtObject {
+    // } implements RtHasPlus  {
     readonly _type = "RtNumber";
     private readonly _value: number;
 
@@ -21,7 +22,7 @@ export class RtNumber extends RtObject { // } implements RtHasPlus  {
         if (isRtNumber(other)) {
             return new RtNumber(this._value + other.value);
         }
-        if ( isRtString(other)) {
+        if (isRtString(other)) {
             return new RtNumber(this._value + Number.parseFloat(other.asString()));
         } else if (isRtEmpty(other)) {
             return this;
@@ -35,7 +36,7 @@ export class RtNumber extends RtObject { // } implements RtHasPlus  {
     multiply(other: RtObject): RtObject {
         if (isRtNumber(other)) {
             return new RtNumber(this._value * other.value);
-        } else if ( isRtString(other)) {
+        } else if (isRtString(other)) {
             return new RtNumber(this._value * Number.parseFloat(other.asString()));
         } else if (isRtEmpty(other)) {
             return this;
@@ -50,7 +51,7 @@ export class RtNumber extends RtObject { // } implements RtHasPlus  {
         if (isRtNumber(other)) {
             return new RtNumber(this._value - other.value);
         }
-        if ( isRtString(other)) {
+        if (isRtString(other)) {
             return new RtNumber(this._value - Number.parseFloat(other.asString()));
         } else if (isRtEmpty(other)) {
             return other;
@@ -64,7 +65,7 @@ export class RtNumber extends RtObject { // } implements RtHasPlus  {
     divide(other: RtObject): RtObject {
         if (isRtNumber(other)) {
             return new RtNumber(this._value / other.value);
-        } else if ( isRtString(other)) {
+        } else if (isRtString(other)) {
             return new RtNumber(this._value / Number.parseFloat(other.asString()));
         } else if (isRtEmpty(other)) {
             return other;

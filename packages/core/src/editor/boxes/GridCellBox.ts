@@ -12,7 +12,14 @@ export class GridCellBox extends Box {
     columnSpan?: number;
     kind: string = "GridCellBox";
 
-    constructor(node: FreNode, role: string, row: number, column: number, box: Box, initializer?: Partial<GridCellBox>) {
+    constructor(
+        node: FreNode,
+        role: string,
+        row: number,
+        column: number,
+        box: Box,
+        initializer?: Partial<GridCellBox>,
+    ) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.row = row;

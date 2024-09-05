@@ -2,7 +2,7 @@ import { FreLanguage } from "@freon4dsl/core";
 import { DemoAttributeType } from "../language/gen";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
-import { describe, it, test, expect, beforeEach } from "vitest"
+import { describe, it, test, expect, beforeEach } from "vitest";
 
 // limited DemoAttributeType implements Type {
 //     name: string;
@@ -13,7 +13,6 @@ import { describe, it, test, expect, beforeEach } from "vitest"
 //     ANY = { "name": "ANY", "extra": "456"}
 // }
 //
-
 
 describe("Checking stdlib for Demo", () => {
     let stdlib: DemoStdlib;

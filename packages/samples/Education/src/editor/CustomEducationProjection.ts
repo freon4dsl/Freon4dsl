@@ -69,7 +69,7 @@ export class CustomEducationProjection implements FreProjection {
         const result = new GridBox(fraction, "fraction-all", cells, {
             cssClass: "mygrid"
         });
-        return createDefaultExpressionBox(fraction, "fraction-exp", [result]);
+        return createDefaultExpressionBox(fraction, [result]);
     }
 
     // TABLE_DEFINITION_FOR_CONCEPT() : FreTableDefinition { ... }

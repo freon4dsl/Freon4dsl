@@ -8,7 +8,6 @@ import { FreMetaClassifier, FreMetaConcept, FreMetaInterface } from "../../metal
 // 4. Empty list implies no ancestors.
 
 export class CommonSuperTypeUtil {
-
     public static commonSuperType(inList: FreMetaClassifier[]): FreMetaClassifier[] {
         if (!!inList && inList.length > 0) {
             // start with the supers from the first element
@@ -59,7 +58,7 @@ export class CommonSuperTypeUtil {
                         }
                     }
                     if (elem instanceof FreMetaInterface) {
-                        elem.base.forEach(b => {
+                        elem.base.forEach((b) => {
                             nextLevel.add(b.name, b.referred);
                         });
                     }

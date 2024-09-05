@@ -1,16 +1,13 @@
 import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import {
-    Names,
-    FREON_CORE,
-    GenerationUtil, CONFIGURATION_FOLDER
-} from "../../../utils/index.js";
+import { Names, FREON_CORE, GenerationUtil, CONFIGURATION_FOLDER } from "../../../utils/index.js";
 import { ScopeDef } from "../../metalanguage/index.js";
 
 export class ScoperDefTemplate {
-
     generateScoperDef(language: FreMetaLanguage, scoperDef: ScopeDef, relativePath: string): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const concreteNamespaces: FreMetaClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(scoperDef.namespaces);
+        const concreteNamespaces: FreMetaClassifier[] = GenerationUtil.replaceInterfacesWithImplementors(
+            scoperDef.namespaces,
+        );
         // TODO Quick fix, add all subclasses of a namespace concept
         //      Need to also add classes implementing subinterfaces !
         for (const cls of scoperDef.namespaces) {
@@ -20,7 +17,6 @@ export class ScoperDefTemplate {
                     if (!concreteNamespaces.includes(subcls)) {
                         concreteNamespaces.push(subcls);
                     }
-
                 }
             }
         }
@@ -45,9 +41,12 @@ export class ScoperDefTemplate {
              * Adds namespace info to the in-memory representation of the language metamodel.
              */
              export function initializeScoperDef(rootScoper: FreScoperComposite) {
-                 ${concreteNamespaces.map( element =>
-                    `${Names.FreLanguage}.getInstance().classifier("${Names.classifier(element)}").isNamespace = true;`
-                ).join("\n")}
+                 ${concreteNamespaces
+                     .map(
+                         (element) =>
+                             `${Names.FreLanguage}.getInstance().classifier("${Names.classifier(element)}").isNamespace = true;`,
+                     )
+                     .join("\n")}
                 initializeScopers(rootScoper);
             }`;
     }

@@ -13,6 +13,6 @@ export class TestScoper {
     getFromVisibleElements(name: string): FreNamedNode {
         // console.log("Scoper get ["+ name + "] element [" + this.root.element.name + "] length [" + this.root.element.manyPart.length + "]" );
         // console.log("parts "+ this.root.element.manyPart.map(p => p.name) + "  found => "+ result);
-        return this.root.element.manyPart.find(part => part.name === name);
+        return this.root.element.manyPart.find((part) => part.name === name);
     }
 }

@@ -54,7 +54,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         makeObservable<FreNodeReference<T>, "_FRE_pathname" | "_FRE_referred">(this, {
             _FRE_referred: observable,
             _FRE_pathname: observable,
-            referred: computed
+            referred: computed,
             // name: computed,
             // pathname: computed
         });
@@ -96,16 +96,22 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
     }
 
     get referred(): T {
-        LOGGER.log("FreElementReference " + this._FRE_pathname + " property " + this.freOwnerDescriptor().propertyName
-            + " owner " + this.freOwnerDescriptor().owner.freLanguageConcept());
+        LOGGER.log(
+            "FreElementReference " +
+                this._FRE_pathname +
+                " property " +
+                this.freOwnerDescriptor().propertyName +
+                " owner " +
+                this.freOwnerDescriptor().owner.freLanguageConcept(),
+        );
         if (!!this._FRE_referred) {
-           return this._FRE_referred;
-       } else {
+            return this._FRE_referred;
+        } else {
             return FreLanguageEnvironment.getInstance().scoper.resolvePathName(
                 this.freOwnerDescriptor().owner,
                 this.freOwnerDescriptor().propertyName,
                 this._FRE_pathname,
-                this.typeName
+                this.typeName,
             ) as T;
         }
     }

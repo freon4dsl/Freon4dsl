@@ -16,7 +16,6 @@ const LOGGER = new FreLogger("FreCommand"); // .mute();
  * The `undo()` function is not always implemented yet.
  */
 export abstract class FreCommand {
-
     /**
      * Executes the action, should contain all model changes for this action.
      * Returns a function that should be executed after the projection has been calculated as a result
@@ -50,7 +49,9 @@ class FreNullCommand extends FreCommand {
 
     // @ts-ignore
     // parameters present to adhere to base class signature
-    undo(box: Box, editor: FreEditor): void { /* to be done */ }
+    undo(box: Box, editor: FreEditor): void {
+        /* to be done */
+    }
 }
 
 export const PI_NULL_COMMAND: FreCommand = new FreNullCommand();
@@ -69,19 +70,32 @@ export class FreCreateBinaryExpressionCommand extends FreCommand {
 
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
         // console.log("FreCreateBinaryExpressionCommand: trigger [" + triggerTypeToString(trigger) + "] part: ");
-        const selected = BTREE.insertBinaryExpression(this.expressionBuilder(box, triggerTypeToString(trigger), editor), box, editor);
+        const selected = BTREE.insertBinaryExpression(
+            this.expressionBuilder(box, triggerTypeToString(trigger), editor),
+            box,
+            editor,
+        );
         // TODO Check whether this fix works consistently correct.
         const childProperty = selected.boxRoleToSelect === FRE_BINARY_EXPRESSION_LEFT ? "left" : "right";
         return function () {
-            LOGGER.log("FreCreateBinaryExpressionCommand select after: " + selected.element.freLanguageConcept() + " ID " + selected.element.freId() + " rolr " + childProperty)
+            LOGGER.log(
+                "FreCreateBinaryExpressionCommand select after: " +
+                    selected.element.freLanguageConcept() +
+                    " ID " +
+                    selected.element.freId() +
+                    " rolr " +
+                    childProperty,
+            );
             editor.selectElement(selected.element, childProperty);
-            editor.selectFirstEditableChildBox(selected.element)
+            editor.selectFirstEditableChildBox(selected.element);
         };
     }
 
     // @ts-ignore
     // parameters present to adhere to base class signature
-    undo() { /* to be done */ }
+    undo() {
+        /* to be done */
+    }
 }
 
 export class FreCustomCommand extends FreCommand {
@@ -120,5 +134,7 @@ export class FreCustomCommand extends FreCommand {
 
     // @ts-ignore
     // parameters present to adhere to base class signature
-    undo() { /* to be done */ }
+    undo() {
+        /* to be done */
+    }
 }

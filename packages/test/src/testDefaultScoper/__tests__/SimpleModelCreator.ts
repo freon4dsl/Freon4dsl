@@ -126,13 +126,16 @@ export class SimpleModelCreator {
         for (let i = 0; i < this.breadth * 2; i++) {
             const index = this.makeReferenceIndex();
             if (!!this.allNames[index] && this.allNames[index].length > 0) {
-                const someReference: FreNodeReference<DSref> = FreNodeReference.create<DSref>([this.allNames[index]], "DSref");
+                const someReference: FreNodeReference<DSref> = FreNodeReference.create<DSref>(
+                    [this.allNames[index]],
+                    "DSref",
+                );
                 dSunit.dsRefs.push(someReference);
             } else {
                 console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
             }
-            dSunit.dsPrivates.forEach(part => this.addReferences(part));
-            dSunit.dsPublics.forEach(part => this.addReferences(part));
+            dSunit.dsPrivates.forEach((part) => this.addReferences(part));
+            dSunit.dsPublics.forEach((part) => this.addReferences(part));
         }
     }
 
@@ -140,7 +143,10 @@ export class SimpleModelCreator {
         for (let i = 0; i < this.breadth * 2; i++) {
             const index = this.makeReferenceIndex();
             if (!!this.allNames[index] && this.allNames[index].length > 0) {
-                const someReference: FreNodeReference<DSref> = FreNodeReference.create<DSref>(this.allNames[index], "DSref");
+                const someReference: FreNodeReference<DSref> = FreNodeReference.create<DSref>(
+                    this.allNames[index],
+                    "DSref",
+                );
                 part.conceptRefs.push(someReference);
             } else {
                 console.log("empty reference for index: " + index + " (length: " + this.allNames.length + ")");
@@ -169,16 +175,16 @@ export class SimpleModelCreator {
     public DSmodelToString(model: DSmodel): string {
         let result: string = "";
         let indent = "";
-        for (const unit of model.units){
+        for (const unit of model.units) {
             result += "unit: " + unit.name + "\n";
-            for(const part of unit.dsPublics) {
-                result += this.DSpublicToString(indent + SimpleModelCreator.IN, part)
+            for (const part of unit.dsPublics) {
+                result += this.DSpublicToString(indent + SimpleModelCreator.IN, part);
             }
-            for(const priv of unit.dsPrivates) {
-                result += this.DSprivateToString(indent + SimpleModelCreator.IN, priv)
+            for (const priv of unit.dsPrivates) {
+                result += this.DSprivateToString(indent + SimpleModelCreator.IN, priv);
             }
             for (const ref of unit.dsRefs) {
-                result += indent + SimpleModelCreator.IN + "reference " + ref.name + '\n';
+                result += indent + SimpleModelCreator.IN + "reference " + ref.name + "\n";
             }
         }
 

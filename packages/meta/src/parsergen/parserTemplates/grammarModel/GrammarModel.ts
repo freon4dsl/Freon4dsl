@@ -5,7 +5,7 @@ import {
     internalTransformLeaf,
     internalTransformList,
     internalTransformNode,
-    internalTransformRefList
+    internalTransformRefList,
 } from "../ParserGenUtil.js";
 import { refRuleName } from "./GrammarUtils.js";
 import { GrammarPart } from "./GrammarPart.js";
@@ -55,13 +55,13 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
 
     private grammarContent(): string {
         let result: string = "";
-        this.parts.forEach(part => {
+        this.parts.forEach((part) => {
             if (!!part.unit) {
                 result += `// rules for "${part.unit.name}"\n`;
             } else {
                 result += `// common rules\n`;
             }
-            part.rules.map(rule => {
+            part.rules.map((rule) => {
                 result += rule.toGrammar() + "\n\n";
             });
         });
@@ -71,12 +71,14 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
     toMethod(): string {
         const className: string = Names.syntaxAnalyser(this.language);
         let switchContent: string = "";
-        this.parts.forEach(part => part.rules.map(rule => {
-            const name = rule.ruleName;
-            switchContent += `if ('${name}' === brName) {
+        this.parts.forEach((part) =>
+            part.rules.map((rule) => {
+                const name = rule.ruleName;
+                switchContent += `if ('${name}' === brName) {
                         return this.${this.getPartAnalyserName(part)}.transform${name}(branch);
                     } else `;
-        }));
+            }),
+        );
 
         switchContent += `if ('${refRuleName}' === brName) {
                         return this.transform${refRuleName}(branch);
@@ -91,7 +93,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         import SPPTLeaf = net.akehurst.language.api.sppt.SPPTLeaf;
         import SPPTNode = net.akehurst.language.api.sppt.SPPTNode;
         import { ${Names.FreNamedNode}, ${Names.FreParseLocation}, ${Names.FreNodeReference} } from "@freon4dsl/core";
-        import { ${this.parts.map(part => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
+        import { ${this.parts.map((part) => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from ".";
 
         /**
         *   Class ${className} is the main syntax analyser.
@@ -102,7 +104,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         export class ${className} implements SyntaxAnalyser {
             sourceName: string = "";
             locationMap: any;
-            ${this.parts.map(part => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
+            ${this.parts.map((part) => `private ${this.getPartAnalyserName(part)}: ${Names.unitAnalyser(this.language, part.unit)} = new ${Names.unitAnalyser(this.language, part.unit)}(this)`).join(";\n")}
 
             clear(): void {
                 throw new Error("Method not implemented.");

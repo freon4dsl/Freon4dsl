@@ -3,7 +3,7 @@ import { DSmodel, DSref, DSunit } from "../language/gen";
 import { SimpleModelCreator } from "./SimpleModelCreator";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
 import { ExtendedModelCreator } from "./ExtendedModelCreator";
-import { describe, test, expect, beforeEach } from "vitest"
+import { describe, test, expect, beforeEach } from "vitest";
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";
@@ -36,9 +36,9 @@ describe("Testing Default Scoper", () => {
     });
 
     test("validator messages in model with 1 unit of depth 3", () => {
-        const model: DSmodel = creator.createModel(1, 3 );
+        const model: DSmodel = creator.createModel(1, 3);
         // run the scoper to test all names in the model
-        const visibleNames = scoper.getVisibleNames( model.getUnits()[0] );
+        const visibleNames = scoper.getVisibleNames(model.getUnits()[0]);
 
         // There is only one modelunit, so all names should be visible
         for (const x of creator.allNames) {
@@ -68,15 +68,19 @@ describe("Testing Default Scoper", () => {
         // create extra references
         const ref1 = FreNodeReference.create<DSref>(["unit1_OF_model", "private9_OF_unit1_OF_model"], "DSprivate");
         const ref2 = FreNodeReference.create<DSref>(["unit1_OF_model", "public2_OF_unit1_OF_model"], "DSpublic");
-        const ref3 = FreNodeReference.create<DSref>([
-            "unit1_OF_model",
-            "public2_OF_unit1_OF_model",
-            "private6_OF_public2_OF_unit1_OF_model" ], "DSpublic");
-        const ref4 = FreNodeReference.create<DSref>([
-            "unit1_OF_model",
-            "public2_OF_unit1_OF_model",
-            "private6_OF_public2_OF_unit1_OF_model",
-            "public7_OF_private6_OF_public2_OF_unit1_OF_model" ], "DSpublic");
+        const ref3 = FreNodeReference.create<DSref>(
+            ["unit1_OF_model", "public2_OF_unit1_OF_model", "private6_OF_public2_OF_unit1_OF_model"],
+            "DSpublic",
+        );
+        const ref4 = FreNodeReference.create<DSref>(
+            [
+                "unit1_OF_model",
+                "public2_OF_unit1_OF_model",
+                "private6_OF_public2_OF_unit1_OF_model",
+                "public7_OF_private6_OF_public2_OF_unit1_OF_model",
+            ],
+            "DSpublic",
+        );
 
         // add them to the other unit
         const otherUnit = model.findUnit("unit16_OF_model") as DSunit;
@@ -117,6 +121,6 @@ describe("Testing Default Scoper", () => {
         //     errorMessages.push(mess.message + " in " + mess.locationdescription);
         // });
         // print("found errors", errorMessages);
-        expect (errors.length).toBe(858);
+        expect(errors.length).toBe(858);
     });
 });

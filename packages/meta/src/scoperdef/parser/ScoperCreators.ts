@@ -24,7 +24,9 @@ export function createScopeDef(data: Partial<ScopeDef>): ScopeDef {
     if (!!data.scopeConceptDefs) {
         result.scopeConceptDefs = data.scopeConceptDefs;
     }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     // result.namespaces.forEach(ns => {
     //     LOGGER.log("namespace: " + ns.unitName + " created");
     // });
@@ -34,25 +36,41 @@ export function createScopeDef(data: Partial<ScopeDef>): ScopeDef {
 export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeConceptDef {
     LOGGER.log("createScoperConceptDef");
     const result = new ScopeConceptDef();
-    if (!!data.conceptRef) { result.conceptRef = data.conceptRef; }
-    if (!!data.namespaceAdditions) { result.namespaceAdditions = data.namespaceAdditions; }
-    if (!!data.alternativeScope) { result.alternativeScope = data.alternativeScope; }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.conceptRef) {
+        result.conceptRef = data.conceptRef;
+    }
+    if (!!data.namespaceAdditions) {
+        result.namespaceAdditions = data.namespaceAdditions;
+    }
+    if (!!data.alternativeScope) {
+        result.alternativeScope = data.alternativeScope;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
 export function createNamespaceDef(data: Partial<FreNamespaceAddition>): FreNamespaceAddition {
     LOGGER.log("createNamespaceDef");
     const result = new FreNamespaceAddition();
-    if (!!data.expressions) { result.expressions = data.expressions; }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.expressions) {
+        result.expressions = data.expressions;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }
 
 export function createAlternativeScope(data: Partial<FreAlternativeScope>): FreAlternativeScope {
     LOGGER.log("createAlternativeScope");
     const result = new FreAlternativeScope();
-    if (!!data.expression) { result.expression = data.expression; }
-    if (!!data.location) { result.location = data.location; }
+    if (!!data.expression) {
+        result.expression = data.expression;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+    }
     return result;
 }

@@ -1,6 +1,6 @@
 import { autorun } from "mobx";
 import { FreNode } from "../../ast";
-import { FreUtils } from "../../util/index.js"
+import { FreUtils } from "../../util/index.js";
 import { Box, BoolFunctie } from "./internal";
 
 /**
@@ -17,8 +17,8 @@ export class OptionalBox2 extends Box {
 
     content: Box = null;
     placeholder: Box = null;
-    _mustShow: boolean = false;  // is set to true by action that does not (yet) change the model, but causes part of the optional to be shown
-    condition: () => boolean;   // a condition based on the model that determines whether the optional is shown
+    _mustShow: boolean = false; // is set to true by action that does not (yet) change the model, but causes part of the optional to be shown
+    condition: () => boolean; // a condition based on the model that determines whether the optional is shown
 
     get mustShow() {
         return this._mustShow;
@@ -28,7 +28,15 @@ export class OptionalBox2 extends Box {
         this.isDirty();
     }
 
-    constructor(node: FreNode, role: string, condition: BoolFunctie, box: Box, mustShow: boolean, placeholder: Box, initializer?: Partial<OptionalBox2>) {
+    constructor(
+        node: FreNode,
+        role: string,
+        condition: BoolFunctie,
+        box: Box,
+        mustShow: boolean,
+        placeholder: Box,
+        initializer?: Partial<OptionalBox2>,
+    ) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.content = box;
@@ -37,7 +45,7 @@ export class OptionalBox2 extends Box {
         this.placeholder = placeholder;
         this.placeholder.parent = this;
         this.mustShow = mustShow;
-        this.condition = condition;        
+        this.condition = condition;
         autorun(this.conditionChanged);
     }
 
@@ -52,7 +60,7 @@ export class OptionalBox2 extends Box {
         // console.log("AUTORUN showByCondition")
         this.condition();
         this.isDirty();
-    }
+    };
 
     /**
      * Get the first selectable leaf box in the tree with `this` as root.

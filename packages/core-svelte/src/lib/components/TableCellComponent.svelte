@@ -141,7 +141,7 @@
         // create the data to be transferred and notify the store that something is being dragged
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
-        $draggedElem = new ListElementInfo(box.element, parentComponentId);
+        $draggedElem = new ListElementInfo(box.node, parentComponentId);
         $draggedFrom = parentComponentId;
     };
 

@@ -1,10 +1,10 @@
-import {FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept} from "../../metalanguage/index.js";
+import { FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept } from "../../metalanguage/index.js";
 import {
     LANGUAGE_GEN_FOLDER,
     Names,
     FREON_CORE,
     CONFIGURATION_FOLDER,
-    LANGUAGE_UTILS_GEN_FOLDER
+    LANGUAGE_UTILS_GEN_FOLDER,
 } from "../../../utils/index.js";
 
 export class StdlibTemplate {
@@ -16,7 +16,7 @@ export class StdlibTemplate {
 
         return `
         import { ${Names.FreNamedNode}, ${Names.FreStdlib}, ${Names.FreLanguage} } from "${FREON_CORE}";
-        import { ${this.limitedConceptNames.map(name => `${name}`).join(", ") }
+        import { ${this.limitedConceptNames.map((name) => `${name}`).join(", ")}
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
         import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
@@ -94,13 +94,18 @@ export class StdlibTemplate {
     }
 
     private makeTexts(language: FreMetaLanguage) {
-        language.concepts.filter((con: FreMetaConcept) => con instanceof FreMetaLimitedConcept).map((limCon: FreMetaConcept) => {
-            const limitedConcept: FreMetaLimitedConcept = limCon as FreMetaLimitedConcept;
-            const myName = Names.concept(limitedConcept);
-            this.limitedConceptNames.push(myName);
-            this.constructorText = this.constructorText.concat(`${limitedConcept.instances.map((x: FreMetaInstance) =>
-                `this.elements.push(${myName}.${x.name});`).join("\n ")}`);
-        });
+        language.concepts
+            .filter((con: FreMetaConcept) => con instanceof FreMetaLimitedConcept)
+            .map((limCon: FreMetaConcept) => {
+                const limitedConcept: FreMetaLimitedConcept = limCon as FreMetaLimitedConcept;
+                const myName = Names.concept(limitedConcept);
+                this.limitedConceptNames.push(myName);
+                this.constructorText = this.constructorText.concat(
+                    `${limitedConcept.instances
+                        .map((x: FreMetaInstance) => `this.elements.push(${myName}.${x.name});`)
+                        .join("\n ")}`,
+                );
+            });
     }
 
     generateIndex(language: FreMetaLanguage) {

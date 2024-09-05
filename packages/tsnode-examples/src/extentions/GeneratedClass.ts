@@ -1,7 +1,6 @@
 export class GeneratedClass {
     name: string = "default A name";
-    constructor() {
-    }
-    methodX(): void { };
-    methodY(): void { };
+    constructor() {}
+    methodX(): void {}
+    methodY(): void {}
 }

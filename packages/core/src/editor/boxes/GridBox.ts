@@ -15,7 +15,7 @@ export class GridBox extends Box {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.cells = cells;
-        this.cells.forEach(c => {
+        this.cells.forEach((c) => {
             if (!c.columnSpan) {
                 c.columnSpan = 1;
             }
@@ -39,13 +39,13 @@ export class GridBox extends Box {
 
     numberOfColumns(): number {
         let max = 0;
-        this.cells.forEach(c => (max = Math.max(max, c.column + c.columnSpan)));
+        this.cells.forEach((c) => (max = Math.max(max, c.column + c.columnSpan)));
         return max;
     }
 
     numberOfRows(): number {
         let max = 0;
-        this.cells.forEach(cell => (max = Math.max(max, cell.row + cell.rowSpan)));
+        this.cells.forEach((cell) => (max = Math.max(max, cell.row + cell.rowSpan)));
         return max;
     }
 }

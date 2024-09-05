@@ -35,6 +35,6 @@ export interface SelectedOption {
 }
 
 export function findOption(options: SelectOption[], id: string): SelectOption | null {
-    const index = options.findIndex(option => option.label === id);
-    return (index === -1 ? null : options[index]);
+    const index = options.findIndex((option) => option.label === id);
+    return index === -1 ? null : options[index];
 }

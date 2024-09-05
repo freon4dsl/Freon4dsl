@@ -36,7 +36,10 @@ export class AstWalker {
             }
 
             // find part properties in the language meta definition
-            const partProperties: FreLanguageProperty[] = FreLanguage.getInstance().getPropertiesOfKind(node.freLanguageConcept(), "part");
+            const partProperties: FreLanguageProperty[] = FreLanguage.getInstance().getPropertiesOfKind(
+                node.freLanguageConcept(),
+                "part",
+            );
             // walk all parts
             for (const prop of partProperties) {
                 for (const child of FreLanguage.getInstance().getPropertyValue(node, prop)) {

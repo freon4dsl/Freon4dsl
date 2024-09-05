@@ -2,7 +2,6 @@ import { isRtBoolean, RtBoolean } from "./RtBoolean";
 import { RtObject } from "./RtObject";
 
 export class RtEmpty extends RtObject {
-
     static NIX_VALUE = new RtEmpty();
     readonly _type: string = "RtEmpty";
 
@@ -20,7 +19,6 @@ export class RtEmpty extends RtObject {
         }
         return RtBoolean.FALSE;
     }
-
 }
 
 export function isRtEmpty(object: any): object is RtEmpty {

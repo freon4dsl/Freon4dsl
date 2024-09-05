@@ -3,14 +3,10 @@ import {
     FreMetaInterface,
     FreLangExp,
     FreLangFunctionCallExp,
-    FreMetaLanguage, FreMetaProperty
+    FreMetaLanguage,
+    FreMetaProperty,
 } from "../../../languagedef/metalanguage/index.js";
-import {
-    Names,
-    LANGUAGE_GEN_FOLDER,
-    FREON_CORE,
-    GenerationUtil, LangUtil, ListUtil
-} from "../../../utils/index.js";
+import { Names, LANGUAGE_GEN_FOLDER, FREON_CORE, GenerationUtil, LangUtil, ListUtil } from "../../../utils/index.js";
 import { ScopeDef, ScopeConceptDef } from "../../metalanguage/index.js";
 
 export class ScoperTemplate {
@@ -40,8 +36,9 @@ export class ScoperTemplate {
         const generatedClassName: string = Names.scoper(language);
         const scoperBaseName: string = Names.FreScoperBase;
 
-        const coreImports: string[] = [scoperBaseName, Names.FreLogger, Names.FreNode, Names.FreNamespace ];
-        if (!!scopedef) { // should always be the case, either the definition read from file or the default
+        const coreImports: string[] = [scoperBaseName, Names.FreLogger, Names.FreNode, Names.FreNamespace];
+        if (!!scopedef) {
+            // should always be the case, either the definition read from file or the default
             this.makeAlternativeScopeTexts(scopedef);
             this.makeAdditionalNamespaceTexts(scopedef, coreImports);
         }
@@ -91,8 +88,8 @@ export class ScoperTemplate {
 
         // now we have enough information to create the correct imports
         const templateImports: string = `
-        ${coreImports.length > 0 ? `import { ${coreImports.map(name => name).join(", ")} } from "${FREON_CORE}";`: "" }
-        ${this.languageImports.length > 0 ? `import { ${this.languageImports.map(name => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`: "" }
+        ${coreImports.length > 0 ? `import { ${coreImports.map((name) => name).join(", ")} } from "${FREON_CORE}";` : ""}
+        ${this.languageImports.length > 0 ? `import { ${this.languageImports.map((name) => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ""}
         `;
 
         return templateImports + templateBody;
@@ -119,7 +116,12 @@ export class ScoperTemplate {
         }
     }
 
-    private makeAdditionalNamespaceTextsForConcept(freConcept: FreMetaConcept, def: ScopeConceptDef, comment: string, coreImports: string[]) {
+    private makeAdditionalNamespaceTextsForConcept(
+        freConcept: FreMetaConcept,
+        def: ScopeConceptDef,
+        comment: string,
+        coreImports: string[],
+    ) {
         const typeName = Names.concept(freConcept);
         // we are adding to three textstrings
         // first, to the import statements
@@ -130,14 +132,16 @@ export class ScoperTemplate {
         // and the interface that its implements. Both should be added!
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(comment);
         this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
-            `if (element instanceof ${typeName}) {`);
+            `if (element instanceof ${typeName}) {`,
+        );
         if (!!def.namespaceAdditions) {
             for (const expression of def.namespaceAdditions.expressions) {
-                this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(this.addNamespaceExpression(expression, coreImports));
+                this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
+                    this.addNamespaceExpression(expression, coreImports),
+                );
             }
         }
-        this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
-            `}\n`);
+        this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(`}\n`);
     }
 
     private makeAlternativeScopeTexts(scopedef: ScopeDef) {
@@ -153,7 +157,8 @@ export class ScoperTemplate {
                 this.hasAlternativeScopeText = this.hasAlternativeScopeText.concat(
                     `if (!!modelelement && modelelement instanceof ${conceptName}) {
                         return true;
-                     }`);
+                     }`,
+                );
 
                 // third, to the 'getAlternativeScope' method
                 if (!!def.alternativeScope.expression) {
@@ -161,7 +166,8 @@ export class ScoperTemplate {
                         `if (!!modelelement && modelelement instanceof ${conceptName}) {
                         // use alternative scope '${def.alternativeScope.expression.toFreString()}'
                         ${this.altScopeExpToTypeScript(def.alternativeScope.expression)}
-                    }`);
+                    }`,
+                    );
                 }
             }
         }
@@ -220,9 +226,9 @@ export class ScoperTemplate {
         let result;
         // special case: the expression refers to 'typeof'
         if (expression instanceof FreLangFunctionCallExp && expression.sourceName === "typeof") {
-            let actualParamToGenerate: string = '';
+            let actualParamToGenerate: string = "";
             // we know that typeof has exactly 1 actual parameter
-            if ( expression.actualparams[0].sourceName === "container" ) {
+            if (expression.actualparams[0].sourceName === "container") {
                 actualParamToGenerate = `modelelement.freOwnerDescriptor().owner`;
             } else {
                 actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0]);

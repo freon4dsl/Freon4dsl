@@ -3,7 +3,7 @@ import {
     FreMetaClassifier,
     FreMetaConcept,
     FreMetaLanguage,
-    FreMetaLimitedConcept
+    FreMetaLimitedConcept,
 } from "../../languagedef/metalanguage/index.js";
 import { UnitAnalyser } from "./UnitAnalyser.js";
 import { FreMetaUnitDescription } from "../../languagedef/metalanguage/FreMetaLanguage.js";
@@ -11,13 +11,13 @@ import { SemanticAnalysisTemplate } from "./SemanticAnalysisTemplate.js";
 
 export interface FreAnalyser {
     // name of the unit
-    unit: FreMetaUnitDescription | undefined
+    unit: FreMetaUnitDescription | undefined;
     // all concepts used in this unit
     classifiersUsed: FreMetaClassifier[];
     // all binary concepts used in this unit
     binaryConceptsUsed: FreMetaBinaryExpressionConcept[];
     // all interfaces and abstract concepts that are mentioned in this unit
-    interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]> ;
+    interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]>;
     // all limited concepts that are referred to (as type of properties), from this unit
     limitedsReferred: FreMetaLimitedConcept[];
     // all concepts that are not abstract, but do have sub concepts, from this unit
@@ -34,7 +34,7 @@ export class LanguageAnalyser {
     analyseModel(language: FreMetaLanguage) {
         this.commonAnalyser.reset();
 
-        language.units.forEach(unit => {
+        language.units.forEach((unit) => {
             const unitAnalyser = new UnitAnalyser();
             this.unitAnalysers.push(unitAnalyser);
             unitAnalyser.analyseUnit(unit);
@@ -58,20 +58,20 @@ export class LanguageAnalyser {
     }
 
     private removeCommonsFromUnitAnalysers() {
-        this.unitAnalysers.forEach(analyser => {
-            this.commonAnalyser.classifiersUsed.forEach(classifier => {
+        this.unitAnalysers.forEach((analyser) => {
+            this.commonAnalyser.classifiersUsed.forEach((classifier) => {
                 const index = analyser.classifiersUsed.indexOf(classifier);
                 if (index !== -1) {
                     analyser.classifiersUsed.splice(index, 1);
                 }
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             });
-            this.commonAnalyser.binaryConceptsUsed.forEach(classifier => {
+            this.commonAnalyser.binaryConceptsUsed.forEach((classifier) => {
                 const index = analyser.binaryConceptsUsed.indexOf(classifier);
                 analyser.binaryConceptsUsed.splice(index, 1);
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
             });
-            this.commonAnalyser.limitedsReferred.forEach(classifier => {
+            this.commonAnalyser.limitedsReferred.forEach((classifier) => {
                 const index = analyser.limitedsReferred.indexOf(classifier);
                 analyser.limitedsReferred.splice(index, 1);
                 // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
@@ -90,26 +90,26 @@ export class LanguageAnalyser {
     }
 
     private getCommonsFromUnits() {
-        this.unitAnalysers.forEach(analyser => {
+        this.unitAnalysers.forEach((analyser) => {
             const otherAnalysers: UnitAnalyser[] = this.getOtherAnalysers(analyser);
-            analyser.classifiersUsed.forEach(classifier => {
-                otherAnalysers.forEach(other => {
+            analyser.classifiersUsed.forEach((classifier) => {
+                otherAnalysers.forEach((other) => {
                     if (other.classifiersUsed.includes(classifier)) {
                         // found a common one
                         this.addClassifierUsed(classifier);
                     }
                 });
             });
-            analyser.binaryConceptsUsed.forEach(classifier => {
-                otherAnalysers.forEach(other => {
+            analyser.binaryConceptsUsed.forEach((classifier) => {
+                otherAnalysers.forEach((other) => {
                     if (other.binaryConceptsUsed.includes(classifier)) {
                         // found a common one
                         this.addBinaryConceptsUsed(classifier);
                     }
                 });
             });
-            analyser.limitedsReferred.forEach(classifier => {
-                otherAnalysers.forEach(other => {
+            analyser.limitedsReferred.forEach((classifier) => {
+                otherAnalysers.forEach((other) => {
                     if (other.limitedsReferred.includes(classifier)) {
                         // found a common one
                         this.addLimitedsReferred(classifier);
@@ -117,7 +117,7 @@ export class LanguageAnalyser {
                 });
             });
             for (const [classifier, used] of analyser.interfacesAndAbstractsUsed) {
-                otherAnalysers.forEach(other => {
+                otherAnalysers.forEach((other) => {
                     if (other.interfacesAndAbstractsUsed.has(classifier)) {
                         // found a common one
                         this.addInterfacesAndAbstractsUsed(classifier, used);
@@ -125,7 +125,7 @@ export class LanguageAnalyser {
                 });
             }
             for (const [classifier, used] of analyser.conceptsWithSub) {
-                otherAnalysers.forEach(other => {
+                otherAnalysers.forEach((other) => {
                     if (other.conceptsWithSub.has(classifier)) {
                         // found a common one
                         this.addConceptsWithSubs(classifier, used);
@@ -170,7 +170,7 @@ export class LanguageAnalyser {
 
     private getOtherAnalysers(currentAnalyser: UnitAnalyser): UnitAnalyser[] {
         const result: UnitAnalyser[] = [];
-        this.unitAnalysers.forEach(analyser => {
+        this.unitAnalysers.forEach((analyser) => {
             if (analyser !== currentAnalyser) {
                 result.push(analyser);
             }

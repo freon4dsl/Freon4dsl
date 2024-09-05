@@ -9,7 +9,6 @@
     background-color: darkslategray;
     --md-sys-color-primary: whitesmoke;
     --md-sys-color-on-surface-variant: whitesmoke; /* color for the one that is not checked */
-
 }
 
 .label-component:empty:before {
@@ -35,10 +34,9 @@
 .layout-component-vertical {
 }
 
-
 .limited-checkbox-component-group {
     --md-sys-color-primary: transparent;
-    --md-sys-color-on-surface-variant: whitesmoke; 
+    --md-sys-color-on-surface-variant: whitesmoke;
     --md-sys-color-on-surface: whitesmoke; /* box color for the one that is not checked */
 }
 .limited-checkbox-component-group:hover,
@@ -102,18 +100,18 @@
 
 /* Button style */
 .button-component {
-    box-shadow: 2px 2px 4px antiquewhite; 
+    box-shadow: 2px 2px 4px antiquewhite;
     background-color: whitesmoke;
     color: darkblue;
 }
 
 boolean-checkbox-component {
-    --md-sys-color-primary:  rgba(211, 227, 253, 255);
+    --md-sys-color-primary: rgba(211, 227, 253, 255);
 }
 .boolean-checkbox-component:hover,
 .boolean-checkbox-component:focus-within {
-    outline:  rgba(211, 227, 253, 255) solid 1px;
-    box-shadow: 0px 0px 10px  rgba(211, 227, 253, 255);
+    outline: rgba(211, 227, 253, 255) solid 1px;
+    box-shadow: 0px 0px 10px rgba(211, 227, 253, 255);
 }
 
 .boolean-radio-component-group {
@@ -205,11 +203,11 @@ dropdown-component {
     color: white;
 }
 
-.inner-switch-component button[role='switch'][aria-checked='false'] {
+.inner-switch-component button[role="switch"][aria-checked="false"] {
     color: whitesmoke;
     background-color: gray;
 }
-.inner-switch-component button[role='switch'][aria-checked='true'] {
+.inner-switch-component button[role="switch"][aria-checked="true"] {
     color: darkblue;
     background-color: lightgray;
 }
@@ -222,7 +220,6 @@ dropdown-component {
     outline: white solid 1px;
     box-shadow: 0 0 8px white;
 }
-
 
 .optional-component-new:empty:before {
     background-color: lightpink;
@@ -252,18 +249,19 @@ dropdown-component {
     background: darkslategray;
 }
 
-.switch-component button::before { /* defines the knob */
+.switch-component button::before {
+    /* defines the knob */
     background-color: whitesmoke;
 }
 
-.switch-component button[aria-checked='true']{
+.switch-component button[aria-checked="true"] {
     background-color: lightgray;
 }
-.switch-component button[aria-checked='false']{
+.switch-component button[aria-checked="false"] {
     background-color: dimgray;
 }
 
-.switch-component button[aria-checked='true']::before{
+.switch-component button[aria-checked="true"]::before {
 }
 
 .switch-component button:hover,

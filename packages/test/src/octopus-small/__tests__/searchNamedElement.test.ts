@@ -1,12 +1,8 @@
 import { FreModelUnit, FreNode, FreSearcher } from "@freon4dsl/core";
 import { FileHandler } from "../../utils/FileHandler";
-import {
-    AssociationEnd,
-    OctopusModel,
-    UmlPart
-} from "../language/gen";
+import { AssociationEnd, OctopusModel, UmlPart } from "../language/gen";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 const writer = OctopusModelEnvironment.getInstance().writer;
 const reader = OctopusModelEnvironment.getInstance().reader;
@@ -25,12 +21,11 @@ function readFile(filepath: string): FreModelUnit {
 }
 
 describe("Testing Search NamedElement", () => {
-
     test("search elements named 'customer' or 'Customer' in orders", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/orders.uml2");
         if (!!myUnit) {
             const found: FreNode[] = searcher.findNamedElementNotCaseSensitive("customer", myUnit);
-            expect (found.length).toBe(3);
+            expect(found.length).toBe(3);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");
@@ -41,7 +36,7 @@ describe("Testing Search NamedElement", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/orders.uml2");
         if (!!myUnit) {
             const found: FreNode[] = searcher.findNamedElement("customer", myUnit);
-            expect (found.length).toBe(2);
+            expect(found.length).toBe(2);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");
@@ -52,7 +47,7 @@ describe("Testing Search NamedElement", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
             const found: FreNode[] = searcher.findNamedElement("kind", myUnit);
-            expect (found.length).toBe(2);
+            expect(found.length).toBe(2);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {
             console.log("No unit to search");

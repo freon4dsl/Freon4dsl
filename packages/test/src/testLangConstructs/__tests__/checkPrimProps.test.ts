@@ -1,5 +1,10 @@
-import { ConceptWithPrimProps, ConceptWithAllProps, ConceptWithBasePrim, ConceptWithInheritanceTree1 } from "../language/gen";
-import { describe, test, expect } from "vitest"
+import {
+    ConceptWithPrimProps,
+    ConceptWithAllProps,
+    ConceptWithBasePrim,
+    ConceptWithInheritanceTree1,
+} from "../language/gen";
+import { describe, test, expect } from "vitest";
 
 describe("Checking primitive properties", () => {
     let concept1 = ConceptWithPrimProps.create({
@@ -8,7 +13,7 @@ describe("Checking primitive properties", () => {
         conceptProp3: 120117,
         conceptProp4: [151012, 260888],
         conceptProp5: true,
-        conceptProp6: [true, false]
+        conceptProp6: [true, false],
     });
 
     let concept2 = ConceptWithBasePrim.create({
@@ -17,7 +22,7 @@ describe("Checking primitive properties", () => {
         conceptProp3: 120117,
         conceptProp4: [151012, 260888],
         conceptProp5: true,
-        conceptProp6: [true, false]
+        conceptProp6: [true, false],
     });
 
     let concept3 = ConceptWithInheritanceTree1.create({
@@ -26,7 +31,7 @@ describe("Checking primitive properties", () => {
         conceptProp3: 120117,
         conceptProp4: [151012, 260888],
         conceptProp5: true,
-        conceptProp6: [true, false]
+        conceptProp6: [true, false],
     });
 
     let concept4 = ConceptWithAllProps.create({
@@ -35,7 +40,7 @@ describe("Checking primitive properties", () => {
         conceptProp3: 120117,
         conceptProp4: [151012, 260888],
         conceptProp5: true,
-        conceptProp6: [true, false]
+        conceptProp6: [true, false],
     });
 
     test("concepts of different type but with same props compared", () => {

@@ -19,7 +19,10 @@ export class FreNodeReferenceTestScoper<T extends FreNamedNode> extends MobxMode
      * @param name
      * @param typeName
      */
-    public static create<T extends FreNamedNode>(name: string | string[] | T, typeName: string): FreNodeReferenceTestScoper<T> {
+    public static create<T extends FreNamedNode>(
+        name: string | string[] | T,
+        typeName: string,
+    ): FreNodeReferenceTestScoper<T> {
         const result = new FreNodeReferenceTestScoper(null, typeName);
         if (Array.isArray(name)) {
             result.pathname = name;
@@ -56,7 +59,7 @@ export class FreNodeReferenceTestScoper<T extends FreNamedNode> extends MobxMode
         makeObservable<FreNodeReferenceTestScoper<T>, "_FRE_pathname" | "_FRE_referred">(this, {
             _FRE_referred: observable,
             _FRE_pathname: observable,
-            referred: computed
+            referred: computed,
             // name: computed,
             // pathname: computed
         });
@@ -98,8 +101,14 @@ export class FreNodeReferenceTestScoper<T extends FreNamedNode> extends MobxMode
     }
 
     get referred(): T {
-        LOGGER.log("FreNodeReference " + this._FRE_pathname + " property " + this.freOwnerDescriptor().propertyName
-            + " owner " + this.freOwnerDescriptor().owner.freLanguageConcept());
+        LOGGER.log(
+            "FreNodeReference " +
+                this._FRE_pathname +
+                " property " +
+                this.freOwnerDescriptor().propertyName +
+                " owner " +
+                this.freOwnerDescriptor().owner.freLanguageConcept(),
+        );
         if (!!this._FRE_referred) {
             return this._FRE_referred;
         } else {

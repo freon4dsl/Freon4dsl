@@ -1,0 +1,7 @@
+editor specials
+
+IfExpression {
+        [
+        (${ self.condition } ? ${ self.whenTrue } : ${self.whenFalse} )
+        ]
+}

@@ -2,7 +2,7 @@ const SERVER_URL = "http://127.0.0.1:8001/";
 
 import request from "supertest";
 import { app } from "../server/server-def";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 const modelUnitInterfacePostfix: string = "Public";
 const modelName: string = "__TEST__";
@@ -16,9 +16,9 @@ const contentHgUnit = {
             name: "gfah ",
             body: null,
             parameters: [],
-            declaredType: null
-        }
-    ]
+            declaredType: null,
+        },
+    ],
 };
 const contentHgIntf = {
     $typename: "ExampleUnit",
@@ -27,9 +27,9 @@ const contentHgIntf = {
     methods: [
         {
             $typename: "Method",
-            name: "gfah "
-        }
-    ]
+            name: "gfah ",
+        },
+    ],
 };
 const emptyJson = {};
 
@@ -62,7 +62,9 @@ describe("Freon Model Server", () => {
         const response1 = await serv.get(`/getModelUnit?folder=${modelName}&name=${unitName}`);
         expect(response1.status).toBe(201);
         expect(JSON.parse(response1.body)).toEqual(contentHgUnit);
-        const response2 = await serv.get(`/getModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
+        const response2 = await serv.get(
+            `/getModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`,
+        );
         expect(response2.status).toBe(201);
         expect(JSON.parse(response2.body)).toEqual(contentHgIntf);
     });
@@ -71,12 +73,16 @@ describe("Freon Model Server", () => {
         const unitName: string = "NIEUW";
         const response1 = await serv.put(`/putModelUnit?folder=${modelName}&name=${unitName}`);
         expect(response1.status).toBe(201);
-        const response2 = await serv.put(`/putModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
+        const response2 = await serv.put(
+            `/putModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`,
+        );
         expect(response2.status).toBe(201);
         const response3 = await serv.get(`/getModelUnit?folder=${modelName}&name=${unitName}`);
         expect(response3.status).toBe(201);
         expect(JSON.parse(response3.body)).toEqual(emptyJson);
-        const response4 = await serv.get(`/getModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
+        const response4 = await serv.get(
+            `/getModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`,
+        );
         expect(response4.status).toBe(201);
         expect(JSON.parse(response3.body)).toEqual(emptyJson);
     });
@@ -89,7 +95,9 @@ describe("Freon Model Server", () => {
         // and delete it
         const response1 = await serv.get(`/deleteModelUnit?folder=${modelName}&name=${unitName}`);
         expect(response1.status).toBe(201);
-        const response2 = await serv.get(`/deleteModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
+        const response2 = await serv.get(
+            `/deleteModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`,
+        );
         expect(response2.status).toBe(201);
         // check whether it is no longer present
         const response3 = await serv.get(`/getUnitList?folder=${modelName}`);

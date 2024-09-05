@@ -1,13 +1,20 @@
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
-    ConceptRuleSet, ExpressionRule, IsUniqueRule,
+    ConceptRuleSet,
+    ExpressionRule,
+    IsUniqueRule,
     NotEmptyRule,
-    ValidatorDef, ValidationMessage, ValidationMessageReference, ValidationMessageText, ValidationRule, ValidationSeverity,
-    ValidNameRule
+    ValidatorDef,
+    ValidationMessage,
+    ValidationMessageReference,
+    ValidationMessageText,
+    ValidationRule,
+    ValidationSeverity,
+    ValidNameRule,
 } from "../metalanguage/index.js";
 import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
-import {FreMetaDefinitionElement, ParseLocationUtil} from "../../utils/index.js";
+import { FreMetaDefinitionElement, ParseLocationUtil } from "../../utils/index.js";
 
 // Functions used to create instances of the language classes (in ValidatorDefLang)
 // from the parsed data objects (from ValidatorGrammar.pegjs).
@@ -182,7 +189,9 @@ export function createErrorMessage(data: Partial<ValidationMessage>): Validation
     return result;
 }
 
-export function createValidationMessageReference(data: Partial<ValidationMessageReference>): ValidationMessageReference {
+export function createValidationMessageReference(
+    data: Partial<ValidationMessageReference>,
+): ValidationMessageReference {
     const result = new ValidationMessageReference();
     if (!!data.expression) {
         result.expression = data.expression;

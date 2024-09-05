@@ -1,10 +1,10 @@
-import { ListJoinType } from "./FreEditDefLang.js";
+import { ListJoinType } from "./editlanguage/index.js";
 
 export class EditorDefaults {
-    static standardReferenceSeparator = ".";
+    static globalReferenceSeparator = ".";
     static startBracket = "{";
     static endBracket = "}";
-    static standardIndent = 4;
+    static globalIndent = 4;
     static listJoinType = ListJoinType.Separator;
     static listJoinText = "";
     // Other defaults for listInfo are set in class ListInfo.

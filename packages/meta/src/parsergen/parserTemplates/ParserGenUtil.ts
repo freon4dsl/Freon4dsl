@@ -1,14 +1,17 @@
-import { FreEditProjection, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
+import { FreEditNormalProjection, FreEditProjectionGroup, FreEditUnit } from "../../editordef/metalanguage/index.js";
 import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults.js";
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaExpressionConcept } from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaBinaryExpressionConcept,
+    FreMetaClassifier,
+    FreMetaExpressionConcept,
+} from "../../languagedef/metalanguage/index.js";
 import { GenerationUtil } from "../../utils/index.js";
 
 export class ParserGenUtil {
-
     // find all expression bases for all binaries
     static findAllExpressionBases(list: FreMetaBinaryExpressionConcept[]): FreMetaExpressionConcept[] {
         const bases: FreMetaExpressionConcept[] = [];
-        list.forEach(impl => {
+        list.forEach((impl) => {
             const expBase = GenerationUtil.findExpressionBase(impl as FreMetaBinaryExpressionConcept);
             if (bases.indexOf(expBase) === -1) {
                 // add if not present
@@ -25,30 +28,42 @@ export class ParserGenUtil {
      * @param editUnit the edit definition to serach for the projection groups
      */
     static findParsableProjectionGroup(editUnit: FreEditUnit) {
-        let projectionGroup: FreEditProjectionGroup | undefined = editUnit.projectiongroups.find(g => g.name === EditorDefaults.parserGroupName);
+        let projectionGroup: FreEditProjectionGroup | undefined = editUnit.projectiongroups.find(
+            (g) => g.name === EditorDefaults.parserGroupName,
+        );
         if (!projectionGroup) {
             projectionGroup = editUnit.getDefaultProjectiongroup();
         }
         return projectionGroup;
     }
 
-    static findNonTableProjection(projectionGroup: FreEditProjectionGroup, classifier: FreMetaClassifier, projectionName?: string): FreEditProjection | undefined {
+    static findNonTableProjection(
+        projectionGroup: FreEditProjectionGroup,
+        classifier: FreMetaClassifier,
+        projectionName?: string,
+    ): FreEditNormalProjection | undefined {
         let myGroup: FreEditProjectionGroup | undefined = projectionGroup;
         // take care of named projections: search the projection group with the right name
         if (!!projectionName && projectionName.length > 0) {
             if (projectionGroup.name !== projectionName) {
-                myGroup = projectionGroup.owningDefinition?.projectiongroups.find(group => group.name === projectionName);
+                myGroup = projectionGroup.owningDefinition?.projectiongroups.find(
+                    (group) => group.name === projectionName,
+                );
             }
         }
-        let myProjection: FreEditProjection | undefined = undefined;
+        let myProjection: FreEditNormalProjection | undefined = undefined;
         if (!!myGroup) {
             myProjection = myGroup.findNonTableProjectionForType(classifier);
-            if (!myProjection && projectionGroup !== myGroup) { // if not found, then try my 'own' projection group
+            if (!myProjection && projectionGroup !== myGroup) {
+                // if not found, then try my 'own' projection group
                 myProjection = projectionGroup.findNonTableProjectionForType(classifier);
             }
         }
-        if (!myProjection) { // still not found, try the default group
-            myProjection = projectionGroup.owningDefinition?.getDefaultProjectiongroup()?.findNonTableProjectionForType(classifier);
+        if (!myProjection) {
+            // still not found, try the default group
+            myProjection = projectionGroup.owningDefinition
+                ?.getDefaultProjectiongroup()
+                ?.findNonTableProjectionForType(classifier);
         }
         return myProjection;
     }
@@ -66,10 +81,10 @@ export class ParserGenUtil {
      * Creates a comment from the grammar rule 'rule'.
      * @param rule
      */
-    static makeComment (rule: string): string {
-        rule = rule.replace(new RegExp("\n", "gm") , "\n\t*");
-        rule = rule.replace(new RegExp("/\\*", "gm") , "--");
-        rule = rule.replace(new RegExp("\\*/", "gm") , "--");
+    static makeComment(rule: string): string {
+        rule = rule.replace(new RegExp("\n", "gm"), "\n\t*");
+        rule = rule.replace(new RegExp("/\\*", "gm"), "--");
+        rule = rule.replace(new RegExp("\\*/", "gm"), "--");
         return `/**
              * Method to transform branches that match the following rule:
              * ${rule}
@@ -82,15 +97,19 @@ export class ParserGenUtil {
         // See also BasicGrammar.part.pegjs
         // Note that the order of these chars is relevant! Always put "\\" first.
         const regexSpecialCharacters = [
-            "\"", "\'", "/", "{"
+            '"',
+            "'",
+            "/",
+            "{",
             // "\\", ".", "+", "*", "?",
             // "[", "]", "$", "(", "^",
             // ")",  "}", "=", "!",
             // "<", ">", "|", ":", "-"
         ];
 
-        regexSpecialCharacters.forEach(rgxSpecChar =>
-            input = input.replace(new RegExp("\\" + rgxSpecChar, "gm"), "\\" + rgxSpecChar));
+        regexSpecialCharacters.forEach(
+            (rgxSpecChar) => (input = input.replace(new RegExp("\\" + rgxSpecChar, "gm"), "\\" + rgxSpecChar)),
+        );
         return input;
     }
 }

@@ -1,0 +1,48 @@
+editor special
+
+
+
+ExternalUnit {[
+    ${self.content}
+    A simple external component:
+    [external = simple ]
+    Some text in front of fragment XX [fragment xx]
+    Some text in front of fragment YY [fragment yy]
+]
+fragment xx [
+    This is fragment XX
+    [fragment zz]
+]
+fragment yy [
+    This is fragment YY
+]
+fragment zz [
+    This is fragment ZZ
+]
+}
+
+AA {[
+    This is concept AA ${self.name} in which all properties are wrapped.
+    stringProp ${self.stringProp wrap=stringWrapper}
+    numberProp ${self.numberProp wrap=numberWrapper}
+    booleanProp${self.booleanProp wrap=booleanWrapper}
+    // properties with concept as type
+    conceptProp ${self.conceptProp wrap=partWrapper}
+    conceptList ${self.conceptList wrap=partListWrapper}
+    referenceProp ${self.referenceProp wrap=refWrapper}
+    referenceList ${self.referenceList wrap=refListWrapper}
+]}
+
+BB {[
+    This is concept BB ${self.name} in which all properties are replaced.
+    // the possibilities for primitive properties
+    stringProp ${self.stringProp replace=stringReplacer}
+    numberProp ${self.numberProp replace=numberReplacer}
+    booleanProp ${self.booleanProp replace=booleanReplacer}
+    // properties with concept as type
+    conceptProp ${self.conceptProp replace=partReplacer}
+    conceptList ${self.conceptList replace=partListReplacer}
+    // properties with reference as type
+    referenceProp ${self.referenceProp replace=refReplacer}
+    referenceList ${self.referenceList replace=refListReplacer}
+]}

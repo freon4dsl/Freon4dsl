@@ -9,33 +9,33 @@ class Vehicle implements X {
 
     constructor() {
         makeObservable(this, {
-            type: observable
-        })
+            type: observable,
+        });
     }
 }
 class Car extends Vehicle {
-    type: string = "car"
+    type: string = "car";
     name: string;
 
     constructor() {
         super();
-       // makeObservable(this, {
-       //      type: observable
-       //  })
+        // makeObservable(this, {
+        //      type: observable
+        //  })
     }
 }
 
 const vehicle = new Vehicle();
 const car = new Car();
 
-autorun( () => {
+autorun(() => {
     console.log("autorun car.type " + car.type);
-})
-autorun( () => {
+});
+autorun(() => {
     console.log("autorun vehicle.type " + vehicle.type);
-})
+});
 
-runInAction( () => {
+runInAction(() => {
     vehicle.type = "none";
-    car.type = "fast car"
+    car.type = "fast car";
 });

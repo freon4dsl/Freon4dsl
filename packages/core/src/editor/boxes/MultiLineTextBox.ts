@@ -25,7 +25,13 @@ export class MultiLineTextBox extends Box {
         return this.$getText();
     }
 
-    constructor(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<MultiLineTextBox>) {
+    constructor(
+        node: FreNode,
+        role: string,
+        getText: () => string,
+        setText: (text: string) => void,
+        initializer?: Partial<MultiLineTextBox>,
+    ) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.$getText = getText;

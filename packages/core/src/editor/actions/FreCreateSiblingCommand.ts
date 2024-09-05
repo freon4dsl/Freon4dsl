@@ -13,8 +13,8 @@ import { FreCommand } from "./FreCommand";
  */
 export class FreCreateSiblingCommand extends FreCommand {
     // propertyName: string;                   // The name of the property in which the created element will be stored.
-    conceptName: string;                    // The name of the concept that will be created.
-    referenceShortcut: ReferenceShortcut;   // todo
+    conceptName: string; // The name of the concept that will be created.
+    referenceShortcut: ReferenceShortcut; // todo
     boxRoleToSelect: string;
 
     constructor(conceptName: string, referenceShortcut: ReferenceShortcut, boxRoleToSelect?: string) {
@@ -33,8 +33,15 @@ export class FreCreateSiblingCommand extends FreCommand {
      */
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
         // todo make index optional and set the default value to -1;
-        console.log("CreateSiblingCommand: trigger [" + triggerTypeToString(trigger) + "] part: " + this.conceptName + " refshort " + this.referenceShortcut);
-        const ownerDescriptor = box.element.freOwnerDescriptor();
+        console.log(
+            "CreateSiblingCommand: trigger [" +
+                triggerTypeToString(trigger) +
+                "] part: " +
+                this.conceptName +
+                " refshort " +
+                this.referenceShortcut,
+        );
+        const ownerDescriptor = box.node.freOwnerDescriptor();
         const ownerConcept: string = ownerDescriptor.owner.freLanguageConcept();
         const propName: string = ownerDescriptor.propertyName;
         let theModelElement = ownerDescriptor.owner[propName];
@@ -51,7 +58,10 @@ export class FreCreateSiblingCommand extends FreCommand {
             theModelElement = newElement;
         }
         if (!!trigger && isString(trigger) && !!this.referenceShortcut) {
-            newElement[this.referenceShortcut.propertyName] = FreLanguage.getInstance().referenceCreator(trigger, this.referenceShortcut.conceptName);
+            newElement[this.referenceShortcut.propertyName] = FreLanguage.getInstance().referenceCreator(
+                trigger,
+                this.referenceShortcut.conceptName,
+            );
         }
         const self = this;
         if (!!this.boxRoleToSelect) {
@@ -68,5 +78,7 @@ export class FreCreateSiblingCommand extends FreCommand {
 
     // @ts-ignore
     // parameters present to adhere to base class signature
-    undo(box: Box, editor: FreEditor) { /* to be done */ }
+    undo(box: Box, editor: FreEditor) {
+        /* to be done */
+    }
 }

@@ -9,13 +9,13 @@ Editor_Definition = group:projectionGroup
 }
 
 projectionGroup = ws "editor" ws name:var ws num:("precedence" ws n:numberliteral ws {return n;})?
-        standard:("global" ws "{" ws list:singleStandardProjection* ws "}" ws {return list;})?
+        globals:("global" ws "{" ws list:singleGlobalProjection* ws "}" ws {return list;})?
         projections:classifierProjection* ws
 {
     return creator.createProjectionGroup({
         "name"                          : name,
         "precedence"                    : num !== undefined && num !== null ? Number.parseInt(num, 10) : undefined, // the standard for parseInt is not (!) the decimal system,
-        "standardProjections"           : standard,
+        "globalProjections"             : globals,
         "projections"                   : projections,
         "location"                      : location()
     });
@@ -28,15 +28,9 @@ projection_end          = "]"
 projection_separator    = "|"
 displayType             = "text" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
 
-//standardProjections = "defaults" ws "{" ws list:singleStandardProjection* ws "}"
-//{
-//    console.log("list: " + list + ", " + location().start.line)
-//    return { list: list };
-//}
-
-singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
+singleGlobalProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "boolean",
         "displayType"   : kind,
         "keywords"      : kw,
@@ -45,7 +39,7 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 }
 / "referenceSeparator" ws projection_begin t:textBut projection_end ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "referenceSeparator",
         "separator"     : t,
         "location"      : location()
@@ -53,7 +47,7 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 }
 / "number" ws kind:displayType? ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "number",
         "displayType"   : kind,
         "location"      : location()
@@ -61,7 +55,7 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 }
 / "limited" projection_begin projection_end ws kind:displayType? ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "limitedList",
         "displayType"   : kind,
         "location"      : location()
@@ -69,47 +63,38 @@ singleStandardProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 }
 / "limited" ws kind:displayType? ws
 {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "limited",
         "displayType"   : kind,
         "location"      : location()
     });
 }
-/ "externals" ws "{" ws list:singleExternal* ws "}" ws
+/ "external" ws "{" ws list:listOfExternals ws "}" ws
   {
-    return creator.createStandard({
+    return creator.createGlobal({
         "for"           : "externals",
-        "externals"     : creator.makeMapFromArray(list),
+        "externals"     : list,
         "location"      : location()
     });
   }
 
-singleExternal = boxName:var ws "from" ws "\"" boxPath:text "\""
-  {
-      return creator.createExternal({
-          "boxName"     : boxName,
-          "boxPath"     : boxPath,
-          "location"    : location()
-      })
-  }
-
-text = chars:anythingBut+
-  {
-      return chars.join("");
-  }
+listOfExternals = list:var|.., ws "," ws|
+{ return list; }
 
 classifierProjection =
             classifier:classifierReference curly_begin ws
                 projections:projectionChoice?
                 extras: extraClassifierInfo?
+                fragments: fragment_def_single*
             curly_end
 {
     return creator.createParsedClassifier({
-        "classifier"       : classifier,
-        "projection"       : !!projections ? projections["normal"] : null,
-        "tableProjection"  : !!projections ? projections["table"] : null,
-        "classifierInfo"   : extras,
-        "location"         : location()
+        "classifier"            : classifier,
+        "projection"            : !!projections ? projections["normal"] : null,
+        "tableProjection"       : !!projections ? projections["table"] : null,
+        "classifierInfo"        : extras,
+        "fragmentDefinitions"   : fragments,
+        "location"              : location()
     });
 }
 
@@ -235,22 +220,65 @@ tableProjection = "table" ws projection_begin ws
     return creator.createTableProjection({ "headers" : headers, "cells": cells, "location": location() });
 }
 
-lineWithOptional = items:(templateSpace / textItem / optionalProjection / custom_projection / property_projection / superProjection / newline )+
+lineWithOptional = items:(templateSpace / textItem / optionalProjection / simple_external / fragment_projection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
 
-lineWithOutOptional = items:(templateSpace / textItem / custom_projection / property_projection / superProjection / newline )+
+lineWithOutOptional = items:(templateSpace / textItem / simple_external / fragment_projection / property_projection / superProjection / newline )+
 {
     return creator.createLine( {"items": items} );
 }
 
-custom_projection = projection_begin "custom" equals_separator name:var ws projection_end
+simple_external = projection_begin "external" equals_separator name:var ws params:key_value_pair* projection_end
 {
-     return creator.createCustomProjection({
-        "boxName"   : name,
-        "location"  : location()
-     })
+    return creator.createSimpleExternal({
+        "name"          : name,
+        "params"        : params,
+        "location"      : location()
+    });
+}
+
+fragment_projection = projection_begin "fragment" ws name:var ws ext:external_info? projection_end
+{
+    return creator.createFragmentProjection({
+        "name"          : name,
+        "wrapperInfo"   : ext,
+        "location"      : location()
+    });
+}
+
+external_info = "wrap" equals_separator wrap:var ws params:key_value_pair*
+{
+    return creator.createExternalInfo({
+        "wrapBy"        : wrap,
+        "params"        : params,
+        "location"      : location()
+    });
+}
+/ "replace" equals_separator replace:var ws params:key_value_pair*
+{
+    return creator.createExternalInfo({
+        "replaceBy"     : replace,
+        "params"        : params,
+        "location"      : location()
+    });
+}
+
+// todo add table projection to the possibilities for 'child'
+fragment_def_single = "fragment" ws name:var wrap:("wrap" equals_separator w:var {return w;})? child:projection
+{
+    return creator.createFragmentDefinition({
+        "name"                  : name,
+        "wrapperInfo"           : wrap,
+        "childProjection"       : child,
+        "location"              : location()
+    });
+}
+
+key_value_pair = key:var equals_separator "\"" value:textBut "\"" ws
+{
+    return creator.createKeyValuePair( { key: key, value: value});
 }
 
 templateSpace = s:[ \t]+
@@ -267,8 +295,9 @@ property_projection = s:singleProperty {return s;}
     / l:listProperty {return l;}
     / b:button_projection {return b;}
 
+// todo make order of displayType, keywordDecl, and external_info flexible
 singleProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:displayType? ws kw:keywordDecl? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws kind:displayType? ws kw:keywordDecl? ws ext:external_info?
                       propProjectionEnd
 {
     return creator.createSinglePropertyProjection( {
@@ -276,12 +305,13 @@ singleProperty = propProjectionStart ws
         "projectionName"    : projName,
         "displayType"       : kind,
         "boolKeywords"      : kw,
+        "externalInfo"      : ext,
         "location"          : location()
     });
 }
 
 listProperty = propProjectionStart ws
-                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws l:listInfo? ws kind:displayType? ws
+                         "self."? propName:var projName:(colon_separator v:var {return v;})? ws l:listInfo? ws kind:displayType? ws ext:external_info? ws
                       propProjectionEnd
 {
     return creator.createListPropertyProjection( {
@@ -289,6 +319,7 @@ listProperty = propProjectionStart ws
         "projectionName"    : projName,
         "listInfo"          : l,
         "displayType"       : kind,
+        "externalInfo"      : ext,
         "location"          : location()
     });
 }

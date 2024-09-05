@@ -1,22 +1,22 @@
-import {Box} from "./internal";
-import {FreNode} from "../../ast";
-import {FreLogger} from "../../logging";
-import {FreUtils} from "../../util";
+import { Box } from "./internal";
+import { FreNode } from "../../ast";
+import { FreLogger } from "../../logging";
+import { FreUtils } from "../../util";
 
 const LOGGER: FreLogger = new FreLogger("BooleanControlBox").mute();
 
 export enum BoolDisplay {
-    SELECT,         // a dropdown menu with selections for True and False
-    CHECKBOX,       // a Checkbox that can be toggled
-    RADIO_BUTTON,   // a RadioButton with two options: True and False
-    SWITCH,         // an ordinary, sliding Switch that can be turned on and off
-    INNER_SWITCH,   // a Switch, shown within a box, with labels, that can be turned on and off
+    SELECT, // a dropdown menu with selections for True and False
+    CHECKBOX, // a Checkbox that can be toggled
+    RADIO_BUTTON, // a RadioButton with two options: True and False
+    SWITCH, // an ordinary, sliding Switch that can be turned on and off
+    INNER_SWITCH, // a Switch, shown within a box, with labels, that can be turned on and off
 }
 
 export class BooleanControlBox extends Box {
     readonly kind: string = "BooleanControlBox";
     showAs: BoolDisplay = BoolDisplay.RADIO_BUTTON;
-    labels: { yes: string; no: string } = { yes: "true", no: "false" }
+    labels: { yes: string; no: string } = { yes: "true", no: "false" };
     $getBoolean: () => boolean;
     $setBoolean: (newValue: boolean) => void;
 
@@ -34,11 +34,12 @@ export class BooleanControlBox extends Box {
         return this.$getBoolean();
     }
 
-    constructor(node: FreNode,
-                role: string,
-                getBoolean: () => boolean,
-                setBoolean: (newValue: boolean) => void,
-                initializer?: Partial<BooleanControlBox>
+    constructor(
+        node: FreNode,
+        role: string,
+        getBoolean: () => boolean,
+        setBoolean: (newValue: boolean) => void,
+        initializer?: Partial<BooleanControlBox>,
     ) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);

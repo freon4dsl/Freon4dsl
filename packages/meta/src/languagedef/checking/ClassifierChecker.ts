@@ -38,15 +38,17 @@ export class ClassifierChecker {
     // Note: this can be done only after checking for circular inheritance, because we need to look at allParts.
     public checkInfiniteLoops(classifier: FreMetaClassifier, runner: CheckRunner) {
         this.runner = runner;
-        classifier.allParts().forEach(aPart => {
+        classifier.allParts().forEach((aPart) => {
             if (!aPart.isPrimitive && !aPart.isOptional && !aPart.isList) {
                 const aPartType = aPart.type;
                 if (!!aPartType) {
-                    aPartType.allParts().forEach(bPart => {
+                    aPartType.allParts().forEach((bPart) => {
                         if (!bPart.isOptional && !bPart.isList) {
                             const bPartType = bPart.type;
-                            runner.simpleCheck(bPartType !== classifier,
-                                `Language contains an infinite loop: mandatory part '${aPart.name}' has mandatory property '${bPart.name}' of type ${bPart.typeReference.name} ${ParseLocationUtil.location(aPart)}.`);
+                            runner.simpleCheck(
+                                bPartType !== classifier,
+                                `Language contains an infinite loop: mandatory part '${aPart.name}' has mandatory property '${bPart.name}' of type ${bPart.typeReference.name} ${ParseLocationUtil.location(aPart)}.`,
+                            );
                         }
                     });
                 }
@@ -62,14 +64,16 @@ export class ClassifierChecker {
         propsToCheck.push(...classifier.primProperties);
         propsToCheck.push(...classifier.properties);
         const propsDone: FreMetaProperty[] = [];
-        propsToCheck.forEach(prop => {
+        propsToCheck.forEach((prop) => {
             // 1. all props defined in this classifier against themselves:
             // no prop with same name allowed, not even if they have the same type
-            const inSameCls = propsDone.find(prevProp => prevProp.name === prop.name);
+            const inSameCls = propsDone.find((prevProp) => prevProp.name === prop.name);
             if (!!inSameCls) {
                 // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
-                this.runner!.simpleCheck(false,
-                    `Property '${prop.name}' already exists in ${classifier.name} ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSameCls)}.`);
+                this.runner!.simpleCheck(
+                    false,
+                    `Property '${prop.name}' already exists in ${classifier.name} ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSameCls)}.`,
+                );
             }
             propsDone.push(prop);
             // 2. all props defined in this classifier should be different from the props of its super concepts/interfaces
@@ -78,18 +82,20 @@ export class ClassifierChecker {
             if (classifier instanceof FreMetaConcept && !!classifier.base) {
                 this.checkPropsOfBase(classifier.base.referred, prop);
             } else if (classifier instanceof FreMetaInterface) {
-                classifier.base.forEach(intfRef => {
+                classifier.base.forEach((intfRef) => {
                     const inSuper: FreMetaProperty | undefined = this.searchLocalProps(intfRef.referred, prop);
                     if (!!inSuper) {
                         // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
-                        this.runner!.simpleCheck(LangUtil.compareTypes(prop, inSuper),
-                            `Property '${prop.name}' with non conforming type already exists in base interface '${intfRef.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSuper)}.`);
+                        this.runner!.simpleCheck(
+                            LangUtil.compareTypes(prop, inSuper),
+                            `Property '${prop.name}' with non conforming type already exists in base interface '${intfRef.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSuper)}.`,
+                        );
                     }
                 });
             }
             // 3. all props defined in this concept against props from implemented interfaces: name and type should conform
             if (classifier instanceof FreMetaConcept) {
-                classifier.allInterfaces().forEach(intf => {
+                classifier.allInterfaces().forEach((intf) => {
                     this.checkPropAgainstInterface(intf, prop);
                 });
             }
@@ -98,12 +104,16 @@ export class ClassifierChecker {
         //      should not have a name equal to any other, except when their types conform.
         if (classifier instanceof FreMetaConcept) {
             const innerPropsDone: FreMetaProperty[] = [];
-            classifier.allInterfaces().forEach(intf => {
-                intf.allProperties().forEach(toBeImplemented => {
+            classifier.allInterfaces().forEach((intf) => {
+                intf.allProperties().forEach((toBeImplemented) => {
                     const implementedProp = this.findImplementedProperty(toBeImplemented, classifier, false);
-                    if (implementedProp === null || implementedProp === undefined) { // there is NO counterpart in either this concept or its base
-                        const inAnotherInterface = innerPropsDone.find(prevProp => prevProp.name === toBeImplemented.name);
-                        if (!!inAnotherInterface) { // there is a prop with the same name in another implemented interface
+                    if (implementedProp === null || implementedProp === undefined) {
+                        // there is NO counterpart in either this concept or its base
+                        const inAnotherInterface = innerPropsDone.find(
+                            (prevProp) => prevProp.name === toBeImplemented.name,
+                        );
+                        if (!!inAnotherInterface) {
+                            // there is a prop with the same name in another implemented interface
                             // we must check type conformance both ways!
                             // when types conform: add a new prop with the most specific type to classifier
                             let virtualProp: FreMetaProperty;
@@ -114,8 +124,10 @@ export class ClassifierChecker {
                             }
                             // if virtualProp exists, the types did conform to each other
                             // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
-                            this.runner!.simpleCheck(!!virtualProp!,
-                                `Concept '${classifier.name}': property '${toBeImplemented.name}' in '${intf.name}' does not conform to property '${toBeImplemented.name}' in '${inAnotherInterface.owningClassifier.name}' ${ParseLocationUtil.location(classifier)}.`);
+                            this.runner!.simpleCheck(
+                                !!virtualProp!,
+                                `Concept '${classifier.name}': property '${toBeImplemented.name}' in '${intf.name}' does not conform to property '${toBeImplemented.name}' in '${inAnotherInterface.owningClassifier.name}' ${ParseLocationUtil.location(classifier)}.`,
+                            );
                         }
                     }
                     innerPropsDone.push(toBeImplemented);
@@ -129,8 +141,8 @@ export class ClassifierChecker {
                 const basePropsToCheck: FreMetaProperty[] = [];
                 basePropsToCheck.push(...myBase.primProperties);
                 basePropsToCheck.push(...myBase.properties);
-                classifier.interfaces.forEach(intf => {
-                    basePropsToCheck.forEach(baseProp => {
+                classifier.interfaces.forEach((intf) => {
+                    basePropsToCheck.forEach((baseProp) => {
                         const inSuper: FreMetaProperty | undefined = this.searchLocalProps(classifier, baseProp);
                         if (!inSuper) {
                             this.checkPropAgainstInterface(intf.referred, baseProp);
@@ -152,12 +164,12 @@ export class ClassifierChecker {
                     whenOk: () => {
                         // set the 'implementedInBase' flag
                         prop.implementedInBase = true;
-
-                    }
+                    },
                 });
             } else if (!!myBase.base) {
                 // check base of base
-                if (myBase.base.referred instanceof FreMetaConcept) { // if error is made, base could be an interface
+                if (myBase.base.referred instanceof FreMetaConcept) {
+                    // if error is made, base could be an interface
                     this.checkPropsOfBase(myBase.base.referred, prop);
                 }
             }
@@ -165,28 +177,34 @@ export class ClassifierChecker {
     }
 
     private checkPropAgainstInterface(intf: FreMetaInterface, prop: FreMetaProperty) {
-        let inIntf: FreMetaProperty | undefined = intf.primProperties.find(prevProp => prevProp.name === prop.name);
+        let inIntf: FreMetaProperty | undefined = intf.primProperties.find((prevProp) => prevProp.name === prop.name);
         if (!inIntf) {
-            inIntf = intf.properties.find(prevProp => prevProp.name === prop.name);
+            inIntf = intf.properties.find((prevProp) => prevProp.name === prop.name);
         }
         if (!!inIntf) {
             // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
-            this.runner!.simpleCheck(LangUtil.compareTypes(prop, inIntf),
-                `(Inherited) property '${prop.name}' with non conforming type exists in implemented interface '${intf.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inIntf)}.`);
+            this.runner!.simpleCheck(
+                LangUtil.compareTypes(prop, inIntf),
+                `(Inherited) property '${prop.name}' with non conforming type exists in implemented interface '${intf.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inIntf)}.`,
+            );
         }
     }
 
-    private findImplementedProperty(prop: FreMetaProperty, concept: FreMetaConcept, includeInterfaces: boolean) : FreMetaProperty | undefined {
+    private findImplementedProperty(
+        prop: FreMetaProperty,
+        concept: FreMetaConcept,
+        includeInterfaces: boolean,
+    ): FreMetaProperty | undefined {
         const propsToCheck: FreMetaProperty[] = [];
         propsToCheck.push(...concept.primProperties);
         propsToCheck.push(...concept.properties);
         if (includeInterfaces && concept.interfaces.length > 0) {
-            concept.interfaces.forEach(intf => {
+            concept.interfaces.forEach((intf) => {
                 propsToCheck.push(...intf.referred.allPrimProperties());
                 propsToCheck.push(...intf.referred.allProperties());
             });
         }
-        let implementedProp: FreMetaProperty | undefined = propsToCheck.find(prevProp => prevProp.name === prop.name);
+        let implementedProp: FreMetaProperty | undefined = propsToCheck.find((prevProp) => prevProp.name === prop.name);
         // if not implemented by the concept itself, try its base - recursive -
         const myBase = concept.base?.referred;
         if (!implementedProp && !!myBase) {
@@ -198,10 +216,12 @@ export class ClassifierChecker {
     private checkCircularInheritance(circularNames: string[], con: FreMetaClassifier): boolean {
         if (circularNames.includes(con.name)) {
             // error, already seen this name
-            const text: string = circularNames.map(name => name ).join(", ");
+            const text: string = circularNames.map((name) => name).join(", ");
             // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
-            this.runner!.simpleCheck(false,
-                `Concept or interface '${con.name}' is part of a forbidden circular inheritance tree (${text}) ${ParseLocationUtil.location(con)}.`);
+            this.runner!.simpleCheck(
+                false,
+                `Concept or interface '${con.name}' is part of a forbidden circular inheritance tree (${text}) ${ParseLocationUtil.location(con)}.`,
+            );
             return true;
         } else {
             // not (yet) found a circularity, check 'base'
@@ -216,7 +236,7 @@ export class ClassifierChecker {
                 }
             } else if (con instanceof FreMetaInterface) {
                 let result = false;
-                for ( const base of con.base ) {
+                for (const base of con.base) {
                     const realBase = base.referred;
                     if (!!realBase) {
                         result = result || this.checkCircularInheritance(circularNames, realBase);
@@ -233,9 +253,11 @@ export class ClassifierChecker {
     }
 
     private searchLocalProps(myBase: FreMetaClassifier, prop: FreMetaProperty): FreMetaProperty | undefined {
-        let inSuper: FreMetaProperty | undefined = myBase.primProperties.find(prevProp => prevProp.name === prop.name);
+        let inSuper: FreMetaProperty | undefined = myBase.primProperties.find(
+            (prevProp) => prevProp.name === prop.name,
+        );
         if (!inSuper) {
-            inSuper = myBase.properties.find(prevProp => prevProp.name === prop.name);
+            inSuper = myBase.properties.find((prevProp) => prevProp.name === prop.name);
         }
         return inSuper;
     }

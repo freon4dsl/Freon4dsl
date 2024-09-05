@@ -3,9 +3,11 @@ import {
     FretExp,
     FretFunctionCallExp,
     FretLimitedInstanceExp,
-    FretPropertyCallExp, FretPropInstance,
-    FretSelfExp, FretTypeConcept,
-    FretWhereExp
+    FretPropertyCallExp,
+    FretPropInstance,
+    FretSelfExp,
+    FretTypeConcept,
+    FretWhereExp,
 } from "../../metalanguage/index.js";
 import { ListUtil, Names } from "../../../utils/index.js";
 import { FreMetaClassifier, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
@@ -27,7 +29,12 @@ export class FreTyperGenUtils {
         return false;
     }
 
-    public static makeExpAsTypeOrElement(exp: FretExp, varName: string, varIsType: boolean, imports: FreMetaClassifier[]): string {
+    public static makeExpAsTypeOrElement(
+        exp: FretExp,
+        varName: string,
+        varIsType: boolean,
+        imports: FreMetaClassifier[],
+    ): string {
         if (!!exp.returnType && FreTyperGenUtils.isType(exp.returnType)) {
             return FreTyperGenUtils.makeExpAsType(exp, varName, varIsType, imports);
         } else {
@@ -35,7 +42,12 @@ export class FreTyperGenUtils {
         }
     }
 
-    public static makeExpAsType(exp: FretExp, varName: string, varIsType: boolean, imports: FreMetaClassifier[]): string {
+    public static makeExpAsType(
+        exp: FretExp,
+        varName: string,
+        varIsType: boolean,
+        imports: FreMetaClassifier[],
+    ): string {
         let result: string = "";
         if (exp instanceof FretAnytypeExp) {
             result = `AstType.ANY_TYPE`;
@@ -44,7 +56,7 @@ export class FreTyperGenUtils {
         } else if (exp instanceof FretCreateExp && !!exp.type) {
             ListUtil.addIfNotPresent(imports, exp.type);
             result = `${Names.classifier(exp.type)}.create({
-                ${exp.propertyDefs.map((prop: FretPropInstance) => `${prop.property ? prop.property.name : ''}: ${FreTyperGenUtils.makePropValue(prop, varName, varIsType, imports)}`)}
+                ${exp.propertyDefs.map((prop: FretPropInstance) => `${prop.property ? prop.property.name : ""}: ${FreTyperGenUtils.makePropValue(prop, varName, varIsType, imports)}`)}
             }) /* FretCreateExp A */`;
             if (this.types.includes(exp.type)) {
                 // the 'create' makes an object that is an AST concept, not a FretTypeConcept
@@ -61,7 +73,7 @@ export class FreTyperGenUtils {
                 }
             } else if (exp.calledFunction === commonSuperName) {
                 // TODO params that are lists themselves
-                result = `this.mainTyper.commonSuperType([${exp.actualParameters.map(par => `${FreTyperGenUtils.makeExpAsElement(par, varName, varIsType, imports)}`). join(", ")}])`;
+                result = `this.mainTyper.commonSuperType([${exp.actualParameters.map((par) => `${FreTyperGenUtils.makeExpAsElement(par, varName, varIsType, imports)}`).join(", ")}])`;
             } else {
                 result = "null /* FretFunctionCallExp */";
             }
@@ -98,7 +110,12 @@ export class FreTyperGenUtils {
         return result;
     }
 
-    public static makeExpAsElement(exp: FretExp, varName: string, varIsType: boolean, imports: FreMetaClassifier[]): string {
+    public static makeExpAsElement(
+        exp: FretExp,
+        varName: string,
+        varIsType: boolean,
+        imports: FreMetaClassifier[],
+    ): string {
         let result: string = "";
         if (exp instanceof FretAnytypeExp) {
             result = Names.FreType + ".ANY";
@@ -140,9 +157,15 @@ export class FreTyperGenUtils {
         return result;
     }
 
-    public static makePropValue(propExp: FretPropInstance, varName: string, varIsType: boolean, imports: FreMetaClassifier[]): string {
+    public static makePropValue(
+        propExp: FretPropInstance,
+        varName: string,
+        varIsType: boolean,
+        imports: FreMetaClassifier[],
+    ): string {
         let result: string = FreTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, varIsType, imports);
-        if (!!propExp.property && !propExp.property.isPart) { // it is a reference, wrap it in a FreElementReference
+        if (!!propExp.property && !propExp.property.isPart) {
+            // it is a reference, wrap it in a FreElementReference
             // TODO find solution for this import, currently it is imported always
             // ListUtil.addIfNotPresent(imports, Names.FreElementReference);
             const typeName: string = Names.classifier(propExp.property.type);
@@ -161,5 +184,4 @@ export class FreTyperGenUtils {
             return `${Names.FreNodeReference}.create<${typeName}>((${toBeCopiedName} as ${toBeCopiedTypeName}).\$${prop.name}, "${typeName}")`;
         }
     }
-
 }

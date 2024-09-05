@@ -2,7 +2,6 @@ import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { Names } from "../../../utils/index.js";
 
 export class InterpreterMainTemplate {
-
     /**
      * The base class containing all interpreter functions that should be defined.
      * @param language
@@ -72,5 +71,4 @@ export class InterpreterMainTemplate {
         }
         `;
     }
-
 }

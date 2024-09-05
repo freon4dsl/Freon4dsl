@@ -85,7 +85,7 @@ export const MANUAL_CUSTOM_ACTIONS: FreCustomAction[] = [
         ],
         trigger: /[0-9]/,
         action: (box: Box, trigger: FreTriggerUse, editor: FreEditor) => {
-            const parent = box.element;
+            const parent = box.node;
             const x = new NumberLiteralExpression();
             if( isString(trigger) ) {
                 x.value = Number.parseInt(trigger.toString());

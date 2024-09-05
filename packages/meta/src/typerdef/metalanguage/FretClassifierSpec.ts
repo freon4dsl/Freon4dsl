@@ -17,7 +17,7 @@ export class FretClassifierSpec extends FreTyperElement {
     static create(data: Partial<FretClassifierSpec>): FretClassifierSpec {
         const result = new FretClassifierSpec();
         if (!!data.rules) {
-            data.rules.forEach(x => result.rules.push(x));
+            data.rules.forEach((x) => result.rules.push(x));
         }
         if (!!data.$myClassifier) {
             result.$myClassifier = data.$myClassifier;
@@ -31,7 +31,7 @@ export class FretClassifierSpec extends FreTyperElement {
     owner: TyperDef;
 
     readonly $typename: string = "FretClassifierSpec"; // holds the metatype in the form of a string
-    $id: string = ''; // a unique identifier
+    $id: string = ""; // a unique identifier
 
     rules: FretTypeRule[] = []; // implementation of part 'rules'
     // @ts-ignore Property is set during parsing and checking phases
@@ -49,6 +49,6 @@ export class FretClassifierSpec extends FreTyperElement {
         return undefined;
     }
     toFreString(): string {
-        return this.$myClassifier.name + " {\n\t" + this.rules.map(r => r.toFreString()).join("\n\t") + "\n} ";
+        return this.$myClassifier.name + " {\n\t" + this.rules.map((r) => r.toFreString()).join("\n\t") + "\n} ";
     }
 }

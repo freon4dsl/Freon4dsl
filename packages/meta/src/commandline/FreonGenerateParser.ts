@@ -12,7 +12,8 @@ export class FreonGenerateParser extends FreonGeneratePartAction {
         super({
             actionName: "parse-it",
             summary: "Generates the typeScript code for the reader and writer of your language",
-            documentation: "Generates TypeScript code for the reader and writer of the language defined in the .ast and .edit files."
+            documentation:
+                "Generates TypeScript code for the reader and writer of the language defined in the .ast and .edit files.",
         });
     }
 

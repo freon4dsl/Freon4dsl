@@ -7,7 +7,6 @@ import { remove, union } from "lodash";
  * Utility functions to combine two FreAction objects.
  */
 export class ActionsUtil {
-
     /**
      * Join the actions, ensuring no duplicare triggers are in the result.
      * If there is a duplicate trigger, the one in `newActions` will be used.
@@ -16,7 +15,7 @@ export class ActionsUtil {
      * @param newActions The ssecond FreActions to join.
      */
     static join(defaultActions: FreAction[], newActions: FreAction[]) {
-        newActions.forEach(newA => this.remove(defaultActions, newA));
+        newActions.forEach((newA) => this.remove(defaultActions, newA));
         return union(defaultActions, newActions);
     }
 

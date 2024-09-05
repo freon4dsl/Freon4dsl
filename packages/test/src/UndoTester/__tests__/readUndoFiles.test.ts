@@ -2,7 +2,7 @@ import { UndoModel, UndoPart, UndoUnit } from "../language/gen";
 import { UndoModelEnvironment } from "../config/gen/UndoModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import { FreUndoManager } from "@freon4dsl/core";
-import { describe, it, expect} from "vitest"
+import { describe, it, expect } from "vitest";
 
 const handler = new FileHandler();
 const reader = UndoModelEnvironment.getInstance().reader;
@@ -28,15 +28,15 @@ describe("Testing Undo Manager", () => {
 
         // change the value of 'prim'
         unit1.prim = "nieuwe_waarde";
-        expect (unit1.prim).toBe("nieuwe_waarde");
+        expect(unit1.prim).toBe("nieuwe_waarde");
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (unit1.prim).toBe("myText");
+        expect(unit1.prim).toBe("myText");
 
         // redo the change
         manager.executeRedo(unit1);
-        expect (unit1.prim).toBe("nieuwe_waarde");
+        expect(unit1.prim).toBe("nieuwe_waarde");
     });
 
     it("change, undo, redo, undo on part", () => {
@@ -46,17 +46,17 @@ describe("Testing Undo Manager", () => {
 
         // change the value of 'part'
         const oldPartId = unit1.part.freId(); // remember the id of the old value
-        const otherPart = UndoPart.create({name: "part42"});
+        const otherPart = UndoPart.create({ name: "part42" });
         unit1.part = otherPart;
-        expect (unit1.part).toBe(otherPart);
+        expect(unit1.part).toBe(otherPart);
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (unit1.part.freId()).toBe(oldPartId);
+        expect(unit1.part.freId()).toBe(oldPartId);
 
         // redo the change
         manager.executeRedo(unit1);
-        expect (unit1.part).toBe(otherPart);
+        expect(unit1.part).toBe(otherPart);
     });
 
     it("change, undo, redo, undo on an element in a list of primitives", () => {
@@ -68,15 +68,15 @@ describe("Testing Undo Manager", () => {
         // change the value of 'numlist'
         const oldValue = unit1.numlist[0];
         unit1.numlist[0] = 24;
-        expect (unit1.numlist[0]).toBe(24);
+        expect(unit1.numlist[0]).toBe(24);
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (unit1.numlist[0]).toBe(oldValue);
+        expect(unit1.numlist[0]).toBe(oldValue);
 
         // redo the change
         manager.executeRedo(unit1);
-        expect (unit1.numlist[0]).toBe(24);
+        expect(unit1.numlist[0]).toBe(24);
     });
 
     it("change, undo, redo, undo on multiple elements in a list of primitives", () => {
@@ -86,23 +86,23 @@ describe("Testing Undo Manager", () => {
         expect(unit1.numlist.length).toBeGreaterThan(0);
 
         // change the value of 'numlist'
-        expect (unit1.numlist.length).toBe(3);
+        expect(unit1.numlist.length).toBe(3);
         const oldValue1 = unit1.numlist[0];
         const oldValue2 = unit1.numlist[1];
         const oldValue3 = unit1.numlist[2];
         unit1.numlist.splice(1, 2);
-        expect (unit1.numlist.length).toBe(1);
+        expect(unit1.numlist.length).toBe(1);
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (unit1.numlist.length).toBe(3);
-        expect (unit1.numlist[0]).toBe(oldValue1);
-        expect (unit1.numlist[1]).toBe(oldValue2);
-        expect (unit1.numlist[2]).toBe(oldValue3);
+        expect(unit1.numlist.length).toBe(3);
+        expect(unit1.numlist[0]).toBe(oldValue1);
+        expect(unit1.numlist[1]).toBe(oldValue2);
+        expect(unit1.numlist[2]).toBe(oldValue3);
 
         // redo the change
         manager.executeRedo(unit1);
-        expect (unit1.numlist.length).toBe(1);
+        expect(unit1.numlist.length).toBe(1);
     });
 
     it("change, undo, redo, undo on an element in a list of parts", () => {
@@ -115,15 +115,15 @@ describe("Testing Undo Manager", () => {
         const oldValue = unit1.partlist[2];
         const newValue = new UndoPart("part90");
         unit1.partlist[2] = newValue;
-        expect (unit1.partlist[2]).toBe(newValue);
+        expect(unit1.partlist[2]).toBe(newValue);
 
         // undo the change
         manager.executeUndo(unit1);
-        expect (unit1.partlist[2]).toBe(oldValue);
+        expect(unit1.partlist[2]).toBe(oldValue);
 
         // redo the change
         manager.executeRedo(unit1);
-        expect (unit1.partlist[2]).toBe(newValue);
+        expect(unit1.partlist[2]).toBe(newValue);
     });
 
     it("change, undo, redo, undo on multiple elements in a list of parts", () => {
@@ -135,25 +135,25 @@ describe("Testing Undo Manager", () => {
 
         // change the value of 'partlist'
         // console.log(unit1.partlist.map(p => p.name));
-        expect (unit1.partlist.length).toBe(5);
-        expect (unit1.freOwner()).not.toBeNull();
-        expect (unit1.freOwner()).not.toBeUndefined();
+        expect(unit1.partlist.length).toBe(5);
+        expect(unit1.freOwner()).not.toBeNull();
+        expect(unit1.freOwner()).not.toBeUndefined();
         const oldValue1 = unit1.partlist[0];
         const oldValue2 = unit1.partlist[1];
         const oldValue3 = unit1.partlist[2];
         unit1.partlist.splice(1, 2);
-        expect (unit1.partlist.length).toBe(3);
+        expect(unit1.partlist.length).toBe(3);
 
         // undo the change
         // console.log("length of undo stack: " + undoStack.length + " => [[" + undoStack.map(d => d.toString()).join(", ") + "]]");
         manager.executeUndo(unit1);
-        expect (unit1.partlist.length).toBe(5);
-        expect (unit1.partlist[0]).toBe(oldValue1);
-        expect (unit1.partlist[1]).toBe(oldValue2);
-        expect (unit1.partlist[2]).toBe(oldValue3);
+        expect(unit1.partlist.length).toBe(5);
+        expect(unit1.partlist[0]).toBe(oldValue1);
+        expect(unit1.partlist[1]).toBe(oldValue2);
+        expect(unit1.partlist[2]).toBe(oldValue3);
 
         // redo the change
         manager.executeRedo(unit1);
-        expect (unit1.partlist.length).toBe(3);
+        expect(unit1.partlist.length).toBe(3);
     });
 });

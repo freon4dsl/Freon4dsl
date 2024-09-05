@@ -10,7 +10,7 @@ import {
     DemoMultiplyExpression,
     DemoPlusExpression,
     DemoDivideExpression,
-    DemoExpression
+    DemoExpression,
 } from "../language/gen";
 
 export function makeLiteralExp(incoming: any): DemoExpression {
@@ -20,7 +20,7 @@ export function makeLiteralExp(incoming: any): DemoExpression {
         (mine as DemoNumberLiteralExpression).value = Number.parseInt(incoming, 10);
     } else if (typeof incoming === "string" && (incoming === "true" || incoming === "false")) {
         mine = new DemoBooleanLiteralExpression();
-        (mine as DemoBooleanLiteralExpression).value = (incoming === "true");
+        (mine as DemoBooleanLiteralExpression).value = incoming === "true";
     } else if (typeof incoming === "string") {
         mine = new DemoStringLiteralExpression();
         (mine as DemoStringLiteralExpression).value = incoming;

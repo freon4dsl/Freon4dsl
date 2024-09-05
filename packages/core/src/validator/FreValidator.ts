@@ -18,24 +18,26 @@ export interface FreValidator {
  * element or a list of model elements.
  */
 export class FreError {
-    message: string;                    // human-readable error message
-    reportedOn: FreNode | FreNode[];    // the model element that does not comply
-    propertyName: string;               // the property of the model element that does not comply, if appropriate
-    propertyIndex: number;              // the property index of the model element that does not comply, if appropriate
-    locationdescription: string;        // human-readable indication of 'reportedOn'
-    severity: FreErrorSeverity;         // indication of how serious the error is, default is 'To Do'
+    message: string; // human-readable error message
+    reportedOn: FreNode | FreNode[]; // the model element that does not comply
+    propertyName: string; // the property of the model element that does not comply, if appropriate
+    propertyIndex: number; // the property index of the model element that does not comply, if appropriate
+    locationdescription: string; // human-readable indication of 'reportedOn'
+    severity: FreErrorSeverity; // indication of how serious the error is, default is 'To Do'
 
-    constructor(message: string,
-                node: FreNode | FreNode[],
-                locationdescription: string,
-                propertyName: string,
-                severity?: FreErrorSeverity,
-                propertyIndex?: number) {
+    constructor(
+        message: string,
+        node: FreNode | FreNode[],
+        locationdescription: string,
+        propertyName: string,
+        severity?: FreErrorSeverity,
+        propertyIndex?: number,
+    ) {
         this.message = message;
         this.reportedOn = node;
         this.locationdescription = locationdescription;
         // TODO Check typeof
-        if (typeof(severity) !== 'undefined') {
+        if (typeof severity !== "undefined") {
             this.severity = severity;
         } else {
             this.severity = FreErrorSeverity.ToDo;
@@ -52,5 +54,5 @@ export enum FreErrorSeverity {
     Improvement = "Improvement",
     ToDo = "TODO",
     Info = "Info",
-    NONE = "NONE"
+    NONE = "NONE",
 }

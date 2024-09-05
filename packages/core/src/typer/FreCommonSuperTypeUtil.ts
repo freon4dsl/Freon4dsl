@@ -9,7 +9,6 @@ import { FreType } from "./FreType";
 // 4. Empty list implies no ancestors.
 
 export class FreCommonSuperTypeUtil {
-
     public static commonSuperType(inList: FreType[], typer: FreTyper): FreType[] {
         if (!!inList && inList.length > 0) {
             // start with the supers from the first element

@@ -2,20 +2,19 @@ import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER } from "../../../utils/index.js"
 import {
     FreMetaLanguage,
     FreMetaBinaryExpressionConcept,
-    FreMetaClassifier, FreMetaProperty, FreMetaPrimitiveType
+    FreMetaClassifier,
+    FreMetaProperty,
+    FreMetaPrimitiveType,
 } from "../../../languagedef/metalanguage/index.js";
 import { Roles } from "../../../utils/index.js";
-import {
-    FreEditProjection,
-    FreEditUnit,
-    FreOptionalPropertyProjection
-} from "../../metalanguage/index.js";
+import { FreEditNormalProjection, FreEditUnit, FreOptionalPropertyProjection } from "../../metalanguage/index.js";
 
 export class DefaultActionsTemplate {
-
     generate(language: FreMetaLanguage, editorDef: FreEditUnit, relativePath: string): string {
-        const modelImports: string[] = language.conceptsAndInterfaces().map(c => `${Names.classifier(c)}`)
-            .concat(language.units.map(u => `${Names.classifier(u)}`));
+        const modelImports: string[] = language
+            .conceptsAndInterfaces()
+            .map((c) => `${Names.classifier(c)}`)
+            .concat(language.units.map((u) => `${Names.classifier(u)}`));
         return `
             import * as Keys from "${FREON_CORE}";
             import {
@@ -40,7 +39,7 @@ export class DefaultActionsTemplate {
                 RIGHT_MOST
             } from "${FREON_CORE}";
 
-            import { ${modelImports.join(", ") } } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+            import { ${modelImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
 
              /**
              * This module implements the actions available to the user in the editor.
@@ -51,9 +50,11 @@ export class DefaultActionsTemplate {
              * (3) if neither (1) nor (2) yields a result, the default is used.
              */
             export const BINARY_EXPRESSION_CREATORS: ${Names.FreCreateBinaryExpressionAction}[] = [
-                ${language.concepts.filter(c => (c instanceof FreMetaBinaryExpressionConcept) && !c.isAbstract).map(c =>
-            !!editorDef.findExtrasForType(c) ?
-                `${Names.FreCreateBinaryExpressionAction}.create({
+                ${language.concepts
+                    .filter((c) => c instanceof FreMetaBinaryExpressionConcept && !c.isAbstract)
+                    .map((c) =>
+                        !!editorDef.findExtrasForType(c)
+                            ? `${Names.FreCreateBinaryExpressionAction}.create({
                         trigger: "${editorDef.findExtrasForType(c)!.symbol}",
                         activeInBoxRoles: [
                             LEFT_MOST,
@@ -62,14 +63,13 @@ export class DefaultActionsTemplate {
                             AFTER_BINARY_OPERATOR
                         ],
                         expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
-                            const parent = box.element;
+                            const parent = box.node;
                             const newExpression = new ${Names.concept(c)}();
                             parent[(box as ActionBox).propertyName] = newExpression;
                             return newExpression;
                         }
                 })`
-            : 
-                `${Names.FreCreateBinaryExpressionAction}.create({
+                            : `${Names.FreCreateBinaryExpressionAction}.create({
                         trigger: "unknown-trigger",
                         activeInBoxRoles: [
                             LEFT_MOST,
@@ -78,13 +78,13 @@ export class DefaultActionsTemplate {
                             AFTER_BINARY_OPERATOR
                         ],
                         expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
-                            const parent = box.element;
+                            const parent = box.node;
                             const newExpression = new ${Names.concept(c)}();
                             parent[(box as ActionBox).propertyName] = newExpression;
                             return newExpression;
                         }
-                })`
-        )}
+                })`,
+                    )}
             ];
 
             export const CUSTOM_ACTIONS: ${Names.FreCustomAction}[] = [
@@ -93,14 +93,14 @@ export class DefaultActionsTemplate {
                 ${this.customActionForReferences(language, editorDef)}
             ];
             `;
-        }
+    }
 
     private customActionsForOptional(editorDef: FreEditUnit): string {
         let result: string = "";
-        editorDef.getDefaultProjectiongroup()?.projections.forEach( projection => {
-            if (!!projection && projection instanceof FreEditProjection) {
-                projection.lines.forEach(line => {
-                    line.items.forEach(item => {
+        editorDef.getDefaultProjectiongroup()?.projections.forEach((projection) => {
+            if (!!projection && projection instanceof FreEditNormalProjection) {
+                projection.lines.forEach((line) => {
+                    line.items.forEach((item) => {
                         if (item instanceof FreOptionalPropertyProjection && !!item.property) {
                             const firstLiteral: string = item.firstLiteral();
                             const myClassifier: FreMetaClassifier | undefined = projection.classifier?.referred;
@@ -114,15 +114,31 @@ export class DefaultActionsTemplate {
                                     rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName);
                                 } else if (prop.isPrimitive) {
                                     if (prop.type === FreMetaPrimitiveType.number) {
-                                        rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "numberbox");
+                                        rolename = Roles.propertyRole(
+                                            myClassifier.name,
+                                            optionalPropertyName,
+                                            "numberbox",
+                                        );
                                     } else if (prop.type === FreMetaPrimitiveType.string) {
-                                        rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "textbox");
+                                        rolename = Roles.propertyRole(
+                                            myClassifier.name,
+                                            optionalPropertyName,
+                                            "textbox",
+                                        );
                                     } else if (prop.type === FreMetaPrimitiveType.boolean) {
-                                        rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "booleanbox");
+                                        rolename = Roles.propertyRole(
+                                            myClassifier.name,
+                                            optionalPropertyName,
+                                            "booleanbox",
+                                        );
                                     }
                                 } else {
                                     // reference
-                                    rolename = Roles.propertyRole(myClassifier.name, optionalPropertyName, "referencebox");
+                                    rolename = Roles.propertyRole(
+                                        myClassifier.name,
+                                        optionalPropertyName,
+                                        "referencebox",
+                                    );
                                 }
                             }
                             result += `${Names.FreCustomAction}.create(
@@ -131,7 +147,7 @@ export class DefaultActionsTemplate {
                                         activeInBoxRoles: ["optional-${optionalPropertyName}"],
                                         action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
                                             ((box.parent) as OptionalBox).mustShow = true;
-                                            return box.element;
+                                            return box.node;
                                         },
                                         boxRoleToSelect: "${rolename}"
                                     })`;
@@ -149,24 +165,28 @@ export class DefaultActionsTemplate {
         const allClassifiers: FreMetaClassifier[] = [];
         allClassifiers.push(...language.units);
         allClassifiers.push(...language.concepts);
-        allClassifiers.forEach(concept => concept.allReferences().filter(ref => ref.isList).forEach(reference => {
-                const referredConcept = reference.type;
-                const extras = editorDef.findExtrasForType(referredConcept);
-                const trigger = (!!extras && !!extras.trigger) ? extras.trigger : reference.name;
-                result += `${Names.FreCustomAction}.create(
+        allClassifiers.forEach((concept) =>
+            concept
+                .allReferences()
+                .filter((ref) => ref.isList)
+                .forEach((reference) => {
+                    const referredConcept = reference.type;
+                    const extras = editorDef.findExtrasForType(referredConcept);
+                    const trigger = !!extras && !!extras.trigger ? extras.trigger : reference.name;
+                    result += `${Names.FreCustomAction}.create(
                 {   // Action to insert new reference to a concept
                     activeInBoxRoles: ["${Roles.newConceptReferencePart(reference)}"],
                     trigger: "${trigger}",
                     action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
-                        const parent: ${Names.classifier(concept)} = box.element as ${Names.classifier(concept)};
+                        const parent: ${Names.classifier(concept)} = box.node as ${Names.classifier(concept)};
                         const newBase: ${Names.FreNodeReference}<${Names.classifier(referredConcept)}> = ${Names.FreNodeReference}.create<${Names.classifier(referredConcept)}>("", null);
                         parent.${reference.name}.push(newBase);
                         return newBase.referred;
                     }
                 })
                 `;
-                result += ",";
-            })
+                    result += ",";
+                }),
         );
         return result;
     }

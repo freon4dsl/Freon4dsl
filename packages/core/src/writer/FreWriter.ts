@@ -2,7 +2,6 @@ import { FreNode } from "../ast";
 
 // Part of the Freon Framework.
 export interface FreWriter {
-
     /**
      * Returns a string representation of 'node'.
      * If 'short' is present and true, then a single-line result will be given.

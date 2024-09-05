@@ -2,7 +2,6 @@ import { FreMetaClassifier, FreMetaLanguage } from "../../metalanguage/index.js"
 import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil, FREON_CORE } from "../../../utils/index.js";
 
 export class WalkerTemplate {
-
     generateWalker(language: FreMetaLanguage, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts();
         const generatedClassName: String = Names.walker(language);
@@ -14,9 +13,13 @@ export class WalkerTemplate {
 
         // Template starts here
         return `
-        // import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
-        import { ${classifiersToDo.map(concept => `
-                ${Names.classifier(concept)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        // import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${classifiersToDo
+            .map(
+                (concept) => `
+                ${Names.classifier(concept)}`,
+            )
+            .join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}";
         import { ${Names.FreLogger}, ${Names.FreNode} } from "${FREON_CORE}";
 
@@ -45,16 +48,22 @@ export class WalkerTemplate {
              */
             public walk(modelelement: ${allLangConcepts}, includeChildren?: (elem: ${allLangConcepts}) => boolean) {
                 if(this.myWorkers.length > 0) {
-                    ${classifiersToDo.map(concept => `
+                    ${classifiersToDo
+                        .map(
+                            (concept) => `
                     if(modelelement instanceof ${Names.classifier(concept)}) {
                         return this.walk${Names.classifier(concept)}(modelelement, includeChildren );
-                    }`).join("")}
+                    }`,
+                        )
+                        .join("")}
                 } else {
                     LOGGER.error( "No worker found.");
                 }
             }
 
-            ${classifiersToDo.map(concept => `
+            ${classifiersToDo
+                .map(
+                    (concept) => `
                 private walk${Names.classifier(concept)}(
                             modelelement: ${Names.classifier(concept)},
                             includeChildren?: (elem: ${allLangConcepts}) => boolean) {
@@ -64,30 +73,34 @@ export class WalkerTemplate {
                             stopWalkingThisNode = worker.execBefore${Names.classifier(concept)}(modelelement);
                         }
                     }
-                    ${((concept.allParts().length > 0) ?
-                    `// work on children in the model tree
-                    ${concept.allParts().map( part =>
-                        (part.isList ?
-                            `modelelement.${part.name}.forEach(p => {
+                    ${
+                        concept.allParts().length > 0
+                            ? `// work on children in the model tree
+                    ${concept
+                        .allParts()
+                        .map((part) =>
+                            part.isList
+                                ? `modelelement.${part.name}.forEach(p => {
                                 if(!(includeChildren === undefined) && includeChildren(p)) {
                                     this.walk(p, includeChildren );
                                 }
                             });`
-                        :
-                            `if(!(includeChildren === undefined) && includeChildren(modelelement.${part.name})) {
+                                : `if(!(includeChildren === undefined) && includeChildren(modelelement.${part.name})) {
                                 this.walk(modelelement.${part.name}, includeChildren );
-                            }`
+                            }`,
                         )
-                    ).join("\n")}
+                        .join("\n")}
                     `
-                    : ``
-                    )}
+                            : ``
+                    }
                     for (let worker of this.myWorkers ) {
                         if (!stopWalkingThisNode ) {
                             stopWalkingThisNode = worker.execAfter${Names.classifier(concept)}(modelelement);
                         }
                     }
-            }`).join("\n")}
+            }`,
+                )
+                .join("\n")}
         }`;
     }
 }

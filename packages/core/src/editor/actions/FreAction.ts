@@ -5,12 +5,12 @@ import { FreEditor } from "../FreEditor";
 import { FreCommand } from "./FreCommand";
 import { FreTriggerUse, FreTriggerType } from "./FreTriggers";
 
-export type CustomAction = (box: Box,
-                            trigger: FreTriggerUse,
-                            editor: FreEditor) => FreNode | null;
+export type CustomAction = (box: Box, trigger: FreTriggerUse, editor: FreEditor) => FreNode | null;
 export type FrePostAction = () => void;
 
-export const EMPTY_POST_ACTION = function() { /* todo create this function body */ };
+export const EMPTY_POST_ACTION = function () {
+    /* todo create this function body */
+};
 
 export type ReferenceShortcut = {
     propertyName: string;

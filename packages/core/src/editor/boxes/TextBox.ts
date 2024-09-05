@@ -10,7 +10,7 @@ export enum CharAllowed {
     OK,
     GOTO_NEXT,
     GOTO_PREVIOUS,
-    NOT_OK
+    NOT_OK,
 }
 
 export class TextBox extends Box {
@@ -50,7 +50,13 @@ export class TextBox extends Box {
         return CharAllowed.OK;
     };
 
-    constructor(node: FreNode, role: string, getText: () => string, setText: (text: string) => void, initializer?: Partial<TextBox>) {
+    constructor(
+        node: FreNode,
+        role: string,
+        getText: () => string,
+        setText: (text: string) => void,
+        initializer?: Partial<TextBox>,
+    ) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this.$getText = getText;

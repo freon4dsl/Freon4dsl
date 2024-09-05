@@ -1,6 +1,13 @@
 // This file contains all methods to connect the webapp to the Freon generated language editorEnvironment and to the server that stores the models
-import { FreError, FreErrorSeverity, FreLogger, InMemoryModel } from "@freon4dsl/core"
-import type { FreEnvironment, FreNode, FreModel, FreModelUnit, FreOwnerDescriptor, IServerCommunication } from "@freon4dsl/core";
+import { FreError, FreErrorSeverity, FreLogger, InMemoryModel } from "@freon4dsl/core";
+import type {
+    FreEnvironment,
+    FreNode,
+    FreModel,
+    FreModelUnit,
+    FreOwnerDescriptor,
+    IServerCommunication,
+} from "@freon4dsl/core";
 import { get } from "svelte/store";
 import {
     currentModelName,
@@ -8,12 +15,12 @@ import {
     editorProgressShown,
     noUnitAvailable,
     units,
-    unitNames
+    unitNames,
 } from "../components/stores/ModelStore.js";
 import { setUserMessage } from "../components/stores/UserMessageStore.js";
 import { modelErrors } from "../components/stores/InfoPanelStore.js";
 import { runInAction } from "mobx";
-import {WebappConfigurator} from "../WebappConfigurator.js";
+import { WebappConfigurator } from "../WebappConfigurator.js";
 
 const LOGGER = new FreLogger("EditorState").mute();
 
@@ -27,30 +34,30 @@ export class EditorState {
         return EditorState.instance;
     }
 
-    modelStore: InMemoryModel
+    modelStore: InMemoryModel;
     modelChanged = (store: InMemoryModel): void => {
-        LOGGER.log("modelChanged")
-        currentModelName.set(store?.model?.name)
+        LOGGER.log("modelChanged");
+        currentModelName.set(store?.model?.name);
         unitNames.set(store.getUnitIdentifiers());
-        units.set(store.getUnits())
-    }
-    
+        units.set(store.getUnits());
+    };
+
     private constructor() {
-            this.modelStore = new InMemoryModel(this.langEnv, this.serverCommunication)
-        this.modelStore.addCurrentModelListener(this.modelChanged)
+        this.modelStore = new InMemoryModel(this.langEnv, this.serverCommunication);
+        this.modelStore.addCurrentModelListener(this.modelChanged);
     }
-    
+
     private __currentUnit: FreModelUnit = null;
     get currentUnit(): FreModelUnit {
-        return this.__currentUnit
+        return this.__currentUnit;
     }
     set currentUnit(unit: FreModelUnit) {
-        this.__currentUnit = unit
-        currentUnitName.set({name: this?.currentUnit?.name, id: this?.currentUnit?.freId()});
+        this.__currentUnit = unit;
+        currentUnitName.set({ name: this?.currentUnit?.name, id: this?.currentUnit?.freId() });
     }
-    
+
     get currentModel(): FreModel {
-        return this.modelStore.model
+        return this.modelStore.model;
     }
     private langEnv: FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
     private serverCommunication: IServerCommunication = WebappConfigurator.getInstance().serverCommunication;
@@ -67,7 +74,7 @@ export class EditorState {
         // reset all visible information on the model and unit
         this.resetGlobalVariables();
         // create a new model
-        await this.modelStore.createModel(modelName)
+        await this.modelStore.createModel(modelName);
         editorProgressShown.set(false);
     }
 
@@ -83,16 +90,16 @@ export class EditorState {
         // save the old current unit, if there is one
         await this.saveCurrentUnit();
         // create new model instance in memory and set its name
-        await this.modelStore.openModel(modelName)
-        const unitIdentifiers = this.modelStore.getUnitIdentifiers()
+        await this.modelStore.openModel(modelName);
+        const unitIdentifiers = this.modelStore.getUnitIdentifiers();
         LOGGER.log("unit identifiers: " + JSON.stringify(unitIdentifiers));
         if (!!unitIdentifiers && unitIdentifiers.length > 0) {
             // load the first unit completely and show it
             let first: boolean = true;
             for (const unitIdentifier of unitIdentifiers) {
                 if (first) {
-                    const unit = this.modelStore.getUnitByName(unitIdentifier.name)
-                    LOGGER.log("UnitId " + unitIdentifier.name + " unit is " + unit?.name)
+                    const unit = this.modelStore.getUnitByName(unitIdentifier.name);
+                    LOGGER.log("UnitId " + unitIdentifier.name + " unit is " + unit?.name);
                     this.currentUnit = unit;
                     first = false;
                 }
@@ -101,7 +108,6 @@ export class EditorState {
         } else {
             editorProgressShown.set(false);
         }
-
     }
 
     /**
@@ -125,7 +131,7 @@ export class EditorState {
         editorProgressShown.set(true);
         // save the old current unit, if there is one
         await this.saveCurrentUnit();
-        await this.createNewUnit(newName, unitType)
+        await this.createNewUnit(newName, unitType);
     }
 
     /**
@@ -137,7 +143,7 @@ export class EditorState {
      */
     private async createNewUnit(newName: string, unitType: string) {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName);
-        const newUnit = await this.modelStore.createUnit(newName, unitType)
+        const newUnit = await this.modelStore.createUnit(newName, unitType);
         if (!!newUnit) {
             newUnit.name = newName;
             // show the new unit in the editor
@@ -156,7 +162,7 @@ export class EditorState {
         if (!!unit) {
             if (!!this.currentModel?.name && this.currentModel?.name?.length) {
                 if (!!unit.name && unit.name.length > 0) {
-                    await this.modelStore.saveUnit(unit)
+                    await this.modelStore.saveUnit(unit);
                     currentUnitName.set({ name: unit.name, id: unit.freId() }); // just in case the user has changed the name in the editor
                 } else {
                     setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
@@ -186,15 +192,17 @@ export class EditorState {
         LOGGER.log("delete called for unit: " + unit.name);
 
         // get rid of the unit on the server
-        await this.modelStore.deleteUnit(unit)
+        await this.modelStore.deleteUnit(unit);
         // if the unit is shown in the editor, get rid of that one, as well
         if (this.currentUnit.freId() === unit.freId()) {
-            this.langEnv.editor.rootElement = null;
+            runInAction(() => {
+                this.langEnv.editor.rootElement = null;
+            });
             noUnitAvailable.set(true);
             modelErrors.set([]);
         }
         // get rid of the name in the navigator
-        currentUnitName.set({name: "", id: "???"});
+        currentUnitName.set({ name: "", id: "???" });
     }
 
     /**
@@ -206,7 +214,7 @@ export class EditorState {
     private setUnitLists() {
         LOGGER.log("setUnitLists");
         const unitsInModel = this.currentModel.getUnits();
-        unitNames.set(unitsInModel.map(u => ({name: u.name, id: u.freId()})));
+        unitNames.set(unitsInModel.map((u) => ({ name: u.name, id: u.freId() })));
         units.set(unitsInModel);
     }
 
@@ -249,7 +257,7 @@ export class EditorState {
                     // set elem in editor
                     this.showUnitAndErrors(unit);
                 }
-                await this.modelStore.addUnit(unit)
+                await this.modelStore.addUnit(unit);
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -259,17 +267,24 @@ export class EditorState {
     }
 
     private makeUnitName(fileName: string): string {
-        const nameExist: boolean = !!this.currentModel.getUnits().find((existing: FreModelUnit) => existing.name === fileName);
+        const nameExist: boolean = !!this.currentModel
+            .getUnits()
+            .find((existing: FreModelUnit) => existing.name === fileName);
         if (nameExist) {
             setUserMessage(`Unit named '${fileName}' already exists, adding number.`, FreErrorSeverity.Error);
             // find the existing names that start with the file name
-            const unitsWithSimiliarName = this.currentModel.getUnits().filter((existing: FreModelUnit) => existing.name.startsWith(fileName));
-            if (unitsWithSimiliarName.length > 1) { // there are already numbered units
+            const unitsWithSimiliarName = this.currentModel
+                .getUnits()
+                .filter((existing: FreModelUnit) => existing.name.startsWith(fileName));
+            if (unitsWithSimiliarName.length > 1) {
+                // there are already numbered units
                 // find the biggest number that is in use after the filename, e.g. Home12, Home3 => 12
                 let biggestNr: number = 1;
                 // find the characters in each of the existing names that come after the file name
-                const trailingParts: string[] = unitsWithSimiliarName.map((existing: FreModelUnit) => existing.name.slice(fileName.length));
-                trailingParts.forEach(trailing => {
+                const trailingParts: string[] = unitsWithSimiliarName.map((existing: FreModelUnit) =>
+                    existing.name.slice(fileName.length),
+                );
+                trailingParts.forEach((trailing) => {
                     const nextNumber: number = Number.parseInt(trailing, 10);
                     if (!isNaN(nextNumber) && nextNumber >= biggestNr) {
                         biggestNr = nextNumber + 1;
@@ -294,12 +309,16 @@ export class EditorState {
         LOGGER.log("showUnitAndErrors called, unitName: " + newUnit?.name);
         if (!!newUnit) {
             noUnitAvailable.set(false);
-            this.langEnv.editor.rootElement = newUnit;
+            runInAction(() => {
+                this.langEnv.editor.rootElement = newUnit;
+            });
             this.currentUnit = newUnit;
             this.getErrors();
         } else {
             noUnitAvailable.set(true);
-            this.langEnv.editor.rootElement = null;
+            runInAction(() => {
+                this.langEnv.editor.rootElement = null;
+            });
             this.currentUnit = null;
         }
         editorProgressShown.set(false);
@@ -323,13 +342,17 @@ export class EditorState {
             try {
                 const list = this.langEnv.validator.validate(this.currentUnit);
                 modelErrors.set(list);
-            } catch (e: unknown) { // catch any errors regarding erroneously stored model units
+            } catch (e: unknown) {
+                // catch any errors regarding erroneously stored model units
                 if (e instanceof Error) {
                     LOGGER.log(e.message);
-                    modelErrors.set([new FreError("Problem reading model unit: '" + e.message + "'",
-                        this.currentUnit,
-                        this.currentUnit.name,
-                        FreErrorSeverity.Error)
+                    modelErrors.set([
+                        new FreError(
+                            "Problem reading model unit: '" + e.message + "'",
+                            this.currentUnit,
+                            this.currentUnit.name,
+                            FreErrorSeverity.Error,
+                        ),
                     ]);
                 }
             }
@@ -346,17 +369,15 @@ export class EditorState {
                 if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
                     const propList = owner[desc.propertyName];
                     if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
-                        runInAction(() =>
-                            propList.splice(desc.propertyIndex, 1)
-                        );
+                        runInAction(() => propList.splice(desc.propertyIndex, 1));
                     }
                 } else {
-                    runInAction(() =>
-                        owner[desc.propertyName] = null
-                    );
+                    runInAction(() => (owner[desc.propertyName] = null));
                 }
             } else {
-                console.error("deleting of " + tobeDeleted.freId() + " not succeeded, because owner descriptor is empty.");
+                console.error(
+                    "deleting of " + tobeDeleted.freId() + " not succeeded, because owner descriptor is empty.",
+                );
             }
         }
     }
@@ -367,19 +388,16 @@ export class EditorState {
         if (Array.isArray(property)) {
             // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
             runInAction(() => {
-                    if (index !== null && index !== undefined && index > 0) {
-                        property.splice(index, 0, this.langEnv.editor.copiedElement);
-                    } else {
-                        property.push(this.langEnv.editor.copiedElement);
-                    }
+                if (index !== null && index !== undefined && index > 0) {
+                    property.splice(index, 0, this.langEnv.editor.copiedElement);
+                } else {
+                    property.push(this.langEnv.editor.copiedElement);
                 }
-            );
+            });
             // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
         } else {
             // console.log('property ' + propertyName + ' is no list');
-            runInAction(() =>
-                element[propertyName] = this.langEnv.editor.copiedElement
-            );
+            runInAction(() => (element[propertyName] = this.langEnv.editor.copiedElement));
         }
     }
 }

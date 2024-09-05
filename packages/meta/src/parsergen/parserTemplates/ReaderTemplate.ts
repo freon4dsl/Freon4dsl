@@ -2,7 +2,6 @@ import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { LANGUAGE_GEN_FOLDER, Names, FREON_CORE } from "../../utils/index.js";
 
 export class ReaderTemplate {
-
     /**
      * Returns a string representation of a generic parser for 'language'. This parser is able
      * to handle every modelunit in the language.
@@ -25,7 +24,7 @@ export class ReaderTemplate {
         import LanguageProcessor = agl.net.akehurst.language.api.processor.LanguageProcessor;
         import Agl = agl.net.akehurst.language.agl.processor.Agl;
         import AutomatonKind_api = agl.net.akehurst.language.api.processor.AutomatonKind_api;
-        import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER }";
+        import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
         import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
         import { ${semanticAnalyser} } from "./${semanticAnalyser}";
@@ -51,10 +50,14 @@ export class ReaderTemplate {
                 this.analyser.sourceName = sourceName;
                 let startRule: string = "";
                 // choose the correct parser
-                ${language.units.map(unit =>
-                    `if (metatype === "${Names.classifier(unit)}") {
+                ${language.units
+                    .map(
+                        (unit) =>
+                            `if (metatype === "${Names.classifier(unit)}") {
                         startRule  = "${Names.classifier(unit)}";
-                    }`).join(" else ")}
+                    }`,
+                    )
+                    .join(" else ")}
 
                 // parse the input
                 let unit: ${Names.modelunit()} = null;

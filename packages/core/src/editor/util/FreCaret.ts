@@ -2,7 +2,7 @@ export enum FreCaretPosition {
     UNSPECIFIED,
     LEFT_MOST,
     RIGHT_MOST,
-    INDEX
+    INDEX,
 }
 
 export class FreCaret {
@@ -14,9 +14,9 @@ export class FreCaret {
         return new FreCaret(FreCaretPosition.INDEX, from, to);
     }
 
-    position: FreCaretPosition;  // the type of the FreCaret
-    from: number;               // the index of the char where the caret should be (selection-start), only used with type FreCaretPosition.INDEX
-    to: number;                 // the index of the char where the selection should end, only used with type FreCaretPosition.INDEX
+    position: FreCaretPosition; // the type of the FreCaret
+    from: number; // the index of the char where the caret should be (selection-start), only used with type FreCaretPosition.INDEX
+    to: number; // the index of the char where the selection should end, only used with type FreCaretPosition.INDEX
 
     private constructor(p: FreCaretPosition, from: number, to?: number) {
         this.position = p;
@@ -27,8 +27,8 @@ export class FreCaret {
             this.to = from;
         }
     }
-    
+
     toString(): string {
-        return "" + this.position
+        return "" + this.position;
     }
 }

@@ -37,10 +37,11 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     public constructor() {
         super({
             actionName: "all",
-            summary: "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the AST",
+            summary:
+                "Generates the TypeScript code for all parts of the work environment for your language, plus some diagrams that show the AST",
             documentation:
                 "Generates TypeScript code for the language implemention, the editor, the scoper, the typer, the reader, the writer, and the " +
-                "validator for language as defined in files in DEFINITIONS_DIR."
+                "validator for language as defined in files in DEFINITIONS_DIR.",
         });
     }
 
@@ -64,16 +65,18 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
                 this.generateDiagrams();
             } catch (e: unknown) {
                 if (e instanceof Error) {
-                    LOG2USER.error("Stopping generation because of errors in the language definition: " + e.message + "\n");
+                    LOG2USER.error(
+                        "Stopping generation because of errors in the language definition: " + e.message + "\n",
+                    );
                 }
             }
             if (this.watch) {
                 LOG2USER.info("Watching language definition files ...");
             }
-        // this try-catch is here for debugging purposes, should be removed from release
+            // this try-catch is here for debugging purposes, should be removed from release
         } catch (e: unknown) {
             if (e instanceof Error) {
-                LOG2USER.error(e.stack ? e.stack : 'No stack trace provided.');
+                LOG2USER.error(e.stack ? e.stack : "No stack trace provided.");
             }
         }
     }
@@ -218,7 +221,9 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             return editor;
         } catch (e: unknown) {
             if (e instanceof Error) {
-                LOG2USER.error("Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack);
+                LOG2USER.error(
+                    "Stopping editor and parser generation because of errors: " + e.message + "\n" + e.stack,
+                );
                 // LOG2USER.error("Stopping editor, reader and writer generation because of errors: " + e.message);
             }
         }
@@ -243,5 +248,4 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             this.diagramGenerator.generate();
         }
     };
-
 }

@@ -1,11 +1,9 @@
 export class GeneratedClass {
     name: string = "default A name";
-    constructor() {
-    }
-    methodX(): void { };
-    methodY(): void { };
+    constructor() {}
+    methodX(): void {}
+    methodY(): void {}
 }
-
 
 export interface GeneratedClass {
     newMethod(): void;
@@ -27,9 +25,9 @@ type Constructor22 = new (...args: any[]) => {};
 
 function extension(extension: Constructor22, original: Constructor22) {
     const extensionPrototype = extension.prototype;
-    const originalPrototype = original.prototype
-    for(const property of Object.getOwnPropertyNames(extensionPrototype)) {
-        if( property !== "constructor"){
+    const originalPrototype = original.prototype;
+    for (const property of Object.getOwnPropertyNames(extensionPrototype)) {
+        if (property !== "constructor") {
             console.log("Extending " + originalPrototype.constructor.name + " with property " + property);
             originalPrototype[property] = extensionPrototype[property];
         }
@@ -46,9 +44,7 @@ function props(obj: Object) {
     var p = [];
     for (; obj != null; obj = Object.getPrototypeOf(obj)) {
         var op = Object.getOwnPropertyNames(obj);
-        for (var i=0; i<op.length; i++)
-            if (p.indexOf(op[i]) == -1)
-                p.push(op[i]);
+        for (var i = 0; i < op.length; i++) if (p.indexOf(op[i]) == -1) p.push(op[i]);
     }
     return p;
 }
@@ -65,4 +61,3 @@ a.newMethod();
 // logAllProperties(Object.getPrototypeOf(a));
 // console.log("XXXXX ")
 // logAllProperties(Object.getPrototypeOf(x));
-

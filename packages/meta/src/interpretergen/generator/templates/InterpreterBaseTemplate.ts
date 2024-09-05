@@ -3,7 +3,6 @@ import { Names } from "../../../utils/index.js";
 import { FreInterpreterDef } from "../../metalanguage/FreInterpreterDef.js";
 
 export class InterpreterBaseTemplate {
-
     /**
      * The base class containing all interpreter functions that should be defined.
      * @param language
@@ -12,7 +11,7 @@ export class InterpreterBaseTemplate {
     public interpreterBase(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
         return `// Generated my Freon, will be overwritten with every generation.
         import { InterpreterContext, RtObject, RtError } from "@freon4dsl/core";
-        import { ${interpreterDef.conceptsToEvaluate.map(c => Names.classifier(c)).join(",")} } from "../../language/gen";
+        import { ${interpreterDef.conceptsToEvaluate.map((c) => Names.classifier(c)).join(",")} } from "../../language/gen";
 
         /**
          * The base class containing all interpreter functions that should be defined.
@@ -22,11 +21,14 @@ export class InterpreterBaseTemplate {
 
             constructor() {}
 
-            ${interpreterDef.conceptsToEvaluate.map(c =>
-                `eval${Names.classifier(c)} (node: ${Names.classifier(c)} , ctx: InterpreterContext): RtObject {
+            ${interpreterDef.conceptsToEvaluate
+                .map(
+                    (c) =>
+                        `eval${Names.classifier(c)} (node: ${Names.classifier(c)} , ctx: InterpreterContext): RtObject {
                     throw new RtError("eval${Names.classifier(c)} is not defined");
-                }`
-            ).join("\n\n")}
+                }`,
+                )
+                .join("\n\n")}
         }
         `;
     }
@@ -64,11 +66,12 @@ export class InterpreterBaseTemplate {
         export function ${Names.interpreterInitname(language)}(main: IMainInterpreter) {
             const interpreter = new ${interpreter}(main);
 
-            ${interpreterDef.conceptsToEvaluate.map(c => {
-                return `main.registerFunction("${Names.classifier(c)}", interpreter.eval${Names.classifier(c)});`;
-            }).join("\n")} // DONE
+            ${interpreterDef.conceptsToEvaluate
+                .map((c) => {
+                    return `main.registerFunction("${Names.classifier(c)}", interpreter.eval${Names.classifier(c)});`;
+                })
+                .join("\n")} // DONE
 
         }`;
     }
-
 }

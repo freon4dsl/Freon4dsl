@@ -2,10 +2,9 @@ import { FreNodeReferenceTestScoper } from "./FreNodeReferenceTestScoper";
 import { TestScoper } from "./TestScoper";
 import { MobxTestElement, ModelContext, MobxTestRoot, MobxTestParts } from "./MobxModel";
 import { observe, reaction } from "mobx";
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect, beforeEach } from "vitest";
 
 describe("Mobx Model", () => {
-
     const ctx: ModelContext = new ModelContext();
     let root: MobxTestRoot;
     let element: MobxTestParts;
@@ -54,10 +53,10 @@ describe("Mobx Model", () => {
             },
             // @ts-ignore
             // todo check whether this ts-ignore is correct
-            innerElement => {
+            (innerElement) => {
                 reaktion++;
                 // console.log("React " + reaktion + " on " + (!!innerElement ? innerElement["name"] : "innerElement is null"));
-            }
+            },
         );
         reaktion = 0;
     });
@@ -173,14 +172,12 @@ describe("Mobx Model", () => {
         expect(element.manyPrim).toContain(1945);
     });
     it("assigned null to element of list of primitives", () => {
-
         element.manyPrim[1] = null;
         expect(element.manyPrim).not.toContain(1917);
         expect(element.manyPrim).toContain(1912);
         expect(element.manyPrim.length).toBe(1);
     });
     it("adding null to list of primitives", () => {
-
         element.manyPrim.push(null);
         expect(element.manyPrim).toContain(1917);
         expect(element.manyPrim).toContain(1912);
@@ -323,5 +320,4 @@ describe("Mobx Model", () => {
         expect(part2.$$owner).toBe(element);
         expect(part2.$$propertyName).toBe("manyPart");
     }
-
 });

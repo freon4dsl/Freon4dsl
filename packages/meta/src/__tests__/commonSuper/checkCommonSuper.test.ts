@@ -1,6 +1,11 @@
-import { FreMetaClassifier, FreMetaConcept, MetaElementReference, FreMetaInterface } from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaClassifier,
+    FreMetaConcept,
+    MetaElementReference,
+    FreMetaInterface,
+} from "../../languagedef/metalanguage/index.js";
 import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
-import { describe, test, expect } from "vitest"
+import { describe, test, expect } from "vitest";
 
 function concept(name: string): FreMetaConcept {
     const result: FreMetaConcept = new FreMetaConcept();
@@ -40,7 +45,6 @@ function addInterfacesToConcept(con: FreMetaConcept, intf: FreMetaInterface[]) {
 }
 
 describe("Checking common super types algorithm", () => {
-
     test("no supers", () => {
         const myList: FreMetaClassifier[] = [];
         myList.push(concept("AA"));
@@ -144,7 +148,7 @@ describe("Checking common super types algorithm", () => {
         expect(result.length).toBe(2);
         expect(result.includes(myBase1)).toBeTruthy();
         expect(result.includes(myBase2)).toBeTruthy();
-        });
+    });
 
     test("level 1 concepts and interfaces", () => {
         let myList: FreMetaConcept[] = [];

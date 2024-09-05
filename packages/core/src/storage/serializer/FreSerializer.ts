@@ -17,5 +17,4 @@ export interface FreSerializer {
      * @param publicOnly If true, only serialize the public properties, used to serialize a model unit interface.
      */
     convertToJSON(tsObject: FreNode, publicOnly?: boolean): any;
-
 }

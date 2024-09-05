@@ -1,4 +1,4 @@
-import { GeneratedClass} from "./GeneratedClass";
+import { GeneratedClass } from "./GeneratedClass";
 
 // TS typing
 declare module "./GeneratedClass" {
@@ -43,4 +43,3 @@ export default GeneratedClass;
 // }
 //
 // extension(ExtensionClass, GeneratedClass);
-

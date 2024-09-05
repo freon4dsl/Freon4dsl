@@ -1,13 +1,22 @@
 import {
     ListJoinType,
-    FreEditProjection, FreEditProjectionGroup,
+    FreEditNormalProjection,
+    FreEditProjectionGroup,
     FreEditProjectionItem,
     FreEditProjectionLine,
     FreEditProjectionText,
-    FreEditPropertyProjection, FreEditSuperProjection,
-    FreOptionalPropertyProjection
+    FreEditPropertyProjection,
+    FreEditSuperProjection,
+    FreOptionalPropertyProjection,
 } from "../../editordef/metalanguage/index.js";
-import { FreMetaBinaryExpressionConcept, FreMetaClassifier, FreMetaLimitedConcept, FreMetaPrimitiveProperty, FreMetaPrimitiveType, FreMetaProperty } from "../../languagedef/metalanguage/index.js";
+import {
+    FreMetaBinaryExpressionConcept,
+    FreMetaClassifier,
+    FreMetaLimitedConcept,
+    FreMetaPrimitiveProperty,
+    FreMetaPrimitiveType,
+    FreMetaProperty,
+} from "../../languagedef/metalanguage/index.js";
 import { ParserGenUtil } from "./ParserGenUtil.js";
 import {
     GrammarRule,
@@ -41,7 +50,8 @@ import {
     RHSBinaryExp,
     RHSBinExpList,
     RHSBinExpListWithInitiator,
-    RHSBinExpListWithSeparator, RHSBinExpListWithTerminator
+    RHSBinExpListWithSeparator,
+    RHSBinExpListWithTerminator,
 } from "./grammarModel/index.js";
 import { LOG2USER, ListUtil } from "../../utils/index.js";
 import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator.js";
@@ -51,14 +61,17 @@ export class ConceptMaker {
     private currentProjectionGroup: FreEditProjectionGroup | undefined = undefined;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last to added
-    private namedProjections: FreEditProjection[] = [];
+    private namedProjections: FreEditNormalProjection[] = [];
 
     generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreMetaClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
         const rules: GrammarRule[] = [];
         for (const freConcept of conceptsUsed) {
             // all methods in this class depend on the fact that only non-table projections are passes as parameter!!
-            const projection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(projectionGroup, freConcept);
+            const projection: FreEditNormalProjection | undefined = ParserGenUtil.findNonTableProjection(
+                projectionGroup,
+                freConcept,
+            );
             if (!!projection) {
                 // generate a grammar rule entry
                 rules.push(this.generateProjection(freConcept, projection, false));
@@ -73,14 +86,18 @@ export class ConceptMaker {
         return rules;
     }
 
-    private generateProjection(freClassifier: FreMetaClassifier, projection: FreEditProjection, addName: boolean) {
+    private generateProjection(
+        freClassifier: FreMetaClassifier,
+        projection: FreEditNormalProjection,
+        addName: boolean,
+    ) {
         let rule: ConceptRule;
         if (addName) {
             rule = new ConceptRule(freClassifier, projection.name);
         } else {
             rule = new ConceptRule(freClassifier);
         }
-        const isSingleEntry: boolean = (projection.lines.length === 1);
+        const isSingleEntry: boolean = projection.lines.length === 1;
         for (const l of projection.lines) {
             rule.ruleParts.push(...this.doLine(l, false, isSingleEntry));
         }
@@ -88,27 +105,35 @@ export class ConceptMaker {
         return rule;
     }
 
-    private doLine(line: FreEditProjectionLine, inOptionalGroup: boolean, isSingleEntry: boolean): RightHandSideEntry[] {
+    private doLine(
+        line: FreEditProjectionLine,
+        inOptionalGroup: boolean,
+        isSingleEntry: boolean,
+    ): RightHandSideEntry[] {
         const subs = this.addItems(line.items, inOptionalGroup, isSingleEntry);
-        if (!!subs && !!subs[subs.length - 1] ) {
+        if (!!subs && !!subs[subs.length - 1]) {
             // to manage the layout of the grammar, we set 'addNewLineToGrammar' of the last entry in the line
             subs[subs.length - 1].addNewLineToGrammar = true;
         }
         return subs;
     }
 
-    private addItems(list: FreEditProjectionItem[], inOptionalGroup: boolean, isSingleEntry: boolean): RightHandSideEntry[] {
+    private addItems(
+        list: FreEditProjectionItem[],
+        inOptionalGroup: boolean,
+        isSingleEntry: boolean,
+    ): RightHandSideEntry[] {
         const parts: RightHandSideEntry[] = [];
         if (!!list && list.length !== 1) {
             isSingleEntry = false;
         }
         if (!!list && list.length > 0) {
-            list.forEach(item => {
+            list.forEach((item) => {
                 if (item instanceof FreOptionalPropertyProjection && !!item.property) {
                     const subs: RightHandSideEntry[] = [];
                     let propIndex: number = 0; // the index in the list of parts in the optional group
                     let foundIndex: boolean = false;
-                    item.lines.forEach(line => {
+                    item.lines.forEach((line) => {
                         const subParts = this.addItems(line.items, true, isSingleEntry);
                         subParts.forEach((part, index) => {
                             if (part instanceof RHSPropEntry && part.property === item.property!.referred) {
@@ -137,19 +162,31 @@ export class ConceptMaker {
         return parts;
     }
 
-    private makePropPart(item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry | undefined {
+    private makePropPart(
+        item: FreEditPropertyProjection,
+        inOptionalGroup: boolean,
+        isSingleEntry: boolean,
+    ): RHSPropEntry | undefined {
         const prop: FreMetaProperty | undefined = item.property?.referred;
         let result: RHSPropEntry | undefined = undefined;
         if (!!prop) {
             const propType: FreMetaClassifier = prop.type; // more efficient to determine referred only once
             this.imports.push(propType);
             // take care of named projections
-            let myProjName: string = '';
+            let myProjName: string = "";
             if (!!this.currentProjectionGroup) {
-                if (!!item.projectionName && item.projectionName.length > 0 && item.projectionName !== this.currentProjectionGroup.name) {
-                    const xx: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, propType, item.projectionName);
+                if (
+                    !!item.projectionName &&
+                    item.projectionName.length > 0 &&
+                    item.projectionName !== this.currentProjectionGroup.name
+                ) {
+                    const xx: FreEditNormalProjection | undefined = ParserGenUtil.findNonTableProjection(
+                        this.currentProjectionGroup,
+                        propType,
+                        item.projectionName,
+                    );
                     if (!!xx) {
-                        ListUtil.addIfNotPresent<FreEditProjection>(this.namedProjections, xx);
+                        ListUtil.addIfNotPresent<FreEditNormalProjection>(this.namedProjections, xx);
                     }
                     myProjName = item.projectionName;
                 }
@@ -189,7 +226,11 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeListProperty(prop: FreMetaProperty, item: FreEditPropertyProjection, isSingleEntry: boolean): RHSPropEntry | undefined {
+    private makeListProperty(
+        prop: FreMetaProperty,
+        item: FreEditPropertyProjection,
+        isSingleEntry: boolean,
+    ): RHSPropEntry | undefined {
         let result: RHSPropEntry | undefined = undefined;
         if (!!item.listInfo) {
             if (prop.isPart) {
@@ -226,7 +267,11 @@ export class ConceptMaker {
         return result;
     }
 
-    private makeSingleProperty(prop: FreMetaProperty, myProjName: string, inOptionalGroup: boolean): RHSPropEntry | undefined {
+    private makeSingleProperty(
+        prop: FreMetaProperty,
+        myProjName: string,
+        inOptionalGroup: boolean,
+    ): RHSPropEntry | undefined {
         let result: RHSPropEntry | undefined = undefined;
         if (prop.isPart && (!prop.isOptional || inOptionalGroup)) {
             result = new RHSPartEntry(prop, myProjName); // `${propTypeName}`;
@@ -247,7 +292,7 @@ export class ConceptMaker {
         if (trimmed.includes(" ")) {
             // we need to add a series of texts with whitespace between them
             splitted = trimmed.split(" ");
-            splitted.forEach(str => {
+            splitted.forEach((str) => {
                 if (str.length > 0) {
                     result.push(new RHSText(`\'${this.addExtraEscape(str)}\'`));
                 }
@@ -261,16 +306,22 @@ export class ConceptMaker {
         return result;
     }
 
-    private makePrimitiveProperty(prop: FreMetaPrimitiveProperty,
-                                  propType: FreMetaClassifier,
-                                  item: FreEditPropertyProjection,
-                                  inOptionalGroup: boolean): RHSPropEntry | undefined {
+    private makePrimitiveProperty(
+        prop: FreMetaPrimitiveProperty,
+        propType: FreMetaClassifier,
+        item: FreEditPropertyProjection,
+        inOptionalGroup: boolean,
+    ): RHSPropEntry | undefined {
         if (propType === FreMetaPrimitiveType.boolean && !!item.boolKeywords) {
             // note that lists of booleans can never have a boolean keyword projection
             if (!item.boolKeywords.falseKeyword) {
                 return new RHSBooleanWithSingleKeyWord(prop, item.boolKeywords.trueKeyword);
             } else {
-                return new RHSBooleanWithDoubleKeyWord(prop, item.boolKeywords.trueKeyword, item.boolKeywords.falseKeyword);
+                return new RHSBooleanWithDoubleKeyWord(
+                    prop,
+                    item.boolKeywords.trueKeyword,
+                    item.boolKeywords.falseKeyword,
+                );
             }
         } else if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {
@@ -300,7 +351,7 @@ export class ConceptMaker {
     private addExtraEscape(str: string) {
         str = ParserGenUtil.escapeRelevantChars(str);
         // apparantly "\'" needs an extra backslash in the grammar
-        return str.replace(new RegExp("\'", "gm"), "\\" + "\'");
+        return str.replace(new RegExp("'", "gm"), "\\" + "'");
     }
 
     private makeListJoinText(joinText: string): string {
@@ -319,10 +370,14 @@ export class ConceptMaker {
         const subs: RightHandSideEntry[] = [];
         // find the projection that we need
         if (!!this.currentProjectionGroup && !!item.superRef) {
-            const myProjection: FreEditProjection | undefined = ParserGenUtil.findNonTableProjection(this.currentProjectionGroup, item.superRef.referred, item.projectionName);
+            const myProjection: FreEditNormalProjection | undefined = ParserGenUtil.findNonTableProjection(
+                this.currentProjectionGroup,
+                item.superRef.referred,
+                item.projectionName,
+            );
             if (!!myProjection) {
-                const isSingleEntry: boolean = (myProjection.lines.length === 1);
-                myProjection.lines.forEach(line => {
+                const isSingleEntry: boolean = myProjection.lines.length === 1;
+                myProjection.lines.forEach((line) => {
                     subs.push(...this.addItems(line.items, inOptionalGroup, isSingleEntry));
                 });
             }
@@ -330,7 +385,12 @@ export class ConceptMaker {
         return subs;
     }
 
-    private makeLimitedProp(prop: FreMetaProperty, item: FreEditPropertyProjection, inOptionalGroup: boolean, isSingleEntry: boolean): RHSPropEntry | undefined {
+    private makeLimitedProp(
+        prop: FreMetaProperty,
+        item: FreEditPropertyProjection,
+        inOptionalGroup: boolean,
+        isSingleEntry: boolean,
+    ): RHSPropEntry | undefined {
         if (!prop.isList) {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSLimitedRefEntry(prop);
@@ -363,10 +423,11 @@ export class ConceptMaker {
                 if (!xx.includes(part.property)) {
                     xx.push(part.property);
                 } else {
-                    LOG2USER.warning(`Warning: Found two entries for property '${part.property.name}' in '${rule.concept?.name}'. Only the last will yield a parse result.`);
+                    LOG2USER.warning(
+                        `Warning: Found two entries for property '${part.property.name}' in '${rule.concept?.name}'. Only the last will yield a parse result.`,
+                    );
                 }
             }
         }
-
     }
 }

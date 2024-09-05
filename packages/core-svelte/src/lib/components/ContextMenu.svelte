@@ -123,7 +123,7 @@
             submenuItems = item.subItems;
             openSub(itemIndex);
         } else {
-            item.handler(editor.selectedBox.element, elementIndex, editor);
+            item.handler(editor.selectedBox.node, elementIndex, editor);
             hide();
         }
         event.stopPropagation();

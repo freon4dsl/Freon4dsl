@@ -10,9 +10,9 @@ import {
     observableprimlist,
     FreNodeBaseImpl,
     FreUtils,
-    FreParseLocation
+    FreParseLocation,
 } from "@freon4dsl/core";
-import type {FreModelUnit} from "@freon4dsl/core";
+import type { FreModelUnit } from "@freon4dsl/core";
 import { ShowCasePart } from "./ShowCasePart.js";
 
 export class ShowCaseUnit extends FreNodeBaseImpl implements FreModelUnit {
@@ -27,7 +27,7 @@ export class ShowCaseUnit extends FreNodeBaseImpl implements FreModelUnit {
             result.prim = data.prim;
         }
         if (!!data.numlist) {
-            data.numlist.forEach(x => result.numlist.push(x));
+            data.numlist.forEach((x) => result.numlist.push(x));
         }
         if (!!data.name) {
             result.name = data.name;
@@ -36,7 +36,7 @@ export class ShowCaseUnit extends FreNodeBaseImpl implements FreModelUnit {
             result.part = data.part;
         }
         if (!!data.partlist) {
-            data.partlist.forEach(x => result.partlist.push(x));
+            data.partlist.forEach((x) => result.partlist.push(x));
         }
         if (!!data.parseLocation) {
             result.parseLocation = data.parseLocation;
@@ -127,7 +127,7 @@ export class ShowCaseUnit extends FreNodeBaseImpl implements FreModelUnit {
             result.prim = this.prim;
         }
         if (!!this.numlist) {
-            this.numlist.forEach(x => result.numlist.push(x));
+            this.numlist.forEach((x) => result.numlist.push(x));
         }
         if (!!this.name) {
             result.name = this.name;
@@ -136,7 +136,7 @@ export class ShowCaseUnit extends FreNodeBaseImpl implements FreModelUnit {
             result.part = this.part.copy();
         }
         if (!!this.partlist) {
-            this.partlist.forEach(x => result.partlist.push(x.copy()));
+            this.partlist.forEach((x) => result.partlist.push(x.copy()));
         }
         return result;
     }

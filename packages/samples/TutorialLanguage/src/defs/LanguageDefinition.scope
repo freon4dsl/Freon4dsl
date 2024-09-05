@@ -1,0 +1,17 @@
+scoper Entity for language Entity
+
+isnamespace { EntityModelUnit, Entity, EntityFunction }
+
+Entity {
+    namespace_addition = self.baseEntity;
+}
+
+/*
+Type {
+    namespace_addition = self.baseInterface
+}
+*/
+
+AppliedFeature {
+	scope = typeof( container );
+}

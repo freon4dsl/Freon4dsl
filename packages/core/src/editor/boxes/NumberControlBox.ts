@@ -1,20 +1,20 @@
-import {FreLogger} from "../../logging";
-import {FreNode} from "../../ast";
-import {FreUtils, isNullOrUndefined} from "../../util";
-import {Box} from "./internal";
+import { FreLogger } from "../../logging";
+import { FreNode } from "../../ast";
+import { FreUtils, isNullOrUndefined } from "../../util";
+import { Box } from "./internal";
 
 const LOGGER: FreLogger = new FreLogger("NumberControlBox");
 
 export type NumberDisplayInfo = {
     max?: number | undefined;
     min?: number | undefined;
-    step?: number| undefined;
+    step?: number | undefined;
     showMarks?: boolean | undefined;
     discrete?: boolean | undefined;
-}
+};
 export enum NumberDisplay {
-    SELECT,             // a text component
-    SLIDER,  // a slider from left to right
+    SELECT, // a text component
+    SLIDER, // a slider from left to right
 }
 
 export class NumberControlBox extends Box {
@@ -34,7 +34,7 @@ export class NumberControlBox extends Box {
         this.$setNumber(newValue);
         if (this.showAs === NumberDisplay.SLIDER && newValue > this.displayInfo.max) {
             this.displayInfo.max = newValue;
-            console.log("NumberBox: value greater than max")
+            console.log("NumberBox: value greater than max");
         }
         this.isDirty();
     }
@@ -43,11 +43,12 @@ export class NumberControlBox extends Box {
         return this.$getNumber();
     }
 
-    constructor(node: FreNode,
-                role: string,
-                getNumber: () => number,
-                setNumber: (newValue: number) => void,
-                initializer?: Partial<NumberControlBox>
+    constructor(
+        node: FreNode,
+        role: string,
+        getNumber: () => number,
+        setNumber: (newValue: number) => void,
+        initializer?: Partial<NumberControlBox>,
     ) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
@@ -94,8 +95,8 @@ export class NumberControlBox extends Box {
                 max: myMax,
                 step: myStep,
                 showMarks: myShowMarks,
-                discrete: myDiscrete
-            }
+                discrete: myDiscrete,
+            };
         } else {
             if (this.displayInfo.min === undefined) {
                 this.displayInfo.min = myMin;
@@ -146,7 +147,8 @@ export class NumberControlBox extends Box {
                                 this.displayInfo.step = 1;
                             } else {
                                 // increase max if the step does not fit
-                                let remainder: number = (this.displayInfo.max - this.displayInfo.min) % this.displayInfo.step;
+                                let remainder: number =
+                                    (this.displayInfo.max - this.displayInfo.min) % this.displayInfo.step;
                                 if (remainder !== 0) {
                                     this.displayInfo.max += remainder;
                                 }
@@ -162,4 +164,3 @@ export class NumberControlBox extends Box {
 export function isNumberControlBox(b: Box): b is NumberControlBox {
     return b?.kind === "NumberControlBox"; // b instanceof NumberControlBox;
 }
-

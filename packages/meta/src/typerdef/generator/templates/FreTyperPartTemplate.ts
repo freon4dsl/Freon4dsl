@@ -1,4 +1,4 @@
-import {Names, FREON_CORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER, LOG2USER} from "../../../utils/index.js";
+import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER, LOG2USER } from "../../../utils/index.js";
 import { FreMetaConcept, FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../../metalanguage/index.js";
 import { ListUtil } from "../../../utils/index.js";
@@ -18,7 +18,7 @@ export class FreTyperPartTemplate {
     generateTyperPart(language: FreMetaLanguage, typerdef: TyperDef | undefined, relativePath: string): string {
         if (language === undefined || language === null) {
             LOG2USER.error("Could not create type part, because language was not set.");
-            return '';
+            return "";
         }
         this.language = language;
         if (!!typerdef) {
@@ -211,7 +211,7 @@ export class FreTyperPartTemplate {
                 ${superTypeMaker.makeSuperTypes(typerdef, "type", this.importedClassifiers)}
             }
 
-            ${inferMaker.extraMethods.map(meth => meth).join("\n\n")}
+            ${inferMaker.extraMethods.map((meth) => meth).join("\n\n")}
 
             private typeOf(myArg: ${Names.FreNode} | ${Names.FreNode}[]): ${Names.FreType} {
                 let result: ${Names.FreType};
@@ -234,8 +234,8 @@ export class FreTyperPartTemplate {
             }
         }`;
 
-        const typeConceptImports: string [] = [];
-        this.importedClassifiers.forEach(cls => {
+        const typeConceptImports: string[] = [];
+        this.importedClassifiers.forEach((cls) => {
             if (FreTyperGenUtils.isType(cls)) {
                 if (cls.name !== Names.FreType) {
                     ListUtil.addIfNotPresent(typeConceptImports, Names.classifier(cls));
@@ -243,29 +243,31 @@ export class FreTyperPartTemplate {
             } else {
                 ListUtil.addIfNotPresent(this.imports, Names.classifier(cls));
             }
-
         });
 
         const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, FreCommonSuperTypeUtil } from "${FREON_CORE}";
-        import { ${this.imports.map(im => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map(im => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}`;
+        import { ${this.imports.map((im) => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map((im) => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}`;
 
         return imports + baseClass;
     }
 
     private makeIsType(allTypes: FreMetaClassifier[]) {
-        let result: string = '';
+        let result: string = "";
         // add statements for all concepts that are marked 'isType'
         // all elements of allTypes should be FreConcepts
-        const myList: FreMetaConcept[] = allTypes.filter(t => t instanceof FreMetaConcept) as FreMetaConcept[];
-        myList.forEach(type => {
+        const myList: FreMetaConcept[] = allTypes.filter((t) => t instanceof FreMetaConcept) as FreMetaConcept[];
+        myList.forEach((type) => {
             ListUtil.addIfNotPresent(this.imports, Names.concept(type));
         });
-        result = `${myList.map(type =>
-            `if (modelelement instanceof ${Names.concept(type)}) {
+        result = `${myList
+            .map(
+                (type) =>
+                    `if (modelelement instanceof ${Names.concept(type)}) {
                 return true;
-            }`
-        ).join(" else ")}`;
+            }`,
+            )
+            .join(" else ")}`;
         result = result.concat(`return false;`);
         return result;
     }
