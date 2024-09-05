@@ -1,11 +1,12 @@
-import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
-import { FileHandler } from "../../UnusedOrInvalid/utils/FileHandler";
-import { GenericModelSerializer } from "@freon4dsl/core";
-import { ModelUnitMetaType, OctopusModel, OctopusModelUnitType } from "../language/gen";
+import { describe, test, expect } from "vitest";
+import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
+import { FileHandler } from "./FileHandler";
+import {FreModelSerializer, FreNode} from "@freon4dsl/core";
+import { OctopusModel } from "../language/gen";
 
-const writer = OctopusEnvironment.getInstance().writer;
-const reader = OctopusEnvironment.getInstance().reader;
-const serial: GenericModelSerializer = new GenericModelSerializer();
+const writer = OctopusModelEnvironment.getInstance().writer;
+const reader = OctopusModelEnvironment.getInstance().reader;
+const serial: FreModelSerializer = new FreModelSerializer();
 const handler = new FileHandler();
 
 function compareReadAndWrittenOclParts(path: string) {
@@ -26,32 +27,32 @@ function compareReadAndWrittenOclParts(path: string) {
     }
 }
 
-function readFromFile(filepath: string, metatype: ModelUnitMetaType): OctopusModelUnitType {
+function readFromFile(filepath: string, metatype: string): FreNode {
     // read language file
     const langSpec = handler.stringFromFile(filepath);
-    return reader.readFromString(langSpec, metatype, new OctopusModel()) as OctopusModelUnitType;
+    return reader.readFromString(langSpec, metatype, new OctopusModel());
 }
 
 describe("Testing Parser for OCl part", () => {
 
     // TODO use snapshots
     test("Period unparsed and parsed again", () => {
-        compareReadAndWrittenOclParts("src/octopus/__inputs__/Period.ocl");
+        compareReadAndWrittenOclParts("src/__inputs__/Period.ocl");
     });
 
     // test("Period unparsed and parsed again", () => {
-    //     compareReadAndWrittenOclParts("src/octopus/__inputs__/Appendix.ocl");
+    //     compareReadAndWrittenOclParts("src/__inputs__/Appendix.ocl");
     // });
     //
     // test("Period unparsed and parsed again", () => {
-    //     compareReadAndWrittenOclParts("src/octopus/__inputs__/Bookpart.ocl");
+    //     compareReadAndWrittenOclParts("src/__inputs__/Bookpart.ocl");
     // });
     //
     // test("Period unparsed and parsed again", () => {
-    //     compareReadAndWrittenOclParts("src/octopus/__inputs__/Chapter.ocl");
+    //     compareReadAndWrittenOclParts("src/__inputs__/Chapter.ocl");
     // });
     //
     // test("Period unparsed and parsed again", () => {
-    //     compareReadAndWrittenOclParts("src/octopus/__inputs__/Prependix.ocl");
+    //     compareReadAndWrittenOclParts("src/__inputs__/Prependix.ocl");
     // });
 });

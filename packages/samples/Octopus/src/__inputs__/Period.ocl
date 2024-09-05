@@ -11,6 +11,6 @@ context Period
 def: getNrOfNonworkingDays(): Integer = nrOfDays - nrOfWorkingDays
 
 context Period
-def: someAttribute = nrOfDays + nrOfWorkingDays
+def: someAttribute : Integer = nrOfDays + nrOfWorkingDays
 
 endpackage //Book
