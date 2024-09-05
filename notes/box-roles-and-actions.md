@@ -46,6 +46,9 @@ in this case all box roles  where an expression will fit.
 
 - [ ] create more options to be able to hook in actions
 
+### Reference shortcuts
+Are in Actions, but also in Commands.
+
 **NB**
  Need to take a look at how custom actions are done for buttons etc.
 
