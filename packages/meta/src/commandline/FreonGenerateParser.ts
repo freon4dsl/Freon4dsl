@@ -1,7 +1,7 @@
 import { FreEditParser } from "../editordef/parser/FreEditParser.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/MetaLogger.js";
-import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
+import { ReaderWriterGenerator } from "../parsergen4peggy/ReaderWriterGenerator.js";
 import {DefaultEditorGenerator, FreEditUnit} from "../editordef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateParser"); // .mute();

@@ -4,6 +4,7 @@ import peggy from "peggy";
 // import {grammarStr} from "./JavaScriptGrammar";
 import {simpleGrammarStr} from "./SimpleGrammar";
 import {GrammarError, Parser, parser } from "pegjs";
+import * as PeggyParser from "./PeggyParser.js";
 
 function isPegjsError(object: any): object is parser.SyntaxError {
     return "location" in object;
@@ -12,6 +13,27 @@ function isPegjsError(object: any): object is parser.SyntaxError {
 export class NewReader {
 
     readFromString(sentence: string) {
+        try {
+            const allowedStartRules = ["UmlPart"];
+            // other possibly useful parameters: grammarSource, error, info, warnings
+            PeggyParser.parse(sentence, {allowedStartRules: allowedStartRules});
+        } catch (e) {
+            if (isPegjsError(e)) {
+                console.log("SyntaxError: " + e.message + ", line: " + e.location.start.line + ", column: " + e.location.start.column);
+            } else if (e instanceof GrammarError) {
+                // throws an exception if the grammar is invalid
+                console.log("Invalid Grammar: " + e.message + ", line: " + e.location.start.line + ", column: " + e.location.start.column);
+            } else if (typeof e.format === "function") {
+                    console.log(e.format([
+                        {source: './packages/samples/Octopus/readers/OctopusModelGrammar.ts', sentence},
+                    ]));
+            } else {
+                console.log("Other error: "+ e.message);
+            }
+        }
+    }
+
+    readFromStringOld(sentence: string) {
         let parser: Parser;
         try {
             // set allowedStartRules to all possible unit types
@@ -27,9 +49,9 @@ export class NewReader {
                 // throws an exception if the grammar is invalid
                 console.log("Invalid Grammar: " + e.message + ", line: " + e.location.start.line + ", column: " + e.location.start.column);
             } else if (typeof e.format === "function") {
-                    console.log(e.format([
-                        {source: './packages/samples/Octopus/readers/OctopusModelGrammar.ts', sentence},
-                    ]));
+                console.log(e.format([
+                    {source: './packages/samples/Octopus/readers/OctopusModelGrammar.ts', sentence},
+                ]));
             } else {
                 console.log("Other error: "+ e.message);
             }

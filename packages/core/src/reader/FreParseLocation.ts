@@ -20,4 +20,8 @@ export class FreParseLocation {
     column: number;
 
     private constructor() {}
+
+    toString(): string {
+        return `[${this.filename}:${this.line}:${this.column}]`;
+    }
 }

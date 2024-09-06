@@ -4,6 +4,7 @@ import { FileHandler } from "../__tests__/FileHandler";
 import {FreModelSerializer, FreNamedNode} from "@freon4dsl/core";
 import { OctopusModel } from "../language/gen";
 import {NewReader} from "./NewReader";
+import {resetCurrentFileName, setCurrentFileName} from "./ParseHelpers";
 
 
 const writer = OctopusModelEnvironment.getInstance().writer;
@@ -15,7 +16,9 @@ function compareReadAndWrittenUmlParts(filepath: string) {
     try {
         // const model: OctopusModel = new OctopusModel();
         const langSpec: string = handler.stringFromFile(filepath);
+        setCurrentFileName(filepath);
         reader.readFromString(langSpec);
+        resetCurrentFileName();
         // const unit1: FreNamedNode = reader.readFromString(langSpec);
         // unit1.name = "unit1";
         // let result: string = writer.writeToString(unit1, 0, false);
