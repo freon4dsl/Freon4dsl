@@ -2,6 +2,7 @@ import { FreEditParser } from "../editordef/parser/FreEditParser.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
 import { MetaLogger } from "../utils/MetaLogger.js";
 import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
+import {DefaultEditorGenerator, FreEditUnit} from "../editordef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateParser"); // .mute();
 
@@ -26,13 +27,18 @@ export class FreonGenerateParser extends FreonGeneratePartAction {
         this.parserGenerator.outputfolder = this.outputFolder;
         this.parserGenerator.language = this.language;
 
-        const editor = new FreEditParser(this.language).parseMulti(this.editFiles);
-        // This command is being used to generate, specifically and only,
-        // the reader/writer couple. Therefore, we do not generate a default editor when
-        // no editor definition is found.
-        if (editor === null || editor === undefined) {
+        let editor: FreEditUnit | undefined;
+        if (this.editFiles.length > 0) {
+            editor = new FreEditParser(this.language).parseMulti(this.editFiles);
+        } else {
+            editor = DefaultEditorGenerator.createEmptyEditorDefinition(this.language);
+        }
+        if (!!editor) {
+            // add default values for everything that is not present in the default projection group
+            DefaultEditorGenerator.addDefaults(editor);
+            this.parserGenerator.generate(editor);
+        } else {
             throw new Error("Editor definition could not be parsed, exiting.");
         }
-        this.parserGenerator.generate(editor);
     }
 }
