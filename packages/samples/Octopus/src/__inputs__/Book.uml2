@@ -20,10 +20,10 @@
 <attributes> + author: String;
 			 + subject: String;
 <operations> + determineDurationTillFinished(from: Date): Period;
-//<states> ready;
-//         inwriting;
-//         inwriting::draft;
-//         inwriting::finaldraft;
+<states> ready;
+         inwriting;
+         inwriting::draft;
+         inwriting::finaldraft;
 <endclass>
 
 <class> Appendix  <specializes> Bookpart <implements> TwoColumnPart
