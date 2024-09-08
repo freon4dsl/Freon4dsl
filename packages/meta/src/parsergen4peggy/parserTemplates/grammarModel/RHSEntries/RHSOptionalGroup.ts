@@ -15,13 +15,16 @@ export class RHSOptionalGroup extends RHSPropEntry {
         this.propIndex = propIndex;
     }
 
-    toGrammar(): string {
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
         if (this.subs.length > 1) {
             // no need for newline between subs and closing ')?'
-            return `${ParserGenUtil.internalName(this.property.name)}:( ${this.subs
-                .map((sub) => `${sub.toGrammar()}`)
+            return `${varName}:( ${this.subs
+                .map((sub) => `${sub.toGrammar("__optionalInner")}`)
                 .join(" ")
-                .trimEnd()} )?\n\t`;
+                .trimEnd()} {return __optionalInner})?\n\t`;
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList || first instanceof RHSBooleanWithSingleKeyWord) {

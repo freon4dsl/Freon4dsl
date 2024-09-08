@@ -17,8 +17,11 @@ export class RHSRefListWithTerminator extends RHSPropPartWithSeparator {
         this.isSingleEntry = isSingleEntry;
     }
 
-    toGrammar(): string {
-        return `( ${this.entry.toGrammar()} '${this.separatorText}' )*` + this.doNewline();
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
+        return `${varName}:( ${this.entry.toGrammar("__innerList")} '${this.separatorText}' {return __innerList})*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

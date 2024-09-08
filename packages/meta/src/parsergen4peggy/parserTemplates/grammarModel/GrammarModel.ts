@@ -27,14 +27,18 @@ export class GrammarModel {
         // other layout matters into account in this template
         // unfortunately, this makes things a little less legible :-(
         return `{{
-import * as helper from "./ParseHelpers"
-import {UmlPart, UmlClass, UmlPackage, Attribute, Association, AssociationClass, AssociationEnd,
-  DataType, EnumerationType, State, UmlInterface, EnumLiteral} from "../language/gen/index";
+import * as helper from "./ParseHelpers";
+import { FreNodeReference } from "@freon4dsl/core";
+import {${this.imports().join(",\n\t")} } from "../language/gen/index";
 }}
 
 ${this.grammarContent()}
 
-${refRuleName} = [ identifier / '${this.refSeparator}' ]+ ;
+//
+// Rule for references 
+//
+
+${refRuleName} = __ref:identifier|1.., '${this.refSeparator}'|  // returns an Array of strings
 
 //
 // Rules for primitive values
@@ -124,6 +128,19 @@ LineTerminator "end of line"
             });
         });
         return result.trimEnd();
+    }
+
+    private imports(): string[] {
+        let result: string[] = [];
+        this.parts.forEach((part) => {
+            part.rules.map((rule) => {
+                    if (rule.nameToImport() && rule.nameToImport().length > 0) {
+                        result.push(rule.nameToImport())
+                    }
+                }
+            );
+        });
+        return result;
     }
 
     toMethod(): string {
@@ -355,4 +372,6 @@ LineTerminator "end of line"
             return `_unit_common_analyser`;
         }
     }
+
+
 }

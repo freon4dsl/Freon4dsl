@@ -4,7 +4,9 @@ import peggy from "peggy";
 // import {grammarStr} from "./JavaScriptGrammar";
 import {simpleGrammarStr} from "./SimpleGrammar";
 import {GrammarError, Parser, parser } from "pegjs";
-import * as PeggyParser from "./PeggyParser.js";
+import * as PeggyParser from "./OctopusModelParser.js";
+import {UmlPart} from "../language/gen";
+import {FreNamedNode} from "@freon4dsl/core";
 
 function isPegjsError(object: any): object is parser.SyntaxError {
     return "location" in object;
@@ -12,11 +14,12 @@ function isPegjsError(object: any): object is parser.SyntaxError {
 
 export class NewReader {
 
-    readFromString(sentence: string) {
+    readFromString(sentence: string): FreNamedNode | undefined {
         try {
-            const allowedStartRules = ["UmlPart"];
+            // const allowedStartRules = ["UmlPart"];
             // other possibly useful parameters: grammarSource, error, info, warnings
-            PeggyParser.parse(sentence, {allowedStartRules: allowedStartRules});
+            const xx : UmlPart = PeggyParser.parse(sentence, {startRule: "UmlPart"});
+            return xx;
         } catch (e) {
             if (isPegjsError(e)) {
                 console.log("SyntaxError: " + e.message + ", line: " + e.location.start.line + ", column: " + e.location.start.column);
@@ -31,6 +34,7 @@ export class NewReader {
                 console.log("Other error: "+ e.message);
             }
         }
+        return undefined;
     }
 
     readFromStringOld(sentence: string) {

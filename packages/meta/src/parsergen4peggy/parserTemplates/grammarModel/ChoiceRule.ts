@@ -47,35 +47,14 @@ export class ChoiceRule extends GrammarRule {
                     .map((implementor) => `${getTypeCall(implementor)} `)
                     .join("\n    / ")} ;`;
             }
-            // if (this.implementors.length !== implementorsNoBinaries.length) {
-                // there are binaries
-                // exclude binary expression concepts
-                // rule = `${this.ruleName} = ${implementorsNoBinaries
-                //     .map((implementor) => `${getTypeCall(implementor)} `)
-                //     .join("\n    / ")}`;
-                // // add the special binary concept rule(s) as choice
-                // const expBases = ParserGenUtil.findAllExpressionBases(
-                //     this.implementors.filter(
-                //         (sub) => sub instanceof FreMetaBinaryExpressionConcept,
-                //     ) as FreMetaBinaryExpressionConcept[],
-                // );
-                // if (implementorsNoBinaries.length > 0) {
-                //     // there are already choices present in the rule, so add a '/' as separator
-                //     rule += "\n    / ";
-                // }
-                // expBases.forEach((base) => {
-                //     rule += `HIER ${BinaryExpMaker.getBinaryRuleName(base)} ;`;
-                // });
-            // } else {
-            //     // normal choice rule
-            //     rule = `${this.ruleName} = ${implementorsNoBinaries
-            //         .map((implementor) => `${getTypeCall(implementor)} `)
-            //         .join("\n    / ")} ;`;
-            // }
         } else {
             rule = `${this.ruleName} = 'ERROR' ; // there are no concepts that implement this interface or extend this abstract concept`;
         }
         return rule;
+    }
+
+    nameToImport(): string {
+        return '';
     }
 
     toMethod(mainAnalyserName: string): string {

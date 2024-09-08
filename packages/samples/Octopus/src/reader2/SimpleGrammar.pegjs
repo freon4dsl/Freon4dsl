@@ -219,11 +219,13 @@ OclContext = ws "context" ws ModelElementReference
 
 ModelElementReference = __fre_reference (ws "::" ws __fre_reference )?
 
-Operation = VisibilityKind? name:identifier ws "(" ws Parameter|.., ","| ")" ws (ws ":" ws __fre_reference )?
+Operation = VisibilityKind? identifier ws "(" ws __parameters:Parameter|.., ","| ws ")" ws (ws ":" ws __fre_reference )?
 	 OclPreStatement*
 	 OclPostStatement*
+{ console.log(__parameters) }
 
 Parameter = ParameterDirectionKind? name:identifier ws ":" ws __fre_reference
+{return "PARAM " + name}
 
 OclPreStatement = ws "pre" ws ( name:identifier ws ":" ws )?
 	 OclExpression

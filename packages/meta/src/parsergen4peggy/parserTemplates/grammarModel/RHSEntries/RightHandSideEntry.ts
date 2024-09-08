@@ -13,7 +13,10 @@ export abstract class RightHandSideEntry {
         return ``;
     }
 
-    toGrammar(): string {
+    // @ts-ignore
+    // TS6133: varName is declared but its value is never read.
+    // This error is ignored because this parameter is only used by subclasses.
+    toGrammar(varName?: string): string {
         return `RightHandSideEntry.toGrammar() should be implemented by its subclasses.`;
     }
 

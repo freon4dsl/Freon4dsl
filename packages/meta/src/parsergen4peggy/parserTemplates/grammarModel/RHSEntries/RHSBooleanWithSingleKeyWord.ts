@@ -12,8 +12,11 @@ export class RHSBooleanWithSingleKeyWord extends RHSPropEntry {
         this.isList = false;
     }
 
-    toGrammar(): string {
-        return `ws ${ParserGenUtil.internalName(this.property.name)}:'${this.keyword}'? ws` + this.doNewline();
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
+        return `${varName}:(ws __keyword:'${this.keyword}'? ws { return !!__keyword })` + this.doNewline();
     }
 
     // @ts-ignore

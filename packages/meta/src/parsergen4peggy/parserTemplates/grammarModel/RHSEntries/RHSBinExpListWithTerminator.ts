@@ -23,11 +23,13 @@ export class RHSBinExpListWithTerminator extends RHSPropEntry {
         this.separatorText = separatorText;
     }
 
-    toGrammar(): string {
-        return (
-            `( ${BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type))} '${this.separatorText}' )*` +
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
+        return `${varName}:(${BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type))} '${this.separatorText}' )*` +
             this.doNewline()
-        );
+        ;
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

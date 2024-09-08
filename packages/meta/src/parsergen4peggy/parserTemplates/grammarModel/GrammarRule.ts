@@ -11,4 +11,8 @@ export abstract class GrammarRule {
     toMethod(mainAnalyserName: string): string {
         return `GrammarRule.toMethod() should be implemented by its subclasses.`;
     }
+
+    nameToImport() {
+        return `GrammarRule.nameToImport() should be implemented by its subclasses.`;
+    }
 }

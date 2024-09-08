@@ -6,7 +6,7 @@ import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil.js";
 import { getTypeCall } from "./GrammarUtils.js";
 
 export class SuperChoiceRule extends GrammarRule {
-    // the same as ChoiceRule, except that the call to the implementors is never to '__pi_super_...'
+    // the same as ChoiceRule, except that the call to the implementors is never to '__fre_super_...'
     implementors: FreMetaClassifier[];
     myConcept: FreMetaClassifier;
 
@@ -54,6 +54,10 @@ export class SuperChoiceRule extends GrammarRule {
             rule = `${this.ruleName} = 'ERROR' ; // there are no concepts that implement this interface or extend this abstract concept`;
         }
         return rule;
+    }
+
+    nameToImport(): string {
+        return '';
     }
 
     toMethod(mainAnalyserName: string): string {

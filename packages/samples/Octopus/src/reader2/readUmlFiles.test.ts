@@ -2,9 +2,10 @@ import { describe, test, expect } from "vitest";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
 import { FileHandler } from "../__tests__/FileHandler";
 import {FreModelSerializer, FreNamedNode} from "@freon4dsl/core";
-import { OctopusModel } from "../language/gen";
+import {OctopusModel, UmlPart} from "../language/gen";
 import {NewReader} from "./NewReader";
 import {resetCurrentFileName, setCurrentFileName} from "./ParseHelpers";
+import * as helper from "./ParseHelpers"
 
 
 const writer = OctopusModelEnvironment.getInstance().writer;
@@ -17,13 +18,14 @@ function compareReadAndWrittenUmlParts(filepath: string) {
         // const model: OctopusModel = new OctopusModel();
         const langSpec: string = handler.stringFromFile(filepath);
         setCurrentFileName(filepath);
-        reader.readFromString(langSpec);
+        const unit1: FreNamedNode = reader.readFromString(langSpec);
         resetCurrentFileName();
-        // const unit1: FreNamedNode = reader.readFromString(langSpec);
-        // unit1.name = "unit1";
-        // let result: string = writer.writeToString(unit1, 0, false);
-        // expect(result.length).toBeGreaterThan(0);
-        // // handler.stringToFile(filepath + "2", result);
+        expect(unit1).not.toBeUndefined;
+        unit1.name = "unit1";
+        helper.printUmlPackage((unit1 as UmlPart).umlPackage);
+        let result: string = writer.writeToString(unit1, 0, false);
+        expect(result.length).toBeGreaterThan(0);
+        handler.stringToFile(filepath + "2", result);
         // const unit2: FreNamedNode = reader.readFromString(result) as FreNamedNode;
         // unit2.name = "unit1"; // the names should be the same in the comparison, but may not be the same in the reader method!!!
         // // simply comparing the units does not work because the id properties of the two units
@@ -34,7 +36,7 @@ function compareReadAndWrittenUmlParts(filepath: string) {
         // expect(unit1_json).toEqual(unit2_json);
     } catch (e) {
         console.log(e.message + e.stack);
-        // expect(e).toBeNaN();
+        expect(true).toBe(false);
     }
 }
 

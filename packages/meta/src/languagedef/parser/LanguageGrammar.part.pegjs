@@ -1,7 +1,6 @@
 /**
  * Grammar for language definition syntax (.ast files)
  */
-
 Language_Definition
   = ws "language" rws name:var rws langparts:(langdef)*
     {

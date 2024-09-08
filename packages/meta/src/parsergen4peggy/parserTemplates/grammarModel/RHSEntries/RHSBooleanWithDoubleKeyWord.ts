@@ -14,8 +14,11 @@ export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
         this.isList = false;
     }
 
-    toGrammar(): string {
-        return `${ParserGenUtil.internalName(this.property.name)}:( ws '${this.trueKeyword}' ws { return true } 
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
+        return `${varName}:( ws '${this.trueKeyword}' ws { return true } 
         / ws '${this.falseKeyword}' ws { return false } )` + this.doNewline();
     }
 

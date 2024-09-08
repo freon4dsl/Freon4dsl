@@ -5,12 +5,12 @@
              + nrOfPages: Integer;
              - startPageNr: Integer;
 //             - /startPageNr: Integer;
-<operations> + determineStartPageNumber(): Integer;
+<operations> + determineStartPageNumber(<in> text: String, <out> second: Integer): Integer;
 			 + getLastPageNumber(): Integer;
 			 + getNext(): Bookpart;
 <endclass>
 
-<class> Prependix  <specializes> Bookpart
+<class> Prependix  <specializes> Bookpart::Chapter14::Page11
 <attributes> + kind: PrependixKind;
 <operations> + needsEmptyLastPage(): Boolean;
              + isFirstBookpart(): Boolean;
@@ -20,10 +20,10 @@
 <attributes> + author: String;
 			 + subject: String;
 <operations> + determineDurationTillFinished(from: Date): Period;
-<states> ready;
-         inwriting;
-         inwriting::draft;
-         inwriting::finaldraft;
+//<states> ready;
+//         inwriting;
+//         inwriting::draft;
+//         inwriting::finaldraft;
 <endclass>
 
 <class> Appendix  <specializes> Bookpart <implements> TwoColumnPart

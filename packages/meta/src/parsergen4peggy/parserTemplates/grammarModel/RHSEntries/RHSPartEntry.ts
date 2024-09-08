@@ -12,8 +12,11 @@ export class RHSPartEntry extends RHSPropEntry {
         this.projectionName = projectionName;
     }
 
-    toGrammar(): string {
-        return `${ParserGenUtil.internalName(this.property.name)}:${getTypeCall(this.property.type, this.projectionName)}` + this.doNewline();
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
+        return `${varName}:${getTypeCall(this.property.type, this.projectionName)}` + this.doNewline();
     }
 
     // @ts-ignore

@@ -10,8 +10,11 @@ export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
         this.isList = true;
     }
 
-    toGrammar(): string {
-        return `${ParserGenUtil.internalName(this.property.name)}:(head:${refRuleName} tail:(ws '${this.separatorText}' ws @${refRuleName})* { return [head, ...tail]; })` + this.doNewline();
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
+        return `${varName}:${refRuleName}|.., "${this.separatorText}"|` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

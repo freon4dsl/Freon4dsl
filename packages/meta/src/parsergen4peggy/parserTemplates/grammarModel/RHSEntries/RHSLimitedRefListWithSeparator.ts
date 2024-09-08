@@ -9,8 +9,10 @@ export class RHSLimitedRefListWithSeparator extends RHSPropPartWithSeparator {
         this.isList = true;
     }
 
-    toGrammar(): string {
-        return `${ParserGenUtil.internalName(this.property.name)}:(head:${getTypeCall(this.property.type)} tail:(ws '${this.separatorText}' ws @${getTypeCall(this.property.type)})* { return [head, ...tail]; })` + this.doNewline();
+    toGrammar(varName?: string): string {        if (!varName || varName.length <= 0) {
+        varName = ParserGenUtil.internalName(this.property.name);
+    }
+        return `${varName}:${getTypeCall(this.property.type)}|.., "${this.separatorText}"|` + this.doNewline();
     }
 
     // @ts-ignore

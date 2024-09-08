@@ -9,8 +9,11 @@ export class RHSPrimListEntry extends RHSPropEntry {
         this.isList = true;
     }
 
-    toGrammar(): string {
-        return `${ParserGenUtil.internalName(this.property.name)}:${getPrimCall(this.property.type)}*` + this.doNewline();
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
+        return `${varName}:${getPrimCall(this.property.type)}*` + this.doNewline();
     }
 
     // @ts-ignore

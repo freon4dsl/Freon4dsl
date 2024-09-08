@@ -1,4 +1,3 @@
-import * as creator from "../../dist/reader2/Creators.js"
 export const simpleGrammarStr: string = `
 
 // rules for "OclPart"
@@ -148,11 +147,13 @@ OclContext = ws "context" ws ModelElementReference
 
 ModelElementReference = __fre_reference (ws "::" ws __fre_reference )? ;
 
-Operation = VisibilityKind? identifier ws "(" ws Parameter|.., ","| ")" ws (ws ":" ws __fre_reference )?
+Operation = VisibilityKind? identifier ws "(" ws __parameters:Parameter|.., ","| ws ")" ws (ws ":" ws __fre_reference )?
 	 OclPreStatement*
 	 OclPostStatement* ;
+{ console.log(__parameters) }
 
 Parameter = ParameterDirectionKind? identifier ws ":" ws __fre_reference ;
+{console.log("__parameters"); return "PARAM"}
 
 OclPreStatement = ws "pre" ws ( identifier ws ":" ws )?
 	 OclExpression ;

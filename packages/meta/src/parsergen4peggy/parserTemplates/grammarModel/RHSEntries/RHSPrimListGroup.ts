@@ -14,8 +14,11 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
         this.entry = entry;
     }
 
-    toGrammar(): string {
-        return `( ${this.entry.toGrammar()} '${this.separatorText}' )*\n\t`;
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
+        return `${varName}:( ${this.entry.toGrammar("__innerList")} '${this.separatorText}' {return __innerList} )*\n\t`;
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

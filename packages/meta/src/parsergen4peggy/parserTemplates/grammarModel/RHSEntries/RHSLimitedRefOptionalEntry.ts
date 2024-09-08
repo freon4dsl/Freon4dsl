@@ -9,8 +9,10 @@ export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
         this.isList = false;
     }
 
-    toGrammar(): string {
-        return `${ParserGenUtil.internalName(this.property.name)}:${getTypeCall(this.property.type)}?` + this.doNewline();
+    toGrammar(varName?: string): string {        if (!varName || varName.length <= 0) {
+        varName = ParserGenUtil.internalName(this.property.name);
+    }
+        return `${varName}:${getTypeCall(this.property.type)}?` + this.doNewline();
     }
 
     //  @ts-ignore

@@ -24,6 +24,14 @@ export class BinaryExpressionRule extends GrammarRule {
         return `${this.rule1()}\n${this.rule2()}`;
     }
 
+    nameToImport(): string {
+        if (!!this.expressionBase) {
+            return Names.classifier(this.expressionBase);
+        } else {
+            return '';
+        }
+    }
+
     toMethod(mainAnalyserName: string): string {
         const cases: string[] = [];
         for (const [key, value] of this.symbolToConcept) {

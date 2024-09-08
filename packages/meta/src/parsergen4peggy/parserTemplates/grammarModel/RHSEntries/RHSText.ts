@@ -39,7 +39,10 @@ export class RHSText extends RightHandSideEntry {
         this.text = str;
     }
 
-    toGrammar(): string {
+    // @ts-ignore
+    // TS6133: varName is declared but its value is never read.
+    // This parameter is only here to adhere to the super class signature.
+    toGrammar(varName?: string): string {
         return "ws " + this.text + " ws" + this.doNewline();
     }
 

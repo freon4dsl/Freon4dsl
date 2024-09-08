@@ -23,21 +23,28 @@ export class LimitedRule extends GrammarRule {
             // note that this rule cannot be prefixed with 'leaf'; this would cause the syntax analysis to fail
             result = `${this.ruleName} = `;
             let first = true;
-            const mapKeys: IterableIterator<string> = this.myMap.values();
-            for (const value of mapKeys) {
+            for (let [key, value] of this.myMap) {
                 // prefix the second and all other choices with the '/' symbol
                 if (first) {
                     first = false;
                 } else {
                     result += "\n\t/ ";
                 }
-                result += `\'${value}\'`;
+                result += `ws \'${value}\' ws { return ${key} }`;
             }
         } else {
             // make a 'normal' reference rule
-            result = `${this.ruleName} = identifier`;
+            result = `${this.ruleName} = __name:identifier { return __name }`;
         }
         return result + " ;";
+    }
+
+    nameToImport(): string {
+        if (!!this.concept) {
+            return Names.classifier(this.concept);
+        } else {
+            return '';
+        }
     }
 
     toMethod(): string {

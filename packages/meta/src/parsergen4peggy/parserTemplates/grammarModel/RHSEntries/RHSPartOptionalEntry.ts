@@ -13,8 +13,11 @@ export class RHSPartOptionalEntry extends RHSPropEntry {
         this.projectionName = projectionName;
     }
 
-    toGrammar(): string {
-        return `${getTypeCall(this.property.type, this.projectionName)}?` + this.doNewline();
+    toGrammar(varName?: string): string {
+        if (!varName || varName.length <= 0) {
+            varName = ParserGenUtil.internalName(this.property.name);
+        }
+        return `${varName}:${getTypeCall(this.property.type, this.projectionName)}?` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

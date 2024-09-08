@@ -1,6 +1,7 @@
 import {Attribute, OclPart, UmlClass, UmlPackage, UmlPart} from "../language/gen";
-import {FreParseLocation} from "@freon4dsl/core";
+import {FreNamedNode, FreNodeReference, FreParseLocation} from "@freon4dsl/core";
 import {LocationRange} from "peggy";
+import {parser} from "pegjs";
 
 let currentFileName: string = "UNKNOWN_FILE";
 export function setCurrentFileName(newName: string) {
@@ -27,6 +28,20 @@ export function pegLocationToFreLocation(data: LocationRange): FreParseLocation 
     return result;
 }
 
+export function createReferenceList(data: Object, type: string): FreNodeReference<any>[] {
+    const result: FreNodeReference<any>[] = [];
+    if (!!data) {
+        if (Array.isArray(data)) {
+            data.forEach(xx => {
+                if (Array.isArray(xx)) {
+                    result.push(FreNodeReference.create(xx, type));
+                }
+            })
+        }
+    }
+    return result;
+}
+
 export function createOclPart(data: Partial<OclPart>): OclPart {
     const result: OclPart = new OclPart();
     if (!!data.name) {
@@ -46,16 +61,8 @@ export function printUmlPackage(umlPackage: UmlPackage) {
         "\n\twith associations: [" + umlPackage.associations.map(attr => attr.name).join(", ") + "]" +
         "\n\twith imports: [" + umlPackage.imports.map(attr => attr.name).join(", ") + "]"
     )
-}
-
-export function createAttribute(data: Partial<Attribute>): Attribute {
-    const result: Attribute = new Attribute();
-    if (!!data.name) {
-        result.name = data.name;
-    }
-    if (!!data.parseLocation) {
-        result.parseLocation = data.parseLocation;
-    }
-    console.log("Parsed Attribute: " + result.name + " at line " + result.parseLocation.toString())
-    return result;
+    umlPackage.classifiers.forEach(cls => {
+        console.log("Parsed Classifier: " + cls.name +
+            ", generalizations: " + cls.generalizations.map(gen => gen.pathnameToString("--")))
+    })
 }
