@@ -18,7 +18,7 @@ export class RHSPartListWithInitiator extends RHSPropPartWithSeparator {
         if (!varName || varName.length <= 0) {
             varName = ParserGenUtil.internalName(this.property.name);
         }
-        return `${varName}:( '${this.separatorText}' ${this.entry.toGrammar("__innerList")} {return __innerList)*` + this.doNewline();
+        return `${varName}:( '${this.separatorText}' ${this.entry.toGrammar("__innerList")} {return __innerList})*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

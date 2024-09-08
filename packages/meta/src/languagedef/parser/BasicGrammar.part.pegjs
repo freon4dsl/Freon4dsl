@@ -69,10 +69,10 @@ char
     )
     { return sequence; }
 
-escape
+escape "escape character"
   = "\\"
 
-unescaped
+unescaped "normal character"
   = [^\0-\x1F\x22\x5C]
 
 // ----- Core ABNF Rules -----

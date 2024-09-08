@@ -76,13 +76,13 @@ char
     )
     { return sequence; }
 
-escape
+escape "escape character"
   = "\\\\"
 
 quotation_mark
   = '"'
 
-unescaped
+unescaped "normal character"
   = [^\\0-\\x1F\\x22\\x5C]
 
 DIGIT  = [0-9]
