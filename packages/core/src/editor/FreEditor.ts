@@ -58,6 +58,7 @@ export class FreEditor {
         makeObservable<FreEditor, "_rootElement">(this, {
             // theme: observable,
             _rootElement: observable,
+            forceRecalculateProjection: observable
         });
         autorun(this.auto);
     }
@@ -86,12 +87,19 @@ export class FreEditor {
     }
 
     auto = () => {
-        // console.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept());
+        console.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " recalc is " + this.forceRecalculateProjection);
+        this.forceRecalculateProjection
         if (this.rootElement !== null) {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
         }
     };
+
+    /**
+     * Increase this value to force recalculation of the projection.
+     * Used e.g. when projection list changes.
+     */
+    forceRecalculateProjection: number = 0
 
     // Getters and Setters
 

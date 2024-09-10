@@ -50,10 +50,9 @@ export class EditorRequestsHandler {
             proj.enableProjections(names);
         }
         // Let the editor know that the projections have changed.
-        // TODO rootBoxChanged should NOT be called from outside FreEditor.
-        // this.langEnv.editor.rootBoxChanged();
-        // TODO: Shoukd this become mobx enabled, or staay like this?
-        this.langEnv.editor.auto();
+        // TODO: This should go automatically through mobx.
+        //       But observing the projections array does not work as expected.
+        this.langEnv.editor.forceRecalculateProjection++;
     }
 
     /**
