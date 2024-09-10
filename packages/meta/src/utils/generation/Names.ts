@@ -121,6 +121,7 @@ export class Names {
     public static referenceSeparator: string = "/"; // TODO use value from editDef
     public static listUtil: string = "ListUtil";
     public static brackets: string = "Brackets";
+    public static parserHelpers: string = "ParserHelpers";
 
     public static environment(language: FreMetaLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment";

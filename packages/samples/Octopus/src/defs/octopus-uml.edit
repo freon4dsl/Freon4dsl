@@ -12,7 +12,7 @@ IClassifier {
         [
         [?<attributes>  ${attributes vertical terminator [;] }]
         [?<operations>  ${operations vertical terminator [;] }]
-        [?<states>      ${states     vertical separator [;] }]
+        [?<states>      ${states     vertical terminator [;] }]
         [?<invariants>  ${invariants vertical terminator [;] }]
         ]
 }
@@ -106,21 +106,19 @@ UmlPackage {
 }
 
 Parameter {
-
         [[?${directionKind}] ${name} : ${type}]
 }
-
 OclPostStatement {
-
         [post [?${name} :] ${expr}]
 }
 OclPreStatement {
-
     [pre [?${name} :] ${expr}]
 }
 OclStatement {
-
     [[?${name} :] ${expr}]
+}
+State {
+    [${self.name} ${self.subStates horizontal initiator [::]}]
 }
 
 //concept PrimitiveType base DataType {

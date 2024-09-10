@@ -11,11 +11,10 @@ import {
     WRITER_GEN_FOLDER,
 } from "../utils/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
-import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
-// import net from "net.akehurst.language-agl-processor";
-// var Agl = net.net.akehurst.language.agl.processor.Agl;
+import {WriterTemplate, GrammarGenerator, ReaderHelperTemplate, ReaderTemplate} from "./parserTemplates/index.js";
 import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
-import { GrammarModel } from "./parserTemplates/grammarModel/GrammarModel.js";
+import { GrammarModel } from "./parserTemplates/grammarModel/index.js";
+import peggy from "peggy";
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
 
@@ -45,9 +44,10 @@ export class ReaderWriterGenerator {
             "Generating parser and unparser in folder " + this.writerGenFolder + " for language " + this.language?.name,
         );
 
-        const unparserTemplate = new WriterTemplate();
-        const readerTemplate = new ReaderTemplate();
-        const grammarGenerator = new GrammarGenerator();
+        const unparserTemplate: WriterTemplate = new WriterTemplate();
+        const helperTemplate: ReaderHelperTemplate = new ReaderHelperTemplate();
+        const readerTemplate: ReaderTemplate = new ReaderTemplate();
+        const grammarGenerator: GrammarGenerator = new GrammarGenerator();
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.writerGenFolder);
@@ -58,13 +58,10 @@ export class ReaderWriterGenerator {
         // set relative path to get the imports right
         const relativePath = "../../";
 
-        // remember all file names etc. for the index
-        let indexContent: string = "";
-
         //  Generate the writer
-        let generatedFilePath = `${this.writerGenFolder}/${Names.writer(this.language)}.ts`;
-        let generatedContent = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
-        this.makeFile(`language writer`, generatedFilePath, generatedContent, generationStatus);
+        const writerFilePath: string = `${this.writerGenFolder}/${Names.writer(this.language)}.ts`;
+        let generatedGrammar: string = unparserTemplate.generateUnparser(this.language, editDef, relativePath);
+        this.makeFile(`language writer`, writerFilePath, generatedGrammar, generationStatus);
 
         // Generate the reader
         // The complete structure model of the language is analysed. All concepts are split into groups.
@@ -80,56 +77,51 @@ export class ReaderWriterGenerator {
         }
 
         // Write the grammar to file
-        generatedContent = grammarModel.toGrammar();
+        generatedGrammar = grammarModel.toGrammar(relativePath);
         // test the generated grammar, if not ok error will be thrown
         // this.testGrammar(generatedContent, generationStatus);
         // write the grammar to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.grammar(this.language)}.pegjs`;
-        // indexContent += `export * from "./${Names.grammar(this.language)}";\n`;
-        // this.makeFile(`Peggy grammar`, generatedFilePath, generatedContent, generationStatus);
-        fs.writeFileSync(`${generatedFilePath}`, generatedContent);
+        const grammarFilePath: string = `${this.readerGenFolder}/${Names.grammar(this.language)}.peggy`;
+        // Do not use the prettier! This is not typescript.
+        fs.writeFileSync(`${grammarFilePath}`, generatedGrammar);
 
-        // Write the main syntax analyser to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(this.language)}.ts`;
-        indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}";\n`;
-        // const mainContent = grammarModel.toMethod();
-        // this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus);
+        // Generate a parser from the grammar and write to file.
+        let parser: string | undefined = undefined;
+        try {
+            // throws an exception if the grammar is invalid
+            parser = peggy.generate(generatedGrammar, {
+                output: "source",
+                format: "es",
+                allowedStartRules: grammarModel.getStartRules()
+            });
+        } catch (e) {
+            // @ts-ignore
+            LOGGER.error("Invalid Grammar: " + e.message + ", line: " + e.location.start.line + ", column: " + e.location.start.column);
+            generationStatus.numberOfErrors += 1;
+        }
+        if (!!parser) {
+            // Do not use the prettier! This is not typescript.
+            const parserFilePath: string = `${this.readerGenFolder}/${Names.parser(this.language)}.js`;
+            fs.writeFileSync(`${parserFilePath}`, parser);
+        }
 
-        // Write the syntax analysers for each unit to file
-        grammarModel.parts.forEach((grammarPart) => {
-            generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
-            indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}";\n`;
-            // const analyserContent: string = grammarPart.toMethod(this.language!, relativePath);
-            // let message: string = "";
-            // if (!!grammarPart.unit) {
-            //     message = `syntax analyser for unit ${grammarPart.unit?.name}`;
-            // } else {
-            //     message = "common syntax analyser";
-            // }
-            // this.makeFile(message, generatedFilePath, analyserContent, generationStatus);
-        });
+        // Generate and write the helper functions for the parser.
+        const helpers: string = helperTemplate.generate();
+        const helpersFilePath = `${this.readerGenFolder}/${Names.parserHelpers}.ts`;
+        this.makeFile(`reader helpers`, helpersFilePath, helpers, generationStatus);
 
-        // Get the semantic analyser and write it to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.semanticAnalyser(this.language)}.ts`;
-        indexContent += `export * from "./${Names.semanticAnalyser(this.language)}";\n`;
-        generatedContent = analyser.getRefCorrectorContent(this.language, relativePath);
-        // this.makeFile(`semantic analyser`, generatedFilePath, generatedContent, generationStatus);
-
-        // get the semantic analysis walker and write it to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.semanticWalker(this.language)}.ts`;
-        indexContent += `export * from "./${Names.semanticWalker(this.language)}";\n`;
-        generatedContent = analyser.getRefCorrectorWalkerContent(this.language, relativePath);
-        // this.makeFile(`semantic analysis walker`, generatedFilePath, generatedContent, generationStatus);
-
-        // get the reader and write it to file
-        generatedFilePath = `${this.readerGenFolder}/${Names.reader(this.language)}.ts`;
-        indexContent += `export * from "./${Names.reader(this.language)}";\n`;
-        generatedContent = readerTemplate.generateReader(this.language, relativePath);
-        this.makeFile(`language reader`, generatedFilePath, generatedContent, generationStatus);
+        // Generate and write the reader class.
+        const reader: string = readerTemplate.generateReader(this.language, relativePath);
+        const readerFilePath = `${this.readerGenFolder}/${Names.reader(this.language)}.ts`;
+        this.makeFile(`reader`, readerFilePath, reader, generationStatus);
 
         // write the index file for the reader gen folder
-        generatedFilePath = `${this.readerGenFolder}/index.ts`;
-        this.makeFile(`reader index`, generatedFilePath, indexContent, generationStatus);
+        const indexContent: string =
+            `export * from "./${Names.parser(this.language)}";
+            export * from "./${Names.parserHelpers}";
+            export * from "./${Names.reader(this.language)}";\n`;
+        const indexFilePath = `${this.readerGenFolder}/index.ts`;
+        this.makeFile(`reader index`, indexFilePath, indexContent, generationStatus);
 
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(
@@ -139,21 +131,6 @@ export class ReaderWriterGenerator {
             LOGGER.info(`Successfully generated reader and writer.`);
         }
     }
-
-    // private testGrammar(generatedContent: string, generationStatus: GenerationStatus) {
-    //     try {
-    //         // strip generated content of stuff around the grammar
-    //         let testContent = generatedContent.replace("export const", "// export const ");
-    //         testContent = testContent.replace("}`; // end of grammar", "}");
-    //         testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
-    //         Agl.processorFromString(testContent, null, null, null);
-    //     } catch (e: unknown) {
-    //         if (e instanceof Error) {
-    //             generationStatus.numberOfErrors += 1;
-    //             LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
-    //         }
-    //     }
-    // }
 
     private getFolderNames() {
         this.writerFolder = this.outputfolder + "/" + WRITER_FOLDER;

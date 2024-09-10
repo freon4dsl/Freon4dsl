@@ -59,12 +59,24 @@ export class ConceptRule extends GrammarRule {
         let propSetters: string[] = [];
         const myProperties = this.propsToSet();
         myProperties.forEach(prop => {
-            if (!prop.isPart && !prop.isList) {
-                propSetters.push(`${prop.name}: FreNodeReference.create(${ParserGenUtil.internalName(prop.name)}, "${Names.classifier(prop.type)}")`);
-            } else if (!prop.isPart && prop.isList) {
-                propSetters.push(`${prop.name}: helper.createReferenceList(${ParserGenUtil.internalName(prop.name)}, "${Names.classifier(prop.type)}")`);
+            const intName: string = ParserGenUtil.internalName(prop.name);
+            if (!prop.isPart) {
+                // We handle references differently, because they are parsed as an array of strings, at a point
+                // during the parsing in which the required metatype (in FreNodeReference.create(..., METATYPE))
+                // is not yet known.
+                if (prop.isList) {
+                    propSetters.push(`${prop.name}: helper.createReferenceList(${intName}, "${Names.classifier(prop.type)}")`);
+                } else {
+                    if (prop.isOptional) {
+                        propSetters.push(
+                            `${prop.name}: !!${intName}? FreNodeReference.create(${intName}, "${Names.classifier(prop.type)}") : undefined`
+                        );
+                    } else {
+                        propSetters.push(`${prop.name}: FreNodeReference.create(${intName}, "${Names.classifier(prop.type)}")`);
+                    }
+                }
             } else {
-                propSetters.push(`${prop.name}: ${ParserGenUtil.internalName(prop.name)}`);
+                propSetters.push(`${prop.name}: ${intName}`);
             }
         });
         propSetters.push(`parseLocation: helper.pegLocationToFreLocation(location())`);

@@ -72,8 +72,9 @@ AssociationEnd = VisibilityKind? __fre_reference ws "." ws name:identifier Multi
 //	 State*
 //	 (ws "visibility" ws VisibilityKind )?
 //	ws "}" ws
-State = identifier|1.., "::"|
+State = __visibility:VisibilityKind? __name:identifier|1.., "::"|
 {
+console.log(__name)
     return State.create({
         parseLocation: helper.pegLocationToFreLocation(location())
     })

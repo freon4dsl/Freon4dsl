@@ -59,6 +59,7 @@
     "kotlin": "^1.5.21",
     "net.akehurst.language-agl-processor": "4.0.0-rc.5",
     "peggy": "^4.0.3",
+    "peggy-tracks": "^3.2.0",
     "prettier": "^3.3.0",
     "source-map-support": "^0.5.21",
     "tslib": "^2.6.3"
