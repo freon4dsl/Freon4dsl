@@ -1,5 +1,4 @@
 import { runInAction } from "mobx"
-import { FreNode } from "../ast/index"
 import { FreUndoManager } from "./FreUndoManager"
 
 export type errorFunction = (msg: string) => void
@@ -44,25 +43,25 @@ class AstChanger {
      * The changeFunction function should return a node if a new node is created, otherwise it should return null
      * @param changeFunction
      */
-    change(changeFunction: () => FreNode): FreNode | null {
+    change(changeFunction: () => void): void {
         // Avoid nested change calls
         if (this.isInChange) {
-            return changeFunction()
+            changeFunction()
+            return
         }
         // Now we have a new change() call
         this.isInChange = true
-        let result: FreNode = null
         FreUndoManager.getInstance().startTransaction()
         try {
             runInAction( () => {
-                result = changeFunction()
+                changeFunction()
             })
         } catch(e) {
             this.error(e)
+        } finally {
+            FreUndoManager.getInstance().endTransaction()
+            this.isInChange = false
         }
-        FreUndoManager.getInstance().endTransaction()
-        this.isInChange = false
-        return result
     }
 }
 
