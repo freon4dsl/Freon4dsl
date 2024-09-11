@@ -9,9 +9,9 @@ export class ChoiceRuleMaker {
     static superNames: Map<FreMetaClassifier, string> = new Map<FreMetaClassifier, string>();
     imports: FreMetaClassifier[] = [];
 
-    // for interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
-    // that either implement or extend the concept
-    // because limited concepts can only be used as reference, these are excluded for this choice
+    // For interfaces and abstract concepts we create a parse rule that is a choice between all classifiers
+    // that either implement or extend the concept.
+    // Because limited concepts can only be used as reference, these are excluded from this choice.
     generateChoiceRules(interfacesAndAbstractsUsed: Map<FreMetaClassifier, FreMetaClassifier[]>): GrammarRule[] {
         const rules: GrammarRule[] = [];
         for (const [freClassifier, subs] of interfacesAndAbstractsUsed) {

@@ -36,11 +36,12 @@ export class ChoiceRule extends GrammarRule {
                         (sub) => sub instanceof FreMetaBinaryExpressionConcept,
                     ) as FreMetaBinaryExpressionConcept[],
                 );
-                // make the second rule
-                rule += `\n${this.ruleName} = ${BinaryExpMaker.getNonBinaryRuleName(this.myConcept)}`;
+                // Make the second rule
+                rule += `\n\n${this.ruleName} = `;
                 expBases.forEach((base) => {
-                    rule += ` / ${BinaryExpMaker.getBinaryRuleName(base)}`;
+                    rule += `${BinaryExpMaker.getBinaryRuleName(base)} / `;
                 });
+                rule += `${BinaryExpMaker.getNonBinaryRuleName(this.myConcept)}`;
             } else {
                 // normal choice rule
                 rule = `${this.ruleName} = ${implementorsNoBinaries

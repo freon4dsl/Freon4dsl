@@ -67,9 +67,10 @@ expression NamedExp base Exp {
     myType: NamedType;
 }
 
-expression PlusExp base Exp {
+binary expression PlusExp base Exp {
     left: Exp;
     right: Exp;
+    priority = 4;
 }
 
 expression UnitLiteral base Exp {

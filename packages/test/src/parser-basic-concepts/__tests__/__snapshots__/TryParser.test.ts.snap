@@ -12,14 +12,14 @@ ExpressionTest {
   },
   "$$propertyIndex": undefined,
   "$$propertyName": "expr",
-  "$id": "ID-10",
+  "$id": "ID-12",
   "$typename": "ExpressionTest",
   "_FRE_binEx": [
     PlusEx {
       "$$owner": [Circular],
       "$$propertyIndex": 0,
       "$$propertyName": "binEx",
-      "$id": "ID-4",
+      "$id": "ID-5",
       "$typename": "PlusEx",
       "_FRE_left": StringLiteralEx {
         "$$owner": [Circular],
@@ -30,6 +30,7 @@ ExpressionTest {
         "_FRE_value": "literal1",
         "parseLocation": FreParseLocation {
           "column": 2,
+          "filename": "UNKNOWN_FILE",
           "line": 4,
         },
       },
@@ -37,74 +38,81 @@ ExpressionTest {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "right",
-        "$id": "ID-3",
+        "$id": "ID-4",
         "$typename": "StringLiteralEx",
         "_FRE_value": "literal2",
         "parseLocation": FreParseLocation {
           "column": 39,
+          "filename": "UNKNOWN_FILE",
           "line": 4,
         },
       },
       "parseLocation": FreParseLocation {
         "column": 2,
+        "filename": "UNKNOWN_FILE",
         "line": 4,
       },
     },
-    MultiplyEx {
+    DivideEx {
       "$$owner": [Circular],
       "$$propertyIndex": 1,
       "$$propertyName": "binEx",
-      "$id": "ID-9",
-      "$typename": "MultiplyEx",
-      "_FRE_left": DivideEx {
+      "$id": "ID-11",
+      "$typename": "DivideEx",
+      "_FRE_left": NumberLiteralEx {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "left",
-        "$id": "ID-7",
-        "$typename": "DivideEx",
-        "_FRE_left": NumberLiteralEx {
+        "$id": "ID-6",
+        "$typename": "NumberLiteralEx",
+        "_FRE_value": "109",
+        "parseLocation": FreParseLocation {
+          "column": 2,
+          "filename": "UNKNOWN_FILE",
+          "line": 5,
+        },
+      },
+      "_FRE_right": MultiplyEx {
+        "$$owner": [Circular],
+        "$$propertyIndex": undefined,
+        "$$propertyName": "right",
+        "$id": "ID-10",
+        "$typename": "MultiplyEx",
+        "_FRE_left": StringLiteralEx {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "left",
-          "$id": "ID-5",
-          "$typename": "NumberLiteralEx",
-          "_FRE_value": 109,
-          "parseLocation": FreParseLocation {
-            "column": 2,
-            "line": 5,
-          },
-        },
-        "_FRE_right": StringLiteralEx {
-          "$$owner": [Circular],
-          "$$propertyIndex": undefined,
-          "$$propertyName": "right",
-          "$id": "ID-6",
+          "$id": "ID-7",
           "$typename": "StringLiteralEx",
           "_FRE_value": "literal3",
           "parseLocation": FreParseLocation {
             "column": 32,
+            "filename": "UNKNOWN_FILE",
+            "line": 5,
+          },
+        },
+        "_FRE_right": BooleanLiteralEx {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-9",
+          "$typename": "BooleanLiteralEx",
+          "_FRE_value": true,
+          "parseLocation": FreParseLocation {
+            "column": 69,
+            "filename": "UNKNOWN_FILE",
             "line": 5,
           },
         },
         "parseLocation": FreParseLocation {
-          "column": 2,
-          "line": 5,
-        },
-      },
-      "_FRE_right": BooleanLiteralEx {
-        "$$owner": [Circular],
-        "$$propertyIndex": undefined,
-        "$$propertyName": "right",
-        "$id": "ID-8",
-        "$typename": "BooleanLiteralEx",
-        "_FRE_value": true,
-        "parseLocation": FreParseLocation {
-          "column": 69,
+          "column": 32,
+          "filename": "UNKNOWN_FILE",
           "line": 5,
         },
       },
       "parseLocation": FreParseLocation {
         "column": 2,
+        "filename": "UNKNOWN_FILE",
         "line": 5,
       },
     },
@@ -114,6 +122,7 @@ ExpressionTest {
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
+    "filename": "UNKNOWN_FILE",
     "line": 1,
   },
 }

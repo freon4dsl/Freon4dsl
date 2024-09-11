@@ -96,17 +96,32 @@ export class ReaderWriterGenerator {
             });
         } catch (e) {
             // @ts-ignore
-            LOGGER.error("Invalid Grammar: " + e.message + ", line: " + e.location.start.line + ", column: " + e.location.start.column);
+            if (typeof e.location === "function") {
+                // @ts-ignore
+                LOGGER.error("Invalid grammar: " + e.message + ", line: " + e.location.start.line + ", column: " + e.location.start.column + ".\nGenerating an empty parser.");
+            } else if (e instanceof Error) {
+                LOGGER.error("Grammar error: " + e.message + ".\nGenerating an empty parser.");
+            } else {
+                throw e;
+            }
             generationStatus.numberOfErrors += 1;
         }
         if (!!parser) {
-            // Do not use the prettier! This is not typescript.
             const parserFilePath: string = `${this.readerGenFolder}/${Names.parser(this.language)}.js`;
+            // Do not use the prettier! This is not typescript.
             fs.writeFileSync(`${parserFilePath}`, parser);
+        } else {
+            const parserFilePath: string = `${this.readerGenFolder}/${Names.parser(this.language)}.ts`;
+            // There is no correct parser, therefore we create a stub with an empty parse function.
+            const stubContent: string =
+            'export function parse(sentence: string, options: { startRule: string }): undefined {\n' +
+                'throw new Error(`Not able to read ${options.startRule}, no parser available.`)\n' +
+            '}'
+            this.makeFile(`parser stub `, parserFilePath, stubContent, generationStatus);
         }
 
         // Generate and write the helper functions for the parser.
-        const helpers: string = helperTemplate.generate();
+        const helpers: string = helperTemplate.generate(grammarModel, relativePath);
         const helpersFilePath = `${this.readerGenFolder}/${Names.parserHelpers}.ts`;
         this.makeFile(`reader helpers`, helpersFilePath, helpers, generationStatus);
 

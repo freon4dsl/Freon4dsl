@@ -294,13 +294,13 @@ export class ConceptMaker {
             splitted = trimmed.split(" ");
             splitted.forEach((str) => {
                 if (str.length > 0) {
-                    result.push(new RHSText(`\'${this.addExtraEscape(str)}\'`));
+                    result.push(new RHSText(`\'${ParserGenUtil.escapeRelevantChars(str)}\'`));
                 }
             });
             return result;
         } else {
             if (trimmed.length > 0) {
-                result.push(new RHSText(`\'${this.addExtraEscape(trimmed)}\'`));
+                result.push(new RHSText(`\'${ParserGenUtil.escapeRelevantChars(trimmed)}\'`));
             }
         }
         return result;
@@ -346,12 +346,6 @@ export class ConceptMaker {
             }
             return undefined;
         }
-    }
-
-    private addExtraEscape(str: string) {
-        str = ParserGenUtil.escapeRelevantChars(str);
-        // apparantly "\'" needs an extra backslash in the grammar
-        return str.replace(new RegExp("'", "gm"), "\\" + "'");
     }
 
     private makeListJoinText(joinText: string): string {

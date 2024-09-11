@@ -1,13 +1,6 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import {LANGUAGE_GEN_FOLDER, Names} from "../../../utils/index.js";
-// import {
-//     internalTransformBranch,
-//     internalTransformLeaf,
-//     internalTransformList,
-//     internalTransformNode,
-//     internalTransformRefList,
-// } from "../ParserGenUtil.js";
-import { refRuleName } from "./GrammarUtils.js";
+import {getTypeCall, refRuleName} from "./GrammarUtils.js";
 import { GrammarPart } from "./GrammarPart.js";
 
 export class GrammarModel {
@@ -31,10 +24,11 @@ export class GrammarModel {
 // The parse rules follow the syntax as defined in the .edit files.
 //
 // This file is generated as a convenience. Its content is used to generate the parser in the 
-// ${Names.parser(this.language)}.js module. Running the following command on the command line 
-// will produce the same parser.
+// ${Names.parser(this.language)}.js module. Running the following command on the command line, 
+// from the directory where the ${Names.parser(this.language)}.js module reseides, will produce 
+// the same parser.
 //
-// peggy -o ./src/reader/gen/${Names.parser(this.language)}.js --format es --allowed-start-rules ${this.getStartRules().map(r => r).join(",")} src/reader/gen/${Names.grammar(this.language)}.peggy   
+// peggy -o ${Names.parser(this.language)}.js --format es --allowed-start-rules ${this.getStartRules().map(r => r).join(",")} ${Names.grammar(this.language)}.peggy   
 //      
 
 {{
@@ -132,9 +126,9 @@ LineTerminator "end of line"
         let result: string = "";
         this.parts.forEach((part) => {
             if (!!part.unit) {
-                result += `// rules for "${part.unit.name}"\n`;
+                result += `// Rules for "${part.unit.name}"\n`;
             } else {
-                result += `// common rules\n`;
+                result += `// Common rules\n`;
             }
             part.rules.map((rule) => {
                 result += rule.toGrammar() + "\n\n";
@@ -158,9 +152,9 @@ LineTerminator "end of line"
 
     public getStartRules(): string[] {
         const result: string[] = [];
-        this.parts.forEach(part => {
+        this.parts.forEach((part) => {
             if (!!part.unit) {
-                result.push(Names.classifier(part.unit));
+                result.push(getTypeCall(part.unit)) + "YYY";
             }
         })
         return  result;

@@ -1,10 +1,13 @@
+import { BinaryExpressionRule, GrammarModel } from "./grammarModel/index.js";
+import { FreMetaClassifier } from "../../languagedef/metalanguage/index.js";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../utils/index.js";
 
 export class ReaderHelperTemplate {
     /**
      * Returns a string representation of a series of helper functions for the reader.
      */
-    public generate(): string {
-        return `import {FreNodeReference, FreParseLocation} from "@freon4dsl/core";
+    public generate(grammarModel: GrammarModel, relativePath: string): string {
+        let result: string =`import {FreNodeReference, FreParseLocation} from "@freon4dsl/core";
             import {LocationRange} from "peggy";
             
             /**
@@ -60,5 +63,21 @@ export class ReaderHelperTemplate {
                 return result;
             }
             `;
+        // add helper function(s) for binary expressions
+        const imports: FreMetaClassifier[] = [];
+        grammarModel.parts.forEach(part => {
+            part.rules.forEach(rule => {
+                if (rule instanceof BinaryExpressionRule) {
+                    result += rule.toMethod();
+                    imports.push(...rule.helperImports())
+                }
+            })
+        });
+        // add the extra imports needed for the binary expression function(s)
+        let importStr: string = '';
+        if (imports.length > 1) {
+            importStr += `import { ${imports.map(imp => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}/${LANGUAGE_GEN_FOLDER}";\n`;
+        }
+        return importStr + result;
     }
 }

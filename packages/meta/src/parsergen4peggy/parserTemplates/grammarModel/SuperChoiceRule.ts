@@ -26,9 +26,9 @@ export class SuperChoiceRule extends GrammarRule {
                 (sub) => !(sub instanceof FreMetaBinaryExpressionConcept),
             );
             if (this.implementors.length !== implementorsNoBinaries.length) {
-                // there are binaries
-                // exclude binary expression concepts
-                rule = `${this.ruleName} = ${implementorsNoBinaries
+                // There are binaries, make two separate rules, one with the 'single' expression,
+                // the second with the choice between single and binary expression(s).
+                rule = `${BinaryExpMaker.getNonBinaryRuleName(this.myConcept)} = ${implementorsNoBinaries
                     .map((implementor) => `${this.getTypeCallExcludeSelf(implementor)} `)
                     .join("\n    / ")}`;
                 // add the special binary concept rule(s) as choice
@@ -37,13 +37,12 @@ export class SuperChoiceRule extends GrammarRule {
                         (sub) => sub instanceof FreMetaBinaryExpressionConcept,
                     ) as FreMetaBinaryExpressionConcept[],
                 );
-                if (implementorsNoBinaries.length > 0) {
-                    // there are already choices present in the rule, so add a '/' as separator
-                    rule += "\n    / ";
-                }
+                // Make the second rule
+                rule += `\n\n${this.ruleName} = `;
                 expBases.forEach((base) => {
-                    rule += `${BinaryExpMaker.getBinaryRuleName(base)} ;`;
+                    rule += `${BinaryExpMaker.getBinaryRuleName(base)} / `;
                 });
+                rule += `${BinaryExpMaker.getNonBinaryRuleName(this.myConcept)}`;
             } else {
                 // normal choice rule
                 rule = `${this.ruleName} = ${this.implementors

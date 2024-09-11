@@ -33,7 +33,7 @@ function isPeggyError(object: any): object is parser.SyntaxError {
      * @param model         the model to which the unit will be added
      * @param sourceName    the (optional) name of the source that contains 'sentence'
      */
-    readFromString(sentence: string, metatype: string, model: ${Names.classifier(language.modelConcept)}, sourceName?: string): ${Names.modelunit()} {
+    readFromString(sentence: string, metatype: string, model: ${Names.classifier(language.modelConcept)}, sourceName?: string): ${Names.modelunit()} | undefined {
         if (!!sourceName) {
             setCurrentFileName(sourceName);
         }
@@ -42,7 +42,7 @@ function isPeggyError(object: any): object is parser.SyntaxError {
         if (typeof PeggyParser.parse === "function") {
             unit = this.internalRead(sentence, metatype);
         }
-        if (!!model) {
+        if (!!model && !!unit) {
             this.addToModel(model, unit);
         }
         if (!!sourceName) {
