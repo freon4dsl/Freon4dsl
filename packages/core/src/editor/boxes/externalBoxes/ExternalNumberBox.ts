@@ -1,8 +1,8 @@
+import { AST } from "../../../change-manager/index";
 import { Box } from "../Box";
 import { FreNode } from "../../../ast";
 import { FreUtils } from "../../../util";
 import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox";
-import { runInAction } from "mobx";
 
 /**
  * This class represent an external box replacing the native projection of a single property of primitive type.
@@ -31,7 +31,7 @@ export class ExternalNumberBox extends AbstractExternalPropertyBox {
 
     setPropertyValue(newValue: number) {
         if (typeof newValue === "number" && this.getPropertyType() === "number") {
-            runInAction(() => {
+            AST.change(() => {
                 this.node[this.propertyName] = newValue;
             });
         } else {

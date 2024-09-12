@@ -122,10 +122,15 @@ export abstract class Box {
      * Return the previous selectable leaf in the tree.
      */
     get nextLeafRight(): Box | null {
-        if (!this.parent) {
+        if (this.parent === null || this.parent === undefined) {
             return null;
         }
         const thisIndex: number = this.parent.children.indexOf(this);
+        if (thisIndex === -1) {
+            console.error("Index of child is -1 !!!")
+            console.error(`Box ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()}`)
+            throw new Error("Index of child is -1 !!!")
+        }
         const rightSiblings: Box[] = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
         for (const sibling of rightSiblings) {
             const siblingChild: Box = sibling.firstLeaf;
@@ -320,5 +325,13 @@ export abstract class Box {
 
     isEditable(): boolean {
         return false;
+    }
+    
+    toStringRecursive(indent: string = ""): string {
+        let result = indent + this.id + " (" + this.kind + ")"
+        this.children.forEach(child => {
+            result += "\n" + child.toStringRecursive(indent + "  ")
+        })
+        return result
     }
 }

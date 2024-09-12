@@ -1,10 +1,10 @@
+import { AST } from "../../change-manager/index";
 import { Box } from "./internal";
 import { FreNode } from "../../ast";
 import { FreLogger } from "../../logging";
 import { FreUtils } from "../../util";
 import { BehaviorExecutionResult } from "../util";
 import { FrePostAction } from "../actions";
-import { runInAction } from "mobx";
 import { FreEditor } from "../FreEditor";
 
 const LOGGER: FreLogger = new FreLogger("ButtonBox"); //.mute();
@@ -25,7 +25,7 @@ export class ButtonBox extends Box {
         for (const action of editor.newFreActions) {
             if (action.activeInBoxRoles.includes(this.role)) {
                 let postAction: FrePostAction = null;
-                runInAction(() => {
+                AST.change(() => {
                     const command = action.command();
                     postAction = command.execute(this, "no-label", editor, -1);
                 });
