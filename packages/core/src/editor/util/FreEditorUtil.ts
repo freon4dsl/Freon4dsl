@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { AST } from "../../change-manager/index";
 import { FreLogger } from "../../logging";
 import { Box, PI_NULL_COMMAND, FreCommand, FreEditor } from "../index";
 import { FreExpressionNode } from "../../ast";
@@ -24,7 +24,7 @@ export class FreEditorUtil {
             isFreExpression(newExpression),
             "replaceExpression: new element should be a FreExpressionNode, but it isn't",
         );
-        runInAction(() => {
+        AST.change(() => {
             FreUtils.setContainer(newExpression, oldExpression.freOwnerDescriptor(), editor);
         });
     }
