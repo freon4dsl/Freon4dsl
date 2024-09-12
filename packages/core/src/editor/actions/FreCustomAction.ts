@@ -1,6 +1,6 @@
 import { FreUtils } from "../../util";
-import { FreAction, CustomAction } from "./internal";
-import { FreCommand, FreCustomCommand } from "./FreCommand";
+import { FreAction, CustomAction, FreCustomCommand } from "./internal";
+import { FreCommand } from "./FreCommand";
 // import { FreLogger } from "../../logging";
 
 // const LOGGER = new FreLogger("FreCustomAction");

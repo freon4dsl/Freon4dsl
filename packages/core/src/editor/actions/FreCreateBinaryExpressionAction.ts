@@ -3,10 +3,9 @@ import { FreUtils } from "../../util";
 import { Box } from "../boxes";
 import { FreEditor } from "../FreEditor";
 import { FreAction } from "./FreAction";
-import { FreCommand, FreCreateBinaryExpressionCommand } from "./FreCommand";
+import { FreCommand } from "./FreCommand";
+import { FreCreateBinaryExpressionCommand } from "./FreCreateBinaryExpressionCommand";
 
-// import { FreLogger } from "../../logging";
-// const LOGGER = new FreLogger("FreCreateBinaryExpressionAction");
 
 export class FreCreateBinaryExpressionAction extends FreAction {
     static create(initializer?: Partial<FreCreateBinaryExpressionAction>): FreCreateBinaryExpressionAction {

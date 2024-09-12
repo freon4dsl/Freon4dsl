@@ -14,3 +14,5 @@ export * from "./FreCreateBinaryExpressionAction";
 export * from "./FreCreatePartAction";
 export * from "./FreCreateSiblingAction";
 export * from "./FreTriggers";
+export * from "./FreCreateBinaryExpressionCommand"
+export * from "./FreCustomCommand"

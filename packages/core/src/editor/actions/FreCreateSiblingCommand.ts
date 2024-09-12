@@ -4,7 +4,7 @@ import { isString, FreTriggerUse, triggerTypeToString } from "./FreTriggers";
 import { FreEditor } from "../FreEditor";
 import { FreNode } from "../../ast";
 import { FreLanguage } from "../../language";
-import { FreCommand } from "./FreCommand";
+import { FreCommand, FRECOMMAND_LOGGER } from "./FreCommand";
 
 /**
  * Command to create a part (child) of a FreElement.
@@ -33,7 +33,7 @@ export class FreCreateSiblingCommand extends FreCommand {
      */
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
         // todo make index optional and set the default value to -1;
-        console.log(
+        FRECOMMAND_LOGGER.log(
             "CreateSiblingCommand: trigger [" +
                 triggerTypeToString(trigger) +
                 "] part: " +
@@ -49,7 +49,7 @@ export class FreCreateSiblingCommand extends FreCommand {
         const newElement: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.creator({});
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
-            console.error("FreCreateSiblingCommand: Unexpected new element undefined");
+            FRECOMMAND_LOGGER.error("FreCreateSiblingCommand: Unexpected new element undefined");
             return EMPTY_POST_ACTION;
         }
         if (FreLanguage.getInstance().classifierProperty(ownerConcept, propName).isList) {

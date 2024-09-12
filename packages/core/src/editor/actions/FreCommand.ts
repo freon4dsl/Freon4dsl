@@ -1,13 +1,10 @@
-import { FreBinaryExpression } from "../../ast";
-import { BTREE, FRE_BINARY_EXPRESSION_LEFT } from "../../util";
-import { FreCaret } from "../util";
 import { Box } from "../boxes";
 import { FreEditor } from "../FreEditor";
-import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction";
-import { FreTriggerUse, triggerTypeToString } from "./FreTriggers";
+import { EMPTY_POST_ACTION, FrePostAction } from "./FreAction";
+import { FreTriggerUse } from "./FreTriggers";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("FreCommand"); // .mute();
+export const FRECOMMAND_LOGGER = new FreLogger("FreCommand"); // .mute();
 
 /**
  * Abstract supercass for all commands in Freon.
@@ -56,85 +53,5 @@ class FreNullCommand extends FreCommand {
 
 export const PI_NULL_COMMAND: FreCommand = new FreNullCommand();
 
-export type FreBinaryExpressionBuilder = (box: Box, text: string, editor: FreEditor) => FreBinaryExpression;
 
-export class FreCreateBinaryExpressionCommand extends FreCommand {
-    expressionBuilder: FreBinaryExpressionBuilder;
-    boxRoleToSelect: string;
-    caretPosition: FreCaret;
 
-    constructor(expressionBuilder: FreBinaryExpressionBuilder) {
-        super();
-        this.expressionBuilder = expressionBuilder;
-    }
-
-    execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
-        // console.log("FreCreateBinaryExpressionCommand: trigger [" + triggerTypeToString(trigger) + "] part: ");
-        const selected = BTREE.insertBinaryExpression(
-            this.expressionBuilder(box, triggerTypeToString(trigger), editor),
-            box,
-            editor,
-        );
-        // TODO Check whether this fix works consistently correct.
-        const childProperty = selected.boxRoleToSelect === FRE_BINARY_EXPRESSION_LEFT ? "left" : "right";
-        return function () {
-            LOGGER.log(
-                "FreCreateBinaryExpressionCommand select after: " +
-                    selected.element.freLanguageConcept() +
-                    " ID " +
-                    selected.element.freId() +
-                    " rolr " +
-                    childProperty,
-            );
-            editor.selectElement(selected.element, childProperty);
-            editor.selectFirstEditableChildBox(selected.element);
-        };
-    }
-
-    // @ts-ignore
-    // parameters present to adhere to base class signature
-    undo() {
-        /* to be done */
-    }
-}
-
-export class FreCustomCommand extends FreCommand {
-    boxRoleToSelect: string;
-    caretPosition: FreCaret;
-    action: CustomAction;
-
-    constructor(action: CustomAction, boxRoleToSelect: string, caretPosition: FreCaret) {
-        super();
-        this.action = action;
-        this.boxRoleToSelect = boxRoleToSelect;
-        this.caretPosition = caretPosition;
-    }
-
-    execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
-        // LOGGER.log("execute custom action, text is [" + text + "] refShort [" + this.referenceShortcut + "]" );
-        // console.log("FreCustomCommand: trigger [" + triggerTypeToString(trigger) + "]");
-        const self = this;
-        const selected = self.action(box, triggerTypeToString(trigger), editor);
-
-        if (!!selected) {
-            if (!!self.boxRoleToSelect) {
-                return function () {
-                    // console.log("FreCommand select " + box.element.freLanguageConcept() + " box " + self.boxRoleToSelect);
-                    editor.selectElementBox(selected, self.boxRoleToSelect, self.caretPosition);
-                };
-            } else {
-                // Default: select the first editable child of the selected element
-                return function () {
-                    editor.selectFirstEditableChildBox(selected);
-                };
-            }
-        }
-        return EMPTY_POST_ACTION;
-    }
-
-    // @ts-ignore
-    // parameters present to adhere to base class signature
-    undo() {
-        /* to be done */
-    }
-}
