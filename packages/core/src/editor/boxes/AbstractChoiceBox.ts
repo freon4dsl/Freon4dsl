@@ -44,8 +44,16 @@ export abstract class AbstractChoiceBox extends Box {
         return this._textBox;
     }
 
-    getSelectedOption(): SelectOption | null {
+    _getSelectedOption(): SelectOption | null {
         return null;
+    }
+
+    set getSelectedOption( value: () => SelectOption | null) {
+        this._getSelectedOption = value
+        this.isDirty()
+    }
+    get getSelectedOption(): () => SelectOption | null {
+        return this._getSelectedOption
     }
 
     // @ts-ignore

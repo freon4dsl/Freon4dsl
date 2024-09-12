@@ -1,3 +1,4 @@
+import { autorun } from "mobx";
 import { FreUtils } from "../../util";
 import { FreCaret, FreCaretPosition } from "../util";
 import { FreNode } from "../../ast";
@@ -29,7 +30,7 @@ export class TextBox extends Box {
 
     placeHolder: string = "";
     caretPosition: number = -1;
-    $getText: () => string;
+    $_getText: () => string;
     $setText: (newValue: string) => void;
 
     /**
@@ -43,7 +44,17 @@ export class TextBox extends Box {
     }
 
     getText(): string {
-        return this.$getText();
+        return this.$_getText();
+    }
+    
+    set $getText( value: () => string ) {
+        const oldvalue = this.$_getText()
+        this.$_getText = value;
+        autorun( () => {
+            const newvalue = this.$_getText()
+            LOGGER.log(`old '${oldvalue}'  new '${newvalue}'`)
+            this.isDirty()
+        })
     }
 
     isCharAllowed: (currentText: string, key: string, index: number) => CharAllowed = () => {
@@ -59,7 +70,7 @@ export class TextBox extends Box {
     ) {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
-        this.$getText = getText;
+        this.$_getText = getText;
         this.$setText = setText;
     }
 
