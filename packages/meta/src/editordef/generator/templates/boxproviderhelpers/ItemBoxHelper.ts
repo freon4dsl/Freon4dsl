@@ -123,7 +123,7 @@ export class ItemBoxHelper {
             result = `BoxFactory.optional2(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
                 ${result},
                 false, 
-                ${this.generatePropertyProjection(propertyProjection, elementVarName, language)}
+                BoxFactory.action(this._node, "optional-${optionalPropertyName}", "${optional.firstLiteral()}")
             )`;
             return result;
         } else {
