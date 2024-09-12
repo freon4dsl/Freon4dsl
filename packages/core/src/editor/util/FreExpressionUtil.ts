@@ -2,7 +2,6 @@ import {
     Box,
     HorizontalLayoutBox,
     isHorizontalBox,
-    SelectBox,
     SelectOption,
     FreEditor,
     triggerTypeToString,
@@ -119,7 +118,8 @@ export function createDefaultBinaryBox(
  * @param cssStyle
  */
 export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, symbol: string, cssStyle?: string): Box {
-    const operatorBox = new SelectBox(
+    // TODO Does not work without factory!
+    const operatorBox = BoxFactory.select(
         exp,
         EXPRESSION_SYMBOL,
         "<...>",
@@ -138,7 +138,9 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
                 return [];
             }
         },
-        () => null,
+        () => {
+            return { id: symbol, label: symbol };
+        },
         (innerEditor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
             if (innerEditor.actions && innerEditor.actions.binaryExpressionActions) {
                 const action = innerEditor.actions.binaryExpressionActions.filter(
@@ -167,9 +169,9 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
         },
     );
 
-    operatorBox.getSelectedOption = () => {
-        return { id: symbol, label: symbol };
-    };
+    // operatorBox.getSelectedOption = () => {
+    //     return { id: symbol, label: symbol };
+    // };
 
     return operatorBox;
 }
