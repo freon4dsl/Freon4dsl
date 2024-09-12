@@ -1,9 +1,9 @@
 import { FreNode } from "../../../ast";
+import { AST } from "../../../change-manager/index";
 import { BoxFactory, LimitedControlBox, LimitedDisplay } from "../../boxes";
 import { FreLanguage, FreLanguageProperty } from "../../../language";
 import { UtilCheckers } from "./UtilCheckers";
 import { RoleProvider } from "../RoleProvider";
-import { runInAction } from "mobx";
 
 export class UtilLimitedHelpers {
     public static limitedBox(
@@ -35,16 +35,12 @@ export class UtilLimitedHelpers {
             roleName,
             () => (node[propertyName] === null ? [] : [node[propertyName].name]),
             (v: string[]) =>
-                runInAction(() => {
+                AST.change(() => {
                     if (!!v[0]) {
                         // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + v[0]);
-                        runInAction(() => {
-                            setFunc(v[0]);
-                        });
+                        setFunc(v[0]);
                     } else {
-                        runInAction(() => {
-                            node[propertyName] = null;
-                        });
+                        node[propertyName] = null;
                     }
                 }),
             possibleValues,
@@ -88,7 +84,7 @@ export class UtilLimitedHelpers {
             roleName,
             () => node[propertyName].map((n) => n.name), // node[propertyName] is a list of references, therefore we need to get their names
             (v: string[]) =>
-                runInAction(() => {
+                AST.change(() => {
                     setFunc(v);
                 }),
             possibleValues,
