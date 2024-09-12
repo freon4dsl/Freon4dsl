@@ -4,7 +4,7 @@ import { isNullOrUndefined } from "../../util";
 import { FreNode } from "../../ast";
 import { FreBoxProvider } from "./FreBoxProvider";
 import { FreProjection } from "./FreProjection";
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { ArrayUtil } from "../../util/ArrayUtil";
 import { FreTableHeaderInfo } from "./FreTableHeaderInfo";
 import { FreHeaderProvider } from "./FreHeaderProvider";
@@ -128,10 +128,12 @@ export class FreProjectionHandler {
      * @param p
      */
     addProjection(p: string) {
-        ArrayUtil.addIfNotPresent(this._allProjections, p);
-        if (p !== "default") {
-            ArrayUtil.addIfNotPresent(this._enabledProjections, p);
-        }
+        runInAction( () => {
+            ArrayUtil.addIfNotPresent(this._allProjections, p);
+            if (p !== "default") {
+                ArrayUtil.addIfNotPresent(this._enabledProjections, p);
+            }
+        })
     }
 
     /**
@@ -149,7 +151,9 @@ export class FreProjectionHandler {
                 newList.push(proj);
             }
         }
-        this._enabledProjections = newList;
+        runInAction( () => {
+            this._enabledProjections = newList;
+        })
         // console.log(" ============== enabled projections: " + this._enabledProjections);
 
         //  Let all providers know that projection may be changed.
