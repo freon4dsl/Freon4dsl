@@ -53,6 +53,7 @@ describe("Change and Undo Manager", () => {
             });
             UndoModel.create({ unit: unit });
         })
+        FreUndoManager.getInstance().currentUnit = unit
     });
 
     it("create model", () => {
@@ -66,7 +67,6 @@ describe("Change and Undo Manager", () => {
     it("change, undo, redo, undo on prim", () => {
         // change the value of 'prim'
         console.log("!")
-        FreUndoManager.getInstance().currentUnit = unit
         AST.change( () => {
             unit.prim = "nieuwe_waarde";
         })
@@ -96,7 +96,9 @@ describe("Change and Undo Manager", () => {
         // change the value of 'part'
         const oldPartId = unit.part.freId(); // remember the id of the old value
         const newPart = UndoPart.create({ name: "part42" });
-        unit.part = newPart;
+        AST.change( () => {
+            unit.part = newPart;
+        })
 
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect(undoStack).not.toBeNull();
@@ -122,7 +124,9 @@ describe("Change and Undo Manager", () => {
 
         // change one of the values in 'numlist'
         const oldValue = unit.numlist[0];
-        unit.numlist[0] = 24;
+        AST.change( () => {
+            unit.numlist[0] = 24;
+        })
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect(undoStack.length).toBe(1);
         expect(unit.numlist[0]).toBe(24);
@@ -145,7 +149,9 @@ describe("Change and Undo Manager", () => {
         const oldValue1 = unit.numlist[0];
         const oldValue2 = unit.numlist[1];
         const oldValue3 = unit.numlist[2];
-        unit.numlist.splice(1, 2);
+        AST.change( () => {
+            unit.numlist.splice(1, 2);
+        })
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect(undoStack.length).toBe(1);
         expect(unit.numlist.length).toBe(1);
@@ -172,7 +178,9 @@ describe("Change and Undo Manager", () => {
         // change the value of 'partlist'
         const oldValue = unit.partlist[2];
         const newValue = new UndoPart("part90");
-        unit.partlist[2] = newValue;
+        AST.change( () => {
+            unit.partlist[2] = newValue;
+        })
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect(undoStack.length).toBe(1);
         expect(unit.partlist[2]).toBe(newValue);
@@ -198,7 +206,9 @@ describe("Change and Undo Manager", () => {
         const oldValue1 = unit.partlist[0];
         const oldValue2 = unit.partlist[1];
         const oldValue3 = unit.partlist[2];
-        unit.partlist.splice(1, 2);
+        AST.change( () => {
+            unit.partlist.splice(1, 2);
+        })
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
         expect(undoStack.length).toBe(1);
         expect(unit.partlist.length).toBe(3);
@@ -222,27 +232,26 @@ describe("Change and Undo Manager", () => {
 
     it("transaction: change, undo, redo, undo on multiple elements in a list of parts", () => {
         // make this a transaction
-        manager.startTransaction(unit);
 
-        // change the value of 'prim'
-        unit.prim = "nieuwe_waarde";
-
-        // change the value of 'part'
-        // const oldPartId = unit.part.freId(); // remember the id of the old value
-        unit.part = UndoPart.create({ name: "part42" });
-
-        // change the value of 'partlist'
-        expect(unit.partlist.length).toBe(5);
-        expect(unit.freOwner()).not.toBeNull();
-        expect(unit.freOwner()).not.toBeUndefined();
         const oldValue1 = unit.partlist[0];
         const oldValue2 = unit.partlist[1];
         const oldValue3 = unit.partlist[2];
-        unit.partlist.splice(1, 2);
-        expect(unit.partlist.length).toBe(3);
 
-        // end the transaction
-        manager.endTransaction(unit);
+        AST.change( () => {
+            // change the value of 'prim'
+            unit.prim = "nieuwe_waarde";
+            // change the value of 'part'
+            // const oldPartId = unit.part.freId(); // remember the id of the old value
+            unit.part = UndoPart.create({ name: "part42" });
+
+            // change the value of 'partlist'
+            expect(unit.partlist.length).toBe(5);
+            expect(unit.freOwner()).not.toBeNull();
+            expect(unit.freOwner()).not.toBeUndefined();
+            unit.partlist.splice(1, 2);
+            expect(unit.partlist.length).toBe(3);
+        })
+        // manager.endTransaction(unit);
 
         // check the stack
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
