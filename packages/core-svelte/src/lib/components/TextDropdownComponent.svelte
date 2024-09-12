@@ -19,8 +19,8 @@
         FreEditor,
         FreLogger,
         type SelectOption,
-        TextBox, isRegExp, triggerTypeToString, isActionBox, type FrePostAction, FreCaretPosition, FreCaret
-    } from "@freon4dsl/core"
+        TextBox, isRegExp, triggerTypeToString, isActionBox, type FrePostAction, FreCaretPosition, FreCaret, AST
+    } from "@freon4dsl/core";
 
     import { runInAction } from "mobx"
     import { afterUpdate, onMount } from "svelte";
@@ -43,6 +43,7 @@
     let textComponent;
 
     let setText = (value: string) => {
+        LOGGER.log(`${box.id}: setting text to '${value}'`)
         if (value === null || value === undefined) {
             text = "";
         } else {
@@ -63,7 +64,7 @@
      * It is called from the RenderComponent.
      */
     const setFocus = () => {
-        // LOGGER.log("setFocus " + box.kind + id);
+        LOGGER.log("setFocus " + box.kind + id);
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
@@ -76,10 +77,11 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
-        // LOGGER.log("refresh: " + why)
+        LOGGER.log(`${box.id}: refresh: ` + why + " for " + box?.kind)
         if (isSelectBox(box)) {
             // TODO see todo in 'storeOrExecute'
             let selectedOption = box.getSelectedOption();
+            LOGGER.log("    selectedOption is " + selectedOption?.label)
             if (!!selectedOption) {
                 box.textHelper.setText(selectedOption.label);
                 setText(box.textHelper.getText());
@@ -90,13 +92,14 @@
     }
 
     afterUpdate( () => {
+        LOGGER.log(`${box.id}: afterUpdate`)
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
         box.triggerKeyPressEvent = triggerKeyPressEvent
     });
 
     onMount(() => {
-        // LOGGER.log("onMount for role [" + box.role + "]");
+        LOGGER.log("onMount for role [" + box.role + "]");
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
         box.triggerKeyPressEvent = triggerKeyPressEvent
@@ -217,15 +220,15 @@
                 clearText() 
                 // event.stopPropagation()
                 let execresult: FrePostAction = null;
-                runInAction(() => {
-                    runInAction(() => {
+                // runInAction(() => {
+                    AST.change(() => {
                         const command = matchingOption.action.command();
                         execresult = command.execute(box, event.detail.content, editor, 0);
                     });
                     if (!!execresult) {
                         execresult();
                     }
-                })
+                // })
                 clearText()
                 isEditing = false;
                 dropdownShown = false;

@@ -2,7 +2,7 @@
     import {
         ALT, ARROW_DOWN,
         ARROW_LEFT,
-        ARROW_RIGHT, ARROW_UP,
+        ARROW_RIGHT, ARROW_UP, AST,
         CONTROL,
         FreEditor,
         FreLogger,
@@ -61,7 +61,9 @@
     });
     const onChange = (event: MouseEvent) => {
         currentValue = event.target["value"];
-        box.setNames([currentValue]);
+        AST.change( () => {
+            box.setNames([currentValue]);
+        })
         editor.selectElementForBox(box);
         event.stopPropagation();
     }
