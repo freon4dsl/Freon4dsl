@@ -1,8 +1,10 @@
+import { FreLogger } from "../logging/index";
 import { FreChangeManager } from "./FreChangeManager";
 import { FreModelUnit } from "../ast";
 import { FreDelta } from "./FreDelta";
 import { FreUndoStackManager } from "./FreUndoStackManager";
 
+const LOGGER = new FreLogger("FreUndoManager").mute()
 /**
  * Class FreUndoManager holds the change information on the model.
  * The information is stored per model unit; one stack for undo info, one for redo info.
@@ -27,8 +29,16 @@ export class FreUndoManager {
     private modelUndoManager: FreUndoStackManager = new FreUndoStackManager(null);
     private inTransaction: boolean = false;
     private unitForTransaction: FreModelUnit = null;
+    /**
+     * The current unit for which undo/redo should be done
+     */
+    public currentUnit: FreModelUnit = null;
 
     public startTransaction(unit?: FreModelUnit) {
+        LOGGER.log("startTransaction")
+        if (unit === undefined) {
+            unit = this.currentUnit
+        }
         if (!!unit) {
             this.getUndoStackManager(unit).startTransaction();
             this.unitForTransaction = unit;
@@ -39,6 +49,10 @@ export class FreUndoManager {
     }
 
     public endTransaction(unit?: FreModelUnit) {
+        LOGGER.log("endTransaction")
+        if (unit === undefined) {
+            unit = this.currentUnit
+        }
         if (!!unit) {
             this.getUndoStackManager(unit).endTransaction();
             this.unitForTransaction = null;
@@ -49,6 +63,10 @@ export class FreUndoManager {
     }
 
     public startIgnore(unit?: FreModelUnit) {
+        LOGGER.log("startIgnore")
+        if (unit === undefined) {
+            unit = this.currentUnit
+        }
         if (!!unit) {
             this.getUndoStackManager(unit).startIgnore();
         } else {
@@ -57,6 +75,10 @@ export class FreUndoManager {
     }
 
     public endIgnore(unit?: FreModelUnit) {
+        LOGGER.log("endIgnore")
+        if (unit === undefined) {
+            unit = this.currentUnit
+        }
         if (!!unit) {
             this.getUndoStackManager(unit).endIgnore();
         } else {
@@ -65,6 +87,10 @@ export class FreUndoManager {
     }
 
     public cleanStacks(unit?: FreModelUnit) {
+        LOGGER.log("cleanStacks")
+        if (unit === undefined) {
+            unit = this.currentUnit
+        }
         if (!!unit) {
             this.getUndoStackManager(unit).cleanStacks();
         } else {
@@ -78,6 +104,9 @@ export class FreUndoManager {
     }
 
     public nextUndoAsText(unit?: FreModelUnit): string {
+        if (unit === undefined) {
+            unit = this.currentUnit
+        }
         if (!!unit) {
             // console.log("execute undo for unit" )
             return this.getUndoStackManager(unit).nextUndoAsText();
@@ -88,6 +117,9 @@ export class FreUndoManager {
     }
 
     public nextRedoAsText(unit?: FreModelUnit): string {
+        if (unit === undefined) {
+            unit = this.currentUnit
+        }
         if (!!unit) {
             // console.log("execute undo for unit" )
             return this.getUndoStackManager(unit).nextRedoAsText();
@@ -98,16 +130,22 @@ export class FreUndoManager {
     }
 
     public executeUndo(unit?: FreModelUnit) {
+        if (unit === undefined) {
+            unit = this.currentUnit
+        }
         if (!!unit) {
-            // console.log("execute undo for unit" )
+            LOGGER.log("execute undo for unit" )
             this.getUndoStackManager(unit).executeUndo();
         } else {
-            // console.log("execute undo for model" )
+            LOGGER.log("execute undo for model" )
             this.modelUndoManager.executeUndo();
         }
     }
 
     public executeRedo(unit?: FreModelUnit) {
+        if (unit === undefined) {
+            unit = this.currentUnit
+        }
         if (!!unit) {
             this.getUndoStackManager(unit).executeRedo();
         } else {
@@ -152,10 +190,10 @@ export class FreUndoManager {
 
     private getUndoStackManager(unit?: FreModelUnit): FreUndoStackManager {
         if (!!unit) {
-            let unitManager = this.undoManagerPerUnit.get(unit.name);
+            let unitManager = this.undoManagerPerUnit.get(unit.freId());
             if (!unitManager) {
                 unitManager = new FreUndoStackManager(unit);
-                this.undoManagerPerUnit.set(unit.name, unitManager);
+                this.undoManagerPerUnit.set(unit.freId(), unitManager);
             }
             return unitManager;
         } else {

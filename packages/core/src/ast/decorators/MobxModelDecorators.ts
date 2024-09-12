@@ -1,4 +1,4 @@
-import { IObservableValue, IArrayWillChange, IArrayWillSplice, observable, intercept, runInAction } from "mobx";
+import { IObservableValue, IArrayWillChange, IArrayWillSplice, observable, intercept, runInAction, configure } from "mobx";
 import "reflect-metadata";
 import { FreNode } from "../FreNode";
 
@@ -7,6 +7,9 @@ import { FreChangeManager } from "../../change-manager";
 import { PrimType } from "../../language";
 import { FreLogger } from "../../logging";
 
+configure({
+    enforceActions: "always"
+})
 const LOGGER: FreLogger = new FreLogger("MobxDecorators").mute();
 
 /**
