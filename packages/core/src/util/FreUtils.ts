@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { AST } from "../change-manager/index";
 import { FreEditor } from "../editor";
 import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast";
 import { isFreExpression } from "../ast-utils";
@@ -58,7 +58,7 @@ export class FreUtils {
     }
 
     static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
-        runInAction(() => {
+        AST.change( () => {
             // TODO Check typeof
             if (typeof freOwnerDescriptor !== "undefined") {
                 if (freOwnerDescriptor.propertyIndex === undefined) {
@@ -81,9 +81,9 @@ export class FreUtils {
             isFreExpression(newExpression),
             "replaceExpression: new element should be a FreExpressionNode, but it isn't",
         );
-        runInAction(() => {
+        AST.change( () => {
             FreUtils.setContainer(newExpression, oldExpression.freOwnerDescriptor(), editor);
-        });
+        })
     }
 }
 

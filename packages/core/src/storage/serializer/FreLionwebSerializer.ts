@@ -5,6 +5,7 @@ import {
     LionWebJsonNode,
     LionWebJsonReference,
 } from "@lionweb/validation";
+import { runInAction } from "mobx";
 import { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index";
 import { FreLanguage, FreLanguageProperty } from "../../language/index";
 import { FreLogger } from "../../logging/index";
@@ -67,14 +68,17 @@ export class FreLionwebSerializer implements FreSerializer {
         LOGGER.log("SerializationFormatVersion: " + serVersion);
         // First read all nodes without children, and store them in a map.
         const nodes: LionWebJsonNode[] = chunk.nodes;
-        for (const object of nodes) {
-            // LOGGER.log("node: " + object.concept.key + "     with id " + object.id)
-            const parsedNode = this.toTypeScriptInstanceInternal(object);
-            if (parsedNode !== null) {
-                this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
+        // Not using AST.change(...) here, because we don't need an undo for this code
+        runInAction( () => {
+            for (const object of nodes) {
+                // LOGGER.log("node: " + object.concept.key + "     with id " + object.id)
+                const parsedNode = this.toTypeScriptInstanceInternal(object);
+                if (parsedNode !== null) {
+                    this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
+                }
             }
-        }
-        this.resolveChildrenAndReferences();
+            this.resolveChildrenAndReferences();
+        })
         return this.findRoot();
     }
 
