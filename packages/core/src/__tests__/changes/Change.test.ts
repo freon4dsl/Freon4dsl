@@ -1,14 +1,15 @@
+import { runInAction } from "mobx";
 import { UndoModel } from "./change-model/UndoModel";
 import { UndoUnit } from "./change-model/UndoUnit";
 import { UndoPart } from "./change-model/UndoPart";
-import { FreDelta, FreTransactionDelta, FreUndoManager } from "../../change-manager";
+import { AST, FreDelta, FreTransactionDelta, FreUndoManager } from "../../change-manager";
 import { FreModelUnit } from "../../ast";
 import { describe, it, expect, beforeEach } from "vitest";
 
 // expose the private parts of the undo manager for testing purposes only
 function getUndoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreDelta[] {
     if (!!unit) {
-        return manager["undoManagerPerUnit"].get(unit.name)["undoStack"];
+        return manager["undoManagerPerUnit"].get(unit.freId())["undoStack"];
     } else {
         return manager["modelUndoManager"]["undoStack"];
     }
@@ -16,7 +17,7 @@ function getUndoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreD
 
 function getRedoStackPerUnit(manager: FreUndoManager, unit?: FreModelUnit): FreDelta[] {
     if (!!unit) {
-        return manager["undoManagerPerUnit"].get(unit.name)["redoStack"];
+        return manager["undoManagerPerUnit"].get(unit.freId())["redoStack"];
     } else {
         return manager["modelUndoManager"]["redoStack"];
     }
@@ -36,20 +37,22 @@ describe("Change and Undo Manager", () => {
     beforeEach(() => {
         manager.cleanAllStacks();
         // create a simple model where some actions cannot be un-done and re-done
-        part1 = UndoPart.create({ name: "part1" });
-        part2 = UndoPart.create({ name: "part2" });
-        part3 = UndoPart.create({ name: "part3" });
-        part4 = UndoPart.create({ name: "part4" });
-        part5 = UndoPart.create({ name: "part5" });
-        part6 = UndoPart.create({ name: "part6" });
-        unit = UndoUnit.create({
-            name: "firstUndoUnit",
-            prim: "myPrimText",
-            numlist: [100, 200, 300],
-            part: part1,
-            partlist: [part2, part3, part4, part5, part6],
-        });
-        UndoModel.create({ unit: unit });
+        runInAction( () => {
+            part1 = UndoPart.create({ name: "part1" });
+            part2 = UndoPart.create({ name: "part2" });
+            part3 = UndoPart.create({ name: "part3" });
+            part4 = UndoPart.create({ name: "part4" });
+            part5 = UndoPart.create({ name: "part5" });
+            part6 = UndoPart.create({ name: "part6" });
+            unit = UndoUnit.create({
+                name: "firstUndoUnit",
+                prim: "myPrimText",
+                numlist: [100, 200, 300],
+                part: part1,
+                partlist: [part2, part3, part4, part5, part6],
+            });
+            UndoModel.create({ unit: unit });
+        })
     });
 
     it("create model", () => {
@@ -62,7 +65,11 @@ describe("Change and Undo Manager", () => {
 
     it("change, undo, redo, undo on prim", () => {
         // change the value of 'prim'
-        unit.prim = "nieuwe_waarde";
+        console.log("!")
+        FreUndoManager.getInstance().currentUnit = unit
+        AST.change( () => {
+            unit.prim = "nieuwe_waarde";
+        })
 
         // get the stack after the change, before the result will be null/undefined!!
         const undoStack: FreDelta[] = getUndoStackPerUnit(manager, unit);
