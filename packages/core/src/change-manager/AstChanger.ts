@@ -16,7 +16,7 @@ class AstChanger {
      * @private
      */
     private error: errorFunction = (msg: string): void => {
-        console.error(msg)
+        console.error("AST.change: " + msg)
     }
 
     /**
