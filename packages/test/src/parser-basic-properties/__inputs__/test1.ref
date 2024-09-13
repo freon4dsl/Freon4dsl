@@ -24,7 +24,7 @@ RefsTest myName {
                         ref someName.otherName.xxx.yyy
                         // optRef not present
                         refList
-                            name1.ff.gg.yuio
+                            name1.ff.gg.yuio.oo
                             name2
                         // optRefList not present
                     }
@@ -32,24 +32,24 @@ RefsTest myName {
                         ref someName.otherName.xxx.yyy
                         // optRef not present
                         refList
-                            name1.ff.gg.yuio
+                            name1.gg.yuio
                             name2
                         // optRefList not present
-                    } !!
+                    } #
+                    WithDirectRefs {
+                        ref someName.otherName.xxx.yyy
+                        // optRef not present
+                        refList
+                            name1.ff.yuio
+                            name2
+                        // optRefList not present
+                    } #
                     WithDirectRefs {
                         ref someName.otherName.xxx.yyy
                         // optRef not present
                         refList
                             name1.ff.gg.yuio
-                            name2
-                        // optRefList not present
-                    } !!
-                    WithDirectRefs {
-                        ref someName.otherName.xxx.yyy
-                        // optRef not present
-                        refList
-                            name1.ff.gg.yuio
-                            name2
+                            name2.xx
                         // optRefList not present
                     }
 }

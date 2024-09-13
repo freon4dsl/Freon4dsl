@@ -60,7 +60,7 @@ export class ConceptMaker {
     imports: FreMetaClassifier[] = [];
     private currentProjectionGroup: FreEditProjectionGroup | undefined = undefined;
     // namedProjections is the list of projections with a different name than the current projection group
-    // this list is filled during the build of the template and should alwyas be the last to added
+    // this list is filled during the build of the template and should always be the last to be added to the template
     private namedProjections: FreEditNormalProjection[] = [];
 
     generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreMetaClassifier[]): GrammarRule[] {

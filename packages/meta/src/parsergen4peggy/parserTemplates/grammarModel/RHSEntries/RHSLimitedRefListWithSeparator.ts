@@ -12,7 +12,7 @@ export class RHSLimitedRefListWithSeparator extends RHSPropPartWithSeparator {
     toGrammar(varName?: string): string {        if (!varName || varName.length <= 0) {
         varName = ParserGenUtil.internalName(this.property.name);
     }
-        return `${varName}:${getTypeCall(this.property.type)}|.., "${this.separatorText}"|` + this.doNewline();
+        return `${varName}:${getTypeCall(this.property.type)}|.., ws "${this.separatorText}" ws |` + this.doNewline();
     }
 
     // @ts-ignore

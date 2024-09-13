@@ -22,111 +22,149 @@ describe("Parser properties of type", () => {
     });
 
     test(" Primitive ", () => {
+        let unit1: PrimitivesTest = undefined;
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.pri");
-            const unit1: PrimitivesTest = reader.readFromString(
+             unit1 = reader.readFromString(
                 input,
                 "PrimitivesTest",
                 new TestParserModel(),
+                 "src/parser-basic-properties/__inputs__/test1.pri"
             ) as PrimitivesTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
         }
+        expect(unit1).not.toBeUndefined();
+        // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.pri-out", writer.writeToString(unit1));
+        expect(unit1).toMatchSnapshot();
     });
 
     test(" Primitive with Keyword projection ", () => {
+        let unit1: PrimsWithKeywordTest = undefined;
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.wit");
-            const unit1: PrimsWithKeywordTest = reader.readFromString(
+            unit1  = reader.readFromString(
                 input,
                 "PrimsWithKeywordTest",
                 new TestParserModel(),
+                "src/parser-basic-properties/__inputs__/test1.wit"
             ) as PrimsWithKeywordTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
         }
+        expect(unit1).not.toBeUndefined();
+        // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.wit-out", writer.writeToString(unit1));
+        expect(unit1).toMatchSnapshot();
     });
 
     test(" Limited Concept ", () => {
-        // TODO not correct: line 14 of input not handled as it should
+        let unit1: LimitedTest = undefined;
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.lim");
-            const unit1: LimitedTest = reader.readFromString(
+            unit1 = reader.readFromString(
                 input,
                 "LimitedTest",
                 new TestParserModel(),
+                "src/parser-basic-properties/__inputs__/test1.lim"
             ) as LimitedTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
         }
+        expect(unit1).not.toBeUndefined();
+        // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.lim-out", writer.writeToString(unit1));
+        expect(unit1).toMatchSnapshot();
     });
 
     test(" Part ", () => {
+        let unit1: PartsTest = undefined;
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.par");
-            const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            unit1 = reader.readFromString(
+                input,
+                "PartsTest",
+                new TestParserModel(),
+                "src/parser-basic-properties/__inputs__/test1.par"
+            ) as PartsTest;
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
         }
+        expect(unit1).not.toBeUndefined();
+        // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.par-out", writer.writeToString(unit1));
+        expect(unit1).toMatchSnapshot();
     });
 
     test(" Part with Optionals present", () => {
+        let unit1: PartsTest = undefined;
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test3.par");
-            const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            unit1= reader.readFromString(
+                input,
+                "PartsTest",
+                new TestParserModel(),
+                "src/parser-basic-properties/__inputs__/test3.par"
+            ) as PartsTest;
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
         }
+        expect(unit1).not.toBeUndefined();
+        // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test3.par-out", writer.writeToString(unit1));
+        expect(unit1).toMatchSnapshot();
     });
 
     test(" Part and Sub Parts ", () => {
+        let unit1: PartsTest = undefined;
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.par");
-            const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            unit1= reader.readFromString(
+                input,
+                "PartsTest",
+                new TestParserModel(),
+                "src/parser-basic-properties/__inputs__/test2.par"
+            ) as PartsTest;
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
         }
+        expect(unit1).not.toBeUndefined();
+        // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test2.par-out", writer.writeToString(unit1));
+        expect(unit1).toMatchSnapshot();
     });
 
     test(" Ref ", () => {
+        let unit1: RefsTest = undefined;
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.ref");
-            const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            unit1 = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
         }
+        expect(unit1).not.toBeUndefined();
+        // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.ref-out", writer.writeToString(unit1));
+        expect(unit1).toMatchSnapshot();
     });
 
     test(" Ref with Optionals present", () => {
+        let unit1: RefsTest = undefined;
         try {
             let input: string = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.ref");
-            const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            unit1 = reader.readFromString(
+                input,
+                "RefsTest",
+                new TestParserModel(),
+                "src/parser-basic-properties/__inputs__/test2.ref"
+            ) as RefsTest;
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
         }
+        expect(unit1).not.toBeUndefined();
+        // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test2.ref-out", writer.writeToString(unit1));
+        expect(unit1).toMatchSnapshot();
     });
 });

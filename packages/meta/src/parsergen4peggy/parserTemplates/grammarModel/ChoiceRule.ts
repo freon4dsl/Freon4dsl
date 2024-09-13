@@ -27,30 +27,43 @@ export class ChoiceRule extends GrammarRule {
             if (this.implementors.length !== implementorsNoBinaries.length) {
                 // There are binaries, make two separate rules, one with the 'single' expression,
                 // the second with the choice between single and binary expression(s).
-                rule = `${BinaryExpMaker.getNonBinaryRuleName(this.myConcept)} = ${implementorsNoBinaries
-                    .map((implementor) => `${getTypeCall(implementor)} `)
-                    .join("\n    / ")}\n`;
-                // Add the special binary concept rule(s) as choice in the second rule
-                const expBases = ParserGenUtil.findAllExpressionBases(
-                    this.implementors.filter(
-                        (sub) => sub instanceof FreMetaBinaryExpressionConcept,
-                    ) as FreMetaBinaryExpressionConcept[],
-                );
-                // Make the second rule
-                rule += `\n\n${this.ruleName} = `;
-                expBases.forEach((base) => {
-                    rule += `${BinaryExpMaker.getBinaryRuleName(base)} / `;
-                });
-                rule += `${BinaryExpMaker.getNonBinaryRuleName(this.myConcept)}`;
+                rule = this.makeRulesWithBinaries(implementorsNoBinaries);
             } else {
-                // normal choice rule
-                rule = `${this.ruleName} = ${implementorsNoBinaries
-                    .map((implementor) => `${getTypeCall(implementor)} `)
-                    .join("\n    / ")} ;`;
+                // Make a normal choice rule
+                rule = `${this.ruleName} = ${this.makeNormalChoice(implementorsNoBinaries)}`;
             }
         } else {
             rule = `${this.ruleName} = 'ERROR' ; // there are no concepts that implement this interface or extend this abstract concept`;
         }
+        return rule;
+    }
+
+    protected makeNormalChoice(implementorsNoBinaries: FreMetaClassifier[]): string {
+        const choices: string[] = [];
+        for(let i=0; i <implementorsNoBinaries.length; i++) {
+            let negations: string = '';
+            for(let j=i+1; j <implementorsNoBinaries.length; j++) {
+                negations += `!${getTypeCall(implementorsNoBinaries[j])} `
+            }
+            choices.push(`${negations}__choice:${getTypeCall(implementorsNoBinaries[i])} {return __choice}`);
+        }
+        return `${choices.join("\n    / ")}`;
+    }
+
+    private makeRulesWithBinaries(implementorsNoBinaries: FreMetaClassifier[]): string {
+        let rule: string = `${BinaryExpMaker.getNonBinaryRuleName(this.myConcept)} = ${this.makeNormalChoice(implementorsNoBinaries)}`;
+        // Add the special binary concept rule(s) as choice in the second rule
+        const expBases = ParserGenUtil.findAllExpressionBases(
+            this.implementors.filter(
+                (sub) => sub instanceof FreMetaBinaryExpressionConcept,
+            ) as FreMetaBinaryExpressionConcept[],
+        );
+        // Make the second rule
+        rule += `\n\n${this.ruleName} = `;
+        expBases.forEach((base) => {
+            rule += `${BinaryExpMaker.getBinaryRuleName(base)} / `;
+        });
+        rule += `${BinaryExpMaker.getNonBinaryRuleName(this.myConcept)}`;
         return rule;
     }
 

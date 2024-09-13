@@ -14,7 +14,7 @@ export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
         if (!varName || varName.length <= 0) {
             varName = ParserGenUtil.internalName(this.property.name);
         }
-        return `${varName}:${refRuleName}|.., "${this.separatorText}"|` + this.doNewline();
+        return `${varName}:${refRuleName}|.., ws "${this.separatorText}" ws |` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

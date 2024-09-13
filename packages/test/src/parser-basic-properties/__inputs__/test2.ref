@@ -78,7 +78,7 @@ RefsTest myName {
     }
 withSeparator
                         WithDirectRefs {
-                                            ref someName
+                                            ref someNameC
                                             optRef nameA
                                             refList
                                                 name1
@@ -88,15 +88,14 @@ withSeparator
                                             optRefList nameZ
                                             nameY
                                             nameX
-                        } !!
+                        } !
                         WithDirectRefs {
                                             ref someName
-                                            optRef nameA
+                                            optRef nameA.nameB
                                             refList
                                                 name1
                                                 name2
-                                                name3
-                                                name4
+                                                name3.name4
                                             optRefList nameZ
                                             nameY
                                             nameX

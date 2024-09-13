@@ -21,7 +21,7 @@ export class RHSBinExpListWithSeparator extends RHSPropEntry {
             varName = ParserGenUtil.internalName(this.property.name);
         }
         const binCall: string = BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type));
-        return `${varName}:${binCall}|.., "${this.separatorText}"|` + this.doNewline();
+        return `${varName}:${binCall}|.., ws "${this.separatorText}" ws |` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

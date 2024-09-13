@@ -1,5 +1,5 @@
 import { FreMetaClassifier, FreMetaConcept } from "../../languagedef/metalanguage/index.js";
-import { Names } from "../../utils/index.js";
+import {GenerationUtil, Names} from "../../utils/index.js";
 import { GrammarRule } from "./grammarModel/GrammarRule.js";
 import { ChoiceRule } from "./grammarModel/ChoiceRule.js";
 import { SuperChoiceRule } from "./grammarModel/SuperChoiceRule.js";
@@ -16,8 +16,8 @@ export class ChoiceRuleMaker {
         const rules: GrammarRule[] = [];
         for (const [freClassifier, subs] of interfacesAndAbstractsUsed) {
             const branchName = Names.classifier(freClassifier);
-            // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
-            const implementors = this.sortImplementorsOnPrimitiveProps(subs);
+            // sort the concepts: more complex concepts should go first
+            const implementors = this.sortImplementorsOnComplexity(subs);
             this.imports.push(freClassifier);
             rules.push(new ChoiceRule(branchName, freClassifier, implementors));
         }
@@ -34,8 +34,8 @@ export class ChoiceRuleMaker {
             // make sure the concrete class rule is the first of the implementors because
             // that rule gets the least priority in the parser
             implementors.push(freConcept);
-            // sort the concepts: concepts that have literals in them should go last, because the parser treats them with priority
-            implementors.push(...this.sortImplementorsOnPrimitiveProps(subs));
+            // sort the concepts: more complex concepts should go first
+            implementors.push(...this.sortImplementorsOnComplexity(subs));
             this.imports.push(freConcept);
             rules.push(new SuperChoiceRule(branchName, freConcept, implementors));
         }
@@ -43,22 +43,30 @@ export class ChoiceRuleMaker {
     }
 
     /**
-     * Returns the list of classifiers with all classifiers that have primitive properties as last
+     * Returns the list of classifiers with all classifiers that have primitive properties as first
      * @param implementors
      * @private
      */
-    private sortImplementorsOnPrimitiveProps(implementors: FreMetaClassifier[]): FreMetaClassifier[] {
-        const result: FreMetaClassifier[] = [];
-        const withPrims: FreMetaClassifier[] = [];
-        for (const concept of implementors) {
-            if (concept.primProperties.length > 0) {
-                // there are primitive props, move this implementor to the end
-                withPrims.push(concept);
+    private sortImplementorsOnComplexity(implementors: FreMetaClassifier[]): FreMetaClassifier[] {
+        const last: FreMetaClassifier[] = [];
+        const first: FreMetaClassifier[] = [];
+        const middle: FreMetaClassifier[] = [];
+        // Sort the implementors such that a base class in the list comes before its subclasses.
+        const sorted: FreMetaClassifier[] = GenerationUtil.sortClassifiers(implementors).reverse();
+        for (const concept of sorted) {
+            // If a concept has subconcepts, make the concept go before others
+            if (concept instanceof FreMetaConcept && concept.allSubConceptsDirect().length > 0) {
+                first.push(concept);
+            } else if (concept.primProperties.length > 0) {
+                // We assume that an entry with primitive values is easier to match by the parser,
+                // therefore any implementor with primitive props should be tried early.
+                middle.push(concept);
             } else {
-                result.push(concept);
+                last.push(concept);
             }
         }
-        result.push(...withPrims);
-        return result;
+        first.push(...middle);
+        first.push(...last);
+        return first;
     }
 }

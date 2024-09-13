@@ -52,10 +52,10 @@ ${refRuleName} = __ref:identifier|1.., '${this.refSeparator}'|  // returns an Ar
 identifier     "identifier" 
     = ws first:[a-zA-Z_] rest:[a-zA-Z0-9_]* ws { return first + rest.join(""); }
 numberLiteral  "number"     
-    = ws all:[0-9]+ ws { return all.join(""); }
+    = ws all:[0-9]+ ws { return parseInt(all.join(""), 10); }
 booleanLiteral "boolean"    
-    = ws "false" ws { return false }
-    / ws "true" ws { return true }
+    = ws "${this.falseValue}" ws { return false }
+    / ws "${this.trueValue}" ws { return true }
 stringLiteral  "string"     
     = ws quotation_mark chars:char* quotation_mark ws { return chars.join(""); }
 

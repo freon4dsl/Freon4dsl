@@ -338,7 +338,7 @@ export class WriterTemplate {
                         if (typeof listElem === "string" && !isIdentifier) {
                             this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
                         } else {
-                            this.output[this.currentLine] += \`\$\{listElem\}\`;
+                            this.output[this.currentLine] += listElem + ' ';
                         }
                         this.doSeparatorOrTerminatorAndNewline(sepType, isLastInList, sepText, vertical, short, indent);
                     });
@@ -684,6 +684,8 @@ export class WriterTemplate {
             const myType: FreMetaClassifier = myElem.type;
             if (myType === FreMetaPrimitiveType.string) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
+            } else if (myType === FreMetaPrimitiveType.number) {
+                myCall = `this.output[this.currentLine] += ${elemStr} + ' ';`
             } else if (myType === FreMetaPrimitiveType.boolean) {
                 // get the right manner to unparse the boolean values
                 // either from the standard boolean keywords in the default projection group

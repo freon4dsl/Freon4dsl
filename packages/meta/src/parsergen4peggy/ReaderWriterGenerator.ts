@@ -11,7 +11,7 @@ import {
     WRITER_GEN_FOLDER,
 } from "../utils/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
-import {WriterTemplate, GrammarGenerator, ReaderHelperTemplate, ReaderTemplate} from "./parserTemplates/index.js";
+import { WriterTemplate, GrammarGenerator, ReaderHelperTemplate, ReaderTemplate } from "./parserTemplates/index.js";
 import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
 import { GrammarModel } from "./parserTemplates/grammarModel/index.js";
 import peggy from "peggy";

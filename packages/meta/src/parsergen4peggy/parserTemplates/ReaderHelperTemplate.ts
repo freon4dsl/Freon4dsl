@@ -44,20 +44,24 @@ export class ReaderHelperTemplate {
             }
             
             /**
-             * Creates a list of FreNodeReferences from an array of arrays of strings, which is the type that is returned 
-             * by the peggy parser.
-             * @param data the array of arrays of strings
+             * Creates a list of FreNodeReferences from two types of arrays. First, an array of arrays 
+             * of strings, which is the type that is returned in case of a 'normal' reference, like
+             * 'PP::RR::SS' or 'NN'. Second, an array of some limited concept type, like 
+             * 'limited XX {
+             *     FIRST; SECOND;
+             * }'.
+             * FreNodeReference.create() handles both cases.
+             * 
+             * @param data the array of references
              * @param type the type of nodes that the references should refer to
              */
             export function createReferenceList(data: Object, type: string): FreNodeReference<any>[] {
                 const result: FreNodeReference<any>[] = [];
                 if (!!data) {
                     if (Array.isArray(data)) {
-                        data.forEach(xx => {
-                            if (Array.isArray(xx)) {
-                                result.push(FreNodeReference.create(xx, type));
-                            }
-                        })
+                        data.forEach((xx) => {
+                            result.push(FreNodeReference.create(xx, type));
+                        });
                     }
                 }
                 return result;

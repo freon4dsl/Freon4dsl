@@ -40,7 +40,7 @@ function isPeggyError(object: any): object is parser.SyntaxError {
         // parse the input
         let unit: ${Names.modelunit()} | undefined = undefined;
         if (typeof PeggyParser.parse === "function") {
-            unit = this.internalRead(sentence, metatype);
+            unit = this.internalRead(sentence, metatype, sourceName);
         }
         if (!!model && !!unit) {
             this.addToModel(model, unit);
@@ -64,15 +64,20 @@ function isPeggyError(object: any): object is parser.SyntaxError {
         }
     }
 
-    private internalRead(sentence: string, unitType: string): ${Names.modelunit()} | undefined {
+    private internalRead(sentence: string, unitType: string, sourceName?: string): ${Names.modelunit()} | undefined {
         try {
             // other possibly useful parameters: grammarSource, error, info, warnings
             return PeggyParser.parse(sentence, {startRule: unitType});
         } catch (e) {
             if (isPeggyError(e)) {
-                console.log("SyntaxError: " + e.message + ", line: " + e.location.start.line + ", column: " + e.location.start.column);
+                // add more information to the error
+                if (!sourceName) {
+                    sourceName = "<filename-unknown>";
+                }
+                throw new Error(
+                    "SyntaxError: " + e.message + " [" + sourceName + ":" + e.location.start.line + ":" + e.location.start.column + "]",
+                );
             } else {
-                console.log("Error: "+ e.message);
                 throw e;
             }
         }

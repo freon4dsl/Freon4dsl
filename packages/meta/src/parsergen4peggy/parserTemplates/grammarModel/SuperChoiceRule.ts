@@ -1,20 +1,15 @@
-import { GrammarRule } from "./GrammarRule.js";
 import { FreMetaBinaryExpressionConcept, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 import { Names } from "../../../utils/index.js";
 import { BinaryExpMaker } from "../BinaryExpMaker.js";
-import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil.js";
+import { ParserGenUtil } from "../ParserGenUtil.js";
 import { getTypeCall } from "./GrammarUtils.js";
+import { ChoiceRule } from "./ChoiceRule.js";
 
-export class SuperChoiceRule extends GrammarRule {
+export class SuperChoiceRule extends ChoiceRule {
     // the same as ChoiceRule, except that the call to the implementors is never to '__fre_super_...'
-    implementors: FreMetaClassifier[];
-    myConcept: FreMetaClassifier;
 
     constructor(ruleName: string, myConcept: FreMetaClassifier, implementors: FreMetaClassifier[]) {
-        super();
-        this.ruleName = ruleName;
-        this.implementors = implementors;
-        this.myConcept = myConcept;
+        super(ruleName, myConcept, implementors);
     }
 
     toGrammar(): string {
@@ -44,28 +39,13 @@ export class SuperChoiceRule extends GrammarRule {
                 });
                 rule += `${BinaryExpMaker.getNonBinaryRuleName(this.myConcept)}`;
             } else {
-                // normal choice rule
-                rule = `${this.ruleName} = ${this.implementors
-                    .map((implementor) => `${this.getTypeCallExcludeSelf(implementor)} `)
-                    .join("\n    / ")} ;`;
+                // Make a normal choice rule
+                rule = `${this.ruleName} = ${this.makeNormalChoice(implementorsNoBinaries)}`;
             }
         } else {
             rule = `${this.ruleName} = 'ERROR' ; // there are no concepts that implement this interface or extend this abstract concept`;
         }
         return rule;
-    }
-
-    nameToImport(): string {
-        return '';
-    }
-
-    toMethod(mainAnalyserName: string): string {
-        return `
-            ${ParserGenUtil.makeComment(this.toGrammar())}
-            public transform${this.ruleName}(branch: SPPTBranch) : ${Names.classifier(this.myConcept)} {
-                // console.log('transform${this.ruleName} called: ' + branch.name);
-                return this.${mainAnalyserName}.${internalTransformNode}(branch.nonSkipChildren.toArray()[0]);
-            }`;
     }
 
     getTypeCallExcludeSelf(propType: FreMetaClassifier): string {

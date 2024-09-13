@@ -9,11 +9,12 @@ PartsTest myName {
                         PartConcept {
                             content "otherString"
                             // optContent not present
-                            visibility #  },
+                            visibility #  } ,
                         PartConcept {
                             content "stringLiteralXXX"
                             optContent 123
-                            visibility -  },
+                            visibility -  }
+                            ,
                         PartConcept {
                             content "stringLiteralYYY"
                             // optContent not present

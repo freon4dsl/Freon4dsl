@@ -77,9 +77,9 @@ concept Segway base Vehicle implements IsElectrical {
     typeName: identifier = "Segway";
 }
 
-concept Scateboard base Vehicle {
+concept Skateboard base Vehicle {
     size: number;
-    typeName: identifier = "Scateboard";
+    typeName: identifier = "Skateboard";
 }
 
 concept KickBike base Vehicle {

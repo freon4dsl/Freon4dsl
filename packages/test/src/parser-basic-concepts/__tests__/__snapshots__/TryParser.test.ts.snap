@@ -30,7 +30,7 @@ ExpressionTest {
         "_FRE_value": "literal1",
         "parseLocation": FreParseLocation {
           "column": 2,
-          "filename": "UNKNOWN_FILE",
+          "filename": "src/parser-basic-concepts/__inputs__/test1.exp",
           "line": 4,
         },
       },
@@ -43,13 +43,13 @@ ExpressionTest {
         "_FRE_value": "literal2",
         "parseLocation": FreParseLocation {
           "column": 39,
-          "filename": "UNKNOWN_FILE",
+          "filename": "src/parser-basic-concepts/__inputs__/test1.exp",
           "line": 4,
         },
       },
       "parseLocation": FreParseLocation {
         "column": 2,
-        "filename": "UNKNOWN_FILE",
+        "filename": "src/parser-basic-concepts/__inputs__/test1.exp",
         "line": 4,
       },
     },
@@ -65,10 +65,10 @@ ExpressionTest {
         "$$propertyName": "left",
         "$id": "ID-6",
         "$typename": "NumberLiteralEx",
-        "_FRE_value": "109",
+        "_FRE_value": 109,
         "parseLocation": FreParseLocation {
           "column": 2,
-          "filename": "UNKNOWN_FILE",
+          "filename": "src/parser-basic-concepts/__inputs__/test1.exp",
           "line": 5,
         },
       },
@@ -87,7 +87,7 @@ ExpressionTest {
           "_FRE_value": "literal3",
           "parseLocation": FreParseLocation {
             "column": 32,
-            "filename": "UNKNOWN_FILE",
+            "filename": "src/parser-basic-concepts/__inputs__/test1.exp",
             "line": 5,
           },
         },
@@ -100,19 +100,19 @@ ExpressionTest {
           "_FRE_value": true,
           "parseLocation": FreParseLocation {
             "column": 69,
-            "filename": "UNKNOWN_FILE",
+            "filename": "src/parser-basic-concepts/__inputs__/test1.exp",
             "line": 5,
           },
         },
         "parseLocation": FreParseLocation {
           "column": 32,
-          "filename": "UNKNOWN_FILE",
+          "filename": "src/parser-basic-concepts/__inputs__/test1.exp",
           "line": 5,
         },
       },
       "parseLocation": FreParseLocation {
         "column": 2,
-        "filename": "UNKNOWN_FILE",
+        "filename": "src/parser-basic-concepts/__inputs__/test1.exp",
         "line": 5,
       },
     },
@@ -122,7 +122,7 @@ ExpressionTest {
   "fileExtension": "",
   "parseLocation": FreParseLocation {
     "column": 1,
-    "filename": "UNKNOWN_FILE",
+    "filename": "src/parser-basic-concepts/__inputs__/test1.exp",
     "line": 1,
   },
 }

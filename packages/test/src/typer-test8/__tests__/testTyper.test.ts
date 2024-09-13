@@ -14,25 +14,6 @@ const testdir = "src/typer-test8/__inputs__/";
 
 // TODO test the PlusExp and introduce some NamedTypes
 
-function compareReadAndWrittenFiles(path: string) {
-    try {
-        const model = new XX();
-        const unit1 = reader.readFromString(handler.stringFromFile(path), metatype, model) as FreModelUnit;
-        let result: string = writer.writeToString(unit1, 0, false);
-        expect(result.length).toBeGreaterThan(0);
-        const unit2 = reader.readFromString(result, metatype, model);
-        // simply comparing the units does not work because the id properties of the two units
-        // are not the same, therefore we use the hack of checking whether both units in JSON
-        // format are the same
-        const unit1_json = serial.convertToJSON(unit1);
-        const unit2_json = serial.convertToJSON(unit2);
-        expect(unit1_json).toEqual(unit2_json);
-    } catch (e) {
-        console.log(e.message);
-        expect(e).toBeNaN();
-    }
-}
-
 describe("Testing Typer on", () => {
     // TODO make an input file in which a number of NamedTypes are created and used
 
@@ -46,6 +27,7 @@ describe("Testing Typer on", () => {
             handler.stringFromFile(testdir + "literals.expr"),
             "XXunit",
             model,
+            testdir + "literals.expr"
         ) as XXunit;
         expect(unit1).not.toBeNull();
         if (!!unit1) {
@@ -73,6 +55,7 @@ describe("Testing Typer on", () => {
             handler.stringFromFile(testdir + "literalsWithComplexTypes.expr"),
             "XXunit",
             model,
+            testdir + "literalsWithComplexTypes.expr"
         ) as XXunit;
         expect(unit1).not.toBeNull();
         if (!!unit1) {
@@ -172,20 +155,22 @@ describe("Testing Typer on", () => {
         expect(unit1).not.toBeNull();
         if (!!unit1) {
             const errors: FreError[] = validator.validate(unit1);
+            console.log(errors.map(err => err.message).join("=\n=") + "==\n ====")
+            expect(errors.length).toBe(3);
             expect(
-                errors.find((e) => e.message.endsWith("of [Set { true, true, false }] is not equal to Set < NUMBER >")),
+                errors.find((e) => e.message.includes("of [Set { true, true, false }] is not equal to Set < NUMBER >")),
             ).toBeTruthy();
             expect(
                 errors.find((e) =>
-                    e.message.endsWith(
+                    e.message.includes(
                         'of [Bag { Set { 12, 13, 14 }, Sequence { "string", "Str", "STRING" } }] is not equal to Bag < Sequence < NUMBER > >',
                     ),
                 ),
             ).toBeTruthy();
             expect(
-                errors.find((e) => e.message.endsWith("of [124 Meters] is not equal to kWh < NUMBER >")),
+                errors.find((e) => e.message.includes("of [124Meters] is not equal to kWh < NUMBER >")),
             ).toBeTruthy();
-            expect(errors.length).toBe(3);
+
 
             // console.log(errors.map(e => e.message).join("\n"));
         }

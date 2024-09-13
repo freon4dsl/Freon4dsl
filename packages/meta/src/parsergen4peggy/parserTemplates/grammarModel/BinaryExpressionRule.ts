@@ -54,7 +54,7 @@ export class BinaryExpressionRule extends GrammarRule {
 * @param operator
 * @param right
 */
-        export function createBinaryExpression(left: ExBase, operator: string, right: ExBase): ${Names.concept(this.expressionBase)} | undefined {
+        export function createBinaryExpression(left: ${Names.concept(this.expressionBase)}, operator: string, right: ${Names.concept(this.expressionBase)}): ${Names.concept(this.expressionBase)} | undefined {
         let combined: ${Names.concept(this.expressionBase)} = undefined;
         switch (operator) {
             ${cases.map((c) => `${c}`).join("")}
@@ -112,7 +112,7 @@ export class BinaryExpressionRule extends GrammarRule {
     private rule1(): string {
         const singleExpressionRule: string = BinaryExpMaker.getNonBinaryRuleName(this.expressionBase);
         return `${this.ruleName} = __left:${singleExpressionRule} ws __op:__fre_binary_operator ws __right:${getTypeCall(this.expressionBase)}
-{ helper.createBinaryExpression(__left, __op, __right) }\n`
+{ return helper.createBinaryExpression(__left, __op, __right) }\n`
     }
 
     private rule2(): string {

@@ -14,7 +14,7 @@ export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
         if (!varName || varName.length <= 0) {
             varName = ParserGenUtil.internalName(this.property.name);
         }
-        return `${varName}:${getPrimCall(this.property.type)}|.., "${this.separatorText}"|` + this.doNewline();
+        return `${varName}:${getPrimCall(this.property.type)}|.., ws "${this.separatorText}" ws |` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {

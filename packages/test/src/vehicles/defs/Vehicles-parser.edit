@@ -82,7 +82,7 @@ Segway {
     Is allowed on the road: ${isAllowedOnRoad [HOORAY]}
 ]}
 
-Scateboard {
+Skateboard {
 [
     [=> Vehicle]
     Size: ${size}
