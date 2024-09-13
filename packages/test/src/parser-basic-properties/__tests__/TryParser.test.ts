@@ -33,7 +33,7 @@ describe("Parser properties of type", () => {
             ) as PrimitivesTest;
         } catch (e) {
             // console.log(e.stack);
-            expect(e).toBeNaN();
+            expect(e).toBeNull();
         }
         expect(unit1).not.toBeUndefined();
         // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.pri-out", writer.writeToString(unit1));
@@ -52,7 +52,7 @@ describe("Parser properties of type", () => {
             ) as PrimsWithKeywordTest;
         } catch (e) {
             // console.log(e.stack);
-            expect(e).toBeNaN();
+            expect(e).toBeNull();
         }
         expect(unit1).not.toBeUndefined();
         // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.wit-out", writer.writeToString(unit1));
@@ -71,7 +71,7 @@ describe("Parser properties of type", () => {
             ) as LimitedTest;
         } catch (e) {
             // console.log(e.stack);
-            expect(e).toBeNaN();
+            expect(e).toBeNull();
         }
         expect(unit1).not.toBeUndefined();
         // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.lim-out", writer.writeToString(unit1));
@@ -90,7 +90,7 @@ describe("Parser properties of type", () => {
             ) as PartsTest;
         } catch (e) {
             // console.log(e.stack);
-            expect(e).toBeNaN();
+            expect(e).toBeNull();
         }
         expect(unit1).not.toBeUndefined();
         // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.par-out", writer.writeToString(unit1));
@@ -109,7 +109,7 @@ describe("Parser properties of type", () => {
             ) as PartsTest;
         } catch (e) {
             // console.log(e.stack);
-            expect(e).toBeNaN();
+            expect(e).toBeNull();
         }
         expect(unit1).not.toBeUndefined();
         // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test3.par-out", writer.writeToString(unit1));
@@ -128,7 +128,7 @@ describe("Parser properties of type", () => {
             ) as PartsTest;
         } catch (e) {
             // console.log(e.stack);
-            expect(e).toBeNaN();
+            expect(e).toBeNull();
         }
         expect(unit1).not.toBeUndefined();
         // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test2.par-out", writer.writeToString(unit1));
@@ -142,7 +142,7 @@ describe("Parser properties of type", () => {
             unit1 = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
         } catch (e) {
             // console.log(e.stack);
-            expect(e).toBeNaN();
+            expect(e).toBeNull();
         }
         expect(unit1).not.toBeUndefined();
         // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test1.ref-out", writer.writeToString(unit1));
@@ -161,7 +161,7 @@ describe("Parser properties of type", () => {
             ) as RefsTest;
         } catch (e) {
             // console.log(e.stack);
-            expect(e).toBeNaN();
+            expect(e).toBeNull();
         }
         expect(unit1).not.toBeUndefined();
         // fileHandler.stringToFile("src/parser-basic-properties/__inputs__/test2.ref-out", writer.writeToString(unit1));

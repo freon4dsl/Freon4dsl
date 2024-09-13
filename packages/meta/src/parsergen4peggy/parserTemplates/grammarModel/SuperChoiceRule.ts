@@ -1,8 +1,6 @@
 import { FreMetaBinaryExpressionConcept, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../utils/index.js";
 import { BinaryExpMaker } from "../BinaryExpMaker.js";
 import { ParserGenUtil } from "../ParserGenUtil.js";
-import { getTypeCall } from "./GrammarUtils.js";
 import { ChoiceRule } from "./ChoiceRule.js";
 
 export class SuperChoiceRule extends ChoiceRule {
@@ -46,13 +44,5 @@ export class SuperChoiceRule extends ChoiceRule {
             rule = `${this.ruleName} = 'ERROR' ; // there are no concepts that implement this interface or extend this abstract concept`;
         }
         return rule;
-    }
-
-    getTypeCallExcludeSelf(propType: FreMetaClassifier): string {
-        if (propType === this.myConcept) {
-            return Names.classifier(propType);
-        } else {
-            return getTypeCall(propType);
-        }
     }
 }

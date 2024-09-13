@@ -26,7 +26,7 @@ describe("Parser concepts of type", () => {
             ) as ExpressionTest;
         } catch (e) {
             // console.log(e.stack);
-            expect(e).toBeNaN();
+            expect(e).toBeNull();
         }
         expect (unit1).not.toBeUndefined();
         // console.log(writer.writeToString(unit1, 0, false));

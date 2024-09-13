@@ -43,9 +43,9 @@ export class ChoiceRule extends GrammarRule {
         for(let i=0; i <implementorsNoBinaries.length; i++) {
             let negations: string = '';
             for(let j=i+1; j <implementorsNoBinaries.length; j++) {
-                negations += `!${getTypeCall(implementorsNoBinaries[j])} `
+                negations += `!${this.getTypeCallExcludeSelf(implementorsNoBinaries[j])} `
             }
-            choices.push(`${negations}__choice:${getTypeCall(implementorsNoBinaries[i])} {return __choice}`);
+            choices.push(`${negations}__choice:${this.getTypeCallExcludeSelf(implementorsNoBinaries[i])} {return __choice}`);
         }
         return `${choices.join("\n    / ")}`;
     }
@@ -78,5 +78,12 @@ export class ChoiceRule extends GrammarRule {
                 // console.log('transform${this.ruleName} called: ' + branch.name);
                 return this.${mainAnalyserName}.${internalTransformNode}(branch.nonSkipChildren.toArray()[0]);
             }`;
+    }
+    getTypeCallExcludeSelf(propType: FreMetaClassifier): string {
+        if (propType === this.myConcept) {
+            return Names.classifier(propType);
+        } else {
+            return getTypeCall(propType);
+        }
     }
 }
