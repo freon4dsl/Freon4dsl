@@ -87,7 +87,7 @@ export class FreEditor {
     }
 
     auto = () => {
-        console.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " recalc is " + this.forceRecalculateProjection);
+        LOGGER.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " recalc is " + this.forceRecalculateProjection);
         this.forceRecalculateProjection
         if (this.rootElement !== null) {
             this._rootBox = this.projection.getBox(this.rootElement);
