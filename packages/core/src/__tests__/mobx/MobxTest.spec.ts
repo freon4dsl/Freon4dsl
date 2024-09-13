@@ -109,7 +109,9 @@ describe("Mobx Model", () => {
         expect(element.singleReference.referred).toBeUndefined();
         checkUnchanged();
 
-        part1.name = "part1";
+        runInAction( () => {
+            part1.name = "part1";
+        })
         // reference to part1 can be found again
         expect(element.singleReference.name).toBe("part1");
         expect(element.singleReference.referred).toBe(part1);
