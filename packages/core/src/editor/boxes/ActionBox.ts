@@ -213,7 +213,7 @@ export class ActionBox extends AbstractChoiceBox {
 
     triggerKeyPressEvent = (key: string) => {
         // TODO rename this one, e.g. to triggerKeyEvent
-        console.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
+        LOGGER.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
     };
 }
 

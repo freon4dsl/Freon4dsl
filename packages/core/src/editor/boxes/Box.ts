@@ -127,9 +127,8 @@ export abstract class Box {
         }
         const thisIndex: number = this.parent.children.indexOf(this);
         if (thisIndex === -1) {
-            console.error("Index of child is -1 !!!")
-            console.error(`Box ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()}`)
-            throw new Error("Index of child is -1 !!!")
+            LOGGER.error(`nextLeafRight: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is mising in its parent (index === -1) `)
+            return null
         }
         const rightSiblings: Box[] = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
         for (const sibling of rightSiblings) {
@@ -153,6 +152,10 @@ export abstract class Box {
             return null;
         }
         const thisIndex: number = this.parent.children.indexOf(this);
+        if (thisIndex === -1) {
+            LOGGER.error(`nextLeafLeft: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is mising in its parent (index === -1) `)
+            return null
+        }
         const leftSiblings: Box[] = this.parent.children.slice(0, thisIndex).reverse();
         for (const sibling of leftSiblings) {
             const siblingChild: Box = sibling.lastLeaf;

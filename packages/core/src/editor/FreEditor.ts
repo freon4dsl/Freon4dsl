@@ -279,7 +279,7 @@ export class FreEditor {
             return false;
         }
         if (isNullOrUndefined(element)) {
-            console.error("FreEditor.selectedElement is null !");
+            LOGGER.error("FreEditor.selectedElement is null !");
             return false;
         }
         return true;

@@ -53,7 +53,7 @@ export class FreCreatePartCommand extends FreCommand {
         const newElement: FreNode = FreLanguage.getInstance().classifier(this.conceptName)?.creator({});
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
-            console.error("ActionBox action: Unexpected new element undefined");
+            FRECOMMAND_LOGGER.error("ActionBox action: Unexpected new element undefined");
             return EMPTY_POST_ACTION;
         }
         FRECOMMAND_LOGGER.log(
