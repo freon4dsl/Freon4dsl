@@ -12,7 +12,7 @@ import { modelUnit } from "../ast-utils";
 import { FreLogger } from "../logging";
 import { FreUndoManager } from "./FreUndoManager";
 
-const LOGGER: FreLogger = new FreLogger("FreUndoStackManager");
+const LOGGER: FreLogger = new FreLogger("FreUndoStackManager").mute();
 
 /**
  * Class FreUndoStackManager holds two sets of stacks of change information on a model unit.

@@ -8,7 +8,7 @@ import { Box, FreCombinedActions, FreCaret, FreProjectionHandler, wait, isTextBo
 import { FreErrorSeverity } from "../validator";
 import { isNullOrUndefined } from "../util";
 
-const LOGGER = new FreLogger("FreEditor");
+const LOGGER = new FreLogger("FreEditor").mute();
 
 export class FreEditor {
     private static isOnPreviousLine(ref: Box, other: Box): boolean {

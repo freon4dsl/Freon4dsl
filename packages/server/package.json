@@ -30,8 +30,8 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^2.0.3",
-    "@vitest/ui": "^2.0.3"
+    "vitest": "^2.1.0",
+    "@vitest/ui": "^2.1.0"
   },
   "dependencies": {
     "@types/koa": "^2.13.4",
