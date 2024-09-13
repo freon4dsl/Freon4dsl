@@ -1,3 +1,4 @@
+import { AST } from "@freon4dsl/core";
 import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { Demo, DemoModel } from "../language/gen";
@@ -37,12 +38,14 @@ describe("Testing Parser", () => {
             fileHandler.stringToFile(path, unparser.writeToString(originalModel.models[0]));
             // read it back in, in a completely new model
 
-            const readModel = parser.readFromString(
-                fileHandler.stringFromFile(path),
-                "DemoModel",
-                new Demo(),
-            ) as DemoModel;
-
+            let readModel
+            AST.change( () => {
+                readModel = parser.readFromString(
+                    fileHandler.stringFromFile(path),
+                    "DemoModel",
+                    new Demo(),
+                ) as DemoModel;
+            })
             // compare the read unit with the original
             // check the name
             expect(originalModel.models[0].name).toBe(readModel.name);

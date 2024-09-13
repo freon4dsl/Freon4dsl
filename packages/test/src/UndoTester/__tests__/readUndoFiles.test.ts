@@ -1,7 +1,7 @@
 import { UndoModel, UndoPart, UndoUnit } from "../language/gen";
 import { UndoModelEnvironment } from "../config/gen/UndoModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
-import { FreUndoManager } from "@freon4dsl/core";
+import { AST, FreUndoManager } from "@freon4dsl/core";
 import { describe, it, expect } from "vitest";
 
 const handler = new FileHandler();
@@ -10,11 +10,12 @@ const reader = UndoModelEnvironment.getInstance().reader;
 
 function readUnitInTransaction(manager: FreUndoManager, filePath: string) {
     manager.cleanAllStacks();
-    manager.startTransaction();
-    const model: UndoModel = new UndoModel();
-    const langSpec: string = handler.stringFromFile(filePath);
-    const unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
-    manager.endTransaction();
+    let unit1
+    AST.change( () => {
+        const model: UndoModel = new UndoModel();
+        const langSpec: string = handler.stringFromFile(filePath);
+        unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
+    })
     return unit1;
 }
 
@@ -42,12 +43,16 @@ describe("Testing Undo Manager", () => {
     it("change, undo, redo, undo on part", () => {
         const filePath = "src/UndoTester/__inputs__/second.und";
         const unit1 = readUnitInTransaction(manager, filePath);
+        FreUndoManager.getInstance().currentUnit = unit1
         expect(unit1).not.toBeNull();
 
         // change the value of 'part'
         const oldPartId = unit1.part.freId(); // remember the id of the old value
-        const otherPart = UndoPart.create({ name: "part42" });
-        unit1.part = otherPart;
+        let otherPart
+        AST.change( () => {
+            otherPart = UndoPart.create({ name: "part42" });
+            unit1.part = otherPart;
+        })
         expect(unit1.part).toBe(otherPart);
 
         // undo the change
@@ -62,12 +67,15 @@ describe("Testing Undo Manager", () => {
     it("change, undo, redo, undo on an element in a list of primitives", () => {
         const filePath = "src/UndoTester/__inputs__/first.und";
         const unit1 = readUnitInTransaction(manager, filePath);
+        FreUndoManager.getInstance().currentUnit = unit1
         expect(unit1).not.toBeNull();
         expect(unit1.numlist.length).toBeGreaterThan(0);
 
         // change the value of 'numlist'
         const oldValue = unit1.numlist[0];
-        unit1.numlist[0] = 24;
+        AST.change( () => {
+            unit1.numlist[0] = 24;
+        })
         expect(unit1.numlist[0]).toBe(24);
 
         // undo the change
@@ -82,15 +90,18 @@ describe("Testing Undo Manager", () => {
     it("change, undo, redo, undo on multiple elements in a list of primitives", () => {
         const filePath = "src/UndoTester/__inputs__/second.und";
         const unit1 = readUnitInTransaction(manager, filePath);
+        FreUndoManager.getInstance().currentUnit = unit1
         expect(unit1).not.toBeNull();
-        expect(unit1.numlist.length).toBeGreaterThan(0);
 
+        expect(unit1.numlist.length).toBeGreaterThan(0);
         // change the value of 'numlist'
-        expect(unit1.numlist.length).toBe(3);
         const oldValue1 = unit1.numlist[0];
         const oldValue2 = unit1.numlist[1];
         const oldValue3 = unit1.numlist[2];
-        unit1.numlist.splice(1, 2);
+        expect(unit1.numlist.length).toBe(3);
+        AST.change( () => {
+            unit1.numlist.splice(1, 2);
+        })
         expect(unit1.numlist.length).toBe(1);
 
         // undo the change
@@ -108,13 +119,16 @@ describe("Testing Undo Manager", () => {
     it("change, undo, redo, undo on an element in a list of parts", () => {
         const filePath = "src/UndoTester/__inputs__/third.und";
         const unit1 = readUnitInTransaction(manager, filePath);
+        FreUndoManager.getInstance().currentUnit = unit1
         expect(unit1).not.toBeNull();
         expect(unit1.partlist.length).toBe(5);
 
         // change the value of 'partlist'
         const oldValue = unit1.partlist[2];
         const newValue = new UndoPart("part90");
-        unit1.partlist[2] = newValue;
+        AST.change( () => {
+            unit1.partlist[2] = newValue;
+        })
         expect(unit1.partlist[2]).toBe(newValue);
 
         // undo the change
@@ -130,6 +144,7 @@ describe("Testing Undo Manager", () => {
         const manager = FreUndoManager.getInstance();
         const filePath = "src/UndoTester/__inputs__/third.und";
         const unit1 = readUnitInTransaction(manager, filePath);
+        FreUndoManager.getInstance().currentUnit = unit1
         expect(unit1).not.toBeNull();
         expect(unit1.partlist.length).toBeGreaterThan(0);
 
@@ -141,7 +156,9 @@ describe("Testing Undo Manager", () => {
         const oldValue1 = unit1.partlist[0];
         const oldValue2 = unit1.partlist[1];
         const oldValue3 = unit1.partlist[2];
-        unit1.partlist.splice(1, 2);
+        AST.change( () => {
+            unit1.partlist.splice(1, 2);
+        })
         expect(unit1.partlist.length).toBe(3);
 
         // undo the change

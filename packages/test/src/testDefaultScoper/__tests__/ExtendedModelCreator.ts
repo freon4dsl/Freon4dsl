@@ -1,5 +1,5 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen";
-import { FreModelSerializer, FreNodeReference } from "@freon4dsl/core";
+import { AST, FreModelSerializer, FreNodeReference } from "@freon4dsl/core";
 
 // This class creates a model like SimpleModelCreator,
 // but adds more extensive references
@@ -26,21 +26,24 @@ export class ExtendedModelCreator {
      * @param depth         must be larger than 0
      */
     public createModel(nrOfUnits: number, depth: number): DSmodel {
-        // reset names
-        this.nameNumber = 0;
-        this.allNames = [];
-        this.numberOfRefs = 0;
-        // create a new model
-        const modelUnits: DSunit[] = [];
-        for (let i = 0; i < nrOfUnits; i++) {
-            modelUnits.push(this.createUnit("model", depth));
-        }
-        const model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
-        // add references
-        for (let i = 0; i < nrOfUnits; i++) {
-            this.addReferencesToUnit(modelUnits[i]);
-        }
-        // console.log("number of names created: " + this.nameNumber);
+        let model
+        AST.change( () => {
+            // reset names
+            this.nameNumber = 0;
+            this.allNames = [];
+            this.numberOfRefs = 0;
+            // create a new model
+            const modelUnits: DSunit[] = [];
+            for (let i = 0; i < nrOfUnits; i++) {
+                modelUnits.push(this.createUnit("model", depth));
+            }
+            model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+            // add references
+            for (let i = 0; i < nrOfUnits; i++) {
+                this.addReferencesToUnit(modelUnits[i]);
+            }
+            // console.log("number of names created: " + this.nameNumber);
+        })
         return model;
     }
 
@@ -62,41 +65,52 @@ export class ExtendedModelCreator {
             return null;
         }
         const modelUnits: DSunit[] = [];
-        for (let i = 0; i < nrOfUnits; i++) {
-            const completeUnit = this.createUnit("model", depth);
-            if (i === primary) {
-                modelUnits.push(completeUnit);
-            } else {
-                const serialized = this.serial.convertToJSON(completeUnit, true);
-                const unitInterface = this.serial.toTypeScriptInstance(serialized);
-                modelUnits.push(unitInterface as DSunit);
+        let model
+        AST.change( () => {
+            for (let i = 0; i < nrOfUnits; i++) {
+                const completeUnit = this.createUnit("model", depth);
+                if (i === primary) {
+                    modelUnits.push(completeUnit);
+                } else {
+                    const serialized = this.serial.convertToJSON(completeUnit, true);
+                    const unitInterface = this.serial.toTypeScriptInstance(serialized);
+                    modelUnits.push(unitInterface as DSunit);
+                }
             }
-        }
-        const model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
-        // add references
-        for (let i = 0; i < nrOfUnits; i++) {
-            this.addReferencesToUnit(modelUnits[i]);
-        }
+            model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+            // add references
+            for (let i = 0; i < nrOfUnits; i++) {
+                this.addReferencesToUnit(modelUnits[i]);
+            }
+        })
         return model;
     }
 
     createUnit(parent: string, depth: number): DSunit {
-        const unitName = this.createName(parent, "unit");
-        const dsPublics: DSpublic[] = [];
-        for (let i = 0; i < this.breadth; i++) {
-            dsPublics.push(this.createPublic(unitName, depth));
-        }
-        const dsPrivates: DSprivate[] = [];
-        for (let i = 0; i < this.breadth; i++) {
-            dsPrivates.push(this.createPrivate(unitName, depth));
-        }
-        return DSunit.create({ name: unitName, dsPublics: dsPublics, dsPrivates: dsPrivates });
+        let unit
+        AST.change( () => {
+            const unitName = this.createName(parent, "unit");
+            const dsPublics: DSpublic[] = [];
+            for (let i = 0; i < this.breadth; i++) {
+                dsPublics.push(this.createPublic(unitName, depth));
+            }
+            const dsPrivates: DSprivate[] = [];
+            for (let i = 0; i < this.breadth; i++) {
+                dsPrivates.push(this.createPrivate(unitName, depth));
+            }
+            unit = DSunit.create({ name: unitName, dsPublics: dsPublics, dsPrivates: dsPrivates });
+        })
+        return unit
     }
 
     createPublic(parent: string, depth: number): DSpublic {
-        const partName = this.createName(parent, "public");
-        const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, partName);
-        return DSpublic.create({ name: partName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
+        let pub
+        AST.change( () => {
+            const partName = this.createName(parent, "public");
+            const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, partName);
+            pub = DSpublic.create({ name: partName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
+        })
+        return pub
     }
 
     createPrivate(parentName: string, depth: number): DSprivate {

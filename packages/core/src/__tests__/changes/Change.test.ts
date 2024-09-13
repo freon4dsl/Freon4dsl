@@ -66,7 +66,6 @@ describe("Change and Undo Manager", () => {
 
     it("change, undo, redo, undo on prim", () => {
         // change the value of 'prim'
-        console.log("!")
         AST.change( () => {
             unit.prim = "nieuwe_waarde";
         })
