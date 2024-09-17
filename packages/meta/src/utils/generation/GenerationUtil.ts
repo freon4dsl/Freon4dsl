@@ -217,7 +217,7 @@ export class GenerationUtil {
     }
 
     /**
-     * Returns true if 'freClasssifier' has a property that respresents it name, i.e. a property
+     * Returns true if 'freClasssifier' has a property that represents it name, i.e. a property
      * that is called 'name' and has as type 'identifier'.
      * @param freClassifier
      */

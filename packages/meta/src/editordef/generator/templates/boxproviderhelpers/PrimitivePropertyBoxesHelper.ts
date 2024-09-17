@@ -100,7 +100,7 @@ export class PrimitivePropertyBoxesHelper {
         ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxFactory");
         ListUtil.addIfNotPresent(this._myTemplate.coreImports, "Box");
         // TODO Create Action for the role to actually add an element.
-        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-${roleDirection}", "",
+        return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-${roleDirection}", "${property.name}",
                             (${element}.${property.name}.map( (item, index)  =>
                                 ${this.singlePrimitivePropertyProjection(property, element, boolDisplayType, boolInfo)}
                             ) as Box[]).concat( [

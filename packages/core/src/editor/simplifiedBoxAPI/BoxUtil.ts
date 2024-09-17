@@ -23,6 +23,7 @@ import {
     NumberWrapperBox,
     PartListWrapperBox,
     PartWrapperBox,
+    ReferenceBox,
     RefListWrapperBox,
     RefWrapperBox,
     SelectBox,
@@ -159,31 +160,33 @@ export class BoxUtil {
     }
 
     /**
-     * Returns a LimitedControlBox to display the property named 'propertyName' of 'node' that is a single limited value,
-     * as a radio group control.
-     * Note that a single limited value can also be displayed as a reference box, which is handled in a
-     * different method of this class ('this.referenceBox(...)'). Which method needs to be chosen depends on the display
-     * type provided.
+     * Returns a box to display the property named 'propertyName' of 'node' that is a single limited value. If the
+     * display type is RADIO_GROUP then a LimitedControlBox is returned. If the display type is SELECT, then a
+     * SelectBox is returned.
      * @param node
      * @param propertyName
      * @param setFunc           a function to make a reference to a single limited value/instance
      * @param display
+     * @param scoper
+     * @param index
      */
     public static limitedBox(
         node: FreNode,
         propertyName: string,
         setFunc: (selected: string) => void,
         display: LimitedDisplay,
-    ): LimitedControlBox {
-        return UtilLimitedHelpers.limitedBox(node, propertyName, setFunc, display);
+        scoper?: FreScoper,
+        index?: number
+    ): LimitedControlBox | SelectBox {
+        return UtilLimitedHelpers.limitedBox(node, propertyName, setFunc, display, scoper, index);
     }
 
     /**
      * Returns a LimitedControlBox to display the property named 'propertyName' of 'node' that is a list of limited values,
      * as a checkbox control.
-     * Note that a list of limited values can also be displayed as a list of reference boxes, which is handled in a
-     * different method of this class ('this.referenceBox(...)'). Which method needs to be chosen depends on the display
-     * type provided.
+     * Note that a list of limited values can also be displayed as a list of reference boxes, which is handled in
+     * different methods of this class ('this.verticalReferenceListBox(...)' and 'this.horizontalReferenceListBox(...)').
+     * Which method needs to be chosen depends on the display type provided.
      * @param node
      * @param propertyName
      * @param setFunc           a function to make a reference to a single limited value/instance
@@ -267,7 +270,7 @@ export class BoxUtil {
         setFunc: (selected: string) => void,
         scoper: FreScoper,
         index?: number,
-    ): SelectBox {
+    ): ReferenceBox {
         return UtilRefHelpers.referenceBox(node, propertyName, setFunc, scoper, index);
     }
 
@@ -280,6 +283,7 @@ export class BoxUtil {
      * @param node
      * @param propertyName
      * @param scoper
+     * @param isLimited
      * @param listInfo
      * @param initializer
      */
@@ -287,10 +291,11 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         scoper: FreScoper,
+        isLimited: boolean,
         listInfo?: FreListInfo,
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
-        return UtilRefHelpers.verticalReferenceListBox(node, propertyName, scoper, listInfo, initializer);
+        return UtilRefHelpers.verticalReferenceListBox(node, propertyName, scoper, isLimited, listInfo, initializer);
     }
 
     /**
@@ -302,6 +307,7 @@ export class BoxUtil {
      * @param node
      * @param propertyName
      * @param scoper
+     * @param isLimited
      * @param listJoin
      * @param initializer
      */
@@ -309,10 +315,41 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         scoper: FreScoper,
+        isLimited: boolean,
         listJoin?: FreListInfo,
         initializer?: Partial<HorizontalListBox>,
     ): HorizontalListBox {
-        return UtilRefHelpers.horizontalReferenceListBox(node, propertyName, scoper, listJoin, initializer);
+        return UtilRefHelpers.horizontalReferenceListBox(node, propertyName, scoper, isLimited, listJoin, initializer);
+    }
+
+
+    /**
+     * Returns a textBox for a property named 'propertyName' within 'node', either the box that is already present in
+     * the 'boxProviderCache', or an ActionBox by means of which a new value for this property can be created. The 'conceptName'
+     * is needed to known what type of value needs to be created.
+     * @param node
+     * @param propertyName
+     * @param conceptName
+     * @param boxProviderCache
+     */
+    public static getBoxOrAction(
+        node: FreNode,
+        propertyName: string,
+        conceptName: string,
+        boxProviderCache: FreProjectionHandler,
+    ): Box {
+        // find the information on the property to be shown
+        const property = node[propertyName];
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName);
+        let result: Box = !!property
+            ? boxProviderCache.getBoxProvider(property).box
+            : BoxFactory.action(node, roleName, `<${propertyName}>`, {
+                propertyName: propertyName,
+                conceptName: conceptName,
+            });
+        result.propertyName = propertyName;
+        // result.propertyIndex = ??? todo
+        return result;
     }
 
     /**
@@ -364,35 +401,6 @@ export class BoxUtil {
             boxProviderCache,
             initializer,
         );
-    }
-
-    /**
-     * Returns a textBox for a property named 'propertyName' within 'node', either the box that is already present in
-     * the 'boxProviderCache', or an ActionBox by means of which a new value for this property can be created. The 'conceptName'
-     * is needed to known what type of value needs to be created.
-     * @param node
-     * @param propertyName
-     * @param conceptName
-     * @param boxProviderCache
-     */
-    public static getBoxOrAction(
-        node: FreNode,
-        propertyName: string,
-        conceptName: string,
-        boxProviderCache: FreProjectionHandler,
-    ): Box {
-        // find the information on the property to be shown
-        const property = node[propertyName];
-        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName);
-        let result: Box = !!property
-            ? boxProviderCache.getBoxProvider(property).box
-            : BoxFactory.action(node, roleName, `<${propertyName}>`, {
-                  propertyName: propertyName,
-                  conceptName: conceptName,
-              });
-        result.propertyName = propertyName;
-        // result.propertyIndex = ??? todo
-        return result;
     }
 
     // TODO get the role names correct in the following methods

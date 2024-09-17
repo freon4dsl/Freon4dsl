@@ -2,7 +2,7 @@ import { DemoModelCreator } from "./DemoModelCreator";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment";
 import { Demo, DemoModel } from "../language/gen";
 import { FileHandler } from "../../utils/FileHandler";
-import { describe, it, test, expect, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
 
 describe("Testing Parser", () => {
     beforeEach(() => {
@@ -29,7 +29,7 @@ describe("Testing Parser", () => {
         // }
         // do not unparse if there are more errors than the four custom ones
         if (errors.length === 4) {
-            // the custom validator adds 4 unneccessary errors
+            // the custom validator adds 4 unnecessary errors
             const path: string = "./unparsedDemoModel1.txt";
             const fileHandler = new FileHandler();
 

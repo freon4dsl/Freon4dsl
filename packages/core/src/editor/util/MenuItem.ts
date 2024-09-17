@@ -2,12 +2,16 @@ import { FreNode } from "../../ast";
 import { FreEditor } from "../FreEditor";
 
 export class MenuItem {
-    label: string; // the label shown in the menu
-    shortcut: string; // a keyboard shortcut, if available
-    subItems: MenuItem[] = []; // subitems to this menuItem, if any
-    handler: (element: FreNode, index: number, editor: FreEditor) => void; // the method that is called when this menu item is choosen
+    // The label shown in the menu
+    label: string;
+    // A keyboard shortcut, if available
+    shortcut: string;
+    // Subitems to this menuItem, if any
+    subItems: MenuItem[] = [];
+    // The method that is called when this menu item is chosen.
     // In the handler, sometimes we need to know the element, sometimes we need only the index of the element.
     // For sake of conformity, we always pass both parameters.
+    handler: (element: FreNode, index: number, editor: FreEditor) => void;
 
     constructor(
         label: string,

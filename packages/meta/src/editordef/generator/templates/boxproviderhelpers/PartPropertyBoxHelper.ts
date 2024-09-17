@@ -13,7 +13,7 @@ export class PartPropertyBoxHelper {
         language: FreMetaLanguage,
         appliedFeature: FreMetaConceptProperty,
         element: string,
-    ) {
+    ): string {
         const featureType = Names.classifier(appliedFeature.type);
         ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
         ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));

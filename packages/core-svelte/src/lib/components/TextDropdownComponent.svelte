@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { isNumber } from "lodash"
-
     // This component is a combination of a TextComponent and a DropdownComponent.
     // The TextComponent is shown in non-editable state until it gets focus,
     // then the Dropdown also appears. When the text in the TextComponent alters,
@@ -8,6 +6,7 @@
     // within the text.
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
+    import ArrowForward from "$lib/components/images/ArrowForward.svelte";
     import { clickOutsideConditional, componentId, selectedBoxes } from "./svelte-utils/index.js";
     import {
         type AbstractChoiceBox,
@@ -15,11 +14,16 @@
         ARROW_UP,
         ENTER,
         ESCAPE,
-        isSelectBox,
         FreEditor,
         FreLogger,
+        type FrePostAction,
+        isActionBox,
+        isRegExp,
+        isSelectBox,
+        isReferenceBox,
         type SelectOption,
-        TextBox, isRegExp, triggerTypeToString, isActionBox, type FrePostAction, FreCaretPosition, FreCaret
+        TextBox,
+        triggerTypeToString
     } from "@freon4dsl/core"
 
     import { runInAction } from "mobx"
@@ -35,7 +39,7 @@
     let id: string;                             // an id for the html element
     id = !!box ? componentId(box) : 'textdropdown-with-unknown-box';
     let isEditing: boolean = false;             // becomes true when the text field gets focus
-    let dropdownShown: boolean = false;         // when true the dropdwon element is shown
+    let dropdownShown: boolean = false;         // when true the dropdown element is shown
     let text: string = "";		                // the text in the text field
     let selectedId: string;		                // the id of the selected option in the dropdown
     let filteredOptions: SelectOption[];        // the list of filtered options that are shown in the dropdown
@@ -501,6 +505,18 @@
         endEditing();
     };
 
+    const selectReferred = (event) => {
+        if (isReferenceBox(box)) {
+            if (box.isSelectAble()) {
+                box.selectReferred(editor);
+            } else {
+                editor.setUserMessage("Cannot jump to this element.");
+            }
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    };
+
     refresh();
 
 </script>
@@ -534,6 +550,11 @@
                 bind:selectedId={selectedId}
                 bind:options={filteredOptions}
                 on:freItemSelected={itemSelected}/>
+    {/if}
+    {#if isReferenceBox(box) && box.isSelectAble()}
+        <button on:click={(event) => selectReferred(event)}>
+            <svelte:component this={ArrowForward} />
+        </button>
     {/if}
 </span>
 

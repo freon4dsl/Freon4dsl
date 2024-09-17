@@ -54,7 +54,7 @@ class FreNullCommand extends FreCommand {
     }
 }
 
-export const PI_NULL_COMMAND: FreCommand = new FreNullCommand();
+export const FRE_NULL_COMMAND: FreCommand = new FreNullCommand();
 
 export type FreBinaryExpressionBuilder = (box: Box, text: string, editor: FreEditor) => FreBinaryExpression;
 
