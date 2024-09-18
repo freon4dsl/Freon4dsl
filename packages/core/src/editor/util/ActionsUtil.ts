@@ -8,11 +8,11 @@ import { remove, union } from "lodash";
  */
 export class ActionsUtil {
     /**
-     * Join the actions, ensuring no duplicare triggers are in the result.
+     * Join the actions, ensuring no duplicate triggers are in the result.
      * If there is a duplicate trigger, the one in `newActions` will be used.
      *
      * @param defaultActions The first FreActions to join.
-     * @param newActions The ssecond FreActions to join.
+     * @param newActions The second FreActions to join.
      */
     static join(defaultActions: FreAction[], newActions: FreAction[]) {
         newActions.forEach((newA) => this.remove(defaultActions, newA));
