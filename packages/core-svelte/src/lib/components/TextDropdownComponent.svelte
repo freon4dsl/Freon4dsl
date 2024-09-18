@@ -1,4 +1,6 @@
 <script lang="ts">
+    import ButtonComponent from "$lib/components/ButtonComponent.svelte"
+
     // This component is a combination of a TextComponent and a DropdownComponent.
     // The TextComponent is shown in non-editable state until it gets focus,
     // then the Dropdown also appears. When the text in the TextComponent alters,
@@ -545,16 +547,16 @@
             on:endEditing={endEditing}
             on:onFocusOutText={onFocusOutText}
     />
-    {#if dropdownShown}
+    {#if isReferenceBox(box) && box.isSelectAble()}
+        <button class="reference-button" id="{id}" on:click={(event) => selectReferred(event)}>
+            <ArrowForward/>
+        </button>
+    {/if}
+      {#if dropdownShown}
         <DropdownComponent
                 bind:selectedId={selectedId}
                 bind:options={filteredOptions}
                 on:freItemSelected={itemSelected}/>
-    {/if}
-    {#if isReferenceBox(box) && box.isSelectAble()}
-        <button on:click={(event) => selectReferred(event)}>
-            <svelte:component this={ArrowForward} />
-        </button>
     {/if}
 </span>
 
