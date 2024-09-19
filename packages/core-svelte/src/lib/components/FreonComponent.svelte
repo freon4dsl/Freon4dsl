@@ -14,8 +14,8 @@
         ARROW_LEFT,
         DELETE,
         ENTER,
-        ARROW_RIGHT, isNullOrUndefined, isTableRowBox, isElementBox,
-    } from "@freon4dsl/core";
+        ARROW_RIGHT, isNullOrUndefined, isTableRowBox, isElementBox
+    } from "@freon4dsl/core"
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
     import { afterUpdate, onMount, tick } from "svelte";
@@ -161,7 +161,7 @@
 
     const refreshRootBox = (why?: string) => {
         rootBox = editor.rootBox;
-        LOGGER.log("REFRESH " + why + " ==================> FreonComponent with rootbox " + rootBox?.id);
+        LOGGER.log("REFRESH " + why + " ==================> FreonComponent with rootbox " + rootBox?.id + " unit " + (!!(rootBox?.node) ? rootBox.node["name"] : "undefined"));
     };
 
     refreshRootBox("Initialize FreonComponent");
