@@ -7,6 +7,8 @@ import * as path from "node:path"
 const storeFolder = "./modelstore";
 
 export class ModelRequests {
+    public static validate = false;
+    
     public static async putModelUnit(foldername: string, name: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
@@ -24,19 +26,21 @@ export class ModelRequests {
         try {
             this.checkStoreFolder();
             const result = fs.readFileSync(path.join(`${storeFolder}`, foldername, `${name}.json`))
-            const jsonObject = JSON.parse(result.toString())
-            // LOGGER.log(`jsonObject ${JSON.stringify(jsonObject)}`);
-            const chunk = jsonObject as LionWebJsonChunk;
-            const validator = new LionWebValidator(chunk, new LanguageRegistry())
-            validator.validateSyntax()
-            if (validator.validationResult.hasErrors()) {
-                console.error(issuestoString(validator.validationResult, name + ": lionweb-deserialize-syntax"))
+            if (ModelRequests.validate) {
+                const jsonObject = JSON.parse(result.toString())
+                // LOGGER.log(`jsonObject ${JSON.stringify(jsonObject)}`);
+                const chunk = jsonObject as LionWebJsonChunk;
+                const validator = new LionWebValidator(chunk, new LanguageRegistry())
+                validator.validateSyntax()
+                if (validator.validationResult.hasErrors()) {
+                    console.error(issuestoString(validator.validationResult, name + ": lionweb-deserialize-syntax"))
+                }
+                validator.validateReferences()
+                if (validator.validationResult.hasErrors()) {
+                    console.error(issuestoString(validator.validationResult, name + ": lionweb-deserialize-references"))
+                }
             }
-            validator.validateReferences()
-            if (validator.validationResult.hasErrors()) {
-                console.error(issuestoString(validator.validationResult, name + ": lionweb-deserialize-references"))
-            }
-            ctx.response.body = fs.readFileSync(path.join(`${storeFolder}`, foldername, `${name}.json`));
+            ctx.response.body = result;
         } catch (e) {
             console.log(e.message);
         }
