@@ -24,6 +24,7 @@ export class ButtonBox extends Box {
         // find the action to use based on the boxRole
         for (const action of editor.newFreActions) {
             if (action.activeInBoxRoles.includes(this.role)) {
+                // execute the action
                 let postAction: FrePostAction = null;
                 AST.change(() => {
                     const command = action.command();
@@ -35,7 +36,6 @@ export class ButtonBox extends Box {
                 return BehaviorExecutionResult.EXECUTED;
             }
         }
-        // execute the action
         // return the result
         LOGGER.log("Executing ButtonBox Action");
         return BehaviorExecutionResult.NULL;

@@ -28,6 +28,7 @@ import {
     AbstractExternalBox,
     ExternalPartListBox,
     isExternalPartListBox,
+    ReferenceBox,
 } from "./internal";
 
 type RoleCache<T extends Box> = {
@@ -48,6 +49,7 @@ let buttonCache: BoxCache<ButtonBox> = {};
 let numberCache: BoxCache<NumberControlBox> = {};
 let limitedCache: BoxCache<LimitedControlBox> = {};
 let selectCache: BoxCache<SelectBox> = {};
+let referenceCache: BoxCache<ReferenceBox> = {};
 // let indentCache: BoxCache<IndentBox> = {};
 let optionalCache: BoxCache<OptionalBox> = {};
 let optionalCache2: BoxCache<OptionalBox2> = {};
@@ -68,6 +70,7 @@ let cacheButtonOff: boolean = false;
 let cacheNumberOff: boolean = false;
 let cacheLimitedOff: boolean = false;
 let cacheSelectOff: boolean = false;
+let cacheReferenceOff: boolean = false;
 // let cacheIndentOff: boolean = false;
 // let cacheOptionalOff: boolean = false;
 let cacheHorizontalLayoutOff: boolean = false;
@@ -91,6 +94,7 @@ export class BoxFactory {
         numberCache = {};
         limitedCache = {};
         selectCache = {};
+        referenceCache = {};
         // indentCache = {};
         optionalCache = {};
         optionalCache2 = {};
@@ -113,6 +117,7 @@ export class BoxFactory {
         cacheNumberOff = true;
         cacheLimitedOff = true;
         cacheSelectOff = true;
+        cacheReferenceOff = true;
         // cacheIndentOff = true;
         // cacheOptionalOff = true;
         cacheHorizontalLayoutOff = true;
@@ -131,6 +136,7 @@ export class BoxFactory {
         cacheNumberOff = false;
         cacheLimitedOff = false;
         cacheSelectOff = false;
+        cacheReferenceOff = false;
         // cacheIndentOff = false;
         // cacheOptionalOff = false;
         cacheHorizontalLayoutOff = false;
@@ -435,6 +441,32 @@ export class BoxFactory {
         // 1. Create the select box, or find the one that already exists for this element and role
         const creator = () => new SelectBox(node, role, placeHolder, getOptions, getSelectedOption, selectOption);
         const result: SelectBox = this.find<SelectBox>(node, role, creator, selectCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.placeholder = placeHolder;
+        result.getOptions = getOptions;
+        result.getSelectedOption = getSelectedOption;
+        result.selectOption = selectOption;
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static reference(
+        node: FreNode,
+        role: string,
+        placeHolder: string,
+        getOptions: (editor: FreEditor) => SelectOption[],
+        getSelectedOption: () => SelectOption | null,
+        selectOption: (editor: FreEditor, option: SelectOption) => BehaviorExecutionResult,
+        initializer?: Partial<SelectBox>,
+    ): ReferenceBox {
+        if (cacheReferenceOff) {
+            return new ReferenceBox(node, role, placeHolder, getOptions, getSelectedOption, selectOption, initializer);
+        }
+        // 1. Create the select box, or find the one that already exists for this element and role
+        const creator = () => new ReferenceBox(node, role, placeHolder, getOptions, getSelectedOption, selectOption);
+        const result: ReferenceBox = this.find<ReferenceBox>(node, role, creator, referenceCache);
 
         // 2. Apply the other arguments in case they have changed
         result.placeholder = placeHolder;

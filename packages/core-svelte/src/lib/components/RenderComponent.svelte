@@ -21,13 +21,21 @@
         isSelectBox,
         isTextBox,
         isSvgBox,
+        isBooleanControlBox,
+        isNumberControlBox,
+        isElementBox,
+        isOptionalBox2,
+        isMultiLineTextBox,
+        isLimitedControlBox,
+        isButtonBox,
+        isExternalBox,
+        isFragmentBox,
+        isReferenceBox,
         FreEditor,
         FreLogger,
         Box,
-        BoolDisplay, isBooleanControlBox,
-        isNumberControlBox,
-        isElementBox, isOptionalBox2, isMultiLineTextBox,
-        isLimitedControlBox, LimitedDisplay, isButtonBox, isExternalBox, isFragmentBox
+        BoolDisplay,
+        LimitedDisplay
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "$lib/components/MultiLineTextComponent.svelte";
     import EmptyLineComponent from "$lib/components/EmptyLineComponent.svelte";
@@ -167,7 +175,7 @@
             <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
         {:else if isMultiLineTextBox(box) }
             <MultiLineTextComponent box={box} editor={editor} text=""/>
-        {:else if isActionBox(box) || isSelectBox(box)}
+        {:else if isActionBox(box) || isSelectBox(box) || isReferenceBox(box) }
             <TextDropdownComponent box={box} editor={editor}/>
         {:else if isEmptyLineBox(box) }
             <EmptyLineComponent box={box}/>

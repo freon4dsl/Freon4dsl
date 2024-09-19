@@ -3,7 +3,7 @@ import { AST } from "../../change-manager/index";
 import { isRegExp, isString, Box, FreEditor, FrePostAction, FreAction } from "../index";
 import { FreLogger } from "../../logging";
 
-const LOGGER = new FreLogger("BehaviorUtils");
+const LOGGER: FreLogger = new FreLogger("BehaviorUtils");
 
 export enum BehaviorExecutionResult {
     NULL,
@@ -116,7 +116,7 @@ export function executeSingleBehavior(
     if (!!execresult) {
         execresult();
 
-        // TODO The following ensured that the cursor gwets the correct focus after the change.  probably still needed.
+        // TODO The following ensured that the cursor gets the correct focus after the change.  probably still needed.
         // if (!!action.boxRoleToSelect) {
         //     editor.selectBoxByRoleAndElementId(execresult.freId(),action.boxRoleToSelect,action.caretPosition);
         // }else {

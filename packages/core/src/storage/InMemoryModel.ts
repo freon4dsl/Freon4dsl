@@ -31,6 +31,7 @@ export class InMemoryModel {
      * @param name
      */
     async createModel(name: string): Promise<FreModel> {
+        LOGGER.log(`createModel ${name}`)
         this.__model = this.languageEnvironment.newModel(name);
         await this.server.createModel(name);
         this.currentModelChanged();
@@ -82,6 +83,7 @@ export class InMemoryModel {
      * @param unitConcept
      */
     async createUnit(name: string, unitConcept: string): Promise<FreModelUnit> {
+        LOGGER.log(`createUnit ${name} of type ${unitConcept}`)
         const newUnit = this.model.newUnit(unitConcept);
         newUnit.name = name;
         await this.server.createModelUnit(this.model.name, newUnit);
@@ -113,6 +115,7 @@ export class InMemoryModel {
      * @param unit
      */
     async addUnit(unit: FreModelUnit): Promise<void> {
+        LOGGER.log(`addUnit ${unit?.name}`)
         AST.change( () => {
             this.model.addUnit(unit);
         })

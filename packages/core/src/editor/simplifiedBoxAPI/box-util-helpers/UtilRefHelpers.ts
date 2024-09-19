@@ -3,7 +3,8 @@ import {
     BoxFactory,
     ExternalRefListBox,
     HorizontalListBox,
-    SelectBox,
+    LimitedDisplay,
+    ReferenceBox,
     SelectOption,
     VerticalListBox,
 } from "../../boxes";
@@ -25,7 +26,7 @@ export class UtilRefHelpers {
         setFunc: (selected: string) => void,
         scoper: FreScoper,
         index?: number,
-    ): SelectBox {
+    ): ReferenceBox {
         const propType: string = FreLanguage.getInstance().classifierProperty(
             node.freLanguageConcept(),
             propertyName,
@@ -41,8 +42,9 @@ export class UtilRefHelpers {
             property = property[index];
         }
 
-        let result: SelectBox;
-        result = BoxFactory.select(
+        let result: ReferenceBox;
+        // Note that this code is exactly the same as the code for creating a select box
+        result = BoxFactory.reference(
             node,
             roleName,
             `<${propertyName}>`,
@@ -89,6 +91,7 @@ export class UtilRefHelpers {
         node: FreNode,
         propertyName: string,
         scoper: FreScoper,
+        isLimited: boolean,
         listInfo?: FreListInfo,
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
@@ -98,12 +101,13 @@ export class UtilRefHelpers {
         if (property !== undefined && propertyName !== null && isList && isPart === "reference") {
             // find the children to show in this listBox
             let children: Box[] = this.makeRefItems(
-                node,
-                property as FreNodeReference<FreNamedNode>[],
-                propertyName,
-                scoper,
-                listInfo,
-            );
+                    node,
+                    property as FreNodeReference<FreNamedNode>[],
+                    propertyName,
+                    isLimited,
+                    scoper,
+                    listInfo,
+                );
             // add a placeholder where a new element can be added
             children = UtilRefHelpers.addReferencePlaceholder(children, node, propertyName);
             // determine the role
@@ -125,6 +129,7 @@ export class UtilRefHelpers {
         node: FreNode,
         propertyName: string,
         scoper: FreScoper,
+        isLimited: boolean,
         listJoin?: FreListInfo,
         initializer?: Partial<HorizontalListBox>,
     ): HorizontalListBox {
@@ -138,6 +143,7 @@ export class UtilRefHelpers {
                 node,
                 property as FreNodeReference<FreNamedNode>[],
                 propertyName,
+                isLimited,
                 scoper,
                 listJoin,
             );
@@ -179,6 +185,7 @@ export class UtilRefHelpers {
                 node,
                 property as FreNodeReference<FreNamedNode>[],
                 propertyName,
+                false,
                 scoper,
             );
             // determine the role
@@ -221,6 +228,7 @@ export class UtilRefHelpers {
         element: FreNode,
         properties: FreNodeReference<FreNamedNode>[],
         propertyName: string,
+        asSelect: boolean,
         scoper: FreScoper,
         listJoin?: FreListInfo,
     ): Box[] {
@@ -237,35 +245,14 @@ export class UtilRefHelpers {
                 listElem.name = selected;
                 return BehaviorExecutionResult.EXECUTED;
             };
-            const innerBox: Box = BoxUtil.referenceBox(element, propertyName, setFunc, scoper, index);
+            let innerBox: Box;
+            if (asSelect) {
+                innerBox = BoxUtil.limitedBox(element, propertyName, setFunc, LimitedDisplay.SELECT, scoper, index);
+            } else {
+                innerBox = BoxUtil.referenceBox(element, propertyName, setFunc, scoper, index);
+            }
             if (listJoin !== null && listJoin !== undefined) {
-                if (listJoin.type === UtilCommon.separatorName) {
-                    if (index < numberOfItems - 1) {
-                        result.push(
-                            BoxFactory.horizontalList(element, roleName, propertyName, [
-                                innerBox,
-                                BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                            ]),
-                        );
-                    } else {
-                        result.push(innerBox);
-                    }
-                } else if (listJoin.type === UtilCommon.terminatorName) {
-                    result.push(
-                        BoxFactory.horizontalList(element, roleName, propertyName, [
-                            innerBox,
-                            BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                        ]),
-                    );
-                } else if (listJoin.type === UtilCommon.initiatorName) {
-                    // TODO test this code
-                    result.push(
-                        BoxFactory.horizontalList(element, roleName, propertyName, [
-                            BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
-                            innerBox,
-                        ]),
-                    );
-                }
+                result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, element, roleName, propertyName, innerBox));
             } else {
                 result.push(innerBox);
             }

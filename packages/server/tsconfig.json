@@ -2,7 +2,7 @@
   "extends": "../../tsconfig-base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "target": "es2017",
+    "target": "es2021",
     "declaration": true,
     "downlevelIteration": true,
     "declarationMap": true,
@@ -15,7 +15,7 @@
       "es6",
       "es2016.array.include"
     ],
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "newLine": "lf",
     "noEmit": false,

@@ -5,6 +5,7 @@
     "access": "public"
   },
   "license": "MIT",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/freon4dsl/Freon4dsl"
@@ -17,7 +18,7 @@
   "scripts": {
     "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
-    "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server/server-starter.ts",
+    "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec node ./dist/server/server-starter.js",
     "build": "tsc --build",
     "build-dev": "tsc --build",
     "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
@@ -35,6 +36,7 @@
   },
   "dependencies": {
     "@types/koa": "^2.13.4",
+    "@lionweb/validation": "^0.6.3",
     "koa": "2.13.1",
     "koa-bodyparser": "4.3.0",
     "koa-router": "10.0.0",

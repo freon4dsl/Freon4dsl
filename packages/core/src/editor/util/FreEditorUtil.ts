@@ -1,6 +1,6 @@
 import { AST } from "../../change-manager/index";
 import { FreLogger } from "../../logging";
-import { Box, PI_NULL_COMMAND, FreCommand, FreEditor } from "../index";
+import { Box, FRE_NULL_COMMAND, FreCommand, FreEditor } from "../index";
 import { FreExpressionNode } from "../../ast";
 import { isFreExpression } from "../../ast-utils";
 import { isProKey, FreTriggerUse } from "../actions";
@@ -69,7 +69,7 @@ export class FreEditorUtil {
                 }
             }
         }
-        return PI_NULL_COMMAND;
+        return FRE_NULL_COMMAND;
     }
 }
 

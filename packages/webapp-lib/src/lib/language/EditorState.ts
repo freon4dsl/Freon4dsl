@@ -1,5 +1,5 @@
 // This file contains all methods to connect the webapp to the Freon generated language editorEnvironment and to the server that stores the models
-import { AST, FreError, FreErrorSeverity, FreLogger, FreUndoManager, InMemoryModel } from "@freon4dsl/core";
+import { BoxFactory, FreError, FreErrorSeverity, FreLogger, InMemoryModel } from "@freon4dsl/core"
 import type {
     FreEnvironment,
     FreNode,
@@ -105,6 +105,8 @@ export class EditorState {
                     first = false;
                 }
             }
+            BoxFactory.clearCaches()
+            this.langEnv.projectionHandler.clear()
             EditorState.getInstance().showUnitAndErrors(this.currentUnit);
         } else {
             editorProgressShown.set(false);

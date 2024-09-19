@@ -1,4 +1,4 @@
-import { FreEditor } from "../editor";
+import { FreEditor, FreProjectionHandler } from "../editor"
 import { FreInterpreter } from "../interpreter";
 import { FreValidator } from "../validator";
 import { FreScoperComposite } from "../scoper";
@@ -21,6 +21,7 @@ export interface FreEnvironment {
     writer: FreWriter;
     reader: FreReader;
     interpreter: FreInterpreter;
+    projectionHandler: FreProjectionHandler;
 
     languageName: string;
     fileExtensions: Map<string, string>;

@@ -26,23 +26,23 @@ export class ConceptTemplate {
 
     private generateConceptPrivate(concept: FreMetaConcept): string {
         // const language = concept.language;
-        const myName = Names.concept(concept);
-        const hasSuper = !!concept.base;
-        const hasReferences = concept.implementedReferences().length > 0;
-        const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
-        const isAbstract = concept.isAbstract;
-        const isExpression =
+        const myName: string = Names.concept(concept);
+        const hasSuper: boolean = !!concept.base;
+        const hasReferences: boolean = concept.implementedReferences().length > 0;
+        const extendsClass: string = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
+        const isAbstract: boolean = concept.isAbstract;
+        const isExpression: boolean =
             concept instanceof FreMetaBinaryExpressionConcept || concept instanceof FreMetaExpressionConcept;
-        const abstract = concept.isAbstract ? "abstract" : "";
-        const hasName = concept.implementedPrimProperties().some((p) => p.name === "name");
-        const implementsFre = isExpression ? Names.FreExpressionNode : hasName ? Names.FreNamedNode : Names.FreNode;
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
+        const abstract: string = concept.isAbstract ? "abstract" : "";
+        const hasName: boolean = concept.implementedPrimProperties().some((p) => p.name === "name");
+        const implementsFre: string = isExpression ? Names.FreExpressionNode : hasName ? Names.FreNamedNode : Names.FreNode;
+        const coreImports: string[] = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .concat(implementsFre)
             .concat([Names.FreParseLocation])
             .concat(hasReferences ? Names.FreNodeReference : "");
-        const metaType = Names.metaType();
-        const modelImports = this.findModelImports(concept, myName);
-        const intfaces = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
+        const metaType: string = Names.metaType();
+        const modelImports: string[] = this.findModelImports(concept, myName);
+        const interfaces: string[] = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
@@ -51,7 +51,7 @@ export class ConceptTemplate {
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
              * to the changes in the state of its properties.
              */
-            export ${abstract} class ${myName} extends ${extendsClass} implements ${implementsFre}${intfaces.map((imp) => `, ${imp}`).join("")}
+            export ${abstract} class ${myName} extends ${extendsClass} implements ${implementsFre}${interfaces.map((imp) => `, ${imp}`).join("")}
             {
                 ${!isAbstract ? `${ConceptUtils.makeStaticCreateMethod(concept, myName)}` : ""}
 
@@ -173,22 +173,21 @@ export class ConceptTemplate {
             ${result}`;
     }
 
-    // the folowing template is based on assumptions about a limited concept.
+    // the following template is based on assumptions about a limited concept.
     // a limited does not have any non-prim properties
     // a limited does not have any references
     private generateLimited(concept: FreMetaLimitedConcept): string {
-        // const language = concept.language;
-        const myName = Names.concept(concept);
-        const hasSuper = !!concept.base;
-        const extendsClass = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
-        const abstract = concept.isAbstract ? "abstract" : "";
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([
+        const myName: string = Names.concept(concept);
+        const hasSuper: boolean = !!concept.base;
+        const extendsClass: string = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
+        const abstract: string = concept.isAbstract ? "abstract" : "";
+        const coreImports: string[] = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([
             Names.FreNamedNode,
             Names.FreParseLocation,
         ]);
-        const metaType = Names.metaType();
-        const imports = this.findModelImports(concept, myName);
-        const intfaces = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
+        const metaType: string = Names.metaType();
+        const imports: string[] = this.findModelImports(concept, myName);
+        const intfaces: string[] = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `

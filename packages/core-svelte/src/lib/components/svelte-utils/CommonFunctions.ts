@@ -26,8 +26,7 @@ export function focusAndScrollIntoView(element: HTMLElement) {
 
 export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: FreEditor) {
     const cmd: FreCommand = FreEditorUtil.findKeyboardShortcutCommand(toFreKey(event), box, editor);
-    LOGGER.log("executeCustomKeyboardShortCut cmd: " + (cmd !== PI_NULL_COMMAND))
-    if (cmd !== PI_NULL_COMMAND) {
+    if (cmd !== FRE_NULL_COMMAND) {
         let postAction: FrePostAction;
         AST.change(() => {
             // todo KeyboardEvent does not have an "action" prop, so what is happening here?

@@ -20,23 +20,25 @@ export class ListPropertyBoxHelper {
         listJoin: FreEditListInfo,
         reference: FreMetaConceptProperty,
         element: string,
-    ) {
+        isLimited: boolean
+    ): string {
         ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
         ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));
         const joinEntry = this.getJoinEntry(listJoin);
         if (listJoin.direction === FreEditProjectionDirection.Vertical) {
-            return `BoxUtil.verticalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
+            return `BoxUtil.verticalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${isLimited}, ${joinEntry})`;
         } // else
-        return `BoxUtil.horizontalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
+        return `BoxUtil.horizontalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${isLimited}, ${joinEntry})`;
     }
 
-    public getJoinEntry(listJoin: FreEditListInfo) {
+    public getJoinEntry(listJoin: FreEditListInfo): string {
         let joinEntry: string = `{ text:"${listJoin.joinText}", type:"${listJoin.joinType}" }`;
         if (listJoin.joinType === ListJoinType.NONE || !(listJoin.joinText?.length > 0)) {
             joinEntry = "null";
         }
         return joinEntry;
     }
+
     /**
      * generate the part list
      *
