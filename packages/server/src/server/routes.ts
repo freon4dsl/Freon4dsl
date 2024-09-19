@@ -1,6 +1,6 @@
 import Router from "koa-router";
 
-import { ModelRequests } from "./ModelRequests";
+import { ModelRequests } from "./ModelRequests.js";
 
 const router = new Router();
 
