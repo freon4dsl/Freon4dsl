@@ -2,7 +2,7 @@ import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import cors from "koa2-cors";
 
-import { routes } from "./routes";
+import { routes } from "./routes.js";
 
 export const app = new Koa();
 

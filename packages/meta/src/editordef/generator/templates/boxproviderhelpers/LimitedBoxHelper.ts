@@ -11,16 +11,15 @@ export class LimitedBoxHelper {
     private stdLimitedListDisplayType: string = "text";
     private _myTemplate: BoxProviderTemplate;
     private _myListPropHelper: ListPropertyBoxHelper;
-    private readonly _myPartPropHelper: PartPropertyBoxHelper;
 
     constructor(
         myTemplate: BoxProviderTemplate,
         myListPropHelper: ListPropertyBoxHelper,
+        //@ts-ignore todo remove
         myPartPropHelper: PartPropertyBoxHelper,
     ) {
         this._myTemplate = myTemplate;
         this._myListPropHelper = myListPropHelper;
-        this._myPartPropHelper = myPartPropHelper;
     }
 
     public setGlobals(defProjGroup: FreEditProjectionGroup) {
@@ -61,26 +60,27 @@ export class LimitedBoxHelper {
                         listInfo,
                         property,
                         elementVarName,
+                        true
                     );
                 }
             }
         } else {
             if (displayType === "radio" || this.stdLimitedListDisplayType === "radio") {
                 // use limited control
-                result += this.generateLimitedSingleProjection(property, elementVarName, "radio");
+                result += this.generateSingleRadioProjection(property, elementVarName, "radio");
             } else {
                 // make 'normal' reference
-                result += this._myPartPropHelper.generateReferenceProjection(language, property, elementVarName);
+                result += this.generateSingleSelectProjection(language, property, elementVarName);
             }
         }
         return result;
     }
 
-    private generateLimitedSingleProjection(
+    private generateSingleRadioProjection(
         appliedFeature: FreMetaConceptProperty,
         element: string,
         displayType: string,
-    ) {
+    ): string {
         const featureType: string = Names.classifier(appliedFeature.type);
         ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
         ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [
@@ -104,6 +104,26 @@ export class LimitedBoxHelper {
                )`;
     }
 
+    private generateSingleSelectProjection(
+        language: FreMetaLanguage,
+        appliedFeature: FreMetaConceptProperty,
+        element: string,
+    ): string {
+        const featureType: string = Names.classifier(appliedFeature.type);
+        ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
+        ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));
+        ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [Names.FreNodeReference, "BoxUtil", "LimitedDisplay"]);
+        return `BoxUtil.limitedBox(
+                                ${element},
+                                "${appliedFeature.name}",
+                                (selected: string) => {
+                                    ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
+                                               selected, "${featureType}" );
+                                },
+                                LimitedDisplay.SELECT,
+                                ${Names.environment(language)}.getInstance().scoper
+               )`;
+    }
     private generateLimitedListProjection(
         appliedFeature: FreMetaConceptProperty,
         element: string,

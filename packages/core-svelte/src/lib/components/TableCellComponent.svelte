@@ -91,12 +91,14 @@
 
     onMount(() => {
         box.refreshComponent = refresh;
+        box.setFocus = setFocus;
         row = box.row;
         column = box.column;
     });
 
     afterUpdate(() => {
         box.refreshComponent = refresh;
+        box.setFocus = setFocus;
         // selection is handled here because TableCells are not included in the RenderComponent
         let isSelected: boolean = $selectedBoxes.includes(box);
         cssClass = (isSelected ? "table-cell-component-selected" : "table-cell-component-unselected");

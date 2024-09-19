@@ -235,7 +235,7 @@
     padding: 0px;
     margin: 1px;
     line-height: 6px;
-    width: 100%;
+    /*width: 100%;*/
     box-sizing: border-box;
     border: none;
 }
@@ -244,7 +244,7 @@
     padding: 0px;
     margin: 1px;
     line-height: 6px;
-    width: 100%;
+    /*width: 100%;*/
     white-space: normal;
     display: inline-block;
 }
@@ -480,4 +480,16 @@
     justify-self: baseline;
     display: flex;
     margin: 1px;
+}
+
+.reference-button {
+    background-color: transparent;
+    border: none;
+    height: 12px;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 16px;
+}
+.reference-arrow {
+    height: 12px;
 }

@@ -42,6 +42,7 @@ export class ConceptUtils {
             return "";
         }
     }
+
     private static initializer(freProp: FreMetaPrimitiveProperty): string {
         let initializer = "";
         const myType: FreMetaClassifier = freProp.type;
@@ -124,7 +125,8 @@ export class ConceptUtils {
                     }
                 }
                 return result;
-            }`;
+            }
+            `;
                 }
             }
         }

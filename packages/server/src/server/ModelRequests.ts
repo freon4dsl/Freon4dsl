@@ -1,10 +1,14 @@
+import { issuestoString, LanguageRegistry, LionWebJsonChunk, LionWebValidator } from "@lionweb/validation"
 import * as fs from "fs";
 import { IRouterContext } from "koa-router";
-var path = require("path");
+import * as path from "node:path"
+// var path = require("path");
 
 const storeFolder = "./modelstore";
 
 export class ModelRequests {
+    public static validate = false;
+    
     public static async putModelUnit(foldername: string, name: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
@@ -21,7 +25,22 @@ export class ModelRequests {
     public static async getModelUnit(foldername: string, name: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            ctx.response.body = fs.readFileSync(path.join(`${storeFolder}`, foldername, `${name}.json`));
+            const result = fs.readFileSync(path.join(`${storeFolder}`, foldername, `${name}.json`))
+            if (ModelRequests.validate) {
+                const jsonObject = JSON.parse(result.toString())
+                // LOGGER.log(`jsonObject ${JSON.stringify(jsonObject)}`);
+                const chunk = jsonObject as LionWebJsonChunk;
+                const validator = new LionWebValidator(chunk, new LanguageRegistry())
+                validator.validateSyntax()
+                if (validator.validationResult.hasErrors()) {
+                    console.error(issuestoString(validator.validationResult, name + ": lionweb-deserialize-syntax"))
+                }
+                validator.validateReferences()
+                if (validator.validationResult.hasErrors()) {
+                    console.error(issuestoString(validator.validationResult, name + ": lionweb-deserialize-references"))
+                }
+            }
+            ctx.response.body = result;
         } catch (e) {
             console.log(e.message);
         }

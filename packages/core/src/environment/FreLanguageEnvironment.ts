@@ -36,6 +36,7 @@ export class FreLanguageEnvironment implements FreEnvironment {
     public validator: FreValidator;
     public writer: FreWriter;
     public interpreter: FreInterpreter;
+    public projectionHandler: FreProjectionHandler;
 
     // @ts-ignore
     // function needs to be implemented because it is part of the interface FreEnvironment

@@ -48,8 +48,8 @@ export class FreEditor {
     private _rootElement: FreNode = null; // The model element to be shown in this editor.
     private _rootBox: Box | null = null; // The box that is defined for the _rootElement. Note that it is a 'slave' to _rootElement.
     private _selectedElement: FreNode = null; // The model element, or the parent element of the property, that is currently selected in the editor.
-    private _selectedProperty: string = ""; // The property that is currectly selected in the editor, if applicable.
-    private _selectedIndex: number = -1; // The index within the property that is currectly selected in the editor, if applicable.
+    private _selectedProperty: string = ""; // The property that is currently selected in the editor, if applicable.
+    private _selectedIndex: number = -1; // The index within the property that is currently selected in the editor, if applicable.
     private _selectedBox: Box | null = null; // The box defined for _selectedElement. Note that it is a 'slave' to _selectedElement.
     private _selectedPosition: FreCaret = FreCaret.UNSPECIFIED; // The caret position within the _selectedBox.
     private NOSELECT: Boolean = false; // Do not accept "select" actions, used e.g. when an undo is going to come.
@@ -98,7 +98,7 @@ export class FreEditor {
     }
 
     auto = () => {
-        // console.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept());
+        LOGGER.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " name " + (!!this.rootElement ? this.rootElement["name"] : "undefined"));
         if (this.rootElement !== null) {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
