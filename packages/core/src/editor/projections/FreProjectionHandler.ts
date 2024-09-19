@@ -58,6 +58,13 @@ export class FreProjectionHandler {
         });
     }
 
+    /**
+     * Clears the element provider map, needed whenever a new model is opened
+     */
+    clear(): void {
+        this.elementToProvider.clear()
+    }
+
     /////////// The main methods ///////////
 
     /**

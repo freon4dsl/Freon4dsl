@@ -63,6 +63,7 @@ export class EnvironmentTemplate {
                 initializeEditorDef();
                 initializeScoperDef(this.scoper);
                 initializeTypers(this.typer);
+                this.projectionHandler = myComposite;
             }
 
             /**
@@ -84,6 +85,7 @@ export class EnvironmentTemplate {
             writer: ${Names.FreWriter} = new ${Names.writer(language)}();
             reader: ${Names.FreReader} = new ${Names.reader(language)}();
             interpreter: ${Names.FreInterpreter} = new ${Names.interpreterName(language)};
+            projectionHandler: FreProjectionHandler;
             languageName: string = "${language.name}";
             fileExtensions: Map<string, string> = new Map([
                 ${language.modelConcept.unitTypes().map((unit) => `["${Names.classifier(unit)}", "${unit.fileExtension}"]`)}
