@@ -55,6 +55,7 @@
     import { selectedBoxes, componentId, setBoxSizes, findCustomComponent} from "$lib/index.js";
 
     import {afterUpdate} from "svelte";
+    import ErrorTooltip from "$lib/components/ErrorTooltip.svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -65,6 +66,8 @@
     let selectedCls: string = '';   // css class name for when the node is selected
     let errorCls: string = '';      // css class name for when the node is erroneous
     let element: HTMLElement;
+    let errMess: string = '';       // error message to be shown when element is hovered
+    let hasErr: boolean = false;    // indicates whether this box has errors
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log("RenderComponent.onClick for box " + box.role + ", selectable:" + box.selectable);
@@ -95,6 +98,15 @@
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH RenderComponent (" + why + ")");
         id = !!box? `render-${componentId(box)}` : 'render-for-unknown-box';
+        if (box.hasError) {
+            errorCls = "render-component-error";
+            errMess = box.errorMessage;
+            hasErr = true;
+        } else {
+            errorCls = "";
+            errMess = "";
+            hasErr = false;
+        }
     };
 
     let first = true;
@@ -102,9 +114,6 @@
         refresh((first ? "first" : "later") + "   " + box?.id);
         first = false;
     // }
-
-    errorCls = (box.hasError ? "render-component-error" : "");
-
 </script>
 
 <!-- TableRows are not included here, because they use the CSS grid and table cells must in HTML
@@ -117,6 +126,7 @@
     <ElementComponent box={box} editor={editor}/>
 {:else}
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
+    <ErrorTooltip content={errMess} hasErr={hasErr}>
     <span id={id}
           class="render-component {errorCls} {selectedCls} "
           on:click={onClick}
@@ -180,5 +190,6 @@
             <p class="render-component-unknown-box">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
         {/if}
     </span>
+    </ErrorTooltip>
 {/if}
 

@@ -22,7 +22,8 @@ export abstract class Box {
     // todo because most boxes are not selectable the default could be set to false
     isVisible: boolean = true; // Is this box currently not shown in the editor?
     parent: Box = null;
-    protected __hasError: boolean = false;
+    protected _hasError: boolean = false;
+    protected _errorMessage: string = '';
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
 
@@ -41,7 +42,7 @@ export abstract class Box {
      * If the node displayed in this box is erroneous, this getter returns true.
      */
     get hasError(): boolean {
-        return this.__hasError;
+        return this._hasError;
     }
 
     /**
@@ -50,9 +51,17 @@ export abstract class Box {
      * @param val
      */
     set hasError(val: boolean) {
-        this.__hasError = val;
+        this._hasError = val;
         console.log("DIRTYYYYYYYYYYYY")
         this.isDirty();
+    }
+
+    get errorMessage(): string {
+        return this._errorMessage;
+    }
+
+    set errorMessage(val: string) {
+        this._errorMessage = val;
     }
 
     // Never set these manually, these properties are set after rendering to get the

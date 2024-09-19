@@ -25,27 +25,27 @@ export class FreErrorDecorator {
         this.previousList.forEach(err => {
             if (Array.isArray(err.reportedOn)) {
                 err.reportedOn.forEach((x, index) => {
-                    this.setErrorForNode(false, x, err.propertyName, index);
+                    this.setErrorForNode(false, x, '', err.propertyName, index);
                 })
             } else {
-                this.setErrorForNode(false, err.reportedOn, err.propertyName);
+                this.setErrorForNode(false, err.reportedOn, '', err.propertyName);
             }
         });
         // set the new errors
         list.forEach(err => {
             if (Array.isArray(err.reportedOn)) {
                 err.reportedOn.forEach((x, index) => {
-                    this.setErrorForNode(true, x, err.propertyName, index);
+                    this.setErrorForNode(true, x, err.message, err.propertyName, index);
                 })
             } else {
-                this.setErrorForNode(true, err.reportedOn, err.propertyName);
+                this.setErrorForNode(true, err.reportedOn, err.message, err.propertyName);
             }
         });
         // remember the errors
         this.previousList = list;
     }
 
-    private setErrorForNode(value: boolean, node: FreNode, propertyName?: string, propertyIndex?: number) {
+    private setErrorForNode(value: boolean, node: FreNode, errorMessage: string, propertyName?: string, propertyIndex?: number) {
         LOGGER.log(
             `setErrorOnElement ${node?.freLanguageConcept()} with id ${node?.freId()}, property: [${propertyName}, ${propertyIndex}]`
         );
@@ -57,6 +57,7 @@ export class FreErrorDecorator {
             }
             console.log(`${value ? `SETTING` : `REMOVING`} error for ${box.role} ${box.kind}`)
             box.hasError = value;
+            box.errorMessage = errorMessage;
         }
     }
 }
