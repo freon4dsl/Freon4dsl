@@ -16,7 +16,7 @@ import type { FreNode } from "@freon4dsl/core";
 import {
     activeTab,
     errorsLoaded,
-    errorTab,
+    errorTab, modelErrors,
     searchResultLoaded,
     searchResults,
     searchTab,
@@ -40,8 +40,8 @@ export class EditorRequestsHandler {
     private langEnv: FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
 
     /**
-     * Makes sure that the editor show the current unit using the projections selected by the user
-     * @param name
+     * Makes sure that the editor shows the current unit using the projections selected by the user
+     * @param names
      */
     enableProjections(names: string[]): void {
         LOGGER.log("enabling Projection " + names);
@@ -52,8 +52,10 @@ export class EditorRequestsHandler {
         // Let the editor know that the projections have changed.
         // TODO rootBoxChanged should NOT be called from outside FreEditor.
         // this.langEnv.editor.rootBoxChanged();
-        // TODO: Shoukd this become mobx enabled, or staay like this?
+        // TODO: Should this become mobx enabled, or stay like this?
         this.langEnv.editor.auto();
+        // redo the validation to set the errors in the new box tree
+        this.validate();
     }
 
     /**
@@ -168,6 +170,9 @@ export class EditorRequestsHandler {
         activeTab.set(errorTab);
         EditorState.getInstance().getErrors();
         errorsLoaded.set(true);
+        if (!!modelErrors[0]) {
+            EditorState.getInstance().selectElement(modelErrors[0].reportedOn);
+        }
     }
 
     findText(stringToFind: string) {

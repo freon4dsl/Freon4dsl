@@ -44,6 +44,11 @@ export abstract class AbstractChoiceBox extends Box {
         return this._textBox;
     }
 
+    set hasError(val: boolean) {
+        this.__hasError = val;
+        this._textBox.hasError = val;
+    }
+
     getSelectedOption(): SelectOption | null {
         return null;
     }

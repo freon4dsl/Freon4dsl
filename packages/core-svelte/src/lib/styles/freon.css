@@ -378,8 +378,6 @@
     box-sizing: border-box;
     display: flex;
 }
-.render-component-error {
-}
 .render-component-unselected {
     border: none;
 }

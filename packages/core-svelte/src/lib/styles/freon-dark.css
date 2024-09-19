@@ -233,11 +233,16 @@ dropdown-component {
 
 .render-component {
 }
-.render-component-error {
+.render-component-unknown-box {
     color: red;
 }
+.render-component-error {
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: red;
+}
 .render-component-unselected {
-    background: transparent;
+    /*background-color: transparent;*/
 }
 .render-component-selected {
     outline-color: whitesmoke;

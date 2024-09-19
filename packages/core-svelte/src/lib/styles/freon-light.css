@@ -31,7 +31,11 @@
 }
 
 .layout-component-vertical {
-    /*width: 100%;*/
+}
+
+.layout-component-vertical-error {
+    border-left: 2px solid red;
+    height: 100%;
 }
 
 .limited-checkbox-component-group {
@@ -138,6 +142,11 @@
     color: blue;
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
+.text-component-text-error {
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: red;
+}
 
 .text-component-placeholder {
     color: blue;
@@ -227,11 +236,12 @@
 
 .render-component {
 }
-.render-component-error {
+.render-component-unknown-box {
     color: red;
 }
+
 .render-component-unselected {
-    background: transparent;
+    /*background-color: transparent;*/
 }
 .render-component-selected {
     outline-color: darkblue;

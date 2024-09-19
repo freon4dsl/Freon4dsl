@@ -341,6 +341,7 @@ export class EditorState {
         if (!!this.currentUnit) {
             try {
                 const list = this.langEnv.validator.validate(this.currentUnit);
+                WebappConfigurator.getInstance().editorEnvironment.editor.setErrors(list);
                 modelErrors.set(list);
             } catch (e: unknown) {
                 // catch any errors regarding erroneously stored model units

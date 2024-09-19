@@ -26,6 +26,7 @@
     let element: HTMLSpanElement;
     let children: Box[];
     let isHorizontal: boolean;
+    let errorCls: string = '';
 
     async function setFocus(): Promise<void> {
         if (!!element) {
@@ -48,13 +49,18 @@
         id = !!box ? componentId(box) : 'layout-for-unknown-box';
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
+        errorCls = !isHorizontal && box.hasError ? 'layout-component-vertical-error' : 'noClass';
+        if (errorCls.length > 0 && errorCls !== 'noClass') {
+            console.log("REFRESH LayoutComponent (" + why + ")" + box?.node?.freLanguageConcept() + ", err: " + errorCls);
+        }
     };
+
     $: { // Evaluated and re-evaluated when the box changes.
         refresh("Refresh Layout box changed " + box?.id);
     }
 </script>
 
-<span class="layout-component"
+<span class="layout-component {errorCls}"
       id="{id}"
       class:layout-component-horizontal="{isHorizontal}"
       class:layout-component-vertical="{!isHorizontal}"

@@ -62,7 +62,8 @@
     export let editor: FreEditor;
 
     let id: string;
-    let className: string = '';
+    let selectedCls: string = '';   // css class name for when the node is selected
+    let errorCls: string = '';      // css class name for when the node is erroneous
     let element: HTMLElement;
 
     const onClick = (event: MouseEvent) => {
@@ -81,7 +82,7 @@
         if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected
         } else {
-            className = (isSelected ? "render-component-selected" : "render-component-unselected");
+            selectedCls = (isSelected ? "render-component-selected" : "render-component-unselected");
         }
         if (!!element) { // upon initialization the element might be null
             setBoxSizes(box, element.getBoundingClientRect());
@@ -89,6 +90,7 @@
             LOGGER.log('No element for ' + box?.id + ' ' + box?.kind);
         }
     });
+
     // todo test GridComponent
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH RenderComponent (" + why + ")");
@@ -100,6 +102,8 @@
         refresh((first ? "first" : "later") + "   " + box?.id);
         first = false;
     // }
+
+    errorCls = (box.hasError ? "render-component-error" : "");
 
 </script>
 
@@ -114,7 +118,7 @@
 {:else}
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
     <span id={id}
-          class="render-component {className}"
+          class="render-component {errorCls} {selectedCls} "
           on:click={onClick}
           bind:this={element}
           role="group"
@@ -173,7 +177,7 @@
             <EmptyLineComponent box={box}/>
         {:else}
             <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
-            <p class="render-component-error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
+            <p class="render-component-unknown-box">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
         {/if}
     </span>
 {/if}

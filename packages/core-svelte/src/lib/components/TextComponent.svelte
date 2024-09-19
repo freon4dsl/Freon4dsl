@@ -34,6 +34,7 @@
 
 	import { runInAction } from "mobx";
 	import { replaceHTML } from "./svelte-utils/index.js";
+	import {errorClass} from "@freon4dsl/meta/dist/utils/index.js";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
 	const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -58,6 +59,7 @@
 	let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
 	let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
 	let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
+	let errorCls: string = '';				// style when node in box has error(s)
 	// Note that 'from <= to' always holds.
 	let placeHolderStyle: string;
 	$: placeHolderStyle = (partOfActionBox ? "text-component-action-placeholder" : "text-component-placeholder");
@@ -437,10 +439,11 @@
 	const refresh = () => {
 		LOGGER.log(`${id}: REFRESH  ${id} (${box?.node?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
 		placeholder = box.placeHolder;
-		// If being edited, do not set the value, let the user type whatever (s)he wants
-		// if (!isEditing) {
 		text = box.getText();
-		// }
+		errorCls = box.hasError ? 'text-component-text-error' : 'noClass';
+		if (errorCls.length > 0 && errorCls !== 'noClass') {
+			console.log("REFRESH TextComponent " + box?.node?.freLanguageConcept() + ", err: " + errorCls);
+		}
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
 		setInputWidth();
 	}
@@ -564,7 +567,7 @@
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 <span on:click={onClick} id="{id}" role="none">
 	{#if isEditing}
-		<span class="text-component-input">
+		<span class="text-component-input {errorCls}">
 			<input type="text"
 				   class="text-component-input"
 				   id="{id}-input"
@@ -583,7 +586,7 @@
 		     But ... this is only a problem when this component is inside a draggable element (like List or table)
 		-->
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-		<span class="{box.role} text-box-{boxType} text-component-text"
+		<span class="{box.role} text-box-{boxType} text-component-text {errorCls}"
 			  on:click={startEditing}
 			  contenteditable=true
 			  spellcheck=false
@@ -592,7 +595,7 @@
 			{#if !!text && text.length > 0}
 				{text}
 			{:else}
-				<span class="{placeHolderStyle}">{placeholder}</span>
+				<span class="{placeHolderStyle} {errorCls}">{placeholder}</span>
 			{/if}
 		</span>
 	{/if}

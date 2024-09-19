@@ -81,7 +81,7 @@ export class FreProjectionHandler {
     ////////// Methods for registering the boxproviders ////////////
 
     /**
-     * Method that initilizes the property 'conceptNameToProviderConstructor'.
+     * Method that initializes the property 'conceptNameToProviderConstructor'.
      * @param constructorMap
      */
     initProviderConstructors(constructorMap: Map<string, () => FreBoxProvider>) {

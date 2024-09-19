@@ -22,6 +22,7 @@ export abstract class Box {
     // todo because most boxes are not selectable the default could be set to false
     isVisible: boolean = true; // Is this box currently not shown in the editor?
     parent: Box = null;
+    protected __hasError: boolean = false;
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
 
@@ -34,6 +35,24 @@ export abstract class Box {
         } else {
             LOGGER.log("No refreshComponent() for " + this.role);
         }
+    }
+
+    /**
+     * If the node displayed in this box is erroneous, this getter returns true.
+     */
+    get hasError(): boolean {
+        return this.__hasError;
+    }
+
+    /**
+     * If the node displayed in this box is erroneous, this method should be used to display
+     * that fact.
+     * @param val
+     */
+    set hasError(val: boolean) {
+        this.__hasError = val;
+        console.log("DIRTYYYYYYYYYYYY")
+        this.isDirty();
     }
 
     // Never set these manually, these properties are set after rendering to get the
@@ -237,10 +256,7 @@ export abstract class Box {
      * @param propertyName
      * @param propertyIndex
      */
-    findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
-        // if (propertyName === "value" && propertyIndex === undefined) {
-        console.log("findChildBoxForProperty " + this.role + "[" + propertyName + ", " + propertyIndex + "]");
-        // }
+    findChildBoxForProperty(propertyName: string, propertyIndex?: number): Box | null {
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
             if (!isNullOrUndefined(propertyName)) {
@@ -257,7 +273,7 @@ export abstract class Box {
             } else {
                 return child;
             }
-            const result = child.findChildBoxForProperty(propertyName, propertyIndex);
+            const result: Box = child.findChildBoxForProperty(propertyName, propertyIndex);
             if (!isNullOrUndefined(result) && result.node === this.node) {
                 return result;
             }
