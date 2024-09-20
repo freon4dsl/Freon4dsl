@@ -1,4 +1,5 @@
 import { FreNode } from "../../../ast";
+import { AST } from "../../../change-manager/index";
 import {BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox, SelectOption} from "../../boxes";
 import { FreLanguage, FreLanguageProperty } from "../../../language";
 import { UtilCheckers } from "./UtilCheckers";
