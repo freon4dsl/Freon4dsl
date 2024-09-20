@@ -1,5 +1,4 @@
-import { AST, Box, FreLogger } from "@freon4dsl/core";
-import { PI_NULL_COMMAND, FreCommand, FreEditor, FreEditorUtil, type FrePostAction, toFreKey } from "@freon4dsl/core";
+import { AST, Box, FRE_NULL_COMMAND, FreLogger, FreCommand, FreEditor, FreEditorUtil, type FrePostAction, toFreKey } from "@freon4dsl/core";
 import { viewport } from "./EditorViewportStore.js";
 import { get } from "svelte/store";
 
