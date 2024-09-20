@@ -7,7 +7,6 @@
 	import { componentId } from "$lib/index.js";
 	import { FreEditor, FreLogger, MultiLineTextBox } from "@freon4dsl/core";
 
-	import { runInAction } from "mobx";
 	// Probably needed to code/encode HTML inside <TextArea>
 	// import { replaceHTML } from "./svelte-utils/index.js";
 
@@ -62,14 +61,12 @@
      */
 	const onFocusOut = (e) => {
 		LOGGER.log("onFocusOut " + id)
-		runInAction(() => {
 			if (text !== box.getText()) {
 				LOGGER.log(`   text is new value`)
 				box.setText(text);
 			} else {
 				LOGGER.log("Text is unchanged: " + text)
 			}
-		});
 	}
 
 	const refresh = () => {

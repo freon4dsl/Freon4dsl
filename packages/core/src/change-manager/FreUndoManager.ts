@@ -28,20 +28,20 @@ export class FreUndoManager {
     private undoManagerPerUnit: Map<string, FreUndoStackManager> = new Map<string, FreUndoStackManager>();
     private modelUndoManager: FreUndoStackManager = new FreUndoStackManager(null);
     private inTransaction: boolean = false;
-    private unitForTransaction: FreModelUnit = null;
+    // private unitForTransaction: FreModelUnit = null;
     /**
      * The current unit for which undo/redo should be done
      */
     public currentUnit: FreModelUnit = null;
 
     public startTransaction(unit?: FreModelUnit) {
-        LOGGER.log("startTransaction")
+        LOGGER.log(`>> startTransaction for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
         if (unit === undefined) {
             unit = this.currentUnit
         }
         if (!!unit) {
             this.getUndoStackManager(unit).startTransaction();
-            this.unitForTransaction = unit;
+            // this.unitForTransaction = unit;
         } else {
             this.modelUndoManager.startTransaction();
         }
@@ -49,13 +49,13 @@ export class FreUndoManager {
     }
 
     public endTransaction(unit?: FreModelUnit) {
-        LOGGER.log("endTransaction")
+        LOGGER.log(`<< endTransaction for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
         if (unit === undefined) {
             unit = this.currentUnit
         }
         if (!!unit) {
             this.getUndoStackManager(unit).endTransaction();
-            this.unitForTransaction = null;
+            // this.unitForTransaction = null;
         } else {
             this.modelUndoManager.endTransaction();
         }
@@ -63,7 +63,7 @@ export class FreUndoManager {
     }
 
     public startIgnore(unit?: FreModelUnit) {
-        LOGGER.log("startIgnore")
+        LOGGER.log(`startIgnore for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
         if (unit === undefined) {
             unit = this.currentUnit
         }
@@ -75,7 +75,7 @@ export class FreUndoManager {
     }
 
     public endIgnore(unit?: FreModelUnit) {
-        LOGGER.log("endIgnore")
+        LOGGER.log(`endIgnore for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
         if (unit === undefined) {
             unit = this.currentUnit
         }
@@ -87,7 +87,7 @@ export class FreUndoManager {
     }
 
     public cleanStacks(unit?: FreModelUnit) {
-        LOGGER.log("cleanStacks")
+        LOGGER.log(`cleanStacks for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
         if (unit === undefined) {
             unit = this.currentUnit
         }
@@ -134,15 +134,16 @@ export class FreUndoManager {
             unit = this.currentUnit
         }
         if (!!unit) {
-            LOGGER.log("execute undo for unit" )
+            LOGGER.log(`executeUndo for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
             this.getUndoStackManager(unit).executeUndo();
         } else {
-            LOGGER.log("execute undo for model" )
+            LOGGER.log("executeUndo for model" )
             this.modelUndoManager.executeUndo();
         }
     }
 
     public executeRedo(unit?: FreModelUnit) {
+        LOGGER.log(`executeRedo for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
         if (unit === undefined) {
             unit = this.currentUnit
         }
@@ -165,11 +166,11 @@ export class FreUndoManager {
     }
 
     private addDelta(delta: FreDelta) {
+        LOGGER.log(` addDelta for unit ${this.currentUnit?.name}`)
         if (this.inTransaction) {
             // we are in a transaction => store all changes in the unit that originated the transaction
-            if (!!this.unitForTransaction) {
-                // console.log("adding transaction to " + this.unitForTransaction.name)
-                this.getUndoStackManager(this.unitForTransaction).addDelta(delta);
+            if (!!this.currentUnit) {
+                this.getUndoStackManager(this.currentUnit).addDelta(delta);
             } else {
                 // the model has changed => store in model manager
                 // console.log("adding transaction to model")

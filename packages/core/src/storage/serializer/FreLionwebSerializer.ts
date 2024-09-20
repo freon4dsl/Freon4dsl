@@ -82,6 +82,10 @@ export class FreLionwebSerializer implements FreSerializer {
         return this.findRoot();
     }
 
+    /**
+     * We assume that there is exactly one unit node.
+     * @private
+     */
     private findRoot(): FreNode {
         // TODO Check next line
         const mapEntries: IterableIterator<ParsedNode> = this.nodesfromJson.values();

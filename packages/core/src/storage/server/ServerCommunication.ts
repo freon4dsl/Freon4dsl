@@ -1,6 +1,6 @@
 import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index";
 import { FreLogger } from "../../logging/index";
-import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../index";
+import { FreLionwebSerializer, FreModelSerializer } from "../index";
 import { FreErrorSeverity } from "../../validator/index";
 import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
 import process from "process";
@@ -33,8 +33,8 @@ export class ServerCommunication implements IServerCommunication {
         this._SERVER_IP = value;
         this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
     }
-    static serial: FreSerializer = new FreModelSerializer();
-    static lionweb_serial: FreSerializer = new FreLionwebSerializer();
+    static serial: FreModelSerializer = new FreModelSerializer();
+    static lionweb_serial: FreLionwebSerializer = new FreLionwebSerializer();
     static instance: ServerCommunication;
 
     static getInstance(): ServerCommunication {

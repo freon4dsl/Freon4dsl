@@ -86,10 +86,10 @@ export class FreUndoStackManager {
         // LOGGER.log(`addDelta inTransaction '${this.inTransaction}' for unit '${this.changeSource?.name}'`);
         if (!this.inIgnoreState) {
             if (this.inUndo) {
-                LOGGER.log('adding redo to ' + this.changeSource?.name)
+                LOGGER.log('addDelta: adding redo to ' + this.changeSource?.name)
                 this.addRedo(delta);
             } else {
-                LOGGER.log('adding undo to ' + this.changeSource?.name)
+                LOGGER.log('addDelta: adding undo to ' + this.changeSource?.name)
                 this.addUndo(delta);
             }
         } else {
@@ -98,7 +98,7 @@ export class FreUndoStackManager {
     }
 
     private addUndo(delta: FreDelta) {
-        LOGGER.log(`addUndo delta for '${delta.owner.freLanguageConcept()}'.property '${delta.propertyName}' for unit '${this.changeSource?.name}'`)
+        LOGGER.log(`addUndo: delta for '${delta.owner.freLanguageConcept()}'.property '${delta.propertyName}' for unit '${this.changeSource?.name}'`)
         if (this.inTransaction) {
             if (this.currentTransaction === null || this.currentTransaction === undefined) {
                 this.currentTransaction = new FreTransactionDelta(
@@ -145,7 +145,7 @@ export class FreUndoStackManager {
                         delta.owner[delta.propertyName][delta.index] = delta.oldValue;
                     })
                 } else {
-                    LOGGER.error(`cannot reverse ${delta.toString()} because the index is incorrect`);
+                    LOGGER.error(`reverseDelta: cannot reverse ${delta.toString()} because the index is incorrect`);
                 }
             } else {
                 runInAction( () => {
