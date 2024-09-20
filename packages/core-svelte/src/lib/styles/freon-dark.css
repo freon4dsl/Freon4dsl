@@ -86,6 +86,21 @@
     border-top: solid 1px #c5c5c5;
 }
 
+.error-tooltip {
+    border: 1px solid #ddd;
+    box-shadow: 1px 1px 1px #ddd;
+    background: darkgrey;
+    border-radius: 4px;
+    padding: 4px;
+    position: absolute;
+}
+
+.error-marker {
+    min-width: 10px;
+    min-heigh: 8px;
+    background-color: red;
+}
+
 .button-component-ripple {
 }
 .button-component-ripple:hover {

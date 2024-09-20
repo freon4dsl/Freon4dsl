@@ -30,6 +30,11 @@
 .layout-component-horizontal {
 }
 
+.layout-component-horizontal-error {
+    border-left: 2px solid red;
+    height: 100%;
+}
+
 .layout-component-vertical {
 }
 
@@ -83,6 +88,21 @@
 
 .contextmenu-hr {
     border-top: solid 1px #c5c5c5;
+}
+
+.error-tooltip {
+    border: 1px solid dimgrey;
+    box-shadow: 1px 1px 1px dimgrey;
+    background: antiquewhite;
+    border-radius: 4px;
+    padding: 4px;
+    position: absolute;
+}
+.error-marker {
+    /* padding seems to be the only way to make the element visible without content*/
+    padding: 1px;
+    width: 100px;
+    background-color: red;
 }
 
 .button-component-ripple {

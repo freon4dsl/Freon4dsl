@@ -1,6 +1,4 @@
 <script lang="ts">
-    import ButtonComponent from "$lib/components/ButtonComponent.svelte"
-
     // This component is a combination of a TextComponent and a DropdownComponent.
     // The TextComponent is shown in non-editable state until it gets focus,
     // then the Dropdown also appears. When the text in the TextComponent alters,
@@ -47,6 +45,7 @@
     let filteredOptions: SelectOption[];        // the list of filtered options that are shown in the dropdown
     let allOptions: SelectOption[];             // all options as calculated by the editor
     let textComponent;
+
 
     let setText = (value: string) => {
         if (value === null || value === undefined) {
@@ -552,7 +551,7 @@
             <ArrowForward/>
         </button>
     {/if}
-      {#if dropdownShown}
+    {#if dropdownShown}
         <DropdownComponent
                 bind:selectedId={selectedId}
                 bind:options={filteredOptions}

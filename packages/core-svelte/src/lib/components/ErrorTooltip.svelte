@@ -1,7 +1,9 @@
 <!-- Copied and adapted from https://svelte.dev/repl/hello-world?version=4.2.19 -->
 
 <script lang="ts">
-    export let content: string = '';
+    import { viewport } from "./svelte-utils/EditorViewportStore.js";
+
+    export let content: string[] = [];
     export let hasErr: boolean = false;
     let isHovered: boolean = false;
     let x: number;
@@ -11,14 +13,16 @@
         // todo adjust height for header
         if (hasErr) {
             isHovered = true;
-            x = event.pageX + 5;
-            y = event.pageY + 5;
+            // get the position of the mouse relative to the editor view
+            x = event.pageX - $viewport.left + 5;
+            y = event.pageY - $viewport.top + 5;
         }
     }
     function mouseMove(event: MouseEvent) {
         if (hasErr) {
-            x = event.pageX + 5;
-            y = event.pageY + 5;
+            // get the position of the mouse relative to the editor view
+            x = event.pageX - $viewport.left + 5;
+            y = event.pageY - $viewport.top + 5;
         }
     }
     function mouseLeave() {
@@ -37,16 +41,18 @@
 </div>
 
 {#if isHovered}
-    <div style="top: {y}px; left: {x}px;" class="tooltip">{content}</div>
-{/if}
+    <div style="top: {y}px; left: {x}px;" class="error-tooltip">
+        {#if content.length > 1}
+            <ul class="error-tooltip-list">
+                {#each content as item}
+                    {#if item.length > 0}
+                        <li>{item}</li>
+                    {/if}
+                {/each}
+            </ul>
+        {:else}
+            {content[0]}
+        {/if}
 
-<style>
-    .tooltip {
-        border: 1px solid #ddd;
-        box-shadow: 1px 1px 1px #ddd;
-        background: white;
-        border-radius: 4px;
-        padding: 4px;
-        position: absolute;
-    }
-</style>
+    </div>
+{/if}

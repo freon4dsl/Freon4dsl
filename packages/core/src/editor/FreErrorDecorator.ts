@@ -57,7 +57,11 @@ export class FreErrorDecorator {
             }
             console.log(`${value ? `SETTING` : `REMOVING`} error for ${box.role} ${box.kind}`)
             box.hasError = value;
-            box.errorMessage = errorMessage;
+            if (value) {
+                box.addErrorMessage(errorMessage);
+            } else {
+                box.resetErrorMessages();
+            }
         }
     }
 }

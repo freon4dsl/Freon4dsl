@@ -19,7 +19,6 @@
 		ENTER,
 		ESCAPE,
 		isActionBox,
-		isActionTextBox,
 		isSelectBox,
 		FreCaret,
 		FreCaretPosition,
@@ -29,12 +28,12 @@
 		FreErrorSeverity,
 		SHIFT,
 		TAB,
-		TextBox, isRegExp, triggerTypeToString, type FrePostAction
+		TextBox
 	} from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";
 	import { replaceHTML } from "./svelte-utils/index.js";
-	import {errorClass} from "@freon4dsl/meta/dist/utils/index.js";
+	import ErrorTooltip from "$lib/components/ErrorTooltip.svelte";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
 	const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -59,8 +58,12 @@
 	let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
 	let from = -1;							// the cursor position, or when different from 'to', the start of the selected text
 	let to = -1;							// the cursor position, or when different from 'from', the end of the selected text
-	let errorCls: string = '';				// style when node in box has error(s)
 	// Note that 'from <= to' always holds.
+
+	let errorCls: string = '';              // css class name for when the node is erroneous
+	let errMess: string[] = [];             // error message to be shown when element is hovered
+	let hasErr: boolean = false;            // indicates whether this box has errors
+
 	let placeHolderStyle: string;
 	$: placeHolderStyle = (partOfActionBox ? "text-component-action-placeholder" : "text-component-placeholder");
 	let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
@@ -440,8 +443,16 @@
 		LOGGER.log(`${id}: REFRESH  ${id} (${box?.node?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
 		placeholder = box.placeHolder;
 		text = box.getText();
-		errorCls = box.hasError ? 'text-component-text-error' : 'noClass';
-		if (errorCls.length > 0 && errorCls !== 'noClass') {
+		if (box.hasError) {
+			errorCls = 'text-component-text-error';
+			errMess = box.errorMessages;
+			hasErr = true;
+		} else {
+			errorCls = "";
+			errMess = [];
+			hasErr = false;
+		}
+		if (errorCls.length > 0) {
 			console.log("REFRESH TextComponent " + box?.node?.freLanguageConcept() + ", err: " + errorCls);
 		}
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
@@ -565,41 +576,44 @@
 
 <!-- todo there is a double selection here: two borders are showing -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-<span on:click={onClick} id="{id}" role="none">
-	{#if isEditing}
-		<span class="text-component-input {errorCls}">
-			<input type="text"
-				   class="text-component-input"
-				   id="{id}-input"
-				   bind:this={inputElement}
-				   on:input={onInput}
-				   bind:value={text}
-				   on:focusout={onFocusOut}
-				   on:keydown={onKeyDown}
-				   draggable="true"
-				   on:dragstart={onDragStart}
-				   placeholder="{placeholder}"/>
-			<span class="text-component-width" bind:this={widthSpan}></span>
-		</span>
-	{:else}
-		<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
-		     But ... this is only a problem when this component is inside a draggable element (like List or table)
-		-->
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-		<span class="{box.role} text-box-{boxType} text-component-text {errorCls}"
-			  on:click={startEditing}
-			  contenteditable=true
-			  spellcheck=false
-			  id="{id}-span"
-			  role="none">
-			{#if !!text && text.length > 0}
-				{text}
-			{:else}
-				<span class="{placeHolderStyle} {errorCls}">{placeholder}</span>
-			{/if}
-		</span>
-	{/if}
-</span>
+<ErrorTooltip content={errMess} hasErr={hasErr}>
+	<span on:click={onClick} id="{id}" role="none">
+		{#if isEditing}
+			<span class="text-component-input {errorCls}">
+				<input type="text"
+					   class="text-component-input"
+					   id="{id}-input"
+					   bind:this={inputElement}
+					   on:input={onInput}
+					   bind:value={text}
+					   on:focusout={onFocusOut}
+					   on:keydown={onKeyDown}
+					   draggable="true"
+					   on:dragstart={onDragStart}
+					   placeholder="{placeholder}"/>
+				<span class="text-component-width" bind:this={widthSpan}></span>
+			</span>
+		{:else}
+			<!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
+				 But ... this is only a problem when this component is inside a draggable element (like List or table)
+			-->
+			<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
+			<span class="{box.role} text-box-{boxType} text-component-text {errorCls}"
+				  on:click={startEditing}
+				  contenteditable=true
+				  spellcheck=false
+				  id="{id}-span"
+				  role="none">
+				{#if !!text && text.length > 0}
+					{text}
+				{:else}
+					<span class="{placeHolderStyle} {errorCls}">{placeholder}</span>
+				{/if}
+			</span>
+		{/if}
+	</span>
+</ErrorTooltip>
+
 <style>
 	/** Hiding and showing the <input> or <span> by using Svelte #if did not work, because the
 	 *  CSS class for <input> was not applied anymore.

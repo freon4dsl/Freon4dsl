@@ -23,7 +23,7 @@ export abstract class Box {
     isVisible: boolean = true; // Is this box currently not shown in the editor?
     parent: Box = null;
     protected _hasError: boolean = false;
-    protected _errorMessage: string = '';
+    protected _errorMessages: string[] = [];
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
 
@@ -52,16 +52,19 @@ export abstract class Box {
      */
     set hasError(val: boolean) {
         this._hasError = val;
-        console.log("DIRTYYYYYYYYYYYY")
         this.isDirty();
     }
 
-    get errorMessage(): string {
-        return this._errorMessage;
+    get errorMessages(): string[] {
+        return this._errorMessages;
     }
 
-    set errorMessage(val: string) {
-        this._errorMessage = val;
+    addErrorMessage(val: string) {
+        this._errorMessages.push(val);
+    }
+
+    resetErrorMessages() {
+        this._errorMessages = [];
     }
 
     // Never set these manually, these properties are set after rendering to get the
