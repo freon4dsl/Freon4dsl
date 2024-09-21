@@ -462,7 +462,6 @@
 
 /* The container styling - needed to position the dropdown content */
 .text-dropdown-component {
-    position: relative;
     display: inline-block;
 }
 
