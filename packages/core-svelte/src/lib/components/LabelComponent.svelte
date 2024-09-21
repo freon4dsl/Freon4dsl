@@ -42,17 +42,13 @@
     $: { // Evaluated and re-evaluated when the box changes.
         refresh("FROM component " + box?.id);
     }
-    const content: string[] = ['label text']
 </script>
 
-<ErrorTooltip  content={content}  hasErr={true}>
-    <span class="label-component {text} {cssClass}"
-          style="{style}"
-          bind:this={element}
-          id="{id}"
-    >
+<span class="label-component {text} {cssClass}"
+      style="{style}"
+      bind:this={element}
+      id="{id}"
+>
     {text}
 </span>
-</ErrorTooltip>
-
 

@@ -97,6 +97,12 @@
     border-radius: 4px;
     padding: 4px;
 }
+.error-tooltip-list-content {
+    padding-left: 20px;
+}
+.error-tooltip-single-content {
+
+}
 .error-marker {
     display: block;
     /* padding seems to be the only way to make the element visible without content*/
@@ -110,7 +116,7 @@
     position: absolute;
     width: 20px;
     height: 20px;
-    margin-left: -18px; /* relative to, but negative number, padding-left in .error-marker */
+    margin-left: -18px; /* value relates to padding-left in .error-marker, but is negative number */
 }
 
 .button-component-ripple {

@@ -84,7 +84,10 @@
         <ErrorTooltip content={errMess} hasErr={hasErr}>
             <!-- We add a non breaking space here to ensure that the element has a height and a width. -->
             <!-- This trick does not work in all browsers, so the styling should be done carefully. -->
-            <div class="error-marker">&nbsp</div>
+            <!-- Often setting padding to a positive, non-zero value makes the element visible. -->
+            <span style=" position: relative;"> <!-- to make sure that any image is scrolled along with the other content -->
+            <span class="error-marker">&nbsp</span>
+                </span>
         </ErrorTooltip>
     {/if}
     {#if isHorizontal }
