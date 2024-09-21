@@ -14,6 +14,7 @@
         if (hasErr) {
             isHovered = true;
             // get the position of the mouse relative to the editor view
+            console.log(`Postion: event.pageY ${event.pageY}, event.pageX ${event.pageX}, viewport.top ${$viewport.top}, viewport.left ${$viewport.left}`)
             x = event.pageX - $viewport.left + 5;
             y = event.pageY - $viewport.top + 5;
         }
@@ -32,16 +33,17 @@
     }
 </script>
 
-<div role= "group"
+<span role="group" class="tooltip-surround"
      on:mouseover={mouseOver}
      on:mouseleave={mouseLeave}
      on:mousemove={mouseMove}
      on:focus={onFocus}>
     <slot />
-</div>
+</span>
 
 {#if isHovered}
-    <div style="top: {y}px; left: {x}px;" class="error-tooltip">
+    <div style="top: {y}px; left: {x}px; z-index: 95; position: absolute;" class="error-tooltip">
+        my top: {y}, my left: {x}
         {#if content.length > 1}
             <ul class="error-tooltip-list">
                 {#each content as item}

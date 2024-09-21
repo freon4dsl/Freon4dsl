@@ -45,12 +45,12 @@ export abstract class AbstractChoiceBox extends Box {
     }
 
     set hasError(val: boolean) {
-        this._hasError = val;
+        // this._hasError = val;
         this._textBox.hasError = val;
     }
 
     addErrorMessage(val: string) {
-        this._errorMessages.push(val);
+        // this._errorMessages.push(val);
         this._textBox.addErrorMessage(val);
     }
 

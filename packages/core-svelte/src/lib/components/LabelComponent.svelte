@@ -6,6 +6,7 @@
     import { onMount, afterUpdate } from "svelte";
     import { FreLogger, LabelBox } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils/index.js";
+    import ErrorTooltip from "$lib/components/ErrorTooltip.svelte";
 
     export let box: LabelBox;
 
@@ -41,13 +42,17 @@
     $: { // Evaluated and re-evaluated when the box changes.
         refresh("FROM component " + box?.id);
     }
+    const content: string[] = ['label text']
 </script>
 
-<span class="label-component {text} {cssClass}"
-      style="{style}"
-      bind:this={element}
-      id="{id}"
->
+<ErrorTooltip  content={content}  hasErr={true}>
+    <span class="label-component {text} {cssClass}"
+          style="{style}"
+          bind:this={element}
+          id="{id}"
+    >
     {text}
 </span>
+</ErrorTooltip>
+
 
