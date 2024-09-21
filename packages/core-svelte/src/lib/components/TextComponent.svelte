@@ -47,8 +47,11 @@
 	export let partOfActionBox: boolean = false; // indication whether this text component is part of an TextDropdownComponent
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
+	// changed
 	export let textUpdateFunction = undefined
 	export let endEditingParentFunction = undefined
+	// end changed
+
 	// Local variables
 	let id: string;                         // an id for the html element
 	id = !!box ? componentId(box) : 'text-with-unknown-box';
@@ -63,9 +66,10 @@
 	let errorCls: string = '';              // css class name for when the node is erroneous
 	let errMess: string[] = [];             // error message to be shown when element is hovered
 	let hasErr: boolean = false;            // indicates whether this box has errors
-
+    // changed
 	let placeHolderStyle: string;
 	$: placeHolderStyle = (partOfActionBox ? "text-component-action-placeholder" : "text-component-placeholder");
+	// end changed
 	let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
 	$: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
 
@@ -158,14 +162,16 @@
 	 * @param event
 	 */
 	function onClick(event: MouseEvent) {
-		if (!!inputElement) {
+		if (!!inputElement) { // changed if-stat removed
 			LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 			setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
 		}
 		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
 			LOGGER.log('dispatching from on click');
+			// changed
 			textUpdateFunction({content: text, caret: from})
 			// dispatcher('textUpdate', {content: text, caret: from});
+			// end changed
 		}
 		event.stopPropagation();
 	}
@@ -194,11 +200,13 @@
 					}
 				});
 			} else {
+				// changed
 				if (!!endEditingParentFunction) {
 					endEditingParentFunction();
 				} else {
 					LOGGER.error("No parent endEditing function")
 				}
+				// end changed
 			}
 		}
 	}
@@ -362,15 +370,18 @@
 				}
 				default: { // the event.key is SHIFT or a printable character
 					getCaretPosition(event);
+					// changed
 					if (event.shiftKey && event.key === "Shift") {
 						// shift key pressed, ignore
 						event.stopPropagation();
 						break
 					}
+					// end changed
 					switch (box.isCharAllowed(text, event.key, from)) {
 						case CharAllowed.OK: // add to text, handled by browser
 							LOGGER.log('CharAllowed ' + JSON.stringify(event.key));
-							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
+							// afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed.
+							// changed
 							if (editor.selectedBox.kind === "ActionBox") {
 								LOGGER.log(`${id}: TEXT UPDATE text '${text}' key: '${event.key}' from: ${from}`)
 
@@ -389,6 +400,7 @@
 								// dispatcher('textUpdate', {content: text.concat(event.key), caret: from - 1});
 							}
 							event.stopPropagation()
+							// end changed
 							break;
 						case CharAllowed.NOT_OK: // ignore
 							// ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
@@ -396,7 +408,8 @@
 							event.preventDefault();
 							event.stopPropagation();
 							break;
-						case CharAllowed.GOTO_NEXT: // try in previous or next box
+						case CharAllowed.GOTO_NEXT: // try in next box
+								// changed
 							LOGGER.log("KeyPressAction.GOTO_NEXT FROM IS " + from);
 							editor.selectNextLeaf();
 							LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
@@ -408,7 +421,7 @@
 							event.preventDefault();
 							event.stopPropagation();
 							break;
-						case CharAllowed.GOTO_PREVIOUS: // try in previous or next box
+						case CharAllowed.GOTO_PREVIOUS: // try in previous box
 							LOGGER.log("KeyPressAction.GOTO_PREVIOUS FROM IS " + from);
 							editor.selectPreviousLeaf();
 							LOGGER.log("    PREVIOUS LEAF IS " + editor.selectedBox.role);
@@ -420,6 +433,7 @@
 							event.preventDefault();
 							event.stopPropagation();
 							break;
+							// end changed
 					}
 				}
 			}
@@ -435,13 +449,15 @@
 			endEditing();
 		} else {
 			// let TextDropdownComponent handle it
-			dispatcher("onFocusOutText")
+			dispatcher("onFocusOutText") // changed: removed
 		}
 	}
 
 	const refresh = () => {
 		LOGGER.log(`${id}: REFRESH  ${id} (${box?.node?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
 		placeholder = box.placeHolder;
+		// If being edited, do not set the value, let the user type whatever (s)he wants
+		// if (!isEditing) { // changed if-stat
 		text = box.getText();
 		if (box.hasError) {
 			errorCls = 'text-component-text-error';
@@ -489,6 +505,7 @@
 			inputElement.focus();
 			editStart = false;
 		}
+		// changed
 		// if (isEditing && partOfActionBox) {
 		// 	if (text !== originalText) {
 		// send event to parent
@@ -497,6 +514,7 @@
 		// textUpdateFunction({content: text, caret: from + 1})
 		// }
 		// }
+		// end changed
 		// Always set the input width explicitly.
 		setInputWidth();
 		placeholder = box.placeHolder
@@ -526,9 +544,11 @@
 	 * See https://dev.to/matrixersp/how-to-make-an-input-field-grow-shrink-as-you-type-513l
 	 */
 	function setInputWidth() {
+		// changed
 		if (box.getText().startsWith("home")) {
 			console.log(`setInputWidth box ${box.$id} for value '${inputElement?.value}' isEditing ${isEditing}`)
 		}
+		// end changed
 		if(!!widthSpan && !!inputElement) {
 			let value = inputElement.value;
 			if ((value !== undefined) && (value !== null) && (value.length === 0)) {
@@ -542,13 +562,17 @@
 			const width = widthSpan.offsetWidth + "px";
 			inputElement.style.width = width;
 			// LOGGER.log("setInputWidth mirror [" + value + "] input [" + inputElement.value + "] placeholder [" + placeholder + "] w: " + width + " " + widthSpan.clientWidth + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
+			// changed
 			if (box.getText().startsWith("home")) {
 				console.log("    setInputWidth " + width)
 			}
+			// end changed
 		} else {
+			// changed
 			if (box.getText().startsWith("home")) {
 				console.log(`    setInputWidth ${box.$id} not calculated`)
 			}
+			// end changed
 			// LOGGER.log("SetInputWidth do nothing for element " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ") " + widthSpan + "::" + inputElement + "::" + spanElement);
 		}
 	}
@@ -615,6 +639,7 @@
 </ErrorTooltip>
 
 <style>
+	/* changed */
 	/** Hiding and showing the <input> or <span> by using Svelte #if did not work, because the
 	 *  CSS class for <input> was not applied anymore.
 	 *  Therefore we switched to using the CSS display: none property.

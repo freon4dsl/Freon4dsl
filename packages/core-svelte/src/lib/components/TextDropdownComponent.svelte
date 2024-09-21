@@ -46,7 +46,7 @@
     let allOptions: SelectOption[];             // all options as calculated by the editor
     let textComponent;
 
-
+    // changed
     let setText = (value: string) => {
         if (value === null || value === undefined) {
             text = "";
@@ -54,6 +54,7 @@
             text = value;
         }
     }
+    // end changed
     const noOptionsId = 'noOptions';            // constant for when the editor has no options
     let getOptions = (): SelectOption[] => {    // the function used to calculate all_options, called by onClick and setFocus
         let result = box?.getOptions(editor);
@@ -87,7 +88,9 @@
             let selectedOption = box.getSelectedOption();
             if (!!selectedOption) {
                 box.textHelper.setText(selectedOption.label);
+                // changed
                 setText(box.textHelper.getText());
+                // end changed
             }
         }
         // because the box maybe a different one than we started with ...
@@ -97,7 +100,9 @@
     afterUpdate( () => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        // changed
         box.triggerKeyPressEvent = triggerKeyPressEvent
+        // end changed
     });
 
     onMount(() => {
@@ -106,14 +111,17 @@
         box.refreshComponent = refresh;
         box.triggerKeyPressEvent = triggerKeyPressEvent
     });
-    
+
+    // changed
     const triggerKeyPressEvent = (key: string) => {
         textUpdateFunction({content: key, caret: 1})
         box.textHelper.setText(key)
     }
+    // end changed
 
     // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!
 
+    // changed
     const textUpdateFunction = (data: {content: string, caret: number}): boolean => {
         LOGGER.log(`textUpdateFunction for ${box.kind}: ` + JSON.stringify(data));
         dropdownShown = true;
@@ -173,7 +181,7 @@
         }
         return false
     }
-    
+    // end changed
     /**
      * This custom event is triggered when the text in the textComponent is altered or when the
      * caret position is changed.
@@ -188,9 +196,10 @@
         // setText(event.detail.content);
         allOptions = getOptions();
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+        // changed
         makeUnique();
         if (isActionBox(box)) {
-            // Onlhy one option and has been fully typed in
+            // Only one option and has been fully typed in
             LOGGER.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
             if (filteredOptions.length === 1 && filteredOptions[0].label === event.detail.content && filteredOptions[0].label.length === event.detail.caret ) {
                 LOGGER.log("STOP 1 !!")
@@ -252,7 +261,7 @@
         });
         filteredOptions = result;
     }
-
+    // end changed
     function selectLastOption() {
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
@@ -293,7 +302,7 @@
                         break;
                     }
                     case ARROW_DOWN: {
-                        if (dropdownShown) {
+                        if (dropdownShown) { // if stat removed
                             if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
                                 selectFirstOption();
                             } else {
@@ -310,7 +319,7 @@
                         break;
                     }
                     case ARROW_UP: {
-                        if (dropdownShown) {
+                        if (dropdownShown) { // if stat removed
                             if (!selectedId || selectedId.length == 0) { // there is no current selection, start at the last option
                                 selectLastOption();
                             } else {
@@ -329,7 +338,7 @@
                     case ENTER: { // user wants current selection
                         // find the chosen option
                         let chosenOption: SelectOption = null;
-                        if (filteredOptions.length <= 1) {
+                        if (filteredOptions.length <= 1) { // changed: was === 1
                             if (filteredOptions.length !== 0) { // if there is just one option left, choose that one
                                 chosenOption = filteredOptions[0];
                             } else { // there are no valid options left
@@ -345,7 +354,7 @@
                         if (!!chosenOption) {
                             storeAndExecute(chosenOption);
                         } else { //  no valid option, restore the original text
-                            setText(textBox.getText());
+                            setText(textBox.getText()); // line : using setText
                             // stop editing
                             isEditing = false;
                             dropdownShown = false;
@@ -378,7 +387,7 @@
         // todo find out whether we can do without this textHelper
         LOGGER.log(`clearText for ${id} from text '${text}' & boxtext '${box.textHelper.getText()}' `)
         box.textHelper.setText("");
-        // setText("");
+        // setText(""); // changed
     }
 
     /**
@@ -413,6 +422,7 @@
         editor.selectElementForBox(box);
         allOptions = getOptions();
         if (!!event) {
+            // changed
             if ( text === undefined || text === null) {
                 filteredOptions = allOptions.filter(o => true);
             } else {
@@ -421,10 +431,11 @@
                     return o?.label?.startsWith(text.substring(0, event.detail.caret))
                 });
             }
+            // end changed
         } else {
             filteredOptions = allOptions.filter(o => o?.label?.startsWith(text.substring(0, 0)));
         }
-        makeUnique();
+        makeUnique(); // changed: line added
     };
 
     /**
@@ -438,9 +449,11 @@
         LOGGER.log('executing option ' + selected.label);
         isEditing = false;
         dropdownShown = false;
+        // changed
         if (isActionBox(box)) {
             clearText()
         }
+        // end changed
         runInAction(() => {
             // TODO set the new cursor through the editor
             box.selectOption(editor, selected); // TODO the result of the execution is ignored
@@ -464,6 +477,7 @@
      */
     const endEditing = () => {
         LOGGER.log("endEditing " +id + " dropdownShow:" + dropdownShown + " isEditing: " + isEditing);
+        // changed
         if (isEditing === true) {
             isEditing = false;
         } else {
@@ -472,6 +486,7 @@
             }
             return;
         }
+        // end changed
         if (dropdownShown) {
             allOptions = getOptions();
             let validOption = allOptions.find(o => o.label === text);
@@ -491,6 +506,7 @@
         }
     };
 
+    // changed
     const onFocusOutText = () => {
         LOGGER.log(`onFocusOutText ${id} text '${text}'`);
         if (isEditing) {
@@ -517,9 +533,22 @@
             event.preventDefault();
         }
     };
+    // end changed
 
     refresh();
-
+/*
+changed in html:
+            textUpdateFunction={textUpdateFunction}
+            endEditingParentFunction={endEditing}
+    and
+            on:onFocusOutText={onFocusOutText}
+    and
+            {#if isReferenceBox(box) && box.isSelectAble()}
+            <button class="reference-button" id="{id}" on:click={(event) => selectReferred(event)}>
+                <ArrowForward/>
+            </button>
+            {/if}
+ */
 </script>
 
 
