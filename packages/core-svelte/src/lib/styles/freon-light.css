@@ -108,15 +108,7 @@
     /* padding seems to be the only way to make the element visible without content*/
     /* padding-left is width of the image plus some extra */
     padding: 2px 2px 2px 24px;
-}
-.error-marker:before{
-    content: '';
-    background: url('./img/icons8-warning-26.png');
-    background-size: cover;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    margin-left: -18px; /* value relates to padding-left in .error-marker, but is negative number */
+    background_color: red;
 }
 
 .button-component-ripple {
