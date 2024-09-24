@@ -19,7 +19,6 @@
 		ENTER,
 		ESCAPE,
 		isActionBox,
-		isActionTextBox,
 		isSelectBox,
 		FreCaret,
 		FreCaretPosition,
@@ -29,6 +28,7 @@
 		FreErrorSeverity,
 		SHIFT,
 		TAB,
+		AST,
 		TextBox, isRegExp, triggerTypeToString, type FrePostAction
 	} from "@freon4dsl/core";
 	import { replaceHTML } from "./svelte-utils/index.js";
