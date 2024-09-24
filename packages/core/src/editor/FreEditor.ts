@@ -137,56 +137,61 @@ export class FreEditor {
     /**
      * The only setter for _selectedElement, used to programmatically select an element,
      * e.g. from the webapp or caused by a model change on the server.
-     * @param element
+     * @param node
      * @param propertyName
      * @param propertyIndex
      * @param caretPosition
      */
-    selectElement(element: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
+    selectElement(node: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
         LOGGER.log(
-            "selectElement " +
-                element?.freLanguageConcept() +
-                " with id " +
-                element?.freId() +
-                ", property: [" +
-                propertyName +
-                ", " +
-                propertyIndex +
-                "]" +
-                " " +
-                caretPosition,
+            `selectElement ${node?.freLanguageConcept()} with id ${node?.freId()}, property: [${propertyName}, ${propertyIndex}] ${caretPosition}`
         );
-        if (this.checkParam(element)) {
-            const box: ElementBox = this.projection.getBox(element);
+        const box: Box = this.findBoxForNode(node, propertyName, propertyIndex);
+        if (!isNullOrUndefined(box)) {
+            if (box instanceof ElementBox) {
+                this._selectedBox = box;
+                this._selectedProperty = "";
+                this._selectedIndex = -1;
+            } else {
+                this._selectedBox = box;
+                this._selectedProperty = propertyName;
+                this._selectedIndex = propertyIndex;
+            }
+            if (!isNullOrUndefined(caretPosition)) {
+                LOGGER.log("Set caretPosition to " + caretPosition);
+                this._selectedPosition = caretPosition;
+            } else {
+                this._selectedPosition = FreCaret.UNSPECIFIED;
+            }
+            this._selectedElement = node;
+            this.selectionChanged();
+        }
+    }
+
+    findBoxForNode(node: FreNode, propertyName?: string, propertyIndex?: number): Box | undefined {
+        LOGGER.log(
+            `findBoxForNode ${node?.freLanguageConcept()} with id ${node?.freId()}, property: ${propertyName}[${propertyIndex}]`
+        );
+        if (this.checkParam(node)) {
+            const box: ElementBox = this.projection.getBox(node);
             // check whether the box is shown in the current projection
             if (isNullOrUndefined(box) || !this.isBoxInTree(box)) {
-                // element is not shown, try selecting its parent todo maybe try selecting a sibling first?
-                this.selectElement(element.freOwner());
+                // element is not shown, try selecting its parent
+                return this.findBoxForNode(node.freOwner());
             } else {
                 // try and find the property to be selected
                 let propBox: Box | undefined = undefined;
-                if (!isNullOrUndefined(propertyName) && !isNullOrUndefined(propertyIndex)) {
+                if (!isNullOrUndefined(propertyName)) {
                     propBox = box.findChildBoxForProperty(propertyName, propertyIndex);
                 }
                 if (!isNullOrUndefined(propBox)) {
-                    this._selectedBox = propBox;
-                    this._selectedProperty = propertyName;
-                    this._selectedIndex = propertyIndex;
+                    return propBox;
                 } else {
-                    this._selectedBox = box;
-                    this._selectedProperty = "";
-                    this._selectedIndex = -1;
+                    return box;
                 }
-                if (!isNullOrUndefined(caretPosition)) {
-                    LOGGER.log("Set caretPosition to " + caretPosition);
-                    this._selectedPosition = caretPosition;
-                } else {
-                    this._selectedPosition = FreCaret.UNSPECIFIED;
-                }
-                this._selectedElement = element;
             }
-            this.selectionChanged();
         }
+        return undefined;
     }
 
     /**
@@ -431,9 +436,12 @@ export class FreEditor {
      * Sets the next sibling of the currently selected box to be the selected box.
      * TODO what if there is no next sibling?
      */
-    selectNextLeaf() {
-        const next = this._selectedBox?.nextLeafRight;
-        LOGGER.log("Select next leaf is box " + next?.role);
+    selectNextLeaf(box?: Box) {
+        if (isNullOrUndefined(box)) {
+            box = this._selectedBox
+        }
+        const next = box?.nextLeafRight;
+        console.log("Select next leaf is box " + next?.role);
         if (!!next) {
             this.selectElementForBox(next, FreCaret.LEFT_MOST);
         }

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import ButtonComponent from "$lib/components/ButtonComponent.svelte"
-
     // This component is a combination of a TextComponent and a DropdownComponent.
     // The TextComponent is shown in non-editable state until it gets focus,
     // then the Dropdown also appears. When the text in the TextComponent alters,
@@ -55,6 +53,7 @@
             text = value;
         }
     }
+
     const noOptionsId = 'noOptions';            // constant for when the editor has no options
     let getOptions = (): SelectOption[] => {    // the function used to calculate all_options, called by onClick and setFocus
         let result = box?.getOptions(editor);
@@ -66,7 +65,6 @@
 
     /**
      * This function sets the focus on this element programmatically.
-     * It is called from the RenderComponent.
      */
     const setFocus = () => {
         // LOGGER.log("setFocus " + box.kind + id);
@@ -77,6 +75,11 @@
         }
     }
 
+    function setTextLocalAndInBox(text: string) {
+        box.textHelper.setText(text);
+        setText(text);
+    }
+
     /**
      * This function is executed whenever there is a change in the box model.
      * It sets the text in the box, if this is a SelectBox.
@@ -84,11 +87,9 @@
     const refresh = (why?: string) => {
         // LOGGER.log("refresh: " + why)
         if (isSelectBox(box)) {
-            // TODO see todo in 'storeOrExecute'
             let selectedOption = box.getSelectedOption();
             if (!!selectedOption) {
-                box.textHelper.setText(selectedOption.label);
-                setText(box.textHelper.getText());
+                setTextLocalAndInBox(selectedOption.label);
             }
         }
         // because the box maybe a different one than we started with ...
@@ -109,72 +110,42 @@
     });
     
     const triggerKeyPressEvent = (key: string) => {
-        textUpdateFunction({content: key, caret: 1})
         box.textHelper.setText(key)
     }
 
-    // TODO still not functioning: reference shortcuts and chars that are not valid in textComponent to drop in next action!!!
-
-    const textUpdateFunction = (data: {content: string, caret: number}): boolean => {
-        LOGGER.log(`textUpdateFunction for ${box.kind}: ` + JSON.stringify(data));
-        dropdownShown = true;
-        // ?????
-        // setText(data.content);
-        allOptions = getOptions();
-        filteredOptions = allOptions.filter(o => o.label.startsWith(data.content.substring(0, data.caret)));
-        makeUnique();
-        LOGGER.log(`FilteredOptions are ${filteredOptions.map(o => o.label)}`)
-        if (isActionBox(box)) {
-            // Only one option and has been fully typed in
-            LOGGER.log(`textUpdateFunction: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length})`)
-            if (filteredOptions.length === 1 && filteredOptions[0].label === data.content && filteredOptions[0].label.length === data.caret ) {
-                LOGGER.log("STOP 12 !!")
-                storeAndExecute(filteredOptions[0])
-                // event.stopPropagation()
-                // Done
-                clearText()
-                isEditing = false;
-                dropdownShown = false;
-                return true
+    function matchAndExecuteAction(event: CustomEvent<any>) {
+        // Try to match a regular expression
+        const matchingOption = box.getOptions(editor).find(option => {
+            if (isRegExp(option.action.trigger)) {
+                if (option.action.trigger.test(event.detail.content)) {
+                    LOGGER.log("Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + event.detail.content + "'")
+                    return true
+                }
+                return false
             }
-
-            // Try to find a regular expression
-            const matchingOption = box.getOptions(editor).find(option => {
-                if (isRegExp(option.action.trigger) ){
-                    if (option.action.trigger.test(data.content)) {
-                        LOGGER.log(".    Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + data.content + "'")
-                        return true
-                    }
-                    return false
+        })
+        if (!!matchingOption) {
+            event.preventDefault()
+            event.stopPropagation()
+            LOGGER.log(`Matching regexp ${matchingOption.label}`)
+            LOGGER.log("STOP 2 !!")
+            // isn't this equal to BehaviourUtil.executeBehavior
+            let execResult: FrePostAction = null;
+            runInAction(() => {
+                runInAction(() => {
+                    const command = matchingOption.action.command();
+                    execResult = command.execute(box, event.detail.content, editor, 0);
+                });
+                if (!!execResult) {
+                    execResult();
                 }
             })
-            if (!!matchingOption) {
-                event.preventDefault()
-                LOGGER.log(`.    Matching regexp ${matchingOption.label}`)
-                LOGGER.log("STOP 22!!")
-                clearText()
-                // event.stopPropagation()
-                let execresult: FrePostAction = null;
-                runInAction(() => {
-                    runInAction(() => {
-                        const command = matchingOption.action.command();
-                        execresult = command.execute(box, data.content, editor, 0);
-                    });
-                    if (!!execresult) {
-                        execresult();
-                    }
-                })
-                clearText()
-                isEditing = false;
-                dropdownShown = false;
-                return true;
-            }
-        } else {
-            LOGGER.log("Not an ActionBox, continue")
+            setTextLocalAndInBox('')
+            isEditing = false;
+            dropdownShown = false;
         }
-        return false
     }
-    
+
     /**
      * This custom event is triggered when the text in the textComponent is altered or when the
      * caret position is changed.
@@ -183,64 +154,32 @@
      * @param event
      */
     const textUpdate = (event: CustomEvent) => {
-        LOGGER.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail));
+        console.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail));
         dropdownShown = true;
-        // ?????
-        // setText(event.detail.content);
+        setText(event.detail.content);
         allOptions = getOptions();
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
-        makeUnique();
+        makeFilteredOptionsUnique();
+        // Only one option and has been fully typed in, use this option without waiting for the ENTER key
+        // console.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
+        if (filteredOptions.length === 1 && filteredOptions[0].label === event.detail.content && filteredOptions[0].label.length === event.detail.caret ) {
+            console.log("STOP 1 !!")
+            event.preventDefault()
+            event.stopPropagation()
+            storeAndExecute(filteredOptions[0])
+            setTextLocalAndInBox(filteredOptions[0].label);
+            isEditing = false;
+            dropdownShown = false;
+            return
+        }
         if (isActionBox(box)) {
-            // Onlhy one option and has been fully typed in
-            LOGGER.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
-            if (filteredOptions.length === 1 && filteredOptions[0].label === event.detail.content && filteredOptions[0].label.length === event.detail.caret ) {
-                LOGGER.log("STOP 1 !!")
-                event.preventDefault()
-                clearText()
-                storeAndExecute(filteredOptions[0])
-                // event.stopPropagation()
-                // Done
-                clearText()
-                isEditing = false;
-                dropdownShown = false;
-                return
-            }
-
-            // Try to find a regular expression
-            const matchingOption = box.getOptions(editor).find(option => {
-                if (isRegExp(option.action.trigger) ){
-                    if (option.action.trigger.test(event.detail.content)) {
-                        LOGGER.log("Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + event.detail.content + "'")
-                        return true
-                    }
-                    return false
-                }
-            })
-            if (!!matchingOption) {
-                event.preventDefault()
-                LOGGER.log(`Matching regexp ${matchingOption.label}`)
-                LOGGER.log("STOP 2 !!")
-                clearText() 
-                // event.stopPropagation()
-                let execresult: FrePostAction = null;
-                runInAction(() => {
-                    runInAction(() => {
-                        const command = matchingOption.action.command();
-                        execresult = command.execute(box, event.detail.content, editor, 0);
-                    });
-                    if (!!execresult) {
-                        execresult();
-                    }
-                })
-                clearText()
-                isEditing = false;
-                dropdownShown = false;
-            }
+            // Try to match a regular expression, and execute the action that is associated with it
+            matchAndExecuteAction(event);
         }
     };
 
-    function makeUnique() {
-        // make doubles unique, to avoid errors
+    function makeFilteredOptionsUnique() {
+        // remove doubles, to avoid errors
         const seen: string[] = [];
         const result: SelectOption[] = [];
         filteredOptions.forEach( option => {
@@ -375,13 +314,6 @@
         }
     };
 
-    function clearText() {
-        // todo find out whether we can do without this textHelper
-        LOGGER.log(`clearText for ${id} from text '${text}' & boxtext '${box.textHelper.getText()}' `)
-        box.textHelper.setText("");
-        // setText("");
-    }
-
     /**
      * This custom event is triggered by a click in the dropdown. The option that is clicked
      * is set as text in the textComponent and the editing state is ended.
@@ -395,9 +327,8 @@
                 storeAndExecute(chosenOption);
             }
         }
-        if (!isSelectBox(box)) {
-            // clear text for an action box
-            clearText();
+        if (!isSelectBox(box)) { // clear text for an action box
+            setTextLocalAndInBox('');
         }
         isEditing = false;
         dropdownShown = false;
@@ -414,7 +345,8 @@
         editor.selectElementForBox(box);
         allOptions = getOptions();
         if (!!event) {
-            if ( text === undefined || text === null) {
+            if ( text === undefined || text === null || text.length === 0) {
+                // @ts-ignore filter used to make a shallow copy
                 filteredOptions = allOptions.filter(o => true);
             } else {
                 filteredOptions = allOptions.filter(o => {
@@ -425,7 +357,7 @@
         } else {
             filteredOptions = allOptions.filter(o => o?.label?.startsWith(text.substring(0, 0)));
         }
-        makeUnique();
+        makeFilteredOptionsUnique();
     };
 
     /**
@@ -436,25 +368,16 @@
      * @param selected
      */
     function storeAndExecute(selected: SelectOption) {
-        LOGGER.log('executing option ' + selected.label);
+        console.log('storeAndExecute for option ' + selected.label + ' ' + box.kind);
         isEditing = false;
         dropdownShown = false;
-        if (isActionBox(box)) {
-            clearText()
-        }
-        runInAction(() => {
-            // TODO set the new cursor through the editor
-            box.selectOption(editor, selected); // TODO the result of the execution is ignored
 
-            // TODO the execution of the option should set the text in the selectBox, for now this is handled here
-            if (isSelectBox(box)) {
-                box.textHelper.setText(selected.label);
-                setText(selected.label);
-            } else {
-                // ActionBox, action done, clear input text
-                clearText();
-            }
-        });
+        // TODO set the new cursor through the editor
+        box.selectOption(editor, selected); // TODO the result of the execution is ignored
+        console.log("XXXXX")
+        if (isActionBox(box)) { // ActionBox, action done, clear input text
+            setTextLocalAndInBox('');
+        }
     }
 
     /**
@@ -540,8 +463,6 @@
             partOfActionBox={true}
             box={textBox}
             editor={editor}
-            textUpdateFunction={textUpdateFunction}
-            endEditingParentFunction={endEditing}
             on:textUpdate={textUpdate}
             on:startEditing={startEditing}
             on:endEditing={endEditing}

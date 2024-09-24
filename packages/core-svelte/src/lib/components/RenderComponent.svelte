@@ -109,6 +109,9 @@
         first = false;
     // }
 
+    if (box?.node?.freId() === 'ID-100') {
+        console.log(`Rendering ID-100 ${box.kind}`)
+    }
 </script>
 
 <!-- TableRows are not included here, because they use the CSS grid and table cells must in HTML

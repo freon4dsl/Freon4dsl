@@ -89,10 +89,6 @@ export abstract class AbstractChoiceBox extends Box {
         /* To be overwritten by `AbstractChoiceComponent` */
     };
 
-    public deleteWhenEmpty1(): boolean {
-        return false;
-    }
-
     isEditable(): boolean {
         return true;
     }
