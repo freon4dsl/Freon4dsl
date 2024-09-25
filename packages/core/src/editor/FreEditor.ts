@@ -433,15 +433,17 @@ export class FreEditor {
     }
 
     /**
-     * Sets the next sibling of the currently selected box to be the selected box.
+     * Sets the next sibling of 'box', or when 'box' is not present, the next sibling of
+     * the currently selected box, to be the selected box.
      * TODO what if there is no next sibling?
+     * @param box
      */
     selectNextLeaf(box?: Box) {
         if (isNullOrUndefined(box)) {
             box = this._selectedBox
         }
         const next = box?.nextLeafRight;
-        console.log("Select next leaf is box " + next?.role);
+        LOGGER.log("Select next leaf is box " + next?.role);
         if (!!next) {
             this.selectElementForBox(next, FreCaret.LEFT_MOST);
         }

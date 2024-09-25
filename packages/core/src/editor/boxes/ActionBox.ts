@@ -30,28 +30,25 @@ export class ActionBox extends AbstractChoiceBox {
 
     selectOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
         LOGGER.log("ActionBox selectOption " + JSON.stringify(option));
-        runInAction(() => {
-            if (!!option.action) {
-                return executeSingleBehavior(option.action, this, option.id, option.label, editor);
-            } else {
-                // Try all statically defined actions
-                const result = executeBehavior(this, option.id, option.label, editor);
-                if (result === BehaviorExecutionResult.EXECUTED) {
-                    return result;
-                }
-                // Wasn't a match, now get all dynamic options, including referenceShortcuts and check these
-                const allOptions = this.getOptions(editor);
-                const selectedOptions = allOptions.filter((o) => option.label === o.label);
-                if (selectedOptions.length === 1) {
-                    LOGGER.log("ActionBox.selectOption dynamic " + JSON.stringify(selectedOptions));
-                    return executeBehavior(this, selectedOptions[0].id, selectedOptions[0].label, editor);
-                } else {
-                    LOGGER.log("ActionBox.selectOption : " + JSON.stringify(selectedOptions));
-                    return BehaviorExecutionResult.NO_MATCH;
-                }
+        if (!!option.action) {
+            return executeSingleBehavior(option.action, this, option.id, option.label, editor);
+        } else {
+            // Try all statically defined actions
+            const result = executeBehavior(this, option.id, option.label, editor);
+            if (result === BehaviorExecutionResult.EXECUTED) {
+                return result;
             }
-        })
-        return BehaviorExecutionResult.NULL;
+            // Wasn't a match, now get all dynamic options, including referenceShortcuts and check these
+            const allOptions = this.getOptions(editor);
+            const selectedOptions = allOptions.filter((o) => option.label === o.label);
+            if (selectedOptions.length === 1) {
+                LOGGER.log("ActionBox.selectOption dynamic " + JSON.stringify(selectedOptions));
+                return executeBehavior(this, selectedOptions[0].id, selectedOptions[0].label, editor);
+            } else {
+                LOGGER.log("ActionBox.selectOption : " + JSON.stringify(selectedOptions));
+                return BehaviorExecutionResult.NO_MATCH;
+            }
+        }
     }
 
     /**

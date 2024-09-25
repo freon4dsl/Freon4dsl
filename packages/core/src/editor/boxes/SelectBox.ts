@@ -36,16 +36,16 @@ export class SelectBox extends AbstractChoiceBox {
         // }))
         return this.getAllOptions(editor);
     }
+
     selectOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        const result = this._innerSelectOption(editor, option);
-        // todo add if-stat when generation is changed to create a function that returns a result
-        // if (result === BehaviorExecutionResult.EXECUTED) {
-        // TODO Might need an index as well
-        this.isDirty()
-        const nodeBox = editor.findBoxForNode(this.node, this.propertyName)?.nextLeafRight
-        editor.selectElementForBox(nodeBox)
-        console.log(`SelectBox: selectOption: ${option.label} box.kind: ${nodeBox.role}`)
-        // }
+        const result: BehaviorExecutionResult = this._innerSelectOption(editor, option);
+        if (result === BehaviorExecutionResult.EXECUTED) {
+            this.isDirty()
+            // TODO Might need an index as well
+            const nodeBox: Box = editor.findBoxForNode(this.node, this.propertyName)?.nextLeafRight
+            editor.selectElementForBox(nodeBox)
+            // console.log(`SelectBox: selectOption: ${option.label} box.kind: ${nodeBox.role}`)
+        }
         return result
     }
 }
