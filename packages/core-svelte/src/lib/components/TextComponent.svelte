@@ -15,7 +15,6 @@
 		CharAllowed,
 		DELETE,
 		ENTER,
-		ESCAPE,
 		isActionBox,
 		isSelectBox,
 		FreCaret,
@@ -199,7 +198,6 @@
 				case ARROW_DOWN:
 				case ARROW_UP:
 				case ENTER:
-				case ESCAPE:
 				case TAB: {
 					// todo Maybe this option could be completely handled by TextDropDown and Freon,
 					// this would avoid a second call to endEditing when the selection is changed.
@@ -273,9 +271,6 @@
 		text = box.getText();
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
 		setInputWidth();
-		// box.setFocus = setFocus;
-		// box.setCaret = setCaret;
-		// box.refreshComponent = refresh;
 	}
 
 	/**
@@ -322,12 +317,12 @@
 
 	/**
 	 * When this component is mounted, the setFocus and setCaret functions are
-	 * made available to the textbox, and the 'text' and 'originalText' variables
+	 * made available to the textbox, and the 'text' variables
 	 * are set.
 	 */
 	onMount(() => {
-		console.log("onMount" + " for element "  + box?.node?.freId() + " (" + box?.node?.freLanguageConcept() + ")" + " original text: '" + box.getText() + "'");
-		// originalText = text = box.getText();
+		LOGGER.log("onMount" + " for element "  + box?.node?.freId() + " (" + box?.node?.freLanguageConcept() + ")" + " original text: '" + box.getText() + "'");
+		text = box.getText();
 		placeholder = box.placeHolder;
 		setInputWidth();
 		box.setFocus = setFocus;
@@ -336,7 +331,7 @@
 	});
 
 	/**
-	 * Sets the inputwidth to match the text inside.
+	 * Sets the input width to match the text inside.
 	 * Copy text from <input> into the <span> with position = absolute and takes the rendered span width.
 	 * See https://dev.to/matrixersp/how-to-make-an-input-field-grow-shrink-as-you-type-513l
 	 */

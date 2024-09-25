@@ -158,6 +158,8 @@ export class UtilPrimHelper {
                     isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
                         return isNumber(currentText, key, innerIndex);
                     },
+                    // todo remove when meta has deleteWhenEmpty in .edit file
+                    deleteWhenEmpty: true,
                 },
             );
         } else {
@@ -174,6 +176,8 @@ export class UtilPrimHelper {
                     isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
                         return isNumber(currentText, key, innerIndex);
                     },
+                    // todo remove when meta has deleteWhenEmpty in .edit file
+                    deleteWhenEmpty: true,
                 },
             );
         }

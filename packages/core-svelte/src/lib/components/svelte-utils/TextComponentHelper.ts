@@ -87,22 +87,8 @@ export class TextComponentHelper {
 
     handleCharAllowed(event: KeyboardEvent, caretFrom: number, editor: FreEditor, htmlId: string) {
         LOGGER.log('CharAllowed ' + JSON.stringify(event.key));
-        // afterUpdate handles the dispatch of the textUpdate to the TextDropdown Component, if needed
         if (this._myBox.kind === "ActionBox") {
             LOGGER.log(`${htmlId}: TEXT UPDATE text '${this._getText()}' key: '${event.key}' from: ${caretFrom}`)
-
-            // if (this._textUpdateFunction !== undefined) {
-            //     LOGGER.log(`${htmlId}: TRY TO MATCH text `)
-            //     const executed = this._textUpdateFunction({content: this._getText().concat(event.key), caret: caretFrom + 1})
-            //     LOGGER.log("Executed is " + executed)
-            //     if (executed) {
-            //         LOGGER.log("Stop propagation and preventDefault in onKeyDown")
-            //         event.stopPropagation()
-            //         event.preventDefault()
-            //     }
-            // } else {
-            //     LOGGER.log(`${htmlId} no textupdatefunction`)
-            // }
             this._dispatcher('textUpdate', {content: this._getText().concat(event.key), caret: this._from - 1});
         }
         event.stopPropagation()
@@ -132,6 +118,7 @@ export class TextComponentHelper {
     }
 
     handleAltOrCtrlKey(event: KeyboardEvent, editor: FreEditor) {
+        // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
         LOGGER.log(`AltOrCtrlKey, key: ${JSON.stringify(event.key)}, ctrl: ${!!event.ctrlKey}, alt: ${!!event.altKey}`);
         // assert (event.altKey || event.ctrlKey)
         // first check if this event has a command defined for it
