@@ -1,1 +1,1 @@
-export { PiLanguageEnvironment } from "./config/gen/PiLanguageEnvironment";
+export { PiLanguageEnvironment } from "./config/gen/PiLanguageEnvironment.js";

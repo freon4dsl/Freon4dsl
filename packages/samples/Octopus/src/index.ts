@@ -1,1 +1,1 @@
-export { OctopusModelEnvironment } from "./config/gen/OctopusModelEnvironment";
+export { OctopusModelEnvironment } from "./config/gen/OctopusModelEnvironment.js";

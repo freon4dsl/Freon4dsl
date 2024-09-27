@@ -2,13 +2,13 @@
   "name": "@freon4dsl/samples-example",
   "version": "0.7.0-beta",
   "license": "MIT",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "type": "module",
   "scripts": {
     "clean": "rm -rf node_modules/",
-    "build": "npm run generate && tsc && tsc-alias && rollup --config",
+    "build": "npm run generate && tsc && rollup --config",
     "compile": "tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
     "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs -o src/",
@@ -24,7 +24,6 @@
     "mobx": "^6.12.3",
     "mobx-utils": "^6.0.8",
     "net.akehurst.language-agl-processor": "4.0.0-rc.5",
-    "tsc-alias": "^1.8.10",
     "tslib": "^2.6.2"
   }
 }

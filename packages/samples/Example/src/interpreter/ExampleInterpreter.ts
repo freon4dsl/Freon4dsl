@@ -5,8 +5,8 @@ import {
     EqualsExpression,
     NumberLiteralExpression,
     PlusExpression
-} from "../language/gen/index";
-import { ExampleInterpreterBase } from "./gen/ExampleInterpreterBase";
+} from "../language/gen/index.js";
+import { ExampleInterpreterBase } from "./gen/ExampleInterpreterBase.js";
 
 let main: IMainInterpreter;
 

@@ -1,5 +1,5 @@
 import { RtBoolean, RtNumber, RtObject } from "@freon4dsl/core";
-import { Question } from "../language/gen/index";
+import { Question } from "../language/gen/index.js";
 
 export class RtAnswer extends RtObject {
     readonly _type: string = "RtAnswer";
