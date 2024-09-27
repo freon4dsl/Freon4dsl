@@ -15,13 +15,17 @@ const config = [
 				sourcemap: true,
 				format: 'es',
 				name: pkg.name,
-				file: pkg.module,
+				file: pkg.main,
 			},
 			{
-				sourcemap: true,
-				format: 'umd',
-				name: pkg.name,
-				file: pkg.main,
+				file: 'dist/index.cjs',
+				format: 'cjs'
+			// },
+			// {
+			// 	sourcemap: true,
+			// 	format: 'umd',
+			// 	name: pkg.name,
+			// 	file: pkg.main,
 			}
 		],
 		plugins: [
