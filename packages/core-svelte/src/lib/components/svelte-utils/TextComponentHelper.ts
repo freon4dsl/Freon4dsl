@@ -21,9 +21,10 @@ export class TextComponentHelper {
     private readonly _getText: () => string;
     // Function that enables us to do everything that is needed when the editing of the TextComponent is in any way stopped.
     private readonly _endEditing: () => void;
-    // Function that enables us to ...
-    // private readonly _textUpdateFunction: (p: { caret: number; content: string }) => boolean;
+    // The dispatcher that enables us to communicate with the surrounding TextDropdownComponent
     private readonly _dispatcher: EventDispatcher<any>;
+    // Indicates whether the text component is part of a TextDropdownComponent
+    private _isPartOfDropdown: boolean = false;
 
     // The cursor position, or when different from 'to', the start of the selected text.
     // Note that 'from <= to' always holds.
@@ -31,14 +32,16 @@ export class TextComponentHelper {
     // The cursor position, or when different from 'from', the end of the selected text.
     // Note that 'from <= to' always holds.
     _to: number = -1;
-    
+
     constructor(box: TextBox,
+                isPartOfDropdown,
                 getText: () => string,
                 endEditing: () => void,
                 // textUpdateFunction: (p: { caret: number; content: string }) => boolean,
                 dispatcher: EventDispatcher<any>
     ) {
         this._myBox = box;
+        this._isPartOfDropdown = isPartOfDropdown;
         this._getText = getText;
         this._endEditing = endEditing;
         // this._textUpdateFunction = textUpdateFunction;
@@ -59,6 +62,46 @@ export class TextComponentHelper {
 
     set from (val: number) {
         this._from = val;
+    }
+
+
+    handleDelete(event: KeyboardEvent, editor: FreEditor) {
+        LOGGER.log(`Delete`);
+        if (!event.ctrlKey && !event.altKey && event.shiftKey) { // shift-delete
+            // TODO CUT
+        } else {
+            this.getCaretPosition(event);
+            let endPosition: number = this._getText().length;
+            // todo this code is the same as in handleBackspace, make it a private method
+            // for now: the console messages make clearer what is happening
+            if (this._from < endPosition || (this._from !== this._to)) { // some chars remain at the right, or several chars are selected
+                console.log(`handleDelete, caret: ${this._from}-${this._to}`);
+                // Without propagation but with event Default, the browser handles which char(s) to be deleted.
+                // With event.ctrlKey: delete text from caret to start, is also handled by the browser.
+                event.stopPropagation();
+                // If needed, the afterUpdate function dispatches a 'textUpdate' to the parent TextDropdownComponent
+            } else { // nothing left in this component to delete at the right
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+    }
+
+    handleBackSpace(event: KeyboardEvent, editor: FreEditor) {
+        this.getCaretPosition(event);
+        let endPosition: number = 0;
+        // todo this code is the same as in handleDelete, make it a private method
+        // for now: the console messages make clearer what is happening
+        if (this._from > endPosition || (this._from !== this._to)) { // some chars remain at the left, or several chars are selected
+            console.log(`handleBackSpace, caret: ${this._from}-${this._to}`);
+            // Without propagation but with event Default, the browser handles which char(s) to be deleted.
+            // With event.ctrlKey: delete text from caret to start, is also handled by the browser.
+            event.stopPropagation();
+            // If needed, the afterUpdate function dispatches a 'textUpdate' to the parent TextDropdownComponent
+        } else { // nothing left in this component to delete at the left
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 
     handleGoToPrevious(event: KeyboardEvent, editor: FreEditor, htmlId: string) {
@@ -89,32 +132,11 @@ export class TextComponentHelper {
         LOGGER.log('CharAllowed ' + JSON.stringify(event.key));
         if (this._myBox.kind === "ActionBox") {
             LOGGER.log(`${htmlId}: TEXT UPDATE text '${this._getText()}' key: '${event.key}' from: ${caretFrom}`)
+            // note: caret is set to one more because getCaretPosition is calculated before the event is executed
+            console.log(`textUpdate from handleCharAllowed`)
             this._dispatcher('textUpdate', {content: this._getText().concat(event.key), caret: this._from - 1});
         }
         event.stopPropagation()
-    }
-
-    handleDelete(event: KeyboardEvent, editor: FreEditor) {
-        LOGGER.log(`Delete`);
-        if (!event.ctrlKey && !event.altKey && event.shiftKey) { // shift-delete
-            // TODO CUT
-        } else {
-            event.stopPropagation();
-            this.getCaretPosition(event);
-            if (this._to !== this._getText().length) { // when there are still chars remaining to the right, do not let the parent handle it
-                // without propagation, the browser handles which char(s) to be deleted
-                // with event.ctrlKey: delete text from caret to 0 => handled by browser
-                event.stopPropagation();
-            } else if (this._getText() === "" || !this._getText()) { //  nothing left in this component to delete
-                if (this._myBox.deleteWhenEmptyAndErase) {
-                    editor.deleteBox(this._myBox);
-                } else { // TODO is this correct?
-                    // the key will cause this element to lose focus, its content should be saved
-                    this._endEditing();
-                    editor.selectNextLeaf();
-                }
-            }
-        }
     }
 
     handleAltOrCtrlKey(event: KeyboardEvent, editor: FreEditor) {
@@ -175,17 +197,18 @@ export class TextComponentHelper {
                 // TODO REDO
             }
         }
-
     }
 
     handleArrowLeft(event: KeyboardEvent) {
         this.getCaretPosition(event);
-        LOGGER.log("Arrow-left: Caret at: " + this._from);
+        console.log(`handleArrowLeft, caret: ${this._from}-${this._to}`);
         if (this._from !== 0) { // when the arrow key can stay within the text, do not let the parent handle it
             event.stopPropagation();
             // note: caret is set to one less because getCaretPosition is calculated before the event is executed
-            LOGGER.log('dispatching from arrow-left')
-            this._dispatcher('textUpdate', {content: this._getText(), caret: this._from - 1});
+            this._from -= 1;
+            this._to -= 1;
+            console.log(`textUpdate from handleArrowLeft`)
+            this._dispatcher('textUpdate', {content: this._getText(), caret: this._from});
         } else { // the key will cause this element to lose focus, its content should be saved
             this._endEditing();
             // let the parent take care of handling the event
@@ -194,39 +217,19 @@ export class TextComponentHelper {
 
     handleArrowRight(event: KeyboardEvent) {
         this.getCaretPosition(event);
-        LOGGER.log("Arrow-right: Caret at: " + this._from);
+        console.log(`handleArrowRight, caret: ${this._from}-${this._to}`);
         if (this._from !== this._getText().length) { // when the arrow key can stay within the text, do not let the parent handle it
             event.stopPropagation();
             // note: caret is set to one more because getCaretPosition is calculated before the event is executed
-            LOGGER.log('dispatching from arrow-right')
-            this._dispatcher('textUpdate', {content: this._getText(), caret: this._from + 1});
+            this._from =+ 1;
+            this._to =+ 1;
+            console.log(`textUpdate from handleArrowLeft`)
+            this._dispatcher('textUpdate', {content: this._getText(), caret: this._from});
         } else { // the key will cause this element to lose focus, its content should be saved
             this._endEditing();
             // let the parent take care of handling the event
         }
     }
-
-    handleBackSpace(event: KeyboardEvent, editor: FreEditor) {
-        this.getCaretPosition(event);
-        LOGGER.log("Caret at: " + this._from);
-        if (this._from !== 0) { // When there are still chars remaining to the left, do not let the parent handle it.
-            // Without propagation, the browser handles which char(s) to be deleted.
-            // With event.ctrlKey: delete text from caret to end => handled by browser.
-            event.stopPropagation();
-        } else if (this._getText() === "" || !!this._getText()) { // nothing left in this component to delete
-            if (this._myBox.deleteWhenEmptyAndErase) {
-                editor.deleteBox(this._myBox);
-                event.stopPropagation();
-                // return;
-            }
-            editor.selectPreviousLeaf();
-        } else {
-            // the key will cause this element to lose focus, its content should be saved
-            this._endEditing();
-            editor.selectPreviousLeaf();
-        }
-    }
-
 
 
     /**
@@ -256,6 +259,10 @@ export class TextComponentHelper {
             this._from = inTo;
             this._to = inFrom;
         }
+    }
+
+    isTextEmpty(): boolean {
+        return this._getText() === "" || !this._getText();
     }
 }
 

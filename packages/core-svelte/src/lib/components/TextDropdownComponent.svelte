@@ -154,16 +154,15 @@
      * @param event
      */
     const textUpdate = (event: CustomEvent) => {
-        console.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail));
+        console.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail) + ", start: "+ text.substring(0, event.detail.caret));
         dropdownShown = true;
-        setText(event.detail.content);
+        // setText(event.detail.content);
         allOptions = getOptions();
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
         makeFilteredOptionsUnique();
         // Only one option and has been fully typed in, use this option without waiting for the ENTER key
         // console.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
         if (filteredOptions.length === 1 && filteredOptions[0].label === event.detail.content && filteredOptions[0].label.length === event.detail.caret ) {
-            console.log("STOP 1 !!")
             event.preventDefault()
             event.stopPropagation()
             storeAndExecute(filteredOptions[0])
@@ -177,6 +176,10 @@
             matchAndExecuteAction(event);
         }
     };
+
+    const hideDropdown= () => {
+        dropdownShown = false;
+    }
 
     function makeFilteredOptionsUnique() {
         // remove doubles, to avoid errors
@@ -341,8 +344,7 @@
     const startEditing = (event?: CustomEvent) => {
         LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event?.detail));
         isEditing = true;
-        dropdownShown = true;
-        editor.selectElementForBox(box);
+        // dropdownShown = true;
         allOptions = getOptions();
         if (!!event) {
             if ( text === undefined || text === null || text.length === 0) {
@@ -368,13 +370,12 @@
      * @param selected
      */
     function storeAndExecute(selected: SelectOption) {
-        console.log('storeAndExecute for option ' + selected.label + ' ' + box.kind);
+        LOGGER.log('storeAndExecute for option ' + selected.label + ' ' + box.kind);
         isEditing = false;
         dropdownShown = false;
 
         // TODO set the new cursor through the editor
         box.selectOption(editor, selected); // TODO the result of the execution is ignored
-        console.log("XXXXX")
         if (isActionBox(box)) { // ActionBox, action done, clear input text
             setTextLocalAndInBox('');
         }
@@ -460,10 +461,11 @@
             bind:isEditing={isEditing}
             bind:text={text}
             bind:this={textComponent}
-            partOfActionBox={true}
+            partOfDropdown={true}
             box={textBox}
             editor={editor}
             on:textUpdate={textUpdate}
+            on:hideDropdown={hideDropdown}
             on:startEditing={startEditing}
             on:endEditing={endEditing}
             on:onFocusOutText={onFocusOutText}

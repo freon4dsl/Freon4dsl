@@ -108,10 +108,6 @@
         refresh((first ? "first" : "later") + "   " + box?.id);
         first = false;
     // }
-
-    if (box?.node?.freId() === 'ID-100') {
-        console.log(`Rendering ID-100 ${box.kind}`)
-    }
 </script>
 
 <!-- TableRows are not included here, because they use the CSS grid and table cells must in HTML
@@ -175,7 +171,7 @@
         {:else if isTableBox(box) }
             <TableComponent box={box} editor={editor} />
         {:else if isTextBox(box) }
-            <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
+            <TextComponent box={box} editor={editor} partOfDropdown={false} text="" isEditing={false}/>
         {:else if isMultiLineTextBox(box) }
             <MultiLineTextComponent box={box} editor={editor} text=""/>
         {:else if isActionBox(box) || isSelectBox(box) || isReferenceBox(box) }

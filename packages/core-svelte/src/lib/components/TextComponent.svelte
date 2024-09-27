@@ -38,7 +38,7 @@
 	export let box: TextBox;				// the accompanying textbox
 	export let editor: FreEditor;			// the editor
 	export let isEditing: boolean = false; 	// indication whether this component is currently being edited by the user, needs to be exported for binding in TextDropdownComponent
-	export let partOfActionBox: boolean = false; // indication whether this text component is part of an TextDropdownComponent
+	export let partOfDropdown: boolean = false; // indication whether this text component is part of an TextDropdownComponent
 	export let text: string;    			// the text to be displayed, needs to be exported for to use 'bind:text' in TextDropdownComponent
 
 	// Local variables
@@ -51,12 +51,12 @@
 
 	// Variables for styling
 	let placeHolderStyle: string;
-	$: placeHolderStyle = (partOfActionBox ? "text-component-action-placeholder" : "text-component-placeholder");
+	$: placeHolderStyle = (partOfDropdown ? "text-component-action-placeholder" : "text-component-placeholder");
 	let boxType: BoxType = "text";          // indication how is this text component is used, determines styling
 	$: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
 
 	// We create an extra object that handles a number of the more complex functions for this component
-	let myHelper: TextComponentHelper = new TextComponentHelper(box, () => {return text}, endEditing, dispatcher);
+	let myHelper: TextComponentHelper = new TextComponentHelper(box, partOfDropdown, () => {return text}, endEditing, dispatcher);
 
 	/**
 	 * This function sets the focus on this element programmatically.
@@ -120,7 +120,7 @@
 		myHelper.setFromAndTo(anchorOffset, focusOffset);
 		event.preventDefault();
 		event.stopPropagation();
-		if (partOfActionBox) {
+		if (partOfDropdown) {
 			dispatcher('startEditing', {content: text, caret: myHelper.from}); // tell the TextDropdown that the edit has started
 		}
 	}
@@ -136,8 +136,8 @@
 			LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 			myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
 		}
-		if (partOfActionBox) {  // let TextDropdownComponent know, dropdown menu needs to be altered
-			LOGGER.log('dispatching from on click');
+		if (partOfDropdown) {  // let TextDropdownComponent know, dropdown menu needs to be altered
+			console.log(`textUpdate from onClick`)
 			dispatcher('textUpdate', {content: text, caret: myHelper.from});
 		}
 		event.stopPropagation();
@@ -155,7 +155,7 @@
 			myHelper.from = -1;
 			myHelper.to = -1;
 
-			if (!partOfActionBox) {
+			if (!partOfDropdown) {
 				// store the current value in the textbox, or delete the box, if appropriate
 				LOGGER.log(`   save text using box.setText(${text})`)
 				runInAction(() => {
@@ -167,11 +167,6 @@
 					}
 				});
 			} else {
-				// if (!!endEditingParentFunction) {
-				// 	endEditingParentFunction();
-				// } else {
-				// 	LOGGER.error("No parent endEditing function")
-				// }
 				dispatcher('endEditing');
 			}
 		}
@@ -202,7 +197,7 @@
 					// todo Maybe this option could be completely handled by TextDropDown and Freon,
 					// this would avoid a second call to endEditing when the selection is changed.
 					LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
-					if (!partOfActionBox && isEditing) {
+					if (!partOfDropdown && isEditing) {
 						endEditing(); // do not switch selection, this will be done by FreonComponent
 					} // else, let TextDropDownComponent handle this
 					break;
@@ -256,8 +251,8 @@
 	 * When this component loses focus, do everything that is needed to end the editing state.
 	 */
 	const onFocusOut = () => {
-		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfActionBox + " isEditing:" + isEditing)
-		if (!partOfActionBox && isEditing) {
+		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
+		if (!partOfDropdown && isEditing) {
 			endEditing();
 		} else {
 			// let TextDropdownComponent handle it
@@ -301,11 +296,17 @@
 			inputElement.selectionEnd = myHelper.to >= 0 ? myHelper.to : 0;
 			inputElement.focus();
 			editStart = false;
-		}
-		if (isEditing && partOfActionBox) {
-			// send event to parent TextDropdownComponent
-			LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
-			dispatcher('textUpdate', {content: text, caret: myHelper.from + 1});
+		} else if (isEditing) {
+			console.log(`check deleteWhenEmpty, caret: ${myHelper.from}-${myHelper.to}, text: "${text}", empty:${myHelper.isTextEmpty()}, deleteWhenEmpty: ${box.deleteWhenEmpty}`)
+			if (myHelper.isTextEmpty() && box.deleteWhenEmpty) { // the text is completely empty, and we may delete the node
+				console.log("Deleting box")
+				dispatcher('hideDropdown');
+				editor.deleteBox(box);
+			} else if (partOfDropdown) {
+				// send event to parent TextDropdownComponent
+				console.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
+				dispatcher('textUpdate', {content: text, caret: myHelper.from});
+			}
 		}
 		// Always set the input width explicitly.
 		setInputWidth();
@@ -336,9 +337,6 @@
 	 * See https://dev.to/matrixersp/how-to-make-an-input-field-grow-shrink-as-you-type-513l
 	 */
 	function setInputWidth() {
-		if (box.getText().startsWith("home")) {
-			console.log(`setInputWidth box ${box.$id} for value '${inputElement?.value}' isEditing ${isEditing}`)
-		}
 		if(!!widthSpan && !!inputElement) {
 			let value = inputElement.value;
 			if ((value !== undefined) && (value !== null) && (value.length === 0)) {
@@ -352,13 +350,7 @@
 			const width = widthSpan.offsetWidth + "px";
 			inputElement.style.width = width;
 			// LOGGER.log("setInputWidth mirror [" + value + "] input [" + inputElement.value + "] placeholder [" + placeholder + "] w: " + width + " " + widthSpan.clientWidth + " for element "  + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ")")
-			if (box.getText().startsWith("home")) {
-				console.log("    setInputWidth " + width)
-			}
 		} else {
-			if (box.getText().startsWith("home")) {
-				console.log(`    setInputWidth ${box.$id} not calculated`)
-			}
 			// LOGGER.log("SetInputWidth do nothing for element " + box?.element?.freId() + " (" + box?.element?.freLanguageConcept() + ") " + widthSpan + "::" + inputElement + "::" + spanElement);
 		}
 	}

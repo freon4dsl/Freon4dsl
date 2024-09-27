@@ -27,7 +27,7 @@
     let isHorizontal: boolean = false; // todo expose horizontal/vertical to user
 
     const onClick = (event) => {
-        console.log("onClick")
+        // console.log("onClick")
         // prevent bubbling up
         event.stopPropagation();
     }
@@ -37,14 +37,14 @@
     }
 
     function changed(name: string) {
-        console.log("changed name: " + name)
+        // console.log("changed name: " + name)
         if (isChecked(name)) {
             currentNames.splice(currentNames.indexOf(name), 1);
         } else {
             currentNames.push(name);
         }
         box.setNames(currentNames);
-        console.log("box names: " + box.getNames())
+        // console.log("box names: " + box.getNames())
         editor.selectElementForBox(box);
     }
     /**
@@ -59,7 +59,7 @@
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH LimitedControlBox: " + why);
         currentNames = box.getNames();
-        console.log("box names: " + box.getNames())
+        // console.log("box names: " + box.getNames())
     };
     onMount(() => {
         currentNames = box.getNames();
