@@ -24,7 +24,7 @@ export class IndexTemplate {
 
         export {
         ${tmp.map((c) => `${c}`).join(",\n")}
-        } from "./internal"`;
+        } from "./internal.js"`;
     }
 
     generateInternal(language: FreMetaLanguage): string {
@@ -55,13 +55,13 @@ export class IndexTemplate {
          * concepts that are extending them.
          */
 
-        ${tmp.map((c) => `export * from "./${c}";`).join("\n")}
+        ${tmp.map((c) => `export * from "./${c}.js";`).join("\n")}
         `;
     }
 
     generateUtilsIndex(language: FreMetaLanguage): string {
-        return `export * from "./${Names.workerInterface(language)}";
-                export * from "./${Names.walker(language)}";
-                export * from "./${Names.defaultWorker(language)}";`;
+        return `export * from "./${Names.workerInterface(language)}.js";
+                export * from "./${Names.walker(language)}.js";
+                export * from "./${Names.defaultWorker(language)}.js";`;
     }
 }

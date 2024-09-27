@@ -156,21 +156,21 @@ export class BoxProviderTemplate {
 
             ${
                 this.modelImports.length > 0
-                    ? `import { ${this.modelImports.map((c) => `${c}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`
+                    ? `import { ${this.modelImports.map((c) => `${c}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";`
                     : ``
             }
 
             ${
                 this.configImports.length > 0
                     ? this.configImports.map(
-                          (c) => `import { ${c} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${c}";`,
+                          (c) => `import { ${c} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${c}.js";`,
                       )
                     : ``
             }
 
             ${
                 this.supersUsed.length > 0
-                    ? `import { ${this.supersUsed.map((c) => `${Names.boxProvider(c)}`).join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";`
+                    ? `import { ${this.supersUsed.map((c) => `${Names.boxProvider(c)}`).join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}/index.js";`
                     : ``
             }
             

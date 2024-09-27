@@ -86,8 +86,8 @@ export class FreTypeConceptMaker {
     ): string {
         return `
             ${importsFromCore.length > 0 ? `import { ${importsFromCore.join(",")} } from "${FREON_CORE}";` : ``}
-            ${modelImports.length > 0 ? `import { ${modelImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
-            ${typeImports.length > 0 ? `import { ${typeImports.join(", ")} } from "./internal";` : ``}
+            ${modelImports.length > 0 ? `import { ${modelImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";` : ``}
+            ${typeImports.length > 0 ? `import { ${typeImports.join(", ")} } from "./internal.js";` : ``}
             `;
     }
 
@@ -146,7 +146,7 @@ export class FreTypeConceptMaker {
 
         export {
         ${tmp.map((c) => `${c}`).join(",\n")}
-        } from "./internal"`;
+        } from "./internal.js"`;
     }
 
     public makeInternalFile(typerdef: TyperDef) {
@@ -171,7 +171,7 @@ export class FreTypeConceptMaker {
          * concepts that are extending them.
          */
 
-        ${tmp.map((c) => `export * from "./${c}";`).join("\n")}
+        ${tmp.map((c) => `export * from "./${c}.js";`).join("\n")}
         `;
     }
 
