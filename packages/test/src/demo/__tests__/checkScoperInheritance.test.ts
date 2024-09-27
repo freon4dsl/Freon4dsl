@@ -1,7 +1,7 @@
-import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { DemoScoper } from "../scoper/gen";
-import { DemoEntity, Demo } from "../language/gen";
-import { DemoModelCreator } from "./DemoModelCreator";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
+import { DemoScoper } from "../scoper/gen/index.js";
+import { DemoEntity, Demo } from "../language/gen/index.js";
+import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("testing Scoper", () => {

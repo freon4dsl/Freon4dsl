@@ -1,10 +1,10 @@
-import { DemoScoper } from "../scoper/gen";
-import { DemoModel, Demo } from "../language/gen";
-import { initializeScoperDef } from "../scoper/gen";
-import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
-import { DemoUnitCreator } from "./DemoUnitCreator";
-import { DemoEnvironment } from "../config/gen/DemoEnvironment";
+import { DemoScoper } from "../scoper/gen/index.js";
+import { DemoModel, Demo } from "../language/gen/index.js";
+import { initializeScoperDef } from "../scoper/gen/index.js";
+import { DemoModelCreator } from "./DemoModelCreator.js";
+import { DemoStdlib } from "../stdlib/gen/DemoStdlib.js";
+import { DemoUnitCreator } from "./DemoUnitCreator.js";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("testing Scoper on model units", () => {

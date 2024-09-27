@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { InMemoryModel, LionWebRepositoryCommunication, ServerCommunication } from "@freon4dsl/core";
-import { RulesModelEnvironment } from "../config/gen/RulesModelEnvironment";
+import { RulesModelEnvironment } from "../config/gen/RulesModelEnvironment.js";
 import { Data, Rules, RulesModel } from "../language/gen/index.js";
 import { fillDataUnit, fillRulesUnit, modelToString } from "./StoreModelCreator.js";
 

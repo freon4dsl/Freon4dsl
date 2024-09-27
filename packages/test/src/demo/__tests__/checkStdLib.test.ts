@@ -1,7 +1,7 @@
 import { FreLanguage } from "@freon4dsl/core";
-import { DemoAttributeType } from "../language/gen";
-import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { DemoStdlib } from "../stdlib/gen/DemoStdlib";
+import { DemoAttributeType } from "../language/gen/index.js";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
+import { DemoStdlib } from "../stdlib/gen/DemoStdlib.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
 // limited DemoAttributeType implements Type {

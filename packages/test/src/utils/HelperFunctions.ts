@@ -1,5 +1,5 @@
 import { FreModelSerializer, FreModel, FreModelUnit, FreReader, FreWriter, FreNode } from "@freon4dsl/core";
-import { FileHandler } from "./FileHandler";
+import { FileHandler } from "./FileHandler.js";
 import { expect } from "vitest";
 
 const serial: FreModelSerializer = new FreModelSerializer();

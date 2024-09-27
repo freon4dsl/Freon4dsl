@@ -10,10 +10,10 @@ import {
     DemoVariable,
     DemoAttributeType,
 } from "../language/gen";
-import { DemoModelCreator } from "./DemoModelCreator";
-import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
-import { DemoValidator } from "../validator/gen";
-import { DemoEnvironment } from "../config/gen/DemoEnvironment";
+import { DemoModelCreator } from "./DemoModelCreator.js";
+import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
+import { DemoValidator } from "../validator/gen/index.js";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
 // import { FileHandler } from "../../utils/FileHandler";
 import { describe, it, test, expect, beforeEach } from "vitest";
 

@@ -1,5 +1,5 @@
 import { FreNodeReference } from "@freon4dsl/core";
-import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, DemoFunction } from "../language/gen";
+import { DemoEntity, DemoAttribute, DemoModel, DemoAttributeType, DemoFunction } from "../language/gen/index.js";
 
 export class JsonModelCreator {
     model: DemoModel;

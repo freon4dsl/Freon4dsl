@@ -1,5 +1,5 @@
 import { FreNodeReference, FreError } from "@freon4dsl/core";
-import { DemoEnvironment } from "../config/gen/DemoEnvironment";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
 import {
     DemoModel,
     DemoAttributeType,
@@ -12,9 +12,9 @@ import {
     DemoVariable,
     Demo,
 } from "../language/gen";
-import { DemoValidator } from "../validator/gen";
-import { DemoModelCreator } from "./DemoModelCreator";
-import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions";
+import { DemoValidator } from "../validator/gen/index.js";
+import { DemoModelCreator } from "./DemoModelCreator.js";
+import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
 import { describe, test, expect, beforeEach } from "vitest";
 
 describe("Testing Validator", () => {

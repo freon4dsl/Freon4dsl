@@ -1,4 +1,4 @@
-import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen";
+import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen/index.js";
 import { FreModelSerializer, FreNodeReference } from "@freon4dsl/core";
 
 // This class creates a model like SimpleModelCreator,

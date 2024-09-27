@@ -1,7 +1,7 @@
-import { DemoModelCreator } from "./DemoModelCreator";
-import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { Demo, DemoModel } from "../language/gen";
-import { FileHandler } from "../../utils/FileHandler";
+import { DemoModelCreator } from "./DemoModelCreator.js";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
+import { Demo, DemoModel } from "../language/gen/index.js";
+import { FileHandler } from "../../utils/FileHandler.js";
 import { describe, test, expect, beforeEach } from "vitest";
 
 describe("Testing Parser", () => {
