@@ -231,7 +231,6 @@ export class TextComponentHelper {
         }
     }
 
-
     /**
      * When a keyboard event is triggered, this function stores the caret position(s).
      * Note, this function is to be used from the <input> element only. It depends on the
