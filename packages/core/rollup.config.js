@@ -20,27 +20,10 @@ const config = [
 			{
 				file: 'dist/index.cjs',
 				format: 'cjs'
-			// },
-			// {
-			// 	sourcemap: true,
-			// 	format: 'umd',
-			// 	name: pkg.name,
-			// 	file: pkg.main,
+
 			}
 		],
 		plugins: [
-			// If you have external dependencies installed from
-			// npm, you'll most likely need these plugins. In
-			// some cases you'll need additional configuration -
-			// consult the documentation for details:
-			// https://github.com/rollup/plugins/tree/master/packages/commonjs
-
-			/* the param to resolve is added because of the note in
-			https://github.com/rollup/plugins/tree/master/packages/node-resolve/#readme
-			regarding "Resolving Built-Ins (like fs)"
-			 */
-			resolve({ preferBuiltins: false }),
-			commonjs(),
 			typescript(),
 
 			// If we're building for production (npm run build
