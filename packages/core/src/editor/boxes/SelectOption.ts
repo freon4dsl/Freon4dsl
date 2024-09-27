@@ -1,4 +1,4 @@
-import { FreAction } from "../actions";
+import { FreAction } from "../actions/index.js";
 
 /**
  * Describes an option in a dropdown

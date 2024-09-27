@@ -5,12 +5,12 @@ import {
     LionWebJsonNode,
     LionWebJsonReference,
 } from "@lionweb/validation";
-import { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index";
-import { FreLanguage, FreLanguageProperty } from "../../language/index";
-import { FreLogger } from "../../logging/index";
-import { FreUtils, isNullOrUndefined } from "../../util/index";
-import { FreSerializer } from "./FreSerializer";
-import { createLionWebJsonNode, isLionWebJsonChunk } from "./NewLionwebM3";
+import { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js";
+import { FreLanguage, FreLanguageProperty } from "../../language/index.js";
+import { FreLogger } from "../../logging/index.js";
+import { FreUtils, isNullOrUndefined } from "../../util/index.js";
+import { FreSerializer } from "./FreSerializer.js";
+import { createLionWebJsonNode, isLionWebJsonChunk } from "./NewLionwebM3.js";
 
 const LOGGER = new FreLogger("FreLionwebSerializer");
 /**

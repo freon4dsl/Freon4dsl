@@ -4,4 +4,4 @@
  * in order to avoid problem with circular imports.
  */
 
-export * from "./internal";
+export * from "./internal.js";

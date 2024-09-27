@@ -1,5 +1,5 @@
-import { InterpreterTracer } from "./InterpreterTracer";
-import { RtObject } from "./runtime";
+import { InterpreterTracer } from "./InterpreterTracer.js";
+import { RtObject } from "./runtime/index.js";
 
 export interface FreInterpreter {
     setTracing(value: boolean): void;

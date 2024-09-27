@@ -1,5 +1,5 @@
-import { DecoratedModelElement, MobxModelElementImpl, FreNode, FreNodeBaseImpl, FreModelUnit } from "../ast";
-import { PrimType } from "../language";
+import { DecoratedModelElement, MobxModelElementImpl, FreNode, FreNodeBaseImpl, FreModelUnit } from "../ast/index.js";
+import { PrimType } from "../language/index.js";
 
 export abstract class FreDelta {
     unit: FreModelUnit;

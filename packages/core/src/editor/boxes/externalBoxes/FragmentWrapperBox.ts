@@ -1,7 +1,7 @@
-import { Box } from "../Box";
-import { FreNode } from "../../../ast";
-import { FreUtils } from "../../../util";
-import { AbstractExternalBox } from "./AbstractExternalBox";
+import { Box } from "../Box.js";
+import { FreNode } from "../../../ast/index.js";
+import { FreUtils } from "../../../util/index.js";
+import { AbstractExternalBox } from "./AbstractExternalBox.js";
 
 /**
  * This class represents an external component that may have a Freon native component as child projection.

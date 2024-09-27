@@ -1,8 +1,8 @@
-import { Box } from "./Box";
-import { FreNode } from "../../ast";
-import { FreLanguage } from "../../language";
-import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
-import { LayoutBox, ListDirection } from "./LayoutBox";
+import { Box } from "./Box.js";
+import { FreNode } from "../../ast/index.js";
+import { FreLanguage } from "../../language/index.js";
+import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util/index.js";
+import { LayoutBox, ListDirection } from "./LayoutBox.js";
 
 // import { FreLogger } from "../../logging";
 // const LOGGER = new FreLogger("ListBox");

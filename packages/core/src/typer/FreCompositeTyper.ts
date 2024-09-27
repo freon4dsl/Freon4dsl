@@ -1,7 +1,7 @@
-import { FreNode } from "../ast";
-import { ArrayUtil } from "../util/ArrayUtil";
-import { FreTyper } from "./FreTyper";
-import { FreType } from "./FreType";
+import { FreNode } from "../ast/index.js";
+import { ArrayUtil } from "../util/ArrayUtil.js";
+import { FreTyper } from "./FreTyper.js";
+import { FreType } from "./FreType.js";
 
 export class FreCompositeTyper implements FreTyper {
     mainTyper: FreTyper;

@@ -1,4 +1,4 @@
-import { FreNode } from "../../ast";
+import { FreNode } from "../../ast/index.js";
 import {
     BoolDisplay,
     BooleanWrapperBox,
@@ -30,14 +30,14 @@ import {
     StringWrapperBox,
     TextBox,
     VerticalListBox,
-} from "../boxes";
-import { FreScoper } from "../../scoper";
-import { RoleProvider } from "./RoleProvider";
-import { FreProjectionHandler } from "../projections";
-import { UtilPrimHelper } from "./box-util-helpers/UtilPrimHelper";
-import { UtilRefHelpers } from "./box-util-helpers/UtilRefHelpers";
-import { UtilPartHelpers } from "./box-util-helpers/UtilPartHelpers";
-import { UtilLimitedHelpers } from "./box-util-helpers/UtilLimitedHelpers";
+} from "../boxes/index.js";
+import { FreScoper } from "../../scoper/index.js";
+import { RoleProvider } from "./RoleProvider.js";
+import { FreProjectionHandler } from "../projections/index.js";
+import { UtilPrimHelper } from "./box-util-helpers/UtilPrimHelper.js";
+import { UtilRefHelpers } from "./box-util-helpers/UtilRefHelpers.js";
+import { UtilPartHelpers } from "./box-util-helpers/UtilPartHelpers.js";
+import { UtilLimitedHelpers } from "./box-util-helpers/UtilLimitedHelpers.js";
 
 export class FreListInfo {
     text: string;

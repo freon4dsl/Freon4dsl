@@ -1,6 +1,6 @@
-import { InterpreterContext } from "./InterpreterContext";
-import { InterpreterTracer } from "./InterpreterTracer";
-import { RtObject } from "./runtime";
+import { InterpreterContext } from "./InterpreterContext.js";
+import { InterpreterTracer } from "./InterpreterTracer.js";
+import { RtObject } from "./runtime/index.js";
 
 export type ConceptFunction = (node: Object) => string;
 export type OwningPropertyFunction = (node: Object) => string;

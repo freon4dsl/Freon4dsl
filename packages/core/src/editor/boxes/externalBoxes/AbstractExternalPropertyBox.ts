@@ -1,6 +1,6 @@
-import { AbstractExternalBox } from "./AbstractExternalBox";
-import { FreNode } from "../../../ast";
-import { FreLanguage } from "../../../language";
+import { AbstractExternalBox } from "./AbstractExternalBox.js";
+import { FreNode } from "../../../ast/index.js";
+import { FreLanguage } from "../../../language/index.js";
 
 export abstract class AbstractExternalPropertyBox extends AbstractExternalBox {
     // the following two are inherit from Box

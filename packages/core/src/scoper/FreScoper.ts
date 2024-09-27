@@ -1,5 +1,5 @@
-import { FreNode, FreNamedNode } from "../ast";
-import { FreScoperComposite } from "./FreScoperComposite";
+import { FreNode, FreNamedNode } from "../ast/index.js";
+import { FreScoperComposite } from "./FreScoperComposite.js";
 
 // Part of the Freon Framework
 

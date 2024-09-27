@@ -1,7 +1,7 @@
-import { observablepart, FreNodeBaseImpl, FreModel } from "../../../ast";
-import { FreUtils } from "../../../util";
-import { FreLanguage } from "../../../language";
-import { UndoUnit } from "./UndoUnit";
+import { observablepart, FreNodeBaseImpl, FreModel } from "../../../ast/index.js";
+import { FreUtils } from "../../../util/index.js";
+import { FreLanguage } from "../../../language/index.js";
+import { UndoUnit } from "./UndoUnit.js";
 
 /**
  * Class UndoModel is the implementation of the model with the same name in the language definition file.

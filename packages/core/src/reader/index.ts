@@ -1,2 +1,2 @@
-export * from "./FreReader";
-export * from "./FreParseLocation";
+export * from "./FreReader.js";
+export * from "./FreParseLocation.js";

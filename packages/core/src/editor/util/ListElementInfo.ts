@@ -1,4 +1,4 @@
-import { FreNode } from "../../ast";
+import { FreNode } from "../../ast/index.js";
 
 /**
  * This class represent information on a single element from a list in the FreNode model.

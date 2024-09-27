@@ -1,6 +1,6 @@
-import { FreNode } from "../../ast";
-import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util";
-import { FreLogger } from "../../logging";
+import { FreNode } from "../../ast/index.js";
+import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util/index.js";
+import { FreLogger } from "../../logging/index.js";
 
 const LOGGER = new FreLogger("Box");
 

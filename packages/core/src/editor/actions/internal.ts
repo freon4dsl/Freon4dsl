@@ -7,10 +7,10 @@
  * concepts that are using them.
  */
 
-export * from "./FreCommand";
-export * from "./FreAction";
-export * from "./FreCustomAction";
-export * from "./FreCreateBinaryExpressionAction";
-export * from "./FreCreatePartAction";
-export * from "./FreCreateSiblingAction";
-export * from "./FreTriggers";
+export * from "./FreCommand.js";
+export * from "./FreAction.js";
+export * from "./FreCustomAction.js";
+export * from "./FreCreateBinaryExpressionAction.js";
+export * from "./FreCreatePartAction.js";
+export * from "./FreCreateSiblingAction.js";
+export * from "./FreTriggers.js";

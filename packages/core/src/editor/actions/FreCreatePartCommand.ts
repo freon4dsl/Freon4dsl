@@ -1,12 +1,12 @@
-import { FreLogger } from "../../logging/index";
-import { BTREE } from "../../util/index";
-import { EMPTY_POST_ACTION, FrePostAction, ReferenceShortcut } from "./FreAction";
-import { Box } from "../boxes";
-import { isString, FreTriggerUse, triggerTypeToString } from "./FreTriggers";
-import { FreEditor } from "../FreEditor";
-import { FreBinaryExpression, FreNode } from "../../ast";
-import { FreLanguage } from "../../language";
-import { FreCommand } from "./FreCommand";
+import { FreLogger } from "../../logging/index.js";
+import { BTREE } from "../../util/index.js";
+import { EMPTY_POST_ACTION, FrePostAction, ReferenceShortcut } from "./FreAction.js";
+import { Box } from "../boxes/index.js";
+import { isString, FreTriggerUse, triggerTypeToString } from "./FreTriggers.js";
+import { FreEditor } from "../FreEditor.js";
+import { FreBinaryExpression, FreNode } from "../../ast/index.js";
+import { FreLanguage } from "../../language/index.js";
+import { FreCommand } from "./FreCommand.js";
 
 const LOGGER = new FreLogger("FreCommand");
 /**

@@ -1,7 +1,7 @@
-import { AbstractExternalBox } from "./AbstractExternalBox";
-import { Box } from "../Box";
-import { FreNode } from "../../../ast";
-import { FreUtils } from "../../../util";
+import { AbstractExternalBox } from "./AbstractExternalBox.js";
+import { Box } from "../Box.js";
+import { FreNode } from "../../../ast/index.js";
+import { FreUtils } from "../../../util/index.js";
 
 /**
  * This class represents a simple addition to the box tree. The box is only coupled to the

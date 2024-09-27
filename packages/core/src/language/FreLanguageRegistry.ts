@@ -6,7 +6,7 @@ import {
     FreLanguageProperty,
     FreLanguageModel,
     FreLanguageModelUnit,
-} from "./FreLanguage";
+} from "./FreLanguage.js";
 
 /**
  * Registry for all languages used.

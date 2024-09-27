@@ -1,5 +1,5 @@
-import { FreNode } from "../ast";
-import { FreType } from "./FreType";
+import { FreNode } from "../ast/index.js";
+import { FreType } from "./FreType.js";
 
 export interface FreTyper {
     // name: string;

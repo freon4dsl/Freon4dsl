@@ -8,9 +8,9 @@ import {
     triggerTypeToString,
     BoxFactory,
     FreProjectionHandler,
-} from "../index";
-import { FreBinaryExpression, FreExpressionNode } from "../../ast";
-import { FreLanguage } from "../../language";
+} from "../index.js";
+import { FreBinaryExpression, FreExpressionNode } from "../../ast/index.js";
+import { FreLanguage } from "../../language/index.js";
 import {
     FRE_BINARY_EXPRESSION_LEFT,
     FRE_BINARY_EXPRESSION_RIGHT,
@@ -23,9 +23,9 @@ import {
     LEFT_MOST,
     RIGHT_MOST,
     FreUtils,
-} from "../../util";
-import { NBSP } from "../index";
-import { BehaviorExecutionResult } from "./BehaviorUtils";
+} from "../../util/index.js";
+import { NBSP } from "../index.js";
+import { BehaviorExecutionResult } from "./BehaviorUtils.js";
 
 // const LOGGER = new FreLogger("FreExpressionNodeHelpers");
 // todo maybe moved these functions to BoxUtils?

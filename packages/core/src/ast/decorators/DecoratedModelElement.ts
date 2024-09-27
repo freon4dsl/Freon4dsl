@@ -1,5 +1,5 @@
 import { makeObservable, observable } from "mobx";
-import { FreOwnerDescriptor, FreNode } from "..";
+import { FreOwnerDescriptor, FreNode } from "../index.js";
 
 /**
  *  An element using the decorators should implement this interface.

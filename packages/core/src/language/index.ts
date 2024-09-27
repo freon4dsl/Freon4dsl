@@ -1,1 +1,1 @@
-export * from "./FreLanguage";
+export * from "./FreLanguage.js";

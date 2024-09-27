@@ -1,7 +1,7 @@
-import { FreLogger } from "../../logging";
-import { FreNode } from "../../ast";
-import { FreUtils, isNullOrUndefined } from "../../util";
-import { Box } from "./internal";
+import { FreLogger } from "../../logging/index.js";
+import { FreNode } from "../../ast/index.js";
+import { FreUtils, isNullOrUndefined } from "../../util/index.js";
+import { Box } from "./internal.js";
 
 const LOGGER: FreLogger = new FreLogger("NumberControlBox");
 

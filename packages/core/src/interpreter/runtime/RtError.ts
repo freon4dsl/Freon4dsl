@@ -1,5 +1,5 @@
-import { RtBoolean } from "./RtBoolean";
-import { RtObject } from "./RtObject";
+import { RtBoolean } from "./RtBoolean.js";
+import { RtObject } from "./RtObject.js";
 
 export class RtError extends RtObject {
     readonly _type = "RtError";

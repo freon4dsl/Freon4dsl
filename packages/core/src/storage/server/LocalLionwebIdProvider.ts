@@ -1,4 +1,4 @@
-import { IdProvider } from "../../util/index";
+import { IdProvider } from "../../util/index.js";
 
 export class LocalLionwebIdProvider implements IdProvider {
     index: number = 300;

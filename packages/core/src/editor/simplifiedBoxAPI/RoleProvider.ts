@@ -1,5 +1,5 @@
-import { FreLanguageConcept, FreLanguageInterface, FreLanguageModelUnit } from "../../language";
-import { FreNode } from "../../ast";
+import { FreLanguageConcept, FreLanguageInterface, FreLanguageModelUnit } from "../../language/index.js";
+import { FreNode } from "../../ast/index.js";
 
 export class RoleProvider {
     public static classifier(concept: FreLanguageModelUnit | FreLanguageConcept | FreLanguageInterface): string {

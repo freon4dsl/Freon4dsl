@@ -1,7 +1,7 @@
-import { FreChangeManager } from "./FreChangeManager";
-import { FreModelUnit } from "../ast";
-import { FreDelta } from "./FreDelta";
-import { FreUndoStackManager } from "./FreUndoStackManager";
+import { FreChangeManager } from "./FreChangeManager.js";
+import { FreModelUnit } from "../ast/index.js";
+import { FreDelta } from "./FreDelta.js";
+import { FreUndoStackManager } from "./FreUndoStackManager.js";
 
 /**
  * Class FreUndoManager holds the change information on the model.

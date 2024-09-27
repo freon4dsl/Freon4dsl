@@ -1,9 +1,9 @@
-import { FreBinaryExpression } from "../../ast";
-import { FreUtils } from "../../util";
-import { Box } from "../boxes";
-import { FreEditor } from "../FreEditor";
-import { FreAction } from "./FreAction";
-import { FreCommand, FreCreateBinaryExpressionCommand } from "./FreCommand";
+import { FreBinaryExpression } from "../../ast/index.js";
+import { FreUtils } from "../../util/index.js";
+import { Box } from "../boxes/index.js";
+import { FreEditor } from "../FreEditor.js";
+import { FreAction } from "./FreAction.js";
+import { FreCommand, FreCreateBinaryExpressionCommand } from "./FreCommand.js";
 
 // import { FreLogger } from "../../logging";
 // const LOGGER = new FreLogger("FreCreateBinaryExpressionAction");

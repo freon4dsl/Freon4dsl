@@ -1,11 +1,11 @@
 import { IObservableValue, IArrayWillChange, IArrayWillSplice, observable, intercept, runInAction } from "mobx";
 import "reflect-metadata";
-import { FreNode } from "../FreNode";
+import { FreNode } from "../FreNode.js";
 
-import { allOwners, DecoratedModelElement } from "./DecoratedModelElement";
-import { FreChangeManager } from "../../change-manager";
-import { PrimType } from "../../language";
-import { FreLogger } from "../../logging";
+import { allOwners, DecoratedModelElement } from "./DecoratedModelElement.js";
+import { FreChangeManager } from "../../change-manager/index.js";
+import { PrimType } from "../../language/index.js";
+import { FreLogger } from "../../logging/index.js";
 
 const LOGGER: FreLogger = new FreLogger("MobxDecorators").mute();
 
