@@ -15,7 +15,7 @@ import {
     DemoOrExpression,
     DemoVariable,
     DemoVariableRef,
-} from "../language/gen";
+} from "../language/gen/index.js";
 import {
     MakeDivideExp,
     MakeEqualsExp,
@@ -23,7 +23,7 @@ import {
     makeLiteralExp,
     MakeMultiplyExp,
     MakePlusExp,
-} from "./HelperFunctions";
+} from "./HelperFunctions.js";
 
 export class DemoModelCreator {
     public createModelWithMultipleUnits(): Demo {

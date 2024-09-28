@@ -1,5 +1,5 @@
-import { FreOwnerDescriptor } from "./FreOwnerDescriptor";
-import { FreParseLocation } from "../reader";
+import { FreOwnerDescriptor } from "./FreOwnerDescriptor.js";
+import { FreParseLocation } from "../reader/index.js";
 
 /**
  * You can either directly implement these interfaces, or use `Module Augmentation`,

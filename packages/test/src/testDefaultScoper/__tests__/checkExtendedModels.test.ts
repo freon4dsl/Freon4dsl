@@ -1,8 +1,8 @@
 import { FreNodeReference } from "@freon4dsl/core";
-import { DSmodel, DSref, DSunit } from "../language/gen";
-import { SimpleModelCreator } from "./SimpleModelCreator";
-import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
-import { ExtendedModelCreator } from "./ExtendedModelCreator";
+import { DSmodel, DSref, DSunit } from "../language/gen/index.js";
+import { SimpleModelCreator } from "./SimpleModelCreator.js";
+import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment.js";
+import { ExtendedModelCreator } from "./ExtendedModelCreator.js";
 import { describe, test, expect, beforeEach } from "vitest";
 
 function print(prefix: string, visibleNames: string[]) {

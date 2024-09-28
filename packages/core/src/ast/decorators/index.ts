@@ -1,2 +1,2 @@
-export * from "./MobxModelDecorators";
-export * from "./DecoratedModelElement";
+export * from "./MobxModelDecorators.js";
+export * from "./DecoratedModelElement.js";

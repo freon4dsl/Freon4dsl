@@ -1,12 +1,12 @@
-import { FreNode } from "../../../ast";
-import {BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox, SelectOption} from "../../boxes";
-import { FreLanguage, FreLanguageProperty } from "../../../language";
-import { UtilCheckers } from "./UtilCheckers";
-import { RoleProvider } from "../RoleProvider";
+import { FreNode } from "../../../ast/index.js";
+import {BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox, SelectOption} from "../../boxes/index.js";
+import { FreLanguage, FreLanguageProperty } from "../../../language/index.js";
+import { UtilCheckers } from "./UtilCheckers.js";
+import { RoleProvider } from "../RoleProvider.js";
 import { runInAction } from "mobx";
-import {FreScoper} from "../../../scoper";
-import {FreEditor} from "../../FreEditor";
-import {BehaviorExecutionResult} from "../../util";
+import {FreScoper} from "../../../scoper/index.js";
+import {FreEditor} from "../../FreEditor.js";
+import {BehaviorExecutionResult} from "../../util/index.js";
 
 export class UtilLimitedHelpers {
 

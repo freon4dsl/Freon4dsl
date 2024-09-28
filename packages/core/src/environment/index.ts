@@ -1,2 +1,2 @@
-export { FreEnvironment } from "./FreEnvironment";
-export { FreLanguageEnvironment } from "./FreLanguageEnvironment";
+export { FreEnvironment } from "./FreEnvironment.js";
+export { FreLanguageEnvironment } from "./FreLanguageEnvironment.js";

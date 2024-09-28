@@ -8,14 +8,14 @@
  */
 
 // dependent only upon editor
-export * from "./MatchUtil";
+export * from "./MatchUtil.js";
 
 // the rest of this package depends on FreUtils
-export * from "./FreUtils";
+export * from "./FreUtils.js";
 
 // the others
-export * from "./BalanceTreeUtils";
+export * from "./BalanceTreeUtils.js";
 
-export * from "./IdProvider";
-export * from "./SimpleIdProvider";
-export * from "./Json";
+export * from "./IdProvider.js";
+export * from "./SimpleIdProvider.js";
+export * from "./Json.js";

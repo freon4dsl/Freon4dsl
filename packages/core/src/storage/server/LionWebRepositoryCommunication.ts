@@ -1,12 +1,12 @@
 import { ClientResponse, ListPartitionsResponse, RepositoryClient } from "@lionweb/repository-client";
 // import { createLwNode, LionWebJsonNode } from "@lionweb/validation"
 // import process from "process"
-import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index";
-import { FreLogger } from "../../logging/index";
-import { createLionWebJsonNode, FreLionwebSerializer, FreSerializer } from "../index";
-import { FreErrorSeverity } from "../../validator/index";
-import type { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
-import { collectUsedLanguages } from "./UsedLanguages";
+import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
+import { FreLogger } from "../../logging/index.js";
+import { createLionWebJsonNode, FreLionwebSerializer, FreSerializer } from "../index.js";
+import { FreErrorSeverity } from "../../validator/index.js";
+import type { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
+import { collectUsedLanguages } from "./UsedLanguages.js";
 
 const LOGGER = new FreLogger("LionWebRepositoryCommunication");
 

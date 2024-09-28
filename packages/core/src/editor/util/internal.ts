@@ -8,18 +8,18 @@
  */
 
 // files without dependencies
-export * from "./Keys";
+export * from "./Keys.js";
 
 // dependent only upon editor
-export * from "./BehaviorUtils";
-export * from "./ActionsUtil";
-export * from "./FreEditorUtil";
-export * from "./FreCaret";
+export * from "./BehaviorUtils.js";
+export * from "./ActionsUtil.js";
+export * from "./FreEditorUtil.js";
+export * from "./FreCaret.js";
 
 // the others
-export * from "./ListUtil";
-export * from "./ListElementInfo";
-export * from "./MenuItem";
+export * from "./ListUtil.js";
+export * from "./ListElementInfo.js";
+export * from "./MenuItem.js";
 
 // the following depends on BalanceTreeUtils and BehaviorUtils
-export * from "./FreExpressionUtil";
+export * from "./FreExpressionUtil.js";

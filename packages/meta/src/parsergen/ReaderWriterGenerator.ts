@@ -85,19 +85,19 @@ export class ReaderWriterGenerator {
         this.testGrammar(generatedContent, generationStatus);
         // write the grammar to file
         generatedFilePath = `${this.readerGenFolder}/${Names.grammar(this.language)}.ts`;
-        indexContent += `export * from "./${Names.grammar(this.language)}";\n`;
+        indexContent += `export * from "./${Names.grammar(this.language)}.js";\n`;
         this.makeFile(`AGL grammar`, generatedFilePath, generatedContent, generationStatus);
 
         // Write the main syntax analyser to file
         generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(this.language)}.ts`;
-        indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}";\n`;
+        indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}.js";\n`;
         const mainContent = grammarModel.toMethod();
         this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus);
 
         // Write the syntax analysers for each unit to file
         grammarModel.parts.forEach((grammarPart) => {
             generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
-            indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}";\n`;
+            indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}.js";\n`;
             const analyserContent: string = grammarPart.toMethod(this.language!, relativePath);
             let message: string = "";
             if (!!grammarPart.unit) {
@@ -110,19 +110,19 @@ export class ReaderWriterGenerator {
 
         // Get the semantic analyser and write it to file
         generatedFilePath = `${this.readerGenFolder}/${Names.semanticAnalyser(this.language)}.ts`;
-        indexContent += `export * from "./${Names.semanticAnalyser(this.language)}";\n`;
+        indexContent += `export * from "./${Names.semanticAnalyser(this.language)}.js";\n`;
         generatedContent = analyser.getRefCorrectorContent(this.language, relativePath);
         this.makeFile(`semantic analyser`, generatedFilePath, generatedContent, generationStatus);
 
         // get the semantic analysis walker and write it to file
         generatedFilePath = `${this.readerGenFolder}/${Names.semanticWalker(this.language)}.ts`;
-        indexContent += `export * from "./${Names.semanticWalker(this.language)}";\n`;
+        indexContent += `export * from "./${Names.semanticWalker(this.language)}.js";\n`;
         generatedContent = analyser.getRefCorrectorWalkerContent(this.language, relativePath);
         this.makeFile(`semantic analysis walker`, generatedFilePath, generatedContent, generationStatus);
 
         // get the reader and write it to file
         generatedFilePath = `${this.readerGenFolder}/${Names.reader(this.language)}.ts`;
-        indexContent += `export * from "./${Names.reader(this.language)}";\n`;
+        indexContent += `export * from "./${Names.reader(this.language)}.js";\n`;
         generatedContent = readerTemplate.generateReader(this.language, relativePath);
         this.makeFile(`language reader`, generatedFilePath, generatedContent, generationStatus);
 

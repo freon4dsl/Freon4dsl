@@ -1,1 +1,1 @@
-export * from "./FreWriter";
+export * from "./FreWriter.js";

@@ -15,8 +15,8 @@
       "es6",
       "es2016.array.include"
     ],
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "newLine": "lf",
     "noEmit": false,
     "noEmitOnError": true,

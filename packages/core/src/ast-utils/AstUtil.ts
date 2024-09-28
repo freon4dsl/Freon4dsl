@@ -1,4 +1,4 @@
-import { FreLanguage } from "../language";
+import { FreLanguage } from "../language/index.js";
 import {
     FreBinaryExpression,
     FreNode,
@@ -7,7 +7,7 @@ import {
     FreModelUnit,
     FreNamedNode,
     FreNodeReference,
-} from "../ast";
+} from "../ast/index.js";
 
 export function isFreModel(node: FreNode): node is FreModel {
     return !!node && node.freIsModel && node.freIsModel();

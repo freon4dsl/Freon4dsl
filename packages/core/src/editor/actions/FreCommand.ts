@@ -1,11 +1,11 @@
-import { FreBinaryExpression } from "../../ast";
-import { BTREE, FRE_BINARY_EXPRESSION_LEFT } from "../../util";
-import { FreCaret } from "../util";
-import { Box } from "../boxes";
-import { FreEditor } from "../FreEditor";
-import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction";
-import { FreTriggerUse, triggerTypeToString } from "./FreTriggers";
-import { FreLogger } from "../../logging";
+import { FreBinaryExpression } from "../../ast/index.js";
+import { BTREE, FRE_BINARY_EXPRESSION_LEFT } from "../../util/index.js";
+import { FreCaret } from "../util/index.js";
+import { Box } from "../boxes/index.js";
+import { FreEditor } from "../FreEditor.js";
+import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction.js";
+import { FreTriggerUse, triggerTypeToString } from "./FreTriggers.js";
+import { FreLogger } from "../../logging/index.js";
 
 const LOGGER = new FreLogger("FreCommand"); // .mute();
 

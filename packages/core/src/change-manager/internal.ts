@@ -1,3 +1,3 @@
-export * from "./FreChangeManager";
-export * from "./FreUndoManager";
-export * from "./FreDelta";
+export * from "./FreChangeManager.js";
+export * from "./FreUndoManager.js";
+export * from "./FreDelta.js";

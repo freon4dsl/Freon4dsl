@@ -1,11 +1,11 @@
-import { FreLanguageConcept, FreLanguage, FreLanguageProperty, FreLanguageClassifier } from "../../language";
-import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util";
-import { FreCreatePartAction, FreCustomAction, FreTriggerType } from "../actions";
-import { triggerTypeToString, FreEditor, isProKey } from "../internal";
-import { Box, AbstractChoiceBox, SelectOption } from "./internal";
-import { FreNode, FreNodeReference } from "../../ast";
+import { FreLanguageConcept, FreLanguage, FreLanguageProperty, FreLanguageClassifier } from "../../language/index.js";
+import { BehaviorExecutionResult, executeBehavior, executeSingleBehavior } from "../util/index.js";
+import { FreCreatePartAction, FreCustomAction, FreTriggerType } from "../actions/index.js";
+import { triggerTypeToString, FreEditor, isProKey } from "../internal.js";
+import { Box, AbstractChoiceBox, SelectOption } from "./internal.js";
+import { FreNode, FreNodeReference } from "../../ast/index.js";
 import { runInAction } from "mobx";
-import { FreLogger } from "../../logging";
+import { FreLogger } from "../../logging/index.js";
 
 const LOGGER: FreLogger = new FreLogger("ActionBox");
 

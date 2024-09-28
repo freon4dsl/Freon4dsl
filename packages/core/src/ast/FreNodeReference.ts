@@ -1,8 +1,8 @@
-import { FreNamedNode } from ".";
+import { FreNamedNode } from "./FreNamedNode.js";
 import { computed, observable, makeObservable } from "mobx";
-import { FreLanguageEnvironment } from "../environment";
-import { FreLogger } from "../logging";
-import { MobxModelElementImpl } from "./decorators";
+import { FreLanguageEnvironment } from "../environment/index.js";
+import { FreLogger } from "../logging/index.js";
+import { MobxModelElementImpl } from "./decorators/index.js";
 
 const LOGGER = new FreLogger("FreElementReference").mute();
 /**

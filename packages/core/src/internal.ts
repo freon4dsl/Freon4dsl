@@ -8,32 +8,32 @@
  */
 
 // ast and logging depends on nothing
-export * from "./logging/index";
-export * from "./ast/index";
+export * from "./logging/index.js";
+export * from "./ast/index.js";
 // language holds dependencies on ast, editor, and util
-export * from "./language/index";
+export * from "./language/index.js";
 // ast-utils depends on language, ast, util
-export * from "./ast-utils/index";
+export * from "./ast-utils/index.js";
 
 // editor and util depend upon each other, and upon language
-export * from "./util/index";
-export * from "./editor/index";
+export * from "./util/index.js";
+export * from "./editor/index.js";
 
 // the following parts depend upon language and ast
-export * from "./environment/index";
-export * from "./reader/index";
-export * from "./scoper/index";
-export * from "./searchers/index";
-export * from "./storage/index";
-export * from "./stdlib/index";
-export * from "./typer/index";
-export * from "./validator/index";
-export * from "./writer/index";
+export * from "./environment/index.js";
+export * from "./reader/index.js";
+export * from "./scoper/index.js";
+export * from "./searchers/index.js";
+export * from "./storage/index.js";
+export * from "./stdlib/index.js";
+export * from "./typer/index.js";
+export * from "./validator/index.js";
+export * from "./writer/index.js";
 
 // environment depends on most of the other parts
-export * from "./environment/index";
+export * from "./environment/index.js";
 
 // change manager
-export * from "./change-manager/index";
+export * from "./change-manager/index.js";
 
-export * from "./interpreter/index";
+export * from "./interpreter/index.js";

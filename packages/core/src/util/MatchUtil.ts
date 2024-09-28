@@ -1,4 +1,4 @@
-import { FreTriggerType, isProKey, isRegExp, isString } from "../editor";
+import { FreTriggerType, isProKey, isRegExp, isString } from "../editor/index.js";
 
 export class MatchUtil {
     public static fullMatch(text: string, trigger: FreTriggerType): boolean {

@@ -1,5 +1,5 @@
-import { FreNode } from "../ast";
-import { FreSearchWorker } from "./FreSearchWorker";
+import { FreNode } from "../ast/index.js";
+import { FreSearchWorker } from "./FreSearchWorker.js";
 
 export class StructureSearchWorker implements FreSearchWorker {
     private readonly toFind: Partial<FreNode>;

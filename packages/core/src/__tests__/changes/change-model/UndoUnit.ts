@@ -10,9 +10,9 @@ import {
     observableprimlist,
     FreNodeBaseImpl,
     FreModelUnit,
-} from "../../../ast";
+} from "../../../ast/index.js";
 import { UndoPart } from "./UndoPart";
-import { FreUtils } from "../../../util";
+import { FreUtils } from "../../../util/index.js";
 import { FreLogger } from "../../../logging";
 
 const LOGGER = new FreLogger("UndoUnit");

@@ -5,11 +5,11 @@ import {
     FrePrimDelta,
     FrePrimListDelta,
     FreTransactionDelta,
-} from "./FreDelta";
-import { FreModelUnit } from "../ast";
-import { modelUnit } from "../ast-utils";
-import { FreLogger } from "../logging";
-import { FreUndoManager } from "./FreUndoManager";
+} from "./FreDelta.js";
+import { FreModelUnit } from "../ast/index.js";
+import { modelUnit } from "../ast-utils/index.js";
+import { FreLogger } from "../logging/index.js";
+import { FreUndoManager } from "./FreUndoManager.js";
 
 const LOGGER: FreLogger = new FreLogger("FreUndoStackManager");
 

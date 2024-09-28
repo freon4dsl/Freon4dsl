@@ -1,1 +1,1 @@
-export { UndoModelEnvironment } from "./config/gen/UndoModelEnvironment";
+export { UndoModelEnvironment } from "./config/gen/UndoModelEnvironment.js";

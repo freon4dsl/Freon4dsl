@@ -3,16 +3,16 @@
  * They support drag-and-drop and cut/copy-paste functionality.
  */
 
-import { jsonAsString } from "../../util";
+import { jsonAsString } from "../../util/index.js";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
-import * as Keys from "./Keys";
-import { MetaKey } from "./Keys";
-import { FreLogger } from "../../logging";
-import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index";
-import { FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language";
-import { FreNode } from "../../ast";
+import * as Keys from "./Keys.js";
+import { MetaKey } from "./Keys.js";
+import { FreLogger } from "../../logging/index.js";
+import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index.js";
+import { FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language/index.js";
+import { FreNode } from "../../ast/index.js";
 import { runInAction } from "mobx";
-import { FreErrorSeverity } from "../../validator";
+import { FreErrorSeverity } from "../../validator/index.js";
 
 const LOGGER = new FreLogger("ListUtil");
 

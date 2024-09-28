@@ -1,17 +1,17 @@
 {
   "exclude": [
-    "Calculator",
-    "RulesLanguage",
-    "DocuProject",
-    "Education",
-    "Calculator",
-    "Examples",
-    "ExpressionLibrary",
-    "ExpTest",
-    "UnusedOrInvalid/graphviz",
-    "heat",
-    "Json",
-    "MpsExpressions",
-    "Octopus"
+//    "Calculator",
+//    "RulesLanguage",
+//    "DocuProject",
+//    "Education",
+//    "Calculator",
+//    "Examples",
+//    "ExpressionLibrary",
+//    "ExpTest",
+    "UnusedOrInvalid/*",
+//    "heat",
+//    "Json",
+//    "MpsExpressions",
+//    "Octopus"
   ]
 }

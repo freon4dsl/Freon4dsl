@@ -1,6 +1,6 @@
-import { FreNodeReferenceTestScoper } from "./FreNodeReferenceTestScoper";
-import { TestScoper } from "./TestScoper";
-import { MobxTestElement, ModelContext, MobxTestRoot, MobxTestParts } from "./MobxModel";
+import { FreNodeReferenceTestScoper } from "./FreNodeReferenceTestScoper.js";
+import { TestScoper } from "./TestScoper.js";
+import { MobxTestElement, ModelContext, MobxTestRoot, MobxTestParts } from "./MobxModel.js";
 import { observe, reaction } from "mobx";
 import { describe, it, expect, beforeEach } from "vitest";
 

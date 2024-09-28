@@ -1,5 +1,5 @@
-import { FreNode } from "../ast";
-import { Box } from "./boxes";
+import { FreNode } from "../ast/index.js";
+import { Box } from "./boxes/index.js";
 
 export type FreTableDefinition = {
     headers: string[];

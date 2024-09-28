@@ -1,8 +1,8 @@
-import { FreNode } from "../../ast";
-import { FreUtils } from "../../util";
-import { BehaviorExecutionResult, FreCaret, FreKey } from "../util";
-import { BoxFactory, FreEditor } from "../internal";
-import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
+import { FreNode } from "../../ast/index.js";
+import { FreUtils } from "../../util/index.js";
+import { BehaviorExecutionResult, FreCaret, FreKey } from "../util/index.js";
+import { BoxFactory, FreEditor } from "../internal.js";
+import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal.js";
 
 export abstract class AbstractChoiceBox extends Box {
     kind: string = "AbstractChoiceBox";

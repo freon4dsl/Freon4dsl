@@ -39,7 +39,7 @@ export class DefaultActionsTemplate {
                 RIGHT_MOST
             } from "${FREON_CORE}";
 
-            import { ${modelImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+            import { ${modelImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
 
              /**
              * This module implements the actions available to the user in the editor.

@@ -32,10 +32,10 @@ export class FreTyperTemplate {
         return `
         import { ${Names.FreNode}, ${Names.FreType}, ${Names.FreLanguage}, ${typerInterfaceName} } from "${FREON_CORE}";
 
-        ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ``}
-        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
-        import { ${defaultTyperName} } from "./${defaultTyperName}";
-        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
+        ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";` : ``}
+        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
+        import { ${defaultTyperName} } from "./${defaultTyperName}.js";
+        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}.js";
 
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
@@ -253,8 +253,8 @@ export class FreTyperTemplate {
             return "";
         }
         return `
-        export * from "./${Names.typerPart(language)}";
-        export * from "./${Names.typerDef(language)}";
+        export * from "./${Names.typerPart(language)}.js";
+        export * from "./${Names.typerDef(language)}.js";
         `;
     }
 
@@ -264,7 +264,7 @@ export class FreTyperTemplate {
             return "";
         }
         return `
-        export * from "./${Names.customTyper(language)}";
+        export * from "./${Names.customTyper(language)}.js";
         `;
     }
 }

@@ -1,5 +1,5 @@
-import { FreLanguage, FreLanguageProperty } from "../../../language";
-import { FreUtils } from "../../../util";
+import { FreLanguage, FreLanguageProperty } from "../../../language/index.js";
+import { FreUtils } from "../../../util/index.js";
 
 export class UtilCheckers {
     public static checkLimitedType(propInfo: FreLanguageProperty, propertyName: string): string[] {

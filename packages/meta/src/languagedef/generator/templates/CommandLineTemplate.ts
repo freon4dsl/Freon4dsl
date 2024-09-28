@@ -80,11 +80,11 @@ export class CommandLineTemplate {
         return `// Run this as the main program.
             ${
                 configImports.length > 0
-                    ? configImports.map((c) => `import { ${c} } from "../${CONFIGURATION_GEN_FOLDER}/${c}";`)
+                    ? configImports.map((c) => `import { ${c} } from "../${CONFIGURATION_GEN_FOLDER}/${c}.js";`)
                     : ``
             }
-            import { FreonCommandLine } from "./FreonCommandLine";
-            import { DummyAction } from "./DummyAction";
+            import { FreonCommandLine } from "./FreonCommandLine.js";
+            import { DummyAction } from "./DummyAction.js";
             
             // ensure language is initialized
             const tmp = ${Names.environment(language)}.getInstance();

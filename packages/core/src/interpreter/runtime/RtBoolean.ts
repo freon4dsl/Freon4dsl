@@ -1,4 +1,4 @@
-import { RtObject } from "./RtObject";
+import { RtObject } from "./RtObject.js";
 
 export class RtBoolean extends RtObject {
     static readonly TRUE = new RtBoolean(true);
