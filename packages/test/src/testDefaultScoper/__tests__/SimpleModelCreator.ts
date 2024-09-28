@@ -1,6 +1,5 @@
-import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen";
-import { FreModelSerializer, AstWalker, FreNode, FreNodeReference, AST } from "@freon4dsl/core";
-import { RefCreatorWorker } from "./RefCreatorWorker";
+import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen/index.js";
+import { AST, FreModelSerializer, AstWalker, FreNode, FreNodeReference } from "@freon4dsl/core";
 
 export class SimpleModelCreator {
     private breadth = 1;

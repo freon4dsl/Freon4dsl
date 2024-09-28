@@ -1,9 +1,9 @@
 import { runInAction } from "mobx";
-import { UndoModel } from "./change-model/UndoModel";
-import { UndoUnit } from "./change-model/UndoUnit";
-import { UndoPart } from "./change-model/UndoPart";
-import { AST, FreDelta, FreTransactionDelta, FreUndoManager } from "../../change-manager";
-import { FreModelUnit } from "../../ast";
+import { UndoModel } from "./change-model/UndoModel.js";
+import { UndoUnit } from "./change-model/UndoUnit.js";
+import { UndoPart } from "./change-model/UndoPart.js";
+import { AST, FreDelta, FreTransactionDelta, FreUndoManager } from "../../change-manager/index.js";
+import { FreModelUnit } from "../../ast/index.js";
 import { describe, it, expect, beforeEach } from "vitest";
 
 // expose the private parts of the undo manager for testing purposes only

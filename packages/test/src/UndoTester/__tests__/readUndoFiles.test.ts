@@ -1,6 +1,6 @@
-import { UndoModel, UndoPart, UndoUnit } from "../language/gen";
-import { UndoModelEnvironment } from "../config/gen/UndoModelEnvironment";
-import { FileHandler } from "../../utils/FileHandler";
+import { UndoModel, UndoPart, UndoUnit } from "../language/gen/index.js";
+import { UndoModelEnvironment } from "../config/gen/UndoModelEnvironment.js";
+import { FileHandler } from "../../utils/FileHandler.js";
 import { AST, FreUndoManager } from "@freon4dsl/core";
 import { describe, it, expect } from "vitest";
 

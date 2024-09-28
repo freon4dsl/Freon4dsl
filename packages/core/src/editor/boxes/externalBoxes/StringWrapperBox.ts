@@ -1,7 +1,7 @@
-import { Box } from "../Box";
-import { FreNode } from "../../../ast";
-import { FreUtils } from "../../../util";
-import { AbstractPropertyWrapperBox } from "./AbstractPropertyWrapperBox";
+import { Box } from "../Box.js";
+import { FreNode } from "../../../ast/index.js";
+import { FreUtils } from "../../../util/index.js";
+import { AbstractPropertyWrapperBox } from "./AbstractPropertyWrapperBox.js";
 
 /**
  * This class represent an external box wrapping a single property of primitive type.

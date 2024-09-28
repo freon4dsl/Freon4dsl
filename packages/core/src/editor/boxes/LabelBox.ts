@@ -1,6 +1,6 @@
-import { Box } from "./Box";
-import { FreUtils } from "../../util";
-import { FreNode } from "../../ast";
+import { Box } from "./Box.js";
+import { FreUtils } from "../../util/index.js";
+import { FreNode } from "../../ast/index.js";
 
 export class LabelBox extends Box {
     readonly kind: string = "LabelBox";

@@ -5,7 +5,7 @@ export class WorkerInterfaceTemplate {
     generateWorkerInterface(language: FreMetaLanguage, relativePath: string): string {
         // the template starts here
         return `
-        import { ${GenerationUtil.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${GenerationUtil.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
 
         /**
          * Interface ${Names.workerInterface(language)} implements the extended visitor pattern of instances of language ${language.name}.

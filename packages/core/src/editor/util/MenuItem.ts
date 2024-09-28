@@ -1,5 +1,5 @@
-import { FreNode } from "../../ast";
-import { FreEditor } from "../FreEditor";
+import { FreNode } from "../../ast/index.js";
+import { FreEditor } from "../FreEditor.js";
 
 export class MenuItem {
     // The label shown in the menu

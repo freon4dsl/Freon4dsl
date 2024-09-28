@@ -11,8 +11,8 @@ export class ActionsTemplate {
                 FreCustomAction
             } from "${FREON_CORE}";
 
-            import { BINARY_EXPRESSION_CREATORS, CUSTOM_ACTIONS } from "./${Names.defaultActions(language)}";
-            import { MANUAL_BINARY_EXPRESSION_ACTIONS, MANUAL_CUSTOM_ACTIONS } from "../${Names.customActions(language)}";
+            import { BINARY_EXPRESSION_CREATORS, CUSTOM_ACTIONS } from "./${Names.defaultActions(language)}.js";
+            import { MANUAL_BINARY_EXPRESSION_ACTIONS, MANUAL_CUSTOM_ACTIONS } from "../${Names.customActions(language)}.js";
 
              /**
              * Class ${Names.actions(language)} implements the actions available to the user in the editor.

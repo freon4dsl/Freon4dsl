@@ -1,4 +1,4 @@
-import { FreNode } from "../../../ast";
+import { FreNode } from "../../../ast/index.js";
 import { AST } from "../../../change-manager/index";
 import {
     BoolDisplay,
@@ -12,13 +12,13 @@ import {
     SelectBox,
     SelectOption,
     TextBox,
-} from "../../boxes";
-import { FreEditor } from "../../FreEditor";
-import { BehaviorExecutionResult } from "../../util";
-import { UtilCheckers } from "./UtilCheckers";
-import { FreLanguage, FreLanguageProperty } from "../../../language";
-import { RoleProvider } from "../RoleProvider";
-import { FreUtils } from "../../../util";
+} from "../../boxes/index.js";
+\import { FreEditor } from "../../FreEditor.js";
+import { BehaviorExecutionResult } from "../../util/index.js";
+import { UtilCheckers } from "./UtilCheckers.js";
+import { FreLanguage, FreLanguageProperty } from "../../../language/index.js";
+import { RoleProvider } from "../RoleProvider.js";
+import { FreUtils } from "../../../util/index.js";
 
 export class UtilPrimHelper {
     public static textBox(node: FreNode, propertyName: string, index?: number): TextBox {

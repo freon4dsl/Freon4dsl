@@ -1,12 +1,15 @@
-import { isEqual } from "lodash";
+// import { isEqual } from "lodash";
+import pkg from 'lodash';
+const { isEqual } = pkg;
+
 import { autorun, makeObservable, observable } from "mobx";
-import { FreEnvironment } from "../environment";
-import { FreOwnerDescriptor, FreNode } from "../ast";
-import { FreLogger } from "../logging";
-import { FreAction } from "./actions";
-import { Box, FreCombinedActions, FreCaret, FreProjectionHandler, wait, isTextBox, ElementBox } from "./index";
-import { FreErrorSeverity } from "../validator";
-import { isNullOrUndefined } from "../util";
+import { FreEnvironment } from "../environment/index.js";
+import { FreOwnerDescriptor, FreNode } from "../ast/index.js";
+import { FreLogger } from "../logging/index.js";
+import { FreAction } from "./actions/index.js";
+import { Box, FreCombinedActions, FreCaret, FreProjectionHandler, wait, isTextBox, ElementBox } from "./index.js";
+import { FreErrorSeverity } from "../validator/index.js";
+import { isNullOrUndefined } from "../util/index.js";
 
 const LOGGER = new FreLogger("FreEditor").mute();
 

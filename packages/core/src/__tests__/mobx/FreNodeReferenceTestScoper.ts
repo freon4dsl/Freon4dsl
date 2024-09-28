@@ -1,8 +1,8 @@
-import { FreNamedNode } from "../../ast";
+import { FreNamedNode } from "../../ast/index.js";
 import { computed, observable, makeObservable } from "mobx";
-import { TestScoper } from "./TestScoper";
-import { FreLogger } from "../../logging";
-import { MobxModelElementImpl } from "../../ast";
+import { TestScoper } from "./TestScoper.js";
+import { FreLogger } from "../../logging/index.js";
+import { MobxModelElementImpl } from "../../ast/index.js";
 
 const LOGGER = new FreLogger("FreNodeReference").mute();
 /**

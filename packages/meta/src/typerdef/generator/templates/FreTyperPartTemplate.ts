@@ -246,8 +246,8 @@ export class FreTyperPartTemplate {
         });
 
         const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, FreCommonSuperTypeUtil } from "${FREON_CORE}";
-        import { ${this.imports.map((im) => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map((im) => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}";` : ``}`;
+        import { ${this.imports.map((im) => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map((im) => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}/index.js";` : ``}`;
 
         return imports + baseClass;
     }

@@ -1,14 +1,14 @@
-import { FreNamedNode, FreNode } from "../../ast/index";
-import { FreLogger } from "../../logging/index";
-import { FreLionwebSerializer } from "../index";
-import { FreErrorSeverity } from "../../validator/index";
-import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
-import { ServerCommunication } from "./ServerCommunication";
-import process from "process";
+import { FreNamedNode, FreNode } from "../../ast/index.js";
+import { FreLogger } from "../../logging/index.js";
+import { FreLionwebSerializer } from "../index.js";
+import { FreErrorSeverity } from "../../validator/index.js";
+import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
+import { ServerCommunication } from "./ServerCommunication.js";
+// import * as process from "process";
 
 const LOGGER = new FreLogger("LionWebCommunication"); // .mute();
 
-const lionWebPort = process?.env.LIONWEB_PORT || 63320;
+const lionWebPort = 63322; // process?.env.LIONWEB_PORT || 63320;
 const SERVER_URL = `http://127.0.0.1:${lionWebPort}`;
 // console.log("NODE_PORT:" + lionWebPort+ "  env " + JSON.stringify(process.env));
 

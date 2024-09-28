@@ -1,7 +1,7 @@
-import { FreModelSerializer, FreError, FreModelUnit, AST } from "@freon4dsl/core";
-import { XXunit, XX } from "../language/gen";
-import { XXEnvironment } from "../config/gen/XXEnvironment";
-import { FileHandler } from "../../utils/FileHandler";
+import { AST, FreModelSerializer, FreError, FreModelUnit } from "@freon4dsl/core";
+import { XXunit, XX } from "../language/gen/index.js";
+import { XXEnvironment } from "../config/gen/XXEnvironment.js";
+import { FileHandler } from "../../utils/FileHandler.js";
 import { describe, test, expect, beforeEach } from "vitest";
 
 const writer = XXEnvironment.getInstance().writer;

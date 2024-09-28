@@ -1,8 +1,8 @@
 import { runInAction } from "mobx";
-import { FreNode } from "../../ast/index";
-import { FreLanguage, FreLanguageProperty } from "../../language/index";
-import { isNullOrUndefined } from "../../util/index";
-import { FreSerializer } from "./FreSerializer";
+import { FreNode } from "../../ast/index.js";
+import { FreLanguage, FreLanguageProperty } from "../../language/index.js";
+import { isNullOrUndefined } from "../../util/index.js";
+import { FreSerializer } from "./FreSerializer.js";
 
 /**
  * Helper class to serialize a model using MobXModelElementImpl.

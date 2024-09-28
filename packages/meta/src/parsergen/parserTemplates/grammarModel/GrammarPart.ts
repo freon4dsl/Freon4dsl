@@ -29,10 +29,10 @@ export class GrammarPart {
         ${this.rules.length > 0 ? `import SPPTBranch = net.akehurst.language.api.sppt.SPPTBranch;` : ""}
         ${
             this.imports.length > 0
-                ? `import { ${this.imports.map((imp) => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";`
+                ? `import { ${this.imports.map((imp) => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";`
                 : ""
         }
-        import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
+        import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}.js";
         ${this.rules.length > 0 ? `import { ${Names.FreNodeReference} } from "@freon4dsl/core";` : ""}
 
         export class ${className} {

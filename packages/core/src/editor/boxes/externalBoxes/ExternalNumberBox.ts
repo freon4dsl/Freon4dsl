@@ -1,8 +1,8 @@
 import { AST } from "../../../change-manager/index";
-import { Box } from "../Box";
-import { FreNode } from "../../../ast";
-import { FreUtils } from "../../../util";
-import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox";
+import { Box } from "../Box.js";
+import { FreNode } from "../../../ast/index.js";
+import { FreUtils } from "../../../util/index.js";
+import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";
 
 /**
  * This class represent an external box replacing the native projection of a single property of primitive type.

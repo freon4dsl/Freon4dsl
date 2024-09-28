@@ -23,8 +23,8 @@ export class ScoperDefTemplate {
         // const includeRoot: boolean = !concreteNamespaces.includes(language.modelConcept);
 
         return `import { ${Names.FreLanguage}, ${Names.FreScoperComposite} } from "${FREON_CORE}";
-            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
-            import { ${Names.scoper(language)} } from "./${Names.scoper(language)}";
+            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
+            import { ${Names.scoper(language)} } from "./${Names.scoper(language)}.js";
 
             /**
              * Adds all known scopers to the main scoper.

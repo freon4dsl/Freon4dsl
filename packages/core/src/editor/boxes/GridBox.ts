@@ -1,8 +1,8 @@
-import { GridCellBox } from "./GridCellBox";
+import { GridCellBox } from "./GridCellBox.js";
 
-import { Box } from "./Box";
-import { FreNode } from "../../ast";
-import { FreUtils } from "../../util";
+import { Box } from "./Box.js";
+import { FreNode } from "../../ast/index.js";
+import { FreUtils } from "../../util/index.js";
 
 export type GridOrientation = "neutral" | "row" | "column";
 

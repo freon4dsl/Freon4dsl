@@ -16,7 +16,7 @@ export class InterpreterMainTemplate {
             InterpreterTracer,
             MainInterpreter, OwningPropertyFunction, ${Names.FreNode}, RtObject, RtError
         } from "@freon4dsl/core";
-        import {  ${Names.interpreterInitname(language)} } from "./gen/${Names.interpreterInitname(language)}";
+        import {  ${Names.interpreterInitname(language)} } from "./gen/${Names.interpreterInitname(language)}.js";
 
         const getPropertyFunction: OwningPropertyFunction = (node: Object) => {
             const index = (node as ${Names.FreNode}).freOwnerDescriptor().propertyIndex;

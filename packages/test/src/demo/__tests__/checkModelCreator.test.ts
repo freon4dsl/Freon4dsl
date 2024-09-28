@@ -1,6 +1,6 @@
 import { FreNode } from "@freon4dsl/core";
-import { DemoModel, DemoFunction, DemoEntity } from "../language/gen";
-import { DemoModelCreator } from "./DemoModelCreator";
+import { DemoModel, DemoFunction, DemoEntity } from "../language/gen/index.js";
+import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe, test, expect } from "vitest";
 
 describe("Demo Model", () => {

@@ -16,12 +16,12 @@ export class ConfigurationTemplate {
         const workerName = Names.checkerInterface(language);
         return `
             import { ${Names.FreProjection}, ${Names.FreActions}, ${Names.FreTyperPart}, ${Names.FreStdlib}, ${Names.FrScoperPart} } from "${FREON_CORE}";
-            import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}";
-            import { ${Names.customScoper(language)} } from "${relativePath}${SCOPER_FOLDER}";
-            import { ${Names.customTyper(language)} } from "${relativePath}${TYPER_FOLDER}";
-            import { ${Names.customValidator(language)} } from "${relativePath}${VALIDATOR_FOLDER}";
-            import { ${Names.customStdlib(language)} } from "${relativePath}${STDLIB_FOLDER}";
-            import { ${workerName} } from "${relativePath}${VALIDATOR_GEN_FOLDER}";
+            import { ${Names.customActions(language)}, ${Names.customProjection(language)} } from "${relativePath}${EDITOR_FOLDER}/index.js";
+            import { ${Names.customScoper(language)} } from "${relativePath}${SCOPER_FOLDER}/index.js";
+            import { ${Names.customTyper(language)} } from "${relativePath}${TYPER_FOLDER}/${Names.customTyper(language)}.js";
+            import { ${Names.customValidator(language)} } from "${relativePath}${VALIDATOR_FOLDER}/index.js";
+            import { ${Names.customStdlib(language)} } from "${relativePath}${STDLIB_FOLDER}/${Names.customStdlib(language)}.js";
+            import { ${workerName} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/index.js";
 
             /**
              * Class ${configurationName} is the place where you can add all your customisations.

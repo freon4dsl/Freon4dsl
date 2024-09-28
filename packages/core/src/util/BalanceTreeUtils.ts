@@ -1,10 +1,10 @@
 import { action, makeObservable } from "mobx";
-import { AST } from "../change-manager/index";
-import { FreUtils } from "./internal";
-import { Box, FreEditor } from "../editor";
-import { FreBinaryExpression, FreNode, FreExpressionNode } from "../ast";
-import { isFreBinaryExpression, isFreExpression } from "../ast-utils";
-import { FreLogger } from "../logging";
+import { AST } from "../change-manager/index.js";
+import { FreUtils } from "./internal.js";
+import { Box, FreEditor } from "../editor/index.js";
+import { FreBinaryExpression, FreNode, FreExpressionNode } from "../ast/index.js";
+import { isFreBinaryExpression, isFreExpression } from "../ast-utils/index.js";
+import { FreLogger } from "../logging/index.js";
 
 // reserved role names for expressions, use with care.
 export const FRE_BINARY_EXPRESSION_LEFT = "FreBinaryExpression-left";

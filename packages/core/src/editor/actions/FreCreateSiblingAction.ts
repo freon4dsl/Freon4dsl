@@ -1,7 +1,7 @@
-import { FreUtils } from "../../util";
-import { FreAction } from "./FreAction";
-import { FreCommand } from "./FreCommand";
-import { FreCreateSiblingCommand } from "./FreCreateSiblingCommand";
+import { FreUtils } from "../../util/index.js";
+import { FreAction } from "./FreAction.js";
+import { FreCommand } from "./FreCommand.js";
+import { FreCreateSiblingCommand } from "./FreCreateSiblingCommand.js";
 
 // import { FreLogger } from "../../logging";
 // const LOGGER = new FreLogger("FreCreateSiblingAction");

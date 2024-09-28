@@ -1,5 +1,5 @@
 import { FreNodeReference } from "@freon4dsl/core";
-import { Attribute, CheckingRule, Data, Entity, Rules, RulesModel, Type } from "../language/gen/index";
+import { Attribute, CheckingRule, Data, Entity, Rules, RulesModel, Type } from "../language/gen/index.js";
 
 export function createModel(name: string): RulesModel {
     const result = new RulesModel();

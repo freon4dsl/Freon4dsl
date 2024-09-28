@@ -1,4 +1,4 @@
-import { FreProjectionHandler } from "./FreProjectionHandler";
+import { FreProjectionHandler } from "./FreProjectionHandler.js";
 
 /**
  * Contains all logic to determine which projection should be used by a BoxProvider for a certain concept.

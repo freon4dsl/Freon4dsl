@@ -128,7 +128,7 @@ export class WriterTemplate {
                     ${Names.concept(concept)}`,
                 )
                 .join(", ")}
-        } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
 
         /**
          * SeparatorType is used to unparse lists.

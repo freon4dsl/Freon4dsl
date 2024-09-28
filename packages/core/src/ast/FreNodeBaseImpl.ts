@@ -1,6 +1,6 @@
-import { FreNode } from "..";
-import { FreParseLocation } from "../reader";
-import { MobxModelElementImpl } from "./decorators";
+import { FreNode } from "./index.js";
+import { FreParseLocation } from "../reader/index.js";
+import { MobxModelElementImpl } from "./decorators/index.js";
 
 /**
  * An abstract implementation of a decorated FreNode.

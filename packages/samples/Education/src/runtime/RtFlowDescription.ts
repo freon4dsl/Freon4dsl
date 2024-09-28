@@ -1,5 +1,5 @@
 import { RtBoolean, RtObject } from "@freon4dsl/core";
-import { FlowDescription } from "../language/gen/index";
+import { FlowDescription } from "../language/gen/index.js";
 
 export class RtFlowDescription extends RtObject {
     readonly _type: string = "RtFlow";

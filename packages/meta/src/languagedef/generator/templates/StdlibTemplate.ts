@@ -17,9 +17,9 @@ export class StdlibTemplate {
         return `
         import { ${Names.FreNamedNode}, ${Names.FreStdlib}, ${Names.FreLanguage} } from "${FREON_CORE}";
         import { ${this.limitedConceptNames.map((name) => `${name}`).join(", ")}
-               } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
-        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}";
+               } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
+        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}.js";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
@@ -110,7 +110,7 @@ export class StdlibTemplate {
 
     generateIndex(language: FreMetaLanguage) {
         return `
-        export * from "./${Names.customStdlib(language)}";
+        export * from "./${Names.customStdlib(language)}.js";
         `;
     }
 }

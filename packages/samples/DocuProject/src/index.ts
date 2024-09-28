@@ -1,1 +1,1 @@
-export { InsuranceModelEnvironment } from "./config/gen/InsuranceModelEnvironment";
+export { InsuranceModelEnvironment } from "./config/gen/InsuranceModelEnvironment.js";

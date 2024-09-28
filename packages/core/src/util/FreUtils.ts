@@ -1,9 +1,9 @@
-import { AST } from "../change-manager/index";
-import { FreEditor } from "../editor";
-import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast";
-import { isFreExpression } from "../ast-utils";
-import { IdProvider } from "./IdProvider";
-import { SimpleIdProvider } from "./SimpleIdProvider";
+import { AST } from "../change-manager/index.js";
+import { FreEditor } from "../editor/index.js";
+import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast/index.js";
+import { isFreExpression } from "../ast-utils/index.js";
+import { IdProvider } from "./IdProvider.js";
+import { SimpleIdProvider } from "./SimpleIdProvider.js";
 
 // export type BooleanCallback = () => boolean;
 // export type DynamicBoolean = BooleanCallback | boolean;

@@ -1,5 +1,5 @@
-import { isRtBoolean, RtBoolean } from "./RtBoolean";
-import { RtObject } from "./RtObject";
+import { isRtBoolean, RtBoolean } from "./RtBoolean.js";
+import { RtObject } from "./RtObject.js";
 
 export class RtEmpty extends RtObject {
     static NIX_VALUE = new RtEmpty();

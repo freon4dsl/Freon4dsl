@@ -1,8 +1,8 @@
 import { FreLogger } from "../logging/index";
-import { FreChangeManager } from "./FreChangeManager";
-import { FreModelUnit } from "../ast";
-import { FreDelta } from "./FreDelta";
-import { FreUndoStackManager } from "./FreUndoStackManager";
+import { FreChangeManager } from "./FreChangeManager.js";
+import { FreModelUnit } from "../ast/index.js";
+import { FreDelta } from "./FreDelta.js";
+import { FreUndoStackManager } from "./FreUndoStackManager.js";
 
 const LOGGER = new FreLogger("FreUndoManager").mute()
 /**

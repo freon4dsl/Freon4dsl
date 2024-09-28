@@ -1,11 +1,11 @@
-import { BTREE } from "../../util/index";
-import { EMPTY_POST_ACTION, FrePostAction, ReferenceShortcut } from "./FreAction";
-import { Box } from "../boxes";
-import { isString, FreTriggerUse, triggerTypeToString } from "./FreTriggers";
-import { FreEditor } from "../FreEditor";
-import { FreBinaryExpression, FreNode } from "../../ast";
-import { FreLanguage } from "../../language";
-import { FreCommand, FRECOMMAND_LOGGER } from "./FreCommand";
+import { BTREE } from "../../util/index.js";
+import { EMPTY_POST_ACTION, FrePostAction, ReferenceShortcut } from "./FreAction.js";
+import { Box } from "../boxes/index.js";
+import { isString, FreTriggerUse, triggerTypeToString } from "./FreTriggers.js";
+import { FreEditor } from "../FreEditor.js";
+import { FreBinaryExpression, FreNode } from "../../ast/index.js";
+import { FreLanguage } from "../../language/index.js";
+import { FreCommand, FRECOMMAND_LOGGER } from "./FreCommand.js";
 
 /**
  * Command to create a part (child) of a FreElement.

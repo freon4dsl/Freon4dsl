@@ -1,7 +1,7 @@
-import { Box } from "./Box";
-import { FreNode } from "../../ast";
-import { FreUtils } from "../../util";
-import { TableCellBox } from "./TableCellBox";
+import { Box } from "./Box.js";
+import { FreNode } from "../../ast/index.js";
+import { FreUtils } from "../../util/index.js";
+import { TableCellBox } from "./TableCellBox.js";
 
 export class TableRowBox extends Box {
     kind: string = "TableRowBox";

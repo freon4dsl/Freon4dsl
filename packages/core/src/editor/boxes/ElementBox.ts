@@ -1,6 +1,6 @@
-import { FreNode } from "../../ast";
+import { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
-import { Box } from "./Box";
+import { Box } from "./Box.js";
 
 export class ElementBox extends Box {
     kind: string = "ElementBox";

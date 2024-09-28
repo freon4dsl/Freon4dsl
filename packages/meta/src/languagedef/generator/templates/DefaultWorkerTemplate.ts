@@ -16,8 +16,8 @@ export class DefaultWorkerTemplate {
 
         // the template starts here
         return `
-        import { ${GenerationUtil.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${workerInterfaceName} } from "./${Names.workerInterface(language)}";
+        import { ${GenerationUtil.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        import { ${workerInterfaceName} } from "./${Names.workerInterface(language)}.js";
 
         /**
          * Class ${defaultWorkerClassName} is part of the implementation of the visitor pattern on models.

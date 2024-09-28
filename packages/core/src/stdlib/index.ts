@@ -1,1 +1,1 @@
-export { FreStdlib, EmptyStdLib } from "./FreStdlib";
+export { FreStdlib, EmptyStdLib } from "./FreStdlib.js";

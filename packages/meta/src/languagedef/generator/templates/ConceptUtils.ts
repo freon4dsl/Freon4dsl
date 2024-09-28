@@ -19,7 +19,7 @@ export class ConceptUtils {
         ListUtil.addListIfNotPresent(checkedModelImports, modelImports);
         return `
             ${checkedCoreImports.length > 0 ? `import { ${checkedCoreImports.join(", ")} } from "${FREON_CORE}";` : ""}
-            ${checkedModelImports.length > 0 ? `import { ${checkedModelImports.join(", ")} } from "./internal";` : ""}
+            ${checkedModelImports.length > 0 ? `import { ${checkedModelImports.join(", ")} } from "./internal.js";` : ""}
             `;
     }
 

@@ -1,11 +1,11 @@
 import { AST } from "../../change-manager/index";
-import { Box } from "./internal";
-import { FreNode } from "../../ast";
-import { FreLogger } from "../../logging";
-import { FreUtils } from "../../util";
-import { BehaviorExecutionResult } from "../util";
-import { FrePostAction } from "../actions";
-import { FreEditor } from "../FreEditor";
+import { Box } from "./internal.js";
+import { FreNode } from "../../ast/index.js";
+import { FreLogger } from "../../logging/index.js";
+import { FreUtils } from "../../util/index.js";
+import { BehaviorExecutionResult } from "../util/index.js";
+import { FrePostAction } from "../actions/index.js";
+import { FreEditor } from "../FreEditor.js";
 
 const LOGGER: FreLogger = new FreLogger("ButtonBox"); //.mute();
 

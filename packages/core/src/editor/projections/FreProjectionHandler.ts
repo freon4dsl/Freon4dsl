@@ -1,13 +1,13 @@
-import { FreLogger } from "../../logging/index";
-import { Box, BoxFactory, ElementBox } from "../boxes";
-import { isNullOrUndefined } from "../../util";
-import { FreNode } from "../../ast";
-import { FreBoxProvider } from "./FreBoxProvider";
-import { FreProjection } from "./FreProjection";
+import { FreLogger } from "../../logging/index.js";
+import { Box, BoxFactory, ElementBox } from "../boxes/index.js";
+import { isNullOrUndefined } from "../../util/index.js";
+import { FreNode } from "../../ast/index.js";
+import { FreBoxProvider } from "./FreBoxProvider.js";
+import { FreProjection } from "./FreProjection.js";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { ArrayUtil } from "../../util/ArrayUtil";
-import { FreTableHeaderInfo } from "./FreTableHeaderInfo";
-import { FreHeaderProvider } from "./FreHeaderProvider";
+import { ArrayUtil } from "../../util/ArrayUtil.js";
+import { FreTableHeaderInfo } from "./FreTableHeaderInfo.js";
+import { FreHeaderProvider } from "./FreHeaderProvider.js";
 
 const LOGGER = new FreLogger("FreProjectionHandler");
 /**

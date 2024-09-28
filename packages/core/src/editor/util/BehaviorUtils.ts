@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
-import { AST } from "../../change-manager/index";
-import { isRegExp, isString, Box, FreEditor, FrePostAction, FreAction } from "../index";
-import { FreLogger } from "../../logging";
+import { AST } from "../../change-manager/index.js";
+import { isRegExp, isString, Box, FreEditor, FrePostAction, FreAction } from "../index.js";
+import { FreLogger } from "../../logging/index.js";
 
 const LOGGER: FreLogger = new FreLogger("BehaviorUtils");
 

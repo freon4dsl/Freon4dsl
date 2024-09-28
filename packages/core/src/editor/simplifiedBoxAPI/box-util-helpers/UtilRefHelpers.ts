@@ -7,17 +7,17 @@ import {
     ReferenceBox,
     SelectOption,
     VerticalListBox,
-} from "../../boxes";
-import { FreNamedNode, FreNode, FreNodeReference } from "../../../ast";
-import { RoleProvider } from "../RoleProvider";
-import { FreScoper } from "../../../scoper";
-import { BehaviorExecutionResult } from "../../util";
-import { BoxUtil, FreListInfo } from "../BoxUtil";
-import { UtilCommon } from "./UtilCommon";
-import { FreLanguage } from "../../../language";
-import { FreEditor } from "../../FreEditor";
+} from "../../boxes/index.js";
+import { FreNamedNode, FreNode, FreNodeReference } from "../../../ast/index.js";
+import { RoleProvider } from "../RoleProvider.js";
+import { FreScoper } from "../../../scoper/index.js";
+import { BehaviorExecutionResult } from "../../util/index.js";
+import { BoxUtil, FreListInfo } from "../BoxUtil.js";
+import { UtilCommon } from "./UtilCommon.js";
+import { FreLanguage } from "../../../language/index.js";
+import { FreEditor } from "../../FreEditor.js";
 import { runInAction } from "mobx";
-import { FreUtils } from "../../../util";
+import { FreUtils } from "../../../util/index.js";
 
 export class UtilRefHelpers {
     public static referenceBox(

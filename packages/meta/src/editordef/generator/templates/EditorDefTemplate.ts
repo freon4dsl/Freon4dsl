@@ -181,9 +181,9 @@ export class EditorDefTemplate {
 
         // template starts here
         return `import { ${coreImports.join(", ")} } from "${FREON_CORE}";
-            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
-            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}";
+            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
+            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}/index.js";
 
             const map = ${conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection)};
 

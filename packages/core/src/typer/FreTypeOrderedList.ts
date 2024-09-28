@@ -1,5 +1,5 @@
-import { FreTyper } from "./FreTyper";
-import { FreType } from "./FreType";
+import { FreTyper } from "./FreTyper.js";
+import { FreType } from "./FreType.js";
 
 export class FreTypeOrderedList<T extends FreType> implements Iterable<T> {
     protected elements: T[] = [];

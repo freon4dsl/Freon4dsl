@@ -12,7 +12,7 @@ import {
     FreTriggerUse, isString, ActionBox
 } from "@freon4dsl/core";
 import { RoleProvider } from "@freon4dsl/core";
-import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression";
+import { NumberLiteralExpression } from "../language/gen/NumberLiteralExpression.js";
 
 /**
  * Class CustomExampleActions provides an entry point for the language engineer to
