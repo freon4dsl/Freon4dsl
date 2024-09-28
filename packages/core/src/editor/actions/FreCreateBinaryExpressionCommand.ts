@@ -1,12 +1,12 @@
-import { FreBinaryExpression } from "../../ast/index";
-import { AST } from "../../change-manager/index";
-import { BTREE, FRE_BINARY_EXPRESSION_LEFT, Selected } from "../../util/index";
-import { Box } from "../boxes/index";
-import { FreEditor } from "../FreEditor";
-import { FreCaret } from "../util/index";
-import { FrePostAction } from "./FreAction";
-import { FreCommand, FRECOMMAND_LOGGER } from "./FreCommand";
-import { FreTriggerUse, triggerTypeToString } from "./FreTriggers";
+import { FreBinaryExpression } from "../../ast/index.js";
+import { AST } from "../../change-manager/index.js";
+import { BTREE, FRE_BINARY_EXPRESSION_LEFT, Selected } from "../../util/index.js";
+import { Box } from "../boxes/index.js";
+import { FreEditor } from "../FreEditor.js";
+import { FreCaret } from "../util/index.js";
+import { FrePostAction } from "./FreAction.js";
+import { FreCommand, FRECOMMAND_LOGGER } from "./FreCommand.js";
+import { FreTriggerUse, triggerTypeToString } from "./FreTriggers.js";
 
 export type FreBinaryExpressionBuilder = (box: Box, text: string, editor: FreEditor) => FreBinaryExpression;
 

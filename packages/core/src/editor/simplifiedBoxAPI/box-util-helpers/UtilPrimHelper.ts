@@ -1,5 +1,5 @@
 import { FreNode } from "../../../ast/index.js";
-import { AST } from "../../../change-manager/index";
+import { AST } from "../../../change-manager/index.js";
 import {
     BoolDisplay,
     BooleanControlBox,
@@ -13,7 +13,7 @@ import {
     SelectOption,
     TextBox,
 } from "../../boxes/index.js";
-\import { FreEditor } from "../../FreEditor.js";
+import { FreEditor } from "../../FreEditor.js";
 import { BehaviorExecutionResult } from "../../util/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";
 import { FreLanguage, FreLanguageProperty } from "../../../language/index.js";

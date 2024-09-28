@@ -3,7 +3,7 @@
  * They support drag-and-drop and cut/copy-paste functionality.
  */
 
-import { AST } from "../../change-manager/index,js";
+import { AST } from "../../change-manager/index.js"
 import { jsonAsString } from "../../util/index.js";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
 import * as Keys from "./Keys.js";

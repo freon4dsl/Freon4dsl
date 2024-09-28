@@ -1,5 +1,5 @@
 import { runInAction } from "mobx"
-import { FreUndoManager } from "./FreUndoManager"
+import { FreUndoManager } from "./FreUndoManager.js"
 
 export type errorFunction = (msg: string) => void
 

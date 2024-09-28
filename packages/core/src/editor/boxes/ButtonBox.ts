@@ -1,4 +1,4 @@
-import { AST } from "../../change-manager/index";
+import { AST } from "../../change-manager/index.js";
 import { Box } from "./internal.js";
 import { FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
@@ -7,7 +7,7 @@ import { BehaviorExecutionResult } from "../util/index.js";
 import { FrePostAction } from "../actions/index.js";
 import { FreEditor } from "../FreEditor.js";
 
-const LOGGER: FreLogger = new FreLogger("ButtonBox"); //.mute();
+const LOGGER: FreLogger = new FreLogger("ButtonBox").mute();
 
 export class ButtonBox extends Box {
     readonly kind: string = "ButtonBox";

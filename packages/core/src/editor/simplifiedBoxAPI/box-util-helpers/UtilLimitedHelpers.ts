@@ -1,5 +1,5 @@
 import { FreNode } from "../../../ast/index.js";
-import { AST } from "../../../change-manager/index";
+import { AST } from "../../../change-manager/index.js";
 import {BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox, SelectOption} from "../../boxes/index.js";
 import { FreLanguage, FreLanguageProperty } from "../../../language/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";

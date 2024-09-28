@@ -1,4 +1,4 @@
-import { FreLogger } from "../logging/index";
+import { FreLogger } from "../logging/index.js";
 import { FreChangeManager } from "./FreChangeManager.js";
 import { FreModelUnit } from "../ast/index.js";
 import { FreDelta } from "./FreDelta.js";

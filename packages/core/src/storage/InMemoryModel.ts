@@ -1,5 +1,5 @@
 import { FreModel, FreModelUnit } from "../ast/index.js";
-import { AST } from "../change-manager/index";
+import { AST } from "../change-manager/index.js";
 import { FreEnvironment } from "../environment/index.js";
 import { FreLogger } from "../logging/index.js";
 import { IServerCommunication, ModelUnitIdentifier } from "./server/index.js";

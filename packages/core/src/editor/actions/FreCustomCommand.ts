@@ -1,10 +1,10 @@
-import { AST } from "../../change-manager/index";
-import { Box } from "../boxes/index";
-import { FreEditor } from "../FreEditor";
-import { FreCaret } from "../util/index";
-import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction";
-import { FreCommand } from "./FreCommand";
-import { FreTriggerUse, triggerTypeToString } from "./FreTriggers";
+import { AST } from "../../change-manager/index.js";
+import { Box } from "../boxes/index.js";
+import { FreEditor } from "../FreEditor.js";
+import { FreCaret } from "../util/index.js";
+import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction.js";
+import { FreCommand } from "./FreCommand.js";
+import { FreTriggerUse, triggerTypeToString } from "./FreTriggers.js";
 
 export class FreCustomCommand extends FreCommand {
     boxRoleToSelect: string;

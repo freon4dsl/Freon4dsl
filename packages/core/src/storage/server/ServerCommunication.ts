@@ -1,6 +1,6 @@
 import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../index.js";
+import { FreLionwebSerializer, FreModelSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
 

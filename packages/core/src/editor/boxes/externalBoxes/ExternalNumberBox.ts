@@ -1,4 +1,4 @@
-import { AST } from "../../../change-manager/index";
+import { AST } from "../../../change-manager/index.js";
 import { Box } from "../Box.js";
 import { FreNode } from "../../../ast/index.js";
 import { FreUtils } from "../../../util/index.js";
