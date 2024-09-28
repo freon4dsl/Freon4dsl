@@ -23,7 +23,7 @@
 		FreLogger,
 		SelectBox,
 		TAB,
-		TextBox, SHIFT, CONTROL, ALT
+		TextBox, SHIFT, CONTROL, ALT, ESCAPE
 	} from "@freon4dsl/core";
 
 	import { runInAction } from "mobx";
@@ -138,6 +138,7 @@
 		}
 		if (partOfDropdown) {  // let TextDropdownComponent know, dropdown menu needs to be altered
 			console.log(`textUpdate from onClick`)
+			dispatcher('showDropdown')
 			dispatcher('textUpdate', {content: text, caret: myHelper.from});
 		}
 		event.stopPropagation();
@@ -176,6 +177,7 @@
 	/**
 	 * This function handles any keyboard event that occurs within the <input> element.
 	 * Note, we use onKeyDown, because onKeyPress is deprecated.
+	 * In case of an ESCAPE in the textComponent, the dropdown is closed, while the editing state remains.
 	 * @param event
 	 */
 	const onKeyDown = (event: KeyboardEvent) => {
@@ -190,16 +192,22 @@
 			myHelper.handleAltOrCtrlKey(event, editor);
 		} else { // handle non meta keys
 			switch (event.key) {
+				case ESCAPE: {
+					if (partOfDropdown) dispatcher('hideDropdown');
+					event.preventDefault();
+					event.stopPropagation();
+					break;
+				}
 				case ARROW_DOWN:
 				case ARROW_UP:
 				case ENTER:
 				case TAB: {
 					// todo Maybe this option could be completely handled by TextDropDown and Freon,
 					// this would avoid a second call to endEditing when the selection is changed.
-					LOGGER.log("Arrow up, arrow down, enter, escape, or tab pressed: " + event.key);
+					LOGGER.log("Arrow up, arrow down, enter, or tab pressed: " + event.key);
 					if (!partOfDropdown && isEditing) {
 						endEditing(); // do not switch selection, this will be done by FreonComponent
-					} // else, let TextDropDownComponent handle this
+					} // else, let TextDropDownComponent or FreonComponent (in case of TAB) handle this
 					break;
 				}
 				case ARROW_LEFT: {
@@ -219,6 +227,7 @@
 					break;
 				}
 				default: { // the event.key is SHIFT or a printable character
+					if (partOfDropdown) dispatcher('showDropdown');
 					myHelper.getCaretPosition(event);
 					if (event.shiftKey && event.key === "Shift") {
 						// only shift key pressed, ignore
@@ -226,11 +235,13 @@
 						break
 					}
 					switch (box.isCharAllowed(text, event.key, myHelper.from)) {
-						case CharAllowed.OK: // add to text, handled by browser
-							myHelper.handleCharAllowed(event, myHelper.from, editor, id);
+						case CharAllowed.OK:
+							// add char to text, handled by browser
+							// dispatch to TextDropdown handled by afterUpdate()
+							myHelper.from += 1;
+							event.stopPropagation();
 							break;
 						case CharAllowed.NOT_OK: // ignore
-							// ignore any spaces in the text TODO make this depend on textbox.spaceAllowed
 							LOGGER.log("KeyPressAction.NOT_OK");
 							event.preventDefault();
 							event.stopPropagation();
@@ -297,7 +308,7 @@
 			inputElement.focus();
 			editStart = false;
 		} else if (isEditing) {
-			console.log(`check deleteWhenEmpty, caret: ${myHelper.from}-${myHelper.to}, text: "${text}", empty:${myHelper.isTextEmpty()}, deleteWhenEmpty: ${box.deleteWhenEmpty}`)
+			// console.log(`check deleteWhenEmpty, caret: ${myHelper.from}-${myHelper.to}, text: "${text}", empty:${myHelper.isTextEmpty()}, deleteWhenEmpty: ${box.deleteWhenEmpty}`)
 			if (myHelper.isTextEmpty() && box.deleteWhenEmpty) { // the text is completely empty, and we may delete the node
 				console.log("Deleting box")
 				dispatcher('hideDropdown');

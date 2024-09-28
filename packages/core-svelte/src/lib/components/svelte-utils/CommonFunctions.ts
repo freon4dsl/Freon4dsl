@@ -17,6 +17,7 @@ export function focusAndScrollIntoView(element: HTMLElement) {
             rect.right <= get(viewport).width;
 
         // if the element is not visible then scroll to it
+        // see https://learn.svelte.dev/tutorial/update for example on scrolling
         if (!elemIsVisible) {
             element.scrollIntoView();
         }

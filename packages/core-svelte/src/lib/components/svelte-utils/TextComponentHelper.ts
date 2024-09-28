@@ -44,7 +44,6 @@ export class TextComponentHelper {
         this._isPartOfDropdown = isPartOfDropdown;
         this._getText = getText;
         this._endEditing = endEditing;
-        // this._textUpdateFunction = textUpdateFunction;
         this._dispatcher = dispatcher;
     }
 
@@ -70,6 +69,7 @@ export class TextComponentHelper {
         if (!event.ctrlKey && !event.altKey && event.shiftKey) { // shift-delete
             // TODO CUT
         } else {
+            this._dispatcher('showDropdown');
             this.getCaretPosition(event);
             let endPosition: number = this._getText().length;
             // todo this code is the same as in handleBackspace, make it a private method
@@ -88,6 +88,7 @@ export class TextComponentHelper {
     }
 
     handleBackSpace(event: KeyboardEvent, editor: FreEditor) {
+        this._dispatcher('showDropdown');
         this.getCaretPosition(event);
         let endPosition: number = 0;
         // todo this code is the same as in handleDelete, make it a private method
@@ -126,17 +127,6 @@ export class TextComponentHelper {
         }
         event.preventDefault();
         event.stopPropagation();
-    }
-
-    handleCharAllowed(event: KeyboardEvent, caretFrom: number, editor: FreEditor, htmlId: string) {
-        LOGGER.log('CharAllowed ' + JSON.stringify(event.key));
-        if (this._myBox.kind === "ActionBox") {
-            LOGGER.log(`${htmlId}: TEXT UPDATE text '${this._getText()}' key: '${event.key}' from: ${caretFrom}`)
-            // note: caret is set to one more because getCaretPosition is calculated before the event is executed
-            console.log(`textUpdate from handleCharAllowed`)
-            this._dispatcher('textUpdate', {content: this._getText().concat(event.key), caret: this._from - 1});
-        }
-        event.stopPropagation()
     }
 
     handleAltOrCtrlKey(event: KeyboardEvent, editor: FreEditor) {
@@ -200,6 +190,7 @@ export class TextComponentHelper {
     }
 
     handleArrowLeft(event: KeyboardEvent) {
+        this._dispatcher('showDropdown');
         this.getCaretPosition(event);
         console.log(`handleArrowLeft, caret: ${this._from}-${this._to}`);
         if (this._from !== 0) { // when the arrow key can stay within the text, do not let the parent handle it
@@ -216,6 +207,7 @@ export class TextComponentHelper {
     }
 
     handleArrowRight(event: KeyboardEvent) {
+        this._dispatcher('showDropdown');
         this.getCaretPosition(event);
         console.log(`handleArrowRight, caret: ${this._from}-${this._to}`);
         if (this._from !== this._getText().length) { // when the arrow key can stay within the text, do not let the parent handle it

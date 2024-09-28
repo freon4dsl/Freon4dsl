@@ -113,36 +113,32 @@
         box.textHelper.setText(key)
     }
 
-    function matchAndExecuteAction(event: CustomEvent<any>) {
+    function matchAndExecuteAction() {
         // Try to match a regular expression
         const matchingOption = box.getOptions(editor).find(option => {
             if (isRegExp(option.action.trigger)) {
-                if (option.action.trigger.test(event.detail.content)) {
-                    LOGGER.log("Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + event.detail.content + "'")
+                if (option.action.trigger.test(text)) {
+                    LOGGER.log("Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + text + "'")
                     return true
                 }
                 return false
             }
         })
+        // If there is a match, execute it and stop editing.
         if (!!matchingOption) {
-            event.preventDefault()
-            event.stopPropagation()
-            LOGGER.log(`Matching regexp ${matchingOption.label}`)
-            LOGGER.log("STOP 2 !!")
+            LOGGER.log(`Found match to regexp: ${matchingOption.label}`)
             // isn't this equal to BehaviourUtil.executeBehavior
             let execResult: FrePostAction = null;
             runInAction(() => {
                 runInAction(() => {
                     const command = matchingOption.action.command();
-                    execResult = command.execute(box, event.detail.content, editor, 0);
+                    execResult = command.execute(box,text, editor, 0);
                 });
                 if (!!execResult) {
                     execResult();
                 }
             })
-            setTextLocalAndInBox('')
-            isEditing = false;
-            dropdownShown = false;
+            endEditing();
         }
     }
 
@@ -155,30 +151,29 @@
      */
     const textUpdate = (event: CustomEvent) => {
         console.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail) + ", start: "+ text.substring(0, event.detail.caret));
-        dropdownShown = true;
-        // setText(event.detail.content);
         allOptions = getOptions();
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
         makeFilteredOptionsUnique();
         // Only one option and has been fully typed in, use this option without waiting for the ENTER key
         // console.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
-        if (filteredOptions.length === 1 && filteredOptions[0].label === event.detail.content && filteredOptions[0].label.length === event.detail.caret ) {
+        if (filteredOptions.length === 1 && filteredOptions[0].label === text && filteredOptions[0].label.length === event.detail.caret ) {
             event.preventDefault()
             event.stopPropagation()
-            storeAndExecute(filteredOptions[0])
-            setTextLocalAndInBox(filteredOptions[0].label);
-            isEditing = false;
-            dropdownShown = false;
+            storeOrExecute(filteredOptions[0])
             return
         }
         if (isActionBox(box)) {
             // Try to match a regular expression, and execute the action that is associated with it
-            matchAndExecuteAction(event);
+            matchAndExecuteAction();
         }
     };
 
     const hideDropdown= () => {
         dropdownShown = false;
+    }
+
+    const showDropdown= () => {
+        dropdownShown = true;
     }
 
     function makeFilteredOptionsUnique() {
@@ -221,20 +216,13 @@
      * In case of an arrow down or up event in the textComponent, the currently selected option in the dropdown is changed.
      * In case of an Enter event in the dropdown, the currently selected option in the dropdown is set as text in the
      * textComponent, and the editing state is ended.
-     * In case of an ESCAPE in the textComponent, the dropdown is closed, while the editing state remains.
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log("onKeyDown: " + id + " [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
+        console.log("XX onKeyDown: " + id + " [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
         if (dropdownShown) {
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
-                    case ESCAPE: {
-                        dropdownShown = false;
-                        event.preventDefault();
-                        event.stopPropagation();
-                        break;
-                    }
                     case ARROW_DOWN: {
                         if (dropdownShown) {
                             if (!selectedId || selectedId.length == 0) { // there is no current selection: start at the first option
@@ -286,7 +274,7 @@
                         }
                         // store or execute the option
                         if (!!chosenOption) {
-                            storeAndExecute(chosenOption);
+                            storeOrExecute(chosenOption);
                         } else { //  no valid option, restore the original text
                             setText(textBox.getText());
                             // stop editing
@@ -327,7 +315,7 @@
         if (index >= 0 && index < filteredOptions.length) {
             const chosenOption = filteredOptions[index];
             if (!!chosenOption) {
-                storeAndExecute(chosenOption);
+                storeOrExecute(chosenOption);
             }
         }
         if (!isSelectBox(box)) { // clear text for an action box
@@ -344,7 +332,7 @@
     const startEditing = (event?: CustomEvent) => {
         LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event?.detail));
         isEditing = true;
-        // dropdownShown = true;
+        dropdownShown = true;
         allOptions = getOptions();
         if (!!event) {
             if ( text === undefined || text === null || text.length === 0) {
@@ -369,12 +357,11 @@
      * by these changes.
      * @param selected
      */
-    function storeAndExecute(selected: SelectOption) {
-        LOGGER.log('storeAndExecute for option ' + selected.label + ' ' + box.kind);
+    function storeOrExecute(selected: SelectOption) {
+        LOGGER.log('storeOrExecute for option ' + selected.label + ' ' + box.kind);
         isEditing = false;
         dropdownShown = false;
 
-        // TODO set the new cursor through the editor
         box.selectOption(editor, selected); // TODO the result of the execution is ignored
         if (isActionBox(box)) { // ActionBox, action done, clear input text
             setTextLocalAndInBox('');
@@ -383,12 +370,11 @@
 
     /**
      * This function is called whenever the user ends editing the TextComponent,
-     * in whatever manner. It checks whether the current selected option/text is
-     * a valid option. If so, this option is executed, else the text is set to the
-     * original value.
+     * in whatever manner.
      */
     const endEditing = () => {
         LOGGER.log("endEditing " +id + " dropdownShow:" + dropdownShown + " isEditing: " + isEditing);
+        // todo this is strange code, must have a better look
         if (isEditing === true) {
             isEditing = false;
         } else {
@@ -401,7 +387,7 @@
             allOptions = getOptions();
             let validOption = allOptions.find(o => o.label === text);
             if (!!validOption && validOption.id !== noOptionsId) {
-                storeAndExecute(validOption);
+                storeOrExecute(validOption);
             } else { // no valid option, restore the previous value
                 setText(textBox.getText());
             }
@@ -419,7 +405,7 @@
     const onFocusOutText = () => {
         LOGGER.log(`onFocusOutText ${id} text '${text}'`);
         if (isEditing) {
-            isEditing = false;
+            endEditing();
         }
     };
 
@@ -466,6 +452,7 @@
             editor={editor}
             on:textUpdate={textUpdate}
             on:hideDropdown={hideDropdown}
+            on:showDropdown={showDropdown}
             on:startEditing={startEditing}
             on:endEditing={endEditing}
             on:onFocusOutText={onFocusOutText}
