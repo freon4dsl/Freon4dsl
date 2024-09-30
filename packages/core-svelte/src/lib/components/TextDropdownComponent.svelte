@@ -111,9 +111,22 @@
     
     const triggerKeyPressEvent = (key: string) => {
         box.textHelper.setText(key)
+        allOptions = getOptions();
+        filteredOptions = allOptions.filter(o => o.label.startsWith(key))
+        makeFilteredOptionsUnique();
+        // Only one option and has been fully typed in, use this option without waiting for the ENTER key
+        // console.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
+        if (filteredOptions.length === 1 && filteredOptions[0].label === key && filteredOptions[0].label.length === 1 ) {
+            storeOrExecute(filteredOptions[0])
+            return
+        }
+        if (isActionBox(box)) {
+            // Try to match a regular expression, and execute the action that is associated with it
+            matchRegExpAndExecuteAction();
+        }
     }
 
-    function matchAndExecuteAction() {
+    function matchRegExpAndExecuteAction() {
         // Try to match a regular expression
         const matchingOption = box.getOptions(editor).find(option => {
             if (isRegExp(option.action.trigger)) {
@@ -164,7 +177,7 @@
         }
         if (isActionBox(box)) {
             // Try to match a regular expression, and execute the action that is associated with it
-            matchAndExecuteAction();
+            matchRegExpAndExecuteAction();
         }
     };
 

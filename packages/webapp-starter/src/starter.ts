@@ -1,5 +1,5 @@
 import { FreonLayout, WebappConfigurator } from "@freon4dsl/webapp-lib";
-import { ServerCommunication } from "@freon4dsl/core";
+import {FreLogger, ServerCommunication} from "@freon4dsl/core";
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
 import { setCustomComponents } from "@freon4dsl/core-svelte";
 // For DocuProject:
@@ -78,4 +78,8 @@ WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getI
 const app = new FreonLayout({
     target: document.body,
 });
+
+FreLogger.unmute("TextComponent")
+FreLogger.unmute("TextDropdownComponent")
+
 export default app;

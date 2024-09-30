@@ -130,6 +130,10 @@ export class FreEditor {
         };
     }
 
+    set selectedCaretPosition(c: FreCaret) {
+        this._selectedPosition = c;
+    }
+
     get selectedCaretPosition(): FreCaret {
         return this._selectedPosition;
     }

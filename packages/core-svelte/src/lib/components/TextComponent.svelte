@@ -63,7 +63,7 @@
 	 * It is called from the box.
 	 */
 	export async function setFocus(): Promise<void> {
-		// LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
+		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
@@ -80,7 +80,7 @@
 	 * @param freCaret
 	 */
 	const setCaret = (freCaret: FreCaret) => {
-		LOGGER.log(`setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]` );
+		LOGGER.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]` );
 		switch (freCaret.position) {
 			case FreCaretPosition.RIGHT_MOST:  // type nr 2
 				myHelper.from = myHelper.to = text.length;
@@ -110,7 +110,7 @@
 	 * Called when clicked on the <span> element.
 	 */
 	function startEditing(event: MouseEvent) {
-		LOGGER.log('startEditing ' + id);
+		LOGGER.log(`${id}: startEditing`);
 		// set the global selection
 		editor.selectElementForBox(box);
 		// set the local variables
@@ -184,7 +184,7 @@
 		// see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
 		// stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
 		// preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
-		LOGGER.log("onKeyDown: [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]");
+		LOGGER.log(`${id}: onKeyDown: [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}] meta [${event.metaKey}]`);
 		if (event.key === SHIFT || event.key === CONTROL || event.key === ALT) { // ignore meta keys
 			LOGGER.log("META KEY: stop propagation")
 			event.stopPropagation();

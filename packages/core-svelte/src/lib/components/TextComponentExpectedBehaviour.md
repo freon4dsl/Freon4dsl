@@ -28,6 +28,8 @@ When selected, the component should react to the following keystrokes and events
     1. Note that in Firefox this feature is not functioning!
 5. Mouse drag: the text between start and end should be selected, and the component should thereafter react using this 
    selection to adding a character, backspace, delete, or to cut, paste, etc.
+6. Ctrl-arrow left or right should go to the end or start of the text.
+7. Ctrl-shift-arrow left or right should select part of the text.
 
 Deselection can be done by:
 1. Arrow up or down
