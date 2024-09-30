@@ -91,7 +91,11 @@
             if (!!selectedOption) {
                 box.textHelper.setText(selectedOption.label);
                 setText(box.textHelper.getText());
+            } else {
+                box.textHelper.setText("");
+                setText(box.textHelper.getText());
             }
+            selectedId = undefined
         }
         // because the box maybe a different one than we started with ...
         // box.setFocus = setFocus; todo remove?
