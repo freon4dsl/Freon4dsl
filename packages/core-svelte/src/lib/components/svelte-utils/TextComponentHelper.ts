@@ -9,7 +9,6 @@ import {
 } from "@freon4dsl/core";
 import { EventDispatcher } from "svelte";
 import { executeCustomKeyboardShortCut } from "./CommonFunctions.js";
-import {box} from "$lib";
 
 const LOGGER = new FreLogger("TextComponentHelper").mute();
 
@@ -122,8 +121,8 @@ export class TextComponentHelper {
         editor.selectNextLeaf();
         LOGGER.log(htmlId + "    NEXT LEAF IS " + editor.selectedBox.role);
         if (isActionBox(editor.selectedBox)) {
-            editor.selectedBox.execute(event.key)
-            editor.selectedBox.setText(key)
+            // editor.selectedBox.execute(event.key)
+            // editor.selectedBox.setText(key)
             LOGGER.log("     is an action box");
             editor.selectedBox.triggerKeyPressEvent(event.key);
             editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
