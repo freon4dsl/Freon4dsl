@@ -1,3 +1,4 @@
+import { runInAction } from "mobx";
 import {
     FreDelta,
     FrePartDelta,
@@ -5,13 +6,13 @@ import {
     FrePrimDelta,
     FrePrimListDelta,
     FreTransactionDelta,
-} from "./FreDelta";
-import { FreModelUnit } from "../ast";
-import { modelUnit } from "../ast-utils";
-import { FreLogger } from "../logging";
-import { FreUndoManager } from "./FreUndoManager";
+} from "./FreDelta.js";
+import { FreModelUnit } from "../ast/index.js";
+import { modelUnit } from "../ast-utils/index.js";
+import { FreLogger } from "../logging/index.js";
+import { FreUndoManager } from "./FreUndoManager.js";
 
-const LOGGER: FreLogger = new FreLogger("FreUndoStackManager");
+const LOGGER: FreLogger = new FreLogger("FreUndoStackManager").mute();
 
 /**
  * Class FreUndoStackManager holds two sets of stacks of change information on a model unit.
@@ -59,6 +60,7 @@ export class FreUndoStackManager {
      * A temporary method, because during testing we use the same manager
      */
     public cleanStacks() {
+        LOGGER.log("cleanStacks")
         this.undoStack = [];
         this.redoStack = [];
     }
@@ -66,7 +68,7 @@ export class FreUndoStackManager {
     public executeUndo() {
         this.inUndo = true; // make sure incoming changes are stored on redo stack
         const delta = this.undoStack.pop();
-        // console.log("executing undo for unit: "+ this.changeSource.name + ", " + delta.toString())
+        LOGGER.log(`executing undo for unit: '${this.changeSource.name}', delta '${delta?.toString()}`)
         if (!!delta) {
             this.reverseDelta(delta);
         }
@@ -81,19 +83,22 @@ export class FreUndoStackManager {
     }
 
     public addDelta(delta: FreDelta) {
-        // console.log("in transaction: " + this.inTransaction);
+        // LOGGER.log(`addDelta inTransaction '${this.inTransaction}' for unit '${this.changeSource?.name}'`);
         if (!this.inIgnoreState) {
             if (this.inUndo) {
-                // console.log('adding redo to ' + this.changeSource?.name)
+                LOGGER.log('addDelta: adding redo to ' + this.changeSource?.name)
                 this.addRedo(delta);
             } else {
-                // console.log('adding undo to ' + this.changeSource?.name)
+                LOGGER.log('addDelta: adding undo to ' + this.changeSource?.name)
                 this.addUndo(delta);
             }
+        } else {
+            LOGGER.log("addDelta ignored")
         }
     }
 
     private addUndo(delta: FreDelta) {
+        LOGGER.log(`addUndo: delta for '${delta.owner.freLanguageConcept()}'.property '${delta.propertyName}' for unit '${this.changeSource?.name}'`)
         if (this.inTransaction) {
             if (this.currentTransaction === null || this.currentTransaction === undefined) {
                 this.currentTransaction = new FreTransactionDelta(
@@ -105,10 +110,10 @@ export class FreUndoStackManager {
                 this.undoStack.push(this.currentTransaction);
             }
             this.currentTransaction.internalDeltas.push(delta);
-            // console.log("FreUndoManager: IN TRANSACTION added undo for " + delta.owner.freLanguageConcept() + "[" + delta.propertyName + "]");
+            // LOGGER.log("IN TRANSACTION added undo for " + delta.owner.freLanguageConcept() + "[" + delta.propertyName + "]");
         } else {
             this.undoStack.push(delta);
-            // console.log("FreUndoManager: added undo for " + delta.owner.freLanguageConcept() + "[" + delta.propertyName + "]");
+            // LOGGER.log("FreUndoManager: added undo for " + delta.owner.freLanguageConcept() + "[" + delta.propertyName + "]");
         }
     }
 
@@ -132,28 +137,36 @@ export class FreUndoStackManager {
     }
 
     private reverseDelta(delta: FreDelta) {
-        // console.log(`reverseDelta<${delta.constructor.name}>:  ${delta.toString()} `);
+        LOGGER.log(`reverseDelta<${delta.constructor.name}>:  ${delta.toString()}  inTransaction '${this.inTransaction}'`);
         if (delta instanceof FrePartDelta || delta instanceof FrePrimDelta) {
             if (FreUndoStackManager.hasIndex(delta)) {
                 if (FreUndoStackManager.checkIndex(delta)) {
-                    delta.owner[delta.propertyName][delta.index] = delta.oldValue;
+                    runInAction( () => {
+                        delta.owner[delta.propertyName][delta.index] = delta.oldValue;
+                    })
                 } else {
-                    LOGGER.error(`cannot reverse ${delta.toString()} because the index is incorrect`);
+                    LOGGER.error(`reverseDelta: cannot reverse ${delta.toString()} because the index is incorrect`);
                 }
             } else {
-                delta.owner[delta.propertyName] = delta.oldValue;
+                runInAction( () => {
+                    delta.owner[delta.propertyName] = delta.oldValue;
+                })
             }
         } else if (delta instanceof FrePartListDelta || delta instanceof FrePrimListDelta) {
             if (delta.removed.length > 0) {
-                delta.owner[delta.propertyName].splice(delta.index, 0, ...delta.removed);
+                runInAction( () => {
+                    delta.owner[delta.propertyName].splice(delta.index, 0, ...delta.removed);
+                })
             }
             if (delta.added.length > 0) {
-                delta.owner[delta.propertyName].splice(delta.index, delta.added.length);
+                runInAction( () => {
+                    delta.owner[delta.propertyName].splice(delta.index, delta.added.length);
+                })
             }
         } else if (delta instanceof FreTransactionDelta) {
             // TODO when multiple sources of change are present, then a check is needed whether the state of the unit is such that this delta can be reversed
             FreUndoManager.getInstance().startTransaction(this.changeSource);
-            for (const sub of delta.internalDeltas) {
+            for (const sub of delta.internalDeltas.reverse()) {
                 this.reverseDelta(sub);
             }
             FreUndoManager.getInstance().endTransaction(this.changeSource);

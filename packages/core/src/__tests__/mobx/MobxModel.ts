@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import { FreNodeBaseImpl, observablepartlist, observablepart, observableprimlist, observableprim } from "../../ast";
+import { FreNodeBaseImpl, observablepartlist, observablepart, observableprimlist, observableprim } from "../../ast/index.js";
 import { makeObservable, observable } from "mobx";
-import { FreNodeReferenceTestScoper } from "./FreNodeReferenceTestScoper";
+import { FreNodeReferenceTestScoper } from "./FreNodeReferenceTestScoper.js";
 
 /**
  * These classes are used only to test the mobx decorators. They extend FreNodeBaseImpl directly.

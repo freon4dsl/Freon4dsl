@@ -1,7 +1,7 @@
-import { FreNode } from "../../ast";
-import { Box } from "./Box";
-import { GridCellBox } from "./GridCellBox";
-import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util";
+import { FreNode } from "../../ast/index.js";
+import { Box } from "./Box.js";
+import { GridCellBox } from "./GridCellBox.js";
+import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util/index.js";
 
 export class TableCellBox extends GridCellBox {
     kind: string = "TableCellBox";

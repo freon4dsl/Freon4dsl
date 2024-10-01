@@ -1,4 +1,4 @@
-import { FreUtils } from "@freon4dsl/core";
+import { AST, FreUtils } from "@freon4dsl/core";
 import { TestParserModelEnvironment } from "../config/gen/TestParserModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
 import {
@@ -24,13 +24,15 @@ describe("Parser properties of type", () => {
     test(" Primitive ", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.pri");
-            const unit1: PrimitivesTest = reader.readFromString(
-                input,
-                "PrimitivesTest",
-                new TestParserModel(),
-            ) as PrimitivesTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            AST.change( () => {
+                const unit1: PrimitivesTest = reader.readFromString(
+                    input,
+                    "PrimitivesTest",
+                    new TestParserModel(),
+                ) as PrimitivesTest;
+                // console.log(writer.writeToString(unit1));
+                expect(unit1).toMatchSnapshot();
+            })
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
@@ -40,13 +42,15 @@ describe("Parser properties of type", () => {
     test(" Primitive with Keyword projection ", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.wit");
-            const unit1: PrimsWithKeywordTest = reader.readFromString(
-                input,
-                "PrimsWithKeywordTest",
-                new TestParserModel(),
-            ) as PrimsWithKeywordTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            AST.change( () => {
+                const unit1: PrimsWithKeywordTest = reader.readFromString(
+                    input,
+                    "PrimsWithKeywordTest",
+                    new TestParserModel(),
+                ) as PrimsWithKeywordTest;
+                // console.log(writer.writeToString(unit1));
+                expect(unit1).toMatchSnapshot();
+            })
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
@@ -57,13 +61,15 @@ describe("Parser properties of type", () => {
         // TODO not correct: line 14 of input not handled as it should
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.lim");
-            const unit1: LimitedTest = reader.readFromString(
-                input,
-                "LimitedTest",
-                new TestParserModel(),
-            ) as LimitedTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            AST.change( () => {
+                const unit1: LimitedTest = reader.readFromString(
+                    input,
+                    "LimitedTest",
+                    new TestParserModel(),
+                ) as LimitedTest;
+                // console.log(writer.writeToString(unit1));
+                expect(unit1).toMatchSnapshot();
+            })
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
@@ -73,9 +79,11 @@ describe("Parser properties of type", () => {
     test(" Part ", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.par");
-            const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            AST.change( () => {
+                const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
+                // console.log(writer.writeToString(unit1));
+                expect(unit1).toMatchSnapshot();
+            })
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
@@ -85,9 +93,11 @@ describe("Parser properties of type", () => {
     test(" Part with Optionals present", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test3.par");
-            const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            AST.change( () => {
+                const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
+                // console.log(writer.writeToString(unit1));
+                expect(unit1).toMatchSnapshot();
+            })
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
@@ -97,9 +107,11 @@ describe("Parser properties of type", () => {
     test(" Part and Sub Parts ", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.par");
-            const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            AST.change( () => {
+                const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
+                // console.log(writer.writeToString(unit1));
+                expect(unit1).toMatchSnapshot();
+            })
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
@@ -109,9 +121,11 @@ describe("Parser properties of type", () => {
     test(" Ref ", () => {
         try {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.ref");
-            const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            AST.change( () => {
+                const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
+                // console.log(writer.writeToString(unit1));
+                expect(unit1).toMatchSnapshot();
+            })
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();
@@ -121,9 +135,11 @@ describe("Parser properties of type", () => {
     test(" Ref with Optionals present", () => {
         try {
             let input: string = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.ref");
-            const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
-            // console.log(writer.writeToString(unit1));
-            expect(unit1).toMatchSnapshot();
+            AST.change( () => {
+                const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
+                // console.log(writer.writeToString(unit1));
+                expect(unit1).toMatchSnapshot();
+            })
         } catch (e) {
             // console.log(e.stack);
             expect(e).toBeNaN();

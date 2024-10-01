@@ -222,7 +222,7 @@ export class ModelTemplate {
 
         return `
             import { ${Names.modelunit()}, ${coreImports.join(",")} } from "${FREON_CORE}";
-            import { ${modelImports.join(", ")} } from "./internal";
+            import { ${modelImports.join(", ")} } from "./internal.js";
 
             ${result}`;
     }

@@ -1,4 +1,5 @@
 import { FreModel, FreModelUnit } from "../ast/index.js";
+import { AST } from "../change-manager/index.js";
 import { FreEnvironment } from "../environment/index.js";
 import { FreLogger } from "../logging/index.js";
 import { IServerCommunication, ModelUnitIdentifier } from "./server/index.js";
@@ -59,7 +60,9 @@ export class InMemoryModel {
         for (const unitId of unitsIds) {
             LOGGER.log("openModel: load model-unit: " + unitId.name);
             const unit = await this.server.loadModelUnit(this.model.name, unitId);
-            this.model.addUnit(unit as FreModelUnit);
+            AST.change( () => {
+                this.model.addUnit(unit as FreModelUnit);
+            })
         }
         this.currentModelChanged();
         return this.__model;
@@ -113,7 +116,9 @@ export class InMemoryModel {
      */
     async addUnit(unit: FreModelUnit): Promise<void> {
         LOGGER.log(`addUnit ${unit?.name}`)
-        this.model.addUnit(unit);
+        AST.change( () => {
+            this.model.addUnit(unit);
+        })
         await this.saveUnit(unit);
         this.currentModelChanged();
     }

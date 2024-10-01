@@ -1,3 +1,3 @@
-import { FreNode } from "./FreNode";
+import { FreNode } from "./FreNode.js";
 
 export interface FreExpressionNode extends FreNode {}

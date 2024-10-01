@@ -1,9 +1,9 @@
-import { runInAction } from "mobx";
-import { FreEditor } from "../editor";
-import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast";
-import { isFreExpression } from "../ast-utils";
-import { IdProvider } from "./IdProvider";
-import { SimpleIdProvider } from "./SimpleIdProvider";
+import { AST } from "../change-manager/index.js";
+import { FreEditor } from "../editor/index.js";
+import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast/index.js";
+import { isFreExpression } from "../ast-utils/index.js";
+import { IdProvider } from "./IdProvider.js";
+import { SimpleIdProvider } from "./SimpleIdProvider.js";
 
 // export type BooleanCallback = () => boolean;
 // export type DynamicBoolean = BooleanCallback | boolean;
@@ -58,7 +58,7 @@ export class FreUtils {
     }
 
     static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
-        runInAction(() => {
+        AST.change( () => {
             // TODO Check typeof
             if (typeof freOwnerDescriptor !== "undefined") {
                 if (freOwnerDescriptor.propertyIndex === undefined) {
@@ -81,9 +81,9 @@ export class FreUtils {
             isFreExpression(newExpression),
             "replaceExpression: new element should be a FreExpressionNode, but it isn't",
         );
-        runInAction(() => {
+        AST.change( () => {
             FreUtils.setContainer(newExpression, oldExpression.freOwnerDescriptor(), editor);
-        });
+        })
     }
 }
 

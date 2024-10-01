@@ -11,7 +11,7 @@ import {
     DemoPlusExpression,
     DemoDivideExpression,
     DemoExpression,
-} from "../language/gen";
+} from "../language/gen/index.js";
 
 export function makeLiteralExp(incoming: any): DemoExpression {
     let mine: DemoExpression;

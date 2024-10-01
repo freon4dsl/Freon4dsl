@@ -111,19 +111,26 @@ export class ItemBoxHelper {
         if (!!propertyProjection && !!property && !!propertyProjection.property) {
             const optionalPropertyName: string = propertyProjection.property.name;
             const myLabel: string = `${mainBoxLabel}-optional-${optionalPropertyName}`;
+            let optionalLiteral = optional.firstLiteral()
+            // if (optionalLiteral === "") {
+            //     optionalLiteral = optionalPropertyName
+            // }
 
             // reuse the general method to handle lines
             let result: string = this._myTemplate.generateLines(optional.lines, elementVarName, myLabel, language, 2);
 
             // surround with optional box, and add "BoxFactory" to imports
             ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxFactory");
+            if (optionalLiteral === "") {
+                return result;
+            }
             const condition: string = property.isList
                 ? `() => (!!${elementVarName}.${optionalPropertyName}) && (${elementVarName}.${optionalPropertyName}).length !== 0`
                 : `() => (!!${elementVarName}.${optionalPropertyName})`;
             result = `BoxFactory.optional2(${elementVarName}, "optional-${optionalPropertyName}", ${condition},
                 ${result},
                 false, 
-                ${this.generatePropertyProjection(propertyProjection, elementVarName, language)}
+                BoxFactory.action(this._node, "optional-${optionalPropertyName}", "${optionalLiteral}")
             )`;
             return result;
         } else {

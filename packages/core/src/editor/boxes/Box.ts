@@ -1,6 +1,6 @@
-import { FreNode } from "../../ast";
-import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util";
-import { FreLogger } from "../../logging";
+import { FreNode } from "../../ast/index.js";
+import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util/index.js";
+import { FreLogger } from "../../logging/index.js";
 
 const LOGGER = new FreLogger("Box");
 
@@ -153,10 +153,14 @@ export abstract class Box {
      * Return the previous selectable leaf in the tree.
      */
     get nextLeafRight(): Box | null {
-        if (!this.parent) {
+        if (this.parent === null || this.parent === undefined) {
             return null;
         }
         const thisIndex: number = this.parent.children.indexOf(this);
+        if (thisIndex === -1) {
+            LOGGER.error(`nextLeafRight: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is mising in its parent (index === -1) `)
+            return null
+        }
         const rightSiblings: Box[] = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
         for (const sibling of rightSiblings) {
             const siblingChild: Box = sibling.firstLeaf;
@@ -179,6 +183,10 @@ export abstract class Box {
             return null;
         }
         const thisIndex: number = this.parent.children.indexOf(this);
+        if (thisIndex === -1) {
+            LOGGER.error(`nextLeafLeft: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is mising in its parent (index === -1) `)
+            return null
+        }
         const leftSiblings: Box[] = this.parent.children.slice(0, thisIndex).reverse();
         for (const sibling of leftSiblings) {
             const siblingChild: Box = sibling.lastLeaf;
@@ -348,5 +356,13 @@ export abstract class Box {
 
     isEditable(): boolean {
         return false;
+    }
+    
+    toStringRecursive(indent: string = ""): string {
+        let result = indent + this.id + " (" + this.kind + ")"
+        this.children.forEach(child => {
+            result += "\n" + child.toStringRecursive(indent + "  ")
+        })
+        return result
     }
 }

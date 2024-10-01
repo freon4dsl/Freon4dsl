@@ -1,1 +1,1 @@
-export { EntityModelEnvironment } from "./config/gen/EntityModelEnvironment";
+export { EntityModelEnvironment } from "./config/gen/EntityModelEnvironment.js";

@@ -1,6 +1,6 @@
-import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { DemoModel, DemoAttributeType } from "../language/gen";
-import { DemoModelCreator } from "./DemoModelCreator";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
+import { DemoModel, DemoAttributeType } from "../language/gen/index.js";
+import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("Testing Typer", () => {

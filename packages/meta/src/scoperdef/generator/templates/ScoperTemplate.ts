@@ -17,14 +17,14 @@ export class ScoperTemplate {
 
     generateGenIndex(language: FreMetaLanguage): string {
         return `
-        export * from "./${Names.scoper(language)}";
-        export * from "./${Names.scoperDef(language)}";
+        export * from "./${Names.scoper(language)}.js";
+        export * from "./${Names.scoperDef(language)}.js";
         `;
     }
 
     generateIndex(language: FreMetaLanguage): string {
         return `
-        export * from "./${Names.customScoper(language)}";
+        export * from "./${Names.customScoper(language)}.js";
         `;
     }
 
@@ -89,7 +89,7 @@ export class ScoperTemplate {
         // now we have enough information to create the correct imports
         const templateImports: string = `
         ${coreImports.length > 0 ? `import { ${coreImports.map((name) => name).join(", ")} } from "${FREON_CORE}";` : ""}
-        ${this.languageImports.length > 0 ? `import { ${this.languageImports.map((name) => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";` : ""}
+        ${this.languageImports.length > 0 ? `import { ${this.languageImports.map((name) => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";` : ""}
         `;
 
         return templateImports + templateBody;

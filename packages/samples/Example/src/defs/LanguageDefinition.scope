@@ -6,7 +6,7 @@ scoper ExampleScoper for language Example
 
 // 2 isnamespace { Method, Entity }
 
-isnamespace { Method, Entity, ExampleUnit, SumExpression }
+isnamespace { Method, Entity, SumExpression }
 
 Entity {
     namespace_addition = self.baseEntity;

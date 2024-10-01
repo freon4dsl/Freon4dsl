@@ -1,6 +1,6 @@
-import { FreNode } from "../../ast";
-import { FreUtils } from "../../util";
-import { Box } from "./Box";
+import { FreNode } from "../../ast/index.js";
+import { FreUtils } from "../../util/index.js";
+import { Box } from "./Box.js";
 
 // TODO state in every box which element we assume to be getting as param, e.g. is the element in a GridCellBox the same as in the corresponding GridBox?
 export class GridCellBox extends Box {

@@ -1,9 +1,8 @@
-import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index";
-import { FreLogger } from "../../logging/index";
-import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../index";
-import { FreErrorSeverity } from "../../validator/index";
-import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication";
-import process from "process";
+import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
+import { FreLogger } from "../../logging/index.js";
+import { FreLionwebSerializer, FreModelSerializer } from "../index.js";
+import { FreErrorSeverity } from "../../validator/index.js";
+import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
@@ -33,8 +32,8 @@ export class ServerCommunication implements IServerCommunication {
         this._SERVER_IP = value;
         this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
     }
-    static serial: FreSerializer = new FreModelSerializer();
-    static lionweb_serial: FreSerializer = new FreLionwebSerializer();
+    static serial: FreModelSerializer = new FreModelSerializer();
+    static lionweb_serial: FreLionwebSerializer = new FreLionwebSerializer();
     static instance: ServerCommunication;
 
     static getInstance(): ServerCommunication {
@@ -52,7 +51,7 @@ export class ServerCommunication implements IServerCommunication {
         }
     }
 
-    private _nodePort = process.env.NODE_PORT || 8001;
+    private _nodePort = 8001; // process.env.NODE_PORT || 8001;
     private _SERVER_IP = `http://127.0.0.1`;
     private _SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
 

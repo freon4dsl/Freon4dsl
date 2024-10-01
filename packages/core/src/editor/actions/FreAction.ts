@@ -1,9 +1,9 @@
-import { FreNode } from "../../ast";
-import { FreCaret } from "../util/";
-import { Box } from "../boxes/";
-import { FreEditor } from "../FreEditor";
-import { FreCommand } from "./FreCommand";
-import { FreTriggerUse, FreTriggerType } from "./FreTriggers";
+import { FreNode } from "../../ast/index.js";
+import { FreCaret } from "../util/index.js";
+import { Box } from "../boxes/index.js";
+import { FreEditor } from "../FreEditor.js";
+import { FreCommand } from "./FreCommand.js";
+import { FreTriggerUse, FreTriggerType } from "./FreTriggers.js";
 
 export type CustomAction = (box: Box, trigger: FreTriggerUse, editor: FreEditor) => FreNode | null;
 export type FrePostAction = () => void;

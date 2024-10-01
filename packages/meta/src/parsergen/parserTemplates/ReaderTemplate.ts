@@ -24,10 +24,10 @@ export class ReaderTemplate {
         import LanguageProcessor = agl.net.akehurst.language.api.processor.LanguageProcessor;
         import Agl = agl.net.akehurst.language.agl.processor.Agl;
         import AutomatonKind_api = agl.net.akehurst.language.api.processor.AutomatonKind_api;
-        import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}";
-        import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}";
-        import { ${semanticAnalyser} } from "./${semanticAnalyser}";
+        import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}.js";
+        import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}.js";
+        import { ${semanticAnalyser} } from "./${semanticAnalyser}.js";
 
         /**
         *   Class ${Names.reader(language)} is a wrapper for the various parsers of

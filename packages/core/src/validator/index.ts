@@ -1,1 +1,1 @@
-export * from "./FreValidator";
+export * from "./FreValidator.js";

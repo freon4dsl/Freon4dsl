@@ -1,1 +1,1 @@
-export { MpsExpressionModelEnvironment } from "./config/gen/MpsExpressionModelEnvironment";
+export { MpsExpressionModelEnvironment } from "./config/gen/MpsExpressionModelEnvironment.js";

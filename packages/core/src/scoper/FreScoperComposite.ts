@@ -1,6 +1,6 @@
-import { FreNode, FreNamedNode } from "../ast";
-import { FreLogger } from "../logging";
-import { FreScoper } from "./FreScoper";
+import { FreNode, FreNamedNode } from "../ast/index.js";
+import { FreLogger } from "../logging/index.js";
+import { FreScoper } from "./FreScoper.js";
 
 const LOGGER = new FreLogger("FreScoperComposite").mute();
 

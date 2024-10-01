@@ -1,8 +1,8 @@
-import { FreNode } from "../../ast";
-import { isNullOrUndefined } from "../../util";
-import { Box, ElementBox, LabelBox } from "../boxes";
-import { FreProjectionHandler } from "./FreProjectionHandler";
-import { FreProjectionCalculator } from "./FreProjectionCalculator";
+import { FreNode } from "../../ast/index.js";
+import { isNullOrUndefined } from "../../util/index.js";
+import { Box, ElementBox, LabelBox } from "../boxes/index.js";
+import { FreProjectionHandler } from "./FreProjectionHandler.js";
+import { FreProjectionCalculator } from "./FreProjectionCalculator.js";
 
 /**
  * Base class for all box providers.

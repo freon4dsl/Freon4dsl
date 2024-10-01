@@ -1,4 +1,4 @@
-import { FreExpressionNode } from "./FreExpressionNode";
+import { FreExpressionNode } from "./FreExpressionNode.js";
 
 export interface FreBinaryExpression extends FreExpressionNode {
     freLeft(): FreExpressionNode;

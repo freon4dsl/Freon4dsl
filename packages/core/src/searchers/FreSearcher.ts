@@ -1,10 +1,10 @@
-import { FreNode } from "../ast";
-import { AstWalker } from "../ast-utils";
-import { FreWriter } from "../writer";
-import { StructureSearchWorker } from "./StructureSearchWorker";
-import { NamedElementSearchWorker } from "./NamedElementSearchWorker";
-import { StringSearchWorker } from "./StringSearchWorker";
-import { FreSearchWorker } from "./FreSearchWorker";
+import { FreNode } from "../ast/index.js";
+import { AstWalker } from "../ast-utils/index.js";
+import { FreWriter } from "../writer/index.js";
+import { StructureSearchWorker } from "./StructureSearchWorker.js";
+import { NamedElementSearchWorker } from "./NamedElementSearchWorker.js";
+import { StringSearchWorker } from "./StringSearchWorker.js";
+import { FreSearchWorker } from "./FreSearchWorker.js";
 
 export class FreSearcher {
     /**

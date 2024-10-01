@@ -1,6 +1,6 @@
-import { FreNode } from "../../ast";
+import { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
-import { Box } from "./Box";
+import { Box } from "./Box.js";
 
 export class ElementBox extends Box {
     kind: string = "ElementBox";
@@ -22,7 +22,7 @@ export class ElementBox extends Box {
     }
 
     set content(v: Box) {
-        if (!!this?._content) {
+        if (this._content !== null && this._content !== undefined) {
             this._content.parent = null;
         }
         this._content = v;
@@ -33,7 +33,11 @@ export class ElementBox extends Box {
     }
 
     get children(): ReadonlyArray<Box> {
-        return [this.content];
+        if (this.content === null || this.content === undefined) {
+            return []
+        } else {
+            return [this.content];
+        }
     }
 }
 

@@ -8,9 +8,9 @@ import {
     RtString,
     RtBoolean, RtArray, RtError, isRtBoolean, jsonAsString
 } from "@freon4dsl/core";
-import { RtFlowDescription } from "../runtime/RtFlowDescription";
-import { RtGrade } from "../runtime/RtGrade";
-import { RtPage } from "../runtime/RtPage";
+import { RtFlowDescription } from "../runtime/RtFlowDescription.js";
+import { RtGrade } from "../runtime/RtGrade.js";
+import { RtPage } from "../runtime/RtPage.js";
 import {
     Function,
     FractionLiteralExpression,
@@ -24,9 +24,9 @@ import {
     EqualsExpression,
     AndExpression,
     OrExpression, QuestionRef, FunctionCase, PageResult, Test, FlowRule, GreaterThenExpression
-} from "../language/gen/index";
-import { RtFraction } from "../runtime/RtFraction";
-import { EducationInterpreterBase } from "./gen/EducationInterpreterBase";
+} from "../language/gen/index.js";
+import { RtFraction } from "../runtime/RtFraction.js";
+import { EducationInterpreterBase } from "./gen/EducationInterpreterBase.js";
 
 let main: IMainInterpreter;
 

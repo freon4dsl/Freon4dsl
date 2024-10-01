@@ -1,5 +1,5 @@
-import { DecoratedModelElement, MobxModelElementImpl, FreNode, FreNodeBaseImpl, FreModelUnit } from "../ast";
-import { PrimType } from "../language";
+import { DecoratedModelElement, MobxModelElementImpl, FreNode, FreNodeBaseImpl, FreModelUnit } from "../ast/index.js";
+import { PrimType } from "../language/index.js";
 
 export abstract class FreDelta {
     unit: FreModelUnit;
@@ -43,7 +43,7 @@ export class FrePrimDelta extends FreDelta {
         if (this.index > 0) {
             indexStr = "[" + this.index + "]";
         }
-        return "set " + DeltaUtil.getElemName(this.owner) + "." + this.propertyName + indexStr + " to " + this.newValue;
+        return "PrimDelta: set " + DeltaUtil.getElemName(this.owner) + "." + this.propertyName + indexStr + " to " + this.newValue + " old " + this.oldValue;
     }
 }
 
@@ -73,7 +73,7 @@ export class FrePartDelta extends FreDelta {
 
     toString(): string {
         return (
-            "set " +
+            "PartDelta: set " +
             DeltaUtil.getElemName(this.owner) +
             "." +
             this.propertyName +
@@ -163,8 +163,11 @@ export class FreTransactionDelta extends FreDelta {
 
 export class DeltaUtil {
     static getElemName(node: FreNode): string {
+        if (node === null || node === undefined) {
+            return "NullDefined"
+        }
         let ownerName: string = node["name"];
-        if (!ownerName) {
+        if (ownerName === null || ownerName === undefined) {
             ownerName = node?.freLanguageConcept();
         }
         return ownerName;

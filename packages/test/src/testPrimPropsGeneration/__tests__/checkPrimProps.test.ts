@@ -1,9 +1,13 @@
+import { AST } from "@freon4dsl/core";
 import { BB } from "../language/gen";
 import { describe, test, expect } from "vitest";
 
 describe("Checking generation of primitive properties", () => {
     test("initial values in def files should be preserved", () => {
-        const concept1: BB = new BB();
+        let concept1
+        AST.change( () => {
+            concept1 = new BB();
+        })
         expect(concept1.BBprop1).toBe("prop1Value");
         // unfortunately, we cannot use 'toStrictEqual' because 'concept.BBprop2' is a mobx array
         // 'toStrictEqual' checks the types besides the structure.

@@ -1,1 +1,1 @@
-export { RulesModelEnvironment } from "./config/gen/RulesModelEnvironment";
+export { RulesModelEnvironment } from "./config/gen/RulesModelEnvironment.js";

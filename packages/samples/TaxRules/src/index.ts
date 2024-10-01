@@ -1,1 +1,1 @@
-export { RevenueServiceEnvironment } from "./config/gen/RevenueServiceEnvironment";
+export { RevenueServiceEnvironment } from "./config/gen/RevenueServiceEnvironment.js";

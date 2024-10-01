@@ -26,9 +26,9 @@ export class ReferenceCheckerTemplate {
         // the template starts here
         return `
         import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.FreNodeReference}, ${Names.FreNamedNode}, ${Names.FreNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.imports.map((imp) => `${imp}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-        import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
+        import { ${this.imports.map((imp) => `${imp}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
+        import { ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
 
         /**
          * Class ${checkerClassName} is part of the implementation of the default validator.

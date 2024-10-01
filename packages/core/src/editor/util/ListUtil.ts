@@ -3,16 +3,16 @@
  * They support drag-and-drop and cut/copy-paste functionality.
  */
 
-import { jsonAsString } from "../../util";
+import { AST } from "../../change-manager/index.js"
+import { jsonAsString } from "../../util/index.js";
 // the following two imports are needed, to enable use of the names without the prefix 'Keys', avoiding 'Keys.MetaKey'
-import * as Keys from "./Keys";
-import { MetaKey } from "./Keys";
-import { FreLogger } from "../../logging";
-import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index";
-import { FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language";
-import { FreNode } from "../../ast";
-import { runInAction } from "mobx";
-import { FreErrorSeverity } from "../../validator";
+import * as Keys from "./Keys.js";
+import { MetaKey } from "./Keys.js";
+import { FreLogger } from "../../logging/index.js";
+import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index.js";
+import { FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language/index.js";
+import { FreNode } from "../../ast/index.js";
+import { FreErrorSeverity } from "../../validator/index.js";
 
 const LOGGER = new FreLogger("ListUtil");
 
@@ -56,20 +56,20 @@ export function moveListElement(
     parentElement: FreNode,
     movedElement: FreNode,
     targetPropertyName: string,
-    targetIndex: number,
+    targetIndex: number
 ) {
-    runInAction(() => {
-        // get info about the property that needs to be changed
-        const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
-        // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
-        const oldIndex: number = movedElement.freOwnerDescriptor().propertyIndex;
-        // tslint:disable-next-line:max-line-length
-        // console.log(`moveListElement=> element: ${parentElement.freLanguageConcept()}, property: ${targetPropertyName}, oldIndex: ${oldIndex}, targetIndex: ${targetIndex}`);
-        // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
-        // The splice(), however, still functions when the targetIndex > property.length.
-        if (isList && oldIndex < property.length && targetIndex <= property.length) {
-            // Note that because of the Mobx decorators that set the data on the parent of the element,
-            // the property must be removed before it is added at a different location, not the other way around!
+    // get info about the property that needs to be changed
+    const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
+    // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+    const oldIndex: number = movedElement.freOwnerDescriptor().propertyIndex;
+    // tslint:disable-next-line:max-line-length
+    // console.log(`moveListElement=> element: ${parentElement.freLanguageConcept()}, property: ${targetPropertyName}, oldIndex: ${oldIndex}, targetIndex: ${targetIndex}`);
+    // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
+    // The splice(), however, still functions when the targetIndex > property.length.
+    if (isList && oldIndex < property.length && targetIndex <= property.length) {
+        // Note that because of the Mobx decorators that set the data on the parent of the element,
+        // the property must be removed before it is added at a different location, not the other way around!
+        AST.change(() => {
             const tmpProp = property[oldIndex];
             property.splice(oldIndex, 1);
             // Make sure the item is added at the correct index
@@ -77,9 +77,9 @@ export function moveListElement(
                 targetIndex -= 1;
             }
             property.splice(targetIndex, 0, tmpProp);
-        }
-        // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
-    });
+        });
+    }
+    // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
 }
 
 /**
@@ -111,22 +111,22 @@ export function dropListElement(
         );
         return;
     }
-    runInAction(() => {
-        // console.log(`dropListElement=> element: ${dropped.element.freLanguageConcept()}, property: ${dropped.propertyName},
-        // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
-        // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
-        const { property, isList } = getPropertyInfo(targetElem, targetPropertyName);
-        // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
-        if (!!dropped.element) {
-            // Add the found element to 'targetElem[targetPropertyName]' at position 'targetIndex'.
-            // Note that we need not explicitly remove the item from its old position, the mobx decorators do that.
-            // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
-            if (isList && targetIndex <= property.length) {
+    // console.log(`dropListElement=> element: ${dropped.element.freLanguageConcept()}, property: ${dropped.propertyName},
+    // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
+    // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
+    const { property, isList } = getPropertyInfo(targetElem, targetPropertyName);
+    // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+    if (!!dropped.element) {
+        // Add the found element to 'targetElem[targetPropertyName]' at position 'targetIndex'.
+        // Note that we need not explicitly remove the item from its old position, the mobx decorators do that.
+        // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
+        if (isList && targetIndex <= property.length) {
+            AST.change( () => {
                 property.splice(targetIndex, 0, dropped.element);
-            }
+            })
         }
-        // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
-    });
+    }
+    // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
 }
 
 /**
@@ -319,7 +319,7 @@ function addListElement(
     } else if (isList && FreLanguage.getInstance().metaConformsToType(newElement, type)) {
         // allow subtyping
         // LOGGER.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
-        runInAction(() => {
+        AST.change(() => {
             property.splice(index, 0, newElement);
         });
         editor.selectElement(newElement);
@@ -351,7 +351,7 @@ function deleteListElement(listParent: FreNode, propertyName: string, index: num
     // make the change
     if (isList) {
         // console.log('List before: [' + property.length()); //map(x => x.freId()).join(', ') + ']');
-        runInAction(() => {
+        AST.change(() => {
             if (targetIndex < property.length) {
                 property.splice(targetIndex, 1);
             }
@@ -430,7 +430,7 @@ function pasteListElement(
     if (isList) {
         LOGGER.log("List before: [" + property.map((x) => x.freId()).join(", ") + "]");
         let insertedElement = editor.copiedElement;
-        runInAction(() => {
+        AST.change(() => {
             if (targetIndex <= property.length) {
                 property.splice(targetIndex, 0, editor.copiedElement);
             }

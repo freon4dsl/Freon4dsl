@@ -1,1 +1,1 @@
-export { ExampleEnvironment } from "./config/gen/ExampleEnvironment";
+export { ExampleEnvironment } from "./config/gen/ExampleEnvironment.js";

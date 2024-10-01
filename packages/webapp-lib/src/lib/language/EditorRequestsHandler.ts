@@ -13,6 +13,7 @@ import {
     type FreEnvironment,
 } from "@freon4dsl/core";
 import type { FreNode } from "@freon4dsl/core";
+import { runInAction } from "mobx";
 import {
     activeTab,
     errorsLoaded,
@@ -50,10 +51,11 @@ export class EditorRequestsHandler {
             proj.enableProjections(names);
         }
         // Let the editor know that the projections have changed.
-        // TODO rootBoxChanged should NOT be called from outside FreEditor.
-        // this.langEnv.editor.rootBoxChanged();
-        // TODO: Should this become mobx enabled, or stay like this?
-        this.langEnv.editor.auto();
+        // TODO: This should go automatically through mobx.
+        //       But observing the projections array does not work as expected.
+        runInAction( () => {
+            this.langEnv.editor.forceRecalculateProjection++;
+        })
         // redo the validation to set the errors in the new box tree
         this.validate();
     }
@@ -72,7 +74,7 @@ export class EditorRequestsHandler {
 
     redo() {
         const unitInEditor = EditorState.getInstance().currentUnit;
-        console.log("redo called: " + FreUndoManager.getInstance().nextRedoAsText(unitInEditor));
+        LOGGER.log(`redo called: '${FreUndoManager.getInstance().nextRedoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'` );
         if (!!unitInEditor) {
             FreUndoManager.getInstance().executeRedo(unitInEditor);
         }
@@ -80,9 +82,11 @@ export class EditorRequestsHandler {
 
     undo() {
         const unitInEditor = EditorState.getInstance().currentUnit;
-        LOGGER.log("undo called: " + FreUndoManager.getInstance().nextUndoAsText(unitInEditor));
+        LOGGER.log(`undo called: '${FreUndoManager.getInstance().nextUndoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'` );
         if (!!unitInEditor) {
-            FreUndoManager.getInstance().executeUndo(unitInEditor);
+            runInAction( () => {
+                FreUndoManager.getInstance().executeUndo(unitInEditor);
+            })
         }
     }
 

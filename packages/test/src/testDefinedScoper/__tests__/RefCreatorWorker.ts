@@ -1,5 +1,5 @@
 import { AstWorker, FreNode, FreNodeReference } from "@freon4dsl/core";
-import { DSprivate, DSpublic, DSref, DSunit } from "../language/gen/index";
+import { DSprivate, DSpublic, DSref, DSunit } from "../language/gen/index.js";
 
 export class RefCreatorWorker implements AstWorker {
     units: DSunit[];
