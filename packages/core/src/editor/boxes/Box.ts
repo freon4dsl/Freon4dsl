@@ -136,6 +136,7 @@ export abstract class Box {
                 return sibling;
             }
         }
+        console.log(`${this.id} nextLeafRight: referring to parent`)
         return this.parent.nextLeafRight;
     }
 

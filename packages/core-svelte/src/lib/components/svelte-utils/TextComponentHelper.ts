@@ -1,5 +1,6 @@
 import {
     BACKSPACE,
+    BehaviorExecutionResult,
     FreCaret,
     FreEditor,
     FreErrorSeverity,
@@ -7,8 +8,8 @@ import {
     isActionBox,
     TextBox,
 } from "@freon4dsl/core";
-import { EventDispatcher } from "svelte";
-import { executeCustomKeyboardShortCut } from "./CommonFunctions.js";
+import {EventDispatcher} from "svelte";
+import {executeCustomKeyboardShortCut} from "./CommonFunctions.js";
 
 const LOGGER = new FreLogger("TextComponentHelper").mute();
 
@@ -106,27 +107,28 @@ export class TextComponentHelper {
     }
 
     handleGoToPrevious(event: KeyboardEvent, editor: FreEditor, htmlId: string) {
-        editor.selectPreviousLeaf();
+        this._endEditing();
+        editor.selectPreviousLeafIncludingExpressionPreOrPost();
         LOGGER.log(htmlId + "    PREVIOUS LEAF IS " + editor.selectedBox.role);
         if (isActionBox(editor.selectedBox)) {
-            LOGGER.log("     is an action box");
-            editor.selectedBox.triggerKeyPressEvent(event.key);
-            editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
+            const executionResult: BehaviorExecutionResult = editor.selectedBox.tryToExecute(event.key, editor)
+            if (executionResult !== BehaviorExecutionResult.EXECUTED) {
+                editor.selectedBox.setCaret(FreCaret.LEFT_MOST, editor)
+            }
         }
         event.preventDefault();
         event.stopPropagation();
     }
 
     handleGoToNext(event: KeyboardEvent, editor: FreEditor, htmlId: string) {
-        editor.selectNextLeaf();
-        LOGGER.log(htmlId + "    NEXT LEAF IS " + editor.selectedBox.role);
+        this._endEditing();
+        editor.selectNextLeafIncludingExpressionPreOrPost();
+        console.log(htmlId + "    NEXT LEAF IS " + editor.selectedBox.role);
         if (isActionBox(editor.selectedBox)) {
-            // editor.selectedBox.execute(event.key)
-            // editor.selectedBox.setText(key)
-            LOGGER.log("     is an action box");
-            editor.selectedBox.triggerKeyPressEvent(event.key);
-            editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
-            editor.selectedCaretPosition = FreCaret.RIGHT_MOST
+            const executionResult: BehaviorExecutionResult = editor.selectedBox.tryToExecute(event.key, editor)
+            if (executionResult !== BehaviorExecutionResult.EXECUTED) {
+                editor.selectedBox.setCaret(FreCaret.RIGHT_MOST, editor)
+            }
         }
         event.preventDefault();
         event.stopPropagation();
@@ -216,8 +218,8 @@ export class TextComponentHelper {
         if (this._from !== this._getText().length) { // when the arrow key can stay within the text, do not let the parent handle it
             event.stopPropagation();
             // note: caret is set to one more because getCaretPosition is calculated before the event is executed
-            this._from =+ 1;
-            this._to =+ 1;
+            this._from += 1;
+            this._to += 1;
             console.log(`textUpdate from handleArrowLeft`)
             this._dispatcher('textUpdate', {content: this._getText(), caret: this._from});
         } else { // the key will cause this element to lose focus, its content should be saved

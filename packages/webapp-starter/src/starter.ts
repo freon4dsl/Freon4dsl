@@ -79,7 +79,8 @@ const app = new FreonLayout({
     target: document.body,
 });
 
-FreLogger.unmute("TextComponent")
-FreLogger.unmute("TextDropdownComponent")
+// FreLogger.unmute("TextComponent")
+// FreLogger.unmute("TextDropdownComponent")
+FreLogger.unmute("BehaviorUtils")
 
 export default app;

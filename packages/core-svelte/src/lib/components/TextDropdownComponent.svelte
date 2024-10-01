@@ -13,20 +13,16 @@
         ARROW_DOWN,
         ARROW_UP,
         ENTER,
-        ESCAPE,
         FreEditor,
         FreLogger,
-        type FrePostAction,
         isActionBox,
-        isRegExp,
         isSelectBox,
         isReferenceBox,
         type SelectOption,
         TextBox,
-        triggerTypeToString
+        BehaviorExecutionResult
     } from "@freon4dsl/core"
 
-    import { runInAction } from "mobx"
     import { afterUpdate, onMount } from "svelte";
 
     const LOGGER = new FreLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -71,7 +67,7 @@
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
-            console.error('TextDropdownComponent ' + id + ' has no textComponent' )
+            LOGGER.error('TextDropdownComponent ' + id + ' has no textComponent' )
         }
     }
 
@@ -110,49 +106,10 @@
     });
     
     const triggerKeyPressEvent = (key: string) => {
-        box.textHelper.setText(key)
-        allOptions = getOptions();
-        filteredOptions = allOptions.filter(o => o.label.startsWith(key))
-        makeFilteredOptionsUnique();
-        // Only one option and has been fully typed in, use this option without waiting for the ENTER key
-        // console.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
-        if (filteredOptions.length === 1 && filteredOptions[0].label === key && filteredOptions[0].label.length === 1 ) {
-            storeOrExecute(filteredOptions[0])
-            return
-        }
-        if (isActionBox(box)) {
-            // Try to match a regular expression, and execute the action that is associated with it
-            matchRegExpAndExecuteAction();
-        }
-    }
-
-    function matchRegExpAndExecuteAction() {
-        // Try to match a regular expression
-        const matchingOption = box.getOptions(editor).find(option => {
-            if (isRegExp(option.action.trigger)) {
-                if (option.action.trigger.test(text)) {
-                    LOGGER.log("Matched regexp" + triggerTypeToString(option.action.trigger) + " for '" + text + "'")
-                    return true
-                }
-                return false
-            }
-        })
-        // If there is a match, execute it and stop editing.
-        if (!!matchingOption) {
-            LOGGER.log(`Found match to regexp: ${matchingOption.label}`)
-            // isn't this equal to BehaviourUtil.executeBehavior
-            let execResult: FrePostAction = null;
-            runInAction(() => {
-                runInAction(() => {
-                    const command = matchingOption.action.command();
-                    execResult = command.execute(box,text, editor, 0);
-                });
-                if (!!execResult) {
-                    execResult();
-                }
-            })
-            endEditing();
-        }
+        // allOptions = getOptions();
+        // filteredOptions = allOptions.filter(o => o.label.startsWith(key))
+        // makeFilteredOptionsUnique();
+        // dropdownShown = true;
     }
 
     /**
@@ -163,12 +120,12 @@
      * @param event
      */
     const textUpdate = (event: CustomEvent) => {
-        console.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail) + ", start: "+ text.substring(0, event.detail.caret));
+        LOGGER.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail) + ", start: "+ text.substring(0, event.detail.caret));
         allOptions = getOptions();
         filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
         makeFilteredOptionsUnique();
         // Only one option and has been fully typed in, use this option without waiting for the ENTER key
-        // console.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
+        LOGGER.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
         if (filteredOptions.length === 1 && filteredOptions[0].label === text && filteredOptions[0].label.length === event.detail.caret ) {
             event.preventDefault()
             event.stopPropagation()
@@ -177,7 +134,8 @@
         }
         if (isActionBox(box)) {
             // Try to match a regular expression, and execute the action that is associated with it
-            matchRegExpAndExecuteAction();
+            const result = box.tryToMatchRegExpAndExecuteAction(text, editor);
+            if (result === BehaviorExecutionResult.EXECUTED) endEditing();
         }
     };
 
@@ -232,7 +190,7 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        console.log("XX onKeyDown: " + id + " [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
+        LOGGER.log("XX onKeyDown: " + id + " [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
         if (dropdownShown) {
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
@@ -375,7 +333,7 @@
         isEditing = false;
         dropdownShown = false;
 
-        box.selectOption(editor, selected); // TODO the result of the execution is ignored
+        box.executeOption(editor, selected); // TODO the result of the execution is ignored
         if (isActionBox(box)) { // ActionBox, action done, clear input text
             setTextLocalAndInBox('');
         }
@@ -409,15 +367,12 @@
     };
 
     const onBlur = () => {
+        // We use on:blur instead of on:focusout, because when the user selects an item in the dropdown list,
+        // the text component will trigger a focus out event. The focus out event from the text component
+        // always comes before the click in the dropdown. If we react to focus out by endEditing(), any click
+        // on the dropdown list will have no effect.
         LOGGER.log("onBlur " + id);
         if (!document.hasFocus() || !$selectedBoxes.includes(box)) {
-            endEditing();
-        }
-    };
-
-    const onFocusOutText = () => {
-        LOGGER.log(`onFocusOutText ${id} text '${text}'`);
-        if (isEditing) {
             endEditing();
         }
     };
@@ -468,7 +423,6 @@
             on:showDropdown={showDropdown}
             on:startEditing={startEditing}
             on:endEditing={endEditing}
-            on:onFocusOutText={onFocusOutText}
     />
     {#if isReferenceBox(box) && box.isSelectAble()}
         <button class="reference-button" id="{id}" on:click={(event) => selectReferred(event)}>
@@ -477,9 +431,9 @@
     {/if}
       {#if dropdownShown}
         <DropdownComponent
-                bind:selectedId={selectedId}
-                bind:options={filteredOptions}
-                on:freItemSelected={itemSelected}/>
+            bind:selectedId={selectedId}
+            bind:options={filteredOptions}
+            on:freItemSelected={itemSelected}/>
     {/if}
 </span>
 

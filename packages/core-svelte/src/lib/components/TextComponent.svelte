@@ -100,6 +100,7 @@
 			inputElement.selectionStart = myHelper.from >= 0 ? myHelper.from : 0;
 			inputElement.selectionEnd = myHelper.to >= 0 ? myHelper.to : 0;
 			inputElement.focus();
+			if (partOfDropdown) dispatcher('showDropdown');
 		}
 	};
 
@@ -132,12 +133,13 @@
 	 * @param event
 	 */
 	function onClick(event: MouseEvent) {
+		LOGGER.log('onClick: ')
 		if (!!inputElement) {
 			LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 			myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
 		}
 		if (partOfDropdown) {  // let TextDropdownComponent know, dropdown menu needs to be altered
-			console.log(`textUpdate from onClick`)
+			LOGGER.log(`textUpdate from onClick`)
 			dispatcher('showDropdown')
 			dispatcher('textUpdate', {content: text, caret: myHelper.from});
 		}
@@ -265,10 +267,7 @@
 		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
 		if (!partOfDropdown && isEditing) {
 			endEditing();
-		} else {
-			// let TextDropdownComponent handle it
-			dispatcher("onFocusOutText")
-		}
+		} // else Let TextDropdownComponent handle it. The event will bubble up.
 	}
 
 	const refresh = () => {
@@ -308,14 +307,14 @@
 			inputElement.focus();
 			editStart = false;
 		} else if (isEditing) {
-			// console.log(`check deleteWhenEmpty, caret: ${myHelper.from}-${myHelper.to}, text: "${text}", empty:${myHelper.isTextEmpty()}, deleteWhenEmpty: ${box.deleteWhenEmpty}`)
+			// LOGGER.log(`check deleteWhenEmpty, caret: ${myHelper.from}-${myHelper.to}, text: "${text}", empty:${myHelper.isTextEmpty()}, deleteWhenEmpty: ${box.deleteWhenEmpty}`)
 			if (myHelper.isTextEmpty() && box.deleteWhenEmpty) { // the text is completely empty, and we may delete the node
-				console.log("Deleting box")
+				LOGGER.log("Deleting box")
 				dispatcher('hideDropdown');
 				editor.deleteBox(box);
 			} else if (partOfDropdown) {
 				// send event to parent TextDropdownComponent
-				console.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
+				LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
 				dispatcher('textUpdate', {content: text, caret: myHelper.from});
 			}
 		}
