@@ -14,3 +14,5 @@ export * from "./FreCreateBinaryExpressionAction.js";
 export * from "./FreCreatePartAction.js";
 export * from "./FreCreateSiblingAction.js";
 export * from "./FreTriggers.js";
+export * from "./FreCreateBinaryExpressionCommand.js"
+export * from "./FreCustomCommand.js"

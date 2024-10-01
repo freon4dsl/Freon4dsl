@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FreonLogo from "$lib/img/FreonLogo.svelte";
 	import { onMount } from "svelte";
 
 	import TopAppBarComponentDev from "@smui/top-app-bar";
@@ -152,8 +153,8 @@
 				</Icon>
 			</IconButton>
 			<IconButton aria-label="Documentation Site" target="_blank" href="https://www.freon4dsl.dev/">
-				<Icon tag=svg viewBox="0 0 24 24">
-					<path fill="currentColor" d={mdiWeb} />
+				<Icon>
+					<FreonLogo/>
 				</Icon>
 			</IconButton>
 			<IconButton aria-label="Help Page" on:click={() => {$helpDialogVisible = true; console.log($helpDialogVisible)}}>

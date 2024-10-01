@@ -1,3 +1,4 @@
+import { autorun } from "mobx"
 import { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
 import { BehaviorExecutionResult, FreCaret, FreKey } from "../util/index.js";
@@ -44,9 +45,30 @@ export abstract class AbstractChoiceBox extends Box {
         return this._textBox;
     }
 
-    getSelectedOption(): SelectOption | null {
+    _getSelectedOption(): SelectOption | null {
         return null;
     }
+
+    set getSelectedOption( value: () => SelectOption | null) {
+        this._getSelectedOption = value
+        this.isDirty()
+        autorun( () => {
+            this._getSelectedOption()
+            this.isDirty()
+        })
+    }
+    get getSelectedOption(): () => SelectOption | null {
+        return this._getSelectedOption
+    }
+    
+    // protected setSelectedOptionExec(value: () => SelectOption | null): SelectOption | null {
+    //     this._getSelectedOption = value
+    //     this.isDirty()
+    //     autorun( () => {
+    //         this._getSelectedOption()
+    //         this.isDirty()
+    //     })
+    // }
 
     // @ts-ignore
     // parameter is present to support subclasses
@@ -60,7 +82,7 @@ export abstract class AbstractChoiceBox extends Box {
         console.error("AbstractChoiceBox.selectOption");
         return BehaviorExecutionResult.NULL;
     }
-
+    
     setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
         if (!!this.textBox) {
             this.textBox.setCaret(caret);

@@ -28,7 +28,7 @@ export class SelectBox extends AbstractChoiceBox {
         this.getSelectedOption = getSelectedOption;
         this.selectOption = selectOption;
     }
-
+    
     getOptions(editor: FreEditor): SelectOption[] {
         // console.log("Options for " + this.element.freLanguageConcept() + this.getAllOptions(editor).map(opt => {
         //     opt.label

@@ -1,4 +1,5 @@
 import { FreNode } from "../../../ast/index.js";
+import { AST } from "../../../change-manager/index.js";
 import {BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox, SelectOption} from "../../boxes/index.js";
 import { FreLanguage, FreLanguageProperty } from "../../../language/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";
@@ -76,7 +77,7 @@ export class UtilLimitedHelpers {
             roleName,
             () => node[propertyName].map((n) => n.name), // node[propertyName] is a list of references, therefore we need to get their names
             (v: string[]) =>
-                runInAction(() => {
+                AST.change(() => {
                     setFunc(v);
                 }),
             possibleValues,

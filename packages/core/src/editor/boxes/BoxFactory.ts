@@ -193,7 +193,7 @@ export class BoxFactory {
 
         // 2. Apply the other arguments in case they have changed
         result.placeholder = placeHolder;
-        result.textHelper.setText("");
+        // result.textHelper.setText("");
         FreUtils.initializeObject(result, initializer);
 
         return result;

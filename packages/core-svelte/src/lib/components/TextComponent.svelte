@@ -19,7 +19,6 @@
 		ENTER,
 		ESCAPE,
 		isActionBox,
-		isActionTextBox,
 		isSelectBox,
 		FreCaret,
 		FreCaretPosition,
@@ -29,10 +28,9 @@
 		FreErrorSeverity,
 		SHIFT,
 		TAB,
+		AST,
 		TextBox, isRegExp, triggerTypeToString, type FrePostAction
 	} from "@freon4dsl/core";
-
-	import { runInAction } from "mobx";
 	import { replaceHTML } from "./svelte-utils/index.js";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
@@ -69,7 +67,7 @@
 	 * It is called from the box.
 	 */
 	export async function setFocus(): Promise<void> {
-		// LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
+		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
@@ -180,14 +178,12 @@
 			if (!partOfActionBox) {
 				// store the current value in the textbox, or delete the box, if appropriate
 				LOGGER.log(`   save text using box.setText(${text})`)
-				runInAction(() => {
-					if (box.deleteWhenEmpty && text.length === 0) {
-						editor.deleteBox(box);
-					} else if (text !== box.getText()) {
-						LOGGER.log(`   text is new value`)
-						box.setText(text);
-					}
-				});
+				if (box.deleteWhenEmpty && text.length === 0) {
+					editor.deleteBox(box);
+				} else if (text !== box.getText()) {
+					LOGGER.log(`   text is new value`)
+					box.setText(text);
+				}
 			} else {
 				if (!!endEditingParentFunction) {
 					endEditingParentFunction();
@@ -225,6 +221,7 @@
 		if (event.altKey || event.ctrlKey) {  // No shift, because that is handled as normal text
 			// first check if this event has a command defined for it
 			executeCustomKeyboardShortCut(event, 0, box, editor); // this method will stop the event from propagating, but does not prevent default!!
+			// todo if the event is a custom keyboard shortcut, the rest should not execute!!
 			// next handle any key that should have a special effect within the text
 			if (event.ctrlKey && !event.altKey && event.key === 'z') { // ctrl-z
 				// UNDO handled by browser
@@ -391,19 +388,19 @@
 							event.preventDefault();
 							event.stopPropagation();
 							break;
-						case CharAllowed.GOTO_NEXT: // try in previous or next box
+						case CharAllowed.GOTO_NEXT: // try in next box
 							LOGGER.log("KeyPressAction.GOTO_NEXT FROM IS " + from);
 							editor.selectNextLeaf();
 							LOGGER.log("    NEXT LEAF IS " + editor.selectedBox.role);
 							if (isActionBox(editor.selectedBox)) {
 								LOGGER.log("     is an action box");
 								editor.selectedBox.triggerKeyPressEvent(event.key);
-								editor.selectedBox.setCaret(FreCaret.RIGHT_MOST)
+								editor.selectedBox.setCaret(FreCaret.RIGHT_MOST) // todo why not LEFT_MOST?
 							}
 							event.preventDefault();
 							event.stopPropagation();
 							break;
-						case CharAllowed.GOTO_PREVIOUS: // try in previous or next box
+						case CharAllowed.GOTO_PREVIOUS: // try in previous box
 							LOGGER.log("KeyPressAction.GOTO_PREVIOUS FROM IS " + from);
 							editor.selectPreviousLeaf();
 							LOGGER.log("    PREVIOUS LEAF IS " + editor.selectedBox.role);
@@ -434,8 +431,8 @@
 		}
 	}
 
-	const refresh = () => {
-		LOGGER.log(`${id}: REFRESH  ${id} (${box?.node?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
+	const refresh = (why?: string) => {
+		LOGGER.log(`${id}: REFRESH why ${why}: (${box?.node?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
 		placeholder = box.placeHolder;
 		// If being edited, do not set the value, let the user type whatever (s)he wants
 		// if (!isEditing) {
@@ -450,6 +447,7 @@
 	 * It may be null or undefined! Therefore, we need this check to set the focus.
 	 */
 	beforeUpdate(() => {
+		LOGGER.log(`${id}: beforeUpdate `)
 		if (editStart && !!inputElement) {
 			LOGGER.log(`${id}: Before update : ${inputElement}`);
 			setInputWidth();
@@ -466,7 +464,7 @@
 	 * box sizes in the textbox.
 	 */
 	afterUpdate(() => {
-		// LOGGER.log("Start afterUpdate  " + from + ", " + to + " id: " + id);
+		LOGGER.log(`${id}: afterUpdate ` + from + ", " + to + " id: " + id);
 		if (editStart && !!inputElement) {
 			LOGGER.log(`${id}:  editStart in afterupdate text '${text}' `)
 			inputElement.selectionStart = from >= 0 ? from : 0;

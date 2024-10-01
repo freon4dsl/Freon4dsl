@@ -1,3 +1,4 @@
+import { runInAction } from "mobx";
 import { FreNode } from "../../ast/index.js";
 import { FreLanguage, FreLanguageProperty } from "../../language/index.js";
 import { isNullOrUndefined } from "../../util/index.js";
@@ -24,7 +25,10 @@ export class FreModelSerializer implements FreSerializer {
      * @param jsonObject JSON object as converted from TypeScript by `toSerializableJSON`.
      */
     public toTypeScriptInstance(jsonObject: Object): FreNode {
-        return this.toTypeScriptInstanceInternal(jsonObject);
+        // Not using AST.change(...) here, because we don't need an undo for this code
+        return runInAction( () => {
+            return this.toTypeScriptInstanceInternal(jsonObject);
+        })
     }
 
     /**

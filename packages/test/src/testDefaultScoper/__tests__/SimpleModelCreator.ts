@@ -1,5 +1,5 @@
 import { DSmodel, DSpublic, DSprivate, DSref, DSunit } from "../language/gen/index.js";
-import { FreModelSerializer, AstWalker, FreNode, FreNodeReference } from "@freon4dsl/core";
+import { AST, FreModelSerializer, AstWalker, FreNode, FreNodeReference } from "@freon4dsl/core";
 
 export class SimpleModelCreator {
     private breadth = 1;
@@ -28,21 +28,25 @@ export class SimpleModelCreator {
         this.numberOfRefs = 0;
         // create a new model
         const modelUnits: DSunit[] = [];
-        for (let i = 0; i < nrOfUnits; i++) {
-            modelUnits.push(this.createUnit("model", depth));
-        }
-        // add references, after all names have been created
-        // const result = DSmodel.create({name: "modelOfDepth" + depth, units: modelUnits });
-        // const worker = new RefCreatorWorker(modelUnits);
-        // const myWalker = new AstWalker();
-        // myWalker.myWorkers.push(worker);
-        // myWalker.walk(result, (e: FreNode) => true);
-        // return result;
+        let model
+        AST.change( () => {
+            for (let i = 0; i < nrOfUnits; i++) {
+                modelUnits.push(this.createUnit("model", depth));
+            }
+            // add references, after all names have been created
+            // const result = DSmodel.create({name: "modelOfDepth" + depth, units: modelUnits });
+            // const worker = new RefCreatorWorker(modelUnits);
+            // const myWalker = new AstWalker();
+            // myWalker.myWorkers.push(worker);
+            // myWalker.walk(result, (e: FreNode) => true);
+            // return result;
 
-        for (let i = 0; i < nrOfUnits; i++) {
-            this.addReferencesToUnit(modelUnits[i]);
-        }
-        return DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+            for (let i = 0; i < nrOfUnits; i++) {
+                this.addReferencesToUnit(modelUnits[i]);
+            }
+            model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+        })
+        return model
     }
 
     /**
@@ -63,21 +67,25 @@ export class SimpleModelCreator {
             return null;
         }
         const modelUnits: DSunit[] = [];
-        for (let i = 0; i < nrOfUnits; i++) {
-            const completeUnit = this.createUnit("model", depth);
-            if (i === primary) {
-                modelUnits.push(completeUnit);
-            } else {
-                const serialized = this.serial.convertToJSON(completeUnit, true);
-                const unitInterface = this.serial.toTypeScriptInstance(serialized);
-                modelUnits.push(unitInterface as DSunit);
+        let model
+        AST.change( () => {
+            for (let i = 0; i < nrOfUnits; i++) {
+                const completeUnit = this.createUnit("model", depth);
+                if (i === primary) {
+                    modelUnits.push(completeUnit);
+                } else {
+                    const serialized = this.serial.convertToJSON(completeUnit, true);
+                    const unitInterface = this.serial.toTypeScriptInstance(serialized);
+                    modelUnits.push(unitInterface as DSunit);
+                }
             }
-        }
-        // add references, after all names have been created
-        for (let i = 0; i < nrOfUnits; i++) {
-            this.addReferencesToUnit(modelUnits[i]);
-        }
-        return DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+            // add references, after all names have been created
+            for (let i = 0; i < nrOfUnits; i++) {
+                this.addReferencesToUnit(modelUnits[i]);
+            }
+            model = DSmodel.create({ name: "modelOfDepth" + depth, units: modelUnits });
+        })
+        return model
     }
 
     createUnit(parent: string, depth: number): DSunit {

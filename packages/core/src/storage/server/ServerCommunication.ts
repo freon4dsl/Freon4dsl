@@ -1,9 +1,8 @@
 import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { FreLionwebSerializer, FreModelSerializer, FreSerializer } from "../index.js";
+import { FreLionwebSerializer, FreModelSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
-// import * as process from "process";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 const modelUnitInterfacePostfix: string = "Public";
@@ -33,8 +32,8 @@ export class ServerCommunication implements IServerCommunication {
         this._SERVER_IP = value;
         this.SERVER_URL = `${this._SERVER_IP}:${this._nodePort}/`;
     }
-    static serial: FreSerializer = new FreModelSerializer();
-    static lionweb_serial: FreSerializer = new FreLionwebSerializer();
+    static serial: FreModelSerializer = new FreModelSerializer();
+    static lionweb_serial: FreLionwebSerializer = new FreLionwebSerializer();
     static instance: ServerCommunication;
 
     static getInstance(): ServerCommunication {

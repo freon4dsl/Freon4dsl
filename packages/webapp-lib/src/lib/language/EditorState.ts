@@ -1,5 +1,5 @@
 // This file contains all methods to connect the webapp to the Freon generated language editorEnvironment and to the server that stores the models
-import { BoxFactory, FreError, FreErrorSeverity, FreLogger, InMemoryModel } from "@freon4dsl/core"
+import { AST, BoxFactory, FreError, FreErrorSeverity, FreLogger, FreUndoManager, InMemoryModel } from "@freon4dsl/core";
 import type {
     FreEnvironment,
     FreNode,
@@ -53,6 +53,7 @@ export class EditorState {
     }
     set currentUnit(unit: FreModelUnit) {
         this.__currentUnit = unit;
+        FreUndoManager.getInstance().currentUnit = unit
         currentUnitName.set({ name: this?.currentUnit?.name, id: this?.currentUnit?.freId() });
     }
 
@@ -371,10 +372,10 @@ export class EditorState {
                 if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
                     const propList = owner[desc.propertyName];
                     if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
-                        runInAction(() => propList.splice(desc.propertyIndex, 1));
+                        AST.change(() => propList.splice(desc.propertyIndex, 1));
                     }
                 } else {
-                    runInAction(() => (owner[desc.propertyName] = null));
+                    AST.change(() => (owner[desc.propertyName] = null));
                 }
             } else {
                 console.error(
@@ -389,7 +390,7 @@ export class EditorState {
         // todo make new copy to keep in 'this.langEnv.editor.copiedElement'
         if (Array.isArray(property)) {
             // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
-            runInAction(() => {
+            AST.change(() => {
                 if (index !== null && index !== undefined && index > 0) {
                     property.splice(index, 0, this.langEnv.editor.copiedElement);
                 } else {
@@ -399,7 +400,7 @@ export class EditorState {
             // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
         } else {
             // console.log('property ' + propertyName + ' is no list');
-            runInAction(() => (element[propertyName] = this.langEnv.editor.copiedElement));
+            AST.change(() => (element[propertyName] = this.langEnv.editor.copiedElement));
         }
     }
 }

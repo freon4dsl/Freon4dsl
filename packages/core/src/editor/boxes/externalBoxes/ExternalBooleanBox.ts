@@ -1,8 +1,8 @@
+import { AST } from "../../../change-manager/index.js";
 import { Box } from "../Box.js";
 import { FreNode } from "../../../ast/index.js";
 import { FreUtils } from "../../../util/index.js";
 import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";
-import { runInAction } from "mobx";
 
 /**
  * This class represent an external box replacing the native projection of a single property of primitive type.
@@ -31,7 +31,7 @@ export class ExternalBooleanBox extends AbstractExternalPropertyBox {
 
     setPropertyValue(newValue: boolean) {
         if (typeof newValue === "boolean" && this.getPropertyType() === "boolean") {
-            runInAction(() => {
+            AST.change(() => {
                 this.node[this.propertyName] = newValue;
             });
         } else {

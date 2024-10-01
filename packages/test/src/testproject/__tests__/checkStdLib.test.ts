@@ -1,12 +1,15 @@
-import { FreLanguage, jsonAsString } from "@freon4dsl/core";
+import { AST, FreLanguage, jsonAsString } from "@freon4dsl/core";
 import { KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestStartEnvironment } from "../config/gen/TestStartEnvironment";
 import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
 import { describe, test, expect } from "vitest";
 
 describe("Checking stdlib for Demo", () => {
-    TestStartEnvironment.getInstance();
-    let stdlib: TestStartStdlib = FreLanguage.getInstance().stdLib as TestStartStdlib;
+    let stdlib
+    AST.change( () => {
+        TestStartEnvironment.getInstance();
+        stdlib = FreLanguage.getInstance().stdLib as TestStartStdlib;
+    })
     // The stdlib contains the following elements
     // ZZ.ZZinstance1
     // XX.XXinstance1

@@ -67,10 +67,10 @@ export class ActionBox extends AbstractChoiceBox {
                 this.conceptName,
                 this.propertyName,
             );
-            LOGGER.log(`clsIntf: ${clsOtIntf} prop kind: ${propDef?.propertyKind}`);
+            LOGGER.log(`clsIntf: ${clsOtIntf?.typeName} prop kind: ${propDef?.propertyKind}`);
             clsOtIntf.subConceptNames.concat(this.conceptName).forEach((creatableConceptname: string) => {
                 const creatableConcept: FreLanguageConcept = FreLanguage.getInstance().concept(creatableConceptname);
-                LOGGER.log(`creatableConcept: ${creatableConcept}`);
+                LOGGER.log(`creatableConcept: ${creatableConcept?.typeName}`);
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!creatableConcept.referenceShortcut) {
                         this.addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor);
@@ -214,7 +214,7 @@ export class ActionBox extends AbstractChoiceBox {
 
     triggerKeyPressEvent = (key: string) => {
         // TODO rename this one, e.g. to triggerKeyEvent
-        console.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
+        LOGGER.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
     };
 }
 

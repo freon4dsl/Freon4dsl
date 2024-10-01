@@ -61,6 +61,7 @@ export class FreEditor {
         makeObservable<FreEditor, "_rootElement">(this, {
             // theme: observable,
             _rootElement: observable,
+            forceRecalculateProjection: observable
         });
         autorun(this.auto);
     }
@@ -89,12 +90,19 @@ export class FreEditor {
     }
 
     auto = () => {
-        LOGGER.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " name " + (!!this.rootElement ? this.rootElement["name"] : "undefined"));
+        LOGGER.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " recalc is " + this.forceRecalculateProjection);
+        this.forceRecalculateProjection
         if (this.rootElement !== null) {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
         }
     };
+
+    /**
+     * Increase this value to force recalculation of the projection.
+     * Used e.g. when projection list changes.
+     */
+    forceRecalculateProjection: number = 0
 
     // Getters and Setters
 
@@ -274,7 +282,7 @@ export class FreEditor {
             return false;
         }
         if (isNullOrUndefined(element)) {
-            console.error("FreEditor.selectedElement is null !");
+            LOGGER.error("FreEditor.selectedElement is null !");
             return false;
         }
         return true;

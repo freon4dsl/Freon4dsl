@@ -1,4 +1,5 @@
 import { action, makeObservable } from "mobx";
+import { AST } from "../change-manager/index.js";
 import { FreUtils } from "./internal.js";
 import { Box, FreEditor } from "../editor/index.js";
 import { FreBinaryExpression, FreNode, FreExpressionNode } from "../ast/index.js";
@@ -105,6 +106,7 @@ class BTree {
     }
 
     insertBinaryExpression(newBinExp: FreBinaryExpression, box: Box, editor: FreEditor): Selected | null {
+        FreUtils.CHECK(AST.isInChange, "Method `insertBinaryExpression` should be called inside AST.change()")
         LOGGER.log("insertBinaryExpression for " + box.node);
         let selectedElement: Selected | null = null;
         FreUtils.CHECK(
@@ -154,6 +156,7 @@ class BTree {
      * Works when `exp` has just been added to the tree.
      */
     balanceTree(binaryExp: FreBinaryExpression, editor: FreEditor) {
+        FreUtils.CHECK(AST.isInChange, "Method `insertBinaryExpression` should be called inside AstChange()")
         const ownerDescriptor = binaryExp.freOwnerDescriptor();
         const left = binaryExp.freLeft();
         if (isFreBinaryExpression(left)) {
