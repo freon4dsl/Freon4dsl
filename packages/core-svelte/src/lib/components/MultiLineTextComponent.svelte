@@ -11,7 +11,7 @@
 	// import { replaceHTML } from "./svelte-utils/index.js";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
-    const LOGGER = new FreLogger("MultiLineTextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
+    const LOGGER = new FreLogger("MultiLineTextComponent").mute()
 
     // Parameters
     export let box: MultiLineTextBox;		// the accompanying box

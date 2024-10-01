@@ -1,9 +1,8 @@
 <script lang="ts">
     import {afterUpdate, onMount} from "svelte";
-    import {Box, ExternalRefListBox, FreEditor, FreNodeReference} from "@freon4dsl/core";
+    import { AST, Box, ExternalRefListBox, FreEditor, FreNodeReference } from "@freon4dsl/core";
     import {CC} from "@freon4dsl/samples-external-tester";
     import {RenderComponent} from "@freon4dsl/core-svelte";
-    import {runInAction} from "mobx";
     export let box: ExternalRefListBox;
     export let editor: FreEditor;
 
@@ -25,7 +24,7 @@
         let newRef: FreNodeReference<CC> = FreNodeReference.create<CC>("nameOfReferedNode", "CC");
         // Note that you need to put any changes to the actual model in a 'runInAction',
         // because all elements in the model are reactive using mobx.
-        runInAction(() => {
+        AST.changeNamed("ExternalRefListComponent.addChild", () => {
             value.push(newRef);
             // or use: box.getPropertyValue().push(newRef);
         });

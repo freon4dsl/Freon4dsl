@@ -1,4 +1,5 @@
 import { autorun } from "mobx";
+import { AST } from "../../change-manager/index.js";
 import { FreUtils } from "../../util/index.js";
 import { FreCaret, FreCaretPosition } from "../util/index.js";
 import { FreNode } from "../../ast/index.js";
@@ -39,7 +40,9 @@ export class TextBox extends Box {
      */
     setText(newValue: string): void {
         LOGGER.log("setText to " + newValue);
-        this.$setText(newValue);
+        AST.changeNamed("TextBox.setText", () => {
+            this.$setText(newValue);
+        })
         this.isDirty();
     }
 
