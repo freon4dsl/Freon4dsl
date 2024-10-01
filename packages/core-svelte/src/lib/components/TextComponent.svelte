@@ -45,6 +45,7 @@
 	id = !!box ? componentId(box) : 'text-with-unknown-box';
 	let inputElement: HTMLInputElement; 	// the <input> element on the screen
 	let placeholder: string = '<..>';       // the placeholder when value of text component is not present
+	let originalText: string;               // variable to remember the text that was in the box previously
 	let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
 	let widthSpan: HTMLSpanElement;			// the width of the <span> element, used to set the width of the <input> element
 
@@ -69,6 +70,7 @@
 			// set the local variables, then the inputElement will be shown
 			isEditing = true;
 			editStart = true;
+			originalText = text;
 			setCaret(editor.selectedCaretPosition);
 		}
 	}
@@ -116,6 +118,7 @@
 		// set the local variables
 		isEditing = true;
 		editStart = true;
+		originalText = text;
 		let {anchorOffset, focusOffset} = document.getSelection();
 		myHelper.setFromAndTo(anchorOffset, focusOffset);
 		event.preventDefault();
@@ -311,9 +314,11 @@
 				dispatcher('hideDropdown');
 				editor.deleteBox(box);
 			} else if (partOfDropdown) {
-				// send event to parent TextDropdownComponent
-				LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
-				dispatcher('textUpdate', {content: text, caret: myHelper.from});
+				if (text !== originalText) { // check added to avoid too many textUpdate events, e.g. when moving through the text with arrows
+					// send event to parent TextDropdownComponent
+					LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
+					dispatcher('textUpdate', {content: text, caret: myHelper.from});
+				}
 			}
 		}
 		// Always set the input width explicitly.
@@ -326,11 +331,12 @@
 
 	/**
 	 * When this component is mounted, the setFocus and setCaret functions are
-	 * made available to the textbox, and the 'text' variables
+	 * made available to the textbox, and the 'text' and 'originalText' variables
 	 * are set.
 	 */
 	onMount(() => {
 		LOGGER.log("onMount" + " for element "  + box?.node?.freId() + " (" + box?.node?.freLanguageConcept() + ")" + " original text: '" + box.getText() + "'");
+		originalText = box.getText();
 		text = box.getText();
 		placeholder = box.placeHolder;
 		setInputWidth();

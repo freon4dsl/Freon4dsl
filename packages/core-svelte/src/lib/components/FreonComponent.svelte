@@ -92,7 +92,7 @@
             switch (event.key) {
                 case BACKSPACE:
                 case ARROW_LEFT:
-                    editor.selectPreviousLeaf();
+                    editor.selectPreviousLeafIncludingExpressionPreOrPost();
                     stopEvent(event);
                     break;
                 case DELETE:
@@ -102,8 +102,11 @@
                     break;
                 case TAB:
                 case ENTER:
-                case ARROW_RIGHT:
                     editor.selectNextLeaf();
+                    stopEvent(event);
+                    break;
+                case ARROW_RIGHT:
+                    editor.selectNextLeafIncludingExpressionPreOrPost();
                     stopEvent(event);
                     break;
                 case ARROW_DOWN:

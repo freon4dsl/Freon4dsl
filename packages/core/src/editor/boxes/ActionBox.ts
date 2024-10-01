@@ -199,7 +199,7 @@ export class ActionBox extends AbstractChoiceBox {
         console.log("ActionBox executeOption " + JSON.stringify(option));
         FreUtils.CHECK(!!option.action, `ActionBox.executeOption: action missing for ${option.label}` )
         if (!!option.action) {
-            return executeSingleBehavior(option.action, this, option.id, option.label, editor);
+            return executeSingleBehavior(option.action, this, option.label, editor);
         }
         return BehaviorExecutionResult.NULL;
     }
@@ -239,7 +239,11 @@ export class ActionBox extends AbstractChoiceBox {
         // If there is a match, execute it.
         if (!!matchingOption) {
             LOGGER.log(`Found match to regexp: ${matchingOption.label}`);
-            return this.executeOption(editor, matchingOption);
+            FreUtils.CHECK(!!matchingOption.action, `ActionBox.executeOption: action missing for ${matchingOption.label}` )
+            if (!!matchingOption.action) {
+                return executeSingleBehavior(matchingOption.action, this, text, editor);
+            }
+            return BehaviorExecutionResult.NULL;
         }
         return BehaviorExecutionResult.NO_MATCH;
     }

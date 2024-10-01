@@ -203,8 +203,8 @@ export class TextComponentHelper {
             // note: caret is set to one less because getCaretPosition is calculated before the event is executed
             this._from -= 1;
             this._to -= 1;
-            console.log(`textUpdate from handleArrowLeft`)
-            this._dispatcher('textUpdate', {content: this._getText(), caret: this._from});
+            console.log(`caretChanged from handleArrowLeft, caret: ${this._from}-${this._to}`)
+            this._dispatcher('caretChanged', {content: this._getText(), caret: this._from});
         } else { // the key will cause this element to lose focus, its content should be saved
             this._endEditing();
             // let the parent take care of handling the event
@@ -220,8 +220,8 @@ export class TextComponentHelper {
             // note: caret is set to one more because getCaretPosition is calculated before the event is executed
             this._from += 1;
             this._to += 1;
-            console.log(`textUpdate from handleArrowLeft`)
-            this._dispatcher('textUpdate', {content: this._getText(), caret: this._from});
+            console.log(`caretChanged from handleArrowLeft, caret: ${this._from}-${this._to}`)
+            this._dispatcher('caretChanged', {content: this._getText(), caret: this._from});
         } else { // the key will cause this element to lose focus, its content should be saved
             this._endEditing();
             // let the parent take care of handling the event

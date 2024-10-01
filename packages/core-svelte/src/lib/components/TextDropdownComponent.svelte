@@ -143,6 +143,13 @@
         }
     };
 
+    const caretChanged = (event: CustomEvent) => {
+        LOGGER.log(`caretChanged for ${box.kind}: ` + JSON.stringify(event.detail) + ", start: "+ text.substring(0, event.detail.caret));
+        allOptions = getOptions();
+        filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+        makeFilteredOptionsUnique();
+    };
+
     const hideDropdown= () => {
         dropdownShown = false;
     }
@@ -402,7 +409,6 @@
     };
 
     refresh();
-
 </script>
 
 
@@ -423,6 +429,7 @@
             box={textBox}
             editor={editor}
             on:textUpdate={textUpdate}
+            on:caretChanged={caretChanged}
             on:hideDropdown={hideDropdown}
             on:showDropdown={showDropdown}
             on:startEditing={startEditing}

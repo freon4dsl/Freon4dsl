@@ -93,14 +93,11 @@ export function executeBehavior(box: Box, text: string, label: string, editor: F
 export function executeSingleBehavior(
     action: FreAction,
     box: Box,
-    text: string,
     label: string,
     editor: FreEditor,
 ): BehaviorExecutionResult {
     LOGGER.log(
-        "Enter executeSingleBehavior text [" +
-            text +
-            "] label [" +
+        "Enter executeSingleBehavior label [" +
             label +
             "] refshortcut [" +
             action.referenceShortcut +
