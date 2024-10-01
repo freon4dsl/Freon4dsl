@@ -171,6 +171,7 @@ export abstract class Box {
                 return sibling;
             }
         }
+        console.log(`${this.id} nextLeafRight: referring to parent`)
         return this.parent.nextLeafRight;
     }
 
@@ -276,7 +277,10 @@ export abstract class Box {
      * @param propertyName
      * @param propertyIndex
      */
-    findChildBoxForProperty(propertyName: string, propertyIndex?: number): Box | null {
+    findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
+        // if (propertyName === "value" && propertyIndex === undefined) {
+        LOGGER.log("findChildBoxForProperty " + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        // }
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
             if (!isNullOrUndefined(propertyName)) {

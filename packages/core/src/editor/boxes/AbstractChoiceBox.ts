@@ -93,14 +93,16 @@ export abstract class AbstractChoiceBox extends Box {
 
     // @ts-ignore
     // parameter is present to support subclasses
-    selectOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        console.error("AbstractChoiceBox.selectOption");
+    executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
+        console.error("AbstractChoiceBox.executeOption");
         return BehaviorExecutionResult.NULL;
     }
 
-    setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
+    setCaret: (caret: FreCaret, editor: FreEditor) => void = (caret: FreCaret, editor: FreEditor) => {
         if (!!this.textBox) {
             this.textBox.setCaret(caret);
+            // todo remove if and when editor.selectedCaretPosition can be removed
+            editor.selectedCaretPosition = caret;
         }
     };
 

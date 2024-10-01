@@ -83,6 +83,9 @@
                 window.removeEventListener('touchmove', callback, false);
                 window.removeEventListener('touchend', ontouchend, false);
             };
+            // todo Added non-passive event listener to a scroll-blocking 'touchstart' event.
+            // Consider marking event handler as 'passive' to make the page more responsive.
+            // See https://www.chromestatus.com/feature/5745543795965952
             window.addEventListener('touchmove', callback, false);
             window.addEventListener('touchend', ontouchend, false);
         }

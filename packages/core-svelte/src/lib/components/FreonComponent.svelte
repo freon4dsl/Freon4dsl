@@ -35,20 +35,52 @@
 
     const onKeyDown = (event: KeyboardEvent) => {
         LOGGER.log("FreonComponent onKeyDown: " + event.key + " ctrl: " + event.ctrlKey + " alt: " + event.altKey + " shift: " + event.shiftKey);
+        // if (event.ctrlKey) {
+        //     if (!event.altKey) {
+        //         if (event.key === 'z') { // ctrl-z
+        //             // todo UNDO
+        //         } else if (event.key === 'h') { // ctrl-h
+        //             // todo SEARCH
+        //             event.stopPropagation();
+        //         } else if (event.key === 'y') { // ctrl-y
+        //             // todo REDO
+        //             event.stopPropagation();
+        //         } else if (event.key === 'x') { // ctrl-x
+        //             // todo CUT
+        //             event.stopPropagation();
+        //         } else if (event.key === 'x') { // ctrl-a
+        //             // todo SELECT ALL in focused control
+        //             event.stopPropagation();
+        //         } else if (event.key === 'c') { // ctrl-c
+        //             // todo COPY
+        //         } else if (event.key === 'v') { // ctrl-v
+        //             // todo PASTE
+        //         }
+        //     }
+        //     if (event.key === 'z') { // ctrl-alt-z
+        //         // todo REDO
+        //     }
+        // } else {
+        //     if (event.altKey && event.key === BACKSPACE) { // alt-backspace
+        //         // TODO UNDO
+        //     } else if (!event.ctrlKey && event.altKey && event.shiftKey) { // alt-shift-backspace
+        //         // TODO REDO
+        //     }
+        // }
         if (event.ctrlKey || event.altKey) {
             switch (event.key) {
-                case ARROW_UP:
+                case ARROW_UP: // ctrl-arrow-up or alt-arrow-up
                     editor.selectParent();
                     stopEvent(event);
                     break;
-                case ARROW_DOWN:
+                case ARROW_DOWN: // ctrl-arrow-down or alt-arrow-down
                     editor.selectFirstLeafChildBox();
                     stopEvent(event);
                     break;
             }
         } else if (event.shiftKey) {
             switch (event.key) {
-                case TAB:
+                case TAB: // shift-tab
                     editor.selectPreviousLeaf();
                     stopEvent(event);
                     break;
@@ -60,17 +92,21 @@
             switch (event.key) {
                 case BACKSPACE:
                 case ARROW_LEFT:
-                    editor.selectPreviousLeaf();
+                    editor.selectPreviousLeafIncludingExpressionPreOrPost();
                     stopEvent(event);
                     break;
                 case DELETE:
+                    console.log("FreonComponent - DELETE")
                     editor.deleteBox(editor.selectedBox);
                     stopEvent(event);
                     break;
                 case TAB:
                 case ENTER:
-                case ARROW_RIGHT:
                     editor.selectNextLeaf();
+                    stopEvent(event);
+                    break;
+                case ARROW_RIGHT:
+                    editor.selectNextLeafIncludingExpressionPreOrPost();
                     stopEvent(event);
                     break;
                 case ARROW_DOWN:
@@ -78,7 +114,6 @@
                     stopEvent(event);
                     break;
                 case ARROW_UP:
-                    LOGGER.log("Up: " + editor.selectedBox.role);
                     editor.selectBoxAbove(editor.selectedBox);
                     stopEvent(event);
                     break;

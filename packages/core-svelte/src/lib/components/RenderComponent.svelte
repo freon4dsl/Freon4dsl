@@ -185,7 +185,7 @@
         {:else if isTableBox(box) }
             <TableComponent box={box} editor={editor} />
         {:else if isTextBox(box) }
-            <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
+            <TextComponent box={box} editor={editor} partOfDropdown={false} text="" isEditing={false}/>
         {:else if isMultiLineTextBox(box) }
             <MultiLineTextComponent box={box} editor={editor} text=""/>
         {:else if isActionBox(box) || isSelectBox(box) || isReferenceBox(box) }

@@ -17,7 +17,7 @@ import {
     RoleProvider
 } from "./index.js";
 import { FreError, FreErrorSeverity } from "../validator/index.js";
-import { isNullOrUndefined } from "../util/index.js";
+import { isExpressionPreOrPost, isNullOrUndefined } from "../util/index.js";
 import {FreErrorDecorator} from "./FreErrorDecorator.js";
 
 const LOGGER = new FreLogger("FreEditor").mute();
@@ -150,6 +150,10 @@ export class FreEditor {
             propertyName: this._selectedProperty,
             propertyIndex: this._selectedIndex,
         };
+    }
+
+    set selectedCaretPosition(c: FreCaret) {
+        this._selectedPosition = c;
     }
 
     get selectedCaretPosition(): FreCaret {
@@ -316,7 +320,7 @@ export class FreEditor {
             if (!box.selectable) {
                 // get the ElementBox for the selected element
                 this._selectedBox = this.projection.getBox(box.node);
-                // console.log('box not selectable: ' + box.kind)
+                console.log('box not selectable: ' + box.kind)
             } else {
                 this._selectedBox = box;
             }
@@ -326,10 +330,6 @@ export class FreEditor {
             // TODO Only needed when something actually changed
             this.selectionChanged();
         }
-        // console.log(`==>     this._selectedElement = ${this._selectedElement.freId()}=${this._selectedElement.freLanguageConcept()};
-        // this._selectedBox = ${this._selectedBox.role} of kind ${this._selectedBox.kind};
-        // this._selectedIndex = ${this._selectedIndex};
-        // this._selectedProperty = ${this._selectedProperty};`);
     }
 
     selectParent() {
@@ -446,21 +446,60 @@ export class FreEditor {
      * Sets the previous sibling of the currently selected box to be the selected box.
      * TODO what if there is no previous sibling?
      */
-    selectPreviousLeaf() {
-        const previous: Box = this.selectedBox?.nextLeafLeft;
+    selectPreviousLeaf(box?: Box) {
+        if (isNullOrUndefined(box)) {
+            box = this._selectedBox
+        }
+        const previous: Box = box?.nextLeafLeft;
+        LOGGER.log("Select previous leaf is box " + previous?.role);
+        if (isExpressionPreOrPost(previous)){
+            // Special expression prefix or postfix box, don't select it
+            this.selectPreviousLeaf(previous);
+        } else {
+            this.selectElementForBox(previous, FreCaret.RIGHT_MOST);
+        }
+    }
+
+    /**
+     * Sets the next sibling of 'box', or when 'box' is not present, the next sibling of
+     * the currently selected box, to be the selected box.
+     * TODO what if there is no next sibling?
+     * @param box
+     */
+    selectNextLeaf(box?: Box) {
+        if (isNullOrUndefined(box)) {
+            box = this._selectedBox
+        }
+        const next: Box = box?.nextLeafRight;
+        console.log("Select next leaf is box " + next?.role);
+        if (!!next) {
+            if (isExpressionPreOrPost(next)){
+                // Special expression prefix or postfix box, don't select it
+                console.log(`selectNextleaf: skipping ${next.id} ${next.kind}`)
+                this.selectNextLeaf(next);
+            } else {
+                this.selectElementForBox(next, FreCaret.LEFT_MOST);
+            }
+        }
+    }
+
+    selectPreviousLeafIncludingExpressionPreOrPost(box?: Box) {
+        if (isNullOrUndefined(box)) {
+            box = this._selectedBox
+        }
+        const previous: Box = box?.nextLeafLeft;
         LOGGER.log("Select previous leaf is box " + previous?.role);
         if (!!previous) {
             this.selectElementForBox(previous, FreCaret.RIGHT_MOST);
         }
     }
 
-    /**
-     * Sets the next sibling of the currently selected box to be the selected box.
-     * TODO what if there is no next sibling?
-     */
-    selectNextLeaf() {
-        const next = this._selectedBox?.nextLeafRight;
-        LOGGER.log("Select next leaf is box " + next?.role);
+    selectNextLeafIncludingExpressionPreOrPost(box?: Box) {
+        if (isNullOrUndefined(box)) {
+            box = this._selectedBox
+        }
+        const next: Box = box?.nextLeafRight;
+        console.log("Select next leaf is box " + next?.role);
         if (!!next) {
             this.selectElementForBox(next, FreCaret.LEFT_MOST);
         }

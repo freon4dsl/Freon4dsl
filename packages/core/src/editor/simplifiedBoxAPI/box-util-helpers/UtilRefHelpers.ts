@@ -67,9 +67,9 @@ export class UtilRefHelpers {
             },
             // @ts-ignore
             (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
-                // L.log("==> SET selected option for property " + propertyName + " of " + element["name"] + " to " + option?.label);
+                // L.log("==> SET selected option for property " + propertyName + " of " + node["name"] + " to " + option?.label);
                 if (!!option) {
-                    // console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
+                    // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + option.label);
                     runInAction(() => {
                         setFunc(option.label);
                     });

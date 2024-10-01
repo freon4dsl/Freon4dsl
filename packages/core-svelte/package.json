@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/freon4dsl/Freon4dsl"
+    "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
