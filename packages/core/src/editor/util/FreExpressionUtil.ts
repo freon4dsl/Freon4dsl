@@ -1,3 +1,4 @@
+import { AST } from "../../change-manager/index.js";
 import {
     Box,
     HorizontalLayoutBox,
@@ -152,10 +153,12 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
                         triggerTypeToString(action.trigger),
                         innerEditor,
                     );
-                    newExp.freSetLeft(exp.freLeft());
-                    newExp.freSetRight(exp.freRight());
-                    FreUtils.replaceExpression(exp, newExp, innerEditor);
-                    BTREE.balanceTree(newExp, innerEditor);
+                    AST.changeNamed("FreExpressionUtil.createOperatorBox", () => {
+                        newExp.freSetLeft(exp.freLeft());
+                        newExp.freSetRight(exp.freRight());
+                        FreUtils.replaceExpression(exp, newExp, innerEditor);
+                        BTREE.balanceTree(newExp, innerEditor);
+                    })
                     exp = newExp;
                     innerEditor.selectElementBox(newExp, AFTER_BINARY_OPERATOR); // todo adjust property name
                     // editor.selectBoxNew(operatorBox.nextLeafRight.firstLeaf, FreCaret.LEFT_MOST);
@@ -168,10 +171,6 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
             cssStyle: cssStyle,
         },
     );
-
-    // operatorBox.getSelectedOption = () => {
-    //     return { id: symbol, label: symbol };
-    // };
 
     return operatorBox;
 }

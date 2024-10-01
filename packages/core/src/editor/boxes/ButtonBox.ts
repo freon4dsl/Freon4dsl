@@ -26,7 +26,7 @@ export class ButtonBox extends Box {
             if (action.activeInBoxRoles.includes(this.role)) {
                 // execute the action
                 let postAction: FrePostAction = null;
-                AST.change(() => {
+                AST.changeNamed("ButtonBox.executeAction", () => {
                     const command = action.command();
                     postAction = command.execute(this, "no-label", editor, -1);
                 });

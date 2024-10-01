@@ -1,8 +1,10 @@
 import { runInAction } from "mobx"
+import { FreLogger } from "../logging/index.js";
 import { FreUndoManager } from "./FreUndoManager.js"
 
 export type errorFunction = (msg: string) => void
 
+const LOGGER = new FreLogger("AstChanger")
 /**
  * This class encapsulates static variables and functions.
  * This to avoid cluttering the global namespace.
@@ -20,17 +22,18 @@ class AstChanger {
     }
 
     /**
-     * Set the error handling function to _e_ 
+     * Set the error handling function to _e_
      * @param e
-     */    
+     */
     setErrorFunction(e: errorFunction) {
         this.error = e
     }
-    
+
     private _isInChange: boolean = false
     get isInChange(): boolean {
         return this._isInChange
     }
+
     private set isInChange(value: boolean) {
         this._isInChange = value
     }
@@ -53,15 +56,20 @@ class AstChanger {
         this.isInChange = true
         FreUndoManager.getInstance().startTransaction()
         try {
-            runInAction( () => {
+            runInAction(() => {
                 changeFunction()
             })
-        } catch(e) {
+        } catch (e) {
             this.error(e)
         } finally {
             FreUndoManager.getInstance().endTransaction()
             this.isInChange = false
         }
+    }
+
+    changeNamed(name: string, changeFunction: () => void): void {
+        LOGGER.log(`change ${name}`)
+        this.change(changeFunction)
     }
 }
 

@@ -1,3 +1,4 @@
+import { AST } from "../../change-manager/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { Box } from "./internal.js";
 import { FreNode } from "../../ast/index.js";
@@ -28,13 +29,15 @@ export class LimitedControlBox extends Box {
      * @param newValue
      */
     setNames(newValue: string[]): void {
-        LOGGER.log("set Limited to " + newValue);
-        this.$setNames(newValue);
+        LOGGER.log("setNames Limited to " + newValue);
+        AST.changeNamed("LimitedControlBox.setNames", () => {
+            this.$setNames(newValue);
+        })
         this.isDirty();
     }
 
     getNames(): string[] {
-        // console.log("LimitedControlBox.getNames() current value is " + this.$getNames());
+        // LOGGER.log("getNames() current value is " + this.$getNames());
         return this.$getNames();
     }
 
@@ -51,7 +54,6 @@ export class LimitedControlBox extends Box {
         initializer?: Partial<LimitedControlBox>,
     ) {
         super(node, role);
-        // console.log("Created limited box: [" + possibleValues + "]")
         FreUtils.initializeObject(this, initializer);
         this.$getNames = getValues;
         this.$setNames = setValues;
