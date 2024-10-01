@@ -68,7 +68,7 @@
         tabIndex={0}
         bind:this={htmlElement}
 >
-    {#each cells as cell (cell?.content?.element?.freId() + "-" + cell?.content?.id + cell?.role + "-grid")}
+    {#each cells as cell (cell?.content?.node?.freId() + "-" + cell?.content?.id + cell?.role + "-grid")}
         <GridCellComponent grid={box} cellBox={cell} editor={editor}/>
     {/each}
 </div>

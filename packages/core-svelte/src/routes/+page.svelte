@@ -4,7 +4,7 @@
     import {ModelInstantiator} from "./showcase/showcase-model/ModelInstantiator.js";
     const model = new ModelInstantiator().createModel();
     console.log("model name: " + model.name);
-    const box: LabelBox = BoxUtil.labelBox(model, model.name, "bracket-open", true) as LabelBox;
+    const box: LabelBox = BoxUtil.labelBox(model, model.name, "bracket-open", {}) as LabelBox;
 </script>
 
 <!-- include the material design styling -->

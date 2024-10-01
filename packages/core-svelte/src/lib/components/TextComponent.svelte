@@ -26,7 +26,7 @@
 		AST,
 		TextBox,
 	} from "@freon4dsl/core";
-	import { replaceHTML } from "./svelte-utils/index.js";
+	import {TextComponentHelper} from "$lib/components/svelte-utils/TextComponentHelper.js";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
 	const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -297,7 +297,7 @@
 	 * box sizes in the textbox.
 	 */
 	afterUpdate(() => {
-		LOGGER.log(`${id}: afterUpdate ` + from + ", " + to + " id: " + id);
+		LOGGER.log(`${id}: afterUpdate ` + myHelper.from + ", " + myHelper.to + " id: " + id);
 		if (editStart && !!inputElement) {
 			LOGGER.log(`${id}:  editStart in afterUpdate text '${text}' `)
 			inputElement.selectionStart = myHelper.from >= 0 ? myHelper.from : 0;

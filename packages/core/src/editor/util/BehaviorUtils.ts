@@ -115,22 +115,6 @@ export function executeSingleBehavior(
     });
     if (!!execresult) {
         execresult();
-
-        // TODO The following ensured that the cursor gets the correct focus after the change.  probably still needed.
-        // if (!!action.boxRoleToSelect) {
-        //     editor.selectBoxByRoleAndElementId(execresult.freId(),action.boxRoleToSelect,action.caretPosition);
-        // }else {
-        //     editor.selectFirstLeafChildBox();
-        //     if (editor.selectedBox.role.includes(LEFT_MOST)){
-        //         // Special expression prefix box, don't select it
-        //         editor.selectNextLeaf()
-        //     }
-        // }
     }
-    // TODO Probably needed to focus on the correct element.
-    // if( !!execresult){
-    //     await editor.selectElement(execresult, LEFT_MOST);
-    //     editor.selectFirstLeafChildBox();
-    // }
     return BehaviorExecutionResult.EXECUTED;
 }
