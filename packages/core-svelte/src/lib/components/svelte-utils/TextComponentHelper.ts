@@ -72,10 +72,8 @@ export class TextComponentHelper {
         } else {
             this._dispatcher('showDropdown');
             this.getCaretPosition(event);
-            let endPosition: number = this._getText().length;
-            // todo this code is the same as in handleBackspace, make it a private method
-            // for now: the console messages make clearer what is happening
-            if (this._from < endPosition || (this._from !== this._to)) { // some chars remain at the right, or several chars are selected
+            if (this._from < this._getText().length || (this._from !== this._to)) { // some chars remain at the right, or several chars are selected
+                // No need to adjust the caret position, the char will be deleted *after* the caret
                 console.log(`handleDelete, caret: ${this._from}-${this._to}`);
                 // Without propagation but with event Default, the browser handles which char(s) to be deleted.
                 // With event.ctrlKey: delete text from caret to start, is also handled by the browser.
@@ -91,10 +89,12 @@ export class TextComponentHelper {
     handleBackSpace(event: KeyboardEvent, editor: FreEditor) {
         this._dispatcher('showDropdown');
         this.getCaretPosition(event);
-        let endPosition: number = 0;
-        // todo this code is the same as in handleDelete, make it a private method
-        // for now: the console messages make clearer what is happening
-        if (this._from > endPosition || (this._from !== this._to)) { // some chars remain at the left, or several chars are selected
+        if (this._from > 0 || (this._from !== this._to)) { // some chars remain at the left, or several chars are selected
+            if (this._from === this._to) {
+                // Adjust the caret position to take into account the deleted char, because it is *before* the current caret
+                this._from -= 1;
+                this._to -= 1;
+            } // else: the deleted chars are *after* this._from, therefore no need to adjust the caret.
             console.log(`handleBackSpace, caret: ${this._from}-${this._to}`);
             // Without propagation but with event Default, the browser handles which char(s) to be deleted.
             // With event.ctrlKey: delete text from caret to start, is also handled by the browser.

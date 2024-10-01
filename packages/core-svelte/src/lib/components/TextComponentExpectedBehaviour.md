@@ -101,7 +101,7 @@ Deselection can be done by:
    2. The component that is clicked should be selected.
 
 **In all cases the dropdown should be hidden. When this is an action box, the text should be emptied. In case of a 
-select box, the current text should be saved, even if it is incorrect.****
+select box, the current text should be saved, but not if it is incorrect.****
 
 ## Translation into code
 
