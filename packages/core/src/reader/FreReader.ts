@@ -1,4 +1,4 @@
-import { FreNode, FreModel } from "../ast";
+import { FreNode, FreModel } from "../ast/index.js";
 
 export interface FreReader {
     /**

@@ -1,7 +1,7 @@
-import { FileHandler } from "./FileHandler";
-import { PiStructureDef, PiValidatorDef, PiScoperDef, PiTyperDef, PiLanguage } from "../language/gen";
-import { PiError } from "@freon4dsl/core";
-import { PiLanguageEnvironment } from "../config/gen/PiLanguageEnvironment";
+import { FileHandler } from "./FileHandler.js";
+import { PiStructureDef, PiValidatorDef, PiScoperDef, PiTyperDef, PiLanguage } from "../language/gen/index.js";
+import { FreError } from "@freon4dsl/core";
+import { PiLanguageEnvironment } from "../config/gen/PiLanguageEnvironment.js";
 
 describe("Pi Language Parser", () => {
     const reader = PiLanguageEnvironment.getInstance().reader;
@@ -68,7 +68,7 @@ describe("Pi Language Parser", () => {
             const simpleExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "SimpleExp1");
             // console.log(`visible in simpleExpRule: ${scoper.getVisibleElements(simpleExpRule).map(elem => `${elem.name}`).join(", ")}`);
 
-            const errors: PiError[] = validator.validate(typeUnit);
+            const errors: FreError[] = validator.validate(typeUnit);
             // TODO MetaType.scope and .valid are not yet adjusted to the new structure in MetaType.ast
             // expect(errors.length).toBe(0);
             // console.log("found " + errors.length + " errors");

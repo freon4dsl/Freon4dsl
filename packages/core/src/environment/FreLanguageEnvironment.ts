@@ -1,13 +1,13 @@
-import { FreProjectionHandler, FreEditor } from "../editor";
-import { FreEnvironment } from "./FreEnvironment";
-import { FreModel } from "../ast";
-import { FreInterpreter } from "../interpreter";
-import { FreReader } from "../reader";
-import { FreScoperComposite } from "../scoper";
-import { FreStdlib } from "../stdlib";
-import { FreCompositeTyper } from "../typer";
-import { FreValidator } from "../validator";
-import { FreWriter } from "../writer";
+import { FreProjectionHandler, FreEditor } from "../editor/index.js";
+import { FreEnvironment } from "./FreEnvironment.js";
+import { FreModel } from "../ast/index.js";
+import { FreInterpreter } from "../interpreter/index.js";
+import { FreReader } from "../reader/index.js";
+import { FreScoperComposite } from "../scoper/index.js";
+import { FreStdlib } from "../stdlib/index.js";
+import { FreCompositeTyper } from "../typer/index.js";
+import { FreValidator } from "../validator/index.js";
+import { FreWriter } from "../writer/index.js";
 
 // todo explain the relationship between this class and the generated environment
 export class FreLanguageEnvironment implements FreEnvironment {

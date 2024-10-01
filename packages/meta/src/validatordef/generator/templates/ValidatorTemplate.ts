@@ -27,12 +27,12 @@ export class ValidatorTemplate {
         // Template starts here
         return `
         import { ${this.validatorInterfaceName}, ${this.errorClassName}, ${this.typerInterfaceName}, ${Names.FreNode} } from "${FREON_CORE}";
-        // import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}";
-        ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}";` : ``}
-        import { ${referenceChecker} } from "./${referenceChecker}";
-        import { ${walkerClassName}, ${workerInterfaceName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
+        // import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}.js";
+        ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}.js";` : ``}
+        import { ${referenceChecker} } from "./${referenceChecker}.js";
+        import { ${walkerClassName}, ${workerInterfaceName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
+        import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
 
         /**
          * Interface '${Names.checkerInterface(language)}' represents any object that traverses the model tree and checks
@@ -106,9 +106,9 @@ export class ValidatorTemplate {
 
     generateGenIndex(language: FreMetaLanguage, validdef: ValidatorDef | undefined): string {
         return `
-        export * from "./${Names.nonOptionalsChecker(language)}";
-        export * from "./${Names.validator(language)}";
-        ${!!validdef ? `export * from "./${Names.rulesChecker(language)}";` : ``}
+        export * from "./${Names.nonOptionalsChecker(language)}.js";
+        export * from "./${Names.validator(language)}.js";
+        ${!!validdef ? `export * from "./${Names.rulesChecker(language)}.js";` : ``}
         `;
     }
 
@@ -119,8 +119,8 @@ export class ValidatorTemplate {
         const validatorName: string = Names.validator(language);
         return `
         import { ${Names.FreError}, ${Names.FreErrorSeverity} } from "${FREON_CORE}";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${defaultWorkerName}";
-        import { ${interfaceName} } from "./gen/${validatorName}";
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${defaultWorkerName}.js";
+        import { ${interfaceName} } from "./gen/${validatorName}.js";
 
         export class ${className} extends ${defaultWorkerName} implements ${interfaceName} {
             errorList: ${Names.FreError}[] = [];
@@ -129,7 +129,7 @@ export class ValidatorTemplate {
 
     generateIndex(language: FreMetaLanguage) {
         return `
-        export * from "./${Names.customValidator(language)}";
+        export * from "./${Names.customValidator(language)}.js";
         `;
     }
 }

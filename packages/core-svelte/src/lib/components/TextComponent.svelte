@@ -22,12 +22,11 @@
 		FreEditor,
 		FreLogger,
 		SelectBox,
-		TAB,
-		TextBox, SHIFT, CONTROL, ALT, ESCAPE
+		TAB, SHIFT, CONTROL, ALT, ESCAPE,
+		AST,
+		TextBox,
 	} from "@freon4dsl/core";
-
-	import { runInAction } from "mobx";
-	import { TextComponentHelper } from "$lib/components/svelte-utils/TextComponentHelper.js";
+	import { replaceHTML } from "./svelte-utils/index.js";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
 	const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -161,14 +160,12 @@
 			if (!partOfDropdown) {
 				// store the current value in the textbox, or delete the box, if appropriate
 				LOGGER.log(`   save text using box.setText(${text})`)
-				runInAction(() => {
-					if (box.deleteWhenEmpty && text.length === 0) {
-						editor.deleteBox(box);
-					} else if (text !== box.getText()) {
-						LOGGER.log(`   text is new value`)
-						box.setText(text);
-					}
-				});
+				if (box.deleteWhenEmpty && text.length === 0) {
+					editor.deleteBox(box);
+				} else if (text !== box.getText()) {
+					LOGGER.log(`   text is new value`)
+					box.setText(text);
+				}
 			} else {
 				dispatcher('endEditing');
 			}
@@ -270,8 +267,8 @@
 		} // else Let TextDropdownComponent handle it. The event will bubble up.
 	}
 
-	const refresh = () => {
-		LOGGER.log(`${id}: REFRESH  ${id} (${box?.node?.freLanguageConcept()}) box text '${box.getText()}' text '${text}'`)
+	const refresh = (why?: string) => {
+		LOGGER.log(`${id}: REFRESH why ${why}: (${box?.node?.freLanguageConcept()}) boxtext '${box.getText()}' text '${text}'`)
 		placeholder = box.placeHolder;
 		text = box.getText();
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
@@ -283,6 +280,7 @@
 	 * It may be null or undefined! Therefore, we need this check to set the focus.
 	 */
 	beforeUpdate(() => {
+		LOGGER.log(`${id}: beforeUpdate `)
 		if (editStart && !!inputElement) {
 			LOGGER.log(`${id}: Before update : ${inputElement}`);
 			setInputWidth();
@@ -299,7 +297,7 @@
 	 * box sizes in the textbox.
 	 */
 	afterUpdate(() => {
-		// LOGGER.log("Start afterUpdate  " + from + ", " + myHelper.to + " id: " + id);
+		LOGGER.log(`${id}: afterUpdate ` + from + ", " + to + " id: " + id);
 		if (editStart && !!inputElement) {
 			LOGGER.log(`${id}:  editStart in afterUpdate text '${text}' `)
 			inputElement.selectionStart = myHelper.from >= 0 ? myHelper.from : 0;

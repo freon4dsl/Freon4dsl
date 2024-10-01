@@ -1,8 +1,8 @@
-import { RtBoolean } from "./RtBoolean";
-import { isRtError, RtError } from "./RtError";
-import { RtObject } from "./RtObject";
-import { isRtString } from "./RtString";
-import { isRtEmpty } from "./RtEmpty";
+import { RtBoolean } from "./RtBoolean.js";
+import { isRtError, RtError } from "./RtError.js";
+import { RtObject } from "./RtObject.js";
+import { isRtString } from "./RtString.js";
+import { isRtEmpty } from "./RtEmpty.js";
 
 export class RtNumber extends RtObject {
     // } implements RtHasPlus  {

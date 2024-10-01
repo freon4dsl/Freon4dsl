@@ -22,7 +22,7 @@ export class ScoperUtilsTemplate {
         import { 
                     ${includeRoot ? `${Names.classifier(language.modelConcept)},` : ``}
                     ${concreteNamespaces.map((ref) => `${Names.classifier(ref)}`).join(", ")}
-                } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+                } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
 
         /**
          * Returns true if 'modelelement' is marked by 'isnamespace' in the scoper definition.

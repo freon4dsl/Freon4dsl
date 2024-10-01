@@ -1,1 +1,1 @@
-export { EducationEnvironment } from "./config/gen/EducationEnvironment";
+export { EducationEnvironment } from "./config/gen/EducationEnvironment.js";

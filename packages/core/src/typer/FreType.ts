@@ -1,5 +1,5 @@
-import { FreWriter } from "../writer";
-import { FreNode } from "../ast";
+import { FreWriter } from "../writer/index.js";
+import { FreNode } from "../ast/index.js";
 
 export interface FreType {
     /**

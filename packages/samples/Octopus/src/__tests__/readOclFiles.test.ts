@@ -1,7 +1,7 @@
-import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment";
-import { FileHandler } from "../../UnusedOrInvalid/utils/FileHandler";
+import { OctopusEnvironment } from "../environment/gen/OctopusEnvironment.js";
+import { FileHandler } from "../../UnusedOrInvalid/utils/FileHandler.js";
 import { GenericModelSerializer } from "@freon4dsl/core";
-import { ModelUnitMetaType, OctopusModel, OctopusModelUnitType } from "../language/gen";
+import { ModelUnitMetaType, OctopusModel, OctopusModelUnitType } from "../language/gen/index.js";
 
 const writer = OctopusEnvironment.getInstance().writer;
 const reader = OctopusEnvironment.getInstance().reader;

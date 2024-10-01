@@ -1,11 +1,11 @@
-import { FreEditor, FreProjectionHandler } from "../editor"
-import { FreInterpreter } from "../interpreter";
-import { FreValidator } from "../validator";
-import { FreScoperComposite } from "../scoper";
-import { FreCompositeTyper } from "../typer";
-import { FreWriter } from "../writer";
-import { FreReader } from "../reader";
-import { FreModel } from "../ast";
+import { FreEditor, FreProjectionHandler } from "../editor/index.js"
+import { FreInterpreter } from "../interpreter/index.js";
+import { FreValidator } from "../validator/index.js";
+import { FreScoperComposite } from "../scoper/index.js";
+import { FreCompositeTyper } from "../typer/index.js";
+import { FreWriter } from "../writer/index.js";
+import { FreReader } from "../reader/index.js";
+import { FreModel } from "../ast/index.js";
 
 export interface FreEnvironment {
     /**

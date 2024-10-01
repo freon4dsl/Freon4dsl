@@ -1,14 +1,16 @@
-import { isEqual } from "lodash";
-import { autorun, makeObservable, observable } from "mobx";
-import { FreEnvironment } from "../environment";
-import { FreOwnerDescriptor, FreNode } from "../ast";
-import { FreLogger } from "../logging";
-import { FreAction } from "./actions";
-import { Box, FreCombinedActions, FreCaret, FreProjectionHandler, wait, isTextBox, ElementBox } from "./index";
-import { FreErrorSeverity } from "../validator";
-import { isNullOrUndefined, isExpressionPreOrPost } from "../util";
+import pkg from 'lodash';
+const { isEqual } = pkg;
 
-const LOGGER = new FreLogger("FreEditor");
+import { autorun, makeObservable, observable } from "mobx";
+import { FreEnvironment } from "../environment/index.js";
+import { FreOwnerDescriptor, FreNode } from "../ast/index.js";
+import { FreLogger } from "../logging/index.js";
+import { FreAction } from "./actions/index.js";
+import { Box, FreCombinedActions, FreCaret, FreProjectionHandler, wait, isTextBox, ElementBox } from "./index.js";
+import { FreErrorSeverity } from "../validator/index.js";
+import {isExpressionPreOrPost, isNullOrUndefined} from "../util/index.js";
+
+const LOGGER = new FreLogger("FreEditor").mute();
 
 export class FreEditor {
     private static isOnPreviousLine(ref: Box, other: Box): boolean {
@@ -58,6 +60,7 @@ export class FreEditor {
         makeObservable<FreEditor, "_rootElement">(this, {
             // theme: observable,
             _rootElement: observable,
+            forceRecalculateProjection: observable
         });
         autorun(this.auto);
     }
@@ -86,12 +89,19 @@ export class FreEditor {
     }
 
     auto = () => {
-        LOGGER.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " name " + (!!this.rootElement ? this.rootElement["name"] : "undefined"));
+        LOGGER.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " recalc is " + this.forceRecalculateProjection);
+        this.forceRecalculateProjection
         if (this.rootElement !== null) {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
         }
     };
+
+    /**
+     * Increase this value to force recalculation of the projection.
+     * Used e.g. when projection list changes.
+     */
+    forceRecalculateProjection: number = 0
 
     // Getters and Setters
 
@@ -280,7 +290,7 @@ export class FreEditor {
             return false;
         }
         if (isNullOrUndefined(element)) {
-            console.error("FreEditor.selectedElement is null !");
+            LOGGER.error("FreEditor.selectedElement is null !");
             return false;
         }
         return true;

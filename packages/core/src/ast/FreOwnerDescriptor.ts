@@ -1,4 +1,4 @@
-import { FreNode } from "./FreNode";
+import { FreNode } from "./FreNode.js";
 
 /**
  * This object describes for each FreNode what its `owner` object is (if any),

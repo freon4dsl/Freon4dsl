@@ -1,10 +1,10 @@
-import { runInAction } from "mobx";
-import { FreLogger } from "../../logging";
-import { Box, FRE_NULL_COMMAND, FreCommand, FreEditor } from "../index";
-import { FreExpressionNode } from "../../ast";
-import { isFreExpression } from "../../ast-utils";
-import { isProKey, FreTriggerUse } from "../actions";
-import { FreUtils } from "../../util";
+import { AST } from "../../change-manager/index.js";
+import { FreLogger } from "../../logging/index.js";
+import { Box, FRE_NULL_COMMAND, FreCommand, FreEditor } from "../index.js";
+import { FreExpressionNode } from "../../ast/index.js";
+import { isFreExpression } from "../../ast-utils/index.js";
+import { isProKey, FreTriggerUse } from "../actions/index.js";
+import { FreUtils } from "../../util/index.js";
 
 export type BooleanCallback = () => boolean;
 export type DynamicBoolean = BooleanCallback | boolean;
@@ -24,7 +24,7 @@ export class FreEditorUtil {
             isFreExpression(newExpression),
             "replaceExpression: new element should be a FreExpressionNode, but it isn't",
         );
-        runInAction(() => {
+        AST.change(() => {
             FreUtils.setContainer(newExpression, oldExpression.freOwnerDescriptor(), editor);
         });
     }

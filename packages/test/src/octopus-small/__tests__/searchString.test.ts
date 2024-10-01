@@ -1,4 +1,4 @@
-import { FreModelUnit, FreNode, FreSearcher } from "@freon4dsl/core";
+import { AST, FreModelUnit, FreNode, FreSearcher } from "@freon4dsl/core";
 import { AssociationEnd, Attribute, OctopusModel, UmlPart } from "../language/gen";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
 import { FileHandler } from "../../utils/FileHandler";
@@ -11,9 +11,13 @@ const searcher = new FreSearcher();
 
 function readFile(filepath: string): FreModelUnit {
     try {
-        const model: OctopusModel = new OctopusModel();
-        const langSpec: string = handler.stringFromFile(filepath);
-        return reader.readFromString(langSpec, "UmlPart", model) as FreModelUnit;
+        let unit
+        AST.change( () => {
+            const model: OctopusModel = new OctopusModel();
+            const langSpec: string = handler.stringFromFile(filepath);
+            unit = reader.readFromString(langSpec, "UmlPart", model) as FreModelUnit;
+            return unit
+        })
     } catch (e) {
         console.log(e.message + e.stack);
     }

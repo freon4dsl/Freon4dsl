@@ -16,17 +16,17 @@ export class EditorIndexTemplate {
         // todo remove the loop over usedLanguages, it is unused
         // @ts-expect-error
         return ` ${language.usedLanguages.map(lang => `  
-            export * from "./${Names.actions(language)}";
-            export * from "./${Names.defaultActions(language)}";`).join("")} 
-        ${boxProviderConcepts.map(cls => `export * from "./${Names.boxProvider(cls)}";` ).join("")} 
-            export * from "./EditorDef"; `;
+            export * from "./${Names.actions(language)}.js";
+            export * from "./${Names.defaultActions(language)}.js";`).join("")} 
+        ${boxProviderConcepts.map(cls => `export * from "./${Names.boxProvider(cls)}.js";` ).join("")} 
+            export * from "./EditorDef.js"; `;
     }
 
     generateIndex(language: FreMetaLanguage): string {
         return `
-        export * from "./gen";
-        export * from "./${Names.customProjection(language)}";
-        export * from "./${Names.customActions(language)}";
+        export * from "./gen/index.js";
+        export * from "./${Names.customProjection(language)}.js";
+        export * from "./${Names.customActions(language)}.js";
         `;
     }
 }

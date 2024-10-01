@@ -1,6 +1,7 @@
 import { runInAction } from "mobx";
-import { isRegExp, isString, Box, FreEditor, FrePostAction, FreAction } from "../index";
-import { FreLogger } from "../../logging";
+import { AST } from "../../change-manager/index.js";
+import { isRegExp, isString, Box, FreEditor, FrePostAction, FreAction } from "../index.js";
+import { FreLogger } from "../../logging/index.js";
 
 const LOGGER: FreLogger = new FreLogger("BehaviorUtils");
 
@@ -108,7 +109,7 @@ export function executeSingleBehavior(
     let execresult: FrePostAction;
 
     const index = -1; // todo get the correct index
-    runInAction(() => {
+    AST.change(() => {
         const command = action.command();
         execresult = command.execute(box, label, editor, index);
     });

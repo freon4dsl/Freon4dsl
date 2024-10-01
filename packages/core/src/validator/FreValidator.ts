@@ -1,4 +1,4 @@
-import { FreNode } from "../ast";
+import { FreNode } from "../ast/index.js";
 
 // Part of the Freon Framework.
 export interface FreValidator {

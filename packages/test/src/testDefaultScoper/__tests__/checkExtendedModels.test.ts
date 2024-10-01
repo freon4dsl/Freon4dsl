@@ -1,8 +1,8 @@
-import { FreNodeReference } from "@freon4dsl/core";
-import { DSmodel, DSref, DSunit } from "../language/gen";
-import { SimpleModelCreator } from "./SimpleModelCreator";
-import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
-import { ExtendedModelCreator } from "./ExtendedModelCreator";
+import { AST, FreNodeReference } from "@freon4dsl/core";
+import { DSmodel, DSref, DSunit } from "../language/gen/index.js";
+import { SimpleModelCreator } from "./SimpleModelCreator.js";
+import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment.js";
+import { ExtendedModelCreator } from "./ExtendedModelCreator.js";
 import { describe, test, expect, beforeEach } from "vitest";
 
 function print(prefix: string, visibleNames: string[]) {
@@ -65,51 +65,53 @@ describe("Testing Default Scoper", () => {
     test("references in model with 2 units of depth 2, no interfaces", () => {
         const model: DSmodel = creator.createModel(2, 2);
 
-        // create extra references
-        const ref1 = FreNodeReference.create<DSref>(["unit1_OF_model", "private9_OF_unit1_OF_model"], "DSprivate");
-        const ref2 = FreNodeReference.create<DSref>(["unit1_OF_model", "public2_OF_unit1_OF_model"], "DSpublic");
-        const ref3 = FreNodeReference.create<DSref>(
-            ["unit1_OF_model", "public2_OF_unit1_OF_model", "private6_OF_public2_OF_unit1_OF_model"],
-            "DSpublic",
-        );
-        const ref4 = FreNodeReference.create<DSref>(
-            [
-                "unit1_OF_model",
-                "public2_OF_unit1_OF_model",
-                "private6_OF_public2_OF_unit1_OF_model",
-                "public7_OF_private6_OF_public2_OF_unit1_OF_model",
-            ],
-            "DSpublic",
-        );
+        AST.change( () => {
+            // create extra references
+            const ref1 = FreNodeReference.create<DSref>(["unit1_OF_model", "private9_OF_unit1_OF_model"], "DSprivate");
+            const ref2 = FreNodeReference.create<DSref>(["unit1_OF_model", "public2_OF_unit1_OF_model"], "DSpublic");
+            const ref3 = FreNodeReference.create<DSref>(
+                ["unit1_OF_model", "public2_OF_unit1_OF_model", "private6_OF_public2_OF_unit1_OF_model"],
+                "DSpublic",
+            );
+            const ref4 = FreNodeReference.create<DSref>(
+                [
+                    "unit1_OF_model",
+                    "public2_OF_unit1_OF_model",
+                    "private6_OF_public2_OF_unit1_OF_model",
+                    "public7_OF_private6_OF_public2_OF_unit1_OF_model",
+                ],
+                "DSpublic",
+            );
 
-        // add them to the other unit
-        const otherUnit = model.findUnit("unit16_OF_model") as DSunit;
-        // console.log("otherUnit: " + otherUnit.$$propertyIndex);
-        otherUnit.dsRefs.push(ref1);
-        otherUnit.dsRefs.push(ref2);
-        otherUnit.dsRefs.push(ref3);
-        otherUnit.dsRefs.push(ref4);
+            // add them to the other unit
+            const otherUnit = model.findUnit("unit16_OF_model") as DSunit;
+            // console.log("otherUnit: " + otherUnit.$$propertyIndex);
+            otherUnit.dsRefs.push(ref1);
+            otherUnit.dsRefs.push(ref2);
+            otherUnit.dsRefs.push(ref3);
+            otherUnit.dsRefs.push(ref4);
 
-        // try to resolve them
-        expect(ref1.referred).toBeNull();
-        expect(ref2.referred?.name).toBe("public2_OF_unit1_OF_model");
-        expect(ref3.referred).toBeNull();
-        expect(ref4.referred).toBeNull();
+            // try to resolve them
+            expect(ref1.referred).toBeNull();
+            expect(ref2.referred?.name).toBe("public2_OF_unit1_OF_model");
+            expect(ref3.referred).toBeNull();
+            expect(ref4.referred).toBeNull();
 
-        // now add them to the same unit
-        let sameUnit = model.findUnit("unit1_OF_model") as DSunit;
-        sameUnit.dsRefs.push(ref1);
-        sameUnit.dsRefs.push(ref2);
-        sameUnit.dsRefs.push(ref3);
-        sameUnit.dsRefs.push(ref4);
-        // the ref objects should be removed from their previous owner
-        expect(otherUnit.dsRefs.length).toBe(0);
-        // try to resolve them
-        expect(ref1.referred?.name).toBe("private9_OF_unit1_OF_model");
-        expect(ref2.referred?.name).toBe("public2_OF_unit1_OF_model");
-        // Next two are incorrect pathnames because second part is not a namespace
-        expect(ref3.referred).toBeNull();
-        expect(ref4.referred).toBeNull();
+            // now add them to the same unit
+            let sameUnit = model.findUnit("unit1_OF_model") as DSunit;
+            sameUnit.dsRefs.push(ref1);
+            sameUnit.dsRefs.push(ref2);
+            sameUnit.dsRefs.push(ref3);
+            sameUnit.dsRefs.push(ref4);
+            // the ref objects should be removed from their previous owner
+            expect(otherUnit.dsRefs.length).toBe(0);
+            // try to resolve them
+            expect(ref1.referred?.name).toBe("private9_OF_unit1_OF_model");
+            expect(ref2.referred?.name).toBe("public2_OF_unit1_OF_model");
+            // Next two are incorrect pathnames because second part is not a namespace
+            expect(ref3.referred).toBeNull();
+            expect(ref4.referred).toBeNull();
+        })
     });
 
     test.skip("validator messages in model with 2 units of depth 3", () => {

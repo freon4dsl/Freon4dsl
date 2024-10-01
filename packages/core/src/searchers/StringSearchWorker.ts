@@ -1,6 +1,6 @@
-import { FreNode } from "../ast";
-import { FreWriter } from "../writer";
-import { FreSearchWorker } from "./FreSearchWorker";
+import { FreNode } from "../ast/index.js";
+import { FreWriter } from "../writer/index.js";
+import { FreSearchWorker } from "./FreSearchWorker.js";
 
 export class StringSearchWorker implements FreSearchWorker {
     /**

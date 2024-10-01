@@ -1,7 +1,7 @@
-import { DemoEnvironment } from "../config/gen/DemoEnvironment";
-import { DemoScoper } from "../scoper/gen";
-import { AppliedFeature, DemoAttributeRef, Demo } from "../language/gen";
-import { DemoModelCreator } from "./DemoModelCreator";
+import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
+import { DemoScoper } from "../scoper/gen/index.js";
+import { AppliedFeature, DemoAttributeRef, Demo } from "../language/gen/index.js";
+import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
 describe("testing Alternative Scopes", () => {

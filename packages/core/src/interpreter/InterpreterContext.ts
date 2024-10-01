@@ -2,7 +2,7 @@
  * Class representing the comntext (or environment) in which an expreession is evaaluated.
  * The context contains values for objects and is hierarchical.
  */
-import { RtObject } from "./runtime";
+import { RtObject } from "./runtime/index.js";
 
 export class InterpreterContext {
     // Dummy context, caan be used as the start context

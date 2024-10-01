@@ -5,12 +5,13 @@ import {
     LionWebJsonNode,
     LionWebJsonReference,
 } from "@lionweb/validation";
-import { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index";
-import { FreLanguage, FreLanguageProperty } from "../../language/index";
-import { FreLogger } from "../../logging/index";
-import { FreUtils, isNullOrUndefined } from "../../util/index";
-import { FreSerializer } from "./FreSerializer";
-import { createLionWebJsonNode, isLionWebJsonChunk } from "./NewLionwebM3";
+import { runInAction } from "mobx";
+import { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js";
+import { FreLanguage, FreLanguageProperty } from "../../language/index.js";
+import { FreLogger } from "../../logging/index.js";
+import { FreUtils, isNullOrUndefined } from "../../util/index.js";
+import { FreSerializer } from "./FreSerializer.js";
+import { createLionWebJsonNode, isLionWebJsonChunk } from "./NewLionwebM3.js";
 
 const LOGGER = new FreLogger("FreLionwebSerializer");
 /**
@@ -67,17 +68,24 @@ export class FreLionwebSerializer implements FreSerializer {
         LOGGER.log("SerializationFormatVersion: " + serVersion);
         // First read all nodes without children, and store them in a map.
         const nodes: LionWebJsonNode[] = chunk.nodes;
-        for (const object of nodes) {
-            // LOGGER.log("node: " + object.concept.key + "     with id " + object.id)
-            const parsedNode = this.toTypeScriptInstanceInternal(object);
-            if (parsedNode !== null) {
-                this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
+        // Not using AST.change(...) here, because we don't need an undo for this code
+        runInAction( () => {
+            for (const object of nodes) {
+                // LOGGER.log("node: " + object.concept.key + "     with id " + object.id)
+                const parsedNode = this.toTypeScriptInstanceInternal(object);
+                if (parsedNode !== null) {
+                    this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
+                }
             }
-        }
-        this.resolveChildrenAndReferences();
+            this.resolveChildrenAndReferences();
+        })
         return this.findRoot();
     }
 
+    /**
+     * We assume that there is exactly one unit node.
+     * @private
+     */
     private findRoot(): FreNode {
         // TODO Check next line
         const mapEntries: IterableIterator<ParsedNode> = this.nodesfromJson.values();

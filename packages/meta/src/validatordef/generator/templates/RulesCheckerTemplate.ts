@@ -42,10 +42,10 @@ export class RulesCheckerTemplate {
         // the template starts here
         return `
         import { ${errorClassName}, ${Names.FreErrorSeverity}, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-        import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
-        import { reservedWordsInTypescript } from "./ReservedWords";
+        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
+        import { ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
+        import { reservedWordsInTypescript } from "./ReservedWords.js";
 
         /**
          * Class ${checkerClassName} is the part of validator that is generated from, if present,

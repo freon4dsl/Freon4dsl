@@ -8,7 +8,7 @@ import {
     HorizontalLayoutBox,
     LabelBox, SvgBox, HorizontalListBox, GridBox, createDefaultExpressionBox, BoxUtil, NumberDisplay
 } from "@freon4dsl/core";
-import { FractionLiteralExpression } from "../language/gen/index";
+import { FractionLiteralExpression } from "../language/gen/index.js";
 
 const dividerSvg: string = `M1 1 L20 1 L20 2 L1 2`;
 

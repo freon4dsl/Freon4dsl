@@ -1,1 +1,1 @@
-export * from "./FreSearcher";
+export * from "./FreSearcher.js";

@@ -1,6 +1,6 @@
-import { RtBoolean } from "./RtBoolean";
-import { RtNumber } from "./RtNumber";
-import { RtObject } from "./RtObject";
+import { RtBoolean } from "./RtBoolean.js";
+import { RtNumber } from "./RtNumber.js";
+import { RtObject } from "./RtObject.js";
 
 export class RtString extends RtObject {
     static readonly EMPTY_STRING = new RtString("");

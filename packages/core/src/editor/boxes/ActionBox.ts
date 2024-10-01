@@ -1,12 +1,12 @@
-import { FreLanguageConcept, FreLanguage, FreLanguageProperty, FreLanguageClassifier } from "../../language";
-import { BehaviorExecutionResult, executeSingleBehavior } from "../util";
-import {FreCreatePartAction, FreCustomAction, FreTriggerType, isRegExp} from "../actions";
-import { triggerTypeToString, FreEditor, isProKey } from "../internal";
-import { Box, AbstractChoiceBox, SelectOption } from "./internal";
-import { FreNode, FreNodeReference } from "../../ast";
+import { FreLanguageConcept, FreLanguage, FreLanguageProperty, FreLanguageClassifier } from "../../language/index.js";
+import { BehaviorExecutionResult, executeSingleBehavior } from "../util/index.js";
+import {FreCreatePartAction, FreCustomAction, FreTriggerType, isRegExp} from "../actions/index.js";
+import { triggerTypeToString, FreEditor, isProKey } from "../internal.js";
+import { Box, AbstractChoiceBox, SelectOption } from "./internal.js";
+import { FreNode, FreNodeReference } from "../../ast/index.js";
 import { runInAction } from "mobx";
-import { FreLogger } from "../../logging";
-import {FreUtils} from "../../util";
+import { FreLogger } from "../../logging/index.js";
+import {FreUtils} from "../../util/index.js";
 
 const LOGGER: FreLogger = new FreLogger("ActionBox");
 
@@ -45,10 +45,10 @@ export class ActionBox extends AbstractChoiceBox {
                 this.conceptName,
                 this.propertyName,
             );
-            LOGGER.log(`clsIntf: ${clsOtIntf} prop kind: ${propDef?.propertyKind}`);
+            LOGGER.log(`clsIntf: ${clsOtIntf?.typeName} prop kind: ${propDef?.propertyKind}`);
             clsOtIntf.subConceptNames.concat(this.conceptName).forEach((creatableConceptname: string) => {
                 const creatableConcept: FreLanguageConcept = FreLanguage.getInstance().concept(creatableConceptname);
-                LOGGER.log(`creatableConcept: ${creatableConcept}`);
+                LOGGER.log(`creatableConcept: ${creatableConcept?.typeName}`);
                 if (!!creatableConcept && !creatableConcept.isAbstract) {
                     if (!!creatableConcept.referenceShortcut) {
                         this.addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor);
@@ -192,7 +192,7 @@ export class ActionBox extends AbstractChoiceBox {
 
     triggerKeyPressEvent = (key: string) => {
         // TODO rename this one, e.g. to triggerKeyEvent
-        console.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
+        LOGGER.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
     };
 
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {

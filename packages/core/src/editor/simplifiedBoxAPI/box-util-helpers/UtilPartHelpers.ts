@@ -1,10 +1,10 @@
-import {Box, BoxFactory, ElementBox, ExternalPartListBox, HorizontalListBox, VerticalListBox} from "../../boxes";
-import { FreNode } from "../../../ast";
-import { RoleProvider } from "../RoleProvider";
-import { FreLanguage } from "../../../language";
-import { FreBoxProvider, FreProjectionHandler } from "../../projections";
-import { FreListInfo } from "../BoxUtil";
-import { UtilCommon } from "./UtilCommon";
+import {Box, BoxFactory, ElementBox, ExternalPartListBox, HorizontalListBox, VerticalListBox} from "../../boxes/index.js";
+import { FreNode } from "../../../ast/index.js";
+import { RoleProvider } from "../RoleProvider.js";
+import { FreLanguage } from "../../../language/index.js";
+import { FreBoxProvider, FreProjectionHandler } from "../../projections/index.js";
+import { FreListInfo } from "../BoxUtil.js";
+import { UtilCommon } from "./UtilCommon.js";
 
 export class UtilPartHelpers {
     public static verticalPartListBox(

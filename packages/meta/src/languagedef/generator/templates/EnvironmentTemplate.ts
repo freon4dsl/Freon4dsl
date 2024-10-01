@@ -20,15 +20,15 @@ export class EnvironmentTemplate {
                     ${Names.FreTyper}, ${Names.FreValidator}, ${Names.FreStdlib},
                     ${Names.FreWriter}, ${Names.FreInterpreter}, ${Names.FreScoperComposite}, ${Names.LanguageEnvironment}, ${Names.FreProjectionHandler}
                } from "${FREON_CORE}";
-        import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}";
-        import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}";
-        import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}";
-        import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}";
-        import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
-        import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}";
-        import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}";
-        import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}";
-        import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
+        import { ${Names.actions(language)}, initializeEditorDef, initializeProjections } from "${relativePath}${EDITOR_GEN_FOLDER}/index.js";
+        import { initializeScoperDef } from "${relativePath}${SCOPER_GEN_FOLDER}/index.js";
+        import { initializeTypers } from "${relativePath}${TYPER_GEN_FOLDER}/index.js";
+        import { ${Names.validator(language)} } from "${relativePath}${VALIDATOR_GEN_FOLDER}/index.js";
+        import { ${Names.stdlib(language)}  } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}.js";
+        import { ${Names.writer(language)}  } from "${relativePath}${WRITER_GEN_FOLDER}/${Names.writer(language)}.js";
+        import { ${Names.reader(language)}  } from "${relativePath}${READER_GEN_FOLDER}/${Names.reader(language)}.js";
+        import { ${Names.interpreterName(language)}  } from "${relativePath}${INTERPRETER_FOLDER}/${Names.interpreterName(language)}.js";
+        import { ${Names.classifier(language.modelConcept)}, ${Names.classifier(language.units[0])}, ${Names.initializeLanguage} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.

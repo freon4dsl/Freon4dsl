@@ -1,1 +1,1 @@
-export { CalculatorModelEnvironment } from "./config/gen/CalculatorModelEnvironment";
+export { CalculatorModelEnvironment } from "./config/gen/CalculatorModelEnvironment.js";

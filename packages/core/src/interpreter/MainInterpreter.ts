@@ -1,14 +1,14 @@
-import { InterpreterContext } from "./InterpreterContext";
-import { InterpreterError } from "./InterpreterException";
-import { InterpreterTracer } from "./InterpreterTracer";
+import { InterpreterContext } from "./InterpreterContext.js";
+import { InterpreterError } from "./InterpreterException.js";
+import { InterpreterTracer } from "./InterpreterTracer.js";
 import {
     ConceptFunction,
     EvaluateFunction,
     IMainInterpreter,
     InitFunction,
     OwningPropertyFunction,
-} from "./IMainInterpreter";
-import { isRtError, RtObject } from "./runtime";
+} from "./IMainInterpreter.js";
+import { isRtError, RtObject } from "./runtime/index.js";
 
 /**
  * The main interpreter class, usually hidden by a facade specific for a project.

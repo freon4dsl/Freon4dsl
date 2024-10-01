@@ -1,8 +1,9 @@
-import { FreNode } from "../../ast";
-import { FreUtils } from "../../util";
-import { BehaviorExecutionResult, FreCaret, FreKey } from "../util";
-import { BoxFactory, FreEditor } from "../internal";
-import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal";
+import { autorun } from "mobx"
+import { FreNode } from "../../ast/index.js";
+import { FreUtils } from "../../util/index.js";
+import { BehaviorExecutionResult, FreCaret, FreKey } from "../util/index.js";
+import { BoxFactory, FreEditor } from "../internal.js";
+import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal.js";
 
 export abstract class AbstractChoiceBox extends Box {
     kind: string = "AbstractChoiceBox";
@@ -44,9 +45,30 @@ export abstract class AbstractChoiceBox extends Box {
         return this._textBox;
     }
 
-    getSelectedOption(): SelectOption | null {
+    _getSelectedOption(): SelectOption | null {
         return null;
     }
+
+    set getSelectedOption( value: () => SelectOption | null) {
+        this._getSelectedOption = value
+        this.isDirty()
+        autorun( () => {
+            this._getSelectedOption()
+            this.isDirty()
+        })
+    }
+    get getSelectedOption(): () => SelectOption | null {
+        return this._getSelectedOption
+    }
+
+    // protected setSelectedOptionExec(value: () => SelectOption | null): SelectOption | null {
+    //     this._getSelectedOption = value
+    //     this.isDirty()
+    //     autorun( () => {
+    //         this._getSelectedOption()
+    //         this.isDirty()
+    //     })
+    // }
 
     // @ts-ignore
     // parameter is present to support subclasses

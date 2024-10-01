@@ -47,9 +47,9 @@ export class NonOptionalsCheckerTemplate {
 
         return `
         import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.done.map((cls) => Names.classifier(cls)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}";
-        import { ${checkerInterfaceName} } from "./${Names.validator(language)}";
+        import { ${this.done.map((cls) => Names.classifier(cls)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
+        import { ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
         
         ${result}`;
     }

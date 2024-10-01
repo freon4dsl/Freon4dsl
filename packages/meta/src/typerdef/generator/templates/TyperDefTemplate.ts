@@ -5,8 +5,8 @@ export class TyperDefTemplate {
     generateTyperDef(language: FreMetaLanguage, relativePath: string): string {
         return `import { FreCompositeTyper } from "${FREON_CORE}";
 
-            import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}";
-            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}";
+            import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}.js";
+            import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
 
             /**
              * Adds all known type-providers the root typer.

@@ -8,8 +8,8 @@ export class LanguageTemplate {
             import { ${Names.FreLanguage}, FreLanguageModel, FreLanguageModelUnit, FreLanguageProperty, FreLanguageConcept, FreLanguageInterface, ${Names.FreNodeReference} } from "${FREON_CORE}";
 
             // Import as MyLanguage to avoid naming conflicts in generated constructors
-            import * as MyLanguage from "./internal";
-            import { ${Names.stdlib(language)} } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}";
+            import * as MyLanguage from "./internal.js";
+            import { ${Names.stdlib(language)} } from "${relativePath}${STDLIB_GEN_FOLDER}/${Names.stdlib(language)}.js";
 
             /**
              * Creates an in-memory representation of structure of the language metamodel, used in e.g. the (de)serializer.

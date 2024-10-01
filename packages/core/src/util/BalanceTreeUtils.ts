@@ -1,9 +1,10 @@
 import { action, makeObservable } from "mobx";
-import { FreUtils } from "./internal";
-import { Box, FreEditor } from "../editor";
-import { FreBinaryExpression, FreNode, FreExpressionNode } from "../ast";
-import { isFreBinaryExpression, isFreExpression } from "../ast-utils";
-import { FreLogger } from "../logging";
+import { AST } from "../change-manager/index.js";
+import { FreUtils } from "./internal.js";
+import { Box, FreEditor } from "../editor/index.js";
+import { FreBinaryExpression, FreNode, FreExpressionNode } from "../ast/index.js";
+import { isFreBinaryExpression, isFreExpression } from "../ast-utils/index.js";
+import { FreLogger } from "../logging/index.js";
 
 // reserved role names for expressions, use with care.
 // TODO sort out the following const, they seems to be overlapping
@@ -115,6 +116,7 @@ class BTree {
     }
 
     insertBinaryExpression(newBinExp: FreBinaryExpression, box: Box, editor: FreEditor): Selected | null {
+        FreUtils.CHECK(AST.isInChange, "Method `insertBinaryExpression` should be called inside AST.change()")
         LOGGER.log("insertBinaryExpression for " + box.node);
         let selectedElement: Selected | null = null;
         FreUtils.CHECK(
@@ -164,6 +166,7 @@ class BTree {
      * Works when `exp` has just been added to the tree.
      */
     balanceTree(binaryExp: FreBinaryExpression, editor: FreEditor) {
+        FreUtils.CHECK(AST.isInChange, "Method `insertBinaryExpression` should be called inside AstChange()")
         const ownerDescriptor = binaryExp.freOwnerDescriptor();
         const left = binaryExp.freLeft();
         if (isFreBinaryExpression(left)) {

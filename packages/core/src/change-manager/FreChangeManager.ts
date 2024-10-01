@@ -1,8 +1,8 @@
-import { DecoratedModelElement, FreNode } from "../ast";
-import { FreDelta, FrePartListDelta, FrePartDelta, FrePrimDelta, FrePrimListDelta } from "./FreDelta";
-import { FreLogger } from "../logging";
-import { PrimType } from "../language";
-import { modelUnit } from "../ast-utils";
+import { DecoratedModelElement, FreNode } from "../ast/index.js";
+import { FreDelta, FrePartListDelta, FrePartDelta, FrePrimDelta, FrePrimListDelta } from "./FreDelta.js";
+import { FreLogger } from "../logging/index.js";
+import { PrimType } from "../language/index.js";
+import { modelUnit } from "../ast-utils/index.js";
 
 export type callback = (delta: FreDelta) => void;
 
