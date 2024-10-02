@@ -1,7 +1,7 @@
 import { FreonLayout, WebappConfigurator } from "@freon4dsl/webapp-lib";
-import {FreLogger, ServerCommunication} from "@freon4dsl/core";
+import { ServerCommunication } from "@freon4dsl/core";
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
-import { setCustomComponents } from "@freon4dsl/core-svelte";
+// import { setCustomComponents } from "@freon4dsl/core-svelte";
 // For DocuProject:
 // import ShowAnimatedGif from "./customComponents/forDocuProject/ShowAnimatedGif.svelte";
 // import SMUI_Card_Component from "./customComponents/forDocuProject/SMUI_Card_Component.svelte";
@@ -78,9 +78,5 @@ WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getI
 const app = new FreonLayout({
     target: document.body,
 });
-
-// FreLogger.unmute("TextComponent")
-// FreLogger.unmute("TextDropdownComponent")
-FreLogger.unmute("BehaviorUtils")
 
 export default app;
