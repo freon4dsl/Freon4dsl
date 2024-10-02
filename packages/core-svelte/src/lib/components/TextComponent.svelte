@@ -210,8 +210,6 @@
 				case ARROW_UP:
 				case ENTER:
 				case TAB: {
-					// todo Maybe this option could be completely handled by TextDropDown and Freon,
-					// this would avoid a second call to endEditing when the selection is changed.
 					LOGGER.log("Arrow up, arrow down, enter, or tab pressed: " + event.key);
 					if (!partOfDropdown && isEditing) {
 						endEditing(); // do not switch selection, this will be done by FreonComponent

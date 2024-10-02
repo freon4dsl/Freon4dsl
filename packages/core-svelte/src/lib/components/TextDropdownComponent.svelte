@@ -42,7 +42,6 @@
     let allOptions: SelectOption[];             // all options as calculated by the editor
     let textComponent;
 
-    // changed
     let setText = (value: string) => {
         LOGGER.log(`${box.id}: setting text to '${value}'`)
         if (value === null || value === undefined) {
@@ -100,9 +99,7 @@
         LOGGER.log(`${box.id}: afterUpdate`)
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
-        // changed
         box.triggerKeyPressEvent = triggerKeyPressEvent
-        // end changed
     });
 
     onMount(() => {
@@ -176,7 +173,6 @@
         });
         filteredOptions = result;
     }
-    // end changed
     function selectLastOption() {
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
@@ -246,7 +242,7 @@
                     case ENTER: { // user wants current selection
                         // find the chosen option
                         let chosenOption: SelectOption = null;
-                        if (filteredOptions.length <= 1) { // changed: was === 1
+                        if (filteredOptions.length <= 1) {
                             if (filteredOptions.length !== 0) { // if there is just one option left, choose that one
                                 chosenOption = filteredOptions[0];
                             } else { // there are no valid options left
@@ -330,7 +326,6 @@
                     return o?.label?.startsWith(text.substring(0, event.detail.caret))
                 });
             }
-            // end changed
         } else {
             filteredOptions = allOptions.filter(o => o?.label?.startsWith(text.substring(0, 0)));
         }
@@ -370,7 +365,6 @@
             }
             return;
         }
-        // end changed
         if (dropdownShown) {
             allOptions = getOptions();
             let validOption = allOptions.find(o => o.label === text);
@@ -413,7 +407,6 @@
             event.preventDefault();
         }
     };
-    // end changed
 
     refresh();
 </script>
