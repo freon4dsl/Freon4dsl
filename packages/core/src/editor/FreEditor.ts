@@ -194,6 +194,14 @@ export class FreEditor {
         }
     }
 
+    /**
+     * Returns the box in the current projection that projects 'node', or when provided, the property with name
+     * 'propertyName', and index 'propertyIndex'. If 'node', or its property, is not projected, then one of its
+     * parents, the one that is projected, is returned.
+     * @param node
+     * @param propertyName
+     * @param propertyIndex
+     */
     findBoxForNode(node: FreNode, propertyName?: string, propertyIndex?: number): Box | undefined {
         LOGGER.log(
             `findBoxForNode ${node?.freLanguageConcept()} with id ${node?.freId()}, property: ${propertyName}[${propertyIndex}]`

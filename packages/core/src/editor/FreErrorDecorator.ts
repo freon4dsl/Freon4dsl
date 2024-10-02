@@ -1,9 +1,9 @@
-import {FreError} from "../validator";
-import {FreNode} from "../ast";
-import {isNullOrUndefined} from "../util";
-import {Box, ElementBox} from "./boxes";
-import {FreEditor} from "./FreEditor";
-import {FreLogger} from "../logging";
+import {FreError} from "../validator/index.js";
+import {FreNode} from "../ast/index.js";
+import {isNullOrUndefined} from "../util/index.js";
+import {Box, ElementBox} from "./boxes/index.js";
+import {FreEditor} from "./FreEditor.js";
+import {FreLogger} from "../logging/index.js";
 
 const LOGGER: FreLogger = new FreLogger("FreErrorDecorator").mute();
 
@@ -22,6 +22,8 @@ export class FreErrorDecorator {
      */
     setErrors(list: FreError[]) {
         // remove all old errors
+        // todo this method of removing old errors should be changed when nodes are validated
+        //  upon every change
         this.previousList.forEach(err => {
             if (Array.isArray(err.reportedOn)) {
                 err.reportedOn.forEach((x, index) => {

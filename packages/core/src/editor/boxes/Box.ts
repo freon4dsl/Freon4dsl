@@ -11,18 +11,29 @@ export abstract class Box {
     $id: string;
     kind: string = "";
     role: string = "";
-    node: FreNode = null; // the model element to which this box is coupled
-    propertyName: string; // the name of the property, if any, in 'element' which this box projects
-    propertyIndex: number; // the index within the property, if appropriate
-    // todo make sure propertyName and index are correctly set
-
-    cssClass: string = ""; // Custom CSS class that will be added to the component rendering this box
-    cssStyle: string = ""; // Custom CSS Style class that will be added as inline style to the component rendering this box
-    selectable: boolean = true; // Can this box be selected in the editor?
-    // todo because most boxes are not selectable the default could be set to false
-    isVisible: boolean = true; // Is this box currently not shown in the editor?
+    // The model element to which this box is coupled
+    node: FreNode = null;
+    // The name of the property, if any, in the 'node' which this box projects
+    propertyName: string;
+    // The index within the property, if appropriate
+    propertyIndex: number;
+    // Custom CSS class that will be added to the component rendering this box
+    cssClass: string = "";
+    // Custom CSS Style class that will be added as inline style to the component rendering this box
+    cssStyle: string = "";
+    // Can this box be selected in the editor?
+    selectable: boolean = true; // todo because most boxes are not selectable the default could be set to false
+    // Is this box currently not shown in the editor?
+    isVisible: boolean = true;
     parent: Box = null;
+
+    // Indication whether the 'node' which this box projects has any validation errors. Adds a CSS class
+    // to the component rendering this box.
     protected _hasError: boolean = false;
+    // Indication whether this box holds any validation messages. These messages, although they concern
+    // the 'node' which this box projects, may be gathered into one of the parent boxes.
+    protected _hasErrorMessages: boolean = false;
+    // The list of errorMessages that are to be shown by this box.
     protected _errorMessages: string[] = [];
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
