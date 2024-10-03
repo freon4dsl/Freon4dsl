@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require("../server/server-starter");
+import "../server/server-starter.js"

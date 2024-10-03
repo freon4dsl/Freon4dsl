@@ -1,4 +1,4 @@
-<svg width="100%" height="100%" viewBox="0 0 774 798" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;">
+<svg width="100%" height="100%" viewBox="0 0 774 798" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;">
     <g transform="matrix(1,0,0,1,-151.785,-28.9384)">
         <g>
             <g transform="matrix(1,0,0,1,0,31)">
@@ -13,19 +13,19 @@
             <g id="hexagon" transform="matrix(1,0,0,1,384.615,295.615)">
                 <path d="M76.923,0L230.769,0L307.692,132.308L230.769,264.615L76.923,264.615L0,132.308" style="fill:rgb(169,169,169);fill-rule:nonzero;stroke:rgb(169,169,169);stroke-width:1px;stroke-linecap:butt;"/>
             </g>
-            <g id="hexagon1" serif:id="hexagon" transform="matrix(1,0,0,1,615.385,163.308)">
+            <g id="hexagon1" transform="matrix(1,0,0,1,615.385,163.308)">
                 <path d="M76.923,0L230.769,0L307.692,132.308L230.769,264.615L76.923,264.615L0,132.308" style="fill:rgb(255,0,0);fill-rule:nonzero;stroke:rgb(255,0,0);stroke-width:1px;stroke-linecap:butt;"/>
             </g>
-            <g id="hexagon2" serif:id="hexagon" transform="matrix(1,0,0,1,153.846,163.308)">
+            <g id="hexagon2" transform="matrix(1,0,0,1,153.846,163.308)">
                 <path d="M76.923,0L230.769,0L307.692,132.308L230.769,264.615L76.923,264.615L0,132.308" style="fill:rgb(128,0,128);fill-rule:nonzero;stroke:rgb(128,0,128);stroke-width:1px;stroke-linecap:butt;"/>
             </g>
-            <g id="hexagon3" serif:id="hexagon" transform="matrix(1,0,0,1,384.615,31)">
+            <g id="hexagon3" transform="matrix(1,0,0,1,384.615,31)">
                 <path d="M76.923,0L230.769,0L307.692,132.308L230.769,264.615L76.923,264.615L0,132.308" style="fill:rgb(0,0,255);fill-rule:nonzero;stroke:rgb(0,0,255);stroke-width:1px;stroke-linecap:butt;"/>
             </g>
-            <g id="hexagon4" serif:id="hexagon" transform="matrix(1,0,0,1,384.615,560.231)">
+            <g id="hexagon4" transform="matrix(1,0,0,1,384.615,560.231)">
                 <path d="M76.923,0L230.769,0L307.692,132.308L230.769,264.615L76.923,264.615L0,132.308" style="fill:rgb(255,210,2);fill-rule:nonzero;stroke:rgb(255,210,2);stroke-width:1px;stroke-linecap:butt;"/>
             </g>
-            <g id="hexagon5" serif:id="hexagon" transform="matrix(1,0,0,1,615.385,427.923)">
+            <g id="hexagon5" transform="matrix(1,0,0,1,615.385,427.923)">
                 <path d="M76.923,0L230.769,0L307.692,132.308L230.769,264.615L76.923,264.615L0,132.308" style="fill:rgb(0,128,0);fill-rule:nonzero;stroke:rgb(0,128,0);stroke-width:1px;stroke-linecap:butt;"/>
             </g>
             <g transform="matrix(1,0,0,1,0,31)">
