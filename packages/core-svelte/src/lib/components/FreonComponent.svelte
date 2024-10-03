@@ -135,7 +135,23 @@
         }, 400); // Might use another value for the delay, but this seems ok.
     }
 
+    function setViewportSizes(elem: Element) {
+        // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
+        // A: I have no idea why.
+        if (!!elem) {
+            let rect = elem.getBoundingClientRect();
+            if (!!elem.parentElement) {
+                let parentRect = elem.parentElement.getBoundingClientRect();
+                $viewport.setSizes(rect.height, rect.width, parentRect.top, parentRect.left);
+            } else {
+                $viewport.setSizes(rect.height, rect.width, 0, 0);
+            }
+        }
+    }
+
     onMount(() => {
+        setViewportSizes(element);
+
         // We keep track of the size of the editor component, to be able to position any context menu correctly.
         // For this we use a ResizeObserver.
 
@@ -145,13 +161,8 @@
             $contextMenuVisible = false;
             // Use a timeOut to improve performance, otherwise every slight change will activate this function.
             setTimeout(() => {
-                // We're only watching one element, this is the first of the entries.
-                const entry = entries.at(0);
-                // Get the element's size.
-                // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
-                // A: I have no idea why.
-                let rect = entry.target.getBoundingClientRect();
-                $viewport.setSizes(rect.height, rect.width, rect.top, rect.left);
+                // We're only watching one element, this is the first of the entries. Get it's size.
+                setViewportSizes(entries.at(0).target);
             }, 400); // Might use another value for the delay, but this seems ok.
         });
 
@@ -167,6 +178,7 @@
     afterUpdate( () => {
         editor.refreshComponentSelection = refreshSelection
         editor.refreshComponentRootBox= refreshRootBox;
+        setViewportSizes(element);
     } );
 
     const refreshSelection = async  (why?: string) => {
@@ -218,9 +230,12 @@
      id="{id}"
      role="group"
 >
+    <div class="gutter"></div>
+    <div class="editor-component">
     <RenderComponent editor={editor}
                      box={rootBox}
     />
+    </div>
 </div>
 <!-- Here the only instance of ContextMenu is defined -->
 <!-- TODO make some default items for the context menu -->

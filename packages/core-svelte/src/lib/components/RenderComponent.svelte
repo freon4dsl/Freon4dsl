@@ -63,7 +63,6 @@
     import { selectedBoxes, componentId, setBoxSizes, findCustomComponent} from "$lib/index.js";
 
     import {afterUpdate} from "svelte";
-    import ErrorTooltip from "$lib/components/ErrorTooltip.svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 

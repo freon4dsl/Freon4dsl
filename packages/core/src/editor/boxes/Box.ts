@@ -30,9 +30,6 @@ export abstract class Box {
     // Indication whether the 'node' which this box projects has any validation errors. Adds a CSS class
     // to the component rendering this box.
     protected _hasError: boolean = false;
-    // Indication whether this box holds any validation messages. These messages, although they concern
-    // the 'node' which this box projects, may be gathered into one of the parent boxes.
-    protected _hasErrorMessages: boolean = false;
     // The list of errorMessages that are to be shown by this box.
     protected _errorMessages: string[] = [];
 
@@ -76,6 +73,14 @@ export abstract class Box {
 
     resetErrorMessages() {
         this._errorMessages = [];
+    }
+
+    gatherErrMessages(): string[] {
+        let result: string[] = this._errorMessages;
+        this.children.forEach(ch => {
+            result.push(...ch.gatherErrMessages())
+        })
+        return result;
     }
 
     // Never set these manually, these properties are set after rendering to get the

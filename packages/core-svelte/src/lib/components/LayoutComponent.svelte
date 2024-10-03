@@ -16,7 +16,7 @@
         LayoutBox
     } from "@freon4dsl/core";
     import { componentId } from "$lib/index.js";
-    import ErrorTooltip from "$lib/components/ErrorTooltip.svelte";
+    import ErrorMarker from "$lib/components/ErrorMarker.svelte";
 
     // Parameters
     export let box: LayoutBox;
@@ -73,6 +73,9 @@
     }
 </script>
 
+{#if errMess.length > 0}
+    <ErrorMarker element={element} content={errMess}/>
+{/if}
 <span class="layout-component {errorCls}"
       id="{id}"
       class:layout-component-horizontal="{isHorizontal}"
@@ -80,16 +83,6 @@
       tabIndex={0}
       bind:this={element}
 >
-    {#if hasErr}
-        <ErrorTooltip content={errMess} hasErr={hasErr}>
-            <!-- We add a non breaking space here to ensure that the element has a height and a width. -->
-            <!-- This trick does not work in all browsers, so the styling should be done carefully. -->
-            <!-- Often setting padding to a positive, non-zero value makes the element visible. -->
-            <span style=" position: relative;"> <!-- to make sure that any image is scrolled along with the other content -->
-            <span class="error-marker">&nbsp</span>
-                </span>
-        </ErrorTooltip>
-    {/if}
     {#if isHorizontal }
         {#each children as child (child.id)}
             <RenderComponent box={child} editor={editor}/>

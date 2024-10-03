@@ -20,10 +20,11 @@
     let style: string = `margin-left: ${box?.indent * indentWidth}px;`;
     let id: string = !!box ? componentId(box) : 'indent-for-unknown-box';
     let child: Box;
-
+ 
     onMount( () => {
         box.refreshComponent = refresh;
     });
+
     afterUpdate( () => {
         box.refreshComponent = refresh;
     })
@@ -33,6 +34,7 @@
         child = box?.child;
         style = `margin-left: ${box?.indent * indentWidth}px;`
     };
+
     $: { // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
     }

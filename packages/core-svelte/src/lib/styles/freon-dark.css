@@ -90,30 +90,9 @@
     border: 1px solid #ddd;
     box-shadow: 1px 1px 1px #ddd;
     background: darkgrey;
-    border-radius: 4px;
-    padding: 4px;
-    position: absolute;
-}
-.error-tooltip-list-content {
-    padding-left: 20px;
-}
-.error-tooltip-single-content {
-
 }
 .error-marker {
-    display: block;
-    /* padding seems to be the only way to make the element visible without content*/
-    /* padding-left is width of the image plus some extra */
-    padding: 2px 2px 2px 24px;
-}
-.error-marker:before{
-    content: '';
-    background: url('./img/icons8-warning-26.png');
-    background-size: cover;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    margin-left: -18px; /* value relates to padding-left in .error-marker, but is negative number */
+    background_color: #FF4C4C;
 }
 
 .button-component-ripple {

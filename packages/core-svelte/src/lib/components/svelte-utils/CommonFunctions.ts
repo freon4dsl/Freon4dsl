@@ -24,6 +24,27 @@ export function focusAndScrollIntoView(element: HTMLElement) {
     }
 }
 
+/**
+ * This calculates the position of the context- or sub-menu, either on x-axis or y-axis
+ * @param viewportSize
+ * @param contentSize
+ * @param mousePosition
+ */
+export function calculatePos(viewportSize: number, contentSize: number, mousePosition: number): number {
+    let result: number;
+    // see if the menu will fit in the editor view, if not: position it left/up, not right/down of the mouse click
+    if (viewportSize - mousePosition < contentSize) {
+        result = mousePosition - contentSize;
+    } else {
+        result = mousePosition;
+    }
+    // if the result should be outside the editor view, then position it on the leftmost/uppermost point
+    if (result < 0) {
+        result = 0;
+    }
+    return result;
+}
+
 export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: FreEditor) {
     const cmd: FreCommand = FreEditorUtil.findKeyboardShortcutCommand(toFreKey(event), box, editor);
     if (cmd !== FRE_NULL_COMMAND) {

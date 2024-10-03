@@ -2,14 +2,6 @@
 
 // linear-progress is included for the progress indicator in the EditorPart component
 @use '@material/linear-progress/index' as linear-progress;
-
-// example of adding icons to a button
-
-// Don't forget to include one of these in webapp-starter/public/index.html:
-//<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/font-awesome.min.css" rel="stylesheet" >
-//<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-// , or import them here:
-//@import 'material-icons/iconfont/material-icons.scss';
 @use '@material/typography/mdc-typography';
 
 html,
@@ -78,34 +70,4 @@ body {
   border-radius: 8px;
   background: blanchedalmond;
   padding: 2px;
-}
-
-// styles for errors
-.error-tooltip {
-  border: 1px solid dimgrey;
-  box-shadow: 1px 1px 1px dimgrey;
-  background: antiquewhite;
-  border-radius: 4px;
-  padding: 4px;
-}
-.error-tooltip-list-content {
-  padding-left: 20px;
-}
-.error-tooltip-single-content {
-}
-.error-marker {
-  display: block;
-  /* padding seems to be the only way to make the element visible without content*/
-  /* padding-left is width of the image plus some extra */
-  padding: 2px 2px 2px 24px;
-  background_color: red;
-}
-.error-marker:before{
-  content: '';
-  background: url('./img/icons8-warning-26.png');
-  background-size: cover;
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  margin-left: -18px; /* value relates to padding-left in .error-marker, but is negative number */
 }

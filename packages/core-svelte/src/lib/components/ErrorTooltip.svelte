@@ -1,33 +1,40 @@
-<!-- Copied and adapted from https://svelte.dev/repl/hello-world?version=4.2.19 -->
+<!-- Copied and adapted from https://svelte.dev/repl/dd6754a2ad0547c5b1c1ea37c0293fef?version=4.2.19 -->
 
 <script lang="ts">
     import { viewport } from "./svelte-utils/EditorViewportStore.js";
 
     export let content: string[] = [];
     export let hasErr: boolean = false;
+    export let parentTop: number = 0;
+    export let parentLeft: number = 0;
     let isHovered: boolean = false;
-    let x: number;
-    let y: number;
+    // position of error message(s)
+    let top = 0;
+    let left = 0;
 
-    function mouseOver(event: MouseEvent) {
+    async function mouseOver(event: MouseEvent) {
         if (hasErr) {
             isHovered = true;
-            // get the position of the mouse relative to the editor view
-            // console.log(`Postion: event.pageY ${event.pageY}, event.pageX ${event.pageX}, viewport.top ${$viewport.top}, viewport.left ${$viewport.left}`)
-            x = event.pageX - $viewport.left + 5;
-            y = event.pageY - $viewport.top + 5;
+            // Get the position of the mouse relative to the editor view and - if applicable - to its ErrorMarker parent.
+            // Because an ErrorMarker also has its 'position' set to something other than 'static'.
+            left = event.pageX - $viewport.left - parentLeft + 5;
+            top = event.pageY - $viewport.top - parentTop + 5;
+            console.log(`ErrorTooltip: left-top [${left}, ${top}] event [${event.pageX}, ${event.pageY}] parent [${parentLeft}, ${parentTop}] viewport [${$viewport.left}, ${$viewport.top}]`)
         }
     }
     function mouseMove(event: MouseEvent) {
-        if (hasErr) {
-            // get the position of the mouse relative to the editor view
-            x = event.pageX - $viewport.left + 5;
-            y = event.pageY - $viewport.top + 5;
+        if (hasErr && isHovered) {
+            // Get the position of the mouse relative to the editor view and - if applicable - to its ErrorMarker parent.
+            // Because an ErrorMarker also has its 'position' set to something other than 'static'.
+            left = event.pageX - $viewport.left - parentLeft + 5;
+            top = event.pageY - $viewport.top - parentTop + 5;
         }
     }
     function mouseLeave() {
         isHovered = false;
     }
+
+    // Empty function to avoid error: "Svelte: A11y: on:mouseover must be accompanied by on:focus"
     function onFocus() {
     }
 </script>
@@ -36,12 +43,16 @@
      on:mouseover={mouseOver}
      on:mouseleave={mouseLeave}
      on:mousemove={mouseMove}
-     on:focus={onFocus}>
+     on:focus={onFocus}
+     >
     <slot />
 </span>
 
 {#if isHovered}
-    <div style="top: {y}px; left: {x}px; z-index: 95; position: absolute;" class="error-tooltip">
+    <div
+         style="top: {top}px; left: {left}px;"
+         class="error-tooltip"
+    >
         {#if content.length > 1}
             <ol class="error-tooltip-list-content">
                 {#each content as item}
