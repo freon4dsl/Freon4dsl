@@ -62,10 +62,6 @@
             errMess = [];
             hasErr = false;
         }
-        // todo remove this if-stat
-        if (errorCls.length > 0) {
-            console.log("REFRESH TextComponent " + box?.node?.freLanguageConcept() + ", err: " + errorCls);
-        }
     };
 
     $: { // Evaluated and re-evaluated when the box changes.

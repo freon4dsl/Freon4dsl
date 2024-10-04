@@ -31,8 +31,8 @@
 }
 
 .layout-component-horizontal-error {
-    border-left: 2px solid red;
-    height: 100%;
+    border-bottom: double thin red;
+    padding-bottom: 1px;
 }
 
 .layout-component-vertical {

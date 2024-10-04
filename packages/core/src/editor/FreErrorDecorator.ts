@@ -7,6 +7,9 @@ import {FreLogger} from "../logging/index.js";
 
 const LOGGER: FreLogger = new FreLogger("FreErrorDecorator").mute();
 
+// Margin, measure in number of pixels, used to identify whether boxes are on the same 'line'.
+const LINE_HEIGHT_MARGIN: number = 6;
+
 export class FreErrorDecorator {
     private myEditor: FreEditor;
     private previousList: FreError[] =[];
@@ -18,12 +21,12 @@ export class FreErrorDecorator {
     /**
      * This method makes sure that for all boxes that display nodes that are in the error list,
      * the hasError setter is being called.
-     * @param list
+     * @param errors
      */
-    setErrors(list: FreError[]) {
-        // remove all old errors
+    setErrors(errors: FreError[]) {
         // todo this method of removing old errors should be changed when nodes are validated
         //  upon every change
+        // Remove all old errors
         this.previousList.forEach(err => {
             if (Array.isArray(err.reportedOn)) {
                 err.reportedOn.forEach((x, index) => {
@@ -33,24 +36,61 @@ export class FreErrorDecorator {
                 this.setErrorForNode(false, err.reportedOn, '', err.propertyName);
             }
         });
-        // set the new errors
-        list.forEach(err => {
+        // Remember the errors
+        this.previousList = errors;
+        // end of to be done
+
+        // Set the new errors
+        let erroneousBoxes: Box[] = [];
+        // First set the errors in the box where they belong
+        errors.forEach(err => {
             if (Array.isArray(err.reportedOn)) {
                 err.reportedOn.forEach((x, index) => {
-                    this.setErrorForNode(true, x, err.message, err.propertyName, index);
+                    erroneousBoxes.push(...this.setErrorForNode(true, x, err.message, err.propertyName, index));
                 })
             } else {
-                this.setErrorForNode(true, err.reportedOn, err.message, err.propertyName);
+                erroneousBoxes.push(...this.setErrorForNode(true, err.reportedOn, err.message, err.propertyName));
             }
         });
-        // remember the errors
-        this.previousList = list;
+        // Sort the erroneous boxes based on their y-coordinate, because we want to gather all messages on the same 'line'
+        erroneousBoxes.sort((a, b: Box) => (a.actualY > b.actualY) ? 1 : -1);
+        // Group the boxes
+        let lines: Box[][] = [];
+        let lineIndex: number = 0;
+        let oldIndex: number = 0;
+        for( let i: number = 0; i < erroneousBoxes.length; i++ ) {
+            if (erroneousBoxes[i].actualY + LINE_HEIGHT_MARGIN < erroneousBoxes[i+1].actualY ) {
+                lines[lineIndex] = erroneousBoxes.slice(oldIndex, i);
+                oldIndex = i;
+                lineIndex ++;
+            }
+        }
+        console.log(`Found lines: 
+            ${lines.map((line: Box[]) => `[${line.map(box => `${box.id} ${box.kind} ${box.errorMessages}`).join(', ')}]\n`
+        )}`)
+        // For each 'line' get the outermost box, i.e. the one of the left, and put all error messages
+        // on the line in that box. Remove the error messages from the other boxes, but do not remove the 'hasError' marker.
+        // The latter enables the styling of erroneous boxes, regardless of the presence of the error message.
+        lines.forEach(line => {
+            // Sort the boxes in a single line based on their x-coordinate.
+            line.sort((a, b: Box) => (a.actualX > b.actualX) ? 1 : -1);
+            // Get the left-most box
+            let first = line[0];
+            for( let i: number = 0; i < line.length; i++ ) {
+                first.addErrorMessage(line[i].errorMessages)
+                line[i].resetErrorMessages();
+            }
+        })
+        console.log(`Found messages: 
+            ${lines.map((line: Box[]) => `[${line.map(box => `${box.id} ${box.kind}  ${box.errorMessages}`).join(', ')}]\n`
+        )}`)
     }
 
-    private setErrorForNode(value: boolean, node: FreNode, errorMessage: string, propertyName?: string, propertyIndex?: number) {
+    private setErrorForNode(value: boolean, node: FreNode, errorMessage: string, propertyName?: string, propertyIndex?: number): Box[] {
         LOGGER.log(
             `setErrorOnElement ${node?.freLanguageConcept()} with id ${node?.freId()}, property: [${propertyName}, ${propertyIndex}]`
         );
+        let result: Box[] = [];
         let box: Box = this.myEditor.findBoxForNode(node, propertyName, propertyIndex);
         if (!isNullOrUndefined(box)) {
             if (box instanceof ElementBox) {
@@ -64,6 +104,8 @@ export class FreErrorDecorator {
             } else {
                 box.resetErrorMessages();
             }
+            result.push(box);
         }
+        return result;
     }
 }

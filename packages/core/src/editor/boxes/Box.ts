@@ -67,8 +67,12 @@ export abstract class Box {
         return this._errorMessages;
     }
 
-    addErrorMessage(val: string) {
-        this._errorMessages.push(val);
+    addErrorMessage(val: string | string[]) {
+        if (Array.isArray(val)) {
+            this._errorMessages.push(...val);
+        } else {
+            this._errorMessages.push(val);
+        }
     }
 
     resetErrorMessages() {

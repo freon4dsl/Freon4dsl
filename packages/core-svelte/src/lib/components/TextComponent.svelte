@@ -290,9 +290,6 @@
             errMess = [];
             hasErr = false;
         }
-        if (errorCls.length > 0) {
-            console.log("REFRESH TextComponent " + box?.node?.freLanguageConcept() + ", err: " + errorCls);
-        }
 		boxType = (box.parent instanceof ActionBox ? "action" : (box.parent instanceof SelectBox ? "select" : "text"));
 		setInputWidth();
 	}
