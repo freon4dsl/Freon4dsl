@@ -1,5 +1,5 @@
 import { FreonLayout, WebappConfigurator } from "@freon4dsl/webapp-lib";
-import { ServerCommunication } from "@freon4dsl/core";
+import { FreLogger, ServerCommunication } from "@freon4dsl/core"
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
 // import { setCustomComponents } from "@freon4dsl/core-svelte";
 // For DocuProject:

@@ -1,3 +1,4 @@
+import { AST } from "../../change-manager/index.js";
 import { Box } from "./internal.js";
 import { FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
@@ -26,7 +27,9 @@ export class BooleanControlBox extends Box {
      */
     setBoolean(newValue: boolean): void {
         LOGGER.log("setBoolean to " + newValue);
-        this.$setBoolean(newValue);
+        AST.changeNamed("BooleanControlBox.setBoolean", () => {
+            this.$setBoolean(newValue);
+        })
         this.isDirty();
     }
 

@@ -1,3 +1,4 @@
+import { AST } from "../../../change-manager/index.js";
 import {
     Box,
     BoxFactory,
@@ -16,7 +17,6 @@ import { BoxUtil, FreListInfo } from "../BoxUtil.js";
 import { UtilCommon } from "./UtilCommon.js";
 import { FreLanguage } from "../../../language/index.js";
 import { FreEditor } from "../../FreEditor.js";
-import { runInAction } from "mobx";
 import { FreUtils } from "../../../util/index.js";
 
 export class UtilRefHelpers {
@@ -70,11 +70,11 @@ export class UtilRefHelpers {
                 // L.log("==> SET selected option for property " + propertyName + " of " + node["name"] + " to " + option?.label);
                 if (!!option) {
                     // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + option.label);
-                    runInAction(() => {
+                    AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to ${option.label}`, () => {
                         setFunc(option.label);
                     });
                 } else {
-                    runInAction(() => {
+                    AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to null`, () => {
                         node[propertyName] = null;
                     });
                 }
