@@ -1,3 +1,4 @@
+import { AST } from "../../../change-manager/index.js";
 import { FreLogger } from "../../../logging/index.js";
 import {
     Box,
@@ -17,7 +18,6 @@ import { BoxUtil, FreListInfo } from "../BoxUtil.js";
 import { UtilCommon } from "./UtilCommon.js";
 import { FreLanguage } from "../../../language/index.js";
 import { FreEditor } from "../../FreEditor.js";
-import { runInAction } from "mobx";
 import { FreUtils, isNullOrUndefined } from "../../../util/index.js";
 
 const LOGGER = new FreLogger("UtilRefHelpers")
@@ -71,11 +71,12 @@ export class UtilRefHelpers {
             (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
                 LOGGER.log("referenceBox ==> SET selected option for property " + propertyName + " of " + (isNullOrUndefined(node)? "NULL" : node["name"]) + " to " + option?.label);
                 if (!!option) {
-                    runInAction(() => {
+                    // console.log("========> set property [" + propertyName + "] of " + element["name"] + " := " + option.label);
+                    AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to ${option.label}`, () => {
                         setFunc(option.label);
                     });
                 } else {
-                    runInAction(() => {
+                    AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to null`, () => {
                         node[propertyName] = null;
                     });
                 }

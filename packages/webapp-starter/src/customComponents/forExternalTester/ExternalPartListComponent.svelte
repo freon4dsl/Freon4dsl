@@ -1,9 +1,8 @@
 <script lang="ts">
     import {afterUpdate, onMount} from "svelte";
-    import {ExternalPartListBox, FreEditor, FreNode} from "@freon4dsl/core";
+    import { AST, ExternalPartListBox, FreEditor, FreNode } from "@freon4dsl/core";
     import {BB} from "@freon4dsl/samples-external-tester";
     import {RenderComponent} from "@freon4dsl/core-svelte";
-    import {runInAction} from "mobx";
     export let box: ExternalPartListBox;
     export let editor: FreEditor;
 
@@ -23,9 +22,9 @@
 
     const addChild = () => {
         let newBB: BB = BB.create({name: "new element", numberProp: 100, booleanProp: true});
-        // Note that you need to put any changes to the actual model in a 'runInAction',
+        // Note that you need to put any changes to the actual model in a 'AST.change or AST.changeNamed',
         // because all elements in the model are reactive using mobx.
-        runInAction(() => {
+        AST.changeNamed("ExternalPartListComponent.addChild", () => {
             value.push(newBB);
         });
     }

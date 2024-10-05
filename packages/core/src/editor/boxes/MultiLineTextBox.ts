@@ -1,9 +1,10 @@
 import { FreNode } from "../../ast/index.js";
+import { AST } from "../../change-manager/index.js";
 import { FreUtils } from "../../util/index.js";
 import { Box } from "./Box.js";
 import { FreLogger } from "../../logging/index.js";
 
-const LOGGER: FreLogger = new FreLogger("MultiLineTextBox");
+const LOGGER: FreLogger = new FreLogger("MultiLineTextBox").mute();
 
 export class MultiLineTextBox extends Box {
     kind: string = "MultiLineTextBox";
@@ -17,7 +18,9 @@ export class MultiLineTextBox extends Box {
      */
     setText(newValue: string): void {
         LOGGER.log("setText to " + newValue);
-        this.$setText(newValue);
+        AST.changeNamed("MultiLineTextBox.setText", () => {
+            this.$setText(newValue);
+        })
         this.isDirty();
     }
 

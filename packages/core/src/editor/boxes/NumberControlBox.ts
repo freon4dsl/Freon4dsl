@@ -1,9 +1,10 @@
+import { AST } from "../../change-manager/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { FreNode } from "../../ast/index.js";
 import { FreUtils, isNullOrUndefined } from "../../util/index.js";
 import { Box } from "./internal.js";
 
-const LOGGER: FreLogger = new FreLogger("NumberControlBox");
+const LOGGER: FreLogger = new FreLogger("NumberControlBox").mute();
 
 export type NumberDisplayInfo = {
     max?: number | undefined;
@@ -31,7 +32,9 @@ export class NumberControlBox extends Box {
      */
     setNumber(newValue: number): void {
         LOGGER.log("setNumber to " + newValue);
-        this.$setNumber(newValue);
+        AST.changeNamed("NumberControlBox.setNumber", () => {
+            this.$setNumber(newValue);
+        })
         if (this.showAs === NumberDisplay.SLIDER && newValue > this.displayInfo.max) {
             this.displayInfo.max = newValue;
             console.log("NumberBox: value greater than max");
