@@ -157,7 +157,7 @@ export function getContextMenuOptions(
         (element: FreNode, index: number, editor: FreEditor) => {},
     );
     if (clsOtIntf === undefined || clsOtIntf === null) {
-        console.log("Unexpected: Cannot find class or interface for [" + conceptName + "]");
+        console.error("Unexpected: Cannot find class or interface for [" + conceptName + "]");
         return [errorItem];
     }
     let items: MenuItem[];

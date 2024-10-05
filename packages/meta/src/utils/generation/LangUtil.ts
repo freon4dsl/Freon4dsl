@@ -258,7 +258,7 @@ export class LangUtil {
         const type1: FreMetaClassifier = firstProp.type;
         const type2: FreMetaClassifier = secondProp.type;
         if (!type1 || !type2) {
-            console.log("INTERNAL ERROR: property types are not set: " + firstProp.name + ", " + secondProp.name);
+            console.error("INTERNAL ERROR: property types are not set: " + firstProp.name + ", " + secondProp.name);
             return false;
         }
 

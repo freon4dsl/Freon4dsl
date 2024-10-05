@@ -68,7 +68,7 @@ export class TableUtil {
         hasHeaders: boolean,
     ): TableRowBox {
         if (isNullOrUndefined(rowIndex)) {
-            console.log("NO rowIndex for TableRowBox! " + node.freLanguageConcept() + node.freId());
+            console.error("NO rowIndex for TableRowBox! " + node.freLanguageConcept() + node.freId());
         }
         // Note that css grid counts from 1, not 0, which is common in lists.
         let gridIndex: number;

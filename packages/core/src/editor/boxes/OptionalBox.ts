@@ -53,7 +53,7 @@ export class OptionalBox extends Box {
     }
 
     conditionChanged = () => {
-        console.log("AUTORUN showByCondition");
+        // console.log("AUTORUN showByCondition");
         this.condition();
         this.isDirty();
     };

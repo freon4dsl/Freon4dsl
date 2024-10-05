@@ -1,3 +1,4 @@
+import { FreLogger } from "../../../logging/index.js";
 import {
     Box,
     BoxFactory,
@@ -17,7 +18,9 @@ import { UtilCommon } from "./UtilCommon.js";
 import { FreLanguage } from "../../../language/index.js";
 import { FreEditor } from "../../FreEditor.js";
 import { runInAction } from "mobx";
-import { FreUtils } from "../../../util/index.js";
+import { FreUtils, isNullOrUndefined } from "../../../util/index.js";
+
+const LOGGER = new FreLogger("UtilRefHelpers")
 
 export class UtilRefHelpers {
     public static referenceBox(
@@ -58,7 +61,6 @@ export class UtilRefHelpers {
                     }));
             },
             () => {
-                // console.log("==> get selected option for property " + propertyName + " of " + element["name"] + " is " + property.name )
                 if (!!property) {
                     return { id: property.name, label: property.name };
                 } else {
@@ -67,9 +69,8 @@ export class UtilRefHelpers {
             },
             // @ts-ignore
             (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
-                // L.log("==> SET selected option for property " + propertyName + " of " + node["name"] + " to " + option?.label);
+                LOGGER.log("referenceBox ==> SET selected option for property " + propertyName + " of " + (isNullOrUndefined(node)? "NULL" : node["name"]) + " to " + option?.label);
                 if (!!option) {
-                    // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + option.label);
                     runInAction(() => {
                         setFunc(option.label);
                     });

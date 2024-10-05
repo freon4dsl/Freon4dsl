@@ -424,7 +424,7 @@ export class FreEditor {
      * @param severityType  The severity of the message (information, hint, warning, or error).
      */
     setUserMessage(message: string, severityType?: FreErrorSeverity) {
-        console.log(
+        console.error(
             'This message should be shown elsewhere: "' + message + '", please override this method appropriately.',
             severityType,
         );
@@ -459,11 +459,11 @@ export class FreEditor {
             box = this._selectedBox
         }
         const next: Box = box?.nextLeafRight;
-        console.log("Select next leaf is box " + next?.role);
+        LOGGER.log("Select next leaf is box " + next?.role);
         if (!!next) {
             if (isExpressionPreOrPost(next)){
                 // Special expression prefix or postfix box, don't select it
-                console.log(`selectNextleaf: skipping ${next.id} ${next.kind}`)
+                LOGGER.log(`selectNextleaf: skipping ${next.id} ${next.kind}`)
                 this.selectNextLeaf(next);
             } else {
                 this.selectElementForBox(next, FreCaret.LEFT_MOST);
@@ -487,7 +487,7 @@ export class FreEditor {
             box = this._selectedBox
         }
         const next: Box = box?.nextLeafRight;
-        console.log("Select next leaf is box " + next?.role);
+        LOGGER.log("Select next leaf is box " + next?.role);
         if (!!next) {
             this.selectElementForBox(next, FreCaret.LEFT_MOST);
         }

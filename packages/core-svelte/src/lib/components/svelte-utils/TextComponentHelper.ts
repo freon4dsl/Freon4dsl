@@ -74,7 +74,7 @@ export class TextComponentHelper {
             this.getCaretPosition(event);
             if (this._from < this._getText().length || (this._from !== this._to)) { // some chars remain at the right, or several chars are selected
                 // No need to adjust the caret position, the char will be deleted *after* the caret
-                console.log(`handleDelete, caret: ${this._from}-${this._to}`);
+                LOGGER.log(`handleDelete, caret: ${this._from}-${this._to}`);
                 // Without propagation but with event Default, the browser handles which char(s) to be deleted.
                 // With event.ctrlKey: delete text from caret to start, is also handled by the browser.
                 event.stopPropagation();
@@ -95,7 +95,7 @@ export class TextComponentHelper {
                 this._from -= 1;
                 this._to -= 1;
             } // else: the deleted chars are *after* this._from, therefore no need to adjust the caret.
-            console.log(`handleBackSpace, caret: ${this._from}-${this._to}`);
+            LOGGER.log(`handleBackSpace, caret: ${this._from}-${this._to}`);
             // Without propagation but with event Default, the browser handles which char(s) to be deleted.
             // With event.ctrlKey: delete text from caret to start, is also handled by the browser.
             event.stopPropagation();
@@ -123,7 +123,7 @@ export class TextComponentHelper {
     handleGoToNext(event: KeyboardEvent, editor: FreEditor, htmlId: string) {
         this._endEditing();
         editor.selectNextLeafIncludingExpressionPreOrPost();
-        console.log(htmlId + "    NEXT LEAF IS " + editor.selectedBox.role);
+        LOGGER.log(htmlId + "    NEXT LEAF IS " + editor.selectedBox.role);
         if (isActionBox(editor.selectedBox)) {
             const executionResult: BehaviorExecutionResult = editor.selectedBox.tryToExecute(event.key, editor)
             if (executionResult !== BehaviorExecutionResult.EXECUTED) {
@@ -197,13 +197,13 @@ export class TextComponentHelper {
     handleArrowLeft(event: KeyboardEvent) {
         this._dispatcher('showDropdown');
         this.getCaretPosition(event);
-        console.log(`handleArrowLeft, caret: ${this._from}-${this._to}`);
+        LOGGER.log(`handleArrowLeft, caret: ${this._from}-${this._to}`);
         if (this._from !== 0) { // when the arrow key can stay within the text, do not let the parent handle it
             event.stopPropagation();
             // note: caret is set to one less because getCaretPosition is calculated before the event is executed
             this._from -= 1;
             this._to -= 1;
-            console.log(`caretChanged from handleArrowLeft, caret: ${this._from}-${this._to}`)
+            LOGGER.log(`caretChanged from handleArrowLeft, caret: ${this._from}-${this._to}`)
             this._dispatcher('caretChanged', {content: this._getText(), caret: this._from});
         } else { // the key will cause this element to lose focus, its content should be saved
             this._endEditing();
@@ -214,13 +214,13 @@ export class TextComponentHelper {
     handleArrowRight(event: KeyboardEvent) {
         this._dispatcher('showDropdown');
         this.getCaretPosition(event);
-        console.log(`handleArrowRight, caret: ${this._from}-${this._to}`);
+        LOGGER.log(`handleArrowRight, caret: ${this._from}-${this._to}`);
         if (this._from !== this._getText().length) { // when the arrow key can stay within the text, do not let the parent handle it
             event.stopPropagation();
             // note: caret is set to one more because getCaretPosition is calculated before the event is executed
             this._from += 1;
             this._to += 1;
-            console.log(`caretChanged from handleArrowLeft, caret: ${this._from}-${this._to}`)
+            LOGGER.log(`caretChanged from handleArrowLeft, caret: ${this._from}-${this._to}`)
             this._dispatcher('caretChanged', {content: this._getText(), caret: this._from});
         } else { // the key will cause this element to lose focus, its content should be saved
             this._endEditing();
