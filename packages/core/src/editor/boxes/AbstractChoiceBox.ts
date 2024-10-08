@@ -45,24 +45,30 @@ export abstract class AbstractChoiceBox extends Box {
         return this._textBox;
     }
 
-    set hasError(val: boolean) {
-        // this._hasError = val;
+    override set hasError(val: boolean) {
+        this._hasError = val;
         this._textBox.hasError = val;
+        this.isDirty();
     }
 
-    get errorMessages(): string[] {
+    override get errorMessages(): string[] {
         return this._textBox.errorMessages;
     }
 
-    addErrorMessage(val: string | string[]) {
+    override addErrorMessage(val: string | string[]) {
         // this._errorMessages.push(val);
         this._textBox.addErrorMessage(val);
+        this.isDirty();
     }
 
-    resetErrorMessages() {
+    override resetErrorMessages() {
         this._errorMessages = [];
         this._textBox.resetErrorMessages();
+        this.isDirty();
     }
+
+    // If true, then this box should carry all error messages on the line.
+    isFirstInLine: boolean = false;
 
     _getSelectedOption(): SelectOption | null {
         return null;

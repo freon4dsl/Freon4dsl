@@ -57,7 +57,8 @@ export class EditorRequestsHandler {
             this.langEnv.editor.forceRecalculateProjection++;
         })
         // redo the validation to set the errors in the new box tree
-        this.validate();
+        // todo reinstate the following statement
+        // this.validate();
     }
 
     /**

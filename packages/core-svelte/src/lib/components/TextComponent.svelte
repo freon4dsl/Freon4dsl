@@ -31,6 +31,7 @@
 	} from "@freon4dsl/core";
 	import {TextComponentHelper} from "$lib/components/svelte-utils/TextComponentHelper.js";
 	import ErrorTooltip from "$lib/components/ErrorTooltip.svelte";
+	import ErrorMarker from "$lib/components/ErrorMarker.svelte";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
 	const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
@@ -48,6 +49,7 @@
 	let id: string;                         // an id for the html element
 	id = !!box ? componentId(box) : 'text-with-unknown-box';
 	let inputElement: HTMLInputElement; 	// the <input> element on the screen
+	let surroundingElement: HTMLElement;	// the element that surrounds all other parts of this component
 	let placeholder: string = '<..>';       // the placeholder when value of text component is not present
 	let originalText: string;               // variable to remember the text that was in the box previously
 	let editStart = false;					// indicates whether we are just starting to edit, so we need to set the cursor in the <input>
@@ -274,7 +276,7 @@
 		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
 		if (!partOfDropdown && isEditing) {
 			endEditing();
-		} // else Let TextDropdownComponent handle it. The event will bubble up.
+		} // else let TextDropdownComponent handle it. The event will bubble up.
 	}
 
 	const refresh = (why?: string) => {
@@ -403,9 +405,12 @@
 	refresh();
 </script>
 
-<ErrorTooltip content={errMess} hasErr={hasErr} parentTop={0} parentLeft={0}>
+{#if errMess.length > 0 && box.isFirstInLine}
+	<ErrorMarker element={surroundingElement} {box}/>
+{/if}
+<ErrorTooltip {box} hasErr={hasErr} parentTop={0} parentLeft={0}>
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-	<span on:click={onClick} id="{id}" role="none">
+	<span on:click={onClick} id="{id}" role="none" bind:this={surroundingElement}>
 		{#if isEditing}
 			<span class="text-component-input">
 				<input type="text"

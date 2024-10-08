@@ -84,18 +84,12 @@ export abstract class Box {
                 this._errorMessages.push(val);
             }
         }
+        this.isDirty()
     }
 
     resetErrorMessages() {
         this._errorMessages = [];
-    }
-
-    gatherErrMessages(): string[] {
-        let result: string[] = this._errorMessages;
-        this.children.forEach(ch => {
-            result.push(...ch.gatherErrMessages())
-        })
-        return result;
+        this.isDirty();
     }
 
     // Never set these manually, these properties are set after rendering to get the

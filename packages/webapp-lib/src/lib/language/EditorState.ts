@@ -318,6 +318,8 @@ export class EditorState {
             this.currentUnit = newUnit;
             // todo reinstate the following statement
             // this.getErrors();
+            // for now:
+            WebappConfigurator.getInstance().editorEnvironment.editor.setErrors([]);
         } else {
             noUnitAvailable.set(true);
             runInAction(() => {

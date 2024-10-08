@@ -29,6 +29,9 @@ export class TextBox extends Box {
      */
     deleteWhenEmptyAndErase: boolean = false;
 
+    // If true, then this box should carry all error messages on the line.
+    isFirstInLine: boolean = false;
+
     placeHolder: string = "";
     caretPosition: number = -1;
     $_getText: () => string;

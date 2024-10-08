@@ -637,4 +637,8 @@ export class FreEditor {
     setErrors(list: FreError[]) {
         this._errorDecorator.setErrors(list);
     }
+    //
+    // gatherErrorsPerLine() {
+    //     this._errorDecorator.gatherMessagesForGutter();
+    // }
 }

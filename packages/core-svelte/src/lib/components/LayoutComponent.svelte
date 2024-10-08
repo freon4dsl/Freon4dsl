@@ -30,7 +30,6 @@
 
     let errorCls: string = '';              // css class name for when the node is erroneous
     let errMess: string[] = [];             // error message to be shown when element is hovered
-    let hasErr: boolean = false;            // indicates whether this box has errors
 
     async function setFocus(): Promise<void> {
         if (!!element) {
@@ -56,11 +55,9 @@
         if (box.hasError) {
             errorCls = !isHorizontal ? 'layout-component-vertical-error' : 'layout-component-horizontal-error';
             errMess = box.errorMessages;
-            hasErr = true;
         } else {
             errorCls = "";
             errMess = [];
-            hasErr = false;
         }
     };
 
@@ -70,7 +67,7 @@
 </script>
 
 {#if errMess.length > 0}
-    <ErrorMarker element={element} content={errMess}/>
+    <ErrorMarker element={element} {box}/>
 {/if}
 <span class="layout-component {errorCls}"
       id="{id}"

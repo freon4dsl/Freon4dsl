@@ -63,6 +63,7 @@
     import { selectedBoxes, componentId, setBoxSizes, findCustomComponent} from "$lib/index.js";
 
     import {afterUpdate} from "svelte";
+    import ErrorMarker from "$lib/components/ErrorMarker.svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -73,8 +74,7 @@
     let element: HTMLElement;
     let selectedCls: string = '';   // css class name for when the node is selected
     let errorCls: string = '';      // css class name for when the node is erroneous
-    let errMess: string[] = [];       // error message to be shown when element is hovered
-    let hasErr: boolean = false;    // indicates whether this box has errors
+    let errMess: string[] = [];     // error message to be shown when element is hovered
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log("RenderComponent.onClick for box " + box.role + ", selectable:" + box.selectable);
@@ -108,11 +108,9 @@
         if (box.hasError) {
             errorCls = "render-component-error";
             errMess = box.errorMessages;
-            hasErr = true;
         } else {
             errorCls = "";
             errMess = [];
-            hasErr = false;
         }
     };
 
@@ -132,6 +130,9 @@
 {#if isElementBox(box) }
     <ElementComponent box={box} editor={editor}/>
 {:else}
+    {#if errMess.length > 0}
+        <ErrorMarker element={element} {box}/>
+    {/if}
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
     <span id={id}
           class="render-component {errorCls} {selectedCls} "
