@@ -23,8 +23,9 @@
 }
 .gutter {
     /*border: 1px solid;*/
+    min-width: 4px;
     width: 8px;
-    height: 100%;
+    height: 100vh;
     box-sizing: border-box;
 }
 .editor-component {
@@ -182,7 +183,8 @@
     /* padding seems to be the only way to make the element visible without content*/
     /* padding-left is width of the image plus some extra */
     padding: 2px 2px 2px 2px;
-    width: 8px; /* equal to the gutter width */
+    width: 4px; /* (padding-left + width + padding-right) is equal to the gutter width */
+    height: 8px;
 }
 
 .error-positioning {

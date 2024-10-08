@@ -7,7 +7,7 @@
     export let element;
     export let content;
     let innerTop = 10;
-    let innerHeight = 24;
+    let innerHeight = 8;
 
     async function calcPos() {
         await tick();
@@ -17,7 +17,6 @@
                 // console.log(`ErrorMarker top ${elementRect.top} bottom ${elementRect.bottom} height ${elementRect.height} viewport.top ${$viewport.top}`)
 				// get the position of the element relative to the editor view
                 innerTop = elementRect.top - $viewport.top;
-                // innerHeight = elementRect.height - 5; /* minus padding */
             } else {
                 console.log("No bounding rect")
             }

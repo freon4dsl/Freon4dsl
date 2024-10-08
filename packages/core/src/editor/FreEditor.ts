@@ -206,7 +206,7 @@ export class FreEditor {
         LOGGER.log(
             `findBoxForNode ${node?.freLanguageConcept()} with id ${node?.freId()}, property: ${propertyName}[${propertyIndex}]`
         );
-        if (this.checkParam(node)) {
+        if (this.checkParam(node) && !node.freIsModel()) {
             const box: ElementBox = this.projection.getBox(node);
             // check whether the box is shown in the current projection
             if (isNullOrUndefined(box) || !this.isBoxInTree(box)) {

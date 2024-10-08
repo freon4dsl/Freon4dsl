@@ -83,6 +83,8 @@ export class AstType implements FreType {
         if (!!this.astElement) {
             if (this.astElement === AstType.ANY) {
                 return "ANY";
+            } else if (!!this.astElement["name"]) { // Note "name" must refer to the property of FreNamedNode!
+                return writer.writeNameOnly(this.astElement);
             } else {
                 return writer.writeToString(this.astElement);
             }

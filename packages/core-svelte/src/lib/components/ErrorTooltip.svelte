@@ -19,7 +19,7 @@
             // Because an ErrorMarker also has its 'position' set to something other than 'static'.
             left = event.pageX - $viewport.left - parentLeft + 5;
             top = event.pageY - $viewport.top - parentTop + 5;
-            console.log(`ErrorTooltip: left-top [${left}, ${top}] event [${event.pageX}, ${event.pageY}] parent [${parentLeft}, ${parentTop}] viewport [${$viewport.left}, ${$viewport.top}]`)
+            // console.log(`ErrorTooltip: left-top [${left}, ${top}] event [${event.pageX}, ${event.pageY}] parent [${parentLeft}, ${parentTop}] viewport [${$viewport.left}, ${$viewport.top}]`)
         }
     }
     function mouseMove(event: MouseEvent) {

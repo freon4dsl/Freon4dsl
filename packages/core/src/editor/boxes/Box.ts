@@ -67,11 +67,22 @@ export abstract class Box {
         return this._errorMessages;
     }
 
+    /**
+     * Adds the string  or string array to the list of error messages, but only if
+     * the message is not already present.
+     * @param val
+     */
     addErrorMessage(val: string | string[]) {
         if (Array.isArray(val)) {
-            this._errorMessages.push(...val);
+            val.forEach(v => {
+                if (!this._errorMessages.includes(v)) {
+                    this._errorMessages.push(v);
+                }
+            })
         } else {
-            this._errorMessages.push(val);
+            if (!this._errorMessages.includes(val)) {
+                this._errorMessages.push(val);
+            }
         }
     }
 
