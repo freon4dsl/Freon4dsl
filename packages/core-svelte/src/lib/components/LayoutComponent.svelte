@@ -16,6 +16,7 @@
         LayoutBox
     } from "@freon4dsl/core";
     import { componentId } from "$lib/index.js";
+    import ErrorMarker from "$lib/components/ErrorMarker.svelte";
 
     // Parameters
     export let box: LayoutBox;
@@ -26,6 +27,9 @@
     let element: HTMLSpanElement;
     let children: Box[];
     let isHorizontal: boolean;
+
+    let errorCls: string = '';              // css class name for when the node is erroneous
+    let errMess: string[] = [];             // error message to be shown when element is hovered
 
     async function setFocus(): Promise<void> {
         if (!!element) {
@@ -48,13 +52,24 @@
         id = !!box ? componentId(box) : 'layout-for-unknown-box';
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
+        if (box.hasError) {
+            errorCls = !isHorizontal ? 'layout-component-vertical-error' : 'layout-component-horizontal-error';
+            errMess = box.errorMessages;
+        } else {
+            errorCls = "";
+            errMess = [];
+        }
     };
+
     $: { // Evaluated and re-evaluated when the box changes.
         refresh("Refresh Layout box changed " + box?.id);
     }
 </script>
 
-<span class="layout-component"
+{#if errMess.length > 0}
+    <ErrorMarker element={element} {box}/>
+{/if}
+<span class="layout-component {errorCls}"
       id="{id}"
       class:layout-component-horizontal="{isHorizontal}"
       class:layout-component-vertical="{!isHorizontal}"

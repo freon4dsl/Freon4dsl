@@ -11,17 +11,27 @@ export abstract class Box {
     $id: string;
     kind: string = "";
     role: string = "";
-    node: FreNode = null; // the model element to which this box is coupled
-    propertyName: string; // the name of the property, if any, in 'element' which this box projects
-    propertyIndex: number; // the index within the property, if appropriate
-    // todo make sure propertyName and index are correctly set
-
-    cssClass: string = ""; // Custom CSS class that will be added to the component rendering this box
-    cssStyle: string = ""; // Custom CSS Style class that will be added as inline style to the component rendering this box
-    selectable: boolean = true; // Can this box be selected in the editor?
-    // todo because most boxes are not selectable the default could be set to false
-    isVisible: boolean = true; // Is this box currently not shown in the editor?
+    // The model element to which this box is coupled
+    node: FreNode = null;
+    // The name of the property, if any, in the 'node' which this box projects
+    propertyName: string;
+    // The index within the property, if appropriate
+    propertyIndex: number;
+    // Custom CSS class that will be added to the component rendering this box
+    cssClass: string = "";
+    // Custom CSS Style class that will be added as inline style to the component rendering this box
+    cssStyle: string = "";
+    // Can this box be selected in the editor?
+    selectable: boolean = true; // todo because most boxes are not selectable the default could be set to false
+    // Is this box currently not shown in the editor?
+    isVisible: boolean = true;
     parent: Box = null;
+
+    // Indication whether the 'node' which this box projects has any validation errors. Adds a CSS class
+    // to the component rendering this box.
+    protected _hasError: boolean = false;
+    // The list of errorMessages that are to be shown by this box.
+    protected _errorMessages: string[] = [];
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
 
@@ -34,6 +44,52 @@ export abstract class Box {
         } else {
             LOGGER.log("No refreshComponent() for " + this.role);
         }
+    }
+
+    /**
+     * If the node displayed in this box is erroneous, this getter returns true.
+     */
+    get hasError(): boolean {
+        return this._hasError;
+    }
+
+    /**
+     * If the node displayed in this box is erroneous, this method should be used to display
+     * that fact.
+     * @param val
+     */
+    set hasError(val: boolean) {
+        this._hasError = val;
+        this.isDirty();
+    }
+
+    get errorMessages(): string[] {
+        return this._errorMessages;
+    }
+
+    /**
+     * Adds the string  or string array to the list of error messages, but only if
+     * the message is not already present.
+     * @param val
+     */
+    addErrorMessage(val: string | string[]) {
+        if (Array.isArray(val)) {
+            val.forEach(v => {
+                if (!this._errorMessages.includes(v)) {
+                    this._errorMessages.push(v);
+                }
+            })
+        } else {
+            if (!this._errorMessages.includes(val)) {
+                this._errorMessages.push(val);
+            }
+        }
+        this.isDirty()
+    }
+
+    resetErrorMessages() {
+        this._errorMessages = [];
+        this.isDirty();
     }
 
     // Never set these manually, these properties are set after rendering to get the
@@ -128,6 +184,8 @@ export abstract class Box {
         const thisIndex: number = this.parent.children.indexOf(this);
         if (thisIndex === -1) {
             LOGGER.error(`nextLeafRight: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is mising in its parent (index === -1) `)
+            LOGGER.error(`  boxid: ${this.id} parent [id: ${this.parent.id}, id: ${this.parent.kind}, node: ${this.parent.node.freLanguageConcept()}]`)
+            LOGGER.error(`  tree: ${(this.parent.parent !== undefined && this.parent.parent !== null) ? this.parent.parent.toStringRecursive("  "):this.parent.toStringRecursive("  ")}`)
             return null
         }
         const rightSiblings: Box[] = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
@@ -140,6 +198,7 @@ export abstract class Box {
                 return sibling;
             }
         }
+        LOGGER.log(`${this.id} nextLeafRight: referring to parent`)
         return this.parent.nextLeafRight;
     }
 
@@ -247,7 +306,7 @@ export abstract class Box {
      */
     findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
         // if (propertyName === "value" && propertyIndex === undefined) {
-        console.log("findChildBoxForProperty " + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        LOGGER.log("findChildBoxForProperty " + this.role + "[" + propertyName + ", " + propertyIndex + "]");
         // }
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
@@ -265,7 +324,7 @@ export abstract class Box {
             } else {
                 return child;
             }
-            const result = child.findChildBoxForProperty(propertyName, propertyIndex);
+            const result: Box = child.findChildBoxForProperty(propertyName, propertyIndex);
             if (!isNullOrUndefined(result) && result.node === this.node) {
                 return result;
             }

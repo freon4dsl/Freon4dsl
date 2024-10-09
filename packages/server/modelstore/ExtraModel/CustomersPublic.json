@@ -1,146 +1,974 @@
 {
-   "$typename": "ExampleUnit",
-   "name": "Customers",
-   "entities": [
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
       {
-         "$typename": "Entity",
-         "name": "Person",
-         "attributes": [
-            {
-               "$typename": "Attribute",
-               "name": "age",
-               "declaredType": "Integer"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "name",
-               "declaredType": "String"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "isStrong",
-               "declaredType": "Boolean"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "length",
-               "declaredType": "Integer"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "livesIn",
-               "declaredType": "House"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "insures",
-               "declaredType": "House"
-            }
-         ],
-         "methods": [
-            {
-               "$typename": "Method",
-               "name": "dddddddd",
-               "body": {
-                  "$typename": "PlusExpression",
-                  "left": {
-                     "$typename": "MultiplyExpression",
-                     "left": {
-                        "$typename": "NumberLiteralExpression",
-                        "value": 1,
-                        "appliedfeature": null
-                     },
-                     "right": {
-                        "$typename": "BooleanLiteralExpression",
-                        "value": false,
-                        "appliedfeature": null
-                     },
-                     "appliedfeature": null
-                  },
-                  "right": {
-                     "$typename": "ParameterRef",
-                     "appliedfeature": {
-                        "$typename": "AttributeRef",
-                        "appliedfeature": null,
-                        "attribute": "isStrong"
-                     },
-                     "parameter": "person"
-                  },
-                  "appliedfeature": null
-               },
-               "parameters": [
-                  {
-                     "$typename": "Parameter",
-                     "name": "person",
-                     "declaredType": "Person"
-                  },
-                  {
-                     "$typename": "Parameter",
-                     "name": "appeltje",
-                     "declaredType": "Boolean"
-                  },
-                  {
-                     "$typename": "Parameter",
-                     "name": "num",
-                     "declaredType": "Integer"
-                  }
-               ],
-               "declaredType": "Person"
-            }
-         ],
-         "baseEntity": null
-      },
-      {
-         "$typename": "Entity",
-         "name": "House",
-         "attributes": [
-            {
-               "$typename": "Attribute",
-               "name": "street",
-               "declaredType": "String"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "num",
-               "declaredType": "Integer"
-            },
-            {
-               "$typename": "Attribute",
-               "name": "city",
-               "declaredType": "String"
-            }
-         ],
-         "methods": [],
-         "baseEntity": null
-      }
-   ],
-   "methods": [
-      {
-         "$typename": "Method",
-         "name": "doSomething",
-         "body": {
-            "$typename": "AndExpression",
-            "left": {
-               "$typename": "BooleanLiteralExpression",
-               "value": false,
-               "appliedfeature": null
-            },
-            "right": {
-               "$typename": "BooleanLiteralExpression",
-               "value": true,
-               "appliedfeature": null
-            },
-            "appliedfeature": null
+         "id": "ID-118",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-ExampleUnit"
          },
-         "parameters": [],
-         "declaredType": "Boolean"
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-name"
+               },
+               "value": "Customers"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-entities"
+               },
+               "children": [
+                  "ID-120",
+                  "ID-147"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-methods"
+               },
+               "children": [
+                  "ID-151",
+                  "ID-155"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
       },
       {
-         "$typename": "Method",
-         "name": "",
-         "body": null,
-         "parameters": [],
-         "declaredType": null
+         "id": "ID-120",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseType-name"
+               },
+               "value": "Person"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-attributes"
+               },
+               "children": [
+                  "ID-121",
+                  "ID-122",
+                  "ID-125",
+                  "ID-126",
+                  "ID-127",
+                  "ID-128"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-methods"
+               },
+               "children": [
+                  "ID-129"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-118"
+      },
+      {
+         "id": "ID-121",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "age"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-120"
+      },
+      {
+         "id": "ID-122",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "name"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-120"
+      },
+      {
+         "id": "ID-125",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "isStrong"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-120"
+      },
+      {
+         "id": "ID-126",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "length"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-120"
+      },
+      {
+         "id": "ID-127",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "livesIn"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "House",
+                     "reference": "ID-36"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-120"
+      },
+      {
+         "id": "ID-128",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "insures"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "House",
+                     "reference": "ID-36"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-120"
+      },
+      {
+         "id": "ID-129",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "dddddddd"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-130"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": [
+                  "ID-139",
+                  "ID-144",
+                  "ID-146"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Person",
+                     "reference": "ID-19"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-120"
+      },
+      {
+         "id": "ID-130",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-PlusExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-132"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-137"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-129"
+      },
+      {
+         "id": "ID-132",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-MultiplyExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-133"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-135"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-130"
+      },
+      {
+         "id": "ID-133",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-NumberLiteralExpression-value"
+               },
+               "value": "1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-132"
+      },
+      {
+         "id": "ID-135",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "false"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-132"
+      },
+      {
+         "id": "ID-137",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-ParameterRef"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Expression-appliedfeature"
+               },
+               "children": [
+                  "ID-138"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ParameterRef-parameter"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "person",
+                     "reference": "ID-139"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-130"
+      },
+      {
+         "id": "ID-138",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-AttributeRef"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-AttributeRef-attribute"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "isStrong",
+                     "reference": "ID-22"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-137"
+      },
+      {
+         "id": "ID-139",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "person"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Person",
+                     "reference": "ID-19"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-129"
+      },
+      {
+         "id": "ID-144",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "appeltje"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-129"
+      },
+      {
+         "id": "ID-146",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Parameter"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-name"
+               },
+               "value": "num"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Parameter-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-129"
+      },
+      {
+         "id": "ID-147",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseType-name"
+               },
+               "value": "House"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-attributes"
+               },
+               "children": [
+                  "ID-148",
+                  "ID-149",
+                  "ID-150"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-methods"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-118"
+      },
+      {
+         "id": "ID-148",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "street"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-147"
+      },
+      {
+         "id": "ID-149",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "num"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-147"
+      },
+      {
+         "id": "ID-150",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-name"
+               },
+               "value": "city"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-147"
+      },
+      {
+         "id": "ID-151",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": "doSomething"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-body"
+               },
+               "children": [
+                  "ID-152"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-118"
+      },
+      {
+         "id": "ID-152",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-AndExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-153"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-154"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-151"
+      },
+      {
+         "id": "ID-153",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "false"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-152"
+      },
+      {
+         "id": "ID-154",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-BooleanLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BooleanLiteralExpression-value"
+               },
+               "value": "true"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-152"
+      },
+      {
+         "id": "ID-155",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-118"
       }
    ]
 }

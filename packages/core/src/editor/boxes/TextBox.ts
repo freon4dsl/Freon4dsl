@@ -25,9 +25,12 @@ export class TextBox extends Box {
     deleteWhenEmpty: boolean = false;
 
     /**
-     * If true, delete element when Erase key is pressed while the element is empty.
+     * If true, delete element when Erase (delete, backspace, etc.) key is pressed while the element is empty.
      */
     deleteWhenEmptyAndErase: boolean = false;
+
+    // If true, then this box should carry all error messages on the line.
+    isFirstInLine: boolean = false;
 
     placeHolder: string = "";
     caretPosition: number = -1;
@@ -77,9 +80,7 @@ export class TextBox extends Box {
         this.$setText = setText;
     }
 
-    public deleteWhenEmpty1(): boolean {
-        return this.deleteWhenEmpty;
-    }
+
 
     // INTERNAL FUNCTIONS
 

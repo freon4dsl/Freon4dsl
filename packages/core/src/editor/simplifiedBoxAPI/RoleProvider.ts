@@ -6,6 +6,7 @@ export class RoleProvider {
         return RoleProvider.startWithUpperCase(concept.typeName);
     }
 
+    // todo remove boxType from params
     public static property(owningConceptName: string, propertyName: string, boxType?: string, index?: number): string {
         let roleName: string = RoleProvider.startWithUpperCase(owningConceptName) + "-" + propertyName;
         if (index !== null && index !== undefined && index >= 0) {
@@ -15,6 +16,9 @@ export class RoleProvider {
             roleName += "-" + boxType;
         }
         return roleName;
+    }
+    public static binaryProperty(propertyName: string) {
+        return `FreBinaryExpression-${propertyName}`
     }
 
     private static startWithUpperCase(word: string): string {

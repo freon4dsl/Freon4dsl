@@ -1,5 +1,5 @@
 import { FreonLayout, WebappConfigurator } from "@freon4dsl/webapp-lib";
-import { FreLogger, ServerCommunication } from "@freon4dsl/core"
+import {FreLogger, ServerCommunication} from "@freon4dsl/core";
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
 import { setCustomComponents } from "@freon4dsl/core-svelte";
 // For DocuProject:
@@ -79,7 +79,4 @@ const app = new FreonLayout({
     target: document.body,
 });
 
-// FreLogger.unmute("NumberControlBox")
-// FreLogger.unmute("BooleanControlBox")
-// FreLogger.unmute("LimitedControlBox")
 export default app;

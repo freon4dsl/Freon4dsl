@@ -30,6 +30,7 @@
     };
 </script>
 
+<span class="dropdown-component-container">
 <nav class="dropdown-component"
      id="{id}"
 >
@@ -50,3 +51,10 @@
         </div>
     {/if}
 </nav>
+</span>
+
+<style>
+    .dropdown-component-container {
+        position: relative;
+    }
+</style>

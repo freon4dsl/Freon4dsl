@@ -23,7 +23,7 @@ export abstract class FreBoxProvider {
 
     /**
      * Every box provider is coupled one-on-one to a single node in the FreNode model.
-     * The property 'element' is a link to this node.
+     * The property 'node' is a link to this node.
      * @param node
      */
     set node(node: FreNode) {

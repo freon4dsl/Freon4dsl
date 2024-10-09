@@ -17,7 +17,7 @@ import { runInAction } from "mobx";
 import {
     activeTab,
     errorsLoaded,
-    errorTab,
+    errorTab, modelErrors,
     searchResultLoaded,
     searchResults,
     searchTab,
@@ -41,8 +41,8 @@ export class EditorRequestsHandler {
     private langEnv: FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
 
     /**
-     * Makes sure that the editor show the current unit using the projections selected by the user
-     * @param name
+     * Makes sure that the editor shows the current unit using the projections selected by the user
+     * @param names
      */
     enableProjections(names: string[]): void {
         LOGGER.log("enabling Projection " + names);
@@ -56,6 +56,9 @@ export class EditorRequestsHandler {
         runInAction( () => {
             this.langEnv.editor.forceRecalculateProjection++;
         })
+        // redo the validation to set the errors in the new box tree
+        // todo reinstate the following statement
+        // this.validate();
     }
 
     /**
@@ -82,9 +85,7 @@ export class EditorRequestsHandler {
         const unitInEditor = EditorState.getInstance().currentUnit;
         LOGGER.log(`undo called: '${FreUndoManager.getInstance().nextUndoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'` );
         if (!!unitInEditor) {
-            runInAction( () => {
-                FreUndoManager.getInstance().executeUndo(unitInEditor);
-            })
+            FreUndoManager.getInstance().executeUndo(unitInEditor);
         }
     }
 
@@ -172,6 +173,9 @@ export class EditorRequestsHandler {
         activeTab.set(errorTab);
         EditorState.getInstance().getErrors();
         errorsLoaded.set(true);
+        if (!!modelErrors[0]) {
+            EditorState.getInstance().selectElement(modelErrors[0].reportedOn);
+        }
     }
 
     findText(stringToFind: string) {

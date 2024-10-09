@@ -30,8 +30,17 @@
 .layout-component-horizontal {
 }
 
+.layout-component-horizontal-error {
+    border-bottom: double thin red;
+    padding-bottom: 1px;
+}
+
 .layout-component-vertical {
-    /*width: 100%;*/
+}
+
+.layout-component-vertical-error {
+    border-left: 2px solid red;
+    height: 100%;
 }
 
 .limited-checkbox-component-group {
@@ -79,6 +88,15 @@
 
 .contextmenu-hr {
     border-top: solid 1px #c5c5c5;
+}
+
+.error-tooltip {
+    border: 1px solid dimgrey;
+    box-shadow: 1px 1px 1px dimgrey;
+    background: antiquewhite;
+}
+.error-marker {
+    background-color: #FF4C4C;
 }
 
 .button-component-ripple {
@@ -137,6 +155,11 @@
 .text-component-text {
     color: blue;
     /*background: var(--freon-text-component-background-color, inherit);*/
+}
+.text-component-text-error {
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: red;
 }
 
 .text-component-placeholder {
@@ -227,11 +250,12 @@
 
 .render-component {
 }
-.render-component-error {
+.render-component-unknown-box {
     color: red;
 }
+
 .render-component-unselected {
-    background: transparent;
+    /*background-color: transparent;*/
 }
 .render-component-selected {
     outline-color: darkblue;
@@ -278,7 +302,6 @@
     background: transparent;
 }
 .table-cell-component-selected {
-    /*background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));*/
     outline-color: darkblue;
 }
 

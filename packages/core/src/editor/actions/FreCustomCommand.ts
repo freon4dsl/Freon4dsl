@@ -3,7 +3,7 @@ import { Box } from "../boxes/index.js";
 import { FreEditor } from "../FreEditor.js";
 import { FreCaret } from "../util/index.js";
 import { CustomAction, EMPTY_POST_ACTION, FrePostAction } from "./FreAction.js";
-import { FreCommand } from "./FreCommand.js";
+import { FreCommand, FRECOMMAND_LOGGER } from "./FreCommand.js";
 import { FreTriggerUse, triggerTypeToString } from "./FreTriggers.js";
 
 export class FreCustomCommand extends FreCommand {
@@ -19,8 +19,8 @@ export class FreCustomCommand extends FreCommand {
     }
 
     execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
-        // FRECOMMAND_LOGGER.log("execute custom action, text is [" + trigger + "] refShort [" + this.referenceShortcut + "]" );
-        console.log("FreCustomCommand: trigger [" + triggerTypeToString(trigger) + "]");
+        FRECOMMAND_LOGGER.log("FreCustomCommand: trigger [" + triggerTypeToString(trigger) + "]");
+        FRECOMMAND_LOGGER.log("FreCustomCommand: action [" + this.action + "]");
         const self = this;
         let selected
         AST.change( () => {

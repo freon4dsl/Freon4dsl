@@ -86,7 +86,7 @@ export class FreLangSelfExp extends FreLangExp {
     $referredElement: MetaElementReference<FreMetaClassifier>; // is not needed, can be determined based on its parent
 
     toFreString(): string {
-        if (!!this.sourceName) {
+        if (!!this.sourceName && this.sourceName !== 'self') {
             return this.sourceName + (this.appliedfeature ? "." + this.appliedfeature.toFreString() : "");
         } else {
             // e.g. in isunique validation rules
@@ -96,8 +96,8 @@ export class FreLangSelfExp extends FreLangExp {
 }
 
 export class FreInstanceExp extends FreLangExp {
-    // sourceName should be name of a limited concept
-    instanceName: string = ""; // should be name of one of the predefined instances of 'sourceName'
+    // sourceName should be the name of a limited concept
+    instanceName: string = ""; // should be the name of one of the predefined instances of 'sourceName'
     // @ts-ignore
     $referredElement: MetaElementReference<FreMetaInstance>;
 

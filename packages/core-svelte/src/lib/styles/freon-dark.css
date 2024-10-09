@@ -86,6 +86,15 @@
     border-top: solid 1px #c5c5c5;
 }
 
+.error-tooltip {
+    border: 1px solid #ddd;
+    box-shadow: 1px 1px 1px #ddd;
+    background: darkgrey;
+}
+.error-marker {
+    background_color: #FF4C4C;
+}
+
 .button-component-ripple {
 }
 .button-component-ripple:hover {
@@ -233,11 +242,16 @@ dropdown-component {
 
 .render-component {
 }
-.render-component-error {
+.render-component-unknown-box {
     color: red;
 }
+.render-component-error {
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: red;
+}
 .render-component-unselected {
-    background: transparent;
+    /*background-color: transparent;*/
 }
 .render-component-selected {
     outline-color: whitesmoke;
@@ -287,7 +301,6 @@ dropdown-component {
     background: transparent;
 }
 .table-cell-component-selected {
-    /*background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));*/
     outline-color: whitesmoke;
 }
 

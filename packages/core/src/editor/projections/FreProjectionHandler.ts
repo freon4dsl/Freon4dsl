@@ -88,7 +88,7 @@ export class FreProjectionHandler {
     ////////// Methods for registering the boxproviders ////////////
 
     /**
-     * Method that initilizes the property 'conceptNameToProviderConstructor'.
+     * Method that initializes the property 'conceptNameToProviderConstructor'.
      * @param constructorMap
      */
     initProviderConstructors(constructorMap: Map<string, () => FreBoxProvider>) {
@@ -249,7 +249,12 @@ export class FreProjectionHandler {
 
     getKnownTableProjectionsFor(conceptName: string): string[] {
         LOGGER.log("getKnownTableProjectionsFor: " + conceptName);
-        return this.conceptNameToProviderConstructor.get(conceptName)(this).knownTableProjections;
+        const providerConstructor = this.conceptNameToProviderConstructor.get(conceptName)(this);
+        if (!!providerConstructor) {
+            return providerConstructor.knownTableProjections;
+        } else {
+            return [];
+        }
     }
 
     getTableHeaderInfo(conceptName: string, projectionName: string): string[] {

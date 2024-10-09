@@ -4,6 +4,7 @@
  * 
  *********************************************/
 
+/* freon-component is the top component and consist of a gutter and an editor-component */
 .freon-component {
     height: 100%;
     width: 100%;
@@ -14,6 +15,22 @@
     font-family: "Arial";
     margin: 1px;
     padding: 0px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 2px;
+}
+.gutter {
+    /*border: 1px solid;*/
+    min-width: 4px;
+    width: 8px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+.editor-component {
+    width: 100%;
+    flex: 1;
 }
 
 .label-component:empty:before {
@@ -138,21 +155,45 @@
     gap: 2px;
     place-items: center;
 }
-
 .contextmenu-button:hover {
 }
-
 .contextmenu-shortcut {
     /*font-size: 0.7em;*/
 }
-
 .contextmenu-hr {
     width: 100%;
     margin: 0;
 }
 
-/* Copied from https://svelte.dev/repl/hello-world?version=4.2.18 */
+/* Styles for errors */
+.error-tooltip {
+    position: absolute;
+    border-radius: 4px;
+    padding: 4px;
+    white-space: nowrap;
+    z-index: 80;
+}
+.error-tooltip-list-content {
+    padding-left: 20px;
+}
+.error-tooltip-single-content {
+}
+.error-marker {
+    display: block;
+    /* padding seems to be the only way to make the element visible without content*/
+    /* padding-left is width of the image plus some extra */
+    padding: 2px 2px 2px 2px;
+    width: 4px; /* (padding-left + width + padding-right) is equal to the gutter width */
+    height: 8px;
+}
+
+.error-positioning {
+    position: absolute;
+    left: 0px;
+}
+
 /* Ripple effect */
+/* Copied from https://svelte.dev/repl/hello-world?version=4.2.18 */
 .button-component-ripple {
     background-position: center;
     transition: background 0.8s;
@@ -378,8 +419,6 @@
     box-sizing: border-box;
     display: flex;
 }
-.render-component-error {
-}
 .render-component-unselected {
     border: none;
 }
@@ -462,7 +501,6 @@
 
 /* The container styling - needed to position the dropdown content */
 .text-dropdown-component {
-    position: relative;
     display: inline-block;
 }
 

@@ -2,14 +2,6 @@
 
 // linear-progress is included for the progress indicator in the EditorPart component
 @use '@material/linear-progress/index' as linear-progress;
-
-// example of adding icons to a button
-
-// Don't forget to include one of these in webapp-starter/public/index.html:
-//<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/font-awesome.min.css" rel="stylesheet" >
-//<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-// , or import them here:
-//@import 'material-icons/iconfont/material-icons.scss';
 @use '@material/typography/mdc-typography';
 
 html,
@@ -40,7 +32,7 @@ body {
   //content: 'plus';
   content: '\2b'; // this number is called the icon's unicode in Font Awesome
   color: dodgerblue;
-  font-size:16px;
+  font-size: 16px;
   rotate: 30deg;
 }
 

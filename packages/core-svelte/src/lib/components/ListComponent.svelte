@@ -218,12 +218,12 @@
                 on:mouseout|stopPropagation={mouseout}
                 on:focus={() => {}}
                 on:blur={() => {}}
-                on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event, index)}
+
                 role="none"
         >
             <RenderComponent box={box} editor={editor}/>
 		</span>
     {/each}
 </span>
-
+<!--                on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event, index)}-->
 

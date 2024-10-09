@@ -316,7 +316,10 @@ export class EditorState {
                 this.langEnv.editor.rootElement = newUnit;
             });
             this.currentUnit = newUnit;
-            this.getErrors();
+            // todo reinstate the following statement
+            // this.getErrors();
+            // for now:
+            WebappConfigurator.getInstance().editorEnvironment.editor.setErrors([]);
         } else {
             noUnitAvailable.set(true);
             runInAction(() => {
@@ -344,14 +347,15 @@ export class EditorState {
         if (!!this.currentUnit) {
             try {
                 const list = this.langEnv.validator.validate(this.currentUnit);
+                WebappConfigurator.getInstance().editorEnvironment.editor.setErrors(list);
                 modelErrors.set(list);
             } catch (e: unknown) {
                 // catch any errors regarding erroneously stored model units
                 if (e instanceof Error) {
-                    LOGGER.log(e.message);
+                    console.log(e.message + e.stack);
                     modelErrors.set([
                         new FreError(
-                            "Problem reading model unit: '" + e.message + "'",
+                            "Problem validating model unit: '" + e.message + "'",
                             this.currentUnit,
                             this.currentUnit.name,
                             FreErrorSeverity.Error,

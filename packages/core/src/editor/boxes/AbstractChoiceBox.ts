@@ -36,6 +36,10 @@ export abstract class AbstractChoiceBox extends Box {
         );
         this.textHelper.box = this._textBox;
     }
+    
+    override get children(): Box[] {
+        return [this.textBox]
+    }
 
     get textBox(): TextBox {
         // TODO Does this need to be done every time the textbox is requested?
@@ -44,6 +48,31 @@ export abstract class AbstractChoiceBox extends Box {
         this._textBox.propertyIndex = this.propertyIndex;
         return this._textBox;
     }
+
+    override set hasError(val: boolean) {
+        this._hasError = val;
+        this._textBox.hasError = val;
+        this.isDirty();
+    }
+
+    override get errorMessages(): string[] {
+        return this._textBox.errorMessages;
+    }
+
+    override addErrorMessage(val: string | string[]) {
+        // this._errorMessages.push(val);
+        this._textBox.addErrorMessage(val);
+        this.isDirty();
+    }
+
+    override resetErrorMessages() {
+        this._errorMessages = [];
+        this._textBox.resetErrorMessages();
+        this.isDirty();
+    }
+
+    // If true, then this box should carry all error messages on the line.
+    isFirstInLine: boolean = false;
 
     _getSelectedOption(): SelectOption | null {
         return null;
@@ -60,7 +89,7 @@ export abstract class AbstractChoiceBox extends Box {
     get getSelectedOption(): () => SelectOption | null {
         return this._getSelectedOption
     }
-    
+
     // protected setSelectedOptionExec(value: () => SelectOption | null): SelectOption | null {
     //     this._getSelectedOption = value
     //     this.isDirty()
@@ -78,14 +107,16 @@ export abstract class AbstractChoiceBox extends Box {
 
     // @ts-ignore
     // parameter is present to support subclasses
-    selectOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        console.error("AbstractChoiceBox.selectOption");
+    executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
+        console.error("AbstractChoiceBox.executeOption");
         return BehaviorExecutionResult.NULL;
     }
-    
-    setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
+
+    setCaret: (caret: FreCaret, editor: FreEditor) => void = (caret: FreCaret, editor: FreEditor) => {
         if (!!this.textBox) {
             this.textBox.setCaret(caret);
+            // todo remove if and when editor.selectedCaretPosition can be removed
+            editor.selectedCaretPosition = caret;
         }
     };
 
@@ -110,10 +141,6 @@ export abstract class AbstractChoiceBox extends Box {
     triggerKeyDownEvent: (key: FreKey) => void = () => {
         /* To be overwritten by `AbstractChoiceComponent` */
     };
-
-    public deleteWhenEmpty1(): boolean {
-        return false;
-    }
 
     isEditable(): boolean {
         return true;

@@ -6,7 +6,7 @@
      *  such that the complete menu stays within the bounderies of the editor viewport. The state of the editor
      *  viewport is stored in the EditorViewportStore (by FreonComponent).
      */
-    import { clickOutsideConditional } from "./svelte-utils/index.js";
+    import { calculatePos, clickOutsideConditional } from "./svelte-utils/index.js";
     import { tick } from "svelte";
     import { FreLogger, MenuItem, FreEditor } from "@freon4dsl/core";
     import { contextMenuVisible } from "./svelte-utils/ContextMenuStore.js";
@@ -70,7 +70,7 @@
      */
     async function openSub(itemIndex: number) {
         submenuOpen = true;
-        await tick(); // wait in order to detemrine the size of the submenu
+        await tick(); // wait in order to determine the size of the submenu
         // determine the 'normal' position of the sub menu, which is
         // (itemHeight px) lower than the main menu, 20 px left to the end of the item
         topSub = top + itemHeight + itemIndex * (itemHeight + 2 + 3 + 4); // add 2 for gap, 3 for margin, 4 for padding
@@ -81,30 +81,12 @@
     }
 
     /**
-     * This calculates the position of the context- or sub-menu, either on x-axis or y-axis
-     */
-    function calculatePos(editor: number, menu: number, mouse: number): number {
-        let result: number;
-        // see if the menu will fit in the editor view, if not: position it left/up, not right/down of the mouse click
-        if (editor - mouse < menu) {
-            result = mouse - menu;
-        } else {
-            result = mouse;
-        }
-        // if the result should be outside the editor view, then position it on the leftmost/uppermost point
-        if (result < 0) {
-            result = 0;
-        }
-        return result;
-    }
-
-    /**
      * This function finds the context menu dimensions the moment that
      * $contextMenuVisible becomes true and the menu is shown.
      */
-    function getContextMenuDimension(node: HTMLElement) {
-        menuHeight = node.offsetHeight;
-        menuWidth = node.offsetWidth;
+    function getContextMenuDimension(htmlElement: HTMLElement) {
+        menuHeight = htmlElement.offsetHeight;
+        menuWidth = htmlElement.offsetWidth;
     }
 
     /**

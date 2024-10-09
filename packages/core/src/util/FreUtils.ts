@@ -59,8 +59,7 @@ export class FreUtils {
 
     static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
         AST.change( () => {
-            // TODO Check typeof
-            if (typeof freOwnerDescriptor !== "undefined") {
+            if ( !isNullOrUndefined(freOwnerDescriptor)) {
                 if (freOwnerDescriptor.propertyIndex === undefined) {
                     freOwnerDescriptor.owner[freOwnerDescriptor.propertyName] = exp;
                 } else {

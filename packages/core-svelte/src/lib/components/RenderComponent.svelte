@@ -63,6 +63,7 @@
     import { selectedBoxes, componentId, setBoxSizes, findCustomComponent} from "$lib/index.js";
 
     import {afterUpdate} from "svelte";
+    import ErrorMarker from "$lib/components/ErrorMarker.svelte";
 
     const LOGGER = new FreLogger("RenderComponent");
 
@@ -70,8 +71,10 @@
     export let editor: FreEditor;
 
     let id: string;
-    let className: string = '';
     let element: HTMLElement;
+    let selectedCls: string = '';   // css class name for when the node is selected
+    let errorCls: string = '';      // css class name for when the node is erroneous
+    let errMess: string[] = [];     // error message to be shown when element is hovered
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log("RenderComponent.onClick for box " + box.role + ", selectable:" + box.selectable);
@@ -89,7 +92,7 @@
         if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected
         } else {
-            className = (isSelected ? "render-component-selected" : "render-component-unselected");
+            selectedCls = (isSelected ? "render-component-selected" : "render-component-unselected");
         }
         if (!!element) { // upon initialization the element might be null
             setBoxSizes(box, element.getBoundingClientRect());
@@ -97,10 +100,18 @@
             LOGGER.log('No element for ' + box?.id + ' ' + box?.kind);
         }
     });
+
     // todo test GridComponent
     const refresh = (why?: string): void => {
         LOGGER.log("REFRESH RenderComponent (" + why + ")");
         id = !!box? `render-${componentId(box)}` : 'render-for-unknown-box';
+        if (box.hasError) {
+            errorCls = "render-component-error";
+            errMess = box.errorMessages;
+        } else {
+            errorCls = "";
+            errMess = [];
+        }
     };
 
     let first = true;
@@ -108,7 +119,6 @@
         refresh((first ? "first" : "later") + "   " + box?.id);
         first = false;
     // }
-
 </script>
 
 <!-- TableRows are not included here, because they use the CSS grid and table cells must in HTML
@@ -120,9 +130,12 @@
 {#if isElementBox(box) }
     <ElementComponent box={box} editor={editor}/>
 {:else}
+    {#if errMess.length > 0}
+        <ErrorMarker element={element} {box}/>
+    {/if}
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
     <span id={id}
-          class="render-component {className}"
+          class="render-component {errorCls} {selectedCls} "
           on:click={onClick}
           bind:this={element}
           role="group"
@@ -172,7 +185,7 @@
         {:else if isTableBox(box) }
             <TableComponent box={box} editor={editor} />
         {:else if isTextBox(box) }
-            <TextComponent box={box} editor={editor} partOfActionBox={false} text="" isEditing={false}/>
+            <TextComponent box={box} editor={editor} partOfDropdown={false} text="" isEditing={false}/>
         {:else if isMultiLineTextBox(box) }
             <MultiLineTextComponent box={box} editor={editor} text=""/>
         {:else if isActionBox(box) || isSelectBox(box) || isReferenceBox(box) }
@@ -181,7 +194,7 @@
             <EmptyLineComponent box={box}/>
         {:else}
             <!-- we use box["kind"] here instead of box.kind to avoid an error from svelte check-->
-            <p class="render-component-error">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
+            <p class="render-component-unknown-box">[UNKNOWN BOX TYPE: {box["kind"]}]</p>
         {/if}
     </span>
 {/if}
