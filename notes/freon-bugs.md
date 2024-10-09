@@ -61,3 +61,9 @@ In the external tester project the replacers for properties do not react upon an
 # LoggerSettings from webapp-lib to webapp-starter
 
 See heading
+
+# Vulnerabilities and warnings when starting webapp
+
+There are 4 vulnerabilities in node_modules. There are a number of warnings at the startup of the webapp.
+
+# Not a bug, but todo: new format for all files on server/modelstore

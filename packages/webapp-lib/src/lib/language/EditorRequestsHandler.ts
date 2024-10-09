@@ -1,16 +1,10 @@
 import {
-    Box,
     FreProjectionHandler,
-    isActionBox,
-    isActionTextBox,
-    isListBox,
-    FreLanguage,
     FreError,
     FreLogger,
-    FreUndoManager,
     FreSearcher,
-    FreErrorSeverity,
     type FreEnvironment,
+    AstActionExecutor,
 } from "@freon4dsl/core";
 import type { FreNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
@@ -23,8 +17,7 @@ import {
     searchTab,
 } from "../components/stores/InfoPanelStore.js";
 import { EditorState } from "./EditorState.js";
-import { setUserMessage } from "../components/stores/UserMessageStore.js";
-import { WebappConfigurator } from "../WebappConfigurator.js";
+import { WebappConfigurator } from "$lib/WebappConfigurator.js";
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
@@ -61,113 +54,27 @@ export class EditorRequestsHandler {
         // this.validate();
     }
 
-    /**
-     * Makes sure that the editor shows the current unit using the projections selected or unselected by the user
-     * @param name
-     */
-    // disableProjection(name: string): void {
-    //     LOGGER.log("disabling Projection " + name);
-    //     const proj = this.langEnv.editor.projection;
-    //     if (proj instanceof FreProjectionHandler) {
-    //         proj.disableProjection(name);
-    //     }
-    // }
-
-    redo() {
-        const unitInEditor = EditorState.getInstance().currentUnit;
-        LOGGER.log(`redo called: '${FreUndoManager.getInstance().nextRedoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'` );
-        if (!!unitInEditor) {
-            FreUndoManager.getInstance().executeRedo(unitInEditor);
-        }
+    redo = (): void => {
+        AstActionExecutor.getInstance(this.langEnv.editor).redo();
     }
 
-    undo() {
-        const unitInEditor = EditorState.getInstance().currentUnit;
-        LOGGER.log(`undo called: '${FreUndoManager.getInstance().nextUndoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'` );
-        if (!!unitInEditor) {
-            FreUndoManager.getInstance().executeUndo(unitInEditor);
-        }
+    undo = (): void => {
+        AstActionExecutor.getInstance(this.langEnv.editor).undo();
     }
 
-    cut() {
-        LOGGER.log("cut called");
-        const tobecut: FreNode = this.langEnv.editor.selectedElement;
-        if (!!tobecut) {
-            EditorState.getInstance().deleteElement(tobecut);
-            this.langEnv.editor.copiedElement = tobecut;
-            // console.log("element " + this.langEnv.editor.copiedElement.freId() + " is stored ");
-        } else {
-            setUserMessage("Nothing selected", FreErrorSeverity.Warning);
-        }
+    cut = (): void => {
+        AstActionExecutor.getInstance(this.langEnv.editor).cut();
     }
 
-    copy() {
-        LOGGER.log("copy called");
-        const tobecopied: FreNode = this.langEnv.editor.selectedElement;
-        if (!!tobecopied) {
-            this.langEnv.editor.copiedElement = tobecopied.copy();
-            // console.log("element " + this.langEnv.editor.copiedElement.freId() + " is stored ");
-        } else {
-            setUserMessage("Nothing selected", FreErrorSeverity.Warning);
-        }
+    copy = (): void => {
+        AstActionExecutor.getInstance(this.langEnv.editor).copy();
     }
 
-    paste() {
-        LOGGER.log("paste called");
-        const tobepasted = this.langEnv.editor.copiedElement;
-        if (!!tobepasted) {
-            const currentSelection: Box = this.langEnv.editor.selectedBox;
-            const element: FreNode = currentSelection.node;
-            if (!!currentSelection) {
-                if (isActionTextBox(currentSelection)) {
-                    if (isActionBox(currentSelection.parent)) {
-                        if (
-                            FreLanguage.getInstance().metaConformsToType(
-                                tobepasted,
-                                currentSelection.parent.conceptName,
-                            )
-                        ) {
-                            // allow subtypes
-                            // console.log("found text box for " + currentSelection.parent.conceptName + ", " + currentSelection.parent.propertyName);
-                            EditorState.getInstance().pasteInElement(element, currentSelection.parent.propertyName);
-                        } else {
-                            setUserMessage(
-                                "Cannot paste an " + tobepasted.freLanguageConcept() + " here.",
-                                FreErrorSeverity.Warning,
-                            );
-                        }
-                    }
-                } else if (isListBox(currentSelection.parent)) {
-                    if (FreLanguage.getInstance().metaConformsToType(tobepasted, element.freLanguageConcept())) {
-                        // allow subtypes
-                        // console.log('pasting in ' + currentSelection.role + ', prop: ' + currentSelection.parent.propertyName);
-                        EditorState.getInstance().pasteInElement(
-                            element.freOwnerDescriptor().owner,
-                            currentSelection.parent.propertyName,
-                            element.freOwnerDescriptor().propertyIndex + 1,
-                        );
-                    } else {
-                        setUserMessage(
-                            "Cannot paste an " + tobepasted.freLanguageConcept() + " here.",
-                            FreErrorSeverity.Warning,
-                        );
-                    }
-                } else {
-                    // todo other pasting options ...
-                }
-            } else {
-                setUserMessage(
-                    "Cannot paste an " + tobepasted.freLanguageConcept() + " here.",
-                    FreErrorSeverity.Warning,
-                );
-            }
-        } else {
-            setUserMessage("Nothing to be pasted", FreErrorSeverity.Warning);
-            return;
-        }
+    paste = (): void => {
+        AstActionExecutor.getInstance(this.langEnv.editor).paste();
     }
 
-    validate() {
+    validate = (): void => {
         LOGGER.log("validate called");
         errorsLoaded.set(false);
         activeTab.set(errorTab);

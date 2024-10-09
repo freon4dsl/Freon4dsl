@@ -47,6 +47,7 @@ export class EditorState {
         this.modelStore.addCurrentModelListener(this.modelChanged);
     }
 
+    // todo see whether we can use only the editor.rootElement as currentUnit
     private __currentUnit: FreModelUnit = null;
     get currentUnit(): FreModelUnit {
         return this.__currentUnit;
@@ -366,45 +367,5 @@ export class EditorState {
         }
     }
 
-    deleteElement(tobeDeleted: FreNode) {
-        if (!!tobeDeleted) {
-            // find the owner of the element to be deleted and remove the element there
-            const owner: FreNode = tobeDeleted.freOwner();
-            const desc: FreOwnerDescriptor = tobeDeleted.freOwnerDescriptor();
-            if (!!desc) {
-                // console.log("deleting " + desc.propertyName + "[" + desc.propertyIndex + "]");
-                if (desc.propertyIndex !== null && desc.propertyIndex !== undefined && desc.propertyIndex >= 0) {
-                    const propList = owner[desc.propertyName];
-                    if (Array.isArray(propList) && propList.length > desc.propertyIndex) {
-                        AST.change(() => propList.splice(desc.propertyIndex, 1));
-                    }
-                } else {
-                    AST.change(() => (owner[desc.propertyName] = null));
-                }
-            } else {
-                console.error(
-                    "deleting of " + tobeDeleted.freId() + " not succeeded, because owner descriptor is empty.",
-                );
-            }
-        }
-    }
 
-    pasteInElement(element: FreNode, propertyName: string, index?: number) {
-        const property = element[propertyName];
-        // todo make new copy to keep in 'this.langEnv.editor.copiedElement'
-        if (Array.isArray(property)) {
-            // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
-            AST.change(() => {
-                if (index !== null && index !== undefined && index > 0) {
-                    property.splice(index, 0, this.langEnv.editor.copiedElement);
-                } else {
-                    property.push(this.langEnv.editor.copiedElement);
-                }
-            });
-            // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
-        } else {
-            // console.log('property ' + propertyName + ' is no list');
-            AST.change(() => (element[propertyName] = this.langEnv.editor.copiedElement));
-        }
-    }
 }
