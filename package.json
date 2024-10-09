@@ -11,6 +11,7 @@
     "build-release": "npm run build-release --workspaces --if-present",
     "publish-local": "npm run publish-local --workspaces --if-present",
     "unpublish-local": "npm run unpublish-local --workspaces --if-present",
+    "republish-local": "npm run unpublish-local && npm run publish-local",
     "install-local": "npm install --registry http://localhost:4873",
     "lint": "npm run lint --workspaces --if-present",
     "setup": "npm run setup --workspaces --if-present",
@@ -64,5 +65,5 @@
     "packages/server",
     "packages/test"
   ],
-  "version": "0.7.0-beta"
+  "version": "0.7.0-beta3"
 }

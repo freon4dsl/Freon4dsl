@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/core-svelte",
-  "version": "0.7.0-beta",
+  "version": "0.7.0-beta3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -45,7 +45,7 @@
     "!dist/**/*.spec.*"
   ],
   "devDependencies": {
-    "@freon4dsl/core": "^0.7.0-beta",
+    "@freon4dsl/core": "^0.7.0-beta3",
     "mobx": "^6.12.3",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/svelte": "^5.1.0",
@@ -70,7 +70,7 @@
     "@material/switch": "^14.0.0",
     "@smui/ripple": "^7.0.0",
     "svelte": "^4.2.17",
-    "@freon4dsl/core": "^0.7.0-beta",
+    "@freon4dsl/core": "^0.7.0-beta3",
     "mobx": "^6.12.3"
   }
 }

@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/webapp-lib",
-  "version": "0.7.0-beta",
+  "version": "0.7.0-beta3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -44,13 +44,9 @@
     "!dist/**/*.spec.*"
   ],
   "dependencies": {
-    "@freon4dsl/core": "0.7.0-beta",
-    "svelte": "^4.2.17"
-  },
-  "devDependencies": {
-    "@material/theme": "^14.0.0",
-    "@material/typography": "^14.0.0",
-    "@mdi/js": "^7.4.47",
+    "@freon4dsl/core": "0.7.0-beta3",
+    "svelte": "^4.2.17",
+    "click-outside": "^2.0.2",
     "@smui-extra/autocomplete": "^7.0.0",
     "@smui/banner": "^7.0.0",
     "@smui/button": "^7.0.0",
@@ -74,7 +70,11 @@
     "@smui/textfield": "^7.0.0",
     "@smui/tooltip": "^7.0.0",
     "@smui/top-app-bar": "^7.0.0",
-    "click-outside": "^2.0.2",
+    "@material/theme": "^14.0.0",
+    "@material/typography": "^14.0.0",
+    "@mdi/js": "^7.4.47"
+  },
+  "devDependencies": {
     "tslib": "^2.6.3",
     "@sveltejs/adapter-auto": "^3.2.1",
     "@sveltejs/kit": "^2.5.10",
