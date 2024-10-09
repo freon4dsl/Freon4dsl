@@ -96,7 +96,7 @@
                     stopEvent(event);
                     break;
                 case DELETE:
-                    console.log("FreonComponent - DELETE")
+                    LOGGER.log("FreonComponent - DELETE")
                     editor.deleteBox(editor.selectedBox);
                     stopEvent(event);
                     break;

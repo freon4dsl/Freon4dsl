@@ -85,9 +85,7 @@ export class EditorRequestsHandler {
         const unitInEditor = EditorState.getInstance().currentUnit;
         LOGGER.log(`undo called: '${FreUndoManager.getInstance().nextUndoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'` );
         if (!!unitInEditor) {
-            runInAction( () => {
-                FreUndoManager.getInstance().executeUndo(unitInEditor);
-            })
+            FreUndoManager.getInstance().executeUndo(unitInEditor);
         }
     }
 

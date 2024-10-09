@@ -36,6 +36,10 @@ export abstract class AbstractChoiceBox extends Box {
         );
         this.textHelper.box = this._textBox;
     }
+    
+    override get children(): Box[] {
+        return [this.textBox]
+    }
 
     get textBox(): TextBox {
         // TODO Does this need to be done every time the textbox is requested?

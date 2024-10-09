@@ -301,7 +301,6 @@ dropdown-component {
     background: transparent;
 }
 .table-cell-component-selected {
-    /*background-color: var(--freon-selected-background-color, rgba(211, 227, 253, 255));*/
     outline-color: whitesmoke;
 }
 

@@ -271,7 +271,7 @@ export class BoxFactory {
         initializer?: Partial<NumberControlBox>,
     ): NumberControlBox {
         if (cacheNumberOff) {
-            console.log("Retruning new NumberControlBox: ");
+            // console.log("Retruning new NumberControlBox: ");
             return new NumberControlBox(node, role, getNumber, setNumber, initializer);
         }
         // 1. Create the Boolean box, or find the one that already exists for this element and role

@@ -184,6 +184,8 @@ export abstract class Box {
         const thisIndex: number = this.parent.children.indexOf(this);
         if (thisIndex === -1) {
             LOGGER.error(`nextLeafRight: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is mising in its parent (index === -1) `)
+            LOGGER.error(`  boxid: ${this.id} parent [id: ${this.parent.id}, id: ${this.parent.kind}, node: ${this.parent.node.freLanguageConcept()}]`)
+            LOGGER.error(`  tree: ${(this.parent.parent !== undefined && this.parent.parent !== null) ? this.parent.parent.toStringRecursive("  "):this.parent.toStringRecursive("  ")}`)
             return null
         }
         const rightSiblings: Box[] = this.parent.children.slice(thisIndex + 1, this.parent.children.length);
@@ -196,7 +198,7 @@ export abstract class Box {
                 return sibling;
             }
         }
-        console.log(`${this.id} nextLeafRight: referring to parent`)
+        LOGGER.log(`${this.id} nextLeafRight: referring to parent`)
         return this.parent.nextLeafRight;
     }
 

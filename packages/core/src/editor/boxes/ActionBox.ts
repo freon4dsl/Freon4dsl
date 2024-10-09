@@ -196,7 +196,7 @@ export class ActionBox extends AbstractChoiceBox {
     };
 
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        console.log("ActionBox executeOption " + JSON.stringify(option));
+        LOGGER.log("ActionBox executeOption " + JSON.stringify(option));
         FreUtils.CHECK(!!option.action, `ActionBox.executeOption: action missing for ${option.label}` )
         if (!!option.action) {
             return executeSingleBehavior(option.action, this, option.label, editor);
@@ -205,7 +205,7 @@ export class ActionBox extends AbstractChoiceBox {
     }
 
     tryToExecute(key: string, editor: FreEditor): BehaviorExecutionResult {
-        console.log(`ActionBox ${this.id} tryToExecute [${key}]`);
+        LOGGER.log(`ActionBox ${this.id} tryToExecute [${key}]`);
         let result: BehaviorExecutionResult;
         // Try if key fits one of the options, and execute the action that is associated with it
         const filteredOptions: SelectOption[] = this.getOptions(editor).filter(o => o.label.startsWith(key));
@@ -224,7 +224,7 @@ export class ActionBox extends AbstractChoiceBox {
     }
 
     tryToMatchRegExpAndExecuteAction(text: string, editor: FreEditor): BehaviorExecutionResult {
-        console.log(`ActionBox tryToMatchRegExpAndExecuteAction [${text}]`);
+        LOGGER.log(`ActionBox tryToMatchRegExpAndExecuteAction [${text}]`);
         // Try to match a regular expression
         const matchingOption = this.getOptions(editor).find(option => {
             if (isRegExp(option.action.trigger)) {

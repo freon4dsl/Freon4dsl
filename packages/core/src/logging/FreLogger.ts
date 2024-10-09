@@ -54,6 +54,7 @@ export class FreLogger {
 
     constructor(cat: string) {
         this.category = cat;
+        this.mute()
     }
 
     info(msg: LogMessage) {

@@ -41,7 +41,7 @@ export class ReferenceBox extends SelectBox {
      * @private
      */
     private findReference() {
-        if (!!this.propertyIndex) {
+        if (this.propertyIndex !== null && this.propertyIndex !== undefined && this.propertyIndex >= 0) {
             // console.log('Setting this._myReference to ' + this.node.freLanguageConcept() + "[" + this.propertyName + "][" + this.propertyIndex + "]")
             this._myReference = this.node[this.propertyName][this.propertyIndex];
         } else {
