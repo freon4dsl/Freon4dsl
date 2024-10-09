@@ -89,7 +89,7 @@ export class FreErrorDecorator {
     public gatherMessagesForGutter() {
         if (isNullOrUndefined(this.erroneousBoxes[0]) || isNullOrUndefined(this.erroneousBoxes[0].actualY) || this.erroneousBoxes[0].actualY === -1) {
             // Too early, wait for the rendering to be done
-            console.log("Setting errors: gathering for gutter - TOO EARLY")
+            // console.log("Setting errors: gathering for gutter - TOO EARLY")
             return;
         }
         // Sort the erroneous boxes based on their y-coordinate, because we want to gather all messages on the same 'line'
