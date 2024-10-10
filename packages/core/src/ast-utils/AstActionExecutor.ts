@@ -56,7 +56,9 @@ export class AstActionExecutor {
         LOGGER.log("copy called");
         const tobecopied: FreNode = this.editor.selectedElement;
         if (!!tobecopied) {
-            this.editor.copiedElement = tobecopied.copy();
+            runInAction( () => {
+                this.editor.copiedElement = tobecopied.copy();
+            })
             // console.log("element " + this.editor.copiedElement.freId() + " is stored ");
         } else {
             this.editor.setUserMessage("Nothing selected", FreErrorSeverity.Warning);
