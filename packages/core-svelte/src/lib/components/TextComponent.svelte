@@ -3,8 +3,9 @@
 <!-- (cursor or selected text), when the switch is being made. -->
 
 <script lang="ts">
+	import { TEXT_LOGGER } from "$lib/components/ComponentLoggers.js";
 	import {afterUpdate, beforeUpdate, createEventDispatcher, type EventDispatcher, onMount} from "svelte";
-	import {componentId, replaceHTML} from "$lib/components/svelte-utils/index.js";
+	import { componentId, replaceHTML, setBoxSizes } from "$lib/components/svelte-utils/index.js";
 	import {
 		ActionBox,
 		ALT,
@@ -34,7 +35,7 @@
 	import ErrorMarker from "$lib/components/ErrorMarker.svelte";
 
 	// TODO find out better way to handle muting/unmuting of LOGGERs
-	const LOGGER = new FreLogger("TextComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
+	const LOGGER = TEXT_LOGGER
 	const dispatcher: EventDispatcher<any> = createEventDispatcher();
 	type BoxType = "action" | "select" | "text";
 
@@ -59,6 +60,7 @@
     let errorCls: string = '';              // css class name for when the node is erroneous
     let errMess: string[] = [];             // error message to be shown when element is hovered
     let hasErr: boolean = false;            // indicates whether this box has errors
+	let spanElement: HTMLSpanElement = undefined
 
     // Variables for styling
 	let placeHolderStyle: string;
@@ -215,7 +217,6 @@
 				case ARROW_UP:
 				case ENTER:
 				case TAB: {
-					LOGGER.log("Arrow up, arrow down, enter, or tab pressed: " + event.key);
 					if (!partOfDropdown && isEditing) {
 						endEditing(); // do not switch selection, this will be done by FreonComponent
 					} // else, let TextDropDownComponent or FreonComponent (in case of TAB) handle this
@@ -276,7 +277,10 @@
 		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
 		if (!partOfDropdown && isEditing) {
 			endEditing();
-		} // else let TextDropdownComponent handle it. The event will bubble up.
+		} else { 
+			// else let TextDropdownComponent handle it
+			dispatcher("focusOutTextComponent")
+		}
 	}
 
 	const refresh = (why?: string) => {
@@ -345,6 +349,13 @@
 		box.setFocus = setFocus;
 		box.setCaret = setCaret;
 		box.refreshComponent = refresh;
+		// NB This is needed here because this component is not shown using RenderComponent if it is part of a TextDropdownComponent.
+		if (!!inputElement) { // upon initialization the element might be null
+			setBoxSizes(box, inputElement.getBoundingClientRect());
+		}
+		if (!!spanElement) { // upon initialization the element might be null
+			setBoxSizes(box, spanElement.getBoundingClientRect());
+		}
 	});
 
 	/**
@@ -433,6 +444,7 @@
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 			<span class="{box.role} text-box-{boxType} text-component-text {errorCls}"
 				  on:click={startEditing}
+				  bind:this={spanElement}
 				  contenteditable=true
 				  spellcheck=false
 				  id="{id}-span"

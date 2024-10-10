@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { TEXTDROPDOWN_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     // This component is a combination of a TextComponent and a DropdownComponent.
     // The TextComponent is shown in non-editable state until it gets focus,
     // then the Dropdown also appears. When the text in the TextComponent alters,
@@ -25,8 +27,8 @@
 
     import { afterUpdate, onMount } from "svelte";
 
-    const LOGGER = new FreLogger("TextDropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
-
+    const LOGGER = TEXTDROPDOWN_LOGGER;
+    
     export let box: AbstractChoiceBox;	        // the accompanying ActionBox or SelectBox
     export let editor: FreEditor;			    // the editor
     let textBox: TextBox;                       // the textbox that is to be coupled to the TextComponent part
@@ -376,6 +378,12 @@
             dropdownShown = false;
         }
     };
+    
+    const focusOutTextComponent = () => {
+        LOGGER.log("focusOutTextComponent " + id)
+        selectedId = undefined
+        isEditing = false
+    }
 
     const onBlur = () => {
         // We use on:blur instead of on:focusout, because when the user selects an item in the dropdown list,
@@ -430,6 +438,7 @@
             editor={editor}
             on:textUpdate={textUpdate}
             on:caretChanged={caretChanged}
+            on:focusOutTextComponent={focusOutTextComponent}
             on:hideDropdown={hideDropdown}
             on:showDropdown={showDropdown}
             on:startEditing={startEditing}
