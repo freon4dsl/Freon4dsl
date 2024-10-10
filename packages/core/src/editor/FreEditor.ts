@@ -533,25 +533,9 @@ export class FreEditor {
         const y = box.actualY + this.scrollY;
         let result: Box = box.nextLeafLeft;
         let tmpResult = result;
-        LOGGER.log(
-            "boxAbove " +
-                box.role +
-                ": " +
-                Math.round(x) +
-                ", " +
-                Math.round(y) +
-                " text: " +
-                (isTextBox(box) ? box.getText() : "NotTextBox"),
-        );
+        LOGGER.log(`boxAbove ${box.role+ box.node.freId()}: actual (${box.actualX}, ${box.actualY}) scroll-relative (${x}, ${y})`);
         while (result !== null) {
-            LOGGER.log(
-                "previous : " +
-                    result.role +
-                    "  " +
-                    Math.round(result.actualX + this.scrollX) +
-                    ", " +
-                    Math.round(result.actualY + this.scrollY),
-            );
+            LOGGER.log(`previous: ${result.role + result.node.freId()} result (${result.actualX}, ${result.actualY}) scroll-relative (${result.actualX + this.scrollX}, ${result.actualY + this.scrollY})`);
             if (FreEditor.isOnPreviousLine(tmpResult, result) && FreEditor.isOnPreviousLine(box, tmpResult)) {
                 return tmpResult;
             }
