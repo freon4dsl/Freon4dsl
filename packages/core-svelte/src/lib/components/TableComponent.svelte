@@ -1,5 +1,7 @@
 <svelte:options immutable={true}/>
 <script lang="ts">
+    import { TABLE_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      * This component shows a list of elements that have the same type (a 'true' list) as
      * a table. It can be shown row-based or column-based, both are displayed as a grid.
@@ -22,7 +24,7 @@
     import { dropListElement, moveListElement } from "@freon4dsl/core";
     import TableCellComponent from "./TableCellComponent.svelte";
 
-    const LOGGER = new FreLogger("TableComponent");
+    const LOGGER = TABLE_LOGGER
 
     export let box: TableBox;
     export let editor: FreEditor;

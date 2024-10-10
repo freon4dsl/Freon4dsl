@@ -1,14 +1,15 @@
 <svelte:options immutable={true}/>
 <script lang="ts">
+    import { ELEMENT_LOGGER } from "$lib/components/ComponentLoggers.js";
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
-    import { FreLogger, type FreEditor, ElementBox, Box } from "@freon4dsl/core";
+    import { type FreEditor, ElementBox, Box } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils/index.js";
 
     export let box: ElementBox;
     export let editor: FreEditor;
 
-    const LOGGER = new FreLogger("ElementComponent");
+    const LOGGER = ELEMENT_LOGGER
     let id: string;
     let childBox: Box ;
 

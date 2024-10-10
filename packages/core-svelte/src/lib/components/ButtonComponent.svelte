@@ -1,8 +1,9 @@
 <script lang="ts">
-    import {ButtonBox, FreEditor, FreLogger} from "@freon4dsl/core";
-    import {afterUpdate, onMount} from "svelte";
+    import { BUTTON_LOGGER } from "$lib/components/ComponentLoggers.js";
+    import { ButtonBox, FreEditor } from "@freon4dsl/core";
+    import { afterUpdate, onMount } from "svelte";
 
-    const LOGGER = new FreLogger("ButtonComponent"); //.mute();
+    const LOGGER = BUTTON_LOGGER
 
     export let editor: FreEditor;
     export let box: ButtonBox;

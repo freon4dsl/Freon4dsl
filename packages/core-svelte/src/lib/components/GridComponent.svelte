@@ -1,10 +1,11 @@
 <script lang="ts">
+    import { GRID_LOGGER } from "$lib/components/ComponentLoggers.js";
     import { GridCellBox, type GridBox, type FreEditor, FreLogger } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
     import GridCellComponent from "./GridCellComponent.svelte";
     import { componentId } from "./svelte-utils/index.js";
 
-    const LOGGER = new FreLogger("GridComponent"); //.mute();
+    const LOGGER = GRID_LOGGER
 
     export let box: GridBox;
     export let editor: FreEditor;

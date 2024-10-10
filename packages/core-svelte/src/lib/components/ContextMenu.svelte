@@ -1,6 +1,8 @@
 <svelte:options accessors={true}/> <!-- this option lets us set the items props after the component has been created -->
 
 <script lang="ts">
+    import { CONTEXTMENU_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      *  This component combines a menu with a submenu. The positions of both the menu and the submenu are determined
      *  such that the complete menu stays within the bounderies of the editor viewport. The state of the editor
@@ -17,7 +19,7 @@
     export let editor: FreEditor;
 
     // local variables
-    const LOGGER = new FreLogger("ContextMenu"); //.mute();
+    const LOGGER = CONTEXTMENU_LOGGER;
     let submenuItems: MenuItem[];
     let elementIndex: number;                   // the index of the element in a list to which this menu is coupled
 

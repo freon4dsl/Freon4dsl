@@ -1,10 +1,11 @@
 <script lang="ts">
     import '@material/web/slider/slider.js';
+    import { NUMERICSLIDER_LOGGER } from "$lib/components/ComponentLoggers.js";
     import {MdSlider} from "@material/web/slider/slider.js";
-    import {FreEditor, FreLogger, NumberControlBox} from "@freon4dsl/core";
+    import {FreEditor, NumberControlBox} from "@freon4dsl/core";
     import {afterUpdate, onMount} from "svelte";
 
-    const LOGGER = new FreLogger("RadioComponent");
+    const LOGGER = NUMERICSLIDER_LOGGER
 
     export let editor: FreEditor;
     export let box: NumberControlBox;

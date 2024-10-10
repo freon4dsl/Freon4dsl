@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { LIMITEDRADIO_LOGGER } from "$lib/components/ComponentLoggers.js";
     import {
         ALT, ARROW_DOWN,
         ARROW_LEFT,
@@ -15,7 +16,7 @@
     export let box: LimitedControlBox;
     export let editor: FreEditor;			// the editor
 
-    const LOGGER = new FreLogger("LimitedRadioComponent");
+    const LOGGER = LIMITEDRADIO_LOGGER
 
     let id: string = box.id;
     let myEnum = box.getPossibleNames();

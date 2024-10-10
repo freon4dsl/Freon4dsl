@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { DROPDOWN_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      * This component is a dropdown menu that is used with a TextDropdownComponent.
      */
@@ -10,7 +12,7 @@
     let id: string = "dropdown";
     const dispatcher = createEventDispatcher();
 
-    const LOGGER = new FreLogger("DropdownComponent"); // .mute(); muting done through webapp/logging/LoggerSettings
+    const LOGGER = DROPDOWN_LOGGER
 
     $: isSelected = (option: SelectOption) => { // determines the style of the selected option
         if (options.length === 1) {

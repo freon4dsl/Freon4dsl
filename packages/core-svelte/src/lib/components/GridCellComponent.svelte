@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { GRIDCELL_LOGGER } from "$lib/components/ComponentLoggers.js";
     import {
         GridBox,
         isMetaKey,
@@ -20,7 +21,7 @@
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
     //local variables
-    const LOGGER = new FreLogger("GridCellComponent");
+    const LOGGER = GRIDCELL_LOGGER
     let contentBox: Box;
     let id: string = !!cellBox? componentId(cellBox) : 'gridcell-for-unknown-box';
 

@@ -7,11 +7,12 @@
     // On Designing and Building Toggle Switches by Sara Soueidan https://www.sarasoueidan.com/blog/toggle-switch-design/
     // and this example by Scott O'hara https://codepen.io/scottohara/pen/zLZwNv
 
+    import { SWITCH_LOGGER } from "$lib/components/ComponentLoggers.js";
     import {BooleanControlBox, FreEditor, FreLogger} from "@freon4dsl/core";
     import {componentId} from "$lib/index.js";
     import {afterUpdate, onMount} from "svelte";
 
-    const LOGGER = new FreLogger("SwitchComponent");
+    const LOGGER = SWITCH_LOGGER
     
     export let box: BooleanControlBox;
     export let editor: FreEditor;			// the editor

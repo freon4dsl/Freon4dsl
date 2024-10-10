@@ -1,5 +1,7 @@
 <svelte:options immutable={true}/>
 <script lang="ts">
+    import { TABLECELL_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      * This component show a single cell in a TableComponent. It supports drag and drop,
      * in so far that when dragged, the model element, that is the parent of the part that is
@@ -46,7 +48,7 @@
     type BoxTypeName = "gridcellNeutral" | "gridcellOdd" | "gridcellEven";
 
     // local variables
-    const LOGGER = new FreLogger("TableCellComponent"); //.mute();
+    const LOGGER = TABLECELL_LOGGER
     const dispatcher = createEventDispatcher();
     let id: string = !!box ? `cell-${componentId(box)}` : 'table-cell-for-unknown-box';
 
