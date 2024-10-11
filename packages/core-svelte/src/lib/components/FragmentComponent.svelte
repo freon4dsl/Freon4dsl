@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { FRAGMENT_LOGGER } from "$lib/components/ComponentLoggers.js";
     import RenderComponent from "./RenderComponent.svelte";
     import { onMount, afterUpdate } from "svelte";
     import {FreLogger, type FreEditor, Box, FragmentBox} from "@freon4dsl/core";
@@ -7,7 +8,7 @@
     export let box: FragmentBox;
     export let editor: FreEditor;
 
-    const LOGGER = new FreLogger("FragmentComponent").mute();
+    const LOGGER = FRAGMENT_LOGGER
     let id: string;
     let childBox: Box;
     let cssClass: string;

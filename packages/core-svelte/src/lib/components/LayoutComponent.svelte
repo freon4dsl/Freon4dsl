@@ -1,6 +1,8 @@
 <svelte:options immutable={true}/>
 
 <script lang="ts">
+    import { LAYOUT_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      * This component shows a list of various boxes (no 'true' list). It can be shown
      * horizontally or vertically. In the latter case, the elements are each separated by
@@ -22,7 +24,7 @@
     export let box: LayoutBox;
     export let editor: FreEditor;
 
-    let LOGGER: FreLogger = new FreLogger("LayoutComponent");
+    let LOGGER: FreLogger = LAYOUT_LOGGER
     let id: string ;
     let element: HTMLSpanElement;
     let children: Box[];

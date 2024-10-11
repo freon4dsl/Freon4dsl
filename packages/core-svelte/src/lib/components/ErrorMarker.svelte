@@ -35,10 +35,15 @@
 		content = box.errorMessages;
 	})
 
+	function ignore(m: MouseEvent)  {
+		m.stopPropagation()
+		m.preventDefault()
+	}
+
 	// todo Calculate parentLeft, or change it to parentRight. At the moment we assume that the ErrorMarker is at the left border of the FreonComponent.
 </script>
 
-<span class="error-positioning" style="top: {top}px; height: {height}px;">
+<span on:click={ignore} class="error-positioning" style="top: {top}px; height: {height}px;">
 	<ErrorTooltip {box} hasErr={true} parentTop={top} parentLeft={2}>
 		<span class="error-marker" style="height: {height}px;">&nbsp</span>
 	</ErrorTooltip>

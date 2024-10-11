@@ -16,7 +16,7 @@ export class CustomProjectionTemplate {
              * (3) if neither (1) nor (2) yields a result, the default is used.
              */
             export class ${Names.customProjection(language)} implements ${Names.FreProjection} {
-                name: string = "Manual";
+                name: string = "Custom";
                 nodeTypeToBoxMethod: Map<string, (node: ${Names.FreNode}) => ${Names.Box}> =
                     new Map<string, (node: ${Names.FreNode}) => ${Names.Box}>([
                         // register your custom box methods here

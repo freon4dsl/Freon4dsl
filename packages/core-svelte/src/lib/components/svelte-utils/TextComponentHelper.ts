@@ -11,7 +11,7 @@ import {
 import {EventDispatcher} from "svelte";
 import {executeCustomKeyboardShortCut} from "./CommonFunctions.js";
 
-const LOGGER = new FreLogger("TextComponentHelper").mute();
+const LOGGER = new FreLogger("TextComponentHelper")
 
 export class TextComponentHelper {
     // The box that is shown in the text component for which this instance is created

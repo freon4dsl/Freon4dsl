@@ -1,15 +1,17 @@
 <svelte:options immutable={true}/>
 <script lang="ts">
+    import { LABEL_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      * This component shows to piece of non-editable text.
      */
     import { onMount, afterUpdate } from "svelte";
-    import { FreLogger, LabelBox } from "@freon4dsl/core";
+    import { LabelBox } from "@freon4dsl/core";
     import { componentId } from "./svelte-utils/index.js";
 
     export let box: LabelBox;
 
-    const LOGGER = new FreLogger("LabelComponent");
+    const LOGGER = LABEL_LOGGER
 
     let id: string = !!box ? componentId(box) : 'label-for-unknown-box';
     let element: HTMLSpanElement = null;

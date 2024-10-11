@@ -150,7 +150,14 @@ export class UtilPrimHelper {
             return BoxFactory.text(
                 node,
                 roleName,
-                () => node[propertyName][index].toString(),
+                () => { 
+                    const propValue = node[propertyName][index]
+                    if (isNaN(propValue)) {
+                        return ""
+                    } else {
+                        return propValue.toString()
+                    }
+                },
                 (v: string) =>
                     AST.change(() => {
                         node[propertyName][index] = Number.parseInt(v, 10);
@@ -159,16 +166,21 @@ export class UtilPrimHelper {
                     placeHolder: `<${propertyName}>`,
                     isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
                         return isNumber(currentText, key, innerIndex);
-                    },
-                    // todo remove when meta has deleteWhenEmpty in .edit file
-                    deleteWhenEmpty: true,
+                    }
                 },
             );
         } else {
             return BoxFactory.text(
                 node,
                 roleName,
-                () => node[propertyName].toString(),
+                () => {
+                    const propValue = node[propertyName]
+                    if (isNaN(propValue)) {
+                        return ""
+                    } else {
+                        return propValue.toString()
+                    }
+                },
                 (v: string) =>
                     AST.change(() => {
                         node[propertyName] = Number.parseInt(v, 10);
@@ -177,9 +189,7 @@ export class UtilPrimHelper {
                     placeHolder: `<${propertyName}>`,
                     isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
                         return isNumber(currentText, key, innerIndex);
-                    },
-                    // todo remove when meta has deleteWhenEmpty in .edit file
-                    deleteWhenEmpty: true,
+                    }
                 },
             );
         }

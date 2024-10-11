@@ -1,8 +1,10 @@
 <script lang="ts">
+    import { CHECKBOX_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      * This component shows a boolean value as checkbox.
      */
-    import {FreEditor, FreLogger, BooleanControlBox} from "@freon4dsl/core";
+    import {FreEditor, BooleanControlBox} from "@freon4dsl/core";
     import { componentId } from "$lib/index.js";
     import {afterUpdate, onMount} from "svelte";
     import '@material/web/checkbox/checkbox.js';
@@ -11,7 +13,7 @@
     export let box: BooleanControlBox;
     export let editor: FreEditor;			// the editor
 
-    const LOGGER = new FreLogger("CheckBoxComponent");
+    const LOGGER = CHECKBOX_LOGGER
 
     let id: string = !!box ? componentId(box) : 'checkbox-for-unknown-box';
     let inputElement: MdCheckbox;

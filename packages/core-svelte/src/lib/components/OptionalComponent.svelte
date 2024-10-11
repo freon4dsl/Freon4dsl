@@ -1,5 +1,7 @@
 <svelte:options immutable={true}/>
 <script lang="ts">
+    import { OPTIONAL_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      * This component display an optional part. It either shows the content of the
      * corresponding OptionalBox, or its placeholder.
@@ -12,7 +14,7 @@
     export let box: OptionalBox;
     export let editor: FreEditor;
 
-    const LOGGER = new FreLogger("OptionalComponent");
+    const LOGGER = OPTIONAL_LOGGER
     let id: string;                             // an id for the html element showing the optional
     id = !!box ? componentId(box) : 'optional-for-unknown-box';
     let childBox: Box;

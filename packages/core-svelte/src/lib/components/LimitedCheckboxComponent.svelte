@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { LIMITEDCHECKBOX_LOGGER } from "$lib/components/ComponentLoggers.js";
     import {
         LimitedControlBox,
         FreEditor,
@@ -16,7 +17,7 @@
     export let box: LimitedControlBox;
     export let editor: FreEditor;			// the editor
 
-    const LOGGER = new FreLogger("LimitedCheckBoxComponent");
+    const LOGGER = LIMITEDCHECKBOX_LOGGER
 
     let id: string = box.id;
     let currentNames: string[] = box.getNames();

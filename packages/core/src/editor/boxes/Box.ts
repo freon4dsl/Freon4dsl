@@ -161,9 +161,8 @@ export abstract class Box {
         if (this.isLeaf() && this.selectable) {
             return this;
         }
-        // TODO Why filter or concat here?
-        // const childrenReversed = this.children.filter(ch => true).reverse();
-        const childrenReversed = this.children.concat().reverse();
+        // _slice_ is needed to create a copy of the array, because _reverse_ changes the array itself
+        const childrenReversed = this.children.slice().reverse();
         for (const child of childrenReversed) {
             const leafChild: Box = child.lastLeaf;
             if (!!leafChild) {
@@ -183,7 +182,7 @@ export abstract class Box {
         }
         const thisIndex: number = this.parent.children.indexOf(this);
         if (thisIndex === -1) {
-            LOGGER.error(`nextLeafRight: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is mising in its parent (index === -1) `)
+            LOGGER.error(`nextLeafRight: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is missing in its parent (index === -1) `)
             LOGGER.error(`  boxid: ${this.id} parent [id: ${this.parent.id}, id: ${this.parent.kind}, node: ${this.parent.node.freLanguageConcept()}]`)
             LOGGER.error(`  tree: ${(this.parent.parent !== undefined && this.parent.parent !== null) ? this.parent.parent.toStringRecursive("  "):this.parent.toStringRecursive("  ")}`)
             return null
@@ -212,7 +211,7 @@ export abstract class Box {
         }
         const thisIndex: number = this.parent.children.indexOf(this);
         if (thisIndex === -1) {
-            LOGGER.error(`nextLeafLeft: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is mising in its parent (index === -1) `)
+            LOGGER.error(`nextLeafLeft: ${this.kind} for ${this.node?.freId()} of concept ${this.node?.freLanguageConcept()} is missing in its parent (index === -1) `)
             return null
         }
         const leftSiblings: Box[] = this.parent.children.slice(0, thisIndex).reverse();
@@ -347,9 +346,9 @@ export abstract class Box {
      */
     setFocus: () => void = async () => {
         console.log(
-            this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id + ", referring to parent",
+            this.kind + ":setFocus not implemented for " + this.id + " id " + this.$id
         );
-        this.parent?.setFocus();
+        // this.parent?.setFocus();
     };
 
     /**

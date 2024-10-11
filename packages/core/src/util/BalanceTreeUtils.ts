@@ -1,6 +1,6 @@
 import { action, makeObservable } from "mobx";
 import { AST } from "../change-manager/index.js";
-import { FreUtils } from "./internal.js";
+import { FreUtils, isNullOrUndefined } from "./internal.js";
 import { Box, FreEditor } from "../editor/index.js";
 import { FreBinaryExpression, FreNode, FreExpressionNode } from "../ast/index.js";
 import { isFreBinaryExpression, isFreExpression } from "../ast-utils/index.js";
@@ -23,7 +23,8 @@ export const EXPRESSION_SYMBOL = "symbol";
 const LOGGER = new FreLogger("BalanceTree");
 
 export function isExpressionPreOrPost(box: Box) : boolean {
-    return box.role.includes(BEFORE_BINARY_OPERATOR) ||
+    return isNullOrUndefined(box) ||
+        box.role.includes(BEFORE_BINARY_OPERATOR) ||
         box.role.includes(AFTER_BINARY_OPERATOR) ||
         box.role.includes(LEFT_MOST) ||
         box.role.includes(RIGHT_MOST);

@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { RADIO_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      * This component shows a boolean value as checkbox.
      */
@@ -8,13 +10,12 @@
       BooleanControlBox,
       CONTROL,
       FreEditor,
-      FreLogger,
       SHIFT
     } from "@freon4dsl/core";
     import {afterUpdate, onMount} from "svelte";
     import {MdRadio} from "@material/web/all.js";
 
-    const LOGGER = new FreLogger("RadioComponent").mute();
+    const LOGGER = RADIO_LOGGER
 
     export let editor: FreEditor;
     export let box: BooleanControlBox;

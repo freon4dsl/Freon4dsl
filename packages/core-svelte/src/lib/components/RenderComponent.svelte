@@ -1,5 +1,7 @@
 <svelte:options immutable={true}/>
 <script lang="ts">
+    import { RENDER_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     // This component renders any box from the box model.
     // Depending on the box type the right component is used.
     // It also makes the rendered element selectable, including changing the style.
@@ -65,7 +67,7 @@
     import {afterUpdate} from "svelte";
     import ErrorMarker from "$lib/components/ErrorMarker.svelte";
 
-    const LOGGER = new FreLogger("RenderComponent");
+    const LOGGER = RENDER_LOGGER
 
     export let box: Box = null;
     export let editor: FreEditor;
