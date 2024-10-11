@@ -280,7 +280,13 @@
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
                     case ENTER: {
-                        startEditing();
+                        // Check whether there is only one option, if so execute immediately
+                        const allOptions = getOptions()
+                        if (allOptions.length === 1) {
+                            storeOrExecute(allOptions[0])
+                        } else {
+                            startEditing();
+                        }
                         event.stopPropagation();
                         event.preventDefault();
                     }

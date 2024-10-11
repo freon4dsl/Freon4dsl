@@ -139,7 +139,6 @@
         } else {
             // No meta key pressed
             switch (event.key) {
-                case BACKSPACE:
                 case ARROW_LEFT:
                     editor.selectPreviousLeafIncludingExpressionPreOrPost();
                     stopEvent(event);
