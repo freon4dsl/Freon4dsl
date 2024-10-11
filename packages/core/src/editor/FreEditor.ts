@@ -465,11 +465,13 @@ export class FreEditor {
         }
         const previous: Box = box?.nextLeafLeft;
         LOGGER.log("Select previous leaf is box " + previous?.role);
-        if (isExpressionPreOrPost(previous)){
-            // Special expression prefix or postfix box, don't select it
-            this.selectPreviousLeaf(previous);
-        } else {
-            this.selectElementForBox(previous, FreCaret.RIGHT_MOST);
+        if (!isNullOrUndefined(previous)) {
+            if (isExpressionPreOrPost(previous)) {
+                // Special expression prefix or postfix box, don't select it
+                this.selectPreviousLeaf(previous);
+            } else {
+                this.selectElementForBox(previous, FreCaret.RIGHT_MOST);
+            }
         }
     }
 
@@ -485,7 +487,7 @@ export class FreEditor {
         }
         const next: Box = box?.nextLeafRight;
         LOGGER.log("Select next leaf is box " + next?.role);
-        if (!!next) {
+        if (!isNullOrUndefined(next)) {
             if (isExpressionPreOrPost(next)){
                 // Special expression prefix or postfix box, don't select it
                 LOGGER.log(`selectNextleaf: skipping ${next.id} ${next.kind}`)
