@@ -72,7 +72,12 @@ export abstract class AbstractChoiceBox extends Box {
     }
 
     // If true, then this box should carry all error messages on the line.
-    isFirstInLine: boolean = false;
+    set isFirstInLine(v: boolean) {
+        this._textBox.isFirstInLine = v
+    }
+    get firstInLine(): boolean {
+        return this._textBox.isFirstInLine
+    }
 
     _getSelectedOption(): SelectOption | null {
         return null;
