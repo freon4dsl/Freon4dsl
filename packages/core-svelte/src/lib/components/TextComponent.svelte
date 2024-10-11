@@ -217,9 +217,11 @@
 				case ARROW_UP:
 				case ENTER:
 				case TAB: {
-					if (!partOfDropdown && isEditing) {
-						endEditing(); // do not switch selection, this will be done by FreonComponent
-					} // else, let TextDropDownComponent or FreonComponent (in case of TAB) handle this
+					// NOTE Not needed as the TAB will be handled by the FreonComponent, and if it leaves
+					// the textbox, a focusOut will occurr, which does exaclt the same.
+					// if (!partOfDropdown && isEditing) {
+					// 	endEditing(); // do not switch selection, this will be done by FreonComponent
+					// } // else, let TextDropDownComponent or FreonComponent (in case of TAB) handle this
 					break;
 				}
 				case ARROW_LEFT: {
