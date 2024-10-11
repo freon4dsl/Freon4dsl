@@ -2,6 +2,7 @@ import pkg from 'lodash';
 const { isEqual } = pkg;
 
 import { autorun, makeObservable, observable } from "mobx";
+import { AST } from "../change-manager/index.js";
 import { FreEnvironment } from "../environment/index.js";
 import { FreOwnerDescriptor, FreNode } from "../ast/index.js";
 import { FreLogger } from "../logging/index.js";
@@ -363,17 +364,19 @@ export class FreEditor {
      * @param box
      */
     deleteBox(box: Box) {
-        LOGGER.log("deleteBox");
+        LOGGER.log("deleteBox " + box.id);
         const node: FreNode = box.node;
         const ownerDescriptor: FreOwnerDescriptor = node.freOwnerDescriptor();
-        const role: string = RoleProvider.property(ownerDescriptor.owner.freLanguageConcept(), ownerDescriptor.propertyName);
         if (ownerDescriptor !== null) {
+            const role: string = RoleProvider.property(ownerDescriptor.owner.freLanguageConcept(), ownerDescriptor.propertyName);
             LOGGER.log("remove from parent splice " + [ownerDescriptor.propertyIndex] + ", 1");
             const propertyIndex = ownerDescriptor.propertyIndex;
             const parentElement = ownerDescriptor.owner;
             if (propertyIndex !== undefined) {
                 const arrayProperty = (ownerDescriptor.owner as any)[ownerDescriptor.propertyName] as any;
-                arrayProperty.splice(propertyIndex, 1);
+                AST.changeNamed("deleteBox", () => {
+                    arrayProperty.splice(propertyIndex, 1);
+                })
                 const length = arrayProperty.length;
                 if (length === 0) {
                     // TODO Maybe we should select the element (or leaf) just before the list.
@@ -387,7 +390,9 @@ export class FreEditor {
                     this.selectElement(arrayProperty[propertyIndex]);
                 }
             } else {
-                ownerDescriptor.owner[ownerDescriptor.propertyName] = null;
+                AST.changeNamed("deleteBox", () => {
+                    ownerDescriptor.owner[ownerDescriptor.propertyName] = null;
+                })
                 this.selectElementBox(
                     ownerDescriptor.owner,
                     ownerDescriptor.owner.freIsBinaryExpression()
