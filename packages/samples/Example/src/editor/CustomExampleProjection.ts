@@ -31,7 +31,7 @@ const OPERAND_COLUMN = 2;
  */
 
 export class CustomExampleProjection implements FreProjection {
-    name: string = "manual";
+    name: string = "Custom";
 
     constructor(name?: string) {
         if (!!name) {
