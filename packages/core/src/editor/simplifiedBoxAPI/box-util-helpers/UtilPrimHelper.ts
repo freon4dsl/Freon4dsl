@@ -151,11 +151,11 @@ export class UtilPrimHelper {
                 node,
                 roleName,
                 () => { 
-                    const stringValue = node[propertyName][index].toString()
-                    if (stringValue === "NaN") {
+                    const propValue = node[propertyName][index]
+                    if (isNaN(propValue)) {
                         return ""
                     } else {
-                        return stringValue
+                        return propValue.toString()
                     }
                 },
                 (v: string) =>
@@ -174,11 +174,11 @@ export class UtilPrimHelper {
                 node,
                 roleName,
                 () => {
-                    const stringValue = node[propertyName].toString()
-                    if (stringValue === "NaN") {
+                    const propValue = node[propertyName]
+                    if (isNaN(propValue)) {
                         return ""
                     } else {
-                        return stringValue
+                        return propValue.toString()
                     }
                 },
                 (v: string) =>
