@@ -150,7 +150,14 @@ export class UtilPrimHelper {
             return BoxFactory.text(
                 node,
                 roleName,
-                () => node[propertyName][index].toString(),
+                () => { 
+                    const stringValue = node[propertyName][index].toString()
+                    if (stringValue === "NaN") {
+                        return ""
+                    } else {
+                        return stringValue
+                    }
+                },
                 (v: string) =>
                     AST.change(() => {
                         node[propertyName][index] = Number.parseInt(v, 10);
@@ -166,7 +173,14 @@ export class UtilPrimHelper {
             return BoxFactory.text(
                 node,
                 roleName,
-                () => node[propertyName].toString(),
+                () => {
+                    const stringValue = node[propertyName].toString()
+                    if (stringValue === "NaN") {
+                        return ""
+                    } else {
+                        return stringValue
+                    }
+                },
                 (v: string) =>
                     AST.change(() => {
                         node[propertyName] = Number.parseInt(v, 10);
