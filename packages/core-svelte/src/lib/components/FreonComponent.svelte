@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { FREON_LOGGER } from "$lib/components/ComponentLoggers.js";
+
     /**
      * This component shows a complete projection, by displaying the rootbox of
      * the associated editor.
@@ -25,7 +27,7 @@
     import { afterUpdate, onMount, tick } from "svelte";
     import { contextMenu, contextMenuVisible, selectedBoxes, viewport, componentId } from "$lib/components/svelte-utils/index.js";
 
-    let LOGGER = new FreLogger("FreonComponent");//.mute();
+    let LOGGER = FREON_LOGGER
     export let editor: FreEditor;
     let element: HTMLDivElement; // The current main element of this component.
     let rootBox: Box;
@@ -143,6 +145,7 @@
                     stopEvent(event);
                     break;
                 case DELETE:
+                case BACKSPACE:
                     editor.deleteBox(editor.selectedBox);
                     stopEvent(event);
                     break;
@@ -229,7 +232,7 @@
 
     const refreshSelection = async  (why?: string) => {
         LOGGER.log("FreonComponent.refreshSelection: " + why + " editor selectedBox is " + editor?.selectedBox?.kind);
-        if (!isNullOrUndefined(editor.selectedBox) && !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
+        if (!isNullOrUndefined(editor.selectedBox) ){ //&& !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             await tick();
             $selectedBoxes = getSelectableChildren(editor.selectedBox);
             editor.selectedBox.setFocus();
