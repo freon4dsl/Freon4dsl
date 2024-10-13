@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/webapp-lib",
-  "version": "0.7.0-beta3",
+  "version": "0.7.0-beta4",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -44,7 +44,7 @@
     "!dist/**/*.spec.*"
   ],
   "dependencies": {
-    "@freon4dsl/core": "0.7.0-beta3",
+    "@freon4dsl/core": "0.7.0-beta4",
     "svelte": "^4.2.17",
     "click-outside": "^2.0.2",
     "@smui-extra/autocomplete": "^7.0.0",

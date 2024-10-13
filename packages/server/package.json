@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/server",
-  "version": "0.7.0-beta3",
+  "version": "0.7.0-beta4",
   "publishConfig": {
     "access": "public"
   },
