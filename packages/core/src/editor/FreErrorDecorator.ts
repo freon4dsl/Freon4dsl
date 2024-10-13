@@ -129,8 +129,8 @@ export class FreErrorDecorator {
                 }
             }
             if (isTextBox(first) || isActionBox(first) || isSelectBox(first)) {
-                first.isFirstInLine = true;
-                console.log(`setting ${first.id} as first in line ${outerIndex}`)
+                first.isFirstInLine = true; 
+                // console.log(`setting ${first.id} as first in line ${outerIndex}`)
             }
         })
     }
