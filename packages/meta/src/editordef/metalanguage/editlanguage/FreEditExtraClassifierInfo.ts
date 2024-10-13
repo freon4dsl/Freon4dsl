@@ -19,12 +19,15 @@ export class FreEditExtraClassifierInfo extends FreMetaDefinitionElement {
     referenceShortcutExp?: FreLangExp = undefined;
     // Only for binary expressions: the operator between left and right parts.
     symbol: string = "";
+    
+    deleteWhenEmpty?: MetaElementReference<FreMetaProperty> = undefined;
 
     toString(): string {
         return `${this.classifier?.name} {
             trigger = ${this.trigger}
             symbol = ${this.symbol}
             referenceShortcut = ${this.referenceShortCut ? this.referenceShortCut.name : this.referenceShortcutExp}
+            deleteWhenEmpty = ${this.deleteWhenEmpty}
         }`;
     }
 }

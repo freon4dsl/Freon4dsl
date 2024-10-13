@@ -117,30 +117,36 @@ projectionChoice = p:projection t:tableProjection?
 /* rules that make the order of extra info flexible */
 extraClassifierInfo = trigger:trigger
               sub:extraChoiceSub1?
+              empty:deleteWhenEmpty?
 {
     return creator.createClassifierInfo({
         "trigger"               : trigger,
         "referenceShortcutExp"  : !!sub ? sub["referenceShortcut"] : null,
+        "deleteWhenEmpty"       : empty,
         "symbol"                : !!sub ? sub["symbol"] : null,
         "location"      : location()
     });
 }
     / symbol:symbol
       sub:extraChoiceSub2?
+      empty:deleteWhenEmpty?
 {
     return creator.createClassifierInfo({
         "trigger"               : !!sub ? sub["trigger"] : null,
         "referenceShortcutExp"  : !!sub ? sub["referenceShortcut"] : null,
+        "deleteWhenEmpty"       : empty,
         "symbol"                : symbol,
         "location"      : location()
     });
 }
     / referenceShortcut:referenceShortcut
       sub:extraChoiceSub3?
+      empty:deleteWhenEmpty?
 {
     return creator.createClassifierInfo({
         "trigger"               : !!sub ? sub["trigger"] : null,
         "referenceShortcutExp"  : referenceShortcut,
+        "deleteWhenEmpty"       : empty,
         "symbol"                : !!sub ? sub["symbol"] : null,
         "location"      : location()
     });

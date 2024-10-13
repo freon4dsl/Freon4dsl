@@ -344,7 +344,7 @@ export class EditorState {
      * Runs the validator for the current unit
      */
     getErrors() {
-        LOGGER.log("EditorState.getErrors() for " + this.currentUnit.name);
+        LOGGER.log("EditorState.getErrors() for " + this.currentUnit?.name);
         if (!!this.currentUnit) {
             try {
                 const list = this.langEnv.validator.validate(this.currentUnit);

@@ -20,6 +20,15 @@ class AstChanger {
     private error: errorFunction = (msg: string): void => {
         console.error("AST.change: " + msg)
     }
+    
+    afterChangeFunction: () => void = () => {
+        console.log("afterChangeFunction")
+    }
+
+    afterChange( func: () => void): void {
+        this.afterChangeFunction = func
+
+    }
 
     /**
      * Set the error handling function to _e_
@@ -64,6 +73,11 @@ class AstChanger {
         } finally {
             FreUndoManager.getInstance().endTransaction()
             this.isInChange = false
+        }
+        try {
+            this.afterChangeFunction()
+        } catch (e) {
+            this.error("Error in afterChange function: " + e)
         }
     }
 
