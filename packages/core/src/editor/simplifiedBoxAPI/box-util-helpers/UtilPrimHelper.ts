@@ -315,7 +315,7 @@ export class UtilPrimHelper {
                             node[propertyName][index] = false;
                         }
                     });
-                    return BehaviorExecutionResult.NULL;
+                    return BehaviorExecutionResult.EXECUTED;
                 },
             );
         } else {
@@ -343,7 +343,7 @@ export class UtilPrimHelper {
                             node[propertyName] = false;
                         }
                     });
-                    return BehaviorExecutionResult.NULL;
+                    return BehaviorExecutionResult.EXECUTED;
                 },
             );
         }
