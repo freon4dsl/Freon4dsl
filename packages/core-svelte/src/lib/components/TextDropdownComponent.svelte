@@ -90,8 +90,10 @@
             LOGGER.log("    selectedOption is " + selectedOption?.label)
             if (!!selectedOption) {
                 setTextLocalAndInBox(selectedOption.label);
+                selectedId = selectedOption.id
+            } else {
+                selectedId = undefined
             }
-            selectedId = undefined
         }
         // because the box maybe a different one than we started with ...
         // box.setFocus = setFocus; todo remove?
@@ -142,7 +144,9 @@
         if (isActionBox(box)) {
             // Try to match a regular expression, and execute the action that is associated with it
             const result = box.tryToMatchRegExpAndExecuteAction(text, editor);
-            if (result === BehaviorExecutionResult.EXECUTED) endEditing();
+            if (result === BehaviorExecutionResult.EXECUTED) {
+                endEditing();
+            }
         }
     };
 
@@ -264,6 +268,7 @@
                             // stop editing
                             isEditing = false;
                             dropdownShown = false;
+                            editor.selectNextLeaf()
                         }
                         event.preventDefault();
                         event.stopPropagation();
@@ -285,6 +290,8 @@
                         if (allOptions.length === 1) {
                             storeOrExecute(allOptions[0])
                         } else {
+                            selectedId = box.getSelectedOption()?.id
+                            console.log("Setting selected option to " + selectedId)
                             startEditing();
                         }
                         event.stopPropagation();
@@ -348,13 +355,15 @@
      * @param selected
      */
     function storeOrExecute(selected: SelectOption) {
-        LOGGER.log('storeOrExecute for option ' + selected.label + ' ' + box.kind);
+        console.log('storeOrExecute for option ' + selected.label + ' ' + box.kind + ' ' + box.role);
         isEditing = false;
         dropdownShown = false;
 
         box.executeOption(editor, selected); // TODO the result of the execution is ignored
         if (isActionBox(box)) { // ActionBox, action done, clear input text
             setTextLocalAndInBox('');
+        } else {
+            editor.selectNextLeaf(box)
         }
     }
 
