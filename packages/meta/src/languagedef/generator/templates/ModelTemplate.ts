@@ -13,6 +13,7 @@ export class ModelTemplate {
             Names.FreModel,
             Names.FreLanguage,
             Names.FreParseLocation,
+            "AST"
         ]);
         const modelImports = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType();
@@ -75,12 +76,14 @@ export class ModelTemplate {
                         .map(
                             (part) =>
                                 `if ( oldUnit.freLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.freOwnerDescriptor().propertyName === "${part.name}" ) {
-                                ${
-                                    part.isList
-                                        ? `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)});
-                                this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type)});`
-                                        : `this.${part.name} = newUnit as ${Names.classifier(part.type)};`
-                                }
+                                    AST.changeNamed("removeUnit", () => {
+                                        ${
+                                            part.isList
+                                                ? `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)});
+                                        this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type)});`
+                                                : `this.${part.name} = newUnit as ${Names.classifier(part.type)};`
+                                        }
+                                    })
                             } else`,
                         )
                         .join(" ")}
@@ -104,12 +107,14 @@ export class ModelTemplate {
                                 .map(
                                     (part) =>
                                         `case "${Names.classifier(part.type)}": {
-                                    ${
-                                        part.isList
-                                            ? `this.${part.name}.push(newUnit as ${Names.classifier(part.type)});`
-                                            : `this.${part.name} = newUnit as ${Names.classifier(part.type)}`
-                                    }
-                                    return true;
+                                            AST.changeNamed("addUnit", () => {
+                                                ${
+                                                    part.isList
+                                                        ? `this.${part.name}.push(newUnit as ${Names.classifier(part.type)});`
+                                                        : `this.${part.name} = newUnit as ${Names.classifier(part.type)}`
+                                                }
+                                            })
+                                            return true;
                                 }`,
                                 )
                                 .join("\n")}
@@ -132,13 +137,15 @@ export class ModelTemplate {
                                 .map(
                                     (part) =>
                                         `case "${Names.classifier(part.type)}": {
-                                    ${
-                                        part.isList
-                                            ? `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)}), 1);`
-                                            : `this.${part.name} = null;`
-                                    }
-                                    return true;
-                                }`,
+                                            AST.changeNamed("removeUnit", () => {
+                                                ${
+                                                    part.isList
+                                                        ? `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)}), 1);`
+                                                        : `this.${part.name} = null;`
+                                                }
+                                            })
+                                            return true;
+                                        }`,
                                 )
                                 .join("\n")}
                             }
@@ -159,11 +166,13 @@ export class ModelTemplate {
                                 (part) =>
                                     `case "${Names.classifier(part.type)}": {
                                 const unit: ${Names.classifier(part.type)} = ${Names.classifier(part.type)}.create({});
-                                ${
-                                    part.isList
-                                        ? `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
-                                        : `this.${part.name} = unit as ${Names.classifier(part.type)}`
-                                }
+                                AST.changeNamed("newUnit", () => {
+                                    ${
+                                        part.isList
+                                            ? `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
+                                            : `this.${part.name} = unit as ${Names.classifier(part.type)}`
+                                    }
+                                })
                                 return unit;
                             }`,
                             )
