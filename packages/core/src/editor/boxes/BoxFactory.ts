@@ -364,7 +364,7 @@ export class BoxFactory {
         node: FreNode,
         role: string,
         propertyName: string,
-        children?: (Box | null)[],
+        children?: Box[],
         initializer?: Partial<HorizontalListBox>,
     ): HorizontalListBox {
         if (cacheHorizontalListOff) {
