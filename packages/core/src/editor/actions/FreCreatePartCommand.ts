@@ -41,6 +41,8 @@ export class FreCreatePartCommand extends FreCommand {
                 this.conceptName +
                 " in " +
                 this.propertyName +
+                " index " +
+                index +
                 " refshort " +
                 this.referenceShortcut +
                 " parentbox " +

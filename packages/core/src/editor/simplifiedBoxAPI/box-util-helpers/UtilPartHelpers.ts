@@ -1,4 +1,4 @@
-import {Box, BoxFactory, ElementBox, ExternalPartListBox, HorizontalListBox, VerticalListBox} from "../../boxes/index.js";
+import { Box, BoxFactory, ElementBox, ExternalPartListBox, HorizontalListBox, VerticalListBox } from "../../boxes/index.js";
 import { FreNode } from "../../../ast/index.js";
 import { RoleProvider } from "../RoleProvider.js";
 import { FreLanguage } from "../../../language/index.js";
@@ -16,7 +16,7 @@ export class UtilPartHelpers {
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
         // make the boxes for the children
-        let children: Box[] = this.makePartItems(node, list, propertyName, boxProviderCache, listJoin);
+        let children: Box[] = UtilPartHelpers.makePartItems(node, list, propertyName, boxProviderCache, listJoin);
         // add a placeholder where a new element can be added
         children = UtilPartHelpers.addPlaceholder(children, node, propertyName);
         // determine the role
@@ -40,7 +40,7 @@ export class UtilPartHelpers {
         // add a placeholder where a new element can be added
         children = UtilPartHelpers.addPlaceholder(children, node, propertyName);
         // determine the role
-        const role: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "vpartlist");
+        const role: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "hpartlist");
         // return the box
         const result: HorizontalListBox = BoxFactory.horizontalList(node, role, propertyName, children, initializer);
         result.propertyName = propertyName;
