@@ -11,7 +11,7 @@ Attribute {
 }
 Entity {
     [
-        entity ${name} [? base ${baseEntity}] {
+        ${abstract} entity ${name} [? base ${baseEntity}] {
             ${attributes }
             ${methods vertical }
         }
