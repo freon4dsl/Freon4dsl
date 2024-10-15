@@ -22,6 +22,7 @@ interface Type base BaseType {
 }
 
 concept Entity implements Type {
+    abstract: boolean;
     attributes: Attribute[];
     methods: Method[];
     reference baseEntity?: Entity;
