@@ -5,7 +5,7 @@
 - [ ] DEletion does niot work very well at all, need to revisit how this is done.
 - [ ] When using reference shortcuts (like Event V1, S1 in Mike’s example) do not show concept “EventReference”
 - [x] Howto add your own editor components to Freon
-- [ ] create the ability to jump to elements by clicking (or something) on its reference
+- [x] create the ability to jump to elements by clicking (or something) on its reference
       (special ReferenceBox?)
 - [ ] When a type of a property cannot be found the error message is rather unclear: (A)
     -  `ERROR: Element 'correctAnswer' should have a type`
@@ -14,10 +14,10 @@
 - [ ] add a handle for the drag and drop
 - [x] make it easy to add a button to a component
 
-- [ ] add custom tables
+- [x] add custom tables
 
 - [ ] maybe add the option to include a vertical line left to an indent component
-- [ ] tinymce editor => have a look at MultiLineComponent2.svelte in M&G's stuff
+- [x] tinymce editor => have a look at MultiLineComponent2.svelte in M&G's stuff
 
 - [ ] Click already selected error in error/search list does not select it in editor.
 - [ ] Some ersors cannot be navigated to, e.g. placeholders for child concepts
@@ -28,7 +28,7 @@
 - [ ] Text for found elements should include something readable.
 - [ ] Enable special projection per element (selectable by the user)
 
-- [ ] Collections as tabbed box (so the elements are stacked upon each other)
+- [x] Collections as tabbed box (so the elements are stacked upon each other)
     - [x]  Covered by external components
 - [ ] Non-textual Box/Component e.g. bodypart picture with click to point to pain areas.
 

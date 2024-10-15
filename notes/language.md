@@ -32,7 +32,7 @@
             - Especially if certain concepts are not used. Should the custom code for these also be removed?
         - Need to package reused language as npm package?
 - [ ] Make Scoper composite
-- [ ] <FreLanguage>Environment should not create the editor, nor the composite projection.
+- [ ] FreLanguageEnvironment should not create the editor, nor the composite projection.
 - [ ] Rename gen/EditorDef.ts ==> "FreLanguage"EditorDef.ts
 - [ ] All imports should be language dependen
 - [ ] AllConceptsType should be removed (should be anyway)

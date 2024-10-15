@@ -11,18 +11,18 @@
 - [ ] Thereis always a left box with focus before an expression.
       This is used so people can add operators there, but while gtabbing it feels wrong.
       How to avoid it?
-    - solution: when tabbing, skip all the empty places inside expressions (start, end, around binary operators).
+    - [x] solution: when tabbing, skip all the empty places inside expressions (start, end, around binary operators).
         - Need to be able to select, so be able to select t hese empty places with the mouse?
         - Show some special background so people see that they can edit there?
-- [ ] Trigger /0-9/. Should not show up in dropdown
-    - [ ] Never show regular expressions in dropdowns (like `/0-9/`)
+- [x] Trigger /0-9/. Should not show up in dropdown
+    - [x] Never show regular expressions in dropdowns (like `/0-9/`)
 - [ ] Do not show binary expressions in `left` or `right` placeholders.
     - People will most probably not use these anyway.
     - allow the shortcuts? And if so, what about options that are larger than one character?
 - [ ] If we know something is an identifier (also for references), try not fitting characters in next box.
   - Similar to the number literal in `samples/Example`
 - [x] Be able to change the text in “[add]” into something else
-- [ ] Deletion in expressions does not work, you get stuck when e.g. a number is empty, delete then jumps to next field
+- [x] Deletion in expressions does not work, you get stuck when e.g. a number is empty, delete then jumps to next field
 
 #### Binary expressions:
 

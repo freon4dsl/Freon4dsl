@@ -18,10 +18,10 @@
 - [ ] Freon alows multi-valued primitive properties, LionWeb does not
   - [ ] Option 1: remove them from Freon
   - [ ] Option 2: map to some Freon defined LionWeb structure (and map back)
-- [ ] LonWeb has introduced DataType in the M3, Freon does not have it
+- [ ] LonWeb has introduced DataType in the M3, Freon does not have it yet
     - [ ] Option 1: Add DataType to Freon
     - [ ] Option 2: map to Freon copncept and (harder) map it back
-- [ ] LionWeb has annotations, Freon does not
+- [ ] LionWeb has annotations, Freon does not yet
 - [ ] LionWeb has node id's, Freon only secondary
   - [ ] M2: Look at `id.json` and see how it can be improved.
   - [ ] M1: $id vs id
