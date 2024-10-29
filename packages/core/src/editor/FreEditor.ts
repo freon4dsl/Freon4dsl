@@ -329,7 +329,6 @@ export class FreEditor {
             if (!box.selectable) {
                 // get the ElementBox for the selected element
                 this._selectedBox = this.projection.getBox(box.node);
-                console.log('box not selectable: ' + box.kind)
             } else {
                 this._selectedBox = box;
             }
