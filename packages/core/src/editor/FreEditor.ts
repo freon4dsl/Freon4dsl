@@ -329,7 +329,6 @@ export class FreEditor {
             if (!box.selectable) {
                 // get the ElementBox for the selected element
                 this._selectedBox = this.projection.getBox(box.node);
-                console.log('box not selectable: ' + box.kind)
             } else {
                 this._selectedBox = box;
             }
@@ -366,6 +365,9 @@ export class FreEditor {
     deleteBox(box: Box) {
         LOGGER.log("deleteBox " + box.id);
         const node: FreNode = box.node;
+        if (node.freIsUnit()) {
+            return
+        }
         const ownerDescriptor: FreOwnerDescriptor = node.freOwnerDescriptor();
         if (ownerDescriptor !== null) {
             const role: string = RoleProvider.property(ownerDescriptor.owner.freLanguageConcept(), ownerDescriptor.propertyName);

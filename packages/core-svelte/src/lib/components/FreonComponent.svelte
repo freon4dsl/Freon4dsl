@@ -132,8 +132,8 @@
         } else if (event.shiftKey) { // NO ctrl, NO alt
             switch (event.key) {
                 case TAB: // shift-tab
-                    editor.selectPreviousLeaf();
-                    stopEvent(event);
+                    // editor.selectPreviousLeaf();
+                    // stopEvent(event);
                     break;
             }
         } else {
@@ -150,8 +150,8 @@
                     break;
                 case TAB:
                 case ENTER:
-                    editor.selectNextLeaf();
-                    stopEvent(event);
+                    // editor.selectNextLeaf();
+                    // stopEvent(event);
                     break;
                 case ARROW_RIGHT:
                     editor.selectNextLeafIncludingExpressionPreOrPost();
@@ -263,6 +263,7 @@
     refreshSelection("Initialize FreonComponent");
 </script>
 
+// TODO This makes us dependent on @material/... do we want that?
 <!-- include the material design styling -->
 <svelte:head>
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet"/>

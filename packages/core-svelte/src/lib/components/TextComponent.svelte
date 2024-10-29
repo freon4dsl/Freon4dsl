@@ -279,10 +279,18 @@
 		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
 		if (!partOfDropdown && isEditing) {
 			endEditing();
-		} else { 
+		} else {
 			// else let TextDropdownComponent handle it
 			dispatcher("focusOutTextComponent")
 		}
+	}
+	const onFocusIn = () => {
+		console.log(`onFocusIn ${id}: `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
+		editor.selectElementForBox(box)
+	}
+	const onFocusInSpan = () => {
+		console.log(`onFocusInSpan ${id}: `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
+		editor.selectElementForBox(box)
 	}
 
 	const refresh = (why?: string) => {
@@ -415,6 +423,7 @@
 		setInputWidth();
 	}
 
+	const tabindex = (box.role.startsWith("action-binary") || box.role.startsWith("action-exp") ? -1 : 0)
 	refresh();
 </script>
 
@@ -433,6 +442,7 @@
 					   on:input={onInput}
 					   bind:value={text}
 					   on:focusout={onFocusOut}
+					   on:focusin={onFocusIn}
 					   on:keydown={onKeyDown}
 					   draggable="true"
 					   on:dragstart={onDragStart}
@@ -446,6 +456,8 @@
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 			<span class="{box.role} text-box-{boxType} text-component-text {errorCls}"
 				  on:click={startEditing}
+				  on:focusin={onFocusInSpan}
+				  tabindex="{tabindex}"
 				  bind:this={spanElement}
 				  contenteditable=true
 				  spellcheck=false
