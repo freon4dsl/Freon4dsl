@@ -75,6 +75,7 @@
       id="{id}"
       class:layout-component-horizontal="{isHorizontal}"
       class:layout-component-vertical="{!isHorizontal}"
+      tabindex="-1"
       bind:this={element}
 >
     {#if isHorizontal }

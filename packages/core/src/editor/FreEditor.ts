@@ -366,6 +366,9 @@ export class FreEditor {
     deleteBox(box: Box) {
         LOGGER.log("deleteBox " + box.id);
         const node: FreNode = box.node;
+        if (node.freIsUnit()) {
+            return
+        }
         const ownerDescriptor: FreOwnerDescriptor = node.freOwnerDescriptor();
         if (ownerDescriptor !== null) {
             const role: string = RoleProvider.property(ownerDescriptor.owner.freLanguageConcept(), ownerDescriptor.propertyName);
