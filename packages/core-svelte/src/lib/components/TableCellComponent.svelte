@@ -221,7 +221,6 @@
         on:blur={() => {}}
         on:keydown={onKeydown}
         on:contextmenu|stopPropagation|preventDefault={(event) => showContextMenu(event)}
-        tabindex={0}
         bind:this={htmlElement}
 >
     <RenderComponent box={childBox} editor={editor}/>
