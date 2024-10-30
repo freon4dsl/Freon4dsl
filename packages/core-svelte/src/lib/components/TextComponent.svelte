@@ -285,11 +285,11 @@
 		}
 	}
 	const onFocusIn = () => {
-		console.log(`onFocusIn ${id}: `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
+		LOGGER.log(`onFocusIn ${id}: `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
 		editor.selectElementForBox(box)
 	}
 	const onFocusInSpan = () => {
-		console.log(`onFocusInSpan ${id}: `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
+		LOGGER.log(`onFocusInSpan ${id}: `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
 		editor.selectElementForBox(box)
 	}
 
