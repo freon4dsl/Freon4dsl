@@ -93,7 +93,7 @@ export class FreCreatePartCommand extends FreCommand {
                     " of kind " +
                     editor.selectedBox.kind,
             );
-            editor.selectFirstEditableChildBox(newElement);
+            editor.selectFirstEditableChildBox(newElement, true);
         };
     }
 

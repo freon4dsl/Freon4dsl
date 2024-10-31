@@ -18,7 +18,7 @@ import {
     RoleProvider
 } from "./index.js";
 import { FreError, FreErrorSeverity } from "../validator/index.js";
-import { isExpressionPreOrPost, isNullOrUndefined } from "../util/index.js";
+import { isExpressionPreOrPost, isNullOrUndefined, LEFT_MOST } from "../util/index.js";
 import {FreErrorDecorator} from "./FreErrorDecorator.js";
 
 const LOGGER = new FreLogger("FreEditor").mute();
@@ -292,9 +292,12 @@ export class FreEditor {
      * Sets 'element' to be the selectedElement, and its first child, which is editable, to the selectedBox.
      * @param element
      */
-    selectFirstEditableChildBox(element: FreNode) {
+    selectFirstEditableChildBox(element: FreNode, skip: boolean = false) {
         if (this.checkParam(element)) {
-            const first = this.projection.getBox(element).firstEditableChild;
+            let first = this.projection.getBox(element).firstEditableChild;
+            if (skip && first.role === LEFT_MOST) {
+               first = first.nextLeafRight 
+            }
             if (!isNullOrUndefined(first)) {
                 this._selectedBox = first;
                 this._selectedProperty = first.propertyName;
