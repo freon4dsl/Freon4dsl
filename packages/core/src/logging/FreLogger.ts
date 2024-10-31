@@ -33,9 +33,9 @@ export class FreLogger {
         this.mutedLogs = [];
     }
 
-    static filter: string = null;
+    static filter: string[] = [];
 
-    static showString(s: string | null) {
+    static setFilter(s: string[]) {
         FreLogger.filter = s;
     }
 
@@ -102,11 +102,11 @@ export class FreLogger {
     }
 
     protected logToConsole(color: string, message: string): void {
-        if (FreLogger.filter === null) {
+        if (FreLogger.filter.length === 0) {
             console.log(color, message, FreLogger.FG_BLACK, "");
             // this.colorMyText();
         } else {
-            if (message.includes(FreLogger.filter)) {
+            if (!FreLogger.filter.some(filt => message.includes(filt))) {
                 console.log(color, message, FreLogger.FG_BLACK, "");
             }
         }
