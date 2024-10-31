@@ -41,13 +41,9 @@ export function createDefaultExpressionBox(exp: FreExpressionNode, children: Box
             result = BoxFactory.horizontalLayout(exp, EXPRESSION, "", children);
         }
         if (isLeftMost) {
-            // TODO Change into Svelte Style
-            // result.insertChild(new ActionBox(exp, LEFT_MOST, NBSP, { style: STYLES.aliasExpression }));
             result.insertChild(BoxFactory.action(exp, LEFT_MOST, NBSP));
         }
         if (isRightMost) {
-            // TODO Change into Svelte Style
-            // result.addChild(new ActionBox(exp, RIGHT_MOST, NBSP, { style: STYLES.aliasExpression }));
             result.addChild(BoxFactory.action(exp, RIGHT_MOST, NBSP));
         }
         FreUtils.initializeObject(result, initializer);
@@ -96,10 +92,8 @@ export function createDefaultBinaryBox(
                   propertyName: "left",
                   conceptName: leftConceptName,
               }),
-        // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         BoxFactory.action(exp, BEFORE_BINARY_OPERATOR, NBSP),
         createOperatorBox(editor, exp, symbol),
-        // TODO  Change into Svelte styles: style: STYLES.aliasExpression
         BoxFactory.action(exp, AFTER_BINARY_OPERATOR, NBSP),
         !!exp.freRight()
             ? boxProviderCache.getBoxProvider(exp.freRight()).box
