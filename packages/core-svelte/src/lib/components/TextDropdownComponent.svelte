@@ -397,7 +397,9 @@
     const focusOutTextComponent = () => {
         LOGGER.log("focusOutTextComponent " + id)
         selectedId = undefined
-        isEditing = false
+        if (isEditing) {
+            endEditing()
+        }
     }
 
     const onBlur = () => {
