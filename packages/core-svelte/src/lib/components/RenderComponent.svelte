@@ -30,6 +30,7 @@
         isMultiLineTextBox,
         isLimitedControlBox,
         isButtonBox,
+        isDiagramBox,
         isExternalBox,
         isFragmentBox,
         isReferenceBox,
@@ -47,6 +48,7 @@
     import LayoutComponent from "$lib/components/LayoutComponent.svelte";
     import ListComponent from "$lib/components/ListComponent.svelte";
     import OptionalComponent from "$lib/components/OptionalComponent.svelte";
+    import DiagramComponent from "$lib/components/DiagramComponent.svelte";
     import OptionalComponentNew from "$lib/components/OptionalComponentNew.svelte";
     import TableComponent from "$lib/components/TableComponent.svelte";
     import TextComponent from "$lib/components/TextComponent.svelte";
@@ -182,6 +184,8 @@
             <OptionalComponent box={box} editor={editor}/>
         {:else if isOptionalBox2(box) }
             <OptionalComponentNew box={box} editor={editor}/>
+        {:else if isDiagramBox(box) }
+            <DiagramComponent box={box} editor={editor}/>
         {:else if isSvgBox(box) }
             <SvgComponent box={box}/>
         {:else if isTableBox(box) }

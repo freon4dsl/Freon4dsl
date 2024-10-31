@@ -70,6 +70,7 @@
     "@material/switch": "^14.0.0",
     "@smui/ripple": "^7.0.0",
     "svelte": "^4.2.17",
+    "@xyflow/svelte": "^0.1.21",
     "@freon4dsl/core": "^0.7.0-beta5",
     "mobx": "^6.12.3"
   }

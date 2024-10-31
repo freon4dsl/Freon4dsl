@@ -11,7 +11,17 @@ import {
     FreLanguage,
     FRE_BINARY_EXPRESSION_LEFT,
     FRE_BINARY_EXPRESSION_RIGHT,
-    HorizontalListBox, FreProjection, FreTableDefinition, TableRowBox, HorizontalLayoutBox, MultiLineTextBox, BoxFactory, BoxUtil, NumberDisplay, TextBox
+    HorizontalListBox,
+    FreProjection,
+    FreTableDefinition,
+    TableRowBox,
+    HorizontalLayoutBox,
+    MultiLineTextBox,
+    BoxFactory,
+    BoxUtil,
+    NumberDisplay,
+    TextBox,
+    DiagramBox
 } from "@freon4dsl/core";
 import { Documentation, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment.js";
@@ -42,7 +52,7 @@ export class CustomExampleProjection implements FreProjection {
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
         ["SumExpression", this.createSumBox],
         ["OrExpression", this.createOrBoxGrid],
-        ["Documentation", this.createDocumentation],
+        ["Documentation", this.createDocumentationD],
         ["NumberLiteralExpression", this.createNumberLiteralBox]
     ]);
 
@@ -64,8 +74,11 @@ export class CustomExampleProjection implements FreProjection {
             { selectable: false },
         );
     }
-
-createDocumentation (doc: Documentation): Box {
+    createDocumentationD (doc: Documentation): Box {
+        return new DiagramBox(doc, "documentation", "Documentation", "diagram")    
+    }
+    
+    createDocumentation (doc: Documentation): Box {
         return BoxFactory.horizontalLayout(
             doc,
             "Documentation-hlist-line-0",

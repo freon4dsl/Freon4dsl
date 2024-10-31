@@ -37,6 +37,7 @@ export * from "./ElementBox.js";
 export * from "./TableBox.js";
 export * from "./TableCellBox.js";
 export * from "./TableRowBox.js";
+export * from "./DiagramBox.js"
 export * from "./externalBoxes/index.js";
 
 // the following files contain export that do not depend on any other file
