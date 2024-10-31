@@ -1,12 +1,13 @@
 import {
+    ActionBox,
     BACKSPACE,
     BehaviorExecutionResult,
     FreCaret,
     FreEditor,
     FreErrorSeverity,
     FreLogger,
-    isActionBox,
-    TextBox,
+    isActionBox, isActionTextBox,
+    TextBox
 } from "@freon4dsl/core";
 import {EventDispatcher} from "svelte";
 import {executeCustomKeyboardShortCut} from "./CommonFunctions.js";
@@ -110,10 +111,11 @@ export class TextComponentHelper {
         this._endEditing();
         editor.selectPreviousLeafIncludingExpressionPreOrPost();
         LOGGER.log(htmlId + "    PREVIOUS LEAF IS " + editor.selectedBox.role);
-        if (isActionBox(editor.selectedBox)) {
-            const executionResult: BehaviorExecutionResult = editor.selectedBox.tryToExecute(event.key, editor)
+        if (isActionTextBox(editor.selectedBox)) {
+            const actionBox = (editor.selectedBox as TextBox).parent as ActionBox
+            const executionResult: BehaviorExecutionResult = actionBox.tryToExecute(event.key, editor)
             if (executionResult !== BehaviorExecutionResult.EXECUTED) {
-                editor.selectedBox.setCaret(FreCaret.LEFT_MOST, editor)
+                actionBox.setCaret(FreCaret.LEFT_MOST, editor)
             }
         }
         event.preventDefault();
@@ -121,13 +123,15 @@ export class TextComponentHelper {
     }
 
     handleGoToNext(event: KeyboardEvent, editor: FreEditor, htmlId: string) {
+        LOGGER.log("handleGoToNext event " + event.key)
         this._endEditing();
         editor.selectNextLeafIncludingExpressionPreOrPost();
         LOGGER.log(htmlId + "    NEXT LEAF IS " + editor.selectedBox.role);
-        if (isActionBox(editor.selectedBox)) {
-            const executionResult: BehaviorExecutionResult = editor.selectedBox.tryToExecute(event.key, editor)
+        if (isActionTextBox(editor.selectedBox)) {
+            const actionBox = (editor.selectedBox as TextBox).parent as ActionBox
+            const executionResult: BehaviorExecutionResult = actionBox.tryToExecute(event.key, editor)
             if (executionResult !== BehaviorExecutionResult.EXECUTED) {
-                editor.selectedBox.setCaret(FreCaret.RIGHT_MOST, editor)
+                actionBox.setCaret(FreCaret.RIGHT_MOST, editor)
             }
         }
         event.preventDefault();

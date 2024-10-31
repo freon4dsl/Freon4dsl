@@ -93,7 +93,6 @@
         style="{cssStyle}"
         on:keydown={onKeydown}
         id="{id}"
-        tabindex={0}
         bind:this={htmlElement}
         role="gridcell"
 >

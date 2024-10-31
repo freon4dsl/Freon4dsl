@@ -35,10 +35,9 @@
         isFragmentBox,
         isReferenceBox,
         FreEditor,
-        FreLogger,
         Box,
         BoolDisplay,
-        LimitedDisplay
+        LimitedDisplay, isActionTextBox, AbstractChoiceBox
     } from "@freon4dsl/core";
     import MultiLineTextComponent from "$lib/components/MultiLineTextComponent.svelte";
     import EmptyLineComponent from "$lib/components/EmptyLineComponent.svelte";
@@ -93,6 +92,13 @@
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
         LOGGER.log('afterUpdate selectedBoxes: [' + $selectedBoxes.map(b => b?.node?.freId() + '=' + b?.node?.freLanguageConcept() + '=' + b?.kind) + "]");
         let isSelected: boolean = $selectedBoxes.includes(box);
+        // Ensure that the internal textbox inside an Action/Select/Reference box is selected if its parent box is.
+        if (isActionTextBox(box) ) {
+            isSelected = isSelected || $selectedBoxes.includes(box.parent)
+        }
+        if ( isActionBox(box) || isSelectBox(box) || isReferenceBox(box)) {
+            isSelected = isSelected || $selectedBoxes.includes(box._textBox)
+        }
         if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected
         } else {
