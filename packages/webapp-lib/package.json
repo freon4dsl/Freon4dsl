@@ -45,7 +45,7 @@
   ],
   "dependencies": {
     "@freon4dsl/core": "1.0.0-beta1",
-    "svelte": "^4.2.17",
+    "svelte": "< 5.0.0",
     "click-outside": "^2.0.2",
     "@smui-extra/autocomplete": "^7.0.0",
     "@smui/banner": "^7.0.0",
