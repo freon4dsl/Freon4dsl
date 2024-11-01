@@ -65,5 +65,5 @@
     "packages/server",
     "packages/test"
   ],
-  "version": "0.7.0-beta5"
+  "version": "1.0.0-beta1"
 }
