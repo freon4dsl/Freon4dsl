@@ -6,7 +6,7 @@ import { Box, AbstractChoiceBox, SelectOption } from "./internal.js";
 import { FreNode, FreNodeReference } from "../../ast/index.js";
 import { runInAction } from "mobx";
 import { FreLogger } from "../../logging/index.js";
-import { FreUtils, isNullOrUndefined } from "../../util/index.js";
+import { AFTER_BINARY_OPERATOR, BEFORE_BINARY_OPERATOR, isNullOrUndefined, LEFT_MOST, RIGHT_MOST } from "../../util/index.js";
 
 const LOGGER: FreLogger = new FreLogger("ActionBox");
 
@@ -90,6 +90,22 @@ export class ActionBox extends AbstractChoiceBox {
                     result.push(...options);
                 }
             });
+        if (this.role === LEFT_MOST || this.role === AFTER_BINARY_OPERATOR) {
+            result.push({
+                label: "(",
+                id: "BRACKET_OPEN",
+                action: null,
+                description: "Add an open parenthesis"
+            })
+        }
+        if (this.role === RIGHT_MOST || this.role === BEFORE_BINARY_OPERATOR) {
+            result.push({
+                label: ")",
+                id: "BRACKET_CLOSE",
+                action: null,
+                description: "Add a close parenthesis"
+            })
+        }
         return result;
     }
 
@@ -198,11 +214,17 @@ export class ActionBox extends AbstractChoiceBox {
     };
 
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
-        LOGGER.log("ActionBox executeOption " + JSON.stringify(option));
-        FreUtils.CHECK(!!option.action, `ActionBox.executeOption: action missing for ${option.label}` )
-        if (!!option.action) {
+        console.log("ActionBox executeOption " + JSON.stringify(option));
+        if (option.id === "BRACKET_OPEN" || option.id === "BRACKET_CLOSE") {
+            console.log("SActionBox.SET TEXT TO (")
+            this.textHelper.setText("(")
+        }
+        if (isNullOrUndefined(option.action)) {
+            console.error(`ActionBox.executeOption: action missing for ${option.label}` )
+        } else {
             return executeSingleBehavior(option.action, this, option.label, editor);
         }
+        console.log("executeOption done")
         return BehaviorExecutionResult.NULL;
     }
 

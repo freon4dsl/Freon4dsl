@@ -38,6 +38,7 @@ export class SelectBox extends AbstractChoiceBox {
     }
 
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
+        console.log("SelectBox.executeOption " + option.label)
         const result: BehaviorExecutionResult = this._innerSelectOption(editor, option);
         if (result === BehaviorExecutionResult.EXECUTED) {
             this.isDirty()

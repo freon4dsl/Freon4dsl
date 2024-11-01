@@ -22,8 +22,8 @@
         isReferenceBox,
         type SelectOption,
         TextBox,
-        BehaviorExecutionResult
-    } from "@freon4dsl/core"
+        BehaviorExecutionResult, LEFT_MOST
+    } from "@freon4dsl/core";
 
     import { afterUpdate, onMount } from "svelte";
 
@@ -309,14 +309,27 @@
     const itemSelected = () => {
         LOGGER.log('itemSelected ' + selectedId)
         const index = filteredOptions.findIndex(o => o.id === selectedId);
+        LOGGER.log(`   index is ${index} filteredOptions is ${filteredOptions.length}`)
+        const chosenOption = filteredOptions[index];
         if (index >= 0 && index < filteredOptions.length) {
-            const chosenOption = filteredOptions[index];
+            // const chosenOption = filteredOptions[index];
+            LOGGER.log(`Chose option is ${chosenOption}`)
             if (!!chosenOption) {
+                LOGGER.log("STORE OR EXECUTE CALL")
                 storeOrExecute(chosenOption);
             }
         }
         if (!isSelectBox(box)) { // clear text for an action box
-            setTextLocalAndInBox('');
+            if (chosenOption.id === "BRACKET_OPEN") {
+                LOGGER.log("set text to (")
+                setTextLocalAndInBox('(');
+            } else if (chosenOption.id === "BRACKET_CLOSE") {
+                LOGGER.log("set text to )")
+                setTextLocalAndInBox(')');
+            } else {
+                LOGGER.log("set text to empty")
+                setTextLocalAndInBox('');
+            }
         }
         isEditing = false;
         dropdownShown = false;
@@ -355,13 +368,24 @@
      * @param selected
      */
     function storeOrExecute(selected: SelectOption) {
-        console.log('storeOrExecute for option ' + selected.label + ' ' + box.kind + ' ' + box.role);
+        LOGGER.log('!!storeOrExecute for option ' + selected.label + ' ' + box.kind + ' ' + box.role);
         isEditing = false;
         dropdownShown = false;
 
+        LOGGER.log("Calling box.executeOption " + box.executeOption)
         box.executeOption(editor, selected); // TODO the result of the execution is ignored
-        if (isActionBox(box)) { // ActionBox, action done, clear input text
-            setTextLocalAndInBox('');
+        LOGGER.log("End of calliong box.executeOption")
+        if (isActionBox(box) ) { // ActionBox, action done, clear input text
+            if (selected.id === "BRACKET_OPEN") {
+                LOGGER.log("set text to (")
+                setTextLocalAndInBox('(');
+            } else if (selected.id === "BRACKET_CLOSE") {
+                LOGGER.log("set text to )")
+                setTextLocalAndInBox(')');
+            } else {
+                LOGGER.log("set text to empty")
+                setTextLocalAndInBox('');
+            }
         } else {
             editor.selectNextLeaf(box)
         }
