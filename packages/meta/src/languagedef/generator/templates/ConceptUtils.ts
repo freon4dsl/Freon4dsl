@@ -191,6 +191,10 @@ export class ConceptUtils {
                             .join("\n")}`
                 : ``
         }
+                // Make copy method a mobx action
+                makeObservable(this, {
+                    copy: action
+                })
             }`;
     }
 
