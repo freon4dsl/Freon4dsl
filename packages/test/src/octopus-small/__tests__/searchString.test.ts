@@ -10,18 +10,17 @@ const handler = new FileHandler();
 const searcher = new FreSearcher();
 
 function readFile(filepath: string): FreModelUnit {
+    let unit: FreModelUnit = null
     try {
-        let unit
         AST.change( () => {
             const model: OctopusModel = new OctopusModel();
             const langSpec: string = handler.stringFromFile(filepath);
             unit = reader.readFromString(langSpec, "UmlPart", model) as FreModelUnit;
-            return unit
         })
     } catch (e) {
         console.log(e.message + e.stack);
     }
-    return null;
+    return unit;
 }
 
 describe("Testing Search String", () => {

@@ -191,10 +191,11 @@ export class ConceptUtils {
                             .join("\n")}`
                 : ``
         }
+                ${hasSuper ? "" : `
                 // Make copy method a mobx action
                 makeObservable(this, {
                     copy: action
-                })
+                })`}
             }`;
     }
 
