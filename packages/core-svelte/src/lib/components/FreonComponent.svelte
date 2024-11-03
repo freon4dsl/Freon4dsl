@@ -263,7 +263,7 @@
     refreshSelection("Initialize FreonComponent");
 </script>
 
-// TODO This makes us dependent on @material/... do we want that?
+<!-- TODO This makes us dependent on @material/... do we want that?-->
 <!-- include the material design styling -->
 <svelte:head>
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet"/>

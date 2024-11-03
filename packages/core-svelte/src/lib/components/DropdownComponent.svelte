@@ -41,7 +41,7 @@
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
             <div class="dropdown-component-item"
                  class:dropdown-component-selected={isSelected(option)}
-                 on:click={(event) => {event.preventDefault(); event.stopPropagation(); handleClick(option); }}
+                 on:mousedown={(event) => {event.preventDefault(); event.stopPropagation(); handleClick(option); }}
                  role="none"
             >
                 {option.label}
