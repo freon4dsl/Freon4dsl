@@ -46,7 +46,7 @@ export class ConceptTemplate {
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
-            import { makeObservable, action } from "mobx"
+            ${hasSuper? "": 'import { makeObservable, action } from "mobx"'}
 
             /**
              * Class ${myName} is the implementation of the concept with the same name in the language definition file.
@@ -105,7 +105,7 @@ export class ConceptTemplate {
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
-            import { makeObservable, action } from "mobx"
+            ${hasSuper? "": 'import { makeObservable, action } from "mobx"'}
             
             /**
              * Class ${myName} is the implementation of the binary expression concept with the same name in the language definition file.
@@ -195,7 +195,7 @@ export class ConceptTemplate {
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
-            import { runInAction, makeObservable, action } from "mobx"
+            import { runInAction ${hasSuper ? "" : ", makeObservable, action"} } from "mobx"
             /**
              * Class ${myName} is the implementation of the limited concept with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react
