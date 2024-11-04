@@ -66,7 +66,7 @@
      * This function sets the focus on this element programmatically.
      */
     const setFocus = () => {
-        LOGGER.log("setFocus " + box.kind + id);
+        console.log("TextDropdownComponent.setFocus " + box.kind + id);
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
@@ -359,7 +359,14 @@
         isEditing = false;
         dropdownShown = false;
 
-        box.executeOption(editor, selected); // TODO the result of the execution is ignored
+        const post = box.executeOption(editor, selected); // TODO the result of the execution is ignored
+        if (!!post) {
+            if (typeof post === "function") {
+                post()
+            } else {
+                console.log("POST is noit a function: " + post)
+            }
+        }
         if (isActionBox(box)) { // ActionBox, action done, clear input text
             setTextLocalAndInBox('');
         } else {
