@@ -7,15 +7,16 @@ import { isFreBinaryExpression, isFreExpression } from "../ast-utils/index.js";
 import { FreLogger } from "../logging/index.js";
 
 // reserved role names for expressions, use with care.
-// TODO sort out the following const, they seems to be overlapping
+// The empty left-hand and right-hand sides/operands of a binary expresion 
 export const FRE_BINARY_EXPRESSION_LEFT = "FreBinaryExpression-left";
 export const FRE_BINARY_EXPRESSION_RIGHT = "FreBinaryExpression-right";
+// BEFORE_BINARY_OPERATOR and AFTER_BINARY_OPERATOR are the action boxes that are before and after a singular binary operator
 export const BEFORE_BINARY_OPERATOR = "binary-pre";
 export const AFTER_BINARY_OPERATOR = "binary-post";
 // LEFT_MOST and RIGHT_MOST are the action boxes to the extreme right and left of a complete expression
-// BEFORE_BINARY_OPERATOR and AFTER_BINARY_OPERATOR are the action boxes that are before and after a singular binary operator
 export const LEFT_MOST = "exp-left";
 export const RIGHT_MOST = "exp-right";
+// role name for complete binary expression layout box
 export const BINARY_EXPRESSION = "binary-expression";
 export const EXPRESSION = "expression";
 export const EXPRESSION_SYMBOL = "symbol";

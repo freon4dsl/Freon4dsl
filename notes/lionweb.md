@@ -5,14 +5,15 @@
 
 - Freon CLI tool
 - [x] Needs other import syntax for AGL because it is commonjs ?!?!
-- [ ] See Cli in lionweb-gfreon for a LionWeb Language => Freon converter.
-- [ ] Create Fren lanmgauge to LionWeb converter
+- [ ] See Cli in lionweb-freon for a LionWeb Language => Freon converter.
+- [ ] Create Freon language to LionWeb converter
 
 - Import metamodel 
     - [x] Use M3 language deserializer, unparse in memory and generate .ast files
     - [x] write projection to enable editing and nice syntax for metamodels.
 
 - [ ] Errors coming from server should be checked and shown to the user.
+
 #### Incompatibilities
 
 - [ ] Freon alows multi-valued primitive properties, LionWeb does not

@@ -3,7 +3,7 @@ editor specials
 BaseProduct {[
     /* In this projection 'self.parts' is always shown according to the projection */
     /* defined for concept InsurancePart in the editor 'comments'.                 */
-    Base Product for ${self.theme radio} ${self.name wrap=SMUI_Dialog buttonLabel = "Change Product Name"}
+    Base Product for ${self.theme radio} ${self.name replace=SMUI_Dialog buttonLabel = "Change Product Name"}
         [fragment First wrap=SMUI_Card] [fragment Second wrap=SMUI_Card]
         ${self.parts:comments replace=SMUI_Accordion multi="multiple"}
 ]

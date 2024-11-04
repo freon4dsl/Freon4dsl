@@ -123,8 +123,8 @@
 	 * and sets the selectedBox of the editor.
 	 * Called when clicked on the <span> element.
 	 */
-	function startEditing(event: MouseEvent) {
-		LOGGER.log(`${id}: startEditing`);
+	function startEditing(event: Event) {
+		LOGGER.log(`${id}: startEditing event type is ${event.type}`);
 		// set the global selection
 		editor.selectElementForBox(box);
 		// set the local variables
@@ -135,7 +135,7 @@
 		myHelper.setFromAndTo(anchorOffset, focusOffset);
 		event.preventDefault();
 		event.stopPropagation();
-		if (partOfDropdown) {
+		if (partOfDropdown && event.type === "click") {
 			dispatcher('startEditing', {content: text, caret: myHelper.from}); // tell the TextDropdown that the edit has started
 		}
 	}
@@ -147,10 +147,12 @@
 	 * @param event
 	 */
 	function onClick(event: MouseEvent) {
-		LOGGER.log('onClick: ')
+		LOGGER.log('onClick enter ')
 		if (!!inputElement) {
-			LOGGER.log('onClick: ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
+			LOGGER.log('onClick: for input element ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 			myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+		} else {
+			LOGGER.log("onClick without input")
 		}
 		if (partOfDropdown) {  // let TextDropdownComponent know, dropdown menu needs to be altered
 			LOGGER.log(`textUpdate from onClick`)
@@ -188,6 +190,9 @@
 	}
 
 
+	const onKeyDownSpan = (event: KeyboardEvent) => {
+		LOGGER.log(`${id}: onKeyDownSpan: [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}] meta [${event.metaKey}]`);
+	}
 	/**
 	 * This function handles any keyboard event that occurs within the <input> element.
 	 * Note, we use onKeyDown, because onKeyPress is deprecated.
@@ -199,7 +204,9 @@
 		// stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
 		// preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
 		LOGGER.log(`${id}: onKeyDown: [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}] meta [${event.metaKey}]`);
-		if (event.key === SHIFT || event.key === CONTROL || event.key === ALT) { // ignore meta keys
+		if (event.key === TAB) {
+			// Do nothing, browser handles this
+		} else if (event.key === SHIFT || event.key === CONTROL || event.key === ALT) { // ignore meta keys
 			LOGGER.log("META KEY: stop propagation")
 			event.stopPropagation();
 		} else if (event.altKey || event.ctrlKey) { // No shift, because that is handled as normal text
@@ -214,8 +221,7 @@
 				}
 				case ARROW_DOWN:
 				case ARROW_UP:
-				case ENTER:
-				case TAB: {
+				case ENTER: {
 					// NOTE No explicit call to endEditing needed, as these events are handled by the FreonComponent,
 					// and if the selection leaves this textbox, a focusOut event will occur, which does exactly this.
 					break;
@@ -275,10 +281,19 @@
 		LOGGER.log(`${id}: onFocusOut `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
 		if (!partOfDropdown && isEditing) {
 			endEditing();
-		} else { 
+		} else {
 			// else let TextDropdownComponent handle it
 			dispatcher("focusOutTextComponent")
 		}
+	}
+	const onFocusIn = () => {
+		LOGGER.log(`onFocusIn ${id}: `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
+		editor.selectElementForBox(box)
+	}
+	const onFocusInSpan = (event: FocusEvent) => {
+		LOGGER.log(`onFocusInSpan ${id}: `+ " partof:" + partOfDropdown + " isEditing:" + isEditing)
+		editor.selectElementForBox(box)
+		// startEditing(event)
 	}
 
 	const refresh = (why?: string) => {
@@ -411,6 +426,7 @@
 		setInputWidth();
 	}
 
+	const tabindex = (box.role.startsWith("action-binary") || box.role.startsWith("action-exp") ? -1 : 0)
 	refresh();
 </script>
 
@@ -429,6 +445,7 @@
 					   on:input={onInput}
 					   bind:value={text}
 					   on:focusout={onFocusOut}
+					   on:focusin={onFocusIn}
 					   on:keydown={onKeyDown}
 					   draggable="true"
 					   on:dragstart={onDragStart}
@@ -441,9 +458,12 @@
 			-->
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 			<span class="{box.role} text-box-{boxType} text-component-text {errorCls}"
-				  on:click={startEditing}
+				  on:mousedown={onClick}
+				  on:focusin={onFocusInSpan}
+				  tabindex="{tabindex}"
 				  bind:this={spanElement}
 				  contenteditable=true
+				  on:keydown={onKeyDownSpan}
 				  spellcheck=false
 				  id="{id}-span"
 				  role="none">

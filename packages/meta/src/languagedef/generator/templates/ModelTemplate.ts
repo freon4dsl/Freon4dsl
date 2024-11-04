@@ -20,6 +20,8 @@ export class ModelTemplate {
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
+            import { makeObservable, action } from "mobx"
+
             /**
              * Class ${myName} is the implementation of the model with the same name in the language definition file.
              * It uses mobx decorators to enable parts of the language environment, e.g. the editor, to react

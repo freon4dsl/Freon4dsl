@@ -53,13 +53,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: F
                 }
             } else if (isString(trigger)) {
                 if (trigger === text) {
-                    LOGGER.log(
-                        "executeBehavior: MATCH FULL TEXT label [" +
-                            label +
-                            "] refShortcut [" +
-                            action.referenceShortcut +
-                            "]",
-                    );
+                    LOGGER.log(`  executeBehavior: MATCH DFULL TEXT label [${label}] refshortcut [${action.referenceShortcut}]`);
                     let postAction: FrePostAction;
                     runInAction(() => {
                         const command = action.command();
@@ -74,7 +68,7 @@ export function executeBehavior(box: Box, text: string, label: string, editor: F
             }
         }
     }
-    LOGGER.log("executeBehavior: no action match, ;partial is " + partialMatch);
+    LOGGER.log("  executeBehavior: no action match, partial is " + partialMatch);
     if (partialMatch) {
         return BehaviorExecutionResult.PARTIAL_MATCH;
     } else {
@@ -96,13 +90,7 @@ export function executeSingleBehavior(
     label: string,
     editor: FreEditor,
 ): BehaviorExecutionResult {
-    LOGGER.log(
-        "Enter executeSingleBehavior label [" +
-            label +
-            "] refshortcut [" +
-            action.referenceShortcut +
-            "]",
-    );
+    LOGGER.log(`Enter executeSingleBehavior label [${label}] refshortcut [${action.referenceShortcut}]`);
     let execresult: FrePostAction;
 
     const index = -1; // todo get the correct index
