@@ -25,7 +25,14 @@
     import RenderComponent from "./RenderComponent.svelte";
     import ContextMenu from "./ContextMenu.svelte";
     import { afterUpdate, onMount, tick } from "svelte";
-    import { contextMenu, contextMenuVisible, selectedBoxes, viewport, componentId } from "$lib/components/svelte-utils/index.js";
+    import {
+        contextMenu,
+        contextMenuVisible,
+        selectedBoxes,
+        viewport,
+        componentId,
+        shouldBeHandledByBrowser
+    } from "$lib/components/svelte-utils/index.js";
 
     let LOGGER = FREON_LOGGER
     export let editor: FreEditor;
@@ -37,6 +44,7 @@
     function stopEvent(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
+        shouldBeHandledByBrowser.set(false);
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -53,31 +61,36 @@
                         stopEvent(event);
                         break;
                     case 'z':  // ctrl-z => UNDO
-                        if (!(event.target instanceof HTMLInputElement)) {
+                        if (!$shouldBeHandledByBrowser) {
+                            console.log("Ctrl-z: UNDO")
                             AstActionExecutor.getInstance(editor).undo();
                             stopEvent(event);
                         }
                         break;
                     case'y': // ctrl-y => REDO
-                        if (!(event.target instanceof HTMLInputElement)) {
+                        if (!$shouldBeHandledByBrowser) {
+                            console.log("Ctrl-y: REDO")
                             AstActionExecutor.getInstance(editor).redo();
                             stopEvent(event);
                         }
                         break;
                     case'x': // ctrl-x => CUT
-                        if (!(event.target instanceof HTMLInputElement)) {
+                        if (!$shouldBeHandledByBrowser) {
+                            console.log("Ctrl-x: CUT")
                             AstActionExecutor.getInstance(editor).cut();
                             stopEvent(event);
                         }
                         break;
                     case'c': // ctrl-c => COPY
-                        if (!(event.target instanceof HTMLInputElement)) {
+                        if (!$shouldBeHandledByBrowser) {
+                            console.log("Ctrl-c: COPY")
                             AstActionExecutor.getInstance(editor).copy();
                             stopEvent(event);
                         }
                         break;
                     case'v': // ctrl-v => PASTE
-                        if (!(event.target instanceof HTMLInputElement)) {
+                        if (!$shouldBeHandledByBrowser) {
+                            console.log("Ctrl-v: PASTE")
                             AstActionExecutor.getInstance(editor).paste();
                             stopEvent(event);
                         }
@@ -94,7 +107,7 @@
             } else {
                 switch (event.key) {
                     case 'z': // ctrl-alt-z => REDO
-                        if (!(event.target instanceof HTMLInputElement)) {
+                        if (!$shouldBeHandledByBrowser) {
                             AstActionExecutor.getInstance(editor).redo();
                             stopEvent(event);
                         }
@@ -105,7 +118,7 @@
             if (event.shiftKey) {
                 switch (event.key) {
                     case BACKSPACE: // alt-shift-backspace => REDO
-                        if (!(event.target instanceof HTMLInputElement)) {
+                        if (!$shouldBeHandledByBrowser) {
                             AstActionExecutor.getInstance(editor).redo();
                             stopEvent(event);
                         }
@@ -114,7 +127,7 @@
             } else { // NO shift
                 switch (event.key) {
                     case BACKSPACE: // alt-backspace => UNDO
-                        if (!(event.target instanceof HTMLInputElement)) {
+                        if (!$shouldBeHandledByBrowser) {
                             AstActionExecutor.getInstance(editor).undo();
                             stopEvent(event);
                         }

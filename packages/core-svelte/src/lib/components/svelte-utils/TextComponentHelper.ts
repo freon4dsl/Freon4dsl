@@ -6,27 +6,26 @@ import {
     FreEditor,
     FreErrorSeverity,
     FreLogger,
-    isActionBox, isActionTextBox,
+    isActionTextBox,
     TextBox
 } from "@freon4dsl/core";
-import {EventDispatcher} from "svelte";
-import {executeCustomKeyboardShortCut} from "./CommonFunctions.js";
+import { EventDispatcher } from "svelte";
+import { executeCustomKeyboardShortCut } from "$lib/components/svelte-utils/CommonFunctions.js";
+import { shouldBeHandledByBrowser } from "$lib/components/svelte-utils/KeystrokeStore.js";
 
 const LOGGER = new FreLogger("TextComponentHelper")
 
 export class TextComponentHelper {
     // The box that is shown in the text component for which this instance is created
     private readonly _myBox: TextBox;
-    // Function that enables us to set the text variable in the TextComponent
-    // private _setText: (val: string) => boolean;
     // Function that enables us to get the value from the text variable in the TextComponent
     private readonly _getText: () => string;
+    // Function that enables us to determine whether the text variable in the TextComponent is different from the value stored in the model
+    private readonly _hasChanges: () => boolean;
     // Function that enables us to do everything that is needed when the editing of the TextComponent is in any way stopped.
     private readonly _endEditing: () => void;
     // The dispatcher that enables us to communicate with the surrounding TextDropdownComponent
     private readonly _dispatcher: EventDispatcher<any>;
-    // Indicates whether the text component is part of a TextDropdownComponent
-    private _isPartOfDropdown: boolean = false;
 
     // The cursor position, or when different from 'to', the start of the selected text.
     // Note that 'from <= to' always holds.
@@ -36,15 +35,14 @@ export class TextComponentHelper {
     _to: number = -1;
 
     constructor(box: TextBox,
-                isPartOfDropdown,
                 getText: () => string,
+                hasChanges: () => boolean,
                 endEditing: () => void,
-                // textUpdateFunction: (p: { caret: number; content: string }) => boolean,
                 dispatcher: EventDispatcher<any>
     ) {
         this._myBox = box;
-        this._isPartOfDropdown = isPartOfDropdown;
         this._getText = getText;
+        this._hasChanges = hasChanges;
         this._endEditing = endEditing;
         this._dispatcher = dispatcher;
     }
@@ -65,11 +63,10 @@ export class TextComponentHelper {
         this._from = val;
     }
 
-
     handleDelete(event: KeyboardEvent, editor: FreEditor) {
         LOGGER.log(`Delete`);
         if (!event.ctrlKey && !event.altKey && event.shiftKey) { // shift-delete
-            // TODO CUT
+            this.cut();
         } else {
             this._dispatcher('showDropdown');
             this.getCaretPosition(event);
@@ -145,55 +142,38 @@ export class TextComponentHelper {
         // first check if this event has a command defined for it
         executeCustomKeyboardShortCut(event, 0, this._myBox, editor); // this method will stop the event from propagating, but does not prevent default!!
         // next handle any key that should have a special effect within the text
-        // todo see which of these can need not be handled here, and can bubble up to FreonComponent
+        this.getCaretPosition(event);
+        // see which of these need to be handled here, and which can bubble up to FreonComponent or to the browser
         if (event.ctrlKey) {
             if (!event.altKey) {
-                if (event.key === 'z') { // ctrl-z
-                    // UNDO handled by browser
-                } else if (event.key === 'h') { // ctrl-h
-                    // todo SEARCH
-                    event.stopPropagation();
-                } else if (event.key === 'y') { // ctrl-y
-                    // todo REDO
-                    event.stopPropagation();
-                } else if (event.key === 'x') { // ctrl-x
-                    // todo CUT
-                    event.stopPropagation();
-                } else if (event.key === 'x') { // ctrl-a
-                    // todo SELECT ALL in focused control
-                    event.stopPropagation();
-                } else if (event.key === 'c') { // ctrl-c
-                    // COPY
-                    event.stopPropagation();
-                    navigator.clipboard.writeText(this._getText()) // TODO get only the selected text from document.getSelection
-                        .then(() => {
-                            editor.setUserMessage('Text copied to clipboard', FreErrorSeverity.Info);
-                        })
-                        .catch(err => {
-                            editor.setUserMessage('Error in copying text: ' + err.message);
-                        });
-                } else if (event.key === 'v') { // ctrl-v
-                    // PASTE
-                    event.stopPropagation();
-                    event.preventDefault(); // the default event causes extra <span> elements to be added
-
-                    // clipboard.readText does not work in Firefox
-                    // Firefox only supports reading the clipboard in browser extensions, using the "clipboardRead" extension permission.
-                    // TODO add a check on the browser used
-                    // navigator.clipboard.readText().then(
-                    // 		clipText => LOGGER.log('adding ' + clipText + ' after ' + this._getText()[to - 1]));
-                    // TODO add the clipText to 'text'
+                switch (event.key) {
+                    case 'z': // ctrl-z
+                    case  'y': // ctrl-y
+                        shouldBeHandledByBrowser.set(this._hasChanges());
+                        break;
+                    case  'x': // ctrl-x
+                        this.cut();
+                        break;
+                    case  'a': // ctrl-a
+                        // todo SELECT ALL in focused control
+                        break;
+                    case  'c': // ctrl-c
+                        this.copy(event, editor);
+                        break;
+                    case  'v': // ctrl-v
+                        this.paste(event);
+                        break;
                 }
             } else { // !!event.altKey
                 if (event.key === 'z') { // ctrl-alt-z
-                    // REDO handled by browser
+                    shouldBeHandledByBrowser.set(this._hasChanges());
                 }
             }
         } else {
             if (event.altKey && event.key === BACKSPACE) { // alt-backspace
-                // TODO UNDO
+                shouldBeHandledByBrowser.set(this._hasChanges());
             } else if (!event.ctrlKey && event.altKey && event.shiftKey) { // alt-shift-backspace
-                // TODO REDO
+                shouldBeHandledByBrowser.set(this._hasChanges());
             }
         }
     }
@@ -263,6 +243,51 @@ export class TextComponentHelper {
 
     isTextEmpty(): boolean {
         return this._getText() === "" || !this._getText();
+    }
+
+    /**
+     * This function determines where the current keystroke event should be handled.
+     * It is used for keystrokes that are not directly handled by the corresponding TextComponent,
+     * but are either handled by the browser, e.g. an undo in the input text, or by the surrounding
+     * FreonComponent, e.g. an undo when there are no changes in the input text left that could be undone.
+     * @private
+     */
+
+
+    /**
+     * Like setHandler(), this function determines where the current keystroke event should be handled.
+     * However, the condition for the choice is a different one.
+     * @private
+     */
+    private cut() {
+        if (this._from !== this._to) { // handled by browser
+            shouldBeHandledByBrowser.set(true);
+        } else { // handled by FreonComponent
+            shouldBeHandledByBrowser.set(false);
+        }
+    }
+
+    private paste(event: KeyboardEvent) {
+        event.stopPropagation();
+        event.preventDefault(); // the default event causes extra <span> elements to be added
+
+        // clipboard.readText does not work in Firefox
+        // Firefox only supports reading the clipboard in browser extensions, using the "clipboardRead" extension permission.
+        // TODO add a check on the browser used
+        // navigator.clipboard.readText().then(
+        // 		clipText => LOGGER.log('adding ' + clipText + ' after ' + this._getText()[to - 1]));
+        // TODO add the clipText to 'text'
+    }
+
+    private copy(event: KeyboardEvent, editor: FreEditor) {
+        event.stopPropagation();
+        navigator.clipboard.writeText(this._getText()) // TODO get only the selected text from document.getSelection
+            .then(() => {
+                editor.setUserMessage('Text copied to clipboard', FreErrorSeverity.Info);
+            })
+            .catch(err => {
+                editor.setUserMessage('Error in copying text: ' + err.message);
+            });
     }
 }
 
