@@ -21,10 +21,11 @@ import {
     BoxUtil,
     NumberDisplay,
     TextBox,
-    DiagramBox
+    DiagramBox, BoolDisplay, FreNodeReference, FreProjectionHandler
 } from "@freon4dsl/core";
-import { Documentation, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
+import { Documentation, Entity, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment.js";
+import { AttributeBoxProvider, DocumentationBoxProvider } from "./gen/index.js";
 
 const sumIcon = "M 6 5 L 6.406531 20.35309 L 194.7323 255.1056 L 4.31761 481.6469 L 3.767654 495.9135 L 373 494 C 376.606 448.306 386.512 401.054 395 356 L 383 353 C 371.817 378.228 363.867 405.207 340 421.958 C 313.834 440.322 279.304 438 249 438 L 79 438 L 252.2885 228.6811 L 96.04328 33.3622 L 187 32.99999 C 245.309 32.99999 328.257 18.91731 351.329 89.00002 C 355.273 100.98 358.007 113.421 359 126 L 372 126 L 362 5 L 6 5 L 6 5 L 6 5 L 6 5 L 6 5 z ";
 const OPERATOR_COLUMN = 1;
@@ -42,6 +43,7 @@ const OPERAND_COLUMN = 2;
 
 export class CustomExampleProjection implements FreProjection {
     name: string = "Custom";
+    handler: FreProjectionHandler;
 
     constructor(name?: string) {
         if (!!name) {
@@ -52,7 +54,8 @@ export class CustomExampleProjection implements FreProjection {
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
         ["SumExpression", this.createSumBox],
         ["OrExpression", this.createOrBoxGrid],
-        ["Documentation", this.createDocumentationD],
+        ["Documentation", this.createDocumentation],
+        ["Entity", this.createEntity],
         ["NumberLiteralExpression", this.createNumberLiteralBox]
     ]);
 
@@ -74,10 +77,13 @@ export class CustomExampleProjection implements FreProjection {
             { selectable: false },
         );
     }
-    createDocumentationD (doc: Documentation): Box {
-        return new DiagramBox(doc, "documentation", "Documentation", "diagram")    
-    }
     
+    createDocumentationD (doc: Documentation): Box {
+        const result = new DiagramBox(doc, "documentation", "Documentation", "diagram")    
+        result.addChild(this.createDocumentation(doc))
+        return result
+    }
+
     createDocumentation (doc: Documentation): Box {
         return BoxFactory.horizontalLayout(
             doc,
@@ -188,4 +194,82 @@ export class CustomExampleProjection implements FreProjection {
                 "[" + property + "]",
                 { propertyName: property, conceptName: FreLanguage.getInstance().classifier(element.freLanguageConcept()).properties.get(property).type });
     }
+    
+    private createEntity(entity: Entity): Box {
+        return BoxFactory.verticalLayout(entity as Entity, "Entity-overall", "", [
+            BoxFactory.horizontalLayout(
+                entity as Entity,
+                "Entity-hlist-line-0",
+                "",
+                [
+                    BoxUtil.booleanBox(entity as Entity, "abstract", { yes: "RIGHT", no: "WRONG" }, BoolDisplay.SELECT),
+                    BoxUtil.labelBox(entity as Entity, "entity", "top-1-line-0-item-1"),
+                    BoxUtil.textBox(entity as Entity, "name"),
+                    BoxFactory.optional2(
+                        entity as Entity,
+                        "optional-baseEntity",
+                        () => !!(entity as Entity).baseEntity,
+                        BoxFactory.horizontalLayout(
+                            entity as Entity,
+                            "Entity-optional-baseEntity-hlist-line-0",
+                            "",
+                            [
+                                BoxUtil.labelBox(entity as Entity, "base", "top-2-line-0-item-0"),
+                                BoxUtil.referenceBox(
+                                    entity as Entity,
+                                    "baseEntity",
+                                    (selected: string) => {
+                                        (entity as Entity).baseEntity = FreNodeReference.create<Entity>(selected, "Entity");
+                                    },
+                                    ExampleEnvironment.getInstance().scoper,
+                                ),
+                            ],
+                            { selectable: false },
+                        ),
+                        false,
+                        BoxFactory.action(entity, "optional-baseEntity", "base"),
+                    ),
+                    BoxFactory.optional2(
+                        entity as Entity,
+                        "optional-baseInterfaces",
+                        () => !!(entity as Entity).baseInterfaces && (entity as Entity).baseInterfaces.length !== 0,
+                        BoxFactory.horizontalLayout(
+                            entity as Entity,
+                            "Entity-optional-baseInterfaces-hlist-line-0",
+                            "",
+                            [
+                                BoxUtil.labelBox(entity as Entity, "implements", "top-2-line-0-item-0"),
+                                BoxUtil.verticalReferenceListBox(
+                                    entity as Entity,
+                                    "baseInterfaces",
+                                    ExampleEnvironment.getInstance().scoper,
+                                    false,
+                                    null,
+                                ),
+                            ],
+                            { selectable: false },
+                        ),
+                        false,
+                        BoxFactory.action(entity, "optional-baseInterfaces", "implements"),
+                    ),
+                    BoxUtil.labelBox(entity as Entity, "{", "top-1-line-0-item-5"),
+                ],
+                { selectable: false },
+            ),
+            new DiagramBox(entity, "attributes", "Attribute", "entityDiagramAttributes", entity.attributes.map(att => this.handler.getBox(att))),
+            // BoxUtil.indentBox(
+            //     entity as Entity,
+            //     4,
+            //     "1",
+            //     BoxUtil.verticalPartListBox(entity as Entity, (entity as Entity).attributes, "attributes", null, this.mainHandler),
+            // ),
+            BoxUtil.indentBox(
+                entity as Entity,
+                4,
+                "2",
+                BoxUtil.verticalPartListBox(entity as Entity, (entity as Entity).methods, "methods", null, this.handler),
+            ),
+            BoxUtil.labelBox(entity as Entity, "}", "top-1-line-3-item-0")
+        ]);
+    } 
 }

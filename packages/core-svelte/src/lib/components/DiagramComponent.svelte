@@ -1,6 +1,8 @@
 <svelte:options immutable={true}/>
 <script lang="ts">
     import { DIAGRAM_LOGGER } from "$lib/components/ComponentLoggers.js";
+    import DiagramBoxComponent from "$lib/components/DiagramBoxComponent.svelte";
+    import DiagramColorPicker from "$lib/components/DiagramColorPicker.svelte";
     import { Background, BackgroundVariant, Controls, MiniMap, SvelteFlow } from "@xyflow/svelte";
 
     /**
@@ -41,40 +43,54 @@
         }
     };
 
+    const nodeTypes = {
+      "color-picker": DiagramColorPicker,
+      "box": DiagramBoxComponent
+    }
     // 👇 this is important! You need to import the styles for Svelte Flow to work
     import '@xyflow/svelte/dist/style.css';
 
     // We are using writables for the nodes and edges to sync them easily. When a user drags a node for example, Svelte Flow updates its position.
-    const nodes = writable([
-        {
-            id: '1',
-            type: 'input',
-            data: { label: 'Input Node' },
-            position: { x: 0, y: 0 }
-        },
-        {
-            id: '2',
-            type: 'default',
-            data: { label: 'Node' },
-            position: { x: 0, y: 150 }
-        }
-    ]);
+    let x = 10
+    let y = 10
+    const childrenNodes = box.children.map(childBox => {
+      x += 10
+      y += 10
+      return {
+        id: childBox.id + x,
+        type: 'box',
+        position: { x: x, y: y },
+        // data is used to store the current color value
+        data: { box: childBox, editor: editor }
+      }
+    })
+    const nodes = writable(childrenNodes)
+    // const nodes = writable([
+    //   {
+    //     id: 'node-2',
+    //     // this type needs to match the newly defined node type
+    //     type: 'box',
+    //     position: { x: 40, y: 60 },
+    //     // data is used to store the current color value
+    //     data: { box: box.children[0], editor: editor }
+    //   }
+    // ]);
 
     // same for edges
     const edges = writable([
-        {
-            id: '1-2',
-            type: 'default',
-            source: '1',
-            target: '2',
-            label: 'Edge Text'
-        }
+        // {
+        //     id: '1-2',
+        //     type: 'default',
+        //     source: '1',
+        //     target: '2',
+        //     label: 'Edge Text'
+        // }
     ]);
 
     const snapGrid = [25, 25];
 
     $: { // Evaluated and re-evaluated when the box changes.
-        refresh("FROM component " + box?.id);
+        refresh("FROM DiagramComponent " + box?.id);
     }
 </script>
 
@@ -84,11 +100,11 @@
     bind:this={element}
     id="{id}">
   <SvelteFlow
+      {nodeTypes}
       {nodes}
       {edges}
       {snapGrid}
       fitView
-      on:nodeclick={(event) => console.log('on node click', event.detail.node)}
   >
     <Controls />
     <Background variant={BackgroundVariant.Dots} />
