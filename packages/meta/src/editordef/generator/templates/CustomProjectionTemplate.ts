@@ -4,7 +4,7 @@ import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 export class CustomProjectionTemplate {
     generate(language: FreMetaLanguage): string {
         return `
-            import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjection}, ${Names.FreTableDefinition} } from "${FREON_CORE}";
+            import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjection}, ${Names.FreTableDefinition}, ${Names.FreProjectionHandler} } from "${FREON_CORE}";
 
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
