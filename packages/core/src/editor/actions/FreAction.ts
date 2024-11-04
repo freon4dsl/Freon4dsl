@@ -1,15 +1,19 @@
 import { FreNode } from "../../ast/index.js";
+import { FreLogger } from "../../logging/index.js";
 import { FreCaret } from "../util/index.js";
 import { Box } from "../boxes/index.js";
 import { FreEditor } from "../FreEditor.js";
-import { FreCommand } from "./FreCommand.js";
 import { FreTriggerUse, FreTriggerType } from "./FreTriggers.js";
 
+export const ACTION_LOGGER = new FreLogger("FreAction")
+    
 export type CustomAction = (box: Box, trigger: FreTriggerUse, editor: FreEditor) => FreNode | null;
 export type FrePostAction = () => void;
 
+/**
+ *  Use this if there is no post action. 
+ */
 export const EMPTY_POST_ACTION = function () {
-    /* todo create this function body */
 };
 
 export type ReferenceShortcut = {
@@ -53,7 +57,11 @@ export abstract class FreAction {
     referenceShortcut?: ReferenceShortcut;
 
     /**
-     * Returns the command object that can be executed to perform the action.
+     * execute the action
+     * @param box       The selected box
+     * @param trigger   The trigger that causes this action to execute
+     * @param editor    The editor
+     * @param index     
      */
-    abstract command(): FreCommand;
+    abstract execute(box: Box, trigger: FreTriggerUse, editor: FreEditor, index?: number): FrePostAction;
 }

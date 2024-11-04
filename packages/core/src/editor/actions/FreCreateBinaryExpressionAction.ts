@@ -1,10 +1,10 @@
 import { FreBinaryExpression } from "../../ast/index.js";
-import { FreUtils } from "../../util/index.js";
+import { AST } from "../../change-manager/index.js";
+import { BTREE, FRE_BINARY_EXPRESSION_LEFT, FreUtils, Selected } from "../../util/index.js";
 import { Box } from "../boxes/index.js";
 import { FreEditor } from "../FreEditor.js";
-import { FreAction } from "./FreAction.js";
-import { FreCommand } from "./FreCommand.js";
-import { FreCreateBinaryExpressionCommand } from "./FreCreateBinaryExpressionCommand.js";
+import { ACTION_LOGGER, FreAction, FrePostAction } from "./FreAction.js";
+import { FreTriggerUse, triggerTypeToString } from "./FreTriggers.js";
 
 
 export class FreCreateBinaryExpressionAction extends FreAction {
@@ -22,7 +22,30 @@ export class FreCreateBinaryExpressionAction extends FreAction {
         super();
     }
 
-    command(): FreCommand {
-        return new FreCreateBinaryExpressionCommand(this.expressionBuilder);
+    execute(box: Box, trigger: FreTriggerUse, editor: FreEditor): FrePostAction {
+        // console.log("FreCreateBinaryExpressionCommand: trigger [" + triggerTypeToString(trigger) + "] part: ");
+        let selected: Selected
+        AST.change( () => {
+            selected = BTREE.insertBinaryExpression(
+                this.expressionBuilder(box, triggerTypeToString(trigger), editor),
+                box,
+                editor,
+            );
+        })
+        // TODO Check whether this fix works consistently correct.
+        const childProperty = selected.boxRoleToSelect === FRE_BINARY_EXPRESSION_LEFT ? "left" : "right";
+        return function () {
+            ACTION_LOGGER.log(
+                "FreCreateBinaryExpressionCommand select after: " +
+                selected.element.freLanguageConcept() +
+                " ID " +
+                selected.element.freId() +
+                " rolr " +
+                childProperty,
+            );
+            editor.selectElement(selected.element, childProperty);
+            editor.selectFirstEditableChildBox(selected.element);
+        };
     }
+
 }

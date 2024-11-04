@@ -134,6 +134,7 @@ export class DefaultActionsTemplate {
                                     }
                                 } else {
                                     // reference
+                                    // TODO Handle List case seperately?
                                     rolename = Roles.propertyRole(
                                         myClassifier.name,
                                         optionalPropertyName,
