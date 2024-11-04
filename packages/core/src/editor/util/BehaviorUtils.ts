@@ -96,7 +96,6 @@ export function executeSingleBehavior(
         execresult = action.execute(box, label, editor, index);
     });
     if (!!execresult) {
-        console.log("executeSingleBehavior post function")
         execresult();
     }
     return BehaviorExecutionResult.EXECUTED;

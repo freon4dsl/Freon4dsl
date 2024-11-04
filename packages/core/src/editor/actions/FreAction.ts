@@ -57,11 +57,11 @@ export abstract class FreAction {
     referenceShortcut?: ReferenceShortcut;
 
     /**
-     * execute the action
-     * @param box       The selected box
+     * Execute the action
+     * @param box       The selected box on which this action is executed
      * @param trigger   The trigger that causes this action to execute
-     * @param editor    The editor
-     * @param index     
+     * @param editor    The editor 
+     * @param index     The index in the list, if there is any
      */
     abstract execute(box: Box, trigger: FreTriggerUse, editor: FreEditor, index?: number): FrePostAction;
 }
