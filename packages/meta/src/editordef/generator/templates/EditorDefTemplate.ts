@@ -198,7 +198,8 @@ export class EditorDefTemplate {
                     .map((group) => `${handlerVarName}.addProjection("${Names.projection(group)}")`)
                     .join(";\n")}
                 for (const p of freonConfiguration.customProjection) {
-                    ${handlerVarName}.addCustomProjection(p);
+                    p.handler = ${handlerVarName}
+                    ${handlerVarName}.addCustomProjection(p)
                 }
                 handler.initConceptToPropertyProjection(map);
                 ${handlerVarName}.initProviderConstructors(new Map<string, () => FreBoxProvider>(

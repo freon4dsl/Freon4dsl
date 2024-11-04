@@ -1,12 +1,14 @@
 import { FreNode } from "../../ast/index.js";
 import { Box } from "../boxes/index.js";
 import { FreTableDefinition } from "../FreTableDefinition.js";
+import { FreProjectionHandler } from "./FreProjectionHandler.js";
 
 /**
  * Interface for a custom projection.
  */
 export interface FreProjection {
     // todo add priority
+    handler: FreProjectionHandler;
 
     // Name of the custom projection
     name: string;
