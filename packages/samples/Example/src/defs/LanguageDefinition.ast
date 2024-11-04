@@ -10,6 +10,7 @@ modelunit ExampleUnit {
     documentation: Documentation;
     name: identifier;
     entities: Entity[];
+    interfaces: Interface[];
     methods: Method[];
     file-extension = "exm";
 }
@@ -21,11 +22,16 @@ concept Documentation {
 interface Type base BaseType {
 }
 
+concept Interface implements Type {
+    methods: Method[];
+}
+
 concept Entity implements Type {
     abstract: boolean;
     attributes: Attribute[];
     methods: Method[];
     reference baseEntity?: Entity;
+    reference baseInterfaces: Interface[];
 }
 
 concept Method {

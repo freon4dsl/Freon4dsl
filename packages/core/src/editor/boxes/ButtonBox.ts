@@ -27,8 +27,7 @@ export class ButtonBox extends Box {
                 // execute the action
                 let postAction: FrePostAction = null;
                 AST.changeNamed("ButtonBox.executeAction", () => {
-                    const command = action.command();
-                    postAction = command.execute(this, "no-label", editor, -1);
+                    postAction = action.execute(this, "no-label", editor, -1);
                 });
                 if (!!postAction) {
                     postAction();

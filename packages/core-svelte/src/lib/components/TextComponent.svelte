@@ -22,7 +22,6 @@
 		FreCaret,
 		FreCaretPosition,
 		FreEditor,
-		FreLogger,
 		isActionBox,
 		isSelectBox,
 		SelectBox,
@@ -69,14 +68,14 @@
 	$: boxType = !!box.parent ? (isActionBox(box?.parent) ? "action" : isSelectBox(box?.parent) ? "select" : "text") : "text";
 
 	// We create an extra object that handles a number of the more complex functions for this component
-	let myHelper: TextComponentHelper = new TextComponentHelper(box, partOfDropdown, () => {return text}, endEditing, dispatcher);
+	let myHelper: TextComponentHelper = new TextComponentHelper(box, () => {return text}, () => { return originalText !== text}, endEditing, dispatcher);
 
 	/**
 	 * This function sets the focus on this element programmatically.
 	 * It is called from the box.
 	 */
 	export async function setFocus(): Promise<void> {
-		LOGGER.log("setFocus "+ id + " input is there: " + !!inputElement);
+		console.log("TextComponent.setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
@@ -223,11 +222,8 @@
 				case ARROW_DOWN:
 				case ARROW_UP:
 				case ENTER: {
-					// NOTE Not needed as the TAB will be handled by the FreonComponent, and if it leaves
-					// the textbox, a focusOut will occurr, which does exaclt the same.
-					// if (!partOfDropdown && isEditing) {
-					// 	endEditing(); // do not switch selection, this will be done by FreonComponent
-					// } // else, let TextDropDownComponent or FreonComponent (in case of TAB) handle this
+					// NOTE No explicit call to endEditing needed, as these events are handled by the FreonComponent,
+					// and if the selection leaves this textbox, a focusOut event will occur, which does exactly this.
 					break;
 				}
 				case ARROW_LEFT: {
@@ -462,7 +458,7 @@
 			-->
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
 			<span class="{box.role} text-box-{boxType} text-component-text {errorCls}"
-				  on:mousedown={onClick} 
+				  on:mousedown={onClick}
 				  on:focusin={onFocusInSpan}
 				  tabindex="{tabindex}"
 				  bind:this={spanElement}

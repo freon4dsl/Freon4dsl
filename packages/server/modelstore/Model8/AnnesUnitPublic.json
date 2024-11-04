@@ -24,10 +24,31 @@
                "containment": {
                   "language": "-default-key-Example",
                   "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-documentation"
+               },
+               "children": [
+                  "ID-23"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
                   "key": "-default-key-ExampleUnit-entities"
                },
                "children": [
                   "ID-19"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-interfaces"
+               },
+               "children": [
+                  "ID-24",
+                  "ID-25"
                ]
             },
             {
@@ -44,6 +65,28 @@
          "parent": null
       },
       {
+         "id": "ID-23",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Documentation"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Documentation-text"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
+      },
+      {
          "id": "ID-19",
          "classifier": {
             "language": "-default-key-Example",
@@ -51,6 +94,14 @@
             "key": "-default-key-Entity"
          },
          "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-abstract"
+               },
+               "value": "false"
+            },
             {
                "property": {
                   "language": "-default-key-Example",
@@ -82,7 +133,16 @@
                ]
             }
          ],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-baseInterfaces"
+               },
+               "targets": []
+            }
+         ],
          "annotations": [],
          "parent": "ID-18"
       },
@@ -152,6 +212,68 @@
          "references": [],
          "annotations": [],
          "parent": "ID-19"
+      },
+      {
+         "id": "ID-24",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Interface"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseType-name"
+               },
+               "value": "One"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Interface-methods"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-25",
+         "classifier": {
+            "language": "-default-key-Example",
+            "version": "2023.1",
+            "key": "-default-key-Interface"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-BaseType-name"
+               },
+               "value": "Two"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Interface-methods"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-18"
       }
    ]
 }

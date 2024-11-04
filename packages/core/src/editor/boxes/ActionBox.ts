@@ -63,8 +63,8 @@ export class ActionBox extends AbstractChoiceBox {
                     }
                 }
             });
-        } else if (!!this.propertyName) {
-            // Reference property
+        } else if (!isNullOrUndefined(this.propertyName)) {
+            // Only has a propertyname, so it is a reference property
             const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(
                 this.node.freLanguageConcept(),
                 this.propertyName,
@@ -98,7 +98,7 @@ export class ActionBox extends AbstractChoiceBox {
         conceptName: string,
         concept: FreLanguageConcept,
     ): SelectOption {
-        LOGGER.log("ActionBox.createElementAction property: " + propertyName + " concept " + conceptName);
+        LOGGER.log("createElementAction property: " + propertyName + " concept " + conceptName);
         return {
             id: conceptName,
             label: concept.trigger,
@@ -119,6 +119,7 @@ export class ActionBox extends AbstractChoiceBox {
      */
     private addReferenceShortcuts(concept: FreLanguageConcept, result: SelectOption[], editor: FreEditor) {
         // Create the new element for this behavior inside a dummy and then point the owner to the
+        LOGGER.log("addReferenceShortcuts")
         // current element.  This way the new element is not part of the model and will not trigger mobx
         // reactions. But the scoper can be used to find available references, because the scoper only
         // needs the owner.
@@ -186,6 +187,7 @@ export class ActionBox extends AbstractChoiceBox {
                                 parentNode[property.name].push(FreNodeReference.create(name, null));
                                 return null;
                             },
+                            boxRoleToSelect: "REFERENCE"
                         }),
                     })),
             );
