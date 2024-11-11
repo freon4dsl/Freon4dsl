@@ -32,13 +32,15 @@ import { setCustomComponents } from "@freon4dsl/core-svelte";
  * The one and only reference to the actual language for which this editor runs
  */
 import {ExampleEnvironment} from "@freon4dsl/samples-example";
+import {MockServer} from "./MockServer.js";
 WebappConfigurator.getInstance().setEditorEnvironment(ExampleEnvironment.getInstance());
+WebappConfigurator.getInstance().isDemo = true;
 
 /**
  * The one and only reference to the server on which the models are stored
  */
 // WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommunication.getInstance());
-WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
+WebappConfigurator.getInstance().setServerCommunication(new MockServer());
 
 /**
  * Make the external components known to Freon before starting the app!

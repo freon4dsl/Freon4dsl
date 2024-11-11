@@ -21,7 +21,7 @@ abstract concept Page {
 }
 
 concept Theory base Page {
-    lines: Line[]; /* For the sake of the example this is simplyfied. Should be formatted text including pictures. */
+    lines: Line[]; /* For the sake of the example this is simplified. Should be formatted text including pictures. */
 }
 
 concept Line {

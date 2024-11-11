@@ -8,7 +8,7 @@
     <Title id="event-title">Open Model</Title>
     <Content id="event-content">
         <div>
-            <br> <!-- br is here to make the lable visible when it is moved to the top of the textfield -->
+            <br> <!-- br is here to make the label visible when it is moved to the top of the text field -->
             <Textfield variant="outlined" bind:invalid={nameInvalid} bind:value={newName} label="name of model">
                 <HelperText slot="helper">{helperText}</HelperText>
             </Textfield>

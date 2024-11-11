@@ -13,6 +13,7 @@ export class WebappConfigurator {
 
     serverCommunication: IServerCommunication;
     editorEnvironment: FreEnvironment;
+    isDemo: boolean = false;
 
     setServerCommunication(serverCommunication: IServerCommunication): void {
         WebappConfigurator.getInstance().serverCommunication = serverCommunication;
