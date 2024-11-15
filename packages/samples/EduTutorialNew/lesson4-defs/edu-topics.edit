@@ -18,10 +18,9 @@ Page {[
 Theory {[
     ----------------------------------------------------
     Theory [=>Page]
-        ${self.content vertical  terminator[== END OF LINE]}
+        ${self.content vertical}
 
-    Questions:
-        ${self.questions vertical}
+        [=>Page:footing]
 ]}
 
 Video {[
@@ -30,8 +29,7 @@ Video {[
         Maybe this video will help you understand.
         ${self.url}
 
-    Questions:
-        ${self.questions vertical}
+        [=>Page:footing]
 ]}
 
 WorkSheet {[
@@ -39,8 +37,7 @@ WorkSheet {[
     Worksheet [=>Page]
         See if you can answer the following questions.
 
-    Questions:
-        ${self.questions vertical}
+        [=>Page:footing]
 ]}
 
 ExamplePage {[
@@ -50,8 +47,7 @@ ExamplePage {[
 
         Now, please, answer the following questions.
 
-    Questions:
-        ${self.questions vertical}
+        [=>Page:footing]
 ]}
 
 InDepthMaterial {[
@@ -61,8 +57,7 @@ InDepthMaterial {[
 
         Test your understanding by answering the following questions.
 
-    Questions:
-        ${self.questions vertical}
+        [=>Page:footing]
 ]}
 
 Question {[

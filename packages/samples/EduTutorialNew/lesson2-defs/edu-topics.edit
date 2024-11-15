@@ -18,7 +18,7 @@ Page {[
 Theory {[
     ----------------------------------------------------
     Theory [=>Page]
-        ${self.content vertical  terminator[== END OF LINE]}
+        ${self.content vertical terminator[== END OF LINE]}
 
     Questions:
         ${self.questions vertical}

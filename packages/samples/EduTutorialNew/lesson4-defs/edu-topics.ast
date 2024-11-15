@@ -10,6 +10,7 @@ modelunit Topic {
 abstract concept Page {
     name: identifier;
     questions: Question[];
+    grading: GradeScore[]; /* concept from 'edu-scoring.ast' */
 }
 
 concept Theory base Page {
