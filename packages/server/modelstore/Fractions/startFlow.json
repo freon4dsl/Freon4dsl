@@ -1,0 +1,558 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-54",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Flow"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "TODO_set-correct-key"
+               },
+               "value": "StartFlow"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Flow-rules"
+               },
+               "children": [
+                  "ID-55",
+                  "ID-105"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-55",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-FlowRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-FlowRule-name"
+               },
+               "value": "FromStartPage"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-FlowRule-description"
+               },
+               "value": "flow from start page to follow ups"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-FlowRule-transitions"
+               },
+               "children": [
+                  "ID-57",
+                  "ID-56",
+                  "ID-58",
+                  "ID-60",
+                  "ID-61",
+                  "ID-64"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-FlowRule-page"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory1",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-54"
+      },
+      {
+         "id": "ID-57",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-1"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "InDepth1",
+                     "reference": "ID-67"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-56",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeB",
+                     "reference": "ID-2"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "InDepth1",
+                     "reference": "ID-67"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-58",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeC",
+                     "reference": "ID-3"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Practice1",
+                     "reference": "ID-65"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-60",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeD",
+                     "reference": "ID-4"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Example1",
+                     "reference": "ID-66"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-61",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeE",
+                     "reference": "ID-5"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Video1",
+                     "reference": "ID-70"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-64",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeF",
+                     "reference": "ID-6"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory1",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-105",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-FlowRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-FlowRule-name"
+               },
+               "value": "FromInDepth1"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-FlowRule-description"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-FlowRule-transitions"
+               },
+               "children": [
+                  "ID-106",
+                  "ID-107",
+                  "ID-108",
+                  "ID-109"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-FlowRule-page"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "InDepth1",
+                     "reference": "ID-67"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-54"
+      },
+      {
+         "id": "ID-106",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-1"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory2",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      },
+      {
+         "id": "ID-107",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeB",
+                     "reference": "ID-2"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory2",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      },
+      {
+         "id": "ID-108",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeC",
+                     "reference": "ID-3"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory2",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      },
+      {
+         "id": "ID-109",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeD",
+                     "reference": "ID-4"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Practice1",
+                     "reference": "ID-65"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      }
+   ]
+}

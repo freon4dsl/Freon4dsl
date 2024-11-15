@@ -1,0 +1,30 @@
+editor default
+
+Test {[
+    Test ${self.name}
+    Regarding subject: ${self.subject}, and flow: ${self.flow}
+
+    ${self.scenarios}
+]}
+
+Scenario {[
+    ${self.description}
+
+        ${self.testFlow vertical separator[=>]}
+]}
+
+TestFlow {[
+    ${self.steps horizontal}
+]}
+
+Step {[
+    => ${self.answerSeries table rows} => ${self.expectedPage}
+]}
+
+StartStep {[
+    ${self.fromPage} => ${self.answerSeries table rows} => ${self.expectedPage}
+]}
+
+Answer { table [
+    ${self.question} | ${self.value}
+]}

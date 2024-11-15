@@ -1,0 +1,16 @@
+language Education
+
+model Education /* Computer Aided Learning */ {
+    name: identifier;
+    topic: Topic[];
+    flow: Flow[];
+    tests: Test[];
+    overviews: Subject[];
+}
+
+modelunit Subject {
+    name: identifier;
+    description: string; /* e.g. Mathematics, fractions for students age 10 */
+    reference topics: Topic[];
+    reference flows: Flow[];
+}
