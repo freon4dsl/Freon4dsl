@@ -8,9 +8,10 @@ Test {[
 ]}
 
 Scenario {[
+    ------------------------------------
     ${self.description}
 
-        ${self.testFlow vertical separator[=>]}
+        ${self.testFlow vertical}
 ]}
 
 TestFlow {[

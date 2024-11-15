@@ -13,4 +13,5 @@ modelunit Subject {
     description: string; /* e.g. Mathematics, fractions for students age 10 */
     reference topics: Topic[];
     reference flows: Flow[];
+    reference tests: Test[];
 }

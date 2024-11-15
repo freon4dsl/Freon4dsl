@@ -27,7 +27,8 @@
                   "key": "-default-key-Test-scenarios"
                },
                "children": [
-                  "ID-36"
+                  "ID-36",
+                  "ID-129"
                ]
             }
          ],
@@ -999,6 +1000,45 @@
          "references": [],
          "annotations": [],
          "parent": "ID-81"
+      },
+      {
+         "id": "ID-129",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Scenario"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Scenario-description"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Scenario-testFlow"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Scenario-steps"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-17"
       }
    ]
 }

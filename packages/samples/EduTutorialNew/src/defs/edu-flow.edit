@@ -11,8 +11,8 @@ Flow {[
 FlowRule {[
     -------------------------------------
     Name: ${self.name}
-        Description: ${self.description}
-        For page ${self.page}
+    Description: ${self.description}
+    From page ${self.page}
 
         ${self.transitions}
 ]}
