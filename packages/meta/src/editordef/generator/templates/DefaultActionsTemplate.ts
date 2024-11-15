@@ -134,11 +134,19 @@ export class DefaultActionsTemplate {
                                     }
                                 } else {
                                     // reference
-                                    rolename = Roles.propertyRole(
-                                        myClassifier.name,
-                                        optionalPropertyName,
-                                        "referencebox",
-                                    );
+                                    if (prop.isList) {
+                                        rolename = Roles.propertyRole(
+                                            myClassifier.name,
+                                            optionalPropertyName,
+                                            "new-list-item"
+                                        )
+                                    } else {
+                                        rolename = Roles.propertyRole(
+                                            myClassifier.name,
+                                            optionalPropertyName,
+                                            "referencebox",
+                                        );
+                                    }
                                 }
                             }
                             result += `${Names.FreCustomAction}.create(

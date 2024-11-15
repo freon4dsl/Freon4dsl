@@ -1,6 +1,6 @@
 import { AST } from "../../change-manager/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { Box, FRE_NULL_COMMAND, FreCommand, FreEditor } from "../index.js";
+import { Box, FreAction, FreEditor } from "../index.js";
 import { FreExpressionNode } from "../../ast/index.js";
 import { isFreExpression } from "../../ast-utils/index.js";
 import { isProKey, FreTriggerUse } from "../actions/index.js";
@@ -40,7 +40,7 @@ export class FreEditorUtil {
      */
     // TODO question: freKey has type FreTriggerUSe which is either a string or a FreKey, but the check here says that freKey must be a 'isProKey',
     // which tests whether its input is a FreKey. Why???
-    static findKeyboardShortcutCommand(freKey: FreTriggerUse, box: Box, editor: FreEditor): FreCommand {
+    static findKeyboardShortcutAction(freKey: FreTriggerUse, box: Box, editor: FreEditor): FreAction {
         LOGGER.log(
             "findKeyboardShortcutCommand for box " +
                 box.role +
@@ -62,14 +62,14 @@ export class FreEditorUtil {
                 if (act.trigger.meta === freKey.meta && act.trigger.key === freKey.key) {
                     if (act.activeInBoxRoles.includes(box.role)) {
                         LOGGER.log("findKeyboardShortcutCommand: executing keyboard action");
-                        return act.command();
+                        return act;
                     } else {
                         LOGGER.log("findKeyboardShortcutCommand: Keyboard action does not include role " + box.role);
                     }
                 }
             }
         }
-        return FRE_NULL_COMMAND;
+        return null;
     }
 }
 

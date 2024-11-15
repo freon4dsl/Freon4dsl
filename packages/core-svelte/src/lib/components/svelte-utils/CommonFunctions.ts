@@ -1,4 +1,4 @@
-import { AST, Box, FRE_NULL_COMMAND, FreLogger, FreCommand, FreEditor, FreEditorUtil, type FrePostAction, toFreKey } from "@freon4dsl/core";
+import { AST, Box, FreLogger, FreEditor, FreEditorUtil, type FrePostAction, toFreKey, FreAction } from "@freon4dsl/core";
 import { viewport } from "./EditorViewportStore.js";
 import { get } from "svelte/store";
 
@@ -46,8 +46,8 @@ export function calculatePos(viewportSize: number, contentSize: number, mousePos
 }
 
 export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: FreEditor) {
-    const cmd: FreCommand = FreEditorUtil.findKeyboardShortcutCommand(toFreKey(event), box, editor);
-    if (cmd !== FRE_NULL_COMMAND) {
+    const cmd: FreAction = FreEditorUtil.findKeyboardShortcutAction(toFreKey(event), box, editor);
+    if (cmd !== null) {
         let postAction: FrePostAction;
         AST.change(() => {
             // todo KeyboardEvent does not have an "action" prop, so what is happening here?
