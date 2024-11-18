@@ -1,0 +1,74 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-18",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-SiteGroup"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-SiteGroup-name"
+               },
+               "value": "Fractions"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-SiteGroup-description"
+               },
+               "value": "Mathematics, fractions for children age 10 or comparable level"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-SiteGroup-topics"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Fractions101",
+                     "reference": "ID-8"
+                  },
+                  {
+                     "resolveInfo": "Fractions102",
+                     "reference": "ID-99"
+                  },
+                  {
+                     "resolveInfo": "Fractions103",
+                     "reference": "ID-19"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-SiteGroup-flows"
+               },
+               "targets": []
+            },
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-SiteGroup-tests"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": null
+      }
+   ]
+}
