@@ -33,8 +33,8 @@ import {
 } from "./boxproviderhelpers/index.js";
 
 export class BoxProviderTemplate {
-    // To be able to add a projections for showing/hiding brackets to binary expression, this dummy projection is used.
-    private static dummyProjection: FreEditNormalProjection = new FreEditNormalProjection();
+    // To be able to add a projections for showing/hiding brackets to binary expression, this projection is used.
+    private static bracketProjection: FreEditNormalProjection = new FreEditNormalProjection();
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
     public modelImports: string[] = []; // imports from ../language/gen
@@ -106,6 +106,15 @@ export class BoxProviderTemplate {
         ListUtil.addListIfNotPresent(allProjections, myBoxProjections);
         ListUtil.addListIfNotPresent(allProjections, myTableProjections);
 
+        if (concept instanceof FreMetaBinaryExpressionConcept) {
+            // if concept is a binary expression, handle it differently
+            // add the projection to show/hide brackets
+            BoxProviderTemplate.bracketProjection.name = Names.brackets;
+            myBoxProjections.splice(0, 0, BoxProviderTemplate.bracketProjection);
+        }
+        ListUtil.addListIfNotPresent(allProjections, myBoxProjections);
+        ListUtil.addListIfNotPresent(allProjections, myTableProjections);
+
         // build the core of the box provider class, to be used in the template
         const coreText: string = new BoxProviderCoreTextTemplate().generateCoreTemplate(
             myBoxProjections,
@@ -125,10 +134,6 @@ export class BoxProviderTemplate {
         // build the text for the box projections or the special text for the binary expressions
         let boxText: string;
         if (concept instanceof FreMetaBinaryExpressionConcept) {
-            // if concept is a binary expression, handle it differently
-            // add the projection to show/hide brackets
-            BoxProviderTemplate.dummyProjection.name = Names.brackets;
-            myBoxProjections.splice(0, 0, BoxProviderTemplate.dummyProjection);
             boxText = this.generateForBinExp(language, editDef.getDefaultProjectiongroup()?.findExtrasForType(concept));
         } else {
             boxText = myBoxProjections
@@ -241,9 +246,9 @@ export class BoxProviderTemplate {
                             isFreBinaryExpression(this._node.freOwnerDescriptor().owner)
                         ) {
                             return BoxFactory.horizontalLayout(this._node, "brackets", '', [
-                                BoxUtil.labelBox(this._node, "(", "bracket-open", {selectable: true} ),
+                                BoxUtil.labelBox(this._node, "(", "bracket-open", {selectable: false, cssClass: "brackets"} ),
                                 binBox,
-                                BoxUtil.labelBox(this._node, ")", "bracket-close", {selectable: true} )
+                                BoxUtil.labelBox(this._node, ")", "bracket-close", {selectable: false, cssClass: "brackets"} )
                             ]);
                         } else {
                             return binBox;
