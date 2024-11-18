@@ -1,0 +1,54 @@
+editor default
+
+GradeScore {[
+    ${self.grade} : ${self.expr}
+]}
+
+///////////////////////////////////
+/// Expressions
+//////////////////////////////////
+
+QuestionReference {
+    [ Answer to ${self.question} is correct ]
+    trigger = "question"
+    referenceShortcut = ${self.question}
+}
+
+NrOfCorrectAnswers {
+    [Number Of Correct Answers]
+}
+
+NumberLiteralExpression {
+    [${value}]
+}
+
+///////////////////////////////////
+/// Boolean AND and OR
+//////////////////////////////////
+
+OrExpression {
+    symbol = "or"
+}
+AndExpression {
+    symbol = "and"
+}
+
+///////////////////////////////////
+/// Comparisons: <=, >=, >, <, ===
+//////////////////////////////////
+
+LessOrEqualsExpression {
+    symbol = "<="
+}
+GreaterOrEqualsExpression {
+    symbol = ">="
+}
+LessThenExpression {
+    symbol = "<"
+}
+GreaterThenExpression {
+    symbol = ">"
+}
+EqualsExpression {
+    symbol = "=="
+}

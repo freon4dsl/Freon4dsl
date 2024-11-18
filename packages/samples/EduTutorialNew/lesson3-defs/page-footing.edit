@@ -1,0 +1,8 @@
+/* This file contains the footing editor definition. */
+
+editor footing
+
+Page {[
+    Questions:
+        ${self.questions vertical terminator [END]}
+]}
