@@ -18,7 +18,7 @@ Page {[
 Theory {[
     ----------------------------------------------------
     Theory [=>Page]
-        ${self.content vertical}
+        ${self.content vertical  terminator[== END OF LINE]}
 
         [=>Page:footing]
 ]}
