@@ -2,7 +2,7 @@ editor default
 
 Test {[
     Test ${self.name}
-    Regarding subject: ${self.subject}, and flow: ${self.flow}
+    Regarding MainTopic: ${self.main}, and flow: ${self.flow}
 
     ${self.scenarios}
 ]}

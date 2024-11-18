@@ -2,7 +2,7 @@ language Education
 
 modelunit Topic {
     name: identifier;
-    reference main: SiteGroup;
+    reference main: MainTopic;
     description: string;
     pages: Page[];
 }
@@ -10,6 +10,7 @@ modelunit Topic {
 abstract concept Page {
     name: identifier;
     questions: Question[];
+    grading: GradeScore[]; /* concept from 'edu-scoring.ast' */
 }
 
 concept Theory base Page {

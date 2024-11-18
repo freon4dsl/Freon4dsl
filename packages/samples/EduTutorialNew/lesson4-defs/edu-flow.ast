@@ -1,7 +1,7 @@
 language Education
 
 modelunit Flow {
-    reference subject: Subject;
+    reference main: SiteGroup;
     rules: FlowRule[];
 }
 
@@ -13,7 +13,7 @@ concept FlowRule {
 }
 
 concept PageTransition { /* E.g. Grade A => show pageA, Grade F => show pageC */
-    condition: Grade;
+    condition: Grade; /* Note: will be changed into an expression later in the tutorial. */
     reference toPage: Page;
 }
 

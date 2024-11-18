@@ -2,8 +2,8 @@
 
 editor default
 
-SiteGroup {[
-    SiteGroup Overview
+MainTopic {[
+    MainTopic Overview
 
         Name: ${self.name}
 

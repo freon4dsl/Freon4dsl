@@ -3,7 +3,7 @@
 editor default
 
 SiteGroup {[
-    SiteGroup Overview
+    Main Topic Overview
 
         Name: ${self.name}
 

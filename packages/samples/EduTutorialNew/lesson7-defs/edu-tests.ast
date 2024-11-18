@@ -3,7 +3,7 @@ language Education
 modelunit Test {
     name: identifier;
     scenarios: Scenario[];
-    reference subject: Subject;
+    reference main: MainTopic;
     reference flow: Flow;
 }
 

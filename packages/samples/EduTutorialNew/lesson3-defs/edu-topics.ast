@@ -2,7 +2,7 @@ language Education
 
 modelunit Topic {
     name: identifier;
-    reference subject: Subject;
+    reference main: SiteGroup;
     description: string;
     pages: Page[];
 }

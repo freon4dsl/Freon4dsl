@@ -1,0 +1,805 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-8",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Topic"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Topic-name"
+               },
+               "value": "Fractions101"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Topic-description"
+               },
+               "value": "Mathematics - Fractions for children age 9 or comparable level"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Topic-pages"
+               },
+               "children": [
+                  "ID-9",
+                  "ID-65",
+                  "ID-66",
+                  "ID-67",
+                  "ID-70"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Topic-subject"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Fractions",
+                     "reference": "ID-18"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-9",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Theory"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-name"
+               },
+               "value": "Theory101"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Theory-content"
+               },
+               "children": [
+                  "ID-11",
+                  "ID-12"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-questions"
+               },
+               "children": [
+                  "ID-13",
+                  "ID-14",
+                  "ID-28",
+                  "ID-30",
+                  "ID-98"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-8"
+      },
+      {
+         "id": "ID-11",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Line"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Line-content"
+               },
+               "value": "Some explanation of fractions"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-9"
+      },
+      {
+         "id": "ID-12",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Line"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Line-content"
+               },
+               "value": "More text on fractions"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-9"
+      },
+      {
+         "id": "ID-13",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "pie"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "Mother has baked an apple pie. She has divide it into ten pieces. Andy, Betty, and Amy all eat a piece. How many pieces are left?"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-20"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-9"
+      },
+      {
+         "id": "ID-20",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-SimpleNumber"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-SimpleNumber-value"
+               },
+               "value": "7"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-13"
+      },
+      {
+         "id": "ID-14",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "pie2"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "How much of the apple pie is left? Express using fractions."
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-21"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-9"
+      },
+      {
+         "id": "ID-21",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Fraction"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-numerator"
+               },
+               "value": "3"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-denominator"
+               },
+               "value": "10"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-14"
+      },
+      {
+         "id": "ID-28",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "marbles"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "Henry has gotten a bag of 24 marbles as birthday present. He does not want to play with them all, because he might loose them. He takes out 10 marbles. Which part of the bag is he using?"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-29"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-9"
+      },
+      {
+         "id": "ID-29",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Fraction"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-numerator"
+               },
+               "value": "10"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-denominator"
+               },
+               "value": "24"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-28"
+      },
+      {
+         "id": "ID-30",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "marbles2"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "Can you simplify the fraction from the previous question?"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-31"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-9"
+      },
+      {
+         "id": "ID-31",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Fraction"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-numerator"
+               },
+               "value": "5"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-denominator"
+               },
+               "value": "12"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-98",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-9"
+      },
+      {
+         "id": "ID-65",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-WorkSheet"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-name"
+               },
+               "value": "Practice1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-8"
+      },
+      {
+         "id": "ID-66",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-ExamplePage"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-name"
+               },
+               "value": "Example1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-ExamplePage-content"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-8"
+      },
+      {
+         "id": "ID-67",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-InDepthMaterial"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-name"
+               },
+               "value": "InDepth1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-InDepthMaterial-content"
+               },
+               "children": [
+                  "ID-68"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-questions"
+               },
+               "children": [
+                  "ID-119"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-8"
+      },
+      {
+         "id": "ID-68",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Line"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Line-content"
+               },
+               "value": "You are doing really well!"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-67"
+      },
+      {
+         "id": "ID-119",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "difficult1"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "What is the answer to 196 / 4"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-120"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-67"
+      },
+      {
+         "id": "ID-120",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-SimpleNumber"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-SimpleNumber-value"
+               },
+               "value": "49"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-119"
+      },
+      {
+         "id": "ID-70",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Video"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Video-url"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-name"
+               },
+               "value": "Video1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-questions"
+               },
+               "children": [
+                  "ID-71"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-8"
+      },
+      {
+         "id": "ID-71",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "further"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "Can you tell me how much is 12 divided by 4?"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-72"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-70"
+      },
+      {
+         "id": "ID-72",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-SimpleNumber"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-SimpleNumber-value"
+               },
+               "value": "3"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-71"
+      }
+   ]
+}

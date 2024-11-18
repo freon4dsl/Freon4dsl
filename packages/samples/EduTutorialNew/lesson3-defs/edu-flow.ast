@@ -1,7 +1,7 @@
 language Education
 
 modelunit Flow {
-    reference subject: Subject;
+    reference main: SiteGroup;
     rules: FlowRule[];
 }
 

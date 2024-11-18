@@ -3,7 +3,7 @@
 editor default
 
 Flow {[
-    Flow ${self.name} for subject ${self.subject}
+    Flow ${self.name} for SiteGroup ${self.main}
 
     ${self.rules vertical}
 ]}

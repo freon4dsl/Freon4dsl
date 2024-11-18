@@ -5,10 +5,10 @@ model Education /* Computer Aided Learning */ {
     topic: Topic[];
     flow: Flow[];
     tests: Test[];
-    overviews: SiteGroup[];
+    overviews: MainTopic[];
 }
 
-modelunit SiteGroup {
+modelunit MainTopic {
     name: identifier;
     description: string; /* e.g. Mathematics, fractions for students age 10 */
     reference topics: Topic[];

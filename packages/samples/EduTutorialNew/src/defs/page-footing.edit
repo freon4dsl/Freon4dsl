@@ -4,7 +4,7 @@ editor footing
 
 Page {[
     Questions:
-        ${self.questions vertical terminator [END]}
+        ${self.questions vertical}
 
     Score
         ${self.grading vertical}

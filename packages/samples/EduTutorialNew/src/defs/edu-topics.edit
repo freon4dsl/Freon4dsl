@@ -3,7 +3,7 @@
 editor default
 
 Topic {[
-    Subject: ${self.subject}
+    SiteGroup: ${self.main}
     Topic: ${self.name}
     Topic description: ${self.description}
 
