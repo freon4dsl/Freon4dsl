@@ -320,3 +320,7 @@
 .text-dropdown-component .text-component-input {
     color: green;
 }
+
+.brackets {
+    color: darkgray;
+}

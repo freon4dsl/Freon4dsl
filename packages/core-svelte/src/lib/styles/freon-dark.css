@@ -315,3 +315,7 @@ dropdown-component {
 .text-dropdown-component .text-component-text {
     color: lightgreen;
 }
+
+.brackets {
+    color: gray;
+}
