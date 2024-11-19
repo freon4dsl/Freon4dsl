@@ -15,3 +15,13 @@ modelunit SiteGroup {
     reference flows: Flow[];
     reference tests: Test[];
 }
+
+interface Type {
+    name: identifier;
+}
+
+limited PrimitiveType implements Type {
+    Integer;
+    Boolean;
+    ANY;
+}

@@ -100,8 +100,7 @@
                   "ID-13",
                   "ID-14",
                   "ID-28",
-                  "ID-30",
-                  "ID-98"
+                  "ID-30"
                ]
             },
             {
@@ -443,36 +442,6 @@
          "references": [],
          "annotations": [],
          "parent": "ID-30"
-      },
-      {
-         "id": "ID-98",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-Question"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Question-name"
-               },
-               "value": ""
-            },
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Question-content"
-               },
-               "value": ""
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-9"
       },
       {
          "id": "ID-10",
@@ -1323,7 +1292,11 @@
                   "version": "2023.1",
                   "key": "-default-key-Page-questions"
                },
-               "children": []
+               "children": [
+                  "ID-94",
+                  "ID-131",
+                  "ID-140"
+               ]
             },
             {
                "containment": {
@@ -1331,12 +1304,331 @@
                   "version": "2023.1",
                   "key": "-default-key-Page-grading"
                },
-               "children": []
+               "children": [
+                  "ID-133"
+               ]
             }
          ],
          "references": [],
          "annotations": [],
          "parent": "ID-8"
+      },
+      {
+         "id": "ID-94",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "lollipops1"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "You have 3 lollipops all for yourself. Can you write the fraction for this?"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-130"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-65"
+      },
+      {
+         "id": "ID-130",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Fraction"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-numerator"
+               },
+               "value": "3"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-denominator"
+               },
+               "value": "1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-94"
+      },
+      {
+         "id": "ID-131",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "lollipops2"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "You are playing with Amy and Bob, and you share your 3 lollipops. How many lollipops does everyone have?"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-132"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-65"
+      },
+      {
+         "id": "ID-132",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-SimpleNumber"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-SimpleNumber-value"
+               },
+               "value": "1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-131"
+      },
+      {
+         "id": "ID-140",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-name"
+               },
+               "value": "lollipops3"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-content"
+               },
+               "value": "Can you write the fractions for the last question?"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-141"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-65"
+      },
+      {
+         "id": "ID-141",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-Fraction"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-numerator"
+               },
+               "value": "3"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-Fraction-denominator"
+               },
+               "value": "3"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-140"
+      },
+      {
+         "id": "ID-133",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-GradeScore"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-GradeScore-expr"
+               },
+               "children": [
+                  "ID-136"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-GradeScore-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeC",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-65"
+      },
+      {
+         "id": "ID-136",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-135"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-139"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-133"
+      },
+      {
+         "id": "ID-135",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-NrOfCorrectAnswers"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-136"
+      },
+      {
+         "id": "ID-139",
+         "classifier": {
+            "language": "-default-key-Education",
+            "version": "2023.1",
+            "key": "-default-key-QuestionReference"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Education",
+                  "version": "2023.1",
+                  "key": "-default-key-QuestionReference-question"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "lollipops2",
+                     "reference": "ID-131"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-136"
       },
       {
          "id": "ID-66",
@@ -1602,7 +1894,7 @@
                   "version": "2023.1",
                   "key": "-default-key-Video-url"
                },
-               "value": ""
+               "value": "/videos/fractions/Video101"
             },
             {
                "property": {
