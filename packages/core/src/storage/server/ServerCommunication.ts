@@ -78,7 +78,6 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitId.name}`);
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
-            const publicModel = ServerCommunication.lionweb_serial.convertToJSON(unit, true);
             let output = {
                 serializationFormatVersion: "2023.1",
                 languages: [],
@@ -87,17 +86,6 @@ export class ServerCommunication implements IServerCommunication {
             };
 
             await this.putWithTimeout(`putModelUnit`, output, `folder=${modelName}&name=${unitId.name}`);
-            let publicOutput = {
-                serializationFormatVersion: "2023.1",
-                languages: [],
-                // "__version": "1234abcdef",
-                nodes: publicModel,
-            };
-            await this.putWithTimeout(
-                `putModelUnit`,
-                publicOutput,
-                `folder=${modelName}&name=${unitId.name}${modelUnitInterfacePostfix}`,
-            );
         } else {
             LOGGER.error(
                 "Name of Unit '" +
@@ -122,10 +110,6 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             await this.fetchWithTimeout<any>(`deleteModelUnit`, `folder=${modelName}&name=${unit.name}`);
-            await this.fetchWithTimeout<any>(
-                `deleteModelUnit`,
-                `folder=${modelName}&name=${unit.name}${modelUnitInterfacePostfix}`,
-            );
         }
     }
 
@@ -163,6 +147,7 @@ export class ServerCommunication implements IServerCommunication {
         LOGGER.log(`ServerCommunication.loadUnitList`);
         let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `folder=${modelName}`);
         // filter out the modelUnitInterfaces
+        // TODO Remive once all server files have been cleaned of the interfaces
         if (!!modelUnits) {
             modelUnits = modelUnits.filter((name: string) => name.indexOf(modelUnitInterfacePostfix) === -1);
             return modelUnits.map((u) => {
@@ -193,7 +178,6 @@ export class ServerCommunication implements IServerCommunication {
                         unit = ServerCommunication.serial.toTypeScriptInstance(res);
                     }
                     return unit;
-                    // loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error("loadModelUnit, " + e.message);
                     this.onError(e.message, FreErrorSeverity.NONE);
@@ -202,42 +186,6 @@ export class ServerCommunication implements IServerCommunication {
             }
         }
         return null;
-    }
-
-    /**
-     * Loads the interface of the unit named 'unitName' of model 'modelName' from the server and calls 'loadCallBack',
-     * which takes the unit as parameter.
-     * @param modelName
-     * @param unitName
-     * @param loadCallback
-     */
-    async loadModelUnitInterface(
-        modelName: string,
-        unit: ModelUnitIdentifier,
-        loadCallback: (piUnitInterface: FreModelUnit) => void,
-    ) {
-        LOGGER.log(`ServerCommunication.loadModelUnitInterface for ${modelName}/${unit.name}`);
-        if (!!unit.name && unit.name.length > 0) {
-            const res = await this.fetchWithTimeout<Object>(
-                `getModelUnit`,
-                `folder=${modelName}&name=${unit.name}${modelUnitInterfacePostfix}`,
-            );
-            if (!!res) {
-                try {
-                    let unit: FreNode;
-                    if (res["$typename"] === undefined) {
-                        unit = ServerCommunication.lionweb_serial.toTypeScriptInstance(res);
-                    } else {
-                        unit = ServerCommunication.serial.toTypeScriptInstance(res);
-                    }
-                    // const model = ServerCommunication.serial.toTypeScriptInstance(res);
-                    loadCallback(unit as FreModelUnit);
-                } catch (e) {
-                    LOGGER.error("loadModelUnitInterface, " + e.message);
-                    this.onError(e.message, FreErrorSeverity.NONE);
-                }
-            }
-        }
     }
 
     async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {

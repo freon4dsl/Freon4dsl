@@ -86,27 +86,10 @@ export interface IServerCommunication {
     loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode>;
 
     /**
-     * Reads the public interface of the model unit according to the data in 'modelInfo' from the server and
-     * calls 'loadCallBack', which takes the model unit as parameter.
-     * @param modelName
-     * @param unitName
-     * @param loadCallback
-     */
-    loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (unit: FreModelUnit) => void);
-
-    /**
      * Create a new modelunit on the server.
      * The _unit_ may not have children.
      * @param modelName
      * @param unit
      */
     createModelUnit(modelName: string, unit: FreModelUnit): void;
-
-    /**
-     * Reads all interfaces for all available units of model 'modelName' and calls loadCallback for each.
-     * @param languageName
-     * @param modelName
-     * @param loadCallback
-     */
-    // getInterfacesForModel(languageName: string, modelName: string, loadCallback: (model: FreNode) => void);
 }

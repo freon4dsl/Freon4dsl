@@ -17,7 +17,6 @@ const projectName = "mps-meetup-2023";
 const modelPath = `/lionweb/bulk?modelRef=${modelName}&project=${projectName}`;
 
 export class LionWebCommunicationWithMPS extends ServerCommunication implements IServerCommunication {
-    // static converterLionWeb = new Freon2LionWebConverter();
     static instanceLionWeb: LionWebCommunicationWithMPS;
 
     static getInstance(): LionWebCommunicationWithMPS {
@@ -46,20 +45,7 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
     async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
         LOGGER.log(`generateIds ${quantity}`);
         let result = ["10000", "10010", "10020", "10030", "10040"];
-        // callback(result)
         return result;
-        // const ids = await this.postWithTimeoutLionWeb(`lionweb-json/default/generate-ids`, null,`?quantity=${quantity}`);
-        // if (!!ids) {
-        //      try {
-        //          return ids["freeIds"];
-        //         // callback(ids["freeIds"]);
-        //     } catch (e) {
-        //         LOGGER.error( "generateIds, " + e.message);
-        //         setUserMessage(e.message);
-        //         console.log(e.stack);
-        //     }
-        // }
-        // return [];
     }
 
     /**
@@ -82,7 +68,6 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
                     //TODO: Hardcoded to avoid empty default property for units
                     unit["name"] = "PropertyRoot";
                     return unit;
-                    // loadCallback(unit as FreNamedNode);
                 } catch (e) {
                     LOGGER.error("loadModelUnit, " + e.message);
                     this.onError("loadModelUnit: " + e.message, FreErrorSeverity.Error);
@@ -117,12 +102,8 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
         }
     }
 
-    // renameModelUnit(modelName: string, oldName: string, newName: string, piUnit: FreNamedNode) {
-    // }
-
     override async fetchWithTimeout<T>(path: string, params?: string): Promise<T> {
-        // params = ServerCommunication.findParams(params);
-        console.log(`LIONWEB FETCHG: ${SERVER_URL}${path}${params}`);
+        LOGGER.log(`LIONWEB FETCHG: ${SERVER_URL}${path}${params}`);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
@@ -142,7 +123,6 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
     }
 
     private async postWithTimeoutLionWeb(path: string, data: Object, params?: string): Promise<any> {
-        // params = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);

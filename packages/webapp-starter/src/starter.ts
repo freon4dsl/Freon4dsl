@@ -3,6 +3,7 @@ import {FreLogger, ServerCommunication} from "@freon4dsl/core";
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
 import { setCustomComponents } from "@freon4dsl/core-svelte";
 import {EducationEnvironment} from "@freon4dsl/samples-edu-tutorial";
+import { setDevelopment } from "@freon4dsl/webapp-lib";
 // For DocuProject:
 // import ShowAnimatedGif from "./customComponents/forDocuProject/ShowAnimatedGif.svelte";
 // import SMUI_Card_Component from "./customComponents/forDocuProject/SMUI_Card_Component.svelte";
@@ -33,7 +34,7 @@ import {EducationEnvironment} from "@freon4dsl/samples-edu-tutorial";
  * The one and only reference to the actual language for which this editor runs
  */
 WebappConfigurator.getInstance().setEditorEnvironment(EducationEnvironment.getInstance());
-
+setDevelopment(true)
 /**
  * The one and only reference to the server on which the models are stored
  */

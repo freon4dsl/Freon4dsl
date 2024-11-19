@@ -52,7 +52,7 @@
 	import { EditorState } from "./language/EditorState.js";
 
 	// import this file to set which loggers will be active
-	import { muteLogs } from "./logging/LoggerSettings.js";
+	import { inDevelopment } from "./logging/LoggerSettings.js";
 	import FreonContent from "./FreonContent.svelte";
 	import RenameUnitDialog from "./components/dialogs/file-dialogs/RenameUnitDialog.svelte";
 	import {WebappConfigurator} from "./WebappConfigurator.js";
@@ -116,7 +116,6 @@
 		comm.openModel(model);
 		$initializing = false;
 	}
-
 </script>
 
 <svelte:window on:beforeunload={onBeforeUnload} />
@@ -170,7 +169,9 @@
 </TopAppBar>
 
 <AutoAdjust {topAppBar} >
-	<StatusBar />
+	{#if inDevelopment}
+		<StatusBar />
+	{/if}
 	<LinearProgress indeterminate closed={!$editorProgressShown} />
 	<div class='main-frame'>
 		<Drawer variant='dismissible' bind:open={$drawerOpen}>
