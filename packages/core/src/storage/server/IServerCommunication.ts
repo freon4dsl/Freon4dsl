@@ -92,7 +92,7 @@ export interface IServerCommunication {
      * @param unitName
      * @param loadCallback
      */
-    loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (unit: FreModelUnit) => void);
+    // loadModelUnitInterface(modelName: string, unit: ModelUnitIdentifier, loadCallback: (unit: FreModelUnit) => void);
 
     /**
      * Create a new modelunit on the server.

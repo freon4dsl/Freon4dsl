@@ -204,14 +204,14 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param loadCallback
      */
     // @ts-ignore prettier breaks the following line, there many ts-ignores
-    async loadModelUnitInterface(
-        // @ts-ignore
-        modelName: string,
-        // @ts-ignore
-        unit: ModelUnitIdentifier,
-        // @ts-ignore
-        loadCallback: (unit: FreModelUnit) => void,
-    ) {}
+    // async loadModelUnitInterface(
+    //     // @ts-ignore
+    //     modelName: string,
+    //     // @ts-ignore
+    //     unit: ModelUnitIdentifier,
+    //     // @ts-ignore
+    //     loadCallback: (unit: FreModelUnit) => void,
+    // ) {}
 
     // @ts-ignore
     private handleError(e: Error) {
