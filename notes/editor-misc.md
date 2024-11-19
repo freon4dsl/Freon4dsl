@@ -2,15 +2,15 @@
 
 - [x] Filter current parent from dropdown in reference.
   - Fixed by custom scoper
-- [ ] DEletion does niot work very well at all, need to revisit how this is done.
-- [ ] When using reference shortcuts (like Event V1, S1 in Mike’s example) do not show concept “EventReference”
+- [x] DEletion does niot work very well at all, need to revisit how this is done.
+- [x] When using reference shortcuts (like Event V1, S1 in Mike’s example) do not show concept “EventReference”
 - [x] Howto add your own editor components to Freon
 - [x] create the ability to jump to elements by clicking (or something) on its reference
       (special ReferenceBox?)
 - [ ] When a type of a property cannot be found the error message is rather unclear: (A)
     -  `ERROR: Element 'correctAnswer' should have a type`
 
-- [ ] in context menu 'add' make base class available
+- [ ] in context menu 'add' make base class available (only if concrete)
 - [ ] add a handle for the drag and drop
 - [x] make it easy to add a button to a component
 
@@ -20,7 +20,7 @@
 - [x] tinymce editor => have a look at MultiLineComponent2.svelte in M&G's stuff
 
 - [ ] Click already selected error in error/search list does not select it in editor.
-- [ ] Some ersors cannot be navigated to, e.g. placeholders for child concepts
+- [ ] Some erors cannot be navigated to, e.g. placeholders for child concepts
 
 - [ ] Drag & drop in tabellen werkt niet.
 
