@@ -1,5 +1,5 @@
 // This file contains all methods to connect the webapp to the Freon generated language editorEnvironment and to the server that stores the models
-import { AST, BoxFactory, FreError, FreErrorSeverity, FreLogger, FreUndoManager, InMemoryModel } from "@freon4dsl/core";
+import { AST, BoxFactory, FreError, FreErrorSeverity, FreLogger, FreUndoManager, InMemoryModel, isIdentifier } from "@freon4dsl/core";
 import type {
     FreEnvironment,
     FreNode,
@@ -17,9 +17,9 @@ import {
     units,
     unitNames,
 } from "../components/stores/ModelStore.js";
-import { setUserMessage } from "../components/stores/UserMessageStore.js";
+import { setUserMessage, userMessage } from "../components/stores/UserMessageStore.js";
 import { modelErrors } from "../components/stores/InfoPanelStore.js";
-import { runInAction } from "mobx";
+import { autorun, runInAction } from "mobx";
 import { WebappConfigurator } from "../WebappConfigurator.js";
 
 const LOGGER = new FreLogger("EditorState").mute();
@@ -77,9 +77,22 @@ export class EditorState {
         this.resetGlobalVariables();
         // create a new model
         await this.modelStore.createModel(modelName);
+        this.updateUnitList("1")
         editorProgressShown.set(false);
     }
 
+    updateUnitListRunning: boolean = false
+    
+    updateUnitList(n: string): void {
+        // Ensure this is done only once
+        if (!this.updateUnitListRunning) {
+            this.updateUnitListRunning = true
+            autorun(() => {
+                unitNames.set(this.modelStore.getUnitIdentifiers());
+                units.set(this.modelStore.getUnits());
+            })
+        }
+    }
     /**
      * Reads the model with name 'modelName' from the server and makes this the current model.
      * The first unit in the model is shown, if present.
@@ -112,6 +125,7 @@ export class EditorState {
         } else {
             editorProgressShown.set(false);
         }
+        this.updateUnitList("2")
     }
 
     /**
@@ -161,12 +175,18 @@ export class EditorState {
      * Pushes the current unit to the server
      */
     async saveCurrentUnit() {
-        LOGGER.log("saveCurrentUnit: " + get(currentUnitName)?.name);
+        LOGGER.log("saveCurrentUnit: " + get(currentUnitName)?.name + `real name is ${(this.langEnv.editor.rootElement as FreModelUnit)?.name}` ) ;
         const unit: FreModelUnit = this.langEnv.editor.rootElement as FreModelUnit;
         if (!!unit) {
             if (!!this.currentModel?.name && this.currentModel?.name?.length) {
                 if (!!unit.name && unit.name.length > 0) {
-                    await this.modelStore.saveUnit(unit);
+                    if (get(currentUnitName).id === unit.freId())  {
+                        // Saved unit already exists but its nbane has changed.
+                        LOGGER.log("Saving unit that changed name, do a rename")
+                        await this.renameModelUnit(unit, get(currentUnitName).name, unit.name)
+                    } else {
+                        await this.modelStore.saveUnit(unit);
+                    }
                     currentUnitName.set({ name: unit.name, id: unit.freId() }); // just in case the user has changed the name in the editor
                 } else {
                     setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
@@ -179,13 +199,18 @@ export class EditorState {
         }
     }
 
-    async renameModelUnit(unit: FreModelUnit, newName: string) {
-        console.log("Units before: " + this.currentModel.getUnits().map((u: FreModelUnit) => u.name));
-        const oldName: string = unit.name;
+    async renameModelUnit(unit: FreModelUnit, oldName: string, newName: string) {
+        LOGGER.log(`renameModelUnit: from ${oldName} to ${newName} isId: ${isIdentifier(newName)} Units before: ` + this.currentModel.getUnits().map((u: FreModelUnit) => u.name));
+        if (!isIdentifier(newName)) {
+            setUserMessage(`Name of Unit '${newName}' may contain only characters, numbers, '_', or '-', and must start with a character.`)
+            return
+        }
         unit.name = newName;
         // TODO Use model store
         this.serverCommunication.renameModelUnit(this.currentModel.name, oldName, newName, unit);
-        console.log("Units after: " + this.currentModel.getUnits().map((u: FreModelUnit) => u.name));
+        this.modelChanged(this.modelStore)
+        setUserMessage(`Saved ${newName}`)
+        LOGGER.log("renameModelUnit: Units after: " + this.currentModel.getUnits().map((u: FreModelUnit) => u.name));
     }
 
     /**

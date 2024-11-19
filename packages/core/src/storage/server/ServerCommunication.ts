@@ -1,5 +1,6 @@
 import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
+import { isIdentifier } from "../../util/index.js";
 import { FreLionwebSerializer, FreModelSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
@@ -75,7 +76,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async putModelUnit(modelName: string, unitId: ModelUnitIdentifier, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitId.name}`);
-        if (!!unitId.name && unitId.name.length > 0 && unitId.name.match(/^[a-z,A-Z][a-z,A-Z0-9_\-\.]*$/)) {
+        if (isIdentifier(unitId.name)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
             const publicModel = ServerCommunication.lionweb_serial.convertToJSON(unit, true);
             let output = {
@@ -294,7 +295,7 @@ export class ServerCommunication implements IServerCommunication {
         // put the unit and its interface under the new name
         this.putModelUnit(modelName, { name: newName, id: unit.freId() }, unit);
         // remove the old unit and interface
-        this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId() });
+        this.deleteModelUnit(modelName, { name: oldName, id: unit.freId() });
     }
 
     // @ts-ignore
