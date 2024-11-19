@@ -19,7 +19,7 @@ describe.skip("List component", () => {
     });
 
     it("all elements are visible", () => {
-        const result = render(ListComponent, { box: horizontalBox, editor: myEditor });
+        const result = render<ListComponent>(ListComponent, { box: horizontalBox, editor: myEditor });
         horizontalBox.children.forEach((box, index) => {
             const myLabel = screen.getByText("Label" + index);
             expect(myLabel).toBeVisible();
@@ -27,7 +27,7 @@ describe.skip("List component", () => {
     });
 
     it("when clicked, a single element gets focus", () => {
-        const result = render(ListComponent, { box: horizontalBox, editor: myEditor });
+        const result = render<ListComponent>(ListComponent, { box: horizontalBox, editor: myEditor });
         // nothing has focus before the click
         horizontalBox.children.forEach((box, index) => {
             const myLabel = screen.getByText("Label" + index);
@@ -54,7 +54,7 @@ describe.skip("List component", () => {
     });
 
     it("using arrow keys, another element gets focus", () => {
-        const result = render(ListComponent, { box: horizontalBox, editor: myEditor });
+        const result = render<ListComponent>(ListComponent, { box: horizontalBox, editor: myEditor });
         // click the second element
         fireEvent.click(screen.getByText("Label1"));
         // the second element has focus

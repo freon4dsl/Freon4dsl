@@ -45,7 +45,7 @@
 
     function doSubmit() {
         if (!newNameInvalid()) {
-            EditorState.getInstance().renameModelUnit($toBeRenamed, newName);
+            EditorState.getInstance().renameModelUnit($toBeRenamed, $toBeRenamed.name, newName);
         }
     }
 

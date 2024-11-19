@@ -1,4 +1,14 @@
 import { FreTriggerType, isProKey, isRegExp, isString } from "../editor/index.js";
+import { isNullOrUndefined } from "./FreUtils.js";
+
+export function isIdentifier(str: string): boolean {
+    if (!isNullOrUndefined(str)) {
+        const match = str.match(/^[a-z,A-Z][a-z,A-Z0-9_\-\.]*$/)
+        return match !== null && match.length > 0
+    } else {
+        return false
+    }
+}
 
 export class MatchUtil {
     public static fullMatch(text: string, trigger: FreTriggerType): boolean {
