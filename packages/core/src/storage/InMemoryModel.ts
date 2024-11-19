@@ -1,7 +1,9 @@
+import { makeObservable, observable } from "mobx";
 import { FreModel, FreModelUnit } from "../ast/index.js";
 import { AST } from "../change-manager/index.js";
 import { FreEnvironment } from "../environment/index.js";
 import { FreLogger } from "../logging/index.js";
+import { isNullOrUndefined } from "../util/index.js";
 import { IServerCommunication, ModelUnitIdentifier } from "./server/index.js";
 
 export type ModelChangedCallbackFunction = (m: InMemoryModel) => void;
@@ -11,18 +13,12 @@ const LOGGER: FreLogger = new FreLogger("InMemoryModel").mute();
 export class InMemoryModel {
     private languageEnvironment: FreEnvironment;
     private server: IServerCommunication;
-    private __model: FreModel | undefined;
+    model: FreModel | undefined = undefined;
 
     constructor(languageEnvironment: FreEnvironment, server: IServerCommunication) {
         this.languageEnvironment = languageEnvironment;
         this.server = server;
-    }
-
-    /**
-     * Return the current in memory model
-     */
-    get model(): FreModel {
-        return this.__model;
+        makeObservable(this, { model: observable });
     }
 
     /**
@@ -32,10 +28,10 @@ export class InMemoryModel {
      */
     async createModel(name: string): Promise<FreModel> {
         LOGGER.log(`createModel ${name}`)
-        this.__model = this.languageEnvironment.newModel(name);
+        this.model = this.languageEnvironment.newModel(name);
         await this.server.createModel(name);
         this.currentModelChanged();
-        return this.__model;
+        return this.model;
     }
 
     /**
@@ -44,8 +40,8 @@ export class InMemoryModel {
      * @param name
      */
     async deleteModel(): Promise<void> {
-        await this.server.deleteModel(this.__model.name);
-        this.__model = undefined;
+        await this.server.deleteModel(this.model.name);
+        this.model = undefined;
     }
 
     /**
@@ -55,7 +51,7 @@ export class InMemoryModel {
      */
     async openModel(name: string): Promise<FreModel> {
         LOGGER.log("openModel(" + name + ")");
-        this.__model = this.languageEnvironment.newModel(name);
+        this.model = this.languageEnvironment.newModel(name);
         const unitsIds = await this.server.loadUnitList(name);
         for (const unitId of unitsIds) {
             LOGGER.log("openModel: load model-unit: " + unitId.name);
@@ -65,7 +61,7 @@ export class InMemoryModel {
             })
         }
         this.currentModelChanged();
-        return this.__model;
+        return this.model;
     }
 
     /**
@@ -135,16 +131,26 @@ export class InMemoryModel {
      * Get all units of the current model.
      */
     getUnits(): FreModelUnit[] {
-        return this.model.getUnits();
+        const units = this?.model?.getUnits()
+        if (isNullOrUndefined(units)) {
+            return []
+        } else {
+            return units
+        }
     }
 
     /**
      * Get all unit identifiers of the current model.
      */
     getUnitIdentifiers(): ModelUnitIdentifier[] {
-        return this.model.getUnits().map((u) => {
-            return { name: u.name, id: u.freId() };
-        });
+        const units = this?.model?.getUnits()
+        if (isNullOrUndefined(units)) {
+            return []
+        } else {
+            return units.map((u) => {
+                return { name: u.name, id: u.freId() };
+            });
+        }
     }
 
     /**

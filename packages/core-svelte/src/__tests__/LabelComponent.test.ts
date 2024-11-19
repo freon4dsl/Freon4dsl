@@ -13,7 +13,7 @@ describe.skip("Label component", () => {
     const myEditor = new FreEditor(null, null);
 
     it("is rendered with label", () => {
-        render(LabelComponent, { box: myLabelBox });
+        render<LabelComponent>(LabelComponent, { box: myLabelBox });
         const myLabel = screen.getByText("LabelText");
         expect(myLabel).toBeVisible();
         myLabelBox.setFocus();
@@ -21,7 +21,7 @@ describe.skip("Label component", () => {
     });
 
     it("gets focus from its box", () => {
-        render(LabelComponent, { box: myLabelBox });
+        render<LabelComponent>(LabelComponent, { box: myLabelBox });
         const myLabel = screen.getByText("LabelText");
         expect(myLabel).toBeVisible();
         myLabelBox.setFocus();
@@ -31,7 +31,7 @@ describe.skip("Label component", () => {
     it("gets focus when clicked", () => {
         // the SelectableComponent listens to mouse clicks,
         // therefore we test this using a wrapper 'TestLabelSelectable'
-        render(MockLabelSelectable, { box1: myLabelBox, box2: secondLabelBox });
+        render<MockLabelSelectable>(MockLabelSelectable, { box1: myLabelBox, box2: secondLabelBox });
         const myContainer1 = screen.getByTestId("test-label1");
         expect(myContainer1).toBeVisible();
         const myLabel = screen.getByText("LabelText");
@@ -49,7 +49,7 @@ describe.skip("Label component", () => {
     it("loses focus when another label is clicked", () => {
         // the SelectableComponent listens to mouse clicks,
         // therefore we test this using a wrapper 'MockLabelSelectable'
-        render(MockLabelSelectable, { box1: myLabelBox, box2: secondLabelBox });
+        render<MockLabelSelectable>(MockLabelSelectable, { box1: myLabelBox, box2: secondLabelBox });
         const myContainer1 = screen.getByTestId("test-label1");
         expect(myContainer1).toBeVisible();
         const myLabel = screen.getByText("LabelText");
