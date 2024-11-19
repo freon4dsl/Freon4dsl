@@ -180,9 +180,9 @@ export class EditorState {
         if (!!unit) {
             if (!!this.currentModel?.name && this.currentModel?.name?.length) {
                 if (!!unit.name && unit.name.length > 0) {
-                    if (get(currentUnitName).id === unit.freId())  {
-                        // Saved unit already exists but its nbane has changed.
-                        LOGGER.log("Saving unit that changed name, do a rename")
+                    if (get(currentUnitName).id === unit.freId() && get(currentUnitName).name !== unit.name)  {
+                        // Saved unit already exists but its name has changed.
+                        LOGGER.log(`Saving unit that changed name, do a rename from ${get(currentUnitName).name} to ${unit.name}`)
                         await this.renameModelUnit(unit, get(currentUnitName).name, unit.name)
                     } else {
                         await this.modelStore.saveUnit(unit);
