@@ -52,54 +52,33 @@ describe("Freon Model Server", () => {
         const response2 = await serv.get(`/getUnitList?folder=${modelName}`);
         expect(response2.status).toBe(201);
         expect(response2.text).toContain("hg");
-        expect(response2.text).toContain(`hg${modelUnitInterfacePostfix}`);
         expect(response2.text).toContain("xng");
-        expect(response2.text).toContain(`xng${modelUnitInterfacePostfix}`);
     });
 
-    test(" is able to serve a unit, including its interface", async () => {
+    test(" is able to serve a unit", async () => {
         const unitName: string = "hg";
         const response1 = await serv.get(`/getModelUnit?folder=${modelName}&name=${unitName}`);
         expect(response1.status).toBe(201);
         expect(JSON.parse(response1.body)).toEqual(contentHgUnit);
-        const response2 = await serv.get(
-            `/getModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`,
-        );
-        expect(response2.status).toBe(201);
-        expect(JSON.parse(response2.body)).toEqual(contentHgIntf);
     });
 
-    test(" is able to save a unit, including its interface", async () => {
+    test(" is able to save a unit", async () => {
         const unitName: string = "NIEUW";
         const response1 = await serv.put(`/putModelUnit?folder=${modelName}&name=${unitName}`);
         expect(response1.status).toBe(201);
-        const response2 = await serv.put(
-            `/putModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`,
-        );
-        expect(response2.status).toBe(201);
         const response3 = await serv.get(`/getModelUnit?folder=${modelName}&name=${unitName}`);
         expect(response3.status).toBe(201);
         expect(JSON.parse(response3.body)).toEqual(emptyJson);
-        const response4 = await serv.get(
-            `/getModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`,
-        );
-        expect(response4.status).toBe(201);
         expect(JSON.parse(response3.body)).toEqual(emptyJson);
     });
 
-    test(" is able to delete a unit, including its interface", async () => {
+    test(" is able to delete a unit", async () => {
         const unitName: string = "NIEUW";
         // create a new unit
         await serv.put(`/putModelUnit?folder=${modelName}&name=${unitName}`);
-        await serv.put(`/putModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`);
         // and delete it
         const response1 = await serv.get(`/deleteModelUnit?folder=${modelName}&name=${unitName}`);
         expect(response1.status).toBe(201);
-        const response2 = await serv.get(
-            `/deleteModelUnit?folder=${modelName}&name=${unitName}${modelUnitInterfacePostfix}`,
-        );
-        expect(response2.status).toBe(201);
-        // check whether it is no longer present
         const response3 = await serv.get(`/getUnitList?folder=${modelName}`);
         expect(response3.status).toBe(201);
         expect(response3.text).not.toContain(unitName);
@@ -110,7 +89,6 @@ describe("Freon Model Server", () => {
         const unitName: string = "NIEUW";
         // create a new model and unit
         await serv.put(`/putModelUnit?folder=${modelName2}&name=${unitName}`);
-        await serv.put(`/putModelUnit?folder=${modelName2}&name=${unitName}${modelUnitInterfacePostfix}`);
         // and delete it
         const response1 = await serv.get(`/deleteModel?folder=${modelName2}`);
         expect(response1.status).toBe(201);

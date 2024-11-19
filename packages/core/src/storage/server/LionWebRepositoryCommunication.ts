@@ -1,6 +1,4 @@
 import { ClientResponse, ListPartitionsResponse, RepositoryClient } from "@lionweb/repository-client";
-// import { createLwNode, LionWebJsonNode } from "@lionweb/validation"
-// import process from "process"
 import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { createLionWebJsonNode, FreLionwebSerializer, FreSerializer } from "../index.js";
@@ -25,14 +23,6 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     constructor() {
         this.client.loggingOn = true;
     }
-
-    // private static findParams(params?: string) {
-    //     if (!!params && params.length > 0) {
-    //         return "?" + params;
-    //     } else {
-    //         return "";
-    //     }
-    // }
 
     private _nodePort = 3005; // process.env.NODE_PORT || 3005;
     private _SERVER_IP = `http://127.0.0.1`;
@@ -196,22 +186,6 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         return null;
     }
 
-    /**
-     * Loads the interface of the unit named 'unitName' of model 'modelName' from the server and calls 'loadCallBack',
-     * which takes the unit as parameter.
-     * @param modelName
-     * @param unitName
-     * @param loadCallback
-     */
-    // @ts-ignore prettier breaks the following line, there many ts-ignores
-    async loadModelUnitInterface(
-        // @ts-ignore
-        modelName: string,
-        // @ts-ignore
-        unit: ModelUnitIdentifier,
-        // @ts-ignore
-        loadCallback: (unit: FreModelUnit) => void,
-    ) {}
 
     // @ts-ignore
     private handleError(e: Error) {
