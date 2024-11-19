@@ -78,13 +78,11 @@ export class ReferenceCheckerTemplate {
                     result += `for (const referredElem of modelelement.${prop.name} ) {
                         if (referredElem.referred === null) {
                             this.makeErrorMessage(modelelement, referredElem, "${prop.name}", \`\${${locationdescription}}\`);
-                            hasFatalError = true;
                         }
                     }`;
                 } else {
                     result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) {
                             this.makeErrorMessage(modelelement, modelelement.${prop.name}, "${prop.name}", \`\${${locationdescription}}\`);
-                            hasFatalError = true;
                     }`;
                 }
             }
@@ -102,9 +100,8 @@ export class ReferenceCheckerTemplate {
              * @param modelelement
              */
             public execBefore${Names.classifier(concept)}(modelelement: ${Names.classifier(concept)}): boolean {
-                let hasFatalError: boolean = false;
                 ${result}
-                return hasFatalError;
+                return false;
             }`;
         } else {
             return ``;
