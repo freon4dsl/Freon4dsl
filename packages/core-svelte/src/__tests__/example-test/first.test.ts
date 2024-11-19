@@ -19,7 +19,7 @@ describe("First test in core-svelte", () => {
             },
         );
         const myEditor = new FreEditor(null, null);
-        render(TextComponent, { box: myTextBox, editor: myEditor, text: myTextBox.getText() });
+        render<TextComponent>(TextComponent, { box: myTextBox, editor: myEditor, text: myTextBox.getText() });
         const node = screen.queryByText("Hello world!");
         expect(node).not.toBeNull();
     });

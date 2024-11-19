@@ -47,7 +47,7 @@
     "@freon4dsl/core": "1.0.0-beta1",
     "svelte": "< 5.0.0",
     "click-outside": "^2.0.2",
-    "mobx": "6.12.13",
+    "mobx": "^6.12.13",
     "@smui-extra/autocomplete": "^7.0.0",
     "@smui/banner": "^7.0.0",
     "@smui/button": "^7.0.0",
