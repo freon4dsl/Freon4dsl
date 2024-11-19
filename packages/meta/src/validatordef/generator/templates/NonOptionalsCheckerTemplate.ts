@@ -84,7 +84,6 @@ export class NonOptionalsCheckerTemplate {
                 }
 
                 result += `if (modelelement.${prop.name} === null || modelelement.${prop.name} === undefined ${additionalStringCheck}) {
-                    hasFatalError = true;
                     this.errorList.push(new ${Names.FreError}("Property '${prop.name}' must have a value", modelelement, ${locationdescription}, '${prop.name}', ${Names.FreErrorSeverity}.Error));
                 }
                 `;
@@ -95,9 +94,8 @@ export class NonOptionalsCheckerTemplate {
             this.done.push(concept);
             return `${commentBefore}
                 public execBefore${Names.classifier(concept)}(modelelement: ${Names.classifier(concept)}): boolean {
-                    let hasFatalError: boolean = false;
                     ${result}
-                    return hasFatalError;
+                    return false;
                 }`;
         } else {
             return ``;

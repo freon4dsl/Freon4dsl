@@ -1,4 +1,4 @@
-import { FreNodeReference, FreError, AST } from "@freon4dsl/core";
+import { FreNodeReference, FreError, AST, FreNode, isNullOrUndefined } from "@freon4dsl/core";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
 import {
     DemoModel,
@@ -216,10 +216,20 @@ describe("Testing Validator", () => {
         //     console.log(DemoEnvironment.getInstance().writer.writeToString(mm))
         // );
         errors = validator.validate(model, true);
-        // errors.forEach(e =>
-        //     console.log(e.message + " => " + e.locationdescription + " of severity " + e.severity)
-        // );
+        errors.forEach(e =>
+            console.log(e.message + " => " + e.locationdescription + " prop: " + e.propertyName + " node: " + p(e.reportedOn) + " of severity " + e.severity)
+        );
         // TODO check every one of the messages
-        expect(errors.length).toBe(23);
+        expect(errors.length).toBe(24);
     });
 });
+
+function p(n: FreNode | FreNode[]): string {
+    if (isNullOrUndefined(n)) {
+        return "null-undefined"
+    } else if (Array.isArray(p)) {
+        return(n as FreNode[]).map(f => f.freId()).join(", ")
+    } else  {
+        return (n as FreNode).freId()
+    }
+}
