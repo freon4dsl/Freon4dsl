@@ -1,4 +1,4 @@
-import { printModel1 } from "@freon4dsl/test/dist/demo/utils/index.js";
+import { astToString } from "../../ast-utils/index.js";
 import {
     LionWebJsonChunk,
     LionWebJsonContainment,
@@ -146,7 +146,7 @@ export class FreLionwebSerializer implements FreSerializer {
                     parsedNode.freNode[reference.featureName] = freonRef;
                 }
 
-                LOGGER.log("resolved reference: " + freonRef.typeName + ", ", printModel1(freonRef.referred) + ", " + freonRef.name + ", " + freonRef.pathname);
+                LOGGER.log("resolved reference: " + freonRef.typeName + ", ", astToString(freonRef.referred) + ", " + freonRef.name + ", " + freonRef.pathname);
             }
         }
     }
