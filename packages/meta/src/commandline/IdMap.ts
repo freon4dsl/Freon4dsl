@@ -10,6 +10,12 @@ type ClassifierData = {
     key: string;
     properties: Map<string, PropertyData>;
 };
+
+/**
+ * This map holds the mapping from Freon concepts, interfaces, poroperties etc, to LionWeb ids and keys.
+ * The map can be initialized by reading the id.json file,.
+ * For non-mapped cponcpets, etc, ids and keys are automatically created.
+ */
 export class IdMap {
     idAndKeyStore = new Map<string, ClassifierData>();
     languageStore = new Map<string, LanguageData>();
@@ -22,7 +28,7 @@ export class IdMap {
     getLanguageId(language: string): string {
         const data = this.languageStore.get(language);
         if (data === undefined || data.id === undefined) {
-            return "-default-id-" + language;
+            return "-id-" + language;
         } else {
             return data.id;
         }
@@ -31,7 +37,7 @@ export class IdMap {
     getLanguageKey(language: string): string {
         const data = this.languageStore.get(language);
         if (data === undefined || data.id === undefined) {
-            return "-default-key-" + language;
+            return "-key-" + language;
         } else {
             return data.key;
         }
@@ -50,19 +56,19 @@ export class IdMap {
         }
     }
 
-    getConceptId(concept: string) {
+    getClassifierId(concept: string) {
         const classifierData = this.idAndKeyStore.get(concept);
         if (classifierData === undefined || classifierData.id === undefined) {
-            return "-default-id-" + concept;
+            return "-id-" + concept;
         } else {
             return classifierData.id;
         }
     }
 
-    getConceptKey(concept: string) {
+    getClassifierKey(concept: string) {
         const classifierData = this.idAndKeyStore.get(concept);
         if (classifierData === undefined || classifierData.key === undefined) {
-            return "-default-key-" + concept;
+            return "-key-" + concept;
         } else {
             return classifierData.key;
         }
@@ -71,11 +77,11 @@ export class IdMap {
     getPropertyId(concept: string, property: string) {
         const classifierData = this.idAndKeyStore.get(concept);
         if (classifierData === undefined || classifierData.id === undefined) {
-            return "-default-id-" + concept + "-" + property;
+            return "-id-" + concept + "-" + property;
         } else {
             const prop = classifierData.properties.get(property);
             if (prop === undefined || prop.id === undefined) {
-                return "-default-id-" + concept + "-" + property;
+                return "-id-" + concept + "-" + property;
             } else {
                 return prop.id;
             }
@@ -85,11 +91,11 @@ export class IdMap {
     getPropertyKey(concept: string, property: string) {
         const classifierData = this.idAndKeyStore.get(concept);
         if (classifierData === undefined || classifierData.key === undefined) {
-            return "-default-key-" + concept + "-" + property;
+            return "-key-" + concept + "-" + property;
         } else {
             const prop = classifierData.properties.get(property);
             if (prop === undefined || prop.key === undefined) {
-                return "-default-key-" + concept + "-" + property;
+                return "-key-" + concept + "-" + property;
             } else {
                 return prop.key;
             }
