@@ -450,6 +450,7 @@
       on:click_outside={onClickOutside}
       on:blur={onBlur}
       on:contextmenu={(event) => endEditing()}
+      tabindex="-1"
       class="text-dropdown-component"
       role="none"
 >
@@ -469,7 +470,8 @@
             on:endEditing={endEditing}
     />
     {#if isReferenceBox(box) && box.isSelectAble()}
-        <button class="reference-button" id="{id}" on:click={(event) => selectReferred(event)}>
+        <button class="reference-button" id="{id}" on:click={(event) => selectReferred(event)}
+            tabindex="-1">
             <ArrowForward/>
         </button>
     {/if}
