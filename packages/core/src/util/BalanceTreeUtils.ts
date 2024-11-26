@@ -27,8 +27,8 @@ export function isExpressionPreOrPost(box: Box) : boolean {
     return isNullOrUndefined(box) ||
         box.role.includes(BEFORE_BINARY_OPERATOR) ||
         box.role.includes(AFTER_BINARY_OPERATOR) ||
-        box.role.includes(LEFT_MOST) ||
-        box.role.includes(RIGHT_MOST);
+        box.role.includes(LEFT_MOST) 
+        // box.role.includes(RIGHT_MOST);
 }
 
 /**
