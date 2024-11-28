@@ -1,4 +1,4 @@
-import { jsonAsString } from "../util/index.js";
+// import { jsonAsString } from "../util/index.js";
 import { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
 import { InterpreterContext } from "./InterpreterContext.js";
 import { RtObject } from "./runtime/index.js";
@@ -43,8 +43,9 @@ class TraceNode {
                 ": " +
                 this.tracer.concept(this.node) +
                 " = " +
-                jsonAsString(this.value) +
-                (this.idValid(this.ctx) ? " Ctx " + this.ctx.toString() : "") +
+                // jsonAsString(this.value) +
+                this.value?.toString() +
+                // (this.idValid(this.ctx) ? " Ctx " + this.ctx.toString() : "") +
                 "\n";
         }
         this.children.forEach((child: TraceNode, index: number) => {

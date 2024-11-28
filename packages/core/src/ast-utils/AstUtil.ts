@@ -146,3 +146,19 @@ export function matchPrimitiveList(
     }
     return foundMatch;
 }
+
+export function astToString(element: FreNode): string {
+    return JSON.stringify(element, skipReferences, "  " )
+}
+
+const ownerprops = ["$$owner", "$$propertyName", "$$propertyIndex"];
+
+function skipReferences(key: string, value: Object) {
+    if (ownerprops.includes(key)) {
+        return undefined;
+    } else if( value instanceof FreNodeReference) {
+        return "REF => " + value.name;
+    }else {
+        return value;
+    }
+}
