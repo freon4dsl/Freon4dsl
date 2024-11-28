@@ -20,7 +20,7 @@ export class RtFraction extends RtObject {
     }
     
     override toString(): string {
-        return "" + this.nominator.toString() + "/" + this.denumerator.toString()
+        return this.nominator.toString() + "/" + this.denumerator.toString()
     }
 
 }

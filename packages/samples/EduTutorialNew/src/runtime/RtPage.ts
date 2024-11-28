@@ -19,7 +19,7 @@ export class RtPage extends RtObject {
     }
 
     override toString(): string {
-        return `page: ${this.page?.name}`;
+        return `Page: ${this.page?.name}`;
     }
 }
 
