@@ -3,3 +3,19 @@ editor default
 global {
     boolean [GOOD | WRONG] // are the strings used to display a boolean value
 }
+
+Steamboat  {
+[
+    ${typeName} Manufacturer: ${manufacturer:additional}
+    [=> IsMotorised]
+    NrOfPassengers: ${nrOfPassengers}
+    PreferedWaterWay: ${preferedWaterWay}
+    Is a heritage ship: ${isHeritage}
+]}
+
+PetrolCar {
+[
+    ${typeName} [=> Vehicle:additional]
+    [=> IsMotorised]
+    max content of boot (in m2): ${bootContent}
+]}

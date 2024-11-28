@@ -45,21 +45,7 @@ Bike {
     Size of tyres: ${tyreSize}
 ]}
 
-Steamboat  {
-[
-    ${typeName} Manufacturer: ${manufacturer:additional}
-    [=> IsMotorised]
-    NrOfPassengers: ${nrOfPassengers}
-    PreferedWaterWay: ${preferedWaterWay}
-    Is a heritage ship: ${isHeritage}
-]}
-
-PetrolCar {
-[
-    ${typeName} [=> Vehicle:additional]
-    [=> IsMotorised]
-    max content of boot (in m2): ${bootContent}
-]}
+//Steamboat  and PetrolCar defined in default
 
 SolarCar {
 [
