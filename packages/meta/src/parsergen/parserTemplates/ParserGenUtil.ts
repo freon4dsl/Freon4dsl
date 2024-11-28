@@ -28,13 +28,49 @@ export class ParserGenUtil {
      * @param editUnit the edit definition to serach for the projection groups
      */
     static findParsableProjectionGroup(editUnit: FreEditUnit) {
-        let projectionGroup: FreEditProjectionGroup | undefined = editUnit.projectiongroups.find(
-            (g) => g.name === EditorDefaults.parserGroupName,
+        const parserProjectionGroup: FreEditProjectionGroup | undefined = editUnit.projectiongroups.find(
+            (g) => g.name === EditorDefaults.parserGroupName
         );
-        if (!projectionGroup) {
-            projectionGroup = editUnit.getDefaultProjectiongroup();
+        const defaultProjectionGroup = editUnit.getDefaultProjectiongroup();
+        return ParserGenUtil.joinProjectionGroups(parserProjectionGroup, defaultProjectionGroup);
+    }
+
+    /**
+     * Join the parser projection with the default projection for generating a (un)parser
+     * @param parserProjection
+     * @param defaultProjection
+     * @private
+     */
+    private static joinProjectionGroups(parserProjection: FreEditProjectionGroup | undefined, defaultProjection: FreEditProjectionGroup | undefined): FreEditProjectionGroup | undefined {
+        if (parserProjection === undefined) {
+            return defaultProjection;
         }
-        return projectionGroup;
+        if (defaultProjection === undefined) {
+            return undefined;
+        }
+        const projection = new FreEditProjectionGroup();
+        projection.name = defaultProjection.name
+        projection.globalProjections = defaultProjection.globalProjections;
+        projection.extras = defaultProjection.extras;
+        projection.owningDefinition = (!!parserProjection.owningDefinition ? parserProjection.owningDefinition : defaultProjection.owningDefinition);
+        projection.aglParseLocation = (!!parserProjection.aglParseLocation ? parserProjection.aglParseLocation : defaultProjection.aglParseLocation);
+        projection.location = (!!parserProjection.location ? parserProjection.location : defaultProjection.location);
+
+        parserProjection.projections.forEach(p => {
+            console.log("Pushing from parser: " + p.classifier?.name)
+            projection.projections.push(p)  
+        } )
+        defaultProjection.projections.forEach(defaultProj => {
+            const found = parserProjection.projections.find(existingProj =>
+                existingProj.classifier?.referred === defaultProj.classifier?.referred);
+            if (found === undefined) {
+                console.log("Pushing from default: " + defaultProj.classifier?.name)
+               projection.projections.push(defaultProj);
+            } else {
+                console.log("Found from parser: " + defaultProj.classifier?.name)
+            }
+        });
+        return projection;
     }
 
     static findNonTableProjection(
