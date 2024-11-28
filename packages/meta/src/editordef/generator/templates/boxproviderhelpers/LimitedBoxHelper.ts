@@ -59,8 +59,7 @@ export class LimitedBoxHelper {
                         language,
                         listInfo,
                         property,
-                        elementVarName,
-                        true
+                        elementVarName
                     );
                 }
             }

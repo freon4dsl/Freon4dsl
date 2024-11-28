@@ -196,8 +196,7 @@ export class ItemBoxHelper {
                     language,
                     item.listInfo,
                     property,
-                    elementVarName,
-                    false
+                    elementVarName
                 );
             } else if (!!item.listInfo) {
                 // if there is information on how to project the property as a list, make it a list
@@ -205,8 +204,7 @@ export class ItemBoxHelper {
                     language,
                     item.listInfo,
                     property,
-                    elementVarName,
-                    false
+                    elementVarName
                 );
             }
             if (!!item.externalInfo) {
