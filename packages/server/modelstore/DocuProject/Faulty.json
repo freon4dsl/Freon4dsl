@@ -171,7 +171,7 @@
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-isApproved"
                },
-               "value": "true"
+               "value": "false"
             }
          ],
          "containments": [

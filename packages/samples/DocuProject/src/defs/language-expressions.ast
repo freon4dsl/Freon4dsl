@@ -56,7 +56,7 @@ expression InsurancePartRef base DocuExpression {
     reference part: InsurancePart;
 }
 
-// Expression used to refer to the insurance parts of a product
+// Expression used to refer to the risk adjustment of a product
 expression RiskAdjustmentRef base DocuExpression {
     name: identifier = "riskAdjustment";
 }
