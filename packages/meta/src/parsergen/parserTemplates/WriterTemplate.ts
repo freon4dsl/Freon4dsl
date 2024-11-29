@@ -486,8 +486,9 @@ export class WriterTemplate {
                           * Unparsing of '${name}' according to projection '${projection.name}'.
                           */`;
         // take care of named projections, the unparse method gets a different name
+        // except when it is the parser projection, this replaces the default projection with the same name.
         let methodName: string = `unparse${name}`;
-        if (projection.name !== this.currentProjectionGroup?.name) {
+        if (projection.name !== this.currentProjectionGroup?.name && projection.name !== "parser") {
             methodName += "_" + projection.name;
         }
         if (!!lines) {
@@ -611,7 +612,8 @@ export class WriterTemplate {
                 if (!!foundProjection) {
                     ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, foundProjection);
                 }
-                result += `this.unparse${Names.classifier(item.superRef.referred)}_${item.projectionName}(modelelement, short);`;
+                result += `// SUPER
+                this.unparse${Names.classifier(item.superRef.referred)}_${item.projectionName}(modelelement, short);`;
             } else {
                 // use the normal unparse method
                 result += `this.unparse${Names.classifier(item.superRef.referred)}(modelelement, short);`;
