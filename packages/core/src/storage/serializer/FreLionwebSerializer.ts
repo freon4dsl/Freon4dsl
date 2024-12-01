@@ -1,4 +1,4 @@
-import { astToString } from "../../ast-utils/index.js";
+// import { astToString } from "../../ast-utils/index.js";
 import {
     LionWebJsonChunk,
     LionWebJsonContainment,
@@ -146,7 +146,7 @@ export class FreLionwebSerializer implements FreSerializer {
                     parsedNode.freNode[reference.featureName] = freonRef;
                 }
 
-                LOGGER.log("resolved reference: " + freonRef.typeName + ", ", astToString(freonRef.referred) + ", " + freonRef.name + ", " + freonRef.pathname);
+                LOGGER.log("resolved reference: " + freonRef.typeName)
             }
         }
     }
@@ -173,12 +173,12 @@ export class FreLionwebSerializer implements FreSerializer {
         const classifier = this.language.classifierByKey(conceptMetaPointer.key);
         // @ts-expect-error TS2345
         if (isNullOrUndefined(classifier)) {
-            LOGGER.log(`1 Cannot read json 3: ${conceptMetaPointer.key} unknown.`);
+            LOGGER.error(`1 Cannot read json 3: ${conceptMetaPointer.key} unknown.`);
             return null;
         }
         const tsObject: FreNode = this.language.createConceptOrUnit(classifier.typeName, id);
         if (isNullOrUndefined(tsObject)) {
-            LOGGER.log(`2 Cannot read json 4: ${conceptMetaPointer.key} unknown.`);
+            LOGGER.error(`2 Cannot read json 4: ${conceptMetaPointer.key} unknown.`);
             return null;
         }
         // Store id, so it will not be used for new instances
