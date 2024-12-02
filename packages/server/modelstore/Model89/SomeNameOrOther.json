@@ -35,6 +35,14 @@
                "containment": {
                   "language": "-default-key-Example",
                   "version": "2023.1",
+                  "key": "-default-key-ExampleUnit-interfaces"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
                   "key": "-default-key-ExampleUnit-methods"
                },
                "children": [
@@ -54,6 +62,14 @@
             "key": "-default-key-Entity"
          },
          "properties": [
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-abstract"
+               },
+               "value": "false"
+            },
             {
                "property": {
                   "language": "-default-key-Example",
@@ -88,7 +104,16 @@
                ]
             }
          ],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-baseInterfaces"
+               },
+               "targets": []
+            }
+         ],
          "annotations": [],
          "parent": "ID-18"
       },
@@ -638,6 +663,14 @@
                "property": {
                   "language": "-default-key-Example",
                   "version": "2023.1",
+                  "key": "-default-key-Entity-abstract"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
                   "key": "-default-key-BaseType-name"
                },
                "value": "ent2"
@@ -670,7 +703,16 @@
                ]
             }
          ],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-default-key-Example",
+                  "version": "2023.1",
+                  "key": "-default-key-Entity-baseInterfaces"
+               },
+               "targets": []
+            }
+         ],
          "annotations": [],
          "parent": "ID-18"
       },
