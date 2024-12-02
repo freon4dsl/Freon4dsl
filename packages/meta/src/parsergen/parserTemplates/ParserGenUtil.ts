@@ -57,17 +57,13 @@ export class ParserGenUtil {
         projection.location = (!!parserProjection.location ? parserProjection.location : defaultProjection.location);
 
         parserProjection.projections.forEach(p => {
-            console.log("Pushing from parser: " + p.classifier?.name)
             projection.projections.push(p)  
         } )
         defaultProjection.projections.forEach(defaultProj => {
             const found = parserProjection.projections.find(existingProj =>
                 existingProj.classifier?.referred === defaultProj.classifier?.referred);
             if (found === undefined) {
-                console.log("Pushing from default: " + defaultProj.classifier?.name)
                projection.projections.push(defaultProj);
-            } else {
-                console.log("Found from parser: " + defaultProj.classifier?.name)
             }
         });
         return projection;
