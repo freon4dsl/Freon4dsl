@@ -346,12 +346,7 @@
 			inputElement.focus();
 			editStart = false;
 		} else if (isEditing) {
-			// LOGGER.log(`check deleteWhenEmpty, caret: ${myHelper.from}-${myHelper.to}, text: "${text}", empty:${myHelper.isTextEmpty()}, deleteWhenEmpty: ${box.deleteWhenEmpty}`)
-			if (myHelper.isTextEmpty() && box.deleteWhenEmpty) { // the text is completely empty, and we may delete the node
-				LOGGER.log("Deleting box")
-				dispatcher('hideDropdown');
-				editor.deleteBox(box);
-			} else if (partOfDropdown) {
+			 if (partOfDropdown) {
 				if (text !== originalText) { // check added to avoid too many textUpdate events, e.g. when moving through the text with arrows
 					// send event to parent TextDropdownComponent
 					LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
@@ -427,6 +422,10 @@
 
 	function onInput() {
 		setInputWidth();
+		LOGGER.log(`onInput text is ${text}  value '${inputElement.value}'`)
+		if (inputElement.value === "") {
+			editor.deleteTextBox(box, false)
+		}
 	}
 
 	const tabindex = (box.role.startsWith("action-binary") || box.role.startsWith("action-exp") ? -1 : 0)
@@ -469,7 +468,7 @@
 				  on:keydown={onKeyDownSpan}
 				  spellcheck=false
 				  id="{id}-span"
-				  role="none">
+				  role="textbox">
 				{#if !!text && text.length > 0}
 					{text}
 				{:else}
