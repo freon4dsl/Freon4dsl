@@ -1,7 +1,7 @@
 import { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/validation";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
 import { DemoEntity, DemoFunction, DemoModel } from "../language/gen/index.js";
-import { AST, FreLionwebSerializer, FreModelSerializer, LwChunk } from "@freon4dsl/core";
+import { AST, FreLionwebSerializer, FreModelSerializer } from "@freon4dsl/core";
 import { JsonModelCreator } from "./JsonModelCreator.js";
 import { describe, it, test, expect, beforeEach } from "vitest";
 
