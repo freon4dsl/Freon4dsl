@@ -1,17 +1,5 @@
 import { IdMap } from "../../commandline/IdMap.js";
 import { LOG2USER } from "../../utils/index.js";
-// import {
-//     PropertyDefinition,
-//     ValidationIssue,
-//     JsonContext,
-//     Syntax_ArrayContainsNull_Issue,
-//     Syntax_PropertyTypeIssue,
-//     UnknownObjectType,
-//     Syntax_PropertyNullIssue,
-//     Syntax_PropertyUnknownIssue,
-//     Syntax_PropertyMissingIssue,
-//     PropertyType
-// } from "@lionweb/validation";
 
 export type IdProperty = {
     name: string
@@ -26,13 +14,6 @@ export type IdClassifier = {
     properties: IdProperty[]
 }
 
-// export type IdConcept = IdClassifier & {
-//     concept: string
-// }
-//
-// export type IdInterface = IdClassifier & {
-//     interface: string
-// }
 
 export type IdLimited = {
     instance: string
@@ -55,6 +36,11 @@ export type IdJson = {
     limited: IdLimited[]
 }
 
+/**
+ * Parser the id.json  file, as specified by the type _IdJson_ and return
+ * the contents as an IdMap.
+ * @param json
+ */
 export function parseIds(json: any): IdMap {
     LOG2USER.log("PARSE IDS");
     const idData = json as IdJson;

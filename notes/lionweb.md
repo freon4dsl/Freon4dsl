@@ -29,6 +29,11 @@
       so in LionWeb you can define new PrimitiveTypes in a language
     - [ ] Add this to Freon
     - [ ] Define some kind of mapping
+- LionWeb allows new PrimitiveTypes to be defined in a language, Freon does not
+    - Such a new primitive tyope can be used as the type of a property in the same language,
+      there is no obvious way to do this in Freon (should be allowed in the .ast file)
+    - Potentially define a CustomPrimitiveType limited concept and map a LionWeb PrimitiveType
+      to a member of CustomPrimitiveType
 
 #### Annotations
 - [ ] LionWeb has annotations, Freon does not yet 

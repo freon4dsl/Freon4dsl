@@ -12,9 +12,9 @@ type ClassifierData = {
 };
 
 /**
- * This map holds the mapping from Freon concepts, interfaces, poroperties etc, to LionWeb ids and keys.
+ * This map holds the mapping from Freon concepts, interfaces, properties etc, to LionWeb ids and keys.
  * The map can be initialized by reading the id.json file,.
- * For non-mapped cponcpets, etc, ids and keys are automatically created.
+ * For non-mapped concepts, etc, ids and keys are automatically created.
  */
 export class IdMap {
     idAndKeyStore = new Map<string, ClassifierData>();
