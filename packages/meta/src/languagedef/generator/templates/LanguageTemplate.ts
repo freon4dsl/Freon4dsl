@@ -64,6 +64,7 @@ export class LanguageTemplate {
                                         type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        isOptional: ${prop.isOptional},
                                         language: "${prop.language.key}",
                                         propertyKind: "primitive"
                                     });`,
@@ -80,6 +81,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        isOptional: ${prop.isOptional},
                                         language: "${prop.language.key}",
                                         propertyKind: "part"
                                     });`,
@@ -96,6 +98,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        isOptional: ${prop.isOptional},
                                         language: "${prop.language.key}",
                                         propertyKind: "reference"
                                     });`,
@@ -133,6 +136,7 @@ export class LanguageTemplate {
                                         type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        isOptional: ${prop.isOptional},
                                         language: "${prop.language.key}",
                                         propertyKind: "primitive"
                                     });`,
@@ -149,6 +153,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        isOptional: ${prop.isOptional},
                                         language: "${prop.language.key}",
                                         propertyKind: "part"
                                     });`,
@@ -165,6 +170,7 @@ export class LanguageTemplate {
                                         type: "${Names.classifier(prop.type)}",
                                         isList: ${prop.isList},
                                         isPublic: ${prop.isPublic},
+                                        isOptional: ${prop.isOptional},
                                         language: "${prop.language.key}",
                                         propertyKind: "reference"
                                     });`,
@@ -209,6 +215,7 @@ export class LanguageTemplate {
                                 key: "${prop.key}",
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
+                                isOptional: false, // ${prop.isOptional},
                                 isPublic: ${prop.isPublic},
                                 language: "${prop.language.key}",
                                 propertyKind: "primitive"
@@ -226,6 +233,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                isOptional: ${prop.isOptional},
                                 language: "${prop.language.key}",
                                 propertyKind: "part"
                             });`,
@@ -242,6 +250,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                isOptional: ${prop.isOptional},
                                 language: "${prop.language.key}",
                                 propertyKind: "reference"
                             });`,
@@ -281,6 +290,7 @@ export class LanguageTemplate {
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                isOptional: ${prop.isOptional},
                                 language: "${prop.language.NAME}",
                                 propertyKind: "primitive"
                             });`,
@@ -297,6 +307,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                isOptional: ${prop.isOptional},
                                 language: "${prop.language.NAME}",
                                 propertyKind: "part"
                             });`,
@@ -313,6 +324,7 @@ export class LanguageTemplate {
                                 type: "${Names.classifier(prop.type)}",
                                 isList: ${prop.isList},
                                 isPublic: ${prop.isPublic},
+                                isOptional: ${prop.isOptional},
                                 language: "${prop.language.NAME}",
                                 propertyKind: "reference"
                             });`,
