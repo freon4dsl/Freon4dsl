@@ -5,7 +5,6 @@ import {
     BoxFactory,
     ExternalRefListBox,
     HorizontalListBox,
-    LimitedDisplay,
     ReferenceBox,
     SelectOption,
     VerticalListBox,
@@ -93,7 +92,6 @@ export class UtilRefHelpers {
         node: FreNode,
         propertyName: string,
         scoper: FreScoper,
-        isLimited: boolean,
         listInfo?: FreListInfo,
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
@@ -106,7 +104,6 @@ export class UtilRefHelpers {
                     node,
                     property as FreNodeReference<FreNamedNode>[],
                     propertyName,
-                    isLimited,
                     scoper,
                     listInfo,
                 );
@@ -131,7 +128,6 @@ export class UtilRefHelpers {
         node: FreNode,
         propertyName: string,
         scoper: FreScoper,
-        isLimited: boolean,
         listJoin?: FreListInfo,
         initializer?: Partial<HorizontalListBox>,
     ): HorizontalListBox {
@@ -145,7 +141,6 @@ export class UtilRefHelpers {
                 node,
                 property as FreNodeReference<FreNamedNode>[],
                 propertyName,
-                isLimited,
                 scoper,
                 listJoin,
             );
@@ -187,7 +182,6 @@ export class UtilRefHelpers {
                 node,
                 property as FreNodeReference<FreNamedNode>[],
                 propertyName,
-                false,
                 scoper,
             );
             // determine the role
@@ -230,7 +224,6 @@ export class UtilRefHelpers {
         element: FreNode,
         properties: FreNodeReference<FreNamedNode>[],
         propertyName: string,
-        asSelect: boolean,
         scoper: FreScoper,
         listJoin?: FreListInfo,
     ): Box[] {
@@ -247,12 +240,7 @@ export class UtilRefHelpers {
                 listElem.name = selected;
                 return BehaviorExecutionResult.EXECUTED;
             };
-            let innerBox: Box;
-            if (asSelect) {
-                innerBox = BoxUtil.limitedBox(element, propertyName, setFunc, LimitedDisplay.SELECT, scoper, index);
-            } else {
-                innerBox = BoxUtil.referenceBox(element, propertyName, setFunc, scoper, index);
-            }
+            let innerBox = BoxUtil.referenceBox(element, propertyName, setFunc, scoper, index);
             if (listJoin !== null && listJoin !== undefined) {
                 result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, element, roleName, propertyName, innerBox));
             } else {

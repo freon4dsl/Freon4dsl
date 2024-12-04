@@ -291,11 +291,10 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         scoper: FreScoper,
-        isLimited: boolean,
         listInfo?: FreListInfo,
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
-        return UtilRefHelpers.verticalReferenceListBox(node, propertyName, scoper, isLimited, listInfo, initializer);
+        return UtilRefHelpers.verticalReferenceListBox(node, propertyName, scoper, listInfo, initializer);
     }
 
     /**
@@ -315,11 +314,10 @@ export class BoxUtil {
         node: FreNode,
         propertyName: string,
         scoper: FreScoper,
-        isLimited: boolean,
         listJoin?: FreListInfo,
         initializer?: Partial<HorizontalListBox>,
     ): HorizontalListBox {
-        return UtilRefHelpers.horizontalReferenceListBox(node, propertyName, scoper, isLimited, listJoin, initializer);
+        return UtilRefHelpers.horizontalReferenceListBox(node, propertyName, scoper, listJoin, initializer);
     }
 
 
