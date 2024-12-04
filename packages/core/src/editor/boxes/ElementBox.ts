@@ -16,7 +16,7 @@ export class ElementBox extends Box {
         super(element, role);
         FreUtils.initializeObject(this, initializer);
     }
-
+    
     get content() {
         return this._content;
     }
@@ -38,6 +38,22 @@ export class ElementBox extends Box {
         } else {
             return [this.content];
         }
+    }
+
+    get actualX(): number {
+        return this.content.actualX;
+    }
+
+    get actualY(): number {
+        return this.content.actualY;
+    }
+
+    get actualWidth(): number {
+        return this.content.actualWidth;
+    }
+
+    get actualHeight(): number {
+        return this.content.actualHeight;
     }
 }
 
