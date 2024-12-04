@@ -75,7 +75,7 @@
 	 * It is called from the box.
 	 */
 	export async function setFocus(): Promise<void> {
-		console.log("TextComponent.setFocus "+ id + " input is there: " + !!inputElement);
+		LOGGER.log("TextComponent.setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {
@@ -424,7 +424,7 @@
 		setInputWidth();
 		LOGGER.log(`onInput text is ${text}  value '${inputElement.value}'`)
 		if (inputElement.value === "") {
-			editor.deleteTextBox(box, false)
+			editor.deleteTextBox(box, box.deleteWhenEmpty)
 		}
 	}
 
