@@ -1,4 +1,4 @@
-editor UsingComments
+editor UsingComments precedence 12
 
 BaseProduct {[
     /* In this projection 'self.parts' is always shown according to the projection */

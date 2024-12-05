@@ -1,0 +1,28 @@
+editor fragments precedence 18
+
+BaseProduct {
+[
+    Base Product for ${self.theme radio} ${self.name }
+        [fragment First] [fragment Second]
+        ${self.parts}
+]
+    fragment First [
+    First Card
+        is still under construction: ${self.isUnderConstruction switch}
+        is approved level1: ${self.isApprovedLevel1 radio}
+        is approved level2: ${self.isApprovedLevel2 inner-switch}
+        is approved level3: ${self.isApprovedLevel3 checkbox}
+    ]
+    fragment Second [
+    Second Card
+        [button text="Push me!" boxRole="MyButton-role"]
+        yields profit: ${self.yieldsProfit}
+        expected nr of use: ${self.nrOfUse slider}
+        range: ${self.range}
+        date: ${self.date}
+    ]
+}
+
+Entity {[
+    ${self.isCompany inner-switch [COMPANY | PERSON]} ${self.name}
+]}

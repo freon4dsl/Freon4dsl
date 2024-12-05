@@ -1,6 +1,6 @@
 /* This file contains the default editor definition. */
 
-editor controls
+editor controls precedence 15
 
 BaseProduct {[
     Base Products ${name} for ${theme radio}
