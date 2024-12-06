@@ -16,7 +16,7 @@ describe.skip("Indent component", () => {
     const myIndentBox = new IndentBox(element2, "indent-role", 4, myLabelBox);
 
     it(", with label as slot, is indented", () => {
-        const result = render(IndentComponent, { box: myIndentBox, editor: myEditor });
+        const result = render<IndentComponent>(IndentComponent, { box: myIndentBox, editor: myEditor });
         const myLabel = screen.getByText("LabelText");
         expect(myLabel).toBeVisible();
         const indentComp = screen.getByTestId(`${myIndentBox.node.freId()}-${myIndentBox.role}`);

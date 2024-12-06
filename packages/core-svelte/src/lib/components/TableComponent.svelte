@@ -142,7 +142,7 @@
         style:grid-template-rows="{templateRows}"
         class="table-component {cssClass}"
         id="{id}"
-        tabIndex={0}
+        tabIndex={-1}
         bind:this={htmlElement}
 >
     {#each cells as cell (cell.content.id + '-' + cell.row + '-' + cell.column)}

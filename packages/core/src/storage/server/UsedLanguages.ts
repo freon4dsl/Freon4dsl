@@ -1,5 +1,10 @@
 import { LionWebJsonMetaPointer, LionWebJsonNode, LwJsonUsedLanguage } from "@lionweb/validation";
 
+/**
+ * Collect all langusges that are nbeing used in the _nodes_ collection.
+ * @param nodes The nodes to search for languages
+ * @returns The list of languages used in _nodes_, can be an empty array.
+ */
 export function collectUsedLanguages(nodes: LionWebJsonNode[]): LwJsonUsedLanguage[] {
     if (nodes.length == 0) {
         return [];

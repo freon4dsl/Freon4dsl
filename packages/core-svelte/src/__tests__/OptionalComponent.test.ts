@@ -32,7 +32,7 @@ describe.skip("Optional component", () => {
             false,
             "someAliasText",
         );
-        const result = render(OptionalComponent, { box: ownerBox, editor: myEditor });
+        const result = render<OptionalComponent>(OptionalComponent, { box: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.getByTestId("OPTIONAL_ELEMENT-optional-element");
@@ -52,7 +52,7 @@ describe.skip("Optional component", () => {
             true,
             "someAliasText",
         );
-        const result = render(OptionalComponent, { box: ownerBox, editor: myEditor });
+        const result = render<OptionalComponent>(OptionalComponent, { box: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.getByTestId("OPTIONAL_ELEMENT-optional-element");
@@ -72,7 +72,7 @@ describe.skip("Optional component", () => {
             true,
             "someAliasText",
         );
-        const result = render(OptionalComponent, { box: ownerBox, editor: myEditor });
+        const result = render<OptionalComponent>(OptionalComponent, { box: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.getByTestId("OPTIONAL_ELEMENT-optional-element");
@@ -92,7 +92,7 @@ describe.skip("Optional component", () => {
             false,
             "someAliasText",
         );
-        const result = render(OptionalComponent, { box: ownerBox, editor: myEditor });
+        const result = render<OptionalComponent>(OptionalComponent, { box: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.queryByTestId("OPTIONAL_ELEMENT-optional-element");
@@ -113,7 +113,7 @@ describe.skip("Optional component", () => {
             true,
             "someAliasText",
         );
-        const result = render(TestOptional, { box: ownerBox, editor: myEditor });
+        const result = render<TestOptional>(TestOptional, { box: ownerBox, editor: myEditor });
         const myOwner = screen.getByTestId("OPTIONAL-OWNER-opt-role");
         expect(myOwner).toBeVisible();
         const myOptional = screen.getByTestId("OPTIONAL_ELEMENT-optional-element");

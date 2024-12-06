@@ -57,19 +57,19 @@ export class ScoperTemplate {
         export class ${generatedClassName} extends  ${scoperBaseName} {
 
              /**
-             * Returns the namespace to be used as alternative scope for 'modelelement'.
-             * @param modelelement
+             * Returns the namespace to be used as alternative scope for 'node'.
+             * @param node
              */
-            getAlternativeScope(modelelement: ${Names.FreNode}): ${Names.FreNamespace} {
+            getAlternativeScope(node: ${Names.FreNode}): ${Names.FreNamespace} {
                 ${this.getAlternativeScopeText}
                 return null;
             }
 
              /**
              * Returns true if there is an alternative scope defined for this 'modelelement'.
-             * @param modelelement
+             * @param hasAlternativeScope
              */
-            hasAlternativeScope(modelelement: ${Names.FreNode}): boolean {
+            hasAlternativeScope(node: ${Names.FreNode}): boolean {
                 ${this.hasAlternativeScopeText}
                 return false;
             }
@@ -155,7 +155,7 @@ export class ScoperTemplate {
 
                 // second, to the 'hasAlternativeScope' method
                 this.hasAlternativeScopeText = this.hasAlternativeScopeText.concat(
-                    `if (!!modelelement && modelelement instanceof ${conceptName}) {
+                    `if (!!node && node instanceof ${conceptName}) {
                         return true;
                      }`,
                 );
@@ -163,7 +163,7 @@ export class ScoperTemplate {
                 // third, to the 'getAlternativeScope' method
                 if (!!def.alternativeScope.expression) {
                     this.getAlternativeScopeText = this.getAlternativeScopeText.concat(
-                        `if (!!modelelement && modelelement instanceof ${conceptName}) {
+                        `if (!!node && node instanceof ${conceptName}) {
                         // use alternative scope '${def.alternativeScope.expression.toFreString()}'
                         ${this.altScopeExpToTypeScript(def.alternativeScope.expression)}
                     }`,
@@ -229,7 +229,7 @@ export class ScoperTemplate {
             let actualParamToGenerate: string = "";
             // we know that typeof has exactly 1 actual parameter
             if (expression.actualparams[0].sourceName === "container") {
-                actualParamToGenerate = `modelelement.freOwnerDescriptor().owner`;
+                actualParamToGenerate = `node.freOwnerDescriptor()?.owner`;
             } else {
                 actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0]);
             }
@@ -240,6 +240,8 @@ export class ScoperTemplate {
                     if (!!newScopeElement) {
                         return ${Names.FreNamespace}.create(newScopeElement);
                     }
+                } else {
+                    console.log("AlternativeScoper for node " + node.freId() + " ")
                 }`;
         } else {
             // normal case: the expression is an ordinary expression over the language

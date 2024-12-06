@@ -19,16 +19,15 @@ export class ListPropertyBoxHelper {
         language: FreMetaLanguage,
         listJoin: FreEditListInfo,
         reference: FreMetaConceptProperty,
-        element: string,
-        isLimited: boolean
+        element: string
     ): string {
         ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
         ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));
         const joinEntry = this.getJoinEntry(listJoin);
         if (listJoin.direction === FreEditProjectionDirection.Vertical) {
-            return `BoxUtil.verticalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${isLimited}, ${joinEntry})`;
+            return `BoxUtil.verticalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
         } // else
-        return `BoxUtil.horizontalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${isLimited}, ${joinEntry})`;
+        return `BoxUtil.horizontalReferenceListBox(${element}, "${reference.name}", ${Names.environment(language)}.getInstance().scoper, ${joinEntry})`;
     }
 
     public getJoinEntry(listJoin: FreEditListInfo): string {

@@ -20,6 +20,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 2px;
+    spellcheck: false;
 }
 .gutter {
     /*border: 1px solid;*/

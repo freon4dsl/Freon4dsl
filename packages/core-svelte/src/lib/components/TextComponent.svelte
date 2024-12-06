@@ -147,7 +147,7 @@
 	 * @param event
 	 */
 	function onClick(event: MouseEvent) {
-		LOGGER.log('onClick enter ')
+		LOGGER.log(`onClick enter isEditing ${isEditing}`)
 		if (!!inputElement) {
 			LOGGER.log('onClick: for input element ' + id + ', ' + inputElement?.selectionStart + ", " + inputElement?.selectionEnd);
 			myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
@@ -161,13 +161,16 @@
 		}
 		event.stopPropagation();
 	}
-
+	function onClick2(event: MouseEvent) {
+		LOGGER.log(`on 2  isEditing ${isEditing}`)
+		startEditing(event)
+	}
 	/**
 	 * When the <input> element loses focus the function is called. It switches the display back to
 	 * the <span> element, and stores the current text in the textbox.
 	 */
 	function endEditing() {
-		LOGGER.log(`${id}:  endEditing text is '${text}'` );
+		LOGGER.log(`${id}:  endEditing text is '${text}'  isEditing ${isEditing}` );
 		if (isEditing) {
 			// reset the local variables
 			isEditing = false;
@@ -203,7 +206,7 @@
 		// see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
 		// stopPropagation on an element will stop that event from happening on the parent (the entire ancestors),
 		// preventDefault on an element will stop the event on the element, but it will happen on it's parent (and the ancestors too!)
-		LOGGER.log(`${id}: onKeyDown: [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}] meta [${event.metaKey}]`);
+		LOGGER.log(`${id}: onKeyDown:  isEditing ${isEditing} key: [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}] meta [${event.metaKey}]`);
 		if (event.key === TAB) {
 			// Do nothing, browser handles this
 		} else if (event.key === SHIFT || event.key === CONTROL || event.key === ALT) { // ignore meta keys
@@ -343,12 +346,7 @@
 			inputElement.focus();
 			editStart = false;
 		} else if (isEditing) {
-			// LOGGER.log(`check deleteWhenEmpty, caret: ${myHelper.from}-${myHelper.to}, text: "${text}", empty:${myHelper.isTextEmpty()}, deleteWhenEmpty: ${box.deleteWhenEmpty}`)
-			if (myHelper.isTextEmpty() && box.deleteWhenEmpty) { // the text is completely empty, and we may delete the node
-				LOGGER.log("Deleting box")
-				dispatcher('hideDropdown');
-				editor.deleteBox(box);
-			} else if (partOfDropdown) {
+			 if (partOfDropdown) {
 				if (text !== originalText) { // check added to avoid too many textUpdate events, e.g. when moving through the text with arrows
 					// send event to parent TextDropdownComponent
 					LOGGER.log(`${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate');
@@ -424,6 +422,10 @@
 
 	function onInput() {
 		setInputWidth();
+		LOGGER.log(`onInput text is ${text}  value '${inputElement.value}'`)
+		if (inputElement.value === "") {
+			editor.deleteTextBox(box, false)
+		}
 	}
 
 	const tabindex = (box.role.startsWith("action-binary") || box.role.startsWith("action-exp") ? -1 : 0)
@@ -435,7 +437,7 @@
 {/if}
 <ErrorTooltip {box} hasErr={hasErr} parentTop={0} parentLeft={0}>
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
-	<span on:click={onClick} id="{id}" role="none" bind:this={surroundingElement}>
+	<span on:click={onClick2} id="{id}" role="none" bind:this={surroundingElement}>
 		{#if isEditing}
 			<span class="text-component-input">
 				<input type="text"
@@ -466,7 +468,7 @@
 				  on:keydown={onKeyDownSpan}
 				  spellcheck=false
 				  id="{id}-span"
-				  role="none">
+				  role="textbox">
 				{#if !!text && text.length > 0}
 					{text}
 				{:else}

@@ -6,6 +6,7 @@ import {FreLogger, ServerCommunication} from "@freon4dsl/core";
  * The one and only reference to the actual language for which this editor runs
  */
 import {ExampleEnvironment} from "@freon4dsl/samples-example";
+import { setDevelopment } from "@freon4dsl/webapp-lib";
 WebappConfigurator.getInstance().setEditorEnvironment(ExampleEnvironment.getInstance());
 
 /**
@@ -14,7 +15,7 @@ WebappConfigurator.getInstance().setEditorEnvironment(ExampleEnvironment.getInst
 // WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommunication.getInstance());
 WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
 
-
+setDevelopment(true)
 
 /**
  * Now start the app ...
@@ -25,4 +26,11 @@ const app = new FreonLayout({
 
 FreLogger.unmute("DiagramComponent")
 // FreLogger.unmute("TextDropdownComponent")
+// FreLogger.unmute("DropdownComponent")
+// FreLogger.unmute("EditorState")
+// FreLogger.unmute("InMemoryModel")
+// FreLogger.unmute("TextComponent")
+// FreLogger.unmute("ServerCommunication")
+FreLogger.setFilter(["beforeUpdate", "setFocus", "afterUpdate", "onMount", "REFRESH", "refresh"])
+
 export default app;
