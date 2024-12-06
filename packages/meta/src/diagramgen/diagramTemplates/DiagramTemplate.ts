@@ -19,9 +19,10 @@ export class DiagramTemplate {
     classDiagram
     direction TD
     %% other possibilites: LR RL DT TB (same as TD)
-${this.makeUmlClasses(language.concepts)}
-${this.makeUmlInterfaces(language.interfaces)}
-    ${this.makeUmlRelationships(language.concepts)}`;
+        ${this.makeUmlClasses(language.concepts)}
+        ${this.makeUmlInterfaces(language.interfaces)}
+        ${this.makeUmlRelationshipsForInterfaces(language.interfaces)}
+        ${this.makeUmlRelationshipsForConcepts(language.concepts)}`;
     }
 
     public makeOverviewPerFile(language: FreMetaLanguage, filename: string): string {
@@ -43,9 +44,10 @@ ${this.makeUmlInterfaces(language.interfaces)}
     classDiagram
     direction TD
     %% other possibilites: LR RL DT TB (same as TD)
-${this.makeUmlClasses(conceptsToInclude)}
-${this.makeUmlInterfaces(interfacesToInclude)}
-    ${this.makeUmlRelationships(conceptsToInclude)}`;
+        ${this.makeUmlClasses(conceptsToInclude)}
+        ${this.makeUmlInterfaces(interfacesToInclude)}
+        ${this.makeUmlRelationshipsForInterfaces(interfacesToInclude)}
+        ${this.makeUmlRelationshipsForConcepts(conceptsToInclude)}`;
     }
 
     public makeInheritanceTrees(language: FreMetaLanguage): string {
@@ -95,11 +97,15 @@ ${this.makeUmlClasses(conceptsToInclude)}
         return "";
     }
 
-    private makeUmlRelationships(concepts: FreMetaConcept[]): string {
+    private makeUmlRelationshipsForConcepts(concepts: FreMetaConcept[]): string {
         return `${concepts.map((c) => this.supersToUml(c)).join("")}
         ${concepts.map((c) => this.partsToUml(c)).join("")}
         ${concepts.map((c) => this.referencesToUml(c)).join("")}
         ${concepts.map((c) => this.implementsToUml(c)).join("")}`;
+    }
+
+    private makeUmlRelationshipsForInterfaces(intfaces: FreMetaInterface[]): string {
+        return `${intfaces.map((c) => this.interfaceBaseToUml(c)).join("")}`;
     }
 
     private supersToUml(concept: FreMetaConcept): string {
@@ -136,5 +142,9 @@ ${this.makeUmlClasses(conceptsToInclude)}
 
     private implementsToUml(concept: FreMetaConcept) {
         return `${concept.interfaces.map((p) => `${concept.name} ..|> ${p.name}\n`).join("\n\t\t")}`;
+    }
+
+    private interfaceBaseToUml(intface: FreMetaInterface) {
+        return `${intface.base.map((p) => `${intface.name} ..|> ${p.name}\n`).join("\n\t\t")}`;
     }
 }
