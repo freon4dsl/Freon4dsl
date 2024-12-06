@@ -13,7 +13,7 @@ import {
     FreCombinedActions,
     FreCaret,
     FreProjectionHandler,
-    wait,
+    // wait,
     isTextBox,
     ElementBox,
     RoleProvider
@@ -688,12 +688,12 @@ export class FreEditor {
      * @param box
      */
     private boxAbove(box: Box): Box {
-        wait(0);
-        const x = box.actualX + this.scrollX;
+        // wait(0);
+        const x = box.actualX + this.scrollX ;
         const y = box.actualY + this.scrollY;
         let result: Box = box.nextLeafLeft;
         let tmpResult = result;
-        LOGGER.log(`boxAbove ${box.role+ box.node.freId()}: actual (${box.actualX}, ${box.actualY}) scroll-relative (${x}, ${y})`);
+        LOGGER.log(`boxAbove ${box.role}: ${box.kind} actual (${Math.round(x)}, ${Math.round(y)}) `);
         while (result !== null) {
             LOGGER.log(`previous: ${result.role + result.node.freId()} result (${result.actualX}, ${result.actualY}) scroll-relative (${result.actualX + this.scrollX}, ${result.actualY + this.scrollY})`);
             if (FreEditor.isOnPreviousLine(tmpResult, result) && FreEditor.isOnPreviousLine(box, tmpResult)) {
@@ -718,20 +718,11 @@ export class FreEditor {
      * @param box
      */
     private boxBelow(box: Box): Box {
-        const x = box.actualX + this.scrollX;
-        const y = box.actualY + this.scrollX;
+        const x = box.actualX + this.scrollX ;
+        const y = box.actualY + this.scrollY;
         let result: Box = box.nextLeafRight;
         let tmpResult = result;
-        LOGGER.log(
-            "boxBelow " +
-                box.role +
-                ": " +
-                Math.round(x) +
-                ", " +
-                Math.round(y) +
-                " text: " +
-                (isTextBox(box) ? box.getText() : "NotTextBox"),
-        );
+        LOGGER.log(`boxBelow ${box.role}: ${box.kind} ${Math.round(x)}, ${Math.round(y)} text: ${(isTextBox(box) ? box.getText() : "NotTextBox")}`);
         while (result !== null) {
             LOGGER.log(
                 "next : " +
@@ -768,7 +759,7 @@ export class FreEditor {
 
     selectBoxAbove(box: Box) {
         const up = this.boxAbove(box);
-        if (up !== null) {
+        if (up !== null && up !== undefined) {
             this.selectElementForBox(up);
         }
     }

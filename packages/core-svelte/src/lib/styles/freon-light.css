@@ -254,6 +254,12 @@
     color: red;
 }
 
+.render-component-error {
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: red;
+}
+
 .render-component-unselected {
     /*background-color: transparent;*/
 }
@@ -311,6 +317,10 @@
 
 .grid-cell-component {
     color: inherit;
+}
+
+.reference-button {
+    background-color: transparent;
 }
 
 .text-dropdown-component .text-component-text {
