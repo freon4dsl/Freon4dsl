@@ -57,7 +57,7 @@
       x += 10
       y += 10
       return {
-        id: childBox.id + x,
+        id: childBox.node.freId(),
         type: 'box',
         position: { x: x, y: y },
         // data is used to store the current color value
@@ -77,7 +77,9 @@
     // ]);
 
     // same for edges
-    const edges = writable([
+    console.log("nodes: " + childrenNodes.map(n => n.id))
+    console.log("Diagram edges " + JSON.stringify(box.edges))
+    const edges = writable([...box.edges
         // {
         //     id: '1-2',
         //     type: 'default',

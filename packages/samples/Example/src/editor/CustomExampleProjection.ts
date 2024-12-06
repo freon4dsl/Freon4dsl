@@ -21,9 +21,9 @@ import {
     BoxUtil,
     NumberDisplay,
     TextBox,
-    DiagramBox, BoolDisplay, FreNodeReference, FreProjectionHandler
+    DiagramBox, BoolDisplay, FreNodeReference, FreProjectionHandler, DiagramEdge
 } from "@freon4dsl/core";
-import { Documentation, Entity, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
+import { Documentation, Entity, ExampleUnit, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment.js";
 
 const sumIcon = "M 6 5 L 6.406531 20.35309 L 194.7323 255.1056 L 4.31761 481.6469 L 3.767654 495.9135 L 373 494 C 376.606 448.306 386.512 401.054 395 356 L 383 353 C 371.817 378.228 363.867 405.207 340 421.958 C 313.834 440.322 279.304 438 249 438 L 79 438 L 252.2885 228.6811 L 96.04328 33.3622 L 187 32.99999 C 245.309 32.99999 328.257 18.91731 351.329 89.00002 C 355.273 100.98 358.007 113.421 359 126 L 372 126 L 362 5 L 6 5 L 6 5 L 6 5 L 6 5 L 6 5 z ";
@@ -54,7 +54,8 @@ export class CustomExampleProjection implements FreProjection {
         ["SumExpression", this.createSumBox],
         ["OrExpression", this.createOrBoxGrid],
         ["Documentation", this.createDocumentation],
-        ["Entity", this.createEntity],
+        // ["Entity", this.createEntity],
+        // ["ExampleUnit", this.getUnit],
         ["NumberLiteralExpression", this.createNumberLiteralBox]
     ]);
 
@@ -77,11 +78,11 @@ export class CustomExampleProjection implements FreProjection {
         );
     }
     
-    createDocumentationD (doc: Documentation): Box {
-        const result = new DiagramBox(doc, "documentation", "Documentation", "diagram")    
-        result.addChild(this.createDocumentation(doc))
-        return result
-    }
+    // createDocumentationD (doc: Documentation): Box {
+    //     const result = new DiagramBox(doc, "documentation", "Documentation", "diagram")    
+    //     result.addChild(this.createDocumentation(doc))
+    //     return result
+    // }
 
     createDocumentation (doc: Documentation): Box {
         return BoxFactory.horizontalLayout(
@@ -255,7 +256,7 @@ export class CustomExampleProjection implements FreProjection {
                 ],
                 { selectable: false },
             ),
-            new DiagramBox(entity, "attributes", "Attribute", "entityDiagramAttributes", entity.attributes.map(att => this.handler.getBox(att))),
+            new DiagramBox(entity, "attributes", "Attribute", "entityDiagramAttributes", entity.attributes.map(att => this.handler.getBox(att)), []),
             // BoxUtil.indentBox(
             //     entity as Entity,
             //     4,
@@ -270,5 +271,46 @@ export class CustomExampleProjection implements FreProjection {
             ),
             BoxUtil.labelBox(entity as Entity, "}", "top-1-line-3-item-0")
         ]);
-    } 
+    }
+
+    getUnit(unit: ExampleUnit): Box {
+        return BoxFactory.verticalLayout(unit as ExampleUnit, "ExampleUnit-overall", "", [
+            BoxUtil.getBoxOrAction(unit as ExampleUnit, "documentation", "Documentation", this.handler),
+            BoxFactory.horizontalLayout(
+                unit as ExampleUnit,
+                "ExampleUnit-hlist-line-1",
+                "",
+                [
+                    BoxUtil.labelBox(unit as ExampleUnit, "unit", "top-1-line-1-item-0"),
+                    BoxUtil.textBox(unit as ExampleUnit, "name"),
+                    BoxUtil.labelBox(unit as ExampleUnit, "{", "top-1-line-1-item-2"),
+                ],
+                { selectable: false },
+            ),
+            BoxUtil.labelBox(unit as ExampleUnit, "}", "top-1-line-6-item-0"),
+            this.createDiagramBox(unit, [...unit.entities, ...unit.interfaces])
+        ]);
+    }
+    
+    createDiagramBox(unit: ExampleUnit, nodeList: FreNode[]): DiagramBox {
+        // map nodelist to 
+        const freNodeToBox = new Map<FreNode, Box>()
+        nodeList.forEach(node => freNodeToBox.set(node, this.handler.getBox(node)))
+        const edges = [] 
+        nodeList.filter(node => node instanceof Entity).map(e => {
+            const ent = e as Entity
+            if (!!ent.baseEntity) {
+                edges.push({
+                    id: ent.freId() + '-' + ent.baseEntity.referred.freId(),
+                    source: ent.freId(),
+                    target: ent.baseEntity.referred.freId(),
+                    animated: false,
+                    type: 'default',
+                    style: 'stroke: red'
+                })
+            }
+        })
+        return new DiagramBox(unit, "entities", "Entity", "unitDiagramEntities", Array.from(freNodeToBox.values()), edges)
+    }
 }
+

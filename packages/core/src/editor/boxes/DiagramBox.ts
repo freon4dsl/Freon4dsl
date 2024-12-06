@@ -2,6 +2,22 @@ import { Box } from "./Box.js";
 import { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
 
+export type DiagramEdge =   {
+    id: string,
+    source: string,
+    target: string,
+    animated: boolean,
+    style: string
+}
+
+export type DiagramNode = {
+    id:string,
+    type: string,
+    position: { x: number, y: number },
+    // data is used to store the current color value
+    data: object
+}
+
 /**
  * A TableBox shows a list in the FreElement model as table. Therefore, we know
  * that every row or column, depending on the orientation, represents a single element in the
@@ -11,13 +27,15 @@ export class DiagramBox extends Box {
     protected _children: Box[] = [];
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
     kind = "DiagramBox"
-
+    edges: DiagramEdge[]
+    
     constructor(
         node: FreNode,
         propertyName: string,
         conceptName: string,
         role: string,
-        children?: Box[],
+        children: Box[],
+        edges: DiagramEdge[],
         initializer?: Partial<DiagramBox>,
     ) {
         super(node, role);
@@ -25,6 +43,7 @@ export class DiagramBox extends Box {
         if (!!children) {
             children.forEach((b) => this.addChild(b));
         }
+        this.edges = edges
         this.propertyName = propertyName;
         this.conceptName = conceptName;
         this.selectable = false;
