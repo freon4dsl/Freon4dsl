@@ -7,7 +7,12 @@ export type DiagramEdge =   {
     source: string,
     target: string,
     animated: boolean,
-    style: string
+    style: string,
+    // Freon
+    startFreNode?: FreNode,
+    endFreNode?: FreNode,
+    propertyName: string
+
 }
 
 export type DiagramNode = {
@@ -16,18 +21,40 @@ export type DiagramNode = {
     position: { x: number, y: number },
     // data is used to store the current color value
     data: object
+    // Freon
+    freNode?: FreNode
 }
 
+// type DiagramDef = {
+//     astNode: FreNode;
+//     // one part[] property containing all Ast nodes to be shown as diagram nodes
+//     // astNode[diagramNodesAsProperty] => FreNode[]
+//     diagramNodesAsProperty: string;
+//     // more generic, a function returning all nodes 
+//     diagramNodes: (astNode: FreNode) => FreNode[]
+//     /**
+//      * A function returning all edges for each ast node
+//      */
+//     nodeEdges(astNode: FreNode): DiagramEdge[]
+//     /**
+//      * Create node buttons for types:
+//      */
+//     create: string[]
+//     // if _diagramNodesAsProperty_ is used, automatic
+//     // All allowable types of the _diagramNodesAsProperty_
+//
+// }
+
+
 /**
- * A TableBox shows a list in the FreElement model as table. Therefore, we know
- * that every row or column, depending on the orientation, represents a single element in the
- * list.
+ * TODO A DiagramBox shows 
  */
 export class DiagramBox extends Box {
     protected _children: Box[] = [];
     conceptName: string = "unknown-type"; // the name of the type of the elements in the list
     kind = "DiagramBox"
     edges: DiagramEdge[]
+    createActions: { label: string, creator: () => FreNode }[]
     
     constructor(
         node: FreNode,
@@ -36,6 +63,7 @@ export class DiagramBox extends Box {
         role: string,
         children: Box[],
         edges: DiagramEdge[],
+        createActions: { label: string, creator: () => FreNode }[],
         initializer?: Partial<DiagramBox>,
     ) {
         super(node, role);
@@ -46,7 +74,12 @@ export class DiagramBox extends Box {
         this.edges = edges
         this.propertyName = propertyName;
         this.conceptName = conceptName;
+        this.createActions = createActions
         this.selectable = false;
+    }
+    
+    findCreateActionForLabel(label: string): () => FreNode {
+        return this.createActions.find(cr =>cr.label === label).creator
     }
 
     get children(): Box[] {

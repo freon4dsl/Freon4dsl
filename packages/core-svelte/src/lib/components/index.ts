@@ -1,6 +1,6 @@
 import BooleanCheckboxComponent from "$lib/components/BooleanCheckboxComponent.svelte";
 import BooleanRadioComponent from "$lib/components/BooleanRadioComponent.svelte";
-import DiagramComponent from "$lib/components/DiagramComponent.svelte";
+import DiagramComponent from "$lib/components/diagrams/DiagramComponent.svelte";
 import DropdownComponent from "$lib/components/DropdownComponent.svelte";
 import EmptyLineComponent from "$lib/components/EmptyLineComponent.svelte";
 import FragmentComponent from "$lib/components/FragmentComponent.svelte";

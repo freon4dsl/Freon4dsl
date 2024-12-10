@@ -1,6 +1,7 @@
 <svelte:options immutable={true}/>
 <script lang="ts">
     import { RENDER_LOGGER } from "$lib/components/ComponentLoggers.js";
+    import DnDWrapper from "$lib/components/diagrams/DnDWrapper.svelte";
 
     // This component renders any box from the box model.
     // Depending on the box type the right component is used.
@@ -47,7 +48,7 @@
     import LayoutComponent from "$lib/components/LayoutComponent.svelte";
     import ListComponent from "$lib/components/ListComponent.svelte";
     import OptionalComponent from "$lib/components/OptionalComponent.svelte";
-    import DiagramComponent from "$lib/components/DiagramComponent.svelte";
+    import DiagramComponent from "$lib/components/diagrams/DiagramComponent.svelte";
     import OptionalComponentNew from "$lib/components/OptionalComponentNew.svelte";
     import TableComponent from "$lib/components/TableComponent.svelte";
     import TextComponent from "$lib/components/TextComponent.svelte";
@@ -191,7 +192,7 @@
         {:else if isOptionalBox2(box) }
             <OptionalComponentNew box={box} editor={editor}/>
         {:else if isDiagramBox(box) }
-            <DiagramComponent box={box} editor={editor}/>
+            <DnDWrapper box={box} editor={editor}/>
         {:else if isSvgBox(box) }
             <SvgComponent box={box}/>
         {:else if isTableBox(box) }
