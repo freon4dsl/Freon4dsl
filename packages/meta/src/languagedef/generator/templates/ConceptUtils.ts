@@ -191,7 +191,8 @@ export class ConceptUtils {
                             .join("\n")}`
                 : ``
         }
-                ${hasSuper ? "" : `
+        observablepartlist(this, "annotations")
+        ${hasSuper ? "" : `
                 // Make copy method a mobx action
                 makeObservable(this, {
                     copy: action
@@ -291,6 +292,9 @@ export class ConceptUtils {
                         .join("\n")}
                     if (!!data.parseLocation) {
                         result.parseLocation = data.parseLocation;
+                    }
+                    if (!!data.annotations) {
+                        result.annotations = data.annotations;
                     }
                     return result;
                 }`;

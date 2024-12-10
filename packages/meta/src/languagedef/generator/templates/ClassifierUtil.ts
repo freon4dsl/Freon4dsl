@@ -38,9 +38,10 @@ export class ClassifierUtil {
             // for non-list non-primitive properties include "observablepart"
             mobxImports.push("observablepart");
         }
-        if (props.some((prop) => prop.isList && !prop.isPrimitive)) {
+        // if (props.some((prop) => prop.isList && !prop.isPrimitive)) {
             // for list properties include "observablepartlist"
+        // Always for annotations
             mobxImports.push("observablepartlist");
-        }
+        // }
     }
 }

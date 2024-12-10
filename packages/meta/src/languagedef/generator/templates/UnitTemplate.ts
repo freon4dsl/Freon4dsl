@@ -17,7 +17,7 @@ export class UnitTemplate {
         const hasReferences = unitDescription.references().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
         const coreImports = ClassifierUtil.findMobxImports(unitDescription)
-            .concat([Names.FreModelUnit, Names.FreParseLocation])
+            .concat([Names.FreModelUnit, Names.FreParseLocation, Names.FreNode])
             .concat(hasReferences ? Names.FreNodeReference : "");
         const metaType = Names.metaType();
         const intfaces = Array.from(new Set(unitDescription.interfaces.map((i) => Names.interface(i.referred))));
@@ -49,6 +49,12 @@ export class UnitTemplate {
                     .references()
                     .map((p) => ConceptUtils.makeReferenceProperty(p))
                     .join("\n")}
+                    
+                annotations: FreNode[]
+
+                annotationOfType(typename: string): FreNode | undefined {
+                    return this.annotations.find(ann => ann.freLanguageConcept() === typename)
+                }
 
                 ${ConceptUtils.makeConstructor(false, unitDescription.allProperties(), coreImports)}
                 ${ConceptUtils.makeBasicMethods(false, metaType, false, true, false, false)}

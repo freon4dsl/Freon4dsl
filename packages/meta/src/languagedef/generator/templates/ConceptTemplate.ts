@@ -38,6 +38,7 @@ export class ConceptTemplate {
         const implementsFre: string = isExpression ? Names.FreExpressionNode : hasName ? Names.FreNamedNode : Names.FreNode;
         const coreImports: string[] = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .concat(implementsFre)
+            .concat(Names.FreNode)
             .concat([Names.FreParseLocation])
             .concat(hasReferences ? Names.FreNodeReference : "");
         const metaType: string = Names.metaType();
@@ -70,6 +71,12 @@ export class ConceptTemplate {
                     .implementedReferences()
                     .map((p) => ConceptUtils.makeReferenceProperty(p))
                     .join("\n")}
+                    
+                annotations: FreNode[]
+
+                annotationOfType(typename: string): FreNode | undefined {
+                    return this.annotations.find(ann => ann.freLanguageConcept() === typename)
+                }
 
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), coreImports)}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, isExpression, false)}
@@ -187,6 +194,7 @@ export class ConceptTemplate {
         const abstract: string = concept.isAbstract ? "abstract" : "";
         const coreImports: string[] = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([
             Names.FreNamedNode,
+            Names.FreNode,
             Names.FreParseLocation,
         ]);
         const metaType: string = Names.metaType();
@@ -215,6 +223,12 @@ export class ConceptTemplate {
             .implementedPrimProperties()
             .map((p) => ConceptUtils.makePrimitiveProperty(p))
             .join("\n")}
+
+                annotations: FreNode[]
+
+                annotationOfType(typename: string): FreNode | undefined {
+                    return this.annotations.find(ann => ann.freLanguageConcept() === typename)
+                }
 
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), coreImports)}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, false, false)}

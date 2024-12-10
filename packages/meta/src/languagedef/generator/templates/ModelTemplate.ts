@@ -11,6 +11,7 @@ export class ModelTemplate {
         const extendsClass = "MobxModelElementImpl";
         const coreImports = ClassifierUtil.findMobxImports(modelDescription).concat([
             Names.FreModel,
+            Names.FreNode,
             Names.FreLanguage,
             Names.FreParseLocation,
             "AST"
@@ -37,6 +38,12 @@ export class ModelTemplate {
                     .parts()
                     .map((p) => ConceptUtils.makePartProperty(p))
                     .join("\n")}
+
+                annotations: FreNode[]
+
+                annotationOfType(typename: string): FreNode | undefined {
+                    return this.annotations.find(ann => ann.freLanguageConcept() === typename)
+                }
 
                 ${ConceptUtils.makeConstructor(false, modelDescription.properties, coreImports)}
                 ${ConceptUtils.makeBasicMethods(false, metaType, true, false, false, false)}
