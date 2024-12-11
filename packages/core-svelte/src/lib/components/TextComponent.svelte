@@ -75,7 +75,7 @@
 	 * It is called from the box.
 	 */
 	export async function setFocus(): Promise<void> {
-		LOGGER.log("TextComponent.setFocus "+ id + " input is there: " + !!inputElement);
+		console.log("TextComponent.setFocus "+ id + " input is there: " + !!inputElement);
 		if (!!inputElement) {
 			inputElement.focus();
 		} else {

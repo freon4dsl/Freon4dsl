@@ -22,6 +22,11 @@ concept Documentation {
 interface Type base BaseType {
 }
 
+concept DiagramPosition {
+    x: number = 0;
+    y: number = 0;
+}
+
 concept Interface implements Type {
     methods: Method[];
 }

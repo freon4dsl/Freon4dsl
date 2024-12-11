@@ -2,11 +2,15 @@ editor UnitDiagram precedence 5
 
 ExampleUnit {
         [
-        ONDERSTE BOVEN unit ${name} {
-        1. unit level methods:
-            ${methods:Third}
-        2. entities
+        unit ${name} {
             ${entities vertical }
         }
         ]
 }
+
+Entity {
+[
+    ${name} 
+]}
+
+Interface { [${name}] }

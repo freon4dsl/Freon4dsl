@@ -76,6 +76,7 @@ export class DiagramBox extends Box {
         this.conceptName = conceptName;
         this.createActions = createActions
         this.selectable = false;
+        this.isDirty()
     }
     
     findCreateActionForLabel(label: string): () => FreNode {

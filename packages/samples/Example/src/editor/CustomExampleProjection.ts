@@ -21,7 +21,7 @@ import {
     BoxUtil,
     NumberDisplay,
     TextBox,
-    DiagramBox, BoolDisplay, FreNodeReference, FreProjectionHandler, DiagramEdge
+    DiagramBox, BoolDisplay, FreNodeReference, FreProjectionHandler, DiagramEdge, isNullOrUndefined
 } from "@freon4dsl/core";
 import { Documentation, Entity, ExampleUnit, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment.js";
@@ -55,7 +55,7 @@ export class CustomExampleProjection implements FreProjection {
         ["OrExpression", this.createOrBoxGrid],
         ["Documentation", this.createDocumentation],
         // ["Entity", this.createEntity],
-        // ["ExampleUnit", this.getUnit],
+        ["ExampleUnit", this.getUnit],
         ["NumberLiteralExpression", this.createNumberLiteralBox]
     ]);
 
@@ -243,7 +243,6 @@ export class CustomExampleProjection implements FreProjection {
                                     entity as Entity,
                                     "baseInterfaces",
                                     ExampleEnvironment.getInstance().scoper,
-                                    false,
                                     null,
                                 ),
                             ],
@@ -256,7 +255,14 @@ export class CustomExampleProjection implements FreProjection {
                 ],
                 { selectable: false },
             ),
-            new DiagramBox(entity, "attributes", "Attribute", "entityDiagramAttributes", entity.attributes.map(att => this.handler.getBox(att)), []),
+            new DiagramBox(entity, 
+                "attributes",
+                "Attribute",
+                "entityDiagramAttributes",
+                entity.attributes.map(att => this.handler.getBox(att)),
+                [],
+                [{label: "Entity", creator: (): FreNode => { return null} }]
+            ),
             // BoxUtil.indentBox(
             //     entity as Entity,
             //     4,
@@ -299,18 +305,26 @@ export class CustomExampleProjection implements FreProjection {
         const edges = [] 
         nodeList.filter(node => node instanceof Entity).map(e => {
             const ent = e as Entity
-            if (!!ent.baseEntity) {
+            if (!!ent.baseEntity && !isNullOrUndefined(ent.$baseEntity)) {
                 edges.push({
                     id: ent.freId() + '-' + ent.baseEntity.referred.freId(),
                     source: ent.freId(),
                     target: ent.baseEntity.referred.freId(),
                     animated: false,
-                    type: 'default',
-                    style: 'stroke: red'
+                    type: 'start-en',
+                    style: 'stroke: red',
+                    label: "label1",
+                    data: {
+                        endLabel: "implements1",
+                        startLabel: "start1"
+                    }
                 })
             }
         })
-        return new DiagramBox(unit, "entities", "Entity", "unitDiagramEntities", Array.from(freNodeToBox.values()), edges)
+        console.log("Create new diagram box with nodes: " + Array.from(freNodeToBox.values()).map(v => v.$id))
+        console.log("    edges: " + edges.map(e => `[${e.source} => ${e.target} ${JSON.stringify(e)}] `))
+        return new DiagramBox(unit, "entities", "Entity", "unitDiagramEntities", Array.from(freNodeToBox.values()), edges,                 [{label: "Entity", creator: (): FreNode => { return new Entity()} }]
+        )
     }
 }
 

@@ -38,6 +38,7 @@
 
     const LOGGER = DIAGRAM_LOGGER;
 
+    LOGGER.log("Initializing new DiagramComponent")
     // Ensure that node positions are stored in the model each time that they are changed
     const nodesStore = useNodes();
     nodesStore.subscribe(PositionsHelper.saveNodePositions);
@@ -60,7 +61,17 @@
     const refresh = (why?: string) => {
         LOGGER.log("REFRESH DiagramComponent (" + why + ")");
 
-        $nodes = childNodes();
+        const newNodes = childNodes();
+        const newEdges = [...box.edges.map(e => {e["markerEnd"] = { type: MarkerType.Arrow }; return e})]
+        // Only refresh when there are new nodes or edges
+        // Otherwise a change inside a box will trigger a refresh of the diagram and
+        // as a result the HTML focus of the box will be lost
+        if (newNodes.length !== $nodes.length) {
+            $nodes = newNodes
+        }
+        if (newEdges.length !== $edges.length) {
+            $edges = newEdges
+        }
         LOGGER.log("nodes: " + $nodes?.map(n => n.id));
     };
 
