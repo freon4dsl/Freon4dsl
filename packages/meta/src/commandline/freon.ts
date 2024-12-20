@@ -3,6 +3,7 @@ import { FreonGenerateInterpreter } from "./FreonGenerateInterpreter.js";
 import { FreonGenerateLanguage } from "./FreonGenerateLanguage.js";
 import { FreonGenerateAllAction } from "./FreonGenerateAllAction.js";
 import { FreonGenerateEditor } from "./FreonGenerateEditor.js";
+import { FreonGenerateLionWeb } from "./FreonGenerateLionWeb.js";
 import { FreonGenerateScoper } from "./FreonGenerateScoper.js";
 import { FreonGenerateValidator } from "./FreonGenerateValidator.js";
 import { FreonGenerateTyper } from "./FreonGenerateTyper.js";
@@ -21,6 +22,7 @@ const LOGGER = new MetaLogger("Freon").mute();
 // The main entry point for the Freon generator
 export class Freon extends CommandLineParser {
     private readonly languageAction: FreonGenerateLanguage;
+    private readonly lionwebAction: FreonGenerateLionWeb
     private readonly allAction: FreonGenerateAllAction;
     private readonly editorAction: FreonGenerateEditor;
     private readonly parserAction: FreonGenerateParser;
@@ -41,6 +43,7 @@ export class Freon extends CommandLineParser {
 
         this.allAction = new FreonGenerateAllAction();
         this.languageAction = new FreonGenerateLanguage();
+        this.lionwebAction = new FreonGenerateLionWeb()
         this.editorAction = new FreonGenerateEditor();
         this.parserAction = new FreonGenerateParser();
         this.diagramAction = new FreonGenerateDiagrams();
@@ -51,6 +54,7 @@ export class Freon extends CommandLineParser {
         this.cleanAction = new FreonCleanAction();
         this.addAction(this.allAction);
         this.addAction(this.languageAction);
+        this.addAction(this.lionwebAction)
         this.addAction(this.editorAction);
         this.addAction(this.parserAction);
         this.addAction(this.diagramAction);

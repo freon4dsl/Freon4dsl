@@ -1,20 +1,149 @@
 {
-   "$typename": "ExampleUnit",
-   "name": "modelUnit2",
-   "entities": [
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
       {
-         "$typename": "Entity",
-         "name": "ent45",
-         "attributes": [
+         "id": "ID-18",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-ExampleUnit"
+         },
+         "properties": [
             {
-               "$typename": "Attribute",
-               "name": "age",
-               "declaredType": "Integer"
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-ExampleUnit-name"
+               },
+               "value": "modelUnit2"
             }
          ],
-         "methods": [],
-         "baseEntity": null
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-ExampleUnit-entities"
+               },
+               "children": [
+                  "ID-20"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-ExampleUnit-interfaces"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-ExampleUnit-methods"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-20",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-abstract"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-BaseType-name"
+               },
+               "value": "ent45"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-attributes"
+               },
+               "children": [
+                  "ID-21"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-methods"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-baseInterfaces"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-18"
+      },
+      {
+         "id": "ID-21",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "age"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Integer",
+                     "reference": null
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-20"
       }
-   ],
-   "methods": []
+   ]
 }

@@ -43,8 +43,8 @@ export class CommonChecker {
         if (!nameProperty) {
             nameProperty = new FreMetaPrimitiveProperty();
             nameProperty.name = "name";
-            nameProperty.id = "TODO_set-correct-id";
-            nameProperty.key = "TODO_set-correct-key";
+            nameProperty.id = `-id-${classifier.name}-name` ;
+            nameProperty.key = `-key-${classifier.name}-name`;
             nameProperty.type = FreMetaPrimitiveType.identifier;
             nameProperty.isPart = true;
             nameProperty.isList = false;

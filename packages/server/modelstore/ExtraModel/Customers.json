@@ -5,16 +5,16 @@
       {
          "id": "ID-118",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-ExampleUnit"
+            "key": "-key-ExampleUnit"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-ExampleUnit-name"
+                  "key": "-key-ExampleUnit-name"
                },
                "value": "Customers"
             }
@@ -22,9 +22,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-ExampleUnit-entities"
+                  "key": "-key-ExampleUnit-entities"
                },
                "children": [
                   "ID-120",
@@ -33,9 +33,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-ExampleUnit-methods"
+                  "key": "-key-ExampleUnit-methods"
                },
                "children": [
                   "ID-151",
@@ -50,16 +50,16 @@
       {
          "id": "ID-120",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Entity"
+            "key": "-key-Entity"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BaseType-name"
+                  "key": "-key-BaseType-name"
                },
                "value": "Person"
             }
@@ -67,9 +67,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Entity-attributes"
+                  "key": "-key-Entity-attributes"
                },
                "children": [
                   "ID-121",
@@ -82,9 +82,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Entity-methods"
+                  "key": "-key-Entity-methods"
                },
                "children": [
                   "ID-129"
@@ -98,16 +98,16 @@
       {
          "id": "ID-121",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Attribute"
+            "key": "-key-Attribute"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-name"
+                  "key": "-key-Attribute-name"
                },
                "value": "age"
             }
@@ -116,9 +116,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-declaredType"
+                  "key": "-key-Attribute-declaredType"
                },
                "targets": [
                   {
@@ -134,16 +134,16 @@
       {
          "id": "ID-122",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Attribute"
+            "key": "-key-Attribute"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-name"
+                  "key": "-key-Attribute-name"
                },
                "value": "name"
             }
@@ -152,9 +152,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-declaredType"
+                  "key": "-key-Attribute-declaredType"
                },
                "targets": [
                   {
@@ -170,16 +170,16 @@
       {
          "id": "ID-125",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Attribute"
+            "key": "-key-Attribute"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-name"
+                  "key": "-key-Attribute-name"
                },
                "value": "isStrong"
             }
@@ -188,9 +188,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-declaredType"
+                  "key": "-key-Attribute-declaredType"
                },
                "targets": [
                   {
@@ -206,16 +206,16 @@
       {
          "id": "ID-126",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Attribute"
+            "key": "-key-Attribute"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-name"
+                  "key": "-key-Attribute-name"
                },
                "value": "length"
             }
@@ -224,9 +224,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-declaredType"
+                  "key": "-key-Attribute-declaredType"
                },
                "targets": [
                   {
@@ -242,16 +242,16 @@
       {
          "id": "ID-127",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Attribute"
+            "key": "-key-Attribute"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-name"
+                  "key": "-key-Attribute-name"
                },
                "value": "livesIn"
             }
@@ -260,9 +260,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-declaredType"
+                  "key": "-key-Attribute-declaredType"
                },
                "targets": [
                   {
@@ -278,16 +278,16 @@
       {
          "id": "ID-128",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Attribute"
+            "key": "-key-Attribute"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-name"
+                  "key": "-key-Attribute-name"
                },
                "value": "insures"
             }
@@ -296,9 +296,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-declaredType"
+                  "key": "-key-Attribute-declaredType"
                },
                "targets": [
                   {
@@ -314,16 +314,16 @@
       {
          "id": "ID-129",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Method"
+            "key": "-key-Method"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-name"
+                  "key": "-key-Method-name"
                },
                "value": "dddddddd"
             }
@@ -331,9 +331,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-body"
+                  "key": "-key-Method-body"
                },
                "children": [
                   "ID-130"
@@ -341,9 +341,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-parameters"
+                  "key": "-key-Method-parameters"
                },
                "children": [
                   "ID-139",
@@ -355,9 +355,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-declaredType"
+                  "key": "-key-Method-declaredType"
                },
                "targets": [
                   {
@@ -373,17 +373,17 @@
       {
          "id": "ID-130",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-PlusExpression"
+            "key": "-key-PlusExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-132"
@@ -391,9 +391,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-137"
@@ -407,17 +407,17 @@
       {
          "id": "ID-132",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-MultiplyExpression"
+            "key": "-key-MultiplyExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-133"
@@ -425,9 +425,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-135"
@@ -441,16 +441,16 @@
       {
          "id": "ID-133",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-NumberLiteralExpression"
+            "key": "-key-NumberLiteralExpression"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-NumberLiteralExpression-value"
+                  "key": "-key-NumberLiteralExpression-value"
                },
                "value": "1"
             }
@@ -463,16 +463,16 @@
       {
          "id": "ID-135",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-BooleanLiteralExpression"
+            "key": "-key-BooleanLiteralExpression"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BooleanLiteralExpression-value"
+                  "key": "-key-BooleanLiteralExpression-value"
                },
                "value": "false"
             }
@@ -485,17 +485,17 @@
       {
          "id": "ID-137",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-ParameterRef"
+            "key": "-key-ParameterRef"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Expression-appliedfeature"
+                  "key": "-key-Expression-appliedfeature"
                },
                "children": [
                   "ID-138"
@@ -505,9 +505,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-ParameterRef-parameter"
+                  "key": "-key-ParameterRef-parameter"
                },
                "targets": [
                   {
@@ -523,18 +523,18 @@
       {
          "id": "ID-138",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-AttributeRef"
+            "key": "-key-AttributeRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-AttributeRef-attribute"
+                  "key": "-key-AttributeRef-attribute"
                },
                "targets": [
                   {
@@ -550,16 +550,16 @@
       {
          "id": "ID-139",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Parameter"
+            "key": "-key-Parameter"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-name"
+                  "key": "-key-Parameter-name"
                },
                "value": "person"
             }
@@ -568,9 +568,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-declaredType"
+                  "key": "-key-Parameter-declaredType"
                },
                "targets": [
                   {
@@ -586,16 +586,16 @@
       {
          "id": "ID-144",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Parameter"
+            "key": "-key-Parameter"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-name"
+                  "key": "-key-Parameter-name"
                },
                "value": "appeltje"
             }
@@ -604,9 +604,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-declaredType"
+                  "key": "-key-Parameter-declaredType"
                },
                "targets": [
                   {
@@ -622,16 +622,16 @@
       {
          "id": "ID-146",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Parameter"
+            "key": "-key-Parameter"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-name"
+                  "key": "-key-Parameter-name"
                },
                "value": "num"
             }
@@ -640,9 +640,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-declaredType"
+                  "key": "-key-Parameter-declaredType"
                },
                "targets": [
                   {
@@ -658,16 +658,16 @@
       {
          "id": "ID-147",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Entity"
+            "key": "-key-Entity"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BaseType-name"
+                  "key": "-key-BaseType-name"
                },
                "value": "House"
             }
@@ -675,9 +675,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Entity-attributes"
+                  "key": "-key-Entity-attributes"
                },
                "children": [
                   "ID-148",
@@ -687,9 +687,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Entity-methods"
+                  "key": "-key-Entity-methods"
                },
                "children": []
             }
@@ -701,16 +701,16 @@
       {
          "id": "ID-148",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Attribute"
+            "key": "-key-Attribute"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-name"
+                  "key": "-key-Attribute-name"
                },
                "value": "street"
             }
@@ -719,9 +719,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-declaredType"
+                  "key": "-key-Attribute-declaredType"
                },
                "targets": [
                   {
@@ -737,16 +737,16 @@
       {
          "id": "ID-149",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Attribute"
+            "key": "-key-Attribute"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-name"
+                  "key": "-key-Attribute-name"
                },
                "value": "num"
             }
@@ -755,9 +755,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-declaredType"
+                  "key": "-key-Attribute-declaredType"
                },
                "targets": [
                   {
@@ -773,16 +773,16 @@
       {
          "id": "ID-150",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Attribute"
+            "key": "-key-Attribute"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-name"
+                  "key": "-key-Attribute-name"
                },
                "value": "city"
             }
@@ -791,9 +791,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Attribute-declaredType"
+                  "key": "-key-Attribute-declaredType"
                },
                "targets": [
                   {
@@ -809,16 +809,16 @@
       {
          "id": "ID-151",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Method"
+            "key": "-key-Method"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-name"
+                  "key": "-key-Method-name"
                },
                "value": "doSomething"
             }
@@ -826,9 +826,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-body"
+                  "key": "-key-Method-body"
                },
                "children": [
                   "ID-152"
@@ -836,9 +836,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-parameters"
+                  "key": "-key-Method-parameters"
                },
                "children": []
             }
@@ -846,9 +846,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-declaredType"
+                  "key": "-key-Method-declaredType"
                },
                "targets": [
                   {
@@ -864,17 +864,17 @@
       {
          "id": "ID-152",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-AndExpression"
+            "key": "-key-AndExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-153"
@@ -882,9 +882,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-154"
@@ -898,16 +898,16 @@
       {
          "id": "ID-153",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-BooleanLiteralExpression"
+            "key": "-key-BooleanLiteralExpression"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BooleanLiteralExpression-value"
+                  "key": "-key-BooleanLiteralExpression-value"
                },
                "value": "false"
             }
@@ -920,16 +920,16 @@
       {
          "id": "ID-154",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-BooleanLiteralExpression"
+            "key": "-key-BooleanLiteralExpression"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-BooleanLiteralExpression-value"
+                  "key": "-key-BooleanLiteralExpression-value"
                },
                "value": "true"
             }
@@ -942,16 +942,16 @@
       {
          "id": "ID-155",
          "classifier": {
-            "language": "-default-key-Example",
+            "language": "-key-Example",
             "version": "2023.1",
-            "key": "-default-key-Method"
+            "key": "-key-Method"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-name"
+                  "key": "-key-Method-name"
                },
                "value": ""
             }
@@ -959,9 +959,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Example",
+                  "language": "-key-Example",
                   "version": "2023.1",
-                  "key": "-default-key-Method-parameters"
+                  "key": "-key-Method-parameters"
                },
                "children": []
             }
