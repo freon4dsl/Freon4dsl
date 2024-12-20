@@ -15,22 +15,24 @@
 ### Incompatibilities
 
 #### Primitive Types
-- [ ] Freon alows multi-valued primitive properties, LionWeb does not
+- [ ] Freon allows multi-valued primitive properties, LionWeb does not
   - [ ] Option 1: remove them from Freon (**Chosen**)
   - [ ] Option 2: map to some Freon defined LionWeb structure (and map back)
-- Primitive properties can be optional in LionWeb, not in Freon
+- [ ] Primitive properties can be optional in LionWeb, not in Freon
 - [ ] LionWeb has introduced _Structured DataType_ in the M3, 
-      Freon does not have it yet
-    - [ ] Option 1: Add Structured DataType to Freon (**Chosen**)
-    - [ ] Option 2: map to Freon concept and (harder) map it back
-          - Need to avoid reference to DataTypes
-          - Problem: LionWeb.dataType => Freon.Concept => LionWeb.Concept
+      Freon does not have it
+    - Option 1: Add Structured DataType to Freon (**Chosen**)
+    - Option 2: map to Freon concept and (harder) map it back
+      - Need to avoid reference to DataTypes
+        - Maybe forbid "name: identifier" property
+        - Check for (in)direct loops 
+      - Problem 2-way: LionWeb.dataType => Freon.Concept => LionWeb.Concept
 - [ ] LionWeb has PrimitiveType, Freon does not (explicitly),
       so in LionWeb you can define new PrimitiveTypes in a language
     - [ ] Add this to Freon
     - [ ] Define some kind of mapping
 - LionWeb allows new PrimitiveTypes to be defined in a language, Freon does not
-    - Such a new primitive tyope can be used as the type of a property in the same language,
+    - Such a new primitive type can be used as the type of a property in the same language,
       there is no obvious way to do this in Freon (should be allowed in the .ast file)
     - Potentially define a CustomPrimitiveType limited concept and map a LionWeb PrimitiveType
       to a member of CustomPrimitiveType
@@ -58,14 +60,15 @@
 #### Standard Libraries
 Freon has an explicit notion of standard library, where e.g. limited values are kept.
 LionWeb has no such thing defined, although it can be done in LionWeb by providing a model with the predefined elements.
+- Current;ly needs to generate a "stdlib" M1 model with each metamodel.
 
 #### Enumerations vs Limiteds
-Enumerations in LionWeb are DataTypes, in Frem Limiteds are concepts.
+Enumerations in LionWeb are DataTypes, in Freon Limiteds are concepts.
 
 - [ ] Option 1
    - Map limited to Concept in LionWeb
    - Map Enumeration to Limited in LionWeb
-   - Problem: LionWeb.Enumeration => Freon.Limited => LionWeb.Concept
+   - Problem 2-way: LionWeb.Enumeration => Freon.Limited => LionWeb.Concept
 
 - [ ] Option 2
    - Simplify Limited to Enumeration in Freon (**My Choice: Jos**)

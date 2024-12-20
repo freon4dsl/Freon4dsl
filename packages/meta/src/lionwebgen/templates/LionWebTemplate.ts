@@ -2,18 +2,18 @@ import { LanguageRegistry, LionWebJsonChunk, LionWebJsonNode, LionWebValidator, 
 import {
     FreMetaClassifier,
     FreMetaConcept,
-    FreMetaConceptProperty,
+    FreMetaConceptProperty, FreMetaInstance,
     FreMetaInterface,
-    FreMetaLanguage,
+    FreMetaLanguage, FreMetaLimitedConcept,
     FreMetaProperty,
     FreMetaUnitDescription, MetaElementReference
 } from "../../languagedef/metalanguage/index.js";
 
 export class LionWebTemplate {
-    
+
     generate(language: FreMetaLanguage): string {
         const modelConcept = language.modelConcept;
-        console.log(`Properties of model ${modelConcept.name} are ${language.modelConcept.properties.map(p => (!!p.id ? p.id : "unknown-child"))}`);
+        // console.log(`Properties of model ${modelConcept.name} are ${language.modelConcept.properties.map(p => (!!p.id ? p.id : "unknown-child"))}`);
         const chunk: LionWebJsonChunk = {
             serializationFormatVersion: "2023.1",
             languages: [
@@ -34,25 +34,25 @@ export class LionWebTemplate {
             chunk.nodes.push(this.toLionWebUnit(unit, modelConcept));
             // All primitive properties of thye concept are separate concepts in LionWeb
             const properties = unit.primProperties.filter(property => property.originalOwningClassifier === unit);
-            console.log(`Unit ${unit.name} properties ${properties.map(p => p.name)}`);
+            // console.log(`Unit ${unit.name} properties ${properties.map(p => p.name)}`);
             properties.forEach(prop => {
                 chunk.nodes.push(this.toLionWebProperty(prop, unit));
             });
             // All references of thye concept are separate concepts in LionWeb 
             const references = unit.references().filter(p => p.originalOwningClassifier === unit);
-            console.log(`Unit ${unit.name} references ${references.map(p => p.name)}`);
+            // console.log(`Unit ${unit.name} references ${references.map(p => p.name)}`);
             references.forEach(ref => {
                 chunk.nodes.push(this.toLionWebReference(ref, unit));
             });
             // All containments of thye concept are separate concepts in LionWeb
             const parts = unit.parts().filter(p => p.originalOwningClassifier === unit);
-            console.log(`Unit ${unit.name} parts ${parts.map(p => p.name)}`);
+            // console.log(`Unit ${unit.name} parts ${parts.map(p => p.name)}`);
             parts.forEach(part => {
                 chunk.nodes.push(this.toLionWebContainment(part, unit));
                 chunk.nodes.push();
             });
         });
-        language.concepts.forEach(concept => {
+        language.concepts.filter(c => !(c instanceof FreMetaLimitedConcept)).forEach(concept => {
             chunk.nodes.push(this.toLionWebConcept(concept, modelConcept));
             // All primitive properties of thye concept are separate concepts in LionWeb
             concept.primProperties.filter(property => property.originalOwningClassifier === concept).forEach(prop => {
@@ -65,8 +65,15 @@ export class LionWebTemplate {
             // All containments of thye concept are separate concepts in LionWeb
             concept.parts().filter(p => p.originalOwningClassifier === concept).forEach(part => {
                 chunk.nodes.push(this.toLionWebContainment(part, concept));
-            });
-        });
+            })
+        })
+        language.concepts.filter(c => (c instanceof FreMetaLimitedConcept)).forEach(concept => {
+            const limited = concept as FreMetaLimitedConcept
+            chunk.nodes.push(this.toLionWebEnumeration(limited, modelConcept))
+            limited.instances.forEach(literal => {
+                chunk.nodes.push(this.toLionWebEnumerationLiteral(literal, limited))
+            })            
+        })
         language.interfaces.forEach(intface => {
             chunk.nodes.push(this.toLionWebInterface(intface, modelConcept));
             intface.primProperties.forEach(prop => {
@@ -89,7 +96,7 @@ export class LionWebTemplate {
         lionWebValidator.validateReferences()
         if (lionWebValidator.validationResult.hasErrors()) {
             lionWebValidator.validationResult.issues.forEach(issue =>
-                console.log(issue.errorMsg())
+                console.log(`LionWeb language error: ${issue.errorMsg()}`)
             )
         } else {
             console.log("Generated LionWeb language chunk is validated ok")
@@ -152,7 +159,7 @@ export class LionWebTemplate {
     toLionWebUnit(unit: FreMetaUnitDescription, parent: FreMetaClassifier): LionWebJsonNode {
         const features = unit.properties.concat(unit.primProperties)
             .filter(p => p.originalOwningClassifier === unit).map(part => (!!part.id ? part.id : "unknown-child"));
-        console.log(`toLionWebUnit ${unit.name} features ${features}`);
+        // console.log(`toLionWebUnit ${unit.name} features ${features}`);
         return this.toConcept({
             id: unit.id,
             abstract: false,
@@ -228,7 +235,7 @@ export class LionWebTemplate {
     toLionWebConcept(concept: FreMetaConcept, parent: FreMetaClassifier): LionWebJsonNode {
         const features = concept.properties.concat(concept.primProperties)
             .filter(p => p.originalOwningClassifier === concept).map(part => (!!part.id ? part.id : "unknown-child"));
-        console.log(`toLionWebConcept ${concept.name} features ${features}`);
+        // console.log(`toLionWebConcept ${concept.name} features ${features}`);
         return {
             id: concept.id,
             classifier: MetaPointers.Concept,
@@ -478,6 +485,59 @@ export class LionWebTemplate {
                 }
 
             ],
+            parent: parent.id
+        };
+        return result;
+    }
+
+    /**
+     * A Freon Concept maps to a LionWeb Concept
+     * @param concept
+     * @param parent
+     */
+    toLionWebEnumeration(limitedConcept: FreMetaLimitedConcept, parent: FreMetaClassifier): LionWebJsonNode {
+        const result: LionWebJsonNode = {
+            id: limitedConcept.id,
+            classifier: MetaPointers.Enumeration,
+            properties: [
+                {
+                    property: MetaPointers.INamedName,
+                    value: limitedConcept.name
+                },
+                {
+                    property: MetaPointers.IKeyedKey,
+                    value: limitedConcept.key
+                }
+            ],
+            containments: [
+                {
+                    containment: MetaPointers.EnumerationLiterals,
+                    children: limitedConcept.instances.map(inst => (!!inst.name ? "-id-" + inst.name : "unknown-child"))
+                }
+            ],
+            annotations: [],
+            references: [],
+            parent: parent.id
+        };
+        return result;
+    }
+    toLionWebEnumerationLiteral(instance: FreMetaInstance, parent: FreMetaClassifier): LionWebJsonNode {
+        const result: LionWebJsonNode = {
+            id: "-id-" + instance.name,
+            classifier: MetaPointers.EnumerationLiteral,
+            properties: [
+                {
+                    property: MetaPointers.INamedName,
+                    value: instance.name
+                },
+                {
+                    property: MetaPointers.IKeyedKey,
+                    value: "-key-" + instance.name
+                }
+            ],
+            containments: [],
+            annotations: [],
+            references: [],
             parent: parent.id
         };
         return result;
