@@ -5,24 +5,24 @@
       {
          "id": "ID-78",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Topic"
+            "key": "-key-Topic"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Topic-name"
+                  "key": "-key-Topic-name"
                },
                "value": "Multiplication"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Topic-description"
+                  "key": "-key-Topic-description"
                },
                "value": "This topic teaches simple multiplication skills"
             }
@@ -30,9 +30,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Topic-pages"
+                  "key": "-key-Topic-pages"
                },
                "children": [
                   "ID-79",
@@ -47,14 +47,14 @@
       {
          "id": "ID-79",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Theory"
+            "key": "-key-Theory"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
                   "key": "-default-key-Page-name"
                },

@@ -137,7 +137,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": null
+                     "reference": "ID-2"
                   }
                ]
             }
