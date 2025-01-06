@@ -23,17 +23,17 @@ modelunit Product {
 // used to create a marketable InsuranceProduct.
 concept BaseProduct {
     name: identifier;               // internal name
+    isUnderConstruction: boolean;   // defines whether this base product is still 'raw'
     theme: InsuranceTheme;          // the 'kind' of insurance
     parts: InsurancePart[];         // all parts of this product
-    isUnderConstruction: boolean;   // defines whether this base product is still 'raw'
     // The following properties are present to show the different options for displaying booleans.
     isApprovedLevel1: boolean;
     isApprovedLevel2: boolean;
     isApprovedLevel3: boolean;
     yieldsProfit: boolean;
-    // The following properties are present to show the different options for displaying numbers.
     range: number;
     nrOfUse: number;
+    // The previoud two properties are present to show the different options for displaying numbers.
     // The following property is present to show the use of an external DatePicker component.
     date: string;
 }
