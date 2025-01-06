@@ -124,8 +124,8 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
         if (!nameProperty) {
             nameProperty = new FreMetaPrimitiveProperty();
             nameProperty.name = "name";
-            nameProperty.id = "TODO_set-correct-id";
-            nameProperty.key = "TODO_set-correct-key";
+            nameProperty.id = `-id-${freLimitedConcept.name}-name` ;
+            nameProperty.key = `-key-${freLimitedConcept.name}-name`;
             nameProperty.type = FreMetaPrimitiveType.identifier;
             nameProperty.isPart = true;
             nameProperty.isList = false;

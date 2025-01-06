@@ -1,6 +1,6 @@
 import { FreNode, FreNodeReference } from "@freon4dsl/core";
 
-export function printModel1(element: FreNode): string {
+export function astToString(element: FreNode): string {
     return JSON.stringify(element, skipReferences, "  " )
 }
 

@@ -16,6 +16,7 @@ export type FreLanguageProperty = {
     key?: string; // used for LionWeb
     isList: boolean;
     isPublic: boolean;
+    isOptional: boolean;
     language: string;
     propertyKind: PropertyKind;
 };

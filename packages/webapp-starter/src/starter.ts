@@ -1,8 +1,8 @@
-import { FreonLayout, WebappConfigurator } from "@freon4dsl/webapp-lib";
-import {FreLogger, ServerCommunication} from "@freon4dsl/core";
+import { FreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/webapp-lib";
+import { ServerCommunication} from "@freon4dsl/core";
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
 import { setCustomComponents } from "@freon4dsl/core-svelte";
-import { setDevelopment } from "@freon4dsl/webapp-lib";
+
 // For DocuProject:
 import ShowAnimatedGif from "./customComponents/forDocuProject/ShowAnimatedGif.svelte";
 import SMUI_Card_Component from "./customComponents/forDocuProject/SMUI_Card_Component.svelte";
@@ -10,6 +10,7 @@ import SMUI_Accordion from "./customComponents/forDocuProject/SMUI_Accordion.sve
 import SMUI_Dialog from "./customComponents/forDocuProject/SMUI_Dialog.svelte";
 import DatePicker from "./customComponents/forDocuProject/DatePicker.svelte";
 import {InsuranceModelEnvironment} from "@freon4dsl/samples-docuproject";
+
 // For ExternalTester
 // import BooleanWrapperComponent from "./customComponents/forExternalTester/BooleanWrapperComponent.svelte";
 // import NumberWrapperComponent from "./customComponents/forExternalTester/NumberWrapperComponent.svelte";
@@ -37,7 +38,6 @@ setDevelopment(true)
 /**
  * The one and only reference to the server on which the models are stored
  */
-// WebappConfigurator.getInstance().setServerCommunication(LionWebRepositoryCommunication.getInstance());
 WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
 
 /**
@@ -78,5 +78,15 @@ setCustomComponents([
 const app = new FreonLayout({
     target: document.body,
 });
+// FreLogger.unmute("FreLionwebSerializer")
+// FreLogger.unmute("MobxDecorators")
+// FreLogger.unmute("TextComponent")
+// FreLogger.unmute("TextDropdownComponent")
+// FreLogger.unmute("DropdownComponent")
+// FreLogger.unmute("EditorState")
+// FreLogger.unmute("InMemoryModel")
+// FreLogger.unmute("TextComponent")
+// FreLogger.unmute("ServerCommunication")
+// FreLogger.setFilter(["beforeUpdate", "setFocus", "afterUpdate", "onMount", "REFRESH", "refresh"])
 
 export default app;

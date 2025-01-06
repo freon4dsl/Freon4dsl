@@ -6,7 +6,7 @@ from packages/samples. The command 'npm run dev' bundles the required packages a
 To change to a different language from the samples folder, do the following.
 
 1. In `package.json` adjust the dependencies to the required sample language. 
-E.g. change `"@freon4dsl/samples-example": "0.7.0-beta"` to `"@freon4dsl/samples-calculator": "0.7.0-beta"`. Note that 
+E.g. change `"@freon4dsl/samples-example": "1.0.0-beta2"` to `"@freon4dsl/samples-calculator": "1.0.0-beta2"`. Note that 
 you must use the name for the language that is specified in its `package.json`, as well as the correct version.
 
 2. Change the name of the language in the command: 

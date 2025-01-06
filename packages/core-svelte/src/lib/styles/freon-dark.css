@@ -31,7 +31,17 @@
 .layout-component-horizontal {
 }
 
+.layout-component-horizontal-error {
+    border-bottom: double thin red;
+    padding-bottom: 1px;
+}
+
 .layout-component-vertical {
+}
+
+.layout-component-vertical-error {
+    border-left: 2px solid red;
+    height: 100%;
 }
 
 .limited-checkbox-component-group {
@@ -310,6 +320,10 @@ dropdown-component {
 
 .grid-cell-component {
     color: inherit;
+}
+
+.reference-button {
+    background-color: transparent;
 }
 
 .text-dropdown-component .text-component-text {

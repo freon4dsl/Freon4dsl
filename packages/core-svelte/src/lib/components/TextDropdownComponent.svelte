@@ -9,7 +9,7 @@
     import TextComponent from "./TextComponent.svelte";
     import DropdownComponent from "./DropdownComponent.svelte";
     import ArrowForward from "$lib/components/images/ArrowForward.svelte";
-    import { clickOutsideConditional, componentId, selectedBoxes } from "./svelte-utils/index.js";
+    import { clickOutsideConditional, componentId, selectedBoxes } from "$lib/index.js";
     import {
         type AbstractChoiceBox,
         ARROW_DOWN,
@@ -79,6 +79,11 @@
         setText(text);
     }
 
+    const setFiltered = (options: SelectOption[]): void => {
+        LOGGER.log(`setFiltered ${options.map(o => o.label)}`)
+        filteredOptions = options
+    }
+    
     /**
      * This function is executed whenever there is a change in the box model.
      * It sets the text in the box, if this is a SelectBox.
@@ -131,7 +136,7 @@
     const textUpdate = (event: CustomEvent) => {
         LOGGER.log(`textUpdate for ${box.kind}: ` + JSON.stringify(event.detail) + ", start: "+ text.substring(0, event.detail.caret));
         allOptions = getOptions();
-        filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+        setFiltered(allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret))));
         makeFilteredOptionsUnique();
         // Only one option and has been fully typed in, use this option without waiting for the ENTER key
         LOGGER.log(`textUpdate: (${filteredOptions.length}, ${filteredOptions[0]?.label}, ${filteredOptions[0]?.label?.length}`)
@@ -153,7 +158,7 @@
     const caretChanged = (event: CustomEvent) => {
         LOGGER.log(`caretChanged for ${box.kind}: ` + JSON.stringify(event.detail) + ", start: "+ text.substring(0, event.detail.caret));
         allOptions = getOptions();
-        filteredOptions = allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret)));
+        setFiltered(allOptions.filter(o => o.label.startsWith(text.substring(0, event.detail.caret))));
         makeFilteredOptionsUnique();
     };
 
@@ -177,7 +182,7 @@
                 result.push(option)
             }
         });
-        filteredOptions = result;
+        setFiltered(result);
     }
     function selectLastOption() {
         if (dropdownShown) {
@@ -267,7 +272,7 @@
                             setText(textBox.getText()); // line : using setText
                             // stop editing
                             isEditing = false;
-                            dropdownShown = false;
+                            hideDropdown()
                             editor.selectNextLeaf()
                         }
                         event.preventDefault();
@@ -277,7 +282,7 @@
                     default: {
                         // stop editing todo is this the correct default?
                         isEditing = false;
-                        dropdownShown = false;
+                        hideDropdown()
                     }
                 }
             }
@@ -319,7 +324,7 @@
             setTextLocalAndInBox('');
         }
         isEditing = false;
-        dropdownShown = false;
+        hideDropdown()
     };
 
     /**
@@ -327,22 +332,23 @@
      * The editor is notified of the newly selected box and the options list is filled.
      */
     const startEditing = (event?: CustomEvent) => {
-        LOGGER.log('TextDropdownComponent: startEditing' + JSON.stringify(event?.detail));
+        LOGGER.log('startEditing event detail: ' + JSON.stringify(event) + ` dropDown: ${dropdownShown}`);
         isEditing = true;
-        dropdownShown = true;
+        showDropdown()
         allOptions = getOptions();
+        LOGGER.log(`    startEditing allOptions ${allOptions.map(o => o.label)} dropDown: ${dropdownShown}` )
         if (!!event) {
             if ( text === undefined || text === null || text.length === 0) {
                 // @ts-ignore filter used to make a shallow copy
-                filteredOptions = allOptions.filter(o => true);
+                setFiltered(allOptions.filter(o => true));
             } else {
-                filteredOptions = allOptions.filter(o => {
-                    LOGGER.log(`startsWith text [${text}], option is ${JSON.stringify(o)}`);
+                setFiltered(allOptions.filter(o => {
+                    LOGGER.log(`    startsWith text [${text}], option is ${JSON.stringify(o)}`);
                     return o?.label?.startsWith(text.substring(0, event.detail.caret))
-                });
+                }));
             }
         } else {
-            filteredOptions = allOptions.filter(o => o?.label?.startsWith(text.substring(0, 0)));
+            setFiltered(allOptions.filter(o => o?.label?.startsWith(text.substring(0, 0))));
         }
         makeFilteredOptionsUnique();
     };
@@ -357,7 +363,7 @@
     function storeOrExecute(selected: SelectOption) {
         console.log('storeOrExecute for option ' + selected.label + ' ' + box.kind + ' ' + box.role);
         isEditing = false;
-        dropdownShown = false;
+        hideDropdown()
 
         const post = box.executeOption(editor, selected); // TODO the result of the execution is ignored
         if (!!post) {
@@ -385,7 +391,7 @@
             isEditing = false;
         } else {
             if (dropdownShown === true) {
-                dropdownShown = false;
+                hideDropdown()
             }
             return;
         }
@@ -397,7 +403,7 @@
             } else { // no valid option, restore the previous value
                 setText(textBox.getText());
             }
-            dropdownShown = false;
+            hideDropdown()
         }
     };
     

@@ -180,6 +180,8 @@ function observablelist(target: Object, propertyKey: string, isPrimitive: boolea
     const privatePropertyKey = MODEL_PREFIX + propertyKey;
 
     const getter = function (this: any) {
+        // LOGGER.log("Getting part " + privatePropertyKey)
+
         return this[privatePropertyKey];
     };
 
@@ -250,6 +252,7 @@ function objectWillChange(
     change: IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement>,
     propertyKey: string,
 ): IArrayWillChange<DecoratedModelElement> | IArrayWillSplice<DecoratedModelElement> | null {
+    // LOGGER.log("objectWillChange " + propertyKey + "   " + change.type + ":" + change.index)
     switch (change.type) {
         case "update":
             const newValue = change.newValue;
