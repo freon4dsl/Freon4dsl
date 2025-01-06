@@ -32,7 +32,7 @@ const conformsToName: string = "conformsTo";
 
 // 'severityLevels' should mirror the levels in FreValidator/FreErrorSeverity, but
 // all names should be in lowercase
-const severityLevels: string[] = ["error", "improvement", "todo", "info"];
+const severityLevels: string[] = ["error", "warning", "hint", "improvement", "todo", "info"];
 
 export class ValidatorChecker extends Checker<ValidatorDef> {
     myExpressionChecker: FreLangExpressionChecker | undefined;
@@ -274,12 +274,20 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                         severity.severity = FreErrorSeverity.Info;
                         break;
                     }
+                    case "hint": {
+                        severity.severity = FreErrorSeverity.Hint;
+                        break;
+                    }
                     case "todo": {
                         severity.severity = FreErrorSeverity.ToDo;
                         break;
                     }
                     case "improvement": {
                         severity.severity = FreErrorSeverity.Improvement;
+                        break;
+                    }
+                    case "warning": {
+                        severity.severity = FreErrorSeverity.Warning;
                         break;
                     }
                     default: {
