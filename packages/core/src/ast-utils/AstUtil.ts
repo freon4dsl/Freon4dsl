@@ -151,7 +151,7 @@ export function astToString(element: FreNode): string {
     return JSON.stringify(element, skipReferences, "  " )
 }
 
-const ownerprops = ["$$owner", "$$propertyName", "$$propertyIndex"];
+const ownerprops: string[] = ["$$owner", "$$propertyName", "$$propertyIndex"];
 
 function skipReferences(key: string, value: Object) {
     if (ownerprops.includes(key)) {

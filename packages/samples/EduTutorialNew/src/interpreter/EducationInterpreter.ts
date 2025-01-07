@@ -10,13 +10,13 @@ import {
     RtString,
     isRtError,
     isRtBoolean,
-    isNullOrUndefined, astToString
+    isNullOrUndefined, astToString,
 } from "@freon4dsl/core";
 import {
     AndExpression,
     Answer,
     EqualsExpression, ExamplePage, FlowRule,
-    Fraction, Grade, GradeScore,
+    Fraction, Grade,
     GreaterOrEqualsExpression,
     GreaterThenExpression, InDepthMaterial, LastStep,
     LessOrEqualsExpression,
