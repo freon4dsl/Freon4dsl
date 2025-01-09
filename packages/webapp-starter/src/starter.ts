@@ -5,8 +5,8 @@ import { ServerCommunication} from "@freon4dsl/core";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-import {ExampleEnvironment} from "@freon4dsl/samples-example";
-WebappConfigurator.getInstance().setEditorEnvironment(ExampleEnvironment.getInstance());
+import { LanguageEnvironment } from "@freon4dsl/samples-example";
+WebappConfigurator.getInstance().setEditorEnvironment(LanguageEnvironment.getInstance());
 
 /**
  * The one and only reference to the server on which the models are stored
