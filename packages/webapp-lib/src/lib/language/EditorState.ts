@@ -36,7 +36,7 @@ export class EditorState {
 
     modelStore: InMemoryModel;
     modelChanged = (store: InMemoryModel): void => {
-        LOGGER.log("modelChanged");
+        LOGGER.log(`modelChanged: ${store?.model?.name}`);
         currentModelName.set(store?.model?.name);
         unitNames.set(store.getUnitIdentifiers());
         units.set(store.getUnits());
@@ -145,7 +145,7 @@ export class EditorState {
      * @param unitType
      */
     async newUnit(newName: string, unitType: string) {
-        LOGGER.log("EditorCommuncation.newUnit: unitType: " + unitType + ", name: " + newName);
+        LOGGER.log("EditorState.newUnit: unitType: " + unitType + ", name: " + newName + " in model " + this.currentModel?.name);
         editorProgressShown.set(true);
         // save the old current unit, if there is one
         await this.saveCurrentUnit();
@@ -163,7 +163,6 @@ export class EditorState {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName);
         const newUnit = await this.modelStore.createUnit(newName, unitType);
         if (!!newUnit) {
-            newUnit.name = newName;
             // show the new unit in the editor
             this.showUnitAndErrors(newUnit);
         } else {
