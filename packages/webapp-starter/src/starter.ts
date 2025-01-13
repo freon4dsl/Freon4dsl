@@ -3,8 +3,6 @@ import { configureExternals } from "./externals.js";
 import { configureLoggers } from "./loggers.js";
 import { LanguageEnvironment } from "@freon4dsl/samples-example";
 import { ServerCommunication} from "@freon4dsl/core";
-// import { LionWebRepositoryCommunication } from "@freon4dsl/core"
-import { setDevelopment } from "@freon4dsl/webapp-lib";
 
 /**
  * Initialize everything
