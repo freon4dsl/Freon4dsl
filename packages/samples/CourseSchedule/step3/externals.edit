@@ -1,0 +1,12 @@
+editor externals
+
+Person {[
+    [fragment nameAndIcon]
+        Availability: ${self.availability checkbox} Competence: ${self.competence}
+]
+fragment nameAndIcon [
+[external=PersonIcon] Nickname: ${self.name}
+Full Name: ${self.fullName}
+Phone number: ${self.phone}
+]
+}

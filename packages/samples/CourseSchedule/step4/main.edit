@@ -1,0 +1,47 @@
+editor default
+
+global {
+    external {
+        PersonIcon,
+        PhoneButton,
+        StaffAccordion
+    }
+}
+
+/* model unit Staff */
+Staff {[
+Staff in the category: ${self.name}
+
+    ${self.teachers}
+]}
+
+Person {[
+    [fragment name]
+        Availability: ${self.availability checkbox} Competence: ${self.competence}
+]
+fragment name [
+Nickname: ${self.name}
+Full Name: ${self.fullName}
+Phone number: ${self.phone}
+]
+}
+
+/* model unit CourseCategory */
+CourseCategory {[
+Category: ${self.name}
+
+    ${self.courses}
+]}
+
+/* model unit Schedule */
+Schedule {[
+Schedule ${self.name}
+
+    ${self.timeSlots}
+]}
+Slot {[
+${self.time}
+    Teacher: ${self.teacher}
+    Room:    ${self.room}
+    Course:  ${self.course}
+]}

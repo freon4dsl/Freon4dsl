@@ -1,15 +1,9 @@
-import { FreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/webapp-lib";
-import { ServerCommunication} from "@freon4dsl/core";
+import {FreonLayout, setDevelopment, WebappConfigurator} from "@freon4dsl/webapp-lib";
+import {ServerCommunication} from "@freon4dsl/core";
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
-import { setCustomComponents } from "@freon4dsl/core-svelte";
+import {setCustomComponents} from "@freon4dsl/core-svelte";
 
 // For DocuProject:
-import ShowAnimatedGif from "./customComponents/forDocuProject/ShowAnimatedGif.svelte";
-import SMUI_Card_Component from "./customComponents/forDocuProject/SMUI_Card_Component.svelte";
-import SMUI_Accordion from "./customComponents/forDocuProject/SMUI_Accordion.svelte";
-import SMUI_Dialog from "./customComponents/forDocuProject/SMUI_Dialog.svelte";
-import DatePicker from "./customComponents/forDocuProject/DatePicker.svelte";
-import {InsuranceModelEnvironment} from "@freon4dsl/samples-docuproject";
 
 // For ExternalTester
 // import BooleanWrapperComponent from "./customComponents/forExternalTester/BooleanWrapperComponent.svelte";
@@ -29,11 +23,17 @@ import {InsuranceModelEnvironment} from "@freon4dsl/samples-docuproject";
 // import RefWrapperComponent from "./customComponents/forExternalTester/RefWrapperComponent.svelte";
 // import RefListWrapperComponent from "./customComponents/forExternalTester/RefListWrapperComponent.svelte";
 // import { ExternalModelEnvironment } from "@freon4dsl/samples-external-tester";
-
+// For CourseSchedule:
+import PersonIcon from "./customComponents/forCourseSchedule/PersonIcon.svelte";
+import PhoneButton from "./customComponents/forCourseSchedule/PhoneButton.svelte";
+import StaffAccordion from "./customComponents/forCourseSchedule/StaffAccordion.svelte";
+import Schedule from "./customComponents/forCourseSchedule/Schedule.svelte";
 /**
  * The one and only reference to the actual language for which this editor runs
  */
-WebappConfigurator.getInstance().setEditorEnvironment(InsuranceModelEnvironment.getInstance());
+import {CourseScheduleEnvironment} from "@freon4dsl/samples-course-schedule";
+
+WebappConfigurator.getInstance().setEditorEnvironment(CourseScheduleEnvironment.getInstance());
 setDevelopment(true)
 /**
  * The one and only reference to the server on which the models are stored
@@ -44,13 +44,13 @@ WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getI
  * Make the external components known to Freon before starting the app!
  */
 // For DocuProject:
-setCustomComponents([
-	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
-	{component: SMUI_Card_Component, knownAs: "SMUI_Card"},
-	{component: SMUI_Accordion, knownAs: "SMUI_Accordion"},
-	{component: SMUI_Dialog, knownAs: "SMUI_Dialog"},
-	{component: DatePicker, knownAs: "DatePicker"}
-]);
+// setCustomComponents([
+// 	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
+// 	{component: SMUI_Card_Component, knownAs: "SMUI_Card"},
+// 	{component: SMUI_Accordion, knownAs: "SMUI_Accordion"},
+// 	{component: SMUI_Dialog, knownAs: "SMUI_Dialog"},
+// 	{component: DatePicker, knownAs: "DatePicker"}
+// ]);
 // For ExternalTester:
 // setCustomComponents([
 //     { component: BooleanWrapperComponent, knownAs: "booleanWrapper" },
@@ -71,6 +71,13 @@ setCustomComponents([
 //     { component: ExternalSimpleComponent, knownAs: "simple" },
 //     { component: ExternalStringComponent, knownAs: "stringReplacer" },
 // ]);
+// For CourseSchedule:
+setCustomComponents([
+    { component: PersonIcon, knownAs: "PersonIcon" },
+    { component: PhoneButton, knownAs: "PhoneButton" },
+    { component: StaffAccordion, knownAs: "StaffAccordion" },
+    { component: Schedule, knownAs: "Schedule" },
+]);
 
 /**
  * Now start the app ...
@@ -78,15 +85,5 @@ setCustomComponents([
 const app = new FreonLayout({
     target: document.body,
 });
-// FreLogger.unmute("FreLionwebSerializer")
-// FreLogger.unmute("MobxDecorators")
-// FreLogger.unmute("TextComponent")
-// FreLogger.unmute("TextDropdownComponent")
-// FreLogger.unmute("DropdownComponent")
-// FreLogger.unmute("EditorState")
-// FreLogger.unmute("InMemoryModel")
-// FreLogger.unmute("TextComponent")
-// FreLogger.unmute("ServerCommunication")
-// FreLogger.setFilter(["beforeUpdate", "setFocus", "afterUpdate", "onMount", "REFRESH", "refresh"])
 
 export default app;
