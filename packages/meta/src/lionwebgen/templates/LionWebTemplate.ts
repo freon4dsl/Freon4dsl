@@ -8,7 +8,6 @@ import {
     FreMetaProperty,
     FreMetaUnitDescription, MetaElementReference
 } from "../../languagedef/metalanguage/index.js";
-import { LOG2USER } from "../../utils/index.js";
 
 export class LionWebTemplate {
 
@@ -97,10 +96,10 @@ export class LionWebTemplate {
         lionWebValidator.validateReferences()
         if (lionWebValidator.validationResult.hasErrors()) {
             lionWebValidator.validationResult.issues.forEach(issue =>
-                LOG2USER.warning(`LionWeb language error: ${issue.errorMsg()}`)
+                console.log(`LionWeb language error: ${issue.errorMsg()}`)
             )
         } else {
-            LOG2USER.warning("Generated LionWeb language chunk is validated ok")
+            console.log("Generated LionWeb language chunk is validated ok")
         }
         const result = JSON.stringify(chunk, null, 2);
         return result;

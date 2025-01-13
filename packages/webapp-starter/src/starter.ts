@@ -1,6 +1,7 @@
 import { FreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/webapp-lib";
 import { ServerCommunication} from "@freon4dsl/core";
 // import { LionWebRepositoryCommunication } from "@freon4dsl/core"
+import { setDevelopment } from "@freon4dsl/webapp-lib";
 
 /**
  * The one and only reference to the actual language for which this editor runs
@@ -21,8 +22,7 @@ setDevelopment(true)
 const app = new FreonLayout({
     target: document.body,
 });
-// FreLogger.unmute("FreLionwebSerializer")
-// FreLogger.unmute("MobxDecorators")
+
 // FreLogger.unmute("TextComponent")
 // FreLogger.unmute("TextDropdownComponent")
 // FreLogger.unmute("DropdownComponent")
