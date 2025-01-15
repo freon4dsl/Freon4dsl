@@ -1,8 +1,8 @@
 language CourseSchedule
 
 model CourseSchedule {
-    schedule: Schedule[];
     persons: Staff[];
+    schedule: Schedule[];
     courses: CourseCategory[];
     rooms: Building[];
 }
@@ -31,13 +31,13 @@ modelunit Building {
 
 /* model unit Schedule */
 concept Slot {
-    time: TimeSlot;
+    time: TimeStamp;
     reference teacher: Person;
     reference room: Room;
     reference course: Course;
 }
 
-limited TimeSlot {
+limited TimeStamp {
     day: number; // 1 = Monday, 2 = Tuesday, etc
     part: number; // 1 indicates morning, 2 indicates afternoon
     MondayMorning = { day: 1, part: 1 }
@@ -57,7 +57,7 @@ concept Person {
     name: identifier;
     fullName: string;
     phone: number;
-    availability: TimeSlot[];
+    availability: TimeStamp[];
     reference competence: Course[];
 }
 

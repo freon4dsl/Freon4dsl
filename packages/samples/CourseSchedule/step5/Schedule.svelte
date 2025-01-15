@@ -2,7 +2,7 @@
     import {afterUpdate, onMount} from "svelte";
     import {Box, ExternalPartListBox, FreEditor, FreNode, FreNodeReference, AST} from "@freon4dsl/core";
     import {RenderComponent} from "@freon4dsl/core-svelte";
-    import {Slot, TimeSlot} from "@freon4dsl/samples-course-schedule";
+    import {Slot, TimeStamp} from "@freon4dsl/samples-course-schedule";
     import IconButton from "@smui/icon-button";
 
     // This component replaces the component for "timeSlots: Slot[];" from model unit "Schedule".
@@ -13,27 +13,18 @@
     // The following four functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
-        // set the focus on the first element in the table
-        // if (!!sortedSlots2 && sortedSlots2.length > 0) {
-        //     slotToBoxMap.get(sortedSlots2[0]).setFocus();
-        // } else {
-        //     button.focus();
-        // }
     }
     const refresh = (why?: string): void => {
-        console.log("refresh XXX")
         // do whatever needs to be done to refresh the elements that show information from the model
-        getSlotList();
+        initialize();
     };
     onMount(() => {
-        console.log("onmount")
-        getSlotList();
+        initialize();
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
     afterUpdate(() => {
-        console.log("afterupdate")
-        getSlotList();
+        initialize();
         sortedSlots = [...sortedSlots]
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
@@ -49,34 +40,34 @@
     let dayTitle: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ];
 
     // variables for creating a new slot
-    let timeStamps: TimeSlot[] = [
-        TimeSlot.MondayMorning,
-        TimeSlot.TuesdayMorning,
-        TimeSlot.WednesdayMorning,
-        TimeSlot.ThursdayMorning,
-        TimeSlot.FridayMorning,
-        TimeSlot.MondayAfternoon,
-        TimeSlot.TuesdayAfternoon,
-        TimeSlot.WednesdayAfternoon,
-        TimeSlot.ThursdayAfternoon,
-        TimeSlot.FridayAfternoon
+    let timeStamps: TimeStamp[] = [
+        TimeStamp.MondayMorning,
+        TimeStamp.TuesdayMorning,
+        TimeStamp.WednesdayMorning,
+        TimeStamp.ThursdayMorning,
+        TimeStamp.FridayMorning,
+        TimeStamp.MondayAfternoon,
+        TimeStamp.TuesdayAfternoon,
+        TimeStamp.WednesdayAfternoon,
+        TimeStamp.ThursdayAfternoon,
+        TimeStamp.FridayAfternoon
     ];
 
-    function sortSlots(startVal: FreNode[]) {
+    function sortSlots(startVal: Slot[]) {
         for (let i = 0; i < 10 ; i++) {
             sortedSlots[i] = [];
         }
-        (startVal as Slot[]).forEach((val, index) => {
+        (startVal).forEach((val, index) => {
             // remember which box belongs to which slot
             slotToBoxMap.set(val, box.children[index]);
             switch (val.$time.day) {
                 case 1: {
                     switch (val.$time.part) {
-                        case 1: { // Mon mor
+                        case 1: { // Monday morning
                             sortedSlots[0].push(val);
                             break;
                         }
-                        case 2: { // monday afternoon
+                        case 2: { // Monday afternoon
                             sortedSlots[5].push(val);
                             break;
                         }
@@ -88,11 +79,11 @@
                 }
                 case 2: {
                     switch (val.$time.part) {
-                        case 1: {
+                        case 1: { // Tuesday morning
                             sortedSlots[1].push(val);
                             break;
                         }
-                        case 2: {
+                        case 2: { // Tuesday afternoon
                             sortedSlots[6].push(val);
                             break;
                         }
@@ -104,11 +95,11 @@
                 }
                 case 3: {
                     switch (val.$time.part) {
-                        case 1: {
+                        case 1: { // Wednesday morning
                             sortedSlots[2].push(val);
                             break;
                         }
-                        case 2: {
+                        case 2: { // Wednesday afternoon
                             sortedSlots[7].push(val);
                             break;
                         }
@@ -120,11 +111,11 @@
                 }
                 case 4: {
                     switch (val.$time.part) {
-                        case 1: {
+                        case 1: { // Thursday morning
                             sortedSlots[3].push(val);
                             break;
                         }
-                        case 2: {
+                        case 2: { // Thursday afternoon
                             sortedSlots[8].push(val);
                             break;
                         }
@@ -136,11 +127,11 @@
                 }
                 case 5: {
                     switch (val.$time.part) {
-                        case 1: {
+                        case 1: { // Friday morning
                             sortedSlots[4].push(val);
                             break;
                         }
-                        case 2: {
+                        case 2: { // Friday afternoon
                             sortedSlots[9].push(val);
                             break;
                         }
@@ -155,27 +146,25 @@
     }
 
     /* Sort the list of slots based on the time */
-    function getSlotList() {
-        console.log('getSlotList')
+    function initialize() {
         let startVal: FreNode[] | undefined = box.getPropertyValue();
         if (!!startVal && box.getPropertyType() === "Slot") {
             // cast the startVal to the expected type, in this case "Slot[]".
             // sort the slots based on the time and remember which box belongs to which slot
-            sortSlots(startVal);
-            // sortedSlots = sortedSlots;
+            sortSlots(startVal as Slot[]);
         }
     }
 
-    const addSlot = (timeStamp: TimeSlot) => {
-        // Note that you need to put any changes to the actual model in a 'AST.change or AST.changeNamed',
+    const addSlot = (timeStamp: TimeStamp) => {
+        // Note that you need to put any changes to the actual model in a 'AST.change' or 'AST.changeNamed',
         // because all elements in the model are reactive using mobx.
-        AST.changeNamed("ExternalPartListComponent.addChild", () => {
-            let newSlot: Slot = Slot.create({time: FreNodeReference.create<TimeSlot>(timeStamp, "TimeSlot")});
+        AST.change(() => {
+            let newSlot: Slot = Slot.create({time: FreNodeReference.create<TimeStamp>(timeStamp, "TimeStamp")});
             box.getPropertyValue().push(newSlot);
         });
     }
 
-    getSlotList();
+    initialize();
 </script>
 
 
@@ -197,11 +186,11 @@
                     {#if slots.length > 0}
                         <td class="demo-cell">
                             <div class="demo-cell-content">
-                            {#each slots as slot}
-                                <div class="demo-slot-render">
-                                <RenderComponent box={slotToBoxMap.get(slot)} editor={editor} />
-                                </div>
-                            {/each}
+                                {#each slots as slot}
+                                    <div class="demo-slot-render">
+                                        <RenderComponent box={slotToBoxMap.get(slot)} editor={editor} />
+                                    </div>
+                                {/each}
                             </div>
                         </td>
                     {:else}
@@ -217,7 +206,7 @@
             {#each timeStamps as stamp, index}
                 {#if index < 5}
                     <td class="demo-btn-cell">
-                        <IconButton class="material-icons demo-button" on:click={() => addSlot(stamp)}>add</IconButton>
+                        <IconButton class="material-icons" on:click={() => addSlot(stamp)}>add</IconButton>
                     </td>
                 {/if}
             {/each}
@@ -230,7 +219,7 @@
                         <td class="demo-cell">
                             {#each slots as slot}
                                 <div class="demo-slot-render">
-                                <RenderComponent box={slotToBoxMap.get(slot)} editor={editor} />
+                                    <RenderComponent box={slotToBoxMap.get(slot)} editor={editor} />
                                 </div>
                             {/each}
                         </td>
@@ -249,7 +238,7 @@
             {#each timeStamps as stamp, index}
                 {#if index >= 5}
                     <td class="demo-btn-cell">
-                        <IconButton class="material-icons demo-button" on:click={() => addSlot(stamp)}>add</IconButton>
+                        <IconButton class="material-icons" on:click={() => addSlot(stamp)}>add</IconButton>
                     </td>
                 {/if}
             {/each}

@@ -31,13 +31,13 @@ modelunit Building {
 
 /* model unit Schedule */
 concept Slot {
-    time: TimeSlot;
+    time: TimeStamp;
     reference teacher: Person;
     reference room: Room;
     reference course: Course;
 }
 
-limited TimeSlot {
+limited TimeStamp {
     day: number; // 1 = Monday, 2 = Tuesday, etc
     part: number; // 1 indicates morning, 2 indicates afternoon
     MondayMorning = { day: 1, part: 1 }
@@ -56,7 +56,7 @@ limited TimeSlot {
 concept Person {
     name: identifier;
     fullName: string;
-    availability: TimeSlot[];
+    availability: TimeStamp[];
     reference competence: Course[];
 }
 

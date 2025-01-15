@@ -16,3 +16,16 @@ Staff in the category: ${self.name}
 
     ${self.teachers replace=StaffAccordion multi="multiple"}
 ]}
+
+Schedule {[
+Schedule ${self.name}
+
+${self.timeSlots replace=Schedule}
+
+]}
+
+Slot {[
+    Teacher: ${self.teacher}
+    Room:    ${self.room}
+    Course:  ${self.course}
+]}
