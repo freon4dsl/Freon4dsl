@@ -42,7 +42,7 @@ router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
 router.put("/putModelUnit", async (ctx: Router.IRouterContext) => {
     const folder = ctx.query["folder"];
     const name = ctx.query["name"];
-    console.log("PutModel: " + folder + "/" + name);
+    console.log("PutModelUnit: " + folder + "/" + name);
     if ((!!name || !!folder) && typeof name === "string" && typeof folder === "string") {
         ModelRequests.putModelUnit(folder, name, ctx);
         ctx.status = 201;

@@ -20,7 +20,7 @@ export class ModelTemplate {
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
-            import { makeObservable, action } from "mobx"
+            import { makeObservable, action, runInAction } from "mobx"
 
             /**
              * Class ${myName} is the implementation of the model with the same name in the language definition file.
@@ -167,16 +167,19 @@ export class ModelTemplate {
                             .map(
                                 (part) =>
                                     `case "${Names.classifier(part.type)}": {
-                                const unit: ${Names.classifier(part.type)} = ${Names.classifier(part.type)}.create({});
-                                AST.changeNamed("newUnit", () => {
-                                    ${
-                                        part.isList
-                                            ? `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
-                                            : `this.${part.name} = unit as ${Names.classifier(part.type)}`
-                                    }
-                                })
-                                return unit;
-                            }`,
+                                        let unit: ${Names.classifier(part.type)};
+                                        runInAction( () => {
+                                            unit = ${Names.classifier(part.type)}.create({});
+                                        })
+                                        AST.changeNamed("newUnit", () => {
+                                            ${
+                                                part.isList
+                                                    ? `this.${part.name}.push(unit as ${Names.classifier(part.type)});`
+                                                    : `this.${part.name} = unit as ${Names.classifier(part.type)}`
+                                            }
+                                        })
+                                        return unit;
+                                    }`,
                             )
                             .join("\n")}
                     }

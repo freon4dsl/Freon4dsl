@@ -2,6 +2,10 @@ import { FreLogger } from "@freon4dsl/core";
 
 export let inDevelopment = false
 
+/**
+ * Sets the development flag, logging will be turned off completely when false.
+ * @param v
+ */
 export function setDevelopment(v: boolean): void {
     inDevelopment = v;
 }

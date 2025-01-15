@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/samples-pi-language",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -18,7 +18,7 @@
     "clean-all": "npm run clean-gen && npm run clean-config && npm run clean-custom"
   },
   "dependencies": {
-    "@freon4dsl/core": "1.0.0-beta2",
+    "@freon4dsl/core": "1.0.0-beta3",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",
     "mobx": "^6.12.3",

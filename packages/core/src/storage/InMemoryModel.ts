@@ -1,4 +1,4 @@
-import { makeObservable, observable } from "mobx";
+import { makeObservable, observable, runInAction } from "mobx";
 import { FreModel, FreModelUnit } from "../ast/index.js";
 import { AST } from "../change-manager/index.js";
 import { FreEnvironment } from "../environment/index.js";
@@ -28,7 +28,9 @@ export class InMemoryModel {
      */
     async createModel(name: string): Promise<FreModel> {
         LOGGER.log(`createModel ${name}`)
-        this.model = this.languageEnvironment.newModel(name);
+        runInAction(() => {
+            this.model = this.languageEnvironment.newModel(name);
+        })
         await this.server.createModel(name);
         this.currentModelChanged();
         return this.model;
@@ -51,7 +53,9 @@ export class InMemoryModel {
      */
     async openModel(name: string): Promise<FreModel> {
         LOGGER.log("openModel(" + name + ")");
-        this.model = this.languageEnvironment.newModel(name);
+        AST.change( () => {
+            this.model = this.languageEnvironment.newModel(name);
+        })
         const unitsIds = await this.server.loadUnitList(name);
         for (const unitId of unitsIds) {
             LOGGER.log("openModel: load model-unit: " + unitId.name);
@@ -79,9 +83,11 @@ export class InMemoryModel {
      * @param unitConcept
      */
     async createUnit(name: string, unitConcept: string): Promise<FreModelUnit> {
-        LOGGER.log(`createUnit ${name} of type ${unitConcept}`)
+        LOGGER.log(`createUnit ${name} of concept ${unitConcept}`)
         const newUnit = this.model.newUnit(unitConcept);
-        newUnit.name = name;
+        runInAction( () => {
+            newUnit.name = name;
+        })
         await this.server.createModelUnit(this.model.name, newUnit);
         this.currentModelChanged();
         return newUnit;
@@ -93,7 +99,9 @@ export class InMemoryModel {
      */
     async deleteUnit(unit: FreModelUnit) {
         await this.server.deleteModelUnit(this.model.name, { name: unit.name, id: unit.freId() });
-        this.model.removeUnit(unit);
+        AST.change( () => {
+            this.model.removeUnit(unit);
+        })
         this.currentModelChanged();
     }
 
