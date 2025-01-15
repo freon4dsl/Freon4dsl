@@ -37,7 +37,6 @@
         for( let i=0; i < box.children.length; i++) {
             if (panelOpen[i]) {
                 box.children[i].setFocus();
-                found = true;
             }
         }
     }
