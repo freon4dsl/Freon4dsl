@@ -1,20 +1,17 @@
 import { FreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/webapp-lib";
+import { configureExternals } from "./externals.js";
+import { configureLoggers } from "./loggers.js";
+import { LanguageEnvironment } from "@freon4dsl/samples-example";
 import { ServerCommunication} from "@freon4dsl/core";
-// import { LionWebRepositoryCommunication } from "@freon4dsl/core"
-import { setDevelopment } from "@freon4dsl/webapp-lib";
 
 /**
- * The one and only reference to the actual language for which this editor runs
+ * Initialize everything
  */
-import {ExampleEnvironment} from "@freon4dsl/samples-example";
-WebappConfigurator.getInstance().setEditorEnvironment(ExampleEnvironment.getInstance());
-
-/**
- * The one and only reference to the server on which the models are stored
- */
+WebappConfigurator.getInstance().setEditorEnvironment(LanguageEnvironment.getInstance());
 WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance());
-
 setDevelopment(true)
+configureExternals()
+configureLoggers()
 
 /**
  * Now start the app ...
@@ -22,14 +19,4 @@ setDevelopment(true)
 const app = new FreonLayout({
     target: document.body,
 });
-
-// FreLogger.unmute("TextComponent")
-// FreLogger.unmute("TextDropdownComponent")
-// FreLogger.unmute("DropdownComponent")
-// FreLogger.unmute("EditorState")
-// FreLogger.unmute("InMemoryModel")
-// FreLogger.unmute("TextComponent")
-// FreLogger.unmute("ServerCommunication")
-// FreLogger.setFilter(["beforeUpdate", "setFocus", "afterUpdate", "onMount", "REFRESH", "refresh"])
-
 export default app;

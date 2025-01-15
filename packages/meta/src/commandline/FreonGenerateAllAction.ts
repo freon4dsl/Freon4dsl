@@ -3,7 +3,7 @@ import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreter
 import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
 import { FreEditParser } from "../editordef/parser/FreEditParser.js";
-import { LionWebGenerator } from "../lionwebgen/LionWebGenerator.js";
+// import { LionWebGenerator } from "../lionwebgen/LionWebGenerator.js";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator.js";
 import { LanguageParser } from "../languagedef/parser/LanguageParser.js";
 import { FreonGenerateAction } from "./FreonGenerateAction.js";
@@ -26,7 +26,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
     public watch: boolean = false;
 
     protected languageGenerator: LanguageGenerator = new LanguageGenerator();
-    protected lionWebGenerator: LionWebGenerator = new LionWebGenerator();
+    // protected lionWebGenerator: LionWebGenerator = new LionWebGenerator();
     protected editorGenerator: EditorGenerator = new EditorGenerator();
     protected parserGenerator: ReaderWriterGenerator = new ReaderWriterGenerator();
     protected scoperGenerator: ScoperGenerator = new ScoperGenerator();
@@ -59,7 +59,7 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
             // generate the language
             try {
                 this.generateLanguage();
-                this.generateLionWeb()
+                // this.generateLionWeb()
                 this.generateEditorAndParser();
                 this.generateValidator();
                 this.generateScoper();
@@ -109,22 +109,22 @@ export class FreonGenerateAllAction extends FreonGenerateAction {
         }
     }
 
-    private generateLionWeb = () => {
-        if (this.language === undefined || this.language === null) {
-            return;
-        }
-        LOG2USER.info("Generating LionWeb");
-        try {
-            this.lionWebGenerator.language = this.language;
-            this.lionWebGenerator.outputfolder = this.outputFolder;
-            this.lionWebGenerator.generate();
-        } catch (e: unknown) {
-            if (e instanceof Error) {
-                LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
-                // LOG2USER.error("Stopping validator generation because of errors: " + e.message);
-            }
-        }
-    };
+    // private generateLionWeb = () => {
+    //     if (this.language === undefined || this.language === null) {
+    //         return;
+    //     }
+    //     LOG2USER.info("Generating LionWeb");
+    //     try {
+    //         this.lionWebGenerator.language = this.language;
+    //         this.lionWebGenerator.outputfolder = this.outputFolder;
+    //         this.lionWebGenerator.generate();
+    //     } catch (e: unknown) {
+    //         if (e instanceof Error) {
+    //             LOG2USER.error("Stopping validator generation because of errors: " + e.message + "\n" + e.stack);
+    //             // LOG2USER.error("Stopping validator generation because of errors: " + e.message);
+    //         }
+    //     }
+    // };
 
     private generateTyper = () => {
         if (this.language === undefined || this.language === null) {

@@ -1,7 +1,7 @@
 import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { isIdentifier } from "../../util/index.js";
-import { FreLionwebSerializer, FreModelSerializer } from "../index.js";
+import { collectUsedLanguages, FreLionwebSerializer, FreModelSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
 
@@ -80,11 +80,10 @@ export class ServerCommunication implements IServerCommunication {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
             let output = {
                 serializationFormatVersion: "2023.1",
-                languages: [],
+                languages: collectUsedLanguages(model),
                 // "__version": "1234abcdef",
                 nodes: model,
             };
-
             await this.putWithTimeout(`putModelUnit`, output, `folder=${modelName}&name=${unitId.name}`);
         } else {
             LOGGER.error(
@@ -251,6 +250,6 @@ export class ServerCommunication implements IServerCommunication {
 
     // @ts-ignore
     createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
-        return Promise.resolve(undefined);
+        this.putModelUnit(modelName, { id: unit.freId(), name: unit.name }, unit)
     }
 }
