@@ -229,7 +229,8 @@ export class ClassifierChecker {
             if (con instanceof FreMetaConcept) {
                 const base = con.base?.referred;
                 if (!!base) {
-                    return this.checkCircularInheritance(circularNames, base);
+                    const recursiveCircularNames = [...circularNames]
+                    return this.checkCircularInheritance(recursiveCircularNames, base);
                 } else {
                     // no problem because there is no 'base'
                     return false;
@@ -239,7 +240,8 @@ export class ClassifierChecker {
                 for (const base of con.base) {
                     const realBase = base.referred;
                     if (!!realBase) {
-                        result = result || this.checkCircularInheritance(circularNames, realBase);
+                        const recursiveCircularNames = [...circularNames]
+                        result = result || this.checkCircularInheritance(recursiveCircularNames, realBase);
                     }
                 }
                 return result;
