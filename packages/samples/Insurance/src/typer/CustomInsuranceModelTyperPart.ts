@@ -3,7 +3,7 @@ import { FreNode, FreType, FreTyper, AstType, FreLanguage } from "@freon4dsl/cor
 import { EuroType, MultiplyExpression, NumberType, ParameterRef, PercentageType } from "../language/gen/index.js";
 
 /**
- * Class 'CustomDocuProjectTyperPart' is meant to be a convient place to add any
+ * Class 'CustomInsuranceModelTyperPart' is meant to be a convenient place to add any
  * custom code for type checking.
  */
 export class CustomInsuranceModelTyperPart implements FreTyper {

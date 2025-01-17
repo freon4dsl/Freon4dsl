@@ -7,7 +7,7 @@
     "clean": "rm -rf node_modules/",
     "build": "echo No build for webapp-starter",
     "build-app": "rollup -c",
-    "build-dev": "cd ../../packages/samples/DocuProject && npm run build",
+    "build-dev": "cd ../../packages/samples/InsuranceModel && npm run build",
     "dev": "cross-env NODE_PORT=8001 rollup -c -w",
     "start": "sirv public --port 8000",
     "validate": "svelte-check --tsconfig ./tsconfig.json",

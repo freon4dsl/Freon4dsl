@@ -15,7 +15,7 @@ Markers on textboxes (squiggly) stay red after projection change, other markers 
 
 ## Incorrect projection for expression
 
-**Description:**  When the AST specifies a specific expression, e.g. for `DocuProject.InsurancePart.risk`, the editor creates a generaic expression projection with a pre- and post- action box. 
+**Description:**  When the AST specifies a specific expression, e.g. for `InsuranceModel.InsurancePart.risk`, the editor creates a generaic expression projection with a pre- and post- action box. 
 
 **Problem:** This is incorrect, as only a NumberLiteralExpression is allowed.
 

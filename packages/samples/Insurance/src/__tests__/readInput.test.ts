@@ -34,7 +34,7 @@ function addProductToModel(model: InsuranceModel, filepath: string) {
     }
 }
 
-describe("Testing DocuProject", () => {
+describe("Testing InsuranceModel", () => {
     const model: InsuranceModel = new InsuranceModel();
     model.name = "TEST_MODEL";
 

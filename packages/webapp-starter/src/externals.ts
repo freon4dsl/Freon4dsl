@@ -1,10 +1,10 @@
-// For DocuProject:
-// import ShowAnimatedGif from "./customComponents/forDocuProject/ShowAnimatedGif.svelte";
-// import SMUI_Card_Component from "./customComponents/forDocuProject/SMUI_Card_Component.svelte";
-// import SMUI_Accordion from "./customComponents/forDocuProject/SMUI_Accordion.svelte";
-// import SMUI_Dialog from "./customComponents/forDocuProject/SMUI_Dialog.svelte";
-// import DatePicker from "./customComponents/forDocuProject/DatePicker.svelte";
-// import {InsuranceModelEnvironment} from "@freon4dsl/samples-docuproject";
+// For InsuranceModel:
+// import ShowAnimatedGif from "./customComponents/forInsuranceModel/ShowAnimatedGif.svelte";
+// import SMUI_Card_Component from "./customComponents/forInsuranceModel/SMUI_Card_Component.svelte";
+// import SMUI_Accordion from "./customComponents/forInsuranceModel/SMUI_Accordion.svelte";
+// import SMUI_Dialog from "./customComponents/forInsuranceModel/SMUI_Dialog.svelte";
+// import DatePicker from "./customComponents/forInsuranceModel/DatePicker.svelte";
+// import {InsuranceModelEnvironment} from "@freon4dsl/samples-insurance";
 // For ExternalTester
 // import BooleanWrapperComponent from "./customComponents/forExternalTester/BooleanWrapperComponent.svelte";
 // import NumberWrapperComponent from "./customComponents/forExternalTester/NumberWrapperComponent.svelte";
@@ -44,7 +44,7 @@ export function configureExternals() {
         { component: StaffAccordion, knownAs: "StaffAccordion" },
         { component: Schedule, knownAs: "Schedule" },
     ]);
-// For DocuProject:
+// For InsuranceModel:
 // setCustomComponents([
 // 	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
 // 	{component: SMUI_Card_Component, knownAs: "SMUI_Card"},

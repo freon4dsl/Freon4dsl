@@ -5,14 +5,14 @@
       {
          "id": "ID-91",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-Part"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "TODO_set-correct-key"
                },
@@ -22,7 +22,7 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-Part-part"
                },
@@ -38,14 +38,14 @@
       {
          "id": "ID-92",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-BaseProduct"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-BaseProduct-name"
                },
@@ -55,7 +55,7 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-BaseProduct-parts"
                },
@@ -70,7 +70,7 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-BaseProduct-theme"
                },
@@ -88,14 +88,14 @@
       {
          "id": "ID-93",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-InsurancePart"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-name"
                },
@@ -103,7 +103,7 @@
             },
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-isApproved"
                },
@@ -113,7 +113,7 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-statisticalRisk"
                },
@@ -123,7 +123,7 @@
             },
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-maximumPayOut"
                },
@@ -139,14 +139,14 @@
       {
          "id": "ID-94",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-PercentageLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-PercentageLiteral-value"
                },
@@ -161,14 +161,14 @@
       {
          "id": "ID-95",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-EuroLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-EuroLiteral-euros"
                },
@@ -176,7 +176,7 @@
             },
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-EuroLiteral-cents"
                },
@@ -191,14 +191,14 @@
       {
          "id": "ID-96",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-InsurancePart"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-name"
                },
@@ -206,7 +206,7 @@
             },
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-isApproved"
                },
@@ -216,7 +216,7 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-statisticalRisk"
                },
@@ -226,7 +226,7 @@
             },
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-maximumPayOut"
                },
@@ -242,14 +242,14 @@
       {
          "id": "ID-97",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-PercentageLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-PercentageLiteral-value"
                },
@@ -264,14 +264,14 @@
       {
          "id": "ID-98",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-EuroLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-EuroLiteral-euros"
                },
@@ -279,7 +279,7 @@
             },
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-EuroLiteral-cents"
                },
@@ -294,14 +294,14 @@
       {
          "id": "ID-99",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-InsurancePart"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-name"
                },
@@ -309,7 +309,7 @@
             },
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-isApproved"
                },
@@ -319,7 +319,7 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-statisticalRisk"
                },
@@ -329,7 +329,7 @@
             },
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-maximumPayOut"
                },
@@ -345,14 +345,14 @@
       {
          "id": "ID-100",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-PercentageLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-PercentageLiteral-value"
                },
@@ -367,14 +367,14 @@
       {
          "id": "ID-101",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-EuroLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-EuroLiteral-euros"
                },
@@ -382,7 +382,7 @@
             },
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-EuroLiteral-cents"
                },
@@ -397,14 +397,14 @@
       {
          "id": "ID-102",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-InsurancePart"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-name"
                },
@@ -412,7 +412,7 @@
             },
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-isApproved"
                },
@@ -422,7 +422,7 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-statisticalRisk"
                },
@@ -432,7 +432,7 @@
             },
             {
                "containment": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-InsurancePart-maximumPayOut"
                },
@@ -448,14 +448,14 @@
       {
          "id": "ID-103",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-PercentageLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-PercentageLiteral-value"
                },
@@ -470,14 +470,14 @@
       {
          "id": "ID-104",
          "classifier": {
-            "language": "-default-key-DocuProject",
+            "language": "-default-key-InsuranceModel",
             "version": "2023.1",
             "key": "-default-key-EuroLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-EuroLiteral-euros"
                },
@@ -485,7 +485,7 @@
             },
             {
                "property": {
-                  "language": "-default-key-DocuProject",
+                  "language": "-default-key-InsuranceModel",
                   "version": "2023.1",
                   "key": "-default-key-EuroLiteral-cents"
                },

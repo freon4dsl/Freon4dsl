@@ -1,4 +1,4 @@
-validator DocuValidator for language DocuProject
+validator DocuValidator for language InsuranceModel
 
 InsuranceProduct {
     notEmpty self.parts;

@@ -34,7 +34,7 @@ language. For example, change the following lines ...
       WebappConfigurator.getInstance().setEditorEnvironment(CalculatorModelEnvironment.getInstance());
     ```
 4. Add any external components that are used in the project's .edit files to `src/starter.ts`. For example, 
-add the following when you want to use the DocuProject.
+add the following when you want to use the InsuranceModel.
 
     ```typescript
     setCustomComponents([
