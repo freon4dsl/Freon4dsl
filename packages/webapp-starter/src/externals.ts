@@ -24,6 +24,12 @@
 // import RefListWrapperComponent from "./customComponents/forExternalTester/RefListWrapperComponent.svelte";
 // import { ExternalModelEnvironment } from "@freon4dsl/samples-external-tester";
 
+import {setCustomComponents} from "@freon4dsl/core-svelte";
+import PersonIcon from "./customComponents/forCourseSchedule/PersonIcon.svelte";
+import PhoneButton from "./customComponents/forCourseSchedule/PhoneButton.svelte";
+import StaffAccordion from "./customComponents/forCourseSchedule/StaffAccordion.svelte";
+import Schedule from "./customComponents/forCourseSchedule/Schedule.svelte";
+
 /**
  * Configure the external components used, so Freon can find them.
  */
@@ -31,6 +37,13 @@ export function configureExternals() {
     /**
      * Make the external components known to Freon before starting the app!
      */
+// For CourseSchedule:
+    setCustomComponents([
+        { component: PersonIcon, knownAs: "PersonIcon" },
+        { component: PhoneButton, knownAs: "PhoneButton" },
+        { component: StaffAccordion, knownAs: "StaffAccordion" },
+        { component: Schedule, knownAs: "Schedule" },
+    ]);
 // For DocuProject:
 // setCustomComponents([
 // 	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
@@ -59,6 +72,6 @@ export function configureExternals() {
 //     { component: ExternalSimpleComponent, knownAs: "simple" },
 //     { component: ExternalStringComponent, knownAs: "stringReplacer" },
 // ]);
-    
+
 }
 

@@ -1,6 +1,6 @@
 <script lang="ts">
     import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
-    import IconButton, { Icon } from '@smui/icon-button';
+    import IconButton from '@smui/icon-button';
     import {AST, ExternalPartListBox, FreEditor, FreNodeReference} from "@freon4dsl/core";
     import {RenderComponent} from "@freon4dsl/core-svelte";
     import {afterUpdate, onMount} from "svelte";
@@ -12,7 +12,7 @@
     export let editor: FreEditor;
 
     let panelOpen: boolean[] = [];      // List of booleans to indicate which panel is open (true) and closed (false).
-    let multiplePar: string = 'multiple';   // Indicates whether multiple panels may be open at the same time.
+    let multiplePar: boolean = false;   // Indicates whether multiple panels may be open at the same time.
 
     /*
         Sets all panels in the state 'closed',
@@ -20,8 +20,8 @@
      */
     function initialize() {
         let param: string = box.findParam("multi");
-        if (param !== null && param !== undefined && param.length > 0) {
-            multiplePar = param;
+        if (param === "multiple") {
+            multiplePar = true;
         }
         panelOpen = [];
         for (let i = 0; i < box.children.length; i++) {
@@ -71,14 +71,6 @@
         });
     }
 
-    /*
-        Sets the panel at index to its opposite state: from closed to open and vice versa.
-     */
-    function setHidden(index) {
-        box.children[index].isVisible = !box.children[index].isVisible;
-        panelOpen[index] = !panelOpen[index];
-    }
-
     // Run the initialization
     initialize();
 </script>
@@ -89,10 +81,6 @@
             <Panel bind:open={panelOpen[index]}>
                 <Header>
                     {childBox.node.freLanguageConcept()} {childBox.node["name"]}
-                    <IconButton slot="icon" toggle pressed={panelOpen[index]} on:click={() => setHidden(index)}>
-                        <Icon class="material-icons" on>expand_less</Icon>
-                        <Icon class="material-icons">expand_more</Icon>
-                    </IconButton>
                 </Header>
                 <Content>
                     <div style="display: flex; align-items: flex-end;">
