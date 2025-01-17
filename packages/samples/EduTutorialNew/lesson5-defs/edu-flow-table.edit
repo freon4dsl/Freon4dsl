@@ -1,0 +1,17 @@
+/* This file contains the rules-as-tables editor definition. */
+
+editor rules_as_table
+
+FlowRule {[
+    -------------------------------------
+    Name: ${name}
+        Description: ${self.description}
+        For page ${page}
+
+        ${self.transitions table rows}
+]}
+
+PageTransition { table [
+    Condition          | Goto Page
+    ${self.condition}  |  ${self.toPage}
+]}

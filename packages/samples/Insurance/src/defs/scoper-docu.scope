@@ -1,0 +1,15 @@
+scoper DocuScoper for language InsuranceModel
+
+isnamespace { InsuranceProduct, BaseProduct, CalcFunction, Entity }
+
+InsuranceProduct {
+    namespace_addition = self.basedOn;
+}
+
+AttributeRef {
+	scope = typeof( container );
+}
+
+Entity {
+    namespace_addition = self.baseEntity;
+}

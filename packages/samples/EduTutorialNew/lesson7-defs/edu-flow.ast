@@ -1,0 +1,27 @@
+language Education
+
+modelunit Flow {
+    reference main: SiteGroup;
+    rules: FlowRule[];
+}
+
+concept FlowRule {
+    name: identifier;
+    description: string;
+    reference page: Page;
+    transitions: PageTransition[];
+}
+
+concept PageTransition { /* E.g. Grade A => show pageA, Grade F => show pageC */
+    condition: Grade; /* Note: will be changed into an expression later in the tutorial. */
+    reference toPage: Page;
+}
+
+limited Grade {
+    gradeA;
+    gradeB;
+    gradeC;
+    gradeD;
+    gradeE;
+    gradeF;
+}

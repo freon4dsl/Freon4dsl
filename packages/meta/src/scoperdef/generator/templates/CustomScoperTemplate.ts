@@ -11,7 +11,7 @@ export class CustomScoperTemplate {
         import { ${Names.FreNode}, ${Names.FreNamedNode}, ${Names.FrScoperPart}, ${Names.FreScoperComposite}  } from "${FREON_CORE}";
 
         /**
-         * Class '${generatedClassName}' is meant to be a convient place to add any
+         * Class '${generatedClassName}' is meant to be a convenient place to add any
          * custom code for scoping.
          */
         export class ${generatedClassName} implements ${scoperInterfaceName} {

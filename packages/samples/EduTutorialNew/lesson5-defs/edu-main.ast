@@ -1,0 +1,17 @@
+language Education
+
+model Education /* Computer Aided Learning */ {
+    name: identifier;
+    topic: Topic[];
+    flow: Flow[];
+    tests: Test[];
+    overviews: SiteGroup[];
+}
+
+modelunit SiteGroup {
+    name: identifier;
+    description: string; /* e.g. Mathematics, fractions for students age 10 */
+    reference topics: Topic[];
+    reference flows: Flow[];
+    reference tests: Test[];
+}

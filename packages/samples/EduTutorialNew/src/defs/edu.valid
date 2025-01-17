@@ -1,0 +1,29 @@
+validator EduValidator for language Education
+
+AndExpression {
+    typecheck equalsType( self.left, PrimitiveType:Boolean );
+    typecheck equalsType( self.right, PrimitiveType:Boolean );
+}
+OrExpression {
+    typecheck equalsType( self.left, PrimitiveType:Boolean );
+    typecheck equalsType( self.right, PrimitiveType:Boolean );
+}
+
+//ComparisonExpression {
+//    typecheck equalsType( self.left, self.right );
+//}
+LessOrEqualsExpression {
+    typecheck equalsType( self.left, self.right );
+}
+GreaterOrEqualsExpression {
+    typecheck equalsType( self.left, self.right );
+}
+LessThenExpression {
+    typecheck equalsType( self.left, self.right );
+}
+GreaterThenExpression {
+    typecheck equalsType( self.left, self.right );
+}
+EqualsExpression {
+    typecheck equalsType( self.left, self.right );
+}

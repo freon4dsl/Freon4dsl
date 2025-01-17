@@ -1,0 +1,146 @@
+language InsuranceModel
+
+////////////////////////////////////////////////////////////////
+//       Main concepts in the Documentation Project           //
+////////////////////////////////////////////////////////////////
+
+model InsuranceModel {
+    parts: Part[];              // units that hold partial definitions of insurance products
+    products: Product[];        // units that hold sellable insurance products
+}
+
+modelunit Part {
+    part: BaseProduct;          // one collection of partial insurance products
+    file-extension = "base";    // the file extension used by the parser
+}
+
+modelunit Product {
+    product: InsuranceProduct;  // one collection of sellable insurance products
+    file-extension = "prod";    // the file extension used by the parser
+}
+
+// A BaseProduct defines all the different elements ('parts') that can be
+// used to create a marketable InsuranceProduct.
+concept BaseProduct {
+    name: identifier;               // internal name
+    isUnderConstruction: boolean;   // defines whether this base product is still 'raw'
+    theme: InsuranceTheme;          // the 'kind' of insurance
+    parts: InsurancePart[];         // all parts of this product
+    // The following properties are present to show the different options for displaying booleans.
+    isApprovedLevel1: boolean;
+    isApprovedLevel2: boolean;
+    isApprovedLevel3: boolean;
+    yieldsProfit: boolean;
+    range: number;
+    nrOfUse: number;
+    // The previoud two properties are present to show the different options for displaying numbers.
+    // The following property is present to show the use of an external DatePicker component.
+    date: string;
+}
+
+// An InsurancePart defines a single aspect of an InsuranceProduct together
+// with the statistical risk of the event happening, and the maximum payout
+// in case the insured event happens.
+concept InsurancePart {
+    name: identifier;                       // internal name
+    isApproved: boolean = false;            // indication of approval status
+    statisticalRisk: PercentageLiteral;     // the statistical risk known for this event
+    maximumPayOut: EuroLiteral;             // maximum payout in case the insured event happens
+}
+
+// An InsuranceProduct is a combination of insured events, defined in InsuranceParts,
+// that can be marketed and sold to the public.
+concept InsuranceProduct {
+    name: identifier;                       // internal name
+    productName: string;                    // name by which this product is known to the public
+    themes: InsuranceTheme[];               // the 'kind' of insurance
+    advertisedPremium: EuroLiteral;         // the premium as known to the public
+    nrPremiumDays: PremiumDays;             // the number of days for which the advertised premium is calculated
+    reference parts: InsurancePart[];       // optionally, known parts can be included by reference
+    reference basedOn: BaseProduct[];       // the BaseProducts from which the parts are taken
+
+    riskAdjustment?: PercentageLiteral;     // an adjustment to the risk of the separate parts, e.g. caused by the combination of the parts
+    calculation: DocuExpression;            // the premium as calculated based on the parts
+    helpers: CalcFunction[];                // helper functions used to calculate the premium
+}
+
+// A function used to make a calculation of the premium of an InsuranceProduct
+concept CalcFunction {
+    name: identifier;                   // the name
+    description?: Description;          // an optional description
+    declaredType : DocuType;            // the type
+    body: DocuExpression;               // the actual calculation definition
+    parameters: Parameter[];            // any parameters
+}
+
+concept Description {
+    content: string;                    // content of the description
+}
+
+concept Parameter  {
+    name: identifier;                   // the name
+    declaredType: DocuType;             // the type
+}
+
+// AST concepts used for typing the language
+
+/* This concept is used wherever an explicit type can be used,
+ * be it either a referred type (i.e. the name of a type that is known),
+ * or declared type (i.e. a type declaration that is made on-the-spot).
+ */
+abstract concept DocuType {
+}
+
+// Sorry, its not good style to use an interface and a set of separate limited concepts.
+// At least, it is an example of using an interface, and of the fact that limited
+// concepts can implement interfaces.
+interface NamedType {
+    name: identifier;
+}
+
+limited InsurancePartType implements NamedType {
+    InsurancePart;
+}
+
+limited PercentageType implements NamedType {
+    Percentage;
+}
+
+limited NumberType implements NamedType {
+    Number;
+}
+
+limited BooleanType implements NamedType {
+    Boolean;
+}
+
+limited EuroType implements NamedType {
+    EUR;
+}
+
+/* The concept TypeRef represents a reference to a known type.
+ * In the 'language-extras.ast' file there is an example of a
+ * concept representing a type declaration.
+ */
+concept TypeRef base DocuType  {
+    reference type: NamedType;
+}
+
+limited InsuranceTheme {        // limited defined as a simple enumeration
+    HomeTheme; HealthTheme; LegalTheme;
+}
+
+limited PremiumDays {           // limited with various options
+    // if the 'name' property was not provided, it would have been generated
+    name: identifier;
+    nrOfDays: number;
+    // notations 'name:' and '"name":' are both correct
+    Week = { name: "Week", nrOfDays: 7 }
+    Month = { "name": "Month", nrOfDays: 30 }
+    // the following instance gets the name "Quarter"
+    Quarter = { nrOfDays: 91 }
+    // the following instance gets the name "Semester"
+    Semester = { nrOfDays: 182 }
+    // the following instance gets the name "Year"
+    Year = { nrOfDays: 365 }
+}

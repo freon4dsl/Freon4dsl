@@ -1,0 +1,12 @@
+editor UsingComments precedence 12
+
+BaseProduct {[
+    /* In this projection 'self.parts' is always shown according to the projection */
+    /* defined for concept InsurancePart in the editor 'comments'.                 */
+    Base Products ${self.name} for ${self.theme}
+        ${self.parts:comments}
+]}
+
+Entity {[
+    ${self.isCompany [COMPANY | PERSON]} ${self.name}
+]}

@@ -29,7 +29,9 @@ const config = [
 			// If we're building for production (npm run build
 			// instead of npm run dev), minify
 			production && terser()
-		]
+		],
+		external
+			: ['mobx', 'lodash', '@lionweb/repository-client', 'reflect-metadata']
 	},
 	{
 		// create a bundled version of the types for use in the sveltekit packages

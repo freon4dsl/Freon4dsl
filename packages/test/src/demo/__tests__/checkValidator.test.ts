@@ -216,9 +216,9 @@ describe("Testing Validator", () => {
         //     console.log(DemoEnvironment.getInstance().writer.writeToString(mm))
         // );
         errors = validator.validate(model, true);
-        errors.forEach(e =>
-            console.log(e.message + " => " + e.locationdescription + " prop: " + e.propertyName + " node: " + p(e.reportedOn) + " of severity " + e.severity)
-        );
+        // errors.forEach(e =>
+        //     console.log(e.message + " => " + e.locationdescription + " prop: " + e.propertyName + " node: " + p(e.reportedOn) + " of severity " + e.severity)
+        // );
         // TODO check every one of the messages
         expect(errors.length).toBe(24);
     });

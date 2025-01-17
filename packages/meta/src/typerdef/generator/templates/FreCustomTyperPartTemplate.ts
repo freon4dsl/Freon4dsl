@@ -14,7 +14,7 @@ export class FreCustomTyperPartTemplate {
         import { ${Names.FreNode}, ${Names.FreType}, FreTyper } from "${FREON_CORE}";
 
         /**
-         * Class '${generatedClassName}' is meant to be a convient place to add any
+         * Class '${generatedClassName}' is meant to be a convenient place to add any
          * custom code for type checking.
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {

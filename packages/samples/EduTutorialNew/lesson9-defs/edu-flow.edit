@@ -1,0 +1,22 @@
+/* This file contains the default editor definition. */
+
+editor default
+
+Flow {[
+    Flow ${self.name} for SiteGroup ${self.main}
+
+    ${self.rules vertical}
+]}
+
+FlowRule {[
+    -------------------------------------
+    Name: ${self.name}
+    Description: ${self.description}
+    From page ${self.page}
+
+        ${self.transitions}
+]}
+
+PageTransition {[
+    when ${self.condition} goto page ${self.toPage}
+]}

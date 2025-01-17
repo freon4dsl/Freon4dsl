@@ -35,6 +35,10 @@ export class RtString extends RtObject {
     length(): RtNumber {
         return new RtNumber(this.asString().length);
     }
+    
+    toString() {
+        return this.asString()
+    }
 }
 
 export function isRtString(object: any): object is RtString {

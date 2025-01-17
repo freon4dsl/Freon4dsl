@@ -1,0 +1,57 @@
+language Education
+
+modelunit Topic {
+    name: identifier;
+    reference main: SiteGroup;
+    description: string;
+    pages: Page[];
+}
+
+abstract concept Page {
+    name: identifier;
+    questions: Question[];
+    grading: GradeScore[]; /* concept from 'edu-scoring.ast' */
+}
+
+concept Theory base Page {
+    /* For the sake of the example this is simplified.
+    Should be formatted text including pictures, etc. */
+    content: Line[];
+}
+
+concept Line { // todo use MultiLine Component
+    content: string;
+}
+
+concept Video base Page {
+    url: string;
+}
+
+concept WorkSheet base Page {
+}
+
+concept ExamplePage base Page {
+    content: Line[];
+}
+
+concept InDepthMaterial base Page {
+    content: Line[];
+}
+
+concept Question {
+    name: identifier;
+    content: string;
+    correctAnswer: NumberConcept;
+}
+
+abstract concept NumberConcept {
+}
+
+concept SimpleNumber base NumberConcept {
+    value: number;
+}
+
+concept Fraction base NumberConcept {
+    numerator: number;
+    denominator: number;
+}

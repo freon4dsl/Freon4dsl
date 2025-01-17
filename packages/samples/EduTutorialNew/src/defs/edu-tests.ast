@@ -1,0 +1,31 @@
+language Education
+
+modelunit Test {
+    name: identifier;
+    scenarios: Scenario[];
+    reference main: SiteGroup;
+    reference flow: Flow;
+}
+
+concept Scenario {
+    description: string;
+    testFlow: TestFlow[];
+    steps: Step[]; /* Note that the order is of importance */
+}
+
+concept TestFlow {
+    steps: Step[]; /* Note that the order is of importance */
+}
+
+concept Step {
+    reference fromPage: Page;
+    answerSeries: Answer[];
+}
+
+concept LastStep base Step {
+}
+
+concept Answer {
+    reference question: Question;
+    value: NumberConcept;
+}

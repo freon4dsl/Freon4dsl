@@ -16,6 +16,7 @@ export class WebappConfigurator {
 
     serverCommunication: IServerCommunication;
     editorEnvironment: FreEnvironment;
+    isDemo: boolean = false;
 
     /**
      * Sets the object that will perform the communication with the server

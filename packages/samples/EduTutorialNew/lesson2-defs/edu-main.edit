@@ -1,0 +1,15 @@
+/* This file contains the default editor definition. */
+
+editor default
+
+SiteGroup {[
+    Main Topic Overview
+
+        Name: ${self.name}
+
+        Description: ${self.description}
+
+        Topics: ${self.topics}
+
+        Flows: ${self.flows}
+]}

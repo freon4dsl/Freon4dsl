@@ -1,6 +1,0 @@
-validator DocuValidator for language DocuProject
-
-EntityAttribute {
-    self.numVal >= 12;       // in .ast file: "numVal: number;"
-    self.numVal <= 30;
-}

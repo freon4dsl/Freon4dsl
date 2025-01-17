@@ -1,0 +1,29 @@
+editor externals precedence 20
+
+BaseProduct {
+[
+    Base Product for ${self.theme radio} ${self.name replace=SMUI_Dialog buttonLabel = "Change Product Name"}
+        [fragment FirstCard wrap=SMUI_Card] [fragment SecondCard wrap=SMUI_Card]
+        ${self.parts replace=SMUI_Accordion multi="multiple"}
+]
+    fragment FirstCard [
+    First Card
+        is still under construction: ${self.isUnderConstruction switch}
+        is approved level1: ${self.isApprovedLevel1 radio}
+        is approved level2: ${self.isApprovedLevel2 inner-switch}
+        is approved level3: ${self.isApprovedLevel3 checkbox}
+        [external=AnimatedGif number="1"]
+    ]
+    fragment SecondCard [
+    Second Card
+        [button text="Push me!" boxRole="MyButton-role"]
+        yields profit: ${self.yieldsProfit}
+        expected nr of use: ${self.nrOfUse slider}
+        range: ${self.range}
+        date: ${self.date replace=DatePicker startDate="24/02/2024"}
+    ]
+}
+
+Entity {[
+    ${self.isCompany inner-switch [COMPANY | PERSON]} ${self.name}
+]}

@@ -1,0 +1,17 @@
+/* This file contains the table definition in a separate editor / projection group.
+This enables the user to switch tables on and off. */
+
+editor buttonedTables precedence 5
+
+InsurancePart{
+table [
+    Name    | risk               | pay out          | is approved   | action
+    ${name} | ${statisticalRisk} | ${maximumPayOut} | ${isApproved} | [button boxRole="MyTableButton-role"]
+]
+}
+
+BaseProduct {[
+    Base Products ${name} for ${theme}
+        ${parts table rows}
+]}
+

@@ -141,7 +141,7 @@
 			<ViewMenu/>
 		</Section>
 		<Section>
-			<div class="mdc-typography--headline6">Freon Environment for {$languageName}</div>
+			<div class="mdc-typography--headline6">Freon for {$languageName}</div>
 		</Section>
 		<Section align="end" toolbar>
 			<IconButton aria-label="GitHub" target="_blank" href="https://github.com/freon4dsl/Freon4dsl.git">

@@ -1,7 +1,7 @@
 LionWeb errors:
 
 ```asciidoc
-> @freon4dsl/samples-docuproject@1.0.0-beta2 generate
+> @freon4dsl/samples-insurance@1.0.0-beta2 generate
 > bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs -o src/
 
  Starting generation of all parts of your language as defined in src/defs  

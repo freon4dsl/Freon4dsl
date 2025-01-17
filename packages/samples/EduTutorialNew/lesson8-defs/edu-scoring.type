@@ -1,0 +1,24 @@
+typer
+
+istype { Type }
+
+hastype { ScoreExpression }
+
+QuestionReference {
+    infertype PrimitiveType:Boolean;
+}
+NrOfCorrectAnswers {
+    infertype PrimitiveType:Integer;
+}
+NumberLiteralExpression {
+    infertype PrimitiveType:Integer;
+}
+OrExpression {
+    infertype PrimitiveType:Boolean;
+}
+AndExpression {
+    infertype PrimitiveType:Boolean;
+}
+ComparisonExpression {
+    infertype PrimitiveType:Boolean;
+}

@@ -1,0 +1,70 @@
+language Education
+
+concept GradeScore {
+    grade: Grade;
+    expr: ScoreExpression;
+}
+
+///////////////////////////////////
+/// Expressions
+//////////////////////////////////
+abstract expression ScoreExpression {
+}
+
+/* The value of a question reference is the answer given to the
+given question */
+expression QuestionReference base ScoreExpression {
+    reference question: Question;
+}
+
+/* The value of NrOfCorrectAnswers is the total number of correct
+answers on a page. */
+expression NrOfCorrectAnswers base ScoreExpression {
+}
+
+/* The value of a NumberLiteralExpression is simply a number, like '24' */
+expression NumberLiteralExpression base ScoreExpression {
+    value: number;
+}
+
+///////////////////////////////////
+/// Boolean AND and OR
+//////////////////////////////////
+abstract binary expression BinaryExpression base ScoreExpression {
+    left: ScoreExpression;
+    right: ScoreExpression;
+}
+
+binary expression AndExpression base BinaryExpression {
+    priority = 1;
+}
+
+binary expression OrExpression base BinaryExpression {
+    priority = 1;
+}
+
+///////////////////////////////////
+/// Comparisons: <=, >=, >, <, ===
+//////////////////////////////////
+abstract binary expression ComparisonExpression base BinaryExpression {
+}
+
+binary expression LessOrEqualsExpression base ComparisonExpression {
+    priority = 2;
+}
+
+binary expression GreaterOrEqualsExpression base ComparisonExpression {
+    priority = 2;
+}
+
+binary expression LessThenExpression base ComparisonExpression {
+    priority = 2;
+}
+
+binary expression GreaterThenExpression base ComparisonExpression {
+    priority = 2;
+}
+
+binary expression EqualsExpression base ComparisonExpression {
+    priority = 2;
+}

@@ -25,17 +25,17 @@
                                         <Item on:SMUI:action={() => (openUnit(index))}>
                                             <Text>Open</Text>
                                         </Item>
-                                        <Item on:SMUI:action={() => (saveUnit(index))}>
+                                        <Item on:SMUI:action={() => (saveUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
                                             <Text>Save</Text>
                                         </Item>
-                                        <Item on:SMUI:action={() => (renameUnit(index))}>
+                                        <Item on:SMUI:action={() => (renameUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
                                             <Text>Rename</Text>
                                         </Item>
-                                        <Item on:SMUI:action={() => (deleteUnit(index))}>
+                                        <Item on:SMUI:action={() => (deleteUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
                                             <Text>Delete</Text>
                                         </Item>
                                         <Separator/>
-                                        <Item on:SMUI:action={() => (exportUnit(index))}>
+                                        <Item on:SMUI:action={() => (exportUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
                                             <Text>Export</Text>
                                         </Item>
                                     </List>
@@ -69,6 +69,7 @@
     import { ImportExportHandler } from "../../language/ImportExportHandler.js";
     import { Anchor } from "@smui/menu-surface";
     import { FreErrorSeverity, type FreModelUnit } from "@freon4dsl/core";
+    import {WebappConfigurator} from "$lib";
     
     // TODO add rename option to context menu
     let menus: MenuComponentDev[] = [];

@@ -1,0 +1,42 @@
+language InsuranceModel
+
+////////////////////////////////////////////////////////////////
+//       Concepts to explain indentation                      //
+////////////////////////////////////////////////////////////////
+
+concept Text {
+}
+concept Text2 {
+}
+concept Text3 {
+}
+concept Text4 {
+}
+
+limited GenericKind { Set; Sequence; Bag; Collection; }
+
+/* A GenericTypeDecl is the AST representation of the 'Set[string]' part in declaration
+ * 'someAttr: Set[string]'.
+ * It is not a type itself, however, there is a one-to-one correspondence to a TT_GenericType,
+ * which is defined in the typer definition.
+ */
+concept GenericTypeDecl base DocuType {
+    baseType: DocuType;
+    kind: GenericKind; // is it a set, sequence, bag, or anything else
+}
+
+expression GenericLiteral base DocuExpression {
+    // Set{ 12, 14, 16, 18 }
+    content: DocuExpression[];
+    kind: GenericKind;
+}
+
+concept Entity {
+    isCompany: boolean;
+    name: identifier;
+    reference baseEntity?: Entity;
+}
+
+concept EntityAttribute {
+    numVal: number;
+}

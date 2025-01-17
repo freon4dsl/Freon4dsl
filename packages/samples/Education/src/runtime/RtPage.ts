@@ -1,5 +1,5 @@
 import { RtBoolean, RtObject } from "@freon4dsl/core";
-import { Grade, Page } from "../language/gen/index.js";
+import { Page } from "../language/gen/index.js";
 
 export class RtPage extends RtObject {
     readonly _type: string = "RtPage";
@@ -19,7 +19,7 @@ export class RtPage extends RtObject {
     }
 
     override toString(): string {
-        return `page: ${this.page.name}`;
+        return `page: ${this.page?.name}`;
     }
 }
 

@@ -1,0 +1,70 @@
+/* This file contains the default editor definition. */
+
+editor default
+
+global {
+    boolean inner-switch [YES | NO] // the strings used to display a boolean value, all booleans will default be displayed as an inner switch control
+//    limited radio
+//    limited[] checkbox
+    // number slider  // you can use the slider control as default projection for numbers, but this will not often be the preferred option
+    referenceSeparator [:] // the string that separates the names in a path name, e.g. pack1:cls3:part
+    external {
+        AnimatedGif,
+        SMUI_Card,
+        SMUI_Accordion,
+        SMUI_Dialog,
+        DatePicker
+    }
+}
+
+// both modelunits show a single concept
+Part {[ ${self.part} ]}
+Product {[ ${self.product} ]}
+
+BaseProduct {[
+    Base Products ${name} for ${theme}
+        ${parts}
+]}
+
+InsurancePart{
+[
+    Insurance Part ${self.name}
+        risk assessment: ${self.statisticalRisk}
+        maximum payout: ${self.maximumPayOut}
+        is approved: ${self.isApproved [JA | NEE]}
+]
+}
+
+InsuranceProduct {[
+    Insurance Product ${name} ( public name: ${productName} ) USES ${basedOn horizontal separator[, ]}
+        Themes: ${themes horizontal separator[, ]}
+        Premium: ${advertisedPremium} per ${nrPremiumDays}
+        Insured risks:
+            ${parts vertical terminator [;]}
+        Calculation
+            [? Risk adjusted by = ${riskAdjustment} ]
+            calculated premium: ${calculation}
+        [?Helper functions:
+            ${helpers vertical}]
+]}
+
+CalcFunction {
+    [
+        ${name} ( ${parameters horizontal separator[,]} ): ${declaredType} {
+            ${body}
+        }
+    ]
+}
+Description {
+    [${content}]
+}
+Parameter {
+     [${name} : ${declaredType}]
+}
+
+// No need for projections for DocuType and its implementors, they
+// are only used as references, so their names suffice.
+
+Entity {[
+    ${self.isCompany [COMPANY]} ${self.name}
+]}

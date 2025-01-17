@@ -71,3 +71,11 @@ body {
   background: blanchedalmond;
   padding: 2px;
 }
+
+.smui-accordion {
+  width: 800px;
+}
+
+.mdc-layout-grid__inner {
+  grid-template-columns: repeat(20, auto);
+}

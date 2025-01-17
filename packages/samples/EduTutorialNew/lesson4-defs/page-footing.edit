@@ -1,0 +1,11 @@
+/* This file contains the footing editor definition. */
+
+editor footing
+
+Page {[
+    Questions:
+        ${self.questions vertical}
+
+    Score
+        ${self.grading vertical}
+]}

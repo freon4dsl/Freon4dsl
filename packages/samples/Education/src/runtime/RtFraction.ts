@@ -1,4 +1,4 @@
-import { isRtString, RtBoolean, RtNumber, RtObject, RtString } from "@freon4dsl/core";
+import { RtBoolean, RtNumber, RtObject } from "@freon4dsl/core";
 
 export class RtFraction extends RtObject {
     readonly _type: string = "RtFraction";
@@ -17,6 +17,10 @@ export class RtFraction extends RtObject {
         } else {
             return RtBoolean.FALSE;
         }
+    }
+    
+    override toString(): string {
+        return "" + this.nominator.toString() + "/" + this.denumerator.toString()
     }
 
 }

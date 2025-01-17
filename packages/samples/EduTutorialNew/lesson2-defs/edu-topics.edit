@@ -1,0 +1,85 @@
+/* This file contains the default editor definition. */
+
+editor default
+
+Topic {[
+    SiteGroup: ${self.main}
+    Topic: ${self.name}
+    Topic description: ${self.description}
+
+    Pages:
+    ${self.pages vertical }
+]}
+
+Page {[
+    ${self.name}
+]}
+
+Theory {[
+    ----------------------------------------------------
+    Theory [=>Page]
+        ${self.content vertical terminator[== END OF LINE]}
+
+    Questions:
+        ${self.questions vertical}
+]}
+
+Video {[
+    ----------------------------------------------------
+    Video [=>Page]
+        Maybe this video will help you understand.
+        ${self.url}
+
+    Questions:
+        ${self.questions vertical}
+]}
+
+WorkSheet {[
+    ----------------------------------------------------
+    Worksheet [=>Page]
+        See if you can answer the following questions.
+
+    Questions:
+        ${self.questions vertical}
+]}
+
+ExamplePage {[
+    ----------------------------------------------------
+    Example [=>Page]
+        ${self.content}
+
+        Now, please, answer the following questions.
+
+    Questions:
+        ${self.questions vertical}
+]}
+
+InDepthMaterial {[
+    ----------------------------------------------------
+    InDepthMaterial [=>Page]
+        ${self.content}
+
+        Test your understanding by answering the following questions.
+
+    Questions:
+        ${self.questions vertical}
+]}
+
+Question {[
+    ${self.name}
+        ${self.content}
+        Correct Answer: ${self.correctAnswer}
+]}
+
+Line {
+    [${self.content}]
+}
+
+SimpleNumber {
+    [${self.value}]
+}
+
+Fraction {
+    [${numerator} / ${denominator}]
+    trigger = "/"
+}

@@ -13,7 +13,7 @@
 	>
 		<List>
 			{#each menuItems as item (item.id)}
-				<Item on:SMUI:action={() => (handleClick(item.id))}>
+				<Item on:SMUI:action={() => (handleClick(item.id))} disabled={WebappConfigurator.getInstance().isDemo}>
 					<Text>{item.title}</Text>
 				</Item>
 				{#if item.id === 2}
@@ -86,8 +86,10 @@
 		// console.log("FileMenu.changeModel");
         // get list of models from server
         const names = await WebappConfigurator.getInstance().serverCommunication.loadModelList()
-		if (names.length > 0) {
+		if (names && names.length > 0) {
 			$modelNames = names;
+		} else {
+			$modelNames = [];
 		}
 		$openModelDialogVisible = true;
     }
@@ -98,8 +100,12 @@
 		if (!!$currentModelName && $currentModelName.length > 0) {
 			// get list of units from server, because new unit may not have the same name as an existing one
 			const names: ModelUnitIdentifier[] = await WebappConfigurator.getInstance().serverCommunication.loadUnitList($currentModelName);
-			// list may be empty => this is the first unit to be stored
-			$unitNames = names;
+			if (names) {
+				// list may be empty => this is the first unit to be stored
+				$unitNames = names;
+			} else {
+				$unitNames = [];
+			}
 			$newUnitDialogVisible = true;
 		} else {
 			setUserMessage("Please, select or create a model first.");
@@ -109,7 +115,12 @@
     // save unit menuitem
     const saveUnit = () => {
         // console.log("FileMenu.saveUnit: " + $currentUnitName);
-        EditorState.getInstance().saveCurrentUnit();
+		if ($currentUnitName) {
+			EditorState.getInstance().saveCurrentUnit();
+			setUserMessage(`Unit '${$currentUnitName.name}' saved.`);
+		} else {
+			setUserMessage('No current unit.')
+		}
     }
 
     // delete model menuitem

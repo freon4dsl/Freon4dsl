@@ -1,0 +1,5 @@
+language Education
+
+modelunit Test {
+    name: identifier;
+}

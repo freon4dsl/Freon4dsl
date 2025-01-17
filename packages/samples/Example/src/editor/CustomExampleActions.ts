@@ -28,7 +28,6 @@ export class CustomExampleActions implements FreCombinedActions {
     customActions: FreCustomAction[] = MANUAL_CUSTOM_ACTIONS;
 }
 
-
 const cust: FreCustomAction[] = [
     FreCustomAction.create({
         activeInBoxRoles: [],

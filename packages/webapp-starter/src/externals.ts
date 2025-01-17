@@ -1,10 +1,10 @@
-// For DocuProject:
-// import ShowAnimatedGif from "./customComponents/forDocuProject/ShowAnimatedGif.svelte";
-// import SMUI_Card_Component from "./customComponents/forDocuProject/SMUI_Card_Component.svelte";
-// import SMUI_Accordion from "./customComponents/forDocuProject/SMUI_Accordion.svelte";
-// import SMUI_Dialog from "./customComponents/forDocuProject/SMUI_Dialog.svelte";
-// import DatePicker from "./customComponents/forDocuProject/DatePicker.svelte";
-// import {InsuranceModelEnvironment} from "@freon4dsl/samples-docuproject";
+// For InsuranceModel:
+// import ShowAnimatedGif from "./customComponents/forInsuranceModel/ShowAnimatedGif.svelte";
+// import SMUI_Card_Component from "./customComponents/forInsuranceModel/SMUI_Card_Component.svelte";
+// import SMUI_Accordion from "./customComponents/forInsuranceModel/SMUI_Accordion.svelte";
+// import SMUI_Dialog from "./customComponents/forInsuranceModel/SMUI_Dialog.svelte";
+// import DatePicker from "./customComponents/forInsuranceModel/DatePicker.svelte";
+// import {InsuranceModelEnvironment} from "@freon4dsl/samples-insurance";
 // For ExternalTester
 // import BooleanWrapperComponent from "./customComponents/forExternalTester/BooleanWrapperComponent.svelte";
 // import NumberWrapperComponent from "./customComponents/forExternalTester/NumberWrapperComponent.svelte";
@@ -24,6 +24,12 @@
 // import RefListWrapperComponent from "./customComponents/forExternalTester/RefListWrapperComponent.svelte";
 // import { ExternalModelEnvironment } from "@freon4dsl/samples-external-tester";
 
+import {setCustomComponents} from "@freon4dsl/core-svelte";
+import PersonIcon from "./customComponents/forCourseSchedule/PersonIcon.svelte";
+import PhoneButton from "./customComponents/forCourseSchedule/PhoneButton.svelte";
+import StaffAccordion from "./customComponents/forCourseSchedule/StaffAccordion.svelte";
+import Schedule from "./customComponents/forCourseSchedule/Schedule.svelte";
+
 /**
  * Configure the external components used, so Freon can find them.
  */
@@ -31,7 +37,14 @@ export function configureExternals() {
     /**
      * Make the external components known to Freon before starting the app!
      */
-// For DocuProject:
+// For CourseSchedule:
+    setCustomComponents([
+        { component: PersonIcon, knownAs: "PersonIcon" },
+        { component: PhoneButton, knownAs: "PhoneButton" },
+        { component: StaffAccordion, knownAs: "StaffAccordion" },
+        { component: Schedule, knownAs: "Schedule" },
+    ]);
+// For InsuranceModel:
 // setCustomComponents([
 // 	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
 // 	{component: SMUI_Card_Component, knownAs: "SMUI_Card"},
@@ -59,6 +72,6 @@ export function configureExternals() {
 //     { component: ExternalSimpleComponent, knownAs: "simple" },
 //     { component: ExternalStringComponent, knownAs: "stringReplacer" },
 // ]);
-    
+
 }
 
