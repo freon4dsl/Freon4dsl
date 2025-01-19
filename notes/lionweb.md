@@ -85,3 +85,5 @@ Enumerations in LionWeb are DataTypes, in Freon Limiteds are concepts.
 
 - [ ] Option 2
    - Simplify Limited to Enumeration in Freon (**Alternative Solution**)
+
+### Other?
