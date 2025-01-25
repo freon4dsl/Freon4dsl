@@ -1,28 +1,33 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-Education",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-99",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Topic"
+            "key": "-key-Topic"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Topic-name"
+                  "key": "-key-Topic-name"
                },
                "value": "Fractions102"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Topic-description"
+                  "key": "-key-Topic-description"
                },
                "value": ""
             }
@@ -30,9 +35,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Topic-pages"
+                  "key": "-key-Topic-pages"
                },
                "children": [
                   "ID-100",
@@ -43,37 +48,23 @@
                ]
             }
          ],
-         "references": [
-            {
-               "reference": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Topic-subject"
-               },
-               "targets": [
-                  {
-                     "resolveInfo": "Fractions",
-                     "reference": "ID-18"
-                  }
-               ]
-            }
-         ],
+         "references": [],
          "annotations": [],
          "parent": null
       },
       {
          "id": "ID-100",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Theory"
+            "key": "-key-Theory"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-name"
+                  "key": "-key-Page-name"
                },
                "value": "Theory102"
             }
@@ -81,17 +72,25 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Theory-content"
+                  "key": "-key-Theory-content"
                },
                "children": []
             },
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-questions"
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
                },
                "children": []
             }
@@ -103,24 +102,24 @@
       {
          "id": "ID-101",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Video"
+            "key": "-key-Video"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Video-url"
+                  "key": "-key-Video-url"
                },
                "value": ""
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-name"
+                  "key": "-key-Page-name"
                },
                "value": "Video2"
             }
@@ -128,9 +127,17 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-questions"
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
                },
                "children": []
             }
@@ -142,16 +149,16 @@
       {
          "id": "ID-102",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-WorkSheet"
+            "key": "-key-WorkSheet"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-name"
+                  "key": "-key-Page-name"
                },
                "value": "Worksheet2"
             }
@@ -159,9 +166,17 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-questions"
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
                },
                "children": []
             }
@@ -173,16 +188,16 @@
       {
          "id": "ID-103",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-ExamplePage"
+            "key": "-key-ExamplePage"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-name"
+                  "key": "-key-Page-name"
                },
                "value": "Example2"
             }
@@ -190,17 +205,25 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-ExamplePage-content"
+                  "key": "-key-ExamplePage-content"
                },
                "children": []
             },
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-questions"
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
                },
                "children": []
             }
@@ -212,16 +235,16 @@
       {
          "id": "ID-104",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-InDepthMaterial"
+            "key": "-key-InDepthMaterial"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-name"
+                  "key": "-key-Page-name"
                },
                "value": "InDepth2"
             }
@@ -229,17 +252,25 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-InDepthMaterial-content"
+                  "key": "-key-InDepthMaterial-content"
                },
                "children": []
             },
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-questions"
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
                },
                "children": []
             }

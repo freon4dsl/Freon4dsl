@@ -128,7 +128,7 @@ export class EducationInterpreter extends EducationInterpreterBase {
         }
         const pageRule: FlowRule = currentFlow.flow.rules.find((rule) => rule.$page === currentPage)
         if (isNullOrUndefined(pageRule)) {
-            return new RtError(`No rules found for page ${currentPage.name} in ${currentFlow.flow.name}`)
+            return new RtError(`No rules found for page ${currentPage.name} in ${currentFlow.flow.name}, rules are ${currentFlow.flow.rules.map(r => r.name)}`)
         }
         const transition = pageRule.transitions.find((trans) => trans.$condition === (grade as RtGrade).grade)
         if (isNullOrUndefined(transition)) {

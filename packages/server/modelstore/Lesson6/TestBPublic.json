@@ -5,16 +5,16 @@
       {
          "id": "ID-17",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Test"
+            "key": "-key-Test"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Test-name"
+                  "key": "-key-Test-name"
                },
                "value": "TestB"
             }
@@ -22,9 +22,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Test-scenarios"
+                  "key": "-key-Test-scenarios"
                },
                "children": [
                   "ID-36",
@@ -35,9 +35,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Test-main"
+                  "key": "-key-Test-main"
                },
                "targets": [
                   {
@@ -48,9 +48,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Test-flow"
+                  "key": "-key-Test-flow"
                },
                "targets": [
                   {
@@ -66,16 +66,16 @@
       {
          "id": "ID-36",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Scenario"
+            "key": "-key-Scenario"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-description"
+                  "key": "-key-Scenario-description"
                },
                "value": "The route that a really good student may take"
             }
@@ -83,9 +83,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-testFlow"
+                  "key": "-key-Scenario-testFlow"
                },
                "children": [
                   "ID-88",
@@ -94,9 +94,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-steps"
+                  "key": "-key-Scenario-steps"
                },
                "children": [
                   "ID-82",
@@ -112,17 +112,17 @@
       {
          "id": "ID-88",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-TestFlow"
+            "key": "-key-TestFlow"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-TestFlow-steps"
+                  "key": "-key-TestFlow-steps"
                },
                "children": [
                   "ID-90",
@@ -138,17 +138,17 @@
       {
          "id": "ID-90",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answerSeries"
+                  "key": "-key-Step-answerSeries"
                },
                "children": [
                   "ID-91",
@@ -161,9 +161,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-fromPage"
+                  "key": "-key-Step-fromPage"
                },
                "targets": [
                   {
@@ -179,17 +179,17 @@
       {
          "id": "ID-91",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-92"
@@ -199,9 +199,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -217,16 +217,16 @@
       {
          "id": "ID-92",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-SimpleNumber"
+            "key": "-key-SimpleNumber"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SimpleNumber-value"
+                  "key": "-key-SimpleNumber-value"
                },
                "value": "7"
             }
@@ -239,17 +239,17 @@
       {
          "id": "ID-112",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-113"
@@ -259,9 +259,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -277,24 +277,24 @@
       {
          "id": "ID-113",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Fraction"
+            "key": "-key-Fraction"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-numerator"
+                  "key": "-key-Fraction-numerator"
                },
                "value": "3"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-denominator"
+                  "key": "-key-Fraction-denominator"
                },
                "value": "10"
             }
@@ -307,17 +307,17 @@
       {
          "id": "ID-114",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-115"
@@ -327,9 +327,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -345,24 +345,24 @@
       {
          "id": "ID-115",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Fraction"
+            "key": "-key-Fraction"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-numerator"
+                  "key": "-key-Fraction-numerator"
                },
                "value": "10"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-denominator"
+                  "key": "-key-Fraction-denominator"
                },
                "value": "24"
             }
@@ -375,17 +375,17 @@
       {
          "id": "ID-116",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-117"
@@ -395,9 +395,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -413,24 +413,24 @@
       {
          "id": "ID-117",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Fraction"
+            "key": "-key-Fraction"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-numerator"
+                  "key": "-key-Fraction-numerator"
                },
                "value": "5"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-denominator"
+                  "key": "-key-Fraction-denominator"
                },
                "value": "12"
             }
@@ -443,17 +443,17 @@
       {
          "id": "ID-96",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answerSeries"
+                  "key": "-key-Step-answerSeries"
                },
                "children": [
                   "ID-110"
@@ -463,9 +463,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-fromPage"
+                  "key": "-key-Step-fromPage"
                },
                "targets": [
                   {
@@ -481,17 +481,17 @@
       {
          "id": "ID-110",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-125"
@@ -501,9 +501,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -519,16 +519,16 @@
       {
          "id": "ID-125",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-SimpleNumber"
+            "key": "-key-SimpleNumber"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SimpleNumber-value"
+                  "key": "-key-SimpleNumber-value"
                },
                "value": "49"
             }
@@ -541,17 +541,17 @@
       {
          "id": "ID-93",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-LastStep"
+            "key": "-key-LastStep"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answerSeries"
+                  "key": "-key-Step-answerSeries"
                },
                "children": []
             }
@@ -559,9 +559,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-fromPage"
+                  "key": "-key-Step-fromPage"
                },
                "targets": [
                   {
@@ -577,17 +577,17 @@
       {
          "id": "ID-126",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-TestFlow"
+            "key": "-key-TestFlow"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-TestFlow-steps"
+                  "key": "-key-TestFlow-steps"
                },
                "children": [
                   "ID-127",
@@ -602,17 +602,17 @@
       {
          "id": "ID-127",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answerSeries"
+                  "key": "-key-Step-answerSeries"
                },
                "children": [
                   "ID-128"
@@ -622,9 +622,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-fromPage"
+                  "key": "-key-Step-fromPage"
                },
                "targets": [
                   {
@@ -640,17 +640,17 @@
       {
          "id": "ID-128",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-121"
@@ -660,9 +660,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -678,24 +678,24 @@
       {
          "id": "ID-121",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Fraction"
+            "key": "-key-Fraction"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-numerator"
+                  "key": "-key-Fraction-numerator"
                },
                "value": "7"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-denominator"
+                  "key": "-key-Fraction-denominator"
                },
                "value": "10"
             }
@@ -708,17 +708,17 @@
       {
          "id": "ID-122",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answerSeries"
+                  "key": "-key-Step-answerSeries"
                },
                "children": [
                   "ID-124"
@@ -728,9 +728,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-fromPage"
+                  "key": "-key-Step-fromPage"
                },
                "targets": [
                   {
@@ -746,9 +746,9 @@
       {
          "id": "ID-124",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [],
@@ -759,17 +759,17 @@
       {
          "id": "ID-82",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answerSeries"
+                  "key": "-key-Step-answerSeries"
                },
                "children": [
                   "ID-83"
@@ -779,9 +779,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-fromPage"
+                  "key": "-key-Step-fromPage"
                },
                "targets": [
                   {
@@ -797,17 +797,17 @@
       {
          "id": "ID-83",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-86"
@@ -817,9 +817,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -835,16 +835,16 @@
       {
          "id": "ID-86",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-SimpleNumber"
+            "key": "-key-SimpleNumber"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SimpleNumber-value"
+                  "key": "-key-SimpleNumber-value"
                },
                "value": "9"
             }
@@ -857,17 +857,17 @@
       {
          "id": "ID-44",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answerSeries"
+                  "key": "-key-Step-answerSeries"
                },
                "children": [
                   "ID-49",
@@ -882,17 +882,17 @@
       {
          "id": "ID-49",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-50"
@@ -902,9 +902,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -920,16 +920,16 @@
       {
          "id": "ID-50",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-SimpleNumber"
+            "key": "-key-SimpleNumber"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SimpleNumber-value"
+                  "key": "-key-SimpleNumber-value"
                },
                "value": "8"
             }
@@ -942,17 +942,17 @@
       {
          "id": "ID-74",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-75"
@@ -962,9 +962,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -980,24 +980,24 @@
       {
          "id": "ID-75",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Fraction"
+            "key": "-key-Fraction"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-numerator"
+                  "key": "-key-Fraction-numerator"
                },
                "value": "7"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Fraction-denominator"
+                  "key": "-key-Fraction-denominator"
                },
                "value": "8"
             }
@@ -1010,17 +1010,17 @@
       {
          "id": "ID-80",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answerSeries"
+                  "key": "-key-Step-answerSeries"
                },
                "children": [
                   "ID-81"
@@ -1034,17 +1034,17 @@
       {
          "id": "ID-81",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-value"
+                  "key": "-key-Answer-value"
                },
                "children": [
                   "ID-87"
@@ -1054,9 +1054,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -1072,16 +1072,16 @@
       {
          "id": "ID-87",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-SimpleNumber"
+            "key": "-key-SimpleNumber"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SimpleNumber-value"
+                  "key": "-key-SimpleNumber-value"
                },
                "value": "70"
             }
@@ -1094,16 +1094,16 @@
       {
          "id": "ID-129",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Scenario"
+            "key": "-key-Scenario"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-description"
+                  "key": "-key-Scenario-description"
                },
                "value": ""
             }
@@ -1111,17 +1111,17 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-testFlow"
+                  "key": "-key-Scenario-testFlow"
                },
                "children": []
             },
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-steps"
+                  "key": "-key-Scenario-steps"
                },
                "children": []
             }
