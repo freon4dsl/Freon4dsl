@@ -14,6 +14,17 @@
 
 ### Incompatibilities
 
+### ModelUnits
+
+- [ ] In Freon a modeluin cannit imple,ent interfaces or have a base concept, in LionWeb a partition can have those.
+  - [ ] Solution is to allow these in Freon, seems straightforward, as modelunits are almost the same as concepts anyway (**chosen**)
+
+### Names
+- [ ] Names in Freon should be identifiers, LionWeb allows almost anything as name.
+  - [ ] Should allow wider name syntax, using e.g. quotes 'this is a name' as delimiters in the parser.
+- [ ] Freon requires a `name: identifier` property to allow a reference to a concept. LionWeb does not.
+  - [ ] Make Freon name/id or both supported for references.
+
 #### Primitive Types
 - [ ] Freon allows multi-valued primitive properties, LionWeb does not
   - [ ] Option 1: remove them from Freon (**Chosen**)
@@ -69,6 +80,10 @@ Enumerations in LionWeb are DataTypes, in Freon Limiteds are concepts.
    - Map limited to Concept in LionWeb
    - Map Enumeration to Limited in LionWeb
    - Problem 2-way: LionWeb.Enumeration => Freon.Limited => LionWeb.Concept
+     Can be solved by smart (de)serializer from/to LionWeb
+     (** Probably best solution**)
 
 - [ ] Option 2
-   - Simplify Limited to Enumeration in Freon (**My Choice: Jos**)
+   - Simplify Limited to Enumeration in Freon (**Alternative Solution**)
+
+### Other?
