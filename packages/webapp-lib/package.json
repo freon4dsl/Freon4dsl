@@ -45,6 +45,7 @@
   ],
   "dependencies": {
     "@freon4dsl/core": "1.0.0-beta3",
+    "@freon4dsl/core-svelte": "1.0.0-beta3",
     "svelte": "< 5.0.0",
     "click-outside": "^2.0.2",
     "mobx": "^6.12.13",
