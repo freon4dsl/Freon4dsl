@@ -42,21 +42,21 @@ export class InterpreterGenerator {
         FileUtil.deleteFilesInDir(this.interpreterGenFolder, generationStatus);
 
         let generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
-        let generatedContent = template.interpreterBase(this.language, interpreterDef);
+        let generatedContent = FileUtil.pretty(template.interpreterBase(this.language, interpreterDef), "interpreter base class" ,generationStatus);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterClassname(this.language)}.ts`;
-        generatedContent = template.interpreterClass(this.language);
+        generatedContent = FileUtil.pretty(template.interpreterClass(this.language), "interpreter manual file" ,generationStatus);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
         // this.makeFile("interpreter class", generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterInitname(this.language)}.ts`;
-        generatedContent = template.interpreterInit(this.language, interpreterDef);
+        generatedContent = FileUtil.pretty(template.interpreterInit(this.language, interpreterDef), "interpreter init file" ,generationStatus);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
         // FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter init")
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterName(this.language)}.ts`;
-        generatedContent = mainTemplate.interpreterMain(this.language);
+        generatedContent = FileUtil.pretty(mainTemplate.interpreterMain(this.language), "interpreter main file" ,generationStatus);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
     }
 
