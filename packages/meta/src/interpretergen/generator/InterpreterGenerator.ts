@@ -42,7 +42,7 @@ export class InterpreterGenerator {
         FileUtil.deleteFilesInDir(this.interpreterGenFolder, generationStatus);
 
         let generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
-        let generatedContent = FileUtil.pretty(template.interpreterBase(this.language, interpreterDef), "interpreter base class" ,generationStatus);
+        let generatedContent = template.interpreterBase(this.language, interpreterDef);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterClassname(this.language)}.ts`;
@@ -51,12 +51,12 @@ export class InterpreterGenerator {
         // this.makeFile("interpreter class", generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterInitname(this.language)}.ts`;
-        generatedContent = FileUtil.pretty(template.interpreterInit(this.language, interpreterDef), "interpreter init file" ,generationStatus);
+        generatedContent = template.interpreterInit(this.language, interpreterDef);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
         // FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter init")
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterName(this.language)}.ts`;
-        generatedContent = FileUtil.pretty(mainTemplate.interpreterMain(this.language), "interpreter main file" ,generationStatus);
+        generatedContent = mainTemplate.interpreterMain(this.language);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
     }
 
