@@ -1,7 +1,7 @@
 import { FreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/webapp-lib";
 import { configureExternals } from "./externals.js";
 import { configureLoggers } from "./loggers.js";
-import { LanguageEnvironment } from "@freon4dsl/samples-course-schedule";
+import { LanguageEnvironment } from "@freon4dsl/samples-edu-tutorial";
 import { ServerCommunication} from "@freon4dsl/core";
 
 /**

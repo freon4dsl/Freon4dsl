@@ -108,7 +108,9 @@
                   "version": "2023.1",
                   "key": "-key-Page-grading"
                },
-               "children": []
+               "children": [
+                  "ID-49"
+               ]
             }
          ],
          "references": [],
@@ -187,6 +189,113 @@
          "parent": "ID-95"
       },
       {
+         "id": "ID-49",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-GradeScore"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-GradeScore-expr"
+               },
+               "children": [
+                  "ID-75"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-GradeScore-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-11"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-100"
+      },
+      {
+         "id": "ID-75",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-74"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-81"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-74",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-NrOfCorrectAnswers"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-75"
+      },
+      {
+         "id": "ID-81",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-NumberLiteralExpression-value"
+               },
+               "value": "1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-75"
+      },
+      {
          "id": "ID-101",
          "classifier": {
             "language": "-key-Education",
@@ -226,12 +335,121 @@
                   "version": "2023.1",
                   "key": "-key-Page-grading"
                },
-               "children": []
+               "children": [
+                  "ID-82"
+               ]
             }
          ],
          "references": [],
          "annotations": [],
          "parent": "ID-99"
+      },
+      {
+         "id": "ID-82",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-GradeScore"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-GradeScore-expr"
+               },
+               "children": [
+                  "ID-87"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-GradeScore-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-11"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-101"
+      },
+      {
+         "id": "ID-87",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-86"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-122"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-82"
+      },
+      {
+         "id": "ID-86",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-NrOfCorrectAnswers"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-87"
+      },
+      {
+         "id": "ID-122",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-NumberLiteralExpression-value"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-87"
       },
       {
          "id": "ID-102",
