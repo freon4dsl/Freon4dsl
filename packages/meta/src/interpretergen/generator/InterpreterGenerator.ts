@@ -46,7 +46,7 @@ export class InterpreterGenerator {
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterClassname(this.language)}.ts`;
-        generatedContent = template.interpreterClass(this.language);
+        generatedContent = FileUtil.pretty(template.interpreterClass(this.language), "interpreter manual file" ,generationStatus);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
         // this.makeFile("interpreter class", generatedFilePath, generatedContent, generationStatus);
 

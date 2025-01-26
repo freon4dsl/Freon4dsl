@@ -9,7 +9,7 @@ export class InterpreterBaseTemplate {
      * @param interpreterDef
      */
     public interpreterBase(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
-        return `// Generated my Freon, will be overwritten with every generation.
+        return `// Will be overwritten with every generation.
         import { InterpreterContext, RtObject, RtError } from "@freon4dsl/core";
         import { ${interpreterDef.conceptsToEvaluate.map((c) => Names.classifier(c)).join(",")} } from "../../language/gen/index.js";
 
@@ -35,15 +35,15 @@ export class InterpreterBaseTemplate {
 
     public interpreterClass(language: FreMetaLanguage): string {
         const baseName = Names.interpreterBaseClassname(language);
-        return `// Generated my Freon once, will NEVER be overwritten.
+        return `// Generated once, will NEVER be overwritten.
         import { InterpreterContext, IMainInterpreter, RtObject } from "@freon4dsl/core";
         import { ${baseName} } from "./gen/${baseName}.js";
 
         let main: IMainInterpreter;
 
         /**
-         * The class containing all interpreter functions twritten by thge language engineer.
-         * This class is initially empty,  and will not be overwritten if it already exists..
+         * The class containing all interpreter functions written by the language engineer.
+         * This class is initially empty, and will not be overwritten if it already exists.
          */
         export class ${Names.interpreterClassname(language)} extends ${baseName} {
 
