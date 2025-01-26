@@ -1,28 +1,33 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-Education",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-18",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-SiteGroup"
+            "key": "-key-SiteGroup"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SiteGroup-name"
+                  "key": "-key-SiteGroup-name"
                },
                "value": "Fractions"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SiteGroup-description"
+                  "key": "-key-SiteGroup-description"
                },
                "value": "Mathematics, fractions for children age 10 or comparable level"
             }
@@ -31,9 +36,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SiteGroup-topics"
+                  "key": "-key-SiteGroup-topics"
                },
                "targets": [
                   {
@@ -52,17 +57,17 @@
             },
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SiteGroup-flows"
+                  "key": "-key-SiteGroup-flows"
                },
                "targets": []
             },
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-SiteGroup-tests"
+                  "key": "-key-SiteGroup-tests"
                },
                "targets": []
             }

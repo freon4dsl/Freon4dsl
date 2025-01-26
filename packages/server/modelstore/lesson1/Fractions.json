@@ -1,28 +1,28 @@
 {
-   "serializationFormatVersion": "2023.1",
+   "serializationFormatVersion": "2023.1", 
    "languages": [],
    "nodes": [
       {
          "id": "ID-18",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Subject"
+            "key": "-key-SiteGroup"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Subject-name"
+                  "key": "-key-SiteGroup-name"
                },
                "value": "Fractions"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Subject-description"
+                  "key": "-key-SiteGroup-description"
                },
                "value": "Mathematics, fractions for children age 10 or comparable level"
             }
@@ -31,9 +31,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Subject-topics"
+               "key": "-key-SiteGroup-topics"
                },
                "targets": [
                   {
@@ -52,9 +52,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Subject-flows"
+                  "key": "-key-SiteGroup-flows"
                },
                "targets": [
                   {
@@ -65,9 +65,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Subject-tests"
+                  "key": "-key-SiteGroup-tests"
                },
                "targets": []
             }
