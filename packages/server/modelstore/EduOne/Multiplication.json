@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-Education",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-78",
@@ -35,8 +40,7 @@
                   "key": "-key-Topic-pages"
                },
                "children": [
-                  "ID-79",
-                  "ID-87"
+                  "ID-79"
                ]
             }
          ],
@@ -56,411 +60,40 @@
                "property": {
                   "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-name"
+                  "key": "-key-Page-name"
                },
-               "value": "Doubling"
+               "value": ""
             }
          ],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Theory-lines"
-               },
-               "children": [
-                  "ID-80",
-                  "ID-81",
-                  "ID-82",
-                  "ID-83"
-               ]
-            },
-            {
-               "containment": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Page-questions"
+                  "key": "-key-Theory-content"
                },
                "children": []
             },
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-calcResult"
+                  "key": "-key-Page-questions"
                },
-               "children": [
-                  "ID-84"
-               ]
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-78"
-      },
-      {
-         "id": "ID-80",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-Line"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Line-content"
-               },
-               "value": "Calculating the double of a numner isn't that hard."
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-79"
-      },
-      {
-         "id": "ID-81",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-Line"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Line-content"
-               },
-               "value": "Doubling the number of X-es for XXX is XXX XXX"
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-79"
-      },
-      {
-         "id": "ID-82",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-Line"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Line-content"
-               },
-               "value": "This is the same as saying that three X-es times 2 gives you six X-es "
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-79"
-      },
-      {
-         "id": "ID-83",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-Line"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Line-content"
-               },
-               "value": "OR in mathematic terms two times three equals six: 2 * 3 = 6."
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-79"
-      },
-      {
-         "id": "ID-84",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-Function"
-         },
-         "properties": [],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Function-cases"
-               },
-               "children": [
-                  "ID-85"
-               ]
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-79"
-      },
-      {
-         "id": "ID-85",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-FunctionCase"
-         },
-         "properties": [],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-FunctionCase-formula"
-               },
-               "children": [
-                  "ID-86"
-               ]
-            }
-         ],
-         "references": [
-            {
-               "reference": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-FunctionCase-grade"
-               },
-               "targets": [
-                  {
-                     "resolveInfo": "gradeA",
-                     "reference": "ID-1"
-                  }
-               ]
-            }
-         ],
-         "annotations": [],
-         "parent": "ID-84"
-      },
-      {
-         "id": "ID-86",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-BooleanLiteralExpression"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-BooleanLiteralExpression-value"
-               },
-               "value": "true"
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-85"
-      },
-      {
-         "id": "ID-87",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-WorkSheet"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Page-name"
-               },
-               "value": "Exercises in doubling"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Page-questions"
-               },
-               "children": [
-                  "ID-88",
-                  "ID-90"
-               ]
+               "children": []
             },
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Page-calcResult"
-               },
-               "children": [
-                  "ID-92"
-               ]
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-78"
-      },
-      {
-         "id": "ID-88",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-Question"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Question-name"
-               },
-               "value": "Double-2"
-            },
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Question-content"
-               },
-               "value": "What is the double of 2"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Question-correctAnswer"
-               },
-               "children": [
-                  "ID-89"
-               ]
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-87"
-      },
-      {
-         "id": "ID-89",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-NumberLiteralExpression"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-NumberLiteralExpression-value"
-               },
-               "value": "4"
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-88"
-      },
-      {
-         "id": "ID-90",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-Question"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Question-name"
-               },
-               "value": "Double-3"
-            },
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Question-content"
-               },
-               "value": "What is the double of 3?"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Question-correctAnswer"
-               },
-               "children": [
-                  "ID-91"
-               ]
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-87"
-      },
-      {
-         "id": "ID-91",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-NumberLiteralExpression"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-NumberLiteralExpression-value"
-               },
-               "value": "6"
-            }
-         ],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-90"
-      },
-      {
-         "id": "ID-92",
-         "classifier": {
-            "language": "-default-key-Education",
-            "version": "2023.1",
-            "key": "-default-key-Function"
-         },
-         "properties": [],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-default-key-Education",
-                  "version": "2023.1",
-                  "key": "-default-key-Function-cases"
+                  "key": "-key-Page-grading"
                },
                "children": []
             }
          ],
          "references": [],
          "annotations": [],
-         "parent": "ID-87"
+         "parent": "ID-78"
       }
    ]
 }

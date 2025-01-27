@@ -8,7 +8,7 @@ export class InterpreterMainTemplate {
      * @param interpreterDef
      */
     public interpreterMain(language: FreMetaLanguage): string {
-        return `// Generated my Freon, will be overwritten with every generation.
+        return `// Will be overwritten with every generation.
         import {
             ConceptFunction, ${Names.FreInterpreter},
             IMainInterpreter,

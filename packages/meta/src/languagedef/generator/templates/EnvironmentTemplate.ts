@@ -32,7 +32,7 @@ export class EnvironmentTemplate {
 
         /**
          * Class ${Names.environment(language)} provides the link between all parts of the language environment.
-         * It holds the currently used editor, scoper, typer, etc, thus providing an entry point for
+         * It holds the currently used editor, scoper, typer, etc, thus providing an entry point for,
          * for instance, the editor to find the right scoper, or for the validator to find the typer
          * to use.
          * This class uses the singleton pattern to ensure that only one instance of the class is present.

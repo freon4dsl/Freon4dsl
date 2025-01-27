@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/webapp-starter",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -35,10 +35,10 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "@freon4dsl/core": "1.0.0-beta2",
-    "@freon4dsl/core-svelte": "1.0.0-beta2",
-    "@freon4dsl/samples-course-schedule": "1.0.0-beta2",
-    "@freon4dsl/webapp-lib": "1.0.0-beta2",
+    "@freon4dsl/core": "1.0.0-beta3",
+    "@freon4dsl/core-svelte": "1.0.0-beta3",
+    "@freon4dsl/samples-course-schedule": "1.0.0-beta3",
+    "@freon4dsl/webapp-lib": "1.0.0-beta3",
     "@smui/snackbar": "^7.0.0",
     "@smui-extra/accordion": "^7.0.0",
     "@types/node": "^20.14.1",
