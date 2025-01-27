@@ -10,7 +10,6 @@ Test {[
 Scenario {[
     ------------------------------------
     ${self.description}
-
         ${self.testFlow vertical}
 ]}
 
