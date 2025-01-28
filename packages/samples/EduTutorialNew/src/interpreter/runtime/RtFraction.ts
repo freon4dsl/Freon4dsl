@@ -11,7 +11,8 @@ export class RtFraction extends RtObject {
         this.nominator = num;
         this.denumerator = den;
     }
-   override equals(other: RtObject): RtBoolean {
+
+    override equals(other: RtObject): RtBoolean {
         if (isRtFraction(other)) {
             return this.nominator.equals(other.nominator).and(this.denumerator.equals(other.denumerator));
         } else {
@@ -22,7 +23,6 @@ export class RtFraction extends RtObject {
     override toString(): string {
         return this.nominator.toString() + "/" + this.denumerator.toString()
     }
-
 }
 
 export function isRtFraction(object: any): object is RtFraction {

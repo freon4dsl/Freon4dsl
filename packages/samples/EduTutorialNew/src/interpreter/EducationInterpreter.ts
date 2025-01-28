@@ -30,17 +30,18 @@ import {
     Step,
     Test, TestFlow, Theory, Video, WorkSheet
 } from "../language/gen/index.js";
-import { RtFraction } from "../runtime/RtFraction.js";
-import { RtFlow } from "../runtime/RtFlow.js"
-import { RtGrade } from "../runtime/RtGrade.js";
-import { RtPage } from "../runtime/RtPage.js"
+import { RtFraction } from "./runtime/RtFraction.js";
+import { RtFlow } from "./runtime/RtFlow.js"
+import { RtGrade } from "./runtime/RtGrade.js";
+import {isRtPage, RtPage} from "./runtime/RtPage.js"
 import { EducationInterpreterBase } from "./gen/EducationInterpreterBase.js"
+import {EducationEnvironment} from "../config/gen/EducationEnvironment.js";
 
 let main: IMainInterpreter
 
 /**
- * The class containing all interpreter functions twritten by thge language engineer.
- * This class is initially empty,  and will not be overwritten if it already exists..
+ * The class containing all interpreter functions written by the language engineer.
+ * This class is initially empty, and will not be overwritten if it already exists.
  */
 export class EducationInterpreter extends EducationInterpreterBase {
     constructor(m: IMainInterpreter) {
@@ -49,78 +50,86 @@ export class EducationInterpreter extends EducationInterpreterBase {
     }
 
     override evalTest(node: Test, ctx: InterpreterContext): RtObject {
+        console.log("Evaluating Scenario " + node.freId() + "  flow " + node.flow.referred?.name)
         // Puts the current flow in the context
-        console.log(`evalTest.flow ${node.flow.referred?.name}`)
         const newCtx = new InterpreterContext(ctx)
         const flow = new RtFlow(node.flow.referred)
         newCtx.set("CURRENT_FLOW", flow)
-        console.log("Set ctx CURRENT_FLOW to " + flow )
         for (const s of node.scenarios) {
-            const result = main.evaluate(s, newCtx) as RtArray<RtBoolean>
-            // const nrSucceeds = result.array.filter((b) => b.asBoolean()).length
-            // const nrFailures = result.array.filter((b) => !b.asBoolean()).length
-            // if (nrFailures > 0) {
-            //     return new RtString("Scenario " + s.description + " has " + nrFailures + " failed steps")
-            // }
+            const scenarioResult = main.evaluate(s, newCtx)
+            if (isRtBoolean(scenarioResult) && scenarioResult.asBoolean() === false) {
+                return RtBoolean.FALSE
+            }
+            if (isRtError(scenarioResult)) {
+                return scenarioResult
+            }
         }
-        return null
+        return RtBoolean.TRUE
     }
 
     override evalScenario(node: Scenario, ctx: InterpreterContext): RtObject {
-        console.log("Eval Scenario " + node.description + "  testFlow " + node.testFlow?.length)
-        const result = new RtArray()
-        const newCtx = new InterpreterContext(ctx)
+        console.log("Evaluating Scenario " + node.description + "  testFlow " + node.testFlow?.length)
         for (const testFlow of node.testFlow) {
-            const stepFlowResult = main.evaluate(testFlow, newCtx)
-            // result.array.push(stepResult)
-            // console.log("    Scenario result is " + jsonAsString(stepResult));
-            // if (isRtError(stepResult)) {
-            //     return stepResult
-            // }
+            const stepFlowResult = main.evaluate(testFlow, ctx)
+            if (isRtBoolean(stepFlowResult) && stepFlowResult.asBoolean() === false) {
+                return RtBoolean.FALSE
+            }
+            if (isRtError(stepFlowResult)) {
+                return stepFlowResult
+            }
         }
-        return new RtString("" + node?.description)
+        return RtBoolean.TRUE
     }
 
     override evalTestFlow(node: TestFlow, ctx: InterpreterContext): RtObject {
-        console.log("Eval Test Flow " + node.freId() + "  steps " + node.steps?.length)
-        const result = new RtArray()
-        const newCtx = new InterpreterContext(ctx)
+        console.log("Evaluating Test Flow " + node.freId() + "  steps " + node.steps?.length)
+        let previousPage: RtPage = undefined
+        let previousStep: Step
+        let first: boolean = true      // indicates whether there is a calculated value for 'previous'
         for (const step of node.steps) {
-            const stepResult = main.evaluate(step, newCtx)
-            result.array.push(stepResult)
-            // console.log("    Scenario result is " + jsonAsString(stepResult));
+            // Compare the fromPage with the previous stepResult
+            if (!first && previousPage.page !== step.$fromPage) {
+                // There was an error. Based on the given answers, we should not be on 'fromPage'.
+                return new RtError(`Next page of step ${EducationEnvironment.getInstance().writer.writeToLines(previousStep)} should be ${previousPage.page.name}, not ${step.$fromPage.name}.`)
+            }
+            const stepResult = main.evaluate(step, ctx)
+            if (isRtPage(stepResult) ) {
+                // Remember the previous stepResult
+                previousPage = stepResult
+                previousStep = step
+                first = false
+            }
             if (isRtError(stepResult)) {
                 return stepResult
             }
         }
-        // TODO check whether page transitions are is correct
-        return result
+        return RtBoolean.TRUE
     }
 
     override evalStep(node: Step, ctx: InterpreterContext): RtObject {
         const currentPage = node.$fromPage
-        console.log(`evalStep ${node.freId()} FromPage ${currentPage?.name} nrAnswers is ${node.answerSeries.length}`)
-        // console.log(astToString(node))
+        console.log(`Evaluating Step ${node.freId()} FromPage ${currentPage?.name} nrAnswers is ${node.answerSeries.length}`)
 
-        // Puts the page for this step in the context
+        // Put the page for this step in the context
         const newCtx = new InterpreterContext(ctx)
         newCtx.set("CURRENT_PAGE", new RtPage(currentPage))
+
+        // Find the nr of correct answers and add it to the context
         let nrOfCorrectAnswers = 0
         for (const answer of node.answerSeries) {
             const actualAnswer = main.evaluate(answer.value, newCtx)
             // Store the actual answer with the question.
             newCtx.set(answer.$question, actualAnswer)
-            console.log(`Ctx.set '${answer.$question.content}' to '${actualAnswer}'`)
             const expectedAnswer = main.evaluate(answer.$question.correctAnswer, newCtx)
-            // const answerCorrect = new RtAnswer(answer.question.referred, actualAnswer))
             if (actualAnswer.equals(expectedAnswer)) {
                 nrOfCorrectAnswers++
             }
         }
         newCtx.set("NR_OF_CORRECT_ANSWERS", new RtNumber(nrOfCorrectAnswers))
-        console.log(`Ctx.set 'NR_OF_CORRECT_ANSWERS' to '${nrOfCorrectAnswers}`)
-        // Find grade for given answers
+
+        // Find the grade for the given answers
         const grade = main.evaluate(currentPage, newCtx) as RtGrade
+
         //  Find rule for current page
         const currentFlow = ctx.find("CURRENT_FLOW") as RtFlow
         if (isNullOrUndefined(currentFlow)) {
@@ -130,29 +139,26 @@ export class EducationInterpreter extends EducationInterpreterBase {
         if (isNullOrUndefined(pageRule)) {
             return new RtError(`No rules found for page ${currentPage.name} in ${currentFlow.flow.name}, rules are ${currentFlow.flow.rules.map(r => r.name)}`)
         }
+
+        // Find the page to which the application should switch based on the calculated grade,
+        // and return it as the result of evaluating this step
         const transition = pageRule.transitions.find((trans) => trans.$condition === (grade as RtGrade).grade)
         if (isNullOrUndefined(transition)) {
             return new RtError(`No transition found for grade ${grade.grade} on page ${currentPage.name} in ${currentFlow.flow.name}`)
         }
-        console.log("Transition " + astToString(transition))
+        console.log(`Evaluating Step ${EducationEnvironment.getInstance().writer.writeToLines(node)} returning grade: ${transition.$condition.name}, page: ${transition.toPage.name}`)
         return new RtPage(transition.$toPage)
-
-        // const expectedPage = node.expectedPage.referred;
-        // const usedTransition = rule.transitions.find(trans => trans.condition.$grade === pageScore.grade);
-        // const actualPage = usedTransition.$toPage;
-        // console.log("Step actual is [" + actualPage.name + "] expected [" + expectedPage.name + "]");
-        // return RtBoolean.of(expectedPage === actualPage);
     }
 
     static evalPage(node: Page, ctx: InterpreterContext): RtObject {
         // Find grade for given answers
-        console.log(`evalPage.node ${node?.name}`)
-        let resultGrade: RtGrade = new RtGrade(Grade.gradeF)
+        console.log(`Evaluating Page ${node?.name}`)
         for (const score of node.grading) {
             const scoreValue = main.evaluate(score.expr, ctx)
             if (isRtBoolean(scoreValue)) {
                 if (scoreValue.asBoolean()) {
-                    return new RtGrade(score.grade.referred)
+                    console.log(`Evaluating Page returning ${score.$grade?.name}`)
+                    return new RtGrade(score.$grade)
                 }
             }
         }
@@ -160,7 +166,6 @@ export class EducationInterpreter extends EducationInterpreterBase {
     }
 
     override evalTheory(node: Theory, ctx: InterpreterContext): RtObject {
-        console.log(`evalTheory.node ${node?.name}`)
         return EducationInterpreter.evalPage(node, ctx)
     }
     override evalVideo(node: Video, ctx: InterpreterContext): RtObject {
@@ -176,29 +181,32 @@ export class EducationInterpreter extends EducationInterpreterBase {
         return EducationInterpreter.evalPage(node, ctx)
     }
 
-    override evalAnswer(node: Answer, ctx: InterpreterContext): RtObject {
-        console.log(`evalAnswer.node ${node?.$question.content}`)
-        const actualAnswer = main.evaluate(node.value, ctx)
-        const expectedAnswer = main.evaluate(node.question.referred.correctAnswer, ctx)
-        return actualAnswer.equals(expectedAnswer)
-    }
-
     override evalQuestionReference(node: QuestionReference, ctx: InterpreterContext): RtObject {
         const question = node?.question?.referred
         if (question === undefined || question === null) {
             throw new RtError("evalQuestionReference: Question is not found")
         }
-        const result = ctx.find(question)
-        if (result === undefined || result === null) {
+        const expected = main.evaluate(question.correctAnswer, ctx)
+        const givenAnswer = ctx.find(question)
+        if (givenAnswer === undefined || givenAnswer === null) {
             throw new RtError(`evalQuestionReference: Question '${question.content}' does not have a result value`)
         }
-        console.log(`evalQref for q'${question.content}' is '${result}'`)
-        const expected = main.evaluate(question.correctAnswer, ctx)
-        return result.equals(expected)
+        console.log(`evalQuestionReference for '${question.content}', given answer is '${givenAnswer}', expected '${expected}'`)
+        return givenAnswer.equals(expected)
     }
 
     override evalNrOfCorrectAnswers(node: NrOfCorrectAnswers, ctx: InterpreterContext): RtObject {
         return ctx.find("NR_OF_CORRECT_ANSWERS")
+    }
+
+    override evalAnswer(node: Answer, ctx: InterpreterContext): RtObject {
+        console.log(`evalAnswer.node ${node?.$question.content}`)
+        const actualAnswer = main.evaluate(node.value, ctx)
+        if (node.question.referred !== undefined && node.question.referred !== null) {
+            const expectedAnswer = main.evaluate(node.question.referred.correctAnswer, ctx)
+            return actualAnswer.equals(expectedAnswer)
+        }
+        return new RtError("evalAnswer: question not found")
     }
 
     override evalLastStep(node: LastStep, ctx: InterpreterContext): RtObject {

@@ -347,8 +347,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "Theory1",
-                     "reference": null
+                     "resolveInfo": "Theory101",
+                     "reference": "ID-9"
                   }
                ]
             }
@@ -445,8 +445,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "Theory2",
-                     "reference": null
+                     "resolveInfo": "Theory102",
+                     "reference": "ID-100"
                   }
                ]
             }
@@ -485,8 +485,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "Theory2",
-                     "reference": null
+                     "resolveInfo": "Theory102",
+                     "reference": "ID-100"
                   }
                ]
             }
@@ -525,8 +525,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "Theory2",
-                     "reference": null
+                     "resolveInfo": "Theory102",
+                     "reference": "ID-100"
                   }
                ]
             }

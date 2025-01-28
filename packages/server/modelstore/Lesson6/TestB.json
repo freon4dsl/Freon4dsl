@@ -756,8 +756,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "InDepth2",
-                     "reference": "ID-104"
+                     "resolveInfo": "Video1",
+                     "reference": "ID-70"
                   }
                ]
             }
