@@ -1,11 +1,11 @@
 /**
- * Class representing the comntext (or environment) in which an expreession is evaaluated.
+ * Class representing the context (or environment) in which an expression is evaluated.
  * The context contains values for objects and is hierarchical.
  */
 import { RtObject } from "./runtime/index.js";
 
 export class InterpreterContext {
-    // Dummy context, caan be used as the start context
+    // Dummy context, can be used as the start context
     public static EMPTY_CONTEXT = new InterpreterContext(null);
 
     // Map containing values for objects in this context
@@ -31,7 +31,7 @@ export class InterpreterContext {
     }
 
     /**
-     * Set the vaalue of `node` to `value`.
+     * Set the value of `node` to `value`.
      */
     set(node: Object, value: RtObject): void {
         this.values.set(node, value);
