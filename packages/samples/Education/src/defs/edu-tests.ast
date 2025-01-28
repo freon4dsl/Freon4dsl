@@ -3,35 +3,29 @@ language Education
 modelunit Test {
     name: identifier;
     scenarios: Scenario[];
-    reference topic: Topic;
-    reference flow: FlowDescription;
+    reference main: SiteGroup;
+    reference flow: Flow;
 }
 
 concept Scenario {
     description: string;
+    testFlow: TestFlow[];
     steps: Step[]; /* Note that the order is of importance */
 }
 
-abstract concept AbstractStep {}
-
-concept Step base AbstractStep {
-    reference fromPage: Page;
-    answersGiven: Answer[];
-    reference expectedPage: Page;
+concept TestFlow {
+    steps: Step[]; /* Note that the order is of importance */
 }
 
-concept ExitStep base AbstractStep {
-    // nothing to do, scenario ends
+concept Step {
+    reference fromPage: Page;
+    answerSeries: Answer[];
+}
+
+concept LastStep base Step {
 }
 
 concept Answer {
     reference question: Question;
-    expr: RuleExpression;
+    value: NumberConcept;
 }
-
-//expression MultipleChoiceExpression base RuleExpression {
-//    answers: string[];
-//}
-//
-//expression Nothing base RuleExpression {
-//}

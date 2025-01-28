@@ -1,0 +1,378 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-CourseSchedule",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-12",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Staff"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Staff-name"
+               },
+               "value": "TeachingStaff"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Staff-teachers"
+               },
+               "children": [
+                  "ID-15",
+                  "ID-16",
+                  "ID-17",
+                  "ID-46"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-15",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Person"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-name"
+               },
+               "value": "Peter"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-fullName"
+               },
+               "value": "Peter Mackinsky"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-phone"
+               },
+               "value": "1234567890"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-availability"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "MondayMorning",
+                     "reference": "ID-1"
+                  },
+                  {
+                     "resolveInfo": "TuesdayMorning",
+                     "reference": "ID-2"
+                  },
+                  {
+                     "resolveInfo": "WednesdayMorning",
+                     "reference": "ID-3"
+                  },
+                  {
+                     "resolveInfo": "ThursdayAfternoon",
+                     "reference": "ID-9"
+                  },
+                  {
+                     "resolveInfo": "FridayAfternoon",
+                     "reference": "ID-10"
+                  },
+                  {
+                     "resolveInfo": "MondayAfternoon",
+                     "reference": "ID-6"
+                  },
+                  {
+                     "resolveInfo": "FridayMorning",
+                     "reference": "ID-5"
+                  },
+                  {
+                     "resolveInfo": "TuesdayAfternoon",
+                     "reference": "ID-7"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-competence"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Swedish",
+                     "reference": "ID-20"
+                  },
+                  {
+                     "resolveInfo": "French2",
+                     "reference": "ID-32"
+                  },
+                  {
+                     "resolveInfo": "English4Foreigners",
+                     "reference": "ID-18"
+                  },
+                  {
+                     "resolveInfo": "Swedish",
+                     "reference": "ID-20"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-16",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Person"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-name"
+               },
+               "value": "Mary"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-fullName"
+               },
+               "value": "Mary O'Sullivan"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-phone"
+               },
+               "value": "9876543210"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-availability"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "WednesdayAfternoon",
+                     "reference": "ID-8"
+                  },
+                  {
+                     "resolveInfo": "WednesdayMorning",
+                     "reference": "ID-3"
+                  },
+                  {
+                     "resolveInfo": "ThursdayAfternoon",
+                     "reference": "ID-9"
+                  },
+                  {
+                     "resolveInfo": "TuesdayAfternoon",
+                     "reference": "ID-7"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-competence"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Swedish",
+                     "reference": "ID-20"
+                  },
+                  {
+                     "resolveInfo": "German",
+                     "reference": "ID-22"
+                  },
+                  {
+                     "resolveInfo": "Swahilli",
+                     "reference": "ID-23"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-17",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Person"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-name"
+               },
+               "value": "Paul"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-fullName"
+               },
+               "value": "Paul Marrow"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-phone"
+               },
+               "value": "5558882220"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-availability"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "FridayAfternoon",
+                     "reference": "ID-10"
+                  },
+                  {
+                     "resolveInfo": "ThursdayAfternoon",
+                     "reference": "ID-9"
+                  },
+                  {
+                     "resolveInfo": "MondayMorning",
+                     "reference": "ID-1"
+                  },
+                  {
+                     "resolveInfo": "TuesdayMorning",
+                     "reference": "ID-2"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-competence"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Spanish",
+                     "reference": "ID-21"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-46",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Person"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-name"
+               },
+               "value": "Alison"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-fullName"
+               },
+               "value": "Alison Dubois"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-phone"
+               },
+               "value": "98273465"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-availability"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "ThursdayMorning",
+                     "reference": "ID-4"
+                  },
+                  {
+                     "resolveInfo": "TuesdayAfternoon",
+                     "reference": "ID-7"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Person-competence"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-12"
+      }
+   ]
+}

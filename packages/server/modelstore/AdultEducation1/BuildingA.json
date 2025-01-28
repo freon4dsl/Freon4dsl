@@ -1,0 +1,224 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [],
+   "nodes": [
+      {
+         "id": "ID-13",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Building"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Building-name"
+               },
+               "value": "BuildingA"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Building-rooms"
+               },
+               "children": [
+                  "ID-24",
+                  "ID-25",
+                  "ID-26",
+                  "ID-27",
+                  "ID-28",
+                  "ID-29"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-24",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Room"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-name"
+               },
+               "value": "1A"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-equipment"
+               },
+               "value": "whiteboard, beamer"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-13"
+      },
+      {
+         "id": "ID-25",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Room"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-name"
+               },
+               "value": "1B"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-equipment"
+               },
+               "value": "running water, sink, stove"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-13"
+      },
+      {
+         "id": "ID-26",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Room"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-name"
+               },
+               "value": "2A"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-equipment"
+               },
+               "value": "whiteboard, beamer, microfoon, headsets"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-13"
+      },
+      {
+         "id": "ID-27",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Room"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-name"
+               },
+               "value": "2B"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-equipment"
+               },
+               "value": "microfoon, headsets"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-13"
+      },
+      {
+         "id": "ID-28",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Room"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-name"
+               },
+               "value": "2C"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-equipment"
+               },
+               "value": "whiteboard"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-13"
+      },
+      {
+         "id": "ID-29",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Room"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-name"
+               },
+               "value": "3A"
+            },
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Room-equipment"
+               },
+               "value": "whiteboard"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-13"
+      }
+   ]
+}

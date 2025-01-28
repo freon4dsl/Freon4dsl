@@ -1,0 +1,1159 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-CourseSchedule",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-30",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Schedule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Schedule-name"
+               },
+               "value": "Semester_2025_1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Schedule-timeSlots"
+               },
+               "children": [
+                  "ID-31",
+                  "ID-33",
+                  "ID-34",
+                  "ID-35",
+                  "ID-36",
+                  "ID-37",
+                  "ID-38",
+                  "ID-39",
+                  "ID-40",
+                  "ID-41",
+                  "ID-42",
+                  "ID-43",
+                  "ID-44",
+                  "ID-45",
+                  "ID-48",
+                  "ID-49",
+                  "ID-50",
+                  "ID-51",
+                  "ID-52",
+                  "ID-53",
+                  "ID-54",
+                  "ID-55",
+                  "ID-56",
+                  "ID-57",
+                  "ID-58"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-31",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "MondayMorning",
+                     "reference": "ID-1"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Mary",
+                     "reference": "ID-16"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "1B",
+                     "reference": "ID-25"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "English4Foreigners",
+                     "reference": "ID-18"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-33",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "MondayMorning",
+                     "reference": "ID-1"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Mary",
+                     "reference": "ID-16"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "2B",
+                     "reference": "ID-27"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Spanish",
+                     "reference": "ID-21"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-34",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "TuesdayAfternoon",
+                     "reference": "ID-7"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Paul",
+                     "reference": "ID-17"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "3A",
+                     "reference": "ID-29"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Swahilli",
+                     "reference": "ID-23"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-35",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "TuesdayMorning",
+                     "reference": "ID-2"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Peter",
+                     "reference": "ID-15"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "2A",
+                     "reference": "ID-26"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Swedish",
+                     "reference": "ID-20"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-36",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "FridayMorning",
+                     "reference": "ID-5"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Paul",
+                     "reference": "ID-17"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "3A",
+                     "reference": "ID-29"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "German",
+                     "reference": "ID-22"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-37",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "ThursdayMorning",
+                     "reference": "ID-4"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Mary",
+                     "reference": "ID-16"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "2C",
+                     "reference": "ID-28"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "French2",
+                     "reference": "ID-32"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-38",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "WednesdayMorning",
+                     "reference": "ID-3"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Mary",
+                     "reference": "ID-16"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "2C",
+                     "reference": "ID-28"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "English4Foreigners",
+                     "reference": "ID-18"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-39",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "WednesdayAfternoon",
+                     "reference": "ID-8"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Paul",
+                     "reference": "ID-17"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "2B",
+                     "reference": "ID-27"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Swahilli",
+                     "reference": "ID-23"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-40",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "ThursdayAfternoon",
+                     "reference": "ID-9"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Mary",
+                     "reference": "ID-16"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "2C",
+                     "reference": "ID-28"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "German",
+                     "reference": "ID-22"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-41",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "FridayAfternoon",
+                     "reference": "ID-10"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Paul",
+                     "reference": "ID-17"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-room"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "1B",
+                     "reference": "ID-25"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Spanish",
+                     "reference": "ID-21"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-42",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "MondayMorning",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-43",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "WednesdayMorning",
+                     "reference": "ID-3"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-44",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "ThursdayMorning",
+                     "reference": "ID-4"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-teacher"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Peter",
+                     "reference": "ID-15"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-course"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "German",
+                     "reference": "ID-22"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-45",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "FridayMorning",
+                     "reference": "ID-5"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-48",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "MondayMorning",
+                     "reference": "ID-1"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-49",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "TuesdayMorning",
+                     "reference": "ID-2"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-50",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "ThursdayMorning",
+                     "reference": "ID-4"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-51",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "FridayMorning",
+                     "reference": "ID-5"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-52",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "WednesdayAfternoon",
+                     "reference": "ID-8"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-53",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "ThursdayAfternoon",
+                     "reference": "ID-9"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-54",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "FridayAfternoon",
+                     "reference": "ID-10"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-55",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "TuesdayAfternoon",
+                     "reference": "ID-7"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-56",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "TuesdayAfternoon",
+                     "reference": "ID-7"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-57",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "TuesdayAfternoon",
+                     "reference": "ID-7"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-58",
+         "classifier": {
+            "language": "-key-CourseSchedule",
+            "version": "2023.1",
+            "key": "-key-Slot"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-CourseSchedule",
+                  "version": "2023.1",
+                  "key": "-key-Slot-time"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "TuesdayAfternoon",
+                     "reference": "ID-7"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      }
+   ]
+}

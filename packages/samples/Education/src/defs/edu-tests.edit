@@ -1,29 +1,31 @@
-/* This file contains the default editor definition. */
-
 editor default
 
 Test {[
-    Name: ${self.name}
-    Topic: ${self.topic} using fules from ${flow}
+    Test ${self.name}
+    Regarding MainTopic: ${self.main}, and flow: ${self.flow}
 
     ${self.scenarios}
 ]}
 
 Scenario {[
-    Scenario: ${self.description}
+    ------------------------------------
+    ${self.description}
 
-    ${self.steps}
+        ${self.testFlow vertical}
+]}
+
+TestFlow {[
+    ${self.steps horizontal separator[===>]}
 ]}
 
 Step {[
-    On page ${self.fromPage} answers are ${self.answersGiven vertical} expected page is ${self.expectedPage}
-
+    ${self.fromPage} => ${self.answerSeries table rows}
 ]}
 
-ExitStep {[
-    Exit subject
+LastStep {[
+    ${self.fromPage}
 ]}
 
-Answer {[
-    ${question} = ${expr}
+Answer { table [
+    ${self.question} | ${self.value}
 ]}

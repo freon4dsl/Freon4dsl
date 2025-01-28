@@ -4,187 +4,270 @@ import {
     IMainInterpreter,
     RtObject,
     RtNumber,
-    isRtError,
+    RtBoolean,
+    RtError,
+    RtArray,
     RtString,
-    RtBoolean, RtArray, RtError, isRtBoolean, jsonAsString
+    isRtError,
+    isRtBoolean,
+    isNullOrUndefined, astToString,
 } from "@freon4dsl/core";
-import { RtFlowDescription } from "../runtime/RtFlowDescription.js";
-import { RtGrade } from "../runtime/RtGrade.js";
-import { RtPage } from "../runtime/RtPage.js";
 import {
-    Function,
-    FractionLiteralExpression,
-    Scenario,
-    Step,
-    StringLiteralExpression,
-    BooleanLiteralExpression,
-    Answer,
-    NumberLiteralExpression,
-    PlusExpression,
-    EqualsExpression,
     AndExpression,
-    OrExpression, QuestionRef, FunctionCase, PageResult, Test, FlowRule, GreaterThenExpression
+    Answer,
+    EqualsExpression, ExamplePage, FlowRule,
+    Fraction, Grade,
+    GreaterOrEqualsExpression,
+    GreaterThenExpression, InDepthMaterial, LastStep,
+    LessOrEqualsExpression,
+    LessThenExpression,
+    NrOfCorrectAnswers,
+    NumberLiteralExpression,
+    OrExpression, Page,
+    QuestionReference,
+    Scenario,
+    SimpleNumber,
+    Step,
+    Test, TestFlow, Theory, Video, WorkSheet
 } from "../language/gen/index.js";
-import { RtFraction } from "../runtime/RtFraction.js";
-import { EducationInterpreterBase } from "./gen/EducationInterpreterBase.js";
+import { RtFraction } from "./runtime/RtFraction.js";
+import { RtFlow } from "./runtime/RtFlow.js"
+import { RtGrade } from "./runtime/RtGrade.js";
+import {isRtPage, RtPage} from "./runtime/RtPage.js"
+import { EducationInterpreterBase } from "./gen/EducationInterpreterBase.js"
+import {EducationEnvironment} from "../config/gen/EducationEnvironment.js";
 
-let main: IMainInterpreter;
+let main: IMainInterpreter
 
 /**
  * The class containing all interpreter functions written by the language engineer.
- * This class is initially empty,  and will not be overwritten if it already exists.
+ * This class is initially empty, and will not be overwritten if it already exists.
  */
 export class EducationInterpreter extends EducationInterpreterBase {
-
     constructor(m: IMainInterpreter) {
-        super();
-        main = m;
+        super()
+        main = m
     }
 
     override evalTest(node: Test, ctx: InterpreterContext): RtObject {
-        ctx.set("CURRENT_FLOW", new RtFlowDescription(node.flow.referred));
+        console.log("Evaluating Scenario " + node.freId() + "  flow " + node.flow.referred?.name)
+        // Puts the current flow in the context
+        const newCtx = new InterpreterContext(ctx)
+        const flow = new RtFlow(node.flow.referred)
+        newCtx.set("CURRENT_FLOW", flow)
         for (const s of node.scenarios) {
-            const result = main.evaluate(s, ctx) as RtArray<RtBoolean>;
-            const nrSucceeds = result.array.filter(b => b.asBoolean()).length;
-            const nrFailures = result.array.filter(b => !b.asBoolean()).length;
-            if (nrFailures > 0) {
-                return new RtString("Scenario " + s.description + " has " + nrFailures + " failed steps");
+            const scenarioResult = main.evaluate(s, newCtx)
+            if (isRtBoolean(scenarioResult) && scenarioResult.asBoolean() === false) {
+                return RtBoolean.FALSE
+            }
+            if (isRtError(scenarioResult)) {
+                return scenarioResult
             }
         }
-        return null;
+        return RtBoolean.TRUE
     }
 
     override evalScenario(node: Scenario, ctx: InterpreterContext): RtObject {
-        // console.log("Eval Scenario " + node.description);
-        const result = new RtArray();
-        const newCtx = new InterpreterContext(ctx);
-        for (const step of node.steps) {
-            const stepResult = main.evaluate(step, newCtx);
-            result.array.push(stepResult);
-            // console.log("    Scenario result is " + jsonAsString(stepResult));
-            if (isRtError(stepResult)) {
-                return stepResult;
+        console.log("Evaluating Scenario " + node.description + "  testFlow " + node.testFlow?.length)
+        for (const testFlow of node.testFlow) {
+            const stepFlowResult = main.evaluate(testFlow, ctx)
+            if (isRtBoolean(stepFlowResult) && stepFlowResult.asBoolean() === false) {
+                return RtBoolean.FALSE
+            }
+            if (isRtError(stepFlowResult)) {
+                return stepFlowResult
             }
         }
-        return result;
+        return RtBoolean.TRUE
+    }
+
+    override evalTestFlow(node: TestFlow, ctx: InterpreterContext): RtObject {
+        console.log("Evaluating Test Flow " + node.freId() + "  steps " + node.steps?.length)
+        let previousPage: RtPage = undefined
+        let previousStep: Step
+        let first: boolean = true      // indicates whether there is a calculated value for 'previous'
+        for (const step of node.steps) {
+            // Compare the fromPage with the previous stepResult
+            if (!first && previousPage.page !== step.$fromPage) {
+                // There was an error. Based on the given answers, we should not be on 'fromPage'.
+                return new RtError(`Next page of step ${EducationEnvironment.getInstance().writer.writeToLines(previousStep)} should be ${previousPage.page.name}, not ${step.$fromPage.name}.`)
+            }
+            const stepResult = main.evaluate(step, ctx)
+            if (isRtPage(stepResult) ) {
+                // Remember the previous stepResult
+                previousPage = stepResult
+                previousStep = step
+                first = false
+            }
+            if (isRtError(stepResult)) {
+                return stepResult
+            }
+        }
+        return RtBoolean.TRUE
     }
 
     override evalStep(node: Step, ctx: InterpreterContext): RtObject {
-        const currentPage = node.fromPage.referred;
-        ctx.set("CURRENT_PAGE", new RtPage(currentPage));
-        for (const answer of node.answersGiven) {
-            const actualAnswer = main.evaluate(answer.expr, ctx);
+        const currentPage = node.$fromPage
+        console.log(`Evaluating Step ${node.freId()} FromPage ${currentPage?.name} nrAnswers is ${node.answerSeries.length}`)
+
+        // Put the page for this step in the context
+        const newCtx = new InterpreterContext(ctx)
+        newCtx.set("CURRENT_PAGE", new RtPage(currentPage))
+
+        // Find the nr of correct answers and add it to the context
+        let nrOfCorrectAnswers = 0
+        for (const answer of node.answerSeries) {
+            const actualAnswer = main.evaluate(answer.value, newCtx)
             // Store the actual answer with the question.
-            ctx.set(answer.question.referred, actualAnswer);
-            // const expectedAnswer = main.evaluate(answer.question.referred.correctAnswer, ctx);
-            // result.array.push(new RtAnswer(answer.question.referred, actualAnswer));
+            newCtx.set(answer.$question, actualAnswer)
+            const expectedAnswer = main.evaluate(answer.$question.correctAnswer, newCtx)
+            if (actualAnswer.equals(expectedAnswer)) {
+                nrOfCorrectAnswers++
+            }
         }
-        const pageScore = main.evaluate(node.fromPage.referred.calcResult, ctx) as RtGrade;
-        console.log("Page score for page " + currentPage.name + " is " + jsonAsString(pageScore));
+        newCtx.set("NR_OF_CORRECT_ANSWERS", new RtNumber(nrOfCorrectAnswers))
+
+        // Find the grade for the given answers
+        const grade = main.evaluate(currentPage, newCtx) as RtGrade
 
         //  Find rule for current page
-        const rule: FlowRule = (ctx.find("CURRENT_FLOW") as RtFlowDescription).flow.rules.find(r =>
-            r.page.referred === currentPage
-        );
-        const expectedPage = node.expectedPage.referred;
-        const usedTransition = rule.transitions.find(trans => trans.condition.$grade === pageScore.grade);
-        const actualPage = usedTransition.$toPage;
-        console.log("Step actual is [" + actualPage.name + "] expected [" + expectedPage.name + "]");
-        return RtBoolean.of(expectedPage === actualPage);
+        const currentFlow = ctx.find("CURRENT_FLOW") as RtFlow
+        if (isNullOrUndefined(currentFlow)) {
+            return new RtError(`No flow found for page ${currentPage.name}`)
+        }
+        const pageRule: FlowRule = currentFlow.flow.rules.find((rule) => rule.$page === currentPage)
+        if (isNullOrUndefined(pageRule)) {
+            return new RtError(`No rules found for page ${currentPage.name} in ${currentFlow.flow.name}`)
+        }
+
+        // Find the page to which the application should switch based on the calculated grade,
+        // and return it as the result of evaluating this step
+        const transition = pageRule.transitions.find((trans) => trans.$condition === (grade as RtGrade).grade)
+        if (isNullOrUndefined(transition)) {
+            return new RtError(`No transition found for grade ${grade.grade} on page ${currentPage.name} in ${currentFlow.flow.name}`)
+        }
+        console.log(`Evaluating Step ${EducationEnvironment.getInstance().writer.writeToLines(node)} returning grade: ${transition.$condition.name}, page: ${transition.toPage.name}`)
+        return new RtPage(transition.$toPage)
+    }
+
+    static evalPage(node: Page, ctx: InterpreterContext): RtObject {
+        // Find grade for given answers
+        console.log(`Evaluating Page ${node?.name}`)
+        for (const score of node.grading) {
+            const scoreValue = main.evaluate(score.expr, ctx)
+            if (isRtBoolean(scoreValue)) {
+                if (scoreValue.asBoolean()) {
+                    console.log(`Evaluating Page returning ${score.$grade?.name}`)
+                    return new RtGrade(score.$grade)
+                }
+            }
+        }
+        return new RtError(`No grade found for current answers in page ${node.name}`)
+    }
+
+    override evalTheory(node: Theory, ctx: InterpreterContext): RtObject {
+        return EducationInterpreter.evalPage(node, ctx)
+    }
+    override evalVideo(node: Video, ctx: InterpreterContext): RtObject {
+        return EducationInterpreter.evalPage(node, ctx)
+    }
+    override evalWorkSheet(node: WorkSheet, ctx: InterpreterContext): RtObject {
+        return EducationInterpreter.evalPage(node, ctx)
+    }
+    override evalInDepthMaterial(node: InDepthMaterial, ctx: InterpreterContext): RtObject {
+        return EducationInterpreter.evalPage(node, ctx)
+    }
+    override evalExamplePage(node: ExamplePage, ctx: InterpreterContext): RtObject {
+        return EducationInterpreter.evalPage(node, ctx)
+    }
+
+    override evalQuestionReference(node: QuestionReference, ctx: InterpreterContext): RtObject {
+        const question = node?.question?.referred
+        if (question === undefined || question === null) {
+            throw new RtError("evalQuestionReference: Question is not found")
+        }
+        const expected = main.evaluate(question.correctAnswer, ctx)
+        const givenAnswer = ctx.find(question)
+        if (givenAnswer === undefined || givenAnswer === null) {
+            throw new RtError(`evalQuestionReference: Question '${question.content}' does not have a result value`)
+        }
+        console.log(`evalQuestionReference for '${question.content}', given answer is '${givenAnswer}', expected '${expected}'`)
+        return givenAnswer.equals(expected)
+    }
+
+    override evalNrOfCorrectAnswers(node: NrOfCorrectAnswers, ctx: InterpreterContext): RtObject {
+        return ctx.find("NR_OF_CORRECT_ANSWERS")
     }
 
     override evalAnswer(node: Answer, ctx: InterpreterContext): RtObject {
-        const actualAnswer = main.evaluate(node.expr, ctx);
-        const expectedAnswer = main.evaluate(node.question.referred.correctAnswer, ctx);
-        return actualAnswer.equals(expectedAnswer);
-    }
-
-    override evalQuestionRef(node: QuestionRef, ctx: InterpreterContext): RtObject {
-        const question = node?.question?.referred;
-        if (question === undefined || question === null) {
-            throw new RtError("evalQuestionRef: Question is not found");
+        console.log(`evalAnswer.node ${node?.$question.content}`)
+        const actualAnswer = main.evaluate(node.value, ctx)
+        if (node.question.referred !== undefined && node.question.referred !== null) {
+            const expectedAnswer = main.evaluate(node.question.referred.correctAnswer, ctx)
+            return actualAnswer.equals(expectedAnswer)
         }
-        const result = ctx.find(question);
-        if (result === undefined || result === null) {
-            throw new RtError("evalQuestionRef: Question does not have a result value");
-        }
-        return result;
+        return new RtError("evalAnswer: question not found")
     }
 
-    override evalFunction(node: Function, ctx: InterpreterContext): RtObject {
-        for (const cse of node.cases) {
-            const caseResult = main.evaluate(cse, ctx);
-            if (caseResult !== undefined) {
-                return caseResult;
-            }
-        }
-        return undefined;
+    override evalLastStep(node: LastStep, ctx: InterpreterContext): RtObject {
+        return RtBoolean.TRUE
     }
 
-    override evalFunctionCase(node: FunctionCase, ctx: InterpreterContext): RtObject {
-        const condition = main.evaluate(node.formula, ctx);
-        if (isRtBoolean(condition)) {
-            if (condition.asBoolean()) {
-                return new RtGrade(node.grade.referred);
-            }
-        }
-        return undefined;
-    }
+    /////////////////// Literals
 
-    override evalPageResult(node: PageResult, ctx: InterpreterContext): RtObject {
-        // Find current page
-        const page = ctx.find("CURRENT_PAGE") as RtPage;
-        return main.evaluate(page.page.calcResult, ctx);
-    }
-
-    //////////////////// Literals
-
-    override evalFractionLiteralExpression(node: FractionLiteralExpression, ctx: InterpreterContext): RtObject {
-        return new RtFraction(new RtNumber(node.numerator), new RtNumber(node.denominator));
+    override evalSimpleNumber(node: SimpleNumber, ctx: InterpreterContext): RtObject {
+        return new RtNumber(node.value)
     }
 
     override evalNumberLiteralExpression(node: NumberLiteralExpression, ctx: InterpreterContext): RtObject {
-        return new RtNumber(node.value);
+        return new RtNumber(node.value)
     }
 
-    override evalStringLiteralExpression(node: StringLiteralExpression, ctx: InterpreterContext): RtObject {
-        return new RtString(node.value);
+    override evalFraction(node: Fraction, ctx: InterpreterContext): RtObject {
+        return new RtFraction(new RtNumber(node.numerator), new RtNumber(node.denominator))
     }
 
-    override evalBooleanLiteralExpression(node: BooleanLiteralExpression, ctx: InterpreterContext): RtObject {
-        return RtBoolean.of(node.value);
+    ///////////////// COMPARISON EXPRESSIONS
+
+    override evalEqualsExpression(node: EqualsExpression, ctx: InterpreterContext): RtObject {
+        const left = main.evaluate(node.left, ctx)
+        const right = main.evaluate(node.right, ctx)
+        return left.equals(right)
     }
 
-    ///////////////// STANDARD EXPRESSIONS
-
-    evalPlusExpression(node: PlusExpression, ctx: InterpreterContext): RtObject {
-        const left = main.evaluate(node.left, ctx);
-        const right = main.evaluate(node.right, ctx);
-        return (left as RtNumber).plus(right as RtNumber );
+    override evalAndExpression(node: AndExpression, ctx: InterpreterContext): RtObject {
+        const left = main.evaluate(node.left, ctx) as RtBoolean
+        const right = main.evaluate(node.right, ctx) as RtBoolean
+        return left.and(right)
     }
 
-    evalEqualsExpression(node: EqualsExpression, ctx: InterpreterContext): RtObject {
-        const left = main.evaluate(node.left, ctx);
-        const right = main.evaluate(node.right, ctx);
-        return (left).equals(right);
+    override evalOrExpression(node: OrExpression, ctx: InterpreterContext): RtObject {
+        const left = main.evaluate(node.left, ctx) as RtBoolean
+        const right = main.evaluate(node.right, ctx) as RtBoolean
+        return left.or(right)
     }
 
-    evalAndExpression(node: AndExpression, ctx: InterpreterContext): RtObject {
-        const left = main.evaluate(node.left, ctx) as RtBoolean;
-        const right = main.evaluate(node.right, ctx) as RtBoolean;
-        return (left).and(right);
+    override evalGreaterThenExpression(node: GreaterThenExpression, ctx: InterpreterContext): RtObject {
+        const left = main.evaluate(node.left, ctx) as RtNumber
+        const right = main.evaluate(node.right, ctx) as RtNumber
+        return RtBoolean.of(left.value > right.value)
     }
 
-    evalOrExpression(node: OrExpression, ctx: InterpreterContext): RtObject {
-        const left = main.evaluate(node.left, ctx) as RtBoolean;
-        const right = main.evaluate(node.right, ctx) as RtBoolean;
-        return (left).or(right);
+    override evalGreaterOrEqualsExpression(node: GreaterOrEqualsExpression, ctx: InterpreterContext): RtObject {
+        const left = main.evaluate(node.left, ctx) as RtNumber
+        const right = main.evaluate(node.right, ctx) as RtNumber
+        return RtBoolean.of(left.value >= right.value)
     }
 
-    evalGreaterThenExpression(node: GreaterThenExpression, ctx: InterpreterContext): RtObject {
-        const left = main.evaluate(node.left, ctx) as RtNumber;
-        const right = main.evaluate(node.right, ctx) as RtNumber;
-        return RtBoolean.of(left.value > right.value);
+    override evalLessThenExpression(node: LessThenExpression, ctx: InterpreterContext): RtObject {
+        const left = main.evaluate(node.left, ctx) as RtNumber
+        const right = main.evaluate(node.right, ctx) as RtNumber
+        return RtBoolean.of(left.value < right.value)
     }
 
+    override evalLessOrEqualsExpression(node: LessOrEqualsExpression, ctx: InterpreterContext): RtObject {
+        const left = main.evaluate(node.left, ctx) as RtNumber
+        const right = main.evaluate(node.right, ctx) as RtNumber
+        return RtBoolean.of(left.value <= right.value)
+    }
 }
