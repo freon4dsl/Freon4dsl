@@ -1,7 +1,0 @@
-/* This file contains the default editor definition. */
-
-editor heading
-
-Page {[
-    ${self.name}
-]}
