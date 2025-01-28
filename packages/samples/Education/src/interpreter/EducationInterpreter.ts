@@ -110,9 +110,7 @@ export class EducationInterpreter extends EducationInterpreterBase {
         const currentPage = node.$fromPage
         console.log(`Evaluating Step ${node.freId()} FromPage ${currentPage?.name} nrAnswers is ${node.answerSeries.length}`)
 
-        // Put the page for this step in the context
         const newCtx = new InterpreterContext(ctx)
-        newCtx.set("CURRENT_PAGE", new RtPage(currentPage))
 
         // Find the nr of correct answers and add it to the context
         let nrOfCorrectAnswers = 0
@@ -135,6 +133,7 @@ export class EducationInterpreter extends EducationInterpreterBase {
         if (isNullOrUndefined(currentFlow)) {
             return new RtError(`No flow found for page ${currentPage.name}`)
         }
+
         const pageRule: FlowRule = currentFlow.flow.rules.find((rule) => rule.$page === currentPage)
         if (isNullOrUndefined(pageRule)) {
             return new RtError(`No rules found for page ${currentPage.name} in ${currentFlow.flow.name}`)
@@ -146,6 +145,7 @@ export class EducationInterpreter extends EducationInterpreterBase {
         if (isNullOrUndefined(transition)) {
             return new RtError(`No transition found for grade ${grade.grade} on page ${currentPage.name} in ${currentFlow.flow.name}`)
         }
+
         console.log(`Evaluating Step ${EducationEnvironment.getInstance().writer.writeToLines(node)} returning grade: ${transition.$condition.name}, page: ${transition.toPage.name}`)
         return new RtPage(transition.$toPage)
     }
