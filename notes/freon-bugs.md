@@ -104,6 +104,10 @@ Then logger setting should be in the webapp-=starter, so the developer can easil
 ## Select and action boxes have no border when selected.
 - [x] IS this just styling?
 
+# Sveltekit > 2.5.10 gives build error
+On githun the .svelte-kit/tsconfig.json is not found.
+Probably fixable bt=y adding a sveltekit sync somewhere in the build.
+
 ## Using InMemoryModel (25 jan 2025)
 
 - Creating a unit uses the unit's id, but the Freon native server uses the unit's name to store it. If the name is not present,

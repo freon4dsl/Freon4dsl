@@ -24,7 +24,7 @@ export class ReferenceBox extends SelectBox {
                 editor.setUserMessage("Cannot find a reference to '" + this._myReference.pathname.toString() + "'.", FreErrorSeverity.Error);
             }
         } else {
-            console.log("Not a FreNodeReference: " + this._myReference)
+            console.error("Not a FreNodeReference: " + this._myReference)
         }
     }
 

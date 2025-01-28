@@ -66,7 +66,7 @@
      * This function sets the focus on this element programmatically.
      */
     const setFocus = () => {
-        console.log("TextDropdownComponent.setFocus " + box.kind + id);
+        LOGGER.log("TextDropdownComponent.setFocus " + box.kind + id);
         if (!!textComponent) {
             textComponent.setFocus();
         } else {
@@ -296,7 +296,7 @@
                             storeOrExecute(allOptions[0])
                         } else {
                             selectedId = box.getSelectedOption()?.id
-                            console.log("Setting selected option to " + selectedId)
+                            LOGGER.log("Setting selected option to " + selectedId)
                             startEditing();
                         }
                         event.stopPropagation();
@@ -361,7 +361,7 @@
      * @param selected
      */
     function storeOrExecute(selected: SelectOption) {
-        console.log('storeOrExecute for option ' + selected.label + ' ' + box.kind + ' ' + box.role);
+        LOGGER.log('storeOrExecute for option ' + selected.label + ' ' + box.kind + ' ' + box.role);
         isEditing = false;
         hideDropdown()
 
@@ -370,7 +370,7 @@
             if (typeof post === "function") {
                 post()
             } else {
-                console.log("POST is noit a function: " + post)
+                LOGGER.log("POST is noit a function: " + post)
             }
         }
         if (isActionBox(box)) { // ActionBox, action done, clear input text

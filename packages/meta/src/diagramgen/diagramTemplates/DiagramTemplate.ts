@@ -1,9 +1,10 @@
 import {
+    FreMetaClassifier,
     FreMetaConcept,
     FreMetaInterface,
     FreMetaLanguage,
     FreMetaLimitedConcept,
-    FreMetaProperty,
+    FreMetaProperty, FreMetaUnitDescription
 } from "../../languagedef/metalanguage/index.js";
 import { ListUtil } from "../../utils/index.js";
 
@@ -20,7 +21,9 @@ export class DiagramTemplate {
     direction TD
     %% other possibilites: LR RL DT TB (same as TD)
 ${this.makeUmlClasses(language.concepts)}
+${this.makeUmlUnits(language.units )}
 ${this.makeUmlInterfaces(language.interfaces)}
+    ${this.makeUnitRelationships(language.units)}
     ${this.makeUmlRelationships(language.concepts)}`;
     }
 
@@ -70,14 +73,18 @@ ${this.makeUmlClasses(conceptsToInclude)}
         return `${conceptsToInclude.map((c) => this.conceptToUml(c)).join("\n")}`;
     }
 
+    private makeUmlUnits(unitsToInclude: FreMetaUnitDescription[]): string {
+        return `${unitsToInclude.map((c) => this.unitToUml(c)).join("\n")}`;
+    }
+
     private conceptToUml(concept: FreMetaConcept): string {
         if (concept instanceof FreMetaLimitedConcept) {
             return `    class ${concept.name}${this.withHtml ? ":::enumeration" : ""} {
         ${!this.withHtml ? "<<enumeration>>" : ""}
         ${concept
-            .allInstances()
-            .map((p) => p.name)
-            .join("\n\t\t")}
+                .allInstances()
+                .map((p) => p.name)
+                .join("\n\t\t")}
     }`;
         } else {
             // only prim properties are shown as UML attributes
@@ -86,6 +93,14 @@ ${this.makeUmlClasses(conceptsToInclude)}
         ${concept.primProperties.map((p) => this.primPropToUml(p)).join("\n\t\t")}
     }`;
         }
+    }
+
+    private unitToUml(unit: FreMetaUnitDescription): string {
+            // only prim properties are shown as UML attributes
+            return `    class ${unit.name} {
+        ${!this.withHtml ? "<<modelunit>>" : ""}
+        ${unit.primProperties.map((p) => this.primPropToUml(p)).join("\n\t\t")}
+    }`;
     }
 
     private primPropToUml(prop: FreMetaProperty): string {
@@ -102,6 +117,11 @@ ${this.makeUmlClasses(conceptsToInclude)}
         ${concepts.map((c) => this.implementsToUml(c)).join("")}`;
     }
 
+    private makeUnitRelationships(units: FreMetaUnitDescription[]): string {
+        return `${units.map((c) => this.partsToUml(c)).join("")}
+        ${units.map((c) => this.referencesToUml(c)).join("")}`;
+    }
+
     private supersToUml(concept: FreMetaConcept): string {
         if (!!concept.base) {
             return `${concept.base.name} <|-- ${concept.name}\n`;
@@ -109,14 +129,14 @@ ${this.makeUmlClasses(conceptsToInclude)}
         return "";
     }
 
-    private partsToUml(concept: FreMetaConcept): string {
+    private partsToUml(concept: FreMetaClassifier): string {
         return `${concept
             .parts()
             .map((p) => `${concept.name} *-- ${p.isList ? '"0..*"' : '"1"'} ${p.type.name} : ${p.name}\n`)
             .join("\n\t\t")}`;
     }
 
-    private referencesToUml(concept: FreMetaConcept): string {
+    private referencesToUml(concept: FreMetaClassifier): string {
         return `${concept
             .references()
             .map((p) => `${concept.name} --> ${p.isList ? '"0..*"' : '"1"'} ${p.type.name} : ${p.name}\n`)
