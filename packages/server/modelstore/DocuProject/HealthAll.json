@@ -5,16 +5,16 @@
       {
          "id": "ID-49",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-Product"
+            "key": "-key-Product"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "TODO_set-correct-key"
+                  "key": "-key-Product-name"
                },
                "value": "HealthAll"
             }
@@ -22,9 +22,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-Product-product"
+                  "key": "-key-Product-product"
                },
                "children": [
                   "ID-50"
@@ -38,24 +38,24 @@
       {
          "id": "ID-50",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-InsuranceProduct"
+            "key": "-key-InsuranceProduct"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-name"
+                  "key": "-key-InsuranceProduct-name"
                },
                "value": "HealthAll1"
             },
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-productName"
+                  "key": "-key-InsuranceProduct-productName"
                },
                "value": "Healthy Life"
             }
@@ -63,9 +63,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-advertisedPremium"
+                  "key": "-key-InsuranceProduct-advertisedPremium"
                },
                "children": [
                   "ID-51"
@@ -73,9 +73,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-riskAdjustment"
+                  "key": "-key-InsuranceProduct-riskAdjustment"
                },
                "children": [
                   "ID-52"
@@ -83,9 +83,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-calculation"
+                  "key": "-key-InsuranceProduct-calculation"
                },
                "children": [
                   "ID-53"
@@ -93,9 +93,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-helpers"
+                  "key": "-key-InsuranceProduct-helpers"
                },
                "children": [
                   "ID-78"
@@ -105,9 +105,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-themes"
+                  "key": "-key-InsuranceProduct-themes"
                },
                "targets": [
                   {
@@ -118,9 +118,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-nrPremiumDays"
+                  "key": "-key-InsuranceProduct-nrPremiumDays"
                },
                "targets": [
                   {
@@ -131,9 +131,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-parts"
+                  "key": "-key-InsuranceProduct-parts"
                },
                "targets": [
                   {
@@ -164,9 +164,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsuranceProduct-basedOn"
+                  "key": "-key-InsuranceProduct-basedOn"
                },
                "targets": [
                   {
@@ -182,24 +182,24 @@
       {
          "id": "ID-51",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-EuroLiteral"
+            "key": "-key-EuroLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-EuroLiteral-euros"
+                  "key": "-key-EuroLiteral-euros"
                },
                "value": "1000"
             },
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-EuroLiteral-cents"
+                  "key": "-key-EuroLiteral-cents"
                },
                "value": "0"
             }
@@ -212,16 +212,16 @@
       {
          "id": "ID-52",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-PercentageLiteral"
+            "key": "-key-PercentageLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-PercentageLiteral-value"
+                  "key": "-key-PercentageLiteral-value"
                },
                "value": "2"
             }
@@ -234,17 +234,17 @@
       {
          "id": "ID-53",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-PlusExpression"
+            "key": "-key-PlusExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-54"
@@ -252,9 +252,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-75"
@@ -268,17 +268,17 @@
       {
          "id": "ID-54",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-PlusExpression"
+            "key": "-key-PlusExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-55"
@@ -286,9 +286,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-70"
@@ -302,17 +302,17 @@
       {
          "id": "ID-55",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-PlusExpression"
+            "key": "-key-PlusExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-56"
@@ -320,9 +320,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-65"
@@ -336,17 +336,17 @@
       {
          "id": "ID-56",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-PlusExpression"
+            "key": "-key-PlusExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-57"
@@ -354,9 +354,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-60"
@@ -370,17 +370,17 @@
       {
          "id": "ID-57",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-FunctionCallExpression"
+            "key": "-key-FunctionCallExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-args"
+                  "key": "-key-FunctionCallExpression-args"
                },
                "children": [
                   "ID-58",
@@ -391,9 +391,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-funcDefinition"
+                  "key": "-key-FunctionCallExpression-funcDefinition"
                },
                "targets": [
                   {
@@ -409,18 +409,18 @@
       {
          "id": "ID-58",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-InsurancePartRef"
+            "key": "-key-InsurancePartRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsurancePartRef-part"
+                  "key": "-key-InsurancePartRef-part"
                },
                "targets": [
                   {
@@ -436,16 +436,16 @@
       {
          "id": "ID-59",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-RiskAdjustmentRef"
+            "key": "-key-RiskAdjustmentRef"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-RiskAdjustmentRef-name"
+                  "key": "-key-RiskAdjustmentRef-name"
                },
                "value": "riskAdjustment"
             }
@@ -458,17 +458,17 @@
       {
          "id": "ID-60",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-FunctionCallExpression"
+            "key": "-key-FunctionCallExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-args"
+                  "key": "-key-FunctionCallExpression-args"
                },
                "children": [
                   "ID-61",
@@ -479,9 +479,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-funcDefinition"
+                  "key": "-key-FunctionCallExpression-funcDefinition"
                },
                "targets": [
                   {
@@ -497,18 +497,18 @@
       {
          "id": "ID-61",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-InsurancePartRef"
+            "key": "-key-InsurancePartRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsurancePartRef-part"
+                  "key": "-key-InsurancePartRef-part"
                },
                "targets": [
                   {
@@ -524,17 +524,17 @@
       {
          "id": "ID-62",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-PlusExpression"
+            "key": "-key-PlusExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-63"
@@ -542,9 +542,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-64"
@@ -558,16 +558,16 @@
       {
          "id": "ID-63",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-RiskAdjustmentRef"
+            "key": "-key-RiskAdjustmentRef"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-RiskAdjustmentRef-name"
+                  "key": "-key-RiskAdjustmentRef-name"
                },
                "value": "riskAdjustment"
             }
@@ -580,16 +580,16 @@
       {
          "id": "ID-64",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-PercentageLiteral"
+            "key": "-key-PercentageLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-PercentageLiteral-value"
+                  "key": "-key-PercentageLiteral-value"
                },
                "value": "1"
             }
@@ -602,17 +602,17 @@
       {
          "id": "ID-65",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-FunctionCallExpression"
+            "key": "-key-FunctionCallExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-args"
+                  "key": "-key-FunctionCallExpression-args"
                },
                "children": [
                   "ID-66",
@@ -623,9 +623,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-funcDefinition"
+                  "key": "-key-FunctionCallExpression-funcDefinition"
                },
                "targets": [
                   {
@@ -641,18 +641,18 @@
       {
          "id": "ID-66",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-InsurancePartRef"
+            "key": "-key-InsurancePartRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsurancePartRef-part"
+                  "key": "-key-InsurancePartRef-part"
                },
                "targets": [
                   {
@@ -668,17 +668,17 @@
       {
          "id": "ID-67",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-MinusExpression"
+            "key": "-key-MinusExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-68"
@@ -686,9 +686,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-69"
@@ -702,16 +702,16 @@
       {
          "id": "ID-68",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-RiskAdjustmentRef"
+            "key": "-key-RiskAdjustmentRef"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-RiskAdjustmentRef-name"
+                  "key": "-key-RiskAdjustmentRef-name"
                },
                "value": "riskAdjustment"
             }
@@ -724,16 +724,16 @@
       {
          "id": "ID-69",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-PercentageLiteral"
+            "key": "-key-PercentageLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-PercentageLiteral-value"
+                  "key": "-key-PercentageLiteral-value"
                },
                "value": "2"
             }
@@ -746,17 +746,17 @@
       {
          "id": "ID-70",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-FunctionCallExpression"
+            "key": "-key-FunctionCallExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-args"
+                  "key": "-key-FunctionCallExpression-args"
                },
                "children": [
                   "ID-71",
@@ -767,9 +767,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-funcDefinition"
+                  "key": "-key-FunctionCallExpression-funcDefinition"
                },
                "targets": [
                   {
@@ -785,18 +785,18 @@
       {
          "id": "ID-71",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-InsurancePartRef"
+            "key": "-key-InsurancePartRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsurancePartRef-part"
+                  "key": "-key-InsurancePartRef-part"
                },
                "targets": [
                   {
@@ -812,17 +812,17 @@
       {
          "id": "ID-72",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-MultiplyExpression"
+            "key": "-key-MultiplyExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-73"
@@ -830,9 +830,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-74"
@@ -846,16 +846,16 @@
       {
          "id": "ID-73",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-RiskAdjustmentRef"
+            "key": "-key-RiskAdjustmentRef"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-RiskAdjustmentRef-name"
+                  "key": "-key-RiskAdjustmentRef-name"
                },
                "value": "riskAdjustment"
             }
@@ -868,16 +868,16 @@
       {
          "id": "ID-74",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-NumberLiteral"
+            "key": "-key-NumberLiteral"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-NumberLiteral-value"
+                  "key": "-key-NumberLiteral-value"
                },
                "value": "4"
             }
@@ -890,17 +890,17 @@
       {
          "id": "ID-75",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-FunctionCallExpression"
+            "key": "-key-FunctionCallExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-args"
+                  "key": "-key-FunctionCallExpression-args"
                },
                "children": [
                   "ID-76",
@@ -911,9 +911,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-FunctionCallExpression-funcDefinition"
+                  "key": "-key-FunctionCallExpression-funcDefinition"
                },
                "targets": [
                   {
@@ -929,18 +929,18 @@
       {
          "id": "ID-76",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-InsurancePartRef"
+            "key": "-key-InsurancePartRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-InsurancePartRef-part"
+                  "key": "-key-InsurancePartRef-part"
                },
                "targets": [
                   {
@@ -956,16 +956,16 @@
       {
          "id": "ID-77",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-RiskAdjustmentRef"
+            "key": "-key-RiskAdjustmentRef"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-RiskAdjustmentRef-name"
+                  "key": "-key-RiskAdjustmentRef-name"
                },
                "value": "riskAdjustment"
             }
@@ -978,16 +978,16 @@
       {
          "id": "ID-78",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-CalcFunction"
+            "key": "-key-CalcFunction"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-CalcFunction-name"
+                  "key": "-key-CalcFunction-name"
                },
                "value": "adjust"
             }
@@ -995,9 +995,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-CalcFunction-declaredType"
+                  "key": "-key-CalcFunction-declaredType"
                },
                "children": [
                   "ID-79"
@@ -1005,9 +1005,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-CalcFunction-body"
+                  "key": "-key-CalcFunction-body"
                },
                "children": [
                   "ID-80"
@@ -1015,9 +1015,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-CalcFunction-parameters"
+                  "key": "-key-CalcFunction-parameters"
                },
                "children": [
                   "ID-87",
@@ -1032,18 +1032,18 @@
       {
          "id": "ID-79",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-TypeRef"
+            "key": "-key-TypeRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-TypeRef-type"
+                  "key": "-key-TypeRef-type"
                },
                "targets": [
                   {
@@ -1059,17 +1059,17 @@
       {
          "id": "ID-80",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-MultiplyExpression"
+            "key": "-key-MultiplyExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-81"
@@ -1077,9 +1077,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-86"
@@ -1093,17 +1093,17 @@
       {
          "id": "ID-81",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-MultiplyExpression"
+            "key": "-key-MultiplyExpression"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-left"
+                  "key": "-key-BinaryExpression-left"
                },
                "children": [
                   "ID-82"
@@ -1111,9 +1111,9 @@
             },
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-BinaryExpression-right"
+                  "key": "-key-BinaryExpression-right"
                },
                "children": [
                   "ID-84"
@@ -1127,17 +1127,17 @@
       {
          "id": "ID-82",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-ParameterRef"
+            "key": "-key-ParameterRef"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-ParameterRef-attribute"
+                  "key": "-key-ParameterRef-attribute"
                },
                "children": [
                   "ID-83"
@@ -1147,9 +1147,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-ParameterRef-parameter"
+                  "key": "-key-ParameterRef-parameter"
                },
                "targets": [
                   {
@@ -1165,16 +1165,16 @@
       {
          "id": "ID-83",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-RiskRef"
+            "key": "-key-RiskRef"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-RiskRef-name"
+                  "key": "-key-RiskRef-name"
                },
                "value": "statisticalRisk"
             }
@@ -1187,17 +1187,17 @@
       {
          "id": "ID-84",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-ParameterRef"
+            "key": "-key-ParameterRef"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-ParameterRef-attribute"
+                  "key": "-key-ParameterRef-attribute"
                },
                "children": [
                   "ID-85"
@@ -1207,9 +1207,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-ParameterRef-parameter"
+                  "key": "-key-ParameterRef-parameter"
                },
                "targets": [
                   {
@@ -1225,16 +1225,16 @@
       {
          "id": "ID-85",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-PayoutRef"
+            "key": "-key-PayoutRef"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-PayoutRef-name"
+                  "key": "-key-PayoutRef-name"
                },
                "value": "maximumPayOut"
             }
@@ -1247,18 +1247,18 @@
       {
          "id": "ID-86",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-ParameterRef"
+            "key": "-key-ParameterRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-ParameterRef-parameter"
+                  "key": "-key-ParameterRef-parameter"
                },
                "targets": [
                   {
@@ -1274,16 +1274,16 @@
       {
          "id": "ID-87",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-Parameter"
+            "key": "-key-Parameter"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-name"
+                  "key": "-key-Parameter-name"
                },
                "value": "part"
             }
@@ -1291,9 +1291,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-declaredType"
+                  "key": "-key-Parameter-declaredType"
                },
                "children": [
                   "ID-88"
@@ -1307,18 +1307,18 @@
       {
          "id": "ID-88",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-TypeRef"
+            "key": "-key-TypeRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-TypeRef-type"
+                  "key": "-key-TypeRef-type"
                },
                "targets": [
                   {
@@ -1334,16 +1334,16 @@
       {
          "id": "ID-89",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-Parameter"
+            "key": "-key-Parameter"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-name"
+                  "key": "-key-Parameter-name"
                },
                "value": "adjustment"
             }
@@ -1351,9 +1351,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-Parameter-declaredType"
+                  "key": "-key-Parameter-declaredType"
                },
                "children": [
                   "ID-90"
@@ -1367,18 +1367,18 @@
       {
          "id": "ID-90",
          "classifier": {
-            "language": "-default-key-InsuranceModel",
+            "language": "-key-InsuranceModel",
             "version": "2023.1",
-            "key": "-default-key-TypeRef"
+            "key": "-key-TypeRef"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-InsuranceModel",
+                  "language": "-key-InsuranceModel",
                   "version": "2023.1",
-                  "key": "-default-key-TypeRef-type"
+                  "key": "-key-TypeRef-type"
                },
                "targets": [
                   {
