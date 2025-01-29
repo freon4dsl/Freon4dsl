@@ -16,7 +16,6 @@
 
 #### Expression edit magic:
 
-- [ ] Add unary expressions
 - [ ] Move to core
     - Does parser already use priorities? If not, it should be solved by this.
 

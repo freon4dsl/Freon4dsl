@@ -11,7 +11,10 @@
 
   - Giving each FreNode a function `getChildren()` would make this much shorter.
   - Each function in the walker becomes smaller.
-  - Might rewrite walker (or have a second one) to execute the same function for every node would make it even really small.
+  - Might rewrite walker to execute the same function for every node would make it even really small.
+    - But that would mean that the language engineer needs to write `if (type of Node)` statements. This is ok if there are ponly a few nodes for which this is needed, but cumbersome if many are needed. See the long `if` statement in the currently generated code.
+
+  - The walker is raher inefficent, because it will execute half of the `if` conditions (on average) to find the correct function. Using a map, like in the interpreter would speed up things considerably.
 
 - ExampleWalker.walk
 
@@ -38,16 +41,14 @@
 
 In the generated code an expression cannot also be a FreNamedNode
 - change this
-hasName only checks for property named “name”, not for its tyoe.
+hasName only checks for property named “name”, not for its type.
 FreNamedNode has a property of type ‘string’ in typescript
 Property type identifier in meta info is string.
 
 #### Scoper
 
-- [ ] Custom scoper is never used => need to implement custom scoper
-  - [ ] Voorbeelden bedenken waarin custrom scoper nodig is (J)
-  - [ ] Implement Custom scoper
 - [ ] scope rule for specific reference in scope language
+
 - [ ] add custom scoper option.
   - [ ] Scoper composable
   - [ ] Scoper override per concept / reference

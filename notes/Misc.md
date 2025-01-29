@@ -3,8 +3,6 @@
 ## Anneke
 - [ ] Use of inherited projections in .edit file is not described in the documentation.(A)
 - [ ] \<br/> in layoutcomponent does not work as intended in LayoutComponent. (A)
-- [ ] Typecheck on abstract class is not evaluated for subclasses. Reason: walker only walks concrete classes. (A)
-- [ ] Non existing concept in .valid file is not checked => get JavaScript exception.  Need to check whether concepts exist.(A)
 
 ## IDE for FreLanguage Development ??
 
