@@ -107,7 +107,7 @@ export class FileUtil {
             fs.readdirSync(folder).forEach((file) => {
                 fs.unlinkSync(path.join(folder, file));
             });
-            fs.rmSync(folder, {});
+            fs.rmdirSync(folder);
             // } else {
             // LOGGER.error("Could not find folder: [" + folder + "]");
         }
@@ -118,7 +118,7 @@ export class FileUtil {
         const folder = "./" + dir;
         if (fs.existsSync(folder)) {
             if (fs.readdirSync(folder).length === 0) {
-                fs.rmSync(folder);
+                fs.rmdirSync(folder);
             } else {
                 LOGGER.info("Folder has content: [" + folder + "]");
             }
