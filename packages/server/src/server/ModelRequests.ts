@@ -93,7 +93,7 @@ export class ModelRequests {
         try {
             this.checkStoreFolder();
             console.log("Unlink: " + path.join(`${storeFolder}`, foldername));
-            fs.rmdirSync(path.join(`${storeFolder}`, foldername), { recursive: true });
+            fs.rmSync(path.join(`${storeFolder}`, foldername), { recursive: true });
         } catch (e) {
             console.log(e.message);
             ctx.request.body = e.message;

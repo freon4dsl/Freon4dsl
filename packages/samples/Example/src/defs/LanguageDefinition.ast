@@ -6,7 +6,17 @@ model Example {
     rules: Rules[];
 }
 
-modelunit ExampleUnit {
+interface All {
+    appl: string;
+}
+concept "Concept is (#*@( All" implements All {
+    documentation: Documentation;
+    name: identifier;
+    entities: Entity[];
+    interfaces: Interface[];
+    methods: Method[];
+}
+modelunit ExampleUnit implements All {
     documentation: Documentation;
     name: identifier;
     entities: Entity[];

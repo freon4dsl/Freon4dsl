@@ -14,8 +14,13 @@ plus_separator = ws "+" ws
 ws "whitespace" = (([ \t\n\r]) / (SingleLineComment) / (MultiLineComment) )*
 rws "required whitespace" = (([ \t\n\r]) / (SingleLineComment) / (MultiLineComment) )+
 
+//var "variable"
+//  = first:varLetter rest:identifierChar* { return first + rest.join(""); }
+
 var "variable"
   = first:varLetter rest:identifierChar* { return first + rest.join(""); }
+    /
+    "\"" value:string "\""      { return value; }
 
 string           = chars:(char)* { return chars.join(""); }
 

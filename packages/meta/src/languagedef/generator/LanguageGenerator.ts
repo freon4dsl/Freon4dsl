@@ -30,7 +30,7 @@ import { CommandLineTemplate } from "./templates/CommandLineTemplate.js";
 import { ConfigurationTemplate } from "./templates/ConfigurationTemplate.js";
 import { ModelTemplate } from "./templates/ModelTemplate.js";
 import { RootIndexTemplate } from "./templates/RootIndexTemplate.js";
-import { UnitTemplate } from "./templates/UnitTemplate.js";
+// import { UnitTemplate } from "./templates/UnitTemplate.js";
 import { ListUtilTemplate } from "./templates/ListUtilTemplate.js";
 
 const LOGGER = new MetaLogger("LanguageGenerator").mute();
@@ -54,7 +54,7 @@ export class LanguageGenerator {
         this.getFolderNames();
 
         const modelTemplate = new ModelTemplate();
-        const unitTemplate = new UnitTemplate();
+        // const unitTemplate = new UnitTemplate();
         const conceptTemplate = new ConceptTemplate();
         const languageTemplate = new LanguageTemplate();
         // const metaTypeTemplate = new MetaTypeTemplate();
@@ -97,9 +97,9 @@ export class LanguageGenerator {
         fs.writeFileSync(`${this.languageGenFolder}/${Names.classifier(language.modelConcept)}.ts`, generated);
 
         language.units.forEach((unit) => {
-            LOGGER.log(`Generating concept: ${this.languageGenFolder}/${Names.classifier(unit)}.ts`);
+            LOGGER.log(`Generating modelunit concept: ${this.languageGenFolder}/${Names.classifier(unit)}.ts`);
             const innerGenerated = FileUtil.pretty(
-                unitTemplate.generateUnit(unit),
+                conceptTemplate.generateConcept(unit),
                 "concept " + unit.name,
                 generationStatus,
             );
