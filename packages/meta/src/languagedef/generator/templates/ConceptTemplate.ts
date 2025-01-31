@@ -8,7 +8,7 @@ import {
     FreMetaProperty,
     FreMetaInstanceProperty,
     FreMetaClassifier,
-    FreMetaPrimitiveType, FreMetaUnitDescription,
+    FreMetaPrimitiveType,
 } from "../../metalanguage/index.js";
 import { ConceptUtils } from "./ConceptUtils.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
@@ -31,7 +31,6 @@ export class ConceptTemplate {
         const hasReferences: boolean = concept.implementedReferences().length > 0;
         const extendsClass: string = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const isAbstract: boolean = concept.isAbstract;
-        const isUnit: boolean = concept instanceof FreMetaUnitDescription;
         const isExpression: boolean =
             concept instanceof FreMetaBinaryExpressionConcept || concept instanceof FreMetaExpressionConcept;
         const abstract: string = concept.isAbstract ? "abstract" : "";
@@ -73,7 +72,7 @@ export class ConceptTemplate {
                     .join("\n")}
 
                 ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), coreImports)}
-                ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, isUnit, isExpression, false)}
+                ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, isExpression, false)}
                 ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}
                 ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, coreImports)}
                 ${ConceptUtils.makeConvenienceMethods(concept.references())}

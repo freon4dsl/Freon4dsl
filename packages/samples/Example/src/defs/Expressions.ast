@@ -1,4 +1,4 @@
-language "Example"
+language Example
 
 interface BaseType {
     name: identifier;
