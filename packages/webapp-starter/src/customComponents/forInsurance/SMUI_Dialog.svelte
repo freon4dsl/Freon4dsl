@@ -56,7 +56,6 @@
         box.refreshComponent = refresh;
     });
     afterUpdate(() => {
-        initialize();
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
