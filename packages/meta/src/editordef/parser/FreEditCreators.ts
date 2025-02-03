@@ -362,7 +362,7 @@ export function createLine(data: Partial<FreEditProjectionLine>): FreEditProject
 export function createOptionalProjection(data: Partial<FreOptionalPropertyProjection>): FreOptionalPropertyProjection {
     const result: FreOptionalPropertyProjection = new FreOptionalPropertyProjection();
     if (!!data.lines) {
-        result.lines = data.lines;
+        result.lines = FreEditParseUtil.normalizeLine(data.lines[0]);
     }
     if (!!data.location) {
         result.location = data.location;
