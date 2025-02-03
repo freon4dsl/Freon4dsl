@@ -350,7 +350,6 @@ export function createTableProjection(data: Partial<FreEditTableProjection>): Fr
 export function createLine(data: Partial<FreEditProjectionLine>): FreEditProjectionLine {
     const result: FreEditProjectionLine = new FreEditProjectionLine();
     if (!!data.items) {
-        result.lines = data.lines;
         result.items = data.items;
     }
     if (!!data.location) {
