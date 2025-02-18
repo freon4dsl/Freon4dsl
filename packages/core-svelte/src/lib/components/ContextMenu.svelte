@@ -1,37 +1,41 @@
-<svelte:options accessors={true}/> <!-- this option lets us set the items props after the component has been created -->
-
 <script lang="ts">
-    import { CONTEXTMENU_LOGGER } from "$lib/components/ComponentLoggers.js";
+    import { CONTEXTMENU_LOGGER } from '$lib/components/ComponentLoggers.js';
 
+    // todo the context menu leaves its place when first clicked, probably a reactivity issue
     /**
      *  This component combines a menu with a submenu. The positions of both the menu and the submenu are determined
-     *  such that the complete menu stays within the bounderies of the editor viewport. The state of the editor
+     *  such that the complete menu stays within the boundaries of the editor viewport. The state of the editor
      *  viewport is stored in the EditorViewportStore (by FreonComponent).
      */
-    import { calculatePos, clickOutsideConditional, contextMenuVisible, viewport } from "./svelte-utils/index.js";
-    import { tick } from "svelte";
-    import { FreLogger, MenuItem, FreEditor } from "@freon4dsl/core";
+    import { calculatePos, clickOutsideConditional } from './svelte-utils/index.js';
+    import { tick } from 'svelte';
+    import { MenuItem } from '@freon4dsl/core';
+    import { contextMenuVisible, viewport } from '$lib/components/stores/AllStores.svelte.js';
+    import type { ContextMenuProps } from '$lib/components/svelte-utils/FreComponentProps.js';
 
     // items for the context menu
-    export let items: MenuItem[];
-    export let editor: FreEditor;
+    let { editor, items }: ContextMenuProps = $props();
 
     // local variables
     const LOGGER = CONTEXTMENU_LOGGER;
-    let submenuItems: MenuItem[];
-    let elementIndex: number;                   // the index of the element in a list to which this menu is coupled
+    let submenuItems: MenuItem[] = $state([]);
+    let elementIndex: number; // the index of the element in a list to which this menu is coupled
 
     // dimension (height and width) of context menu
-    let menuHeight = 0, menuWidth = 0;
+    let menuHeight = 0,
+        menuWidth = 0;
     // position of context menu
-    let top = 0, left = 0;
+    let top = $state(0),
+        left = $state(0);
     // dimension (height and width) of sub menu
-    let submenuHeight = 0, submenuWidth = 0;
+    let submenuHeight = 0,
+        submenuWidth = 0;
     // position of sub menu
-    let topSub = 0, leftSub = 0;
+    let topSub = $state(0),
+        leftSub = $state(0);
     // height of items in menu and sub menu
-    let itemHeight = 40;
-    let submenuOpen = false;
+    let itemHeight = $state(40);
+    let submenuOpen = $state(false);
 
     // let contextmenu: HTMLElement;
     // let submenu: HTMLElement;
@@ -40,28 +44,29 @@
      * This function shows the context menu. Note that the items to be shown should
      * already be set (based on the box to which the menu is coupled)
      * @param event
+     * @param index
      */
     export async function show(event: MouseEvent, index: number) {
-        LOGGER.log("CONTEXTMENU show for index " + index);
+        LOGGER.log('CONTEXTMENU show for index ' + index);
         elementIndex = index;
-        $contextMenuVisible = true;
+        contextMenuVisible.value = true;
         submenuOpen = false;
         // wait for the menu to be rendered, because we need its sizes for the positioning
         await tick();
         // get the position of the mouse relative to the editor view
-        let posX: number = event.pageX - $viewport.left;
-        let posY: number = event.pageY - $viewport.top;
+        let posX: number = event.pageX - viewport.value.left;
+        let posY: number = event.pageY - viewport.value.top;
         // calculate the right position of the context menu
-        left = calculatePos($viewport.width, menuWidth, posX);
-        top = calculatePos($viewport.height, menuHeight, posY);
+        left = calculatePos(viewport.value.width, menuWidth, posX);
+        top = calculatePos(viewport.value.height, menuHeight, posY);
     }
 
     /**
      * This function hides the context menu
      */
     export function hide() {
-        LOGGER.log("CONTEXTMENU hide");
-        $contextMenuVisible = false;
+        LOGGER.log('CONTEXTMENU hide');
+        contextMenuVisible.value = false;
         submenuOpen = false;
     }
 
@@ -76,13 +81,13 @@
         topSub = top + itemHeight + itemIndex * (itemHeight + 2 + 3 + 4); // add 2 for gap, 3 for margin, 4 for padding
         leftSub = left + submenuWidth - 20;
         // calculate the right position of the sub menu based on the size of the editor view
-        topSub = calculatePos($viewport.width, submenuWidth, topSub);
-        leftSub = calculatePos($viewport.height, submenuHeight, leftSub);
+        topSub = calculatePos(viewport.value.width, submenuWidth, topSub);
+        leftSub = calculatePos(viewport.value.height, submenuHeight, leftSub);
     }
 
     /**
      * This function finds the context menu dimensions the moment that
-     * $contextMenuVisible becomes true and the menu is shown.
+     * contextMenuVisible.value becomes true and the menu is shown.
      */
     function getContextMenuDimension(htmlElement: HTMLElement) {
         menuHeight = htmlElement.offsetHeight;
@@ -99,7 +104,7 @@
     }
 
     function onClick(event: MouseEvent, item: MenuItem, itemIndex: number): boolean {
-        LOGGER.log("CONTEXTMENU onClick");
+        LOGGER.log('CONTEXTMENU onClick');
         submenuOpen = false;
         if (item.hasSubItems()) {
             submenuItems = item.subItems;
@@ -114,18 +119,18 @@
     }
 </script>
 
-<div use:clickOutsideConditional={{enabled: $contextMenuVisible}}
-     on:click_outside={hide}>
-    {#if $contextMenuVisible}
-        <nav use:getContextMenuDimension
-             class="contextmenu"
-             style="top: {top}px; left: {left}px"
-        >
+<div use:clickOutsideConditional={{ enabled: contextMenuVisible.value }} onclick_outside={hide}>
+    {#if contextMenuVisible.value}
+        <nav use:getContextMenuDimension class="contextmenu" style="top: {top}px; left: {left}px">
             {#each items as item, index}
                 {#if item.label === '---'}
-                    <hr class="contextmenu-hr"/>
+                    <hr class="contextmenu-hr" />
                 {:else}
-                    <button class="contextmenu-button" on:click={(event) => onClick(event, item, index)} bind:clientHeight={itemHeight}>
+                    <button
+                        class="contextmenu-button"
+                        onclick={(event) => onClick(event, item, index)}
+                        bind:clientHeight={itemHeight}
+                    >
                         {item.label}
                         {#if item.shortcut}
                             <span class="contextmenu-shortcut">{item.shortcut}</span>
@@ -135,15 +140,19 @@
             {/each}
         </nav>
         {#if submenuOpen}
-            <nav use:getSubMenuDimension
-                 class="contextmenu"
-                 style="top: {topSub}px; left: {leftSub}px"
+            <nav
+                use:getSubMenuDimension
+                class="contextmenu"
+                style="top: {topSub}px; left: {leftSub}px"
             >
                 {#each submenuItems as item, index}
                     {#if item.label === '---'}
-                        <hr class="contextmenu-hr"/>
+                        <hr class="contextmenu-hr" />
                     {:else}
-                        <button class="contextmenu-button" on:click={(event) => onClick(event, item, index)}>
+                        <button
+                            class="contextmenu-button"
+                            onclick={(event) => onClick(event, item, index)}
+                        >
                             {item.label}
                             {#if item.shortcut}
                                 <span class="contextmenu-shortcut">{item.shortcut}</span>
@@ -155,5 +164,3 @@
         {/if}
     {/if}
 </div>
-
-

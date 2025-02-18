@@ -40,6 +40,7 @@ export class ShowCaseModel extends FreNodeBaseImpl implements FreModel {
             this.$id = FreUtils.ID(); // uuid.v4();
         }
         this.name = "";
+        // @ts-ignore
         this.unit = null;
 
         // Both 'observablepart' and 'observablepartlist' change the get and set of the attribute
@@ -124,6 +125,7 @@ export class ShowCaseModel extends FreNodeBaseImpl implements FreModel {
      * @param metatype
      */
     findUnit(name: string, metatype?: string): ShowCaseUnit {
+        // @ts-ignore
         let result: ShowCaseUnit = null;
         if (this.unit.name === name) {
             result = this.unit;
@@ -135,6 +137,7 @@ export class ShowCaseModel extends FreNodeBaseImpl implements FreModel {
         } else {
             return result;
         }
+        // @ts-ignore
         return null;
     }
 
@@ -188,6 +191,7 @@ export class ShowCaseModel extends FreNodeBaseImpl implements FreModel {
             const myMetatype = oldUnit.freLanguageConcept();
             switch (myMetatype) {
                 case "UndoUnit": {
+                    // @ts-ignore
                     this.unit = null;
                     return true;
                 }
@@ -209,6 +213,7 @@ export class ShowCaseModel extends FreNodeBaseImpl implements FreModel {
                 return unit;
             }
         }
+        // @ts-ignore
         return null;
     }
 

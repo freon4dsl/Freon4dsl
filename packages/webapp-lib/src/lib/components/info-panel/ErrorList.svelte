@@ -2,7 +2,7 @@
 	sortable
 	bind:sort
 	bind:sortDirection
-	on:SMUIDataTable:sorted={handleSort}
+	onSMUIDataTableSorted={handleSort}
 	table$aria-label="Error list"
 	style="width: 100%;"
 >
@@ -37,7 +37,7 @@
 		</Row>
 	</Head>
 	<Body>
-	{#each $modelErrors as item, index}
+	{#each modelErrors.list as item, index}
 		<Row >
 			<Cell>
 				<Radio
@@ -54,9 +54,8 @@
 
 	<LinearProgress
 			indeterminate
-			closed="{$errorsLoaded}"
+			closed={errorsLoaded.value}
 			aria-label="Data is being loaded..."
-			slot="progress"
 	/>
 </DataTable>
 
@@ -72,21 +71,21 @@
 	import Radio from '@smui/radio';
 	import IconButton from '@smui/icon-button';
 	import LinearProgress from '@smui/linear-progress';
-	import { errorsLoaded, modelErrors } from "../stores/InfoPanelStore.js";
-	import type { FreError } from "@freon4dsl/core";
-	import { EditorState } from "../../language/EditorState.js";
+	import { errorsLoaded, modelErrors } from "../stores/InfoPanelStore.svelte";
+	import {type FreError, isNullOrUndefined} from "@freon4dsl/core";
+	import { EditorState } from "$lib/language/EditorState";
 
 	// sorting of table
-	let sort: keyof FreError = 'message';
-	let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
+	let sort: keyof FreError = $state('message');
+	let sortDirection: Lowercase<keyof typeof SortValue> = $state('ascending');
 
 	function handleSort() {
-		// first remember the currectly selected item
+		// first remember the currently selected item
 		let item;
-		if (!!$modelErrors && $modelErrors.length > 0) {
-			item = $modelErrors[selected];
+		if (!!modelErrors.list && modelErrors.list.length > 0) {
+			item = modelErrors.list[selected];
 		}
-		$modelErrors.sort((a, b) => {
+		modelErrors.list.sort((a, b) => {
 			const [aVal, bVal] = [a[sort], b[sort]][
 				sortDirection === 'ascending' ? 'slice' : 'reverse'
 				]();
@@ -95,20 +94,22 @@
 			}
 			return Number(aVal) - Number(bVal);
 		});
-		$modelErrors = $modelErrors; // we need an assignment to trigger svelte's reactiveness
+		modelErrors.list = modelErrors.list; // we need an assignment to trigger svelte's reactiveness
 		// find the new index for the selected item and make sure this is marked
-		selected = $modelErrors.indexOf(item);
-		handleClick(selected);
+		if (!isNullOrUndefined(item)) {
+			selected = modelErrors.list.indexOf(item);
+			handleClick(selected);
+		}
 	}
 
 	// selection of row does not function, therefore we use the checkbox option from the SMUI docs
 	// todo look into selection of row in errorlist
-	let selected: number = 0;
-	$: handleClick(selected);
+	let selected: number = $state(0);
+	$effect(() => {handleClick(selected);});
 
 	const handleClick = (index: number) => {
-		if (!!$modelErrors && $modelErrors.length > 0) {
-			const item: FreError = $modelErrors[index];
+		if (!!modelErrors.list && modelErrors.list.length > 0) {
+			const item: FreError = modelErrors.list[index];
 			// TODO declaredType should be changed to property coming from error object.
 			if (Array.isArray(item.reportedOn)) {
 				EditorState.getInstance().selectElement(item.reportedOn[0], item.propertyName);

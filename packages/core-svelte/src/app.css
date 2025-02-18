@@ -1,0 +1,44 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import './lib/styles/freon.css';
+@import './lib/styles/freon-dark.css';
+@import './lib/styles/freon-light.css';
+
+h1 {
+    font-size: xx-large;
+}
+
+.test-area {
+    border: 2px dotted rgb(96 139 168);
+    background-color: antiquewhite;
+    margin: 20px;
+    padding: 10px;
+}
+.line {
+    border-color: blue;
+}
+
+a {
+    background-color: coral;
+    padding: 2px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 6px;
+}
+
+.contextmenu-area {
+    height: 4rem;
+    border: solid black 1px;
+}
+
+.limited-checkbox-component-group {
+    --md-sys-color-primary: darkblue;
+    --md-sys-color-on-surface-variant: darkblue;
+    --md-sys-color-on-surface: darkblue;
+}

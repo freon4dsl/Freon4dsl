@@ -44,12 +44,14 @@ export class ShowCaseUnit extends FreNodeBaseImpl implements FreModelUnit {
         return result;
     }
 
+    // @ts-ignore
     fileExtension: string;
     readonly $typename: string = "ShowCaseUnit"; // holds the metatype in the form of a string
     $id: string; // a unique identifier
     prim: string; // implementation of prim
     numlist: number[]; // implementation of numlist
     name: string; // implementation of name
+    // @ts-ignore
     part: ShowCasePart; // implementation of part 'part'
     partlist: ShowCasePart[]; // implementation of part 'partlist'
 

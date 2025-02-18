@@ -1,12 +1,12 @@
 <Dialog
-		bind:open={$deleteUnitDialogVisible}
+		bind:open={deleteUnitDialogVisible.value}
 		aria-labelledby="event-title"
 		aria-describedby="event-content"
-		on:SMUIDialog:closed={closeHandler}
+		onSMUIDialogClosed={closeHandler}
 >
 	<Title id="event-title">Delete model</Title>
 	<Content id="event-content">
-		Are you sure you want to delete unit '{$toBeDeleted?.name}'?
+		Are you sure you want to delete unit '{toBeDeleted.ref?.name}'?
 	</Content>
 	<Actions>
 		<Button color="secondary" variant="raised" action={cancelStr}>
@@ -22,11 +22,11 @@
 <script lang="ts">
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import Button, { Label } from '@smui/button';
-	import { deleteUnitDialogVisible } from "../../stores/DialogStore.js";
-	import { toBeDeleted } from "../../stores/ModelStore.js";
-	import { EditorState } from "../../../language/EditorState.js";
-	import { setUserMessage } from "../../stores/UserMessageStore.js";
-	import { FreErrorSeverity } from "@freon4dsl/core";
+	import { deleteUnitDialogVisible } from "../../stores/DialogStore.svelte";
+	import { toBeDeleted } from "../../stores/ModelStore.svelte";
+	import { EditorState } from "$lib/language/EditorState";
+	import { setUserMessage } from "../../stores/UserMessageStore.svelte";
+	import {FreErrorSeverity, isNullOrUndefined} from "@freon4dsl/core";
 
 	const cancelStr: string = "cancel";
 	const submitStr: string = "submit";
@@ -34,16 +34,18 @@
 	function closeHandler(e: CustomEvent<{ action: string }>) {
 		switch (e.detail.action) {
 			case submitStr:
-				EditorState.getInstance().deleteModelUnit($toBeDeleted);
-				setUserMessage("Deleted unit '" + $toBeDeleted.name + "'.", FreErrorSeverity.Info);
-				$toBeDeleted = null;
+				if (!isNullOrUndefined(toBeDeleted.ref)) {
+					EditorState.getInstance().deleteModelUnit(toBeDeleted.ref);
+					setUserMessage("Deleted unit '" + toBeDeleted.ref.name + "'.", FreErrorSeverity.Info);
+					toBeDeleted.ref = undefined;
+				}
 				break;
 			case cancelStr:
-				$toBeDeleted = null;
+				toBeDeleted.ref = undefined;
 				break;
 			default:
 				// This means the user clicked the scrim or pressed Esc to close the dialog.
-				$toBeDeleted = null;
+				toBeDeleted.ref = undefined;
 				break;
 		}
 	}

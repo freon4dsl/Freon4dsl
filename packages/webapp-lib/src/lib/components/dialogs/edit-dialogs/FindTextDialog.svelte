@@ -1,14 +1,16 @@
 <Dialog
-		bind:open={$findTextDialogVisible}
+		bind:open={findTextDialogVisible.value}
 		aria-labelledby="event-title"
 		aria-describedby="event-content"
-		on:SMUIDialog:closed={closeHandler}
+		onSMUIDialogClosed={closeHandler}
 >
 	<Title id="event-title">Search for a text string</Title>
 	<Content id="event-content">
 		<div>
 		<Textfield variant="outlined" bind:value={stringToFind}>
-			<HelperText slot="helper">Enter the string to search for</HelperText>
+			{#snippet helper()}
+			<HelperText>Enter the string to search for</HelperText>
+			{/snippet}
 		</Textfield>
 		</div>
 	</Content>
@@ -27,8 +29,8 @@
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 	import Button, { Label } from '@smui/button';
-	import { findTextDialogVisible } from "../../stores/DialogStore.js";
-	import { EditorRequestsHandler } from "../../../language/EditorRequestsHandler.js";
+	import { findTextDialogVisible } from "../../stores/DialogStore.svelte";
+	import { EditorRequestsHandler } from "$lib/language/EditorRequestsHandler";
 
 	let stringToFind: string = "";
 	const cancelStr: string = "cancel";

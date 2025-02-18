@@ -1,8 +1,8 @@
 <Dialog
-		bind:open={$findStructureDialogVisible}
+		bind:open={findStructureDialogVisible.value}
 		aria-labelledby="event-title"
 		aria-describedby="event-content"
-		on:SMUIDialog:closed={closeHandler}
+		onSMUIDialogClosed={closeHandler}
 >
 	<Title id="event-title">Search for a structure</Title>
 	<Content id="event-content">
@@ -13,7 +13,9 @@
 							bind:group={metatypeSelected}
 							value={name}
 					/>
-					<span slot="label">{name}</span>
+					{#snippet label()}
+					<span>{name}</span>
+					{/snippet}
 				</FormField>
 			{/each}
 		</div>
@@ -42,7 +44,7 @@
 	import Card from '@smui/card';
 	import FormField from '@smui/form-field';
 	import Button, { Label } from '@smui/button';
-	import { findStructureDialogVisible } from "../../stores/DialogStore.js";
+	import { findStructureDialogVisible } from "../../stores/DialogStore.svelte";
 
 	const initialMessage: string = "Please select an element type.";
 	let metatypeSelected: string = "";
