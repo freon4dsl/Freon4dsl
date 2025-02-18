@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/webapp-lib",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -15,14 +15,20 @@
   "svelte": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf node_modules/",
-    "dev": "tsc --noEmit --watch && vite dev",
-    "build": "tsc --noEmit && vite build && npm run package",
-    "build-dev": "tsc --noEmit && vite build && npm run package",
+    "dev": "vite dev",
+    "build": "vite build && npm run prepack",
     "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "prepack": "svelte-kit sync && svelte-package && publint",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && eslint .",
+    "test:unit": "vitest",
+    "test": "npm run test:unit -- --run",
+    "build-dev": "vite build && npm run package",
     "package": "svelte-kit sync && svelte-package && publint",
     "prepublishOnly": "npm run package",
-    "check": "svelte-kit sync && svelte-check --tsconfig tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig tsconfig.json --watch",
     "build-release": "npm run build",
     "validate": "svelte-check",
     "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
@@ -78,7 +84,6 @@
     "publint": "^0.3.5",
     "sass": "^1.77.6",
     "smui-theme": "^8.0.0-beta.3",
-    "svelte": "5.20.1",
     "svelte-check": "^4.1.4",
     "tslib": "^2.6.3",
     "typescript": "^5.4.5",
@@ -86,7 +91,8 @@
   },
   "dependencies": {
     "@freon4dsl/core": "1.0.0",
-    "@freon4dsl/core-svelte": "1.1.0"
+    "@freon4dsl/core-svelte": "1.1.0",
+    "svelte": "5.20.1"
   }
 }
 
