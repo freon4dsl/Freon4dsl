@@ -17,7 +17,7 @@ const config = [
 			}
 			// Uncomment to generate commonjs, but did not manage to get this working ok
 			// {
-			// 	coiurcemap: true
+			// 	sourcemap: true
 			// 	file: 'dist/index.cjs',
 			// 	format: 'cjs'
 			//
