@@ -1,16 +1,21 @@
 <script lang="ts">
-    import {afterUpdate, onMount} from "svelte";
-    import {Box, ExternalPartListBox, FreEditor, FreNode, FreNodeReference, AST} from "@freon4dsl/core";
-    import {RenderComponent} from "@freon4dsl/core-svelte";
+    import {
+        Box,
+        ExternalPartListBox,
+        type FreNode,
+        FreNodeReference,
+        AST
+    } from "@freon4dsl/core";
+    import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
     import {Slot, TimeStamp} from "@freon4dsl/samples-course-schedule";
     import IconButton from "@smui/icon-button";
 
     // This component replaces the component for "timeSlots: Slot[];" from model unit "Schedule".
     // This property is a parts list, therefore the external box to use is an ExternalPartListBox.
-    export let box: ExternalPartListBox;
-    export let editor: FreEditor;
+    // Props
+    let { editor, box }: FreComponentProps<ExternalPartListBox> = $props();
 
-    // The following four functions need to be included for the editor to function properly.
+    // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
     }
@@ -18,12 +23,7 @@
         // do whatever needs to be done to refresh the elements that show information from the model
         initialize();
     };
-    onMount(() => {
-        initialize();
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
-    afterUpdate(() => {
+    $effect(() => {
         initialize();
         sortedSlots = [...sortedSlots]
         box.setFocus = setFocus;
@@ -32,11 +32,17 @@
 
     // --------------------------- //
     let slotToBoxMap: Map<Slot, Box> = new Map<Slot, Box>();
-    let sortedSlots: Slot[][]; // an array of 10 positions, making use of the 10 different timeSlots that are available
-    sortedSlots = [];
-    for (let i = 0; i < 10 ; i++) {
-        sortedSlots[i] = [];
+    // an array of 10 positions, making use of the 10 different timeSlots that are available
+    let sortedSlots: Slot[][] = $state(initSortedSlots());
+
+    function initSortedSlots(): Slot[][] {
+        let slots = [];
+        for (let i = 0; i < 10; i++) {
+            slots[i] = [];
+        }
+        return slots;
     }
+
     let dayTitle: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ];
 
     // variables for creating a new slot
@@ -206,7 +212,7 @@
             {#each timeStamps as stamp, index}
                 {#if index < 5}
                     <td class="demo-btn-cell">
-                        <IconButton class="material-icons" on:click={() => addSlot(stamp)}>add</IconButton>
+                        <IconButton class="material-icons" onclick={() => addSlot(stamp)}>add</IconButton>
                     </td>
                 {/if}
             {/each}
@@ -238,7 +244,7 @@
             {#each timeStamps as stamp, index}
                 {#if index >= 5}
                     <td class="demo-btn-cell">
-                        <IconButton class="material-icons" on:click={() => addSlot(stamp)}>add</IconButton>
+                        <IconButton class="material-icons" onclick={() => addSlot(stamp)}>add</IconButton>
                     </td>
                 {/if}
             {/each}

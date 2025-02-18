@@ -1,19 +1,19 @@
 <script lang="ts">
-    import {afterUpdate, onMount} from "svelte";
-    import {ExternalStringBox, FreEditor} from "@freon4dsl/core";
-    export let box: ExternalStringBox;
-    export let editor: FreEditor;
+    import {ExternalStringBox} from "@freon4dsl/core";
+    import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
-    let inputElement;
-    let value: string = "";
+    // Props
+    let { editor, box }: FreComponentProps<ExternalStringBox> = $props();
+
+    let inputElement: HTMLInputElement;
+    let value: string = $state("");
     getValue();
 
     const onClick = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
         event.stopPropagation();
     }
 
-    const onChange = (event: MouseEvent & {currentTarget: EventTarget & HTMLInputElement; }) => {
-        event.stopPropagation();
+    const onChange = () => {
         let xx = getValidDate(value)
         if (xx !== undefined) {
             console.log("Changing value to: " + value)
@@ -22,28 +22,25 @@
             console.log("Value: " + value + " is not a valid date")
         }
     }
-    function getValidDate(d) {
+
+    function getValidDate(d: string) {
         let dateArray = d.split("-");
         let newDate = `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`;
 
         console.log("In isValidDate: "+ newDate); // 2019-05-15 (YYYY/MM/DD)
-        let date = new Date(newDate);
-        if (date instanceof Date) {
-            return date;
-        } else {
-            return undefined;
-        }
+        return new Date(newDate);
     }
+
     function getValue() {
         let startStr: string | undefined = box.getPropertyValue();
-        if (typeof startStr === "string" && !!startStr && startStr.length > 0) {
+        if (!!startStr && startStr.length > 0) {
             value = startStr;
         } else {
             value = "2024-02-24";
         }
     }
 
-    // The following four functions need to be included for the editor to function properly.
+    // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
         inputElement.focus();
@@ -52,16 +49,15 @@
         // do whatever needs to be done to refresh the elements that show information from the model
         getValue();
     };
-    onMount(() => {
-        getValue();
+    $effect(() => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
-    afterUpdate(() => {
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
+
+    // execute getValue on initialization
+    getValue();
 </script>
+
 <div class="datepicker">
     <input
             id="default-datepicker"
@@ -69,8 +65,8 @@
             bind:value={value}
             class="datepicker-input"
             placeholder="Select date"
-            on:click={onClick}
-            on:change={onChange}
+            onclick={onClick}
+            onchange={onChange}
             bind:this={inputElement}
     />
 </div>

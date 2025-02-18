@@ -1,18 +1,17 @@
 <script lang="ts">
-    import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
+    import Accordion, { Panel, Header, Content } from '@smui-extra/accordion';
     import IconButton from '@smui/icon-button';
-    import {AST, ExternalPartListBox, FreEditor, FreNodeReference} from "@freon4dsl/core";
-    import {RenderComponent} from "@freon4dsl/core-svelte";
-    import {afterUpdate, onMount} from "svelte";
-    import {Person} from "@freon4dsl/samples-course-schedule";
+    import { AST, ExternalPartListBox } from "@freon4dsl/core";
+    import { type FreComponentProps, RenderComponent } from "@freon4dsl/core-svelte";
+    import { Person } from "@freon4dsl/samples-course-schedule";
 
     // This component replaces the component for "teachers: Person[];" from model unit "Staff".
     // This property is a parts list, therefore the external box to use is an ExternalPartListBox.
-    export let box: ExternalPartListBox;
-    export let editor: FreEditor;
+    // Props
+    let { editor, box }: FreComponentProps<ExternalPartListBox> = $props();
 
-    let panelOpen: boolean[] = [];      // List of booleans to indicate which panel is open (true) and closed (false).
-    let multiplePar: boolean = false;   // Indicates whether multiple panels may be open at the same time.
+    let panelOpen: boolean[] = $state([]);      // List of booleans to indicate which panel is open (true) and closed (false).
+    let multiplePar: boolean = $state(false);   // Indicates whether multiple panels may be open at the same time.
 
     /*
         Sets all panels in the state 'closed',
@@ -31,7 +30,7 @@
         }
     }
 
-    // The following four functions need to be included for the editor to function properly.
+    // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
         for( let i=0; i < box.children.length; i++) {
@@ -44,12 +43,7 @@
         // do whatever needs to be done to refresh the elements that show information from the model
         initialize();
     };
-    onMount(() => {
-        initialize();
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
-    afterUpdate(() => {
+    $effect(() => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
@@ -76,7 +70,7 @@
 </script>
 
 <div style="display: flex; align-items: flex-end;">
-    <Accordion multiple="{multiplePar}">
+    <Accordion multiple={multiplePar}>
         {#each box.children as childBox, index}
             <Panel bind:open={panelOpen[index]}>
                 <Header>
@@ -85,12 +79,12 @@
                 <Content>
                     <div style="display: flex; align-items: flex-end;">
                         <RenderComponent box={childBox} editor={editor} />
-                        <IconButton class="material-icons" on:click={() => removePerson(index)}>remove</IconButton>
+                        <IconButton class="material-icons" onclick={() => removePerson(index)}>remove</IconButton>
                     </div>
                 </Content>
             </Panel>
         {/each}
     </Accordion>
 
-    <IconButton class="material-icons" on:click={() => addPerson()}>add</IconButton>
+    <IconButton class="material-icons" onclick={() => addPerson()}>add</IconButton>
 </div>

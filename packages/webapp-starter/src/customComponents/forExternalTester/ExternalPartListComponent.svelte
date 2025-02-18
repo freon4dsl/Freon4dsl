@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {afterUpdate, onMount} from "svelte";
-    import { AST, ExternalPartListBox, FreEditor, FreNode } from "@freon4dsl/core";
+    import {AST, ExternalPartListBox, FreNode} from "@freon4dsl/core";
     import {BB} from "@freon4dsl/samples-external-tester";
-    import {RenderComponent} from "@freon4dsl/core-svelte";
-    export let box: ExternalPartListBox;
-    export let editor: FreEditor;
+    import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
+
+    // Props
+    let { editor, box }: FreComponentProps<ExternalPartListBox> = $props();
 
     let button;
     let value: BB[];
@@ -29,7 +29,7 @@
         });
     }
 
-    // The following four functions need to be included for the editor to function properly.
+    // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
         if (!!box.children && box.children.length > 0) {
@@ -42,12 +42,7 @@
         // do whatever needs to be done to refresh the elements that show information from the model
         getValue();
     };
-    onMount(() => {
-        getValue();
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
-    afterUpdate(() => {
+    $effect(() => {
         getValue();
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
@@ -61,5 +56,5 @@
             <li><RenderComponent box={childBox} editor={editor} /></li>
         {/each}
     </ol>
-    <button on:click={addChild} bind:this={button}>Add child</button>
+    <button onclick={addChild} bind:this={button}>Add child</button>
 </div>

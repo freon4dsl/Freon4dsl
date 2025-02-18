@@ -13,7 +13,6 @@ export function configureLoggers() {
     // FreLogger.unmute("InMemoryModel")
     // FreLogger.unmute("TextComponent")
     // FreLogger.unmute("ServerCommunication")
-    
     // // Do not show log messages contaning any of these strings
     // FreLogger.setFilter(["beforeUpdate", "setFocus", "afterUpdate", "onMount", "REFRESH", "refresh"])
 }

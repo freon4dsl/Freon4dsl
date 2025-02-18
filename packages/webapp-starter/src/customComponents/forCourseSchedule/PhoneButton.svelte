@@ -1,17 +1,16 @@
 <script lang="ts">
     import IconButton from "@smui/icon-button";
     import Snackbar, { Actions, Label } from '@smui/snackbar';
-    import {RenderComponent} from "@freon4dsl/core-svelte";
-    import {FreEditor, NumberWrapperBox} from "@freon4dsl/core";
-    import {afterUpdate, onMount} from "svelte";
+    import { type FreComponentProps, RenderComponent } from "@freon4dsl/core-svelte";
+    import { NumberWrapperBox } from "@freon4dsl/core";
 
-    export let box: NumberWrapperBox;
-    export let editor: FreEditor;
+    // Props
+    let { editor, box }: FreComponentProps<NumberWrapperBox> = $props();
 
     let clicked: number = 0;
     let snackbarWithClose: Snackbar;
 
-    // The following four functions need to be included for the editor to function properly.
+    // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
         box.childBox.setFocus();
@@ -19,11 +18,7 @@
     const refresh = (why?: string): void => {
         // do whatever needs to be done to refresh the elements that show information from the model
     };
-    onMount(() => {
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
-    afterUpdate(() => {
+    $effect(() => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
@@ -31,8 +26,8 @@
 </script>
 
 <div class="wrapper">
-    Phone number: <RenderComponent box={box.childBox} editor="{editor}"/>
-    <IconButton class="material-icons" on:click={() => {clicked++; snackbarWithClose.open()}} ripple={false}>phone</IconButton>
+    Phone number: <RenderComponent box={box.childBox} editor={editor}/>
+    <IconButton class="material-icons" onclick={() => {clicked++; snackbarWithClose.open()}} ripple={false}>phone</IconButton>
 </div>
 
 <Snackbar bind:this={snackbarWithClose}>

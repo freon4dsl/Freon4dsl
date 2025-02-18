@@ -92,7 +92,7 @@
   "dependencies": {
     "@freon4dsl/core": "1.0.0",
     "@freon4dsl/core-svelte": "1.1.0",
-    "svelte": "5.20.1"
+    "svelte": "^5.20.1"
   }
 }
 
