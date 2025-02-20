@@ -20,7 +20,9 @@
                             bind:group={typeSelected}
                             value={name}
                     />
+                    {#snippet label()}
                     <span>{name}</span>
+                    {/snippet}
                 </FormField>
             {/each}
         </div>

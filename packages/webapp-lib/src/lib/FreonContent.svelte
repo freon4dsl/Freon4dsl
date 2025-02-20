@@ -10,18 +10,6 @@
     import Button from "@smui/button";
     import { FreErrorSeverity } from "@freon4dsl/core";
 
-    // <Icon slot='icon' class="less-padding" tag=svg viewBox='0 0 48 48'>
-    //     {#if severity.value === FreErrorSeverity.Info}
-    //     <path d={mdiInformation}/>
-    // {:else if severity.value === FreErrorSeverity.Hint}
-    // <path d={mdiLightbulb}/>
-    // {:else if severity.value === FreErrorSeverity.Warning}
-    // <path d={mdiAlertCircle}/>
-    // {:else if severity.value === FreErrorSeverity.Error}
-    // <path d={mdiCheckCircle}/>
-    // {/if}
-    // </Icon>
-
     // Instead of a button to dismiss the banner, we use a 'normal' text button.
     // Instead of an icon in front of the banner message, which takes up a lot of vertical space,
     // we use a different style/color for the error message.
@@ -37,16 +25,20 @@
                         "plum"
                         : (severity.value === FreErrorSeverity.Error ?
                             "red"
-                            : "none")));
+                            : "black")));
     });
 </script>
 
 <div>
     <Banner bind:open={userMessageOpen.value} mobileStacked content$style='max-width: max-content;'>
+        {#snippet label()}
         <Label style="color:{severityClass}">
             {userMessage.value}
         </Label>
+        {/snippet}
+        {#snippet actions()}
         <Button>Dismiss</Button>
+        {/snippet}
     </Banner>
     <SplitPane type='vertical' pos={80}>
         {#snippet a()}
