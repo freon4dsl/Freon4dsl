@@ -42,7 +42,7 @@ export class HorizontalListBox extends ListBox {
         children?: (Box | null)[],
         initializer?: Partial<HorizontalListBox>,
     ) {
-        super(element, role, propertyName, children, initializer);
+        super(element, propertyName, role, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
     }
 }
@@ -57,7 +57,7 @@ export class VerticalListBox extends ListBox {
         children?: Box[],
         initializer?: Partial<HorizontalListBox>,
     ) {
-        super(node, role, propertyName, children, initializer);
+        super(node, propertyName, role, children, initializer);
         this.direction = ListDirection.VERTICAL;
     }
 }

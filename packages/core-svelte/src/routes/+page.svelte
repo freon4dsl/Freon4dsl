@@ -13,16 +13,16 @@
         TextBox,
         MultiLineTextBox
     } from '@freon4dsl/core';
-    import { SimpleElement } from '$lib/test-environment/models/SimpleElement.js';
+    import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
     import BooleanCheckboxComponent from '$lib/components/BooleanCheckboxComponent.svelte';
     import BooleanRadioComponent from '$lib/components/BooleanRadioComponent.svelte';
-    import DropdownUser from '$lib/extras/DropdownUser.svelte';
+    import DropdownUser from '$lib/__test__/test-components/DropdownUser.svelte';
     import ContextMenu from '$lib/components/ContextMenu.svelte';
     import EmptyLineComponent from '$lib/components/EmptyLineComponent.svelte';
     import { contextMenu } from '$lib/components/stores/AllStores.svelte.js';
     import InnerSwitchComponent from '$lib/components/BooleanInnerSwitchComponent.svelte';
-    import LimitedCheckboxUser from '$lib/extras/LimitedCheckboxUser.svelte';
-    import LimitedRadioUser from '$lib/extras/LimitedRadioUser.svelte';
+    import LimitedCheckboxUser from '$lib/__test__/test-components/LimitedCheckboxUser.svelte';
+    import LimitedRadioUser from '$lib/__test__/test-components/LimitedRadioUser.svelte';
     import NumericSliderComponent from '$lib/components/NumericSliderComponent.svelte';
     import BooleanSwitchComponent from '$lib/components/BooleanSwitchComponent.svelte';
     import SvgComponent from '$lib/components/SvgComponent.svelte';
@@ -115,18 +115,17 @@
     );
 
     // for ContextMenu
+    const contextMenuItems: MenuItem[] = [
+        new MenuItem('ABCD', 'abcd', (element, index, editor) => {
+            console.log("element.freLanguageConcept()" + index + editor);
+        }),
+        new MenuItem('EFGH', 'efgh', (element, index, editor) => {
+            console.log("element.freLanguageConcept()" + index + editor);
+        })
+    ];
     function showContextMenu(event: MouseEvent, index: number) {
-        const xx: MenuItem[] = [
-            new MenuItem('ABCD', 'abcd', (element, index, editor) => {
-                console.log(element.freLanguageConcept() + index + editor);
-            }),
-            new MenuItem('EFGH', 'efgh', (element, index, editor) => {
-                console.log(element.freLanguageConcept() + index + editor);
-            })
-        ];
         if (contextMenu.instance) {
-            contextMenu.instance.items = xx;
-            contextMenu.instance.show(event, index);
+            contextMenu.instance.show(event, index, contextMenuItems);
             event.preventDefault();
         }
     }
@@ -169,11 +168,19 @@
     svgBox.cssStyle = 'fill:none;stroke:green;stroke-width:3';
 </script>
 
-<h1>Welcome to the Freon core-svelte library</h1>
-<p>Here you can find some tests of the components that are available.</p>
-<div class="button-container">
-    <a href="./render">Click here for tests that use the RenderComponent</a>
-    <a href="./dragdrop">Click here for the Drag and Drop tests</a>
+<ContextMenu bind:this={contextMenu.instance} {editor} />
+
+<div class="top">
+    <div>
+        <h1>Welcome to the Freon core-svelte library</h1>
+        <h3>These pages are here to test the components separately.</h3>
+    </div>
+    <div class="button-container">
+        <!--    <a href=".">Basic tests</a>-->
+        <a href="./render">Tests that use RenderComponent</a>
+        <a href="./dragdrop">Drag and Drop tests</a>
+        <a href="./tabbing">Selection tests</a>
+    </div>
 </div>
 
 <div class="test-area">
@@ -247,14 +254,14 @@
             <hr class="line" />
         </li>
         <li>
-            <ContextMenu bind:this={contextMenu.instance} items={[]} {editor} />
+            <ContextMenu bind:this={contextMenu.instance} {editor} />
             <div
                 role="button"
                 tabindex={0}
                 class="contextmenu-area"
                 oncontextmenu={(event) => showContextMenu(event, 2)}
             >
-                Click in this area to open context menu
+                Right-click in this area to open context menu
             </div>
             <hr class="line" />
         </li>

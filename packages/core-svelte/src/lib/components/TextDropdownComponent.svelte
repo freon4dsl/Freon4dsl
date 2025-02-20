@@ -42,7 +42,7 @@
     });
 
     onMount(() => {
-        console.log(`${box.id}: onMount`);
+        LOGGER.log(`${box.id}: onMount`);
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
@@ -58,7 +58,7 @@
     let textComponent: TextComponent;
 
     let setText = (value: string) => {
-        console.log(`${box.id}: setting text to '${value}'`);
+        LOGGER.log(`${box.id}: setting text to '${value}'`);
         if (isNullOrUndefined(value)) {
             text = '';
         } else {
@@ -70,7 +70,7 @@
 
     // the function used to calculate all_options, called by onClick and setFocus
     let getOptions = (): SelectOption[] => {
-        console.log('getOptions for ' + box?.id)
+        LOGGER.log('getOptions for ' + box?.id)
         let result = box?.getOptions(editor);
         if (isNullOrUndefined(result)) {
             result = [{ id: noOptionsId, label: '<no known options>' }];
@@ -82,7 +82,7 @@
      * This function sets the focus on this element programmatically.
      */
     const setFocus = () => {
-        console.log('TextDropdownComponent.setFocus ' + box.kind + id);
+        LOGGER.log('TextDropdownComponent.setFocus ' + box.kind + id);
         if (!isNullOrUndefined(textComponent)) {
             textComponent.setFocus();
         } else {
@@ -96,7 +96,7 @@
     }
 
     const setFiltered = (options: SelectOption[]): void => {
-        console.log(`setFiltered ${options.map((o) => o.label)}`);
+        LOGGER.log(`setFiltered ${options.map((o) => o.label)}`);
         filteredOptions = options;
     };
 
@@ -105,7 +105,7 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
-        console.log(`${box.id}: refresh: ` + why + ' for ' + box?.kind);
+        LOGGER.log(`${box.id}: refresh: ` + why + ' for ' + box?.kind);
         if (isSelectBox(box)) {
             let selectedOption = box.getSelectedOption();
             LOGGER.log('    selectedOption is ' + selectedOption?.label);
@@ -128,7 +128,7 @@
      * @param details
      */
     const textUpdate = (details: CaretDetails) => {
-        console.log(
+        LOGGER.log(
             `textUpdate for ${box.kind}: ${JSON.stringify(details)}, start: ${text.substring(0, details.caret)}`
         );
         allOptions = getOptions();
@@ -158,7 +158,7 @@
     };
 
     const caretChanged = (details: CaretDetails) => {
-        console.log(
+        LOGGER.log(
             `caretChanged for ${box.kind}: ` +
                 JSON.stringify(details) +
                 ', start: ' +
@@ -223,7 +223,7 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        console.log(
+        LOGGER.log(
             'XX onKeyDown: ' +
                 id +
                 ' [' +
@@ -365,7 +365,7 @@
      * is set as text in the textComponent and the editing state is ended.
      */
     const itemSelected = (sel: SelectOption) => {
-        console.log('itemSelected ' + selected?.id);
+        LOGGER.log('itemSelected ' + selected?.id);
         const index = filteredOptions.findIndex((o) => o === sel);
         if (index >= 0 && index < filteredOptions.length) {
             const chosenOption = filteredOptions[index];
@@ -386,7 +386,7 @@
      * The editor is notified of the newly selected box and the options list is filled.
      */
     const startEditing = (details?: CaretDetails) => {
-        console.log(
+        LOGGER.log(
             'startEditing detail: ' + JSON.stringify(details) + ` dropDown: ${dropdownShown}`
         );
         isEditing = true;
@@ -420,7 +420,7 @@
      * @param selected
      */
     function storeOrExecute(selected: SelectOption) {
-        console.log('storeOrExecute for option ' + selected.label + ' ' + box.kind + ' ' + box.role);
+        LOGGER.log('storeOrExecute for option ' + selected.label + ' ' + box.kind + ' ' + box.role);
         isEditing = false;
         hideDropdown();
 
@@ -438,7 +438,7 @@
      * in whatever manner.
      */
     const endEditing = () => {
-        console.log(
+        LOGGER.log(
             'endEditing ' + id + ' dropdownShow:' + dropdownShown + ' isEditing: ' + isEditing
         );
         // todo this is strange code, must have a better look
@@ -464,7 +464,7 @@
     };
 
     const focusOutTextComponent = () => {
-        console.log('focusOutTextComponent ' + id);
+        LOGGER.log('focusOutTextComponent ' + id);
         selected = undefined;
         if (isEditing) {
             endEditing();
@@ -476,7 +476,7 @@
         // the text component will trigger a focus out event. The focus out event from the text component
         // always comes before the click in the dropdown. If we react to focus out by endEditing(), any click
         // on the dropdown list will have no effect.
-        console.log('onBlur ' + id);
+        LOGGER.log('onBlur ' + id);
         if (!document.hasFocus() || !selectedBoxes.value.includes(box)) {
             endEditing();
         }
@@ -486,7 +486,7 @@
      * The "click_outside" event was triggered because of `use:clickOutsideConditional`.
      */
     const onClickOutside = () => {
-        console.log('onClickOutside');
+        LOGGER.log('onClickOutside');
         endEditing();
     };
 

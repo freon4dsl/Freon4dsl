@@ -104,6 +104,18 @@
         toParent
     );
 
+    $effect(() => {
+        // NB This is needed here because this component is not shown using RenderComponent if it is part of a TextDropdownComponent.
+        if (!isNullOrUndefined(inputElement)) {
+            // upon initialization the element might be null
+            setBoxSizes(box, inputElement.getBoundingClientRect());
+        }
+        if (!isNullOrUndefined(spanElement)) {
+            // upon initialization the element might be null
+            setBoxSizes(box, spanElement.getBoundingClientRect());
+        }
+    });
+
     /* ========	The following functions are called from @freon4dsl/core =========== */
 
     /**
@@ -270,7 +282,7 @@
      * todo remove!
      */
     function onClick() {
-        console.log(`onClick for ${box?.id}`);
+        LOGGER.log(`onClick for ${box?.id}`);
     }
 
     /**
@@ -306,7 +318,7 @@
      */
     const onKeyDown = (event: KeyboardEvent) => {
         // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
-        console.log(
+        LOGGER.log(
             `${id}: onKeyDown:  isEditing ${isEditing} key: [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}] meta [${event.metaKey}]`
         );
         if (event.key === TAB) {
@@ -413,7 +425,7 @@
      * made available to the textbox, and the local variables are set using a call to refresh().
      */
     onMount(() => {
-        console.log(`onMount for ${box?.id}`);
+        LOGGER.log(`onMount for ${box?.id}`);
         if (!isNullOrUndefined(box)) {
             box.setFocus = setFocus;
             box.setCaret = calculateCaret;
@@ -483,7 +495,7 @@
 
     // THE OLD afterUpdate:
     // $effect(() => {
-    //     console.log(`effect 4 for ${box?.id}`)
+    //     LOGGER.log(`effect 4 for ${box?.id}`)
     //     LOGGER.log(`${id}: afterUpdate ` + myHelper.from + ', ' + myHelper.to + ' id: ' + id);
     //     if (editStart && !!inputElement) {
     //         LOGGER.log(`${id}:  editStart in afterUpdate text '${text}' `);

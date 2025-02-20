@@ -19,7 +19,7 @@
         ListElementInfo,
         MenuOptionsType,
         moveListElement,
-        FreLogger
+        FreLogger, MenuItem
     } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
     import { componentId } from '$lib/index.js';
@@ -55,9 +55,9 @@
         event.stopPropagation();
 
         if (!isNullOrUndefined(data)) {
-            LOGGER.log(
+            console.log(
                 'DROPPING item [' +
-                    data.element.freId() +
+                    data.element.freLanguageConcept() +
                     '] from [' +
                     data.componentId +
                     '] in list [' +
@@ -84,13 +84,13 @@
     };
 
     const dragend = (event: DragEvent) => {
-        LOGGER.log('Drag End ' + box.id);
+        console.log('Drag End ' + box.id);
         event.stopPropagation();
         return false;
     };
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
-        LOGGER.log('Drag Start ' + box.id + ' index: ' + listIndex);
+        console.log('Drag Start ' + box.id + ' index: ' + listIndex);
         event.stopPropagation();
         // close any context menu
         contextMenuVisible.value = false;
@@ -109,13 +109,13 @@
     };
 
     const dragleave = (event: DragEvent, index: number): boolean => {
-        LOGGER.log('Drag Leave' + box.id + ' index: ' + index);
+        console.log('Drag Leave' + box.id + ' index: ' + index);
         event.stopPropagation();
         return false;
     };
 
     const dragenter = (event: DragEvent, index: number): boolean => {
-        LOGGER.log('Drag Enter' + box.id + ' index: ' + index);
+        console.log('Drag Enter' + box.id + ' index: ' + index);
         event.stopPropagation();
         event.preventDefault();
         const data: ListElementInfo | null = draggedElem.value;
@@ -155,13 +155,14 @@
                 // $selectedBoxes = [elemBox];
             }
             // determine the contents of the menu based on listBox, before showing the menu!
+            let items: MenuItem[] = [];
             if (isActionBox(elemBox)) {
                 // the selected box is the placeholder => show different menu items
-                contextMenu.instance!.items = box.options(MenuOptionsType.placeholder);
+                items = box.options(MenuOptionsType.placeholder);
             } else {
-                contextMenu.instance!.items = box.options(MenuOptionsType.normal);
+                items = box.options(MenuOptionsType.normal);
             }
-            contextMenu.instance!.show(event, index); // this function sets contextMenuVisible to true
+            contextMenu.instance!.show(event, index, items); // this function sets contextMenuVisible to true
         }
     }
 

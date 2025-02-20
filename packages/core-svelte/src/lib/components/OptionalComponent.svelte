@@ -43,7 +43,7 @@
         } else if (!isNullOrUndefined(placeholderComponent)) {
             box.placeholder.setFocus();
         } else {
-            console.error('OptionalComponent2 ' + id + ' has no elements to put focus on');
+            LOGGER.error('OptionalComponent2 ' + id + ' has no elements to put focus on');
         }
     }
 

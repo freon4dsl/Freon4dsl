@@ -21,7 +21,7 @@
         FreUtils,
         isTableRowBox,
         TableRowBox,
-        isNullOrUndefined
+        isNullOrUndefined, MenuItem
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
     import RenderComponent from './RenderComponent.svelte';
@@ -193,18 +193,19 @@
             let index: number;
             // determine the contents of the menu based on box
             // if the selected box is the placeholder or a title/header => show different menu items
+            let items: MenuItem[] = [];
             if (isActionBox(box.content)) {
-                contextMenu.instance.items = box.options(MenuOptionsType.placeholder);
+                items = box.options(MenuOptionsType.placeholder);
                 index = Number.MAX_VALUE;
             } else if (parent.isHeader) {
-                contextMenu.instance.items = box.options(MenuOptionsType.header);
+                items = box.options(MenuOptionsType.header);
                 index = -1;
             } else {
-                contextMenu.instance.items = box.options(MenuOptionsType.normal);
+                items = box.options(MenuOptionsType.normal);
                 // console.log(`showContextMenu row: ${row}, column: ${column}, box.propertyIndex: ${box.propertyIndex}, box.propertyName: ${box.propertyName}`);
                 index = box.propertyIndex;
             }
-            contextMenu.instance.show(event, index); // this function sets contextMenu.instanceVisible to true
+            contextMenu.instance.show(event, index, items); // this function sets contextMenu.instanceVisible to true
         }
     }
 

@@ -6,7 +6,7 @@
         </div>
             </div>
     {:else}
-        <FreonComponent editor={langEnv.editor}/>
+        <FreonComponent editor={WebappConfigurator.getInstance().editorEnvironment.editor}/>
     {/if}
 </div>
 
@@ -14,8 +14,6 @@
     import { FreonComponent } from "@freon4dsl/core-svelte";
     import { noUnitAvailable } from "../stores/ModelStore.svelte";
     import {WebappConfigurator} from "$lib";
-
-    const langEnv = WebappConfigurator.getInstance().editorEnvironment!;
 </script>
 
 <style>

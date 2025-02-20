@@ -58,9 +58,10 @@ export function moveListElement(
     targetPropertyName: string,
     targetIndex: number
 ) {
+    // console.log(`moveListElement: ${targetPropertyName}, ${parentElement.freId()}`)
     // get info about the property that needs to be changed
     const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
-    // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+    console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
     const oldIndex: number = movedElement.freOwnerDescriptor().propertyIndex;
     // tslint:disable-next-line:max-line-length
     // console.log(`moveListElement=> element: ${parentElement.freLanguageConcept()}, property: ${targetPropertyName}, oldIndex: ${oldIndex}, targetIndex: ${targetIndex}`);
@@ -79,7 +80,7 @@ export function moveListElement(
             property.splice(targetIndex, 0, tmpProp);
         });
     }
-    // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
+    console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
 }
 
 /**
@@ -99,6 +100,11 @@ export function dropListElement(
     targetPropertyName: string,
     targetIndex: number,
 ) {
+    console.log("Checking drop types: (" +
+        dropped.element.freLanguageConcept() +
+        " does not conform to " +
+        targetMetaType +
+        ").")
     if (!FreLanguage.getInstance().metaConformsToType(dropped.element, targetMetaType)) {
         // check if item may be dropped here
         editor.setUserMessage(
@@ -115,7 +121,7 @@ export function dropListElement(
     // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
     // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
     const { property, isList } = getPropertyInfo(targetElem, targetPropertyName);
-    // console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+    console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
     if (!!dropped.element) {
         // Add the found element to 'targetElem[targetPropertyName]' at position 'targetIndex'.
         // Note that we need not explicitly remove the item from its old position, the mobx decorators do that.
@@ -126,7 +132,7 @@ export function dropListElement(
             })
         }
     }
-    // console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
+    console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
 }
 
 /**
@@ -458,7 +464,7 @@ export type PropertyInfo = {
  * @param propertyName
  */
 function getPropertyInfo(element: FreNode, propertyName: string): PropertyInfo {
-    // console.log(`element: ${element.freId()}, element type: ${element.freLanguageConcept()}, propertyName: ${propertyName}`)
+    console.log(`element: ${element.freId()}, element type: ${element.freLanguageConcept()}, propertyName: ${propertyName}`)
     const property = element[propertyName];
     const propInfo = FreLanguage.getInstance().classifierProperty(element.freLanguageConcept(), propertyName);
     const isList: boolean = propInfo.isList;

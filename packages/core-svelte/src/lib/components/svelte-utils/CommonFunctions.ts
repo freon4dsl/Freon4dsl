@@ -10,7 +10,7 @@ import {
     ElementBox,
     isNullOrUndefined
 } from '@freon4dsl/core';
-import { SimpleElement } from '$lib/test-environment/models/SimpleElement.js';
+import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
 
 // const LOGGER = new FreLogger('CommonFunctions').mute();
 

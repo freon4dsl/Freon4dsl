@@ -21,15 +21,15 @@ h1 {
 }
 
 a {
-    background-color: coral;
-    padding: 2px;
+    padding: 1px;
+    margin: 4px;
 }
 
 .button-container {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    flex-direction: column;
     margin-top: 6px;
+    margin-left: 40px;
 }
 
 .contextmenu-area {
@@ -41,4 +41,15 @@ a {
     --md-sys-color-primary: darkblue;
     --md-sys-color-on-surface-variant: darkblue;
     --md-sys-color-on-surface: darkblue;
+}
+
+.top {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+.error {
+    border: 2px solid black;
+    padding: 2px;
 }

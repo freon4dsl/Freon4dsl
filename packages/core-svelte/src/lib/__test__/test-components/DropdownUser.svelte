@@ -1,5 +1,5 @@
 <script lang="ts">
-    import DropdownComponent from '$lib/components/DropdownComponent.svelte';
+    import DropdownComponent from '../../components/DropdownComponent.svelte';
     import type { SelectOption } from '@freon4dsl/core';
 
     let filteredOptions: SelectOption[] = [
@@ -11,8 +11,10 @@
     let dropdownShown: boolean = $state(true);
     let selected: SelectOption | undefined = $state({ id: 'xx', label: 'XXX' });
 
+    let newSelected: {value: string | undefined} = $state({ value: 'xx' });
+
     const selectionChanged = (sel: SelectOption) => {
-        console.log('new selection is ' + JSON.stringify(sel));
+        newSelected.value = JSON.stringify(sel);
     };
 </script>
 
@@ -27,5 +29,6 @@
             />
         {/if}
         <span style="height:8rem">Current value: {selected.id}</span>
+        <span>{newSelected.value}</span>
     {/if}
 </span>

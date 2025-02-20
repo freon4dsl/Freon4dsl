@@ -1,23 +1,22 @@
 <script lang="ts">
     import { CONTEXTMENU_LOGGER } from '$lib/components/ComponentLoggers.js';
 
-    // todo the context menu leaves its place when first clicked, probably a reactivity issue
     /**
      *  This component combines a menu with a submenu. The positions of both the menu and the submenu are determined
      *  such that the complete menu stays within the boundaries of the editor viewport. The state of the editor
      *  viewport is stored in the EditorViewportStore (by FreonComponent).
      */
-    import { calculatePos, clickOutsideConditional } from './svelte-utils/index.js';
+    import {calculatePos, clickOutsideConditional, type MainComponentProps} from '$lib';
     import { tick } from 'svelte';
     import { MenuItem } from '@freon4dsl/core';
     import { contextMenuVisible, viewport } from '$lib/components/stores/AllStores.svelte.js';
-    import type { ContextMenuProps } from '$lib/components/svelte-utils/FreComponentProps.js';
 
     // items for the context menu
-    let { editor, items }: ContextMenuProps = $props();
+    let { editor }: MainComponentProps = $props();
 
     // local variables
     const LOGGER = CONTEXTMENU_LOGGER;
+    let _items: MenuItem[] = $state([]);
     let submenuItems: MenuItem[] = $state([]);
     let elementIndex: number; // the index of the element in a list to which this menu is coupled
 
@@ -37,17 +36,16 @@
     let itemHeight = $state(40);
     let submenuOpen = $state(false);
 
-    // let contextmenu: HTMLElement;
-    // let submenu: HTMLElement;
-
     /**
      * This function shows the context menu. Note that the items to be shown should
      * already be set (based on the box to which the menu is coupled)
      * @param event
      * @param index
+     * @param items
      */
-    export async function show(event: MouseEvent, index: number) {
+    export async function show(event: MouseEvent, index: number, items: MenuItem[]) {
         LOGGER.log('CONTEXTMENU show for index ' + index);
+        _items = items;
         elementIndex = index;
         contextMenuVisible.value = true;
         submenuOpen = false;
@@ -65,7 +63,7 @@
      * This function hides the context menu
      */
     export function hide() {
-        LOGGER.log('CONTEXTMENU hide');
+        console.log('CONTEXTMENU hide');
         contextMenuVisible.value = false;
         submenuOpen = false;
     }
@@ -87,7 +85,7 @@
 
     /**
      * This function finds the context menu dimensions the moment that
-     * contextMenuVisible.value becomes true and the menu is shown.
+     * 'contextMenuVisible.value' becomes true and the menu is shown.
      */
     function getContextMenuDimension(htmlElement: HTMLElement) {
         menuHeight = htmlElement.offsetHeight;
@@ -122,7 +120,7 @@
 <div use:clickOutsideConditional={{ enabled: contextMenuVisible.value }} onclick_outside={hide}>
     {#if contextMenuVisible.value}
         <nav use:getContextMenuDimension class="contextmenu" style="top: {top}px; left: {left}px">
-            {#each items as item, index}
+            {#each _items as item, index}
                 {#if item.label === '---'}
                     <hr class="contextmenu-hr" />
                 {:else}

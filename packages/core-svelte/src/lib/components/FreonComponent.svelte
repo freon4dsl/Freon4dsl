@@ -75,35 +75,35 @@
                         break;
                     case 'z': // ctrl-z => UNDO
                         if (!shouldBeHandledByBrowser.value) {
-                            console.log('Ctrl-z: UNDO');
+                            LOGGER.log('Ctrl-z: UNDO');
                             AstActionExecutor.getInstance(editor).undo();
                             stopEvent(event);
                         }
                         break;
                     case 'y': // ctrl-y => REDO
                         if (!shouldBeHandledByBrowser.value) {
-                            console.log('Ctrl-y: REDO');
+                            LOGGER.log('Ctrl-y: REDO');
                             AstActionExecutor.getInstance(editor).redo();
                             stopEvent(event);
                         }
                         break;
                     case 'x': // ctrl-x => CUT
                         if (!shouldBeHandledByBrowser.value) {
-                            console.log('Ctrl-x: CUT');
+                            LOGGER.log('Ctrl-x: CUT');
                             AstActionExecutor.getInstance(editor).cut();
                             stopEvent(event);
                         }
                         break;
                     case 'c': // ctrl-c => COPY
                         if (!shouldBeHandledByBrowser.value) {
-                            console.log('Ctrl-c: COPY');
+                            LOGGER.log('Ctrl-c: COPY');
                             AstActionExecutor.getInstance(editor).copy();
                             stopEvent(event);
                         }
                         break;
                     case 'v': // ctrl-v => PASTE
                         if (!shouldBeHandledByBrowser.value) {
-                            console.log('Ctrl-v: PASTE');
+                            LOGGER.log('Ctrl-v: PASTE');
                             AstActionExecutor.getInstance(editor).paste();
                             stopEvent(event);
                         }
@@ -333,4 +333,4 @@
 </div>
 <!-- Here the only instance of ContextMenu is defined -->
 <!-- TODO make some default items for the context menu -->
-<ContextMenu bind:this={contextMenu.instance} items={[]} {editor} />
+<ContextMenu bind:this={contextMenu.instance} {editor} />

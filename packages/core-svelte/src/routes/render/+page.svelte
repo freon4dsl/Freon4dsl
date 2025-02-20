@@ -16,11 +16,11 @@
         OptionalBox2,
         VerticalLayoutBox
     } from '@freon4dsl/core';
-    import { SimpleElement } from '$lib/test-environment/models/SimpleElement.js';
+    import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
     import ElementComponent from '$lib/components/ElementComponent.svelte';
     import FragmentComponent from '$lib/components/FragmentComponent.svelte';
-    import { ModelMaker } from '$lib/test-environment/models/ModelMaker.js';
-    import { ElementWithList } from '$lib/test-environment/models/ElementWithList.js';
+    import { ModelMaker } from '$lib/__test__/test-environment/simple-models/ModelMaker.js';
+    import { ElementWithList } from '$lib/__test__/test-environment/simple-models/ElementWithList.js';
     import GridComponent from '$lib/components/GridComponent.svelte';
     import IndentComponent from '$lib/components/IndentComponent.svelte';
     import LayoutComponent from '$lib/components/LayoutComponent.svelte';
@@ -89,10 +89,14 @@
     );
 </script>
 
-<h1>Test for components that call RenderComponent, without drag and drop</h1>
-<div class="button-container">
-    <a href=".">Click here for the basic tests</a>
-    <a href="./dragdrop">Click here for the Drag and Drop tests</a>
+<div class="top">
+    <h1>Test for components that call RenderComponent, without drag and drop</h1>
+    <div class="button-container">
+        <a href=".">Basic tests</a>
+        <!--    <a href="./render">Tests that use RenderComponent</a>-->
+        <a href="./dragdrop">Drag and Drop tests</a>
+        <a href="./tabbing">Selection tests</a>
+    </div>
 </div>
 
 <div class="test-area">
