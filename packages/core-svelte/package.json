@@ -22,8 +22,6 @@
     "check": "svelte-kit sync && svelte-check --tsconfig tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig tsconfig.json --watch",
     "format": "prettier --write .",
-    "test:unit": "vitest",
-    "test": "npm run test:unit -- --run",
 
     "build-dev": "tsc --noEmit && vite build && npm run prepack",
     "clean": "rm -rf node_modules/ && rm -rf dist/",
