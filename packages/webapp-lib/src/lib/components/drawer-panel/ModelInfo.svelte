@@ -93,7 +93,7 @@
     let myUnits: FreModelUnit[] = $state([]);
     $effect(() => {
         myUnits = !!units.refs && units.refs.length > 0
-            ? units.refs.sort((u1, u2) => {
+            ? units.refs.sort((u1: FreModelUnit, u2: FreModelUnit) => {
                 if (u1.name > u2.name) {
                     return 1;
                 }

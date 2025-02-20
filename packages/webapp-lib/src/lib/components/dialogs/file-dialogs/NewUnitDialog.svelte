@@ -50,6 +50,7 @@
     import FormField from "@smui/form-field";
     import { EditorState } from "$lib/language/EditorState";
     import * as Keys from "@freon4dsl/core";
+    import type {ModelUnitIdentifier} from "@freon4dsl/core";
 
     // todo use #snippet instead of <span> for label (see SMUI website)
     const cancelStr: string = "cancel";
@@ -84,7 +85,7 @@
     }
 
     function newNameInvalid(): boolean {
-        if (unitNames.ids.map(u => u.name).includes(newName)) {
+        if (unitNames.ids.map((u: ModelUnitIdentifier) => u.name).includes(newName)) {
             helperText = "Unit with this name already exists.";
             return true;
         } else if (newName.match(/^[0-9]/)) {

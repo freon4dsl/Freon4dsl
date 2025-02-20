@@ -35,7 +35,7 @@
     import { renameUnitDialogVisible } from "../../stores/DialogStore.svelte";
     import { EditorState } from "$lib/language/EditorState";
     import * as Keys from "@freon4dsl/core";
-    import {isNullOrUndefined} from "@freon4dsl/core";
+    import {isNullOrUndefined, type ModelUnitIdentifier} from "@freon4dsl/core";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -67,7 +67,7 @@
     }
 
     function newNameInvalid(): boolean {
-        if (unitNames.ids.map(u => u.name).includes(newName)) {
+        if (unitNames.ids.map((u: ModelUnitIdentifier) => u.name).includes(newName)) {
             helperText = "Unit with this name already exists.";
             return true;
         } else if (newName.match(/^[0-9]/)) {
