@@ -1,27 +1,23 @@
 <script lang="ts">
     import {
-        type Box, FreErrorSeverity, type FreNode,
-        HorizontalListBox,
-        LabelBox,
+        FreErrorSeverity,
         type ListBox,
-        TableBox,
-        TableBoxRowOriented,
-        TableCellBox,
-        TableRowBox,
-        VerticalListBox
+        ListDirection,
+        TableDirection,
     } from '@freon4dsl/core';
-    import { ModelMaker } from '$lib/__test__/test-environment/simple-models/ModelMaker.js';
-    import { ElementWithList } from '$lib/__test__/test-environment/simple-models/ElementWithList.js';
     import ListComponent from '$lib/components/ListComponent.svelte';
     import TableComponent from '$lib/components/TableComponent.svelte';
     import {
         SvelteTestEnvironment
     } from "$lib/__test__/test-environment/svelte-test-model/config/gen/SvelteTestEnvironment";
     import {SvelteTestInstantiator} from "$lib/__test__/test-environment/svelte-test-model/SvelteTestInstantiator";
+    import {OtherType, SimpleNode} from "$lib/__test__/test-environment/svelte-test-model";
+    import {makeListBox, makeTableBox} from "$lib/__test__/test-environment/utils/CommonFunctions";
+    import {draggedElem} from "$lib/components/stores/AllStores.svelte";
 
     let editor = SvelteTestEnvironment.getInstance().editor;
 
-    const myUnit = SvelteTestInstantiator.makeTestUnit("UNIT76");
+    const myUnit = SvelteTestInstantiator.makeTestUnit("UNIT");
     editor.rootElement = myUnit;
     editor.setUserMessage = setUserMessage;
 
@@ -47,80 +43,14 @@
     }
 
     // for ListComponent
-    let listChildren1: Box[] = $state([]);
-    myUnit.myList1.forEach((xx) => {
-        listChildren1.push(
-            new LabelBox(xx, 'layout-label-box', () => {
-                return `${xx.name}`;
-            })
-        );
-    });
-    let listBox1: ListBox = new HorizontalListBox(
-        myUnit,
-        'myList1',
-        'horizontal-list-role',
-        listChildren1
-    );
-
-    let listChildren2: Box[] = [];
-    myUnit.myList2.forEach((xx) => {
-        listChildren2.push(
-            new LabelBox(xx, 'layout-label-box', () => {
-                return `${xx.name}`;
-            })
-        );
-    });
-    let listBox2: ListBox = new VerticalListBox(
-        myUnit,
-        'myList2',
-        'vertical-list-role',
-        listChildren2
-    );
-
-    let listChildren3: Box[] = [];
-    myUnit.myList3.forEach((xx) => {
-        listChildren3.push(
-            new LabelBox(xx, 'layout-label-box', () => {
-                return `${xx.name}`;
-            })
-        );
-    });
-    let listBox3: ListBox = new HorizontalListBox(
-        myUnit,
-        'myList3',
-        'other-type-list-role',
-        listChildren3
-    );
+    let listBox1: ListBox = makeListBox<SimpleNode>(myUnit, myUnit.myList1, 'myList1', ListDirection.HORIZONTAL);
+    let listBox2: ListBox = makeListBox<SimpleNode>(myUnit, myUnit.myList2, 'myList2', ListDirection.VERTICAL);
+    let listBox3: ListBox = makeListBox<OtherType>(myUnit, myUnit.myList3, 'myList3', ListDirection.HORIZONTAL);
 
     // for TableComponent
-    let listElement3: ElementWithList = ModelMaker.makeList('List3');
-    let tableRows: TableRowBox[] = [];
-    listElement3.myList.forEach((xx, index) => {
-        let cells: TableCellBox[] = [];
-        cells.push(
-            new TableCellBox(
-                xx,
-                'myList',
-                index,
-                'ElementWithList',
-                'table-label-box',
-                index + 1,
-                index + 1,
-                new LabelBox(xx, 'table-label-box', () => {
-                    return `Table content ${index}`;
-                })
-            )
-        );
-        tableRows.push(new TableRowBox(xx, 'row', cells, index));
-    });
-    let tableBox: TableBox = new TableBoxRowOriented(
-        listElement3,
-        'myList',
-        'ElementWithList',
-        'table',
-        false,
-        tableRows
-    );
+    let tableBox1 = makeTableBox<SimpleNode>(myUnit, myUnit.myList4, 'myList4', 'SimpleNode', TableDirection.HORIZONTAL);
+    let tableBox2 = makeTableBox<SimpleNode>(myUnit, myUnit.myList5, 'myList5', 'SimpleNode', TableDirection.VERTICAL);
+    let tableBox3 = makeTableBox<OtherType>(myUnit, myUnit.myList6, 'myList6', 'OtherType', TableDirection.HORIZONTAL);
 </script>
 
 <div class="top">
@@ -134,6 +64,9 @@
 </div>
 
 <div style="height:1000px;" class="test-area">
+    <div style="font-weight: bold"> NB the list and table components are not refreshed, because mobx works through editor.rootBox and here we use a different box model.
+        Use a console.log message from ListUtil (from core) to see whether the drop has worked.</div>
+    <hr class="line" />
     <ul>
         <li>
             Test ListComponent horizontal: <ListComponent {editor} box={listBox1} />
@@ -146,16 +79,19 @@
                 <button onclick={resetUserMessage}>Reset message</button>
                 {message}
             </div>
-            <p> NB the list components are not refreshed, because mobx works through editor.rootBox and here we use a different box model.
-            Use a console.log message from ListUtil (from core) to see whether the drop has worked.</p>
-            <hr class="line" />
         </li>
+        <hr class="line" />
+        <p style="color:green">Currently dragged node "{draggedElem.value?.element.freId()}" of type "{draggedElem.value?.elementType}"</p>
+        <hr class="line" />
         <li>
-            Test TableComponent: <TableComponent {editor} box={tableBox} />
+            Test TableComponent row oriented: <TableComponent {editor} box={tableBox1} />
+            <br/>
+            Test TableComponent column oriented: <TableComponent {editor} box={tableBox2} />
             <br />
-            TODO: Drag and drop not functioning properly.
+            Test TableComponent other types: <TableComponent {editor} box={tableBox3} />
             <br />
-            TODO: TableBox constructor is protected, should be public.
+            <p>NB Because every row of a table (or column if otherwise oriented) correspond with a sinlge node, the above test
+            is not representative.</p>
             <hr class="line" />
         </li>
     </ul>

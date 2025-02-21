@@ -43,7 +43,6 @@
         box,
         parentComponentId,
         parentOrientation,
-        myMetaType,
         ondropOnCell
     }: TableCellProps<TableCellBox> = $props();
 
@@ -79,7 +78,7 @@
                 column = box.row;
             }
             childBox = box.content;
-            myMetaType = box.conceptName;
+            box.conceptName = box.conceptName;
         }
         LOGGER.log('    refresh row, col = ' + row + ', ' + column);
     };
@@ -124,13 +123,13 @@
     });
 
     const drop = (event: DragEvent) => {
-        LOGGER.log('drop, dispatching');
+        console.log('drop, dispatching');
         event.stopPropagation();
         ondropOnCell({ row: row, column: column });
     };
 
     const dragstart = (event: DragEvent) => {
-        LOGGER.log('dragStart');
+        console.log(`dragStart ${box.node.freId()} ${box.node.freLanguageConcept()} ${box.node.freOwner()?.freLanguageConcept()}`);
         event.stopPropagation();
         // close any context menu
         contextMenuVisible.value = false;
@@ -155,11 +154,13 @@
     };
 
     const dragenter = (event: DragEvent): boolean => {
+        console.log(`dragEnter ${draggedElem.value?.element.freLanguageConcept()} is dropped on ${box.conceptName}`);
         event.stopPropagation();
+        event.preventDefault();
         // only show this item as active when the type of the element to be dropped is the right one
         if (
             !isNullOrUndefined(draggedElem.value) &&
-            FreLanguage.getInstance().metaConformsToType(draggedElem.value.element, myMetaType)
+            FreLanguage.getInstance().metaConformsToType(draggedElem.value.element, box.conceptName)
         ) {
             activeElem.value = { row: row, column: column };
             activeIn.value = parentComponentId;
@@ -219,11 +220,9 @@
     });
 </script>
 
-<!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->
-<!-- Likewise on:blur is needed for on:mouseout -->
+<!-- on:blur is needed for on:mouseout -->
 <!-- Apparently, we cannot combine multiple inline style directives, as in -->
 <!--  style="grid-row: '{row}' grid-column: '{column}' {cssStyle}"-->
-
 <span
     {id}
     role="cell"
@@ -236,8 +235,10 @@
     ondragstart={(event) => dragstart(event)}
     ondrop={(event) => drop(event)}
     ondragenter={(event) => dragenter(event)}
+    ondragover={(event) => {
+                event.preventDefault();
+            }}
     onmouseout={(event) => mouseout(event)}
-    onfocus={() => {}}
     onblur={() => {}}
     oncontextmenu={(event) => showContextMenu(event)}
     bind:this={htmlElement}

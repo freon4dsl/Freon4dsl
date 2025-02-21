@@ -7,8 +7,11 @@ export class SvelteTestInstantiator {
         AST.change(() => {
             const list1: SimpleNode[] = this.makeSimpleNodeList(name + '-LIST1');
             const list2: SimpleNode[] = this.makeSimpleNodeList(name + '-LIST2');
-            const list3: OtherType[] = this.makeOtherTypeList(name + '-LIST2');
-            result = SvelteTestUnit.create({name: name, myList1: list1, myList2: list2, myList3: list3})
+            const list3: OtherType[] = this.makeOtherTypeList(name + '-LIST3');
+            const list4: SimpleNode[] = this.makeSimpleNodeList(name + '-LIST4');
+            const list5: SimpleNode[] = this.makeSimpleNodeList(name + '-LIST5');
+            const list6: OtherType[] = this.makeOtherTypeList(name + '-LIST6');
+            result = SvelteTestUnit.create({name: name, myList1: list1, myList2: list2, myList3: list3, myList4: list4, myList5: list5, myList6: list6})
         })
         if (!!result) {
             return result;
@@ -20,10 +23,10 @@ export class SvelteTestInstantiator {
     static makeSimpleNodeList(name: string): SimpleNode[] {
         const result: SimpleNode[] = [];
         // AST.change(() => {
-            result.push(SimpleNode.create({name: name + '_ELEMENT1'}));
-            result.push(SimpleNode.create({name: name + '_ELEMENT2'}));
-            result.push(SimpleNode.create({name: name + '_ELEMENT3'}));
-            result.push(SimpleNode.create({name: name + '_ELEMENT4'}));
+            result.push(SimpleNode.create({name: name + '-ELEMENT1'}));
+            result.push(SimpleNode.create({name: name + '-ELEMENT2'}));
+            result.push(SimpleNode.create({name: name + '-ELEMENT3'}));
+            result.push(SimpleNode.create({name: name + '-ELEMENT4'}));
         // });
         return result;
     }

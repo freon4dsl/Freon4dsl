@@ -1,0 +1,19 @@
+language SvelteTest
+
+model SvelteTest {
+    units: SvelteTestUnit[];
+}
+
+modelunit SvelteTestUnit {
+    myList1: SimpleNode[];
+    myList2: SimpleNode[];
+    myList3: OtherType[];
+}
+
+concept SimpleNode {
+    name: identifier;
+}
+
+concept OtherType {
+    name: identifier;
+}

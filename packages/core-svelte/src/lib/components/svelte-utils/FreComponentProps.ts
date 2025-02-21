@@ -21,8 +21,6 @@ export interface GridCellProps<T extends Box> extends FreComponentProps<T> {
 export interface TableCellProps<T extends Box> extends FreComponentProps<T> {
     parentComponentId: string;
     parentOrientation: string;
-    // the type of the elements in the cell, this speeds up the check whether an element may be dropped here
-    myMetaType: string;
     ondropOnCell: (details: TableDetails) => void;
 }
 

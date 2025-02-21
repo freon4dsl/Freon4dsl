@@ -77,7 +77,7 @@
         return _cells;
     }
 
-    onMount(() => {
+    function init() {
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
         // We also set the refresh to each child that is a TableRowBox,
@@ -89,26 +89,20 @@
                 child.refreshComponent = refresh;
             }
         }
+    }
+
+    onMount(() => {
+        init()
     });
 
     $effect(() => {
-        box.refreshComponent = refresh;
-        box.setFocus = setFocus;
-        for (const child of box.children) {
-            if (isTableRowBox(child)) {
-                child.refreshComponent = refresh;
-            } else if (isElementBox(child) && isTableRowBox(child.content)) {
-                child.content.refreshComponent = refresh;
-            }
-        }
+        init();
     });
 
     $effect(() => {
         // Evaluated and re-evaluated when the box changes.
         refresh('Refresh new box: ' + box?.id);
     });
-    // determine the type of the elements in the list
-    // this speeds up the check whether the element may be dropped in a certain drop-zone
 
     const drop = (details: TableDetails) => {
         const data: ListElementInfo | null = draggedElem.value;
@@ -117,9 +111,9 @@
             targetIndex = details.column - 1;
         }
 
-        // console.log("DROPPING item [" + data.element.freId() + "] from [" + data.componentId + "] in grid [" + id + "] on position [" + targetIndex + "]");
+        console.log(`DROPPING item [${data?.element.freId()}] from [${data?.componentId}] in grid [${id}] on position [${targetIndex}]`);
         if (box.hasHeaders) {
-            // take headers into account for the target index
+            // take headers into account for the index in the node model
             targetIndex = targetIndex - 1;
             // console.log("grid has headers, targetIndex: " + targetIndex);
         }
@@ -158,7 +152,6 @@
             {editor}
             parentComponentId={id}
             parentOrientation={box.direction}
-            myMetaType={elementType}
             ondropOnCell={drop}
         />
     {/each}

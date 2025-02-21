@@ -55,9 +55,9 @@
         event.stopPropagation();
 
         if (!isNullOrUndefined(data)) {
-            console.log(
+            LOGGER.log(
                 'DROPPING item [' +
-                    data.element.freLanguageConcept() +
+                    data.element.freId() +
                     '] from [' +
                     data.componentId +
                     '] in list [' +
@@ -84,13 +84,13 @@
     };
 
     const dragend = (event: DragEvent) => {
-        console.log('Drag End ' + box.id);
+        LOGGER.log('Drag End ' + box.id);
         event.stopPropagation();
         return false;
     };
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
-        console.log('Drag Start ' + box.id + ' index: ' + listIndex);
+        LOGGER.log('Drag Start ' + box.id + ' index: ' + listIndex);
         event.stopPropagation();
         // close any context menu
         contextMenuVisible.value = false;
@@ -109,13 +109,13 @@
     };
 
     const dragleave = (event: DragEvent, index: number): boolean => {
-        console.log('Drag Leave' + box.id + ' index: ' + index);
+        LOGGER.log('Drag Leave' + box.id + ' index: ' + index);
         event.stopPropagation();
         return false;
     };
 
     const dragenter = (event: DragEvent, index: number): boolean => {
-        console.log('Drag Enter' + box.id + ' index: ' + index);
+        LOGGER.log('Drag Enter' + box.id + ' index: ' + index);
         event.stopPropagation();
         event.preventDefault();
         const data: ListElementInfo | null = draggedElem.value;
