@@ -87,6 +87,15 @@
         mustShow,
         placeholder
     );
+    let conditionString: string = $state('false');
+
+    function onChange() {
+        if (conditionString === 'false') {
+            optionalCond = false;
+        } else if (conditionString === 'true') {
+            optionalCond = true;
+        }
+    }
 </script>
 
 <div class="top">
@@ -126,11 +135,9 @@
         <li>
             <p>Test OptionalComponent:</p>
             <div>
-                <p>Change how it is displayed here: <input bind:value={optionalCond} /></p>
+                <p>Change how it is displayed here: <input bind:value={conditionString} onchange={onChange}/></p>
             </div>
             <OptionalComponent {editor} box={optionalBox} />
-            <br />
-            TODO It does not respond to setting its parameter back to false.
             <hr class="line" />
         </li>
     </ul>

@@ -8,6 +8,9 @@ modelunit SvelteTestUnit {
     myList1: SimpleNode[];
     myList2: SimpleNode[];
     myList3: OtherType[];
+    myList4: SimpleNode[];
+    myList5: SimpleNode[];
+    myList6: OtherType[];
 }
 
 concept SimpleNode {
