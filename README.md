@@ -1,12 +1,12 @@
 [![Build Status](https://github.com/freon4dsl/freon4dsl/actions/workflows/node.js.yml/badge.svg)]
 
 # Freon, the Language Workbench for the Web
-Web-native Language WOrkbench with projectional editor. The current release (version 1.0.0-beta2) can be found on npm.
+Web-native Language WOrkbench with projectional editor. The current release (version 1.0.0) can be found on npm.
 
 This beta release supports [LionWeb](https://github.com/LionWeb-io) (de)serialization. 
 As LionWeb is in motion, expect this release to change according to LionWeb changes before it becomes final. 
 
-This release also supports external editor component, as an experimental feature.
+This release also supports external editor components, as an experimental feature.
 
 ## What is Freon
 
@@ -14,6 +14,11 @@ Freon is a TypeScript/JavaScript framework to create and implement projectional 
 Additional to the core framework, there are generators for many parts of the work environment for your DSL.
 
 For more information see the <a href="https://www.freon4dsl.dev" target="_blank">Freon</a> website.
+
+## Using Freon
+
+If you want to use Freon to develop a DSL on the Web, goto the [Freon Documentation](https://www.freon4dsl.dev),
+this repository is mean for developing Freon itself.
 
 ## Developing Freon
 
