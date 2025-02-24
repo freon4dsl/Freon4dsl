@@ -415,8 +415,7 @@
      * calls the setFocus() function in this component.
      */
     const onFocusIn = () => {
-        LOGGER.log(`onFocusIn for ${box?.id}`);
-        LOGGER.log(`onFocusIn ${id}: ` + ' part of:' + partOfDropdown + ' isEditing:' + isEditing);
+        LOGGER.log(`onFocusIn for ${id}: ` + ' part of:' + partOfDropdown + ' isEditing:' + isEditing);
         editor.selectElementForBox(box);
     };
 
