@@ -21,15 +21,15 @@ export function makeListBox<T extends FreNamedNode>(parent: FreNode, list: T[], 
     if (direction === ListDirection.HORIZONTAL) {
         return new HorizontalListBox(
             parent,
-            propName,
             propName + '-list-role',
+            propName,
             listChildren
         );
     } else {
         return new VerticalListBox(
             parent,
-            propName,
             propName + '-list-role',
+            propName,
             listChildren
         );
     }

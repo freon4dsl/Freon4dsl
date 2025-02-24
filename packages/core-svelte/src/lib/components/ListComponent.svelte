@@ -56,7 +56,7 @@
         event.stopPropagation();
 
         if (!isNullOrUndefined(data)) {
-            LOGGER.log(
+            console.log(
                 'DROPPING item [' +
                     data.element.freId() +
                     '] from [' +
