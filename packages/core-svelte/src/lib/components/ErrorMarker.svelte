@@ -3,12 +3,10 @@
     import ErrorTooltip from '$lib/components/ErrorTooltip.svelte';
     import { Box } from '@freon4dsl/core';
     import { viewport } from '$lib/components/stores/AllStores.svelte.js';
+    import type {ErrorProps, FreComponentProps} from "$lib";
 
-    interface Props {
-        box: Box;
-        element: HTMLElement;
-    }
-    let { element, box }: Props = $props();
+
+    let { element, box }: ErrorProps = $props();
 
     let top = $state(10);
     let height = $state(8);

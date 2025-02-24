@@ -2,14 +2,10 @@
     import { GRID_LOGGER } from '$lib/components/ComponentLoggers.js';
     import { GridCellBox, GridBox, isNullOrUndefined, FreEditor } from '@freon4dsl/core';
     import GridCellComponent from './GridCellComponent.svelte';
-    import { componentId } from '$lib';
+    import {componentId, type GridProps} from '$lib';
 
     const LOGGER = GRID_LOGGER;
 
-    interface GridProps {
-        editor: FreEditor;
-        box: GridBox;
-    }
     let { editor, box }: GridProps = $props();
 
     let id: string = $state('');
