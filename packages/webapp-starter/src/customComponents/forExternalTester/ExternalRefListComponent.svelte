@@ -6,8 +6,9 @@
     // Props
     let { editor, box }: FreComponentProps<ExternalRefListBox> = $props();
 
-    let button;
+    let button: HTMLButtonElement;
     let value: FreNodeReference<CC>[];
+    let count: number = $state(5);
 
     function getValue() {
         let startVal: FreNodeReference<any>[] | undefined = box.getPropertyValue();
@@ -20,10 +21,10 @@
     }
 
     const addChild = () => {
-        let newRef: FreNodeReference<CC> = FreNodeReference.create<CC>("nameOfReferedNode", "CC");
-        // Note that you need to put any changes to the actual model in a 'runInAction',
+        // Note that you need to put any changes to the actual model in a 'AST.change' or 'AST.changeNamed',
         // because all elements in the model are reactive using mobx.
         AST.changeNamed("ExternalRefListComponent.addChild", () => {
+            let newRef: FreNodeReference<CC> = FreNodeReference.create<CC>("nameOfReferedNode" + count++, "CC");
             value.push(newRef);
             // or use: box.getPropertyValue().push(newRef);
         });

@@ -1,12 +1,12 @@
 <script lang="ts">
-    import {AST, ExternalPartListBox, FreNode} from "@freon4dsl/core";
+    import {AST, ExternalPartListBox, type FreNode} from "@freon4dsl/core";
     import {BB} from "@freon4dsl/samples-external-tester";
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
     // Props
     let { editor, box }: FreComponentProps<ExternalPartListBox> = $props();
 
-    let button;
+    let button: HTMLButtonElement;
     let value: BB[];
 
     function getValue() {
@@ -21,10 +21,10 @@
     getValue();
 
     const addChild = () => {
-        let newBB: BB = BB.create({name: "new element", numberProp: 100, booleanProp: true});
         // Note that you need to put any changes to the actual model in a 'AST.change or AST.changeNamed',
         // because all elements in the model are reactive using mobx.
         AST.changeNamed("ExternalPartListComponent.addChild", () => {
+            let newBB: BB = BB.create({name: "new element", numberProp: 100, booleanProp: true});
             value.push(newBB);
         });
     }

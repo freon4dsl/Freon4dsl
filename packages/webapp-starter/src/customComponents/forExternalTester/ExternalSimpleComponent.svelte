@@ -8,12 +8,12 @@
 
     let src = '/cats-kittens.gif';
     let name1 = 'Two kittens licking';
-    let inputElement;
+    let divElement: HTMLDivElement;
 
     // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
-        inputElement.focus();
+        divElement.focus();
     }
     const refresh = (why?: string): void => {
         // do whatever needs to be done to refresh the elements that show information from the model
@@ -24,6 +24,6 @@
     });
 </script>
 
-<div class="replacer" bind:this={inputElement}>
+<div class="replacer" bind:this={divElement}>
     <img {src} alt="{name1}" />
 </div>

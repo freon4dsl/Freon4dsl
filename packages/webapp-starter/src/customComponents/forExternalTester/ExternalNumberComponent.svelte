@@ -1,16 +1,16 @@
 <script lang="ts">
-    import { ExternalNumberBox} from "@freon4dsl/core";
+    import {ExternalNumberBox, isNullOrUndefined} from "@freon4dsl/core";
     import { type FreComponentProps } from "@freon4dsl/core-svelte";
 
     // Props
     let { editor, box }: FreComponentProps<ExternalNumberBox> = $props();
 
-    let inputElement;
+    let inputElement: HTMLInputElement;
     let value: string = $state('');
 
     function getValue() {
         let startVal: number | undefined = box.getPropertyValue();
-        if (typeof startVal === "number") {
+        if (!isNullOrUndefined(startVal)) {
             value = startVal.toString();
         } else {
             value = "0"; // the default

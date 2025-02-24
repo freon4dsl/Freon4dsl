@@ -23,6 +23,6 @@
 
 <div class="wrapper">
     RefListWrapper
-    <RenderComponent box={box.childBox} editor="{editor}"/>
+    <RenderComponent box={box.childBox} editor={editor}/>
 </div>
 

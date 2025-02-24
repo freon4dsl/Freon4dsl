@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { ExternalRefBox, FreNodeReference} from "@freon4dsl/core";
+    import {AST, ExternalRefBox, FreNodeReference} from "@freon4dsl/core";
     import {CC} from "@freon4dsl/samples-external-tester";
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
     // Props
     let { editor, box }: FreComponentProps<ExternalRefBox> = $props();
 
-    let inputElement;
+    let inputElement: HTMLInputElement;
     let value: FreNodeReference<CC>;
-    let nameOfValue: string;
+    let nameOfValue: string = $state('');
 
     function getValue() {
         let startVal: FreNodeReference<CC> | undefined = box.getPropertyValue();
@@ -24,7 +24,9 @@
                 nameOfValue = "<unknown>";
             }
         } else { // the default
-            value = null;
+            AST.change(() => {
+                value = FreNodeReference.create<CC>('noCC', 'CC');
+            });
             nameOfValue = "<unknown>";
         }
     }

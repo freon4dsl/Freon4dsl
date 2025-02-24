@@ -18,7 +18,7 @@
         and sets the length of 'panelOpen'.
      */
     function initialize() {
-        let param: string = box.findParam("multi");
+        let param: string | undefined = box.findParam("multi");
         if (param === "multiple") {
             multiplePar = true;
         }
@@ -74,7 +74,7 @@
         {#each box.children as childBox, index}
             <Panel bind:open={panelOpen[index]}>
                 <Header>
-                    {childBox.node.freLanguageConcept()} {childBox.node["name"]}
+                    {childBox.node.freLanguageConcept()} {childBox.node.freId()}
                 </Header>
                 <Content>
                     <div style="display: flex; align-items: flex-end;">

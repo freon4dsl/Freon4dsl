@@ -4,7 +4,7 @@
         ExternalPartListBox,
         type FreNode,
         FreNodeReference,
-        AST
+        AST, isNullOrUndefined, LabelBox
     } from "@freon4dsl/core";
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
     import {Slot, TimeStamp} from "@freon4dsl/samples-course-schedule";
@@ -170,6 +170,14 @@
         });
     }
 
+    const findBoxForSlot = (slot: Slot): Box => {
+        let xx = slotToBoxMap.get(slot);
+        if (!isNullOrUndefined(xx)) {
+            return xx;
+        } else {
+            return new LabelBox(box.node, 'no-role', () => { return 'No box found'});
+        }
+    }
     initialize();
 </script>
 
@@ -194,7 +202,7 @@
                             <div class="demo-cell-content">
                             {#each slots as slot}
                                 <div class="demo-slot-render">
-                                <RenderComponent box={slotToBoxMap.get(slot)} editor={editor} />
+                                <RenderComponent box={findBoxForSlot(slot)} editor={editor} />
                                 </div>
                             {/each}
                             </div>
@@ -225,7 +233,7 @@
                         <td class="demo-cell">
                             {#each slots as slot}
                                 <div class="demo-slot-render">
-                                <RenderComponent box={slotToBoxMap.get(slot)} editor={editor} />
+                                <RenderComponent box={findBoxForSlot(slot)} editor={editor} />
                                 </div>
                             {/each}
                         </td>

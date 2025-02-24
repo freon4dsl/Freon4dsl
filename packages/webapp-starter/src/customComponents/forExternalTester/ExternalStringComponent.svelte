@@ -5,7 +5,7 @@
     // Props
     let { editor, box }: FreComponentProps<ExternalStringBox> = $props();
 
-    let inputElement;
+    let inputElement: HTMLInputElement;
     let value: string = $state('');
 
     function getValue() {

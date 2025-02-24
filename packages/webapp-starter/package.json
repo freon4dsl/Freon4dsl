@@ -7,7 +7,7 @@
         "clean": "rm -rf node_modules/",
         "dev": "vite",
         "build": "echo No build for webapp-starter",
-        "build-dev": "cd ../../packages/samples/CourseSchedule && npm run build",
+        "build-dev": "cd ../../packages/samples/ExternalTester && npm run build",
         "build-app": "vite build",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",

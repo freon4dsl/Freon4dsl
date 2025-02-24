@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { ExternalPartBox, FreNode} from "@freon4dsl/core";
+    import { ExternalPartBox, type FreNode} from "@freon4dsl/core";
     import {BB} from "@freon4dsl/samples-external-tester";
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
     // Props
     let { editor, box }: FreComponentProps<ExternalPartBox> = $props();
 
-    let inputElement;
-    let value: BB;
-    let nameOfValue: string;
-    let numberOfValue: string;
+    let inputElement: HTMLInputElement;
+    let value: BB = $state()!;
+    let nameOfValue: string = $state('');
+    let numberOfValue: string = $state('');
 
     function getValue() {
         let startVal: FreNode | undefined = box.getPropertyValue();
@@ -22,7 +22,7 @@
             nameOfValue = value.name;
             numberOfValue = value.numberProp.toString();
         } else { // the default
-            value = null;
+            value = BB.create({name: 'noBB'});
             nameOfValue = "<unknown>";
             numberOfValue = "0";
         }
