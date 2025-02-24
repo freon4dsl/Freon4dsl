@@ -2,28 +2,46 @@ import { type Box, FreEditor, type GridBox, MenuItem, type SelectOption } from '
 import type { CaretDetails } from '$lib/components/svelte-utils/CaretDetails';
 import type { TableDetails } from '$lib/components/svelte-utils/TableDetails';
 
+/**
+ * Properties for the FreonComponent
+ */
 export interface MainComponentProps {
     editor: FreEditor;
 }
 
+/**
+ * Properties for most of the components in core-svelte
+ */
 export interface FreComponentProps<T extends Box> extends MainComponentProps {
     box: T;
 }
 
-export interface ContextMenuProps extends MainComponentProps {
-    items: MenuItem[];
+/**
+ * Properties for a GridComponent
+ */
+export interface GridProps {
+    editor: FreEditor;
+    box: GridBox;
 }
 
+/**
+ * Properties for a GridCellComponent
+ */
 export interface GridCellProps<T extends Box> extends FreComponentProps<T> {
     parentBox: GridBox;
 }
 
+/**
+ * Properties for a TableCellComponent
+ */
 export interface TableCellProps<T extends Box> extends FreComponentProps<T> {
     parentComponentId: string;
     parentOrientation: string;
     ondropOnCell: (details: TableDetails) => void;
 }
-
+/**
+ * Properties for a TextComponent
+ */
 export interface TextComponentProps<T extends Box> extends FreComponentProps<T> {
     // Indication whether this component is currently being edited by the user, needs to be exported for binding in TextDropdownComponent
     isEditing: boolean;
@@ -39,8 +57,19 @@ export interface TextComponentProps<T extends Box> extends FreComponentProps<T> 
     toParent: (eventType: string, details?: CaretDetails) => void;
 }
 
+/**
+ * Properties for a DropdownComponent
+ */
 export interface DropdownProps {
     options: SelectOption[];
     selected?: SelectOption;
     selectionChanged: (sel: SelectOption) => void;
+}
+
+/**
+ * Properties for an ErrorMarker
+ */
+export interface ErrorProps {
+    box: Box;
+    element: HTMLElement;
 }
