@@ -205,7 +205,7 @@
 >
     {#each shownElements as box, index (box.id)}
         <span
-            class="list-item xx"
+            class="list-item"
             class:is-active={activeElem.value?.row === index && activeIn.value === id}
             class:dragged={draggedElem.value?.propertyIndex === index && draggedFrom.value === id}
             style:grid-column={!isHorizontal ? 1 : index + 1}
@@ -224,7 +224,7 @@
             oncontextmenu={(event) => showContextMenu(event, index)}
             role="none"
         >
-            <span class="handle"
+            <span class="drag-handle"
                   draggable="true"
                   ondragstart={(event) => dragstart(event, id, index)}
                   role="listitem"><DragHandle/></span>
@@ -232,18 +232,3 @@
         </span>
     {/each}
 </span>
-
-<style>
-    .xx {
-        position: relative;
-    }
-    .handle {
-        padding: 1px;
-        cursor: move;
-        z-index: 10;
-        border: black 1px solid;
-    }
-    .drag-handle-icon {
-        color: red;
-    }
-</style>

@@ -333,3 +333,7 @@ dropdown-component {
 .brackets {
     color: gray;
 }
+
+.drag-handle-icon {
+    fill: floralwhite;
+}
