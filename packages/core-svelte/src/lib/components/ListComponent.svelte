@@ -32,6 +32,7 @@
         draggedElem,
         draggedFrom
     } from '$lib/components/stores/AllStores.svelte.js';
+    import DragHandle from "$lib/components/images/DragHandle.svelte";
 
     // Props
     let { editor, box }: FreComponentProps<ListBox> = $props();
@@ -210,8 +211,7 @@
             style:grid-column={!isHorizontal ? 1 : index + 1}
             style:grid-row={isHorizontal ? 1 : index + 1}
             animate:flip
-            draggable="true"
-            ondragstart={(event) => dragstart(event, id, index)}
+
             ondragend={(event) => dragend(event)}
             ondrop={(event) => drop(event, index)}
             ondragover={(event) => {
@@ -224,6 +224,10 @@
             oncontextmenu={(event) => showContextMenu(event, index)}
             role="none"
         >
+            <span class="drag-handle"
+                  draggable="true"
+                  ondragstart={(event) => dragstart(event, id, index)}
+                  role="listitem"><DragHandle/></span>
             <RenderComponent {box} {editor} />
         </span>
     {/each}

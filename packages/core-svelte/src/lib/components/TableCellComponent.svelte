@@ -36,6 +36,7 @@
         selectedBoxes
     } from '$lib/components/stores/AllStores.svelte.js';
     import type { TableCellProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import DragHandle from "$lib/components/images/DragHandle.svelte";
 
     // Props
     let {
@@ -230,9 +231,7 @@
     style:grid-row={row}
     style:grid-column={column}
     style={cssStyle}
-    draggable="true"
     onkeydown={onKeydown}
-    ondragstart={(event) => dragstart(event)}
     ondrop={(event) => drop(event)}
     ondragenter={(event) => dragenter(event)}
     ondragover={(event) => {
@@ -244,5 +243,9 @@
     bind:this={htmlElement}
     tabindex={0}
 >
+                <span class="drag-handle"
+                      draggable="true"
+                      ondragstart={(event) => dragstart(event)}
+                      role="listitem"><DragHandle/></span>
     <RenderComponent box={childBox} {editor} />
 </span>

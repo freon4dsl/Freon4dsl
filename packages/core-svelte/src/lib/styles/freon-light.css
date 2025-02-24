@@ -334,3 +334,7 @@
 .brackets {
     color: darkgray;
 }
+
+.drag-handle-icon {
+    fill: darkgrey;
+}

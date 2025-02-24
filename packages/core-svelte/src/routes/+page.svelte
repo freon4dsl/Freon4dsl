@@ -180,6 +180,7 @@
         <a href="./render">Tests that use RenderComponent</a>
         <a href="./dragdrop">Drag and Drop tests</a>
         <a href="./tabbing">Selection tests</a>
+        <a href="./expandable">New Components</a>
     </div>
 </div>
 

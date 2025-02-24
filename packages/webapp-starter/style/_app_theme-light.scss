@@ -2,15 +2,6 @@
 
 @use '@material/theme/color-palette';
 
-// set of matching colors:
-html {
-  --color5: #1B3309;
-  --color4: #375F1B;
-  --color3: #65AD31;
-  --color2: #9BD770;
-  --color1: #E9F6DF;
-}
-
 // Freon Colors!!
 @use '@material/theme/index' as theme with (
   $primary: #375F1B,
@@ -35,6 +26,15 @@ html {
 
 // linear-progress is included for the progress indicator in the EditorPart component
 @use '@material/linear-progress/index' as linear-progress;
+
+// set of matching colors:
+html {
+  --color5: #1B3309;
+  --color4: #375F1B;
+  --color3: #65AD31;
+  --color2: #9BD770;
+  --color1: #E9F6DF;
+}
 
 // my-colored-bar style is used for the progress indicator in the EditorPart component
 .my-colored-bar {

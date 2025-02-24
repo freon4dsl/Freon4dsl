@@ -65,6 +65,16 @@
     box-sizing: border-box;
 }
 
+.list-item {
+    display: flex;
+    align-items: baseline;
+}
+
+.drag-handle {
+    cursor: move;
+    z-index: 10;
+}
+
 .layout-component {
     padding: 0px;
     margin: 1px;
@@ -486,6 +496,8 @@
 }
 
 .table-cell-component {
+    display: flex;
+    align-items: baseline;
     box-sizing: border-box;
     align-self: baseline; /* isn't this the default? */
     justify-self: baseline;
