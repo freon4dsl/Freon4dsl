@@ -33,6 +33,7 @@
     import ErrorTooltip from '$lib/components/ErrorTooltip.svelte';
     import ErrorMarker from '$lib/components/ErrorMarker.svelte';
     import type { TextComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import {contextMenu} from "$lib/components/stores/AllStores.svelte";
 
     const LOGGER = TEXT_LOGGER;
 
@@ -253,12 +254,19 @@
      */
     function onMousedown(event: MouseEvent) {
         LOGGER.log(`onMousedown for ${box?.id}`);
-        startEditing('UI');
-        event.preventDefault();
-        event.stopPropagation();
-        if (partOfDropdown) {
-            // Tell the TextDropdown that the edit has started.
-            toParent('startEditing', { content: text, caret: myHelper.from });
+        if (event.button === 0) { // a 'left' click
+            event.preventDefault();
+            event.stopPropagation();
+            // Because we do not propagate the event, we need to hide any context menu 'manually'.
+            contextMenu.instance?.hide();
+            startEditing('UI');
+            if (partOfDropdown) {
+                // Tell the TextDropdown that the edit has started.
+                toParent('startEditing', { content: text, caret: myHelper.from });
+            }
+        } // 'right' clicks are handled by parent => should open context menu
+        else {
+            console.log('text component: right click mouse down')
         }
     }
 

@@ -17,8 +17,8 @@ export abstract class ListBox extends LayoutBox {
 
     protected constructor(
         node: FreNode,
-        propertyName: string,
         role: string,
+        propertyName: string,
         children?: Box[],
         initializer?: Partial<ListBox>,
     ) {
@@ -37,12 +37,12 @@ export class HorizontalListBox extends ListBox {
 
     constructor(
         element: FreNode,
-        propertyName: string,
         role: string,
+        propertyName: string,
         children?: (Box | null)[],
         initializer?: Partial<HorizontalListBox>,
     ) {
-        super(element, propertyName, role, children, initializer);
+        super(element, role, propertyName, children, initializer);
         this.direction = ListDirection.HORIZONTAL;
     }
 }
@@ -52,12 +52,12 @@ export class VerticalListBox extends ListBox {
 
     constructor(
         node: FreNode,
-        propertyName: string,
         role: string,
+        propertyName: string,
         children?: Box[],
         initializer?: Partial<HorizontalListBox>,
     ) {
-        super(node, propertyName, role, children, initializer);
+        super(node, role, propertyName, children, initializer);
         this.direction = ListDirection.VERTICAL;
     }
 }

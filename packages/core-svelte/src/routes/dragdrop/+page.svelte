@@ -13,7 +13,8 @@
     import {SvelteTestInstantiator} from "$lib/__test__/test-environment/svelte-test-model/SvelteTestInstantiator";
     import {OtherType, SimpleNode} from "$lib/__test__/test-environment/svelte-test-model";
     import {makeListBox, makeTableBox} from "$lib/__test__/test-environment/utils/CommonFunctions";
-    import {draggedElem} from "$lib/components/stores/AllStores.svelte";
+    import {contextMenu, draggedElem} from "$lib/components/stores/AllStores.svelte";
+    import ContextMenu from "$lib/components/ContextMenu.svelte";
 
     let editor = SvelteTestEnvironment.getInstance().editor;
 
@@ -62,6 +63,8 @@
         <a href="./tabbing">Selection tests</a>
     </div>
 </div>
+
+<ContextMenu bind:this={contextMenu.instance} {editor} />
 
 <div style="height:1000px;" class="test-area">
     <div style="font-weight: bold"> NB the list and table components are not refreshed, because mobx works through editor.rootBox and here we use a different box model.

@@ -63,7 +63,7 @@
      * This function hides the context menu
      */
     export function hide() {
-        console.log('CONTEXTMENU hide');
+        LOGGER.log('CONTEXTMENU hide');
         contextMenuVisible.value = false;
         submenuOpen = false;
     }
