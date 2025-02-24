@@ -32,6 +32,7 @@
         draggedElem,
         draggedFrom
     } from '$lib/components/stores/AllStores.svelte.js';
+    import DragHandle from "$lib/components/images/DragHandle.svelte";
 
     // Props
     let { editor, box }: FreComponentProps<ListBox> = $props();
@@ -204,14 +205,13 @@
 >
     {#each shownElements as box, index (box.id)}
         <span
-            class="list-item"
+            class="list-item xx"
             class:is-active={activeElem.value?.row === index && activeIn.value === id}
             class:dragged={draggedElem.value?.propertyIndex === index && draggedFrom.value === id}
             style:grid-column={!isHorizontal ? 1 : index + 1}
             style:grid-row={isHorizontal ? 1 : index + 1}
             animate:flip
-            draggable="true"
-            ondragstart={(event) => dragstart(event, id, index)}
+
             ondragend={(event) => dragend(event)}
             ondrop={(event) => drop(event, index)}
             ondragover={(event) => {
@@ -224,7 +224,26 @@
             oncontextmenu={(event) => showContextMenu(event, index)}
             role="none"
         >
+            <span class="handle"
+                  draggable="true"
+                  ondragstart={(event) => dragstart(event, id, index)}
+                  role="listitem"><DragHandle/></span>
             <RenderComponent {box} {editor} />
         </span>
     {/each}
 </span>
+
+<style>
+    .xx {
+        position: relative;
+    }
+    .handle {
+        padding: 1px;
+        cursor: move;
+        z-index: 10;
+        border: black 1px solid;
+    }
+    .drag-handle-icon {
+        color: red;
+    }
+</style>
