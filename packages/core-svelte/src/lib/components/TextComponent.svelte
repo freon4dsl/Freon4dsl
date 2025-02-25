@@ -125,7 +125,6 @@
      * @param why
      */
     const refresh = (why?: string) => {
-        LOGGER.log(`refresh for ${box?.id}`);
         LOGGER.log(
             `${id}: REFRESH why ${why}: (${box?.node?.freLanguageConcept()}) box text '${box?.getText()}' text '${text}'`
         );
@@ -183,7 +182,6 @@
      */
     // todo see whether this function needs to be called from the box
     const calculateCaret = (freCaret: FreCaret) => {
-        LOGGER.log(`calculateCaret for ${box?.id}`);
         LOGGER.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]`);
         switch (freCaret.position) {
             case FreCaretPosition.RIGHT_MOST: // type nr 2
@@ -266,7 +264,7 @@
             }
         } // 'right' clicks are handled by parent => should open context menu
         else {
-            console.log('text component: right click mouse down')
+            LOGGER.log('text component: right click mouse down')
         }
     }
 
@@ -283,14 +281,6 @@
             LOGGER.log('dispatching from onClickInInput');
             toParent('textUpdate', { content: text, caret: myHelper.from });
         }
-    }
-
-    /**
-     * This function should not be needed
-     * todo remove!
-     */
-    function onClick() {
-        LOGGER.log(`onClick for ${box?.id}`);
     }
 
     /**
@@ -407,7 +397,6 @@
      * When this component loses focus, do everything that is needed to end the editing state.
      */
     const onFocusOut = () => {
-        LOGGER.log(`onFocusOut for ${box?.id}`);
         LOGGER.log(`${id}: onFocusOut ` + ' part of:' + partOfDropdown + ' isEditing:' + isEditing);
         if (!partOfDropdown && isEditing) {
             endEditing();
@@ -546,7 +535,7 @@
     <ErrorMarker element={surroundingElement} {box} />
 {/if}
 <ErrorTooltip {box} {hasErr} parentTop={0} parentLeft={0}>
-    <span {id} onclick={onClick} role="none" bind:this={surroundingElement}>
+    <span {id} role="none" bind:this={surroundingElement}>
         {#if isEditing}
             <span class="text-component-input">
                 <input

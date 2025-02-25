@@ -121,7 +121,7 @@
     };
 
     /**
-     * This custom event is triggered when the text in the textComponent is altered or when the
+     * This function is triggered when the text in the textComponent is altered or when the
      * caret position is changed.
      * Based on the (altered) text and the caret position within the text, the list of options
      * in the dropdownComponent is changed.
@@ -131,6 +131,9 @@
         LOGGER.log(
             `textUpdate for ${box.kind}: ${JSON.stringify(details)}, start: ${text.substring(0, details.caret)}`
         );
+        if (!dropdownShown) {
+            showDropdown();
+        }
         allOptions = getOptions();
         setFiltered(
             allOptions.filter((o) => o.label.startsWith(text.substring(0, details.caret)))
