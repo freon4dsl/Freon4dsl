@@ -75,7 +75,7 @@
     let selectedCls: string = $state(''); // css class name for when the node is selected
     let errorCls: string = $state(''); // css class name for when the node is erroneous
     let errMess: string[] = $state([]); // error message to be shown when element is hovered
-    let externalComponent: Component | undefined = $state(undefined);
+    let ExternalComponent: Component<FreComponentProps<any>> | undefined = $state(undefined);
 
     const onClick = (event: MouseEvent) => {
         LOGGER.log(
@@ -103,7 +103,7 @@
             isSelected = isSelected || selectedBoxes.value.includes(box.parent);
         }
         if (isExternalBox(box)) {
-            externalComponent = findCustomComponent(box.externalComponentName);
+            ExternalComponent = findCustomComponent(box.externalComponentName);
         }
         if (isActionBox(box) || isSelectBox(box) || isReferenceBox(box)) {
             isSelected = isSelected || selectedBoxes.value.includes(box._textBox);
@@ -181,8 +181,8 @@
         {:else if isButtonBox(box)}
             <ButtonComponent {box} {editor} />
         {:else if isExternalBox(box)}
-            {#if !isNullOrUndefined(externalComponent)}
-                <externalComponent {box} {editor}></externalComponent>
+            {#if !isNullOrUndefined(ExternalComponent)}
+                <ExternalComponent {box} {editor}></ExternalComponent>
             {:else}
                 <p class="render-component-error">
                     [UNKNOWN EXTERNAL BOX TYPE: {box.externalComponentName}]
