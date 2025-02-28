@@ -1,9 +1,11 @@
 <script lang="ts">
-    import {Checkbox, Dropdown, DropdownDivider, DropdownItem, NavLi} from 'flowbite-svelte';
+    import {Button, Checkbox, Dropdown, DropdownDivider, DropdownItem, Modal, NavLi} from 'flowbite-svelte';
     import {ChevronDownOutline} from 'flowbite-svelte-icons';
     import {projectionsShown, replaceProjectionsShown} from '$lib/stores/Projections.svelte';
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {ProjectionItem} from "$lib/ts-utils/MenuItem";
+    import {dialogs} from "$lib";
+    import {isNullOrUndefined} from "@freon4dsl/core";
 
     let allProjections: (ProjectionItem | undefined)[] = $derived(
         langInfo.projectionNames.map(view => {
@@ -32,23 +34,16 @@
     }
 </script>
 
-<NavLi class="cursor-pointer"
->View
-    <ChevronDownOutline class="text-primary-800 ms-2 inline h-6 w-6 dark:text-white"/>
-</NavLi
->
-<Dropdown class="z-20 w-44 space-y-3 p-3 text-sm">
-    <li>
-        <Checkbox checked disabled>Default</Checkbox>
-    </li>
+<Modal title="Select the projections to be shown" bind:open={dialogs.selectViewsDialogVisible} size="xs" autoclose outsideclose
+       class="w-full">
+    <Checkbox checked disabled>Default</Checkbox>
     {#each allProjections as option}
-        {#if option !== null && option !== undefined}
-            <li>
-                <Checkbox onchange={() => !!option ? option.selected = !option.selected: null}
-                          checked={option.selected}>{option ? option.name : "unknown view"}</Checkbox>
-            </li>
+        {#if !isNullOrUndefined(option)}
+            <Checkbox onchange={() => !isNullOrUndefined(option) ? option.selected = !option.selected: null}
+                      checked={option.selected}>{option ? option.name : "unknown view"}</Checkbox>
         {/if}
     {/each}
-    <DropdownDivider/>
-    <DropdownItem onclick={() => applyChanges()}>Apply changes</DropdownItem>
-</Dropdown>
+    <svelte:fragment slot="footer">
+        <Button onclick={() => applyChanges()}>Apply changes</Button>
+    </svelte:fragment>
+</Modal>
