@@ -53,6 +53,7 @@
   "workspaces": [
     "packages/core",
     "packages/core-svelte",
+    "packages/fbweblib",
     "packages/meta",
     "packages/webapp-lib",
     "packages/samples/*",
@@ -60,5 +61,5 @@
     "packages/server",
     "packages/test"
   ],
-  "version": "1.0.0"
+  "version": "1.1.0"
 }
