@@ -16,7 +16,6 @@
 	import EditMenu from '$lib/main-app/EditMenu.svelte';
 	import {langInfo} from "$lib/stores/LanguageInfo.svelte";
 	import ToolMenu from "$lib/main-app/ToolMenu.svelte";
-	let hidden = false;
 </script>
 
 <!--  start::navbar   -->
@@ -26,15 +25,15 @@
 			<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Freon for {langInfo.name}</span>
 		</NavBrand>
 
-		<NavUl {hidden}>
+		<NavHamburger />
+		<NavUl>
 			<FileMenu />
 			<EditMenu />
 			<ToolMenu />
 		</NavUl>
+		<Tooltip placement="bottom">See menu</Tooltip>
 		<div class="flex md:order-2">
 			<ButtonGroup class="*:!ring-primary-700">
-				<NavHamburger />
-				<Tooltip placement="bottom">See menu</Tooltip>
 				<DarkMode />
 				<Tooltip placement="bottom">Dark/Light Mode</Tooltip>
 				<Button

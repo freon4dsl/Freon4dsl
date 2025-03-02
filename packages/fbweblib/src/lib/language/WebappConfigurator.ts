@@ -3,7 +3,7 @@ import {
     type FreEnvironment,
     FreErrorSeverity,
     FreLanguage,
-    FreLogger,
+    FreLogger, type FreModel,
     type FreModelUnit,
     FreProjectionHandler,
     FreUndoManager,
@@ -122,6 +122,7 @@ export class WebappConfigurator {
                     }
                 }
             }
+            editorInfo.modelName = modelName;
             this.updateUnitList()
         }
     }
@@ -279,6 +280,73 @@ export class WebappConfigurator {
             } else {
                 setUserMessage('Cannot create new unit.', FreErrorSeverity.Error);
             }
+        }
+    }
+
+    /**
+     * Parses the string 'content' to create a model unit. If the parsing is ok,
+     * then the unit is added to the current model.
+     * @param content
+     * @param metaType
+     */
+    async unitFromFile(fileName: string, content: string, metaType: string, showIt: boolean) {
+        // save the old current unit, if there is one
+        this.saveCurrentUnit();
+        let unit: FreModelUnit | null = null;
+        try {
+            // the following also adds the new unit to the model
+            if (!isNullOrUndefined(editorInfo.modelName) && editorInfo.modelName.length > 0) {
+                const model: FreModel | undefined = this.modelStore?.model;
+                if (!!model) {
+                    unit = this.langEnv!.reader.readFromString(content, metaType, model, fileName) as FreModelUnit;
+                }
+            }
+            if (!!unit) {
+                // if the element does not yet have a name, try to use the file name
+                if (!unit.name || unit.name.length === 0) {
+                    unit.name = this.makeUnitName(fileName);
+                }
+                if (showIt) {
+                    // set elem in editor
+                    this.showUnit(unit);
+                }
+                await this.modelStore?.addUnit(unit);
+            }
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                setUserMessage(e.message, FreErrorSeverity.Error);
+            }
+        }
+    }
+
+    private makeUnitName(fileName: string): string {
+        const nameExist: boolean = !!editorInfo.unitIds
+            .find((existing: UnitInfo) => existing.name === fileName);
+        if (nameExist) {
+            setUserMessage(`Unit named '${fileName}' already exists, adding number.`, FreErrorSeverity.Error);
+            // find the existing names that start with the file name
+            const unitsWithSimiliarName: FreModelUnit[] | undefined = this.modelStore?.getUnits()
+                .filter((existing: FreModelUnit) => existing.name.startsWith(fileName));
+            if (!isNullOrUndefined(unitsWithSimiliarName) && unitsWithSimiliarName.length > 1) {
+                // there are already numbered units
+                // find the biggest number that is in use after the filename, e.g. Home12, Home3 => 12
+                let biggestNr: number = 1;
+                // find the characters in each of the existing names that come after the file name
+                const trailingParts: string[] = unitsWithSimiliarName.map((existing: FreModelUnit) =>
+                    existing.name.slice(fileName.length),
+                );
+                trailingParts.forEach((trailing) => {
+                    const nextNumber: number = Number.parseInt(trailing, 10);
+                    if (!isNaN(nextNumber) && nextNumber >= biggestNr) {
+                        biggestNr = nextNumber + 1;
+                    }
+                });
+                return fileName + biggestNr;
+            } else {
+                return fileName + "1";
+            }
+        } else {
+            return fileName;
         }
     }
 }

@@ -5,7 +5,6 @@
         FooterLinkGroup,
         Spinner,
         Drawer,
-        CloseButton,
         Footer,
         FooterCopyright, Button
     } from 'flowbite-svelte';
@@ -23,7 +22,7 @@
     import {messageInfo} from "$lib/stores/UserMessageStore.svelte";
     import {FreErrorSeverity} from "@freon4dsl/core";
     import ViewDialog from "$lib/dialogs/ViewDialog.svelte";
-    import NewUnitDialog from "$lib/dialogs/NewUnitDialog.svelte";
+    import OpenUnitDialog from "$lib/dialogs/OpenUnitDialog.svelte";
 
     let transitionParams = {
         x: 320,
@@ -107,7 +106,7 @@
                 <InfoCircleSolid slot="icon" class="w-5 h-5"/>
                 {messageInfo.userMessage}
                 <Button slot="close-button" size="xs" let:close
-                        on:click={() => {messageInfo.userMessageOpen = !messageInfo.userMessageOpen}} class="ms-auto">
+                        onclick={() => {messageInfo.userMessageOpen = !messageInfo.userMessageOpen}} class="ms-auto">
                     Dissmiss
                 </Button>
             </Alert>
@@ -158,21 +157,13 @@
         bind:hidden={drawerHidden.value}
         id="sidebar1"
 >
-    <div class="flex items-center">
-        <h5
-                id="drawer-label"
-                class="mb-4 inline-flex items-center text-base font-semibold text-gray-500 dark:text-gray-400"
-        >
-            Model Info
-        </h5>
-        <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-white"/>
-    </div>
     <ModelInfo/>
 </Drawer>
 
 <OpenModelDialog/>
 <!--<DeleteModelDialog/>-->
-<NewUnitDialog/>
+<OpenUnitDialog/>
+
 <!--<DeleteUnitDialog/>-->
 <!--<RenameUnitDialog/>-->
 
