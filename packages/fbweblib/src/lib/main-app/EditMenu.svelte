@@ -18,9 +18,6 @@
 	const paste = (id: number) => {
 		console.log('paste ' + id);
 	};
-	const validate = (id: number) => {
-		console.log('validate ' + id);
-	};
 	const findNamedElement = (id: number) => {
 		console.log('findNamedElement ' + id);
 	};
@@ -29,9 +26,6 @@
 	};
 	const findText = (id: number) => {
 		console.log('findText ' + id);
-	};
-	const runInterpreter = (id: number) => {
-		console.log('runInterpreter ' + id);
 	};
 
 	let menuItems: MenuItem[] = [
@@ -43,8 +37,6 @@
 		{ title: 'Find Named Element', action: findNamedElement, id: 6 },
 		{ title: 'Find Structure Element', action: findStructureElement, id: 7 },
 		{ title: 'Find Text', action: findText, id: 8 },
-		{ title: 'Validate', action: validate, id: 9 },
-		{ title: 'Run Interpreter', action: runInterpreter, id: 10 }
 	];
 </script>
 
@@ -56,7 +48,7 @@
 		<DropdownItem onclick={() => item.action(index)}>
 			{item.title}
 		</DropdownItem>
-		{#if item.id === 2 || item.id === 5 || item.id === 8 || item.id === 9}
+		{#if item.id === 2 || item.id === 5 }
 			<DropdownDivider />
 		{/if}
 	{/each}

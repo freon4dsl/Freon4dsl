@@ -6,16 +6,16 @@
         Listgroup,
         ListgroupItem
     } from 'flowbite-svelte';
-    import {ChevronDownOutline, DotsHorizontalOutline} from 'flowbite-svelte-icons';
+    import {DotsHorizontalOutline} from 'flowbite-svelte-icons';
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
-    import {FreErrorSeverity, type FreModelUnit} from "@freon4dsl/core";
+    import {FreErrorSeverity, type ModelUnitIdentifier} from "@freon4dsl/core";
     import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
-    import {editorInfo, modelInfo} from "$lib/stores/ModelInfo.svelte.js";
+    import {editorInfo, type UnitInfo} from "$lib/stores/ModelInfo.svelte";
 
-    let myUnits: FreModelUnit[] = $state([]);
+    let myUnits: UnitInfo[] = $state([]);
     $effect(() => {
-        myUnits = !!modelInfo.units && modelInfo.units.length > 0
-            ? modelInfo.units.sort((u1: FreModelUnit, u2: FreModelUnit) => {
+        myUnits = !!editorInfo.unitIds && editorInfo.unitIds.length > 0
+            ? editorInfo.unitIds.sort((u1: ModelUnitIdentifier, u2: ModelUnitIdentifier) => {
                 if (u1.name > u2.name) {
                     return 1;
                 }
@@ -28,36 +28,37 @@
     });
 
     const openUnit = (index: number) => {
-        // EditorState.getInstance().openModelUnit(modelInfo.units[index]);
+        console.log('openUnit ' + index)
+        // EditorState.getInstance().openModelUnit(editorInfo.unitIds[index]);
     };
 
     const deleteUnit = (index: number) => {
-        // console.log("ModelInfo.deleteUnit: " + $units[index].name);
-        editorInfo.toBeDeleted = modelInfo.units[index];
+        // console.log("editorInfo.deleteUnit: " + $units[index].name);
+        editorInfo.toBeDeleted = editorInfo.unitIds[index];
         // deleteUnitDialogVisible.value = true;
     };
 
     const saveUnit = (index: number) => {
-        // console.log("ModelInfo.saveUnit: " + modelInfo.units[index].name);
-        if (modelInfo.units[index].name === editorInfo.currentUnit?.name) {
+        // console.log("editorInfo.saveUnit: " + editorInfo.unitIds[index].name);
+        if (editorInfo.unitIds[index].name === editorInfo.currentUnit?.name) {
             // EditorState.getInstance().saveCurrentUnit();
-            setUserMessage(`Unit '${modelInfo.units[index].name}' saved.`, FreErrorSeverity.Warning);
+            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Warning);
         } else {
-            setUserMessage(`Unit '${modelInfo.units[index].name}' has no changes.`, FreErrorSeverity.Warning);
+            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' has no changes.`, FreErrorSeverity.Warning);
         }
     };
 
     const renameUnit = (index: number) => {
-        // console.log("ModelInfo.renameUnit: " + modelInfo.units[index].name);
-        editorInfo.toBeRenamed = modelInfo.units[index];
+        // console.log("editorInfo.renameUnit: " + editorInfo.unitIds[index].name);
+        editorInfo.toBeRenamed = editorInfo.unitIds[index];
         // renameUnitDialogVisible.value = true;
     };
 
     const exportUnit = (index: number) => {
-        if (modelInfo.units[index].name !== editorInfo.currentUnit?.name) {
+        if (editorInfo.unitIds[index].name !== editorInfo.currentUnit?.name) {
             setUserMessage('Can only export unit currently shown in the editor', FreErrorSeverity.Warning);
         } else {
-            // new ImportExportHandler().exportUnit(modelInfo.units[index]);
+            // new ImportExportHandler().exportUnit(editorInfo.unitIds[index]);
         }
     };
 
@@ -69,7 +70,7 @@
         <ListgroupItem class="gap-2 text-base font-semibold">
             <Listgroup>
                 {#each myUnits as unit, index}
-                    {#if unit.freLanguageConcept() === unitType}
+                    {#if unit.type === unitType}
                         <div class="flex justify-between">
                             {unit.name}
                             <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->

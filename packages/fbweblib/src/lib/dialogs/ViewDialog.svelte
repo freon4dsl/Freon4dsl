@@ -1,6 +1,5 @@
 <script lang="ts">
-    import {Button, Checkbox, Dropdown, DropdownDivider, DropdownItem, Modal, NavLi} from 'flowbite-svelte';
-    import {ChevronDownOutline} from 'flowbite-svelte-icons';
+    import {Button, Checkbox, Modal} from 'flowbite-svelte';
     import {projectionsShown, replaceProjectionsShown} from '$lib/stores/Projections.svelte';
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {ProjectionItem} from "$lib/ts-utils/MenuItem";

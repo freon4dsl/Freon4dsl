@@ -23,6 +23,7 @@
     import {messageInfo} from "$lib/stores/UserMessageStore.svelte";
     import {FreErrorSeverity} from "@freon4dsl/core";
     import ViewDialog from "$lib/dialogs/ViewDialog.svelte";
+    import NewUnitDialog from "$lib/dialogs/NewUnitDialog.svelte";
 
     let transitionParams = {
         x: 320,
@@ -121,7 +122,7 @@
                 {/if}
             </div>
         {:else}
-            <FreonComponent editor={WebappConfigurator.getInstance().editorEnvironment?.editor}/>
+            <FreonComponent editor={WebappConfigurator.getInstance().langEnv?.editor}/>
             <div class="text-center {hidden}">
                 <Spinner/>
             </div>
@@ -171,7 +172,7 @@
 
 <OpenModelDialog/>
 <!--<DeleteModelDialog/>-->
-<!--<NewUnitDialog/>-->
+<NewUnitDialog/>
 <!--<DeleteUnitDialog/>-->
 <!--<RenameUnitDialog/>-->
 

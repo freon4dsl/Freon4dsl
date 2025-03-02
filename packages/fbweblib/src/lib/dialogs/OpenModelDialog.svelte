@@ -5,6 +5,7 @@
     import {WebappConfigurator} from '$lib/language';
     import * as Keys from "@freon4dsl/core"
     import {setUserMessage} from '$lib/stores/UserMessageStore.svelte';
+    import {isKeyBoardEvent} from "$lib/ts-utils/CommonFunctions";
 
     const initialHelperText: string = "Enter or select a name.";
     let helperText: string = $state(initialHelperText);
@@ -44,12 +45,13 @@
 
     async function handleSubmit() {
         const comm = WebappConfigurator.getInstance();
-        // console.log('Handle "submit": ' + newName)
+        console.log('Handle "submit": ' + newName)
         if (internalSelected?.length > 0) { // should be checked first, because newName depends on it
+            console.log("OPENING MODEL: " + internalSelected);
             await comm.openModel(internalSelected);
             initializing.value = false;
         } else if (!newNameInvalid() && newName.length > 0) {
-            // console.log("CREATING NEW MODEL: " + newName);
+            console.log("CREATING NEW MODEL: " + newName);
             await comm.newModel(newName);
             initializing.value = false;
         } else {
@@ -58,9 +60,6 @@
         resetVariables();
     }
 
-    function isKeyBoardEvent(event: Event): event is KeyboardEvent {
-        return 'detail' in event;
-    }
 
     const handleEnterKey = (event: Event) => {
         console.log("handleEnterKey " + event)
@@ -79,8 +78,10 @@
         }
     }
 
-	const onInput = () => {
+	const onInput = (event: Event) => {
+        console.log("onInput " + event)
 		newNameInvalid();
+        internalSelected = '';
 	}
 </script>
 
@@ -88,7 +89,7 @@
 
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <div class="flex flex-col space-y-6" onkeydown={handleEnterKey} role="dialog">
-        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Open Model</h3>
+        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Open or create a model</h3>
         <Label class="space-y-2">
             <span>Name of model</span>
             <Input bind:value={newName}
@@ -104,7 +105,7 @@
         </Label>
         <div class="grid grid-cols-3">
             {#each serverInfo.allModelNames as model}
-                <Radio class="p-2" name="models" onchange={() => {internalSelected = model}}>{model}</Radio>
+                <Radio class="p-2" name="models" onchange={() => {internalSelected = model; newName = model;}}>{model}</Radio>
             {/each}
         </div>
     </div>

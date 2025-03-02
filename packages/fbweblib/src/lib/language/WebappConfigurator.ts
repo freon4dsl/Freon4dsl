@@ -1,16 +1,22 @@
 import {
     BoxFactory,
     type FreEnvironment,
-    FreLanguage, FreLogger, type FreModelUnit,
+    FreErrorSeverity,
+    FreLanguage,
+    FreLogger,
+    type FreModelUnit,
     FreProjectionHandler,
     FreUndoManager,
     InMemoryModel,
-    type IServerCommunication, isNullOrUndefined, type ModelUnitIdentifier
+    type IServerCommunication,
+    isNullOrUndefined,
+    type ModelUnitIdentifier
 } from '@freon4dsl/core';
 import {replaceProjectionsShown} from "$lib/stores/Projections.svelte.js";
 import {langInfo} from "$lib/stores/LanguageInfo.svelte.js";
 import {autorun, runInAction} from "mobx";
-import {editorInfo, modelInfo, noUnitAvailable, progressIndicatorShown} from '$lib/stores/ModelInfo.svelte';
+import {editorInfo, noUnitAvailable, progressIndicatorShown, type UnitInfo} from '$lib/stores/ModelInfo.svelte';
+import {setUserMessage} from "$lib";
 
 
 const LOGGER: FreLogger = new FreLogger('Webapp');
@@ -31,10 +37,9 @@ export class WebappConfigurator {
         return WebappConfigurator.instance;
     }
 
-    serverCommunication: IServerCommunication | undefined;
-    editorEnvironment: FreEnvironment | undefined;
+    serverEnv: IServerCommunication | undefined;
+    langEnv: FreEnvironment | undefined;
     private modelStore: InMemoryModel | undefined;
-    currentUnit: FreModelUnit | undefined;
 
     /**
      * Sets the object that will perform the communication with the server, and
@@ -47,8 +52,8 @@ export class WebappConfigurator {
         serverCommunication: IServerCommunication,
     ): void {
         // LOGGER.log('setEnvironment')
-        this.editorEnvironment = editorEnvironment;
-        this.serverCommunication = serverCommunication;
+        this.langEnv = editorEnvironment;
+        this.serverEnv = serverCommunication;
         WebappConfigurator.initialize(editorEnvironment);
         this.modelStore = new InMemoryModel(editorEnvironment, serverCommunication);
     }
@@ -101,18 +106,18 @@ export class WebappConfigurator {
             // create new model instance in memory and set its name
             await this.modelStore.openModel(modelName);
             const unitIdentifiers: ModelUnitIdentifier[] = this.modelStore.getUnitIdentifiers();
-            LOGGER.log('unit identifiers: ' + JSON.stringify(unitIdentifiers));
+            console.log('unit identifiers: ' + JSON.stringify(unitIdentifiers));
             if (!!unitIdentifiers && unitIdentifiers.length > 0) {
                 // load the first unit and show it
                 let first: boolean = true;
                 for (const unitIdentifier of unitIdentifiers) {
                     if (first) {
                         const unit = this.modelStore.getUnitByName(unitIdentifier.name);
-                        LOGGER.log("UnitId " + unitIdentifier.name + " unit is " + unit?.name);
-                        this.currentUnit = unit;
+                        console.log("UnitId " + unitIdentifier.name + " unit is " + unit?.name);
+                        editorInfo.currentUnit = {id: unit.freId(), name: unit.name, type: unit.freLanguageConcept()};
                         BoxFactory.clearCaches()
-                        this.editorEnvironment?.projectionHandler.clear()
-                        this.showUnit(this.currentUnit);
+                        this.langEnv?.projectionHandler.clear()
+                        this.showUnit(unit);
                         first = false;
                     }
                 }
@@ -122,8 +127,8 @@ export class WebappConfigurator {
     }
 
     async getAllModelNames(): Promise<string[]> {
-        if (!!this.serverCommunication) {
-            return this.serverCommunication?.loadModelList();
+        if (!!this.serverEnv) {
+            return this.serverEnv?.loadModelList();
         } else {
             return [];
         }
@@ -135,11 +140,19 @@ export class WebappConfigurator {
         // Ensure this is done only once
         if (!this.updateUnitListRunning) {
             this.updateUnitListRunning = true
-            autorun(() => {
+            // autorun(() => {
                 if (this.modelStore) {
-                    modelInfo.units = this.modelStore.getUnits();
+                    // editorInfo.unitIds = this.modelStore.getUnitIdentifiers();
+                    const tmp: UnitInfo[] = [];
+                    this.modelStore.getUnitIdentifiers().forEach(uid => {
+                        const unit: FreModelUnit | undefined = this.modelStore?.getUnitByName(uid.name);
+                        if (unit) {
+                            tmp.push({name: uid.name, id: uid.id, type: unit.freLanguageConcept()})
+                        }
+                    });
+                    editorInfo.unitIds = tmp;
                 }
-            });
+            // });
         }
     }
 
@@ -152,16 +165,15 @@ export class WebappConfigurator {
         LOGGER.log("showUnit called, unitName: " + newUnit?.name);
         if (!!newUnit) {
             runInAction(() => {
-                if (!!this.editorEnvironment) {
+                if (!!this.langEnv) {
                     console.log("setting rootElement to " + newUnit.name)
-                    this.editorEnvironment.editor.rootElement = newUnit;
-                    this.currentUnit = newUnit;
-                    editorInfo.currentUnit = newUnit;
+                    this.langEnv.editor.rootElement = newUnit;
+                    noUnitAvailable.value = false;
+                    editorInfo.currentUnit = {id: newUnit.freId(), name: newUnit.name, type: newUnit.freLanguageConcept()};
                 }
             });
-            if (!isNullOrUndefined(this.currentUnit)) {
-                noUnitAvailable.value = false;
-            }
+        } else {
+            noUnitAvailable.value = true;
         }
         progressIndicatorShown.value = false;
     }
@@ -179,6 +191,94 @@ export class WebappConfigurator {
             await this.modelStore.createUnit("myUnit", langInfo.unitTypes[0]);
             this.showUnit(this.modelStore.getUnitByName("myUnit"))
             progressIndicatorShown.value = false;
+        }
+    }
+
+    /**
+     * Adds a new unit to the current model and shows it in the editor
+     * @param newName
+     * @param unitType
+     */
+    async newUnit(newName: string, unitType: string) {
+        LOGGER.log("EditorState.newUnit: unitType: " + unitType + ", name: " + newName + " in model " + editorInfo.modelName);
+        progressIndicatorShown.value = true;
+        // save the old current unit, if there is one
+        await this.saveCurrentUnit();
+        await this.createNewUnit(newName, unitType);
+    }
+
+    /**
+     * Pushes the current unit to the server
+     */
+    async saveCurrentUnit() {
+        LOGGER.log("saveCurrentUnit: " + editorInfo.currentUnit?.name + `real name is ${(this.langEnv!.editor.rootElement as FreModelUnit)?.name}`);
+        const unit: FreModelUnit = this.langEnv!.editor.rootElement as FreModelUnit;
+        if (!!unit) {
+            if (!!editorInfo.modelName && editorInfo.modelName.length) {
+                if (!!unit.name && unit.name.length > 0) {
+                    if (!isNullOrUndefined(editorInfo.currentUnit)) {
+                        if (editorInfo.currentUnit.id === unit.freId() && editorInfo.currentUnit.name !== unit.name) {
+                            // Saved unit already exists but its name has changed.
+                            LOGGER.log(`Saving unit that changed name, do a rename from ${editorInfo.currentUnit.name} to ${unit.name}`)
+                            // await this.renameModelUnit(unit, editorInfo.currentUnit.name, unit.name)
+                        } else {
+                            await this.modelStore?.saveUnit(unit);
+                        }
+                    }
+                    // just in case the user has changed the name in the editor
+                    editorInfo.currentUnit = {name: unit.name, id: unit.freId(), type: unit.freLanguageConcept()};
+                } else {
+                    setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`);
+                }
+            } else {
+                LOGGER.log("Internal error: cannot save unit because current model is unknown.");
+            }
+        } else {
+            LOGGER.log("No current model unit");
+        }
+    }
+
+    /**
+     * Because of the asynchronicity the true work of creating a new unit is done by this function
+     * which is called at various points in the code.
+     * @param newName
+     * @param unitType
+     * @private
+     */
+    private async createNewUnit(newName: string, unitType: string) {
+        LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName);
+        const newUnit: FreModelUnit | undefined = await this.modelStore?.createUnit(newName, unitType);
+        if (!!newUnit) {
+            // show the new unit in the editor
+            this.showUnit(newUnit);
+        } else {
+            setUserMessage(`Model unit of type '${unitType}' could not be created.`);
+        }
+    }
+
+    /**
+     * Reads the unit called 'newUnitName' from the server and shows it in the editor
+     * @param newUnitName
+     */
+    async openModelUnit(newUnitName: string) {
+        LOGGER.log("openModelUnit called, unitName: " + newUnitName);
+        if (!!editorInfo.currentUnit && newUnitName === editorInfo.currentUnit.name) {
+            // the unit to open is the same as the unit in the editor, so we are doing nothing
+            LOGGER.log("openModelUnit doing NOTHING");
+        } else {
+            let newUnit: FreModelUnit | undefined = undefined;
+            autorun(() => {
+                if (this.modelStore) {
+                    newUnit = this.modelStore.getUnitByName(newUnitName)
+                }
+            });
+            if (!isNullOrUndefined(newUnit)) {
+                // save the old current unit, if there is one
+                await this.saveCurrentUnit();
+                this.showUnit(newUnit);
+            } else {
+                setUserMessage('Cannot create new unit.', FreErrorSeverity.Error);
+            }
         }
     }
 }
