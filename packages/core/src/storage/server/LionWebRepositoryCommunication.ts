@@ -109,7 +109,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     /**
      * Deletes the unit indicated by 'modelInfo' including its interface.
      * @param modelName
-     * @param unitName
+     * @param unit
      */
     async deleteModelUnit(modelName: string, unit: ModelUnitIdentifier) {
         LOGGER.log(`LionWebRepositoryCommunication.deleteModelUnit ${modelName}/${unit.name}`);
@@ -132,7 +132,6 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
 
     /**
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
-     * @param modelListCallback
      */
     async loadModelList(): Promise<string[]> {
         LOGGER.log(`loadModelList`);
@@ -148,7 +147,6 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     /**
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
      * @param modelName
-     * @param modelListCallback
      */
     async loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]> {
         LOGGER.log(`loadUnitList`);
@@ -163,7 +161,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * Loads the unit named 'unitName' of model 'modelName' from the server and calls 'loadCallBack',
      * which takes the unit as parameter.
      * @param modelName
-     * @param unitName
+     * @param unit
      * @return the loaded in memory modelunit
      */
     async loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode> {

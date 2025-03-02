@@ -6,7 +6,6 @@ import { FreErrorSeverity } from "../../validator/index.js";
 import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
-const modelUnitInterfacePostfix: string = "Public";
 
 export class ServerCommunication implements IServerCommunication {
     get nodePort(): any {
@@ -103,7 +102,7 @@ export class ServerCommunication implements IServerCommunication {
     /**
      * Deletes the unit indicated by 'modelInfo' including its interface.
      * @param modelName
-     * @param unitName
+     * @param unit
      */
     async deleteModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<void> {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`);
@@ -125,7 +124,6 @@ export class ServerCommunication implements IServerCommunication {
 
     /**
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
-     * @param modelListCallback
      */
     async loadModelList(): Promise<string[]> {
         LOGGER.log(`ServerCommunication.loadModelList`);
@@ -140,15 +138,11 @@ export class ServerCommunication implements IServerCommunication {
     /**
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
      * @param modelName
-     * @param modelListCallback
      */
     async loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]> {
         LOGGER.log(`ServerCommunication.loadUnitList`);
         let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `folder=${modelName}`);
-        // filter out the modelUnitInterfaces
-        // TODO Remive once all server files have been cleaned of the interfaces
         if (!!modelUnits) {
-            modelUnits = modelUnits.filter((name: string) => name.indexOf(modelUnitInterfacePostfix) === -1);
             return modelUnits.map((u) => {
                 return { name: u, id: u };
             });
@@ -161,8 +155,7 @@ export class ServerCommunication implements IServerCommunication {
      * Loads the unit named 'unitName' of model 'modelName' from the server and calls 'loadCallBack',
      * which takes the unit as parameter.
      * @param modelName
-     * @param unitName
-     * @param loadCallback
+     * @param unit
      */
     async loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode> {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unit.name}`);

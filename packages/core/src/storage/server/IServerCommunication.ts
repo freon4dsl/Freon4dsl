@@ -30,7 +30,7 @@ export interface IServerCommunication {
      * does not exist on the server use _createModelUnit_.
      * @see createModelUnit
      * @param modelName
-     * @param unitName
+     * @param unitId
      * @param unit
      */
     putModelUnit(modelName: string, unitId: ModelUnitIdentifier, unit: FreNode): void;
@@ -38,7 +38,7 @@ export interface IServerCommunication {
     /**
      * Deletes the unit according to the data in 'modelInfo' from the server
      * @param modelName
-     * @param unitName
+     * @param unit
      */
     deleteModelUnit(modelName: string, unit: ModelUnitIdentifier): void;
 
@@ -65,14 +65,12 @@ export interface IServerCommunication {
 
     /**
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
-     * @param modelListCallback
      */
     loadModelList(): Promise<string[]>;
 
     /**
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
      * @param modelName
-     * @param modelListCallback
      */
     loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]>;
 
@@ -80,8 +78,7 @@ export interface IServerCommunication {
      * Reads the model unit according to the data in 'modelInfo' from the server and
      * calls 'loadCallBack', which takes the model unit as parameter.
      * @param modelName
-     * @param unitName
-     * @param loadCallback
+     * @param unit
      */
     loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode>;
 
