@@ -50,7 +50,6 @@
             // Open the open/new model dialog
             dialogs.openModelDialogVisible = true;
         }
-        setUserMessage("SOME TEXT");
     });
 
     // Svelte: Type 'string' is not assignable to type '"red" | "blue" | "green" | "form" | "none" | "gray" | "yellow" | "indigo" | "purple" | "pink" | "light" | "dark" | "default" | "dropdown" | "navbar" | "navbarUl" | "primary" | "orange" | undefined'.
