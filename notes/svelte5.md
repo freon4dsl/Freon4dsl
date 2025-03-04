@@ -29,7 +29,7 @@
 
     **FIXED** See commits
 
-5. Context menu for lists always seem to come at a fixeed ditance from the mouse click
+5. Context menu for lists **_sometimes_** seem to come at a fixeed distance from the mouse click
    - Open CourseSchedule unit Building
    - right click on various list elements
    - the same for the TeachingStaff
