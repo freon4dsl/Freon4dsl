@@ -11,7 +11,7 @@ import { MetaKey } from "./Keys.js";
 import { FreLogger } from "../../logging/index.js";
 import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index.js";
 import { FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language/index.js";
-import { FreNode } from "../../ast/index.js";
+import { FreNode } from "../../ast/index.js"
 import { FreErrorSeverity } from "../../validator/index.js";
 
 const LOGGER = new FreLogger("ListUtil");
@@ -61,7 +61,7 @@ export function moveListElement(
     // console.log(`moveListElement: ${targetPropertyName}, ${parentElement.freId()}`)
     // get info about the property that needs to be changed
     const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
-    console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+    console.log('List before: [' + property.map(x => x["name"]).join(', ') + ']');
     const oldIndex: number = movedElement.freOwnerDescriptor().propertyIndex;
     // tslint:disable-next-line:max-line-length
     // console.log(`moveListElement=> element: ${parentElement.freLanguageConcept()}, property: ${targetPropertyName}, oldIndex: ${oldIndex}, targetIndex: ${targetIndex}`);
@@ -80,7 +80,7 @@ export function moveListElement(
             property.splice(targetIndex, 0, tmpProp);
         });
     }
-    console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
+    console.log('List after: [' + property.map(x => x["name"]).join(', ') + ']');
 }
 
 /**
@@ -121,7 +121,7 @@ export function dropListElement(
     // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
     // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
     const { property, isList } = getPropertyInfo(targetElem, targetPropertyName);
-    console.log('List before: [' + property.map(x => x.freId()).join(', ') + ']');
+    console.log('List before: [' + property.map(x => x["name"]).join(', ') + ']');
     if (!!dropped.element) {
         // Add the found element to 'targetElem[targetPropertyName]' at position 'targetIndex'.
         // Note that we need not explicitly remove the item from its old position, the mobx decorators do that.
@@ -132,7 +132,7 @@ export function dropListElement(
             })
         }
     }
-    console.log('List after: [' + property.map(x => x.freId()).join(', ') + ']');
+    console.log('List after: [' + property.map(x => x["name"]).join(', ') + ']');
 }
 
 /**
