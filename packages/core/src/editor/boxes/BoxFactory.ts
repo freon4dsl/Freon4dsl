@@ -614,6 +614,10 @@ export class BoxFactory {
         // 2. Apply the other arguments in case they have changed
         FreUtils.initializeObject(result, initializer);
         if (isExternalPartListBox(result)) {
+            result.propertyName = propertyName
+            if (!equals(result.children, children)) {
+                result.replaceChildren(children);
+            }
             return result;
         } else {
             return creator();
