@@ -93,7 +93,7 @@
             <PenSolid class="w-4 h-4 me-2 dark:text-white"/>
         </Button>
         <Tooltip placement="bottom">Rename model</Tooltip>
-        <Button name="Delete" size="xs">
+        <Button name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
             <TrashBinSolid class="w-4 h-4 me-2 dark:text-white"/>
         </Button>
         <Tooltip placement="bottom">Delete model</Tooltip>

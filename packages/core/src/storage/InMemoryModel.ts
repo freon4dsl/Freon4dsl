@@ -39,7 +39,6 @@ export class InMemoryModel {
     /**
      * Delete current model from the server.
      * After this call the current model is undefined.
-     * @param name
      */
     async deleteModel(): Promise<void> {
         await this.server.deleteModel(this.model.name);

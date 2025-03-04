@@ -107,12 +107,13 @@ export class WebappConfigurator {
             await this.modelStore.openModel(modelName);
             const unitIdentifiers: ModelUnitIdentifier[] = this.modelStore.getUnitIdentifiers();
             console.log('unit identifiers: ' + JSON.stringify(unitIdentifiers));
+            const tmp: UnitInfo[] = [];
             if (!!unitIdentifiers && unitIdentifiers.length > 0) {
                 // load the first unit and show it
                 let first: boolean = true;
                 for (const unitIdentifier of unitIdentifiers) {
+                    const unit: FreModelUnit = this.modelStore.getUnitByName(unitIdentifier.name);
                     if (first) {
-                        const unit = this.modelStore.getUnitByName(unitIdentifier.name);
                         console.log("UnitId " + unitIdentifier.name + " unit is " + unit?.name);
                         editorInfo.currentUnit = {id: unit.freId(), name: unit.name, type: unit.freLanguageConcept()};
                         BoxFactory.clearCaches()
@@ -120,9 +121,11 @@ export class WebappConfigurator {
                         this.showUnit(unit);
                         first = false;
                     }
+                    tmp.push({id: unit.freId(), name: unit.name, type: unit.freLanguageConcept()});
                 }
             }
             editorInfo.modelName = modelName;
+            editorInfo.unitIds = tmp;
             this.updateUnitList()
         } else {
             console.log('no modelStore!')
@@ -144,17 +147,17 @@ export class WebappConfigurator {
         if (!this.updateUnitListRunning) {
             this.updateUnitListRunning = true
             // autorun(() => {
-                if (this.modelStore) {
-                    // editorInfo.unitIds = this.modelStore.getUnitIdentifiers();
-                    const tmp: UnitInfo[] = [];
-                    this.modelStore.getUnitIdentifiers().forEach(uid => {
-                        const unit: FreModelUnit | undefined = this.modelStore?.getUnitByName(uid.name);
-                        if (unit) {
-                            tmp.push({name: uid.name, id: uid.id, type: unit.freLanguageConcept()})
-                        }
-                    });
-                    editorInfo.unitIds = tmp;
-                }
+            if (this.modelStore) {
+                // editorInfo.unitIds = this.modelStore.getUnitIdentifiers();
+                const tmp: UnitInfo[] = [];
+                this.modelStore.getUnitIdentifiers().forEach(uid => {
+                    const unit: FreModelUnit | undefined = this.modelStore?.getUnitByName(uid.name);
+                    if (unit) {
+                        tmp.push({name: uid.name, id: uid.id, type: unit.freLanguageConcept()})
+                    }
+                });
+                editorInfo.unitIds = tmp;
+            }
             // });
         }
     }
@@ -172,7 +175,11 @@ export class WebappConfigurator {
                     console.log("setting rootElement to " + newUnit.name)
                     this.langEnv.editor.rootElement = newUnit;
                     noUnitAvailable.value = false;
-                    editorInfo.currentUnit = {id: newUnit.freId(), name: newUnit.name, type: newUnit.freLanguageConcept()};
+                    editorInfo.currentUnit = {
+                        id: newUnit.freId(),
+                        name: newUnit.name,
+                        type: newUnit.freLanguageConcept()
+                    };
                 }
             });
         } else {
@@ -192,9 +199,31 @@ export class WebappConfigurator {
         if (!!this.modelStore) {
             await this.modelStore.createModel(modelName);
             await this.modelStore.createUnit("myUnit", langInfo.unitTypes[0]);
-            this.showUnit(this.modelStore.getUnitByName("myUnit"))
+            const unit: FreModelUnit = this.modelStore.getUnitByName("myUnit");
+            this.showUnit(unit)
             progressIndicatorShown.value = false;
+            editorInfo.modelName = modelName;
+            editorInfo.currentUnit = {id: unit.freId(), name: unit.name, type: unit.freLanguageConcept()};
+            editorInfo.unitIds = [{id: unit.freId(), name: unit.name, type: unit.freLanguageConcept()}]
         }
+    }
+
+    async deleteModel() {
+        console.log('deleting current model')
+        editorInfo.modelName = '';
+        editorInfo.unitIds = [];
+        editorInfo.currentUnit = undefined;
+        await this.modelStore?.deleteModel();
+        runInAction(() => {
+            if (!!this.langEnv) {
+                console.log("setting rootElement to undefined" )
+                // @ts-ignore
+                this.langEnv.editor.rootElement = undefined;
+                BoxFactory.clearCaches()
+                this.langEnv?.projectionHandler.clear();
+                noUnitAvailable.value = true;
+            }
+        });
     }
 
     /**
@@ -288,12 +317,14 @@ export class WebappConfigurator {
     /**
      * Parses the string 'content' to create a model unit. If the parsing is ok,
      * then the unit is added to the current model.
+     * @param fileName
      * @param content
      * @param metaType
+     * @param showIt
      */
     async unitFromFile(fileName: string, content: string, metaType: string, showIt: boolean) {
         // save the old current unit, if there is one
-        this.saveCurrentUnit();
+        await this.saveCurrentUnit();
         let unit: FreModelUnit | null = null;
         try {
             // the following also adds the new unit to the model
