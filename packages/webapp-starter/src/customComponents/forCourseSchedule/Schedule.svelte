@@ -25,7 +25,6 @@
     };
     $effect(() => {
         initialize();
-        sortedSlots = [...sortedSlots]
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
@@ -60,8 +59,9 @@
     ];
 
     function sortSlots(startVal: Slot[]) {
+        const newSlots: Slot[][] = []
         for (let i = 0; i < 10 ; i++) {
-            sortedSlots[i] = [];
+            newSlots[i] = [];
         }
         (startVal).forEach((val, index) => {
             // remember which box belongs to which slot
@@ -70,15 +70,15 @@
                 case 1: {
                     switch (val.$time.part) {
                         case 1: { // Monday morning
-                            sortedSlots[0].push(val);
+                            newSlots[0].push(val);
                             break;
                         }
                         case 2: { // Monday afternoon
-                            sortedSlots[5].push(val);
+                            newSlots[5].push(val);
                             break;
                         }
                         default: {
-                            sortedSlots[0].push(val);
+                            newSlots[0].push(val);
                         }
                     }
                     break;
@@ -86,15 +86,15 @@
                 case 2: {
                     switch (val.$time.part) {
                         case 1: { // Tuesday morning
-                            sortedSlots[1].push(val);
+                            newSlots[1].push(val);
                             break;
                         }
                         case 2: { // Tuesday afternoon
-                            sortedSlots[6].push(val);
+                            newSlots[6].push(val);
                             break;
                         }
                         default: {
-                            sortedSlots[1].push(val);
+                            newSlots[1].push(val);
                         }
                     }
                     break;
@@ -102,15 +102,15 @@
                 case 3: {
                     switch (val.$time.part) {
                         case 1: { // Wednesday morning
-                            sortedSlots[2].push(val);
+                            newSlots[2].push(val);
                             break;
                         }
                         case 2: { // Wednesday afternoon
-                            sortedSlots[7].push(val);
+                            newSlots[7].push(val);
                             break;
                         }
                         default: {
-                            sortedSlots[2].push(val);
+                            newSlots[2].push(val);
                         }
                     }
                     break;
@@ -118,15 +118,15 @@
                 case 4: {
                     switch (val.$time.part) {
                         case 1: { // Thursday morning
-                            sortedSlots[3].push(val);
+                            newSlots[3].push(val);
                             break;
                         }
                         case 2: { // Thursday afternoon
-                            sortedSlots[8].push(val);
+                            newSlots[8].push(val);
                             break;
                         }
                         default: {
-                            sortedSlots[3].push(val);
+                            newSlots[3].push(val);
                         }
                     }
                     break;
@@ -134,21 +134,22 @@
                 case 5: {
                     switch (val.$time.part) {
                         case 1: { // Friday morning
-                            sortedSlots[4].push(val);
+                            newSlots[4].push(val);
                             break;
                         }
                         case 2: { // Friday afternoon
-                            sortedSlots[9].push(val);
+                            newSlots[9].push(val);
                             break;
                         }
                         default: {
-                            sortedSlots[4].push(val);
+                            newSlots[4].push(val);
                         }
                     }
                     break;
                 }
             }
         })
+        sortedSlots = newSlots
     }
 
     /* Sort the list of slots based on the time */
