@@ -89,7 +89,7 @@
 <!--    <ChevronDownOutline class="dots-menu2 text-primary-800 ms-2 inline h-6 w-6 dark:text-white"/>-->
     </span>
     <ButtonGroup class="*:!ring-primary-700 ">
-        <Button name="Rename" size="xs">
+        <Button name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
             <PenSolid class="w-4 h-4 me-2 dark:text-white"/>
         </Button>
         <Tooltip placement="bottom">Rename model</Tooltip>
@@ -97,7 +97,7 @@
             <TrashBinSolid class="w-4 h-4 me-2 dark:text-white"/>
         </Button>
         <Tooltip placement="bottom">Delete model</Tooltip>
-        <Button name="Import Unit(s)..." size="xs">
+        <Button name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
             <ArrowDownToBracketOutline class="w-4 h-4 me-2 dark:text-white"/>
         </Button>
         <Tooltip placement="bottom">Import Unit(s)...</Tooltip>

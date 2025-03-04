@@ -2,19 +2,20 @@ import {type FreEnvironment, type FreModelUnit, isNullOrUndefined} from "@freon4
 import {WebappConfigurator} from "$lib/language/WebappConfigurator";
 import {progressIndicatorShown, setUserMessage} from "$lib";
 
-// TODO rethink this class using Workers, see https://developer.mozilla.org/en-US/docs/Web/API/Worker
-
 export class ImportExportHandler {
     private langEnv: FreEnvironment | undefined = WebappConfigurator.getInstance().langEnv;
 
-    importUnits(fileList: FileList) {
-        progressIndicatorShown.value = true;
-        let showIt: boolean = true; // only show the first of the imported units
-        for (let file of fileList) {
-            this.readSingleFile(file, showIt);
-            showIt = false;
+    importUnits(fileList: FileList | File[]) {
+        if (WebappConfigurator.getInstance().langEnv) {
+            this.langEnv = WebappConfigurator.getInstance().langEnv;
+            progressIndicatorShown.value = true;
+            let showIt: boolean = true; // only show the first of the imported units
+            for (let file of fileList) {
+                this.readSingleFile(file, showIt);
+                showIt = false;
+            }
+            progressIndicatorShown.value = false;
         }
-        progressIndicatorShown.value = false;
     }
 
     private async readSingleFile(file: File, showIt: boolean) {
@@ -62,7 +63,10 @@ export class ImportExportHandler {
         // });
         // TODO: now only export current unit, could be extended to export other units as well.
         //       the code above runs into an error because the loaded modelunit is not placed into a model.
-        this._exportUnit(unit);
+        if (WebappConfigurator.getInstance().langEnv) {
+            this.langEnv = WebappConfigurator.getInstance().langEnv;
+            this._exportUnit(unit);
+        }
     }
 
     private _exportUnit(unit: FreModelUnit) {

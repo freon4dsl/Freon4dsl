@@ -26,6 +26,8 @@
     import NewModelDialog from "$lib/dialogs/NewModelDialog.svelte";
     import OpenModelDialog from "$lib/dialogs/OpenModelDialog.svelte";
     import DeleteModelDialog from "$lib/dialogs/DeleteModelDialog.svelte";
+    import RenameModelDialog from "$lib/dialogs/RenameModelDialog.svelte";
+    import ImportDialog from "$lib/dialogs/ImportDialog.svelte";
 
     let transitionParams = {
         x: 320,
@@ -137,8 +139,10 @@
 <NewModelDialog/>
 <OpenModelDialog/>
 <DeleteModelDialog/>
-<OpenUnitDialog/>
+<RenameModelDialog/>
+<ImportDialog/>
 
+<OpenUnitDialog/>
 <!--<DeleteUnitDialog/>-->
 <!--<RenameUnitDialog/>-->
 

@@ -12,24 +12,25 @@
     }
 
     function resetVariables() {
-        dialogs.newModelDialogVisible = false;
+        dialogs.renameModelDialogVisible = false;
         newName = "";
         errorText = '';
     }
 
     function handleCancel() {
-        dialogs.newModelDialogVisible = false;
+        dialogs.renameModelDialogVisible = false;
         resetVariables();
     }
 
     async function handleSubmit() {
-        console.log("CREATING NEW MODEL: " + newName);
+        console.log("RENAMING MODEL TO: " + newName);
         if (newName.length > 0 && checkModelName(newName).length === 0) {
             const existing: string[] = await WebappConfigurator.getInstance().getAllModelNames();
+            console.log(`Names: ${existing}`)
             if (!!existing && existing.length > 0 && existing.indexOf(newName) !== -1) {
                 errorText = `Cannot create model '${newName}', because a model with that name already exists on the server.`;
             } else {
-                await WebappConfigurator.getInstance().newModel(newName);
+                WebappConfigurator.getInstance().renameModel(newName);
                 resetVariables();
             }
         } else {
@@ -43,8 +44,9 @@
 	}
 </script>
 
-<Modal bind:open={dialogs.newModelDialogVisible} autoclose={false} class="w-full">
-    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">New model</h3>
+<Modal bind:open={dialogs.renameModelDialogVisible} autoclose={false} class="w-full">
+    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Rename model</h3>
+    <p>This is not yet functioning</p>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-gray-700">
             <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline" type="text"
@@ -60,7 +62,7 @@
     </div>
 
     <svelte:fragment slot="footer">
-        <Button onclick={handleSubmit}>New</Button>
+        <Button onclick={handleSubmit}>Rename</Button>
         <Button color="alternative" onclick={handleCancel}>Cancel</Button>
     </svelte:fragment>
 

@@ -134,7 +134,7 @@ export class WebappConfigurator {
 
     async getAllModelNames(): Promise<string[]> {
         if (!!this.serverEnv) {
-            return this.serverEnv?.loadModelList();
+            return await this.serverEnv?.loadModelList();
         } else {
             return [];
         }
@@ -224,6 +224,10 @@ export class WebappConfigurator {
                 noUnitAvailable.value = true;
             }
         });
+    }
+
+    renameModel(newName: string) {
+        // todo implement renaming in the server
     }
 
     /**
