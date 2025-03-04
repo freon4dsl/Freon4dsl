@@ -1,118 +1,60 @@
 <script lang="ts">
-    import {Button, Modal, Label, Input, Radio, Helper} from 'flowbite-svelte';
+    import {Button, Modal, Radio, Helper} from 'flowbite-svelte';
     import {dialogs, initializing} from '$lib/stores/WebappStores.svelte';
     import {serverInfo} from '$lib/stores/ModelInfo.svelte';
     import {WebappConfigurator} from '$lib/language';
-    import * as Keys from "@freon4dsl/core"
     import {setUserMessage} from '$lib/stores/UserMessageStore.svelte';
-    import {isKeyBoardEvent} from "$lib/ts-utils/CommonFunctions";
+    import {FolderOpenSolid} from "flowbite-svelte-icons";
 
-    const initialHelperText: string = "Enter or select a name.";
-    let helperText: string = $state(initialHelperText);
-    const invalidHelperText: string = "Name may contain only characters and numbers, and must start with a character.";
-    let internalSelected: string = ""; // used for radio buttons
-    let newName: string = $state('');
-
-    function newNameInvalid(): string {
-        if (newName === internalSelected) {
-            return ''; // one of the existing models is selected, this is ok => not invalid
-        } else {
-            if (!newName.match(/^[a-z,A-Z][a-z,A-Z0-9_]*$/)) {
-                helperText = invalidHelperText;
-                return 'invalid';
-            } else {
-				helperText = initialHelperText;
-                return '';
-            }
-        }
-    }
+    let errorText: string = $state('');
+    let modelToOpen = $state('');
 
     function resetVariables() {
         dialogs.openModelDialogVisible = false;
         serverInfo.allModelNames = [];
-        newName = "";
-        internalSelected = "";
-        helperText = initialHelperText;
+        modelToOpen = "";
+        errorText = '';
     }
 
-    function handleCancel() {
+    function cancel() {
         if (initializing.value) {
             setUserMessage("You must select or create a model, before you can start!");
         }
-        dialogs.openModelDialogVisible = false;
         resetVariables();
     }
 
-    async function handleSubmit() {
-        const comm = WebappConfigurator.getInstance();
-        console.log('Handle "submit": ' + newName)
-        if (internalSelected?.length > 0) { // should be checked first, because newName depends on it
-            console.log("OPENING MODEL: " + internalSelected);
-            await comm.openModel(internalSelected);
+    async function openModel() {
+        console.log('openModel: ' + modelToOpen)
+        if (modelToOpen.length > 0) {
+            await WebappConfigurator.getInstance().openModel(modelToOpen);
             initializing.value = false;
-        } else if (!newNameInvalid() && newName.length > 0) {
-            console.log("CREATING NEW MODEL: " + newName);
-            await comm.newModel(newName);
-            initializing.value = false;
+            resetVariables();
         } else {
-            setUserMessage(`Cannot create model ${newName}, because its name is invalid.`);
-        }
-        resetVariables();
-    }
-
-
-    const handleEnterKey = (event: Event) => {
-        console.log("handleEnterKey " + event)
-        if (isKeyBoardEvent(event)) {
-            switch (event.key) {
-                case Keys.ENTER: { // on Enter key try to submit
-                    event.stopPropagation();
-                    event.preventDefault();
-                    if (!newNameInvalid()) {
-                        handleSubmit();
-                        resetVariables();
-                    }
-                    break;
-                }
-            }
+            errorText = 'Please, select one of the models below.'
         }
     }
 
-	const onInput = (event: Event) => {
-        console.log("onInput " + event)
-		newNameInvalid();
-        internalSelected = '';
-	}
 </script>
 
 <Modal bind:open={dialogs.openModelDialogVisible} autoclose={false} class="w-full">
-
-    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-    <div class="flex flex-col space-y-6" onkeydown={handleEnterKey} role="dialog">
-        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Open or create a model</h3>
-        <Label class="space-y-2">
-            <span>Name of model</span>
-            <Input bind:value={newName}
-                   type="text"
-                   name="model-name"
-                   placeholder="my_model"
-                   required
-				   oninput={onInput}
-            />
-            <Helper class="mt-2 text-primary-900">
-                <span class="font-medium">{helperText}</span>
-            </Helper>
-        </Label>
-        <div class="grid grid-cols-3">
-            {#each serverInfo.allModelNames as model}
-                <Radio class="p-2" name="models" onchange={() => {internalSelected = model; newName = model;}}>{model}</Radio>
-            {/each}
+    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Open model</h3>
+    <div class="flex flex-col space-y-6" role="dialog">
+        <Helper class="text-sm ml-2 text-primary-900">
+            <span class="font-medium">{errorText}</span>
+        </Helper>
+        <div class="">
+            <div class="grid grid-cols-3 mb-3 p-2">
+                {#each serverInfo.allModelNames as model}
+                    <Radio class="p-2" name="models" onchange={() => {modelToOpen = model;}}>{model}</Radio>
+                {/each}
+            </div>
+            <div class="flex flex-row justify-end">
+                <Button color="alternative" onclick={cancel}>Cancel</Button>
+                <Button onclick={openModel} >
+                    <FolderOpenSolid class="w-4 h-4 me-2 dark:text-white"/>
+                    Open</Button>
+            </div>
         </div>
     </div>
-
-    <svelte:fragment slot="footer">
-        <Button onclick={handleSubmit}>Open</Button>
-        <Button color="alternative" onclick={handleCancel}>Cancel</Button>
-    </svelte:fragment>
-
 </Modal>
+

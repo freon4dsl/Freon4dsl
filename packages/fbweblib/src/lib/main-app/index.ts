@@ -4,5 +4,5 @@ export * from "./ToolMenu.svelte";
 export * from "./GitHub.svelte";
 export * from "./WebappLayout.svelte";
 export * from "./InfoPanel.svelte";
-export * from "./ModelInfo.svelte";
+export * from "./ModelDrawer.svelte";
 export * from "./NavBar.svelte";

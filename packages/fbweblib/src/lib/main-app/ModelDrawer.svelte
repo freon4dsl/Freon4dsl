@@ -8,11 +8,12 @@
         Tooltip,
     } from 'flowbite-svelte';
     import {FolderPlusSolid, TrashBinSolid, DotsHorizontalOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, UploadSolid, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
-    import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {FreErrorSeverity, type ModelUnitIdentifier} from "@freon4dsl/core";
+    import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
     import {editorInfo, type UnitInfo} from "$lib/stores/ModelInfo.svelte";
-    import {drawerHidden} from "$lib/stores";
+    import {drawerHidden, dialogs} from "$lib/stores";
+    import {openModelDialog} from "$lib/language/DialogHelpers";
 
     let myUnits: UnitInfo[] = $state([]);
     $effect(() => {
@@ -69,11 +70,11 @@
 
 <div class="flex items-center">
     <ButtonGroup class="*:!ring-primary-700 ">
-        <Button name="Open existing model" size="xs">
+        <Button name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class="w-4 h-4 me-2 dark:text-white"/>
         </Button>
         <Tooltip placement="bottom">Open existing model</Tooltip>
-        <Button name="Create new model" size="xs">
+        <Button name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
             <FolderPlusSolid class="w-4 h-4 me-2 dark:text-white"/>
         </Button>
         <Tooltip placement="bottom">Create new model</Tooltip>
@@ -114,28 +115,28 @@
                         <div class="flex justify-between items-end text-gray-600 dark:text-gray-200">
                             {unit.name}
                             <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->
-                            <DotsHorizontalOutline class="dots-menu1 inline text-gray-600 dark:text-white"/>
+                            <DotsHorizontalOutline id="dots-menu-{index}" class="inline text-gray-600 dark:text-white"/>
                         </div>
                         </ListgroupItem>
-                        <Popover triggeredBy=".dots-menu1">
-                            <div class="flex flex-col justify-end">
-                                <Button name="Open" size="xs" class="p-1 m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => openUnit(index)}>
+                        <Popover triggeredBy="#dots-menu-{index}" class="p-0 m-0">
+                            <div class="flex flex-col justify-end p-0 m-0">
+                                <Button name="Open" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => openUnit(index)}>
                                     <FolderOpenSolid class="w-4 h-4 me-2"/>
                                     Open
                                 </Button>
-                                <Button name="Save" size="xs" class="p-1 m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => saveUnit(index)}>
+                                <Button name="Save" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => saveUnit(index)}>
                                     <UploadSolid class="w-4 h-4 me-2"/>
                                     Save
                                 </Button>
-                                <Button name="Rename" size="xs" class="p-1 m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => renameUnit(index)}>
+                                <Button name="Rename" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => renameUnit(index)}>
                                     <PenSolid class="w-4 h-4 me-2"/>
                                     Rename
                                 </Button>
-                                <Button name="Delete" size="xs" class="p-1 m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => deleteUnit(index)}>
+                                <Button name="Delete" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => deleteUnit(index)}>
                                     <TrashBinSolid class="w-4 h-4 me-2"/>
                                     Delete
                                 </Button>
-                                <Button name="Export" size="xs" class="p-1 m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => exportUnit(index)}>
+                                <Button name="Export" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => exportUnit(index)}>
                                     <ArrowUpFromBracketOutline class="w-4 h-4 me-2"/>
                                     Export
                                 </Button>

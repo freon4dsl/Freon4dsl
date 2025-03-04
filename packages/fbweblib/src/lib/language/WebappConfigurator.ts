@@ -124,6 +124,8 @@ export class WebappConfigurator {
             }
             editorInfo.modelName = modelName;
             this.updateUnitList()
+        } else {
+            console.log('no modelStore!')
         }
     }
 

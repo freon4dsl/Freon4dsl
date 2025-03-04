@@ -14,16 +14,17 @@
     import {fly} from 'svelte/transition';
     import {WebappConfigurator} from '$lib/language';
     import NavBar from '$lib/main-app/NavBar.svelte';
-    import ModelInfo from '$lib/main-app/ModelInfo.svelte';
-    import OpenModelDialog from '$lib/dialogs/OpenModelDialog.svelte';
-    import {drawerHidden, initializing, dialogs} from '$lib/stores/WebappStores.svelte';
-    import {serverInfo} from '$lib/stores/ModelInfo.svelte.js';
-    import {messageInfo, setUserMessage} from "$lib/stores/UserMessageStore.svelte";
+    import ModelDrawer from '$lib/main-app/ModelDrawer.svelte';
+    import {drawerHidden, initializing} from '$lib/stores/WebappStores.svelte';
+    import {messageInfo} from "$lib/stores/UserMessageStore.svelte";
     import {FreErrorSeverity} from "@freon4dsl/core";
     import ViewDialog from "$lib/dialogs/ViewDialog.svelte";
     import OpenUnitDialog from "$lib/dialogs/OpenUnitDialog.svelte";
     import EditorPart from "$lib/main-app/EditorPart.svelte";
-    import EditorSpeedDial from "$lib/main-app/EditorSpeedDial.svelte";
+    import {openStartDialog} from "$lib/language/DialogHelpers";
+    import StartDialog from "$lib/dialogs/StartDialog.svelte";
+    import NewModelDialog from "$lib/dialogs/NewModelDialog.svelte";
+    import OpenModelDialog from "$lib/dialogs/OpenModelDialog.svelte";
 
     let transitionParams = {
         x: 320,
@@ -40,15 +41,9 @@
             await WebappConfigurator.getInstance().openModel(model);
             initializing.value = false;
         } else {
-            // No model given as parameter, open the dialog to ask for it
-            // Get list of models from server
-            const names = await WebappConfigurator.getInstance().getAllModelNames();
-            if (!!names && names.length > 0) {
-                // Make the names available for the dialog
-                serverInfo.allModelNames = names;
-            }
-            // Open the open/new model dialog
-            dialogs.openModelDialogVisible = true;
+            // No model given as parameter, open the open/new model dialog
+            await openStartDialog();
+            initializing.value = false;
         }
     });
 
@@ -102,7 +97,6 @@
         </Alert>
     {/if}
     <div class="flex-1 overflow-y-scroll">
-        <EditorSpeedDial/>
         <EditorPart/>
     </div>
     <Footer
@@ -135,9 +129,11 @@
         bind:hidden={drawerHidden.value}
         id="sidebar1"
 >
-    <ModelInfo/>
+    <ModelDrawer/>
 </Drawer>
 
+<StartDialog/>
+<NewModelDialog/>
 <OpenModelDialog/>
 <!--<DeleteModelDialog/>-->
 <OpenUnitDialog/>

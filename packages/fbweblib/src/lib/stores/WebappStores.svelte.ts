@@ -3,19 +3,17 @@ export const drawerHidden = $state({
 });
 
 export const dialogs = $state({
-	// variables for the FileMenu
+	startDialogVisible: false,
+	newModelDialogVisible: false,
 	openModelDialogVisible: false,
 	deleteModelDialogVisible: false,
 	deleteUnitDialogVisible: false,
 	newUnitDialogVisible: false,
 	renameUnitDialogVisible: false,
-	// variables for the EditMenu
 	findTextDialogVisible: false,
 	findStructureDialogVisible: false,
 	findNamedDialogVisible: false,
-	// variables for the ToolMenu
 	selectViewsDialogVisible: false,
-	// variables for the HelpButton
 	helpDialogVisible: false,
 });
 
