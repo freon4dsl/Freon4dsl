@@ -1,10 +1,10 @@
-import { makeObservable, observable, runInAction } from "mobx";
-import { FreModel, FreModelUnit } from "../ast/index.js";
-import { AST } from "../change-manager/index.js";
-import { FreEnvironment } from "../environment/index.js";
-import { FreLogger } from "../logging/index.js";
-import { isNullOrUndefined } from "../util/index.js";
-import { IServerCommunication, ModelUnitIdentifier } from "./server/index.js";
+import {makeObservable, observable, runInAction} from "mobx";
+import {FreModel, FreModelUnit} from "../ast/index.js";
+import {AST} from "../change-manager/index.js";
+import {FreEnvironment} from "../environment/index.js";
+import {FreLogger} from "../logging/index.js";
+import {isNullOrUndefined} from "../util/index.js";
+import {IServerCommunication, ModelUnitIdentifier} from "./server/index.js";
 
 export type ModelChangedCallbackFunction = (m: InMemoryModel) => void;
 
@@ -71,8 +71,7 @@ export class InMemoryModel {
      * Get a list of all model names that are available on the server.
      */
     async getModels(): Promise<string[]> {
-        const models = await this.server.loadModelList();
-        return models;
+        return await this.server.loadModelList();
     }
 
     /**
@@ -93,7 +92,7 @@ export class InMemoryModel {
     }
 
     /**
-     * Delete _unit_ from thge model.
+     * Delete _unit_ from the model.
      * @param unit
      */
     async deleteUnit(unit: FreModelUnit) {
@@ -150,7 +149,7 @@ export class InMemoryModel {
      * Get all unit identifiers of the current model.
      */
     getUnitIdentifiers(): ModelUnitIdentifier[] {
-        const units = this?.model?.getUnits()
+        const units = this.model?.getUnits()
         if (isNullOrUndefined(units)) {
             return []
         } else {
