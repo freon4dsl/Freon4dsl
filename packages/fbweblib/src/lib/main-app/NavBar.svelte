@@ -7,8 +7,8 @@
 		NavBrand,
 		Tooltip
 	} from 'flowbite-svelte';
-	import { AnnotationSolid, ChevronRightOutline } from 'flowbite-svelte-icons';
-	import { drawerHidden } from '$lib/stores/WebappStores.svelte';
+	import { AnnotationSolid, ChevronRightOutline, QuestionCircleOutline } from 'flowbite-svelte-icons';
+	import {dialogs, drawerHidden} from '$lib/stores/WebappStores.svelte';
 	import GitHub from '$lib/main-app/GitHub.svelte';
 	import {langInfo} from "$lib/stores/LanguageInfo.svelte";
 </script>
@@ -36,6 +36,10 @@
 					<AnnotationSolid class="ms-0 inline h-6 w-6 dark:text-white" />
 				</Button>
 				<Tooltip placement="bottom">Go to Documentation</Tooltip>
+				<Button name="About" onclick={() => (dialogs.helpDialogVisible = true)}>
+					<QuestionCircleOutline class="ms-0 inline h-6 w-6 dark:text-white" />
+				</Button>
+				<Tooltip placement="bottom">About</Tooltip>
 				<Button onclick={() => (drawerHidden.value = false)}>
 					<ChevronRightOutline class="ms-0 inline h-6 w-6 dark:text-white" />
 				</Button>
