@@ -49,7 +49,7 @@
     const saveUnit = (id: number) => {
         console.log('FileMenu.saveUnit: ' + id); // + $currentUnitName);
         if (editorInfo.currentUnit) {
-            WebappConfigurator.getInstance().saveCurrentUnit();
+            WebappConfigurator.getInstance().saveUnit(editorInfo.currentUnit);
             setUserMessage(`Unit '${editorInfo.currentUnit.name}' saved.`);
         } else {
             setUserMessage('No current unit.')

@@ -1,7 +1,7 @@
 import { FreErrorSeverity } from "@freon4dsl/core";
 
 // info about Freon
-export const versionNumber: string = "1.0.0";
+export const versionNumber: {value: string} = $state({value: "1.1.0-beta"});
 
 export interface MessageInfo {
     severity: string;

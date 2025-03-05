@@ -12,28 +12,28 @@
     }
 
     function resetVariables() {
-        dialogs.newModelDialogVisible = false;
+        dialogs.renameUnitDialogVisible = false;
         newName = "";
         errorText = '';
     }
 
     function handleCancel() {
-        dialogs.newModelDialogVisible = false;
+        dialogs.renameUnitDialogVisible = false;
         resetVariables();
     }
 
     async function handleSubmit() {
-        // console.log("CREATING NEW MODEL: " + newName);
+        // console.log("RENAMING UNIT TO: " + newName);
         if (newName.length > 0 && checkName(newName).length === 0) {
-            const existing: string[] = await WebappConfigurator.getInstance().getAllModelNames();
+            const existing: string[] = await WebappConfigurator.getInstance().getUnitNames();
             if (!!existing && existing.length > 0 && existing.indexOf(newName) !== -1) {
-                errorText = `Cannot create model '${newName}', because a model with that name already exists on the server.`;
+                errorText = `Cannot rename unit to '${newName}', because a unit with that name already exists on the server.`;
             } else {
-                await WebappConfigurator.getInstance().newModel(newName);
+                // WebappConfigurator.getInstance().renameUnit(newName);
                 resetVariables();
             }
         } else {
-            errorText = `Cannot create model '${newName}', because its name is invalid.`;
+            errorText = `Cannot rename unit to '${newName}', because the name is invalid.`;
         }
     }
 
@@ -42,8 +42,9 @@
 	}
 </script>
 
-<Modal bind:open={dialogs.newModelDialogVisible} autoclose={false} class="w-full">
-    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">New model</h3>
+<Modal bind:open={dialogs.renameUnitDialogVisible} autoclose={false} class="w-full">
+    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Rename unit</h3>
+    <p>This is not yet functioning</p>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-gray-700">
             <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline" type="text"
@@ -59,7 +60,7 @@
     </div>
 
     <svelte:fragment slot="footer">
-        <Button onclick={handleSubmit}>New</Button>
+        <Button onclick={handleSubmit}>Rename</Button>
         <Button color="alternative" onclick={handleCancel}>Cancel</Button>
     </svelte:fragment>
 

@@ -24,7 +24,7 @@
     }
 
     async function openModel() {
-        console.log('openModel: ' + modelToOpen)
+        // console.log('openModel: ' + modelToOpen)
         if (modelToOpen.length > 0) {
             await WebappConfigurator.getInstance().openModel(modelToOpen);
             initializing.value = false;

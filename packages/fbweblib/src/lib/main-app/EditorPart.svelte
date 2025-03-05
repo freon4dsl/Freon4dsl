@@ -2,7 +2,7 @@
     import {messageInfo, noUnitAvailable} from "$lib";
     import {fly} from "svelte/transition";
     import {WebappConfigurator} from "$lib/language/index.js";
-    import {Alert, Button, Listgroup, ListgroupItem, SpeedDial, Tooltip} from "flowbite-svelte";
+    import {Alert, Button, Dropdown, Listgroup, ListgroupItem, SpeedDial, Tooltip} from "flowbite-svelte";
     import {
         ClipboardSolid,
         DotsHorizontalOutline, FileCopySolid, FilePasteSolid,
@@ -22,100 +22,65 @@
             </Alert>
         {/if}
     {:else}
-        <!-- SpeedDail has exact same content, but placement is lower when user message is shown. -->
-        <!-- Cannot use svelte snippet here, because Flowbite component is still using slots. -->
+        <!-- Dropdown has exact same content, but placement is lower when user message is shown. -->
+        <!-- TODO use svelte snippet here -->
         {#if messageInfo.userMessageOpen}
-            <SpeedDial defaultClass="absolute end-6 top-40 z-10" placement="top-end" trigger="hover">
-                <Button slot="button" name="Editor actions" size="xs" class="bg-primary-400 text-black dark:text-white dark:bg-primary-900"
-                        pill>
-                    <DotsHorizontalOutline class="w-5 h-7 dark:text-white"/>
-                </Button>
-                <Listgroup active>
-                    <ListgroupItem class="flex">
-                        <UndoOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Undo
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <RedoOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Redo
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <ClipboardSolid class="w-4 h-4 me-2 dark:text-white"/>
-                        Cut
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <FileCopySolid class="me-2 w-5 h-5"/>
-                        Copy
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <FilePasteSolid class="w-4 h-4 me-2 dark:text-white"/>
-                        Paste
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Find...
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Validate
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Interpreter
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        View(s)
-                    </ListgroupItem>
-                </Listgroup>
-            </SpeedDial>
+            <Button id='actions-button' name="Editor actions" size="xs" class="absolute end-6 top-40 z-10 bg-primary-400 text-black dark:text-white dark:bg-primary-800"
+                    pill>
+                <DotsHorizontalOutline class="w-5 h-7 dark:text-white"/>
+            </Button>
+            {@render drop()}
         {:else}
-            <SpeedDial defaultClass="absolute end-6 top-20 z-10" placement="top-end" trigger="hover">
-                <Button slot="button" name="Editor actions" size="xs" class="bg-primary-400 text-black dark:text-white dark:bg-primary-800"
-                        pill>
-                    <DotsHorizontalOutline class="w-5 h-7 dark:text-white"/>
-                </Button>
-                <Tooltip placement="bottom">Editor actions</Tooltip>
-                <Listgroup active>
-                    <ListgroupItem class="flex">
-                        <UndoOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Undo
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <RedoOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Redo
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <ClipboardSolid class="w-4 h-4 me-2 dark:text-white"/>
-                        Cut
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <FileCopySolid class="me-2 w-5 h-5"/>
-                        Copy
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <FilePasteSolid class="w-4 h-4 me-2 dark:text-white"/>
-                        Paste
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Find...
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Validate
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        Interpreter
-                    </ListgroupItem>
-                    <ListgroupItem class="flex">
-                        <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-                        View(s)
-                    </ListgroupItem>
-                </Listgroup>
-            </SpeedDial>
+            <Button id='actions-button' name="Editor actions" size="xs" class="absolute end-6 top-20 z-10 bg-primary-400 text-black dark:text-white dark:bg-primary-800"
+                    pill>
+                <DotsHorizontalOutline class="w-5 h-7 dark:text-white"/>
+            </Button>
+            {@render drop()}
+
         {/if}
         <FreonComponent editor={WebappConfigurator.getInstance().langEnv?.editor}/>
     {/if}
 </div>
+
+{#snippet drop()}
+<Dropdown triggeredBy="#actions-button">
+    <Listgroup active>
+        <ListgroupItem class="flex">
+            <UndoOutline class="w-4 h-4 me-2 dark:text-white"/>
+            Undo
+        </ListgroupItem>
+        <ListgroupItem class="flex">
+            <RedoOutline class="w-4 h-4 me-2 dark:text-white"/>
+            Redo
+        </ListgroupItem>
+        <ListgroupItem class="flex">
+            <ClipboardSolid class="w-4 h-4 me-2 dark:text-white"/>
+            Cut
+        </ListgroupItem>
+        <ListgroupItem class="flex">
+            <FileCopySolid class="me-2 w-5 h-5"/>
+            Copy
+        </ListgroupItem>
+        <ListgroupItem class="flex">
+            <FilePasteSolid class="w-4 h-4 me-2 dark:text-white"/>
+            Paste
+        </ListgroupItem>
+        <ListgroupItem class="flex">
+            <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
+            Find...
+        </ListgroupItem>
+        <ListgroupItem class="flex">
+            <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
+            Validate
+        </ListgroupItem>
+        <ListgroupItem class="flex">
+            <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
+            Interpreter
+        </ListgroupItem>
+        <ListgroupItem class="flex">
+            <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
+            View(s)
+        </ListgroupItem>
+    </Listgroup>
+</Dropdown>
+{/snippet}

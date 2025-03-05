@@ -3,17 +3,19 @@
         Button,
         ButtonGroup,
         CloseButton,
+        Dropdown,
         Listgroup,
-        ListgroupItem, Popover,
+        ListgroupItem,
         Tooltip,
     } from 'flowbite-svelte';
-    import {FolderPlusSolid, TrashBinSolid, DotsHorizontalOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, UploadSolid, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
+    import {FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, DotsHorizontalOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
     import {FreErrorSeverity, type ModelUnitIdentifier} from "@freon4dsl/core";
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
     import {editorInfo, type UnitInfo} from "$lib/stores/ModelInfo.svelte";
     import {drawerHidden, dialogs} from "$lib/stores";
     import {openModelDialog} from "$lib/language/DialogHelpers";
+    import {ImportExportHandler, WebappConfigurator} from "$lib/language";
 
     let myUnits: UnitInfo[] = $state([]);
     $effect(() => {
@@ -32,37 +34,42 @@
 
     const openUnit = (index: number) => {
         console.log('openUnit ' + index)
-        // EditorState.getInstance().openModelUnit(editorInfo.unitIds[index]);
+        WebappConfigurator.getInstance().openModelUnit(editorInfo.unitIds[index].name);
+        drawerHidden.value = true;
     };
 
     const deleteUnit = (index: number) => {
         console.log("editorInfo.deleteUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeDeleted = editorInfo.unitIds[index];
-        // deleteUnitDialogVisible.value = true;
+        dialogs.deleteUnitDialogVisible = true;
+        drawerHidden.value = true;
     };
 
     const saveUnit = (index: number) => {
         console.log("editorInfo.saveUnit: " + editorInfo.unitIds[index].name);
         if (editorInfo.unitIds[index].name === editorInfo.currentUnit?.name) {
-            // EditorState.getInstance().saveCurrentUnit();
+            WebappConfigurator.getInstance().saveUnit(editorInfo.unitIds[index]);
             setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Warning);
         } else {
             setUserMessage(`Unit '${editorInfo.unitIds[index].name}' has no changes.`, FreErrorSeverity.Warning);
         }
+        drawerHidden.value = true;
     };
 
     const renameUnit = (index: number) => {
         console.log("editorInfo.renameUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeRenamed = editorInfo.unitIds[index];
-        // renameUnitDialogVisible.value = true;
+        dialogs.renameUnitDialogVisible = true;
     };
 
     const exportUnit = (index: number) => {
-        if (editorInfo.unitIds[index].name !== editorInfo.currentUnit?.name) {
-            setUserMessage('Can only export unit currently shown in the editor', FreErrorSeverity.Warning);
-        } else {
-            // new ImportExportHandler().exportUnit(editorInfo.unitIds[index]);
-        }
+        new ImportExportHandler().exportUnit(editorInfo.unitIds[index]);
+    };
+
+    const newUnit = (type: string) => {
+        console.log('newUnit of type: ' + type);
+        editorInfo.toBeCreated = {name: '', id: '', type: type}
+        dialogs.newUnitDialogVisible = true;
     };
 
 </script>
@@ -106,7 +113,15 @@
 
 <Listgroup >
     {#each langInfo.unitTypes as unitType}
-        <div class="p-1 font-semibold text-gray-900 dark:text-white">{unitType}</div>
+        <div class="flex justify-between p-1 font-semibold text-gray-900 dark:text-white">
+            {unitType}
+            <ButtonGroup class="*:!ring-primary-700 ">
+            <Button name="New Unit" size="xs" class="p-1" onclick={() => newUnit(unitType)}>
+                <FolderOpenSolid class="w-4 h-4 me-2 dark:text-white mr-0"/>
+            </Button>
+            <Tooltip placement="bottom">New Unit</Tooltip>
+            </ButtonGroup>
+        </div>
         <ListgroupItem class="text-base border-none py-1">
             <Listgroup class="border-none">
                 {#each myUnits as unit, index}
@@ -116,32 +131,33 @@
                             {unit.name}
                             <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->
                             <DotsHorizontalOutline id="dots-menu-{index}" class="inline text-gray-600 dark:text-white"/>
+                            <Dropdown class="p-0 m-0">
+                                <div class="flex flex-col justify-end p-0 m-0">
+                                    <Button name="Open" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => openUnit(index)}>
+                                        <FolderOpenSolid class="w-4 h-4 me-2"/>
+                                        Open
+                                    </Button>
+                                    <Button name="Save" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => saveUnit(index)}>
+                                        <FloppyDiskSolid class="w-4 h-4 me-2"/>
+                                        Save
+                                    </Button>
+                                    <Button name="Rename" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => renameUnit(index)}>
+                                        <PenSolid class="w-4 h-4 me-2"/>
+                                        Rename
+                                    </Button>
+                                    <Button name="Delete" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => deleteUnit(index)}>
+                                        <TrashBinSolid class="w-4 h-4 me-2"/>
+                                        Delete
+                                    </Button>
+                                    <Button name="Export" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => exportUnit(index)}>
+                                        <ArrowUpFromBracketOutline class="w-4 h-4 me-2"/>
+                                        Export
+                                    </Button>
+                                </div>
+                            </Dropdown>
                         </div>
                         </ListgroupItem>
-                        <Popover triggeredBy="#dots-menu-{index}" class="p-0 m-0">
-                            <div class="flex flex-col justify-end p-0 m-0">
-                                <Button name="Open" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => openUnit(index)}>
-                                    <FolderOpenSolid class="w-4 h-4 me-2"/>
-                                    Open
-                                </Button>
-                                <Button name="Save" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => saveUnit(index)}>
-                                    <UploadSolid class="w-4 h-4 me-2"/>
-                                    Save
-                                </Button>
-                                <Button name="Rename" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => renameUnit(index)}>
-                                    <PenSolid class="w-4 h-4 me-2"/>
-                                    Rename
-                                </Button>
-                                <Button name="Delete" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => deleteUnit(index)}>
-                                    <TrashBinSolid class="w-4 h-4 me-2"/>
-                                    Delete
-                                </Button>
-                                <Button name="Export" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => exportUnit(index)}>
-                                    <ArrowUpFromBracketOutline class="w-4 h-4 me-2"/>
-                                    Export
-                                </Button>
-                            </div>
-                        </Popover>
+
                     {/if}
                 {/each}
             </Listgroup>

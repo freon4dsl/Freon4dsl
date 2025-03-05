@@ -19,6 +19,8 @@ export interface EditorInfo {
 	toBeRenamed: ModelUnitIdentifier | undefined;
 	// id of a unit that is to be deleted
 	toBeDeleted: ModelUnitIdentifier | undefined;
+	// info on unit that is about to be created
+	toBeCreated: UnitInfo | undefined;
 }
 
 //================
@@ -32,7 +34,8 @@ export const editorInfo: EditorInfo = $state({
 	unitIds: [],
 	currentUnit: undefined,
 	toBeRenamed: undefined,
-	toBeDeleted: undefined
+	toBeDeleted: undefined,
+	toBeCreated: undefined
 })
 
 export let progressIndicatorShown = $state({ value: false });

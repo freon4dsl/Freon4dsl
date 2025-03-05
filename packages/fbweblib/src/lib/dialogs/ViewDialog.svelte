@@ -19,7 +19,7 @@
     );
 
     function applyChanges() {
-        console.log('Apply Changes')
+        // console.log('Apply Changes')
         // store the selection and enable/disable the projection
         const selection: string[] = [];
         allProjections.forEach(proj => {
@@ -29,7 +29,7 @@
         });
         replaceProjectionsShown(selection);
         // EditorRequestsHandler.getInstance().enableProjections(selection);
-        console.log('Currently shown: ' + projectionsShown)
+        // console.log('Currently shown: ' + projectionsShown)
     }
 </script>
 

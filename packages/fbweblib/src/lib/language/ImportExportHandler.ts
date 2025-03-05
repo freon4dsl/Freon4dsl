@@ -1,6 +1,6 @@
 import {type FreEnvironment, type FreModelUnit, isNullOrUndefined} from "@freon4dsl/core";
 import {WebappConfigurator} from "$lib/language/WebappConfigurator";
-import {progressIndicatorShown, setUserMessage} from "$lib";
+import {progressIndicatorShown, setUserMessage, type UnitInfo} from "$lib";
 
 export class ImportExportHandler {
     private langEnv: FreEnvironment | undefined = WebappConfigurator.getInstance().langEnv;
@@ -56,26 +56,21 @@ export class ImportExportHandler {
         }
     }
 
-    async exportUnit(unit: FreModelUnit) {
-        // get the complete unit from the server
-        // await serverCommunication.loadModelUnit(EditorState.getInstance().currentModel.name, unit.name, (completeUnit: FreModelUnit) => {
-        //     this._exportUnit(completeUnit);
-        // });
-        // TODO: now only export current unit, could be extended to export other units as well.
-        //       the code above runs into an error because the loaded modelunit is not placed into a model.
+    async exportUnit(unitId: UnitInfo) {
         if (WebappConfigurator.getInstance().langEnv) {
             this.langEnv = WebappConfigurator.getInstance().langEnv;
-            this._exportUnit(unit);
+            // get the complete unit from the server
+            const unit: FreModelUnit | undefined = WebappConfigurator.getInstance().getUnit(unitId);
+            if (unit) this._exportUnit(unit);
         }
     }
 
     private _exportUnit(unit: FreModelUnit) {
         // do not try to export a unit with errors, parsing and unparsing will not proceed correctly
         const list = this.langEnv?.validator.validate(unit);
-        // TODO Only allow export of current unit for now.
         if (!isNullOrUndefined(list) && list.length > 0) {
             setUserMessage(`Cannot export a unit that has errors (found ${list.length}).`);
-            console.log("Errors: " + list.map((l) => l.message).join(", "));
+            // console.log("Not exporting because of errors: " + list.map((l) => l.message).join(", "));
             return;
         }
         // create a text string from the unit

@@ -3,53 +3,58 @@
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
+    import {editorInfo, setUserMessage} from "$lib";
 
     let errorText: string = $state('');
     let newName: string = $state('');
 
-    function modelNameValid(){
+    function unitNameValid(){
         errorText = checkName(newName);
     }
 
     function resetVariables() {
-        dialogs.newModelDialogVisible = false;
+        dialogs.newUnitDialogVisible = false;
         newName = "";
         errorText = '';
     }
 
     function handleCancel() {
-        dialogs.newModelDialogVisible = false;
+        dialogs.newUnitDialogVisible = false;
         resetVariables();
     }
 
     async function handleSubmit() {
-        // console.log("CREATING NEW MODEL: " + newName);
+        // console.log("CREATING NEW UNIT: " + newName);
         if (newName.length > 0 && checkName(newName).length === 0) {
-            const existing: string[] = await WebappConfigurator.getInstance().getAllModelNames();
+            const existing: string[] = await WebappConfigurator.getInstance().getUnitNames();
             if (!!existing && existing.length > 0 && existing.indexOf(newName) !== -1) {
-                errorText = `Cannot create model '${newName}', because a model with that name already exists on the server.`;
+                errorText = `Cannot create unit '${newName}', because a unit with that name already exists on the server.`;
             } else {
-                await WebappConfigurator.getInstance().newModel(newName);
-                resetVariables();
+                if (editorInfo.toBeCreated?.type) {
+                    await WebappConfigurator.getInstance().newUnit(newName, editorInfo.toBeCreated?.type);
+                    resetVariables();
+                } else {
+                    setUserMessage('Cannot create a new unit, because its type is unknown.')
+                }
             }
         } else {
-            errorText = `Cannot create model '${newName}', because its name is invalid.`;
+            errorText = `Cannot create unit '${newName}', because its name is invalid.`;
         }
     }
 
 	const onInput = () => {
-		modelNameValid();
+		unitNameValid();
 	}
 </script>
 
-<Modal bind:open={dialogs.newModelDialogVisible} autoclose={false} class="w-full">
-    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">New model</h3>
+<Modal bind:open={dialogs.newUnitDialogVisible} autoclose={false} class="w-full">
+    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">New unit of type {editorInfo.toBeCreated?.type}</h3>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-gray-700">
             <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline" type="text"
                    bind:value={newName}
                    id="new-input"
-                   name="model-name"
+                   name="unit-name"
                    oninput={onInput}
             />
         </div>

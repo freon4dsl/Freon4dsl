@@ -8,7 +8,7 @@ import {
     FreProjectionHandler,
     FreUndoManager,
     InMemoryModel,
-    type IServerCommunication,
+    type IServerCommunication, isIdentifier,
     isNullOrUndefined,
     type ModelUnitIdentifier
 } from '@freon4dsl/core';
@@ -17,6 +17,7 @@ import {langInfo} from "$lib/stores/LanguageInfo.svelte.js";
 import {autorun, runInAction} from "mobx";
 import {editorInfo, noUnitAvailable, progressIndicatorShown, type UnitInfo} from '$lib/stores/ModelInfo.svelte';
 import {setUserMessage} from "$lib";
+import {modelErrors} from "$lib/stores/InfoPanelStore.svelte";
 
 
 const LOGGER: FreLogger = new FreLogger('Webapp');
@@ -126,7 +127,7 @@ export class WebappConfigurator {
             }
             editorInfo.modelName = modelName;
             editorInfo.unitIds = tmp;
-            this.updateUnitList()
+            await this.updateUnitList()
         } else {
             console.log('no modelStore!')
         }
@@ -140,15 +141,22 @@ export class WebappConfigurator {
         }
     }
 
+    async getUnitNames(): Promise<string[]> {
+        const result: string[] = [];
+        this.modelStore?.getUnitIdentifiers().forEach(uid => {
+            result.push(uid.name)
+        });
+        return result;
+    }
+
     updateUnitListRunning: boolean = false;
 
-    updateUnitList(): void {
+    async updateUnitList() {
+        console.log("update unit list")
         // Ensure this is done only once
         if (!this.updateUnitListRunning) {
             this.updateUnitListRunning = true
-            // autorun(() => {
             if (this.modelStore) {
-                // editorInfo.unitIds = this.modelStore.getUnitIdentifiers();
                 const tmp: UnitInfo[] = [];
                 this.modelStore.getUnitIdentifiers().forEach(uid => {
                     const unit: FreModelUnit | undefined = this.modelStore?.getUnitByName(uid.name);
@@ -158,8 +166,9 @@ export class WebappConfigurator {
                 });
                 editorInfo.unitIds = tmp;
             }
-            // });
         }
+        this.updateUnitListRunning = false;
+        console.log("END update unit list: " + JSON.stringify(editorInfo.unitIds))
     }
 
     /**
@@ -217,17 +226,23 @@ export class WebappConfigurator {
         runInAction(() => {
             if (!!this.langEnv) {
                 console.log("setting rootElement to undefined" )
-                // @ts-ignore
-                this.langEnv.editor.rootElement = undefined;
-                BoxFactory.clearCaches()
-                this.langEnv?.projectionHandler.clear();
-                noUnitAvailable.value = true;
+                this.setEditorToUndefined();
             }
         });
     }
 
+    private setEditorToUndefined() {
+        // todo change rootElement setter to accept null
+        // @ts-ignore
+        this.langEnv.editor.rootElement = undefined;
+        BoxFactory.clearCaches()
+        this.langEnv?.projectionHandler.clear();
+        noUnitAvailable.value = true;
+    }
+
     renameModel(newName: string) {
         // todo implement renaming in the server
+        console.log(newName);
     }
 
     /**
@@ -239,16 +254,18 @@ export class WebappConfigurator {
         LOGGER.log("EditorState.newUnit: unitType: " + unitType + ", name: " + newName + " in model " + editorInfo.modelName);
         progressIndicatorShown.value = true;
         // save the old current unit, if there is one
-        await this.saveCurrentUnit();
+        await this.saveUnit(editorInfo.currentUnit);
         await this.createNewUnit(newName, unitType);
     }
 
     /**
      * Pushes the current unit to the server
      */
-    async saveCurrentUnit() {
-        LOGGER.log("saveCurrentUnit: " + editorInfo.currentUnit?.name + `real name is ${(this.langEnv!.editor.rootElement as FreModelUnit)?.name}`);
-        const unit: FreModelUnit = this.langEnv!.editor.rootElement as FreModelUnit;
+    async saveUnit(unitId: ModelUnitIdentifier | undefined) {
+        if (!unitId) return;
+
+        let unit: FreModelUnit | undefined = this.modelStore?.getUnitByName(unitId.name)
+        LOGGER.log("saveUnit: " + editorInfo.currentUnit?.name + `real name is ${(this.langEnv!.editor.rootElement as FreModelUnit)?.name}`);
         if (!!unit) {
             if (!!editorInfo.modelName && editorInfo.modelName.length) {
                 if (!!unit.name && unit.name.length > 0) {
@@ -285,6 +302,7 @@ export class WebappConfigurator {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName);
         const newUnit: FreModelUnit | undefined = await this.modelStore?.createUnit(newName, unitType);
         if (!!newUnit) {
+            await this.updateUnitList();
             // show the new unit in the editor
             this.showUnit(newUnit);
         } else {
@@ -310,11 +328,35 @@ export class WebappConfigurator {
             });
             if (!isNullOrUndefined(newUnit)) {
                 // save the old current unit, if there is one
-                await this.saveCurrentUnit();
+                await this.saveUnit(editorInfo.currentUnit);
                 this.showUnit(newUnit);
             } else {
-                setUserMessage('Cannot create new unit.', FreErrorSeverity.Error);
+                setUserMessage('Cannot open unit ' + newUnitName, FreErrorSeverity.Error);
             }
+        }
+    }
+
+    /**
+     * Deletes the unit 'unit', from the server and from the current in-memory model
+     * @param unit
+     */
+    async deleteModelUnit(unit: ModelUnitIdentifier | undefined) {
+        if (!!unit) {
+            console.log("delete called for unit: " + unit.name);
+
+            // get rid of the unit on the server
+            await this.modelStore?.deleteUnit(unit);
+            // if the unit is shown in the editor, get rid of that one, as well
+            if (!isNullOrUndefined(editorInfo.currentUnit) && editorInfo.currentUnit.id === unit.id) {
+                console.log("removing currently shown unit")
+                runInAction(() => {
+                    this.setEditorToUndefined();
+                });
+                noUnitAvailable.value = true;
+                modelErrors.list = [];
+            }
+            // get rid of the name in the navigator
+            await this.updateUnitList();
         }
     }
 
@@ -328,7 +370,7 @@ export class WebappConfigurator {
      */
     async unitFromFile(fileName: string, content: string, metaType: string, showIt: boolean) {
         // save the old current unit, if there is one
-        await this.saveCurrentUnit();
+        await this.saveUnit(editorInfo.currentUnit);
         let unit: FreModelUnit | null = null;
         try {
             // the following also adds the new unit to the model
@@ -384,6 +426,29 @@ export class WebappConfigurator {
             }
         } else {
             return fileName;
+        }
+    }
+
+    /**
+     * Returns a unit for exporting. The editor is not changed!
+     * @param unitId
+     */
+    getUnit(unitId: UnitInfo): FreModelUnit | undefined {
+        return this.modelStore?.getUnitByName(unitId.name);
+    }
+
+    async renameModelUnit(unit: FreModelUnit, oldName: string, newName: string) {
+        LOGGER.log(`renameModelUnit: from ${oldName} to ${newName} isId: ${isIdentifier(newName)} Units before: ` + editorInfo.unitIds.map((u: UnitInfo) => u.name));
+        unit.name = newName;
+        // TODO Use model store
+        if (!isNullOrUndefined(editorInfo.modelName) && !isNullOrUndefined(editorInfo.currentUnit)) {
+            this.serverEnv!.renameModelUnit(editorInfo.currentUnit.name, oldName, newName, unit);
+            // todo store the info in editorInfo
+            // this.modelChanged(this.modelStore)
+            setUserMessage(`Saved ${newName}`)
+            LOGGER.log("renameModelUnit: Units after: " + editorInfo.unitIds.map((u: UnitInfo) => u.name));
+        } else {
+            setUserMessage(`No current unit to be saved`)
         }
     }
 }

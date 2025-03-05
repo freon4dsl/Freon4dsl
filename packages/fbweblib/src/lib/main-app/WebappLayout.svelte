@@ -19,7 +19,6 @@
     import {messageInfo} from "$lib/stores/UserMessageStore.svelte";
     import {FreErrorSeverity} from "@freon4dsl/core";
     import ViewDialog from "$lib/dialogs/ViewDialog.svelte";
-    import OpenUnitDialog from "$lib/dialogs/OpenUnitDialog.svelte";
     import EditorPart from "$lib/main-app/EditorPart.svelte";
     import {openStartDialog} from "$lib/language/DialogHelpers";
     import StartDialog from "$lib/dialogs/StartDialog.svelte";
@@ -28,6 +27,10 @@
     import DeleteModelDialog from "$lib/dialogs/DeleteModelDialog.svelte";
     import RenameModelDialog from "$lib/dialogs/RenameModelDialog.svelte";
     import ImportDialog from "$lib/dialogs/ImportDialog.svelte";
+    import DeleteUnitDialog from "$lib/dialogs/DeleteUnitDialog.svelte";
+    import NewUnitDialog from "$lib/dialogs/NewUnitDialog.svelte";
+    import RenameUnitDialog from "$lib/dialogs/RenameUnitDialog.svelte";
+    import AboutDialog from "$lib/dialogs/AboutDialog.svelte";
 
     let transitionParams = {
         x: 320,
@@ -142,13 +145,13 @@
 <RenameModelDialog/>
 <ImportDialog/>
 
-<OpenUnitDialog/>
-<!--<DeleteUnitDialog/>-->
-<!--<RenameUnitDialog/>-->
+<NewUnitDialog/>
+<DeleteUnitDialog/>
+<RenameUnitDialog/>
 
 <!--<FindNamedElementDialog />-->
 <!--<FindStructureDialog />-->
 <!--<FindTextDialog />-->
 
 <ViewDialog/>
-<!--<HelpDialog />-->
+<AboutDialog />
