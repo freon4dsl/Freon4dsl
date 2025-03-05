@@ -2,11 +2,12 @@
     import {messageInfo, noUnitAvailable} from "$lib";
     import {fly} from "svelte/transition";
     import {WebappConfigurator} from "$lib/language/index.js";
-    import {Alert, Button, Dropdown, Listgroup, ListgroupItem, SpeedDial, Tooltip} from "flowbite-svelte";
+    import {Alert, Button, Dropdown, Listgroup, ListgroupItem} from "flowbite-svelte";
     import {
         ClipboardSolid,
         DotsHorizontalOutline, FileCopySolid, FilePasteSolid,
-        InfoCircleSolid, RedoOutline, SearchOutline, UndoOutline,
+        InfoCircleSolid, RedoOutline, SearchOutline, UndoOutline, PlaySolid, EyeOutline,
+        ThumbsUpOutline
     } from "flowbite-svelte-icons";
     import {FreonComponent} from "@freon4dsl/core-svelte";
     import {isNullOrUndefined} from "@freon4dsl/core";
@@ -23,7 +24,6 @@
         {/if}
     {:else}
         <!-- Dropdown has exact same content, but placement is lower when user message is shown. -->
-        <!-- TODO use svelte snippet here -->
         {#if messageInfo.userMessageOpen}
             <Button id='actions-button' name="Editor actions" size="xs" class="absolute end-6 top-40 z-10 bg-primary-400 text-black dark:text-white dark:bg-primary-800"
                     pill>
@@ -36,7 +36,6 @@
                 <DotsHorizontalOutline class="w-5 h-7 dark:text-white"/>
             </Button>
             {@render drop()}
-
         {/if}
         <FreonComponent editor={WebappConfigurator.getInstance().langEnv?.editor}/>
     {/if}
@@ -58,7 +57,7 @@
             Cut
         </ListgroupItem>
         <ListgroupItem class="flex">
-            <FileCopySolid class="me-2 w-5 h-5"/>
+            <FileCopySolid class="w-4 h-4 me-2 dark:text-white"/>
             Copy
         </ListgroupItem>
         <ListgroupItem class="flex">
@@ -70,15 +69,15 @@
             Find...
         </ListgroupItem>
         <ListgroupItem class="flex">
-            <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
+            <ThumbsUpOutline class="w-4 h-4 me-2 dark:text-white"/>
             Validate
         </ListgroupItem>
         <ListgroupItem class="flex">
-            <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Interpreter
+            <PlaySolid class="w-4 h-4 me-2 dark:text-white"/>
+            Interpret
         </ListgroupItem>
         <ListgroupItem class="flex">
-            <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
+            <EyeOutline class="w-4 h-4 me-2 dark:text-white"/>
             View(s)
         </ListgroupItem>
     </Listgroup>

@@ -22,31 +22,30 @@
                     <b>Freon</b> is an open source project.
                 </div>
                 <ul class="space-y-2 text-gray-700 dark:text-gray-300">
-                    <li class="w-48">cc</li>
                     <li class="flex items-center">
-                        <ClockOutline class="text-blue-800"/>
+                        <ClockOutline class="text-blue-800  dark:text-blue-200"/>
                         <p class="pl-4">Current version: <b class="pl-1 text-amber-700">{versionNumber.value}</b></p>
                     </li>
                     <li class="flex items-center">
-                        <AnnotationOutline class="ms-0 inline h-6 w-6 text-blue-800 dark:text-white"/>
+                        <AnnotationOutline class="ms-0 inline h-6 w-6 text-blue-800 dark:text-blue-200"/>
                         <p class="pl-3">Documentation: <a class="pl-1 text-amber-700" href="https://www.freon4dsl.dev/"
                                                           target="_blank" rel="noreferrer">
                             www.freon4dsl.dev
                         </a></p>
                     </li>
                     <li class="flex items-center">
-                        <GithubSolid class="text-blue-800"/>
+                        <GithubSolid class="text-blue-800  dark:text-blue-200"/>
                         <p class="pl-4"> Sources: <a class="ml-2 text-amber-700" href="https://github.com/freon4dsl"
                                                      target="_blank" rel="noreferrer">
                             https://github.com/freon4dsl.
                         </a></p>
                     </li>
                     <li class="flex items-center">
-                        <BadgeCheckOutline class="text-blue-800"/>
+                        <BadgeCheckOutline class="text-blue-800  dark:text-blue-200"/>
                         <p class="pl-4">License: <b class="pl-1 text-amber-700">MIT</b></p>
                     </li>
                     <li class="flex items-center">
-                        <EnvelopeOutline class="text-blue-800"/>
+                        <EnvelopeOutline class="text-blue-800  dark:text-blue-200"/>
                         <p class="pl-4">Created by: <a class="pl-1 text-amber-700" href="https://www.openmodeling.nl/"
                                                        target="_blank" rel="noreferrer">www.openmodeling.nl</a>.</p>
                     </li>
