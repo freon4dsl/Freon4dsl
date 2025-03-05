@@ -23,9 +23,9 @@ export async function openStartDialog() {
     dialogs.startDialogVisible = true;
 }
 
-export function checkModelName(newName: string): string {
+export function checkName(newName: string): string {
     const initialErrorText: string = '';
-    const invalidErrorText: string = "Model name may contain only characters and numbers, and must start with a character.";
+    const invalidErrorText: string = "Name may contain only characters and numbers, and must start with a character.";
     if (newName.length > 0 && !newName.match(/^[a-z,A-Z][a-z,A-Z0-9_]*$/)) {
         return invalidErrorText;
     } else {

@@ -2,13 +2,13 @@
     import {Button, Modal, Input, Helper} from 'flowbite-svelte';
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
-    import {checkModelName} from "$lib/language/DialogHelpers";
+    import {checkName} from "$lib/language/DialogHelpers";
 
     let errorText: string = $state('');
     let newName: string = $state('');
 
     function modelNameValid(){
-        errorText = checkModelName(newName);
+        errorText = checkName(newName);
     }
 
     function resetVariables() {
@@ -24,7 +24,7 @@
 
     async function handleSubmit() {
         console.log("CREATING NEW MODEL: " + newName);
-        if (newName.length > 0 && checkModelName(newName).length === 0) {
+        if (newName.length > 0 && checkName(newName).length === 0) {
             const existing: string[] = await WebappConfigurator.getInstance().getAllModelNames();
             if (!!existing && existing.length > 0 && existing.indexOf(newName) !== -1) {
                 errorText = `Cannot create model '${newName}', because a model with that name already exists on the server.`;
