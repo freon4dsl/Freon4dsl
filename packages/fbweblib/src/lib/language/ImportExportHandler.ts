@@ -63,13 +63,14 @@ export class ImportExportHandler {
             const unit: FreModelUnit | undefined = WebappConfigurator.getInstance().getUnit(unitId);
             if (unit) this._exportUnit(unit);
         }
+        console.log("Exporting done")
     }
 
     private _exportUnit(unit: FreModelUnit) {
         // do not try to export a unit with errors, parsing and unparsing will not proceed correctly
         const list = this.langEnv?.validator.validate(unit);
         if (!isNullOrUndefined(list) && list.length > 0) {
-            setUserMessage(`Cannot export a unit that has errors (found ${list.length}).`);
+            setUserMessage(`Cannot export unit '${unit.name}', because it has errors (found ${list.length}).`);
             // console.log("Not exporting because of errors: " + list.map((l) => l.message).join(", "));
             return;
         }
@@ -104,6 +105,7 @@ export class ImportExportHandler {
             link.dispatchEvent(event);
             document.body.removeChild(link);
         });
+        setUserMessage(`Unit '${unit.name}' exported to file ${defaultFileName}).`);
     }
 
     private allExtensionsToString(): string {

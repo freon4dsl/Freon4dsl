@@ -182,8 +182,8 @@ export class WebappConfigurator {
             runInAction(() => {
                 if (!!this.langEnv) {
                     console.log("setting rootElement to " + newUnit.name)
-                    this.langEnv.editor.rootElement = newUnit;
                     noUnitAvailable.value = false;
+                    this.langEnv.editor.rootElement = newUnit;
                     editorInfo.currentUnit = {
                         id: newUnit.freId(),
                         name: newUnit.name,

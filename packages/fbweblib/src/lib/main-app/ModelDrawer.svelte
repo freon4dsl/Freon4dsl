@@ -39,14 +39,14 @@
     };
 
     const deleteUnit = (index: number) => {
-        console.log("editorInfo.deleteUnit: " + editorInfo.unitIds[index].name);
+        console.log("deleteUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeDeleted = editorInfo.unitIds[index];
         dialogs.deleteUnitDialogVisible = true;
         drawerHidden.value = true;
     };
 
     const saveUnit = (index: number) => {
-        console.log("editorInfo.saveUnit: " + editorInfo.unitIds[index].name);
+        console.log("saveUnit: " + editorInfo.unitIds[index].name);
         if (editorInfo.unitIds[index].name === editorInfo.currentUnit?.name) {
             WebappConfigurator.getInstance().saveUnit(editorInfo.unitIds[index]);
             setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Warning);
@@ -57,24 +57,28 @@
     };
 
     const renameUnit = (index: number) => {
-        console.log("editorInfo.renameUnit: " + editorInfo.unitIds[index].name);
+        console.log("renameUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeRenamed = editorInfo.unitIds[index];
         dialogs.renameUnitDialogVisible = true;
+        drawerHidden.value = true;
     };
 
     const exportUnit = (index: number) => {
+        console.log("exportUnit: " + editorInfo.unitIds[index].name);
         new ImportExportHandler().exportUnit(editorInfo.unitIds[index]);
+        drawerHidden.value = true;
     };
 
     const newUnit = (type: string) => {
         console.log('newUnit of type: ' + type);
         editorInfo.toBeCreated = {name: '', id: '', type: type}
         dialogs.newUnitDialogVisible = true;
+        drawerHidden.value = true;
     };
 
 </script>
 
-
+<!-- buttons for open and new model -->
 <div class="flex items-center">
     <ButtonGroup class="*:!ring-primary-700 ">
         <Button name="Open existing model" size="xs" onclick={openModelDialog}>
@@ -89,6 +93,7 @@
     <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-white"/>
 </div>
 
+<!-- buttons that address the current model -->
 <div class="flex justify-between items-center p-3 mb-3 bg-primary-300">
     <span class="font-bold">
         {editorInfo.modelName}
@@ -111,6 +116,7 @@
     </ButtonGroup>
 </div>
 
+<!-- buttons for the model's units -->
 <Listgroup >
     {#each langInfo.unitTypes as unitType}
         <div class="flex justify-between p-1 font-semibold text-gray-900 dark:text-white">
