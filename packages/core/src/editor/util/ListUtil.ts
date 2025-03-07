@@ -10,8 +10,8 @@ import * as Keys from "./Keys.js";
 import { MetaKey } from "./Keys.js";
 import { FreLogger } from "../../logging/index.js";
 import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index.js";
-import { FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language/index.js";
-import { FreNode } from "../../ast/index.js"
+import { DragAndDropType, FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language/index.js"
+import { FreNode, isFreNode, isFreNodeReference } from "../../ast/index.js"
 import { FreErrorSeverity } from "../../validator/index.js";
 
 const LOGGER = new FreLogger("ListUtil");
@@ -95,28 +95,46 @@ export function moveListElement(
 export function dropListElement(
     editor: FreEditor,
     dropped: ListElementInfo,
-    targetMetaType: string,
+    targetMetaType: DragAndDropType,
     targetElem: FreNode,
     targetPropertyName: string,
     targetIndex: number,
 ) {
-    console.log("Checking drop types: (" +
-        dropped.element.freLanguageConcept() +
-        " does not conform to " +
-        targetMetaType +
-        ").")
-    if (!FreLanguage.getInstance().metaConformsToType(dropped.element, targetMetaType)) {
-        // check if item may be dropped here
-        editor.setUserMessage(
-            "Drop is not allowed here, because the types do not match (" +
-                dropped.element.freLanguageConcept() +
+    if (isFreNode(dropped.element)) {
+        console.log("Checking drop types: (" +
+            dropped.element?.freLanguageConcept() +
+            " does not conform to " +
+            targetMetaType +
+            ").")
+        if (!FreLanguage.getInstance().metaConformsToType2(dropped.elementType, targetMetaType)) {
+            // check if item may be dropped here
+            editor.setUserMessage(
+                "Drop is not allowed here, because the types do not match (" +
+                JSON.stringify(dropped.elementType) +
                 " does not conform to " +
-                targetMetaType +
+                JSON.stringify(targetMetaType) +
                 ").",
-            FreErrorSeverity.Error,
-        );
-        return;
+                FreErrorSeverity.Error,
+            );
+            return;
+        }
+    } else if(isFreNodeReference(dropped.element)) {
+        console.log("Reference is " + dropped.element?.name + " target type " + targetMetaType)
+        if (!FreLanguage.getInstance().metaConformsToType2(dropped.elementType, targetMetaType)) {
+            // check if item may be dropped here
+            editor.setUserMessage(
+                "Drop is not allowed here, because the types do not match (" +
+                JSON.stringify(dropped.elementType) +
+                " does not conform to " +
+                JSON.stringify(targetMetaType) +
+                ").",
+                FreErrorSeverity.Error,
+            );
+            return;
+        }
+        return
     }
+
     // console.log(`dropListElement=> element: ${dropped.element.freLanguageConcept()}, property: ${dropped.propertyName},
     // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
     // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);

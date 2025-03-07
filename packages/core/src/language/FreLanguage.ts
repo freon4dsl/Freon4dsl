@@ -457,4 +457,15 @@ export class FreLanguage {
         const metatype = element.freLanguageConcept();
         return metatype === requestedType || FreLanguage.getInstance().subConcepts(requestedType).includes(metatype);
     }
+
+    public metaConformsToType2(sourceType: DragAndDropType, requestedType: DragAndDropType): boolean {
+        return sourceType.isRef 
+            === requestedType.isRef &&
+        (sourceType.type === requestedType.type || FreLanguage.getInstance().subConcepts(requestedType.type).includes(sourceType.type));
+    }
 }
+
+export type DragAndDropType = {
+    type: string;
+    isRef: boolean
+} 

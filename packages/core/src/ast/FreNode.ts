@@ -28,3 +28,7 @@ export interface FreNode {
 
     parseLocation?: FreParseLocation; // if relevant, the location of this node within the source from which it is parsed
 }
+
+export function isFreNode(node: any): node is FreNode {
+    return node?.freLanguageConcept !== undefined
+}

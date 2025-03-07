@@ -19,8 +19,9 @@
         ListElementInfo,
         MenuOptionsType,
         moveListElement,
-        FreLogger, MenuItem
-    } from '@freon4dsl/core';
+        type PropertyKind,
+        FreLogger, MenuItem, type FreNode, type FreNodeReference, type FreNamedNode, type DragAndDropType
+    } from "@freon4dsl/core"
     import RenderComponent from './RenderComponent.svelte';
     import { componentId } from '$lib/index.js';
     import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
@@ -46,9 +47,13 @@
 
     // determine the type of the elements in the list
     // this speeds up the check whether an element may be dropped here
-    let myMetaType: string;
+    let myMetaType: DragAndDropType;
     $effect(() => {
-        myMetaType = box.conceptName;
+        console.log(`EFFECT ${box.conceptName} : ${box.node.freLanguageConcept()}`)
+        myMetaType = {
+            type: box.conceptName,
+            isRef: FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.propertyKind === 'reference'
+        }
     });
 
     const drop = (event: DragEvent, targetIndex: number) => {
@@ -56,17 +61,17 @@
         event.stopPropagation();
 
         if (!isNullOrUndefined(data)) {
-            LOGGER.log(
-                'DROPPING item [' +
-                    data.element.freId() +
-                    '] from [' +
-                    data.componentId +
-                    '] in list [' +
-                    id +
-                    '] on position [' +
-                    targetIndex +
-                    ']'
-            );
+            // LOGGER.log(
+            //     'DROPPING item [' +
+            //         data.element.freId() +
+            //         '] from [' +
+            //         data.componentId +
+            //         '] in list [' +
+            //         id +
+            //         '] on position [' +
+            //         targetIndex +
+            //         ']'
+            // );
             if (data.componentId === id) {
                 // dropping in the same list
                 moveListElement(box.node, data.element, box.propertyName, targetIndex);
@@ -91,7 +96,7 @@
     };
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
-        LOGGER.log('Drag Start ' + box.id + ' index: ' + listIndex);
+        console.log('Drag Start ' + box.id + ' index: ' + listIndex);
         event.stopPropagation();
         // close any context menu
         contextMenuVisible.value = false;
@@ -105,8 +110,25 @@
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
         // create the data to be transferred and notify the store that something is being dragged
-        draggedElem.value = new ListElementInfo(shownElements[listIndex].node, id);
+        let draggedElemBox = shownElements[listIndex]
+        console.log(`property ${box.node.freLanguageConcept()}.${draggedElemBox.propertyName}`)
+        console.log(`property                                  ${box.propertyName}`)
+        let propertyDef = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)
+        let theNode: FreNode | FreNodeReference<FreNamedNode>
+        if (propertyDef?.propertyKind === "part") {
+            console.log(`DAD Part ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node} ${draggedElemBox.propertyName}`)
+            theNode = draggedElemBox.node
+            draggedElem.value = new ListElementInfo(theNode, id);
+        } else { //if (propertyDef?.propertyKind === "reference") {
+            console.log(`DAD Other ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node} ${draggedElemBox.propertyName}`)
+            // @ts-ignore
+            theNode = box.node[box.propertyName][draggedElemBox.propertyIndex] as FreNodeReference<FreNamedNode>
+            draggedElem.value = new ListElementInfo(theNode, id);
+        }
+        
+        // draggedElem.value = new ListElementInfo(theNode, id);
         draggedFrom.value = listId;
+        // console.log(`dragstart: ${draggedElem.value.element.freLanguageConcept()}`)
     };
 
     const dragleave = (event: DragEvent, index: number): boolean => {
@@ -127,7 +149,7 @@
         // only show this item as active when the type of the element to be dropped is the right one
         if (
             !isNullOrUndefined(data) &&
-            FreLanguage.getInstance().metaConformsToType(data.element, myMetaType)
+            FreLanguage.getInstance().metaConformsToType2(data.elementType, myMetaType)
         ) {
             activeElem.value = { row: index, column: -1 };
             activeIn.value = id;
