@@ -27,7 +27,7 @@
      Cannot do `bind:open={undefined}` when `open` has a fallback value
      https://svelte.dev/e/props_invalid_value
 
-    **FIXED** See commits
+    **TODO** Clarify this and add comments to explain
 
 5. Context menu for lists **_sometimes_** seem to come at a fixeed distance from the mouse click
    - Open CourseSchedule unit Building
