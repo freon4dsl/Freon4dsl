@@ -33,3 +33,15 @@
    - Open CourseSchedule unit Building
    - right click on various list elements
    - the same for the TeachingStaff
+
+6. Draghandles in the editor show through the View menu
+
+7. Tabbing goes through several items that should not be tabbable in tables and lists.
+   ** SOLVED ** by changing the tabindex at several places.
+
+8. The parameter list in method has too many drag handles.
+
+9. The table headers have drag handles, they should not be there.
+   The empty action box at the end of a list or table should not have a drag handle either.
+
+10. 
