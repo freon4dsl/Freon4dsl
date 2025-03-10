@@ -44,4 +44,6 @@
 9. The table headers have drag handles, they should not be there.
    The empty action box at the end of a list or table should not have a drag handle either.
 
-10. 
+10. Too many effects in ErrorList.svelte, ErrorMarker, TextComponent, RenderComponent
+    These all seem to come from replacing the old afterUpdate, which has no real equivalent in Svelte 5. 
+    I did make a number of chnages and it seems to be resolved by them, would like to discuss before pushing them.
