@@ -3,6 +3,8 @@ import { Box, BoxUtil, FreBoxProvider, FreProjectionHandler, BoxFactory } from "
 
 import { SvelteTestUnit } from "../../language/gen/index.js";
 
+import { SvelteTestEnvironment } from "../../config/gen/SvelteTestEnvironment.js";
+
 /**
  * This class implements the box provider for a single node of type SvelteTestUnit.
  * The box provider is able to create the (tree of) boxes for the node, based
@@ -165,7 +167,46 @@ export class SvelteTestUnitBoxProvider extends FreBoxProvider {
                     this.mainHandler,
                 ),
             ),
-            BoxUtil.labelBox(this._node as SvelteTestUnit, "}", "top-1-line-13-item-0"),
+            BoxUtil.indentBox(
+                this._node as SvelteTestUnit,
+                4,
+                "13",
+                BoxUtil.labelBox(this._node as SvelteTestUnit, "myList7", "top-1-line-13-item-0"),
+            ),
+            BoxUtil.indentBox(
+                this._node as SvelteTestUnit,
+                8,
+                "14",
+                // @ts-ignore
+                BoxUtil.verticalReferenceListBox(this._node as SvelteTestUnit, "myList7", SvelteTestEnvironment.getInstance().scoper, null),
+            ),
+            BoxUtil.indentBox(
+                this._node as SvelteTestUnit,
+                4,
+                "15",
+                BoxUtil.labelBox(this._node as SvelteTestUnit, "myList8", "top-1-line-15-item-0"),
+            ),
+            BoxUtil.indentBox(
+                this._node as SvelteTestUnit,
+                8,
+                "16",
+                // @ts-ignore
+                BoxUtil.verticalReferenceListBox(this._node as SvelteTestUnit, "myList8", SvelteTestEnvironment.getInstance().scoper, null),
+            ),
+            BoxUtil.indentBox(
+                this._node as SvelteTestUnit,
+                4,
+                "17",
+                BoxUtil.labelBox(this._node as SvelteTestUnit, "myList9", "top-1-line-17-item-0"),
+            ),
+            BoxUtil.indentBox(
+                this._node as SvelteTestUnit,
+                8,
+                "18",
+                // @ts-ignore
+                BoxUtil.verticalReferenceListBox(this._node as SvelteTestUnit, "myList9", SvelteTestEnvironment.getInstance().scoper, null),
+            ),
+            BoxUtil.labelBox(this._node as SvelteTestUnit, "}", "top-1-line-19-item-0"),
         ]);
     }
 }

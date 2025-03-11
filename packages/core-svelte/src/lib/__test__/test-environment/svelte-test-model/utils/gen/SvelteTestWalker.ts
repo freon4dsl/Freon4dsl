@@ -99,6 +99,21 @@ export class SvelteTestWalker {
                 this.walk(p, includeChildren);
             }
         });
+        modelelement.myList4.forEach((p) => {
+            if (!(includeChildren === undefined) && includeChildren(p)) {
+                this.walk(p, includeChildren);
+            }
+        });
+        modelelement.myList5.forEach((p) => {
+            if (!(includeChildren === undefined) && includeChildren(p)) {
+                this.walk(p, includeChildren);
+            }
+        });
+        modelelement.myList6.forEach((p) => {
+            if (!(includeChildren === undefined) && includeChildren(p)) {
+                this.walk(p, includeChildren);
+            }
+        });
 
         for (let worker of this.myWorkers) {
             if (!stopWalkingThisNode) {

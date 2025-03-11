@@ -3,6 +3,7 @@ import { FreError, FreErrorSeverity, type FreWriter, FreNodeReference,
     type FreNamedNode, type FreNode, FreLanguageEnvironment } from "@freon4dsl/core";
 import { SvelteTestDefaultWorker } from "../../utils/gen/index.js";
 import type {SvelteTestCheckerInterface} from "./SvelteTestValidator.js";
+import {SvelteTestUnit} from "$lib/__test__/test-environment/svelte-test-model";
 
 /**
  * Class SvelteTestReferenceChecker is part of the implementation of the default validator.
@@ -17,6 +18,33 @@ export class SvelteTestReferenceChecker extends SvelteTestDefaultWorker implemen
     // 'errorList' holds the errors found while traversing the model tree
     errorList: FreError[] = [];
     private refSeparator: string = "/";
+
+    /**
+     * Checks 'modelelement' before checking its children.
+     * Found errors are pushed onto 'errorlist'.
+     * If an error is found, it is considered 'fatal', which means that no other checks on
+     * 'modelelement' are performed.
+     *
+     * @param modelelement
+     */
+    public execBeforeSvelteTestUnit(modelelement: SvelteTestUnit): boolean {
+        for (const referredElem of modelelement.myList7) {
+            if (referredElem.referred === null) {
+                this.makeErrorMessage(modelelement, referredElem, "myList7", `${modelelement.name}`);
+            }
+        }
+        for (const referredElem of modelelement.myList8) {
+            if (referredElem.referred === null) {
+                this.makeErrorMessage(modelelement, referredElem, "myList8", `${modelelement.name}`);
+            }
+        }
+        for (const referredElem of modelelement.myList9) {
+            if (referredElem.referred === null) {
+                this.makeErrorMessage(modelelement, referredElem, "myList9", `${modelelement.name}`);
+            }
+        }
+        return false;
+    }
 
     private makeErrorMessage(
         modelelement: FreNode,

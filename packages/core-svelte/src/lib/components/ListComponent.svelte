@@ -109,24 +109,21 @@
 
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
-        // create the data to be transferred and notify the store that something is being dragged
-        let draggedElemBox = shownElements[listIndex]
-        console.log(`property ${box.node.freLanguageConcept()}.${draggedElemBox.propertyName}`)
-        console.log(`property                                  ${box.propertyName}`)
-        let propertyDef = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)
-        let theNode: FreNode | FreNodeReference<FreNamedNode>
+        // Create the data to be transferred and notify the store that something is being dragged.
+        let draggedElemBox = shownElements[listIndex];
+        let propertyDef = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName);
+        // If the draggedElemBox is a part, then the node it refers to is the list element that is being transferred.
+        // But if it is a reference then the node it refers to is the parent of the reference, i.e. the complete list.
+        // The same holds for primitive list elements. Therefore, we need to distinguish the following cases.
         if (propertyDef?.propertyKind === "part") {
-            console.log(`DAD Part ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node} ${draggedElemBox.propertyName}`)
-            theNode = draggedElemBox.node
-            draggedElem.value = new ListElementInfo(theNode, id);
-        } else { //if (propertyDef?.propertyKind === "reference") {
-            console.log(`DAD Other ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node} ${draggedElemBox.propertyName}`)
+            // console.log(`DAD Part ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node?.freLanguageConcept()} ${draggedElemBox.propertyName}`)
+            draggedElem.value = new ListElementInfo(draggedElemBox.node, id);
+        } else if (propertyDef?.propertyKind === "reference" || propertyDef?.propertyKind === "primitive"  ) {
+            // console.log(`DAD Other ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node} ${draggedElemBox.propertyName}`)
             // @ts-ignore
-            theNode = box.node[box.propertyName][draggedElemBox.propertyIndex] as FreNodeReference<FreNamedNode>
+            let theNode: FreNode | FreNodeReference<FreNamedNode> = box.node[draggedElemBox.propertyName][draggedElemBox.propertyIndex] as FreNodeReference<FreNamedNode>
             draggedElem.value = new ListElementInfo(theNode, id);
         }
-        
-        // draggedElem.value = new ListElementInfo(theNode, id);
         draggedFrom.value = listId;
         // console.log(`dragstart: ${draggedElem.value.element.freLanguageConcept()}`)
     };
@@ -149,7 +146,7 @@
         // only show this item as active when the type of the element to be dropped is the right one
         if (
             !isNullOrUndefined(data) &&
-            FreLanguage.getInstance().metaConformsToType2(data.elementType, myMetaType)
+            FreLanguage.getInstance().dragMetaConformsToType(data.elementType, myMetaType)
         ) {
             activeElem.value = { row: index, column: -1 };
             activeIn.value = id;

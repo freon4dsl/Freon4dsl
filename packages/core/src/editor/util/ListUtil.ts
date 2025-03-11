@@ -11,7 +11,7 @@ import { MetaKey } from "./Keys.js";
 import { FreLogger } from "../../logging/index.js";
 import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index.js";
 import { DragAndDropType, FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language/index.js"
-import { FreNode, isFreNode, isFreNodeReference } from "../../ast/index.js"
+import {FreNamedNode, FreNode, FreNodeReference} from "../../ast/index.js"
 import { FreErrorSeverity } from "../../validator/index.js";
 
 const LOGGER = new FreLogger("ListUtil");
@@ -54,14 +54,14 @@ export function createKeyboardShortcutForList2(
  */
 export function moveListElement(
     parentElement: FreNode,
-    movedElement: FreNode,
+    movedElement: FreNode | FreNodeReference<FreNamedNode>,
     targetPropertyName: string,
     targetIndex: number
 ) {
     // console.log(`moveListElement: ${targetPropertyName}, ${parentElement.freId()}`)
     // get info about the property that needs to be changed
     const { property, isList } = getPropertyInfo(parentElement, targetPropertyName);
-    console.log('List before: [' + property.map(x => x["name"]).join(', ') + ']');
+    // console.log('List before: [' + property.map(x => x["name"]).join(', ') + ']');
     const oldIndex: number = movedElement.freOwnerDescriptor().propertyIndex;
     // tslint:disable-next-line:max-line-length
     // console.log(`moveListElement=> element: ${parentElement.freLanguageConcept()}, property: ${targetPropertyName}, oldIndex: ${oldIndex}, targetIndex: ${targetIndex}`);
@@ -80,7 +80,15 @@ export function moveListElement(
             property.splice(targetIndex, 0, tmpProp);
         });
     }
-    console.log('List after: [' + property.map(x => x["name"]).join(', ') + ']');
+    // console.log('List after: [' + property.map(x => x["name"]).join(', ') + ']');
+}
+
+function printTypeName(dropped: DragAndDropType): string {
+    if (dropped.isRef) {
+        return 'Reference to ' + dropped.type;
+    } else {
+        return dropped.type;
+    }
 }
 
 /**
@@ -100,57 +108,34 @@ export function dropListElement(
     targetPropertyName: string,
     targetIndex: number,
 ) {
-    if (isFreNode(dropped.element)) {
-        console.log("Checking drop types: (" +
-            dropped.element?.freLanguageConcept() +
-            " does not conform to " +
-            targetMetaType +
-            ").")
-        if (!FreLanguage.getInstance().metaConformsToType2(dropped.elementType, targetMetaType)) {
-            // check if item may be dropped here
-            editor.setUserMessage(
-                "Drop is not allowed here, because the types do not match (" +
-                JSON.stringify(dropped.elementType) +
-                " does not conform to " +
-                JSON.stringify(targetMetaType) +
-                ").",
-                FreErrorSeverity.Error,
-            );
-            return;
-        }
-    } else if(isFreNodeReference(dropped.element)) {
-        console.log("Reference is " + dropped.element?.name + " target type " + targetMetaType)
-        if (!FreLanguage.getInstance().metaConformsToType2(dropped.elementType, targetMetaType)) {
-            // check if item may be dropped here
-            editor.setUserMessage(
-                "Drop is not allowed here, because the types do not match (" +
-                JSON.stringify(dropped.elementType) +
-                " does not conform to " +
-                JSON.stringify(targetMetaType) +
-                ").",
-                FreErrorSeverity.Error,
-            );
-            return;
-        }
-        return
-    }
-
-    // console.log(`dropListElement=> element: ${dropped.element.freLanguageConcept()}, property: ${dropped.propertyName},
-    // oldIndex: ${dropped.propertyIndex}, targetElem: ${targetElem},
-    // targetPropertyName ${targetPropertyName}, targetIndex: ${targetIndex}`);
-    const { property, isList } = getPropertyInfo(targetElem, targetPropertyName);
-    console.log('List before: [' + property.map(x => x["name"]).join(', ') + ']');
     if (!!dropped.element) {
+        // First, check whether the types allow a drop
+        if (!FreLanguage.getInstance().dragMetaConformsToType(dropped.elementType, targetMetaType)) {
+            // check if item may be dropped here
+            editor.setUserMessage(
+                "Drop is not allowed here, because the types do not match (" +
+                printTypeName(dropped.elementType) +
+                " does not conform to " +
+                printTypeName(targetMetaType) +
+                ").",
+                FreErrorSeverity.Error,
+            );
+            return;
+        }
+
+        // Types ok, now perform the actual transfer from one list on another.
+        const {property, isList} = getPropertyInfo(targetElem, targetPropertyName);
+        // console.log('List before: [' + property.map(x => x["name"]).join(', ') + ']');
         // Add the found element to 'targetElem[targetPropertyName]' at position 'targetIndex'.
         // Note that we need not explicitly remove the item from its old position, the mobx decorators do that.
         // Note that because of the placeholder that is shown as last element of a list, the targetIndex may be equal to the property.length.
         if (isList && targetIndex <= property.length) {
-            AST.change( () => {
+            AST.change(() => {
                 property.splice(targetIndex, 0, dropped.element);
             })
         }
+        // console.log('List after: [' + property.map(x => x["name"]).join(', ') + ']');
     }
-    console.log('List after: [' + property.map(x => x["name"]).join(', ') + ']');
 }
 
 /**

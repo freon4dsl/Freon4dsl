@@ -34,4 +34,41 @@ import { SimpleNode, OtherType, SvelteTestUnit } from "../../language/gen/index.
  */
 export const BINARY_EXPRESSION_CREATORS: FreCreateBinaryExpressionAction[] = [];
 
-export const CUSTOM_ACTIONS: FreCustomAction[] = [];
+export const CUSTOM_ACTIONS: FreCustomAction[] = [
+    FreCustomAction.create({
+        // Action to insert new reference to a concept
+        activeInBoxRoles: ["myList7"],
+        trigger: "SimpleNode",
+        action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
+            const parent: SvelteTestUnit = box.node as SvelteTestUnit;
+            // @ts-ignore
+            const newBase: FreNodeReference<SimpleNode> = FreNodeReference.create<SimpleNode>("", null);
+            parent.myList7.push(newBase);
+            return newBase.referred;
+        },
+    }),
+    FreCustomAction.create({
+        // Action to insert new reference to a concept
+        activeInBoxRoles: ["myList8"],
+        trigger: "SimpleNode",
+        action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
+            const parent: SvelteTestUnit = box.node as SvelteTestUnit;
+            // @ts-ignore
+            const newBase: FreNodeReference<SimpleNode> = FreNodeReference.create<SimpleNode>("", null);
+            parent.myList8.push(newBase);
+            return newBase.referred;
+        },
+    }),
+    FreCustomAction.create({
+        // Action to insert new reference to a concept
+        activeInBoxRoles: ["myList9"],
+        trigger: "OtherType",
+        action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
+            const parent: SvelteTestUnit = box.node as SvelteTestUnit;
+            // @ts-ignore
+            const newBase: FreNodeReference<OtherType> = FreNodeReference.create<OtherType>("", null);
+            parent.myList9.push(newBase);
+            return newBase.referred;
+        },
+    }),
+];

@@ -458,7 +458,7 @@ export class FreLanguage {
         return metatype === requestedType || FreLanguage.getInstance().subConcepts(requestedType).includes(metatype);
     }
 
-    public metaConformsToType2(sourceType: DragAndDropType, requestedType: DragAndDropType): boolean {
+    public dragMetaConformsToType(sourceType: DragAndDropType, requestedType: DragAndDropType): boolean {
         return sourceType.isRef 
             === requestedType.isRef &&
         (sourceType.type === requestedType.type || FreLanguage.getInstance().subConcepts(requestedType.type).includes(sourceType.type));

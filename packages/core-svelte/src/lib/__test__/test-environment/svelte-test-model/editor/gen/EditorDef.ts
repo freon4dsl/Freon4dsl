@@ -50,6 +50,9 @@ const map = new Map([
                     ["myList4", ""], // special projection
                     ["myList5", ""], // special projection
                     ["myList6", ""], // special projection
+                    ["myList7", ""], // special projection
+                    ["myList8", ""], // special projection
+                    ["myList9", ""], // special projection
                 ]),
             ],
         ]),
