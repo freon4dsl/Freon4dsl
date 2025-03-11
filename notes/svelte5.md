@@ -2,7 +2,7 @@
 
 ## Drag & drop
 
-1. The console logs in ListUtil.ts use `freId()`, assuming that elements are nodes, but alement can also be references (`FreNodeReference`).
+1. The console logs in ListUtil.ts use `freId()`, assuming that elements are nodes, but element can also be references (`FreNodeReference`).
 
     **FIXED** Changed the console logs to fix this.
 
@@ -10,7 +10,9 @@
   - Turn off all views.
   - Open TeachingStaff
   - drag competence to staff list:
-  - Sould refuse, but does actually try to drop, models becomes incorrect and mobx is complaining.
+  - Should refuse, but does actually try to drop, models becomes incorrect and mobx is complaining.
+  - 
+    **FIXED** Changed the manner in which types are compared to include the diff between reference<X> and X.
 
 3. In language CourseSchedule model AdultEducation1.
   - Open Schedule modelunit with external views on
@@ -29,21 +31,25 @@
 
     **TODO** Clarify this and add comments to explain
 
-5. Context menu for lists **_sometimes_** seem to come at a fixeed distance from the mouse click
+5. Context menu for lists **_sometimes_** seem to come at a fixed distance from the mouse click
    - Open CourseSchedule unit Building
    - right click on various list elements
    - the same for the TeachingStaff
 
 6. Draghandles in the editor show through the View menu
 
+    **FIXED** Removed z-index of .drag-handle
+
 7. Tabbing goes through several items that should not be tabbable in tables and lists.
-   ** SOLVED ** by changing the tabindex at several places.
+   **SOLVED** by changing the tabindex at several places.
 
 8. The parameter list in method has too many drag handles.
 
 9. The table headers have drag handles, they should not be there.
    The empty action box at the end of a list or table should not have a drag handle either.
 
-10. Too many effects in ErrorList.svelte, ErrorMarker, TextComponent, RenderComponent
+10. Too many effects in ErrorList, ErrorMarker, TextComponent, RenderComponent
     These all seem to come from replacing the old afterUpdate, which has no real equivalent in Svelte 5. 
-    I did make a number of chnages and it seems to be resolved by them, would like to discuss before pushing them.
+    I did make a number of changes, and it seems to be resolved by them, would like to discuss before pushing them.
+
+11. The single keyword option for booleans does not function anymore!! (Anneke: This is unrelated to svelte 5, I think.)

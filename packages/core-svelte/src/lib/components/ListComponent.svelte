@@ -19,8 +19,13 @@
         ListElementInfo,
         MenuOptionsType,
         moveListElement,
-        type PropertyKind,
-        FreLogger, MenuItem, type FreNode, type FreNodeReference, type FreNamedNode, type DragAndDropType
+        FreLogger,
+        MenuItem,
+        type FreNodeReference,
+        type FreNamedNode,
+        type DragAndDropType,
+        isFreNodeReference,
+        isFreNode
     } from "@freon4dsl/core"
     import RenderComponent from './RenderComponent.svelte';
     import { componentId } from '$lib/index.js';
@@ -49,7 +54,7 @@
     // this speeds up the check whether an element may be dropped here
     let myMetaType: DragAndDropType;
     $effect(() => {
-        console.log(`EFFECT ${box.conceptName} : ${box.node.freLanguageConcept()}`)
+        // console.log(`EFFECT ${box.conceptName} : ${box.node.freLanguageConcept()}`)
         myMetaType = {
             type: box.conceptName,
             isRef: FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.propertyKind === 'reference'
@@ -61,17 +66,11 @@
         event.stopPropagation();
 
         if (!isNullOrUndefined(data)) {
-            // LOGGER.log(
-            //     'DROPPING item [' +
-            //         data.element.freId() +
-            //         '] from [' +
-            //         data.componentId +
-            //         '] in list [' +
-            //         id +
-            //         '] on position [' +
-            //         targetIndex +
-            //         ']'
-            // );
+            if (isFreNodeReference(data.element)) {
+                LOGGER.log(`DROPPING item [${data.element.name}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
+            } else if (isFreNode(data.element)) {
+                LOGGER.log(`DROPPING item [${data.element.freId()}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
+            }
             if (data.componentId === id) {
                 // dropping in the same list
                 moveListElement(box.node, data.element, box.propertyName, targetIndex);
@@ -118,11 +117,13 @@
         if (propertyDef?.propertyKind === "part") {
             // console.log(`DAD Part ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node?.freLanguageConcept()} ${draggedElemBox.propertyName}`)
             draggedElem.value = new ListElementInfo(draggedElemBox.node, id);
-        } else if (propertyDef?.propertyKind === "reference" || propertyDef?.propertyKind === "primitive"  ) {
+        } else if (propertyDef?.propertyKind === "reference") {
             // console.log(`DAD Other ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node} ${draggedElemBox.propertyName}`)
             // @ts-ignore
-            let theNode: FreNode | FreNodeReference<FreNamedNode> = box.node[draggedElemBox.propertyName][draggedElemBox.propertyIndex] as FreNodeReference<FreNamedNode>
+            let theNode: FreNodeReference<FreNamedNode> = box.node[draggedElemBox.propertyName][draggedElemBox.propertyIndex] as FreNodeReference<FreNamedNode>
             draggedElem.value = new ListElementInfo(theNode, id);
+        } else { // if ( propertyDef?.propertyKind === "primitive" )
+            // todo implement this if we continue having lists of primitive values, and not comply to LionWeb
         }
         draggedFrom.value = listId;
         // console.log(`dragstart: ${draggedElem.value.element.freLanguageConcept()}`)
@@ -140,16 +141,15 @@
         event.preventDefault();
         const data: ListElementInfo | null = draggedElem.value;
         // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
-        if (isNullOrUndefined(draggedElem.value)) {
+        if (isNullOrUndefined(data)) {
             return false;
         }
+        // console.log(JSON.stringify(data.elementType) + ' compares to ' + JSON.stringify(myMetaType))
         // only show this item as active when the type of the element to be dropped is the right one
-        if (
-            !isNullOrUndefined(data) &&
-            FreLanguage.getInstance().dragMetaConformsToType(data.elementType, myMetaType)
-        ) {
+        if (FreLanguage.getInstance().dragMetaConformsToType(data.elementType, myMetaType)) {
             activeElem.value = { row: index, column: -1 };
             activeIn.value = id;
+            return true;
         }
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
@@ -243,10 +243,12 @@
             oncontextmenu={(event) => showContextMenu(event, index)}
             role="none"
         >
+            {#if !isActionBox(box)}
             <span class="drag-handle"
                   draggable="true"
                   ondragstart={(event) => dragstart(event, id, index)}
                   role="listitem"><DragHandle/></span>
+            {/if}
             <RenderComponent {box} {editor} />
         </span>
     {/each}
