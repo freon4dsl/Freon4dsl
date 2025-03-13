@@ -17,7 +17,6 @@
 3. In language CourseSchedule model AdultEducation1.
   - Open Schedule modelunit with external views on
   - Takes _very_ long and gives the following error in the console:
-  ![img.png](img.png)
     Plus button or dropdowns on slots do not work, the ERROR on the last line in the image is then repeated.
 
     **FIXED** Changed sort function to use a local array, and assign to observed sortedSlots at the end once.
@@ -44,11 +43,14 @@
    **SOLVED** by changing the tabindex at several places.
 
 8. The parameter list in method has too many drag handles.
+    - Open Example project, Model89
+
+   **FIXED** Changed adding list-joins from creating a list box into creating a layout box.
 
 9. The table headers have drag handles, they should not be there.
    The empty action box at the end of a list or table should not have a drag handle either.
 
-10. Too many effects in ErrorList, ErrorMarker, TextComponent, RenderComponent
+10. Too many effects in ErrorList, ErrorMarker, TextComponent, RenderComponent, TableComponent.
     These all seem to come from replacing the old afterUpdate, which has no real equivalent in Svelte 5. 
     I did make a number of changes, and it seems to be resolved by them, would like to discuss before pushing them.
 

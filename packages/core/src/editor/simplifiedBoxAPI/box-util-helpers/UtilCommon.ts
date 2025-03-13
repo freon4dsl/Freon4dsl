@@ -24,7 +24,7 @@ export class UtilCommon {
             if (listJoin.type === UtilCommon.separatorName) {
             if (index < numberOfItems - 1) {
                 result.push(
-                    BoxFactory.horizontalList(element, roleName, propertyName, [
+                    BoxFactory.horizontalLayout(element, roleName, propertyName, [
                         innerBox,
                         BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                     ]),
@@ -34,7 +34,7 @@ export class UtilCommon {
             }
         } else if (listJoin.type === UtilCommon.terminatorName) {
             result.push(
-                BoxFactory.horizontalList(element, roleName, propertyName, [
+                BoxFactory.horizontalLayout(element, roleName, propertyName, [
                     innerBox,
                     BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                 ]),
@@ -42,7 +42,7 @@ export class UtilCommon {
         } else if (listJoin.type === UtilCommon.initiatorName) {
             // TODO test this code
             result.push(
-                BoxFactory.horizontalList(element, roleName, propertyName, [
+                BoxFactory.horizontalLayout(element, roleName, propertyName, [
                     BoxFactory.label(element, roleName + "list-item-label", listJoin.text),
                     innerBox,
                 ]),
