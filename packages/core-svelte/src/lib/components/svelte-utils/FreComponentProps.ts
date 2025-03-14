@@ -37,6 +37,7 @@ export interface GridCellProps<T extends Box> extends FreComponentProps<T> {
 export interface TableCellProps<T extends Box> extends FreComponentProps<T> {
     parentComponentId: string;
     parentOrientation: string;
+    addDragHandle: boolean;
     ondropOnCell: (details: TableDetails) => void;
 }
 /**

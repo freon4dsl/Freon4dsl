@@ -44,6 +44,7 @@
         box,
         parentComponentId,
         parentOrientation,
+        addDragHandle,
         ondropOnCell
     }: TableCellProps<TableCellBox> = $props();
 
@@ -247,7 +248,7 @@
     bind:this={htmlElement}
     tabindex={0}
 >
-    {#if isHeader.length === 0}
+    {#if isHeader.length === 0 && addDragHandle}
                 <span class="drag-handle"
                       draggable="true"
                       ondragstart={(event) => dragstart(event)}
