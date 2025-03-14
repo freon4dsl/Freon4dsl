@@ -40,7 +40,8 @@
     **FIXED** Removed z-index of .drag-handle
 
 7. Tabbing goes through several items that should not be tabbable in tables and lists.
-   **SOLVED** by changing the tabindex at several places.
+ 
+   **FIXED** by changing the tabindex at several places.
 
 8. The parameter list in method has too many drag handles.
     - Open Example project, Model89
