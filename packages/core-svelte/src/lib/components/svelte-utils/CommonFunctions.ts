@@ -100,16 +100,6 @@ export function componentId(box: Box): string {
     return `${box?.node?.freId()}-${box?.role}`;
 }
 
-export function setBoxSizes(box: Box, rect: DOMRect) {
-    if (!isNullOrUndefined(box)) {
-        box.actualX = rect.left;
-        box.actualY = rect.top;
-        box.actualHeight = rect.height;
-        box.actualWidth = rect.width;
-        // XLOGGER.log("   actual is (" + Math.round(box.actualX) + ", " + Math.round(box.actualY) + ")");
-    }
-}
-
 /**
  * Replace HTML tags and spaces with HTML Entities.
  * Used to make text containing these acceptable as HTML Text.
