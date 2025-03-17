@@ -5,7 +5,7 @@
 <script lang="ts">
     import { TEXT_LOGGER } from '$lib/components/ComponentLoggers.js';
     import { onMount, tick } from 'svelte';
-    import { componentId, replaceHTML, setBoxSizes } from '$lib/components/svelte-utils/index.js';
+    import { componentId, replaceHTML } from '$lib/components/svelte-utils/index.js';
     import {
         ActionBox,
         ALT,
@@ -14,7 +14,7 @@
         ARROW_RIGHT,
         ARROW_UP,
         BACKSPACE,
-        CharAllowed,
+        CharAllowed, type ClientRectangle,
         CONTROL,
         DELETE,
         ENTER,
@@ -27,8 +27,8 @@
         SelectBox,
         SHIFT,
         TAB,
-        TextBox
-    } from '@freon4dsl/core';
+        TextBox, UndefinedRectangle
+    } from "@freon4dsl/core"
     import { TextComponentHelper } from '$lib/components/svelte-utils/TextComponentHelper.js';
     import ErrorTooltip from '$lib/components/ErrorTooltip.svelte';
     import ErrorMarker from '$lib/components/ErrorMarker.svelte';
@@ -104,18 +104,6 @@
         endEditing,
         toParent
     );
-
-    $effect(() => {
-        // NB This is needed here because this component is not shown using RenderComponent if it is part of a TextDropdownComponent.
-        if (!isNullOrUndefined(inputElement)) {
-            // upon initialization the element might be null
-            setBoxSizes(box, inputElement.getBoundingClientRect());
-        }
-        if (!isNullOrUndefined(spanElement)) {
-            // upon initialization the element might be null
-            setBoxSizes(box, spanElement.getBoundingClientRect());
-        }
-    });
 
     /* ========	The following functions are called from @freon4dsl/core =========== */
 
@@ -230,7 +218,7 @@
         isEditing = true;
         editStart = true;
         originalText = text;
-        await tick(); // wait till the <input> is rendered // todo see whether this is really needed
+        // await tick(); // wait till the <input> is rendered // todo see whether this is really needed
         // Now set the width of <input>, and the caret position,
         // either based on the input from the editor, or from the UI.
         setInputWidth();
@@ -489,6 +477,28 @@
         }
     }
 
+    const clientRectangle = (): ClientRectangle => {
+        LOGGER.log(`clientRectangle ${box.id} ${isEditing} input ${isNullOrUndefined(inputElement)} span ${isNullOrUndefined(spanElement)}`)
+
+        if (!isNullOrUndefined(inputElement)) {
+            LOGGER.log(`clientRectangle ${box.id} using input`)
+            return inputElement.getBoundingClientRect()
+        }
+        if (!isNullOrUndefined(spanElement)) {
+            LOGGER.log(`clientRectangle ${box.id} using span`)
+            return spanElement.getBoundingClientRect();
+        }
+        LOGGER.log(`clientRectangle ${box.id} is undefined`)
+        return UndefinedRectangle
+    }
+    
+    $effect(() => {
+        if (!isNullOrUndefined(box)) {
+            box.getRectangle = clientRectangle
+        }
+    })
+
+    
     // THE OLD afterUpdate:
     // $effect(() => {
     //     LOGGER.log(`effect 4 for ${box?.id}`)
@@ -518,15 +528,6 @@
     //         box.setFocus = setFocus;
     //         box.setCaret = setCaret;
     //         box.refreshComponent = refresh;
-    //     }
-    //     // NB This is needed here because this component is not shown using RenderComponent if it is part of a TextDropdownComponent.
-    //     if (!isNullOrUndefined(inputElement)) {
-    //         // upon initialization the element might be null
-    //         setBoxSizes(box, inputElement.getBoundingClientRect());
-    //     }
-    //     if (!isNullOrUndefined(spanElement)) {
-    //         // upon initialization the element might be null
-    //         setBoxSizes(box, spanElement.getBoundingClientRect());
     //     }
     // });
 </script>

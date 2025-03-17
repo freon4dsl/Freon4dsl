@@ -5,40 +5,53 @@ import { FreLogger } from "../../logging/index.js";
 const LOGGER = new FreLogger("Box");
 
 /**
+ * Type for the rectangle that the corresponding component has in the browser
+ */
+export type ClientRectangle = {
+    height: number,
+    width: number,
+    x: number ,
+    y: number
+}
+
+export const UndefinedRectangle: ClientRectangle = {
+    height: 0,
+    width: 0,
+    x: 0,
+    y: 0
+}
+/**
  * The root of the Box class hierarchy, contains all generic properties and a number of navigation/search functions.
  */
 export abstract class Box {
+    /**
+     * The X position of the corresponding component in the browser
+     */
     get actualX(): number {
-        return this._actualX;
+        return this.getRectangle().x;
     }
 
-    set actualX(value: number) {
-        this._actualX = value;
-    }
-
+    /**
+     * The Y position of the corresponding component in the browser
+     */
     get actualY(): number {
-        return this._actualY;
+        return this.getRectangle().y;
     }
 
-    set actualY(value: number) {
-        this._actualY = value;
-    }
-
+    /**
+     * The width of the corresponding component in the browser
+     */
     get actualWidth(): number {
-        return this._actualWidth;
+        return this.getRectangle().width;
     }
 
-    set actualWidth(value: number) {
-        this._actualWidth = value;
-    }
-
+    /**
+     * The height of the corresponding component in the browser
+     */
     get actualHeight(): number {
-        return this._actualHeight;
+        return this.getRectangle().height;
     }
 
-    set actualHeight(value: number) {
-        this._actualHeight = value;
-    }
     $id: string;
     kind: string = "";
     role: string = "";
@@ -65,6 +78,10 @@ export abstract class Box {
     protected _errorMessages: string[] = [];
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
+    /**
+     * The callback method to the corresponding component in the browser.
+     */
+    getRectangle: () => ClientRectangle = () => { return UndefinedRectangle }
 
     /**
      *  Called when the box is dirty, refreshes the corresponding component.
@@ -122,15 +139,6 @@ export abstract class Box {
         this._errorMessages = [];
         this.isDirty();
     }
-
-    // Never set these manually, these properties are set after rendering to get the
-    // actual coordinates as rendered in the browser,
-    // TODO see whether these can be set on demand and whether this is useful ??? Probably yes.
-    
-    private _actualX: number = -1;
-    private _actualY: number = -1;
-    private _actualWidth: number = -1;
-    private _actualHeight: number = -1;
 
     protected constructor(node: FreNode, role: string) {
         FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");

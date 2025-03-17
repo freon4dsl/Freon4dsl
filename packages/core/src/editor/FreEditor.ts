@@ -26,7 +26,7 @@ const LOGGER = new FreLogger("FreEditor").mute();
 
 export class FreEditor {
     private static isOnPreviousLine(ref: Box, other: Box): boolean {
-        const margin = 5;
+        const margin = 6;
         return other.actualY + margin < ref.actualY;
     }
 
@@ -688,7 +688,6 @@ export class FreEditor {
      * @param box
      */
     private boxAbove(box: Box): Box {
-        // wait(0);
         const x = box.actualX + this.scrollX ;
         const y = box.actualY + this.scrollY;
         let result: Box = box.nextLeafLeft;
