@@ -218,7 +218,7 @@
         isEditing = true;
         editStart = true;
         originalText = text;
-        // await tick(); // wait till the <input> is rendered // todo see whether this is really needed
+        await tick(); // wait till the <input> is rendered // todo see whether this is really needed
         // Now set the width of <input>, and the caret position,
         // either based on the input from the editor, or from the UI.
         setInputWidth();
