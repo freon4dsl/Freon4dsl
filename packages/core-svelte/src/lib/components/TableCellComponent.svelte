@@ -245,11 +245,12 @@
     onblur={() => {}}
     oncontextmenu={(event) => showContextMenu(event)}
     bind:this={htmlElement}
-    tabindex={0}
+    tabindex={-1}
 >
     {#if isHeader.length === 0}
                 <span class="drag-handle"
                       draggable="true"
+                      tabindex={-1}
                       ondragstart={(event) => dragstart(event)}
                       role="listitem"><DragHandle/></span>
     {/if}

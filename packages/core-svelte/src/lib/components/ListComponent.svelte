@@ -246,6 +246,7 @@
             {#if !isActionBox(box)}
             <span class="drag-handle"
                   draggable="true"
+                  tabindex={-1}
                   ondragstart={(event) => dragstart(event, id, index)}
                   role="listitem"><DragHandle/></span>
             {/if}
