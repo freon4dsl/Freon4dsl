@@ -39,7 +39,6 @@
     "rollup": "4.34.8",
     "rollup-plugin-auto-external": "2.0.0",
     "rollup-plugin-css-only": "4.5.2",
-    "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-livereload": "2.0.5",
     "rollup-plugin-polyfill-node": "0.13.0",
     "rollup-plugin-svelte": "^7.2.2",
