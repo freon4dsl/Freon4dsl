@@ -41,23 +41,34 @@ export class LimitedRule extends GrammarRule {
     }
 
     toMethod(): string {
+    // public transformVisibilityKind(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): VisibilityKind {
+    //         console.log("transformVisibilityKind: " + children.toString());
+    //         const choice: string = children.toArray()[0];
+    //         switch (choice) {
+    //             case "+": return VisibilityKind.PUBLIC;
+    //             case "-":
+    //                 return VisibilityKind.PRIVATE;
+    //             case "#":
+    //                 return VisibilityKind.PROTECTED;
+    //             default:
+    //                 return null;
+    //         }
+    //     }
         if (!!this.myMap && this.myMap.size > 0) {
             // found a limited concept with a special projection
-            let ifStat: string = "";
+            let switchStat: string = "";
+            // create all cases for the switch statement
             for (const [key, value] of this.myMap) {
-                ifStat += `if (choice === '${value}') {
-                return ${key};
-            } else `;
+                switchStat += `case'${value}': return ${key};\n`;
             }
-            // close the ifStatement
-            ifStat += `{
-                return null;
+            // complete the switch statement
+            switchStat = `switch (children.toArray()[0]) {
+                ${switchStat} default: return null;
             }`;
             return `
                 ${ParserGenUtil.makeComment(this.toGrammar())}
                 public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${Names.classifier(this.concept)} {
-                    const choice: string = sentence.text;
-                    ${ifStat}
+                    ${switchStat}
                 }`;
         } else {
             // make a 'normal' reference method

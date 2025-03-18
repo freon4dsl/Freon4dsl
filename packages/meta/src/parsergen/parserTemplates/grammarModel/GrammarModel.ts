@@ -102,21 +102,19 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
             
             /**
-             * Generic method to transform lists
+             * Generic method to transform lists of primitive values
              */
             public ${internalTransformPrimList}(list: string[], primType: string, separator?: string): (string | number | boolean)[] {
                 let result: (string | number | boolean)[] = []
                 if (!!list) {
                     list.forEach((element) => {
-                        if (element !== null && element !== undefined) {
-                            if (element !== separator) {
+                        if (element !== null && element !== undefined && element !== separator) {
                                 switch (primType) {
                                     case 'number': result.push(parseInt(element, 10)); break;
                                     case 'string': result.push(element.replace(/"/g, '')); break;
-                                    case 'boolean': result.push((element === 'true' ? true : false)); break;
+                                    case 'boolean': result.push(element === "true"); break;
                                     default: break;
                                 }
-                            }
                         }
                     });
                 }
@@ -126,11 +124,12 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             /**
              * Generic method to transform lists of references
              */
-            public ${internalTransformRefList}\<T extends ${Names.FreNamedNode}\>(list: KtList<T>, typeName: string): ${Names.FreNodeReference}\<T\>[] {
-                let result: ${Names.FreNodeReference}\<T\>[] = [];
+            public ${internalTransformRefList}\<T extends ${Names.FreNamedNode}\>(list: KtList<T>, typeName: string, separator?: string): ${Names.FreNodeReference}\<T\>[] {
+                console.log("transformRefList called: " + JSON.stringify(list));
+                let result: FreNodeReference<T>[] = [];
                 if (!!list) {
-                    for (const child of list) {
-                        if (child !== null && child !== undefined) {
+                    for (const child of list.toArray()) {
+                        if (child !== null && child !== undefined && child !== separator) {
                             result.push(FreNodeReference.create<T>(child, typeName));
                         }
                     }

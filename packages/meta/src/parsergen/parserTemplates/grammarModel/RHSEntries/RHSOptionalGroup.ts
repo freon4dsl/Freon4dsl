@@ -36,22 +36,22 @@ export class RHSOptionalGroup extends RHSPropEntry {
         if (this.subs.length > 1) {
             return (
                 `
-            if (!!${nodeName}[${index}]) { // RHSOptionalGroup
+            if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { // RHSOptionalGroup
                 const _optGroup = ${nodeName}.asJsReadonlyArrayView()[${index}];` + // to avoid an extra newline
-                `const _propItem = _optGroup.children;` +
-                `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "_propItem", mainAnalyserName)}`).join("\n")}
+                `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "_optGroup", mainAnalyserName)}`).join("\n")}
             }`
             );
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList) {
                 return `
-                    if (!!${nodeName}[${index}]) { // RHSOptionalGroup
+                    if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { // RHSOptionalGroup
                         ${first.toMethod(index, nodeName, mainAnalyserName)}
                     }`;
             } else {
+                // todo adjust the following
                 return `
-                    if (!!${nodeName}[${index}]) { // RHSOptionalGroup
+                    if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { // RHSOptionalGroup
                         const _optBranch = this.${mainAnalyserName}.getChildren(${nodeName}[${index}]);
                         ${first.toMethod(0, "_optBranch", mainAnalyserName)}
                     }`;
