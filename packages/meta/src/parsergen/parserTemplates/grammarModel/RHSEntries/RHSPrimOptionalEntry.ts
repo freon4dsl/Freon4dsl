@@ -15,7 +15,7 @@ export class RHSPrimOptionalEntry extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         return `// RHSPrimOptionalEntry
-            if (!${nodeName}[${index}].isEmptyMatch) {
+            if (!!${nodeName}[${index}]) {
                 // take the first element of the group that represents the optional part
                 const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]).nonSkipChildren.toArray()[0];
                 ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformNode}(subNode);

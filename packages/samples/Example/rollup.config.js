@@ -15,7 +15,12 @@ const config = [
             }
         },
         plugins: [typescript()],
-        external: ['@freon4dsl/core', 'net.akehurst.language-agl-processor', 'mobx']
+        external: [
+            '@freon4dsl/core',
+            'net.akehurst.language-agl-processor',
+            'net.akehurst.language-agl-processor/net.akehurst.language-agl-processor.mjs',
+            'mobx'
+        ]
     }
 ];
 

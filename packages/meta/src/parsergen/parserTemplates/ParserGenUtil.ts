@@ -120,8 +120,9 @@ export class ParserGenUtil {
         return `/**
              * Method to transform branches that match the following rule:
              * ${rule}
-             * @param branch
-             * @private
+             * @param nodeInfo
+             * @param children
+             * @param sentence
              */`;
     }
 
@@ -148,7 +149,7 @@ export class ParserGenUtil {
 
 export const internalTransformNode = "transformSharedPackedParseTreeNode";
 export const internalTransformList = "transformSharedPackedParseTreeList";
-export const internalTransformRefList = "transformSharedPackedParseTreeRefList";
-export const internalTransformLeaf = "transformSharedPackedParseTreeLeaf";
-export const internalTransformBranch = "transformSharedPackedParseTreeBranch";
+export const internalTransformPrimList = "transformPrimList";
+
+export const internalTransformRefList = "transformRefList";
 export const internalTransformFreNodeRef = "freNodeRef";

@@ -69,7 +69,7 @@
     "global": "^4.4.0",
     "kotlin": "^1.5.21",
     "mobx": "^6.12.3",
-    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
+    "net.akehurst.language-agl-processor": "4.2.1-20-RC2",
     "tslib": "^2.6.3"
   },
   "publishConfig": {

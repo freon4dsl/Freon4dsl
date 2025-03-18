@@ -12,30 +12,37 @@ export class ReaderTemplate {
 
         // Template starts here
         return `
-        import { ${Names.FreReader}, ${Names.modelunit()} } from "${FREON_CORE}";
-        /* The following does not work with the command line toot because it is commonjs
-           Unclear why, but the lines below seem to work ok.
-        import { net } from "net.akehurst.language-agl-processor";
-        import LanguageProcessor = net.akehurst.language.api.processor.LanguageProcessor;
-        import Agl = net.akehurst.language.agl.processor.Agl;
-        import AutomatonKind_api = net.akehurst.language.api.processor.AutomatonKind_api;
-        */
-        import  agl from "net.akehurst.language-agl-processor";
-        import LanguageProcessor = agl.net.akehurst.language.api.processor.LanguageProcessor;
-        import Agl = agl.net.akehurst.language.agl.processor.Agl;
-        import AutomatonKind_api = agl.net.akehurst.language.api.processor.AutomatonKind_api;
+        import { ${Names.FreReader}, ${Names.modelunit()}, ${Names.FreNode} } from "${FREON_CORE}";
         import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
         import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}.js";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}.js";
         import { ${semanticAnalyser} } from "./${semanticAnalyser}.js";
+        import {
+            Agl,
+            LanguageProcessor, 
+            LanguageProcessorResult,
+            ProcessResult,
+            SentenceContext,
+        } from 'net.akehurst.language-agl-processor/net.akehurst.language-agl-processor.mjs';
 
+        class MyContext implements SentenceContext<FreNode> {
+            constructor(readonly predefined: Map<string, FreNode>) {
+            }
+        }
+        
         /**
         *   Class ${Names.reader(language)} is a wrapper for the various parsers of
-        *   modelunits.
+        *   model units.
         */
         export class ${Names.reader(language)} implements ${Names.FreReader} {
             analyser: ${syntaxAnalyser} = new ${syntaxAnalyser}();
-            parser: LanguageProcessor = Agl.processorFromString(${Names.grammarStr(language)}, this.analyser, null, null);
+            res: LanguageProcessorResult<any, any> = Agl.getInstance().processorFromString(
+                ${Names.grammarStr(language)},
+                Agl.getInstance().configuration(undefined, (b) => {
+                    b.syntaxAnalyserResolverResult(() => this.analyser);
+                })
+            );
+            parser: LanguageProcessor<${Names.classifier(language.modelConcept)}, MyContext> = this.res.processor;
 
             /**
              * Parses and performs a syntax analysis on 'sentence', using the parser and analyser
@@ -63,13 +70,15 @@ export class ReaderTemplate {
                 let unit: ${Names.modelunit()} = null;
                 if (this.parser) {
                     try {
-                        let asm;
+                let parseResult: ProcessResult<${Names.classifier(language.modelConcept)}>;
+                        const options = this.parser.optionsDefault();
                         if (startRule.length > 0) {
-                            asm = this.parser.processForGoal(null, startRule, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                            options.parse.goalRuleName = startRule;
+                            parseResult = this.parser.process(sentence, options);
                         } else {
-                            asm = this.parser.process(null, sentence, AutomatonKind_api.LOOKAHEAD_1);
+                            parseResult = this.parser.process(sentence, null);
                         }
-                        unit = asm as ${Names.modelunit()};
+                        unit = parseResult.asm as ${Names.modelunit()};
                     } catch (e) {
                         // strip the error message, otherwise it's too long for the webapp
                         let mess = e.message.replace("Could not match goal,", "Parse error in " + sourceName + ":");

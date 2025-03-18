@@ -21,7 +21,7 @@ export class RHSPartListWithInitiator extends RHSPropPartWithSeparator {
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         return `
         // RHSPartListWithInitiator
-        if (!${nodeName}[${index}].isEmptyMatch) {
+        if (!!${nodeName}[${index}]) {
             ${ParserGenUtil.internalName(this.property.name)} = [];
             const group = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
             if (group !== ${nodeName}[${index}]) {

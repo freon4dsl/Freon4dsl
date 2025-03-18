@@ -1,8 +1,8 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { getPrimCall, makeIndent } from "../GrammarUtils.js";
-import { GenerationUtil } from "../../../../utils/index.js";
-import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil.js";
+import {internalTransformPrimList, ParserGenUtil} from "../../ParserGenUtil.js";
+import {GenerationUtil} from "../../../../utils/index.js";
 
 export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
     constructor(prop: FreMetaProperty, separatorText: string) {
@@ -15,8 +15,11 @@ export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+        // const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        // return `${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}].toArray(); // RHSPrimListEntryWithSeparator\n`;
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(${nodeName}[${index}], '${this.separatorText}'); // RHSPrimListEntryWithSeparator\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformPrimList}(${nodeName}.asJsReadonlyArrayView()[${index}].toArray(), '${baseType}', '${this.separatorText}') as ${baseType}[]; // RHSPrimListEntryWithSeparator\n`;
+
     }
 
     toString(depth: number): string {

@@ -34,7 +34,7 @@ export class RHSBinExpListWithInitiator extends RHSPropEntry {
         // TODO this method is equal to the one in RHSPartListWithInitiator
         return `
         // RHSBinExpListWithInitiator
-        if (!${nodeName}[${index}].isEmptyMatch) {
+        if (!!${nodeName}[${index}]) {
             ${ParserGenUtil.internalName(this.property.name)} = [];
             const group = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
             if (group !== ${nodeName}[${index}]) {

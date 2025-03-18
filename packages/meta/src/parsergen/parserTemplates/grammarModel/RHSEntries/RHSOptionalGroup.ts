@@ -36,9 +36,9 @@ export class RHSOptionalGroup extends RHSPropEntry {
         if (this.subs.length > 1) {
             return (
                 `
-            if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
-                const _optGroup = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);` + // to avoid an extra newline
-                `const _propItem = this.${mainAnalyserName}.getChildren(_optGroup);` +
+            if (!!${nodeName}[${index}]) { // RHSOptionalGroup
+                const _optGroup = ${nodeName}.asJsReadonlyArrayView()[${index}];` + // to avoid an extra newline
+                `const _propItem = _optGroup.children;` +
                 `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "_propItem", mainAnalyserName)}`).join("\n")}
             }`
             );
@@ -46,12 +46,12 @@ export class RHSOptionalGroup extends RHSPropEntry {
             const first = this.subs[0];
             if (first.isList) {
                 return `
-                    if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
+                    if (!!${nodeName}[${index}]) { // RHSOptionalGroup
                         ${first.toMethod(index, nodeName, mainAnalyserName)}
                     }`;
             } else {
                 return `
-                    if (!${nodeName}[${index}].isEmptyMatch) { // RHSOptionalGroup
+                    if (!!${nodeName}[${index}]) { // RHSOptionalGroup
                         const _optBranch = this.${mainAnalyserName}.getChildren(${nodeName}[${index}]);
                         ${first.toMethod(0, "_optBranch", mainAnalyserName)}
                     }`;

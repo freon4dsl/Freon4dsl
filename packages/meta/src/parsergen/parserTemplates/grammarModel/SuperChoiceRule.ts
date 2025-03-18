@@ -59,8 +59,8 @@ export class SuperChoiceRule extends GrammarRule {
     toMethod(mainAnalyserName: string): string {
         return `
             ${ParserGenUtil.makeComment(this.toGrammar())}
-            public transform${this.ruleName}(branch: SPPTBranch) : ${Names.classifier(this.myConcept)} {
-                // console.log('transform${this.ruleName} called: ' + branch.name);
+            public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.classifier(this.myConcept)} {
+                console.log('transform${this.ruleName} called: ' + children.toString());
                 return this.${mainAnalyserName}.${internalTransformNode}(branch.nonSkipChildren.toArray()[0]);
             }`;
     }

@@ -55,15 +55,15 @@ export class LimitedRule extends GrammarRule {
             }`;
             return `
                 ${ParserGenUtil.makeComment(this.toGrammar())}
-                public transform${this.ruleName}(branch: SPPTBranch): ${Names.classifier(this.concept)} {
-                    const choice = branch.nonSkipMatchedText;
+                public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${Names.classifier(this.concept)} {
+                    const choice: string = sentence.text;
                     ${ifStat}
                 }`;
         } else {
             // make a 'normal' reference method
             return `
                     ${ParserGenUtil.makeComment(this.toGrammar())}
-                    public transform${this.ruleName}(branch: SPPTBranch): string {
+                    public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): string {
                         return branch.nonSkipMatchedText;
                     }`;
         }

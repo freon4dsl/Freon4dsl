@@ -30,7 +30,7 @@ describe("Parser properties of type", () => {
                     "PrimitivesTest",
                     new TestParserModel(),
                 ) as PrimitivesTest;
-                // console.log(writer.writeToString(unit1));
+                console.log(writer.writeToString(unit1));
                 expect(unit1).toMatchSnapshot();
             })
         } catch (e) {
@@ -48,7 +48,7 @@ describe("Parser properties of type", () => {
                     "PrimsWithKeywordTest",
                     new TestParserModel(),
                 ) as PrimsWithKeywordTest;
-                // console.log(writer.writeToString(unit1));
+                console.log(writer.writeToString(unit1));
                 expect(unit1).toMatchSnapshot();
             })
         } catch (e) {
@@ -67,7 +67,7 @@ describe("Parser properties of type", () => {
                     "LimitedTest",
                     new TestParserModel(),
                 ) as LimitedTest;
-                // console.log(writer.writeToString(unit1));
+                console.log(writer.writeToString(unit1));
                 expect(unit1).toMatchSnapshot();
             })
         } catch (e) {
@@ -81,7 +81,7 @@ describe("Parser properties of type", () => {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.par");
             AST.change( () => {
                 const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-                // console.log(writer.writeToString(unit1));
+                console.log(writer.writeToString(unit1));
                 expect(unit1).toMatchSnapshot();
             })
         } catch (e) {
@@ -95,7 +95,7 @@ describe("Parser properties of type", () => {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test3.par");
             AST.change( () => {
                 const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-                // console.log(writer.writeToString(unit1));
+                console.log(writer.writeToString(unit1));
                 expect(unit1).toMatchSnapshot();
             })
         } catch (e) {
@@ -109,7 +109,7 @@ describe("Parser properties of type", () => {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.par");
             AST.change( () => {
                 const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-                // console.log(writer.writeToString(unit1));
+                console.log(writer.writeToString(unit1));
                 expect(unit1).toMatchSnapshot();
             })
         } catch (e) {
@@ -123,7 +123,7 @@ describe("Parser properties of type", () => {
             let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.ref");
             AST.change( () => {
                 const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
-                // console.log(writer.writeToString(unit1));
+                console.log(writer.writeToString(unit1));
                 expect(unit1).toMatchSnapshot();
             })
         } catch (e) {
@@ -137,7 +137,7 @@ describe("Parser properties of type", () => {
             let input: string = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.ref");
             AST.change( () => {
                 const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
-                // console.log(writer.writeToString(unit1));
+                console.log(writer.writeToString(unit1));
                 expect(unit1).toMatchSnapshot();
             })
         } catch (e) {
