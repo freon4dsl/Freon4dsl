@@ -140,7 +140,7 @@
         // Evaluated and re-evaluated when the box changes.
         refresh((first ? 'first' : 'later') + '   ' + box?.id);
         if (!isNullOrUndefined(box) && !isTextBox(box) ) {
-            box.getRectangle = clientRectangle
+            box.getClientRectangle = clientRectangle
         }
         first = false;
     });
