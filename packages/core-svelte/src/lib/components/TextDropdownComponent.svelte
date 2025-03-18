@@ -366,13 +366,6 @@
         hideDropdown()
 
         const post = box.executeOption(editor, selected); // TODO the result of the execution is ignored
-        if (!!post) {
-            if (typeof post === "function") {
-                post()
-            } else {
-                LOGGER.log("POST is noit a function: " + post)
-            }
-        }
         if (isActionBox(box)) { // ActionBox, action done, clear input text
             setTextLocalAndInBox('');
         } else {
