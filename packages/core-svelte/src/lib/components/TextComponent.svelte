@@ -494,7 +494,7 @@
     
     $effect(() => {
         if (!isNullOrUndefined(box)) {
-            box.getRectangle = clientRectangle
+            box.getClientRectangle = clientRectangle
         }
     })
 

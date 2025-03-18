@@ -24,34 +24,6 @@ export const UndefinedRectangle: ClientRectangle = {
  * The root of the Box class hierarchy, contains all generic properties and a number of navigation/search functions.
  */
 export abstract class Box {
-    /**
-     * The X position of the corresponding component in the browser
-     */
-    get actualX(): number {
-        return this.getRectangle().x;
-    }
-
-    /**
-     * The Y position of the corresponding component in the browser
-     */
-    get actualY(): number {
-        return this.getRectangle().y;
-    }
-
-    /**
-     * The width of the corresponding component in the browser
-     */
-    get actualWidth(): number {
-        return this.getRectangle().width;
-    }
-
-    /**
-     * The height of the corresponding component in the browser
-     */
-    get actualHeight(): number {
-        return this.getRectangle().height;
-    }
-
     $id: string;
     kind: string = "";
     role: string = "";
@@ -79,9 +51,10 @@ export abstract class Box {
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
     /**
-     * The callback method to the corresponding component in the browser.
+     * Get the client rectangle opf this box in the browser.
+     * This is a callback method to the corresponding component in the browser.
      */
-    getRectangle: () => ClientRectangle = () => { return UndefinedRectangle }
+    getClientRectangle: () => ClientRectangle = () => { return UndefinedRectangle }
 
     /**
      *  Called when the box is dirty, refreshes the corresponding component.
