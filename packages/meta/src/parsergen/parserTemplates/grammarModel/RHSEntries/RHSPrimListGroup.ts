@@ -2,7 +2,7 @@ import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { GenerationUtil } from "../../../../utils/index.js";
-import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil.js";
+import { internalTransformPartList, ParserGenUtil } from "../../ParserGenUtil.js";
 import { makeIndent } from "../GrammarUtils.js";
 
 export class RHSPrimListGroup extends RHSPropPartWithSeparator {
@@ -25,7 +25,7 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
                 // get the group that represents the optional primitive
                 // because primitives are leafs in the grammar, there is no need to get the children of this group
                 // const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
-                // ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(subNode, '${this.separatorText}');
+                // ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformPartList}<${baseType}>(subNode, '${this.separatorText}');
             }`;
     }
 

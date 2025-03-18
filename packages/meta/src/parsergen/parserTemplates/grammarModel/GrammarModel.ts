@@ -120,6 +120,21 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 }
                 return result;
             }
+            
+            /**
+             * Generic method to transform lists of parts
+             */
+            public transformPartList<T>(list: KtList<T>, separator?: string): T[] {
+                let result: T[] = [];
+                if (!!list) {
+                    for (const element of list.toArray()) {
+                        if (element !== null && element !== undefined && element !== separator) {
+                            result.push(element);
+                        }
+                    }
+                }
+                return result;
+            }
     
             /**
              * Generic method to transform lists of references

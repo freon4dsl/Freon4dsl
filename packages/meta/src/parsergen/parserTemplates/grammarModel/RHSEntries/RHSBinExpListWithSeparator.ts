@@ -3,7 +3,7 @@ import { FreMetaBinaryExpressionConcept, FreMetaProperty } from "../../../../lan
 import { makeIndent } from "../GrammarUtils.js";
 import { BinaryExpMaker } from "../../BinaryExpMaker.js";
 import { GenerationUtil, Names } from "../../../../utils/index.js";
-import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil.js";
+import { internalTransformPartList, ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSBinExpListWithSeparator extends RHSPropEntry {
     type: FreMetaBinaryExpressionConcept;
@@ -26,7 +26,7 @@ export class RHSBinExpListWithSeparator extends RHSPropEntry {
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         // TODO this method is almost equal to the one in RHSPartListWithSeparator, only baseType differs
         const baseType: string = Names.classifier(this.type);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(${nodeName}[${index}], '${this.separatorText}'); // RHSBinExpListWithSeparator\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformPartList}<${baseType}>(${nodeName}[${index}], '${this.separatorText}'); // RHSBinExpListWithSeparator\n`;
     }
 
     toString(depth: number): string {

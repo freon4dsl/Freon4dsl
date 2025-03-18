@@ -148,8 +148,7 @@ export class ParserGenUtil {
 }
 
 export const internalTransformNode = "transformSharedPackedParseTreeNode";
-export const internalTransformList = "transformSharedPackedParseTreeList";
+export const internalTransformPartList = "transformPartList";
 export const internalTransformPrimList = "transformPrimList";
-
 export const internalTransformRefList = "transformRefList";
 export const internalTransformFreNodeRef = "freNodeRef";
