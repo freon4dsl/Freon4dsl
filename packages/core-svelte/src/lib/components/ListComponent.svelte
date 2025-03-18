@@ -194,8 +194,8 @@
     // Both mouseenter and mouseleave do not bubble and do not fire when the mouse cursor moves over descendant elements.
 
     const onKeyDown = (event: KeyboardEvent, index: number) => {
-        console.log(`LIST ENTER '${event.key}' index '${index}'`)
         if (event.key === ENTER) {
+            // Create a new list element after the pone at index
             event.stopPropagation()
             const action: FreCreatePartAction = new FreCreatePartAction({
                 trigger: { meta: MetaKey.None, key: ENTER, code: ENTER },
