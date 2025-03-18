@@ -35,7 +35,9 @@
     let { editor, box }: FreComponentProps<AbstractChoiceBox> = $props();
     // the textbox that is to be coupled to the TextComponent part
     let textBox: TextBox = $state(box.textBox)!; // NB the initial value must be here, the effect starts to function after initialization
-
+    // True if box is a referencebox and referred is in the same unit
+    let selectAbleReference: boolean = $state(false)
+    
     $effect(() => {
         // keeps the textBox variable in state with the box!
         textBox = box?.textBox;
@@ -45,6 +47,7 @@
         LOGGER.log(`${box.id}: onMount`);
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        selectAbleReference = isReferenceBox(box) && box.isSelectAble()
     });
 
     let id: string = $state(''); // an id for the html element
@@ -105,7 +108,7 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
-        LOGGER.log(`${box.id}: refresh: ` + why + ' for ' + box?.kind);
+        console.log(`${box.id}: refresh: ` + why + ' for ' + box?.kind);
         if (isSelectBox(box)) {
             let selectedOption = box.getSelectedOption();
             LOGGER.log('    selectedOption is ' + selectedOption?.label);
@@ -115,6 +118,11 @@
             } else {
                 selected = undefined;
             }
+        }
+        // NB Not in an else if, becuase isSelectBox() is also true for ReferenceBox
+        if (isReferenceBox(box)) {
+            selectAbleReference = box.isSelectAble()
+            console.log("     selectAble is " + selectAbleReference)
         }
         // because the box maybe a different one than we started with ...
         // box.setFocus = setFocus; todo remove?
@@ -548,7 +556,7 @@
         bind:this={textComponent}
         toParent={fromInner}
     />
-    {#if isReferenceBox(box) && box.isSelectAble()}
+    {#if selectAbleReference}
         <button
             class="reference-button"
             {id}
