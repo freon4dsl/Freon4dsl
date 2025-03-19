@@ -1,7 +1,7 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import {FreMetaPrimitiveProperty, FreMetaPrimitiveType} from "../../../../languagedef/metalanguage/index.js";
 import { getPrimCall, makeIndent } from "../GrammarUtils.js";
-import { ParserGenUtil } from "../../ParserGenUtil.js";
+import {internalTransformPrimValue, ParserGenUtil} from "../../ParserGenUtil.js";
 
 export class RHSPrimEntry extends RHSPropEntry {
     constructor(prop: FreMetaPrimitiveProperty) {
@@ -13,15 +13,24 @@ export class RHSPrimEntry extends RHSPropEntry {
         return `${getPrimCall(this.property.type)}` + this.doNewline();
     }
 
-    toMethod(index: number, nodeName: string): string {
-        let regExpAddition: string = '';
-        let regExpComment: string = '';
-        if (this.property.type === FreMetaPrimitiveType.string) {
-            // todo make sure we remove only the outer quotes
-            regExpAddition = '.replace(/"/g, \'\')'
-            regExpComment = '// The regular expression removes the quotes that the parser adds around strings.\n';
+    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+        let tsType: string = '';
+        let typeStr: string = '';
+        if (this.property.type === FreMetaPrimitiveType.identifier ) {
+            tsType = "string";
+            typeStr = "PrimValueType.identifier";
+        } else if (this.property.type === FreMetaPrimitiveType.string ) {
+            tsType = "string";
+            typeStr = "PrimValueType.string";
+        } else if (this.property.type === FreMetaPrimitiveType.number) {
+            tsType = "number";
+            typeStr = "PrimValueType.number";
+        } else if (this.property.type === FreMetaPrimitiveType.boolean) {
+            tsType = "boolean";
+            typeStr = "PrimValueType.boolean";
         }
-        return `${regExpComment}${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}]${regExpAddition}; // RHSPrimEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = 
+                    this.${mainAnalyserName}.${internalTransformPrimValue}<${tsType}>(${nodeName}.asJsReadonlyArrayView()[${index}], ${typeStr}); // RHSPrimEntry\n`
     }
 
     toString(depth: number): string {

@@ -2,7 +2,7 @@ import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils/index.js";
 import { refRuleName } from "./GrammarUtils.js";
 import { GrammarPart } from "./GrammarPart.js";
-import {internalTransformPrimList, internalTransformRefList} from "../ParserGenUtil.js";
+import {internalTransformPrimList, internalTransformPrimValue, internalTransformRefList} from "../ParserGenUtil.js";
 
 export class GrammarModel {
     constructor(language: FreMetaLanguage) {
@@ -87,6 +87,13 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
         import { ${this.parts.map((part) => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from "./index.js";
 
+        export enum PrimValueType {
+            "string",
+            "identifier",
+            "boolean",
+            "number"
+        }
+
         /**
         *   Class ${className} is the main syntax analyser.
         *   The actual work is being done by its parts, one for each model unit,
@@ -104,21 +111,42 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             /**
              * Generic method to transform lists of primitive values
              */
-            public ${internalTransformPrimList}(list: string[], primType: string, separator?: string): (string | number | boolean)[] {
-                let result: (string | number | boolean)[] = []
+            public ${internalTransformPrimList}<T extends string | number | boolean>(
+                list: string[],
+                primType: PrimValueType,
+                separator?: string
+            ): T[] {
+                let result: T[] = [];
                 if (!!list) {
                     list.forEach((element) => {
                         if (element !== null && element !== undefined && element !== separator) {
-                                switch (primType) {
-                                    case 'number': result.push(parseInt(element, 10)); break;
-                                    case 'string': result.push(element.replace(/"/g, '')); break;
-                                    case 'boolean': result.push(element === "true"); break;
-                                    default: break;
-                                }
+                            result.push(this.transformPrimitiveValue(element, primType) as T);
                         }
                     });
                 }
                 return result;
+            }
+        
+            /**
+             * Generic method to transform a primitive value, which is parsed as a string, into the correct type.
+             */
+            public ${internalTransformPrimValue}<T extends string | number | boolean>(
+                element: string,
+                primType: PrimValueType
+            ): T {
+                switch (primType) {
+                    case PrimValueType.number:
+                        const num = parseFloat(element);
+                        return (isNaN(num) ? 0 : num) as T; // Handle invalid number gracefully.
+                    case PrimValueType.string:
+                    case PrimValueType.identifier:
+                        // todo make sure we remove only the outer quotes
+                        return element.replace(/"/g, "") as T;
+                    case PrimValueType.boolean:
+                        return (element.toLowerCase() === "true") as T; // Case-insensitive matching for booleans.
+                    default:
+                        return element as T; // Default case (string)
+                }
             }
             
             /**

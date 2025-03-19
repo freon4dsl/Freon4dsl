@@ -12,7 +12,7 @@ export class ReaderTemplate {
 
         // Template starts here
         return `
-        import { ${Names.FreReader}, ${Names.modelunit()}, ${Names.FreNode} } from "${FREON_CORE}";
+        import { ${Names.FreReader}, ${Names.modelunit()}, ${Names.FreNode}, AST } from "${FREON_CORE}";
         import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
         import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}.js";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}.js";
@@ -72,13 +72,15 @@ export class ReaderTemplate {
                     try {
                 let parseResult: ProcessResult<${Names.classifier(language.modelConcept)}>;
                         const options = this.parser.optionsDefault();
-                        if (startRule.length > 0) {
-                            options.parse.goalRuleName = startRule;
-                            parseResult = this.parser.process(sentence, options);
-                        } else {
-                            parseResult = this.parser.process(sentence, null);
-                        }
-                        unit = parseResult.asm as ${Names.modelunit()};
+                        AST.change( () => {
+                            if (startRule.length > 0) {
+                                options.parse.goalRuleName = startRule;
+                                parseResult = this.parser.process(sentence, options);
+                            } else {
+                                parseResult = this.parser.process(sentence, null);
+                            }
+                            unit = parseResult.asm as ${Names.modelunit()};
+                        });
                     } catch (e) {
                         // strip the error message, otherwise it's too long for the webapp
                         let mess = e.message.replace("Could not match goal,", "Parse error in " + sourceName + ":");
@@ -95,9 +97,11 @@ export class ReaderTemplate {
                             if (model.getUnits().filter(existing => existing.name === unit.name).length > 0) {
                                 throw new Error(\`Unit named '\${unit.name}' already exists.\`);
                             } else {
+                                AST.change( () => {
                                 model.addUnit(unit);
                                 const semAnalyser = new ${semanticAnalyser}();
                                 semAnalyser.correct(unit);
+                                });
                             }
                         } catch (e) {
                             console.log(e.message);

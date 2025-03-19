@@ -36,7 +36,7 @@ export class GrammarPart {
                 ? `import { ${this.imports.map((imp) => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";`
                 : ""
         }
-        import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}.js";
+        import { PrimValueType, ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}.js";
 
         export class ${className} {
             mainAnalyser: ${Names.syntaxAnalyser(language)};
