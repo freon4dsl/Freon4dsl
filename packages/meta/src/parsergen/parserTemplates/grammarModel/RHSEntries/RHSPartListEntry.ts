@@ -15,7 +15,7 @@ export class RHSPartListEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string): string {
-        return `${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}].toArray(); // RHSPartListEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView(); // RHSPartListEntry\n`;
     }
 
     toString(depth: number): string {

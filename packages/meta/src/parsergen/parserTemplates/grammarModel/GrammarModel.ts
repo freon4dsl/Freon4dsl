@@ -155,7 +155,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             public transformPartList<T>(list: KtList<T>, separator?: string): T[] {
                 let result: T[] = [];
                 if (!!list) {
-                    for (const element of list.toArray()) {
+                    for (const element of list.asJsReadonlyArrayView()) {
                         if (element !== null && element !== undefined && element !== separator) {
                             result.push(element);
                         }
@@ -171,7 +171,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 console.log("transformRefList called: " + JSON.stringify(list));
                 let result: FreNodeReference<T>[] = [];
                 if (!!list) {
-                    for (const child of list.toArray()) {
+                    for (const child of list.asJsReadonlyArrayView()) {
                         if (child !== null && child !== undefined && child !== separator) {
                             result.push(FreNodeReference.create<T>(child, typeName));
                         }
