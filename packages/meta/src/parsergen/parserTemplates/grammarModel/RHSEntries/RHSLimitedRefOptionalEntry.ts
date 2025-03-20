@@ -16,6 +16,7 @@ export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        // todo nonSkipChildren, getGroup
         return `// RHSLimitedRefOptionalEntry
             if (!!${nodeName}[${index}]) {
                 // take the first element of the group that represents the optional part

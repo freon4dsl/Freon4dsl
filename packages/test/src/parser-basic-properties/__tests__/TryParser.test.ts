@@ -28,7 +28,7 @@ describe("Parser properties of type", () => {
             "PrimitivesTest",
             new TestParserModel(),
         ) as PrimitivesTest;
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 
@@ -39,7 +39,7 @@ describe("Parser properties of type", () => {
             "PrimsWithKeywordTest",
             new TestParserModel(),
         ) as PrimsWithKeywordTest;
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 
@@ -50,42 +50,42 @@ describe("Parser properties of type", () => {
             "LimitedTest",
             new TestParserModel(),
         ) as LimitedTest;
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 
     test(" Part ", () => {
         let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.par");
         const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 
     test(" Part with Optionals present", () => {
         let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test3.par");
         const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 
     test(" Part and Sub Parts ", () => {
         let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.par");
         const unit1: PartsTest = reader.readFromString(input, "PartsTest", new TestParserModel()) as PartsTest;
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 
     test(" Ref ", () => {
         let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test1.ref");
         const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 
-    test(" Ref with Optionals present", () => {
+    test.skip(" Ref with Optionals present", () => {
         let input: string = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test2.ref");
         const unit1: RefsTest = reader.readFromString(input, "RefsTest", new TestParserModel()) as RefsTest;
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 });

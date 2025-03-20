@@ -35,26 +35,31 @@ export class RHSOptionalGroup extends RHSPropEntry {
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         if (this.subs.length > 1) {
             return (
-                `
-            if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { // RHSOptionalGroup
+                `// RHSOptionalGroup
+            if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
                 const _optGroup = ${nodeName}.asJsReadonlyArrayView()[${index}];` + // to avoid an extra newline
                 `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "_optGroup", mainAnalyserName)}`).join("\n")}
-            }`
+            }
+            // end RHSOptionalGroup
+            `
             );
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList) {
-                return `
-                    if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { // RHSOptionalGroup
+                return `// RHSOptionalGroup
+                    if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
                         ${first.toMethod(index, nodeName, mainAnalyserName)}
-                    }`;
+                    }
+            // end RHSOptionalGroup
+            `;
             } else {
-                // todo adjust the following
-                return `
-                    if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { // RHSOptionalGroup
-                        const _optBranch = this.${mainAnalyserName}.getChildren(${nodeName}[${index}]);
+                return `// RHSOptionalGroup
+                    if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
+                        const _optBranch = ${nodeName}.asJsReadonlyArrayView()[${index}];
                         ${first.toMethod(0, "_optBranch", mainAnalyserName)}
-                    }`;
+                    }
+            // end RHSOptionalGroup
+            `;
             }
         }
         return `// ERROR no elements within optional group`;

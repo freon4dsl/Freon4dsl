@@ -72,6 +72,7 @@ export class LimitedRule extends GrammarRule {
                 }`;
         } else {
             // make a 'normal' reference method
+            // todo nonSkip
             return `
                     ${ParserGenUtil.makeComment(this.toGrammar())}
                     public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): string {

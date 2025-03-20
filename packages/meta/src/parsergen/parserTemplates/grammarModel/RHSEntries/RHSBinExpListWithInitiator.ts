@@ -32,6 +32,7 @@ export class RHSBinExpListWithInitiator extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         // TODO this method is equal to the one in RHSPartListWithInitiator
+        // todo nonSkip, getGroup
         return `
         // RHSBinExpListWithInitiator
         if (!!${nodeName}[${index}]) {

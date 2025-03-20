@@ -1,7 +1,7 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
-import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil.js";
+import { ParserGenUtil } from "../../ParserGenUtil.js";
 import { makeIndent } from "../GrammarUtils.js";
 
 export class RHSPartListWithInitiator extends RHSPropPartWithSeparator {
@@ -18,20 +18,13 @@ export class RHSPartListWithInitiator extends RHSPropPartWithSeparator {
         return `( '${this.separatorText}' ${this.entry.toGrammar()} )*` + this.doNewline();
     }
 
-    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+    toMethod(index: number, nodeName: string): string {
         return `
         // RHSPartListWithInitiator
-        if (!!${nodeName}[${index}]) {
+        if (${nodeName}.asJsReadonlyArrayView()[${index}].length > 1 ) {
             ${ParserGenUtil.internalName(this.property.name)} = [];
-            const group = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
-            if (group !== ${nodeName}[${index}]) {
-                for (const child of ${nodeName}[${index}].nonSkipChildren.toArray()) {
-                    ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(child.nonSkipChildren.toArray()[1]));
-                }
-            } else {
-                for (const child of ${nodeName}) {
-                    ${ParserGenUtil.internalName(this.property.name)}.push(this.${mainAnalyserName}.${internalTransformNode}(child.nonSkipChildren.toArray()[1]));
-                }
+            for (const child of ${nodeName}.asJsReadonlyArrayView()[${index}]) {
+                ${ParserGenUtil.internalName(this.property.name)}.push(child.asJsReadonlyArrayView()[1]);
             }
         } // end RHSPartListWithInitiator
         `;

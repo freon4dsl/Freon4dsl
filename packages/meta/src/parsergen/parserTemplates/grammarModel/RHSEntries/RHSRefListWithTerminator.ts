@@ -33,6 +33,7 @@ export class RHSRefListWithTerminator extends RHSPropPartWithSeparator {
         return `// RHSRefListWithTerminator
             ${ParserGenUtil.internalName(this.property.name)} = [];
             ${myListStatement}
+            // todo nonSkipchildren
             _myList.forEach(subNode => {
                 const _transformed = this.${mainAnalyserName}.${internalTransformFreNodeRef}<${baseType}>(subNode.nonSkipChildren?.toArray()[0], '${baseType}');
                 if (!!_transformed) {

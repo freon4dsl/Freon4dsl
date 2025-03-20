@@ -14,6 +14,7 @@ export class RHSPrimOptionalEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+        // todo nonSkip, getGroup
         return `// RHSPrimOptionalEntry
             if (!!${nodeName}[${index}]) {
                 // take the first element of the group that represents the optional part

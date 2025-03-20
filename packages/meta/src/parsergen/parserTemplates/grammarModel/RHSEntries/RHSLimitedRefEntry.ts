@@ -16,7 +16,14 @@ export class RHSLimitedRefEntry extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = FreNodeReference.create<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}], '${baseType}'); // RHSLimitedRefEntry\n`;
+        return `// RHSLimitedRefEntry
+            // console.log('===> ' + " type: " + ${nodeName}.constructor.name  + ${nodeName} );
+            if (${nodeName} instanceof ${baseType}) {
+                ${ParserGenUtil.internalName(this.property.name)} = FreNodeReference.create<${baseType}>(${nodeName}, "${baseType}");
+            } else {
+                ${ParserGenUtil.internalName(this.property.name)} = FreNodeReference.create<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}], "${baseType}");
+            }
+            // end RHSLimitedRefEntry\n`;
     }
 
     toString(depth: number): string {

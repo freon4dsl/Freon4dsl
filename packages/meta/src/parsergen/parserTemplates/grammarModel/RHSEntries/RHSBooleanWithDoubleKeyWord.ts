@@ -20,9 +20,9 @@ export class RHSBooleanWithDoubleKeyWord extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string): string {
         return `// RHSBooleanWithDoubleKeyWord
-                if (${nodeName}[${index}].nonSkipMatchedText === "${this.trueKeyword}") {
+                if (${nodeName}.asJsReadonlyArrayView()[${index}] === "${this.trueKeyword}") {
                     ${ParserGenUtil.internalName(this.property.name)} = true;
-                } else if (${nodeName}[${index}].nonSkipMatchedText === "${this.falseKeyword}") {
+                } else if (${nodeName}.asJsReadonlyArrayView()[${index}] === "${this.falseKeyword}") {
                     ${ParserGenUtil.internalName(this.property.name)} = false;
                 }`;
     }

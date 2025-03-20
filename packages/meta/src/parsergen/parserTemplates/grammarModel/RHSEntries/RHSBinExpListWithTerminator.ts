@@ -42,6 +42,7 @@ export class RHSBinExpListWithTerminator extends RHSPropEntry {
         return `// RHSBinExpListWithTerminator
             ${ParserGenUtil.internalName(this.property.name)} = [];
             ${myListStatement}
+            // todo nonSkipchildren
             _myList.forEach(subNode => {
                 const _transformed = this.${mainAnalyserName}.${internalTransformNode}(subNode.nonSkipChildren?.toArray()[0]);
                 if (!!_transformed) {

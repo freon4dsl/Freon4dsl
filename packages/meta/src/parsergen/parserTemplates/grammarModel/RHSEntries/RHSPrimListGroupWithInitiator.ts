@@ -20,6 +20,7 @@ export class RHSPrimListGroupWithInitiator extends RHSPropPartWithSeparator {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        // todo getGroup
         return `// RHSPrimListGroupWithInitiator
             if (!!${nodeName}[${index}]) {
                 // get the group that represents the optional primitive

@@ -127,7 +127,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 if (!!list) {
                     list.forEach((element) => {
                         if (element !== null && element !== undefined && element !== separator) {
-                            result.push(this.transformPrimitiveValue(element, primType) as T);
+                            result.push(this.${internalTransformPrimValue}(element, primType) as T);
                         }
                     });
                 }
@@ -179,7 +179,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
              * of the reference list, not the 'reference separator' ("${this.refSeparator}").
              */
             public ${internalTransformRefList}\<T extends ${Names.FreNamedNode}\>(list: KtList<T>, typeName: string, separator?: string): ${Names.FreNodeReference}\<T\>[] {
-                console.log("${internalTransformRefList} called: " + JSON.stringify(list));
+                // console.log("${internalTransformRefList} called: " + JSON.stringify(list));
                 let result: FreNodeReference<T>[] = [];
                 if (!!list) {
                     for (const child of list.asJsReadonlyArrayView()) {

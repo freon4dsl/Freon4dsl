@@ -2,7 +2,7 @@ import { GrammarRule } from "./GrammarRule.js";
 import { FreMetaBinaryExpressionConcept, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 import { Names } from "../../../utils/index.js";
 import { BinaryExpMaker } from "../BinaryExpMaker.js";
-import { internalTransformNode, ParserGenUtil } from "../ParserGenUtil.js";
+import { ParserGenUtil } from "../ParserGenUtil.js";
 import { getTypeCall } from "./GrammarUtils.js";
 
 export class SuperChoiceRule extends GrammarRule {
@@ -56,12 +56,12 @@ export class SuperChoiceRule extends GrammarRule {
         return rule;
     }
 
-    toMethod(mainAnalyserName: string): string {
+    toMethod(): string {
         return `
             ${ParserGenUtil.makeComment(this.toGrammar())}
             public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.classifier(this.myConcept)} {
-                console.log('transform${this.ruleName} called: ' + children.toString());
-                return this.${mainAnalyserName}.${internalTransformNode}(branch.nonSkipChildren.toArray()[0]);
+                // console.log('transform${this.ruleName} called: ' + children.toString());
+                return children.asJsReadonlyArrayView()[0]; // SuperChoiceRule
             }`;
     }
 

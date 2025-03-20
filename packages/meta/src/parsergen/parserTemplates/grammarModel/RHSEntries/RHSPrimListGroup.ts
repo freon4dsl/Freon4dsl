@@ -1,7 +1,7 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
-import { ParserGenUtil } from "../../ParserGenUtil.js";
+import {internalTransformPrimValue, ParserGenUtil} from "../../ParserGenUtil.js";
 import { makeIndent } from "../GrammarUtils.js";
 import {GenerationUtil} from "../../../../utils/index.js";
 
@@ -31,7 +31,7 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
             if (!!${nodeName}.toArray()[${index}]) {
                 ${ParserGenUtil.internalName(this.property.name)} = [];
                 ${nodeName}.toArray()[${index}].toArray().forEach((item) => {
-                    const val = this.mainAnalyser.transformPrimitiveValue<${baseType}>(item.asJsReadonlyArrayView()[0], PrimValueType.${baseType})
+                    const val = this.mainAnalyser.${internalTransformPrimValue}<${baseType}>(item.asJsReadonlyArrayView()[0], PrimValueType.${baseType})
                     ${ParserGenUtil.internalName(this.property.name)}.push(val);
                 })
             }`;

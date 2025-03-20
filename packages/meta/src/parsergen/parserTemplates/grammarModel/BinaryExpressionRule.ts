@@ -44,12 +44,13 @@ export class BinaryExpressionRule extends GrammarRule {
          * @private
          */
         public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.concept(this.expressionBase)} {
-            console.log('transform${this.ruleName} called: ' + children.toString());
+            // console.log('transform${this.ruleName} called: ' + children.toString());
             let index = 0;
-            let first = children.asJsReadonlyArrayView()[index++];
-            while (index < children.length) {
-                let operator = children.asJsReadonlyArrayView()[index++];
-                let second = children.asJsReadonlyArrayView()[index++];
+            let list = children.asJsReadonlyArrayView()
+            let first = list[index++];
+            while (index < list.length) {
+                let operator = list[index++];
+                let second = list[index++];
                 let combined: ${Names.concept(this.expressionBase)} = null;
                 switch (operator) {
                 ${cases.map((c) => `${c}`).join("")}
