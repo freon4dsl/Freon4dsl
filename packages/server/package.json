@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/server",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "publishConfig": {
     "access": "public"
   },
@@ -8,10 +8,8 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/freon4dsl/Freon4dsl"
+    "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "bin": {
     "model-server": "./dist/bin/start-server.js"
   },

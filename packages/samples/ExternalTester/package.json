@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/samples-external-tester",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
