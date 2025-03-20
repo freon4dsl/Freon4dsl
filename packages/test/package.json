@@ -63,8 +63,8 @@
     "@vitest/ui": "^2.1.0"
   },
   "dependencies": {
-    "@freon4dsl/core": "~1.0.0",
-    "@freon4dsl/meta": "~1.0.1",
+    "@freon4dsl/core": "~1.0.2",
+    "@freon4dsl/meta": "~1.0.2",
     "@lionweb/validation": "^0.6.3",
     "global": "^4.4.0",
     "kotlin": "^1.5.21",
