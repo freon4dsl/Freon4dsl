@@ -3,7 +3,7 @@ import type { Writable } from "svelte/store";
 import { FreErrorSeverity } from "@freon4dsl/core";
 
 // info about Freon
-export const versionNumber = "1.0.0";
+export const versionNumber = "1.0.2";
 
 export let severity: Writable<string> = writable<string>(FreErrorSeverity.Error);
 export let userMessage: Writable<string> = writable<string>(
