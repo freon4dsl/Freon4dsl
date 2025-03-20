@@ -189,7 +189,7 @@
             if (filteredOptions?.length !== 0) {
                 selectedId = filteredOptions[filteredOptions.length - 1].id;
             } else { // there are no valid options left
-                editor.setUserMessage("no valid selection");
+                // editor.setUserMessage("selectLast no valid selection");
             }
         }
     }
@@ -199,7 +199,7 @@
             if (filteredOptions?.length !== 0) {
                 selectedId = filteredOptions[0].id;
             } else { // there are no valid options left
-                editor.setUserMessage("No valid selection");
+                // editor.setUserMessage("selectFirstNo valid selection");
             }
         }
     }
@@ -212,7 +212,7 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log("XX onKeyDown: " + id + " [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
+        LOGGER.log(`onKeyDown: ${id} [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
         if (dropdownShown) {
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
@@ -225,6 +225,7 @@
                                 if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
                                     selectedId = filteredOptions[index + 1].id;
                                 } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
+                                    //  TODO If there is no option, ignore the arrow
                                     selectFirstOption();
                                 }
                             }
@@ -250,14 +251,15 @@
                         }
                         break;
                     }
-                    case ENTER: { // user wants current selection
+                    case ENTER: { 
+                        // user wants current selection
                         // find the chosen option
                         let chosenOption: SelectOption = null;
                         if (filteredOptions.length <= 1) {
                             if (filteredOptions.length !== 0) { // if there is just one option left, choose that one
                                 chosenOption = filteredOptions[0];
                             } else { // there are no valid options left
-                                editor.setUserMessage('No valid selection')
+                                editor.setUserMessage('Enter No valid selection')
                             }
                         } else { // find the selected option and choose that one
                             const index = filteredOptions.findIndex(o => o.id === selectedId);
@@ -281,8 +283,8 @@
                     }
                     default: {
                         // stop editing todo is this the correct default?
-                        isEditing = false;
-                        hideDropdown()
+                        // isEditing = false;
+                        // hideDropdown()
                     }
                 }
             }
@@ -388,14 +390,14 @@
             }
             return;
         }
+        allOptions = getOptions();
+        let validOption = allOptions.find(o => o.label === text);
+        if (!!validOption && validOption.id !== noOptionsId) {
+            storeOrExecute(validOption);
+        } else { // no valid option, restore the previous value
+            setText(textBox.getText());
+        }
         if (dropdownShown) {
-            allOptions = getOptions();
-            let validOption = allOptions.find(o => o.label === text);
-            if (!!validOption && validOption.id !== noOptionsId) {
-                storeOrExecute(validOption);
-            } else { // no valid option, restore the previous value
-                setText(textBox.getText());
-            }
             hideDropdown()
         }
     };
