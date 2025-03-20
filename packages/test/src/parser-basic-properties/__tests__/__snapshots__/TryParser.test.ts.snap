@@ -287,7 +287,48 @@ LimitedTest {
         "_FRE_pathname": [
           "#",
         ],
-        "_FRE_referred": null,
+        "_FRE_referred": VisibilityKind {
+          "$$owner": null,
+          "$$propertyIndex": undefined,
+          "$$propertyName": "",
+          "$id": "ID-3",
+          "$typename": "VisibilityKind",
+          "_FRE_name": "#",
+        },
+        "typeName": "VisibilityKind",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "visMulti",
+        "_FRE_pathname": [
+          "#",
+        ],
+        "_FRE_referred": VisibilityKind {
+          "$$owner": null,
+          "$$propertyIndex": undefined,
+          "$$propertyName": "",
+          "$id": "ID-3",
+          "$typename": "VisibilityKind",
+          "_FRE_name": "#",
+        },
+        "typeName": "VisibilityKind",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 2,
+        "$$propertyName": "visMulti",
+        "_FRE_pathname": [
+          "#",
+        ],
+        "_FRE_referred": VisibilityKind {
+          "$$owner": null,
+          "$$propertyIndex": undefined,
+          "$$propertyName": "",
+          "$id": "ID-3",
+          "$typename": "VisibilityKind",
+          "_FRE_name": "#",
+        },
         "typeName": "VisibilityKind",
       },
     ],
@@ -391,6 +432,8 @@ LimitedTest {
     "$typename": "LimitedOptional",
     "_FRE_visMulti": [],
     "_FRE_visMultiWithExtra": [],
+    "_FRE_visWithExtra": null,
+    "_FRE_visibility": null,
     "parseLocation": FreParseLocation {
       "column": 17,
       "line": 18,
@@ -1871,15 +1914,24 @@ PrimitivesTest {
     "$typename": "PrimsWithTerminator",
     "_FRE_primListBooleanTerminator": [
       true,
+      false,
+      true,
+      false,
     ],
     "_FRE_primListIdentifierTerminator": [
       "EenNaam",
+      "NogEEN",
+      "EnNogEeen",
     ],
     "_FRE_primListNumberTerminator": [
       30,
+      40,
+      50,
+      60,
     ],
     "_FRE_primListStringTerminator": [
       "iets",
+      "wat",
     ],
     "parseLocation": FreParseLocation {
       "column": 12,
@@ -1895,10 +1947,13 @@ PrimitivesTest {
     "_FRE_primListBooleanTerminator": [],
     "_FRE_primListIdentifierTerminator": [
       "EenNaam",
+      "NogEEN",
+      "EnNogEeen",
     ],
     "_FRE_primListNumberTerminator": [],
     "_FRE_primListStringTerminator": [
       "iets",
+      "wat",
     ],
     "parseLocation": FreParseLocation {
       "column": 15,
@@ -2062,6 +2117,7 @@ RefsTest {
     "$$propertyName": "directRefs",
     "$id": "ID-2",
     "$typename": "WithDirectRefs",
+    "_FRE_optRef": null,
     "_FRE_optRefList": [],
     "_FRE_ref": FreNodeReference {
       "$$owner": [Circular],
@@ -2082,7 +2138,10 @@ RefsTest {
         "$$propertyIndex": 0,
         "$$propertyName": "refList",
         "_FRE_pathname": [
-          "name1.ff.gg.yuio",
+          "name1",
+          "ff",
+          "gg",
+          "yuio",
         ],
         "_FRE_referred": null,
         "typeName": "RefConcept",
@@ -2138,6 +2197,7 @@ RefsTest {
         "$$propertyName": "optList",
         "$id": "ID-5",
         "$typename": "WithDirectRefs",
+        "_FRE_optRef": null,
         "_FRE_optRefList": [],
         "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
@@ -2158,7 +2218,10 @@ RefsTest {
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
             "_FRE_pathname": [
-              "name1.ff.gg.yuio",
+              "name1",
+              "ff",
+              "gg",
+              "yuio",
             ],
             "_FRE_referred": null,
             "typeName": "RefConcept",
@@ -2185,6 +2248,7 @@ RefsTest {
         "$$propertyName": "optList",
         "$id": "ID-6",
         "$typename": "WithDirectRefs",
+        "_FRE_optRef": null,
         "_FRE_optRefList": [],
         "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
@@ -2205,7 +2269,10 @@ RefsTest {
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
             "_FRE_pathname": [
-              "name1.ff.gg.yuio",
+              "name1",
+              "ff",
+              "gg",
+              "yuio",
             ],
             "_FRE_referred": null,
             "typeName": "RefConcept",
@@ -2232,6 +2299,7 @@ RefsTest {
         "$$propertyName": "optList",
         "$id": "ID-7",
         "$typename": "WithDirectRefs",
+        "_FRE_optRef": null,
         "_FRE_optRefList": [],
         "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
@@ -2252,7 +2320,10 @@ RefsTest {
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
             "_FRE_pathname": [
-              "name1.ff.gg.yuio",
+              "name1",
+              "ff",
+              "gg",
+              "yuio",
             ],
             "_FRE_referred": null,
             "typeName": "RefConcept",
@@ -2281,6 +2352,7 @@ RefsTest {
         "$$propertyName": "partList",
         "$id": "ID-3",
         "$typename": "WithDirectRefs",
+        "_FRE_optRef": null,
         "_FRE_optRefList": [],
         "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
@@ -2301,7 +2373,10 @@ RefsTest {
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
             "_FRE_pathname": [
-              "name1.ff.gg.yuio",
+              "name1",
+              "ff",
+              "gg",
+              "yuio",
             ],
             "_FRE_referred": null,
             "typeName": "RefConcept",
@@ -2348,16 +2423,17 @@ RefsTest {
         "$$propertyName": "partList",
         "$id": "ID-4",
         "$typename": "WithDirectRefs",
+        "_FRE_optRef": null,
         "_FRE_optRefList": [],
         "_FRE_ref": FreNodeReference {
           "$$owner": [Circular],
           "$$propertyIndex": undefined,
           "$$propertyName": "ref",
           "_FRE_pathname": [
-            "someName",
-            "otherName",
-            "xxx",
-            "yyy",
+            "someName2",
+            "otherName2",
+            "xxx2",
+            "yyy2",
           ],
           "_FRE_referred": null,
           "typeName": "RefConcept",
@@ -2368,7 +2444,10 @@ RefsTest {
             "$$propertyIndex": 0,
             "$$propertyName": "refList",
             "_FRE_pathname": [
-              "name1.ff.gg.yuio",
+              "name1",
+              "ff",
+              "gg",
+              "yuio",
             ],
             "_FRE_referred": null,
             "typeName": "RefConcept",

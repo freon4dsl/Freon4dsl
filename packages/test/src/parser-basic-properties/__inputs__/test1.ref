@@ -21,7 +21,7 @@ RefsTest myName {
                                       // optRefList not present
                     } !
                     WithDirectRefs {
-                        ref someName.otherName.xxx.yyy
+                        ref someName2.otherName2.xxx2.yyy2
                         // optRef not present
                         refList
                             name1.ff.gg.yuio

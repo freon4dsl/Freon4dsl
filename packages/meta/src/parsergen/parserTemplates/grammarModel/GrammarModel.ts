@@ -2,7 +2,12 @@ import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils/index.js";
 import { refRuleName } from "./GrammarUtils.js";
 import { GrammarPart } from "./GrammarPart.js";
-import {internalTransformPrimList, internalTransformPrimValue, internalTransformRefList} from "../ParserGenUtil.js";
+import {
+    internalTransformPartList,
+    internalTransformPrimList,
+    internalTransformPrimValue,
+    internalTransformRefList
+} from "../ParserGenUtil.js";
 
 export class GrammarModel {
     constructor(language: FreMetaLanguage) {
@@ -98,6 +103,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
         *   Class ${className} is the main syntax analyser.
         *   The actual work is being done by its parts, one for each model unit,
         *   and one common part that contains the methods used in multiple units.
+        *   Together the syntax analysers transform the parse tree into a FreNode model.
         *
         */
         export class ${className} extends SyntaxAnalyserByMethodRegistrationAbstract<${Names.classifier(language.modelConcept)}> {
@@ -116,6 +122,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 primType: PrimValueType,
                 separator?: string
             ): T[] {
+                // console.log("${internalTransformPrimList} called: "  + JSON.stringify(list));             
                 let result: T[] = [];
                 if (!!list) {
                     list.forEach((element) => {
@@ -134,6 +141,7 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                 element: string,
                 primType: PrimValueType
             ): T {
+                // console.log("${internalTransformPrimValue} called: " + element + ", " + primType);                
                 switch (primType) {
                     case PrimValueType.number:
                         const num = parseFloat(element);
@@ -150,9 +158,10 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
             
             /**
-             * Generic method to transform lists of parts
+             * Generic method to transform lists of parts.
              */
-            public transformPartList<T>(list: KtList<T>, separator?: string): T[] {
+            public ${internalTransformPartList}<T>(list: KtList<T>, separator?: string): T[] {
+                // console.log("${internalTransformPartList} called: " + JSON.stringify(list));
                 let result: T[] = [];
                 if (!!list) {
                     for (const element of list.asJsReadonlyArrayView()) {
@@ -165,10 +174,12 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
     
             /**
-             * Generic method to transform lists of references
+             * Generic method to transform lists of references. The input will be a list of string[], which is
+             * the result of transform__fre_reference. The separator here is the separator between the elements
+             * of the reference list, not the 'reference separator' ("${this.refSeparator}").
              */
             public ${internalTransformRefList}\<T extends ${Names.FreNamedNode}\>(list: KtList<T>, typeName: string, separator?: string): ${Names.FreNodeReference}\<T\>[] {
-                console.log("transformRefList called: " + JSON.stringify(list));
+                console.log("${internalTransformRefList} called: " + JSON.stringify(list));
                 let result: FreNodeReference<T>[] = [];
                 if (!!list) {
                     for (const child of list.asJsReadonlyArrayView()) {
@@ -181,12 +192,19 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
             }
 
             /**
-             * Generic method to transform a single reference
+             * Generic method to transform a single reference into an array of strings.
+             * The actual FreNodeReference object is created when the type of the referred node is known.
+             * The 'reference separator' ("${this.refSeparator}") is removed in the process.
              */
-            public transform${refRuleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): string[]{
-                const props = children.asJsReadonlyArrayView()[0] as KtList<[string, any]>;
-                console.log("\\t " + props)
-                return props;
+            public transform__fre_reference(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): string[] {
+                // console.log("transform__fre_reference called: " + JSON.stringify(children));
+                let result: string[] = [];
+                for (const child of children.asJsReadonlyArrayView()) {
+                    if (child !== null && child !== undefined && child !== '${this.refSeparator}') {
+                        result.push(child);
+                    }
+                }
+                return result;
             }
 
             /**

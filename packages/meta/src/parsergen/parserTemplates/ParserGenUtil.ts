@@ -152,4 +152,4 @@ export const internalTransformPrimValue = "transformPrimitiveValue";
 export const internalTransformPartList = "transformPartList";
 export const internalTransformPrimList = "transformPrimList";
 export const internalTransformRefList = "transformRefList";
-export const internalTransformFreNodeRef = "freNodeRef";
+export const internalTransformFreNodeRef = "transformFreNodeRef";
