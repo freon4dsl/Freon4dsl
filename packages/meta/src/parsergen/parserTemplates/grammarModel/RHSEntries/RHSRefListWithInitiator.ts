@@ -1,37 +1,37 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
-import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil.js";
+import {internalTransformRefList, ParserGenUtil} from "../../ParserGenUtil.js";
 import { makeIndent } from "../GrammarUtils.js";
-import { GenerationUtil } from "../../../../utils/index.js";
+import {GenerationUtil} from "../../../../utils/index.js";
 
-export class RHSRefListWithTerminator extends RHSPropPartWithSeparator {
-    // (propTypeName 'joinText' )*
+export class RHSRefListWithInitiator extends RHSPropPartWithSeparator {
+    // `("joinText" propTypeName)*`
     private entry: RHSPropEntry;
-    // @ts-ignore
-    private readonly isSingleEntry: boolean;
 
-    constructor(prop: FreMetaProperty, entry: RHSPropEntry, separator: string, isSingleEntry: boolean) {
+    constructor(prop: FreMetaProperty, entry: RHSPropEntry, separator: string) {
         super(prop, separator);
         this.entry = entry;
         this.isList = true;
-        this.isSingleEntry = isSingleEntry;
     }
 
     toGrammar(): string {
-        return `( ${this.entry.toGrammar()} '${this.separatorText}' )*` + this.doNewline();
+        return `( '${this.separatorText}' ${this.entry.toGrammar()} )*` + this.doNewline();
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        // When this RHS is the only entry in the grammar rule, e.g. "Concept1 = ( FretExp ';' )* ;",
-        // the actual list that must be transformed cannot be found using 'getChildren'.
-        // TODO ask David
-        // let myListStatement: string = `${nodeName}.asJsReadonlyArrayView()[${index}]`;
-        // if (this.isSingleEntry) {
-        //     myListStatement = `${nodeName}`;
-        // }
+        // return `
+        // // RHSRefListWithInitiator
+        // if (${nodeName}.asJsReadonlyArrayView()[${index}].length > 1 ) {
+        //     ${ParserGenUtil.internalName(this.property.name)} = [];
+        //     for (const child of ${nodeName}.asJsReadonlyArrayView()[${index}]) {
+        //         ${ParserGenUtil.internalName(this.property.name)}.push(child.asJsReadonlyArrayView()[1]);
+        //     }
+        // } // end RHSRefListWithInitiator
+        // `;
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `// RHSRefListWithTerminator
+        return `
+        // RHSRefListWithInitiator
         if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
             ${ParserGenUtil.internalName(this.property.name)} = [];
             for (const child of ${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView()) {
@@ -39,12 +39,12 @@ export class RHSRefListWithTerminator extends RHSPropPartWithSeparator {
                 if (!!_transformed) {
                     ${ParserGenUtil.internalName(this.property.name)}.push(_transformed[0]);
                 }
-            }   
-         }// end RHSRefListWithTerminator`
+            }
+        } // end RHSRefListWithInitiator`;
     }
 
     toString(depth: number): string {
         const indent = makeIndent(depth + 1);
-        return indent + "RHSListGroup: " + indent + this.entry.toString(depth + 1) + " " + this.separatorText;
+        return indent + "RHSListGroup: " + indent + this.separatorText + " " + this.entry.toString(depth + 1);
     }
 }

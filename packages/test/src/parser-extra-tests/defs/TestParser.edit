@@ -1,0 +1,17 @@
+editor default
+
+ProductTest {[
+    ProductTest ${self.name} {
+    	 ${self.product}
+    }
+]}
+
+InsuranceProduct {
+     [
+     InsuranceProduct ${self.name}
+        With terminator:
+        ${self.partsTerminator horizontal terminator[; ]}
+        With initiator:
+        ${self.partsInitiator horizontal initiator[\$ ]}
+    ]
+}

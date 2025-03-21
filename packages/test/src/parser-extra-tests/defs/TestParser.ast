@@ -1,0 +1,26 @@
+language TestParser
+
+// focuses on the different type of properties and how to parse them
+
+// TEST PROPERTIES WITH PRIMITVE TYPES
+model TestParserExtra {
+    name: identifier;
+    lim: ProductTest;
+}
+
+// TEST PROPERTIES WITH TYPES THAT ARE LIMITED CONCEPTS
+modelunit ProductTest {
+    name: identifier;
+    product: InsuranceProduct;
+    file-extension = "prod";
+}
+
+concept InsuranceProduct {
+    name: identifier;
+    reference partsTerminator: InsurancePart[];
+    reference partsInitiator: InsurancePart[];
+}
+
+concept InsurancePart {
+    name: identifier;                       // internal name
+}

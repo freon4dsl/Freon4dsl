@@ -431,7 +431,14 @@ export class WriterTemplate {
              */
             private doInitiator(sepText: string, sepType: SeparatorType) {
                 if (sepType === SeparatorType.Initiator) {
-                    this.output[this.currentLine] += sepText;
+                    const nrOfWhiteSpaces = this.output[this.currentLine].split("").filter((char) => /\\s/.test(char)).length;
+                    const onlyIndentation = this.output[this.currentLine].length === nrOfWhiteSpaces;
+                    if (onlyIndentation) {
+                        this.output[this.currentLine] += sepText;
+                    } else  {
+                        // add space before initiator, if it is not the first on the line
+                        this.output[this.currentLine] += ' ' + sepText;
+                    }
                 }
             }
         } `;
