@@ -11,7 +11,6 @@ const config = [
             file: pkg.module,
             globals: {
                 'kotlin': 'kotlin',
-                'agl': 'net.akehurst.language-agl-processor',
             }
         },
         plugins: [typescript()],
