@@ -1,7 +1,7 @@
 RefsTest myName {
 	directRefs WithDirectRefs {
                   	ref someName.x34565
-                  	optRef nameA
+                  	optRef nameABCDEFGHI
                   	refList
                         name1.d45fgh
                         name2
@@ -14,7 +14,7 @@ RefsTest myName {
     indirectRefs WithSubSubRefs {
                  	part WithDirectRefs {
                                            	ref someName
-                                           	optRef nameA
+                                           	optRef nameABCDEFGH
                                            	refList
                                                  name1.WREQWR.gag
                                                  name2
@@ -27,7 +27,7 @@ RefsTest myName {
                  	    }
                  	optPart WithDirectRefs {
                                               	ref someName
-                                              	optRef nameA
+                                              	optRef nameABCDEFG
                                               	refList
                                                     name1
                                                     name2
@@ -40,7 +40,7 @@ RefsTest myName {
                  	partList
                         WithDirectRefs {
                                             ref someName
-                                            optRef nameA
+                                            optRef nameABCDEF
                                             refList
                                                 name1
                                                 name2
@@ -52,7 +52,7 @@ RefsTest myName {
                         }
                         WithDirectRefs {
                                             ref someName
-                                            optRef nameA
+                                            optRef nameABCDE
                                             refList
                                                 name1
                                                 name2
@@ -65,7 +65,7 @@ RefsTest myName {
                  	optList
                         WithDirectRefs {
                                             ref someName
-                                            optRef nameA
+                                            optRef nameABCD
                                             refList
                                                 name1
                                                 name2
@@ -79,7 +79,7 @@ RefsTest myName {
 withSeparator
                         WithDirectRefs {
                                             ref someName
-                                            optRef nameA
+                                            optRef nameABC
                                             refList
                                                 name1
                                                 name2
@@ -91,7 +91,7 @@ withSeparator
                         } !!
                         WithDirectRefs {
                                             ref someName
-                                            optRef nameA
+                                            optRef nameAB
                                             refList
                                                 name1
                                                 name2

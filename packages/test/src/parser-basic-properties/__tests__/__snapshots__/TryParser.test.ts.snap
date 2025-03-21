@@ -2432,7 +2432,7 @@ RefsTest {
       "$$propertyIndex": undefined,
       "$$propertyName": "optRef",
       "_FRE_pathname": [
-        "nameA",
+        "nameABCDEFGHI",
       ],
       "_FRE_referred": null,
       "typeName": "RefConcept",
@@ -2545,7 +2545,7 @@ RefsTest {
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
           "_FRE_pathname": [
-            "nameA",
+            "nameABCD",
           ],
           "_FRE_referred": null,
           "typeName": "RefConcept",
@@ -2651,7 +2651,7 @@ RefsTest {
         "$$propertyIndex": undefined,
         "$$propertyName": "optRef",
         "_FRE_pathname": [
-          "nameA",
+          "nameABCDEFG",
         ],
         "_FRE_referred": null,
         "typeName": "RefConcept",
@@ -2756,7 +2756,7 @@ RefsTest {
         "$$propertyIndex": undefined,
         "$$propertyName": "optRef",
         "_FRE_pathname": [
-          "nameA",
+          "nameABCDEFGH",
         ],
         "_FRE_referred": null,
         "typeName": "RefConcept",
@@ -2862,7 +2862,7 @@ RefsTest {
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
           "_FRE_pathname": [
-            "nameA",
+            "nameABCDEF",
           ],
           "_FRE_referred": null,
           "typeName": "RefConcept",
@@ -2967,7 +2967,7 @@ RefsTest {
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
           "_FRE_pathname": [
-            "nameA",
+            "nameABCDE",
           ],
           "_FRE_referred": null,
           "typeName": "RefConcept",
@@ -3086,7 +3086,7 @@ RefsTest {
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
           "_FRE_pathname": [
-            "nameA",
+            "nameABC",
           ],
           "_FRE_referred": null,
           "typeName": "RefConcept",
@@ -3191,7 +3191,7 @@ RefsTest {
           "$$propertyIndex": undefined,
           "$$propertyName": "optRef",
           "_FRE_pathname": [
-            "nameA",
+            "nameAB",
           ],
           "_FRE_referred": null,
           "typeName": "RefConcept",
