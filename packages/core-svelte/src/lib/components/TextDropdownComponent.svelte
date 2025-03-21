@@ -188,8 +188,6 @@
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
                 selectedId = filteredOptions[filteredOptions.length - 1].id;
-            } else { // there are no valid options left
-                editor.setUserMessage("no valid selection");
             }
         }
     }
@@ -198,8 +196,6 @@
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
                 selectedId = filteredOptions[0].id;
-            } else { // there are no valid options left
-                editor.setUserMessage("No valid selection");
             }
         }
     }
@@ -212,7 +208,7 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log("XX onKeyDown: " + id + " [" + event.key + "] alt [" + event.altKey + "] shift [" + event.shiftKey + "] ctrl [" + event.ctrlKey + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
+        LOGGER.log(`onKeyDown: ${id} [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
         if (dropdownShown) {
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
@@ -250,7 +246,8 @@
                         }
                         break;
                     }
-                    case ENTER: { // user wants current selection
+                    case ENTER: { 
+                        // user wants current selection
                         // find the chosen option
                         let chosenOption: SelectOption = null;
                         if (filteredOptions.length <= 1) {
@@ -280,9 +277,7 @@
                         break;
                     }
                     default: {
-                        // stop editing todo is this the correct default?
-                        isEditing = false;
-                        hideDropdown()
+                        // handled by FreonComponent
                     }
                 }
             }
@@ -365,14 +360,7 @@
         isEditing = false;
         hideDropdown()
 
-        const post = box.executeOption(editor, selected); // TODO the result of the execution is ignored
-        if (!!post) {
-            if (typeof post === "function") {
-                post()
-            } else {
-                LOGGER.log("POST is noit a function: " + post)
-            }
-        }
+        box.executeOption(editor, selected); // the result of the execution is ignored
         if (isActionBox(box)) { // ActionBox, action done, clear input text
             setTextLocalAndInBox('');
         } else {
@@ -386,15 +374,7 @@
      */
     const endEditing = () => {
         LOGGER.log("endEditing " +id + " dropdownShow:" + dropdownShown + " isEditing: " + isEditing);
-        // todo this is strange code, must have a better look
-        if (isEditing === true) {
-            isEditing = false;
-        } else {
-            if (dropdownShown === true) {
-                hideDropdown()
-            }
-            return;
-        }
+        isEditing = false;
         if (dropdownShown) {
             allOptions = getOptions();
             let validOption = allOptions.find(o => o.label === text);
@@ -404,6 +384,8 @@
                 setText(textBox.getText());
             }
             hideDropdown()
+        } else {
+            setText(textBox.getText());
         }
     };
     

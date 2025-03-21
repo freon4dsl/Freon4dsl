@@ -4,14 +4,14 @@
     "access": "public"
   },
   "name": "@freon4dsl/meta",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/freon4dsl/Freon4dsl"
+    "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
   },
   "bin": {
     "freon": "dist/bin/freon-generator.js"

@@ -1,5 +1,6 @@
 {
   "name": "freon4dsl",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "rebuild": "npm run clean && npm install && npm run build && npm run test",
@@ -53,7 +54,6 @@
     "typescript": "5.4.5",
     "typescript-svelte-plugin": "0.3.38",
     "@vitest/ui": "^2.1.0"
-
   },
   "workspaces": [
     "packages/core",
@@ -64,6 +64,5 @@
     "packages/webapp-starter",
     "packages/server",
     "packages/test"
-  ],
-  "version": "1.0.0"
+  ]
 }

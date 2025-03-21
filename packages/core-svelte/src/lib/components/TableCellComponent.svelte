@@ -23,7 +23,7 @@
         MenuOptionsType,
         FreUtils,
         isTableRowBox,
-        TableRowBox
+        TableRowBox, FreCreatePartAction, MetaKey, AST, TableBox, isTableBox, isElementBox, ElementBox
     } from "@freon4dsl/core";
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
     import RenderComponent from "./RenderComponent.svelte";
@@ -108,12 +108,32 @@
 
     const onKeydown = (event: KeyboardEvent) => {
         LOGGER.log("GridCellComponent onKeyDown");
-        if (isMetaKey(event) || event.key === ENTER) {
+        if (event.key === ENTER) {
+            event.stopPropagation()
             LOGGER.log("Keyboard shortcut in GridCell ===============");
-            // let index: number = parentOrientation === TableDirection.HORIZONTAL ? row : column;
-            // todo handle this here, because there are no shortcuts for Enter created by TableUtils anymore,
-            // or add the shortcuts
-            // executeCustomKeyboardShortCut(event, index, box, editor);
+            // Create a new list element after the pone at index
+            FreUtils.CHECK(isTableRowBox(box.parent));
+            let tableRowBox: TableRowBox = box.parent as TableRowBox;
+            FreUtils.CHECK(isElementBox(tableRowBox.parent));
+            let elementBox: ElementBox = tableRowBox.parent as ElementBox;
+            LOGGER.log(`ElementBox parent ${elementBox.parent.kind} row is ${row}`)
+            FreUtils.CHECK(isTableBox(elementBox.parent));
+            let tableBox: TableBox = elementBox.parent as TableBox;
+            const action: FreCreatePartAction = new FreCreatePartAction({
+                trigger: { meta: MetaKey.None, key: ENTER, code: ENTER },
+                activeInBoxRoles: [box.role, "cell"],
+                conceptName: tableBox.conceptName,
+                propertyName: tableBox.propertyName,
+                boxRoleToSelect: undefined,
+            })
+            let execresult: () => void;
+            const selectedIndex = (tableBox.hasHeaders ? row -1 : row) 
+            AST.changeNamed("ListComponent.Enter", () => {
+                execresult = action.execute(tableBox, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, selectedIndex)
+            })
+            if (!!execresult) {
+                execresult();
+            }
         }
     };
 
