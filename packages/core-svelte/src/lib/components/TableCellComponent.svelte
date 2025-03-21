@@ -116,10 +116,9 @@
             let tableRowBox: TableRowBox = box.parent as TableRowBox;
             FreUtils.CHECK(isElementBox(tableRowBox.parent));
             let elementBox: ElementBox = tableRowBox.parent as ElementBox;
-            console.log(`ElementBox parent ${elementBox.parent.kind} row is ${row}`)
+            LOGGER.log(`ElementBox parent ${elementBox.parent.kind} row is ${row}`)
             FreUtils.CHECK(isTableBox(elementBox.parent));
             let tableBox: TableBox = elementBox.parent as TableBox;
-            event.stopPropagation()
             const action: FreCreatePartAction = new FreCreatePartAction({
                 trigger: { meta: MetaKey.None, key: ENTER, code: ENTER },
                 activeInBoxRoles: [box.role, "cell"],

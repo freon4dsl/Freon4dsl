@@ -188,8 +188,6 @@
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
                 selectedId = filteredOptions[filteredOptions.length - 1].id;
-            } else { // there are no valid options left
-                // editor.setUserMessage("selectLast no valid selection");
             }
         }
     }
@@ -198,8 +196,6 @@
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
                 selectedId = filteredOptions[0].id;
-            } else { // there are no valid options left
-                // editor.setUserMessage("selectFirstNo valid selection");
             }
         }
     }
@@ -225,7 +221,6 @@
                                 if (index + 1 < filteredOptions.length) { // the 'normal' case: go one down
                                     selectedId = filteredOptions[index + 1].id;
                                 } else if (index + 1 === filteredOptions.length) { // the end of the options reached: go to the first
-                                    //  TODO If there is no option, ignore the arrow
                                     selectFirstOption();
                                 }
                             }
@@ -259,7 +254,7 @@
                             if (filteredOptions.length !== 0) { // if there is just one option left, choose that one
                                 chosenOption = filteredOptions[0];
                             } else { // there are no valid options left
-                                editor.setUserMessage('Enter No valid selection')
+                                editor.setUserMessage('No valid selection')
                             }
                         } else { // find the selected option and choose that one
                             const index = filteredOptions.findIndex(o => o.id === selectedId);
@@ -282,9 +277,7 @@
                         break;
                     }
                     default: {
-                        // stop editing todo is this the correct default?
-                        // isEditing = false;
-                        // hideDropdown()
+                        // handled by FreonComponent
                     }
                 }
             }
@@ -367,7 +360,7 @@
         isEditing = false;
         hideDropdown()
 
-        const post = box.executeOption(editor, selected); // TODO the result of the execution is ignored
+        box.executeOption(editor, selected); // the result of the execution is ignored
         if (isActionBox(box)) { // ActionBox, action done, clear input text
             setTextLocalAndInBox('');
         } else {

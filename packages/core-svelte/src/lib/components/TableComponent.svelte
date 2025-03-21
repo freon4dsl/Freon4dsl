@@ -11,13 +11,11 @@
     import {
         type TableBox,
         type FreEditor,
-        FreLogger,
         ListElementInfo,
         TableDirection,
-        GridCellBox,
         isTableRowBox,
         isElementBox,
-        TableCellBox, ENTER, FreCreatePartAction, MetaKey, AST
+        TableCellBox
     } from "@freon4dsl/core";
     import { afterUpdate, onMount } from "svelte";
     import { activeElem, activeIn, componentId, draggedElem, draggedFrom } from "./svelte-utils/index.js";
@@ -135,7 +133,6 @@
         // Clear the drag data cache (for all formats/types) (gives error in FireFox!)
         // event.dataTransfer.clearData();
     };
-        
 </script>
 
 <span
