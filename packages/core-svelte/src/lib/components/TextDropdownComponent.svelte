@@ -381,24 +381,18 @@
      */
     const endEditing = () => {
         LOGGER.log("endEditing " +id + " dropdownShow:" + dropdownShown + " isEditing: " + isEditing);
-        // todo this is strange code, must have a better look
-        if (isEditing === true) {
-            isEditing = false;
-        } else {
-            if (dropdownShown === true) {
-                hideDropdown()
-            }
-            return;
-        }
-        allOptions = getOptions();
-        let validOption = allOptions.find(o => o.label === text);
-        if (!!validOption && validOption.id !== noOptionsId) {
-            storeOrExecute(validOption);
-        } else { // no valid option, restore the previous value
-            setText(textBox.getText());
-        }
+        isEditing = false;
         if (dropdownShown) {
+            allOptions = getOptions();
+            let validOption = allOptions.find(o => o.label === text);
+            if (!!validOption && validOption.id !== noOptionsId) {
+                storeOrExecute(validOption);
+            } else { // no valid option, restore the previous value
+                setText(textBox.getText());
+            }
             hideDropdown()
+        } else {
+            setText(textBox.getText());
         }
     };
     
