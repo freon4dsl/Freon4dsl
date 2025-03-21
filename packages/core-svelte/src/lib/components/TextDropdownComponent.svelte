@@ -108,7 +108,7 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
-        console.log(`${box.id}: refresh: ` + why + ' for ' + box?.kind);
+        LOGGER.log(`${box.id}: refresh: ` + why + ' for ' + box?.kind);
         if (isSelectBox(box)) {
             let selectedOption = box.getSelectedOption();
             LOGGER.log('    selectedOption is ' + selectedOption?.label);
@@ -119,10 +119,10 @@
                 selected = undefined;
             }
         }
-        // NB Not in an else if, becuase isSelectBox() is also true for ReferenceBox
+        // NB Not in an else if, because isSelectBox() is also true for ReferenceBox
         if (isReferenceBox(box)) {
             selectAbleReference = box.isSelectAble()
-            console.log("     selectAble is " + selectAbleReference)
+            LOGGER.log("     selectAble is " + selectAbleReference)
         }
         // because the box maybe a different one than we started with ...
         // box.setFocus = setFocus; todo remove?
