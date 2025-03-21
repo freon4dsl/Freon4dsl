@@ -35,7 +35,7 @@
     "typer-test8": "bash ../../scripts/freon-test-dev.sh all -d src/typer-test8/defs -o src/typer-test8",
     "undo-tester": "bash ../../scripts/freon-test-dev.sh all -d src/UndoTester/defs -o src/UndoTester",
     "vehicles": "bash ../../scripts/freon-test-dev.sh all -d src/vehicles/defs -o src/vehicles",
-    "build": "npm run demo && npm run storage && npm run octopus && npm run parser-conc && npm run basic-props && npm run parsergen && npm run imports && npm run defaultscoper && npm run definedscoper && npm run langconstr && npm run noparser && npm run prim-gen && npm run testproject && npm run typer-test8 && npm run undo-tester && npm run vehicles && tsc",
+    "build": "npm run demo && npm run storage && npm run octopus && npm run parser-conc && npm run basic-props && npm run parsergen && npm run parser-extra && npm run imports && npm run defaultscoper && npm run definedscoper && npm run langconstr && npm run noparser && npm run prim-gen && npm run testproject && npm run typer-test8 && npm run undo-tester && npm run vehicles && tsc",
     "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
@@ -73,6 +73,6 @@
     "tslib": "^2.6.3"
   },
   "publishConfig": {
-    "access": "private"
+    "access": "restricted"
   }
 }
