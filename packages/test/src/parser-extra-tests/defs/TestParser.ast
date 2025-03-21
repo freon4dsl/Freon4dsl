@@ -2,13 +2,13 @@ language TestParser
 
 // focuses on the different type of properties and how to parse them
 
-// TEST PROPERTIES WITH PRIMITVE TYPES
+// TEST OTHER ASPECTS OF THE PARSER GENERATION
 model TestParserExtra {
     name: identifier;
     lim: ProductTest;
 }
 
-// TEST PROPERTIES WITH TYPES THAT ARE LIMITED CONCEPTS
+// TEST REFS TO PARTS
 modelunit ProductTest {
     name: identifier;
     product: InsuranceProduct;
@@ -23,4 +23,27 @@ concept InsuranceProduct {
 
 concept InsurancePart {
     name: identifier;                       // internal name
+}
+
+// TEST BIN EXP LISTS
+modelunit PitExpTest {
+    name: identifier;
+    value: PitExp;
+    file-extension = "pexp";
+}
+
+abstract expression PitExp {
+}
+expression PitSelfExp base PitExp {
+}
+expression PitAnytypeExp base PitExp {
+}
+expression PitWhereExp base PitExp {
+    conditions: PitBinaryExp[];
+}
+
+binary expression PitBinaryExp base PitExp {
+    left: PitExp;
+    right: PitExp;
+    priority = 10;
 }

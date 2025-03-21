@@ -1,6 +1,7 @@
 import {FreUtils} from "@freon4dsl/core";
 import {FileHandler} from "../../utils/FileHandler";
 import {
+    PitExpTest,
     ProductTest, TestParserExtra,
 } from "../language/gen";
 import {describe, test, expect, beforeEach} from "vitest";
@@ -24,6 +25,19 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(null);
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(ProductTest);
+        console.log(writer.writeToString(unit1));
+        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        expect(unit1).toMatchSnapshot();
+    });
+
+    test(" RHSBinExpListWithTerminator", () => {
+        let input: string = fileHandler.stringFromFile("src/parser-extra-tests/__inputs__/test1.pexp");
+        let model = new TestParserExtra();
+        model.name = "TestParserExtra12";
+        const unit1: PitExpTest = reader.readFromString(input, "PitExpTest", model) as PitExpTest;
+        expect(unit1).not.toBe(null);
+        expect(unit1).not.toBe(undefined);
+        expect(unit1).toBeInstanceOf(PitExpTest);
         console.log(writer.writeToString(unit1));
         // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();

@@ -15,3 +15,21 @@ InsuranceProduct {
         ${self.partsInitiator horizontal initiator[\$ ]}
     ]
 }
+
+
+PitWhereExp {[
+    where {
+        ${self.conditions terminator[;]}
+    }
+]}
+
+PitSelfExp {
+    [self]
+}
+PitAnytypeExp {
+    [anytype]
+}
+
+PitBinaryExp {
+    symbol = "=="
+}

@@ -3,7 +3,7 @@ import { FreMetaBinaryExpressionConcept, FreMetaProperty } from "../../../../lan
 import { makeIndent } from "../GrammarUtils.js";
 import { BinaryExpMaker } from "../../BinaryExpMaker.js";
 import { GenerationUtil } from "../../../../utils/index.js";
-import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil.js";
+import { ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSBinExpListWithTerminator extends RHSPropEntry {
     type: FreMetaBinaryExpressionConcept;
@@ -30,25 +30,23 @@ export class RHSBinExpListWithTerminator extends RHSPropEntry {
         );
     }
 
-    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+    toMethod(index: number, nodeName: string): string {
         // TODO this method is equal to the one in RHSPartListWithTerminator
         // When this RHS is the only entry in the grammar rule, e.g. "Concept1 = ( FretExp ';' )* ;",
         // the actual list that must be transformed cannot be found using 'getChildren'.
         // TODO ask David
-        let myListStatement: string = `const _myList = this.${mainAnalyserName}.getChildren(${nodeName}[${index}]);`;
+        let myListStatement: string = `${nodeName}.asJsReadonlyArrayView()[${index}].toArray()`;
         if (this.isSingleEntry) {
-            myListStatement = `const _myList = ${nodeName};`;
+            myListStatement = `${nodeName}.toArray()`;
         }
         return `// RHSBinExpListWithTerminator
             ${ParserGenUtil.internalName(this.property.name)} = [];
-            ${myListStatement}
-            // todo nonSkipchildren
-            _myList.forEach(subNode => {
-                const _transformed = this.${mainAnalyserName}.${internalTransformNode}(subNode.nonSkipChildren?.toArray()[0]);
+            ${myListStatement}.forEach(subNode => {
+                const _transformed = subNode.asJsReadonlyArrayView()[0];
                 if (!!_transformed) {
                     ${ParserGenUtil.internalName(this.property.name)}.push(_transformed);
                 }
-            });`;
+            }); // end RHSBinExpListWithTerminator`;
     }
 
     toString(depth: number): string {
