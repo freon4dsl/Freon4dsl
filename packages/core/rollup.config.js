@@ -1,7 +1,6 @@
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import pkg from './package.json' with { type: 'json'};
-import dts from 'rollup-plugin-dts';
 
 const production = false;
 
@@ -32,13 +31,7 @@ const config = [
 		],
 		external
 			: ['mobx', 'lodash', '@lionweb/repository-client', 'reflect-metadata']
-	},
-	{
-		// create a bundled version of the types for use in the sveltekit packages
-		input: "./dist/dts/index.d.ts",
-		output: [{ file: 'dist/index.d.ts', format: 'es' }],
-		plugins: [dts()],
-	},
+	}
 ]
 
 export default config;

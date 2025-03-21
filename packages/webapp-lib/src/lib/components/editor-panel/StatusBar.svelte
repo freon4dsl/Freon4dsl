@@ -60,8 +60,8 @@
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		(x, y): {(!!currentBox ? Math.round(currentBox.actualX + langEnv.editor.scrollX)
-    + ", " + Math.round(currentBox?.actualY + langEnv.editor.scrollY) : "NAN")}
+<!--		(x, y): {(!!currentBox ? Math.round(currentBox.actualX + langEnv.editor.scrollX)-->
+<!--    + ", " + Math.round(currentBox?.actualY + langEnv.editor.scrollY) : "NAN")}-->
     "{(!!currentBox && isTextBox(currentBox) ? currentBox.getText() : "NotTextBox")}"
 		</span>
 </span>
