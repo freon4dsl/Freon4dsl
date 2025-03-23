@@ -1,0 +1,679 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Parser on extra elements >  On lists of references to parts 1`] = `
+ProductTest {
+  "$$owner": TestParserExtra {
+    "$$owner": null,
+    "$$propertyIndex": undefined,
+    "$$propertyName": "",
+    "$id": "ID-1",
+    "$typename": "TestParserExtra",
+    "_FRE_lim": [Circular],
+    "name": "TestParserExtra12",
+  },
+  "$$propertyIndex": undefined,
+  "$$propertyName": "lim",
+  "$id": "ID-3",
+  "$typename": "ProductTest",
+  "_FRE_name": "TEST1",
+  "_FRE_product": InsuranceProduct {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "product",
+    "$id": "ID-2",
+    "$typename": "InsuranceProduct",
+    "_FRE_name": "NAME",
+    "_FRE_partsInitiator": [
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "partsInitiator",
+        "_FRE_pathname": [
+          "PART3",
+        ],
+        "_FRE_referred": null,
+        "typeName": "InsurancePart",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "partsInitiator",
+        "_FRE_pathname": [
+          "PART4",
+        ],
+        "_FRE_referred": null,
+        "typeName": "InsurancePart",
+      },
+    ],
+    "_FRE_partsTerminator": [
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "partsTerminator",
+        "_FRE_pathname": [
+          "PART1",
+        ],
+        "_FRE_referred": null,
+        "typeName": "InsurancePart",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "partsTerminator",
+        "_FRE_pathname": [
+          "PART2",
+        ],
+        "_FRE_referred": null,
+        "typeName": "InsurancePart",
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 1,
+      "line": 3,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
+exports[`Parser on extra elements >  RHSBinExpListWithInitiator 1`] = `
+PitExpTest {
+  "$$owner": null,
+  "$$propertyIndex": undefined,
+  "$$propertyName": "",
+  "$id": "ID-12",
+  "$typename": "PitExpTest",
+  "_FRE_name": "NAME",
+  "_FRE_value": PitWhereExpInit {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "value",
+    "$id": "ID-11",
+    "$typename": "PitWhereExpInit",
+    "_FRE_conditions": [
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "conditions",
+        "$id": "ID-4",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-2",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 5,
+            "line": 4,
+          },
+        },
+        "_FRE_right": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-3",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 13,
+            "line": 4,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 5,
+          "line": 4,
+        },
+      },
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "conditions",
+        "$id": "ID-7",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-5",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 5,
+            "line": 5,
+          },
+        },
+        "_FRE_right": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-6",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 16,
+            "line": 5,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 5,
+          "line": 5,
+        },
+      },
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 2,
+        "$$propertyName": "conditions",
+        "$id": "ID-10",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-8",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 5,
+            "line": 6,
+          },
+        },
+        "_FRE_right": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-9",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 13,
+            "line": 6,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 5,
+          "line": 6,
+        },
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 9,
+      "line": 2,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
+exports[`Parser on extra elements >  RHSBinExpListWithSeparator 1`] = `
+PitExpTest {
+  "$$owner": null,
+  "$$propertyIndex": undefined,
+  "$$propertyName": "",
+  "$id": "ID-12",
+  "$typename": "PitExpTest",
+  "_FRE_name": "NAME",
+  "_FRE_value": PitWhereExpSep {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "value",
+    "$id": "ID-11",
+    "$typename": "PitWhereExpSep",
+    "_FRE_conditions": [
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "conditions",
+        "$id": "ID-4",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-2",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 3,
+            "line": 4,
+          },
+        },
+        "_FRE_right": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-3",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 11,
+            "line": 4,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 4,
+        },
+      },
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "conditions",
+        "$id": "ID-7",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-5",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 3,
+            "line": 5,
+          },
+        },
+        "_FRE_right": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-6",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 14,
+            "line": 5,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 5,
+        },
+      },
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 2,
+        "$$propertyName": "conditions",
+        "$id": "ID-10",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-8",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 3,
+            "line": 6,
+          },
+        },
+        "_FRE_right": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-9",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 11,
+            "line": 6,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 6,
+        },
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 9,
+      "line": 2,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
+exports[`Parser on extra elements >  RHSBinExpListWithTerminator 1`] = `
+PitExpTest {
+  "$$owner": null,
+  "$$propertyIndex": undefined,
+  "$$propertyName": "",
+  "$id": "ID-12",
+  "$typename": "PitExpTest",
+  "_FRE_name": "NAME",
+  "_FRE_value": PitWhereExp {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "value",
+    "$id": "ID-11",
+    "$typename": "PitWhereExp",
+    "_FRE_conditions": [
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "conditions",
+        "$id": "ID-4",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-2",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 3,
+            "line": 3,
+          },
+        },
+        "_FRE_right": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-3",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 11,
+            "line": 3,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 3,
+        },
+      },
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "conditions",
+        "$id": "ID-7",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-5",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 3,
+            "line": 4,
+          },
+        },
+        "_FRE_right": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-6",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 14,
+            "line": 4,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 4,
+        },
+      },
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 2,
+        "$$propertyName": "conditions",
+        "$id": "ID-10",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-8",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 3,
+            "line": 5,
+          },
+        },
+        "_FRE_right": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-9",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 11,
+            "line": 5,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 5,
+        },
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 9,
+      "line": 2,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
+exports[`Parser on extra elements >  RHSLimitedRefOptionalEntry 1`] = `
+PartsInitiatorTest {
+  "$$owner": null,
+  "$$propertyIndex": undefined,
+  "$$propertyName": "",
+  "$id": "ID-5",
+  "$typename": "PartsInitiatorTest",
+  "_FRE_name": "identifier",
+  "_FRE_value": WithDirectParts {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "value",
+    "$id": "ID-4",
+    "$typename": "WithDirectParts",
+    "_FRE_myLim": FreNodeReference {
+      "$$owner": [Circular],
+      "$$propertyIndex": undefined,
+      "$$propertyName": "myLim",
+      "_FRE_pathname": [
+        "SECOND",
+      ],
+      "_FRE_referred": NonOptionalLimited {
+        "$$owner": null,
+        "$$propertyIndex": undefined,
+        "$$propertyName": "",
+        "$id": "ID-2",
+        "$typename": "NonOptionalLimited",
+        "_FRE_name": "SECOND",
+      },
+      "typeName": "NonOptionalLimited",
+    },
+    "_FRE_partList": [
+      PartConcept {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "partList",
+        "$id": "ID-2",
+        "$typename": "PartConcept",
+        "_FRE_content": "stringLiteralABC",
+        "_FRE_optContent": null,
+        "parseLocation": FreParseLocation {
+          "column": 28,
+          "line": 3,
+        },
+      },
+      PartConcept {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "partList",
+        "$id": "ID-3",
+        "$typename": "PartConcept",
+        "_FRE_content": "stringLiteralXYZ",
+        "_FRE_optContent": null,
+        "parseLocation": FreParseLocation {
+          "column": 30,
+          "line": 7,
+        },
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 9,
+      "line": 2,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
+exports[`Parser on extra elements >  RHSPartListWithInitiator 1`] = `
+PartsInitiatorTest {
+  "$$owner": null,
+  "$$propertyIndex": undefined,
+  "$$propertyName": "",
+  "$id": "ID-5",
+  "$typename": "PartsInitiatorTest",
+  "_FRE_name": "identifier",
+  "_FRE_value": WithDirectParts {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "value",
+    "$id": "ID-4",
+    "$typename": "WithDirectParts",
+    "_FRE_myLim": null,
+    "_FRE_partList": [
+      PartConcept {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "partList",
+        "$id": "ID-2",
+        "$typename": "PartConcept",
+        "_FRE_content": "stringLiteralABC",
+        "_FRE_optContent": null,
+        "parseLocation": FreParseLocation {
+          "column": 28,
+          "line": 3,
+        },
+      },
+      PartConcept {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "partList",
+        "$id": "ID-3",
+        "$typename": "PartConcept",
+        "_FRE_content": "stringLiteralXYZ",
+        "_FRE_optContent": null,
+        "parseLocation": FreParseLocation {
+          "column": 30,
+          "line": 6,
+        },
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 9,
+      "line": 2,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
+exports[`Parser on extra elements >  RHSPrimListGroupWithInitiator 1`] = `
+PrimsTest {
+  "$$owner": null,
+  "$$propertyIndex": undefined,
+  "$$propertyName": "",
+  "$id": "ID-2",
+  "$typename": "PrimsTest",
+  "_FRE_name": "testName",
+  "_FRE_value": [
+    45,
+    1345,
+    890,
+  ],
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
+exports[`Parser on extra elements >  RHSRefOptionalEntry 1`] = `
+PartsInitiatorTest {
+  "$$owner": null,
+  "$$propertyIndex": undefined,
+  "$$propertyName": "",
+  "$id": "ID-5",
+  "$typename": "PartsInitiatorTest",
+  "_FRE_name": "identifier",
+  "_FRE_value": WithDirectParts {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "value",
+    "$id": "ID-4",
+    "$typename": "WithDirectParts",
+    "_FRE_myLim": null,
+    "_FRE_partList": [
+      PartConcept {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "partList",
+        "$id": "ID-2",
+        "$typename": "PartConcept",
+        "_FRE_content": "stringLiteralABC",
+        "_FRE_optContent": FreNodeReference {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "optContent",
+          "_FRE_pathname": [
+            "InsuranceRef",
+          ],
+          "_FRE_referred": null,
+          "typeName": "InsurancePart",
+        },
+        "parseLocation": FreParseLocation {
+          "column": 28,
+          "line": 3,
+        },
+      },
+      PartConcept {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "partList",
+        "$id": "ID-3",
+        "$typename": "PartConcept",
+        "_FRE_content": "stringLiteralXYZ",
+        "_FRE_optContent": null,
+        "parseLocation": FreParseLocation {
+          "column": 30,
+          "line": 7,
+        },
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 9,
+      "line": 2,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
