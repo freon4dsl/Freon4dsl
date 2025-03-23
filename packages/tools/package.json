@@ -1,6 +1,6 @@
 {
   "name": "tsnode-examples",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Finds the country of origin of the incoming request",
   "main": "index.js",
   "scripts": {
