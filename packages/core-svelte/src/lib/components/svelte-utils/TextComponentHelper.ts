@@ -185,7 +185,6 @@ export class TextComponentHelper {
     }
 
     handleArrowLeft(event: KeyboardEvent) {
-        this._dispatcher("showDropdown")
         this.getCaretPosition(event)
         LOGGER.log(`handleArrowLeft, caret: ${this._from}-${this._to}`)
         if (this._from !== 0) {
@@ -196,15 +195,10 @@ export class TextComponentHelper {
             this._to -= 1
             LOGGER.log(`caretChanged from handleArrowLeft, caret: ${this._from}-${this._to}`)
             this._dispatcher("caretChanged", { content: this._getText(), caret: this._from })
-        } else {
-            // the key will cause this element to lose focus, its content should be saved
-            this._endEditing()
-            // let the parent take care of handling the event
         }
     }
 
     handleArrowRight(event: KeyboardEvent) {
-        this._dispatcher("showDropdown")
         this.getCaretPosition(event)
         LOGGER.log(`handleArrowRight, caret: ${this._from}-${this._to}`)
         if (this._from !== this._getText().length) {
@@ -215,10 +209,6 @@ export class TextComponentHelper {
             this._to += 1
             LOGGER.log(`caretChanged from handleArrowLeft, caret: ${this._from}-${this._to}`)
             this._dispatcher("caretChanged", { content: this._getText(), caret: this._from })
-        } else {
-            // the key will cause this element to lose focus, its content should be saved
-            this._endEditing()
-            // let the parent take care of handling the event
         }
     }
 

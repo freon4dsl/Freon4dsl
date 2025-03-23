@@ -224,9 +224,13 @@
 				}
 				case ARROW_DOWN:
 				case ARROW_UP:
+				// NOTE No explicit call to endEditing needed, as these events are handled by the FreonComponent,
+				// and if the selection leaves this textbox, a focusOut event will occur, which does exactly this.
+					break;
 				case ENTER: {
-					// NOTE No explicit call to endEditing needed, as these events are handled by the FreonComponent,
-					// and if the selection leaves this textbox, a focusOut event will occur, which does exactly this.
+					if (!partOfDropdown) {
+						endEditing()
+					}
 					break;
 				}
 				case ARROW_LEFT: {

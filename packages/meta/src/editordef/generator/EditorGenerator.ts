@@ -12,8 +12,7 @@ import {
     GenerationStatus,
     FileUtil,
     isNullOrUndefined,
-    Names,
-    STYLES_FOLDER,
+    Names
 } from "../../utils/index.js";
 import { FreEditUnit } from "../metalanguage/index.js";
 import { ActionsTemplate, EditorIndexTemplate, BoxProviderTemplate } from "./templates/index.js";
@@ -27,7 +26,6 @@ export class EditorGenerator {
     public outputfolder: string = ".";
     protected editorGenFolder: string = "";
     protected editorFolder: string = "";
-    protected stylesFolder: string = "";
     language?: FreMetaLanguage;
 
     generate(editDef: FreEditUnit): void {
@@ -55,7 +53,6 @@ export class EditorGenerator {
 
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.editorFolder); // will not be overwritten
-        FileUtil.createDirIfNotExisting(this.stylesFolder); // will not be overwritten
         FileUtil.createDirIfNotExisting(this.editorGenFolder);
         FileUtil.deleteFilesInDir(this.editorGenFolder, generationStatus);
 
@@ -181,7 +178,6 @@ export class EditorGenerator {
 
     private getFolderNames() {
         this.editorFolder = this.outputfolder + "/" + EDITOR_FOLDER;
-        this.stylesFolder = this.outputfolder + "/" + STYLES_FOLDER;
         this.editorGenFolder = this.outputfolder + "/" + EDITOR_GEN_FOLDER;
     }
 
@@ -189,9 +185,7 @@ export class EditorGenerator {
         this.getFolderNames();
         FileUtil.deleteDirAndContent(this.editorGenFolder);
         if (force) {
-            FileUtil.deleteFile(`${this.stylesFolder}/styles.ts`);
             FileUtil.deleteFile(`${this.editorFolder}/index.ts`);
-            FileUtil.deleteDirIfEmpty(this.stylesFolder);
             if (this.language === null || this.language === undefined) {
                 LOG2USER.error("Cannot remove all files because language is not set.");
             } else {
@@ -207,9 +201,7 @@ export class EditorGenerator {
                         "\n\t" +
                         `${this.editorFolder}/${Names.customProjection(this.language)}.ts` +
                         "\n\t" +
-                        `${this.editorFolder}/index.ts` +
-                        "\n\t" +
-                        `${this.stylesFolder}/styles.ts`,
+                        `${this.editorFolder}/index.ts`
                 );
             }
         }

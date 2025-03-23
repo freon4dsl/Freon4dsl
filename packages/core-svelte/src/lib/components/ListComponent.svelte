@@ -21,7 +21,7 @@
         MenuOptionsType,
         moveListElement,
         FreEditor,
-        FreLogger
+        FreLogger, FreCreatePartAction, MetaKey, AST, ENTER
     } from "@freon4dsl/core";
     import RenderComponent from "./RenderComponent.svelte";
     import {
@@ -192,6 +192,27 @@
     // The mouseenter fires when the mouse cursor is outside an element and then moves to inside the boundaries of the element.
     // The mouseleave fires when the mouse cursor is over an element and then moves to the outside of the element’s boundaries.
     // Both mouseenter and mouseleave do not bubble and do not fire when the mouse cursor moves over descendant elements.
+
+    const onKeyDown = (event: KeyboardEvent, index: number) => {
+        if (event.key === ENTER) {
+            // Create a new list element after the node at index
+            event.stopPropagation()
+            const action: FreCreatePartAction = new FreCreatePartAction({
+                trigger: { meta: MetaKey.None, key: ENTER, code: ENTER },
+                activeInBoxRoles: [box.role, "action-" + box.role + "-textbox"],
+                conceptName: box.conceptName,
+                propertyName: box.propertyName,
+                boxRoleToSelect: undefined,
+            })
+            let execresult: () => void;
+            AST.changeNamed("ListComponent.Enter", () => {
+                execresult = action.execute(box, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, index + 1)
+            })
+            if (!!execresult) {
+                execresult();
+            }
+        }
+    }
 </script>
 
 <!-- on:focus is here to avoid a known bug in svelte 3.4*: "A11y: on:mouseover must be accompanied by on:focus with Svelte v3.40 #285" -->
@@ -211,6 +232,7 @@
                 style:grid-row="{isHorizontal ? 1 : index+1}"
                 animate:flip
                 draggable=true
+                on:keydown={event => {onKeyDown(event, index)}}
                 on:dragstart|stopPropagation={event => dragstart(event, id, index)}
                 on:dragend|stopPropagation={event => dragend(event, id, index)}
                 on:drop|stopPropagation={event => drop(event, index)}
