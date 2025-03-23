@@ -1,0 +1,11 @@
+PartsInitiatorTest identifier {
+	 value WithDirectParts {
+             	 partList ## PartConcept {
+                          	 content "stringLiteralABC"
+                          	 InsuranceRef
+                         	 }
+                          ## PartConcept {
+                          	 content "stringLiteralXYZ"
+                          	 }
+             	 }
+	 }

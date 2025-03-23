@@ -86,7 +86,7 @@ export class FreLangSelfExp extends FreLangExp {
     $referredElement: MetaElementReference<FreMetaClassifier>; // is not needed, can be determined based on its parent
 
     toFreString(): string {
-        if (!!this.sourceName && this.sourceName !== 'self') {
+        if (!!this.sourceName && this.sourceName !== Names.nameForSelf) {
             return this.sourceName + (this.appliedfeature ? "." + this.appliedfeature.toFreString() : "");
         } else {
             // e.g. in isunique validation rules

@@ -459,11 +459,11 @@ describe("Checking editor definition ", () => {
         try {
             parser.parse(testdir + "test14.edit");
         } catch (e: unknown) {
-            console.log("in test14: " + e);
-            console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            console.log(
-                "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
-            );
+            // console.log("in test14: " + e);
+            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // console.log(
+            //     "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
+            // );
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (8).`);
                 expect(
@@ -529,11 +529,11 @@ describe("Checking editor definition ", () => {
         try {
             parser.parse(testdir + "test15.edit");
         } catch (e: unknown) {
-            console.log("in test15: " + e);
-            console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-            console.log(
-                "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
-            );
+            // console.log("in test15: " + e);
+            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // console.log(
+            //     "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
+            // );
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (1).`);
                 expect(

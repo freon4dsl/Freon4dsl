@@ -7,8 +7,6 @@ import { parser } from "./LanguageGrammar.js";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName, setIdMap } from "./LanguageCreators.js";
 import { FreLangChecker } from "../checking/FreLangChecker.js";
 
-// const LOGGER = new MetaLogger("LanguageParser").mute();
-
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     idFile: string | undefined;
 

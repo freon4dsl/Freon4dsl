@@ -60,7 +60,7 @@ ExpressionTest {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "left",
-        "$id": "ID-7",
+        "$id": "ID-8",
         "$typename": "DivideEx",
         "_FRE_left": NumberLiteralEx {
           "$$owner": [Circular],
@@ -95,7 +95,7 @@ ExpressionTest {
         "$$owner": [Circular],
         "$$propertyIndex": undefined,
         "$$propertyName": "right",
-        "$id": "ID-8",
+        "$id": "ID-7",
         "$typename": "BooleanLiteralEx",
         "_FRE_value": true,
         "parseLocation": FreParseLocation {

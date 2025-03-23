@@ -89,9 +89,37 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
-    "@freon4dsl/core": "1.0.0",
-    "@freon4dsl/core-svelte": "1.1.0",
-    "svelte": "^5.20.1"
+    "@freon4dsl/core": "~1.1.0",
+    "@freon4dsl/core-svelte": "~1.1.0",
+    "svelte": "< 5.0.0",
+    "click-outside": "^2.0.2",
+    "mobx": "^6.12.13",
+    "@smui-extra/autocomplete": "^7.0.0",
+    "@smui/banner": "^7.0.0",
+    "@smui/button": "^7.0.0",
+    "@smui/card": "^7.0.0",
+    "@smui/checkbox": "^7.0.0",
+    "@smui/common": "^7.0.0",
+    "@smui/data-table": "^7.0.0",
+    "@smui/dialog": "^7.0.0",
+    "@smui/drawer": "^7.0.0",
+    "@smui/form-field": "^7.0.0",
+    "@smui/icon-button": "^7.0.0",
+    "@smui/layout-grid": "^7.0.0",
+    "@smui/linear-progress": "^7.0.0",
+    "@smui/list": "^7.0.0",
+    "@smui/menu": "^7.0.0",
+    "@smui/menu-surface": "^7.0.0",
+    "@smui/paper": "^7.0.0",
+    "@smui/radio": "^7.0.0",
+    "@smui/tab": "^7.0.0",
+    "@smui/tab-bar": "^7.0.0",
+    "@smui/textfield": "^7.0.0",
+    "@smui/tooltip": "^7.0.0",
+    "@smui/top-app-bar": "^7.0.0",
+    "@material/theme": "^14.0.0",
+    "@material/typography": "^14.0.0",
+    "@mdi/js": "^7.4.47"
   }
 }
 

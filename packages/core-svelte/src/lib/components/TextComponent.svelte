@@ -296,90 +296,90 @@
         }
     }
 
-    /**
-     * This function handles any keyboard event that occurs within the <input> element.
-     * Note, we use onKeyDown, because onKeyPress is deprecated.
-     * In case of an ESCAPE in the textComponent, the dropdown is closed, while the editing state remains.
-     * @param event
-     */
-    const onKeyDown = (event: KeyboardEvent) => {
-        // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
+	/**
+	 * This function handles any keyboard event that occurs within the <input> element.
+	 * Note, we use onKeyDown, because onKeyPress is deprecated.
+	 * In case of an ESCAPE in the textComponent, the dropdown is closed, while the editing state remains.
+	 * @param event
+	 */
+	const onKeyDown = (event: KeyboardEvent) => {
+		// see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
         LOGGER.log(
             `${id}: onKeyDown:  isEditing ${isEditing} key: [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}] meta [${event.metaKey}]`
         );
         if (event.key === TAB) {
-            // Do nothing, browser handles this
-        } else if (event.key === SHIFT || event.key === CONTROL || event.key === ALT) {
-            // ignore meta keys
-            LOGGER.log('META KEY: stop propagation');
-            event.stopPropagation();
-        } else if (event.altKey || event.ctrlKey) {
-            // No shift, because that is handled as normal text
-            myHelper.handleAltOrCtrlKey(event, editor);
-        } else {
-            // handle non meta keys
-            switch (event.key) {
-                case ESCAPE: {
-                    if (partOfDropdown) toParent('hideDropdown');
-                    event.preventDefault();
-                    event.stopPropagation();
-                    break;
-                }
-                case ARROW_DOWN:
-                case ARROW_UP:
-                case ENTER: {
-                    // NOTE No explicit call to endEditing needed, as these events are handled by the FreonComponent,
-                    // and if the selection leaves this textbox, a focusOut event will occur, which does exactly this.
-                    break;
-                }
-                case ARROW_LEFT: {
-                    myHelper.handleArrowLeft(event);
-                    break;
-                }
-                case ARROW_RIGHT: {
-                    myHelper.handleArrowRight(event);
-                    break;
-                }
-                case BACKSPACE: {
-                    myHelper.handleBackSpace(event, editor);
-                    break;
-                }
-                case DELETE: {
-                    myHelper.handleDelete(event, editor);
-                    break;
-                }
-                default: {
-                    // the event.key is SHIFT or a printable character
-                    if (partOfDropdown) toParent('showDropdown');
-                    myHelper.getCaretPosition(event);
-                    if (event.shiftKey && event.key === 'Shift') {
-                        // only shift key pressed, ignore
-                        event.stopPropagation();
-                        break;
-                    }
-                    switch (box.isCharAllowed(text, event.key, myHelper.from)) {
-                        case CharAllowed.OK:
-                            // add char to text, handled by browser
-                            // dispatch to TextDropdown handled by afterUpdate()
-                            myHelper.from += 1;
-                            event.stopPropagation();
-                            break;
-                        case CharAllowed.NOT_OK: // ignore
-                            LOGGER.log('KeyPressAction.NOT_OK');
-                            event.preventDefault();
-                            event.stopPropagation();
-                            break;
-                        case CharAllowed.GOTO_NEXT: // try in previous or next box
-                            myHelper.handleGoToNext(event, editor, id);
-                            break;
-                        case CharAllowed.GOTO_PREVIOUS: // try in previous or next box
-                            myHelper.handleGoToPrevious(event, editor, id);
-                            break;
-                    }
-                }
-            }
-        }
-    };
+			// Do nothing, browser handles this
+		} else if (event.key === SHIFT || event.key === CONTROL || event.key === ALT) { // ignore meta keys
+			LOGGER.log("META KEY: stop propagation")
+			event.stopPropagation();
+		} else if (event.altKey || event.ctrlKey) { // No shift, because that is handled as normal text
+			myHelper.handleAltOrCtrlKey(event, editor);
+		} else { // handle non meta keys
+			switch (event.key) {
+				case ESCAPE: {
+					if (partOfDropdown) toParent('hideDropdown');
+					event.preventDefault();
+					event.stopPropagation();
+					break;
+				}
+				case ARROW_DOWN:
+				case ARROW_UP:
+				// NOTE No explicit call to endEditing needed, as these events are handled by the FreonComponent,
+				// and if the selection leaves this textbox, a focusOut event will occur, which does exactly this.
+					break;
+				case ENTER: {
+					if (!partOfDropdown) {
+						endEditing()
+					}
+					break;
+				}
+				case ARROW_LEFT: {
+					myHelper.handleArrowLeft(event);
+					break;
+				}
+				case ARROW_RIGHT: {
+					myHelper.handleArrowRight(event);
+					break;
+				}
+				case BACKSPACE: {
+					myHelper.handleBackSpace(event, editor);
+					break;
+				}
+				case DELETE: {
+					myHelper.handleDelete(event, editor);
+					break;
+				}
+				default: { // the event.key is SHIFT or a printable character
+					if (partOfDropdown) toParent('showDropdown');
+					myHelper.getCaretPosition(event);
+					if (event.shiftKey && event.key === 'Shift') {
+						// only shift key pressed, ignore
+						event.stopPropagation();
+						break;
+					}
+					switch (box.isCharAllowed(text, event.key, myHelper.from)) {
+						case CharAllowed.OK:
+							// add char to text, handled by browser
+							// dispatch to TextDropdown handled by afterUpdate()
+							myHelper.from += 1;
+							event.stopPropagation();
+							break;
+						case CharAllowed.NOT_OK: // ignore
+							LOGGER.log('KeyPressAction.NOT_OK');
+							event.preventDefault();
+							event.stopPropagation();
+							break;
+						case CharAllowed.GOTO_NEXT: // try in previous or next box
+							myHelper.handleGoToNext(event, editor, id);
+							break;
+						case CharAllowed.GOTO_PREVIOUS: // try in previous or next box
+							myHelper.handleGoToPrevious(event, editor, id);
+							break;
+					}
+				}
+			}
+		}
+	};
 
     /**
      * When this component loses focus, do everything that is needed to end the editing state.
@@ -491,14 +491,14 @@
         LOGGER.log(`clientRectangle ${box.id} is undefined`)
         return UndefinedRectangle
     }
-    
+
     $effect(() => {
         if (!isNullOrUndefined(box)) {
             box.getClientRectangle = clientRectangle
         }
     })
 
-    
+
     // THE OLD afterUpdate:
     // $effect(() => {
     //     LOGGER.log(`effect 4 for ${box?.id}`)

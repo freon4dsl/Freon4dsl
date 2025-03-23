@@ -11,11 +11,10 @@ const reader = UndoModelEnvironment.getInstance().reader;
 function readUnitInTransaction(manager: FreUndoManager, filePath: string) {
     manager.cleanAllStacks();
     let unit1
-    AST.change( () => {
-        const model: UndoModel = new UndoModel();
-        const langSpec: string = handler.stringFromFile(filePath);
-        unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
-    })
+    const model: UndoModel = new UndoModel();
+    const langSpec: string = handler.stringFromFile(filePath);
+    // console.log(langSpec);
+    unit1 = reader.readFromString(langSpec, "UndoUnit", model) as UndoUnit;
     return unit1;
 }
 

@@ -3,7 +3,7 @@ import { FreMetaBinaryExpressionConcept, FreMetaProperty } from "../../../../lan
 import { getTypeCall, makeIndent } from "../GrammarUtils.js";
 import { BinaryExpMaker } from "../../BinaryExpMaker.js";
 import { GenerationUtil, Names } from "../../../../utils/index.js";
-import { internalTransformList, internalTransformNode, ParserGenUtil } from "../../ParserGenUtil.js";
+import { internalTransformPartList, internalTransformNode, ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSBinExpList extends RHSPropEntry {
     type: FreMetaBinaryExpressionConcept;
@@ -23,7 +23,7 @@ export class RHSBinExpList extends RHSPropEntry {
         const baseType: string = Names.classifier(this.type);
         return `// RHSBinExpList
         if (children[${index}].name !== "${getTypeCall(this.property.type)}") {
-            ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(${nodeName}[${index}]);
+            ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformPartList}<${baseType}>(${nodeName}[${index}]);
         } else { // special case: only when this entry is the single rhs entry of this rule
             ${ParserGenUtil.internalName(this.property.name)} = [];
             for (const child of children) {

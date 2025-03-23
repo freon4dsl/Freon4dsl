@@ -73,6 +73,6 @@
     "@material/web": "^2.2.0",
     "@material/slider": "^14.0.0",
     "@material/switch": "^14.0.0",
-    "@freon4dsl/core": "^1.0.0"
+    "@freon4dsl/core": "^1.1.0"
   }
 }

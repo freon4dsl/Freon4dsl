@@ -1,0 +1,24 @@
+language FreLanguageX
+
+// begin scoper definition
+modelunit FreScoperDef {
+    reference namespaces: FreClassifier[];
+    scopeConceptDefs: ScopeConceptDef[];
+    file-extension = "scope";
+}
+
+concept ScopeConceptDef {
+    reference conceptRef: FreConcept;
+    namespaceAdditions?: FreNamespaceAddition;
+    alternativeScope?: FreAlternativeScope;
+}
+
+concept FreNamespaceAddition {
+    expressions: FretExp[];
+}
+
+concept FreAlternativeScope {
+    expression: FretExp;
+}
+
+// end scoper definition

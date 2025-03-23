@@ -9,6 +9,8 @@
      */
     import {
         type TableBox,
+        type FreEditor,
+        FreLogger,
         ListElementInfo,
         TableDirection,
         isTableRowBox,

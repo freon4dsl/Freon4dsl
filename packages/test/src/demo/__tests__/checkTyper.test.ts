@@ -109,7 +109,7 @@ describe("Testing Typer", () => {
             let inheritanceModel: DemoModel = new DemoModelCreator().createInheritanceModel().models[0];
             inheritanceModel.entities.forEach((ent) => {
                 if (!!ent.baseEntity) {
-                    console.log("trying " + ent.name + " found base entity: " + ent.baseEntity?.referred.name);
+                    // console.log("trying " + ent.name + " found base entity: " + ent.baseEntity?.referred.name);
                     expect(typer.conformsType(ent.baseEntity.referred, ent));
                 }
             });

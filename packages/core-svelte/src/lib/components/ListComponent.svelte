@@ -25,7 +25,9 @@
         type FreNamedNode,
         type DragAndDropType,
         isFreNodeReference,
-        isFreNode
+        isFreNode,
+        FreEditor,
+        FreLogger, FreCreatePartAction, MetaKey, AST, ENTER
     } from "@freon4dsl/core"
     import RenderComponent from './RenderComponent.svelte';
     import { componentId } from '$lib/index.js';
@@ -212,6 +214,27 @@
         // Evaluated and re-evaluated when the box changes.
         refresh('Refresh from ListComponent box changed:   ' + box?.id);
     });
+
+    const onKeyDown = (event: KeyboardEvent, index: number) => {
+        if (event.key === ENTER) {
+            // Create a new list element after the node at index
+            event.stopPropagation()
+            const action: FreCreatePartAction = new FreCreatePartAction({
+                trigger: { meta: MetaKey.None, key: ENTER, code: ENTER },
+                activeInBoxRoles: [box.role, "action-" + box.role + "-textbox"],
+                conceptName: box.conceptName,
+                propertyName: box.propertyName,
+                boxRoleToSelect: undefined,
+            })
+            let execresult: () => void;
+            AST.changeNamed("ListComponent.Enter", () => {
+                execresult = action.execute(box, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, index + 1)
+            })
+            if (!!execresult) {
+                execresult();
+            }
+        }
+    }
 </script>
 
 <!-- onblur is needed for onmouseout -->
@@ -231,6 +254,7 @@
             style:grid-row={isHorizontal ? 1 : index + 1}
             animate:flip
 
+            onkeydown={event => {onKeyDown(event, index)}}
             ondragend={(event) => dragend(event)}
             ondrop={(event) => drop(event, index)}
             ondragover={(event) => {

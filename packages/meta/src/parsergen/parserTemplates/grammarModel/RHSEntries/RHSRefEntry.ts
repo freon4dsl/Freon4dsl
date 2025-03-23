@@ -14,9 +14,9 @@ export class RHSRefEntry extends RHSPropEntry {
         return refRuleName + this.doNewline();
     }
 
-    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+    toMethod(index: number, nodeName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.freNodeRef<${baseType}>(${nodeName}[${index}], '${baseType}'); // RHSRefEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = FreNodeReference.create<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}], '${baseType}'); // RHSRefEntry\n`;
     }
 
     toString(depth: number): string {

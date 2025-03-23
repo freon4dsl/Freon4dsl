@@ -1,0 +1,25 @@
+scoper XX for language FreLanguageX
+
+//isnamespace { FretClassifierSpec, FreClassifier, FretLimitedInstanceExp }
+isnamespace { FreClassifier }
+
+//FretPropertyCallExp {
+//    scope = typeof( self.source );
+//}
+//
+//FretLimitedInstanceExp {
+//    namespace_addition = self.myLimited;
+//}
+
+//FretLimitedRule { // TODO This addition should be on FretClassifierRule, but that results in a MobX cycle
+//    namespace_addition = self.myClassifier;
+//}
+
+// scope rules for FreStructureDef
+FreConcept {
+    namespace_addition = self.interfaces + self.base;
+}
+
+FreInterface {
+    namespace_addition = self.base;
+}

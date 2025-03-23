@@ -1,7 +1,7 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
-import { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage/index.js";
+import {FreMetaPrimitiveProperty, FreMetaPrimitiveType} from "../../../../languagedef/metalanguage/index.js";
 import { getPrimCall, makeIndent } from "../GrammarUtils.js";
-import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil.js";
+import {internalTransformPrimValue, ParserGenUtil} from "../../ParserGenUtil.js";
 
 export class RHSPrimEntry extends RHSPropEntry {
     constructor(prop: FreMetaPrimitiveProperty) {
@@ -14,12 +14,27 @@ export class RHSPrimEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        // tslint:disable-next-line:max-line-length
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformNode}(${nodeName}[${index}]); // RHSPrimEntry\n`;
+        let tsType: string = '';
+        let typeStr: string = '';
+        if (this.property.type === FreMetaPrimitiveType.identifier ) {
+            tsType = "string";
+            typeStr = "PrimValueType.identifier";
+        } else if (this.property.type === FreMetaPrimitiveType.string ) {
+            tsType = "string";
+            typeStr = "PrimValueType.string";
+        } else if (this.property.type === FreMetaPrimitiveType.number) {
+            tsType = "number";
+            typeStr = "PrimValueType.number";
+        } else if (this.property.type === FreMetaPrimitiveType.boolean) {
+            tsType = "boolean";
+            typeStr = "PrimValueType.boolean";
+        }
+        return `${ParserGenUtil.internalName(this.property.name)} = 
+                    this.${mainAnalyserName}.${internalTransformPrimValue}<${tsType}>(${nodeName}.asJsReadonlyArrayView()[${index}], ${typeStr}); // RHSPrimEntry\n`
     }
 
     toString(depth: number): string {
-        const indent = makeIndent(depth);
+        const indent: string = makeIndent(depth);
         return indent + "RHSPrimEntry: " + this.property.name;
     }
 }
