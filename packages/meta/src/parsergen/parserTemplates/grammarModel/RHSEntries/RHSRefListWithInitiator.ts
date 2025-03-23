@@ -20,15 +20,6 @@ export class RHSRefListWithInitiator extends RHSPropPartWithSeparator {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        // return `
-        // // RHSRefListWithInitiator
-        // if (${nodeName}.asJsReadonlyArrayView()[${index}].length > 1 ) {
-        //     ${ParserGenUtil.internalName(this.property.name)} = [];
-        //     for (const child of ${nodeName}.asJsReadonlyArrayView()[${index}]) {
-        //         ${ParserGenUtil.internalName(this.property.name)}.push(child.asJsReadonlyArrayView()[1]);
-        //     }
-        // } // end RHSRefListWithInitiator
-        // `;
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         return `
         // RHSRefListWithInitiator

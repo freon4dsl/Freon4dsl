@@ -23,6 +23,18 @@ PitWhereExp {[
     }
 ]}
 
+PitWhereExpInit {[
+    where {
+        ${self.conditions initiator[$]}
+    }
+]}
+
+PitWhereExpSep {[
+    where {
+        ${self.conditions separator[#]}
+    }
+]}
+
 PitSelfExp {
     [self]
 }
@@ -33,3 +45,28 @@ PitAnytypeExp {
 PitBinaryExp {
     symbol = "=="
 }
+
+//
+WithDirectParts {
+     [
+    WithDirectParts {
+	partList ${self.partList vertical initiator[##]}
+	${myLim}
+	}
+	]
+}
+
+PartConcept {
+[
+    PartConcept {
+    	 content ${self.content}
+    	 ${self.optContent}
+    	 }
+]
+}
+
+//
+PrimsTest {[
+    PrimsTest ${name}
+    ${value horizontal initiator[!!]}
+]}

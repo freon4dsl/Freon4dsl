@@ -1,0 +1,18 @@
+editor First
+
+FreEditorDef {
+    [
+    editor ${name} for language ${languageName}
+    ${conceptEditors vertical}
+    ]
+}
+
+FreEditConcept {
+    [
+    ${concept} {
+    ${projection}
+    [?trigger ${trigger}]
+    [?symbol ${operator}]
+    ]
+}
+

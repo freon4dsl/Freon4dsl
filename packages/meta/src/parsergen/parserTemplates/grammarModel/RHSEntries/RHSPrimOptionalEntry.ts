@@ -3,6 +3,8 @@ import { FreMetaPrimitiveProperty } from "../../../../languagedef/metalanguage/i
 import { getPrimCall, makeIndent } from "../GrammarUtils.js";
 import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil.js";
 
+// todo remove this class, or change toMethod
+// RHSPrimOptionalEntry is never used, because optionality of primitive values is ignored.
 export class RHSPrimOptionalEntry extends RHSPropEntry {
     constructor(prop: FreMetaPrimitiveProperty) {
         super(prop);

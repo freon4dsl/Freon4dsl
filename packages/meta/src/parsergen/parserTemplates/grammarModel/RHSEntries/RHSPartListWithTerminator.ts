@@ -24,9 +24,9 @@ export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
         // When this RHS is the only entry in the grammar rule, e.g. "Concept1 = ( FretExp ';' )* ;",
         // the actual list that must be transformed cannot be found using 'getChildren'.
         // TODO ask David
-        let myListStatement: string = `const _myList = ${nodeName}.asJsReadonlyArrayView()[${index}].toArray();`;
+        let myListStatement: string = `const _myList = ${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView();`;
         if (this.isSingleEntry) {
-            myListStatement = `const _myList = ${nodeName}.toArray();`;
+            myListStatement = `const _myList = ${nodeName}.asJsReadonlyArrayView();`;
         }
         return `// RHSPartListWithTerminator
             ${ParserGenUtil.internalName(this.property.name)} = [];

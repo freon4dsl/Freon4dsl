@@ -2,11 +2,10 @@ import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { GenerationUtil } from "../../../../utils/index.js";
-import { internalTransformPartList, ParserGenUtil } from "../../ParserGenUtil.js";
+import { internalTransformPrimList, ParserGenUtil } from "../../ParserGenUtil.js";
 import { makeIndent } from "../GrammarUtils.js";
 
 export class RHSPrimListGroupWithInitiator extends RHSPropPartWithSeparator {
-    // `("joinText" propTypeName)*`
     private entry: RHSPropEntry;
 
     constructor(prop: FreMetaProperty, entry: RHSPropEntry, separator: string) {
@@ -20,18 +19,19 @@ export class RHSPrimListGroupWithInitiator extends RHSPropPartWithSeparator {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        // todo getGroup
-        return `// RHSPrimListGroupWithInitiator
-            if (!!${nodeName}[${index}]) {
-                // get the group that represents the optional primitive
-                // because primitives are leafs in the grammar, there is no need to get the children of this group
-                const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
-                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformPartList}<${baseType}>(subNode, '${this.separatorText}');
-            }`;
+        return  `// RHSPrimListGroupWithInitiator
+            if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
+            ${ParserGenUtil.internalName(this.property.name)} = [];
+            const subNode = ${nodeName}.asJsReadonlyArrayView()[2];
+            for (let child of subNode.asJsReadonlyArrayView()) {
+                const res = this.${mainAnalyserName}.${internalTransformPrimList}<${baseType}>(child.asJsReadonlyArrayView(), PrimValueType.${baseType}, '${this.separatorText}')
+                ${ParserGenUtil.internalName(this.property.name)}.push(...res);
+            }
+        } // end RHSPrimListGroupWithInitiator`;
     }
 
     toString(depth: number): string {
         const indent = makeIndent(depth + 1);
-        return indent + "RHSListGroup: " + indent + this.entry.toString(depth + 1) + " " + this.separatorText;
+        return indent + "RHSPrimListGroupWithInitiator: " + indent + this.entry.toString(depth + 1) + " " + this.separatorText;
     }
 }

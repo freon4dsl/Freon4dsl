@@ -1,0 +1,8 @@
+PitExpTest NAME {
+	 value where {
+	 // expressions with initiator
+	 $ self == self
+	 $ anytype == anytype
+	 $ self == anytype
+	 }
+}

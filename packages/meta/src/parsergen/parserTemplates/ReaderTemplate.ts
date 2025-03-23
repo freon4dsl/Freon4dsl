@@ -19,6 +19,7 @@ export class ReaderTemplate {
         import { ${semanticAnalyser} } from "./${semanticAnalyser}.js";
         import {
             Agl,
+            LanguageIssue,
             LanguageProcessor, 
             LanguageProcessorResult,
             ProcessResult,
@@ -69,27 +70,35 @@ export class ReaderTemplate {
                 // parse the input
                 let unit: ${Names.modelunit()} = null;
                 if (this.parser) {
-                    try {
-                let parseResult: ProcessResult<${Names.classifier(language.modelConcept)}>;
-                        const options = this.parser.optionsDefault();
-                        AST.change( () => {
-                            if (startRule.length > 0) {
-                                options.parse.goalRuleName = startRule;
-                                parseResult = this.parser.process(sentence, options);
-                            } else {
-                                parseResult = this.parser.process(sentence, null);
+                    let parseResult: ProcessResult<${Names.classifier(language.modelConcept)}>;
+                    const options = this.parser.optionsDefault();
+                    AST.change( () => {
+                        if (startRule.length > 0) {
+                            options.parse.goalRuleName = startRule;
+                            parseResult = this.parser.process(sentence, options);
+                        } else {
+                            parseResult = this.parser.process(sentence, null);
+                        }
+                    });
+                    const errors = parseResult.issues.errors.asJsReadonlyArrayView();
+                    if (errors.length > 0) {
+                        errors.map((err: LanguageIssue) => {
+                            // Strip the error message, otherwise it's too long for the webapp,
+                            // and add the location information.
+                            let location = \` [\${sourceName}:\${err.location.line}:\${err.location.column}]\`;
+                            let mess = err.message.replace(/^Failed to match \\{.*?\\} at:\\s*\\.*\\s*/, "Parse error: ");
+                            // if (!!err.data) {
+                            //     mess += ' (expected ' + err.data + ')';
+                            // }
+                            if (!!mess && mess.length > 0) {
+                                // console.log(mess);
+                                throw new Error(mess + location);
                             }
+                        });
+                    } else {
+                        AST.change( () => {
                             unit = parseResult.asm as ${Names.modelunit()};
                         });
-                    } catch (e) {
-                        // strip the error message, otherwise it's too long for the webapp
-                        let mess = e.message.replace("Could not match goal,", "Parse error in " + sourceName + ":");
-                        if (!!mess && mess.length > 0) {
-                            console.log(mess);
-                            throw new Error(mess);
-                        } else {
-                            throw e;
-                        }
                     }
                     // do semantic analysis taking into account the whole model, because references could be pointing anywhere
                     if (!!model) {
@@ -108,10 +117,10 @@ export class ReaderTemplate {
                             throw e;
                         }
                     }
+                    return unit;
                 } else {
                     throw new Error(\`No parser for \${metatype} available: grammar incorrect.\`);
                 }
-                return unit;
             }
         }
         `;

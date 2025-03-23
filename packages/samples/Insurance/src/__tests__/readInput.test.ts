@@ -1,8 +1,9 @@
-
 import { InsuranceModelEnvironment } from "../config/gen/InsuranceModelEnvironment";
-import { BaseProduct, InsuranceModel, InsurancePart, Part, Product } from "../language/gen";
-import {FreNodeReference, FreReader, FreValidator} from "@freon4dsl/core";
-import {FileHandler} from "./test-utils/FileHandler";
+import { BaseProduct, InsuranceModel, Part, Product } from "../language/gen";
+import { FreReader, FreValidator} from "@freon4dsl/core";
+import { FileHandler } from "./FileHandler";
+import {describe, test, expect} from "vitest";
+
 
 // const writer = InsuranceModelEnvironment.getInstance().writer;
 const reader: FreReader = InsuranceModelEnvironment.getInstance().reader;
@@ -39,40 +40,40 @@ describe("Testing InsuranceModel", () => {
     model.name = "TEST_MODEL";
 
     test("add health base", () => {
-        addPartToModel(model, "src/docu-project/__inputs__/base/Health.base");
+        addPartToModel(model, "/base/Health.base");
     });
 
     test("add home base", () => {
-        addPartToModel(model, "src/docu-project/__inputs__/base/Home.base");
+        addPartToModel(model, "/base/Home.base");
     });
 
     test("add legal base", () => {
-        addPartToModel(model, "src/docu-project/__inputs__/base/Legal.base");
+        addPartToModel(model, "/base/Legal.base");
     });
 
     test("add HealthAll product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/HealthAll.prod");
+        addProductToModel(model, "/products/HealthAll.prod");
     });
 
     test("add HomeAll product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/HomeAll.prod");
+        addProductToModel(model, "/products/HomeAll.prod");
     });
 
     test("add HomeAndHealth product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/HomeAndHealth.prod");
+        addProductToModel(model, "/products/HomeAndHealth.prod");
     });
 
     test("add HomeCheap product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/HomeCheap.prod");
+        addProductToModel(model, "/products/HomeCheap.prod");
 
     });
 
     test("add HomeExtra product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/HomeExtra.prod");
+        addProductToModel(model, "/products/HomeExtra.prod");
     });
 
     test("add LegalAll product", () => {
-        addProductToModel(model, "src/docu-project/__inputs__/products/LegalAll.prod");
+        addProductToModel(model, "/products/LegalAll.prod");
     });
 
     test("check resulting model", () => {

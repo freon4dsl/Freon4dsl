@@ -42,8 +42,42 @@ expression PitWhereExp base PitExp {
     conditions: PitBinaryExp[];
 }
 
+expression PitWhereExpInit base PitExp {
+    conditions: PitBinaryExp[];
+}
+
+expression PitWhereExpSep base PitExp {
+    conditions: PitBinaryExp[];
+}
+
 binary expression PitBinaryExp base PitExp {
     left: PitExp;
     right: PitExp;
     priority = 10;
+}
+
+// TEST PARTS LIST WITH INITIATOR, RHSLimitedRefOptionalEntry, and RHSPrimOptionalEntry
+modelunit PartsInitiatorTest {
+    name: identifier;
+    value: WithDirectParts;
+    file-extension = "pint";
+}
+
+concept WithDirectParts {
+    partList: PartConcept[];
+    myLim?: NonOptionalLimited;
+}
+
+concept PartConcept {
+    content: string;
+    reference optContent?: InsurancePart;
+}
+
+limited NonOptionalLimited { FIRST; SECOND; THIRD; }
+
+// TEST RHSPrimListGroupWithInitiator
+modelunit PrimsTest {
+    name: identifier;
+    value: number[];
+    file-extension = "prim";
 }

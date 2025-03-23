@@ -335,6 +335,7 @@ export class WriterTemplate {
                 if (!!list) {
                     list.forEach((listElem, index) => {
                         const isLastInList: boolean = index === list.length - 1;
+                        this.doInitiator(sepText, sepType);
                         if (typeof listElem === "string" && !isIdentifier) {
                             this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
                         } else {
@@ -355,7 +356,6 @@ export class WriterTemplate {
              * @param short
              * @param indent
              */
-            // tslint:disable-next-line:max-line-length
             private doSeparatorOrTerminatorAndNewline(sepType: SeparatorType, isLastInList: boolean, sepText: string, vertical: boolean, short: boolean, indent: number) {
                 // first eliminate any whitespace at the end of the line
                 this.output[this.currentLine] = this.output[this.currentLine].trimEnd();

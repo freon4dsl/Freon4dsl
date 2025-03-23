@@ -21,9 +21,9 @@ export class RHSPartListWithInitiator extends RHSPropPartWithSeparator {
     toMethod(index: number, nodeName: string): string {
         return `
         // RHSPartListWithInitiator
-        if (${nodeName}.asJsReadonlyArrayView()[${index}].length > 1 ) {
+        if (${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView().length > 1 ) {
             ${ParserGenUtil.internalName(this.property.name)} = [];
-            for (const child of ${nodeName}.asJsReadonlyArrayView()[${index}]) {
+            for (const child of ${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView()) {
                 ${ParserGenUtil.internalName(this.property.name)}.push(child.asJsReadonlyArrayView()[1]);
             }
         } // end RHSPartListWithInitiator

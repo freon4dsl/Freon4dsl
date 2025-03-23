@@ -1,0 +1,58 @@
+editor default
+
+// begin validator definition
+FreValidatorDef {[
+    validator ${name} for language ${languageName}
+    ${conceptRules}
+]}
+
+ConceptRuleSet {[
+    ${conceptRef} {
+        ${rules terminator[;]}
+    }
+]}
+
+ValidationRule {[
+    [? ${customMessage} ]
+]}
+
+ValidationMessage {[
+{
+    message: ${message},
+    severity: ${severity}
+}
+]}
+
+CheckEqualsTypeRule {[
+    typecheck equalsType ( ${type1}, ${type2})
+    [=> ValidationRule ]
+]}
+
+CheckConformsRule {[
+    typecheck conformsTo ( ${type1}, ${type2})
+    [=> ValidationRule ]
+]}
+
+ExpressionRule {[
+    ${exp1} ${comparator} ${exp2}
+]}
+
+IsUniqueRule {[
+    isunique ${listproperty} in ${list}
+    [=> ValidationRule ]
+]}
+
+NotEmptyRule {[
+    notEmpty ${property}
+    [=> ValidationRule ]
+]}
+
+ValidNameRule {[
+    validIdentifier [?${propertyName}]
+    [=> ValidationRule ]
+]}
+
+FreListPropExp {
+    [${propertyName}]
+}
+// end validator definition

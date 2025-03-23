@@ -41,19 +41,6 @@ export class LimitedRule extends GrammarRule {
     }
 
     toMethod(): string {
-    // public transformVisibilityKind(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): VisibilityKind {
-    //         console.log("transformVisibilityKind: " + children.toString());
-    //         const choice: string = children.toArray()[0];
-    //         switch (choice) {
-    //             case "+": return VisibilityKind.PUBLIC;
-    //             case "-":
-    //                 return VisibilityKind.PRIVATE;
-    //             case "#":
-    //                 return VisibilityKind.PROTECTED;
-    //             default:
-    //                 return null;
-    //         }
-    //     }
         if (!!this.myMap && this.myMap.size > 0) {
             // found a limited concept with a special projection
             let switchStat: string = "";
@@ -70,14 +57,7 @@ export class LimitedRule extends GrammarRule {
                 public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${Names.classifier(this.concept)} {
                     ${switchStat}
                 }`;
-        } else {
-            // make a 'normal' reference method
-            // todo nonSkip
-            return `
-                    ${ParserGenUtil.makeComment(this.toGrammar())}
-                    public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): string {
-                        return branch.nonSkipMatchedText;
-                    }`;
         }
+        return ``;
     }
 }
