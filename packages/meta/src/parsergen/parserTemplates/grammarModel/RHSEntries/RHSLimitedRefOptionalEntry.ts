@@ -14,14 +14,13 @@ export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
         return `${getTypeCall(this.property.type)}?` + this.doNewline();
     }
 
-    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+    toMethod(index: number, nodeName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `// RHSLimitedRefOptionalEntry
-            if (!${nodeName}[${index}].isEmptyMatch) {
-                // take the first element of the group that represents the optional part
-                const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]).nonSkipChildren.toArray()[0];
-                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.freNodeRef<${baseType}>(subNode, '${baseType}');
-            }`;
+        return  `// RHSLimitedRefOptionalEntry
+            if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
+            const subNode = ${nodeName}.asJsReadonlyArrayView()[${index}];
+            ${ParserGenUtil.internalName(this.property.name)} = FreNodeReference.create<${baseType}>(subNode, "${baseType}");
+        } // end RHSLimitedRefOptionalEntry`;
     }
 
     toString(depth: number): string {

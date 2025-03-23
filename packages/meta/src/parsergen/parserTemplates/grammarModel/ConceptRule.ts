@@ -46,17 +46,15 @@ export class ConceptRule extends GrammarRule {
             return "";
         }
         const myProperties = this.propsToSet();
-        // TODO add parse location: $parseLocation: this.mainAnalyser.location(branch)
         return (
             `${ParserGenUtil.makeComment(this.toGrammar())}
-                public transform${this.ruleName} (branch: SPPTBranch) : ${Names.classifier(this.concept)} {
-                    // console.log('transform${this.ruleName} called: ' + branch.name);
-                    ${myProperties.map((prop) => `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)}`).join(";\n")}
-                    const children = this.${mainAnalyserName}.getChildren(branch);` + // to avoid an extra newline in the result
+                public transform${this.ruleName} (nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.classifier(this.concept)} {
+                    // console.log('transform${this.ruleName} called: ' + children.toString());
+                    ${myProperties.map((prop) => `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)};\n`).join("")}` + // to avoid an extra newline in the result
             `${this.ruleParts.map((part, index) => `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}
                     return ${Names.classifier(this.concept)}.create({
                         ${myProperties.map((prop) => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}
-                        ${myProperties.length > 0 ? "," : ""} parseLocation: this.${mainAnalyserName}.location(branch)
+                        ${myProperties.length > 0 ? "," : ""} parseLocation: this.${mainAnalyserName}.location(sentence, nodeInfo.node)
                     });
                 }`
         );

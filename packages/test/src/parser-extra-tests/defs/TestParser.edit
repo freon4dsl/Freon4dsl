@@ -1,0 +1,72 @@
+editor default
+
+ProductTest {[
+    ProductTest ${self.name} {
+    	 ${self.product}
+    }
+]}
+
+InsuranceProduct {
+     [
+     InsuranceProduct ${self.name}
+        With terminator:
+        ${self.partsTerminator horizontal terminator[; ]}
+        With initiator:
+        ${self.partsInitiator horizontal initiator[\$ ]}
+    ]
+}
+
+
+PitWhereExp {[
+    where {
+        ${self.conditions terminator[;]}
+    }
+]}
+
+PitWhereExpInit {[
+    where {
+        ${self.conditions initiator[$]}
+    }
+]}
+
+PitWhereExpSep {[
+    where {
+        ${self.conditions separator[#]}
+    }
+]}
+
+PitSelfExp {
+    [self]
+}
+PitAnytypeExp {
+    [anytype]
+}
+
+PitBinaryExp {
+    symbol = "=="
+}
+
+//
+WithDirectParts {
+     [
+    WithDirectParts {
+	partList ${self.partList vertical initiator[##]}
+	${myLim}
+	}
+	]
+}
+
+PartConcept {
+[
+    PartConcept {
+    	 content ${self.content}
+    	 ${self.optContent}
+    	 }
+]
+}
+
+//
+PrimsTest {[
+    PrimsTest ${name}
+    ${value horizontal initiator[!!]}
+]}

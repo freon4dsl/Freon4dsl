@@ -1,0 +1,15 @@
+language FreLanguageX
+
+model FreLanguageX {
+    name: identifier;
+    structure: FreStructureDef;
+    editor: FreEditorDef;
+    scoper: FreScoperDef;
+    typer: FreTyperDef;
+    validator: FreValidatorDef;
+}
+
+// TODO validation rule
+//FreLanguageX {
+//    isunique fileExtension in { structure, editor, scoper, typer, validator }
+//}

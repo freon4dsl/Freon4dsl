@@ -46,7 +46,7 @@
     "lodash": "^4.17.21",
     "mobx": "^6.12.3",
     "mobx-utils": "^6.0.8",
-    "net.akehurst.language-agl-processor": "4.0.0-rc.5",
+    "net.akehurst.language-agl-processor": "4.2.1-20-RC2",
     "sirv-cli": "^2.0.2",
     "tslib": "^2.6.2"
   }

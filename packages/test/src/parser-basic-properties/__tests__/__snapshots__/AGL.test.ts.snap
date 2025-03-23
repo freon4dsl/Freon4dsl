@@ -1,0 +1,217 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Parser properties of type >  Ref on small input 1`] = `
+RefsTest {
+  "$$owner": TestParserModel {
+    "$$owner": null,
+    "$$propertyIndex": undefined,
+    "$$propertyName": "",
+    "$id": "ID-1",
+    "$typename": "TestParserModel",
+    "_FRE_lim": null,
+    "_FRE_parts": null,
+    "_FRE_prim": null,
+    "_FRE_primWith": null,
+    "_FRE_ref": [Circular],
+  },
+  "$$propertyIndex": undefined,
+  "$$propertyName": "ref",
+  "$id": "ID-5",
+  "$typename": "RefsTest",
+  "_FRE_directRefs": WithDirectRefs {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "directRefs",
+    "$id": "ID-2",
+    "$typename": "WithDirectRefs",
+    "_FRE_optRef": FreNodeReference {
+      "$$owner": [Circular],
+      "$$propertyIndex": undefined,
+      "$$propertyName": "optRef",
+      "_FRE_pathname": [
+        "nameABCDEFGHI",
+      ],
+      "_FRE_referred": null,
+      "typeName": "RefConcept",
+    },
+    "_FRE_optRefList": [
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "optRefList",
+        "_FRE_pathname": [
+          "nameZ",
+        ],
+        "_FRE_referred": null,
+        "typeName": "RefConcept",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "optRefList",
+        "_FRE_pathname": [
+          "nameY.sdfsgargh.HERA",
+        ],
+        "_FRE_referred": null,
+        "typeName": "RefConcept",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 2,
+        "$$propertyName": "optRefList",
+        "_FRE_pathname": [
+          "nameX",
+        ],
+        "_FRE_referred": null,
+        "typeName": "RefConcept",
+      },
+    ],
+    "_FRE_ref": FreNodeReference {
+      "$$owner": [Circular],
+      "$$propertyIndex": undefined,
+      "$$propertyName": "ref",
+      "_FRE_pathname": [
+        "someName",
+        "x34565",
+      ],
+      "_FRE_referred": null,
+      "typeName": "RefConcept",
+    },
+    "_FRE_refList": [
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "refList",
+        "_FRE_pathname": [
+          "name1.d45fgh",
+        ],
+        "_FRE_referred": null,
+        "typeName": "RefConcept",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "refList",
+        "_FRE_pathname": [
+          "name2",
+        ],
+        "_FRE_referred": null,
+        "typeName": "RefConcept",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 2,
+        "$$propertyName": "refList",
+        "_FRE_pathname": [
+          "name3",
+        ],
+        "_FRE_referred": null,
+        "typeName": "RefConcept",
+      },
+      FreNodeReference {
+        "$$owner": [Circular],
+        "$$propertyIndex": 3,
+        "$$propertyName": "refList",
+        "_FRE_pathname": [
+          "name4",
+        ],
+        "_FRE_referred": null,
+        "typeName": "RefConcept",
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 13,
+      "line": 2,
+    },
+  },
+  "_FRE_indirectRefs": null,
+  "_FRE_name": "myName",
+  "_FRE_withSeparator": RefsWithSeparator {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "withSeparator",
+    "$id": "ID-4",
+    "$typename": "RefsWithSeparator",
+    "_FRE_optList": [],
+    "_FRE_partList": [
+      WithDirectRefs {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "partList",
+        "$id": "ID-3",
+        "$typename": "WithDirectRefs",
+        "_FRE_optRef": null,
+        "_FRE_optRefList": [],
+        "_FRE_ref": FreNodeReference {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "ref",
+          "_FRE_pathname": [
+            "someName",
+            "otherName",
+            "xxx",
+            "yyy",
+          ],
+          "_FRE_referred": null,
+          "typeName": "RefConcept",
+        },
+        "_FRE_refList": [
+          FreNodeReference {
+            "$$owner": [Circular],
+            "$$propertyIndex": 0,
+            "$$propertyName": "refList",
+            "_FRE_pathname": [
+              "name1.ff.gg.yuio",
+            ],
+            "_FRE_referred": null,
+            "typeName": "RefConcept",
+          },
+          FreNodeReference {
+            "$$owner": [Circular],
+            "$$propertyIndex": 1,
+            "$$propertyName": "refList",
+            "_FRE_pathname": [
+              "name2",
+            ],
+            "_FRE_referred": null,
+            "typeName": "RefConcept",
+          },
+          FreNodeReference {
+            "$$owner": [Circular],
+            "$$propertyIndex": 2,
+            "$$propertyName": "refList",
+            "_FRE_pathname": [
+              "name3",
+            ],
+            "_FRE_referred": null,
+            "typeName": "RefConcept",
+          },
+          FreNodeReference {
+            "$$owner": [Circular],
+            "$$propertyIndex": 3,
+            "$$propertyName": "refList",
+            "_FRE_pathname": [
+              "name4",
+            ],
+            "_FRE_referred": null,
+            "typeName": "RefConcept",
+          },
+        ],
+        "parseLocation": FreParseLocation {
+          "column": 19,
+          "line": 15,
+        },
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 19,
+      "line": 15,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;

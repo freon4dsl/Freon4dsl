@@ -1,0 +1,11 @@
+ProductTest TEST1 {
+
+InsuranceProduct NAME
+    With terminator:
+    PART1; PART2 ;
+    With initiator:
+    $ PART3 $ PART4
+}
+
+
+

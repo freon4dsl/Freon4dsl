@@ -335,6 +335,7 @@ export class WriterTemplate {
                 if (!!list) {
                     list.forEach((listElem, index) => {
                         const isLastInList: boolean = index === list.length - 1;
+                        this.doInitiator(sepText, sepType);
                         if (typeof listElem === "string" && !isIdentifier) {
                             this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
                         } else {
@@ -355,7 +356,6 @@ export class WriterTemplate {
              * @param short
              * @param indent
              */
-            // tslint:disable-next-line:max-line-length
             private doSeparatorOrTerminatorAndNewline(sepType: SeparatorType, isLastInList: boolean, sepText: string, vertical: boolean, short: boolean, indent: number) {
                 // first eliminate any whitespace at the end of the line
                 this.output[this.currentLine] = this.output[this.currentLine].trimEnd();
@@ -431,7 +431,14 @@ export class WriterTemplate {
              */
             private doInitiator(sepText: string, sepType: SeparatorType) {
                 if (sepType === SeparatorType.Initiator) {
-                    this.output[this.currentLine] += sepText;
+                    const nrOfWhiteSpaces = this.output[this.currentLine].split("").filter((char) => /\\s/.test(char)).length;
+                    const onlyIndentation = this.output[this.currentLine].length === nrOfWhiteSpaces;
+                    if (onlyIndentation) {
+                        this.output[this.currentLine] += sepText;
+                    } else  {
+                        // add space before initiator, if it is not the first on the line
+                        this.output[this.currentLine] += ' ' + sepText;
+                    }
                 }
             }
         } `;

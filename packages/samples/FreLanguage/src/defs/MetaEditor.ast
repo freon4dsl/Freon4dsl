@@ -1,0 +1,79 @@
+language FreLanguageX  // from: freon/meta/.../editordef
+
+// begin editor definition
+modelunit FreEditorDef {
+    name: identifier;
+//        language: FreLanguageX;
+    languageName: string;
+    conceptEditors: FreEditConcept[];
+    file-extension = "edit";
+}
+
+concept FreEditConcept {
+//    languageEditor: FreEditUnit; // should be self.parent
+    reference concept: FreConcept;
+    projection: FreEditProjection;
+    trigger: string;
+    operator: string; // (used to be 'symbol') only for binary expressions
+}
+
+concept FreEditParsedProjectionIndent implements FreEditProjectionItem {
+    indent: string;
+    amount: number;
+}
+
+concept FreEditProjectionText implements FreEditProjectionItem {
+    text: string;
+    style: string;
+}
+
+concept FreEditPropertyProjection implements FreEditProjectionItem {
+    propertyName: string;
+    listJoin: ListJoin;
+    keyword: string;
+    expression: FreLangExp;
+}
+
+concept FreEditSubProjection implements FreEditProjectionItem {
+    optional: boolean;
+    items: FreEditProjectionItem[];
+}
+
+concept FreEditInstanceProjection implements FreEditProjectionItem {
+    keyword: string;
+    expression: FreInstanceExp;
+}
+
+interface FreEditProjectionItem {
+}
+
+concept FreEditProjectionLine {
+    items: FreEditProjectionItem[];
+    indent: number;
+}
+
+concept FreEditProjection {
+    name: identifier;
+    conceptEditor?: FreEditConcept;
+    lines: FreEditProjectionLine[];
+}
+
+concept ListJoin {
+    direction: FreEditProjectionDirection;
+    joinType?: ListJoinType;
+    joinText: string;
+}
+
+limited FreEditProjectionDirection {
+    name: identifier;
+    NONE = {name:"NONE"}
+    Horizontal = {name:"Horizontal"}
+    Vertical = {name:"Vertical"}
+}
+
+limited ListJoinType {
+    name: identifier;
+    NONE = {name:"NONE"}
+    Terminator = {name:"Terminator"}
+    Separator = {name:"Separator"}
+}

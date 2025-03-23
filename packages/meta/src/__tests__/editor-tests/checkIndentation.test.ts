@@ -56,7 +56,6 @@ describe("Checking indentation ", () => {
                 // we use variable 'checker' here unnecessary.
                 checker.hasErrors();
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-                // tslint:disable-next-line:no-unused-expression
                 expect(e.message).toBeNull();
             }
         }
@@ -100,7 +99,6 @@ describe("Checking indentation ", () => {
             if (e instanceof Error) {
                 console.log(e.message + e.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-                // tslint:disable-next-line:no-unused-expression
                 expect(e.message).toBeNull();
             }
         }
@@ -142,7 +140,6 @@ describe("Checking indentation ", () => {
             if (e instanceof Error) {
                 console.log(e.message + e.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-                // tslint:disable-next-line:no-unused-expression
                 expect(e.message).toBeNull();
             }
         }
@@ -184,7 +181,6 @@ describe("Checking indentation ", () => {
             if (e instanceof Error) {
                 console.log(e.message + e.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-                // tslint:disable-next-line:no-unused-expression
                 expect(e.message).toBeNull();
             }
         }
@@ -212,7 +208,6 @@ describe("Checking indentation ", () => {
             if (e instanceof Error) {
                 console.log(e.message + e.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-                // tslint:disable-next-line:no-unused-expression
                 expect(e.message).toBeNull();
             }
         }
@@ -245,7 +240,6 @@ describe("Checking indentation ", () => {
             if (e instanceof Error) {
                 console.log(e.message + e.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-                // tslint:disable-next-line:no-unused-expression
                 expect(e.message).toBeNull();
             }
         }

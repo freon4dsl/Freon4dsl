@@ -4,14 +4,14 @@ import { FreLanguageEnvironment } from "../environment/index.js";
 import { FreLogger } from "../logging/index.js";
 import { MobxModelElementImpl } from "./decorators/index.js";
 
-const LOGGER = new FreLogger("FreElementReference").mute();
+const LOGGER = new FreLogger("FreNodeReference").mute();
 /**
  * Class FreElementReference provides the implementation for a (named) reference in Freon.
  * References can be set with either a referred object, or with a name.
  */
 export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementImpl {
     /**
-     * Returns a new instance which refers to an node named 'name' of type T, or
+     * Returns a new instance which refers to a node named 'name' of type T, or
      * to the node 'name' itself.
      * Param 'typeName' should be equal to T.constructor.name.
      * @param name
@@ -30,7 +30,6 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         return result;
     }
 
-    // tslint:disable-next-line:no-shadowed-variable
     public copy<T extends FreNamedNode>(): FreNodeReference<T> {
         return FreNodeReference.create<T>(this._FRE_pathname, this.typeName);
     }
