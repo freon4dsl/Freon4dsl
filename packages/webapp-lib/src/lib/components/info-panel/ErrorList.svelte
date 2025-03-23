@@ -105,7 +105,6 @@
 	// selection of row does not function, therefore we use the checkbox option from the SMUI docs
 	// todo look into selection of row in errorlist
 	let selected: number = $state(0);
-	$effect(() => {handleClick(selected);});
 
 	const handleClick = (index: number) => {
 		if (!!modelErrors.list && modelErrors.list.length > 0) {
