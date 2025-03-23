@@ -503,7 +503,6 @@ PartsInitiatorTest {
         "$id": "ID-2",
         "$typename": "PartConcept",
         "_FRE_content": "stringLiteralABC",
-        "_FRE_optContent": null,
         "parseLocation": FreParseLocation {
           "column": 28,
           "line": 3,
@@ -516,7 +515,6 @@ PartsInitiatorTest {
         "$id": "ID-3",
         "$typename": "PartConcept",
         "_FRE_content": "stringLiteralXYZ",
-        "_FRE_optContent": null,
         "parseLocation": FreParseLocation {
           "column": 30,
           "line": 7,
@@ -627,7 +625,6 @@ PartsInitiatorTest {
     "$$propertyName": "value",
     "$id": "ID-4",
     "$typename": "WithDirectParts",
-    "_FRE_myLim": null,
     "_FRE_partList": [
       PartConcept {
         "$$owner": [Circular],
@@ -658,7 +655,6 @@ PartsInitiatorTest {
         "$id": "ID-3",
         "$typename": "PartConcept",
         "_FRE_content": "stringLiteralXYZ",
-        "_FRE_optContent": null,
         "parseLocation": FreParseLocation {
           "column": 30,
           "line": 7,
