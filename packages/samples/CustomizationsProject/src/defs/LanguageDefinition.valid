@@ -6,9 +6,9 @@ AttributeType  {
 }
 EntityModelUnit {
     notEmpty self.entities;
-    isunique name in self.entities;
+    in self.entities isunique name ;
     notEmpty self.functions;
-    isunique name in self.functions;
+    in self.functions isunique name ;
     validIdentifier; // default is 'name'
 }
 Entity {
