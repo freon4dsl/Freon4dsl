@@ -2,8 +2,8 @@ validator DocuValidator for language InsuranceModel
 
 InsuranceProduct {
     notEmpty self.parts;
-    isunique name in self.parts;
-    isunique name in self.helpers;
+    in self.parts isunique name;
+    in self.helpers isunique name ;
 }
 
 // the following typechecks are not yet functioning, implemented in custom validator and custom typer instead
@@ -27,7 +27,7 @@ InsurancePart {
 }
 CalcFunction {
     // typecheck conformsTo (self.body, self.declaredType);
-    isunique name in self.parameters;
+    in self.parameters isunique name ;
     validIdentifier
     {
         message: "El nombre '${self.name}' no es un identificador correcto.",
