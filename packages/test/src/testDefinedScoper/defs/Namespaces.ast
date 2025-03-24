@@ -1,0 +1,22 @@
+language ScoperTest
+
+interface INamespace {
+    isNS: boolean;
+}
+
+interface IAlsoNamespace base INamespace {
+    isAlso: boolean;
+}
+
+interface INotNamespace { }
+
+concept InheritNamespaceDirect implements INamespace {}
+concept InheritNamespaceIndirect implements IAlsoNamespace {}
+concept NoNamespace implements INotNamespace {}
+
+concept InheritNamespaceDirectThroughConcept base InheritNamespaceDirect {}
+concept InheritNamespaceIndirectThroughConcept base InheritNamespaceIndirect {}
+
+concept NamespaceConcept {}
+concept InheritDirectFromConcept base NamespaceConcept {}
+concept InheritIndirectFromConcept base InheritDirectFromConcept {}

@@ -1,0 +1,29 @@
+scoper DefinedScoperTest for language ScoperTest
+
+// the language definition in this project is the same as in testDefaultScoper
+// here we also add a scoper definition to the test
+
+// the model is not a namespace
+isnamespace { INamespace, NamespaceConcept }
+
+//public modelunit DSunit {
+//    public name: string;
+//    public dsParts: DSpart[];
+//    public reference dsRefs: DSref[];
+//    dsPrivates: DSprivate[];
+//}
+//
+//public concept DSpart {
+//    public name: string;
+//    public conceptParts: DSpart[];
+//    public reference conceptRefs: DSref[];
+//    conceptPrivates: DSprivate[];
+//}
+//
+//concept DSprivate {
+//    name: string;
+//    conceptParts: DSpart[];
+//    conceptPrivates: DSprivate[];
+//    reference conceptRefs: DSref[];
+//}
+

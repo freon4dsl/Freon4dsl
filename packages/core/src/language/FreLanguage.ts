@@ -24,7 +24,7 @@ export type FreLanguageModel = {
     typeName: string;
     id?: string;
     key?: string; // used for LionWeb
-    isNamespace?: boolean;
+    isNamespace: boolean;
     isNamedElement?: boolean;
     isAbstract?: boolean;
     language: string;
@@ -39,7 +39,7 @@ export type FreLanguageModelUnit = {
     id?: string;
     key?: string; // used for LionWeb
     // isPublic?: boolean;
-    isNamespace?: boolean;
+    isNamespace: boolean;
     isNamedElement?: boolean;
     isAbstract?: boolean;
     language: string;
@@ -59,7 +59,7 @@ export type FreLanguageConcept = {
     isPublic: boolean;
     isLimited: boolean;
     instanceNames: string[];
-    isNamespace?: boolean;
+    isNamespace: boolean;
     isNamedElement?: boolean;
     language: string;
     baseName: string;
@@ -77,7 +77,7 @@ export type FreLanguageInterface = {
     id?: string;
     key?: string; // used for LionWeb
     isPublic: boolean;
-    isNamespace?: boolean;
+    isNamespace: boolean;
     isNamedElement?: boolean;
     isAbstract?: boolean;
     subConceptNames: string[];
