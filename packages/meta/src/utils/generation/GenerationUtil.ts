@@ -3,7 +3,6 @@ import {
     FreMetaConcept,
     FreMetaConceptProperty,
     FreMetaExpressionConcept,
-    FreMetaInterface,
     FreMetaLangElement,
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
