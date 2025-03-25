@@ -533,9 +533,9 @@
 </script>
 
 {#if errMess.length > 0 && box.isFirstInLine}
-    <ErrorMarker element={surroundingElement} {box} />
+    <ErrorMarker {editor} {box} />
 {/if}
-<ErrorTooltip {box} {hasErr} parentTop={0} parentLeft={0}>
+<ErrorTooltip {editor} {box} {hasErr} parentTop={0} parentLeft={0}>
     <span {id} role="none" bind:this={surroundingElement}>
         {#if isEditing}
             <span class="text-component-input">

@@ -8,8 +8,8 @@
      */
     import {calculatePos, clickOutsideConditional, type MainComponentProps} from '$lib';
     import { tick } from 'svelte';
-    import { MenuItem } from '@freon4dsl/core';
-    import { contextMenuVisible, viewport } from '$lib/components/stores/AllStores.svelte.js';
+    import {FreEditor, MenuItem} from '@freon4dsl/core';
+    import { contextMenuVisible } from '$lib/components/stores/AllStores.svelte.js';
 
     // items for the context menu
     let { editor }: MainComponentProps = $props();
@@ -52,11 +52,12 @@
         // wait for the menu to be rendered, because we need its sizes for the positioning
         await tick();
         // get the position of the mouse relative to the editor view
-        let posX: number = event.pageX - viewport.value.left;
-        let posY: number = event.pageY - viewport.value.top;
+        const rect = editor.getClientRectangle();
+        let posX: number = event.pageX - rect.x;
+        let posY: number = event.pageY - rect.y;
         // calculate the right position of the context menu
-        left = calculatePos(viewport.value.width, menuWidth, posX);
-        top = calculatePos(viewport.value.height, menuHeight, posY);
+        left = calculatePos(rect.width, menuWidth, posX);
+        top = calculatePos(rect.height, menuHeight, posY);
     }
 
     /**
@@ -79,8 +80,9 @@
         topSub = top + itemHeight + itemIndex * (itemHeight + 2 + 3 + 4); // add 2 for gap, 3 for margin, 4 for padding
         leftSub = left + submenuWidth - 20;
         // calculate the right position of the sub menu based on the size of the editor view
-        topSub = calculatePos(viewport.value.width, submenuWidth, topSub);
-        leftSub = calculatePos(viewport.value.height, submenuHeight, leftSub);
+        const rect = editor.getClientRectangle();
+        topSub = calculatePos(rect.width, submenuWidth, topSub);
+        leftSub = calculatePos(rect.height, submenuHeight, leftSub);
     }
 
     /**

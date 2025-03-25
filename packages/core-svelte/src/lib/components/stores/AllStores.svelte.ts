@@ -16,7 +16,6 @@ export class ViewportSizes {
     }
 }
 
-export const viewport: { value: ViewportSizes } = $state({ value: new ViewportSizes() });
 // indication whether any context menu is being shown
 export const contextMenuVisible: { value: boolean } = $state({ value: false });
 // variable that holds the single instance of the context menu

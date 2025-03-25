@@ -67,9 +67,11 @@ export interface DropdownProps {
 }
 
 /**
- * Properties for an ErrorMarker
+ * Properties for an ErrorTooltip
  */
-export interface ErrorProps {
-    box: Box;
-    element: HTMLElement;
+export interface ErrorProps<T extends Box> extends FreComponentProps<T> {
+    hasErr: boolean;
+    parentTop: number;
+    parentLeft: number;
+    children(): any; // replaces slot from Svelte version 4
 }

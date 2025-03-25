@@ -1,25 +1,11 @@
 import { FreNode } from "../../ast/index.js";
 import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util/index.js";
 import { FreLogger } from "../../logging/index.js";
+import {ClientRectangle, UndefinedRectangle} from "../ClientRectangleTypes.js";
 
 const LOGGER = new FreLogger("Box");
 
-/**
- * Type for the rectangle that the corresponding component has in the browser
- */
-export type ClientRectangle = {
-    height: number,
-    width: number,
-    x: number ,
-    y: number
-}
 
-export const UndefinedRectangle: ClientRectangle = {
-    height: 0,
-    width: 0,
-    x: 0,
-    y: 0
-}
 /**
  * The root of the Box class hierarchy, contains all generic properties and a number of navigation/search functions.
  */
@@ -51,7 +37,7 @@ export abstract class Box {
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
     /**
-     * Get the client rectangle opf this box in the browser.
+     * Get the client rectangle of this box in the browser.
      * This is a callback method to the corresponding component in the browser.
      */
     getClientRectangle: () => ClientRectangle = () => { return UndefinedRectangle }

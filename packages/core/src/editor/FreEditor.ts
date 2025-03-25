@@ -21,6 +21,7 @@ import {
 import { FreError, FreErrorSeverity } from "../validator/index.js";
 import { isExpressionPreOrPost, isNullOrUndefined, LEFT_MOST } from "../util/index.js";
 import {FreErrorDecorator} from "./FreErrorDecorator.js";
+import {ClientRectangle, UndefinedRectangle} from "./ClientRectangleTypes.js";
 
 const LOGGER = new FreLogger("FreEditor").mute();
 
@@ -82,6 +83,11 @@ export class FreEditor {
     // The refresh method from the component that displays this box.
     refreshComponentSelection: (why?: string) => void;
     refreshComponentRootBox: (why?: string) => void;
+    /**
+     * Get the client rectangle of the complete editor in the browser.
+     * This is a callback method to the FreonComponent in the browser.
+     */
+    getClientRectangle: () => ClientRectangle = () => { return UndefinedRectangle }
 
     // Called when the editor selection has changed
     selectionChanged(): void {

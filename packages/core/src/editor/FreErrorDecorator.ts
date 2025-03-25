@@ -1,9 +1,10 @@
 import {FreError} from "../validator/index.js";
 import {FreNode} from "../ast/index.js";
 import {isNullOrUndefined} from "../util/index.js";
-import { Box, ElementBox, isActionBox, isSelectBox, isTextBox, UndefinedRectangle } from "./boxes/index.js"
+import { Box, ElementBox, isActionBox, isSelectBox, isTextBox } from "./boxes/index.js"
 import {FreEditor} from "./FreEditor.js";
 import {FreLogger} from "../logging/index.js";
+import {UndefinedRectangle} from "./ClientRectangleTypes.js";
 
 const LOGGER: FreLogger = new FreLogger("FreErrorDecorator").mute();
 
