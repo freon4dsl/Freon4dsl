@@ -246,7 +246,7 @@
                         }
                         break;
                     }
-                    case ENTER: {
+                    case ENTER: { 
                         // user wants current selection
                         // find the chosen option
                         let chosenOption: SelectOption = null;

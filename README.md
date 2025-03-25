@@ -1,12 +1,11 @@
 [![Build Status](https://github.com/freon4dsl/freon4dsl/actions/workflows/node.js.yml/badge.svg)]
 
 # Freon, the Language Workbench for the Web
-Web-native Language WOrkbench with projectional editor. The current release (version 1.0.0) can be found on npm.
+Web-native Language Workbench with projectional editor. 
+The current release (version 1.0.0) can be found on npm.
 
-This beta release supports [LionWeb](https://github.com/LionWeb-io) (de)serialization. 
-As LionWeb is in motion, expect this release to change according to LionWeb changes before it becomes final. 
-
-This release also supports external editor components, as an experimental feature.
+**This branch is used for maintenance on the 1.0.0 release.**
+Further development takes place in the `development` branch.
 
 ## What is Freon
 
