@@ -2,17 +2,17 @@ validator ExampleValidator for language Example
 
 ExampleUnit {
     notEmpty self.entities;
-    isunique name in self.entities;
+    in self.entities isunique name;
     notEmpty self.methods;
-    isunique name in self.methods;
+    in self.methods isunique name;
     validIdentifier; // default is 'name'
 }
 
 Entity {
 //    notEmpty self.attributes;
-    isunique name in self.attributes;
+    in self.attributes isunique name;
 //    notEmpty self.methods;
-    isunique name in self.methods;
+    in self.methods isunique name;
     validIdentifier
     {
         message: "De naam ${self.name} is geen correcte identifier",
@@ -28,7 +28,7 @@ Entity {
 
 Method {
     typecheck conformsTo (self.body, self.declaredType);
-    isunique name in self.parameters;
+    in self.parameters isunique name ;
     validIdentifier ;
 }
 

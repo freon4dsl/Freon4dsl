@@ -117,6 +117,7 @@ export class LanguageTemplate {
                         id: "${modelunit.id}",
                         key: "${modelunit.key}",
                         isNamedElement: true,
+                        isNamespace: false,
                         language: "${modelunit.language.key}",
                         fileExtension: "${modelunit.fileExtension}",
                         subConceptNames: [], // Nothing yet, but may change in the future
@@ -193,6 +194,7 @@ export class LanguageTemplate {
                         isAbstract: ${concept.isAbstract},
                         isPublic: ${concept.isPublic},
                         isLimited: ${concept instanceof FreMetaLimitedConcept},
+                        isNamespace: false,
                         instanceNames: ${concept instanceof FreMetaLimitedConcept ? `[${concept.instances.map((inst) => `"${inst.name}"`)}]` : "[]"},
                         language: "${concept.originalOwningLanguage.key}",
                         isNamedElement: ${concept.allPrimProperties().some((p) => p.name === "name")},
@@ -271,6 +273,7 @@ export class LanguageTemplate {
                         key: "${intface.key}",
                         isPublic: ${intface.isPublic},
                         isNamedElement: ${intface.allPrimProperties().some((p) => p.name === "name")},
+                        isNamespace: false,
                         properties: new Map< string, FreLanguageProperty>(),
                         constructor: undefined,
                         creator: undefined,

@@ -3,7 +3,6 @@ import {
     FreMetaConcept,
     FreMetaConceptProperty,
     FreMetaExpressionConcept,
-    FreMetaInterface,
     FreMetaLangElement,
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
@@ -104,38 +103,7 @@ export class GenerationUtil {
         }
         return false;
     }
-
-    /**
-     * Takes a list of FreClassifiers that contains both interfaces and concepts and returns a list of concepts
-     * that are either in the list or implement an interface that is in the list.
-     *
-     * @param classifiers
-     */
-    public static replaceInterfacesWithImplementors(
-        classifiers: FreMetaClassifier[] | MetaElementReference<FreMetaClassifier>[],
-    ): FreMetaClassifier[] {
-        const result: FreMetaClassifier[] = [];
-        for (const ref of classifiers) {
-            const myClassifier = ref instanceof MetaElementReference ? ref.referred : ref;
-            if (myClassifier instanceof FreMetaInterface) {
-                const implementors = myClassifier.language.concepts.filter((con) =>
-                    con.interfaces.some((intf) => intf.referred === myClassifier),
-                );
-                // check on duplicates
-                for (const implementor of implementors) {
-                    if (!result.includes(implementor)) {
-                        result.push(implementor);
-                    }
-                }
-            } else {
-                if (!result.includes(myClassifier)) {
-                    result.push(myClassifier);
-                }
-            }
-        }
-        return result;
-    }
-
+    
     /**
      * Returns a string representation of 'exp' that can be used in TypeScript code.
      * @param exp

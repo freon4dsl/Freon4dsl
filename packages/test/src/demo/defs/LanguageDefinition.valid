@@ -2,27 +2,27 @@ validator Demo for language Demo
 
 DemoModel {
     notEmpty self.entities;
-    isunique name in self.entities;
+    in self.entities isunique name;
     notEmpty self.functions;
-    isunique name in self.functions;
+    in self.functions isunique name ;
     validIdentifier; // default is 'name'
 }
 
 DemoEntity {
     notEmpty self.attributes;
-    isunique name in self.attributes;
+    in self.attributes isunique name ;
     notEmpty self.functions;
-    isunique name in self.functions;
+    in self.functions isunique name;
     validIdentifier    {
                        message:
                        "iets met ${self.name} en nog een ${self.simpleprop} enzo",
-                       severity: eRRor
+                       severity: error
                        };
 }
 
 DemoAttribute {
     validIdentifier self.name
-    {severity: Info,
+    {severity: info,
     message:
     "iets met ${self.name} enzo"
     };
@@ -30,7 +30,7 @@ DemoAttribute {
 
 DemoFunction {
     typecheck conformsTo (self.expression, self.declaredType) {severity: improvement, message: "${self.name} EXPRESSION TYPE IS NOT CORRECT!!"};
-    isunique name in self.parameters         {severity: improvement};
+    in self.parameters isunique name          {severity: improvement};
     validIdentifier;
 }
 

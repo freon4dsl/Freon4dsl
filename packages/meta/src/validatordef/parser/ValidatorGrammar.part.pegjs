@@ -136,7 +136,8 @@ expressionRule = exp1:langExpression ws comparator:comparator ws exp2:langExpres
   });
 }
 
-isuniqueRule = isuniqueKey exp1:langExpression rws inKey exp2:langExpression extra:ruleExtras? {
+//isuniqueRule = isuniqueKey exp1:langExpression rws inKey exp2:langExpression extra:ruleExtras? {
+isuniqueRule = inKey exp2:langExpression rws isuniqueKey exp1:langExpression ws extra:ruleExtras? {
   return create.createIsuniqueRule( {
     "listproperty": exp1,
     "list": exp2,
