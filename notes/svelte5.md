@@ -51,8 +51,14 @@
 9. The table headers have drag handles, they should not be there.
    The empty action box at the end of a list or table should not have a drag handle either.
 
+   **FIXED** Added parameter to add drag handle to TableCellComponent.
+
 10. Too many effects in ErrorList, ErrorMarker, TextComponent, RenderComponent, TableComponent.
     These all seem to come from replacing the old afterUpdate, which has no real equivalent in Svelte 5. 
     I did make a number of changes, and it seems to be resolved by them, would like to discuss before pushing them.
 
+    **FIXED**
+
 11. The single keyword option for booleans does not function anymore!! (Anneke: This is unrelated to svelte 5, I think.)
+    
+    **ADDED TO ISSUES IN NOTES REPO**

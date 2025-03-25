@@ -9,7 +9,6 @@
      * handles the drop.
      */
     import {
-        isMetaKey,
         ENTER,
         TableCellBox,
         FreLanguage,
@@ -20,16 +19,26 @@
         MenuOptionsType,
         FreUtils,
         isTableRowBox,
-        TableRowBox, FreCreatePartAction, MetaKey, AST, TableBox, isTableBox, isElementBox, ElementBox
+        TableRowBox,
+        FreCreatePartAction,
+        MetaKey,
+        AST,
+        TableBox,
+        isTableBox,
+        isElementBox,
+        ElementBox,
+        isNullOrUndefined,
+        isFreNodeReference,
+        isFreNode,
+        MenuItem
     } from "@freon4dsl/core";
     import { onMount } from "svelte";
     import RenderComponent from './RenderComponent.svelte';
-    import { componentId } from '$lib/index.js';
+    import { componentId, rememberDraggedNode } from '$lib/index.js';
     import {
         activeElem,
         activeIn,
         draggedElem,
-        draggedFrom,
         contextMenu,
         contextMenuVisible,
         selectedBoxes
@@ -43,7 +52,6 @@
         box,
         parentComponentId,
         parentOrientation,
-        addDragHandle,
         ondropOnCell
     }: TableCellProps<TableCellBox> = $props();
 
@@ -92,9 +100,7 @@
     }
 
     onMount(() => {
-        row = box.row;
-        column = box.column;
-        isHeader = (box.parent as TableRowBox).isHeader ? 'table-header' : 'no-header';
+        refresh('from onMount');
     });
 
     $effect(() => {
@@ -130,6 +136,7 @@
             AST.changeNamed("ListComponent.Enter", () => {
                 execresult = action.execute(tableBox, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, selectedIndex)
             })
+            // @ts-ignore
             if (!!execresult) {
                 execresult();
             }
@@ -159,14 +166,13 @@
             event.dataTransfer.dropEffect = 'move';
         }
 
-        // select the complete element
-        editor.selectElementForBox(box);
-
-        // create the data to be transferred and notify the store that something is being dragged
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
-        draggedElem.value = new ListElementInfo(box.node, parentComponentId);
-        draggedFrom.value = parentComponentId;
+        // Create the data to be transferred and notify the store that something is being dragged.
+        if (!!box.getParentTableBox()) {
+            rememberDraggedNode(id, box.getParentTableBox()!, box);
+            // console.log(`dragstart: ${draggedElem.value?.element.freLanguageConcept()}`)
+        }
     };
 
     const dragenter = (event: DragEvent): boolean => {
@@ -267,10 +273,9 @@
     bind:this={htmlElement}
     tabindex={-1}
 >
-    {#if isHeader.length === 0 && addDragHandle}
+    {#if isHeader.length === 0 && box.isFirstInElementBox()}
                 <span class="drag-handle"
                       draggable="true"
-                      tabindex={-1}
                       ondragstart={(event) => dragstart(event)}
                       role="listitem"><DragHandle/></span>
     {/if}

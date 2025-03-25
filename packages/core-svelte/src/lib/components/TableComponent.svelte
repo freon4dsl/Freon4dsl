@@ -9,8 +9,6 @@
      */
     import {
         type TableBox,
-        type FreEditor,
-        FreLogger,
         ListElementInfo,
         TableDirection,
         isTableRowBox,
@@ -18,7 +16,6 @@
         TableCellBox,
         isNullOrUndefined, isFreNodeReference, isFreNode, type DragAndDropType, FreLanguage
     } from '@freon4dsl/core';
-    import { onMount } from 'svelte';
     import { componentId } from '$lib';
 
     import { dropListElement, moveListElement } from '@freon4dsl/core';
@@ -46,7 +43,6 @@
             isRef: FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.propertyKind === 'reference'
         }
     });
-    let addDragHandle: number[] = $state([]);
 
     const refresh = (why?: string): void => {
         LOGGER.log('Refresh TableBox, box: ' + why);
@@ -74,19 +70,12 @@
             if (isElementBox(ch)) {
                 const rowBox = ch.content;
                 if (isTableRowBox(rowBox)) {
-                    // addDragHandle.push(_cells.length);
-                    console.log('adding drag handle at position ' + _cells.length);
                     _cells.push(...rowBox.cells);
                 }
             } else if (isTableRowBox(ch)) {
-                // addDragHandle.push(_cells.length);
-                console.log('adding drag handle at position ' + _cells.length);
                 _cells.push(...ch.cells);
             }
         });
-        // console.log("all cell ids: ")
-        // console.log(_cells.map(cell => `   ${cell.content.id + '-' + cell.row + '-' + cell.column}`).join("\n"));
-        // console.log("Drag handles to be added at positions [" + addDragHandle + "]");
         return _cells;
     }
 
@@ -105,10 +94,12 @@
     }
 
     $effect(() => {
+        // console.log('effect init')
         init();
     });
 
     $effect(() => {
+        // console.log('effect refresh')
         // Evaluated and re-evaluated when the box changes.
         refresh('Refresh new box: ' + box?.id);
     });
@@ -160,12 +151,10 @@
     tabIndex={-1}
     bind:this={htmlElement}
 >
-    TABLE
-    {#each cells as cell, index (cell.content.id + '-' + cell.row + '-' + cell.column)}
+    {#each cells as cell (cell.content.id + '-' + cell.row + '-' + cell.column)}
         <TableCellComponent
             box={cell}
             {editor}
-            addDragHandle={addDragHandle.includes(index)}
             parentComponentId={id}
             parentOrientation={box.direction}
             ondropOnCell={drop}

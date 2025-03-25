@@ -12,9 +12,9 @@ export class ListElementInfo {
     propertyName: string; // the name of the property in which the element is stored by its parent
     propertyIndex: number; // the index within the list
 
-    constructor(element: FreNode | FreNodeReference<FreNamedNode>, boxId: string) {
+    constructor(element: FreNode | FreNodeReference<FreNamedNode>, componentId: string) {
         this.element = element;
-        this.componentId = boxId;
+        this.componentId = componentId;
         if (isFreNode(element)) {
             this.elementType = { type: element.freLanguageConcept(), isRef: false};
             this.propertyName = element.freOwnerDescriptor().propertyName;

@@ -19,18 +19,18 @@
         ListElementInfo,
         MenuOptionsType,
         moveListElement,
-        FreLogger,
         MenuItem,
-        type FreNodeReference,
-        type FreNamedNode,
         type DragAndDropType,
         isFreNodeReference,
         isFreNode,
-        FreEditor,
-        FreLogger, FreCreatePartAction, MetaKey, AST, ENTER
+        FreLogger,
+        FreCreatePartAction,
+        MetaKey,
+        AST,
+        ENTER
     } from "@freon4dsl/core"
     import RenderComponent from './RenderComponent.svelte';
-    import { componentId } from '$lib/index.js';
+    import { componentId, rememberDraggedNode } from '$lib/index.js';
     import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
     import {
         activeElem,
@@ -111,23 +111,7 @@
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
         // Create the data to be transferred and notify the store that something is being dragged.
-        let draggedElemBox = shownElements[listIndex];
-        let propertyDef = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName);
-        // If the draggedElemBox is a part, then the node it refers to is the list element that is being transferred.
-        // But if it is a reference then the node it refers to is the parent of the reference, i.e. the complete list.
-        // The same holds for primitive list elements. Therefore, we need to distinguish the following cases.
-        if (propertyDef?.propertyKind === "part") {
-            // console.log(`DAD Part ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node?.freLanguageConcept()} ${draggedElemBox.propertyName}`)
-            draggedElem.value = new ListElementInfo(draggedElemBox.node, id);
-        } else if (propertyDef?.propertyKind === "reference") {
-            // console.log(`DAD Other ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node} ${draggedElemBox.propertyName}`)
-            // @ts-ignore
-            let theNode: FreNodeReference<FreNamedNode> = box.node[draggedElemBox.propertyName][draggedElemBox.propertyIndex] as FreNodeReference<FreNamedNode>
-            draggedElem.value = new ListElementInfo(theNode, id);
-        } else { // if ( propertyDef?.propertyKind === "primitive" )
-            // todo implement this if we continue having lists of primitive values, and not comply to LionWeb
-        }
-        draggedFrom.value = listId;
+        rememberDraggedNode(listId, box, shownElements[listIndex]);
         // console.log(`dragstart: ${draggedElem.value.element.freLanguageConcept()}`)
     };
 
@@ -230,6 +214,7 @@
             AST.changeNamed("ListComponent.Enter", () => {
                 execresult = action.execute(box, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, index + 1)
             })
+            // @ts-ignore
             if (!!execresult) {
                 execresult();
             }
@@ -270,7 +255,6 @@
             {#if !isActionBox(box)}
             <span class="drag-handle"
                   draggable="true"
-                  tabindex={-1}
                   ondragstart={(event) => dragstart(event, id, index)}
                   role="listitem"><DragHandle/></span>
             {/if}

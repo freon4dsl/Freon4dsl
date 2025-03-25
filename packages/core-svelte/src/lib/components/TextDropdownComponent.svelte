@@ -207,7 +207,7 @@
     function selectLastOption() {
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
-                selectedId = filteredOptions[filteredOptions.length - 1].id;
+                selected = filteredOptions[filteredOptions.length - 1];
             }
         }
     }
@@ -215,7 +215,7 @@
     function selectFirstOption() {
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
-                selectedId = filteredOptions[0].id;
+                selected = filteredOptions[0];
             }
         }
     }
@@ -228,7 +228,7 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log(`onKeyDown: ${id} [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selectedId + " dropdown:" + dropdownShown + " editing:" + isEditing);
+        LOGGER.log(`onKeyDown: ${id} [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selected.id + " dropdown:" + dropdownShown + " editing:" + isEditing);
         if (dropdownShown) {
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {

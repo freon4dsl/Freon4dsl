@@ -11,7 +11,7 @@ import { MetaKey } from "./Keys.js";
 import { FreLogger } from "../../logging/index.js";
 import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index.js";
 import { DragAndDropType, FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language/index.js"
-import {FreNamedNode, FreNode, FreNodeReference} from "../../ast/index.js"
+import { FreNamedNode, FreNode, FreNodeReference, isFreNodeReference } from "../../ast/index.js"
 import { FreErrorSeverity } from "../../validator/index.js";
 
 const LOGGER = new FreLogger("ListUtil");
@@ -121,6 +121,12 @@ export function dropListElement(
                 FreErrorSeverity.Error,
             );
             return;
+        }
+
+        // The dropped element may have a completely different projection within the context of
+        // the node in which it is dropped. Therefore, we clean the used projection for the dropped element.
+        if (!isFreNodeReference(dropped.element)) {
+            editor.projection.getBoxProvider(dropped.element).clearUsedProjection();
         }
 
         // Types ok, now perform the actual transfer from one list on another.
