@@ -25,11 +25,11 @@ this repository is mean for developing Freon itself.
 The main prerequisites are: [Node.js](https://nodejs.org/) and [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/).
 We are typically using the latest versions of both, although older versions likely work just as well.
 
-Clone or fork this github project, check out the `development` branch, and install dependencies:
+Clone or fork this GitHub project, check out the `development` branch, and install dependencies:
 ```bash
   git clone https://github.com/freon4dsl/Freon4dsl.git
 ```
-Setup the multirepo and install all dependencies:
+Set up the multirepo and install all dependencies:
 ```bash
   npm install
 ```
