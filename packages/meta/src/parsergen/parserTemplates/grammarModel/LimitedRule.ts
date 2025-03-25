@@ -43,29 +43,21 @@ export class LimitedRule extends GrammarRule {
     toMethod(): string {
         if (!!this.myMap && this.myMap.size > 0) {
             // found a limited concept with a special projection
-            let ifStat: string = "";
+            let switchStat: string = "";
+            // create all cases for the switch statement
             for (const [key, value] of this.myMap) {
-                ifStat += `if (choice === '${value}') {
-                return ${key};
-            } else `;
+                switchStat += `case'${value}': return ${key};\n`;
             }
-            // close the ifStatement
-            ifStat += `{
-                return null;
+            // complete the switch statement
+            switchStat = `switch (children.toArray()[0]) {
+                ${switchStat} default: return null;
             }`;
             return `
                 ${ParserGenUtil.makeComment(this.toGrammar())}
-                public transform${this.ruleName}(branch: SPPTBranch): ${Names.classifier(this.concept)} {
-                    const choice = branch.nonSkipMatchedText;
-                    ${ifStat}
+                public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${Names.classifier(this.concept)} {
+                    ${switchStat}
                 }`;
-        } else {
-            // make a 'normal' reference method
-            return `
-                    ${ParserGenUtil.makeComment(this.toGrammar())}
-                    public transform${this.ruleName}(branch: SPPTBranch): string {
-                        return branch.nonSkipMatchedText;
-                    }`;
         }
+        return ``;
     }
 }

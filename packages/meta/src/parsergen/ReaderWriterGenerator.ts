@@ -91,7 +91,7 @@ export class ReaderWriterGenerator {
         // Write the main syntax analyser to file
         generatedFilePath = `${this.readerGenFolder}/${Names.syntaxAnalyser(this.language)}.ts`;
         indexContent += `export * from "./${Names.syntaxAnalyser(this.language)}.js";\n`;
-        const mainContent = grammarModel.toMethod();
+        const mainContent = grammarModel.toMethod(this.language!, relativePath);
         this.makeFile(`main syntax analyser`, generatedFilePath, mainContent, generationStatus);
 
         // Write the syntax analysers for each unit to file

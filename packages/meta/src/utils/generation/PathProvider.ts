@@ -29,8 +29,6 @@ export const CONFIGURATION_FOLDER = "config";
 export const COMMAND_LINE_FOLDER = "commandline";
 export const CONFIGURATION_GEN_FOLDER = "config/gen";
 export const RESERVED_WORDS_ORIGIN = "../meta/src/validatordef/generator/templates"; // the folder in which the to-be-copied files can be found
-export const STYLES_ORIGIN = "../meta/src/editordef/generator/templates/styles"; // the folder in which the to-be-copied files can be found
-export const STYLES_FOLDER = EDITOR_FOLDER + "/styles"; // the folder to which the style files should be copied
 // the predefined interfaces and classes can be found in ...
 export const FREON_CORE = "@freon4dsl/core";
 export const scoperInterface = FREON_CORE;
@@ -38,7 +36,6 @@ export const typerInterface = FREON_CORE;
 export const validatorInterface = FREON_CORE;
 export const errorClass = FREON_CORE;
 export const freNamedElement = FREON_CORE;
-export const EDITORSTYLES = STYLES_FOLDER + "/styles";
 /**
  * Defines all paths to files and folders that are used in the generation, to ensure they are identical
  * at each usage.

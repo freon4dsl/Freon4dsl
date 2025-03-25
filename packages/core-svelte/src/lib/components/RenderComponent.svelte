@@ -1,6 +1,6 @@
 <script lang="ts">
     import { RENDER_LOGGER } from '$lib/components/ComponentLoggers.js';
-
+    import { tick } from "svelte"
     // This component renders any box from the box model.
     // Depending on the box type the right component is used.
     // It also makes the rendered element selectable, including changing the style.
@@ -35,8 +35,8 @@
         BoolDisplay,
         LimitedDisplay,
         isActionTextBox,
-        isNullOrUndefined
-    } from '@freon4dsl/core';
+        isNullOrUndefined, type ClientRectangle, UndefinedRectangle
+    } from "@freon4dsl/core"
     import MultiLineTextComponent from '$lib/components/MultiLineTextComponent.svelte';
     import EmptyLineComponent from '$lib/components/EmptyLineComponent.svelte';
     import GridComponent from '$lib/components/GridComponent.svelte';
@@ -59,7 +59,7 @@
     import SwitchComponent from '$lib/components/BooleanSwitchComponent.svelte';
     import ButtonComponent from '$lib/components/ButtonComponent.svelte';
     import FragmentComponent from '$lib/components/FragmentComponent.svelte';
-    import { componentId, findCustomComponent, setBoxSizes } from '$lib/index.js';
+    import { componentId, findCustomComponent } from '$lib/index.js';
 
     import ErrorMarker from '$lib/components/ErrorMarker.svelte';
     import { selectedBoxes } from '$lib/components/stores/AllStores.svelte.js';
@@ -87,8 +87,9 @@
         event.preventDefault();
         event.stopPropagation();
     };
-
+    
     $effect(() => {
+        let selectedChanged = false
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
         LOGGER.log(
             'afterUpdate selectedBoxes: [' +
@@ -111,13 +112,9 @@
         if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
             // do not set extra class, the control itself handles being selected
         } else {
-            selectedCls = isSelected ? 'render-component-selected' : 'render-component-unselected';
-        }
-        if (!isNullOrUndefined(element)) {
-            // upon initialization the element might be null
-            setBoxSizes(box, element.getBoundingClientRect());
-        } else {
-            LOGGER.log('No element for ' + box?.id + ' ' + box?.kind);
+            const newSelectedCls = isSelected ? 'render-component-selected' : 'render-component-unselected'
+            selectedChanged = (newSelectedCls !== selectedCls)
+            selectedCls = newSelectedCls
         }
     });
 
@@ -132,11 +129,19 @@
             errMess = [];
         }
     };
+    
+    const clientRectangle = (): ClientRectangle => {
+        LOGGER.log(`Render clientRect ${box.id} `)
+        return element?.getBoundingClientRect() || UndefinedRectangle
+    }
 
     let first = true;
     $effect(() => {
         // Evaluated and re-evaluated when the box changes.
         refresh((first ? 'first' : 'later') + '   ' + box?.id);
+        if (!isNullOrUndefined(box) && !isTextBox(box) ) {
+            box.getClientRectangle = clientRectangle
+        }
         first = false;
     });
 </script>
@@ -151,7 +156,7 @@
     <ElementComponent {box} {editor} />
 {:else}
     {#if errMess.length > 0 && !isNullOrUndefined(element)}
-        <ErrorMarker {element} {box} />
+        <ErrorMarker {box} {editor} />
     {/if}
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions a11y_click_events_have_key_events -->
     <!--	svelte-ignore a11y_click_events_have_key_events -->

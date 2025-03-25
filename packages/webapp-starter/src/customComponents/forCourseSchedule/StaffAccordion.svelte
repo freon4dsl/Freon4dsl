@@ -4,7 +4,7 @@
     import { AST, ExternalPartListBox } from "@freon4dsl/core";
     import { type FreComponentProps, RenderComponent } from "@freon4dsl/core-svelte";
     import { Person } from "@freon4dsl/samples-course-schedule";
-
+    import { untrack } from "svelte" 
     // This component replaces the component for "teachers: Person[];" from model unit "Staff".
     // This property is a parts list, therefore the external box to use is an ExternalPartListBox.
     // Props
@@ -13,6 +13,7 @@
     let panelOpen: boolean[] = $state([]);      // List of booleans to indicate which panel is open (true) and closed (false).
     let multiplePar: boolean = $state(false);   // Indicates whether multiple panels may be open at the same time.
 
+    let ch = $state([...box.children])
     /*
         Sets all panels in the state 'closed',
         and sets the length of 'panelOpen'.
@@ -22,7 +23,7 @@
         if (param === "multiple") {
             multiplePar = true;
         }
-        panelOpen = [];
+        panelOpen = []
         for (let i = 0; i < box.children.length; i++) {
             // this also sets the length of panelOpen!
             panelOpen[i] = false;
@@ -40,14 +41,10 @@
         }
     }
     const refresh = (why?: string): void => {
+        console.log("REFRESH ACCORDION")
         // do whatever needs to be done to refresh the elements that show information from the model
-        initialize();
+        untrack( () => initialize() );
     };
-    $effect(() => {
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
-
     const addPerson = () => {
         // Note that you need to put any changes to the actual model in a 'AST.change or AST.changeNamed',
         // because all elements in the model are reactive using mobx.
@@ -64,14 +61,28 @@
             box.getPropertyValue().splice(index, 1);
         });
     }
-
     // Run the initialization
     initialize();
+
+    $effect(() => {
+        // $inspect.trace(`accordion for $effect ${box.children.length} id ${box.id}`)
+        // console.log(`========== $effect ${box.children.length} id ${box.id}` )
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
+        // Needed to get an effect
+        ch = box.children
+        // untrack becauise initialize causes a too many  effects error
+        untrack( () => {
+            initialize()
+        })        
+    });
+
+
 </script>
 
 <div style="display: flex; align-items: flex-end;">
     <Accordion multiple={multiplePar}>
-        {#each box.children as childBox, index}
+        {#each ch as childBox, index}
             <Panel bind:open={panelOpen[index]}>
                 <Header>
                     {childBox.node.freLanguageConcept()} {childBox.node.freId()}

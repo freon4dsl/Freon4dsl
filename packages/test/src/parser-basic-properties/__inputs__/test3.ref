@@ -1,0 +1,26 @@
+RefsTest myName {
+	directRefs WithDirectRefs {
+                  	ref someName.x34565
+                  	optRef nameABCDEFGHI
+                  	refList
+                        name1.d45fgh
+                        name2
+                        name3
+                        name4
+                    optRefList nameZ
+                    nameY.sdfsgargh.HERA
+                    nameX
+    }
+    // indirectRefs not present
+    withSeparator WithDirectRefs {
+                                        	ref someName.otherName.xxx.yyy
+                                        	// optRef not present
+                                        	refList
+                                              name1.ff.gg.yuio
+                                              name2
+                                              name3
+                                              name4
+                                          // optRefList not present
+                        }
+    }
+

@@ -1,0 +1,85 @@
+editor default
+
+global {
+    referenceSeparator [::]
+}
+
+// begin typer definition
+FreTyperDef {[
+    typer
+    [?istype { ${self.types horizontal separator [, ]} }]
+    ${self.typeConcepts}
+    [?hastype { ${self.conceptsWithType horizontal separator [, ]} }]
+    [?${self.anyTypeSpec}]
+    ${self.classifierSpecs vertical}
+    ]}
+FretTypeConcept {[
+    type ${self.name} [?base ${self.base}] {
+        ${self.properties terminator[;]}
+    }
+]}
+FretProperty {
+    [${self.name} : ${self.type}]
+}
+FretClassifierSpec {[
+    ${self.myClassifier} {
+        ${self.rules}
+    }
+]}
+FretAnyTypeSpec {[
+    anytype {
+        ${self.rules}
+    }
+]}
+FretInferenceRule {
+    [infertype ${self.exp};]
+}
+FretConformanceRule {
+    [conformsto ${self.exp};]
+}
+FretEqualsRule {
+    [equalsto ${self.exp};]
+}
+FretLimitedRule {
+    [${self.exp};]
+}
+FretVarDecl {
+    [${self.name} : ${self.type}]
+}
+FretPropInstance {
+    [${self.property} : ${self.value}]
+}
+
+// expressions
+FretPropertyCallExp {
+    [${source}.${property}]
+}
+FretSelfExp {
+    [self]
+}
+FretAnytypeExp {
+    [anytype]
+}
+FretVarCallExp {
+    [${self.variable}]
+}
+FretCreateExp {
+    [${self.type} { ${self.propertyDefs separator[,] } }]
+}
+FretFunctionCallExp {
+    [${self.calledFunction} ( ${self.arguments horizontal separator[, ]} )]
+}
+FretLimitedInstanceExp {
+    [[?${myLimited}:]${myInstance}]
+}
+FretWhereExp {[
+    ${self.variable} where {
+        ${self.conditions terminator[;]}
+    }
+]}
+FretEquals {
+    symbol = "equalsto"
+}
+FretConforms {
+    symbol = "conformsto"
+}

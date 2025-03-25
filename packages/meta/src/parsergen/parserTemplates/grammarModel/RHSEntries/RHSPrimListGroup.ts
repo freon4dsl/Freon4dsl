@@ -1,9 +1,9 @@
 import { RHSPropPartWithSeparator } from "./RHSPropPartWithSeparator.js";
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
-import { GenerationUtil } from "../../../../utils/index.js";
-import { internalTransformList, ParserGenUtil } from "../../ParserGenUtil.js";
+import {internalTransformPrimValue, ParserGenUtil} from "../../ParserGenUtil.js";
 import { makeIndent } from "../GrammarUtils.js";
+import {GenerationUtil} from "../../../../utils/index.js";
 
 export class RHSPrimListGroup extends RHSPropPartWithSeparator {
     // `(${propTypeName} '${joinText}' )* /* option C */`
@@ -18,14 +18,22 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
         return `( ${this.entry.toGrammar()} '${this.separatorText}' )*\n\t`;
     }
 
-    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
+    toMethod(index: number, nodeName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        // return `// RHSPrimListGroup
+        //     if (!!${nodeName}[${index}]) {
+        //         // get the group that represents the optional primitive
+        //         // because primitives are leafs in the grammar, there is no need to get the children of this group
+        //         const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
+        //         ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformPartList}<${baseType}>(subNode, '${this.separatorText}');
+        //     }`;
         return `// RHSPrimListGroup
-            if (!${nodeName}[${index}].isEmptyMatch) {
-                // get the group that represents the optional primitive
-                // because primitives are leafs in the grammar, there is no need to get the children of this group
-                const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
-                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformList}<${baseType}>(subNode, '${this.separatorText}');
+            if (!!${nodeName}.toArray()[${index}]) {
+                ${ParserGenUtil.internalName(this.property.name)} = [];
+                ${nodeName}.toArray()[${index}].toArray().forEach((item) => {
+                    const val = this.mainAnalyser.${internalTransformPrimValue}<${baseType}>(item.asJsReadonlyArrayView()[0], PrimValueType.${baseType})
+                    ${ParserGenUtil.internalName(this.property.name)}.push(val);
+                })
             }`;
     }
 

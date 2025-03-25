@@ -1,0 +1,76 @@
+language FreLanguageX
+
+// begin validator definition
+modelunit FreValidatorDef {
+    name: identifier;
+//}
+//concept FreValidatorDef {
+//    location: ParseLocation;
+//    validatorName: string;
+    languageName: identifier;
+    conceptRules: ConceptRuleSet[];
+    file-extension = "valid";
+}
+
+concept ConceptRuleSet {
+//    location: ParseLocation;
+    reference conceptRef: FreConcept;
+    rules: ValidationRule[];
+}
+
+abstract concept ValidationRule {
+//    location: ParseLocation;
+    customMessage?: ValidationMessage;
+}
+
+concept ValidationMessage {
+    severity: identifier;
+    message: string;
+}
+
+concept CheckEqualsTypeRule base ValidationRule {
+    type1: FreLangExp;
+    type2: FreLangExp;
+}
+
+concept CheckConformsRule base ValidationRule {
+    type1: FreLangExp;
+    type2: FreLangExp;
+}
+
+concept ExpressionRule base ValidationRule {
+    exp1: FreLangExp;
+    exp2: FreLangExp;
+    comparator: FreComparator;
+}
+
+concept IsUniqueRule base ValidationRule {
+    list: FreLangExp;
+    listproperty: FreListPropExp; // NB this is different from the implementation in meta, but it seems a better solution.
+    comparator: FreComparator;
+}
+
+concept NotEmptyRule base ValidationRule {
+    property: FreLangExp;
+}
+
+concept ValidNameRule base ValidationRule {
+    property: FreLangExp;
+    propertyName?: string;
+}
+
+concept FreListPropExp base FreLangExp {
+    propertyName: identifier;
+}
+
+limited FreComparator {
+    name: identifier;
+    Equals = { name: "="}
+    LargerThen = { name: ">"}
+    LargerIncluding = { name: ">="}
+    SmallerThen = { name: "<"}
+    SmallerIncluding = { name: "<="}
+}
+
+// end validator definition
+

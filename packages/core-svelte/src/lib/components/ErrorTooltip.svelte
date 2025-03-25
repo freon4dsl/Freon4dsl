@@ -2,25 +2,25 @@
 
 <script lang="ts">
     import { Box } from '@freon4dsl/core';
-    import { viewport } from '$lib/components/stores/AllStores.svelte.js';
+    import type {ErrorProps} from "$lib";
 
-    export let box: Box;
-    export let hasErr: boolean = false;
-    export let parentTop: number = 0;
-    export let parentLeft: number = 0;
-    let content: string[] = [];
-    let isHovered: boolean = false;
+    let { editor, box, hasErr, parentLeft, parentTop, children }: ErrorProps<Box> = $props();
+
+    let content: string[] = $state([]);
+    let isHovered: boolean = $state(false);
+
     // position of error message(s)
-    let top = 0;
-    let left = 0;
+    let top = $state(0);
+    let left = $state(0);
 
     async function mouseOver(event: MouseEvent) {
         if (hasErr) {
             isHovered = true;
             // Get the position of the mouse relative to the editor view and - if applicable - to its ErrorMarker parent.
             // Because an ErrorMarker also has its 'position' set to something other than 'static', we need to take its position into account.
-            left = event.pageX - viewport.value.left - parentLeft + 5;
-            top = event.pageY - viewport.value.top - parentTop + 5;
+            const rect = editor.getClientRectangle();
+            left = event.pageX - rect.x - parentLeft + 5;
+            top = event.pageY - rect.y - parentTop + 5;
             // console.log(`ErrorTooltip: left-top [${left}, ${top}] event [${event.pageX}, ${event.pageY}] parent [${parentLeft}, ${parentTop}] viewport [${$viewport.left}, ${$viewport.top}]`)
             content = box.errorMessages;
         }
@@ -29,8 +29,9 @@
         if (hasErr && isHovered) {
             // Get the position of the mouse relative to the editor view and - if applicable - to its ErrorMarker parent.
             // Because an ErrorMarker also has its 'position' set to something other than 'static'.
-            left = event.pageX - viewport.value.left - parentLeft + 5;
-            top = event.pageY - viewport.value.top - parentTop + 5;
+            const rect = editor.getClientRectangle();
+            left = event.pageX - rect.x - parentLeft + 5;
+            top = event.pageY - rect.y - parentTop + 5;
         }
     }
     function mouseLeave() {
@@ -43,12 +44,12 @@
 
 <span
     role="group"
-    on:mouseover={mouseOver}
-    on:mouseleave={mouseLeave}
-    on:mousemove={mouseMove}
-    on:focus={onFocus}
+    onmouseover={mouseOver}
+    onmouseleave={mouseLeave}
+    onmousemove={mouseMove}
+    onfocus={onFocus}
 >
-    <slot />
+    {@render children()}
 </span>
 
 {#if isHovered}

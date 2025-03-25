@@ -51,7 +51,6 @@
     "svelte": "^5.0.0"
   },
   "devDependencies": {
-    "@freon4dsl/core": "^1.0.0",
     "@material/web": "^2.2.0",
     "@sveltejs/adapter-auto": "^4.0.0",
     "@sveltejs/kit": "^2.16.0",
@@ -74,6 +73,6 @@
     "@material/web": "^2.2.0",
     "@material/slider": "^14.0.0",
     "@material/switch": "^14.0.0",
-    "@freon4dsl/core": "^1.0.0"
+    "@freon4dsl/core": "^1.1.0"
   }
 }

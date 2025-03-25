@@ -1,16 +1,20 @@
 import {
     AST,
     Box,
-    // FreLogger,
     FreEditor,
     FreEditorUtil,
     type FrePostAction,
     toFreKey,
     FreAction,
     ElementBox,
-    isNullOrUndefined
+    isNullOrUndefined,
+    FreLanguage,
+    ListElementInfo,
+    type FreNodeReference,
+    type FreNamedNode
 } from '@freon4dsl/core';
 import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
+import {draggedElem, draggedFrom} from "$lib/components/stores/AllStores.svelte";
 
 // const LOGGER = new FreLogger('CommonFunctions').mute();
 
@@ -100,16 +104,6 @@ export function componentId(box: Box): string {
     return `${box?.node?.freId()}-${box?.role}`;
 }
 
-export function setBoxSizes(box: Box, rect: DOMRect) {
-    if (!isNullOrUndefined(box)) {
-        box.actualX = rect.left;
-        box.actualY = rect.top;
-        box.actualHeight = rect.height;
-        box.actualWidth = rect.width;
-        // XLOGGER.log("   actual is (" + Math.round(box.actualX) + ", " + Math.round(box.actualY) + ")");
-    }
-}
-
 /**
  * Replace HTML tags and spaces with HTML Entities.
  * Used to make text containing these acceptable as HTML Text.
@@ -117,5 +111,26 @@ export function setBoxSizes(box: Box, rect: DOMRect) {
  * "<"   => &lt;
  */
 export function replaceHTML(s: string): string {
-    return s.replace(/\s/g, '&nbsp;').replace(/\</, '&lt;');
+    return s.replace(/\s/g, '&nbsp;').replace(/</, '&lt;');
 }
+
+export function rememberDraggedNode(componentId: string, listOrTableBox: Box, draggedElemBox: Box) {
+    console.log(`rememberDraggedNode parentBox: ${listOrTableBox?.kind}, draggedElemBox: ${draggedElemBox.kind}`);
+    let propertyDef = FreLanguage.getInstance().classifierProperty(listOrTableBox?.node.freLanguageConcept(), listOrTableBox?.propertyName);
+    // If the draggedElemBox is a part, then its node is the list element that is being transferred.
+    // But if it is a reference then its node is the parent of the reference, i.e. the complete list.
+    // The same holds for primitive list elements. Therefore, we need to distinguish the following cases.
+    if (propertyDef?.propertyKind === "part") {
+        console.log(`DAD Part ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node?.freLanguageConcept()} ${draggedElemBox.propertyName}`)
+        draggedElem.value = new ListElementInfo(draggedElemBox.node, componentId);
+    } else if (propertyDef?.propertyKind === "reference") {
+        console.log(`DAD Other ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node} ${draggedElemBox.propertyName}`)
+        // @ts-ignore
+        let theNode: FreNodeReference<FreNamedNode> = listOrTableBox.node[draggedElemBox.propertyName][draggedElemBox.propertyIndex] as FreNodeReference<FreNamedNode>
+        draggedElem.value = new ListElementInfo(theNode, componentId);
+    } else { // if ( propertyDef?.propertyKind === "primitive" )
+        // todo implement this if we continue having lists of primitive values, and not comply to LionWeb
+    }
+    draggedFrom.value = componentId;
+}
+

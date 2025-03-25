@@ -170,7 +170,39 @@ function describeSvelteTestUnit(): FreLanguageModelUnit {
         language: "-key-SvelteTest",
         propertyKind: "part",
     });
-
+    modelunit.properties.set("myList7", {
+        name: "myList7",
+        id: "-id-SvelteTestUnit-myList7",
+        key: "-key-SvelteTestUnit-myList7",
+        type: "SimpleNode",
+        isList: true,
+        isPublic: true,
+        isOptional: false,
+        language: "-key-SvelteTest",
+        propertyKind: "reference",
+    });
+    modelunit.properties.set("myList8", {
+        name: "myList8",
+        id: "-id-SvelteTestUnit-myList8",
+        key: "-key-SvelteTestUnit-myList8",
+        type: "SimpleNode",
+        isList: true,
+        isPublic: true,
+        isOptional: false,
+        language: "-key-SvelteTest",
+        propertyKind: "reference",
+    });
+    modelunit.properties.set("myList9", {
+        name: "myList9",
+        id: "-id-SvelteTestUnit-myList9",
+        key: "-key-SvelteTestUnit-myList9",
+        type: "OtherType",
+        isList: true,
+        isPublic: true,
+        isOptional: false,
+        language: "-key-SvelteTest",
+        propertyKind: "reference",
+    });
     return modelunit;
 }
 

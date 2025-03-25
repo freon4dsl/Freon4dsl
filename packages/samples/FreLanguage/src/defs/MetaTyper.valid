@@ -1,0 +1,39 @@
+validator yyy for language FreLanguageX
+
+FreTyperDef {
+    // 1. No two classifier-rules for the same classifier
+    // Should be: with the same kind: infertype, equals, conforms.
+    isunique myClassifier in self.classifierSpecs;
+}
+
+//FretInferenceRule {
+//    // 2. An abstract rule may not be defined.
+//    self.isAbstract implies isempty(self.exp) and isempty(self.other);
+//    // 2.1. Non-abstract rules should define something.
+//    not self.isAbstract implies not isempty(self.exp) or not isempty(self.other);
+//    // 2.2. Non-abstract rules should have either an expression or an FretSingleRule.
+//    not self.isAbstract and not isempty(self.exp) implies isempty(self.other);
+//    not self.isAbstract and not isempty(self.other) implies isempty(self.exp);
+//    // 3. No inference rule for concepts that are types.
+//    not ancestor(FreTyperDef).types.includes(self.myClassifier);
+//    // 4. An inference rule should result in a type.
+//    not isempty self.exp implies ancestor(FreTyperDef).types.includes(typeof(self.exp));
+//    not isempty self.other implies ancestor(FreTyperDef).types.includes(typeof(self.other));
+//}
+//
+//FretConformanceOrEqualsRule {
+//    // 5. No equals or conforms rules for non-types.
+//    ancestor(FreTyperDef).types.includes(self.myClassifier);
+//}
+//
+//FretFunctionCallExp {
+//    // 7. The only functions that may be used are: typeof(1 param), commonSuperType(2 params (or list?)),
+//    //   ancestor(1 param).
+//    self.functionName == "typeof"
+//        or self.functionName == "commonSuperType"
+//        or self.functionName == "ancestor";
+//    self.functionName == "typeof" or self.functionName == "ancestor"
+//        implies self.arguments.length == 1;
+//    self.functionName == "commonSuperType" implies self.arguments.length == 2;
+// 8. if 'container'is used as param to typeof(), give error message if no type rule for container is defined!!!
+//}

@@ -14,9 +14,8 @@
         isTableRowBox,
         isElementBox,
         TableCellBox,
-        isNullOrUndefined
+        isNullOrUndefined, isFreNodeReference, isFreNode, type DragAndDropType, FreLanguage
     } from '@freon4dsl/core';
-    import { onMount } from 'svelte';
     import { componentId } from '$lib';
 
     import { dropListElement, moveListElement } from '@freon4dsl/core';
@@ -36,7 +35,14 @@
     let templateRows: string = $state('');
     let cssClass: string = $state('');
     let htmlElement: HTMLElement;
-    let elementType: string = $state('');
+    let myMetaType: DragAndDropType;
+    $effect(() => {
+        // console.log(`EFFECT ${box.conceptName} : ${box.node.freLanguageConcept()}`)
+        myMetaType = {
+            type: box.conceptName,
+            isRef: FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.propertyKind === 'reference'
+        }
+    });
 
     const refresh = (why?: string): void => {
         LOGGER.log('Refresh TableBox, box: ' + why);
@@ -45,7 +51,6 @@
             templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
             templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
             cssClass = box.cssClass;
-            elementType = box.conceptName;
         }
     };
 
@@ -71,9 +76,6 @@
                 _cells.push(...ch.cells);
             }
         });
-        // console.log("all cell ids: ")
-        // console.log(_cells.map(cell => `   ${cell.content.id + '-' + cell.row + '-' + cell.column}`).join("\n"));
-
         return _cells;
     }
 
@@ -91,15 +93,13 @@
         }
     }
 
-    onMount(() => {
-        init()
-    });
-
     $effect(() => {
+        // console.log('effect init')
         init();
     });
 
     $effect(() => {
+        // console.log('effect refresh')
         // Evaluated and re-evaluated when the box changes.
         refresh('Refresh new box: ' + box?.id);
     });
@@ -111,13 +111,18 @@
             targetIndex = details.column - 1;
         }
 
-        console.log(`DROPPING item [${data?.element.freId()}] from [${data?.componentId}] in grid [${id}] on position [${targetIndex}]`);
-        if (box.hasHeaders) {
-            // take headers into account for the index in the node model
-            targetIndex = targetIndex - 1;
-            // console.log("grid has headers, targetIndex: " + targetIndex);
-        }
         if (!isNullOrUndefined(data)) {
+            if (isFreNodeReference(data.element)) {
+                LOGGER.log(`DROPPING item [${data.element.name}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
+            } else if (isFreNode(data.element)) {
+                LOGGER.log(`DROPPING item [${data.element.freId()}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
+            }
+            if (box.hasHeaders) {
+                // take headers into account for the index in the node model
+                targetIndex = targetIndex - 1;
+                // console.log("grid has headers, targetIndex: " + targetIndex);
+            }
+
             if (data.componentId === id) {
                 // dropping in the same grid
                 // console.log("moving item within grid");
@@ -125,7 +130,7 @@
             } else {
                 // dropping in another list
                 // console.log("moving item to another grid, drop type: " + data.elementType + ", grid cell type: " + elementType);
-                dropListElement(editor, data, elementType, box.node, box.propertyName, targetIndex);
+                dropListElement(editor, data, myMetaType, box.node, box.propertyName, targetIndex);
             }
         }
         // Everything is done, so reset the variables

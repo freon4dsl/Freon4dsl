@@ -5,8 +5,10 @@ import {
     observablepartlist,
     type FreModelUnit,
     FreParseLocation,
+    type FreNodeReference,
     FreUtils,
     matchElementList,
+    matchReferenceList,
 } from "@freon4dsl/core";
 import { SimpleNode, OtherType } from "./internal.js";
 
@@ -46,6 +48,15 @@ export class SvelteTestUnit extends MobxModelElementImpl implements FreModelUnit
         if (!!data.myList6) {
             data.myList6.forEach((x) => result.myList6.push(x));
         }
+        if (!!data.myList7) {
+            data.myList7.forEach((x) => result.myList7.push(x));
+        }
+        if (!!data.myList8) {
+            data.myList8.forEach((x) => result.myList8.push(x));
+        }
+        if (!!data.myList9) {
+            data.myList9.forEach((x) => result.myList9.push(x));
+        }
         if (!!data.parseLocation) {
             result.parseLocation = data.parseLocation;
         }
@@ -63,6 +74,10 @@ export class SvelteTestUnit extends MobxModelElementImpl implements FreModelUnit
     myList4!: SimpleNode[]; // implementation of part 'myList4'
     myList5!: SimpleNode[]; // implementation of part 'myList5'
     myList6!: OtherType[]; // implementation of part 'myList6'
+    myList7!: FreNodeReference<SimpleNode>[]; // implementation of part 'myList7'
+    myList8!: FreNodeReference<OtherType>[]; // implementation of part 'myList8'
+    myList9!: FreNodeReference<OtherType>[]; // implementation of reference 'myList9'
+
 
     constructor(id?: string) {
         super();
@@ -85,6 +100,9 @@ export class SvelteTestUnit extends MobxModelElementImpl implements FreModelUnit
         observablepartlist(this, "myList4");
         observablepartlist(this, "myList5");
         observablepartlist(this, "myList6");
+        observablepartlist(this, "myList7");
+        observablepartlist(this, "myList8");
+        observablepartlist(this, "myList9");
 
         // Make copy method a mobx action
         makeObservable(this, {
@@ -159,6 +177,15 @@ export class SvelteTestUnit extends MobxModelElementImpl implements FreModelUnit
         if (!!this.myList6) {
             this.myList6.forEach((x) => result.myList6.push(x.copy()));
         }
+        if (!!this.myList7) {
+            this.myList7.forEach((x) => result.myList7.push(x.copy()));
+        }
+        if (!!this.myList8) {
+            this.myList8.forEach((x) => result.myList8.push(x.copy()));
+        }
+        if (!!this.myList9) {
+            this.myList9.forEach((x) => result.myList9.push(x.copy()));
+        }
         return result;
     }
     /**
@@ -188,6 +215,15 @@ export class SvelteTestUnit extends MobxModelElementImpl implements FreModelUnit
         }
         if (result && !!toBeMatched.myList6) {
             result = result && matchElementList(this.myList6, toBeMatched.myList6);
+        }
+        if (result && !!toBeMatched.myList7) {
+            result = result && matchReferenceList(this.myList7, toBeMatched.myList7);
+        }
+        if (result && !!toBeMatched.myList8) {
+            result = result && matchReferenceList(this.myList8, toBeMatched.myList8);
+        }
+        if (result && !!toBeMatched.myList9) {
+            result = result && matchReferenceList(this.myList9, toBeMatched.myList9);
         }
         return result;
     }

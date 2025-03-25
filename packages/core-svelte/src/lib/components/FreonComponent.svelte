@@ -19,7 +19,7 @@
         isTableRowBox,
         isElementBox,
         AstActionExecutor,
-        type FreNode
+        type FreNode, type ClientRectangle, UndefinedRectangle
     } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
     import ContextMenu from './ContextMenu.svelte';
@@ -29,8 +29,7 @@
         contextMenu,
         contextMenuVisible,
         selectedBoxes,
-        shouldBeHandledByBrowser,
-        viewport
+        shouldBeHandledByBrowser
     } from '$lib/components/stores/AllStores.svelte.js';
     import type { MainComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
 
@@ -212,48 +211,53 @@
         }, 400); // Might use another value for the delay, but this seems ok.
     }
 
-    function setViewportSizes(elem?: Element) {
-        // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
-        // A: I have no idea why.
-        if (!isNullOrUndefined(elem)) {
-            let rect = elem.getBoundingClientRect();
-            if (!isNullOrUndefined(elem.parentElement)) {
-                let parentRect = elem.parentElement.getBoundingClientRect();
-                viewport.value.setSizes(rect.height, rect.width, parentRect.top, parentRect.left);
-            } else {
-                viewport.value.setSizes(rect.height, rect.width, 0, 0);
-            }
-        }
+    const clientRectangle = (): ClientRectangle => {
+        LOGGER.log(`FreonComponent clientRect`)
+        return element?.getBoundingClientRect() || UndefinedRectangle
     }
+    // function setViewportSizes(elem?: Element) {
+    //     // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
+    //     // A: I have no idea why.
+    //     if (!isNullOrUndefined(elem)) {
+    //         let rect = elem.getBoundingClientRect();
+    //         if (!isNullOrUndefined(elem.parentElement)) {
+    //             let parentRect = elem.parentElement.getBoundingClientRect();
+    //             viewport.value.setSizes(rect.height, rect.width, parentRect.top, parentRect.left);
+    //         } else {
+    //             viewport.value.setSizes(rect.height, rect.width, 0, 0);
+    //         }
+    //         console.log('setViewportSizes')
+    //     }
+    // }
 
-    onMount(() => {
-        setViewportSizes(element);
-
-        // We keep track of the size of the editor component, to be able to position any context menu correctly.
-        // For this we use a ResizeObserver.
-
-        // Define the observer and its callback.
-        const resizeObserver = new ResizeObserver((entries) => {
-            // Hide any contextmenu upon resize, because its position will not be correct.
-            contextMenuVisible.value = false;
-            // Use a timeOut to improve performance, otherwise every slight change will activate this function.
-            setTimeout(() => {
-                // We're only watching one element, this is the first of the entries. Get it's size.
-                setViewportSizes(entries.at(0)?.target);
-            }, 400); // Might use another value for the delay, but this seems ok.
-        });
-
-        // Observe the FreonComponent element.
-        resizeObserver.observe(element);
-
-        // This callback cleans up the observer.
-        return () => resizeObserver.unobserve(element);
-    });
+    // onMount(() => {
+    //     setViewportSizes(element);
+    //
+    //     // We keep track of the size of the editor component, to be able to position any context menu correctly.
+    //     // For this we use a ResizeObserver.
+    //
+    //     // Define the observer and its callback.
+    //     const resizeObserver = new ResizeObserver((entries) => {
+    //         // Hide any contextmenu upon resize, because its position will not be correct.
+    //         contextMenuVisible.value = false;
+    //         // Use a timeOut to improve performance, otherwise every slight change will activate this function.
+    //         setTimeout(() => {
+    //             // We're only watching one element, this is the first of the entries. Get it's size.
+    //             setViewportSizes(entries.at(0)?.target);
+    //         }, 400); // Might use another value for the delay, but this seems ok.
+    //     });
+    //
+    //     // Observe the FreonComponent element.
+    //     resizeObserver.observe(element);
+    //
+    //     // This callback cleans up the observer.
+    //     return () => resizeObserver.unobserve(element);
+    // });
 
     $effect(() => {
         editor.refreshComponentSelection = refreshSelection;
         editor.refreshComponentRootBox = refreshRootBox;
-        setViewportSizes(element);
+        editor.getClientRectangle = clientRectangle
     });
 
     const refreshSelection = async (why?: string) => {

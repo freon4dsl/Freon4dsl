@@ -9,7 +9,6 @@
      * handles the drop.
      */
     import {
-        isMetaKey,
         ENTER,
         TableCellBox,
         FreLanguage,
@@ -21,16 +20,25 @@
         FreUtils,
         isTableRowBox,
         TableRowBox,
-        isNullOrUndefined, MenuItem
-    } from '@freon4dsl/core';
-    import { onMount } from 'svelte';
+        FreCreatePartAction,
+        MetaKey,
+        AST,
+        TableBox,
+        isTableBox,
+        isElementBox,
+        ElementBox,
+        isNullOrUndefined,
+        isFreNodeReference,
+        isFreNode,
+        MenuItem
+    } from "@freon4dsl/core";
+    import { onMount } from "svelte";
     import RenderComponent from './RenderComponent.svelte';
-    import { componentId } from '$lib/index.js';
+    import { componentId, rememberDraggedNode } from '$lib/index.js';
     import {
         activeElem,
         activeIn,
         draggedElem,
-        draggedFrom,
         contextMenu,
         contextMenuVisible,
         selectedBoxes
@@ -60,13 +68,9 @@
     let orientation: BoxTypeName = 'gridcellNeutral';
     let childBox: Box = $state()!;
     let htmlElement: HTMLElement;
-    let isHeader = 'noheader';
+    let isHeader = $state('');
     let cssStyle: string = '';
     let cssClass: string = $state('');
-
-    // the drag ghost image, preload  it, otherwise it will not be shown on the first drag
-    const img = new Image();
-    // img.src = "img/freonlogo.png"; // todo provide better drag image
 
     const refresh = (why?: string) => {
         LOGGER.log('TableCellComponent refresh, why: ' + why);
@@ -80,6 +84,7 @@
             }
             childBox = box.content;
             box.conceptName = box.conceptName;
+            isHeader = (box.parent as TableRowBox).isHeader ? 'table-header' : '';
         }
         LOGGER.log('    refresh row, col = ' + row + ', ' + column);
     };
@@ -95,8 +100,7 @@
     }
 
     onMount(() => {
-        row = box.row;
-        column = box.column;
+        refresh('from onMount');
     });
 
     $effect(() => {
@@ -108,13 +112,34 @@
     });
 
     const onKeydown = (event: KeyboardEvent) => {
-        LOGGER.log('GridCellComponent onKeyDown');
-        if (isMetaKey(event) || event.key === ENTER) {
-            LOGGER.log('Keyboard shortcut in GridCell ===============');
-            // let index: number = parentOrientation === TableDirection.HORIZONTAL ? row : column;
-            // todo handle this here, because there are no shortcuts for Enter created by TableUtils anymore,
-            // or add the shortcuts
-            // executeCustomKeyboardShortCut(event, index, box, editor);
+        LOGGER.log("GridCellComponent onKeyDown");
+        if (event.key === ENTER) {
+            event.stopPropagation()
+            LOGGER.log("Keyboard shortcut in GridCell ===============");
+            // Create a new list element after the pone at index
+            FreUtils.CHECK(isTableRowBox(box.parent));
+            let tableRowBox: TableRowBox = box.parent as TableRowBox;
+            FreUtils.CHECK(isElementBox(tableRowBox.parent));
+            let elementBox: ElementBox = tableRowBox.parent as ElementBox;
+            LOGGER.log(`ElementBox parent ${elementBox.parent.kind} row is ${row}`)
+            FreUtils.CHECK(isTableBox(elementBox.parent));
+            let tableBox: TableBox = elementBox.parent as TableBox;
+            const action: FreCreatePartAction = new FreCreatePartAction({
+                trigger: { meta: MetaKey.None, key: ENTER, code: ENTER },
+                activeInBoxRoles: [box.role, "cell"],
+                conceptName: tableBox.conceptName,
+                propertyName: tableBox.propertyName,
+                boxRoleToSelect: undefined,
+            })
+            let execresult: () => void;
+            const selectedIndex = (tableBox.hasHeaders ? row -1 : row)
+            AST.changeNamed("ListComponent.Enter", () => {
+                execresult = action.execute(tableBox, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, selectedIndex)
+            })
+            // @ts-ignore
+            if (!!execresult) {
+                execresult();
+            }
         }
     };
 
@@ -139,32 +164,37 @@
             // give the drag an effect
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.dropEffect = 'move';
-            // give the drag an image
-            event.dataTransfer.setDragImage(img, 0, 0);
-            // And Chrome seems to require the image to be in the dom: document.body.append(img), which should be hidden with some css
         }
 
-        // select the complete element
-        editor.selectElementForBox(box);
-
-        // create the data to be transferred and notify the store that something is being dragged
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
-        draggedElem.value = new ListElementInfo(box.node, parentComponentId);
-        draggedFrom.value = parentComponentId;
+        // Create the data to be transferred and notify the store that something is being dragged.
+        if (!!box.getParentTableBox()) {
+            rememberDraggedNode(id, box.getParentTableBox()!, box);
+            // console.log(`dragstart: ${draggedElem.value?.element.freLanguageConcept()}`)
+        }
     };
 
     const dragenter = (event: DragEvent): boolean => {
-        console.log(`dragEnter ${draggedElem.value?.element.freLanguageConcept()} is dropped on ${box.conceptName}`);
-        event.stopPropagation();
-        event.preventDefault();
-        // only show this item as active when the type of the element to be dropped is the right one
-        if (
-            !isNullOrUndefined(draggedElem.value) &&
-            FreLanguage.getInstance().metaConformsToType(draggedElem.value.element, box.conceptName)
-        ) {
-            activeElem.value = { row: row, column: column };
-            activeIn.value = parentComponentId;
+        let data: ListElementInfo | null = draggedElem.value;
+        if (!!data) {
+            if (isFreNodeReference(data.element)) {
+                LOGGER.log(`dragEnter item [${data.element.name}] from [${data.componentId}] in table [${id}] on position [${row},${column}]`);
+            } else if (isFreNode(data.element)) {
+                LOGGER.log(`dragEnter item [${data.element.freId()}] from [${data.componentId}] in table [${id}] on position [${row},${column}]`);
+            }
+            event.stopPropagation();
+            event.preventDefault();
+            let myMetaType = {
+                type: box.conceptName,
+                isRef: FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.propertyKind === 'reference'
+            }
+            // only show this item as active when the type of the element to be dropped is the right one
+            if (FreLanguage.getInstance().dragMetaConformsToType(data.elementType, myMetaType)) {
+                activeElem.value = {row: row, column: column};
+                activeIn.value = parentComponentId;
+                return true;
+            }
         }
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
@@ -241,11 +271,13 @@
     onblur={() => {}}
     oncontextmenu={(event) => showContextMenu(event)}
     bind:this={htmlElement}
-    tabindex={0}
+    tabindex={-1}
 >
+    {#if isHeader.length === 0 && box.isFirstInElementBox()}
                 <span class="drag-handle"
                       draggable="true"
                       ondragstart={(event) => dragstart(event)}
                       role="listitem"><DragHandle/></span>
+    {/if}
     <RenderComponent box={childBox} {editor} />
 </span>

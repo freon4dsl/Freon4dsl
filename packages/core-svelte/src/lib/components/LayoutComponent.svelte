@@ -58,7 +58,7 @@
 </script>
 
 {#if errMess.length > 0}
-    <ErrorMarker {element} {box} />
+    <ErrorMarker {editor} {box} />
 {/if}
 <span
     class="layout-component {errorCls}"

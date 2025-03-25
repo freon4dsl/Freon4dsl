@@ -35,6 +35,8 @@
     let { editor, box }: FreComponentProps<AbstractChoiceBox> = $props();
     // the textbox that is to be coupled to the TextComponent part
     let textBox: TextBox = $state(box.textBox)!; // NB the initial value must be here, the effect starts to function after initialization
+    // True if box is a referencebox and referred is in the same unit
+    let selectAbleReference: boolean = $state(false)
 
     $effect(() => {
         // keeps the textBox variable in state with the box!
@@ -45,6 +47,7 @@
         LOGGER.log(`${box.id}: onMount`);
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        selectAbleReference = isReferenceBox(box) && box.isSelectAble()
     });
 
     let id: string = $state(''); // an id for the html element
@@ -115,6 +118,11 @@
             } else {
                 selected = undefined;
             }
+        }
+        // NB Not in an else if, because isSelectBox() is also true for ReferenceBox
+        if (isReferenceBox(box)) {
+            selectAbleReference = box.isSelectAble()
+            LOGGER.log("     selectAble is " + selectAbleReference)
         }
         // because the box maybe a different one than we started with ...
         // box.setFocus = setFocus; todo remove?
@@ -200,9 +208,6 @@
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
                 selected = filteredOptions[filteredOptions.length - 1];
-            } else {
-                // there are no valid options left
-                editor.setUserMessage('no valid selection');
             }
         }
     }
@@ -211,9 +216,6 @@
         if (dropdownShown) {
             if (filteredOptions?.length !== 0) {
                 selected = filteredOptions[0];
-            } else {
-                // there are no valid options left
-                editor.setUserMessage('No valid selection');
             }
         }
     }
@@ -226,27 +228,7 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log(
-            'XX onKeyDown: ' +
-                id +
-                ' [' +
-                event.key +
-                '] alt [' +
-                event.altKey +
-                '] shift [' +
-                event.shiftKey +
-                '] ctrl [' +
-                event.ctrlKey +
-                '] meta [' +
-                event.metaKey +
-                ']' +
-                ', selected?.id: ' +
-                selected?.id +
-                ' dropdown:' +
-                dropdownShown +
-                ' editing:' +
-                isEditing
-        );
+        LOGGER.log(`onKeyDown: ${id} [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selected?.id + " dropdown:" + dropdownShown + " editing:" + isEditing);
         if (dropdownShown) {
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
@@ -331,9 +313,7 @@
                         break;
                     }
                     default: {
-                        // stop editing todo is this the correct default?
-                        isEditing = false;
-                        hideDropdown();
+                        // handled by FreonComponent
                     }
                 }
             }
@@ -427,7 +407,7 @@
         isEditing = false;
         hideDropdown();
 
-        box.executeOption(editor, selected);
+        box.executeOption(editor, selected); // the result of the execution is ignored
         if (isActionBox(box)) {
             // ActionBox, action done, clear input text
             setTextLocalAndInBox('');
@@ -441,18 +421,8 @@
      * in whatever manner.
      */
     const endEditing = () => {
-        LOGGER.log(
-            'endEditing ' + id + ' dropdownShow:' + dropdownShown + ' isEditing: ' + isEditing
-        );
-        // todo this is strange code, must have a better look
-        if (isEditing === true) {
-            isEditing = false;
-        } else {
-            if (dropdownShown === true) {
-                hideDropdown();
-            }
-            return;
-        }
+        LOGGER.log("endEditing " +id + " dropdownShow:" + dropdownShown + " isEditing: " + isEditing);
+        isEditing = false;
         if (dropdownShown) {
             allOptions = getOptions();
             let validOption = allOptions.find((o) => o.label === text);
@@ -462,7 +432,9 @@
                 // no valid option, restore the previous value
                 setText(textBox.getText());
             }
-            hideDropdown();
+            hideDropdown()
+        } else {
+            setText(textBox.getText());
         }
     };
 
@@ -548,7 +520,7 @@
         bind:this={textComponent}
         toParent={fromInner}
     />
-    {#if isReferenceBox(box) && box.isSelectAble()}
+    {#if selectAbleReference}
         <button
             class="reference-button"
             {id}

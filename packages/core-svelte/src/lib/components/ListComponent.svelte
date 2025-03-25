@@ -19,10 +19,18 @@
         ListElementInfo,
         MenuOptionsType,
         moveListElement,
-        FreLogger, MenuItem
-    } from '@freon4dsl/core';
+        MenuItem,
+        type DragAndDropType,
+        isFreNodeReference,
+        isFreNode,
+        FreLogger,
+        FreCreatePartAction,
+        MetaKey,
+        AST,
+        ENTER
+    } from "@freon4dsl/core"
     import RenderComponent from './RenderComponent.svelte';
-    import { componentId } from '$lib/index.js';
+    import { componentId, rememberDraggedNode } from '$lib/index.js';
     import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
     import {
         activeElem,
@@ -46,9 +54,13 @@
 
     // determine the type of the elements in the list
     // this speeds up the check whether an element may be dropped here
-    let myMetaType: string;
+    let myMetaType: DragAndDropType;
     $effect(() => {
-        myMetaType = box.conceptName;
+        // console.log(`EFFECT ${box.conceptName} : ${box.node.freLanguageConcept()}`)
+        myMetaType = {
+            type: box.conceptName,
+            isRef: FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.propertyKind === 'reference'
+        }
     });
 
     const drop = (event: DragEvent, targetIndex: number) => {
@@ -56,17 +68,11 @@
         event.stopPropagation();
 
         if (!isNullOrUndefined(data)) {
-            LOGGER.log(
-                'DROPPING item [' +
-                    data.element.freId() +
-                    '] from [' +
-                    data.componentId +
-                    '] in list [' +
-                    id +
-                    '] on position [' +
-                    targetIndex +
-                    ']'
-            );
+            if (isFreNodeReference(data.element)) {
+                LOGGER.log(`DROPPING item [${data.element.name}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
+            } else if (isFreNode(data.element)) {
+                LOGGER.log(`DROPPING item [${data.element.freId()}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
+            }
             if (data.componentId === id) {
                 // dropping in the same list
                 moveListElement(box.node, data.element, box.propertyName, targetIndex);
@@ -91,7 +97,7 @@
     };
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
-        LOGGER.log('Drag Start ' + box.id + ' index: ' + listIndex);
+        console.log('Drag Start ' + box.id + ' index: ' + listIndex);
         event.stopPropagation();
         // close any context menu
         contextMenuVisible.value = false;
@@ -104,9 +110,9 @@
 
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
-        // create the data to be transferred and notify the store that something is being dragged
-        draggedElem.value = new ListElementInfo(shownElements[listIndex].node, id);
-        draggedFrom.value = listId;
+        // Create the data to be transferred and notify the store that something is being dragged.
+        rememberDraggedNode(listId, box, shownElements[listIndex]);
+        // console.log(`dragstart: ${draggedElem.value.element.freLanguageConcept()}`)
     };
 
     const dragleave = (event: DragEvent, index: number): boolean => {
@@ -121,16 +127,15 @@
         event.preventDefault();
         const data: ListElementInfo | null = draggedElem.value;
         // Do nothing if no element is being dragged. Stops Svelte from thinking something has changed.
-        if (isNullOrUndefined(draggedElem.value)) {
+        if (isNullOrUndefined(data)) {
             return false;
         }
+        // console.log(JSON.stringify(data.elementType) + ' compares to ' + JSON.stringify(myMetaType))
         // only show this item as active when the type of the element to be dropped is the right one
-        if (
-            !isNullOrUndefined(data) &&
-            FreLanguage.getInstance().metaConformsToType(data.element, myMetaType)
-        ) {
+        if (FreLanguage.getInstance().dragMetaConformsToType(data.elementType, myMetaType)) {
             activeElem.value = { row: index, column: -1 };
             activeIn.value = id;
+            return true;
         }
         return false; // cancels 'normal' browser handling, more or less like preventDefault, present to avoid type error
     };
@@ -193,6 +198,28 @@
         // Evaluated and re-evaluated when the box changes.
         refresh('Refresh from ListComponent box changed:   ' + box?.id);
     });
+
+    const onKeyDown = (event: KeyboardEvent, index: number) => {
+        if (event.key === ENTER) {
+            // Create a new list element after the node at index
+            event.stopPropagation()
+            const action: FreCreatePartAction = new FreCreatePartAction({
+                trigger: { meta: MetaKey.None, key: ENTER, code: ENTER },
+                activeInBoxRoles: [box.role, "action-" + box.role + "-textbox"],
+                conceptName: box.conceptName,
+                propertyName: box.propertyName,
+                boxRoleToSelect: undefined,
+            })
+            let execresult: () => void;
+            AST.changeNamed("ListComponent.Enter", () => {
+                execresult = action.execute(box, { meta: MetaKey.None, key: ENTER, code: ENTER }, editor, index + 1)
+            })
+            // @ts-ignore
+            if (!!execresult) {
+                execresult();
+            }
+        }
+    }
 </script>
 
 <!-- onblur is needed for onmouseout -->
@@ -212,6 +239,7 @@
             style:grid-row={isHorizontal ? 1 : index + 1}
             animate:flip
 
+            onkeydown={event => {onKeyDown(event, index)}}
             ondragend={(event) => dragend(event)}
             ondrop={(event) => drop(event, index)}
             ondragover={(event) => {
@@ -224,10 +252,12 @@
             oncontextmenu={(event) => showContextMenu(event, index)}
             role="none"
         >
+            {#if !isActionBox(box)}
             <span class="drag-handle"
                   draggable="true"
                   ondragstart={(event) => dragstart(event, id, index)}
                   role="listitem"><DragHandle/></span>
+            {/if}
             <RenderComponent {box} {editor} />
         </span>
     {/each}
