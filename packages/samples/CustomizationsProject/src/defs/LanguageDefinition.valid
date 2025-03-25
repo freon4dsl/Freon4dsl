@@ -6,16 +6,16 @@ AttributeType  {
 }
 EntityModelUnit {
     notEmpty self.entities;
-    isunique name in self.entities;
+    in self.entities isunique name ;
     notEmpty self.functions;
-    isunique name in self.functions;
+    in self.functions isunique name ;
     validIdentifier; // default is 'name'
 }
 Entity {
     notEmpty self.attributes;
-    isunique name in self.attributes;
+    in self.attributes isunique name ;
     notEmpty self.functions;
-    isunique name in self.functions;
+    in self.functions isunique name ;
     validIdentifier;
 }
 AttributeWithLimitedType {
@@ -26,7 +26,7 @@ Variable {
 }
 EntityFunction {
     typecheck conformsTo (self.expression, self.declaredType);
-    isunique name in self.parameters;
+    in self.parameters isunique name ;
     validIdentifier ;
 }
 AbsExpression {
