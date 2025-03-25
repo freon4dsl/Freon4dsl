@@ -159,13 +159,8 @@ export abstract class FreScoperBase implements FreScoper {
      * See FreScoper.
      */
     public getVisibleNames(node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
-        const result: string[] = [];
         const visibleElements = this.getVisibleElements(node, metatype, excludeSurrounding);
-        for (const element of visibleElements) {
-            const n: string = element.name;
-            result.push(n);
-        }
-        return result;
+        return visibleElements.map(el => el.name);
     }
 
     /**
