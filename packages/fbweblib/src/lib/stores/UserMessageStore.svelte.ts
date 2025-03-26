@@ -6,17 +6,17 @@ export const versionNumber: {value: string} = $state({value: "1.1.0-beta"});
 export interface MessageInfo {
     severity: string;
     userMessage: string;
-    userMessageOpen: boolean;
 }
 
 export const messageInfo: MessageInfo = $state({
     severity: FreErrorSeverity.Error,
-    userMessage: "This is an important message. Once you've read it, you can dismiss it.",
-    userMessageOpen: false,
+    userMessage: "This is an important message. Once you've read it, you can dismiss it."
 })
 
+export let userMessageOpen: { value: boolean } =  $state({ value: false })
 
 export function setUserMessage(message: string, sever?: FreErrorSeverity) {
+    console.log("Message: ", message);
     messageInfo.userMessage = message;
     if (sever !== null && sever !== undefined) {
         messageInfo.severity = sever;
@@ -24,5 +24,5 @@ export function setUserMessage(message: string, sever?: FreErrorSeverity) {
         messageInfo.severity = FreErrorSeverity.Error;
     }
     // console.log("Freon User Message: " + message + ", " + get(severity));
-    messageInfo.userMessageOpen = true;
+    userMessageOpen.value = true;
 }

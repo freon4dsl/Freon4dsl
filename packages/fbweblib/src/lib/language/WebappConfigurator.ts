@@ -57,6 +57,7 @@ export class WebappConfigurator {
         this.serverEnv = serverCommunication
         WebappConfigurator.initialize(editorEnvironment)
         this.modelStore = new InMemoryModel(editorEnvironment, serverCommunication)
+        this.langEnv.editor.setUserMessage = setUserMessage;
     }
 
     /**

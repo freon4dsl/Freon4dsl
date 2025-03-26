@@ -11,6 +11,7 @@
 	import {dialogs, drawerHidden} from '$lib/stores/WebappStores.svelte';
 	import GitHub from '$lib/main-app/GitHub.svelte';
 	import {langInfo} from "$lib/stores/LanguageInfo.svelte";
+	import { messageInfo, userMessageOpen } from "$lib/stores/index.js"
 </script>
 
 <!--  start::navbar   -->

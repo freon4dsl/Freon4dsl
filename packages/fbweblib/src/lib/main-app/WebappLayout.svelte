@@ -16,7 +16,7 @@
     import NavBar from '$lib/main-app/NavBar.svelte';
     import ModelDrawer from '$lib/main-app/ModelDrawer.svelte';
     import { drawerHidden, inDevelopment, infoPanel, initializing } from "$lib/stores/WebappStores.svelte"
-    import {messageInfo} from "$lib/stores/UserMessageStore.svelte";
+    import {messageInfo, userMessageOpen} from "$lib/stores/UserMessageStore.svelte";
     import {FreErrorSeverity} from "@freon4dsl/core";
     import ViewDialog from "$lib/dialogs/ViewDialog.svelte";
     import EditorPart from "$lib/main-app/EditorPart.svelte";
@@ -31,14 +31,15 @@
     import NewUnitDialog from "$lib/dialogs/NewUnitDialog.svelte";
     import RenameUnitDialog from "$lib/dialogs/RenameUnitDialog.svelte";
     import AboutDialog from "$lib/dialogs/AboutDialog.svelte";
-    import FindDialog from "$lib/dialogs/SearchTextDialog.svelte"
     import SearchTextDialog from "$lib/dialogs/SearchTextDialog.svelte"
     import SearchElementDialog from "$lib/dialogs/SearchElementDialog.svelte"
     import StatusBar from "$lib/main-app/StatusBar.svelte"
     import InfoPanel from "$lib/main-app/InfoPanel.svelte"
     import ToolBar from "$lib/main-app/ToolBar.svelte"
 
-    let showInfoPanel = $derived(infoPanel.value);
+    let showInfoPanel: boolean = $derived(infoPanel.value);
+    let showUserMessage: boolean = $derived(userMessageOpen.value);
+    let userMessage: string = $derived(messageInfo.userMessage);
     let transitionParams = {
         x: 320,
         duration: 200,
@@ -102,7 +103,7 @@
     <ToolBar/>
 
     {#if showInfoPanel}
-        <div class="grid grid-cols-4 grid-template gap-4">
+        <div class="grid grid-cols-4 grid-template">
             <div class="col-span-3 overflow-y-scroll">
                 <EditorPart/>
             </div>
@@ -114,17 +115,6 @@
         <div class="overflow-y-scroll">
             <EditorPart/>
         </div>
-    {/if}
-
-    {#if messageInfo.userMessageOpen}
-        <Alert color={messColor} dismissable transition={fly} params={{ x: 200 }}>
-            <InfoCircleSolid slot="icon" class="w-5 h-5"/>
-            {messageInfo.userMessage}
-            <Button slot="close-button" size="xs"
-                    onclick={() => {messageInfo.userMessageOpen = !messageInfo.userMessageOpen}} class="ms-auto">
-                Dismiss
-            </Button>
-        </Alert>
     {/if}
 
     <Footer
