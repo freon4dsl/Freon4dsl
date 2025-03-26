@@ -1,4 +1,5 @@
 import type { FreError } from "@freon4dsl/core";
+import type { TreeNodeType } from "$lib/tree/TreeNodeType"
 
 export let searchResultLoaded = $state({value: true});
 
@@ -13,7 +14,7 @@ export let errorsLoaded = $state({value: true});
 // the current list of errors in the model unit that is shown in the editor
 export let modelErrors: ErrorInfoInterface = $state({list: []});
 // the trace of the last call to the interpreter
-export let interpreterTrace = $state({value: "no trace"});
+export let interpreterTrace: {value: TreeNodeType | undefined} = $state({value: undefined});
 
 // the currently active tab and constants to indicate the tabs
 export const errorTab = "Errors";

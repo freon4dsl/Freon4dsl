@@ -4,21 +4,22 @@ import {
     FreLogger,
     FreSearcher,
     type FreEnvironment,
-    AstActionExecutor, type FreModelUnit
+    AstActionExecutor, type FreModelUnit, isRtError
 } from "@freon4dsl/core"
-import type { FreNode } from "@freon4dsl/core";
+import type { FreNode, TraceNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
 import {
     activeTab,
     errorsLoaded,
-    errorTab,
+    errorTab, interpreterTab, interpreterTrace,
     modelErrors,
     searchResultLoaded,
     searchResults,
-    searchTab,
-} from "$lib/stores/InfoPanelStore.svelte";
+    searchTab
+} from "$lib/stores/InfoPanelStore.svelte"
 import { WebappConfigurator } from "$lib/language";
 import { editorInfo, infoPanel } from "$lib"
+import { TreeNodeType } from "$lib/tree/TreeNodeType"
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
@@ -96,6 +97,21 @@ export class EditorRequestsHandler {
 
     interpret = (): void => {
         console.log("interpret: called");
+        const langEnv : FreEnvironment = WebappConfigurator.getInstance().langEnv!;
+        const intp = langEnv.interpreter;
+        intp.setTracing(true);
+        const node: FreNode = langEnv.editor.selectedElement;
+
+        const value = intp.evaluate(node);
+        if(isRtError(value)){
+            interpreterTrace.value = new TreeNodeType(value.toString(), undefined);
+            console.log(value.toString());
+        } else {
+            const trace = intp.getTrace().root;
+            console.log(trace.toStringRecursive());
+            interpreterTrace.value = this.makeTreeNode(trace);
+        }
+        activeTab.value = interpreterTab;
     }
 
     findText(stringToFind: string) {
@@ -174,4 +190,16 @@ export class EditorRequestsHandler {
     //     searchResults.list = itemsToShow;
     //     searchResultLoaded.value = true;
     // }
+    private makeTreeNode(trace: TraceNode): TreeNodeType {
+        let name: string = trace.toResultString();
+        if (trace.children && trace.children.length > 0) {
+            const children: TreeNodeType[] = [];
+            for (let child of trace.children) {
+                children.push(this.makeTreeNode(child));
+            }
+            return new TreeNodeType(name, children);
+        } else {
+            return new TreeNodeType(name, undefined);
+        }
+    }
 }

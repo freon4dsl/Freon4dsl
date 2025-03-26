@@ -5,7 +5,7 @@ import {
   // configureExternals,
   // configureLoggers,
   LanguageEnvironment,
-} from "@freon4dsl/samples-example";
+} from "@freon4dsl/samples-education";
 import { WebappConfigurator } from "$lib/language/WebappConfigurator.js";
 import { ServerCommunication } from "@freon4dsl/core";
 

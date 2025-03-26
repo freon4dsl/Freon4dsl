@@ -17,7 +17,7 @@ import {
     searchTab,
 } from "../components/stores/InfoPanelStore.svelte";
 import { EditorState } from "./EditorState.js";
-import { WebappConfigurator } from "$lib";
+import { WebappConfigurator } from "../WebappConfigurator.js";
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 

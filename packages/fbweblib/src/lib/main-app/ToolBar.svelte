@@ -17,10 +17,10 @@ import { Button, Input } from "flowbite-svelte"
 function onSearchInput(event: Event & { currentTarget: EventTarget & HTMLInputElement }) {
     EditorRequestsHandler.getInstance().findText(event.currentTarget.value);
 }
+
 </script>
 
-
-<div class="flex justify-between flex-nowrap bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+<div class="sticky start-0 top-30 flex justify-between flex-nowrap bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
     <div class="ml-2">
         <Button class="text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white  dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().undo}>
             <UndoOutline class="w-4 h-4 me-2 dark:text-white"/>
@@ -50,10 +50,10 @@ function onSearchInput(event: Event & { currentTarget: EventTarget & HTMLInputEl
             <ThumbsUpOutline class="w-4 h-4 me-2 dark:text-white"/>
             Validate
         </Button>
-                <Button class=" text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().interpret}>
-                    <PlayOutline class="w-4 h-4 me-2 dark:text-white"/>
-                    Interpret
-                </Button>
+        <Button class=" text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().interpret}>
+            <PlayOutline class="w-4 h-4 me-2 dark:text-white"/>
+            Interpret
+        </Button>
         <Button class=" text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={() => {dialogs.selectViewsDialogVisible = true}}>
             <EyeOutline class="w-4 h-4 me-2 dark:text-white"/>
             View(s)...

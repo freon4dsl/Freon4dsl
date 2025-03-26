@@ -35,11 +35,8 @@
     import SearchElementDialog from "$lib/dialogs/SearchElementDialog.svelte"
     import StatusBar from "$lib/main-app/StatusBar.svelte"
     import InfoPanel from "$lib/main-app/InfoPanel.svelte"
-    import ToolBar from "$lib/main-app/ToolBar.svelte"
 
     let showInfoPanel: boolean = $derived(infoPanel.value);
-    let showUserMessage: boolean = $derived(userMessageOpen.value);
-    let userMessage: string = $derived(messageInfo.userMessage);
     let transitionParams = {
         x: 320,
         duration: 200,
@@ -100,7 +97,6 @@
 
 <div class="flex flex-col h-screen">
     <NavBar/>
-    <ToolBar/>
 
     {#if showInfoPanel}
         <div class="grid grid-cols-6 grid-template">
