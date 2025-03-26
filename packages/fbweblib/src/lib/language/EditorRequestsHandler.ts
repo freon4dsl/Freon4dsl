@@ -79,18 +79,19 @@ export class EditorRequestsHandler {
 
     validate = (): void => {
         console.log("validate called");
-        // errorsLoaded.value = false;
-        // activeTab.value = errorTab;
+        errorsLoaded.value = false;
+        activeTab.value = errorTab;
         WebappConfigurator.getInstance().getErrors();
-        // errorsLoaded.value = true;
-        // if (!!modelErrors.list[0]) {
-        //     const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn;
-        //     if (Array.isArray(nodes)) {
-        //         EditorState.getInstance().selectElement(nodes[0]);
-        //     } else {
-        //         EditorState.getInstance().selectElement(nodes);
-        //     }
-        // }
+        errorsLoaded.value = true;
+        infoPanel.value = true;
+        if (!!modelErrors.list[0]) {
+            const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn;
+            // if (Array.isArray(nodes)) {
+            //     EditorState.getInstance().selectElement(nodes[0]);
+            // } else {
+            //     EditorState.getInstance().selectElement(nodes);
+            // }
+        }
     }
 
     interpret = (): void => {

@@ -25,17 +25,3 @@
 	</div>
 </span>
 
-<style lang="scss">
-  .status-bar {
-    position: relative;
-    height: 24px;
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    background: var(--freon-colors-bg-status);
-	color: var(--freon-colors-text-status);
-	font-style: var(--freon-text-style-status);
-	white-space: nowrap;
-  }
-</style>

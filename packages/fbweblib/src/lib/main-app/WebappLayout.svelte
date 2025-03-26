@@ -103,11 +103,11 @@
     <ToolBar/>
 
     {#if showInfoPanel}
-        <div class="grid grid-cols-4 grid-template">
-            <div class="col-span-3 overflow-y-scroll">
+        <div class="grid grid-cols-6 grid-template">
+            <div class="col-span-4 overflow-y-scroll">
                 <EditorPart/>
             </div>
-            <div class="overflow-y-scroll bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+            <div class="col-span-2 overflow-y-scroll bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
                 <InfoPanel />
             </div>
         </div>

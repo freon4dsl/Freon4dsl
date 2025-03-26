@@ -463,7 +463,7 @@ export class WebappConfigurator {
             if (toBeChecked) {
                 try {
                     if (!!this.langEnv) {
-                        const list = this.langEnv.validator.validate(toBeChecked);
+                        const list: FreError[] = this.langEnv.validator.validate(toBeChecked);
                         this.langEnv.editor.setErrors(list);
                         modelErrors.list = list;
                     }

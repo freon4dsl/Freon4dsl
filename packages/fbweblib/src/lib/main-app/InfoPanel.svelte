@@ -15,7 +15,7 @@
 	<TabItem open={activeTab.value === searchTab} title="Search results">
 		<SearchResults/>
 	</TabItem>
-	<TabItem open={activeTab.value === errorTab} title="Errors">
+	<TabItem open={activeTab.value === errorTab} title="Validation results">
 		<ErrorList/>
 	</TabItem>
 	<TabItem open={activeTab.value === interpreterTab} title="Interpreter results">

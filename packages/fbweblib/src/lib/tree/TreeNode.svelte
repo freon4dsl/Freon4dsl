@@ -14,7 +14,7 @@
 </script>
 
 <li>
-    <button onclick={toggle} style="cursor: pointer;" tabindex="0" role="button">
+    <button onclick={toggle} style="cursor: pointer;" tabindex="0">
         {#if node.children}
             {#if expanded}
                 <AngleDownOutline class="ms-0 inline h-3 w-3 dark:text-white" />
