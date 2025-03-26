@@ -2,6 +2,10 @@ export const drawerHidden = $state({
 	value: true,
 });
 
+export const infoPanel = $state({
+	value: true,
+});
+
 export const dialogs = $state({
 	// for handling models
 	startDialogVisible: false,

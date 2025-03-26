@@ -434,7 +434,7 @@ export class WebappConfigurator {
      * @param unitId
      */
     getUnit(unitId: UnitInfo): FreModelUnit | undefined {
-        return this.modelStore?.getUnitByName(unitId.name)
+        return this.modelStore?.getUnitById(unitId)
     }
 
     async renameModelUnit(unit: FreModelUnit, oldName: string, newName: string) {

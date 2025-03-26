@@ -8,17 +8,17 @@ import {
 } from "@freon4dsl/core"
 import type { FreNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
-// import {
-//     activeTab,
-//     errorsLoaded,
-//     errorTab,
-//     modelErrors,
-//     searchResultLoaded,
-//     searchResults,
-//     searchTab,
-// } from "../components/stores/InfoPanelStore.svelte";
+import {
+    activeTab,
+    errorsLoaded,
+    errorTab,
+    modelErrors,
+    searchResultLoaded,
+    searchResults,
+    searchTab,
+} from "$lib/stores/InfoPanelStore.svelte";
 import { WebappConfigurator } from "$lib/language";
-import { editorInfo } from "$lib"
+import { editorInfo, infoPanel } from "$lib"
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
@@ -93,24 +93,47 @@ export class EditorRequestsHandler {
         // }
     }
 
+    interpret = (): void => {
+        console.log("interpret: called");
+    }
+
     findText(stringToFind: string) {
         // todo loading of errors and search results should also depend on whether something has changed in the unit shown
-        LOGGER.log("findText called");
-        // searchResultLoaded.set(false);
-        // activeTab.set(searchTab);
+        console.log("findText called: " + stringToFind);
+        searchResultLoaded.value = false;
+        activeTab.value = searchTab;
         const searcher = new FreSearcher();
         if (!!editorInfo.currentUnit) {
+            console.log('has current unit')
             const unit: FreModelUnit | undefined = WebappConfigurator.getInstance().getUnit(editorInfo.currentUnit);
             if (!!unit) {
+                console.log('found unit')
                 const results: FreNode[] = searcher.findString(
                     stringToFind,
                     unit,
                     WebappConfigurator.getInstance().langEnv?.writer!
                 )
                 console.log(results);
-                // this.showSearchResults(results, stringToFind);
+                this.showSearchResults(results, stringToFind);
             }
         }
+    }
+
+    private showSearchResults(results: FreNode[], stringToFind: string) {
+        const itemsToShow: FreError[] = [];
+        if (!results || results.length === 0) {
+            // @ts-ignore
+            itemsToShow.push(new FreError("No results for " + stringToFind, null, "", ""));
+        } else {
+            for (const elem of results) {
+                // message: string, element: FreNode | FreNode[], locationdescription: string, severity?: FreErrorSeverity
+                // todo show some part of the text string instead of the element id
+                itemsToShow.push(new FreError(elem.freId(), elem, elem.freId(), ""));
+            }
+        }
+        searchResults.list = itemsToShow;
+        searchResultLoaded.value = true;
+        infoPanel.value = true;
     }
 
     // findStructure(elemToMatch: Partial<FreNode>) {
