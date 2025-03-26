@@ -15,7 +15,7 @@
     import {WebappConfigurator} from '$lib/language';
     import NavBar from '$lib/main-app/NavBar.svelte';
     import ModelDrawer from '$lib/main-app/ModelDrawer.svelte';
-    import {drawerHidden, initializing} from '$lib/stores/WebappStores.svelte';
+    import { drawerHidden, inDevelopment, initializing } from "$lib/stores/WebappStores.svelte"
     import {messageInfo} from "$lib/stores/UserMessageStore.svelte";
     import {FreErrorSeverity} from "@freon4dsl/core";
     import ViewDialog from "$lib/dialogs/ViewDialog.svelte";
@@ -31,6 +31,11 @@
     import NewUnitDialog from "$lib/dialogs/NewUnitDialog.svelte";
     import RenameUnitDialog from "$lib/dialogs/RenameUnitDialog.svelte";
     import AboutDialog from "$lib/dialogs/AboutDialog.svelte";
+    import FindDialog from "$lib/dialogs/SearchTextDialog.svelte"
+    import SearchTextDialog from "$lib/dialogs/SearchTextDialog.svelte"
+    import SearchElementDialog from "$lib/dialogs/SearchElementDialog.svelte"
+    import StatusBar from "$lib/main-app/StatusBar.svelte"
+    import InfoPanel from "$lib/main-app/InfoPanel.svelte"
 
     let transitionParams = {
         x: 320,
@@ -92,6 +97,9 @@
 
 <div class="flex flex-col h-screen">
     <NavBar/>
+    {#if inDevelopment.value}
+        <StatusBar />
+    {/if}
     {#if messageInfo.userMessageOpen}
         <Alert color={messColor} dismissable transition={fly} params={{ x: 200 }}>
             <InfoCircleSolid slot="icon" class="w-5 h-5"/>
@@ -104,6 +112,9 @@
     {/if}
     <div class="flex-1 overflow-y-scroll">
         <EditorPart/>
+    </div>
+    <div class="flex-1 overflow-y-scroll bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+        <InfoPanel />
     </div>
     <Footer
             class="text-center sticky md: bottom-0 start-0 z-20 w-full border-t border-gray-200 bg-white p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 dark:border-gray-600 dark:bg-gray-800"
@@ -149,9 +160,8 @@
 <DeleteUnitDialog/>
 <RenameUnitDialog/>
 
-<!--<FindNamedElementDialog />-->
-<!--<FindStructureDialog />-->
-<!--<FindTextDialog />-->
+<SearchTextDialog />
+<SearchElementDialog />
 
 <ViewDialog/>
 <AboutDialog />

@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
     import {dialogs, messageInfo, noUnitAvailable} from "$lib";
     import {fly} from "svelte/transition";
     import {WebappConfigurator, EditorRequestsHandler} from "$lib/language/index.js";
-    import {Alert, Button, Dropdown} from "flowbite-svelte";
+    import { Alert, Button, Dropdown, DropdownItem } from "flowbite-svelte"
     import {
         ClipboardSolid,
         DotsHorizontalOutline, FileCopySolid, FilePasteSolid,
@@ -22,7 +22,7 @@
             </Alert>
         {/if}
     {:else}
-        <!-- Dropdown has exact same content, but placement is lower when user message is shown. -->
+        <!-- Snippet editorActions() has exact same content, but placement of button is lower when user message is shown. -->
         {#if messageInfo.userMessageOpen}
             <Button id='actions-button' name="Editor actions" size="xs"
                     class="absolute end-6 top-40 z-10 bg-primary-400 text-black dark:text-white dark:bg-primary-800"
@@ -76,18 +76,22 @@
             <FilePasteSolid class="w-4 h-4 me-2 dark:text-white"/>
             Paste
         </button>
-        <button type="button" onclick={() => {dialogs.findNamedDialogVisible = true}}
+        <button type="button" id='search-button'
                 class="flex items-center text-left py-2 px-4 w-full text-sm font-medium list-none first:rounded-t-lg last:rounded-b-lg hover:bg-gray-100 hover:text-primary-700 dark:hover:bg-gray-600 dark:hover:text-white focus:z-40 focus:outline-none focus:ring-2 focus:ring-primary-700 focus:text-primary-700 dark:focus:ring-gray-500 dark:focus:text-white flex"
                 aria-current="false">
             <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Find...
+            Search...
+            <Dropdown triggeredBy="#search-button">
+                <DropdownItem onclick={() => {dialogs.searchTextDialogVisible = true}}>Plain text</DropdownItem>
+                <DropdownItem onclick={() => {dialogs.searchElementDialogVisible = true}}>Element</DropdownItem>
+            </Dropdown>
         </button>
-<!--        <button type="button" onclick={EditorRequestsHandler.getInstance().validate}-->
-<!--                class="flex items-center text-left py-2 px-4 w-full text-sm font-medium list-none first:rounded-t-lg last:rounded-b-lg hover:bg-gray-100 hover:text-primary-700 dark:hover:bg-gray-600 dark:hover:text-white focus:z-40 focus:outline-none focus:ring-2 focus:ring-primary-700 focus:text-primary-700 dark:focus:ring-gray-500 dark:focus:text-white flex"-->
-<!--                aria-current="false">-->
-<!--            <ThumbsUpOutline class="w-4 h-4 me-2 dark:text-white"/>-->
-<!--            Validate-->
-<!--        </button>-->
+        <button type="button" onclick={EditorRequestsHandler.getInstance().validate}
+                class="flex items-center text-left py-2 px-4 w-full text-sm font-medium list-none first:rounded-t-lg last:rounded-b-lg hover:bg-gray-100 hover:text-primary-700 dark:hover:bg-gray-600 dark:hover:text-white focus:z-40 focus:outline-none focus:ring-2 focus:ring-primary-700 focus:text-primary-700 dark:focus:ring-gray-500 dark:focus:text-white flex"
+                aria-current="false">
+            <ThumbsUpOutline class="w-4 h-4 me-2 dark:text-white"/>
+            Validate
+        </button>
 <!--        <button type="button" onclick={EditorRequestsHandler.getInstance().interpret}-->
 <!--                class="flex items-center text-left py-2 px-4 w-full text-sm font-medium list-none first:rounded-t-lg last:rounded-b-lg hover:bg-gray-100 hover:text-primary-700 dark:hover:bg-gray-600 dark:hover:text-white focus:z-40 focus:outline-none focus:ring-2 focus:ring-primary-700 focus:text-primary-700 dark:focus:ring-gray-500 dark:focus:text-white flex"-->
 <!--                aria-current="false">-->
@@ -95,7 +99,7 @@
 <!--            Interpret-->
 <!--        </button>-->
         <button type="button" onclick={() => {dialogs.selectViewsDialogVisible = true}}
-                class="flex items-center text-left py-2 px-4 w-full text-sm font-medium list-none first:rounded-t-lg last:rounded-b-lg hover:bg-gray-100 hover:text-primary-700 dark:hover:bg-gray-600 dark:hover:text-white focus:z-40 focus:outline-none focus:ring-2 focus:ring-primary-700 focus:text-primary-700 dark:focus:ring-gray-500 dark:focus:text-white flex"
+                class="flex items-center text-left py-2 px-4 w-full text-sm font-medium list-none first:rounded-t-lg last:rounded-b-lg over:bg-gray-100 hover:text-primary-700 dark:hover:bg-gray-600 dark:hover:text-white focus:z-40 focus:outline-none focus:ring-2 focus:ring-primary-700 focus:text-primary-700 dark:focus:ring-gray-500 dark:focus:text-white flex"
                 aria-current="false">
             <EyeOutline class="w-4 h-4 me-2 dark:text-white"/>
             View(s)

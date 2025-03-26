@@ -37,7 +37,7 @@
                         <GithubSolid class="text-blue-800  dark:text-blue-200"/>
                         <p class="pl-4"> Sources: <a class="ml-2 text-amber-700" href="https://github.com/freon4dsl"
                                                      target="_blank" rel="noreferrer">
-                            https://github.com/freon4dsl.
+                            https://github.com/freon4dsl
                         </a></p>
                     </li>
                     <li class="flex items-center">
@@ -46,8 +46,10 @@
                     </li>
                     <li class="flex items-center">
                         <EnvelopeOutline class="text-blue-800  dark:text-blue-200"/>
-                        <p class="pl-4">Created by: <a class="pl-1 text-amber-700" href="https://www.openmodeling.nl/"
-                                                       target="_blank" rel="noreferrer">www.openmodeling.nl</a>.</p>
+                        <p class="pl-4">Contact:
+                            <a class="pl-1 text-amber-700"href= "mailto:jos.warmer@openmodeling.nl">Jos Warmer</a> or
+                            <a class="pl-1 text-amber-700"href= "mailto:anneke.kleppe@openmodeling.nl">Anneke Kleppe</a>
+                        </p>
                     </li>
                 </ul>
             </Card>

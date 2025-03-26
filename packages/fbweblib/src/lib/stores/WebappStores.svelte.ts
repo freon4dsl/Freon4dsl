@@ -18,7 +18,8 @@ export const dialogs = $state({
 	// for editor actions
 	findTextDialogVisible: false,
 	findStructureDialogVisible: false,
-	findNamedDialogVisible: false,
+	searchTextDialogVisible: false,
+	searchElementDialogVisible: false,
 	selectViewsDialogVisible: false,
 	// for the help dialog
 	helpDialogVisible: false,
@@ -26,3 +27,5 @@ export const dialogs = $state({
 
 // indicates whether the application is initializing
 export const initializing = $state({ value: true });
+
+export const inDevelopment = $state({ value: true });

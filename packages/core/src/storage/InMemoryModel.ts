@@ -104,6 +104,19 @@ export class InMemoryModel {
     }
 
     /**
+     * Delete _unit_ from the model.
+     * @param unit
+     */
+    async deleteUnitById(unitId: ModelUnitIdentifier) {
+        await this.server.deleteModelUnit(this.model.name, unitId);
+        const unit: FreModelUnit = this.getUnitById(unitId);
+        AST.change( () => {
+            this.model.removeUnit(unit);
+        })
+        this.currentModelChanged();
+    }
+
+    /**
      * Find a unit with name equal to _name_
      * @param name
      */
@@ -126,11 +139,11 @@ export class InMemoryModel {
     }
 
     /**
-     * TODO Implement
      * @param id
      */
-    getUnitById(id: ModelUnitIdentifier) {
+    getUnitById(id: ModelUnitIdentifier): FreModelUnit {
         console.log(`getUnitById: ${id.name}`);
+        return this.model.findUnit(id.name);
     }
 
     /**

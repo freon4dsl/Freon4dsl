@@ -4,8 +4,8 @@ import {
     FreLogger,
     FreSearcher,
     type FreEnvironment,
-    AstActionExecutor,
-} from "@freon4dsl/core";
+    AstActionExecutor, type FreModelUnit
+} from "@freon4dsl/core"
 import type { FreNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
 // import {
@@ -18,6 +18,7 @@ import { runInAction } from "mobx";
 //     searchTab,
 // } from "../components/stores/InfoPanelStore.svelte";
 import { WebappConfigurator } from "$lib/language";
+import { editorInfo } from "$lib"
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
@@ -38,14 +39,18 @@ export class EditorRequestsHandler {
      * @param names
      */
     enableProjections(names: string[]): void {
-        LOGGER.log("enabling Projection " + names);
-        const proj: FreProjectionHandler = this.langEnv!.editor.projection;
-        proj.enableProjections(names);
+        console.log("enabling Projection " + names);
+        const proj: FreProjectionHandler | undefined = this.langEnv?.editor.projection;
+        if (proj instanceof FreProjectionHandler) {
+            proj.enableProjections(names);
+        }
         // Let the editor know that the projections have changed.
         // TODO: This should go automatically through mobx.
         //       But observing the projections array does not work as expected.
         runInAction( () => {
-            this.langEnv!.editor.forceRecalculateProjection++;
+            if (this.langEnv?.editor) {
+                this.langEnv.editor.forceRecalculateProjection++;
+            }
         })
         // redo the validation to set the errors in the new box tree
         // todo reinstate the following statement
@@ -72,36 +77,42 @@ export class EditorRequestsHandler {
         AstActionExecutor.getInstance(this.langEnv!.editor).paste();
     }
 
-    // validate = (): void => {
-    //     LOGGER.log("validate called");
-    //     errorsLoaded.value = false;
-    //     activeTab.value = errorTab;
-    //     EditorState.getInstance().getErrors();
-    //     errorsLoaded.value = true;
-    //     if (!!modelErrors.list[0]) {
-    //         const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn;
-    //         if (Array.isArray(nodes)) {
-    //             EditorState.getInstance().selectElement(nodes[0]);
-    //         } else {
-    //             EditorState.getInstance().selectElement(nodes);
-    //         }
-    //     }
-    // }
-    //
-    // findText(stringToFind: string) {
-    //     // todo loading of errors and search results should also depend on whether something has changed in the unit shown
-    //     LOGGER.log("findText called");
-    //     searchResultLoaded.value = false;
-    //     activeTab.value = searchTab;
-    //     const searcher = new FreSearcher();
-    //     const results: FreNode[] = searcher.findString(
-    //         stringToFind,
-    //         EditorState.getInstance().currentUnit!,
-    //         this.langEnv!.writer,
-    //     );
-    //     this.showSearchResults(results, stringToFind);
-    // }
-    //
+    validate = (): void => {
+        console.log("validate called");
+        // errorsLoaded.value = false;
+        // activeTab.value = errorTab;
+        WebappConfigurator.getInstance().getErrors();
+        // errorsLoaded.value = true;
+        // if (!!modelErrors.list[0]) {
+        //     const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn;
+        //     if (Array.isArray(nodes)) {
+        //         EditorState.getInstance().selectElement(nodes[0]);
+        //     } else {
+        //         EditorState.getInstance().selectElement(nodes);
+        //     }
+        // }
+    }
+
+    findText(stringToFind: string) {
+        // todo loading of errors and search results should also depend on whether something has changed in the unit shown
+        LOGGER.log("findText called");
+        // searchResultLoaded.set(false);
+        // activeTab.set(searchTab);
+        const searcher = new FreSearcher();
+        if (!!editorInfo.currentUnit) {
+            const unit: FreModelUnit | undefined = WebappConfigurator.getInstance().getUnit(editorInfo.currentUnit);
+            if (!!unit) {
+                const results: FreNode[] = searcher.findString(
+                    stringToFind,
+                    unit,
+                    WebappConfigurator.getInstance().langEnv?.writer!
+                )
+                console.log(results);
+                // this.showSearchResults(results, stringToFind);
+            }
+        }
+    }
+
     // findStructure(elemToMatch: Partial<FreNode>) {
     //     LOGGER.log("findStructure called");
     //     searchResultLoaded.value = false;

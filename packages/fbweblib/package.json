@@ -44,7 +44,7 @@
 		"vitest": "^3.0.4"
 	},
 	"dependencies": {
-		"@freon4dsl/samples-education": "1.0.0",
+		"@freon4dsl/samples-education": "1.1.0",
 		"@freon4dsl/core": "^1.0.0",
 		"@freon4dsl/core-svelte": "^1.1.0",
 		"mobx": "^6.13.6"

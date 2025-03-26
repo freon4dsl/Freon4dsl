@@ -8,7 +8,7 @@
         ListgroupItem,
         Tooltip,
     } from 'flowbite-svelte';
-    import {FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, DotsHorizontalOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
+    import {FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
     import {FreErrorSeverity, type ModelUnitIdentifier} from "@freon4dsl/core";
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
@@ -94,7 +94,7 @@
 </div>
 
 <!-- buttons that address the current model -->
-<div class="flex justify-between items-center p-3 mb-3 bg-primary-300">
+<div class="flex justify-between items-center p-3 mb-3 bg-primary-500">
     <span class="font-bold">
         {editorInfo.modelName}
         <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->
@@ -136,7 +136,7 @@
                         <div class="flex justify-between items-end text-gray-600 dark:text-gray-200">
                             {unit.name}
                             <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->
-                            <DotsHorizontalOutline id="dots-menu-{index}" class="inline text-gray-600 dark:text-white"/>
+                            <ChevronDownOutline id="dots-menu-{index}" class="inline text-gray-600 dark:text-white"/>
                             <Dropdown class="p-0 m-0">
                                 <div class="flex flex-col justify-end p-0 m-0">
                                     <Button name="Open" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => openUnit(index)}>

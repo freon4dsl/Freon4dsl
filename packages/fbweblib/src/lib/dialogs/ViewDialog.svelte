@@ -5,6 +5,7 @@
     import {ProjectionItem} from "$lib/ts-utils/MenuItem";
     import {dialogs} from "$lib";
     import {isNullOrUndefined} from "@freon4dsl/core";
+    import { EditorRequestsHandler, WebappConfigurator } from "$lib/language"
 
     let allProjections: (ProjectionItem | undefined)[] = $derived(
         langInfo.projectionNames.map(view => {
@@ -28,7 +29,7 @@
             }
         });
         replaceProjectionsShown(selection);
-        // EditorRequestsHandler.getInstance().enableProjections(selection);
+        EditorRequestsHandler.getInstance().enableProjections(selection);
         // console.log('Currently shown: ' + projectionsShown)
     }
 </script>
