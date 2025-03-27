@@ -1,0 +1,87 @@
+editor default
+
+Time {
+    [${value} ${unit}]
+    trigger = "time"
+}
+
+StartDay {
+    [start day]
+    trigger = "start day"
+}
+
+
+EventReferenceExpression {
+    [${event} ${eventState} ]
+    referenceShortcut = ${event}
+    trigger = "----------"
+    }
+
+PeriodReferenceExpression {
+    [${period} ${periodState} ]
+    referenceShortcut = ${period}
+    trigger = "-----------"
+}
+
+CountExpression {
+    [count(${event})]
+    referenceShortcut = ${event}
+    trigger = "count"
+} 
+
+PreviousVisit {
+    [previous visit]
+    trigger = "previous visit"
+}
+
+NumberLiteralExpression {
+    [${value}]
+    trigger = "number"
+} 
+
+PlusExpression {
+    symbol = "+"
+}
+
+MinusExpression {
+    symbol = "-"
+}
+
+String {
+    ['${value}']
+    trigger = "'"
+}
+
+// BooleanLiteralExpression {
+//     [ ${value} ]
+//     trigger = "true / false"
+// }
+
+MultiplyExpression {
+    symbol = "*"
+}
+
+DivideExpression {
+    symbol = "/"
+}
+
+LessThenExpression {
+    symbol = "<"
+}
+
+OrExpression {
+    symbol = "or"
+}
+
+AndExpression {
+    symbol = "and"
+}
+
+GreaterThenExpression {
+    symbol = ">"
+}
+EqualsExpression {
+    symbol = "=="
+}
+
+

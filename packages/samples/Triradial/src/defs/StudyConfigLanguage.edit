@@ -1,0 +1,135 @@
+editor default
+
+//boolean [YES | NO] // are the strings used to display a boolean value
+
+Period {
+    [
+        Period: ${name}
+        Description: ${description}
+        EVENTS
+            ${events}
+    ]
+}
+
+Event {
+    [
+        Event: ${name}
+        This is a ${typeOfEvent} that is also referred to as ${alternativeName}
+        Type: 
+        Description: ${description}
+        Schedule: 
+            ${schedule wrap=ExpandCollapseWrapper}
+        Checklist:
+            ${tasks}
+    ] 
+}
+
+Task {
+    [
+        ${name}
+        ${description}
+    ]
+}
+
+Step {
+    [
+        Step ${title} 
+        Description: ${detailsDescription}
+        References: ${references}
+        Systems Used: ${systems table rows}
+        People: ${people}
+    ]
+}
+
+SystemAccess {
+    table [ 
+             System    
+             ${name}
+        ]
+}
+
+SystemAccessReference {
+    [
+        System: ${system}
+    ]
+}
+
+AccessedAtURL {
+    [
+        URL: ${url}
+    ]
+}
+
+AccessedAPhoneNumber {
+    [
+        Phone Number: ${phoneNumber}
+    ]
+}
+
+Person {
+    [
+        Name: ${name}  ${useSystemContact} Use System Contact   Email: ${email}
+                                                                Phone: ${phoneNumber}
+                                                                Role : ${role} 
+    ]
+}
+
+Staffing {
+    [
+        Roles: 
+            ${roles}
+        Assignments: 
+            ${assignments}
+    ]
+}
+
+Reference {
+    [
+        Reference Title: ${title}    Link: ${link}
+        Description    : ${description}
+    ]
+}
+
+Assignment {
+    [
+        Role  : ${role}
+        Person: ${person}
+    ]
+}
+
+StaffRole {
+    [
+        role: ${name}
+    ]
+}
+
+WorkflowDescription {
+    [
+    Description: ${text}
+    ]
+    trigger = "description"
+}
+
+WorkflowBranch {
+    [ Branch: ${branch}  ]
+}
+
+RobotMapping {
+    [
+    From this Page: ${sourcePage}
+    To this Page :   ${targetPage}
+    These fields:
+        ${sourceToTargetMappings}
+    ]
+}
+
+SourceToTargetMapping {
+    [
+        Source Field: ${sourceField}  Target Field: ${targetField}
+    ]
+}
+
+Description {
+   [ ${text} ]
+}
+

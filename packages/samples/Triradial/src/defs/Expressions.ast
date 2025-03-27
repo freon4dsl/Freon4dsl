@@ -1,0 +1,105 @@
+language StudyConfigurationModel
+
+abstract expression ScheduleExpression {
+}
+
+expression EventReferenceExpression base ScheduleExpression {
+    reference event: Event;
+    eventState: EventState;
+}
+
+expression PeriodReferenceExpression base ScheduleExpression {
+    reference period: Period;
+    periodState: PhaseState = PhaseState:completed;
+}
+
+expression Time base ScheduleExpression   {
+    value: string;
+    unit: TimeUnit = TimeUnit:days;
+}
+
+expression PreviousVisit base ScheduleExpression {
+}
+
+expression StartDay base ScheduleExpression {
+}
+
+expression CountExpression base ScheduleExpression {
+    reference event: Event;
+}
+
+abstract expression LiteralExpression base ScheduleExpression {}
+
+expression String {
+    value: string;
+}
+
+// Not an expression because it's created in CustomStudyConfigurationModelActions based on /0..9/ regex
+// Do so it doesn't show up in the choices
+//
+// concept NumberLiteralExpression {
+//     value: number;
+// }
+expression NumberLiteralExpression base LiteralExpression {
+    value: number;
+} 
+
+
+// expression BooleanLiteralExpression base LiteralExpression {
+//     value: boolean;
+// }
+
+///////////////////////////////////
+//    Binary Expressions
+////////////////////////////////////
+
+abstract binary expression BinaryExpression base ScheduleExpression {
+    left: ScheduleExpression;
+    right: ScheduleExpression;
+}
+
+binary expression MultiplyExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression PlusExpression base BinaryExpression {
+     priority = 4;
+}
+
+binary expression MinusExpression base BinaryExpression {
+    priority = 4;
+}
+
+binary expression DivideExpression base BinaryExpression {
+    priority = 8;
+}
+
+binary expression AndExpression base BinaryExpression {
+    priority = 1;
+}
+
+binary expression OrExpression base BinaryExpression {
+    priority = 1;
+}
+
+abstract binary expression ComparisonExpression base BinaryExpression {
+}
+
+binary expression LessThenExpression base ComparisonExpression {
+    priority = 2;
+}
+
+binary expression GreaterThenExpression base ComparisonExpression {
+    priority = 2;
+}
+
+binary expression EqualsExpression base ComparisonExpression {
+    priority = 2;
+}
+abstract expression TimeExpression {}
+
+// abstract binary expression BinaryTimeExpression base TimeExpression {
+//     left: TimeExpression;
+//     right: TimeExpression;
+// }
+

@@ -1,0 +1,149 @@
+language StudyConfigurationModel
+
+concept EventReference {
+    reference event: Event;
+    eventState: EventState = EventState:completed;
+}
+
+concept TimeAmountPart {
+    operator: SimpleOperators = SimpleOperators:plus;
+    timeAmount: TimeAmount;
+}  
+
+interface EventStart {
+    timeAmountPart?: TimeAmountPart;
+}  
+
+concept Day implements EventStart {
+    startDay: number;
+}
+
+concept When implements EventStart {
+    startWhen: EventReference;
+}
+
+concept StudyStart implements EventStart {
+}
+
+concept FirstDayOfStudy implements EventStart {
+}
+
+concept Baseline base FirstDayOfStudy {
+}
+
+concept Previous implements EventStart {
+    eventState: EventState;
+}
+
+concept Unscheduled implements EventStart {
+}
+
+concept AnyDay base Unscheduled {
+}
+
+//TODO: determine why RepeatUnit isn't better as a limited
+
+//limited RepeatUnit implements RepeatExpression {
+//limited RepeatUnit {
+//    daily; weekly; monthly; forever;
+//}
+
+interface RepeatUnit {}
+
+concept Daily implements RepeatUnit {}
+
+concept Weekly implements RepeatUnit {}
+
+concept Monthly implements RepeatUnit {}
+
+concept Forever implements RepeatUnit {}
+
+concept RepeatEvery implements RepeatUnit {
+    repeatEvery: Time;
+}
+
+limited TimeUnit {
+   hours; days; weeks; months;  
+}
+
+limited PhaseState {
+    completed; started; skipped;
+}
+
+limited EventState {
+    completed; eachCompleted = { name:"each completed"} started; scheduled; skipped;
+}
+
+
+//TODO: rename to something other than 'Expression' or determine if it should be an expression.
+interface RepeatExpression {}
+
+concept RepeatCondition implements RepeatExpression {
+    repeatUnit: RepeatUnit;
+    maxRepeats: number;
+    until?: ScheduleExpression;
+}
+
+concept TimeAmount   {
+    value: number;
+    unit: TimeUnit = TimeUnit:days;
+}
+
+limited SimpleOperators {
+    plus = { name:"+" } minus = { name: "-" }
+}
+
+concept RepeatCount implements RepeatExpression {
+    repeatCount: number;
+}
+
+concept Days {
+    count: number;
+}
+
+abstract concept ComplianceWindow {
+}
+
+concept NoComplianceWindow base ComplianceWindow {
+}
+
+concept ComplianceWindowOf base ComplianceWindow {
+    maxDaysBefore: Days;
+    maxDaysAfter: Days;
+}
+
+concept EventWindow {
+    daysBefore: Days;
+    daysAfter: Days;
+    complianceWindow?: ComplianceWindow;
+}
+
+interface EventTimeOfDay { }
+
+concept StartingBy implements EventTimeOfDay {
+    startTimeAsString: string;
+    startHour: number;
+    startMinute: number;
+}
+
+concept EndingBy implements EventTimeOfDay {
+    endTimeAsString: string;
+    endHour: number;
+    endMinute: number;
+}
+ 
+concept BetweenTimes implements EventTimeOfDay {
+    startTimeAsString: string;
+    endTimeAsString: string;
+    startHour: number;
+    startMinute: number;
+    endHour: number;
+    endMinute: number;
+}
+
+concept EventSchedule {
+    eventStart?: EventStart;
+    eventWindow: EventWindow;
+    eventRepeat?: RepeatExpression;
+    eventTimeOfDay?: EventTimeOfDay;
+}

@@ -1,0 +1,151 @@
+editor default
+
+TimeAmount {
+    [${value}${unit}]
+}
+
+TimeAmountPart {
+    [${operator}${timeAmount}]
+    trigger = "plus or minus day/week/month/..."
+} 
+
+Day {
+    [ day ${startDay} ]
+    trigger = "day:         A day of the study"
+}
+
+When {
+    [ when ${startWhen} ${timeAmountPart}]
+    trigger = "when:        Depends on when another event occurs"
+}  
+
+StudyStart {
+    [ as the start day of the study ] 
+    trigger = "study start: Declares this event to be the start of the study"
+} 
+
+FirstDayOfStudy {
+    [ on the start day of the study ${timeAmountPart} ]
+    trigger = "start day:   Depends on the first day of the study +/- some amount of time"
+}
+
+Baseline {
+    [ on the baseline/start day of the study ${timeAmountPart} ]
+    trigger = "baseline:    An alternate name for a reference to the first day of the study"
+}
+
+Previous {
+    [ when the previous event ${eventState} ${timeAmountPart} ]
+    trigger = "previous:    Depends on the previous event"
+}
+Unscheduled {
+    [ on any day (an unscheduled event) ]
+    trigger = "unscheduled: An unscheduled event"
+}
+
+AnyDay {
+    [ on any day (an unscheduled event) ]
+    trigger = "any day:     An alternative name for an unscheduled event"
+} 
+
+Daily {
+    [ daily ]
+    trigger = "daily"
+}
+
+Weekly {
+    [ weekly ]
+    trigger = "weekly"
+}
+
+Monthly {
+    [ monthly ]
+    trigger = "monthly"
+}
+
+Forever {
+    [ forever ]
+    trigger = "forever"
+}
+
+RepeatEvery {
+    [ every: ${repeatEvery} ]
+    trigger = "every"
+}
+
+RepeatCondition {
+    [
+    ${repeatUnit} up to ${maxRepeats} times until ${until}
+    ] trigger = "until: Repeat until a condition occurs"
+} 
+
+RepeatCount {
+    [
+        ${repeatCount} time(s)  
+    ] 
+    trigger = "count: Repeat a specific number of times"
+} 
+
+BetweenTimes {
+    [
+        starting by ${startTimeAsString replace=TimePicker} and ending by ${endTimeAsString replace=TimePicker}
+    ] 
+    trigger = "between times: Times of day event must start and end"
+} 
+
+StartingBy {
+    [
+        starting by ${startTimeAsString replace=TimePicker}
+    ] 
+    trigger = "starting by: Time of day event must start"
+} 
+
+EndingBy {
+    [
+        ending by ${endTimeAsString replace=TimePicker}
+    ] 
+    trigger = "ending by: Time of day event must end"
+} 
+
+
+NoComplianceWindow {
+    [ no extra window] trigger = "no compliance window"
+}
+
+ComplianceWindowOf {
+    [
+         ${maxDaysBefore} additional day(s) before and ${maxDaysAfter}day(s) after
+    ] trigger = "time before/after to be compliant"
+}
+
+EventWindow {
+    [
+        ${daysBefore} day(s) before and ${daysAfter}day(s) after
+        and a compliance window of: ${complianceWindow}
+    ] trigger = "event window"
+}
+
+//RepeatExpression {
+//    [${eventRepeat}]
+//}
+
+EventSchedule {
+    [
+        First scheduled ${eventStart}
+        with a window of ${eventWindow}
+        and then repeats ${eventRepeat}
+        limited to ${eventTimeOfDay}
+    ] 
+    trigger = "event schedule"
+} 
+
+
+EventReference {
+    [${event} ${eventState} ]
+    referenceShortcut = ${event}
+    }
+
+Days {
+    [${count}]
+}
+

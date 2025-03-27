@@ -1,0 +1,68 @@
+editor default
+
+global {
+    external {
+        DatePicker,
+        TimePicker,
+        ExpandCollapseWrapper
+    }
+}
+
+Availability {
+  [
+    STAFFING
+      Number of CRCs Normally Available: ${baselineStaff}
+
+      Staffing Level Changes:
+      ${staffLevels}
+
+  ]
+}
+
+PatientNotAvailable {
+  [
+  ${dates}
+  ]
+}
+
+StaffLevel {
+  [ 
+    # Staff: ${staffAvailable} on: ${dateOrRange}
+  ] trigger = "Staff Level"
+}
+
+DateRange {
+  [${startDate} thru:${endDate}]
+  trigger = "Date or Date Range"
+}
+
+StartRangeDate {
+  [${dateAsString replace=DatePicker startDate="30/09/2024"}]
+}
+
+EndRangeDate {
+  [${dateAsString replace=DatePicker startDate="30/09/2024"}]
+}
+
+PatientInfo {
+  [
+   ${patientHistories}
+  ]
+}
+
+PatientHistory {
+  [
+   ID ${id} 
+   Patient completed: 
+   ${patientVisits} 
+   Not Available ${patientNotAvailableDates}
+  ]
+  trigger = "Patient"
+}
+
+PatientVisit {
+  [
+      '${visit}' on  ${actualVisitDateAsString replace=DatePicker startDate="30/09/2024"}
+  ]
+  trigger = "Visit"
+}
