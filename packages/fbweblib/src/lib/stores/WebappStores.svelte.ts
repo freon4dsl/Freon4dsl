@@ -22,7 +22,7 @@ export const dialogs = $state({
 	searchElementDialogVisible: false,
 	selectViewsDialogVisible: false,
 	// for the help dialog
-	helpDialogVisible: false,
+	aboutDialogVisible: false,
 });
 
 // indicates whether the application is initializing

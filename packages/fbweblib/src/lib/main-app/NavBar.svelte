@@ -39,7 +39,7 @@
             <AnnotationSolid class="ms-0 inline h-6 w-6 dark:text-white" />
         </Button>
         <Tooltip placement="bottom">Go to Documentation</Tooltip>
-        <Button name="About" onclick={() => (dialogs.helpDialogVisible = true)} class="text-secondary-900">
+        <Button name="About" onclick={() => (dialogs.aboutDialogVisible = true)} class="text-secondary-900">
             <QuestionCircleOutline class="ms-0 inline h-6 w-6 dark:text-white" />
         </Button>
         <Tooltip placement="bottom">About</Tooltip>
