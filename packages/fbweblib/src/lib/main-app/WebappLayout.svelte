@@ -35,6 +35,7 @@
     import SearchElementDialog from "$lib/dialogs/SearchElementDialog.svelte"
     import StatusBar from "$lib/main-app/StatusBar.svelte"
     import InfoPanel from "$lib/main-app/InfoPanel.svelte"
+    import ToolBar from "$lib/main-app/ToolBar.svelte"
 
     let showInfoPanel: boolean = $derived(infoPanel.value);
     let transitionParams = {
@@ -97,6 +98,7 @@
 
 <div class="flex flex-col h-screen overflow-hidden">
     <NavBar/>
+    <ToolBar/>
 
     <div class="flex w-auto h-full overflow-auto grid-rows-[auto,1fr] col-span-2">
         {#if showInfoPanel}
