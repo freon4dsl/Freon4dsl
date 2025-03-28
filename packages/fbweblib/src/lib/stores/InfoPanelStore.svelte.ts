@@ -1,7 +1,11 @@
 import type { FreError } from "@freon4dsl/core";
 import type { TreeNodeType } from "$lib/tree/TreeNodeType"
 
-export let searchResultLoaded = $state({value: true});
+export const infoPanelShown = $state({
+    value: false,
+});
+
+export let searchResultLoading = $state({value: true});
 
 export interface ErrorInfoInterface {
     list: FreError[];
@@ -10,7 +14,7 @@ export interface ErrorInfoInterface {
 export let searchResults: ErrorInfoInterface = $state({list: []});
 
 
-export let errorsLoaded = $state({value: true});
+export let errorsLoading = $state({value: true});
 // the current list of errors in the model unit that is shown in the editor
 export let modelErrors: ErrorInfoInterface = $state({list: []});
 // the trace of the last call to the interpreter

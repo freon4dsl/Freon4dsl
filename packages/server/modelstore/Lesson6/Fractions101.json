@@ -1539,7 +1539,7 @@
                   "key": "-key-GradeScore-expr"
                },
                "children": [
-                  "ID-136"
+                  "ID-154"
                ]
             }
          ],
@@ -1562,54 +1562,7 @@
          "parent": "ID-65"
       },
       {
-         "id": "ID-136",
-         "classifier": {
-            "language": "-key-Education",
-            "version": "2023.1",
-            "key": "-key-EqualsExpression"
-         },
-         "properties": [],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-key-Education",
-                  "version": "2023.1",
-                  "key": "-key-BinaryExpression-left"
-               },
-               "children": [
-                  "ID-135"
-               ]
-            },
-            {
-               "containment": {
-                  "language": "-key-Education",
-                  "version": "2023.1",
-                  "key": "-key-BinaryExpression-right"
-               },
-               "children": [
-                  "ID-139"
-               ]
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-133"
-      },
-      {
-         "id": "ID-135",
-         "classifier": {
-            "language": "-key-Education",
-            "version": "2023.1",
-            "key": "-key-NrOfCorrectAnswers"
-         },
-         "properties": [],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-136"
-      },
-      {
-         "id": "ID-139",
+         "id": "ID-154",
          "classifier": {
             "language": "-key-Education",
             "version": "2023.1",
@@ -1633,7 +1586,7 @@
             }
          ],
          "annotations": [],
-         "parent": "ID-136"
+         "parent": "ID-133"
       },
       {
          "id": "ID-66",

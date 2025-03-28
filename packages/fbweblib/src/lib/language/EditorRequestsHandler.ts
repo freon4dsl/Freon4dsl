@@ -10,15 +10,15 @@ import type { FreNode, TraceNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
 import {
     activeTab,
-    errorsLoaded,
+    errorsLoading,
     errorTab, interpreterTab, interpreterTrace,
     modelErrors,
-    searchResultLoaded,
+    searchResultLoading,
     searchResults,
     searchTab
 } from "$lib/stores/InfoPanelStore.svelte"
 import { WebappConfigurator } from "$lib/language";
-import { editorInfo, infoPanel } from "$lib"
+import { editorInfo, infoPanelShown } from "$lib"
 import { TreeNodeType } from "$lib/tree/TreeNodeType"
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
@@ -80,44 +80,63 @@ export class EditorRequestsHandler {
 
     validate = (): void => {
         console.log("validate called");
-        errorsLoaded.value = false;
+        errorsLoading.value = true;
         activeTab.value = errorTab;
         WebappConfigurator.getInstance().getErrors();
-        errorsLoaded.value = true;
-        infoPanel.value = true;
+        console.log("Errors: " + modelErrors.list.map(err => err.message).join("\n"));
+        errorsLoading.value = false;
+        infoPanelShown.value = true;
         if (!!modelErrors.list[0]) {
             const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn;
-            // if (Array.isArray(nodes)) {
-            //     EditorState.getInstance().selectElement(nodes[0]);
-            // } else {
-            //     EditorState.getInstance().selectElement(nodes);
-            // }
+            if (Array.isArray(nodes)) {
+                WebappConfigurator.getInstance().selectElement(nodes[0]);
+            } else {
+                WebappConfigurator.getInstance().selectElement(nodes);
+            }
         }
     }
 
     interpret = (): void => {
         console.log("interpret: called");
         const langEnv : FreEnvironment = WebappConfigurator.getInstance().langEnv!;
-        const intp = langEnv.interpreter;
-        intp.setTracing(true);
-        const node: FreNode = langEnv.editor.selectedElement;
+        const intp = langEnv?.interpreter;
+        if (langEnv && intp) {
+            intp.setTracing(true)
+            const node: FreNode = langEnv.editor.selectedElement
 
-        const value = intp.evaluate(node);
-        if(isRtError(value)){
-            interpreterTrace.value = new TreeNodeType(value.toString(), undefined);
-            console.log(value.toString());
+            const value = intp.evaluate(node)
+            if (isRtError(value)) {
+                interpreterTrace.value = new TreeNodeType(value.toString(), undefined)
+                console.log(value.toString())
+            } else {
+                const trace = intp.getTrace().root
+                console.log(trace.toStringRecursive())
+                interpreterTrace.value = this.makeTreeNode(trace)
+            }
         } else {
-            const trace = intp.getTrace().root;
-            console.log(trace.toStringRecursive());
-            interpreterTrace.value = this.makeTreeNode(trace);
+            interpreterTrace.value = new TreeNodeType("No interpreter found", undefined)
         }
         activeTab.value = interpreterTab;
+    }
+
+    private makeTreeNode(trace: TraceNode): TreeNodeType {
+        let name: string = trace.toResultString();
+        if (trace.children && trace.children.length > 0) {
+            const children: TreeNodeType[] = [];
+            for (let child of trace.children) {
+                children.push(this.makeTreeNode(child));
+            }
+            return new TreeNodeType(name, children);
+        } else {
+            return new TreeNodeType(name, undefined);
+        }
     }
 
     findText(stringToFind: string) {
         // todo loading of errors and search results should also depend on whether something has changed in the unit shown
         console.log("findText called: " + stringToFind);
-        searchResultLoaded.value = false;
+        searchResultLoading.value = true;
+        searchResults.list = [];
         activeTab.value = searchTab;
         const searcher = new FreSearcher();
         if (!!editorInfo.currentUnit) {
@@ -149,8 +168,9 @@ export class EditorRequestsHandler {
             }
         }
         searchResults.list = itemsToShow;
-        searchResultLoaded.value = true;
-        infoPanel.value = true;
+        searchResultLoading.value = false;
+        infoPanelShown.value = true;
+        console.log(`showSearchResults: ${searchResultLoading.value}, ${infoPanelShown.value}, ${searchResults.list.map(it => it.message).join("\n")}`);
     }
 
     // findStructure(elemToMatch: Partial<FreNode>) {
@@ -190,16 +210,5 @@ export class EditorRequestsHandler {
     //     searchResults.list = itemsToShow;
     //     searchResultLoaded.value = true;
     // }
-    private makeTreeNode(trace: TraceNode): TreeNodeType {
-        let name: string = trace.toResultString();
-        if (trace.children && trace.children.length > 0) {
-            const children: TreeNodeType[] = [];
-            for (let child of trace.children) {
-                children.push(this.makeTreeNode(child));
-            }
-            return new TreeNodeType(name, children);
-        } else {
-            return new TreeNodeType(name, undefined);
-        }
-    }
+
 }

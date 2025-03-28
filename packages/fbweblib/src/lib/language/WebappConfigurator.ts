@@ -4,7 +4,7 @@ import {
     FreErrorSeverity,
     FreLanguage,
     FreLogger, type FreModel,
-    type FreModelUnit,
+    type FreModelUnit, type FreNode,
     FreProjectionHandler,
     FreUndoManager,
     InMemoryModel,
@@ -483,5 +483,13 @@ export class WebappConfigurator {
                 }
             }
         }
+    }
+    /**
+     * When an error in the errorlist is selected, or a search result is selected, the editor jumps to the faulty element.
+     * @param item
+     */
+    selectElement(item: FreNode, propertyName?: string) {
+        LOGGER.log("Item selected");
+        this.langEnv!.editor.selectElement(item, propertyName);
     }
 }

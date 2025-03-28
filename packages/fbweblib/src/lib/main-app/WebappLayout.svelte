@@ -15,8 +15,8 @@
     import {WebappConfigurator} from '$lib/language';
     import NavBar from '$lib/main-app/NavBar.svelte';
     import ModelDrawer from '$lib/main-app/ModelDrawer.svelte';
-    import { drawerHidden, inDevelopment, infoPanel, initializing } from "$lib/stores/WebappStores.svelte"
-    import {messageInfo, userMessageOpen} from "$lib/stores/UserMessageStore.svelte";
+    import { drawerHidden, inDevelopment, initializing } from "$lib/stores/WebappStores.svelte"
+    import {messageInfo} from "$lib/stores/UserMessageStore.svelte";
     import {FreErrorSeverity} from "@freon4dsl/core";
     import ViewDialog from "$lib/dialogs/ViewDialog.svelte";
     import EditorPart from "$lib/main-app/EditorPart.svelte";
@@ -36,8 +36,9 @@
     import StatusBar from "$lib/main-app/StatusBar.svelte"
     import InfoPanel from "$lib/main-app/InfoPanel.svelte"
     import ToolBar from "$lib/main-app/ToolBar.svelte"
+    import { infoPanelShown } from "$lib/stores"
 
-    let showInfoPanel: boolean = $derived(infoPanel.value);
+    let showInfoPanel: boolean = $derived(infoPanelShown.value);
     let transitionParams = {
         x: 320,
         duration: 200,
