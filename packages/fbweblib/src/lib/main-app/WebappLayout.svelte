@@ -95,23 +95,25 @@
     });
 </script>
 
-<div class="flex flex-col h-screen">
+<div class="flex flex-col h-screen overflow-hidden">
     <NavBar/>
 
-    {#if showInfoPanel}
-        <div class="grid grid-cols-6 grid-template">
-            <div class="col-span-4 overflow-y-scroll">
+    <div class="flex w-auto h-full overflow-auto grid-rows-[auto,1fr] col-span-2 overflow-hidden">
+        {#if showInfoPanel}
+
+            <div class="flex-grow-1 h-[87vh] relative top-0 overflow-y-auto border-1 border-red-500">
                 <EditorPart/>
             </div>
-            <div class="col-span-2 overflow-y-scroll bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+            <div class="flex-grow-1 h-[87vh] relative top-0 overflow-y-auto border-1 max-w-[25rem] border-blue-500 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
                 <InfoPanel />
             </div>
-        </div>
-    {:else}
-        <div class="overflow-y-scroll">
-            <EditorPart/>
-        </div>
-    {/if}
+
+        {:else}
+            <div class="flex-grow-1 h-[87vh] w-full relative top-0 overflow-y-auto border-1 border-red-500">
+                <EditorPart/>
+            </div>
+        {/if}
+    </div>
 
     <Footer
             class="text-center sticky md: bottom-0 start-0 z-20 w-full border-t border-gray-200 bg-white p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 dark:border-gray-600 dark:bg-gray-800"

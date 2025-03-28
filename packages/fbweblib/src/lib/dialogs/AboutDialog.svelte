@@ -47,8 +47,8 @@
                     <li class="flex items-center">
                         <EnvelopeOutline class="text-blue-800  dark:text-blue-200"/>
                         <p class="pl-4">Contact:
-                            <a class="pl-1 text-amber-700"href= "mailto:jos.warmer@openmodeling.nl">Jos Warmer</a> or
-                            <a class="pl-1 text-amber-700"href= "mailto:anneke.kleppe@openmodeling.nl">Anneke Kleppe</a>
+                            <a class="pl-1 text-amber-700"href= "mailto:info@openmodeling.nl">Jos Warmer</a> or
+                            <a class="pl-1 text-amber-700"href= "mailto:info@openmodeling.nl">Anneke Kleppe</a>
                         </p>
                     </li>
                 </ul>
