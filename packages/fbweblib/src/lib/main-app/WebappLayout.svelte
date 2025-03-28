@@ -98,18 +98,18 @@
 <div class="flex flex-col h-screen overflow-hidden">
     <NavBar/>
 
-    <div class="flex w-auto h-full overflow-auto grid-rows-[auto,1fr] col-span-2 overflow-hidden">
+    <div class="flex w-auto h-full overflow-auto grid-rows-[auto,1fr] col-span-2">
         {#if showInfoPanel}
 
-            <div class="flex-grow-1 h-[87vh] relative top-0 overflow-y-auto border-1 border-red-500">
+            <div class="flex-grow-1 h-[87vh] w-[80vw] relative top-0 overflow-y-auto border-1">
                 <EditorPart/>
             </div>
-            <div class="flex-grow-1 h-[87vh] relative top-0 overflow-y-auto border-1 max-w-[25rem] border-blue-500 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+            <div class="flex-grow-1 h-[87vh] w-[20vw] relative top-0 overflow-y-auto border-1 max-w-[25rem] bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
                 <InfoPanel />
             </div>
 
         {:else}
-            <div class="flex-grow-1 h-[87vh] w-full relative top-0 overflow-y-auto border-1 border-red-500">
+            <div class="flex-grow-1 h-[87vh] w-full relative top-0 overflow-y-auto border-1">
                 <EditorPart/>
             </div>
         {/if}
