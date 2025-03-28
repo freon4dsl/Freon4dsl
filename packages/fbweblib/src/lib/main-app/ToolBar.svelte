@@ -13,60 +13,66 @@ import {
     PlayOutline
 } from "flowbite-svelte-icons"
 import { Banner, Button, Input } from "flowbite-svelte"
+import { ENTER } from "@freon4dsl/core"
 
-function onSearchInput(event: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-    EditorRequestsHandler.getInstance().findText(event.currentTarget.value);
+/**
+ * We use the key ENTER here to be able to search again, when the search text has not changed, but possibly
+ * the model has. The onchange event only triggers when the search text has changed.
+ * @param event
+ */
+function onKeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }) {
+    if (event.key === ENTER) {
+        EditorRequestsHandler.getInstance().findText(event.currentTarget.value);
+    }
 }
 
 </script>
 
 <Banner dismissable={false} class="p-0">
-
-<div class="flex w-full justify-between flex-nowrap bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
-    <div class="ml-2">
-        <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white  dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().undo}>
-            <UndoOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Undo
-        </Button>
-        <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().redo}>
-            <RedoOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Redo
-        </Button>
-        <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().cut}>
-            <ClipboardOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Cut
-        </Button>
-        <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().copy}>
-            <FileCopyOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Copy
-        </Button>
-        <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().paste}>
-            <FilePasteOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Paste
-        </Button>
-        <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={() => {dialogs.searchElementDialogVisible = true}}>
-            <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Element...
-        </Button>
-        <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().validate}>
-            <ThumbsUpOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Validate
-        </Button>
-        <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().interpret}>
-            <PlayOutline class="w-4 h-4 me-2 dark:text-white"/>
-            Interpret
-        </Button>
-        <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={() => {dialogs.selectViewsDialogVisible = true}}>
-            <EyeOutline class="w-4 h-4 me-2 dark:text-white"/>
-            View(s)...
-        </Button>
-    </div>
-    <div class="relative ">
-        <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none text-primary-700">
-            <SearchOutline class="w-4 h-4 " />
+    <div class="flex w-full justify-between flex-nowrap bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
+        <div class="ml-2">
+            <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white  dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().undo}>
+                <UndoOutline class="w-4 h-4 me-2 dark:text-white"/>
+                Undo
+            </Button>
+            <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().redo}>
+                <RedoOutline class="w-4 h-4 me-2 dark:text-white"/>
+                Redo
+            </Button>
+            <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().cut}>
+                <ClipboardOutline class="w-4 h-4 me-2 dark:text-white"/>
+                Cut
+            </Button>
+            <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().copy}>
+                <FileCopyOutline class="w-4 h-4 me-2 dark:text-white"/>
+                Copy
+            </Button>
+            <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().paste}>
+                <FilePasteOutline class="w-4 h-4 me-2 dark:text-white"/>
+                Paste
+            </Button>
+            <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={() => {dialogs.searchElementDialogVisible = true}}>
+                <SearchOutline class="w-4 h-4 me-2 dark:text-white"/>
+                Element...
+            </Button>
+            <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().validate}>
+                <ThumbsUpOutline class="w-4 h-4 me-2 dark:text-white"/>
+                Validate
+            </Button>
+            <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={EditorRequestsHandler.getInstance().interpret}>
+                <PlayOutline class="w-4 h-4 me-2 dark:text-white"/>
+                Interpret
+            </Button>
+            <Button class="rounded-none text-primary-700 font-normal bg-gray-50 hover:text-primary-50 dark:text-white dark:bg-gray-800 p-1" onclick={() => {dialogs.selectViewsDialogVisible = true}}>
+                <EyeOutline class="w-4 h-4 me-2 dark:text-white"/>
+                View(s)...
+            </Button>
         </div>
-        <Input id="search-navbar" class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 text-primary-700" size="sm" placeholder="Search..." onchange={onSearchInput}/>
-    </div>
-
+        <div class="relative ">
+            <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none text-primary-700">
+                <SearchOutline class="w-4 h-4 " />
+            </div>
+            <Input id="search-navbar" class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 text-primary-700" size="sm" placeholder="Search..." onkeydown={onKeydown}/>
+        </div>
     </div>
 </Banner>

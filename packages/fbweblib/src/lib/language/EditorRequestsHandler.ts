@@ -11,7 +11,7 @@ import { runInAction } from "mobx";
 import {
     activeTab,
     errorsLoading,
-    errorTab, interpreterTab, interpreterTrace,
+    errorTab, interpreterResultLoading, interpreterTab, interpreterTrace,
     modelErrors,
     searchResultLoading,
     searchResults,
@@ -19,7 +19,7 @@ import {
 } from "$lib/stores/InfoPanelStore.svelte"
 import { WebappConfigurator } from "$lib/language";
 import { editorInfo, infoPanelShown } from "$lib"
-import { TreeNodeType } from "$lib/tree/TreeNodeType"
+import { FreTreeNodeType, TreeNodeType } from "$lib/tree/TreeNodeType"
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
@@ -82,10 +82,10 @@ export class EditorRequestsHandler {
         console.log("validate called");
         errorsLoading.value = true;
         activeTab.value = errorTab;
+        infoPanelShown.value = true;
         WebappConfigurator.getInstance().getErrors();
         console.log("Errors: " + modelErrors.list.map(err => err.message).join("\n"));
         errorsLoading.value = false;
-        infoPanelShown.value = true;
         if (!!modelErrors.list[0]) {
             const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn;
             if (Array.isArray(nodes)) {
@@ -98,6 +98,9 @@ export class EditorRequestsHandler {
 
     interpret = (): void => {
         console.log("interpret: called");
+        interpreterResultLoading.value = true;
+        activeTab.value = interpreterTab;
+        infoPanelShown.value = true;
         const langEnv : FreEnvironment = WebappConfigurator.getInstance().langEnv!;
         const intp = langEnv?.interpreter;
         if (langEnv && intp) {
@@ -107,28 +110,30 @@ export class EditorRequestsHandler {
             const value = intp.evaluate(node)
             if (isRtError(value)) {
                 interpreterTrace.value = new TreeNodeType(value.toString(), undefined)
-                console.log(value.toString())
+                // console.log(value.toString())
             } else {
                 const trace = intp.getTrace().root
-                console.log(trace.toStringRecursive())
+                // console.log(trace.toStringRecursive())
                 interpreterTrace.value = this.makeTreeNode(trace)
             }
         } else {
             interpreterTrace.value = new TreeNodeType("No interpreter found", undefined)
         }
-        activeTab.value = interpreterTab;
     }
 
-    private makeTreeNode(trace: TraceNode): TreeNodeType {
+    private makeTreeNode(trace: TraceNode): FreTreeNodeType {
         let name: string = trace.toResultString();
         if (trace.children && trace.children.length > 0) {
-            const children: TreeNodeType[] = [];
+            const children: FreTreeNodeType[] = [];
             for (let child of trace.children) {
                 children.push(this.makeTreeNode(child));
             }
-            return new TreeNodeType(name, children);
+            interpreterResultLoading.value = false;
+            // todo remove the type cast when TraceNode has changed its signature
+            return new FreTreeNodeType(name, trace.node as FreNode, children);
         } else {
-            return new TreeNodeType(name, undefined);
+            interpreterResultLoading.value = false;
+            return new FreTreeNodeType(name, trace.node as FreNode, undefined);
         }
     }
 

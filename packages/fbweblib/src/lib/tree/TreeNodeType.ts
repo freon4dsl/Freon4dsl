@@ -1,3 +1,5 @@
+import type { FreNode } from "@freon4dsl/core"
+
 export class TreeNodeType {
     name: string;
     children?: TreeNodeType[];
@@ -8,11 +10,20 @@ export class TreeNodeType {
     }
 };
 
-export interface TreeViewProps {
-    title?: string;
-    data?: TreeNodeType[];
+export class FreTreeNodeType extends TreeNodeType {
+    location: FreNode;
+
+    constructor(name: string, location: FreNode, children?: TreeNodeType[]) {
+        super(name, children);
+        this.location = location;
+    }
 }
 
-export interface TreeNodeProps {
-    node: TreeNodeType;
+export interface TreeViewProps<T extends TreeNodeType> {
+    title?: string;
+    data?: T[];
+}
+
+export interface TreeNodeProps<T extends TreeNodeType> {
+    node: T;
 }

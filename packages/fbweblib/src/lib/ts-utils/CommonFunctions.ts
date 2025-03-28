@@ -1,9 +1,10 @@
 import type { FreNode } from "@freon4dsl/core"
+import { WebappConfigurator } from "$lib/language"
 
-export function goToNode(node: FreNode | FreNode[]) {
-    if (Array.isArray(node)) {
-        console.log(`gotoNode: ${node[0]?.freId()}`)
+export function goToNode(nodes: FreNode | FreNode[]) {
+    if (Array.isArray(nodes)) {
+        WebappConfigurator.getInstance().selectElement(nodes[0]);
     } else {
-        console.log(`gotoNode: ${node.freId()}`)
+        WebappConfigurator.getInstance().selectElement(nodes);
     }
 }

@@ -6,6 +6,7 @@ export const infoPanelShown = $state({
 });
 
 export let searchResultLoading = $state({value: true});
+export let interpreterResultLoading = $state({value: true});
 
 export interface ErrorInfoInterface {
     list: FreError[];
