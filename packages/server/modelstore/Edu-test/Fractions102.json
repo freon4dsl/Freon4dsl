@@ -1,0 +1,588 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-Education",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-99",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Topic"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Topic-name"
+               },
+               "value": "Fractions102"
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Topic-description"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Topic-pages"
+               },
+               "children": [
+                  "ID-100",
+                  "ID-101",
+                  "ID-102",
+                  "ID-103",
+                  "ID-104"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Topic-main"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Fractions",
+                     "reference": "ID-18"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-100",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Theory"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-name"
+               },
+               "value": "Theory102"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Theory-content"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-questions"
+               },
+               "children": [
+                  "ID-95"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
+               },
+               "children": [
+                  "ID-49"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-99"
+      },
+      {
+         "id": "ID-95",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Question-name"
+               },
+               "value": "simplify"
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Question-content"
+               },
+               "value": "Can you simplify 56 / 80?"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Question-correctAnswer"
+               },
+               "children": [
+                  "ID-111"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-100"
+      },
+      {
+         "id": "ID-111",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Fraction"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Fraction-numerator"
+               },
+               "value": "7"
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Fraction-denominator"
+               },
+               "value": "10"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-95"
+      },
+      {
+         "id": "ID-49",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-GradeScore"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-GradeScore-expr"
+               },
+               "children": [
+                  "ID-75"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-GradeScore-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-11"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-100"
+      },
+      {
+         "id": "ID-75",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-74"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-81"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-49"
+      },
+      {
+         "id": "ID-74",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-NrOfCorrectAnswers"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-75"
+      },
+      {
+         "id": "ID-81",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-NumberLiteralExpression-value"
+               },
+               "value": "1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-75"
+      },
+      {
+         "id": "ID-101",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Video"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Video-url"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-name"
+               },
+               "value": "Video2"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
+               },
+               "children": [
+                  "ID-82"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-99"
+      },
+      {
+         "id": "ID-82",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-GradeScore"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-GradeScore-expr"
+               },
+               "children": [
+                  "ID-87"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-GradeScore-grade"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-11"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-101"
+      },
+      {
+         "id": "ID-87",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-EqualsExpression"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-BinaryExpression-left"
+               },
+               "children": [
+                  "ID-86"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-BinaryExpression-right"
+               },
+               "children": [
+                  "ID-122"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-82"
+      },
+      {
+         "id": "ID-86",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-NrOfCorrectAnswers"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-87"
+      },
+      {
+         "id": "ID-122",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-NumberLiteralExpression"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-NumberLiteralExpression-value"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-87"
+      },
+      {
+         "id": "ID-102",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-WorkSheet"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-name"
+               },
+               "value": "Worksheet2"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-99"
+      },
+      {
+         "id": "ID-103",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-ExamplePage"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-name"
+               },
+               "value": "Example2"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-ExamplePage-content"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-99"
+      },
+      {
+         "id": "ID-104",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-InDepthMaterial"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-name"
+               },
+               "value": "InDepth2"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-InDepthMaterial-content"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-99"
+      }
+   ]
+}

@@ -119,6 +119,7 @@ export class EditorRequestsHandler {
         } else {
             interpreterTrace.value = new TreeNodeType("No interpreter found", undefined)
         }
+        interpreterResultLoading.value = false;
     }
 
     private makeTreeNode(trace: TraceNode): FreTreeNodeType {
@@ -128,11 +129,9 @@ export class EditorRequestsHandler {
             for (let child of trace.children) {
                 children.push(this.makeTreeNode(child));
             }
-            interpreterResultLoading.value = false;
             // todo remove the type cast when TraceNode has changed its signature
             return new FreTreeNodeType(name, trace.node as FreNode, children);
         } else {
-            interpreterResultLoading.value = false;
             return new FreTreeNodeType(name, trace.node as FreNode, undefined);
         }
     }

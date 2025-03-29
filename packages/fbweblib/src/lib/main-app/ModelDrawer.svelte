@@ -18,6 +18,9 @@
     import {ImportExportHandler, WebappConfigurator} from "$lib/language";
 
     let myUnits: UnitInfo[] = $state([]);
+    // let selectedIndex: number = $derived(editorInfo.currentUnit ? myUnits.indexOf(editorInfo.currentUnit) : -1);
+    let selectedIndex: number = $state(-1);
+
     $effect(() => {
         myUnits = !!editorInfo.unitIds && editorInfo.unitIds.length > 0
             ? editorInfo.unitIds.sort((u1: ModelUnitIdentifier, u2: ModelUnitIdentifier) => {
@@ -30,7 +33,18 @@
                 return 0;
             })
             : [];
+
     });
+
+    $effect(() => {
+        if (editorInfo.currentUnit && myUnits.length > 0) {
+            myUnits.forEach((u: ModelUnitIdentifier, index: number) => {
+                if (u.id === editorInfo.currentUnit?.id) {
+                    selectedIndex = index;
+                }
+            })
+        }
+    })
 
     const openUnit = (index: number) => {
         console.log('openUnit ' + index)
@@ -97,8 +111,6 @@
 <div class="flex justify-between items-center p-3 mb-3 bg-primary-500">
     <span class="font-bold">
         {editorInfo.modelName}
-        <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->
-<!--    <ChevronDownOutline class="dots-menu2 text-primary-800 ms-2 inline h-6 w-6 dark:text-white"/>-->
     </span>
     <ButtonGroup class="*:!ring-primary-700 ">
         <Button name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
@@ -129,12 +141,14 @@
             </ButtonGroup>
         </div>
         <ListgroupItem class="text-base border-none py-1">
-            <Listgroup class="border-none">
+            <Listgroup class="border-none ">
                 {#each myUnits as unit, index}
                     {#if unit.type === unitType}
-                        <ListgroupItem class="text-base border-none py-1">
+                        <ListgroupItem class="text-base first:rounded-none last:rounded-none border-none p-1 {index === selectedIndex ? 'bg-secondary-400 dark:bg-secondary-600' : ''}">
                         <div class="flex justify-between items-end text-gray-600 dark:text-gray-200">
+<!--                            <div class="{index === selectedIndex ? 'bg-secondary-400 dark:bg-secondary-600' : ''}">-->
                             {unit.name}
+<!--                            </div>-->
                             <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->
                             <ChevronDownOutline id="dots-menu-{index}" class="inline text-gray-600 dark:text-white"/>
                             <Dropdown class="p-0 m-0">
@@ -170,3 +184,13 @@
         </ListgroupItem>
     {/each}
 </Listgroup>
+
+<style>
+    .current {
+        background-color: #47a7f5;
+
+        @variant dark {
+            background: lightgray;
+        }
+    }
+</style>

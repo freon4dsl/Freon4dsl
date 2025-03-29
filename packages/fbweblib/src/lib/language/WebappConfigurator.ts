@@ -108,7 +108,7 @@ export class WebappConfigurator {
             // create new model instance in memory and set its name
             await this.modelStore.openModel(modelName)
             const unitIdentifiers: ModelUnitIdentifier[] = this.modelStore.getUnitIdentifiers()
-            console.log("unit identifiers: " + JSON.stringify(unitIdentifiers))
+            // console.log("unit identifiers: " + JSON.stringify(unitIdentifiers))
             const tmp: UnitInfo[] = []
             if (!!unitIdentifiers && unitIdentifiers.length > 0) {
                 // load the first unit and show it
@@ -169,7 +169,7 @@ export class WebappConfigurator {
             }
         }
         this.updateUnitListRunning = false
-        console.log("END update unit list: " + JSON.stringify(editorInfo.unitIds))
+        console.log("END update unit list: " + JSON.stringify(editorInfo.unitIds) + ', current: ' + editorInfo.currentUnit?.name)
     }
 
     /**
@@ -182,7 +182,7 @@ export class WebappConfigurator {
         if (!!newUnit) {
             runInAction(() => {
                 if (!!this.langEnv) {
-                    console.log("setting rootElement to " + newUnit.name)
+                    // console.log("setting rootElement to " + newUnit.name)
                     noUnitAvailable.value = false
                     this.langEnv.editor.rootElement = newUnit
                     editorInfo.currentUnit = {
@@ -219,14 +219,14 @@ export class WebappConfigurator {
     }
 
     async deleteModel() {
-        console.log("deleting current model")
+        // console.log("deleting current model")
         editorInfo.modelName = ""
         editorInfo.unitIds = []
         editorInfo.currentUnit = undefined
         await this.modelStore?.deleteModel()
         runInAction(() => {
             if (!!this.langEnv) {
-                console.log("setting rootElement to undefined")
+                // console.log("setting rootElement to undefined")
                 this.setEditorToUndefined()
             }
         })
@@ -485,8 +485,9 @@ export class WebappConfigurator {
         }
     }
     /**
-     * When an error in the errorlist is selected, or a search result is selected, the editor jumps to the faulty element.
+     * When an error in the error list is selected, or a search result is selected, the editor jumps to the faulty element.
      * @param item
+     * @param propertyName
      */
     selectElement(item: FreNode, propertyName?: string) {
         LOGGER.log("Item selected");

@@ -23,13 +23,32 @@ export async function openStartDialog() {
     dialogs.startDialogVisible = true;
 }
 
-export function checkName(newName: string): string {
+/**
+ * Returns an error message when 'newName' does not adhere to certain restrictions.
+ * If strict is true, then it must be a valid TypeScript identifier, if strict
+ * is false, then it must be a valid Windows file name.
+ * Returns an empty string if everything is alright.
+ * @param newName
+ * @param strict
+ */
+export function checkName(newName: string, strict: boolean): string {
     const initialErrorText: string = '';
-    const invalidErrorText: string = "Name may contain only characters and numbers, and must start with a character.";
-    if (newName.length > 0 && !newName.match(/^[a-z,A-Z][a-z,A-Z0-9_]*$/)) {
-        return invalidErrorText;
+    if (strict) {
+        // must be a valid TypeScript identifier
+        const invalidErrorText: string = "Name may contain only characters, numbers and underscores, and must start with a character or underscore.";
+        if (newName.length > 0 && !newName.match(/^[a-z,A-Z_][a-z,A-Z0-9_]*$/)) {
+            return invalidErrorText;
+        } else {
+            return initialErrorText;
+        }
     } else {
-        return initialErrorText;
+        // must be a valid Windows file name
+        const invalidErrorText: string = "Name may not contain the following characters: '<', '>',  ':', '“',  '/', '\\' , '|', or '?'.";
+        if (newName.length > 0 && !newName.match(/^[a-z,A-Z][a-z,A-Z0-9_-]*$/)) {
+            return invalidErrorText;
+        } else {
+            return initialErrorText;
+        }
     }
 }
 

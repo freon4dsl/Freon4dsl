@@ -11,23 +11,25 @@
     } from "flowbite-svelte-icons";
     import {FreonComponent} from "@freon4dsl/core-svelte";
     import {isNullOrUndefined} from "@freon4dsl/core";
+
+    let alertCls: string = 'p-1 m-2 gap-1 bg-secondary-600 dark:bg-secondary-200 text-primary-50 dark:text-primary-900';
 </script>
 
 <div class='bg-white dark:bg-gray-700 dark:text-white p-2'>
     {#if (noUnitAvailable.value || isNullOrUndefined(WebappConfigurator.getInstance().langEnv?.editor))}
         {#if !userMessageOpen.value}
-            <Alert color="red" transition={fly} params={{ x: 200 }}>
+            <Alert transition={fly} params={{ x: 200 }} class={alertCls}>
                 <InfoCircleSolid slot="icon" class="w-5 h-5"/>
                 Please, select, create, or import Unit to be shown.
             </Alert>
         {/if}
     {:else}
         {#if userMessageOpen.value}
-            <Alert color="red" dismissable transition={fly} params={{ x: 200 }} class="p-1 gap-0">
+            <Alert dismissable transition={fly} params={{ x: 200 }} class={alertCls}>
                 <InfoCircleSolid slot="icon" class="w-5 h-5"/>
                 {messageInfo.userMessage}
                 <Button slot="close-button" size="xs"
-                        onclick={() => {userMessageOpen.value = !userMessageOpen.value}} class="ms-auto bg-secondary-800">
+                        onclick={() => {userMessageOpen.value = !userMessageOpen.value}} class="ms-auto dark:text-secondary-100 bg-primary-800 dark:bg-primary-800">
                     Dismiss
                 </Button>
             </Alert>

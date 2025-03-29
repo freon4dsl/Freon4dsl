@@ -105,7 +105,7 @@ export class ImportExportHandler {
             link.dispatchEvent(event);
             document.body.removeChild(link);
         });
-        setUserMessage(`Unit '${unit.name}' exported to file ${defaultFileName}).`);
+        setUserMessage(`Unit '${unit.name}' exported to file ${defaultFileName}.`);
     }
 
     private allExtensionsToString(): string {
