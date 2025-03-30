@@ -1,25 +1,18 @@
 <script lang="ts">
     import {
-        Alert,
         FooterLink,
         FooterLinkGroup,
         Drawer,
         Footer,
-        FooterCopyright,
-        Button
-    } from 'flowbite-svelte';
-    import {InfoCircleSolid} from 'flowbite-svelte-icons';
+        FooterCopyright, Tabs, TabItem
+    } from "flowbite-svelte"
     import {onMount} from 'svelte';
     import {sineIn} from 'svelte/easing';
-    import {fly} from 'svelte/transition';
     import {WebappConfigurator} from '$lib/language';
     import NavBar from '$lib/main-app/NavBar.svelte';
     import ModelDrawer from '$lib/main-app/ModelDrawer.svelte';
     import { drawerHidden, inDevelopment, initializing } from "$lib/stores/WebappStores.svelte"
-    import {messageInfo} from "$lib/stores/UserMessageStore.svelte";
-    import {FreErrorSeverity} from "@freon4dsl/core";
     import ViewDialog from "$lib/dialogs/ViewDialog.svelte";
-    import EditorPart from "$lib/main-app/EditorPart.svelte";
     import {openStartDialog} from "$lib/language/DialogHelpers";
     import StartDialog from "$lib/dialogs/StartDialog.svelte";
     import NewModelDialog from "$lib/dialogs/NewModelDialog.svelte";
@@ -34,16 +27,18 @@
     import SearchTextDialog from "$lib/dialogs/SearchTextDialog.svelte"
     import SearchElementDialog from "$lib/dialogs/SearchElementDialog.svelte"
     import StatusBar from "$lib/main-app/StatusBar.svelte"
-    import InfoPanel from "$lib/main-app/InfoPanel.svelte"
     import ToolBar from "$lib/main-app/ToolBar.svelte"
-    import { infoPanelShown } from "$lib/stores"
+    import EditorTab from "$lib/multi-editor/EditorTab.svelte"
+    import { editorInfo, infoPanelShown, type UnitInfo } from "$lib/stores"
 
-    let showInfoPanel: boolean = $derived(infoPanelShown.value);
     let transitionParams = {
         x: 320,
         duration: 200,
         easing: sineIn
     };
+
+    let unitsInTabs: UnitInfo[] = $state([]);
+    let currentOpenTab: number = $state(0);
 
     onMount(async () => {
         // If a model is given as parameter, open this model
@@ -52,6 +47,7 @@
         const model: string | null = urlParams.get('model');
         if (model !== null) {
             await WebappConfigurator.getInstance().openModel(model);
+            unitsInTabs = editorInfo.unitIds;
             initializing.value = false;
         } else {
             // No model given as parameter, open the open/new model dialog
@@ -60,26 +56,26 @@
         }
     });
 
+    function openTab(index: number) {
+        console.log('opening tab: ',  index);
+        WebappConfigurator.getInstance().openModelUnit(editorInfo.unitIds[index].name);
+        currentOpenTab = index;
+        infoPanelShown.value = false;
+    }
 </script>
 
 <div class="flex flex-col h-screen overflow-hidden">
     <NavBar/>
     <ToolBar/>
 
-    <div class="flex w-auto h-full grid-rows-[auto,1fr] col-span-2">
-        {#if showInfoPanel}
-            <div class="flex-grow-1 h-[88vh] w-[80vw] relative top-0 overflow-y-auto border-1">
-                <EditorPart/>
-            </div>
-            <div class="flex-grow-1 h-[88vh] w-[20vw] relative top-0 overflow-y-auto border-1 max-w-[25rem] bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-600">
-                <InfoPanel />
-            </div>
-        {:else}
-            <div class="flex-grow-1 h-[88vh] w-full relative top-0 overflow-y-auto border-1">
-                <EditorPart/>
-            </div>
-        {/if}
-    </div>
+    <Tabs tabStyle="underline" class="dark:bg-gray-800 dark:text-white" >
+        {#each unitsInTabs as unitInfo, index}
+            <TabItem open={currentOpenTab === index} title={unitInfo.name} onclick={() => openTab(index)}
+                     defaultClass="dark:bg-gray-800 dark:text-white inline-block text-sm font-medium text-center disabled:cursor-not-allowed p-0 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-gray-500 dark:text-gray-400">
+                <EditorTab/>
+            </TabItem>
+        {/each}
+    </Tabs>
 
     <Footer
             class="text-center sticky md: bottom-0 start-0 z-20 w-full border-t border-gray-200 bg-white p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 dark:border-gray-600 dark:bg-gray-800"

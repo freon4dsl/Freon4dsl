@@ -218,7 +218,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeA",
-                     "reference": "ID-11"
+                     "reference": "ID-1"
                   }
                ]
             }
@@ -374,7 +374,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeA",
-                     "reference": "ID-11"
+                     "reference": "ID-1"
                   }
                ]
             }
