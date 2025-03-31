@@ -1,5 +1,5 @@
 <script lang="ts">
-	import WebappLayout from '$lib/main-app/WebappLayout.svelte';
+	import FlowbiteFreonLayout from '$lib/main-app/FlowbiteFreonLayout.svelte';
 </script>
 
-<WebappLayout />
+<FlowbiteFreonLayout />

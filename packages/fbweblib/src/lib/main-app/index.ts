@@ -2,7 +2,7 @@ export * from "./EditMenu.svelte";
 export * from "./FileMenu.svelte";
 export * from "./ToolMenu.svelte";
 export * from "./GitHub.svelte";
-export * from "./WebappLayout.svelte";
+export * from "./FlowbiteFreonLayout.svelte";
 export * from "./InfoPanel.svelte";
 export * from "./ModelDrawer.svelte";
 export * from "./NavBar.svelte";

@@ -52,6 +52,7 @@
   "workspaces": [
     "packages/core",
     "packages/core-svelte",
+    "packages/fbapp-starter",
     "packages/fbweblib",
     "packages/meta",
     "packages/webapp-lib",
