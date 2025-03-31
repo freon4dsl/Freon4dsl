@@ -68,10 +68,11 @@
     <NavBar/>
     <ToolBar/>
 
-    <Tabs tabStyle="underline" class="dark:bg-gray-800 dark:text-white" >
+    <Tabs tabStyle="full" class="dark:bg-gray-800 border-t-primary-50 border-t-2" contentClass="p-3 bg-gray-50 dark:bg-gray-800 mt-0">
         {#each unitsInTabs as unitInfo, index}
+            <!-- 'defaultClass' styles the button that opens the tab -->
             <TabItem open={currentOpenTab === index} title={unitInfo.name} onclick={() => openTab(index)}
-                     defaultClass="dark:bg-gray-800 dark:text-white inline-block text-sm font-medium text-center disabled:cursor-not-allowed p-0 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-gray-500 dark:text-gray-400">
+                     defaultClass="rounded-none inline-block text-sm font-medium text-center disabled:cursor-not-allowed p-0 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-none">
                 <EditorTab/>
             </TabItem>
         {/each}
