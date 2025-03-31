@@ -1,8 +1,8 @@
 <script lang="ts">
     import TreeNode from "./TreeNode.svelte"
-    import type { TreeViewProps } from "$lib/tree/TreeNodeType"
+    import { TreeNodeType, type TreeViewProps } from '$lib/tree/TreeNodeType';
 
-    let { title, data }: TreeViewProps = $props();
+    let { title, data }: TreeViewProps<TreeNodeType> = $props();
 </script>
 
 {#if title}

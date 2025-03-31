@@ -1,0 +1,7 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@import './core-styles/freon.css';
+@import './core-styles/freon-dark.css';
+@import './core-styles/freon-light.css';
