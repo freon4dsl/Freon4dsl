@@ -6,6 +6,7 @@
 - redo
 - cut and copy often select too large an element
 - goToNode should go to the part of the node where the search string is
+- element search - also without name?
 
 - [Done] interpreter on node Lesson6/Fractions101/InDepth1 does not yield a result: 'Data is being loaded...' is shown.
 
