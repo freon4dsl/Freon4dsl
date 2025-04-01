@@ -3,7 +3,7 @@ import { FreLogger } from "../../logging/index.js";
 import { isIdentifier } from "../../util/index.js";
 import { collectUsedLanguages, FreLionwebSerializer, FreModelSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
-import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
+import { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 
@@ -73,7 +73,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param unitId
      * @param unit
      */
-    async putModelUnit(modelName: string, unitId: ModelUnitIdentifier, unit: FreNamedNode): Promise<void> {
+    async putModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitId.name}`);
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
@@ -104,7 +104,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param modelName
      * @param unit
      */
-    async deleteModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<void> {
+    async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<void> {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             await this.fetchWithTimeout<any>(`deleteModelUnit`, `folder=${modelName}&name=${unit.name}`);
@@ -139,12 +139,15 @@ export class ServerCommunication implements IServerCommunication {
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
      * @param modelName
      */
-    async loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]> {
+    async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
         LOGGER.log(`ServerCommunication.loadUnitList`);
         let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `folder=${modelName}`);
         if (!!modelUnits) {
             return modelUnits.map((u) => {
-                return { name: u, id: u };
+                // The information the unit's type is not available. This is not a problem
+                // at the moment, because this method is only used in InMemoryModel.
+                // Note that whenever this changes, this code may give problems.
+                return { name: u, id: u, type: '' };
             });
         } else {
             return [];
@@ -157,7 +160,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param modelName
      * @param unit
      */
-    async loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode> {
+    async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<FreNode> {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unit.name}`);
@@ -233,9 +236,9 @@ export class ServerCommunication implements IServerCommunication {
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         // put the unit and its interface under the new name
-        this.putModelUnit(modelName, { name: newName, id: unit.freId() }, unit);
+        this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit and interface
-        this.deleteModelUnit(modelName, { name: oldName, id: unit.freId() });
+        this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
     }
 
     // @ts-ignore
@@ -243,6 +246,6 @@ export class ServerCommunication implements IServerCommunication {
 
     // @ts-ignore
     createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
-        this.putModelUnit(modelName, { id: unit.freId(), name: unit.name }, unit)
+        this.putModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
     }
 }

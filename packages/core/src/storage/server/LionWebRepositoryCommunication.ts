@@ -3,8 +3,9 @@ import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { createLionWebJsonNode, FreLionwebSerializer, FreSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
-import type { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
+import type { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 import { collectUsedLanguages } from "./UsedLanguages.js";
+import { FreLanguage } from '../../language/index.js';
 
 const LOGGER = new FreLogger("LionWebRepositoryCommunication");
 
@@ -70,12 +71,12 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param unitIdentifier
      * @param unit
      */
-    async putModelUnit(modelName: string, unitIdentifier: ModelUnitIdentifier, unit: FreNamedNode) {
+    async putModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNamedNode) {
         LOGGER.log(`LionWebRepositoryCommunication.putModelUnit ${modelName}/${unitIdentifier.name}`);
         if (
             !!unitIdentifier.name &&
             unitIdentifier.name.length > 0 &&
-            unitIdentifier.name.match(/^[a-z,A-Z][a-z,A-Z0-9_\-\.]*$/)
+            unitIdentifier.name.match(/^[a-z,A-Z][a-z,A-Z0-9_\-.]*$/)
         ) {
             const model = this.lionweb_serial.convertToJSON(unit);
             const usedLanguages = collectUsedLanguages(model);
@@ -111,7 +112,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param modelName
      * @param unit
      */
-    async deleteModelUnit(modelName: string, unit: ModelUnitIdentifier) {
+    async deleteModelUnit(modelName: string, unit: FreUnitIdentifier) {
         LOGGER.log(`LionWebRepositoryCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             this.client.repository = modelName;
@@ -148,12 +149,12 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
      * @param modelName
      */
-    async loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]> {
+    async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
         LOGGER.log(`loadUnitList`);
         this.client.repository = modelName;
         let modelUnits: ClientResponse<ListPartitionsResponse> = await this.client.bulk.listPartitions();
         return modelUnits.body.chunk.nodes.map((n) => {
-            return { name: "name " + n.id, id: n.id };
+            return { name: "name " + n.id, id: n.id, type: FreLanguage.getInstance().classifierByKey(n.classifier.key).typeName };
         });
     }
 
@@ -164,7 +165,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param unit
      * @return the loaded in memory modelunit
      */
-    async loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode> {
+    async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<FreNode> {
         LOGGER.log(`loadModelUnit ${unit.name}`);
         this.client.repository = modelName;
         if (!!unit.name && unit.name.length > 0) {
@@ -199,8 +200,8 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         LOGGER.log(`renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         this.client.repository = modelName;
         // put the unit and its interface under the new name
-        await this.putModelUnit(modelName, { name: newName, id: unit.freId() }, unit);
+        await this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit and interface
-        await this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId() });
+        await this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() });
     }
 }

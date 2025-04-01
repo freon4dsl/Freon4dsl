@@ -19,7 +19,7 @@ import {
 } from "$lib/stores/InfoPanelStore.svelte"
 import { WebappConfigurator } from "$lib/language";
 import { editorInfo, infoPanelShown } from "$lib"
-import { FreTreeNodeType, TreeNodeType } from "$lib/tree/TreeNodeType"
+import { TreeNodeData } from "$lib/tree/TreeNodeData"
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
@@ -109,7 +109,7 @@ export class EditorRequestsHandler {
 
             const value = intp.evaluate(node)
             if (isRtError(value)) {
-                interpreterTrace.value = new TreeNodeType(value.toString(), undefined)
+                interpreterTrace.value = new TreeNodeData(value.toString())
                 // console.log(value.toString())
             } else {
                 const trace = intp.getTrace().root
@@ -117,22 +117,22 @@ export class EditorRequestsHandler {
                 interpreterTrace.value = this.makeTreeNode(trace)
             }
         } else {
-            interpreterTrace.value = new TreeNodeType("No interpreter found", undefined)
+            interpreterTrace.value = new TreeNodeData("No interpreter found")
         }
         interpreterResultLoading.value = false;
     }
 
-    private makeTreeNode(trace: TraceNode): FreTreeNodeType {
+    private makeTreeNode(trace: TraceNode): TreeNodeData {
         let name: string = trace.toResultString();
         if (trace.children && trace.children.length > 0) {
-            const children: FreTreeNodeType[] = [];
+            const children: TreeNodeData[] = [];
             for (let child of trace.children) {
                 children.push(this.makeTreeNode(child));
             }
             // todo remove the type cast when TraceNode has changed its signature
-            return new FreTreeNodeType(name, trace.node as FreNode, children);
+            return new TreeNodeData(name, trace.node as FreNode, children);
         } else {
-            return new FreTreeNodeType(name, trace.node as FreNode, undefined);
+            return new TreeNodeData(name, trace.node as FreNode, undefined);
         }
     }
 

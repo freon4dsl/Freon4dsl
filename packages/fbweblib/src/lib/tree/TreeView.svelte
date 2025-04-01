@@ -1,17 +1,17 @@
 <script lang="ts">
     import TreeNode from "./TreeNode.svelte"
-    import { TreeNodeType, type TreeViewProps } from '$lib/tree/TreeNodeType';
+    import { type TreeViewProps } from '$lib/tree/TreeNodeData';
 
-    let { title, data }: TreeViewProps<TreeNodeType> = $props();
+    let { title, dataList }: TreeViewProps = $props();
 </script>
 
 {#if title}
     <h4>{title}</h4>
 {/if}
-{#if data}
+{#if dataList}
     <ul class="max-w-md space-y-1 text-gray-500 dark:text-gray-400">
-        {#each data as node}
-            <TreeNode node={node}/>
+        {#each dataList as node}
+            <TreeNode data={node}/>
         {/each}
     </ul>
 {/if}

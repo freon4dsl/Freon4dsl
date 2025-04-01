@@ -1,6 +1,6 @@
-import {type FreEnvironment, type FreModelUnit, isNullOrUndefined} from "@freon4dsl/core";
+import { type FreEnvironment, type FreModelUnit, type FreUnitIdentifier, isNullOrUndefined } from '@freon4dsl/core';
 import {WebappConfigurator} from "$lib/language/WebappConfigurator";
-import {progressIndicatorShown, setUserMessage, type UnitInfo} from "$lib";
+import {progressIndicatorShown, setUserMessage} from "$lib";
 
 export class ImportExportHandler {
     private langEnv: FreEnvironment | undefined = WebappConfigurator.getInstance().langEnv;
@@ -56,7 +56,7 @@ export class ImportExportHandler {
         }
     }
 
-    async exportUnit(unitId: UnitInfo) {
+    async exportUnit(unitId: FreUnitIdentifier) {
         if (WebappConfigurator.getInstance().langEnv) {
             this.langEnv = WebappConfigurator.getInstance().langEnv;
             // get the complete unit from the server

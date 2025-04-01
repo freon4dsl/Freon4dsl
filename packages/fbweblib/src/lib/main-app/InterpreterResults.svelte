@@ -1,10 +1,10 @@
 <script lang="ts">
-    import type { TreeNodeType } from "$lib/tree/TreeNodeType"
+    import type { TreeNodeData } from "$lib/tree/TreeNodeData"
     import TreeView from "$lib/tree/TreeView.svelte"
     import { interpreterTrace, interpreterResultLoading } from "$lib/stores/InfoPanelStore.svelte"
     import { Spinner } from "flowbite-svelte"
 
-    let treeData: TreeNodeType | undefined = $derived(interpreterTrace.value)
+    let treeData: TreeNodeData | undefined = $derived(interpreterTrace.value)
 
 </script>
 
@@ -16,7 +16,7 @@
 {:else }
     <div class="relative overflow-x-auto">
         {#if treeData}
-            <TreeView data={treeData.children} title={treeData.name}/>
+            <TreeView dataList={treeData.children} title={treeData.name}/>
         {/if}
     </div>
 {/if}

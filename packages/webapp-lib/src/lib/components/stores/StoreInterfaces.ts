@@ -1,4 +1,4 @@
-import type {FreModelUnit, ModelUnitIdentifier} from "@freon4dsl/core";
+import type {FreModelUnit, FreUnitIdentifier} from "@freon4dsl/core";
 
 export interface stringList {
     list: string[];
@@ -6,11 +6,11 @@ export interface stringList {
 
 // todo rethink the interfaces and the way the info is stored
 export interface  UnitInfo {
-    id: ModelUnitIdentifier | undefined;
+    id: FreUnitIdentifier | undefined;
     ref: FreModelUnit | undefined;
 }
 
 export interface UnitList {
-    ids: ModelUnitIdentifier[];
+    ids: FreUnitIdentifier[];
     refs: FreModelUnit[];
 }

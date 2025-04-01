@@ -30,7 +30,7 @@
 <input class:file_selector bind:this={file_selector} {...file_selector_props} onchange={process_files}>
 
 <script lang="ts">
-	import {isNullOrUndefined, type ModelUnitIdentifier} from "@freon4dsl/core";
+	import {isNullOrUndefined, type FreUnitIdentifier} from "@freon4dsl/core";
 	import MenuComponentDev from "@smui/menu";
 	import Menu from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
@@ -101,7 +101,7 @@
 		// console.log("FileMenu.newUnit");
 		if (!!currentModelName.value && currentModelName.value.length > 0) {
 			// get list of units from server, because new unit may not have the same name as an existing one
-			const names: ModelUnitIdentifier[] = await WebappConfigurator.getInstance().serverCommunication!.loadUnitList(currentModelName.value);
+			const names: FreUnitIdentifier[] = await EditorState.getInstance().modelStore!.getUnitIdentifiers();
 			if (names) {
 				// list may be empty => this is the first unit to be stored
 				unitNames.ids = names;

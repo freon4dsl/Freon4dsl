@@ -9,21 +9,20 @@
         Tooltip,
     } from 'flowbite-svelte';
     import {FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
-    import {FreErrorSeverity, type ModelUnitIdentifier} from "@freon4dsl/core";
+    import {FreErrorSeverity, type FreUnitIdentifier} from "@freon4dsl/core";
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
-    import {editorInfo, type UnitInfo} from "$lib/stores/ModelInfo.svelte";
+    import {editorInfo} from "$lib/stores/ModelInfo.svelte";
     import {drawerHidden, dialogs} from "$lib/stores";
     import {openModelDialog} from "$lib/language/DialogHelpers";
     import {ImportExportHandler, WebappConfigurator} from "$lib/language";
 
-    let myUnits: UnitInfo[] = $state([]);
-    // let selectedIndex: number = $derived(editorInfo.currentUnit ? myUnits.indexOf(editorInfo.currentUnit) : -1);
+    let myUnits: FreUnitIdentifier[] = $state([]);
     let selectedIndex: number = $state(-1);
 
     $effect(() => {
         myUnits = !!editorInfo.unitIds && editorInfo.unitIds.length > 0
-            ? editorInfo.unitIds.sort((u1: ModelUnitIdentifier, u2: ModelUnitIdentifier) => {
+            ? editorInfo.unitIds.sort((u1: FreUnitIdentifier, u2: FreUnitIdentifier) => {
                 if (u1.name > u2.name) {
                     return 1;
                 }
@@ -38,7 +37,7 @@
 
     $effect(() => {
         if (editorInfo.currentUnit && myUnits.length > 0) {
-            myUnits.forEach((u: ModelUnitIdentifier, index: number) => {
+            myUnits.forEach((u: FreUnitIdentifier, index: number) => {
                 if (u.id === editorInfo.currentUnit?.id) {
                     selectedIndex = index;
                 }
@@ -144,11 +143,10 @@
             <Listgroup class="border-none ">
                 {#each myUnits as unit, index}
                     {#if unit.type === unitType}
-                        <ListgroupItem class="text-base first:rounded-none last:rounded-none border-none p-1 {index === selectedIndex ? 'bg-secondary-400 dark:bg-secondary-600' : ''}">
+                        <ListgroupItem class="text-base first:rounded-none last:rounded-none border-none p-1
+                                {index === selectedIndex ? 'bg-secondary-400 dark:bg-secondary-600' : ''}">
                         <div class="flex justify-between items-end text-gray-600 dark:text-gray-200">
-<!--                            <div class="{index === selectedIndex ? 'bg-secondary-400 dark:bg-secondary-600' : ''}">-->
                             {unit.name}
-<!--                            </div>-->
                             <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->
                             <ChevronDownOutline id="dots-menu-{index}" class="inline text-gray-600 dark:text-white"/>
                             <Dropdown class="p-0 m-0">
@@ -184,13 +182,3 @@
         </ListgroupItem>
     {/each}
 </Listgroup>
-
-<style>
-    .current {
-        background-color: #47a7f5;
-
-        @variant dark {
-            background: lightgray;
-        }
-    }
-</style>

@@ -4,7 +4,7 @@ import {AST} from "../change-manager/index.js";
 import {FreEnvironment} from "../environment/index.js";
 import {FreLogger} from "../logging/index.js";
 import {isNullOrUndefined} from "../util/index.js";
-import {IServerCommunication, ModelUnitIdentifier} from "./server/index.js";
+import {IServerCommunication, FreUnitIdentifier} from "./server/index.js";
 
 export type ModelChangedCallbackFunction = (m: InMemoryModel) => void;
 
@@ -96,7 +96,7 @@ export class InMemoryModel {
      * @param unit
      */
     async deleteUnit(unit: FreModelUnit) {
-        await this.server.deleteModelUnit(this.model.name, { name: unit.name, id: unit.freId() });
+        await this.server.deleteModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() });
         AST.change( () => {
             this.model.removeUnit(unit);
         })
@@ -107,7 +107,7 @@ export class InMemoryModel {
      * Delete _unit_ from the model.
      * @param unit
      */
-    async deleteUnitById(unitId: ModelUnitIdentifier) {
+    async deleteUnitById(unitId: FreUnitIdentifier) {
         await this.server.deleteModelUnit(this.model.name, unitId);
         const unit: FreModelUnit = this.getUnitById(unitId);
         AST.change( () => {
@@ -141,7 +141,7 @@ export class InMemoryModel {
     /**
      * @param id
      */
-    getUnitById(id: ModelUnitIdentifier): FreModelUnit {
+    getUnitById(id: FreUnitIdentifier): FreModelUnit {
         console.log(`getUnitById: ${id.name}`);
         return this.model.findUnit(id.name);
     }
@@ -161,13 +161,13 @@ export class InMemoryModel {
     /**
      * Get all unit identifiers of the current model.
      */
-    getUnitIdentifiers(): ModelUnitIdentifier[] {
+    getUnitIdentifiers(): FreUnitIdentifier[] {
         const units = this.model?.getUnits()
         if (isNullOrUndefined(units)) {
             return []
         } else {
             return units.map((u) => {
-                return { name: u.name, id: u.freId() };
+                return { name: u.name, id: u.freId(), type: u.freLanguageConcept() };
             });
         }
     }
@@ -179,7 +179,7 @@ export class InMemoryModel {
      * @param unit
      */
     async saveUnit(unit: FreModelUnit): Promise<void> {
-        await this.server.putModelUnit(this.model.name, { name: unit.name, id: unit.freId() }, unit);
+        await this.server.putModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         this.currentModelChanged();
     }
 
