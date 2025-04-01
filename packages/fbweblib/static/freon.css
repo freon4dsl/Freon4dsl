@@ -67,7 +67,7 @@
 
 .list-item {
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
 }
 
 .drag-handle {
@@ -84,7 +84,7 @@
 .layout-component-horizontal {
     white-space: nowrap;
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
 }
 
 .layout-component-vertical {
@@ -154,6 +154,7 @@
     gap: 2px;
     position: absolute; /* relative to a 'relative' parent */
     min-width: 120px;
+    z-index: 10;
 }
 .contextmenu-button {
     border-radius: 2px;
@@ -439,7 +440,6 @@
 }
 
 .switch-component {
-    margin: 1px;
     margin: 2px 6px 4px 6px;
     display: inline-flex;
     width: max-content;
@@ -497,7 +497,7 @@
 
 .table-cell-component {
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     box-sizing: border-box;
     align-self: baseline; /* isn't this the default? */
     justify-self: baseline;
