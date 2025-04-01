@@ -114,7 +114,6 @@ export class WebappConfigurator {
             await this.modelStore.openModel(modelName)
             const unitIdentifiers: FreUnitIdentifier[] = this.modelStore.getUnitIdentifiers()
             // console.log("unit identifiers: " + JSON.stringify(unitIdentifiers))
-            const tmp: FreUnitIdentifier[] = []
             if (!!unitIdentifiers && unitIdentifiers.length > 0) {
                 // load the first unit and show it
                 let first: boolean = true
@@ -127,13 +126,12 @@ export class WebappConfigurator {
                         this.showUnit(unit, unitIdentifier);
                         first = false
                     }
-                    tmp.push({ id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() })
                 }
             }
             editorInfo.modelName = modelName
             await this.updateUnitList()
         } else {
-            console.log("no modelStore!")
+            console.error("No modelStore!")
         }
     }
 
@@ -170,27 +168,31 @@ export class WebappConfigurator {
 
     /**
      * This function takes care of actually showing the new unit in the editor.
-     * @param newUnit
+     * @param toBeShown
      * @param unitId
      * @private
      */
-    private showUnit(newUnit: FreModelUnit, unitId: FreUnitIdentifier) {
-        LOGGER.log("showUnit called, unitName: " + newUnit?.name)
-        if (!!newUnit) {
+    private showUnit(toBeShown: FreModelUnit, unitId: FreUnitIdentifier) {
+        console.log("showUnit called, unitName: " + toBeShown?.name)
+        if (!!toBeShown) {
             runInAction(() => {
                 if (!!this.langEnv) {
                     // console.log("setting rootElement to " + newUnit.name)
                     noUnitAvailable.value = false
-                    this.langEnv.editor.rootElement = newUnit
-                    const unitInfo = {id:newUnit.freId(), name:newUnit.name, type:newUnit.freLanguageConcept()}
-                    editorInfo.currentUnit = unitInfo;
-                    const tabIndex: number = indexForTab(unitInfo);
+                    // set the unit in the editor
+                    this.langEnv.editor.rootElement = toBeShown
+                    // select the right tab
+                    const tabIndex: number = indexForTab(unitId);
                     if (tabIndex > -1) { // an existing tab
                         editorInfo.currentOpenTab = tabIndex;
+                        console.log("opening tab: ", tabIndex, " for unit ", unitId.name)
                     } else { // a new tab
                         editorInfo.unitsInTabs.push(unitId);
                         editorInfo.currentOpenTab = editorInfo.unitsInTabs.length - 1;
+                        console.log("opening tab: ", editorInfo.unitsInTabs.length - 1, " for unit ", unitId.name)
                     }
+                    // remember the current unit
+                    editorInfo.currentUnit = unitId;
                 }
             })
         } else {
@@ -314,29 +316,27 @@ export class WebappConfigurator {
 
     /**
      * Reads the unit called 'newUnitName' from the server and shows it in the editor
-     * @param newUnitName
+     * @param unitId
      */
-    async openModelUnit(newUnitName: string) {
-        LOGGER.log("openModelUnit called, unitName: " + newUnitName)
-        if (!!editorInfo.currentUnit && newUnitName === editorInfo.currentUnit.name) {
+    async openModelUnit(unitId: FreUnitIdentifier) {
+        LOGGER.log("openModelUnit called, unitName: " + unitId)
+        if (!!editorInfo.currentUnit && unitId.name === editorInfo.currentUnit.name && unitId.id === editorInfo.currentUnit.id) {
             // the unit to open is the same as the unit in the editor, so we are doing nothing
             LOGGER.log("openModelUnit doing NOTHING")
         } else {
-            let newUnit: FreModelUnit | undefined = undefined
+            let toBeOpened: FreModelUnit | undefined = undefined
             autorun(() => {
                 if (this.modelStore) {
-                    newUnit = this.modelStore.getUnitByName(newUnitName)
-                    newUnit.freId()
+                    toBeOpened = this.modelStore.getUnitById(unitId)
                 }
             })
-            if (!isNullOrUndefined(newUnit)) {
+            if (!isNullOrUndefined(toBeOpened)) {
                 // save the old current unit, if there is one
                 await this.saveUnit(editorInfo.currentUnit)
                 // ... and show the new one
-                // @ts-ignore (A: compiler complains, I don't know why)
-                this.showUnit(newUnit, { id:newUnit.freId(), name:newUnit.name, type:newUnit.freLanguageConcept()})
+                this.showUnit(toBeOpened, unitId)
             } else {
-                setUserMessage("Cannot open unit " + newUnitName, FreErrorSeverity.Error)
+                setUserMessage("Cannot open unit " + unitId, FreErrorSeverity.Error)
             }
         }
     }
@@ -348,20 +348,65 @@ export class WebappConfigurator {
     async deleteModelUnit(unitId: FreUnitIdentifier | undefined) {
         if (!!unitId) {
             console.log("delete called for unit: " + unitId.name)
-
             // get rid of the unit on the server
             await this.modelStore?.deleteUnitById(unitId)
-            // if the unit is shown in the editor, get rid of that one, as well
-            if (!isNullOrUndefined(editorInfo.currentUnit) && editorInfo.currentUnit.id === unitId.id) {
-                console.log("removing currently shown unit")
-                runInAction(() => {
-                    this.setEditorToUndefined()
-                })
-                noUnitAvailable.value = true
-                modelErrors.list = []
-            }
             // get rid of the name in the navigator
             await this.updateUnitList()
+            // get rid of any tab for this unit
+            const tabIndex = indexForTab(unitId);
+            if (tabIndex > -1) { // there is a tab for this unit
+                if (editorInfo.unitsInTabs.length === 1) { // this tab is the only one
+                    // the unit is shown in the editor, so get rid of that one, as well
+                    if (!isNullOrUndefined(editorInfo.currentUnit) && editorInfo.currentUnit.id === unitId.id) {
+                        console.log("removing currently shown unit")
+                        runInAction(() => {
+                            this.setEditorToUndefined()
+                        })
+                        noUnitAvailable.value = true
+                        modelErrors.list = []
+                    }
+                } else { // other tabs left
+                    this.switchToOtherTab(tabIndex);
+                    if (editorInfo.currentUnit) {
+                        const newUnit = this.modelStore?.getUnitById(editorInfo.currentUnit);
+                        if (this.langEnv?.editor && newUnit) {
+                            this.langEnv.editor.rootElement = newUnit;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    private switchToOtherTab(tabIndex: number) {
+        if (tabIndex > 0) { // switch to the tab on the left
+            editorInfo.currentUnit = editorInfo.unitsInTabs[tabIndex - 1];
+            editorInfo.currentOpenTab = tabIndex - 1;
+        } else { // switch to the tab on the right
+            editorInfo.currentUnit = editorInfo.unitsInTabs[tabIndex + 1];
+            editorInfo.currentOpenTab = tabIndex + 1;
+        }
+        editorInfo.unitsInTabs.splice(tabIndex, 1);
+    }
+
+    /**
+     * Method is called when an editor tab is closed. It handles switching to another tab,
+     * if available. If not available, it sets the editor to undefined, and 'noUnitAvailable' to true,
+     * thus causing a user message on the screen.
+     *
+     * @param unitId
+     */
+    async closeModelUnit(unitId: FreUnitIdentifier) {
+        const tabIndex = indexForTab(unitId);
+        this.switchToOtherTab(tabIndex);
+        if (editorInfo.unitsInTabs.length === 0) {
+            runInAction(() => {
+                this.setEditorToUndefined()
+            })
+            noUnitAvailable.value = true
+            modelErrors.list = []
+            editorInfo.currentUnit = undefined
         }
     }
 

@@ -47,7 +47,7 @@
 
     const openUnit = (index: number) => {
         console.log('openUnit ' + index)
-        WebappConfigurator.getInstance().openModelUnit(editorInfo.unitIds[index].name);
+        WebappConfigurator.getInstance().openModelUnit(editorInfo.unitIds[index]);
         drawerHidden.value = true;
     };
 

@@ -39,14 +39,14 @@
 
 	function openTab(index: number) {
 		console.log('opening tab: ', index);
-		WebappConfigurator.getInstance().openModelUnit(editorInfo.unitIds[index].name);
-		editorInfo.currentOpenTab = index;
+		WebappConfigurator.getInstance().openModelUnit(editorInfo.unitsInTabs[index]);
 		infoPanelShown.value = false;
 	}
 
-    function closeTab(index: number) {
-        console.log('closing tab: ', index);
-    }
+	function closeTab(index: number) {
+		console.log('closing tab: ', index);
+		WebappConfigurator.getInstance().closeModelUnit(editorInfo.unitsInTabs[index]);
+	}
 
 	onMount(async () => {
 		// If a model is given as parameter, open this model
@@ -82,7 +82,7 @@
 												type="button" role="tab" aria-controls="profile"
 												aria-selected="false">{unitInfo.name}
 								</button>
-								<CloseButton size="sm" class="text-secondary-900" onclick={() => closeTab(index)}/>
+								<CloseButton size="sm" class="text-secondary-900 ml-1" onclick={() => closeTab(index)}/>
 							</div>
 						</li>
 <!--              <li class="pl-1 pr-1 pt-1 first:pl-0 last:pr-0 {open}" role="presentation"  >-->
