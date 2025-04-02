@@ -1,11 +1,14 @@
 <script lang="ts">
-    import { Button, Modal, Input, Radio, Card } from "flowbite-svelte"
+    import { Button, Modal, Input, Radio, Card, Helper } from 'flowbite-svelte';
     import { dialogs } from "$lib/stores/WebappStores.svelte"
     import { FreLanguage } from "@freon4dsl/core"
+    import { EditorRequestsHandler } from '$lib/language';
 
     let nodeType = $state("")
     let textToFind: string = $state("")
     let namedElementToFind: string = $state("")
+    const initialHelperText: string = "Enter the name of the element to search for";
+    let helperText: string = $state(initialHelperText);
 
     function handleCancel() {
         dialogs.searchElementDialogVisible = false
@@ -14,12 +17,29 @@
 
     async function handleSubmit() {
 
+        // todo implement this
+        if (!inputInvalid()) {
+            dialogs.searchElementDialogVisible = false
+            EditorRequestsHandler.getInstance().findNamedElement(textToFind, nodeType);
+            resetVariables()
+        }
+
     }
 
     function resetVariables() {
         nodeType = ""
         textToFind = ""
         namedElementToFind = ""
+    }
+
+    function inputInvalid(): boolean {
+        if (!(!!nodeType && nodeType.length > 0)) {
+            helperText = "Please, select the type of the unit below.";
+            return true;
+        } else {
+            helperText = initialHelperText;
+            return false;
+        }
     }
 
 </script>
@@ -36,6 +56,9 @@
                    id="new-input"
                    name="model-name"
             />
+            <Helper class="text-sm">
+                {helperText}
+            </Helper>
         </div>
         <div>
             <div class="grid grid-cols-3 mb-3 p-2">

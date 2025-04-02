@@ -166,13 +166,12 @@ export class EditorRequestsHandler {
             itemsToShow.push(new FreError("No results for " + stringToFind, null, "", ""));
         } else {
             for (const elem of results) {
-                // message: string, element: FreNode | FreNode[], locationdescription: string, severity?: FreErrorSeverity
                 // todo show some part of the text string instead of the element id
                 itemsToShow.push(new FreError(elem.freId(), elem, elem.freId(), ""));
             }
         }
         searchResults.list = itemsToShow;
-        searchResultLoading.value = false;
+
         infoPanelShown.value = true;
         console.log(`showSearchResults: ${searchResultLoading.value}, ${infoPanelShown.value}, ${searchResults.list.map(it => it.message).join("\n")}`);
     }
@@ -185,34 +184,21 @@ export class EditorRequestsHandler {
     //     const results: FreNode[] = searcher.findStructure(elemToMatch, EditorState.getInstance().currentUnit!);
     //     this.showSearchResults(results, "elemToMatch");
     // }
-    //
-    // findNamedElement(nameToFind: string, metatypeSelected: string) {
-    //     LOGGER.log("findNamedElement called");
-    //     searchResultLoaded.value = false;
-    //     activeTab.value = searchTab;
-    //     const searcher = new FreSearcher();
-    //     const results: FreNode[] = searcher.findNamedElement(
-    //         nameToFind,
-    //         EditorState.getInstance().currentUnit!,
-    //         metatypeSelected,
-    //     );
-    //     this.showSearchResults(results, nameToFind);
-    // }
-    //
-    // private showSearchResults(results: FreNode[], stringToFind: string) {
-    //     const itemsToShow: FreError[] = [];
-    //     if (!results || results.length === 0) {
-    //         // @ts-ignore
-    //         itemsToShow.push(new FreError("No results for " + stringToFind, null, "", ""));
-    //     } else {
-    //         for (const elem of results) {
-    //             // message: string, element: FreNode | FreNode[], locationdescription: string, severity?: FreErrorSeverity
-    //             // todo show some part of the text string instead of the element id
-    //             itemsToShow.push(new FreError(elem.freId(), elem, elem.freId(), ""));
-    //         }
-    //     }
-    //     searchResults.list = itemsToShow;
-    //     searchResultLoaded.value = true;
-    // }
 
+    findNamedElement(nameToFind: string, metatypeSelected: string) {
+        LOGGER.log("findNamedElement called");
+        searchResultLoading.value = true;
+        activeTab.value = searchTab;
+        const searcher = new FreSearcher();
+        const unit = WebappConfigurator.getInstance().getUnit(editorInfo.currentUnit!);
+        if (unit) {
+            const results: FreNode[] = searcher.findNamedElement(
+              nameToFind,
+              unit,
+              metatypeSelected
+            );
+            this.showSearchResults(results, nameToFind);
+        }
+        searchResultLoading.value = false;
+    }
 }

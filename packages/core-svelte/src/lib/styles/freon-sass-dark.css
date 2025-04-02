@@ -1,13 +1,15 @@
 /*********************************************
- * 
- * Styles for Freon Svelte components.
- * 
+ *
+ * Dark mode styles for Freon Svelte components
+ * for use by Sass.
+ *
  *********************************************/
 
 .freon-component {
-    color: darkblue;
-    background-color: white;
-    --md-sys-color-primary: darkblue;
+    color: var(--freon-white-200);
+    background-color: var(--freon-gray-700);
+    --md-sys-color-primary: var(--freon-white-200);
+    --md-sys-color-on-surface-variant: var(--freon-white-200); /* color for the one that is not checked */
 }
 
 .label-component:empty:before {
@@ -17,11 +19,11 @@
 }
 
 .list-component-horizontal {
-    border-color: darkgreen;
+    border-color: var(--freon-accent-green);
 }
 
 .list-component-vertical {
-    border-color: red;
+    border-color: var(--freon-accent-red);
 }
 
 .layout-component {
@@ -31,7 +33,7 @@
 }
 
 .layout-component-horizontal-error {
-    border-bottom: double thin red;
+    border-bottom: double thin var(--freon-accent-red);
     padding-bottom: 1px;
 }
 
@@ -39,16 +41,19 @@
 }
 
 .layout-component-vertical-error {
-    border-left: 2px solid red;
+    border-left: 2px solid var(--freon-accent-red);
     height: 100%;
 }
 
 .limited-checkbox-component-group {
+    --md-sys-color-primary: transparent;
+    --md-sys-color-on-surface-variant: var(--freon-white-200);
+    --md-sys-color-on-surface: var(--freon-white-200); /* box color for the one that is not checked */
 }
 .limited-checkbox-component-group:hover,
 .limited-checkbox-component-group:focus-within {
-    outline: #0d47a1 solid 1px;
-    box-shadow: 0 0 10px #0d47a1;
+    outline: var(--freon-gray-100) solid 1px;
+    box-shadow: 0 0 10px var(--freon-gray-100);
 }
 .limited-checkbox-component-label {
 }
@@ -57,10 +62,11 @@
 
 .limited-radio-component-group {
 }
+.limited-radio-component-group:focus,
 .limited-radio-component-group:hover,
 .limited-radio-component-group:focus-within {
-    outline: darkblue solid 1px;
-    box-shadow: 0 0 10px darkblue;
+    outline: var(--freon-white-200) solid 1px;
+    box-shadow: 0 0 10px var(--freon-white-200);
 }
 .limited-radio-component-single {
 }
@@ -68,10 +74,11 @@
 }
 .limited-radio-component-label {
 }
+
 .contextmenu {
-    border-color: #c5c5c5;
-    background: #e5e5e5;
-    box-shadow: 1.5px 1.5px 5px grey;
+    border-color: var(--freon-gray-200);
+    background: var(--freon-gray-100);
+    box-shadow: 1.5px 1.5px 5px var(--freon-gray-500);
 }
 .contextmenu-button {
     background: none;
@@ -79,63 +86,63 @@
 }
 
 .contextmenu-button:hover {
-    background: #f4f4f4;
+    background: var(--freon-white-200);
 }
 
 .contextmenu-shortcut {
-    color: #666;
+    color: var(--freon-gray-700);
 }
 
 .contextmenu-hr {
-    border-top: solid 1px #c5c5c5;
+    border-top: solid 1px var(--freon-gray-200);
 }
 
 .error-tooltip {
-    border: 1px solid dimgrey;
-    box-shadow: 1px 1px 1px dimgrey;
-    background: antiquewhite;
+    border: 1px solid var(--freon-gray-300);
+    box-shadow: 1px 1px 1px var(--freon-gray-300);
+    background: dark var(--freon-gray-500);
 }
 .error-marker {
-    background-color: #FF4C4C;
+    background-color: var(--freon-accent-red);
 }
 
 .button-component-ripple {
 }
 .button-component-ripple:hover {
-    background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) no-repeat center/15000%;
-    background-color: cornflowerblue;
+    background: var(--freon-gray-400) radial-gradient(circle, transparent 1%, var(--freon-gray-400) 1%) no-repeat center/15000%;
+    background-color: var(--freon-white-500);
 }
 .button-component-ripple:active {
-    background-color: lightgreen;
+    background-color: var(--freon-accent-green);
 }
 .button-component-empty {
 }
 
 /* Button style */
 .button-component {
-    box-shadow: 2px 2px 4px cornflowerblue;
-    background-color: darkblue;
-    color: whitesmoke;
+    box-shadow: 2px 2px 4px var(--freon-white-500);
+    background-color: var(--freon-white-200);
+    color: var(--freon-gray-900);
 }
 
 .boolean-checkbox-component {
-    --md-sys-color-primary: darkblue;
+    --md-sys-color-primary: var(--freon-gray-100);
 }
 .boolean-checkbox-component:hover,
 .boolean-checkbox-component:focus-within {
-    outline: darkblue solid 1px;
-    box-shadow: 0px 0px 10px darkblue;
+    outline: var(--freon-gray-100) solid 1px;
+    box-shadow: 0px 0px 10px var(--freon-gray-100);
 }
 
 .boolean-radio-component-group {
-    color: darkblue;
+    color: var(--freon-white-200);
     /*--md-sys-color-primary: var(--freon-boolean-color, var(--mdc-theme-primary));*/
     /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
 }
 .boolean-radio-component-group:hover,
 .boolean-radio-component-group:focus-within {
-    outline: darkblue solid 1px;
-    box-shadow: 0 0 10px darkblue;
+    outline: var(--freon-gray-100) solid 1px;
+    box-shadow: 0 0 10px var(--freon-gray-100);
 }
 .boolean-radio-component-single {
 }
@@ -148,85 +155,81 @@
 }
 
 .text-component-input {
-    color: blue;
-    background: rgba(211, 227, 253, 255);
+    color: var(--freon-accent-amber);
+    background: var(--freon-gray-800);
 }
 
 .text-component-text {
-    color: blue;
+    color: var(--freon-accent-amber);
     /*background: var(--freon-text-component-background-color, inherit);*/
-}
-.text-component-text-error {
-    text-decoration-line: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: red;
 }
 
 .text-component-placeholder {
-    color: blue;
+    color: var(--freon-accent-amber);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-action-placeholder {
-    color: darkgrey;
+    color: var(--freon-white-400);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
 .multiline-text-component {
-    color: blue;
+    color: var(--freon-accent-amber);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
 .numeric-slider-component {
-    --md-slider-inactive-track-color: gray;
+    --md-slider-inactive-track-color: var(--freon-gray-500);
 }
 
 .numeric-slider-component:hover,
 .numeric-slider-component:focus-within {
-    outline: blue solid 1px;
-    box-shadow: 0 0 8px gray;
+    outline: var(--freon-gray-100) solid 1px;
+    box-shadow: 0 0 8px var(--freon-gray-500);
     border-radius: 0.1em;
 }
 
-/*******************************************************
- *  DropDownComponent
- */
-.dropdown-component {
-    border-color: darkblue;
-    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
-    background: #e5e5e5;
+dropdown-component {
+    border-color: var(--freon-white-200);
+    box-shadow: 0 0 6px 0 var(--freon-gray-600);
+    background: var(--freon-gray-100);
 }
 
 .dropdown-component-item {
-    color: darkblue;
+    color: var(--freon-gray-900);
+    /*background-color: var(--freon-dropdownitem-component-background-color, inherit);*/
     background: none;
 }
 
 .dropdown-component-error {
-    color: red;
+    color: var(--freon-accent-red);
     /*background-color: var(--freon-dropdownitem-component-error-bg-color, red);*/
 }
 
 .dropdown-component-item:hover {
-    color: darkblue;
-    background-color: #f4f4f4;
+    color: var(--freon-gray-900);
+    background-color: var(--freon-white-200);
 }
 
 .dropdown-component-selected {
-    color: darkblue;
-    background-color: lightblue;
+    color: var(--freon-gray-900);
+    background-color: var(--freon-gray-200);
 }
 
 /******************************************************************
  *
  ******************************************************************/
 .inner-switch-component button {
-    color: darkblue;
+    color: var(--freon-white-100);
 }
 
-[role="switch"][aria-checked="true"] :first-child,
-[role="switch"][aria-checked="false"] :last-child {
-    color: white;
-    background-color: darkblue;
+.inner-switch-component button[role="switch"][aria-checked="false"] {
+    color: var(--freon-white-200);
+    background-color: var(--freon-gray-500);
+}
+.inner-switch-component button[role="switch"][aria-checked="true"] {
+    color: var(--freon-gray-900);
+    background-color: var(--freon-gray-400);
 }
 
 .inner-switch-component button span {
@@ -234,52 +237,53 @@
 
 .inner-switch-component button:hover,
 .inner-switch-component button:focus {
-    outline: darkblue solid 1px;
-    box-shadow: 0 0 8px darkblue;
+    outline: var(--freon-white-100) solid 1px;
+    box-shadow: 0 0 8px var(--freon-white-100);
 }
 
 .optional-component-new:empty:before {
-    background-color: purple;
+    background-color: lightpink;
 }
 
 .optional-component-show {
 }
 .optional-component-hide {
-    color: lightgrey;
+    color: light var(--freon-gray-500);
 }
 
 .render-component {
 }
 .render-component-unknown-box {
-    color: red;
+    color: var(--freon-accent-red);
 }
-
 .render-component-error {
     text-decoration-line: underline;
     text-decoration-style: wavy;
-    text-decoration-color: red;
+    text-decoration-color: var(--freon-accent-red);
 }
-
 .render-component-unselected {
     /*background-color: transparent;*/
 }
 .render-component-selected {
-    outline-color: darkblue;
+    outline-color: var(--freon-white-200);
 }
 
 .switch-component {
 }
 .switch-component button {
-    background: lightgray;
+    background: var(--freon-gray-800);
 }
 
 .switch-component button::before {
     /* defines the knob */
-    background: darkblue;
+    background-color: var(--freon-white-200);
 }
 
 .switch-component button[aria-checked="true"] {
-    background-color: darkgray;
+    background-color: var(--freon-gray-400);
+}
+.switch-component button[aria-checked="false"] {
+    background-color: var(--freon-gray-700);
 }
 
 .switch-component button[aria-checked="true"]::before {
@@ -287,7 +291,7 @@
 
 .switch-component button:hover,
 .switch-component button:focus {
-    box-shadow: 2px 2px 8px blue;
+    box-shadow: 0 0px 8px var(--freon-gray-100);
 }
 
 .switch-component button {
@@ -297,7 +301,7 @@
 }
 
 .table-component {
-    border-color: darkgreen;
+    border-color: var(--freon-accent-green);
 }
 
 .table-cell-component {
@@ -308,11 +312,11 @@
     background: transparent;
 }
 .table-cell-component-selected {
-    outline-color: darkblue;
+    outline-color: var(--freon-white-200);
 }
 
 .grid-component {
-    border-color: darkgreen;
+    border-color: var(--freon-accent-green);
 }
 
 .grid-cell-component {
@@ -324,17 +328,13 @@
 }
 
 .text-dropdown-component .text-component-text {
-    color: green;
-}
-
-.text-dropdown-component .text-component-input {
-    color: green;
+    color: var(--freon-accent-green);
 }
 
 .brackets {
-    color: darkgray;
+    color: var(--freon-gray-500);
 }
 
 .drag-handle-icon {
-    fill: darkgrey;
+    fill: var(--freon-white-300);
 }

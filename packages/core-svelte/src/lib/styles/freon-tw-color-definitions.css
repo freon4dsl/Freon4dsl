@@ -1,0 +1,30 @@
+/*********************************************
+ *
+ * Color definitions for Freon Svelte components.
+ *
+ *********************************************/
+
+:root {
+    --freon-gray-900: theme(colors.freonGray.900); /* Near-black, deep charcoal gray */
+    --freon-gray-800: theme(colors.freonGray.800); /* Very dark neutral gray */
+    --freon-gray-700: theme(colors.freonGray.700); /* Balanced deep gray */
+    --freon-gray-600: theme(colors.freonGray.600); /* Strong mid-gray */
+    --freon-gray-500: theme(colors.freonGray.500); /* Smooth neutral gray */
+    --freon-gray-400: theme(colors.freonGray.400); /* Lighter, airy neutral gray */
+    --freon-gray-300: theme(colors.freonGray.300); /* Soft, clean light gray */
+    --freon-gray-200: theme(colors.freonGray.200); /* Pale, elegant gray */
+    --freon-gray-100: theme(colors.freonGray.100); /* Near-white subtle gray */
+
+    --freon-white-100: theme(colors.freonWhite.100); /* Pure White */
+    --freon-white-200: theme(colors.freonWhite.200); /* Light Smoke */
+    --freon-white-300: theme(colors.freonWhite.300); /* Floral White */
+    --freon-white-400: theme(colors.freonWhite.400); /* Light Yellow */
+    --freon-white-500: theme(colors.freonWhite.500); /* Antique White */
+
+    --freon-accent-error: theme(colors.freonAccent.error);
+    --freon-accent-editable: theme('colors.freonAccent.editable');
+    --freon-accent-optional: theme('colors.freonAccent.optional');
+    --freon-accent-border: theme('colors.freonAccent.border');
+    --freon-accent-dropdown: theme('colors.freonAccent.dropdown');
+    --freon-accent-button: theme('colors.freonAccent.button');
+}

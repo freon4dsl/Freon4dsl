@@ -2,6 +2,7 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import './core-styles/freon.css';
-@import './core-styles/freon-dark.css';
-@import './core-styles/freon-light.css';
+@import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon.css';
+@import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-tw-color-definitions.css';
+@import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-tw-dark.css';
+@import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-light.css';
