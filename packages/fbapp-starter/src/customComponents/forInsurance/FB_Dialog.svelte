@@ -1,12 +1,10 @@
 <script lang="ts">
-    import Dialog, { Title, Content, Actions } from '@smui/dialog';
-    import Button, { Label } from '@smui/button';
     import {ExternalStringBox, isNullOrUndefined} from "@freon4dsl/core";
-    import Textfield from '@smui/textfield';
-    import Icon from '@smui/textfield/icon';
-    import HelperText from '@smui/textfield/helper-text';
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
     import type {SvelteComponent} from "svelte";
+    import { Button, Modal, Input, Helper } from 'flowbite-svelte';
+    import {PersonChalkboardOutline} from 'flowbite-svelte-icons';
+
 
     // Props
     let { editor, box }: FreComponentProps<ExternalStringBox> = $props();
@@ -59,21 +57,17 @@
     // Svelte: Type 'SvelteComponent<$$ComponentProps, { [evt: string]: CustomEvent<any>; }, {}> & { $$bindings?: "value" | "files" | "invalid" | "dirty" | undefined; } & { ...; }' is missing the following properties from type 'HTMLTextAreaElement': autocomplete, cols, defaultValue, dirName, and 318 more.
 </script>
 
-<Dialog bind:open sheet aria-describedby="sheet-content">
-    <Title id="simple-title">{buttonLabel}</Title>
-    <Content id="simple-content">
-        <Textfield bind:value={value} onchange={onChange} bind:this={inputElement} onkeydown={onKeyDown}>
-            <Icon class="material-icons" >event</Icon>
-            <HelperText >{buttonLabel}</HelperText>
-        </Textfield>
-    </Content>
-    <Actions>
-        <Button>
-            <Label>Close</Label>
-        </Button>
-    </Actions>
-</Dialog>
+<Modal title={buttonLabel} bind:open  autoclose aria-describedby="sheet-content">
+        <Input bind:value={value} onchange={onChange} bind:this={inputElement} onkeydown={onKeyDown}>
+            <PersonChalkboardOutline />
+            <Helper >{buttonLabel}</Helper>
+        </Input>
+    <svelte:fragment slot="footer">
+        <Button on:click={() => alert('Handle "success"')}>I accept</Button>
+        <Button color="alternative">Decline</Button>
+    </svelte:fragment>
+</Modal>
 
 <Button onclick={() => (open = true)}>
-    <Label>{buttonLabel}</Label>
+    {buttonLabel}
 </Button>

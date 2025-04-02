@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
-    import IconButton, { Icon } from '@smui/icon-button';
+
+    import { AccordionItem, Accordion } from 'flowbite-svelte';
     import {ExternalPartListBox} from "@freon4dsl/core";
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
@@ -55,17 +55,15 @@
 
 <Accordion multiple={multiplePar}>
     {#each box.children as childBox, index}
-        <Panel bind:open={panelOpen[index]}>
-            <Header>
+        <AccordionItem bind:open={panelOpen[index]}>
+            <span slot="header">
                 {childBox.node.freLanguageConcept()}
-                <IconButton toggle pressed={panelOpen[index]} onclick={() => setHidden(index)}>
-                    <Icon class="material-icons" on>expand_less</Icon>
-                    <Icon class="material-icons">expand_more</Icon>
-                </IconButton>
-            </Header>
-            <Content>
-                <RenderComponent box={childBox} editor={editor} />
-            </Content>
-        </Panel>
+<!--                <IconButton toggle pressed={panelOpen[index]} onclick={() => setHidden(index)}>-->
+<!--                    <Icon class="material-icons" on>expand_less</Icon>-->
+<!--                    <Icon class="material-icons">expand_more</Icon>-->
+<!--                </IconButton>-->
+            </span>
+            <RenderComponent box={childBox} editor={editor} />
+        </AccordionItem>
     {/each}
 </Accordion>

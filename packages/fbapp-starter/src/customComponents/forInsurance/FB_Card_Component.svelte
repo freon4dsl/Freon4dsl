@@ -1,7 +1,7 @@
 <script lang="ts">
-    import Card from '@smui/card';
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
     import {FragmentWrapperBox} from "@freon4dsl/core";
+    import { Card } from 'flowbite-svelte';
 
     // Props
     let { editor, box }: FreComponentProps<FragmentWrapperBox> = $props();
