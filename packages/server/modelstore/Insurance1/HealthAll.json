@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-InsuranceModel",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-49",
@@ -112,7 +117,7 @@
                "targets": [
                   {
                      "resolveInfo": "HealthTheme",
-                     "reference": "ID-11"
+                     "reference": "ID-21"
                   }
                ]
             },
@@ -125,7 +130,7 @@
                "targets": [
                   {
                      "resolveInfo": "Month",
-                     "reference": "ID-14"
+                     "reference": "ID-24"
                   }
                ]
             },
@@ -1048,7 +1053,7 @@
                "targets": [
                   {
                      "resolveInfo": "EUR",
-                     "reference": "ID-9"
+                     "reference": "ID-19"
                   }
                ]
             }
@@ -1323,7 +1328,7 @@
                "targets": [
                   {
                      "resolveInfo": "InsurancePart",
-                     "reference": "ID-5"
+                     "reference": "ID-15"
                   }
                ]
             }
@@ -1383,7 +1388,7 @@
                "targets": [
                   {
                      "resolveInfo": "Percentage",
-                     "reference": "ID-6"
+                     "reference": "ID-16"
                   }
                ]
             }

@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-InsuranceModel",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-32",
@@ -142,7 +147,7 @@
                "targets": [
                   {
                      "resolveInfo": "HealthTheme",
-                     "reference": "ID-11"
+                     "reference": "ID-21"
                   }
                ]
             }
