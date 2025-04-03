@@ -46,15 +46,15 @@ export default {
           700: "#5B7F20",
           800: "#47651A",
           900: "#334C14",
-          // 900: "#1F1F1F", /* Near-black, deep charcoal gray */
-          // 800: "#2D2D2D", /* Very dark neutral gray */
-          // 700: "#444444", /* Balanced deep gray */
-          // 600: "#5A5A5A", /* Strong mid-gray */
-          // 500: "#6F6F6F", /* Smooth neutral gray */
-          // 400: "#878787", /* Lighter, airy neutral gray */
-          // 300: "#A0A0A0", /* Soft, clean light gray */
-          // 200: "#C0C0C0", /* Pale, elegant gray */
-          // 100: "#E0E0E0", /* Near-white subtle gray */
+          //   100: "#E0E0E0", /* Near-white subtle gray */
+          //   200: "#C0C0C0", /* Pale, elegant gray */
+          //   300: "#A0A0A0", /* Soft, clean light gray */
+          //   400: "#878787", /* Lighter, airy neutral gray */
+          //   500: "#6F6F6F", /* Smooth neutral gray */
+          //   600: "#5A5A5A", /* Strong mid-gray */
+          //   700: "#444444", /* Balanced deep gray */
+          //   800: "#2D2D2D", /* Very dark neutral gray */
+          //   900: "#1F1F1F", /* Near-black, deep charcoal gray */
         },
         freonWhite: {
           100: "#FFE8D9",

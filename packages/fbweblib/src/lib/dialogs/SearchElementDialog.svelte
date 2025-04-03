@@ -46,10 +46,10 @@
 
 <Modal bind:open={dialogs.searchElementDialogVisible} autoclose={false} class="w-full">
     <div class="flex flex-col space-y-6" role="dialog">
-        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Search for ...</h3>
+        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Search for ...</h3>
         <Card class="flex flex-col space-y-6 bg-white shadow my-2 p-6 max-w-full">
-        <h4 class="text-l font-medium text-gray-900 dark:text-white"> Element with certain type and name</h4>
-        <div class="relative text-gray-700">
+        <h4 class="text-l font-medium text-secondary-900 dark:text-primary-50"> Element with certain type and name</h4>
+        <div class="relative text-secondary-700">
             <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline"
                    type="text"
                    bind:value={namedElementToFind}

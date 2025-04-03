@@ -16,11 +16,11 @@
 {:else }
     <div class="relative overflow-x-auto">
         {#if items && items.length > 0}
-            <table class="text-left text-sm text-gray-500 dark:text-gray-40 w-full">
+            <table class="text-left text-sm text-secondary-500 dark:text-secondary-40 w-full">
                 <tbody class="divide-y">
                 {#each items as it}
-                    <tr class="border-b last:border-b-0 bg-white dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
-                        <td class="whitespace-nowrap font-medium text-gray-900 dark:text-white p-1.5">
+                    <tr class="border-b last:border-b-0 bg-white dark:bg-secondary-800 dark:border-secondary-700 hover:bg-secondary-50 dark:hover:bg-secondary-600 odd:bg-white even:bg-secondary-50 odd:dark:bg-secondary-800 even:dark:bg-secondary-700">
+                        <td class="whitespace-nowrap font-medium text-secondary-900 dark:text-primary-50 p-1.5">
                         <button class="font-medium text-primary-900 hover:underline dark:text-primary-500"onclick={() => goToNode(it.reportedOn)}>{it.message}
                         </button>
                     </td>

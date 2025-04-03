@@ -60,12 +60,12 @@
 
 <Modal bind:open={dialogs.startDialogVisible} autoclose={false} class="w-full">
     {#if serverInfo.allModelNames.length > 0}
-        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Create/Open model</h3>
+        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Create/Open model</h3>
     {:else }
-        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Create model</h3>
+        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Create model</h3>
     {/if}
     <div class="flex flex-col space-y-6" role="dialog">
-        <div class="relative text-gray-700">
+        <div class="relative text-secondary-700">
             <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline"
                    type="text"
                    bind:value={newName}
@@ -76,7 +76,7 @@
             <Button class="absolute inset-y-0 right-0 flex items-center px-4 rounded-r-lg"
                     onclick={newModel}
             >
-                <FolderPlusSolid class="w-4 h-4 me-2 dark:text-white"/>
+                <FolderPlusSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
                 Create
             </Button>
         </div>
@@ -84,7 +84,7 @@
             <span class="font-medium">{errorText}</span>
         </Helper>
         {#if serverInfo.allModelNames.length > 0}
-            <hr class="h-px my-8 bg-gray-400 border-0 dark:bg-gray-300">
+            <hr class="h-px my-8 bg-secondary-400 border-0 dark:bg-secondary-300">
             <div class="">
                 <div class="grid grid-cols-3 mb-3 p-2">
                     {#each serverInfo.allModelNames as model}
@@ -94,7 +94,7 @@
                 <div class="flex flex-row justify-end">
                     <Button color="alternative" onclick={cancel}>Cancel</Button>
                     <Button onclick={openModel}>
-                        <FolderOpenSolid class="w-4 h-4 me-2 dark:text-white"/>
+                        <FolderOpenSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
                         Open
                     </Button>
                 </div>

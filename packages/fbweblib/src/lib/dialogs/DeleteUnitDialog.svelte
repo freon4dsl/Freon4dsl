@@ -17,7 +17,7 @@
 
 <Modal bind:open={dialogs.deleteUnitDialogVisible} autoclose={false} class="w-full">
     <div class="flex flex-col space-y-6" role="dialog">
-        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Delete unit</h3>
+        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Delete unit</h3>
         <Label class="space-y-2">
             Do you want to delete <span class="font-bold">{editorInfo.currentUnit?.name}</span>?
         </Label>

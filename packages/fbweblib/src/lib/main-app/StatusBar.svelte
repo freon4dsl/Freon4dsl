@@ -9,7 +9,7 @@
 	let currentBox: Box = $derived(selectedBoxes.value[0]);
 </script>
 
-<span class="dark:bg-gray-300 bg-secondary-100">
+<span class="dark:bg-secondary-300 bg-secondary-100">
 	<div class='text-sm ml-2'>
 		{editorInfo.modelName}
 		<ChevronRightOutline class="dots-menu2 text-primary-700 ms-2 inline h-6 w-6"/>

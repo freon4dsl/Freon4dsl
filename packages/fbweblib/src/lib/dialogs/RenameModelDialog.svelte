@@ -43,10 +43,10 @@
 </script>
 
 <Modal bind:open={dialogs.renameModelDialogVisible} autoclose={false} class="w-full">
-    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Rename model</h3>
+    <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Rename model</h3>
     <p>This is not yet functioning</p>
     <div class="flex flex-col space-y-6" role="dialog">
-        <div class="relative text-gray-700">
+        <div class="relative text-secondary-700">
             <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline" type="text"
                    bind:value={newName}
                    id="new-input"

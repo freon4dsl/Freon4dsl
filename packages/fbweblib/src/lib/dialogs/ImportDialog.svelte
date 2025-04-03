@@ -55,8 +55,8 @@
 
 <Modal bind:open={dialogs.importDialogVisible} autoclose={false} class="w-full">
     <div class="flex flex-col space-y-6" role="dialog">
-        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Import model unit(s)</h3>
-        <button class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600';"
+        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Import model unit(s)</h3>
+        <button class="flex flex-col justify-center items-center w-full h-64 bg-secondary-50 rounded-lg border-2 border-secondary-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-secondary-700 hover:bg-secondary-100 dark:border-secondary-600 dark:hover:border-secondary-500 dark:hover:bg-secondary-600';"
                 id="dropzone"
                 ondrop={dropHandle}
                 ondragover={(event) => {
@@ -64,11 +64,11 @@
                   }}
                 onclick={onClick}
         >
-            <ArrowDownToBracketOutline class="w-10 h-10 me-2 dark:text-white"/>
+            <ArrowDownToBracketOutline class="w-10 h-10 me-2 dark:text-primary-50"/>
             <Label class="space-y-2">
-                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
+                <p class="mb-2 text-sm text-secondary-500 dark:text-secondary-400"><span
                         class="font-semibold">Click to import </span> or drag and drop</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Valid file types: {file_extensions}</p>
+                <p class="text-xs text-secondary-500 dark:text-secondary-400">Valid file types: {file_extensions}</p>
             </Label>
         </button>
         <input class="hidden" type="file" accept={file_extensions} multiple={true} bind:this={file_selector}

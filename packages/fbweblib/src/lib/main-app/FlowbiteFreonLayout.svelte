@@ -69,10 +69,10 @@
 	<NavBar />
 	<ToolBar />
 	<!-- the tab panel with buttons -->
-	<div class="w-full pl-2 pr-2 mx-auto dark:bg-gray-800 bg-secondary-100">
+	<div class="w-full pl-2 pr-2 mx-auto dark:bg-secondary-800 bg-secondary-100">
 		<div class="flex space-x-1 mt-1" role="tablist">
 			{#each editorInfo.unitsInTabs as unitInfo, index}
-				<div class="relative tab-button dark:bg-primary-50 bg-gray-100 dark:text-primary-900 text-gray-600   {editorInfo.currentOpenTab === index ? 'opacity-100' : 'opacity-70'}">
+				<div class="relative tab-button dark:bg-primary-50 bg-secondary-100 dark:text-primary-900 text-secondary-600   {editorInfo.currentOpenTab === index ? 'opacity-100' : 'opacity-70'}">
 					<button
 						class=""
 						class:active={editorInfo.currentOpenTab === index}
@@ -97,7 +97,7 @@
 	</div>
 
 	<Footer
-		class="text-center sticky md: bottom-0 start-0 z-20 w-full border-t border-gray-200 bg-white p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 dark:border-gray-600 dark:bg-gray-800"
+		class="text-center sticky md: bottom-0 start-0 z-20 w-full border-t border-secondary-200 bg-white p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 dark:border-secondary-600 dark:bg-secondary-800"
 	>
 		<div class="flex">
 			<FooterCopyright
@@ -111,7 +111,7 @@
 			{/if}
 		</div>
 		<FooterLinkGroup
-			ulClass="flex flex-wrap items-center mt-3 text-xs text-gray-500 dark:text-gray-400 sm:mt-0"
+			ulClass="flex flex-wrap items-center mt-3 text-xs text-secondary-500 dark:text-secondary-400 sm:mt-0"
 		>
 			<FooterLink href="https://freon4dsl.dev" class="inline-flex items-center"
 			>freon4dsl.dev
@@ -158,6 +158,6 @@
     }
 
     .tab-button.active {
-        @apply bg-white dark:border-gray-900 text-gray-900 dark:text-gray-100 border border-gray-300 border-b-0 ;
+        @apply bg-white dark:border-secondary-900 text-secondary-900 dark:text-secondary-100 border border-secondary-300 border-b-0 ;
     }
 </style>

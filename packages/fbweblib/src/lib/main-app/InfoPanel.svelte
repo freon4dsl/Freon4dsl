@@ -8,7 +8,7 @@
 </script>
 
 <div>
-	<div class="flex flex-end p-0 m-0 w-full border-b border-gray-300 dark:border-gray-800">
+	<div class="flex flex-end p-0 m-0 w-full border-b border-secondary-300 dark:border-secondary-800">
 		<div class="font-semibold p-1">
 			{#if activeTab.value === searchTab}
 				Search results
@@ -18,7 +18,7 @@
 				Interpreter results
 			{/if}
 		</div>
-		<CloseButton onclick={() => (infoPanelShown.value = false)} class="dark:text-white ml-auto" />
+		<CloseButton onclick={() => (infoPanelShown.value = false)} class="dark:text-primary-50 ml-auto" />
 	</div>
 	{#if activeTab.value === searchTab}
 		<SearchResults/>

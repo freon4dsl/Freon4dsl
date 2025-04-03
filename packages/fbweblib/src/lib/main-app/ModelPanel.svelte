@@ -95,15 +95,15 @@
 <div class="flex items-center">
     <ButtonGroup class="*:!ring-primary-700 ">
         <Button name="Open existing model" size="xs" onclick={openModelDialog}>
-            <FolderOpenSolid class="w-4 h-4 me-2 dark:text-white"/>
+            <FolderOpenSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
         </Button>
         <Tooltip placement="bottom">Open existing model</Tooltip>
         <Button name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
-            <FolderPlusSolid class="w-4 h-4 me-2 dark:text-white"/>
+            <FolderPlusSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
         </Button>
         <Tooltip placement="bottom">Create new model</Tooltip>
     </ButtonGroup>
-    <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-white"/>
+    <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-primary-50"/>
 </div>
 
 <!-- buttons that address the current model -->
@@ -113,15 +113,15 @@
     </span>
     <ButtonGroup class="*:!ring-primary-700 ">
         <Button name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
-            <PenSolid class="w-4 h-4 me-2 dark:text-white"/>
+            <PenSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
         </Button>
         <Tooltip placement="bottom">Rename model</Tooltip>
         <Button name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
-            <TrashBinSolid class="w-4 h-4 me-2 dark:text-white"/>
+            <TrashBinSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
         </Button>
         <Tooltip placement="bottom">Delete model</Tooltip>
         <Button name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
-            <ArrowDownToBracketOutline class="w-4 h-4 me-2 dark:text-white"/>
+            <ArrowDownToBracketOutline class="w-4 h-4 me-2 dark:text-primary-50"/>
         </Button>
         <Tooltip placement="bottom">Import Unit(s)...</Tooltip>
     </ButtonGroup>
@@ -130,11 +130,11 @@
 <!-- buttons for the model's units -->
 <Listgroup >
     {#each langInfo.unitTypes as unitType}
-        <div class="flex justify-between p-1 font-semibold text-gray-900 dark:text-white">
+        <div class="flex justify-between p-1 font-semibold text-secondary-900 dark:text-primary-50">
             {unitType}
             <ButtonGroup class="*:!ring-primary-700 ">
             <Button name="New Unit" size="xs" class="p-1" onclick={() => newUnit(unitType)}>
-                <FolderOpenSolid class="w-4 h-4 me-2 dark:text-white mr-0"/>
+                <FolderOpenSolid class="w-4 h-4 me-2 dark:text-primary-50 mr-0"/>
             </Button>
             <Tooltip placement="bottom">New Unit</Tooltip>
             </ButtonGroup>
@@ -145,29 +145,29 @@
                     {#if unit.type === unitType}
                         <ListgroupItem class="text-base first:rounded-none last:rounded-none border-none p-1
                                 {index === selectedIndex ? 'bg-secondary-400 dark:bg-secondary-600' : ''}">
-                        <div class="flex justify-between items-end text-gray-600 dark:text-gray-200">
+                        <div class="flex justify-between items-end text-secondary-600 dark:text-secondary-200">
                             {unit.name}
                             <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->
-                            <ChevronDownOutline id="dots-menu-{index}" class="inline text-gray-600 dark:text-white"/>
+                            <ChevronDownOutline id="dots-menu-{index}" class="inline text-secondary-600 dark:text-primary-50"/>
                             <Dropdown class="p-0 m-0">
                                 <div class="flex flex-col justify-end p-0 m-0">
-                                    <Button name="Open" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => openUnit(index)}>
+                                    <Button name="Open" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => openUnit(index)}>
                                         <FolderOpenSolid class="w-4 h-4 me-2"/>
                                         Open
                                     </Button>
-                                    <Button name="Save" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => saveUnit(index)}>
+                                    <Button name="Save" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => saveUnit(index)}>
                                         <FloppyDiskSolid class="w-4 h-4 me-2"/>
                                         Save
                                     </Button>
-                                    <Button name="Rename" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => renameUnit(index)}>
+                                    <Button name="Rename" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => renameUnit(index)}>
                                         <PenSolid class="w-4 h-4 me-2"/>
                                         Rename
                                     </Button>
-                                    <Button name="Delete" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => deleteUnit(index)}>
+                                    <Button name="Delete" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => deleteUnit(index)}>
                                         <TrashBinSolid class="w-4 h-4 me-2"/>
                                         Delete
                                     </Button>
-                                    <Button name="Export" size="xs" class="m-1 dark:bg-gray-200 dark:text-gray-800" onclick={() => exportUnit(index)}>
+                                    <Button name="Export" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => exportUnit(index)}>
                                         <ArrowUpFromBracketOutline class="w-4 h-4 me-2"/>
                                         Export
                                     </Button>

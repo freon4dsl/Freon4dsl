@@ -15,13 +15,13 @@
 </script>
 
 <li>
-    <div class="flex flex-end p-0 m-0 w-full border-b border-gray-300 dark:border-gray-800">
+    <div class="flex flex-end p-0 m-0 w-full border-b border-secondary-300 dark:border-secondary-800">
     <button onclick={toggle} style="cursor: pointer;" tabindex="0">
         {#if data.children}
             {#if expanded}
-                <AngleDownOutline class="ms-0 inline h-3 w-3 dark:text-white" />
+                <AngleDownOutline class="ms-0 inline h-3 w-3 dark:text-primary-50" />
             {:else}
-                <AngleRightOutline class="ms-0 inline h-3 w-3 dark:text-white" />
+                <AngleRightOutline class="ms-0 inline h-3 w-3 dark:text-primary-50" />
             {/if}
             {data.name}
         {:else}
@@ -31,7 +31,7 @@
     {#if data.aboutNode}
         <button class="bg-transparent border-2 border-primary-600 hover:border-secondary-600 h-7 w-7 rounded-full inline-flex items-center ml-auto mr-1"
                 onclick={() => goToNode(data.aboutNode)}>
-            <ArrowRightOutline class="h-5 w-5 ms-0.5 text-black dark:text-white"/>
+            <ArrowRightOutline class="h-5 w-5 ms-0.5 text-black dark:text-primary-50"/>
         </button>
     {/if}
     </div>

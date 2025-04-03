@@ -37,7 +37,7 @@
 </script>
 
 <Modal bind:open={dialogs.openModelDialogVisible} autoclose={false} class="w-full">
-    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Open model</h3>
+    <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Open model</h3>
     <div class="flex flex-col space-y-6" role="dialog">
         <Helper class="text-sm ml-2 text-primary-900">
             <span class="font-medium">{errorText}</span>
@@ -51,7 +51,7 @@
             <div class="flex flex-row justify-end">
                 <Button color="alternative" onclick={cancel}>Cancel</Button>
                 <Button onclick={openModel} >
-                    <FolderOpenSolid class="w-4 h-4 me-2 dark:text-white"/>
+                    <FolderOpenSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
                     Open</Button>
             </div>
         </div>

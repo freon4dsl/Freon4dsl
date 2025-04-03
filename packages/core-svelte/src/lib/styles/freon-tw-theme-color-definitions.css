@@ -1,6 +1,10 @@
 /*********************************************
  *
- * Color definitions for Freon Svelte components.
+ * Theming color definitions for Freon Svelte components.
+ *
+ * To be used with Tailwind theming. In the tailwind.config
+ * three colors palettes should be defined, called freonGray,
+ * freonWhite, and freonAccent, which define the theme colors.
  *
  *********************************************/
 

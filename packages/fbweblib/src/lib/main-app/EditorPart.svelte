@@ -15,7 +15,7 @@
     let alertCls: string = 'p-1 m-2 gap-1 bg-secondary-600 dark:bg-secondary-200 text-primary-50 dark:text-primary-900';
 </script>
 
-<div class='bg-white dark:bg-primary-50 dark:text-white p-2'>
+<div class='bg-white dark:bg-primary-50 dark:text-primary-50 p-2'>
     {#if (noUnitAvailable.value || isNullOrUndefined(WebappConfigurator.getInstance().langEnv?.editor))}
         {#if !userMessageOpen.value}
             <Alert transition={fly} params={{ x: 200 }} class={alertCls}>
