@@ -1,11 +1,11 @@
 <script lang="ts">
-    import {
-        FooterLink,
-        FooterLinkGroup,
-        Drawer,
-        Footer,
-        FooterCopyright, CloseButton
-    } from 'flowbite-svelte';
+	import {
+		FooterLink,
+		FooterLinkGroup,
+		Drawer,
+		Footer,
+		FooterCopyright, CloseButton
+	} from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	import { sineIn } from 'svelte/easing';
 	import { WebappConfigurator } from '$lib/language';
@@ -28,7 +28,7 @@
 	import SearchElementDialog from '$lib/dialogs/SearchElementDialog.svelte';
 	import StatusBar from '$lib/main-app/StatusBar.svelte';
 	import ToolBar from '$lib/main-app/ToolBar.svelte';
-	import EditorTab from '$lib/main-app/EditorTab.svelte';
+	import EditorTab from '$lib/main-app/TabContent.svelte';
 	import { editorInfo, infoPanelShown } from '$lib/stores';
 
 	let transitionParams = {
@@ -39,6 +39,7 @@
 
 	function openTab(index: number) {
 		console.log('opening tab: ', index);
+		editorInfo.currentOpenTab = index;
 		WebappConfigurator.getInstance().openModelUnit(editorInfo.unitsInTabs[index]);
 		infoPanelShown.value = false;
 	}
@@ -62,44 +63,38 @@
 			initializing.value = false;
 		}
 	});
-
 </script>
 
 <div class="flex flex-col h-screen overflow-hidden">
 	<NavBar />
 	<ToolBar />
 	<!-- the tab panel with buttons -->
-	<div class="pl-2 pr-2 dark:bg-gray-800 bg-secondary-100">
-      <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab"
-          role="tablist">
-          {#each editorInfo.unitsInTabs as unitInfo, index}
-						<li class="pl-1 pr-1 pt-1 first:pl-0 last:pr-0 {open} transition" role="presentation">
-							<div class="flex flex-wrap items-center text-gray-600 hover:text-gray-700 bg-white rounded-t-xl p-1.5
-        transition-all duration-300 ease-in-out
-        {editorInfo.currentOpenTab === index ? 'opacity-100' : 'opacity-70'}">
-								<button title={unitInfo.name} onclick={() => openTab(index)}
-												class="inline-block pl-1" id="profile-styled-tab"
-												type="button" role="tab" aria-controls="profile"
-												aria-selected="false">{unitInfo.name}
-								</button>
-								<CloseButton size="sm" class="text-secondary-900 ml-1" onclick={() => closeTab(index)}/>
-							</div>
-						</li>
-<!--              <li class="pl-1 pr-1 pt-1 first:pl-0 last:pr-0 {open}" role="presentation"  >-->
-<!--                  <div class="flex flex-wrap items-center text-gray-400 hover:text-gray-700 bg-white rounded-t-xl p-1.5 {open}" class:open={editorInfo.currentOpenTab === index}>-->
-<!--                      <button title={unitInfo.name} onclick={() => openTab(index)}-->
-<!--                              class="inline-block pl-1" id="profile-styled-tab"-->
-<!--                              type="button" role="tab" aria-controls="profile"-->
-<!--                              aria-selected="false">{unitInfo.name}-->
-<!--                      </button>-->
-<!--                      <CloseButton size="sm" class="text-secondary-900 " onclick={() => closeTab(index)}/>-->
-<!--                  </div>-->
-<!--              </li>-->
-          {/each}
-      </ul>
-    <!-- the tab content -->
-    <EditorTab />
-  </div>
+	<div class="w-full pl-2 pr-2 mx-auto dark:bg-gray-800 bg-secondary-100">
+		<div class="flex space-x-1 mt-1" role="tablist">
+			{#each editorInfo.unitsInTabs as unitInfo, index}
+				<div class="relative tab-button dark:bg-primary-50 bg-gray-100 dark:text-primary-900 text-gray-600   {editorInfo.currentOpenTab === index ? 'opacity-100' : 'opacity-70'}">
+					<button
+						class=""
+						class:active={editorInfo.currentOpenTab === index}
+						onclick={() => openTab(index)}
+					>
+						{unitInfo.name}
+					</button>
+					<CloseButton size="sm" class="text-secondary-900 dark:text-primary-900 pl-1"
+							onclick={(e: MouseEvent) => {
+								e.stopPropagation(); // Prevent tab change on close
+								closeTab(index);
+							}}
+					/>
+					{#if editorInfo.currentOpenTab === index}
+						<div class="absolute inset-x-0 bottom-0 h-0.5 bg-primary-500"></div>
+					{/if}
+				</div>
+			{/each}
+		</div>
+		<!-- the tab content -->
+		<EditorTab />
+	</div>
 
 	<Footer
 		class="text-center sticky md: bottom-0 start-0 z-20 w-full border-t border-gray-200 bg-white p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 dark:border-gray-600 dark:bg-gray-800"
@@ -156,3 +151,13 @@
 <ViewDialog />
 <AboutDialog />
 
+<style>
+    .tab-button {
+        @apply px-2 py-2 text-sm font-medium transition duration-200 rounded-t-lg focus:outline-none
+				border border-transparent flex flex-wrap items-center;
+    }
+
+    .tab-button.active {
+        @apply bg-white dark:border-gray-900 text-gray-900 dark:text-gray-100 border border-gray-300 border-b-0 ;
+    }
+</style>
