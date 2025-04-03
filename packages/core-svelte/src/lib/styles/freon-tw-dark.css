@@ -106,23 +106,16 @@
     background-color: var(--freon-accent-red);
 }
 
-.dark .button-component-ripple {
-}
-.dark .button-component-ripple:hover {
-    background: var(--freon-gray-400) radial-gradient(circle, transparent 1%, var(--freon-gray-400) 1%) no-repeat center/15000%;
-    background-color: var(--freon-white-500);
-}
-.dark .button-component-ripple:active {
-    background-color: var(--freon-accent-green);
-}
-.dark .button-component-empty {
+.dark .button-component {
+    background-color: var(--freon-gray-400);
 }
 
-/* Button style */
-.dark .button-component {
-    box-shadow: 2px 2px 4px var(--freon-white-500);
-    background-color: var(--freon-white-200);
-    color: var(--freon-gray-900);
+.dark .button-component:hover {
+    background-color: var(--freon-gray-500);
+}
+
+.dark .button-component:focus-within {
+    box-shadow: 0 0 0 4px var(--freon-gray-600);
 }
 
 .dark .boolean-checkbox-component {

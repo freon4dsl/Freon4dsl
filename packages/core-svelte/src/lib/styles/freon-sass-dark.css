@@ -106,16 +106,16 @@
     background-color: var(--freon-accent-red);
 }
 
-.button-component-ripple {
+.button-component {
+    background-color: var(--freon-gray-400);
 }
-.button-component-ripple:hover {
-    background: var(--freon-gray-400) radial-gradient(circle, transparent 1%, var(--freon-gray-400) 1%) no-repeat center/15000%;
-    background-color: var(--freon-white-500);
+
+.button-component:hover {
+    background-color: var(--freon-gray-500);
 }
-.button-component-ripple:active {
-    background-color: var(--freon-accent-green);
-}
-.button-component-empty {
+
+.button-component:focus-within {
+    box-shadow: 0 0 0 4px var(--freon-gray-600);
 }
 
 /* Button style */

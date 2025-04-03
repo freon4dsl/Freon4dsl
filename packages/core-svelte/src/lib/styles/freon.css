@@ -204,35 +204,33 @@
     left: 0px;
 }
 
-/* Ripple effect */
-/* Copied from https://svelte.dev/repl/hello-world?version=4.2.18 */
-.button-component-ripple {
-    background-position: center;
-    transition: background 0.8s;
-}
-.button-component-ripple:hover {
-}
-.button-component-ripple:active {
-    background-size: 100%;
-    transition: background 0s;
-}
-.button-component-empty {
-    min-height: 1em;
-    min-width: 1.5em;
-    display: inline-block;
-}
+/* Button Component */
 
-/* Button style */
 .button-component {
-    border: none;
-    border-radius: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.875rem; /* Tailwind's text-sm */
+    font-weight: 500; /* Tailwind's font-medium */
+    padding: 10px 20px; /* Approximate px-5 py-2.5 */
+    border-radius: 0.5rem; /* Tailwind's rounded-lg */
     outline: none;
-    /*margin: 4px 6px 4px 6px;*/
-    /*margin: 2px;*/
+    transition: background-color 0.2s ease-in-out;
 }
 
+/* Hover effects */
+.button-component:hover {
+    /*background-color: #1e40af; !* Tailwind's hover:bg-primary-800 *!*/
+}
+
+/* Focus-within styles */
+.button-component:focus-within {
+    outline: none;
+    /*box-shadow: 0 0 0 4px #93c5fd; !* Tailwind's focus-within:ring-4 and ring-primary-300 *!*/
+}
+
+/* Boolean Checkbox */
 .boolean-checkbox-component {
     padding: 0px;
     /* the following three variables determine the manner in which the focus-ring is shown */
