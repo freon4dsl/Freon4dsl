@@ -33,7 +33,7 @@
       <DarkMode class="{buttonCls} {colorCls} rounded-none focus-within:ring-2 focus-within:z-10 px-4
 		    border border-gray-200 hover:text-primary-50  hover:bg-primary-900 focus-within:text-primary-700
 				dark:focus-within:text-white dark:border-gray-700 dark:hover:border-gray-600 focus-within:ring-gray-200
-				dark:focus-within:ring-gray-700 [&amp;:not(:first-child)]:-ms-px first:rounded-s-lg last:rounded-e-lg" />
+				dark:focus-within:ring-gray-700 [&:not(:first-child)]:-ms-px first:rounded-s-lg last:rounded-e-lg" />
       <Tooltip placement="bottom" class="{colorCls} {tooltipCls}">Dark/Light Mode</Tooltip>
 
 		<!--  Github button and tooltip      -->

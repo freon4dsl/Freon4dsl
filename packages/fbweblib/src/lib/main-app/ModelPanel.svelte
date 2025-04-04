@@ -8,7 +8,7 @@
         ListgroupItem,
         Tooltip,
     } from 'flowbite-svelte';
-    import {FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
+    import {PlusOutline, FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
     import {FreErrorSeverity, type FreUnitIdentifier} from "@freon4dsl/core";
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
@@ -89,17 +89,21 @@
         drawerHidden.value = true;
     };
 
+    const buttonCls: string = 'text-center bg-secondary-200 dark:bg-secondary-700 hover:bg-primary-900 dark:hover:bg-primary-700';
+    const dropdownButtonCls: string = 'bg-secondary-200 text-primary-900 dark:text-primary-50 m-1 dark:bg-secondary-700';
+    const iconCls: string = "w-4 h-4 dark:text-primary-50";
 </script>
+
 
 <!-- buttons for open and new model -->
 <div class="flex items-center">
     <ButtonGroup class="*:!ring-primary-700 ">
-        <Button name="Open existing model" size="xs" onclick={openModelDialog}>
-            <FolderOpenSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
+        <Button class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
+            <FolderOpenSolid class="{iconCls}"/>
         </Button>
         <Tooltip placement="bottom">Open existing model</Tooltip>
-        <Button name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
-            <FolderPlusSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
+        <Button class={buttonCls} name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
+            <FolderPlusSolid class="{iconCls}"/>
         </Button>
         <Tooltip placement="bottom">Create new model</Tooltip>
     </ButtonGroup>
@@ -108,77 +112,76 @@
 
 <!-- buttons that address the current model -->
 <div class="flex justify-between items-center p-3 mb-3 bg-primary-500">
-    <span class="font-bold">
+    <span class="font-bold text-primary-900 dark:text-primary-50">
         {editorInfo.modelName}
     </span>
     <ButtonGroup class="*:!ring-primary-700 ">
-        <Button name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
-            <PenSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
+        <Button class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
+            <PenSolid class="{iconCls} me-2 "/>
         </Button>
         <Tooltip placement="bottom">Rename model</Tooltip>
-        <Button name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
-            <TrashBinSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
+        <Button class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
+            <TrashBinSolid class="{iconCls} me-2"/>
         </Button>
         <Tooltip placement="bottom">Delete model</Tooltip>
-        <Button name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
-            <ArrowDownToBracketOutline class="w-4 h-4 me-2 dark:text-primary-50"/>
+        <Button class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
+            <ArrowDownToBracketOutline class="{iconCls} me-2"/>
         </Button>
         <Tooltip placement="bottom">Import Unit(s)...</Tooltip>
     </ButtonGroup>
 </div>
 
 <!-- buttons for the model's units -->
-<Listgroup >
+<div class="text-sm font-medium text-gray-900 bg-primary-50 dark:bg-secondary-900 border-gray-200 rounded-lg   dark:text-primary-50">
     {#each langInfo.unitTypes as unitType}
-        <div class="flex justify-between p-1 font-semibold text-secondary-900 dark:text-primary-50">
-            {unitType}
-            <ButtonGroup class="*:!ring-primary-700 ">
-            <Button name="New Unit" size="xs" class="p-1" onclick={() => newUnit(unitType)}>
-                <FolderOpenSolid class="w-4 h-4 me-2 dark:text-primary-50 mr-0"/>
-            </Button>
-            <Tooltip placement="bottom">New Unit</Tooltip>
-            </ButtonGroup>
-        </div>
-        <ListgroupItem class="text-base border-none py-1">
-            <Listgroup class="border-none ">
-                {#each myUnits as unit, index}
-                    {#if unit.type === unitType}
-                        <ListgroupItem class="text-base first:rounded-none last:rounded-none border-none p-1
-                                {index === selectedIndex ? 'bg-secondary-400 dark:bg-secondary-600' : ''}">
-                        <div class="flex justify-between items-end text-secondary-600 dark:text-secondary-200">
-                            {unit.name}
-                            <!-- Instead of DotsHorizontalOutline we could use ChevronDownOutline-->
-                            <ChevronDownOutline id="dots-menu-{index}" class="inline text-secondary-600 dark:text-primary-50"/>
-                            <Dropdown class="p-0 m-0">
-                                <div class="flex flex-col justify-end p-0 m-0">
-                                    <Button name="Open" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => openUnit(index)}>
-                                        <FolderOpenSolid class="w-4 h-4 me-2"/>
-                                        Open
-                                    </Button>
-                                    <Button name="Save" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => saveUnit(index)}>
-                                        <FloppyDiskSolid class="w-4 h-4 me-2"/>
-                                        Save
-                                    </Button>
-                                    <Button name="Rename" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => renameUnit(index)}>
-                                        <PenSolid class="w-4 h-4 me-2"/>
-                                        Rename
-                                    </Button>
-                                    <Button name="Delete" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => deleteUnit(index)}>
-                                        <TrashBinSolid class="w-4 h-4 me-2"/>
-                                        Delete
-                                    </Button>
-                                    <Button name="Export" size="xs" class="m-1 dark:bg-secondary-200 dark:text-secondary-800" onclick={() => exportUnit(index)}>
-                                        <ArrowUpFromBracketOutline class="w-4 h-4 me-2"/>
-                                        Export
-                                    </Button>
-                                </div>
-                            </Dropdown>
+        <div class=" border border-secondary-800 mb-3">
+            <div class="flex justify-between px-1 py-2 font-semibold text-secondary-900 dark:text-primary-50 bg-primary-100 dark:bg-secondary-700">
+                <span class="px-1 text-primary-800 dark:text-primary-100">{unitType}</span>
+                <ButtonGroup class="*:!ring-primary-700 ">
+                <Button class="{buttonCls} p-1" name="New Unit" size="xs" onclick={() => newUnit(unitType)}>
+                    <PlusOutline class="{iconCls} me-2 mr-0"/>
+                </Button>
+                <Tooltip placement="bottom">New Unit</Tooltip>
+                </ButtonGroup>
+            </div>
+        <div class="w-64 ml-4 text-sm font-medium text-gray-900 bg-primary-50 dark:bg-secondary-900 border-gray-200 rounded-lg  dark:border-gray-600 dark:text-white">
+            {#each myUnits as unit, index}
+                {#if unit.type === unitType}
+                <div class="flex justify-between items-end text-primary-800  dark:text-secondary-200 w-full mx-3 my-1 px-4 py-1
+                    cursor-pointer dark:bg-gray-800
+                    {index === selectedIndex ? 'bg-secondary-300 dark:bg-primary-400' : 'bg-primary-100 dark:bg-secondary-700'}"
+                >
+                    {unit.name}
+                    <ChevronDownOutline id="dots-menu-{index}" class="inline text-secondary-900 dark:text-primary-50"/>
+                    <Dropdown class="p-0 m-0 bg-primary-500" placement='left' triggeredBy="#dots-menu-{index}">
+                        <div class="flex flex-col justify-end p-0 m-0">
+                            <Button class={dropdownButtonCls} name="Open" size="xs" onclick={() => openUnit(index)}>
+                                <FolderOpenSolid class="{iconCls} me-2"/>
+                                Open
+                            </Button>
+                            <Button class={dropdownButtonCls}  name="Save" size="xs" onclick={() => saveUnit(index)}>
+                                <FloppyDiskSolid class="{iconCls} me-2"/>
+                                Save
+                            </Button>
+                            <Button class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
+                                <PenSolid class="{iconCls} me-2"/>
+                                Rename
+                            </Button>
+                            <Button class={dropdownButtonCls}  name="Delete" size="xs" onclick={() => deleteUnit(index)}>
+                                <TrashBinSolid class="{iconCls} me-2"/>
+                                Delete
+                            </Button>
+                            <Button class={dropdownButtonCls}  name="Export" size="xs" onclick={() => exportUnit(index)}>
+                                <ArrowUpFromBracketOutline class="{iconCls} me-2"/>
+                                Export
+                            </Button>
                         </div>
-                        </ListgroupItem>
-
-                    {/if}
-                {/each}
-            </Listgroup>
-        </ListgroupItem>
+                    </Dropdown>
+                </div>
+                {/if}
+            {/each}
+        </div>
+        </div>
     {/each}
-</Listgroup>
+</div>
+

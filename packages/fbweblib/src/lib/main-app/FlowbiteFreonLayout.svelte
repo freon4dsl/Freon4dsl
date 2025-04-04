@@ -130,6 +130,7 @@
 	{transitionParams}
 	bind:hidden={drawerHidden.value}
 	id="sidebar1"
+	class="bg-primary-50 dark:bg-secondary-900"
 >
 	<ModelPanel />
 </Drawer>
