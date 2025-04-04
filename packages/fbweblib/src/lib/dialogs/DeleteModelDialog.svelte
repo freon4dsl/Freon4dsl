@@ -15,7 +15,7 @@
 
 </script>
 
-<Modal bind:open={dialogs.deleteModelDialogVisible} autoclose={false} class="w-full">
+<Modal bind:open={dialogs.deleteModelDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800">
     <div class="flex flex-col space-y-6" role="dialog">
         <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Delete model</h3>
         <Label class="space-y-2">

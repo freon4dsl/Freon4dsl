@@ -34,26 +34,29 @@
         }
     }
 
+    const labelClass = 'text-sm rtl:text-right font-medium flex items-center p-2 text-secondary-900 dark:text-primary-50'
+    const inputClass = 'w-4 h-4 bg-secondary-100 border-secondary-300 dark:ring-offset-secondary-800 focus:ring-2 me-2 dark:bg-secondary-600 dark:border-secondary-500 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600';
 </script>
 
-<Modal bind:open={dialogs.openModelDialogVisible} autoclose={false} class="w-full">
+<Modal bind:open={dialogs.openModelDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800" >
     <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Open model</h3>
     <div class="flex flex-col space-y-6" role="dialog">
-        <Helper class="text-sm ml-2 text-primary-900">
-            <span class="font-medium">{errorText}</span>
-        </Helper>
-        <div class="">
-            <div class="grid grid-cols-3 mb-3 p-2">
-                {#each serverInfo.allModelNames as model}
-                    <Radio class="p-2" name="models" onchange={() => {modelToOpen = model;}}>{model}</Radio>
-                {/each}
-            </div>
-            <div class="flex flex-row justify-end">
-                <Button color="alternative" onclick={cancel}>Cancel</Button>
-                <Button onclick={openModel} >
-                    <FolderOpenSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
-                    Open</Button>
-            </div>
+        <div class="grid grid-cols-3 mb-3 p-2">
+            {#each serverInfo.allModelNames as model}
+                <label class={labelClass}>
+                    <input type="radio"
+                           class="{inputClass}" name="models" onchange={() => {modelToOpen = model;}}>
+                    {model}
+                </label>
+            {/each}
+        </div>
+        <div class="flex flex-row justify-end">
+            <Button onclick={cancel} class="text-center font-medium focus-within:ring-4 focus-within:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-secondary-900 bg-primary-50 border border-secondary-200 hover:bg-secondary-100 dark:text-secondary-400 hover:text-primary-700 focus-within:text-primary-700 dark:focus-within:text-primary-50 dark:hover:text-primary-900 dark:hover:bg-primary-200 dark:bg-transparent dark:border-secondary-600 dark:hover:border-secondary-600 focus-within:ring-secondary-200 dark:focus-within:ring-secondary-700 rounded-lg">
+                Cancel
+            </Button>
+            <Button onclick={openModel} class="text-primary-50 dark:text-primary-50">
+                <FolderOpenSolid class="w-4 h-4 me-2 text-primary-50 dark:text-primary-50"/>
+                Open</Button>
         </div>
     </div>
 </Modal>

@@ -97,23 +97,24 @@
 	</div>
 
 	<Footer
-		class="text-center sticky md: bottom-0 start-0 z-20 w-full border-t border-secondary-200 bg-white p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 dark:border-secondary-600 dark:bg-secondary-800"
+		class="text-center sticky md:bottom-0 start-0 z-20 w-full p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 border-t border-secondary-200 text-secondary-700 bg-secondary-50  dark:border-secondary-600 dark:bg-secondary-900"
 	>
-		<div class="flex">
+		<div class="flex items-center justify-between">
 			<FooterCopyright
 				href="/"
 				by="Freon contributors"
 				year={2025}
-				class="inline-flex items-center text-xs mr-4 pr-4"
+				class="inline-flex items-center text-xs mr-4 pr-4 "
+				classSpan="text-secondary-700 dark:text-secondary-400 text-xs"
 			/>
 			{#if inDevelopment.value}
 				<StatusBar />
 			{/if}
 		</div>
 		<FooterLinkGroup
-			ulClass="flex flex-wrap items-center mt-3 text-xs text-secondary-500 dark:text-secondary-400 sm:mt-0"
+			ulClass="flex flex-wrap items-center mt-3 text-xs sm:mt-0 text-secondary-700 dark:text-secondary-400"
 		>
-			<FooterLink href="https://freon4dsl.dev" class="inline-flex items-center"
+			<FooterLink href="https://freon4dsl.dev" class="inline-flex items-center "
 			>freon4dsl.dev
 			</FooterLink
 			>

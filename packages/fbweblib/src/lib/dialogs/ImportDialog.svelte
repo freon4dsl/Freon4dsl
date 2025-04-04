@@ -53,7 +53,7 @@
     }
 </script>
 
-<Modal bind:open={dialogs.importDialogVisible} autoclose={false} class="w-full">
+<Modal bind:open={dialogs.importDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800">
     <div class="flex flex-col space-y-6" role="dialog">
         <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Import model unit(s)</h3>
         <button class="flex flex-col justify-center items-center w-full h-64 bg-secondary-50 rounded-lg border-2 border-secondary-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-secondary-700 hover:bg-secondary-100 dark:border-secondary-600 dark:hover:border-secondary-500 dark:hover:bg-secondary-600';"

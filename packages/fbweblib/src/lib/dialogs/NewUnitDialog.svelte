@@ -47,7 +47,7 @@
 	}
 </script>
 
-<Modal bind:open={dialogs.newUnitDialogVisible} autoclose={false} class="w-full">
+<Modal bind:open={dialogs.newUnitDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800">
     <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">New unit of type {editorInfo.toBeCreated?.type}</h3>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-secondary-700">

@@ -44,7 +44,7 @@
 
 </script>
 
-<Modal bind:open={dialogs.searchElementDialogVisible} autoclose={false} class="w-full">
+<Modal bind:open={dialogs.searchElementDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800">
     <div class="flex flex-col space-y-6" role="dialog">
         <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Search for ...</h3>
         <Card class="flex flex-col space-y-6 bg-white shadow my-2 p-6 max-w-full">

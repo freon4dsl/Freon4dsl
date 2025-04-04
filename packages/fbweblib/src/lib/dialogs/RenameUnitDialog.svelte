@@ -42,7 +42,7 @@
 	}
 </script>
 
-<Modal bind:open={dialogs.renameUnitDialogVisible} autoclose={false} class="w-full">
+<Modal bind:open={dialogs.renameUnitDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800">
     <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Rename unit</h3>
     <p>This is not yet functioning</p>
     <div class="flex flex-col space-y-6" role="dialog">

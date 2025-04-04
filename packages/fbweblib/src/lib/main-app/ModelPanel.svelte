@@ -4,8 +4,6 @@
         ButtonGroup,
         CloseButton,
         Dropdown,
-        Listgroup,
-        ListgroupItem,
         Tooltip,
     } from 'flowbite-svelte';
     import {PlusOutline, FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
@@ -99,11 +97,11 @@
 <div class="flex items-center">
     <ButtonGroup class="*:!ring-primary-700 ">
         <Button class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
-            <FolderOpenSolid class="{iconCls}"/>
+            <FolderOpenSolid class={iconCls}/>
         </Button>
         <Tooltip placement="bottom">Open existing model</Tooltip>
         <Button class={buttonCls} name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
-            <FolderPlusSolid class="{iconCls}"/>
+            <FolderPlusSolid class={iconCls}/>
         </Button>
         <Tooltip placement="bottom">Create new model</Tooltip>
     </ButtonGroup>

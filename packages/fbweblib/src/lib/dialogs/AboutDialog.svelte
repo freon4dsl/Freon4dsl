@@ -12,17 +12,17 @@
 
 </script>
 
-<Modal bind:open={dialogs.aboutDialogVisible} outsideclose={true} size="lg" class="w-full">
+<Modal bind:open={dialogs.aboutDialogVisible} outsideclose={true} size="lg" class="w-full bg-primary-100 dark:bg-secondary-800">
     <div class="pb-0.5"></div>
-    <Card class="flex flex-col space-y-6 bg-white shadow my-2 p-6 max-w-full" role="dialog">
+    <Card class="flex flex-col space-y-6 bg-primary-50 dark:bg-secondary-900 shadow my-2 p-6 max-w-full" role="dialog">
 <!--        <h3 class="mb-0 text-xl font-semibold text-secondary-900 dark:text-primary-50">About the Freon Editor</h3>-->
-        <div class="flex flex-col items-center">
-            <Card>
-                <h3 class="text-xl font-semibold text-secondary-900 dark:text-primary-50 pb-4">
+        <div class="flex flex-col items-center bg-primary-50 dark:bg-secondary-900">
+            <Card class="bg-primary-100 dark:bg-secondary-700">
+                <h3 class="text-xl pb-4 font-semibold text-secondary-900 dark:text-primary-50  ">
                     <span class="pl-1 text-secondary-900 dark:text-primary-50">Freon</span> is an open source project.
                 </h3>
-                <ul class="space-y-2 text-primary-700 dark:text-primary-100">
-                    <li class="flex items-center">
+                <ul class="space-y-2 text-primary-700 dark:text-primary-100 ">
+                    <li class="flex items-center ">
                         <ClockOutline class="text-secondary-900 dark:text-primary-50"/>
                         <p class="pl-4 text-secondary-900 dark:text-primary-50">Current version:</p> <p class="pl-1 text-primary-700 dark:text-primary-100">{versionNumber.value}</p>
                     </li>
@@ -47,7 +47,7 @@
                     <li class="flex items-center">
                         <EnvelopeOutline class="text-secondary-900 dark:text-primary-50"/>
                         <p class="pl-4 text-secondary-900 dark:text-primary-50">Contact:
-                            <a class="pl-1 text-primary-700 dark:text-primary-100"href= "mailto:info@openmodeling.nl">info@openmodeling.nl</a>
+                            <a class="pl-1 text-primary-700 dark:text-primary-100" href= "mailto:info@openmodeling.nl">info@openmodeling.nl</a>
                         </p>
                     </li>
                 </ul>

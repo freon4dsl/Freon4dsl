@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Button, Modal, Input, Radio, Helper} from 'flowbite-svelte';
+    import { Button, Modal, Input, Helper } from 'flowbite-svelte';
     import {dialogs, initializing} from '$lib/stores/WebappStores.svelte';
     import {serverInfo} from '$lib/stores/ModelInfo.svelte';
     import {WebappConfigurator} from '$lib/language';
@@ -56,9 +56,12 @@
     const onInput = () => {
         modelNameValid();
     }
+
+    const labelClass = 'text-sm rtl:text-right font-medium flex items-center p-2 text-secondary-900 dark:text-primary-50'
+    const inputClass = 'w-4 h-4 bg-secondary-100 border-secondary-300 dark:ring-offset-secondary-800 focus:ring-2 me-2 dark:bg-secondary-600 dark:border-secondary-500 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600';
 </script>
 
-<Modal bind:open={dialogs.startDialogVisible} autoclose={false} class="w-full">
+<Modal bind:open={dialogs.startDialogVisible} autoclose={false} class="w-full text-secondary-900 dark:text-primary-50 bg-primary-100 dark:bg-secondary-800">
     {#if serverInfo.allModelNames.length > 0}
         <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Create/Open model</h3>
     {:else }
@@ -66,7 +69,7 @@
     {/if}
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-secondary-700">
-            <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline"
+            <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-secondary-600 border rounded-lg focus:shadow-outline bg-secondary-50 dark:bg-primary-50"
                    type="text"
                    bind:value={newName}
                    id="new-input"
@@ -86,9 +89,13 @@
         {#if serverInfo.allModelNames.length > 0}
             <hr class="h-px my-8 bg-secondary-400 border-0 dark:bg-secondary-300">
             <div class="">
-                <div class="grid grid-cols-3 mb-3 p-2">
+                <div class="grid grid-cols-3 mb-3 p-2 ">
                     {#each serverInfo.allModelNames as model}
-                        <Radio class="p-2" name="models" onchange={() => {modelToOpen = model;}}>{model}</Radio>
+                        <label class={labelClass}>
+                            <input type="radio"
+                                   class="{inputClass}" name="models" onchange={() => {modelToOpen = model;}}>
+                            {model}
+                        </label>
                     {/each}
                 </div>
                 <div class="flex flex-row justify-end">
