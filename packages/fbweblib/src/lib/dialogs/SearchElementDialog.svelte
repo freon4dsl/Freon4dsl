@@ -3,6 +3,7 @@
     import { dialogs } from "$lib/stores/WebappStores.svelte"
     import { FreLanguage } from "@freon4dsl/core"
     import { EditorRequestsHandler } from '$lib/language';
+    import { cancelButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
 
     let nodeType = $state("")
     let textToFind: string = $state("")
@@ -50,7 +51,7 @@
         <Card class="flex flex-col space-y-6 bg-white shadow my-2 p-6 max-w-full">
         <h4 class="text-l font-medium text-secondary-900 dark:text-primary-50"> Element with certain type and name</h4>
         <div class="relative text-secondary-700">
-            <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline"
+            <Input class={textInputClass}
                    type="text"
                    bind:value={namedElementToFind}
                    id="new-input"
@@ -72,7 +73,7 @@
 
     <svelte:fragment slot="footer">
         <Button onclick={handleSubmit}>Search</Button>
-        <Button color="alternative" onclick={handleCancel}>Cancel</Button>
+        <Button class={cancelButtonClass} onclick={handleCancel}>Cancel</Button>
     </svelte:fragment>
 
 </Modal>

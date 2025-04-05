@@ -4,18 +4,21 @@
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
     import {editorInfo, setUserMessage} from "$lib";
+    import { cancelButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
+    import { FolderOpenSolid } from 'flowbite-svelte-icons';
 
-    let errorText: string = $state('');
+    const initialHelperText: string = 'Enter the name of the new unit.'
+    let helperText: string = $state(initialHelperText);
     let newName: string = $state('');
 
     function unitNameValid(){
-        errorText = checkName(newName, true);
+        helperText = checkName(newName, true);
     }
 
     function resetVariables() {
         dialogs.newUnitDialogVisible = false;
         newName = "";
-        errorText = '';
+        helperText = initialHelperText;
     }
 
     function handleCancel() {
@@ -28,7 +31,7 @@
         if (newName.length > 0 && checkName(newName, true).length === 0) {
             const existing: string[] = await WebappConfigurator.getInstance().getUnitNames();
             if (!!existing && existing.length > 0 && existing.indexOf(newName) !== -1) {
-                errorText = `Cannot create unit '${newName}', because a unit with that name already exists on the server.`;
+                helperText = `Cannot create unit '${newName}', because a unit with that name already exists on the server.`;
             } else {
                 if (editorInfo.toBeCreated?.type) {
                     await WebappConfigurator.getInstance().newUnit(newName, editorInfo.toBeCreated?.type);
@@ -38,7 +41,7 @@
                 }
             }
         } else {
-            errorText = `Cannot create unit '${newName}', because its name is invalid.`;
+            helperText = `Cannot create unit '${newName}', because its name is invalid.`;
         }
     }
 
@@ -51,21 +54,27 @@
     <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">New unit of type {editorInfo.toBeCreated?.type}</h3>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-secondary-700">
-            <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline" type="text"
+            <Input class={textInputClass}
+                   type="text"
                    bind:value={newName}
                    id="new-input"
                    name="unit-name"
                    oninput={onInput}
             />
+            <Helper class="text-sm ml-2 text-primary-900">
+                <span class="font-medium">{helperText}</span>
+            </Helper>
         </div>
-        <Helper class="text-sm ml-2 text-primary-900">
-            <span class="font-medium">{errorText}</span>
-        </Helper>
     </div>
 
-    <svelte:fragment slot="footer">
-        <Button onclick={handleSubmit}>New</Button>
-        <Button color="alternative" onclick={handleCancel}>Cancel</Button>
-    </svelte:fragment>
+    <div class="flex flex-row justify-end mt-0">
+        <Button onclick={handleCancel} class={cancelButtonClass}>
+            Cancel
+        </Button>
+        <Button onclick={handleSubmit} class="text-primary-50 dark:text-primary-50">
+            <FolderOpenSolid class="w-4 h-4 me-2 text-primary-50 dark:text-primary-50"/>
+            New
+        </Button>
+    </div>
 
 </Modal>

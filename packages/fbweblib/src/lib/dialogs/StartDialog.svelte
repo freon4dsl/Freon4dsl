@@ -6,6 +6,12 @@
     import {setUserMessage} from '$lib/stores/UserMessageStore.svelte';
     import {FolderOpenSolid, FolderPlusSolid} from "flowbite-svelte-icons";
     import {checkName} from "$lib/language/DialogHelpers";
+    import {
+        cancelButtonClass,
+        radioInputClass,
+        radioLabelClass,
+        textInputClass
+    } from '$lib/stores/StylesStore.svelte';
 
     let errorText: string = $state('');
     let newName: string = $state('');
@@ -57,8 +63,7 @@
         modelNameValid();
     }
 
-    const labelClass = 'text-sm rtl:text-right font-medium flex items-center p-2 text-secondary-900 dark:text-primary-50'
-    const inputClass = 'w-4 h-4 bg-secondary-100 border-secondary-300 dark:ring-offset-secondary-800 focus:ring-2 me-2 dark:bg-secondary-600 dark:border-secondary-500 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600';
+
 </script>
 
 <Modal bind:open={dialogs.startDialogVisible} autoclose={false} class="w-full text-secondary-900 dark:text-primary-50 bg-primary-100 dark:bg-secondary-800">
@@ -69,7 +74,7 @@
     {/if}
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-secondary-700">
-            <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-secondary-600 border rounded-lg focus:shadow-outline bg-secondary-50 dark:bg-primary-50"
+            <Input class={textInputClass}
                    type="text"
                    bind:value={newName}
                    id="new-input"
@@ -91,15 +96,18 @@
             <div class="">
                 <div class="grid grid-cols-3 mb-3 p-2 ">
                     {#each serverInfo.allModelNames as model}
-                        <label class={labelClass}>
+                        <label class={radioLabelClass}>
                             <input type="radio"
-                                   class="{inputClass}" name="models" onchange={() => {modelToOpen = model;}}>
+                                   class="{radioInputClass}" name="models" onchange={() => {modelToOpen = model;}}>
                             {model}
                         </label>
                     {/each}
                 </div>
                 <div class="flex flex-row justify-end">
-                    <Button color="alternative" onclick={cancel}>Cancel</Button>
+                    <Button class={cancelButtonClass}
+                            onclick={cancel}>
+                        Cancel
+                    </Button>
                     <Button onclick={openModel}>
                         <FolderOpenSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
                         Open

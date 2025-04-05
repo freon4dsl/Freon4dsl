@@ -3,7 +3,8 @@
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
-    import { FolderOpenSolid } from 'flowbite-svelte-icons';
+    import { PenSolid } from 'flowbite-svelte-icons';
+    import { cancelButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
 
     let errorText: string = $state('');
     let newName: string = $state('');
@@ -49,7 +50,7 @@
 
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-secondary-700">
-            <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-secondary-600 border rounded-lg focus:shadow-outline bg-secondary-50 dark:bg-primary-50"
+            <Input class={textInputClass}
                    type="text"
                    bind:value={newName}
                    id="new-input"
@@ -60,12 +61,12 @@
                 <span class="font-medium">{errorText}</span>
             </Helper>
             <div class="mt-4 flex flex-row justify-end">
-                <Button onclick={handleCancel} class="text-center font-medium focus-within:ring-4 focus-within:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-secondary-900 bg-primary-50 border border-secondary-200 hover:bg-secondary-100 dark:text-secondary-400 hover:text-primary-700 focus-within:text-primary-700 dark:focus-within:text-primary-50 dark:hover:text-primary-900 dark:hover:bg-primary-200 dark:bg-transparent dark:border-secondary-600 dark:hover:border-secondary-600 focus-within:ring-secondary-200 dark:focus-within:ring-secondary-700 rounded-lg">
+                <Button onclick={handleCancel} class={cancelButtonClass}>
                     Cancel
                 </Button>
                 <Button onclick={handleSubmit} class="text-primary-50 dark:text-primary-50">
-                    <FolderOpenSolid class="w-4 h-4 me-2 text-primary-50 dark:text-primary-50"/>
-                    New
+                    <PenSolid class="w-4 h-4 me-2 text-primary-50 dark:text-primary-50"/>
+                    Rename
                 </Button>
             </div>
         </div>

@@ -14,6 +14,7 @@
     import {drawerHidden, dialogs} from "$lib/stores";
     import {openModelDialog} from "$lib/language/DialogHelpers";
     import {ImportExportHandler, WebappConfigurator} from "$lib/language";
+    import { tooltipClass } from '$lib/stores/StylesStore.svelte';
 
     let myUnits: FreUnitIdentifier[] = $state([]);
     let selectedIndex: number = $state(-1);
@@ -99,11 +100,11 @@
         <Button class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class={iconCls}/>
         </Button>
-        <Tooltip placement="bottom">Open existing model</Tooltip>
+        <Tooltip class={tooltipClass} placement="bottom">Open existing model</Tooltip>
         <Button class={buttonCls} name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
             <FolderPlusSolid class={iconCls}/>
         </Button>
-        <Tooltip placement="bottom">Create new model</Tooltip>
+        <Tooltip class={tooltipClass} placement="bottom">Create new model</Tooltip>
     </ButtonGroup>
     <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-primary-50"/>
 </div>
@@ -117,15 +118,15 @@
         <Button class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
             <PenSolid class="{iconCls} me-2 "/>
         </Button>
-        <Tooltip placement="bottom">Rename model</Tooltip>
+        <Tooltip class={tooltipClass} placement="bottom">Rename model</Tooltip>
         <Button class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
             <TrashBinSolid class="{iconCls} me-2"/>
         </Button>
-        <Tooltip placement="bottom">Delete model</Tooltip>
+        <Tooltip class={tooltipClass} placement="bottom">Delete model</Tooltip>
         <Button class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
             <ArrowDownToBracketOutline class="{iconCls} me-2"/>
         </Button>
-        <Tooltip placement="bottom">Import Unit(s)...</Tooltip>
+        <Tooltip class={tooltipClass} placement="bottom">Import Unit(s)...</Tooltip>
     </ButtonGroup>
 </div>
 
@@ -135,12 +136,11 @@
         <div class=" border border-secondary-800 mb-3">
             <div class="flex justify-between px-1 py-2 font-semibold text-secondary-900 dark:text-primary-50 bg-primary-100 dark:bg-secondary-700">
                 <span class="px-1 text-primary-800 dark:text-primary-100">{unitType}</span>
-                <ButtonGroup class="*:!ring-primary-700 ">
+
                 <Button class="{buttonCls} p-1" name="New Unit" size="xs" onclick={() => newUnit(unitType)}>
                     <PlusOutline class="{iconCls} me-2 mr-0"/>
                 </Button>
-                <Tooltip placement="bottom">New Unit</Tooltip>
-                </ButtonGroup>
+                <Tooltip class={tooltipClass} placement="bottom">New Unit</Tooltip>
             </div>
         <div class="w-64 ml-4 text-sm font-medium text-gray-900 bg-primary-50 dark:bg-secondary-900 border-gray-200 rounded-lg  dark:border-gray-600 dark:text-white">
             {#each myUnits as unit, index}
@@ -151,6 +151,7 @@
                 >
                     {unit.name}
                     <ChevronDownOutline id="dots-menu-{index}" class="inline text-secondary-900 dark:text-primary-50"/>
+                    <Tooltip class={tooltipClass} placement="bottom">Actions on {unit.name}</Tooltip>
                     <Dropdown class="p-0 m-0 bg-primary-500" placement='left' triggeredBy="#dots-menu-{index}">
                         <div class="flex flex-col justify-end p-0 m-0">
                             <Button class={dropdownButtonCls} name="Open" size="xs" onclick={() => openUnit(index)}>

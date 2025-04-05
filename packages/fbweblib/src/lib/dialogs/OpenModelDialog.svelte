@@ -5,6 +5,7 @@
     import {WebappConfigurator} from '$lib/language';
     import {setUserMessage} from '$lib/stores/UserMessageStore.svelte';
     import {FolderOpenSolid} from "flowbite-svelte-icons";
+    import { cancelButtonClass, radioInputClass, radioLabelClass } from '$lib/stores/StylesStore.svelte';
 
     let errorText: string = $state('');
     let modelToOpen = $state('');
@@ -34,8 +35,6 @@
         }
     }
 
-    const labelClass = 'text-sm rtl:text-right font-medium flex items-center p-2 text-secondary-900 dark:text-primary-50'
-    const inputClass = 'w-4 h-4 bg-secondary-100 border-secondary-300 dark:ring-offset-secondary-800 focus:ring-2 me-2 dark:bg-secondary-600 dark:border-secondary-500 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600';
 </script>
 
 <Modal bind:open={dialogs.openModelDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800" >
@@ -43,15 +42,15 @@
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="grid grid-cols-3 mb-3 p-2">
             {#each serverInfo.allModelNames as model}
-                <label class={labelClass}>
+                <label class={radioLabelClass}>
                     <input type="radio"
-                           class="{inputClass}" name="models" onchange={() => {modelToOpen = model;}}>
+                           class="{radioInputClass}" name="models" onchange={() => {modelToOpen = model;}}>
                     {model}
                 </label>
             {/each}
         </div>
         <div class="flex flex-row justify-end">
-            <Button onclick={cancel} class="text-center font-medium focus-within:ring-4 focus-within:outline-none inline-flex items-center justify-center px-5 py-2.5 text-sm text-secondary-900 bg-primary-50 border border-secondary-200 hover:bg-secondary-100 dark:text-secondary-400 hover:text-primary-700 focus-within:text-primary-700 dark:focus-within:text-primary-50 dark:hover:text-primary-900 dark:hover:bg-primary-200 dark:bg-transparent dark:border-secondary-600 dark:hover:border-secondary-600 focus-within:ring-secondary-200 dark:focus-within:ring-secondary-700 rounded-lg">
+            <Button onclick={cancel} class={cancelButtonClass}>
                 Cancel
             </Button>
             <Button onclick={openModel} class="text-primary-50 dark:text-primary-50">

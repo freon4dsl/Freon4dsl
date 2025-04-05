@@ -3,6 +3,8 @@
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
+    import { cancelButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
+    import { PenSolid } from 'flowbite-svelte-icons';
 
     let errorText: string = $state('');
     let newName: string = $state('');
@@ -47,21 +49,25 @@
     <p>This is not yet functioning</p>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-secondary-700">
-            <Input class="w-full h-10 pl-3 pr-32 text-base placeholder-gray-600 border rounded-lg focus:shadow-outline" type="text"
+            <Input class={textInputClass}
+                   type="text"
                    bind:value={newName}
                    id="new-input"
-                   name="model-name"
+                   name="unit-name"
                    oninput={onInput}
             />
         </div>
         <Helper class="text-sm ml-2 text-primary-900">
             <span class="font-medium">{errorText}</span>
         </Helper>
+        <div class="mt-4 flex flex-row justify-end">
+            <Button onclick={handleCancel} class={cancelButtonClass}>
+                Cancel
+            </Button>
+            <Button onclick={handleSubmit} class="text-primary-50 dark:text-primary-50">
+                <PenSolid class="w-4 h-4 me-2 text-primary-50 dark:text-primary-50"/>
+                Rename
+            </Button>
+        </div>
     </div>
-
-    <svelte:fragment slot="footer">
-        <Button onclick={handleSubmit}>Rename</Button>
-        <Button color="alternative" onclick={handleCancel}>Cancel</Button>
-    </svelte:fragment>
-
 </Modal>
