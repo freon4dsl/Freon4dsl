@@ -3,7 +3,8 @@
     import { dialogs } from "$lib/stores/WebappStores.svelte"
     import { FreLanguage } from "@freon4dsl/core"
     import { EditorRequestsHandler } from '$lib/language';
-    import { cancelButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
+    import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
+    import { PenSolid } from 'flowbite-svelte-icons';
 
     let nodeType = $state("")
     let textToFind: string = $state("")
@@ -48,7 +49,7 @@
 <Modal bind:open={dialogs.searchElementDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
     <div class="flex flex-col space-y-6" role="dialog">
         <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Search for ...</h3>
-        <Card class="flex flex-col space-y-6 bg-white shadow my-2 p-6 max-w-full">
+        <Card class="flex flex-col space-y-6 bg-light-base-50 shadow my-2 p-6 max-w-full">
         <h4 class="text-l font-medium text-light-base-900 dark:text-dark-base-50"> Element with certain type and name</h4>
         <div class="relative text-light-base-700">
             <Input class={textInputClass}
@@ -71,9 +72,14 @@
         </Card>
     </div>
 
-    <svelte:fragment slot="footer">
-        <Button onclick={handleSubmit}>Search</Button>
-        <Button class={cancelButtonClass} onclick={handleCancel}>Cancel</Button>
-    </svelte:fragment>
+    <div class="mt-4 flex flex-row justify-end">
+        <Button onclick={handleCancel} class={cancelButtonClass}>
+            Cancel
+        </Button>
+        <Button class={okButtonClass} onclick={handleSubmit} >
+            <PenSolid class="w-4 h-4 me-2"/>
+            Search
+        </Button>
+    </div>
 
 </Modal>

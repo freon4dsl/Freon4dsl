@@ -9,8 +9,8 @@
 	let currentBox: Box = $derived(selectedBoxes.value[0]);
 </script>
 
-<span class="dark:bg-dark-base-300 bg-light-base-100">
-	<div class='text-sm ml-2'>
+<span class="text-light-accent-800 dark:text-dark-accent-100 bg-light-base-50 dark:bg-dark-base-900 ">
+	<div class='text-xs ml-6'>
 		{editorInfo.modelName}
 		<ChevronRightOutline class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
 		{editorInfo.currentUnit?.name ?? "<no unit>"}

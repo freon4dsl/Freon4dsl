@@ -28,7 +28,7 @@
 	import SearchElementDialog from '$lib/dialogs/SearchElementDialog.svelte';
 	import StatusBar from '$lib/main-app/StatusBar.svelte';
 	import ToolBar from '$lib/main-app/ToolBar.svelte';
-	import EditorTab from '$lib/main-app/TabContent.svelte';
+	import TabContent from '$lib/main-app/TabContent.svelte';
 	import { editorInfo, infoPanelShown } from '$lib/stores';
 
 	let transitionParams = {
@@ -72,28 +72,28 @@
 	<div class="w-full pl-2 pr-2 mx-auto dark:bg-dark-base-800 bg-light-base-100">
 		<div class="flex space-x-1 mt-1" role="tablist">
 			{#each editorInfo.unitsInTabs as unitInfo, index}
-				<div class="relative tab-button dark:bg-dark-base-50 bg-light-base-100 dark:text-dark-base-900 text-light-base-600   {editorInfo.currentOpenTab === index ? 'opacity-100' : 'opacity-70'}">
+				<div class="relative tab-button dark:bg-dark-base-500 bg-light-base-200 dark:text-dark-base-50 text-light-base-900
+					{editorInfo.currentOpenTab === index ? 'opacity-100' : 'opacity-70'}">
 					<button
-						class=""
 						class:active={editorInfo.currentOpenTab === index}
 						onclick={() => openTab(index)}
 					>
 						{unitInfo.name}
 					</button>
-					<CloseButton size="sm" class="text-light-base-900 dark:text-dark-base-900 pl-1"
+					<CloseButton size="sm" class="text-light-base-900 dark:text-dark-base-50 pl-1"
 							onclick={(e: MouseEvent) => {
 								e.stopPropagation(); // Prevent tab change on close
 								closeTab(index);
 							}}
 					/>
 					{#if editorInfo.currentOpenTab === index}
-						<div class="absolute inset-x-0 bottom-0 h-0.5 bg-light-base-500"></div>
+						<div class="absolute inset-x-0 bottom-0 h-0.5 bg-light-accent-500 dark:bg-dark-accent-500"></div>
 					{/if}
 				</div>
 			{/each}
 		</div>
 		<!-- the tab content -->
-		<EditorTab />
+		<TabContent />
 	</div>
 
 	<Footer
@@ -160,6 +160,6 @@
     }
 
     .tab-button.active {
-        @apply bg-white dark:border-dark-base-900 text-light-base-900 dark:text-dark-base-100 border border-light-base-300 border-b-0 ;
+        @apply bg-light-base-50 dark:border-dark-base-900 text-light-base-900 dark:text-dark-base-100 border border-light-base-300 border-b-0 ;
     }
 </style>

@@ -6,6 +6,8 @@
     import {dialogs} from "$lib";
     import {isNullOrUndefined} from "@freon4dsl/core";
     import { EditorRequestsHandler, WebappConfigurator } from "$lib/language"
+    import { cancelButtonClass, okButtonClass } from '$lib/stores/StylesStore.svelte';
+    import { PenSolid } from 'flowbite-svelte-icons';
 
     let allProjections: (ProjectionItem | undefined)[] = $derived(
         langInfo.projectionNames.map(view => {
@@ -43,7 +45,10 @@
                       checked={option.selected}>{option ? option.name : "unknown view"}</Checkbox>
         {/if}
     {/each}
-    <svelte:fragment slot="footer">
-        <Button onclick={() => applyChanges()}>Apply changes</Button>
-    </svelte:fragment>
+
+    <div class="mt-4 flex flex-row justify-end">
+        <Button class={okButtonClass} onclick={() => applyChanges()} >
+            Apply changes
+        </Button>
+    </div>
 </Modal>

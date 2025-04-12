@@ -15,7 +15,7 @@
     let alertCls: string = 'p-1 m-2 gap-1 bg-light-base-600 dark:bg-dark-base-200 text-light-base-50 dark:text-dark-base-900';
 </script>
 
-<div class='bg-white dark:bg-dark-base-50 dark:text-dark-base-50 p-2'>
+<div class='bg-light-base-50 dark:bg-dark-base-600 dark:text-dark-base-50 p-1'>
     {#if (noUnitAvailable.value || isNullOrUndefined(WebappConfigurator.getInstance().langEnv?.editor))}
         {#if !userMessageOpen.value}
             <Alert transition={fly} params={{ x: 200 }} class={alertCls}>
@@ -29,7 +29,8 @@
                 <InfoCircleSolid slot="icon" class="w-5 h-5"/>
                 {messageInfo.userMessage}
                 <Button slot="close-button" size="xs"
-                        onclick={() => {userMessageOpen.value = !userMessageOpen.value}} class="ms-auto dark:text-dark-base-100 bg-light-base-800 dark:bg-dark-base-800">
+                        onclick={() => {userMessageOpen.value = !userMessageOpen.value}}
+                        class="ms-auto dark:text-dark-base-100 bg-light-base-800 dark:bg-dark-base-800">
                     Dismiss
                 </Button>
             </Alert>

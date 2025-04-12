@@ -7,7 +7,7 @@
     import {FolderOpenSolid, FolderPlusSolid} from "flowbite-svelte-icons";
     import {checkName} from "$lib/language/DialogHelpers";
     import {
-        cancelButtonClass,
+        cancelButtonClass, okButtonClass,
         radioInputClass,
         radioLabelClass,
         textInputClass
@@ -108,8 +108,9 @@
                             onclick={cancel}>
                         Cancel
                     </Button>
-                    <Button onclick={openModel}>
-                        <FolderOpenSolid class="w-4 h-4 me-2 dark:text-dark-base-50"/>
+                    <Button class={okButtonClass}
+                            onclick={openModel} >
+                        <FolderOpenSolid class="w-4 h-4 me-2 "/>
                         Open
                     </Button>
                 </div>

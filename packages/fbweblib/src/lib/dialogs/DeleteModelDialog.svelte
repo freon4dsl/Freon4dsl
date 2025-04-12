@@ -3,7 +3,7 @@
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {editorInfo} from "$lib";
     import {WebappConfigurator} from "$lib/language";
-    import { cancelButtonClass } from '$lib/stores/StylesStore.svelte';
+    import { cancelButtonClass, okButtonClass } from '$lib/stores/StylesStore.svelte';
     import { TrashBinSolid } from 'flowbite-svelte-icons';
 
     function handleCancel() {
@@ -32,8 +32,9 @@
         <Button onclick={handleCancel} class={cancelButtonClass}>
             Cancel
         </Button>
-        <Button onclick={handleSubmit} class="text-light-base-50 dark:text-dark-base-50">
-            <TrashBinSolid class="w-4 h-4 me-2 text-light-base-50 dark:text-dark-base-50"/>
+        <Button class={okButtonClass}
+                onclick={handleSubmit}>
+            <TrashBinSolid class="w-4 h-4 me-2"/>
             Delete
         </Button>
     </div>

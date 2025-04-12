@@ -19,7 +19,7 @@
             <table class="text-left text-sm text-light-base-500 dark:text-dark-base-40 w-full">
                 <tbody class="divide-y">
                 {#each items as it}
-                    <tr class="border-b last:border-b-0 bg-white dark:bg-dark-base-800 dark:border-dark-base-700 hover:bg-light-base-50 dark:hover:bg-light-base-600 odd:bg-white even:bg-light-base-50 odd:dark:bg-dark-base-800 even:dark:bg-dark-base-700">
+                    <tr class="border-b last:border-b-0 bg-light-base-50 dark:bg-dark-base-800 dark:border-dark-base-700 hover:bg-light-base-50 dark:hover:bg-light-base-600 odd:bg-light-base-50 even:bg-light-base-50 odd:dark:bg-dark-base-800 even:dark:bg-dark-base-700">
                         <td class="whitespace-nowrap font-medium text-light-base-900 dark:text-dark-base-50 p-1.5">
                         <button class="font-medium text-light-base-900 hover:underline dark:text-dark-base-500"onclick={() => goToNode(it.reportedOn)}>{it.message}
                         </button>

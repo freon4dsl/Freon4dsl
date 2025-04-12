@@ -93,7 +93,11 @@
       'text-light-base-900          dark:text-dark-base-50 ' +
       'hover:text-light-base-100    dark:hover:text-dark-base-800 ' +
       'hover:bg-light-base-900      dark:hover:bg-dark-base-700';
-    const dropdownButtonCls: string = 'bg-light-base-200 text-light-base-900 dark:text-dark-base-50 m-1 dark:bg-dark-base-700';
+    const dropdownButtonCls: string = 'm-1 ' +
+      'bg-light-base-200            dark:bg-dark-base-700 ' +
+      'text-light-base-900          dark:text-dark-base-50 ' +
+      'hover:text-light-base-100    dark:hover:text-dark-base-800 ' +
+      'hover:bg-light-base-900      dark:hover:bg-dark-base-700';
     const iconCls: string = "w-4 h-4 ";
 </script>
 
@@ -150,10 +154,11 @@
                 {#if unit.type === unitType}
                 <div class="flex justify-between items-end text-light-base-800  dark:text-dark-base-200 w-full mx-3 my-1 px-4 py-1
                     cursor-pointer dark:bg-dark-base-800
-                    {index === selectedIndex ? 'bg-light-base-300 dark:bg-dark-base-400' : 'bg-light-base-100 dark:bg-dark-base-700'}"
+                    {index === selectedIndex ? 'bg-light-accent-100 dark:bg-dark-accent-100' : 'bg-light-base-100 dark:bg-dark-base-700'}"
                 >
-                    {#if index === selectedIndex}<PenSolid class="{iconCls} me-2 "/>{/if}
+                <span class="flex flex-start">
                     {unit.name}
+                    {#if index === selectedIndex}..<PenSolid class="{iconCls} me-2 "/>{/if}</span>
                     <ChevronDownOutline id="dots-menu-{index}" class="inline text-light-base-900 dark:text-dark-base-50 hover:bg-light-base-900 dark:hover:bg-dark-base-50 hover:text-light-base-150 dark:hover:text-dark-base-700"/>
                     <Tooltip class={tooltipClass} placement="bottom">Actions on {unit.name}</Tooltip>
                     <Dropdown class="p-0 m-0 bg-light-base-500" placement='bottom' triggeredBy="#dots-menu-{index}">

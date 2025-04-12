@@ -4,7 +4,7 @@
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
     import { PenSolid } from 'flowbite-svelte-icons';
-    import { cancelButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
+    import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
 
     let errorText: string = $state('');
     let newName: string = $state('');
@@ -64,8 +64,8 @@
                 <Button onclick={handleCancel} class={cancelButtonClass}>
                     Cancel
                 </Button>
-                <Button onclick={handleSubmit} class="text-light-base-50 dark:text-dark-base-50">
-                    <PenSolid class="w-4 h-4 me-2 text-light-base-50 dark:text-dark-base-50"/>
+                <Button class={okButtonClass} onclick={handleSubmit} >
+                    <PenSolid class="w-4 h-4 me-2"/>
                     Rename
                 </Button>
             </div>

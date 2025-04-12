@@ -5,7 +5,7 @@
     import {WebappConfigurator} from '$lib/language';
     import {setUserMessage} from '$lib/stores/UserMessageStore.svelte';
     import {FolderOpenSolid} from "flowbite-svelte-icons";
-    import { cancelButtonClass, radioInputClass, radioLabelClass } from '$lib/stores/StylesStore.svelte';
+    import { cancelButtonClass, okButtonClass, radioInputClass, radioLabelClass } from '$lib/stores/StylesStore.svelte';
 
     let errorText: string = $state('');
     let modelToOpen = $state('');
@@ -53,8 +53,8 @@
             <Button onclick={cancel} class={cancelButtonClass}>
                 Cancel
             </Button>
-            <Button onclick={openModel} class="text-light-base-50 dark:text-dark-base-50">
-                <FolderOpenSolid class="w-4 h-4 me-2 text-light-base-50 dark:text-dark-base-50"/>
+            <Button class={okButtonClass} onclick={openModel} >
+                <FolderOpenSolid class="w-4 h-4 me-2"/>
                 Open</Button>
         </div>
     </div>
