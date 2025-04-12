@@ -21,12 +21,12 @@
 
 </script>
 
-<Modal bind:open={dialogs.searchTextDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800">
+<Modal bind:open={dialogs.searchTextDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
     <div class="flex flex-col space-y-6" role="dialog">
 
-        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Search for text</h3>
+        <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Search for text</h3>
         <Card class="flex flex-col space-y-6 bg-white shadow my-2 p-6 max-w-full">
-            <div class="relative text-secondary-700">
+            <div class="relative text-light-base-700">
                 <Input class={textInputClass}
                     type="text"
                     bind:value={textToFind}

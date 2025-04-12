@@ -41,7 +41,7 @@
 </script>
 
 <NavLi class="cursor-pointer"
-	>Edit<ChevronDownOutline class="text-primary-800 ms-2 inline h-6 w-6 dark:text-primary-50" /></NavLi
+	>Edit<ChevronDownOutline class="text-light-base-800 ms-2 inline h-6 w-6 dark:text-dark-base-50" /></NavLi
 >
 <Dropdown class="z-20 w-44">
 	{#each menuItems as item, index}

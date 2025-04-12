@@ -69,10 +69,10 @@
 	<NavBar />
 	<ToolBar />
 	<!-- the tab panel with buttons -->
-	<div class="w-full pl-2 pr-2 mx-auto dark:bg-secondary-800 bg-secondary-100">
+	<div class="w-full pl-2 pr-2 mx-auto dark:bg-dark-base-800 bg-light-base-100">
 		<div class="flex space-x-1 mt-1" role="tablist">
 			{#each editorInfo.unitsInTabs as unitInfo, index}
-				<div class="relative tab-button dark:bg-primary-50 bg-secondary-100 dark:text-primary-900 text-secondary-600   {editorInfo.currentOpenTab === index ? 'opacity-100' : 'opacity-70'}">
+				<div class="relative tab-button dark:bg-dark-base-50 bg-light-base-100 dark:text-dark-base-900 text-light-base-600   {editorInfo.currentOpenTab === index ? 'opacity-100' : 'opacity-70'}">
 					<button
 						class=""
 						class:active={editorInfo.currentOpenTab === index}
@@ -80,14 +80,14 @@
 					>
 						{unitInfo.name}
 					</button>
-					<CloseButton size="sm" class="text-secondary-900 dark:text-primary-900 pl-1"
+					<CloseButton size="sm" class="text-light-base-900 dark:text-dark-base-900 pl-1"
 							onclick={(e: MouseEvent) => {
 								e.stopPropagation(); // Prevent tab change on close
 								closeTab(index);
 							}}
 					/>
 					{#if editorInfo.currentOpenTab === index}
-						<div class="absolute inset-x-0 bottom-0 h-0.5 bg-primary-500"></div>
+						<div class="absolute inset-x-0 bottom-0 h-0.5 bg-light-base-500"></div>
 					{/if}
 				</div>
 			{/each}
@@ -97,7 +97,7 @@
 	</div>
 
 	<Footer
-		class="text-center sticky md:bottom-0 start-0 z-20 w-full p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 border-t border-secondary-200 text-secondary-700 bg-secondary-50  dark:border-secondary-600 dark:bg-secondary-900"
+		class="text-center sticky md:bottom-0 start-0 z-20 w-full p-4 px-4 text-xs shadow md:flex md:items-center md:justify-between md:py-1 border-t border-light-base-200 text-light-base-700 bg-light-base-50  dark:border-dark-base-600 dark:bg-dark-base-900"
 	>
 		<div class="flex items-center justify-between">
 			<FooterCopyright
@@ -105,14 +105,14 @@
 				by="Freon contributors"
 				year={2025}
 				class="inline-flex items-center text-xs mr-4 pr-4 "
-				classSpan="text-secondary-700 dark:text-secondary-400 text-xs"
+				classSpan="text-light-base-700 dark:text-dark-base-400 text-xs"
 			/>
 			{#if inDevelopment.value}
 				<StatusBar />
 			{/if}
 		</div>
 		<FooterLinkGroup
-			ulClass="flex flex-wrap items-center mt-3 text-xs sm:mt-0 text-secondary-700 dark:text-secondary-400"
+			ulClass="flex flex-wrap items-center mt-3 text-xs sm:mt-0 text-light-base-700 dark:text-dark-base-400"
 		>
 			<FooterLink href="https://freon4dsl.dev" class="inline-flex items-center "
 			>freon4dsl.dev
@@ -131,7 +131,7 @@
 	{transitionParams}
 	bind:hidden={drawerHidden.value}
 	id="sidebar1"
-	class="bg-primary-50 dark:bg-secondary-900"
+	class="bg-light-base-50 dark:bg-dark-base-900"
 >
 	<ModelPanel />
 </Drawer>
@@ -160,6 +160,6 @@
     }
 
     .tab-button.active {
-        @apply bg-white dark:border-secondary-900 text-secondary-900 dark:text-secondary-100 border border-secondary-300 border-b-0 ;
+        @apply bg-white dark:border-dark-base-900 text-light-base-900 dark:text-dark-base-100 border border-light-base-300 border-b-0 ;
     }
 </style>

@@ -88,15 +88,15 @@
         drawerHidden.value = true;
     };
 
-    const buttonCls: string = 'text-center bg-secondary-200 dark:bg-secondary-700 hover:bg-primary-900 dark:hover:bg-primary-700';
-    const dropdownButtonCls: string = 'bg-secondary-200 text-primary-900 dark:text-primary-50 m-1 dark:bg-secondary-700';
-    const iconCls: string = "w-4 h-4 dark:text-primary-50";
+    const buttonCls: string = 'text-center bg-light-base-200 dark:bg-dark-base-700 hover:bg-light-base-900 dark:hover:bg-light-base-700';
+    const dropdownButtonCls: string = 'bg-light-base-200 text-light-base-900 dark:text-dark-base-50 m-1 dark:bg-dark-base-700';
+    const iconCls: string = "w-4 h-4 dark:text-dark-base-50";
 </script>
 
 
 <!-- buttons for open and new model -->
 <div class="flex items-center">
-    <ButtonGroup class="*:!ring-primary-700 ">
+    <ButtonGroup class="*:!ring-light-base-700 ">
         <Button class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class={iconCls}/>
         </Button>
@@ -106,15 +106,15 @@
         </Button>
         <Tooltip class={tooltipClass} placement="bottom">Create new model</Tooltip>
     </ButtonGroup>
-    <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-primary-50"/>
+    <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-dark-base-50"/>
 </div>
 
 <!-- buttons that address the current model -->
-<div class="flex justify-between items-center p-3 mb-3 bg-primary-500">
-    <span class="font-bold text-primary-900 dark:text-primary-50">
+<div class="flex justify-between items-center p-3 mb-3 bg-light-base-500">
+    <span class="font-bold text-light-base-900 dark:text-dark-base-50">
         {editorInfo.modelName}
     </span>
-    <ButtonGroup class="*:!ring-primary-700 ">
+    <ButtonGroup class="*:!ring-light-base-700 ">
         <Button class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
             <PenSolid class="{iconCls} me-2 "/>
         </Button>
@@ -131,28 +131,28 @@
 </div>
 
 <!-- buttons for the model's units -->
-<div class="text-sm font-medium text-gray-900 bg-primary-50 dark:bg-secondary-900 border-gray-200 rounded-lg   dark:text-primary-50">
+<div class="text-sm font-medium text-gray-900 bg-light-base-50 dark:bg-dark-base-900 border-gray-200 rounded-lg   dark:text-dark-base-50">
     {#each langInfo.unitTypes as unitType}
-        <div class=" border border-secondary-800 mb-3">
-            <div class="flex justify-between px-1 py-2 font-semibold text-secondary-900 dark:text-primary-50 bg-primary-100 dark:bg-secondary-700">
-                <span class="px-1 text-primary-800 dark:text-primary-100">{unitType}</span>
+        <div class=" border border-light-base-800 mb-3">
+            <div class="flex justify-between px-1 py-2 font-semibold text-light-base-900 dark:text-dark-base-50 bg-light-base-100 dark:bg-dark-base-700">
+                <span class="px-1 text-light-base-800 dark:text-dark-base-100">{unitType}</span>
 
                 <Button class="{buttonCls} p-1" name="New Unit" size="xs" onclick={() => newUnit(unitType)}>
                     <PlusOutline class="{iconCls} me-2 mr-0"/>
                 </Button>
                 <Tooltip class={tooltipClass} placement="bottom">New Unit</Tooltip>
             </div>
-        <div class="w-64 ml-4 text-sm font-medium text-gray-900 bg-primary-50 dark:bg-secondary-900 border-gray-200 rounded-lg  dark:border-gray-600 dark:text-white">
+        <div class="w-64 ml-4 text-sm font-medium text-gray-900 bg-light-base-50 dark:bg-dark-base-900 border-gray-200 rounded-lg  dark:border-gray-600 dark:text-white">
             {#each myUnits as unit, index}
                 {#if unit.type === unitType}
-                <div class="flex justify-between items-end text-primary-800  dark:text-secondary-200 w-full mx-3 my-1 px-4 py-1
+                <div class="flex justify-between items-end text-light-base-800  dark:text-dark-base-200 w-full mx-3 my-1 px-4 py-1
                     cursor-pointer dark:bg-gray-800
-                    {index === selectedIndex ? 'bg-secondary-300 dark:bg-primary-400' : 'bg-primary-100 dark:bg-secondary-700'}"
+                    {index === selectedIndex ? 'bg-light-base-300 dark:bg-dark-base-400' : 'bg-light-base-100 dark:bg-dark-base-700'}"
                 >
                     {unit.name}
-                    <ChevronDownOutline id="dots-menu-{index}" class="inline text-secondary-900 dark:text-primary-50"/>
+                    <ChevronDownOutline id="dots-menu-{index}" class="inline text-light-base-900 dark:text-dark-base-50"/>
                     <Tooltip class={tooltipClass} placement="bottom">Actions on {unit.name}</Tooltip>
-                    <Dropdown class="p-0 m-0 bg-primary-500" placement='left' triggeredBy="#dots-menu-{index}">
+                    <Dropdown class="p-0 m-0 bg-light-base-500" placement='left' triggeredBy="#dots-menu-{index}">
                         <div class="flex flex-col justify-end p-0 m-0">
                             <Button class={dropdownButtonCls} name="Open" size="xs" onclick={() => openUnit(index)}>
                                 <FolderOpenSolid class="{iconCls} me-2"/>

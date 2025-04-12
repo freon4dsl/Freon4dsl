@@ -50,10 +50,10 @@
 	}
 </script>
 
-<Modal bind:open={dialogs.newUnitDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800">
-    <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">New unit of type {editorInfo.toBeCreated?.type}</h3>
+<Modal bind:open={dialogs.newUnitDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
+    <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">New unit of type {editorInfo.toBeCreated?.type}</h3>
     <div class="flex flex-col space-y-6" role="dialog">
-        <div class="relative text-secondary-700">
+        <div class="relative text-light-base-700">
             <Input class={textInputClass}
                    type="text"
                    bind:value={newName}
@@ -61,7 +61,7 @@
                    name="unit-name"
                    oninput={onInput}
             />
-            <Helper class="text-sm ml-2 text-primary-900">
+            <Helper class="text-sm ml-2 text-light-base-900">
                 <span class="font-medium">{helperText}</span>
             </Helper>
         </div>
@@ -71,8 +71,8 @@
         <Button onclick={handleCancel} class={cancelButtonClass}>
             Cancel
         </Button>
-        <Button onclick={handleSubmit} class="text-primary-50 dark:text-primary-50">
-            <FolderOpenSolid class="w-4 h-4 me-2 text-primary-50 dark:text-primary-50"/>
+        <Button onclick={handleSubmit} class="text-light-base-50 dark:text-dark-base-50">
+            <FolderOpenSolid class="w-4 h-4 me-2 text-light-base-50 dark:text-dark-base-50"/>
             New
         </Button>
     </div>

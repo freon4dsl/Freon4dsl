@@ -66,14 +66,14 @@
 
 </script>
 
-<Modal bind:open={dialogs.startDialogVisible} autoclose={false} class="w-full text-secondary-900 dark:text-primary-50 bg-primary-100 dark:bg-secondary-800">
+<Modal bind:open={dialogs.startDialogVisible} autoclose={false} class="w-full text-light-base-900 dark:text-dark-base-50 bg-light-base-100 dark:bg-dark-base-800">
     {#if serverInfo.allModelNames.length > 0}
-        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Create/Open model</h3>
+        <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Create/Open model</h3>
     {:else }
-        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Create model</h3>
+        <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Create model</h3>
     {/if}
     <div class="flex flex-col space-y-6" role="dialog">
-        <div class="relative text-secondary-700">
+        <div class="relative text-light-base-700">
             <Input class={textInputClass}
                    type="text"
                    bind:value={newName}
@@ -84,15 +84,15 @@
             <Button class="absolute inset-y-0 right-0 flex items-center px-4 rounded-r-lg"
                     onclick={newModel}
             >
-                <FolderPlusSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
+                <FolderPlusSolid class="w-4 h-4 me-2 dark:text-dark-base-50"/>
                 Create
             </Button>
         </div>
-        <Helper class="text-sm ml-2 text-primary-900">
+        <Helper class="text-sm ml-2 text-light-base-900">
             <span class="font-medium">{errorText}</span>
         </Helper>
         {#if serverInfo.allModelNames.length > 0}
-            <hr class="h-px my-8 bg-secondary-400 border-0 dark:bg-secondary-300">
+            <hr class="h-px my-8 bg-light-base-400 border-0 dark:bg-dark-base-300">
             <div class="">
                 <div class="grid grid-cols-3 mb-3 p-2 ">
                     {#each serverInfo.allModelNames as model}
@@ -109,7 +109,7 @@
                         Cancel
                     </Button>
                     <Button onclick={openModel}>
-                        <FolderOpenSolid class="w-4 h-4 me-2 dark:text-primary-50"/>
+                        <FolderOpenSolid class="w-4 h-4 me-2 dark:text-dark-base-50"/>
                         Open
                     </Button>
                 </div>

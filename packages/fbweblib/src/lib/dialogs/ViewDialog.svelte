@@ -35,7 +35,7 @@
 </script>
 
 <Modal title="Select the projections to be shown" bind:open={dialogs.selectViewsDialogVisible} size="xs" autoclose outsideclose
-       class="w-full bg-primary-100 dark:bg-secondary-800">
+       class="w-full bg-light-base-100 dark:bg-dark-base-800">
     <Checkbox checked disabled>Default</Checkbox>
     {#each allProjections as option}
         {#if !isNullOrUndefined(option)}

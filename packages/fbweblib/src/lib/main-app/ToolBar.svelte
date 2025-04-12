@@ -26,13 +26,22 @@ function onKeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLInp
     }
 }
 
-const buttonCls: string= "rounded-none font-normal p-1 text-primary-700 bg-secondary-50 hover:text-primary-50 dark:text-primary-50 dark:bg-secondary-900"
-const iconCls: string = "w-4 h-4 me-2 dark:text-primary-50"
+const buttonCls: string= "rounded-none font-normal p-1 " +
+  "text-light-base-900          dark:text-dark-base-50 " +
+  'bg-light-base-400            dark:bg-dark-base-300 ' +
+  'hover:bg-light-base-900      dark:hover:bg-dark-base-50 ' +
+  'hover:text-light-base-500    dark:hover:text-dark-base-250 ';
+const iconCls: string = "w-4 h-4 me-2";
+const searchFieldCls: string =
+  "text-light-base-700      dark:text-dark-base-150 " +
+  "bg-light-base-150        dark:bg-dark-base-700 " +
+  "hover:text-light-base-50 dark:hover:text-dark-base-900"+
+  "hover:bg-light-base-600  dark:hover:bg-dark-base-200";
 
 </script>
 
 <Banner dismissable={false} class="p-0">
-    <div class="flex w-full justify-between flex-nowrap bg-secondary-50 dark:bg-secondary-900 text-secondary-500 dark:text-secondary-400 border border-secondary-200 dark:border-secondary-700 divide-y divide-gray-200 dark:divide-gray-600">
+    <div class="flex w-full justify-between flex-nowrap bg-light-base-100 dark:bg-dark-base-800 border border-light-base-100 dark:border-dark-base-800 ">
         <div class="ml-2">
             <Button class="{buttonCls}" onclick={EditorRequestsHandler.getInstance().undo}>
                 <UndoOutline class="{iconCls}"/>
@@ -71,13 +80,13 @@ const iconCls: string = "w-4 h-4 me-2 dark:text-primary-50"
                 View(s)...
             </Button>
         </div>
-        <div class="relative ">
-            <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none text-primary-700 dark:bg-secondary-50">
+        <div class="relative {searchFieldCls}">
+            <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none ">
                 <SearchOutline class="w-4 h-4 " />
             </div>
             <Input id="search-navbar"
-                   class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 text-primary-700 dark:text-primary-100 bg-primary-50 dark:bg-secondary-50"
-                   floatClass="text-secondary-500 dark:text-secondary-400"
+                   class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 {searchFieldCls}"
+                   floatClass="{searchFieldCls}"
                    size="sm"
                    placeholder="Search..."
                    onkeydown={onKeydown}

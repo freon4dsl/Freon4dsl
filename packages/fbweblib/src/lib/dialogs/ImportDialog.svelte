@@ -53,10 +53,10 @@
     }
 </script>
 
-<Modal bind:open={dialogs.importDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800">
+<Modal bind:open={dialogs.importDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
     <div class="flex flex-col space-y-6" role="dialog">
-        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Import model unit(s)</h3>
-        <button class="flex flex-col justify-center items-center w-full h-64 bg-secondary-50 dark:bg-primary-50 rounded-lg border-2 border-secondary-300 border-dashed cursor-pointer dark:hover:bg-bray-800 hover:bg-secondary-100 dark:border-secondary-600 dark:hover:border-secondary-500 dark:hover:bg-secondary-600';"
+        <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Import model unit(s)</h3>
+        <button class="flex flex-col justify-center items-center w-full h-64 bg-light-base-50 dark:bg-dark-base-50 rounded-lg border-2 border-light-base-300 border-dashed cursor-pointer dark:hover:bg-bray-800 hover:bg-light-base-100 dark:border-dark-base-600 dark:hover:border-light-base-500 dark:hover:bg-light-base-600';"
                 id="dropzone"
                 ondrop={dropHandle}
                 ondragover={(event) => {
@@ -64,11 +64,11 @@
                   }}
                 onclick={onClick}
         >
-            <ArrowDownToBracketOutline class="w-10 h-10 me-2 dark:text-secondary-500"/>
+            <ArrowDownToBracketOutline class="w-10 h-10 me-2 dark:text-dark-base-500"/>
             <Label class="space-y-2">
-                <p class="mb-2 text-lg text-secondary-500 dark:text-secondary-400"><span
+                <p class="mb-2 text-lg text-light-base-500 dark:text-dark-base-400"><span
                         class="font-semibold">Click to import </span> or drag and drop</p>
-                <p class="text-base text-secondary-500 dark:text-secondary-400">Valid file types: {file_extensions}</p>
+                <p class="text-base text-light-base-500 dark:text-dark-base-400">Valid file types: {file_extensions}</p>
             </Label>
         </button>
         <input class="hidden" type="file" accept={file_extensions} multiple={true} bind:this={file_selector}

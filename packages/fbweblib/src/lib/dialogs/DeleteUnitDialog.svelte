@@ -17,14 +17,14 @@
 
 </script>
 
-<Modal bind:open={dialogs.deleteUnitDialogVisible} autoclose={false} class="w-full bg-primary-100 dark:bg-secondary-800">
+<Modal bind:open={dialogs.deleteUnitDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
     <div class="flex flex-col space-y-6" role="dialog">
-        <h3 class="mb-4 text-xl font-medium text-secondary-900 dark:text-primary-50">Delete unit</h3>
-        <div class="flex flex-col space-y-6 p-4 bg-primary-700 dark-bg-secondary-300" role="dialog">
-        <Label class="space-y-2 text-primary-50 dark:text-secondary-50">
+        <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Delete unit</h3>
+        <div class="flex flex-col space-y-6 p-4 bg-light-base-700 dark-bg-light-base-300" role="dialog">
+        <Label class="space-y-2 text-light-base-50 dark:text-dark-base-50">
             Do you want to delete <span class="font-bold">{editorInfo.currentUnit?.name}</span>?
         </Label>
-        <Label class="italic text-secondary-200 dark:text-primary-200">Note that this action cannot be undone.</Label>
+        <Label class="italic text-light-base-200 dark:text-dark-base-200">Note that this action cannot be undone.</Label>
         </div>
     </div>
 
@@ -32,8 +32,8 @@
         <Button onclick={handleCancel} class={cancelButtonClass}>
             Cancel
         </Button>
-        <Button onclick={handleSubmit} class="text-primary-50 dark:text-primary-50">
-            <TrashBinSolid class="w-4 h-4 me-2 text-primary-50 dark:text-primary-50"/>
+        <Button onclick={handleSubmit} class="text-light-base-50 dark:text-dark-base-50">
+            <TrashBinSolid class="w-4 h-4 me-2 text-light-base-50 dark:text-dark-base-50"/>
             Delete
         </Button>
     </div>
