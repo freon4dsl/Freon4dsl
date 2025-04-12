@@ -15,6 +15,7 @@ import {
 import { Banner, Button, Input } from "flowbite-svelte"
 import { ENTER } from "@freon4dsl/core"
 
+
 /**
  * We use the key ENTER here to be able to search again, when the search text has not changed, but possibly
  * the model has. The onchange event only triggers when the search text has changed.
@@ -26,17 +27,17 @@ function onKeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLInp
     }
 }
 
-const buttonCls: string= "rounded-none font-normal p-1 " +
-  "text-light-base-900          dark:text-dark-base-50 " +
-  'bg-light-base-400            dark:bg-dark-base-300 ' +
-  'hover:bg-light-base-900      dark:hover:bg-dark-base-50 ' +
-  'hover:text-light-base-500    dark:hover:text-dark-base-250 ';
+const buttonCls: string= 'rounded-none font-normal p-1 ' +
+  'text-light-base-50           dark:text-dark-base-900 ' +
+  'bg-light-base-600 					  dark:bg-dark-base-200 ' +
+  'hover:bg-light-base-900      dark:hover:bg-dark-base-50 ';
 const iconCls: string = "w-4 h-4 me-2";
 const searchFieldCls: string =
-  "text-light-base-700      dark:text-dark-base-150 " +
-  "bg-light-base-150        dark:bg-dark-base-700 " +
-  "hover:text-light-base-50 dark:hover:text-dark-base-900"+
-  "hover:bg-light-base-600  dark:hover:bg-dark-base-200";
+  'text-light-base-50           dark:text-dark-base-900 ' +
+  'bg-light-base-600 					  dark:bg-dark-base-200 ' +
+  'hover:bg-light-base-50       dark:hover:bg-dark-base-900 ' +
+  'hover:text-light-base-900    dark:hover:text-dark-base-900' +
+  'placeholder-light-base-100   dark:placeholder-dark-base-800';
 
 </script>
 

@@ -88,11 +88,14 @@
         drawerHidden.value = true;
     };
 
-    const buttonCls: string = 'text-center bg-light-base-200 dark:bg-dark-base-700 hover:bg-light-base-900 dark:hover:bg-light-base-700';
+    const buttonCls: string = 'text-center ' +
+      'bg-light-base-200            dark:bg-dark-base-700 ' +
+      'text-light-base-900          dark:text-dark-base-50 ' +
+      'hover:text-light-base-100    dark:hover:text-dark-base-800 ' +
+      'hover:bg-light-base-900      dark:hover:bg-dark-base-700';
     const dropdownButtonCls: string = 'bg-light-base-200 text-light-base-900 dark:text-dark-base-50 m-1 dark:bg-dark-base-700';
-    const iconCls: string = "w-4 h-4 dark:text-dark-base-50";
+    const iconCls: string = "w-4 h-4 ";
 </script>
-
 
 <!-- buttons for open and new model -->
 <div class="flex items-center">
@@ -111,7 +114,7 @@
 
 <!-- buttons that address the current model -->
 <div class="flex justify-between items-center p-3 mb-3 bg-light-base-500">
-    <span class="font-bold text-light-base-900 dark:text-dark-base-50">
+    <span class="font-bold text-light-base-100 dark:text-dark-base-50">
         {editorInfo.modelName}
     </span>
     <ButtonGroup class="*:!ring-light-base-700 ">
@@ -131,28 +134,29 @@
 </div>
 
 <!-- buttons for the model's units -->
-<div class="text-sm font-medium text-gray-900 bg-light-base-50 dark:bg-dark-base-900 border-gray-200 rounded-lg   dark:text-dark-base-50">
+<div class="text-sm font-medium text-light-base-900 bg-light-base-50 dark:bg-dark-base-900 border-light-base-200 rounded-lg   dark:text-dark-base-50">
     {#each langInfo.unitTypes as unitType}
         <div class=" border border-light-base-800 mb-3">
-            <div class="flex justify-between px-1 py-2 font-semibold text-light-base-900 dark:text-dark-base-50 bg-light-base-100 dark:bg-dark-base-700">
-                <span class="px-1 text-light-base-800 dark:text-dark-base-100">{unitType}</span>
+            <div class="flex justify-between px-1 py-2 font-semibold text-light-base-900 dark:text-dark-base-50 bg-light-base-200 dark:bg-dark-base-700">
+                <span class="px-1 text-light-base-800 dark:text-dark-base-100">{unitType} units</span>
 
                 <Button class="{buttonCls} p-1" name="New Unit" size="xs" onclick={() => newUnit(unitType)}>
                     <PlusOutline class="{iconCls} me-2 mr-0"/>
                 </Button>
-                <Tooltip class={tooltipClass} placement="bottom">New Unit</Tooltip>
+                <Tooltip class={tooltipClass} placement="bottom">New {unitType} unit</Tooltip>
             </div>
-        <div class="w-64 ml-4 text-sm font-medium text-gray-900 bg-light-base-50 dark:bg-dark-base-900 border-gray-200 rounded-lg  dark:border-gray-600 dark:text-white">
+        <div class="w-64 ml-4 text-sm font-medium text-light-base-900 bg-light-base-50 dark:bg-dark-base-900 border-light-base-200 rounded-lg  dark:border-dark-base-600 dark:text-white">
             {#each myUnits as unit, index}
                 {#if unit.type === unitType}
                 <div class="flex justify-between items-end text-light-base-800  dark:text-dark-base-200 w-full mx-3 my-1 px-4 py-1
-                    cursor-pointer dark:bg-gray-800
+                    cursor-pointer dark:bg-dark-base-800
                     {index === selectedIndex ? 'bg-light-base-300 dark:bg-dark-base-400' : 'bg-light-base-100 dark:bg-dark-base-700'}"
                 >
+                    {#if index === selectedIndex}<PenSolid class="{iconCls} me-2 "/>{/if}
                     {unit.name}
-                    <ChevronDownOutline id="dots-menu-{index}" class="inline text-light-base-900 dark:text-dark-base-50"/>
+                    <ChevronDownOutline id="dots-menu-{index}" class="inline text-light-base-900 dark:text-dark-base-50 hover:bg-light-base-900 dark:hover:bg-dark-base-50 hover:text-light-base-150 dark:hover:text-dark-base-700"/>
                     <Tooltip class={tooltipClass} placement="bottom">Actions on {unit.name}</Tooltip>
-                    <Dropdown class="p-0 m-0 bg-light-base-500" placement='left' triggeredBy="#dots-menu-{index}">
+                    <Dropdown class="p-0 m-0 bg-light-base-500" placement='bottom' triggeredBy="#dots-menu-{index}">
                         <div class="flex flex-col justify-end p-0 m-0">
                             <Button class={dropdownButtonCls} name="Open" size="xs" onclick={() => openUnit(index)}>
                                 <FolderOpenSolid class="{iconCls} me-2"/>
