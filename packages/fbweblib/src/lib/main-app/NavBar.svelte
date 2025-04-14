@@ -7,7 +7,12 @@
 		NavBrand,
 		Tooltip
 	} from 'flowbite-svelte';
-	import { AnnotationOutline, ChevronRightOutline, QuestionCircleOutline } from 'flowbite-svelte-icons';
+	import {
+		AnnotationOutline,
+		ChevronLeftOutline,
+		ChevronRightOutline,
+		QuestionCircleOutline
+	} from 'flowbite-svelte-icons';
 	import { dialogs, drawerHidden } from '$lib/stores/WebappStores.svelte';
 	import GitHub from '$lib/main-app/GitHub.svelte';
 	import { langInfo } from '$lib/stores/LanguageInfo.svelte';
@@ -29,7 +34,6 @@
 		<span
 			class="self-center whitespace-nowrap text-xl font-semibold text-light-base-700 dark:text-dark-base-150 ">Freon for {langInfo.name}</span>
 	</NavBrand>
-
 
 	<ButtonGroup class="*:!ring-dark-base-900 {colorCls}">
       <!--  Dark mode button and tooltip      -->
@@ -59,11 +63,11 @@
 		</Button>
 		<Tooltip placement="bottom" class="{tooltipClass}">About</Tooltip>
 
-		<!--  Model panel button and tooltip      -->
-		<Button class="{buttonCls} {colorCls} " onclick={() => (drawerHidden.value = false)}>
-			<ChevronRightOutline class="{iconCls}" />
-		</Button>
-		<Tooltip placement="bottom" class="{tooltipClass}">Show Model Info</Tooltip>
+<!--		&lt;!&ndash;  Model panel button and tooltip      &ndash;&gt;-->
+<!--		<Button class="{buttonCls} {colorCls} " onclick={() => (drawerHidden.value = false)}>-->
+<!--			<ChevronRightOutline class="{iconCls}" />-->
+<!--		</Button>-->
+<!--		<Tooltip placement="bottom" class="{tooltipClass}">Show Model Info</Tooltip>-->
 	</ButtonGroup>
 </Navbar>
 <!--  end::navbar   -->

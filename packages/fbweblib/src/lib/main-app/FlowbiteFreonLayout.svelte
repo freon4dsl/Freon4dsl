@@ -126,7 +126,7 @@
 <!-- Normally hidden elements-->
 
 <Drawer
-	placement="right"
+	placement="left"
 	transitionType="fly"
 	{transitionParams}
 	bind:hidden={drawerHidden.value}

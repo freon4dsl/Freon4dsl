@@ -31,4 +31,4 @@ export const okButtonClass = 'text-center font-medium focus-within:ring-4 focus-
 	'dark:focus-within:ring-dark-base-700 '
 export const textInputClass = 'w-full h-10 pl-3 pr-32 text-base placeholder-dark-base-600 border rounded-lg focus:shadow-outline bg-light-base-50 ' +
 	'dark:bg-dark-base-50'
-export const tooltipClass: string = 'text-light-base-900 dark:text-dark-base-50 bg-light-accent-200 dark:bg-dark-accent-200 ';
+export const tooltipClass: string = 'text-light-base-900 dark:text-dark-base-50 bg-light-accent-200 dark:bg-dark-accent-200 z-10';
