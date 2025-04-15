@@ -2,7 +2,7 @@ import { FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { FreLionwebSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
-import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
+import { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 import { ServerCommunication } from "./ServerCommunication.js";
 // import * as process from "process";
 
@@ -36,7 +36,7 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
     }
 
     // @ts-ignore
-    async loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]> {
+    async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
         return [];
     }
 
@@ -80,7 +80,7 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
 
     // @ts-ignore
     // parameter present to adhere to interface
-    async putModelUnit(modelName: string, unitIdentifier: ModelUnitIdentifier, unit: FreNode) {
+    async putModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNode) {
         console.log("unit", unit);
         if (!!unitIdentifier.name && unitIdentifier.name.length > 0 && !!unit) {
             try {

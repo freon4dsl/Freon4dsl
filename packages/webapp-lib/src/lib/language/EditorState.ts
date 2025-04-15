@@ -28,7 +28,7 @@ import {
 import { setUserMessage } from "../components/stores/UserMessageStore.svelte";
 import { modelErrors } from "../components/stores/InfoPanelStore.svelte";
 import { autorun, runInAction } from "mobx";
-import { WebappConfigurator } from "$lib";
+import { WebappConfigurator } from "../WebappConfigurator.js";
 
 const LOGGER = new FreLogger("EditorState").mute();
 

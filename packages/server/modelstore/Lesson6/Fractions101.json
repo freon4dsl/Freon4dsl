@@ -478,7 +478,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeA",
-                     "reference": "ID-11"
+                     "reference": "ID-1"
                   }
                ]
             }
@@ -571,7 +571,7 @@
                   "key": "-key-GradeScore-expr"
                },
                "children": [
-                  "ID-48"
+                  "ID-143"
                ]
             }
          ],
@@ -585,7 +585,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeB",
-                     "reference": "ID-12"
+                     "reference": "ID-2"
                   }
                ]
             }
@@ -594,7 +594,7 @@
          "parent": "ID-9"
       },
       {
-         "id": "ID-48",
+         "id": "ID-143",
          "classifier": {
             "language": "-key-Education",
             "version": "2023.1",
@@ -652,7 +652,7 @@
             }
          ],
          "annotations": [],
-         "parent": "ID-48"
+         "parent": "ID-143"
       },
       {
          "id": "ID-52",
@@ -686,7 +686,7 @@
          ],
          "references": [],
          "annotations": [],
-         "parent": "ID-48"
+         "parent": "ID-143"
       },
       {
          "id": "ID-51",
@@ -753,7 +753,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeC",
-                     "reference": "ID-13"
+                     "reference": "ID-3"
                   }
                ]
             }
@@ -982,7 +982,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeD",
-                     "reference": "ID-14"
+                     "reference": "ID-4"
                   }
                ]
             }
@@ -1089,7 +1089,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeE",
-                     "reference": "ID-15"
+                     "reference": "ID-5"
                   }
                ]
             }
@@ -1196,7 +1196,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeF",
-                     "reference": "ID-16"
+                     "reference": "ID-6"
                   }
                ]
             }
@@ -1539,7 +1539,7 @@
                   "key": "-key-GradeScore-expr"
                },
                "children": [
-                  "ID-136"
+                  "ID-154"
                ]
             }
          ],
@@ -1553,7 +1553,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeC",
-                     "reference": "ID-13"
+                     "reference": "ID-3"
                   }
                ]
             }
@@ -1562,54 +1562,7 @@
          "parent": "ID-65"
       },
       {
-         "id": "ID-136",
-         "classifier": {
-            "language": "-key-Education",
-            "version": "2023.1",
-            "key": "-key-EqualsExpression"
-         },
-         "properties": [],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-key-Education",
-                  "version": "2023.1",
-                  "key": "-key-BinaryExpression-left"
-               },
-               "children": [
-                  "ID-135"
-               ]
-            },
-            {
-               "containment": {
-                  "language": "-key-Education",
-                  "version": "2023.1",
-                  "key": "-key-BinaryExpression-right"
-               },
-               "children": [
-                  "ID-139"
-               ]
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-133"
-      },
-      {
-         "id": "ID-135",
-         "classifier": {
-            "language": "-key-Education",
-            "version": "2023.1",
-            "key": "-key-NrOfCorrectAnswers"
-         },
-         "properties": [],
-         "containments": [],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-136"
-      },
-      {
-         "id": "ID-139",
+         "id": "ID-154",
          "classifier": {
             "language": "-key-Education",
             "version": "2023.1",
@@ -1633,7 +1586,7 @@
             }
          ],
          "annotations": [],
-         "parent": "ID-136"
+         "parent": "ID-133"
       },
       {
          "id": "ID-66",
@@ -1850,7 +1803,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeA",
-                     "reference": "ID-11"
+                     "reference": "ID-1"
                   }
                ]
             }
@@ -2030,7 +1983,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeA",
-                     "reference": "ID-11"
+                     "reference": "ID-1"
                   }
                ]
             }
@@ -2095,7 +2048,7 @@
                "targets": [
                   {
                      "resolveInfo": "gradeF",
-                     "reference": "ID-16"
+                     "reference": "ID-6"
                   }
                ]
             }

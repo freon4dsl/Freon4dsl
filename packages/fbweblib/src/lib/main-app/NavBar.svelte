@@ -1,0 +1,75 @@
+<script lang="ts">
+	import {
+		Button,
+		ButtonGroup,
+		DarkMode,
+		Navbar,
+		NavBrand,
+		Tooltip
+	} from 'flowbite-svelte';
+	import {
+		AnnotationOutline,
+		ChevronLeftOutline,
+		ChevronRightOutline,
+		QuestionCircleOutline
+	} from 'flowbite-svelte-icons';
+	import { dialogs, drawerHidden } from '$lib/stores/WebappStores.svelte';
+	import GitHub from '$lib/main-app/GitHub.svelte';
+	import { langInfo } from '$lib/stores/LanguageInfo.svelte';
+	import { tooltipClass } from '$lib/stores/StylesStore.svelte';
+
+	// The @apply directive of Tailwind does not function correctly in Svelte, therefore we use this alternative.
+	const colorCls: string = 'text-light-base-50 dark:text-dark-base-900 ';
+	const buttonCls: string =
+		'bg-light-base-600 					dark:bg-dark-base-200 ' +
+		'hover:bg-light-base-900 		dark:hover:bg-dark-base-50 ' +
+		'border-light-base-100 			dark:border-dark-base-800 ';
+	const iconCls: string = 'ms-0 inline h-6 w-6';
+</script>
+
+<!--  start::navbar   -->
+<Navbar id="freon-navbar" class="bg-light-base-50 dark:bg-dark-base-900 sticky start-0 top-0 z-20 w-full flex-nowrap border-b px-2 sm:px-4">
+	<NavBrand href="/">
+		<img src="./freonlogo.svg" class="me-3 h-6 sm:h-9" alt="Freon Logo" />
+		<span
+			class="self-center whitespace-nowrap text-xl font-semibold text-light-base-700 dark:text-dark-base-150 ">Freon for {langInfo.name}</span>
+	</NavBrand>
+
+	<ButtonGroup class="*:!ring-dark-base-900 {colorCls}">
+      <!--  Dark mode button and tooltip      -->
+      <DarkMode class="{buttonCls} {colorCls} rounded-none focus-within:ring-2 focus-within:z-10 px-4
+		    border [&:not(:first-child)]:-ms-px first:rounded-s-lg last:rounded-e-lg" />
+      <Tooltip placement="bottom" class="{tooltipClass}">Dark/Light Mode</Tooltip>
+
+		<!--  Github button and tooltip      -->
+		<Button class="{buttonCls} {colorCls} "
+						name="View on GitHub"
+						href="https://github.com/freon4dsl/Freon4dsl"
+						target="_blank"
+		>
+			<GitHub />
+		</Button>
+		<Tooltip placement="bottom" class="{tooltipClass}">View on GitHub</Tooltip>
+
+		<!--  Documentation button and tooltip      -->
+		<Button class="{buttonCls} {colorCls} " name="View Documentation" href="https://www.freon4dsl.dev/" target="_blank">
+			<AnnotationOutline class="{iconCls}" />
+		</Button>
+		<Tooltip placement="bottom" class="{tooltipClass}">Go to Documentation</Tooltip>
+
+		<!--  About button and tooltip      -->
+		<Button class="{buttonCls} {colorCls} " name="About" onclick={() => (dialogs.aboutDialogVisible = true)}>
+			<QuestionCircleOutline class="{iconCls}" />
+		</Button>
+		<Tooltip placement="bottom" class="{tooltipClass}">About</Tooltip>
+
+<!--		&lt;!&ndash;  Model panel button and tooltip      &ndash;&gt;-->
+<!--		<Button class="{buttonCls} {colorCls} " onclick={() => (drawerHidden.value = false)}>-->
+<!--			<ChevronRightOutline class="{iconCls}" />-->
+<!--		</Button>-->
+<!--		<Tooltip placement="bottom" class="{tooltipClass}">Show Model Info</Tooltip>-->
+	</ButtonGroup>
+</Navbar>
+<!--  end::navbar   -->
+
+<style></style>

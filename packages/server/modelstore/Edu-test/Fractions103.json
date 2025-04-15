@@ -1,0 +1,249 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-Education",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-19",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Topic"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Topic-name"
+               },
+               "value": "Fractions103"
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Topic-description"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Topic-pages"
+               },
+               "children": [
+                  "ID-32",
+                  "ID-33",
+                  "ID-34",
+                  "ID-35"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Topic-main"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Fractions",
+                     "reference": "ID-18"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-32",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Theory"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-name"
+               },
+               "value": "Theory103"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Theory-content"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-33",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Video"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Video-url"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-name"
+               },
+               "value": "Video3a"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-34",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Video"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Video-url"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-name"
+               },
+               "value": "Video3b"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-35",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-WorkSheet"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-name"
+               },
+               "value": "Worksheet3"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-questions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Page-grading"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-19"
+      }
+   ]
+}

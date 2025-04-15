@@ -1,9 +1,6 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
 @import './lib/styles/freon.css';
-@import './lib/styles/freon-dark.css';
+@import 'lib/styles/freon-plain-color-definitions.css';
+@import 'lib/styles/freon-plain-dark.css';
 @import './lib/styles/freon-light.css';
 
 h1 {

@@ -1,0 +1,673 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-Education",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-54",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Flow"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Flow-name"
+               },
+               "value": "StartFlow"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Flow-rules"
+               },
+               "children": [
+                  "ID-55",
+                  "ID-105",
+                  "ID-124"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Flow-main"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Fractions",
+                     "reference": "ID-18"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-55",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-FlowRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-name"
+               },
+               "value": "FromStartPage"
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-description"
+               },
+               "value": "flow from start page to follow ups"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-transitions"
+               },
+               "children": [
+                  "ID-57",
+                  "ID-56",
+                  "ID-58",
+                  "ID-60",
+                  "ID-61",
+                  "ID-64"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-page"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory101",
+                     "reference": "ID-9"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-54"
+      },
+      {
+         "id": "ID-57",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-1"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "InDepth1",
+                     "reference": "ID-67"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-56",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeB",
+                     "reference": "ID-2"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "InDepth1",
+                     "reference": "ID-67"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-58",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeC",
+                     "reference": "ID-3"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Practice1",
+                     "reference": "ID-65"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-60",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeD",
+                     "reference": "ID-4"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Example1",
+                     "reference": "ID-66"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-61",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeE",
+                     "reference": "ID-5"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Video1",
+                     "reference": "ID-70"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-64",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeF",
+                     "reference": "ID-6"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory101",
+                     "reference": "ID-9"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-105",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-FlowRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-name"
+               },
+               "value": "FromInDepth1"
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-description"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-transitions"
+               },
+               "children": [
+                  "ID-106",
+                  "ID-107",
+                  "ID-108",
+                  "ID-109"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-page"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "InDepth1",
+                     "reference": "ID-67"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-54"
+      },
+      {
+         "id": "ID-106",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-1"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory102",
+                     "reference": "ID-100"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      },
+      {
+         "id": "ID-107",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeB",
+                     "reference": "ID-2"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory102",
+                     "reference": "ID-100"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      },
+      {
+         "id": "ID-108",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeC",
+                     "reference": "ID-3"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory102",
+                     "reference": "ID-100"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      },
+      {
+         "id": "ID-109",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeD",
+                     "reference": "ID-4"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Practice1",
+                     "reference": "ID-65"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      },
+      {
+         "id": "ID-124",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-FlowRule"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-name"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-description"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-transitions"
+               },
+               "children": [
+                  "ID-127"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-FlowRule-page"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory102",
+                     "reference": "ID-100"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-54"
+      },
+      {
+         "id": "ID-127",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-PageTransition"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-condition"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "gradeA",
+                     "reference": "ID-1"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-PageTransition-toPage"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Theory103",
+                     "reference": "ID-32"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-124"
+      }
+   ]
+}

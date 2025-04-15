@@ -111,7 +111,7 @@ export class FreEditor {
     auto = () => {
         LOGGER.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " recalc is " + this.forceRecalculateProjection);
         this.forceRecalculateProjection
-        if (this.rootElement !== null) {
+        if (!isNullOrUndefined(this.rootElement)) {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
         }
@@ -132,8 +132,10 @@ export class FreEditor {
      */
     set rootElement(node: FreNode) {
         this._rootElement = node;
-        // select first editable child
-        this.selectFirstEditableChildBox(node);
+        if (!isNullOrUndefined(node)) {
+            // select first editable child
+            this.selectFirstEditableChildBox(node);
+        }
     }
 
     get rootElement(): FreNode {
