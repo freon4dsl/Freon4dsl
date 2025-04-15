@@ -58,7 +58,7 @@
     });
 </script>
 
-<span class="optional-component-new" {id}>
+<span class="optional-component" {id}>
     {#if mustShow || showByCondition}
         <span class="optional-component-show">
             <RenderComponent box={childBox} {editor} bind:this={contentComponent} />

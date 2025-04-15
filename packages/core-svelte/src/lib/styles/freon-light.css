@@ -5,7 +5,6 @@
  *********************************************/
 
 .freon-component {
-    /* from fb-starter some text to check */
     color: var(--freon-light-base-900);
     background-color: var(--freon-light-base-50);
     --md-sys-color-primary: var(--freon-light-base-900);
@@ -48,8 +47,8 @@
 }
 .limited-checkbox-component-group:hover,
 .limited-checkbox-component-group:focus-within {
-    outline: var(--freon-light-base-600) solid 1px;
-    box-shadow: 0 0 10px var(--freon-light-base-600);
+    outline: var(--freon-light-base-700) solid 1px;
+    box-shadow: 0 0 10px var(--freon-light-base-700);
 }
 .limited-checkbox-component-label {
 }
@@ -70,9 +69,9 @@
 .limited-radio-component-label {
 }
 .contextmenu {
-    border-color: var(--freon-light-base-300);
-    background: var(--freon-light-base-250);
-    box-shadow: 1.5px 1.5px 5px var(--freon-light-base-400);
+    border-color: var(--freon-light-base-150);
+    background: var(--freon-light-base-50);
+    box-shadow: 1.5px 1.5px 5px var(--freon-light-base-200);
 }
 .contextmenu-button {
     background: none;
@@ -80,7 +79,7 @@
 }
 
 .contextmenu-button:hover {
-    background: var(--freon-light-base-100);
+    background: var(--freon-light-base-50);
 }
 
 .contextmenu-shortcut {
@@ -88,13 +87,13 @@
 }
 
 .contextmenu-hr {
-    border-top: solid 1px var(--freon-light-base-300);
+    border-top: solid 1px var(--freon-light-base-150);
 }
 
 .error-tooltip {
-    border: 1px solid var(--freon-light-base-600);
-    box-shadow: 1px 1px 1px var(--freon-light-base-600);
-    background: var(--freon-light-base-200);
+    border: 1px solid var(--freon-light-base-700);
+    box-shadow: 1px 1px 1px var(--freon-light-base-700);
+    background: var(--freon-light-base-100);
 }
 .error-marker {
     background-color: var(--freon-light-accent-red);
@@ -102,17 +101,18 @@
 
 /* Button Component */
 .button-component {
+    box-shadow: 2px 2px 4px var(--freon-light-base-250);
+    background-color: var(--freon-light-base-900);
     color: var(--freon-light-base-50);
-    background-color: var(--freon-light-base-700);
 }
 /* Hover effects */
 .button-component:hover {
-    background-color: var(--freon-light-base-800);
+    background-color: var(--freon-light-base-900);
 }
 
 /* Focus-within styles */
 .button-component:focus-within {
-    box-shadow: 0 0 0 4px var(--freon-light-accent-darkgreen);
+    box-shadow: 0 0 0 4px var(--freon-light-base-700);
 }
 
 .boolean-checkbox-component {
@@ -121,7 +121,7 @@
 .boolean-checkbox-component:hover,
 .boolean-checkbox-component:focus-within {
     outline: var(--freon-light-base-900) solid 1px;
-    box-shadow: 0 0 10 var(--freon-light-base-900);
+    box-shadow: 0 0 10 var(--freon-light-base-800);
 }
 
 .boolean-radio-component-group {
@@ -132,16 +132,16 @@
 .boolean-radio-component-group:hover,
 .boolean-radio-component-group:focus-within {
     outline: var(--freon-light-base-900) solid 1px;
-    box-shadow: 0 0 10px var(--freon-light-base-900);
+    box-shadow: 0 0 10px var(--freon-light-base-800);
 }
 
 .text-component-input {
-    color: var(--freon-light-base-400);
-    background: var(--freon-light-base-250);
+    color: var(--freon-light-base-600);
+    background: var(--freon-light-accent-green);
 }
 
 .text-component-text {
-    color: var(--freon-light-base-400);
+    color: var(--freon-light-base-600);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-text-error {
@@ -149,27 +149,27 @@
 }
 
 .text-component-placeholder {
-    color: var(--freon-light-base-400);
+    color: var(--freon-light-base-600);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-action-placeholder {
-    color: var(--freon-light-base-350);
+    color: var(--freon-light-base-150);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
 .multiline-text-component {
-    color: var(--freon-light-base-400);
+    color: var(--freon-light-base-600);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
 .numeric-slider-component {
-    --md-slider-inactive-track-color: var(--freon-light-base-400);
+    --md-slider-inactive-track-color: var(--freon-light-base-250);
 }
 
 .numeric-slider-component:hover,
 .numeric-slider-component:focus-within {
-    outline: var(--freon-light-base-400) solid 1px;
-    box-shadow: 0 0 8px var(--freon-light-base-400);
+    outline: var(--freon-light-base-700) solid 1px;
+    box-shadow: 0 0 8px var(--freon-light-base-250);
     border-radius: 0.1em;
 }
 
@@ -178,7 +178,7 @@
  */
 .dropdown-component {
     border-color: var(--freon-light-base-900);
-    box-shadow: 0 0 6px 0 var(--freon-light-base-500);
+    box-shadow: 0 0 6px 0 var(--freon-light-base-250);
     background: var(--freon-light-base-250);
 }
 
@@ -205,8 +205,13 @@
 /******************************************************************
  *
  ******************************************************************/
+/*.inner-switch-component {*/
+/*    background: var(--freon-light-accent-darkgreen);*/
+/*}*/
+
 .inner-switch-component button {
     color: var(--freon-light-base-900);
+    background: var(--freon-light-base-200);
 }
 
 [role="switch"][aria-checked="true"] :first-child,
@@ -221,12 +226,12 @@
     box-shadow: 0 0 8px var(--freon-light-base-900);
 }
 
-.optional-component-new:empty:before {
+.optional-component:empty:before {
     background-color: var(--freon-light-accent-darkorange);
 }
 
 .optional-component-hide {
-    color: var(--freon-light-base-300);
+    color: var(--freon-light-base-150);
 }
 
 .render-component-unknown-box {
@@ -242,7 +247,7 @@
 }
 
 .switch-component button {
-    background: var(--freon-light-base-300);
+    background: var(--freon-light-base-150);
 }
 
 .switch-component button::before {
@@ -251,7 +256,7 @@
 }
 
 .switch-component button[aria-checked="true"] {
-    background-color: var(--freon-light-base-300);
+    background-color: var(--freon-light-base-200);
 }
 
 .switch-component button[aria-checked="true"]::before {
@@ -259,7 +264,7 @@
 
 .switch-component button:hover,
 .switch-component button:focus {
-    box-shadow: 2px 2px 8px var(--freon-light-base-400);
+    box-shadow: 2px 2px 8px var(--freon-light-base-700);
 }
 
 .switch-component button {
@@ -304,9 +309,9 @@
 }
 
 .brackets {
-    color: var(--freon-light-base-300);
+    color: var(--freon-light-base-200);
 }
 
 .drag-handle-icon {
-    fill: var(--freon-light-base-350);
+    fill: var(--freon-light-base-250);
 }

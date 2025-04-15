@@ -274,7 +274,6 @@
     position: absolute;
     left: -9999px;
     display: inline-block;
-    line-height: 6px;
     padding: 0px;
     margin: 1px;
     border: none;
@@ -285,7 +284,6 @@
     /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
     padding: 0px;
     margin: 1px;
-    line-height: 6px;
     /*width: 100%;*/
     box-sizing: border-box;
     border: none;
@@ -295,7 +293,6 @@
 .text-component-text {
     padding: 0px;
     margin: 1px;
-    line-height: 6px;
     /*width: 100%;*/
     white-space: normal;
     display: inline-block;
