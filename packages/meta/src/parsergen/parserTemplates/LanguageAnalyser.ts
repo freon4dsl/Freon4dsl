@@ -73,8 +73,10 @@ export class LanguageAnalyser {
             });
             this.commonAnalyser.limitedsReferred.forEach((classifier) => {
                 const index = analyser.limitedsReferred.indexOf(classifier);
-                analyser.limitedsReferred.splice(index, 1);
-                // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
+                if (index !== -1) {
+                    analyser.limitedsReferred.splice(index, 1);
+                    // console.log(`removing ${classifier.name} from ${analyser.unit.name}`);
+                }
             });
             const mapKeys: IterableIterator<FreMetaClassifier> = this.commonAnalyser.interfacesAndAbstractsUsed.keys();
             for (const classifier of mapKeys) {

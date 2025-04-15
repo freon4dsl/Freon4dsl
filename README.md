@@ -1,12 +1,11 @@
 [![Build Status](https://github.com/freon4dsl/freon4dsl/actions/workflows/node.js.yml/badge.svg)]
 
 # Freon, the Language Workbench for the Web
-Web-native Language WOrkbench with projectional editor. The current release (version 1.0.0) can be found on npm.
+Web-native Language Workbench with projectional editor. 
+The current release (version 1.0.0) can be found on npm.
 
-This beta release supports [LionWeb](https://github.com/LionWeb-io) (de)serialization. 
-As LionWeb is in motion, expect this release to change according to LionWeb changes before it becomes final. 
-
-This release also supports external editor components, as an experimental feature.
+**This branch is used for maintenance on the 1.0.0 release.**
+Further development takes place in the `development` branch.
 
 ## What is Freon
 
@@ -25,11 +24,11 @@ this repository is mean for developing Freon itself.
 The main prerequisites are: [Node.js](https://nodejs.org/) and [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/).
 We are typically using the latest versions of both, although older versions likely work just as well.
 
-Clone or fork this github project, check out the `development` branch, and install dependencies:
+Clone or fork this GitHub project, check out the `development` branch, and install dependencies:
 ```bash
   git clone https://github.com/freon4dsl/Freon4dsl.git
 ```
-Setup the multirepo and install all dependencies:
+Set up the multirepo and install all dependencies:
 ```bash
   npm install
 ```
