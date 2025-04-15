@@ -65,7 +65,7 @@
 	});
 </script>
 
-<div class="flex flex-col h-screen overflow-hidden">
+<div id="freon-layout" class="flex flex-col h-screen overflow-hidden">
 	<NavBar />
 	<ToolBar />
 	<!-- the tab panel with buttons -->

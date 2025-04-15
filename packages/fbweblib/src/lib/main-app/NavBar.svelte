@@ -28,7 +28,7 @@
 </script>
 
 <!--  start::navbar   -->
-<Navbar class="bg-light-base-50 dark:bg-dark-base-900 sticky start-0 top-0 z-20 w-full flex-nowrap border-b px-2 sm:px-4">
+<Navbar id="freon-navbar" class="bg-light-base-50 dark:bg-dark-base-900 sticky start-0 top-0 z-20 w-full flex-nowrap border-b px-2 sm:px-4">
 	<NavBrand href="/">
 		<img src="./freonlogo.svg" class="me-3 h-6 sm:h-9" alt="Freon Logo" />
 		<span

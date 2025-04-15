@@ -43,7 +43,7 @@ const searchFieldCls: string =
 
 </script>
 
-<Banner dismissable={false} class="p-0">
+<Banner id="freon-toolbar" dismissable={false} class="p-0">
     <div class="flex w-full justify-between flex-nowrap bg-light-base-100 dark:bg-dark-base-800 border border-light-base-100 dark:border-dark-base-800 ">
         <div class="flex justify-start flex-nowrap">
         <!--  Model panel button and tooltip      -->

@@ -1,4 +1,3 @@
-export * from "./EditMenu.svelte";
 export * from "./FileMenu.svelte";
 export * from "./ToolMenu.svelte";
 export * from "./GitHub.svelte";
