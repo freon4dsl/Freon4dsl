@@ -62,11 +62,14 @@ export class ImportExportHandler {
             // get the complete unit from the server
             const unit: FreModelUnit | undefined = WebappConfigurator.getInstance().getUnit(unitId);
             if (unit) this._exportUnit(unit);
+        } else {
+            console.error('exportUnit: No language environment')
         }
         console.log("Exporting done")
     }
 
     private _exportUnit(unit: FreModelUnit) {
+        console.log("Exporting unit ", unit.name)
         // do not try to export a unit with errors, parsing and unparsing will not proceed correctly
         const list = this.langEnv?.validator.validate(unit);
         if (!isNullOrUndefined(list) && list.length > 0) {
@@ -105,7 +108,7 @@ export class ImportExportHandler {
             link.dispatchEvent(event);
             document.body.removeChild(link);
         });
-        setUserMessage(`Unit '${unit.name}' exported to file ${defaultFileName}.`);
+        // setUserMessage(`Unit '${unit.name}' exported to file ${defaultFileName}.`);
     }
 
     private allExtensionsToString(): string {

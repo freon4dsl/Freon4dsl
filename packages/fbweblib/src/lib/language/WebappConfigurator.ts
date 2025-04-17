@@ -10,7 +10,7 @@ import {
     InMemoryModel,
     type IServerCommunication,
     isNullOrUndefined,
-    type FreUnitIdentifier
+    type FreUnitIdentifier, AST
 } from '@freon4dsl/core';
 import { replaceProjectionsShown } from "$lib/stores/Projections.svelte.js"
 import { langInfo } from "$lib/stores/LanguageInfo.svelte.js"
@@ -199,10 +199,11 @@ export class WebappConfigurator {
         if (!!this.modelStore) {
             resetEditorInfo();
             await this.modelStore.createModel(modelName)
-            await this.modelStore.createUnit("myUnit", langInfo.unitTypes[0])
-            const unit: FreModelUnit = this.modelStore.getUnitByName("myUnit")
-            const unitId: FreUnitIdentifier = { id:unit.freId(), name:unit.name, type:unit.freLanguageConcept()}
-            this.showUnit(unit, unitId);
+            runInAction(() => {
+                this.setEditorToUndefined()
+            })
+            noUnitAvailable.value = true
+            modelErrors.list = []
             progressIndicatorShown.value = false;
         } else {
             console.error("new model: No modelStore!");
@@ -419,13 +420,16 @@ export class WebappConfigurator {
             if (!!unit) {
                 // if the element does not yet have a name, try to use the file name
                 if (!unit.name || unit.name.length === 0) {
-                    unit.name = this.makeUnitName(fileName)
+                    AST.changeNamed('unitfromFile', () => {
+                        if(!!unit) {
+                            unit.name = this.makeUnitName(fileName);
+                        }
+                    })
                 }
                 if (showIt) {
                     // set elem in editor
                     this.showUnit(unit, { id:unit.freId(), name:unit.name, type:unit.freLanguageConcept()})
                 }
-                await this.modelStore?.addUnit(unit)
             }
         } catch (e: unknown) {
             if (e instanceof Error) {

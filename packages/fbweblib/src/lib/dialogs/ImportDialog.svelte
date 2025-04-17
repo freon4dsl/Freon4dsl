@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Label, Modal} from 'flowbite-svelte';
-    import {dialogs, langInfo} from "$lib";
+    import { dialogs, drawerHidden, langInfo } from '$lib';
     import {ArrowDownToBracketOutline} from "flowbite-svelte-icons";
     import {isNullOrUndefined} from "@freon4dsl/core";
     import {ImportExportHandler} from "$lib/language";
@@ -35,6 +35,7 @@
         if (!isNullOrUndefined(files)) {
             new ImportExportHandler().importUnits(files);
             dialogs.importDialogVisible = false;
+            drawerHidden.value = true;
         }
     };
 
@@ -44,6 +45,7 @@
         if (!isNullOrUndefined(fileList)) {
             new ImportExportHandler().importUnits(fileList);
             dialogs.importDialogVisible = false;
+            drawerHidden.value = true;
         }
     }
 

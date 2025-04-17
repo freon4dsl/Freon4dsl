@@ -24,17 +24,6 @@
             </Alert>
         {/if}
     {:else}
-        {#if userMessageOpen.value}
-            <Alert dismissable transition={fly} params={{ x: 200 }} class={alertCls}>
-                <InfoCircleSolid slot="icon" class="w-5 h-5"/>
-                {messageInfo.userMessage}
-                <Button slot="close-button" size="xs"
-                        onclick={() => {userMessageOpen.value = !userMessageOpen.value}}
-                        class="ms-auto dark:text-dark-base-100 bg-light-base-800 dark:bg-dark-base-800">
-                    Dismiss
-                </Button>
-            </Alert>
-        {/if}
         <FreonComponent editor={WebappConfigurator.getInstance().langEnv?.editor}/>
     {/if}
 </div>

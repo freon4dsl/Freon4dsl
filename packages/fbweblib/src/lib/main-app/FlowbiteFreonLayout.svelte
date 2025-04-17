@@ -30,6 +30,7 @@
 	import ToolBar from '$lib/main-app/ToolBar.svelte';
 	import TabContent from '$lib/main-app/TabContent.svelte';
 	import { editorInfo, infoPanelShown } from '$lib/stores';
+	import ErrorMessage from '$lib/dialogs/ErrorMessage.svelte';
 
 	let transitionParams = {
 		x: 320,
@@ -152,6 +153,7 @@
 
 <ViewDialog />
 <AboutDialog />
+<ErrorMessage />
 
 <style>
     .tab-button {

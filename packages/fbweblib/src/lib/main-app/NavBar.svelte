@@ -9,14 +9,13 @@
 	} from 'flowbite-svelte';
 	import {
 		AnnotationOutline,
-		ChevronLeftOutline,
-		ChevronRightOutline,
 		QuestionCircleOutline
 	} from 'flowbite-svelte-icons';
-	import { dialogs, drawerHidden } from '$lib/stores/WebappStores.svelte';
+	import { dialogs } from '$lib/stores/WebappStores.svelte';
 	import GitHub from '$lib/main-app/GitHub.svelte';
 	import { langInfo } from '$lib/stores/LanguageInfo.svelte';
 	import { tooltipClass } from '$lib/stores/StylesStore.svelte';
+	import { editorInfo } from '$lib/stores';
 
 	// The @apply directive of Tailwind does not function correctly in Svelte, therefore we use this alternative.
 	const colorCls: string = 'text-light-base-50 dark:text-dark-base-900 ';
@@ -32,7 +31,9 @@
 	<NavBrand href="/">
 		<img src="./freonlogo.svg" class="me-3 h-6 sm:h-9" alt="Freon Logo" />
 		<span
-			class="self-center whitespace-nowrap text-xl font-semibold text-light-base-700 dark:text-dark-base-150 ">Freon for {langInfo.name}</span>
+			class="self-center whitespace-nowrap text-xl font-semibold text-light-base-700 dark:text-dark-base-150 ">
+			Freon for <span class="text-light-accent-700 dark:text-dark-accent-150">{langInfo.name}.{editorInfo.modelName}</span>
+		</span>
 	</NavBrand>
 
 	<ButtonGroup class="*:!ring-dark-base-900 {colorCls}">

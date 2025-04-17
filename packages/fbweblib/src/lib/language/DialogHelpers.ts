@@ -10,7 +10,6 @@ async function getModelNamesFromServer() {
 }
 
 export async function openModelDialog() {
-    console.log('open model dialog')
     // To keep list of models in sync with what happens on the server, we get the list
     // of models from server every time we open this dialog.
     await getModelNamesFromServer();
@@ -18,7 +17,8 @@ export async function openModelDialog() {
 }
 
 export async function openStartDialog() {
-    console.log('open start dialog')
+    // To keep list of models in sync with what happens on the server, we get the list
+    // of models from server every time we open this dialog.
     await getModelNamesFromServer();
     dialogs.startDialogVisible = true;
 }

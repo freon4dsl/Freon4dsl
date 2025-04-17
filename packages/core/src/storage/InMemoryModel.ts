@@ -1,4 +1,4 @@
-import {makeObservable, observable, runInAction} from "mobx";
+import { autorun, makeObservable, observable, runInAction } from 'mobx';
 import {FreModel, FreModelUnit} from "../ast/index.js";
 import {AST} from "../change-manager/index.js";
 import {FreEnvironment} from "../environment/index.js";
@@ -19,6 +19,12 @@ export class InMemoryModel {
         this.languageEnvironment = languageEnvironment;
         this.server = server;
         makeObservable(this, { model: observable });
+        autorun( () => {
+            if (!isNullOrUndefined(this.model)) {
+                this.model.getUnits()
+                this.currentModelChanged()
+            }
+        })
     }
 
     /**
@@ -32,7 +38,6 @@ export class InMemoryModel {
             this.model = this.languageEnvironment.newModel(name);
         })
         await this.server.createModel(name);
-        this.currentModelChanged();
         return this.model;
     }
 
@@ -42,7 +47,9 @@ export class InMemoryModel {
      */
     async deleteModel(): Promise<void> {
         await this.server.deleteModel(this.model.name);
-        this.model = undefined;
+        runInAction( () => {
+            this.model = undefined;
+        });
     }
 
     /**
@@ -63,7 +70,6 @@ export class InMemoryModel {
                 this.model.addUnit(unit as FreModelUnit);
             })
         }
-        this.currentModelChanged();
         return this.model;
     }
 
@@ -87,7 +93,6 @@ export class InMemoryModel {
             newUnit.name = name;
         })
         await this.server.createModelUnit(this.model.name, newUnit);
-        this.currentModelChanged();
         return newUnit;
     }
 
@@ -100,7 +105,6 @@ export class InMemoryModel {
         AST.change( () => {
             this.model.removeUnit(unit);
         })
-        this.currentModelChanged();
     }
 
     /**
@@ -113,7 +117,6 @@ export class InMemoryModel {
         AST.change( () => {
             this.model.removeUnit(unit);
         })
-        this.currentModelChanged();
     }
 
     /**
@@ -135,7 +138,6 @@ export class InMemoryModel {
             this.model.addUnit(unit);
         })
         await this.saveUnit(unit);
-        this.currentModelChanged();
     }
 
     /**
@@ -180,7 +182,6 @@ export class InMemoryModel {
      */
     async saveUnit(unit: FreModelUnit): Promise<void> {
         await this.server.putModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
-        this.currentModelChanged();
     }
 
     /************************************************************

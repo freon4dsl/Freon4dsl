@@ -29,7 +29,7 @@ export const serverInfo: ServerInfo = $state({
 })
 
 export const editorInfo: EditorInfo = $state({
-	modelName: 'unknownModel',
+	modelName: '<no-model>',
 	unitIds: [],
 	unitsInTabs: [],
 	currentOpenTab: -1,
@@ -40,7 +40,7 @@ export const editorInfo: EditorInfo = $state({
 })
 
 export function resetEditorInfo() {
-	editorInfo.modelName = 'unknownModel';
+	editorInfo.modelName = '<no-model>';
 	editorInfo.unitsInTabs = [];
 	editorInfo.unitIds = [];
 	editorInfo.currentOpenTab = -1;

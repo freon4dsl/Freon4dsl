@@ -16,13 +16,12 @@ export const messageInfo: MessageInfo = $state({
 export let userMessageOpen: { value: boolean } =  $state({ value: false })
 
 export function setUserMessage(message: string, sever?: FreErrorSeverity) {
-    console.log("Message: ", message);
     messageInfo.userMessage = message;
     if (sever !== null && sever !== undefined) {
         messageInfo.severity = sever;
     } else {
         messageInfo.severity = FreErrorSeverity.Error;
     }
-    // console.log("Freon User Message: " + message + ", " + get(severity));
+    console.log("Freon User Message: " + message + ", " + sever);
     userMessageOpen.value = true;
 }

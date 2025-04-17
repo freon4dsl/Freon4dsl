@@ -122,7 +122,7 @@
         {editorInfo.modelName}
     </span>
     <ButtonGroup class="*:!ring-light-base-700 ">
-        <Button class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
+        <Button disabled class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
             <PenSolid class="{iconCls} me-2 "/>
         </Button>
         <Tooltip class={tooltipClass} placement="bottom">Rename model</Tooltip>
@@ -171,7 +171,7 @@
                                 <FloppyDiskSolid class="{iconCls} me-2"/>
                                 Save
                             </Button>
-                            <Button class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
+                            <Button disabled class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
                                 <PenSolid class="{iconCls} me-2"/>
                                 Rename
                             </Button>
