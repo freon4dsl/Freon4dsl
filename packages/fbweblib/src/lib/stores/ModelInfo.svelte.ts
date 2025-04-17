@@ -29,7 +29,7 @@ export const serverInfo: ServerInfo = $state({
 })
 
 export const editorInfo: EditorInfo = $state({
-	modelName: 'aModel',
+	modelName: 'unknownModel',
 	unitIds: [],
 	unitsInTabs: [],
 	currentOpenTab: -1,
@@ -38,6 +38,17 @@ export const editorInfo: EditorInfo = $state({
 	toBeDeleted: undefined,
 	toBeCreated: undefined
 })
+
+export function resetEditorInfo() {
+	editorInfo.modelName = 'unknownModel';
+	editorInfo.unitsInTabs = [];
+	editorInfo.unitIds = [];
+	editorInfo.currentOpenTab = -1;
+	editorInfo.currentUnit = undefined;
+	editorInfo.toBeRenamed = undefined;
+	editorInfo.toBeDeleted = undefined;
+	editorInfo.toBeCreated = undefined;
+}
 
 export function indexForTab(unit: FreUnitIdentifier): number {
 	// console.log("indexForTab: " + JSON.stringify(unit));

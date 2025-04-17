@@ -4,11 +4,9 @@
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
     import { FolderOpenSolid } from 'flowbite-svelte-icons';
-    import { serverInfo } from '$lib';
     import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
-    import { inputClass } from 'flowbite-svelte/Radio.svelte';
 
-    const initialHelperText: string = 'Enter the name of the new unit.'
+    const initialHelperText: string = 'Enter the name of the new model.'
     let helperText: string = $state(initialHelperText);
     let newName: string = $state('');
 

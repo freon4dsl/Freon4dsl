@@ -81,10 +81,10 @@
                    name="model-name"
                    oninput={onInput}
             />
-            <Button class="absolute inset-y-0 right-0 flex items-center px-4 rounded-r-lg"
+            <Button class="absolute inset-y-0 right-0 flex items-center px-4 rounded-r-lg text-light-base-900 dark:text-dark-base-50"
                     onclick={newModel}
             >
-                <FolderPlusSolid class="w-4 h-4 me-2 dark:text-dark-base-50"/>
+                <FolderPlusSolid class="w-4 h-4 me-2 "/>
                 Create
             </Button>
         </div>
