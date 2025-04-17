@@ -12,7 +12,7 @@
     let open = $state(false);
     let buttonLabel: string = $state('OpenDialog');
     let value: string | number = $state('');
-    let inputElement: SvelteComponent;
+    let inputElement: HTMLInputElement;
 
     function initialize() {
         let tmpLabel: string | undefined = box.findParam('buttonLabel');
@@ -57,17 +57,25 @@
     // Svelte: Type 'SvelteComponent<$$ComponentProps, { [evt: string]: CustomEvent<any>; }, {}> & { $$bindings?: "value" | "files" | "invalid" | "dirty" | undefined; } & { ...; }' is missing the following properties from type 'HTMLTextAreaElement': autocomplete, cols, defaultValue, dirName, and 318 more.
 </script>
 
-<Modal title={buttonLabel} bind:open  autoclose aria-describedby="sheet-content">
-        <Input bind:value={value} onchange={onChange} bind:this={inputElement} onkeydown={onKeyDown}>
-            <PersonChalkboardOutline />
-            <Helper >{buttonLabel}</Helper>
+<Modal title={buttonLabel} bind:open  autoclose aria-describedby="sheet-content" class="text-light-base-900 dark:text-dark-base-50" >
+        <Input>
+          <div class="flex justify-start">
+<!--  see https://flowbite-svelte.com/docs/forms/input-field#Advanced_usage        -->
+          <input
+            type="text"
+            id="new-input"
+            name="unit-name"
+            bind:value={value} onchange={onChange} onkeydown={onKeyDown}
+            bind:this={inputElement} />
+          </div>
+          <Helper >{buttonLabel}</Helper>
         </Input>
-    <svelte:fragment slot="footer">
-        <Button on:click={() => alert('Handle "success"')}>I accept</Button>
+  <svelte:fragment slot="footer">
+        <Button class="text-light-base-900 dark:text-dark-base-50 bg-light-accent-100 dark:bg-dark-accent-100" on:click={() => alert('Handle "success"')}>I accept</Button>
         <Button color="alternative">Decline</Button>
     </svelte:fragment>
 </Modal>
 
-<Button onclick={() => (open = true)}>
+<Button class="text-light-base-900 dark:text-dark-base-50" onclick={() => (open = true)}>
     {buttonLabel}
 </Button>
