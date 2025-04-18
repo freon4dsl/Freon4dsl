@@ -31,6 +31,7 @@
 	import TabContent from '$lib/main-app/TabContent.svelte';
 	import { editorInfo, infoPanelShown } from '$lib/stores';
 	import ErrorMessage from '$lib/dialogs/ErrorMessage.svelte';
+	import { FreUndoManager } from '@freon4dsl/core';
 
 	let transitionParams = {
 		x: 320,
@@ -64,7 +65,23 @@
 			initializing.value = false;
 		}
 	});
+
+	/**
+	 * This function shows a dialog before the browser window is reloaded or closed, asking the user for confirmation
+	 * in the case that there are unsaved changes in the model.
+	 * @param event
+	 */
+	function onBeforeUnload(event: BeforeUnloadEvent) {
+		// console.log(`beforeUnload: ${FreUndoManager.getInstance().nextUndoAsText()}`);
+		// todo make this test independent of the actual string
+		if (FreUndoManager.getInstance().nextUndoAsText() !== 'nothing left to undo') {
+			event.preventDefault(); // shows the browser's confirmation dialog according to the specifications
+			event.returnValue = ''; // older browsers may not support this method and a legacy method is used in which the event handler must return a string
+		}
+	}
 </script>
+
+<svelte:window onbeforeunload={onBeforeUnload} />
 
 <div id="freon-layout" class="flex flex-col h-screen overflow-hidden">
 	<NavBar />
