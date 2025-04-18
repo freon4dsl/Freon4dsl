@@ -12,8 +12,8 @@ import {
 } from "../utils/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
-import net from "net.akehurst.language-agl-processor";
-var Agl = net.net.akehurst.language.agl.processor.Agl;
+// import net from "net.akehurst.language-agl-processor";
+// var Agl = net.net.akehurst.language.agl.processor.Agl;
 import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
 import { GrammarModel } from "./parserTemplates/grammarModel/GrammarModel.js";
 
@@ -81,8 +81,10 @@ export class ReaderWriterGenerator {
 
         // Write the grammar to file
         generatedContent = grammarModel.toGrammar();
+        // TODO Testing grammar is slow pon large models, so it is turned off.
+        //      Need to turn it on again with the new AGL parser.
         // test the generated grammar, if not ok error will be thrown
-        this.testGrammar(generatedContent, generationStatus);
+        // this.testGrammar(generatedContent, generationStatus);
         // write the grammar to file
         generatedFilePath = `${this.readerGenFolder}/${Names.grammar(this.language)}.ts`;
         indexContent += `export * from "./${Names.grammar(this.language)}.js";\n`;
@@ -139,20 +141,20 @@ export class ReaderWriterGenerator {
         }
     }
 
-    private testGrammar(generatedContent: string, generationStatus: GenerationStatus) {
-        try {
-            // strip generated content of stuff around the grammar
-            let testContent = generatedContent.replace("export const", "// export const ");
-            testContent = testContent.replace("}`; // end of grammar", "}");
-            testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
-            Agl.processorFromString(testContent, null, null, null);
-        } catch (e: unknown) {
-            if (e instanceof Error) {
-                generationStatus.numberOfErrors += 1;
-                LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
-            }
-        }
-    }
+    // private testGrammar(generatedContent: string, generationStatus: GenerationStatus) {
+    //     try {
+    //         // strip generated content of stuff around the grammar
+    //         let testContent = generatedContent.replace("export const", "// export const ");
+    //         testContent = testContent.replace("}`; // end of grammar", "}");
+    //         testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
+    //         Agl.processorFromString(testContent, null, null, null);
+    //     } catch (e: unknown) {
+    //         if (e instanceof Error) {
+    //             generationStatus.numberOfErrors += 1;
+    //             LOGGER.error(`Error in creating grammar for ${this.language?.name}: '${e.message}`);
+    //         }
+    //     }
+    // }
 
     private getFolderNames() {
         this.writerFolder = this.outputfolder + "/" + WRITER_FOLDER;

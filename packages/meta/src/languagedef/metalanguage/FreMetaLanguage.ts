@@ -252,6 +252,62 @@ export class FreMetaUnitDescription extends FreMetaClassifier {
     allPrimProperties(): FreMetaPrimitiveProperty[] {
         return this.implementedPrimProperties();
     }
+
+    allReferences(): FreMetaConceptProperty[] {
+        return this.implementedReferences();
+    }
+
+    allParts(): FreMetaConceptProperty[] {
+        return this.implementedParts();
+    }
+
+    implementedParts(): FreMetaConceptProperty[] {
+        let result: FreMetaConceptProperty[] = this.parts();
+        for (const intf of this.interfaces) {
+            for (const intfProp of intf.referred.allParts()) {
+                let allreadyIncluded = false;
+                // if the prop from the interface is present in this concept, do not include
+                allreadyIncluded = this.parts().some((p) => p.name === intfProp.name);
+                // if the prop from the interface is present in another implemented interface, do not include
+                if (!allreadyIncluded) {
+                    allreadyIncluded = result.some((p) => p.name === intfProp.name);
+                }
+                if (!allreadyIncluded) {
+                    result = result.concat(intfProp);
+                }
+            }
+        }
+        return result;
+    }
+
+    implementedReferences(): FreMetaConceptProperty[] {
+        let result: FreMetaConceptProperty[] = this.references();
+        for (const intf of this.interfaces) {
+            for (const intfProp of intf.referred.allReferences()) {
+                let allreadyIncluded = false;
+                // if the prop from the interface is present in this concept, do not include
+                allreadyIncluded = this.references().some((p) => p.name === intfProp.name);
+                // if the prop from the interface is present in another implemented interface, do not include
+                if (!allreadyIncluded) {
+                    allreadyIncluded = result.some((p) => p.name === intfProp.name);
+                }
+                if (!allreadyIncluded) {
+                    result = result.concat(intfProp);
+                }
+            }
+        }
+        return result;
+    }
+
+    implementedProperties(): FreMetaProperty[] {
+        let result: FreMetaProperty[] = [];
+        result = result
+            .concat(this.implementedPrimProperties())
+            .concat(this.implementedParts())
+            .concat(this.implementedReferences());
+        return result;
+    }
+
 }
 
 export class FreMetaInterface extends FreMetaClassifier {
@@ -325,7 +381,7 @@ export class FreMetaConcept extends FreMetaClassifier {
     interfaces: MetaElementReference<FreMetaInterface>[] = []; // the interfaces that this concept implements
 
     allPrimProperties(): FreMetaPrimitiveProperty[] {
-        const result: FreMetaPrimitiveProperty[] = this.implementedPrimProperties();
+        const result: FreMetaPrimitiveProperty[] = [...this.implementedPrimProperties()];
         if (!!this.base && !!this.base.referred) {
             this.base.referred.allPrimProperties().forEach((p) => {
                 // hide overwritten property
@@ -351,7 +407,7 @@ export class FreMetaConcept extends FreMetaClassifier {
     }
 
     allReferences(): FreMetaConceptProperty[] {
-        const result: FreMetaConceptProperty[] = this.implementedReferences();
+        const result: FreMetaConceptProperty[] = [...this.implementedReferences()];
         if (!!this.base && !!this.base.referred) {
             this.base.referred.allReferences().forEach((p) => {
                 // hide overwritten property
@@ -398,7 +454,15 @@ export class FreMetaConcept extends FreMetaClassifier {
         return result;
     }
 
+    /**
+     * Cache for Implemented Primitive Properties
+     */
+    $$implementedParts: FreMetaConceptProperty[] | null = null
+
     implementedParts(): FreMetaConceptProperty[] {
+        if (this.$$implementedParts !== null) {
+            return [...this.$$implementedParts]
+        }
         let result: FreMetaConceptProperty[] = this.parts();
         for (const intf of this.interfaces) {
             for (const intfProp of intf.referred.allParts()) {
@@ -418,10 +482,19 @@ export class FreMetaConcept extends FreMetaClassifier {
                 }
             }
         }
+        this.$$implementedParts = [...result]
         return result;
     }
 
+    /**
+     * Cache for Implemented Reference Properties
+     */
+    $$implementedReferences: FreMetaConceptProperty[] | null = null
+    
     implementedReferences(): FreMetaConceptProperty[] {
+        if (this.$$implementedReferences !== null) {
+            return this.$$implementedReferences
+        }
         let result: FreMetaConceptProperty[] = this.references();
         for (const intf of this.interfaces) {
             for (const intfProp of intf.referred.allReferences()) {
@@ -441,6 +514,7 @@ export class FreMetaConcept extends FreMetaClassifier {
                 }
             }
         }
+        this.$$implementedReferences = result
         return result;
     }
 

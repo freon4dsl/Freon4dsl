@@ -42,15 +42,15 @@ export class UnitTemplate {
                     .map((p) => ConceptUtils.makePrimitiveProperty(p))
                     .join("\n")}
                 ${unitDescription
-                    .parts()
+                    .implementedParts()
                     .map((p) => ConceptUtils.makePartProperty(p))
                     .join("\n")}
                 ${unitDescription
-                    .references()
+                    .implementedReferences()
                     .map((p) => ConceptUtils.makeReferenceProperty(p))
                     .join("\n")}
 
-                ${ConceptUtils.makeConstructor(false, unitDescription.allProperties(), coreImports)}
+                ${ConceptUtils.makeConstructor(false, unitDescription.implementedProperties(), coreImports)}
                 ${ConceptUtils.makeBasicMethods(false, metaType, false, true, false, false)}
                 ${ConceptUtils.makeCopyMethod(unitDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, unitDescription, myName, coreImports)}
