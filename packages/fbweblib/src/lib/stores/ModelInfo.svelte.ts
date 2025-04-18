@@ -58,7 +58,7 @@ export function indexForTab(unit: FreUnitIdentifier): number {
 		// console.log("    comparing with: " + JSON.stringify(uid));
 
 		if (uid.id === unit.id && uid.name === unit.name && uid.type === unit.type) {
-			console.log('RESULT: ' + index);
+			// console.log('RESULT: ' + index);
 			return index;
 		}
 	}

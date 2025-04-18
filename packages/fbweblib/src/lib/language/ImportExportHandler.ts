@@ -65,11 +65,11 @@ export class ImportExportHandler {
         } else {
             console.error('exportUnit: No language environment')
         }
-        console.log("Exporting done")
+        // console.log("Exporting done")
     }
 
     private _exportUnit(unit: FreModelUnit) {
-        console.log("Exporting unit ", unit.name)
+        // console.log("Exporting unit ", unit.name)
         // do not try to export a unit with errors, parsing and unparsing will not proceed correctly
         const list = this.langEnv?.validator.validate(unit);
         if (!isNullOrUndefined(list) && list.length > 0) {

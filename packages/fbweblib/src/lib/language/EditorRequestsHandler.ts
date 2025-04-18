@@ -40,7 +40,7 @@ export class EditorRequestsHandler {
      * @param names
      */
     enableProjections(names: string[]): void {
-        console.log("enabling Projection " + names);
+        // console.log("enabling Projection " + names);
         const proj: FreProjectionHandler | undefined = this.langEnv?.editor.projection;
         if (proj instanceof FreProjectionHandler) {
             proj.enableProjections(names);
@@ -79,12 +79,12 @@ export class EditorRequestsHandler {
     }
 
     validate = (): void => {
-        console.log("validate called");
+        // console.log("validate called");
         errorsLoading.value = true;
         activeTab.value = errorTab;
         infoPanelShown.value = true;
         WebappConfigurator.getInstance().getErrors();
-        console.log("Errors: " + modelErrors.list.map(err => err.message).join("\n"));
+        // console.log("Errors: " + modelErrors.list.map(err => err.message).join("\n"));
         errorsLoading.value = false;
         if (!!modelErrors.list[0]) {
             const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn;
@@ -97,7 +97,7 @@ export class EditorRequestsHandler {
     }
 
     interpret = (): void => {
-        console.log("interpret: called");
+        // console.log("interpret: called");
         interpreterResultLoading.value = true;
         activeTab.value = interpreterTab;
         infoPanelShown.value = true;
@@ -138,25 +138,26 @@ export class EditorRequestsHandler {
 
     findText(stringToFind: string) {
         // todo loading of errors and search results should also depend on whether something has changed in the unit shown
-        console.log("findText called: " + stringToFind);
+        // console.log("findText called: " + stringToFind);
         searchResultLoading.value = true;
         searchResults.list = [];
         activeTab.value = searchTab;
         const searcher = new FreSearcher();
         if (!!editorInfo.currentUnit) {
-            console.log('has current unit')
+            // console.log('has current unit')
             const unit: FreModelUnit | undefined = WebappConfigurator.getInstance().getUnit(editorInfo.currentUnit);
             if (!!unit) {
-                console.log('found unit')
+                // console.log('found unit')
                 const results: FreNode[] = searcher.findString(
                     stringToFind,
                     unit,
                     WebappConfigurator.getInstance().langEnv?.writer!
                 )
-                console.log(results);
+                // console.log(results);
                 this.showSearchResults(results, stringToFind);
             }
         }
+        searchResultLoading.value = false;
     }
 
     private showSearchResults(results: FreNode[], stringToFind: string) {
@@ -173,7 +174,7 @@ export class EditorRequestsHandler {
         searchResults.list = itemsToShow;
 
         infoPanelShown.value = true;
-        console.log(`showSearchResults: ${searchResultLoading.value}, ${infoPanelShown.value}, ${searchResults.list.map(it => it.message).join("\n")}`);
+        // console.log(`showSearchResults: ${searchResultLoading.value}, ${infoPanelShown.value}, ${searchResults.list.map(it => it.message).join("\n")}`);
     }
 
     // findStructure(elemToMatch: Partial<FreNode>) {

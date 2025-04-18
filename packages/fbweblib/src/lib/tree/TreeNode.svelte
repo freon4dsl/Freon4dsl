@@ -31,7 +31,7 @@
     {#if data.aboutNode}
         <button class="bg-transparent border-2 border-light-base-600 hover:border-light-base-600 h-7 w-7 rounded-full inline-flex items-center ml-auto mr-1"
                 onclick={() => goToNode(data.aboutNode)}>
-            <ArrowRightOutline class="h-5 w-5 ms-0.5 text-black dark:text-dark-base-50"/>
+            <ArrowRightOutline class="h-5 w-5 ms-0.5 text-light-accent-900 dark:text-dark-accent-50"/>
         </button>
     {/if}
     </div>

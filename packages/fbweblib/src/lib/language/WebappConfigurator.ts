@@ -124,7 +124,7 @@ export class WebappConfigurator {
                 for (const unitIdentifier of unitIdentifiers) {
                     const unit: FreModelUnit = this.modelStore.getUnitByName(unitIdentifier.name)
                     if (first) {
-                        console.log("UnitId " + unitIdentifier.name + " unit is " + unit?.name)
+                        // console.log("UnitId " + unitIdentifier.name + " unit is " + unit?.name)
                         BoxFactory.clearCaches()
                         this.langEnv?.projectionHandler.clear()
                         this.showUnit(unit, unitIdentifier);
@@ -160,7 +160,7 @@ export class WebappConfigurator {
      * @private
      */
     private showUnit(toBeShown: FreModelUnit, unitId: FreUnitIdentifier) {
-        console.log("showUnit called, unitName: " + toBeShown?.name)
+        // console.log("showUnit called, unitName: " + toBeShown?.name)
         if (!!toBeShown) {
             runInAction(() => {
                 if (!!this.langEnv) {
@@ -172,14 +172,16 @@ export class WebappConfigurator {
                     const tabIndex: number = indexForTab(unitId);
                     if (tabIndex > -1) { // an existing tab
                         editorInfo.currentOpenTab = tabIndex;
-                        console.log("opening tab: ", tabIndex, " for unit ", unitId.name)
+                        // console.log("opening tab: ", tabIndex, " for unit ", unitId.name)
                     } else { // a new tab
                         editorInfo.unitsInTabs.push(unitId);
                         editorInfo.currentOpenTab = editorInfo.unitsInTabs.length - 1;
-                        console.log("opening tab: ", editorInfo.unitsInTabs.length - 1, " for unit ", unitId.name)
+                        // console.log("opening tab: ", editorInfo.unitsInTabs.length - 1, " for unit ", unitId.name)
                     }
                     // remember the current unit
                     editorInfo.currentUnit = unitId;
+                    // alert the undo manager that the current unit has changed
+                    FreUndoManager.getInstance().currentUnit = toBeShown;
                 }
             })
         } else {
@@ -233,7 +235,7 @@ export class WebappConfigurator {
 
     renameModel(newName: string) {
         // todo implement renaming in the server
-        console.log(newName)
+        // console.log(newName)
     }
 
     /**
@@ -334,7 +336,7 @@ export class WebappConfigurator {
      */
     async deleteModelUnit(unitId: FreUnitIdentifier | undefined) {
         if (!!unitId) {
-            console.log("delete called for unit: " + unitId.name)
+            // console.log("delete called for unit: " + unitId.name)
             // get rid of the unit on the server
             await this.modelStore?.deleteUnitById(unitId)
             // get rid of the name in the navigator => done through callback
@@ -345,7 +347,7 @@ export class WebappConfigurator {
                 if (editorInfo.unitsInTabs.length === 1) { // this tab is the only one
                     // the unit is shown in the editor, so get rid of that one, as well
                     if (!isNullOrUndefined(editorInfo.currentUnit) && editorInfo.currentUnit.id === unitId.id) {
-                        console.log("removing currently shown unit")
+                        // console.log("removing currently shown unit")
                         runInAction(() => {
                             this.setEditorToUndefined()
                         })
@@ -496,7 +498,7 @@ export class WebappConfigurator {
      * Runs the validator for the current unit
      */
     getErrors() {
-        console.log("WebappConfigurator.getErrors() for " + editorInfo.currentUnit?.name)
+        // console.log("WebappConfigurator.getErrors() for " + editorInfo.currentUnit?.name)
         if (!!editorInfo.currentUnit) {
             const toBeChecked: FreModelUnit | undefined = this.modelStore?.getUnitById(editorInfo.currentUnit)
             if (toBeChecked) {
@@ -509,7 +511,7 @@ export class WebappConfigurator {
                 } catch (e: unknown) {
                     // catch any errors regarding erroneously stored model units
                     if (e instanceof Error) {
-                        console.log(e.message + e.stack)
+                        // console.log(e.message + e.stack)
                         modelErrors.list = [
                             new FreError(
                                 "Problem validating model unit: '" + e.message + "'",

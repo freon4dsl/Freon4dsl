@@ -1,5 +1,8 @@
 # Test Scenarios Models and ModelUnits
-Everywhere the meaning of 'Select (New Model)' is to select the button for this behaviour, even if it is titled differently, or uses an icon.
+
+These scenarios test the functionality available through the webapp, like open model, delete unit.
+
+Everywhere the meaning of 'Select (New Model)' is to select the button for this behaviour, even if it is titled differently, or is shown as an icon.
 
 ## Model Manipulations
 

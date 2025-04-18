@@ -611,7 +611,7 @@ export class FreEditor {
      */
     setUserMessage(message: string, severityType?: FreErrorSeverity) {
         console.error(
-            'This message should be shown elsewhere: "' + message + '", please override this method appropriately.',
+            'This message should be shown elsewhere: "' + message + '", please add an appropriate callback.',
             severityType,
         );
     }

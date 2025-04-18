@@ -8,7 +8,6 @@
 
     let nodeType = $state("")
     let textToFind: string = $state("")
-    let namedElementToFind: string = $state("")
     const initialHelperText: string = "Enter the name of the element to search for";
     let helperText: string = $state(initialHelperText);
 
@@ -18,20 +17,16 @@
     }
 
     async function handleSubmit() {
-
-        // todo implement this
         if (!inputInvalid()) {
             dialogs.searchElementDialogVisible = false
             EditorRequestsHandler.getInstance().findNamedElement(textToFind, nodeType);
             resetVariables()
         }
-
     }
 
     function resetVariables() {
         nodeType = ""
         textToFind = ""
-        namedElementToFind = ""
     }
 
     function inputInvalid(): boolean {
@@ -50,11 +45,12 @@
     <div class="flex flex-col space-y-6" role="dialog">
         <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Search for ...</h3>
         <Card class="flex flex-col space-y-6 bg-light-base-50 shadow my-2 p-6 max-w-full">
-        <h4 class="text-l font-medium text-light-base-900 dark:text-dark-base-50"> Element with certain type and name</h4>
+        <h4 class="text-l font-medium text-light-base-900 dark:text-dark-base-50"> Element with certain type and name: {textToFind}</h4>
+
         <div class="relative text-light-base-700">
             <Input class={textInputClass}
                    type="text"
-                   bind:value={namedElementToFind}
+                   bind:value={textToFind}
                    id="new-input"
                    name="model-name"
             />

@@ -85,7 +85,7 @@ export class AstActionExecutor {
                             this.pasteInElement(element, currentSelection.parent.propertyName);
                         } else {
                             this.editor.setUserMessage(
-                                "Cannot paste an " + tobepasted.freLanguageConcept() + " here.",
+                                "Cannot paste a " + tobepasted.freLanguageConcept() + " here.",
                                 FreErrorSeverity.Warning,
                             );
                         }
@@ -101,16 +101,20 @@ export class AstActionExecutor {
                         );
                     } else {
                         this.editor.setUserMessage(
-                            "Cannot paste an " + tobepasted.freLanguageConcept() + " here.",
+                            "Cannot paste a " + tobepasted.freLanguageConcept() + " here.",
                             FreErrorSeverity.Warning,
                         );
                     }
                 } else {
                     // todo other pasting options ...
+                    this.editor.setUserMessage(
+                      "Cannot paste a " + tobepasted.freLanguageConcept() + " here.",
+                      FreErrorSeverity.Warning,
+                    );
                 }
             } else {
                 this.editor.setUserMessage(
-                    "Cannot paste an " + tobepasted.freLanguageConcept() + " here.",
+                    "Cannot paste a " + tobepasted.freLanguageConcept() + " here.",
                     FreErrorSeverity.Warning,
                 );
             }

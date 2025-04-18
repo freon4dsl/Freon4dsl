@@ -1,8 +1,8 @@
 <script>
 	import { CloseButton } from "flowbite-svelte"
 	import SearchResults from "$lib/main-app/SearchResults.svelte"
-	import ErrorList from "$lib/main-app/ErrorList.svelte"
 	import InterpreterResults from "$lib/main-app/InterpreterResults.svelte"
+	import ValidationResults from '$lib/main-app/ValidationResults.svelte';
 	import { infoPanelShown } from "$lib/stores/index.js"
 	import { activeTab, errorTab, interpreterTab, searchTab } from "$lib/stores/InfoPanelStore.svelte.js"
 </script>
@@ -23,7 +23,7 @@
 	{#if activeTab.value === searchTab}
 		<SearchResults/>
 	{:else if activeTab.value === errorTab}
-		<ErrorList/>
+		<ValidationResults/>
 	{:else if activeTab.value === interpreterTab}
 		<InterpreterResults/>
 	{/if}

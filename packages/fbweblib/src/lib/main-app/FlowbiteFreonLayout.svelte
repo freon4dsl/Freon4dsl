@@ -39,14 +39,14 @@
 	};
 
 	function openTab(index: number) {
-		console.log('opening tab: ', index);
+		// console.log('opening tab: ', index);
 		editorInfo.currentOpenTab = index;
 		WebappConfigurator.getInstance().openModelUnit(editorInfo.unitsInTabs[index]);
 		infoPanelShown.value = false;
 	}
 
 	function closeTab(index: number) {
-		console.log('closing tab: ', index);
+		// console.log('closing tab: ', index);
 		WebappConfigurator.getInstance().closeModelUnit(editorInfo.unitsInTabs[index]);
 	}
 

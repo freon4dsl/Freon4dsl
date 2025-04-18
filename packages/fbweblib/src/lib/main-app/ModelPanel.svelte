@@ -45,20 +45,20 @@
     })
 
     const openUnit = (index: number) => {
-        console.log('openUnit ' + index)
+        // console.log('openUnit ' + index)
         WebappConfigurator.getInstance().openModelUnit(editorInfo.unitIds[index]);
         drawerHidden.value = true;
     };
 
     const deleteUnit = (index: number) => {
-        console.log("deleteUnit: " + editorInfo.unitIds[index].name);
+        // console.log("deleteUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeDeleted = editorInfo.unitIds[index];
         dialogs.deleteUnitDialogVisible = true;
         drawerHidden.value = true;
     };
 
     const saveUnit = (index: number) => {
-        console.log("saveUnit: " + editorInfo.unitIds[index].name);
+        // console.log("saveUnit: " + editorInfo.unitIds[index].name);
         if (editorInfo.unitIds[index].name === editorInfo.currentUnit?.name) {
             WebappConfigurator.getInstance().saveUnit(editorInfo.unitIds[index]);
             setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Warning);
@@ -69,20 +69,20 @@
     };
 
     const renameUnit = (index: number) => {
-        console.log("renameUnit: " + editorInfo.unitIds[index].name);
+        // console.log("renameUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeRenamed = editorInfo.unitIds[index];
         dialogs.renameUnitDialogVisible = true;
         drawerHidden.value = true;
     };
 
     const exportUnit = (index: number) => {
-        console.log("exportUnit: " + editorInfo.unitIds[index].name);
+        // console.log("exportUnit: " + editorInfo.unitIds[index].name);
         new ImportExportHandler().exportUnit(editorInfo.unitIds[index]);
         drawerHidden.value = true;
     };
 
     const newUnit = (type: string) => {
-        console.log('newUnit of type: ' + type);
+        // console.log('newUnit of type: ' + type);
         editorInfo.toBeCreated = {name: '', id: '', type: type}
         dialogs.newUnitDialogVisible = true;
         drawerHidden.value = true;

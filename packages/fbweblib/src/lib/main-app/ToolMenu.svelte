@@ -5,10 +5,10 @@
 	import {dialogs} from "$lib";
 
 	const runInterpreter = (id: number) => {
-		console.log('runInterpreter ' + id);
+		// console.log('runInterpreter ' + id);
 	};
 	const validate = (id: number) => {
-		console.log('validate ' + id);
+		// console.log('validate ' + id);
 	};
 	const selectViews = () => {
 		dialogs.selectViewsDialogVisible = true;

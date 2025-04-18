@@ -22,6 +22,6 @@ export function setUserMessage(message: string, sever?: FreErrorSeverity) {
     } else {
         messageInfo.severity = FreErrorSeverity.Error;
     }
-    console.log("Freon User Message: " + message + ", " + sever);
+    // console.log("Freon User Message: " + message + ", " + sever);
     userMessageOpen.value = true;
 }

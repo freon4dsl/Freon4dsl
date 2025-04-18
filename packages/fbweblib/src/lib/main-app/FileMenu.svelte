@@ -22,7 +22,7 @@
 
     // new model menuitem
     const changeModel = async () => {
-        console.log('FileMenu.changeModel');
+        // console.log('FileMenu.changeModel');
         // get list of models from server
         const names = await WebappConfigurator.getInstance().serverEnv?.loadModelList();
         if (names && names.length > 0) {
@@ -35,7 +35,7 @@
 
     // new unit menuitem
     const newUnit = async () => {
-        console.log('FileMenu.newUnit');
+        // console.log('FileMenu.newUnit');
         if (!!editorInfo.modelName && editorInfo.modelName.length > 0) {
             // get list of units from server, because new unit may not have the same name as an existing one
             await WebappConfigurator.getInstance().updateUnitList();
@@ -47,7 +47,7 @@
 
     // save unit menuitem
     const saveUnit = (id: number) => {
-        console.log('FileMenu.saveUnit: ' + id); // + $currentUnitName);
+        // console.log('FileMenu.saveUnit: ' + id); // + $currentUnitName);
         if (editorInfo.currentUnit) {
             WebappConfigurator.getInstance().saveUnit(editorInfo.currentUnit);
             setUserMessage(`Unit '${editorInfo.currentUnit.name}' saved.`);
@@ -58,7 +58,7 @@
 
     // delete model menuitem
     const deleteModel = async (id: number) => {
-        console.log('FileMenu.deleteModel ' + id);
+        // console.log('FileMenu.deleteModel ' + id);
         // get list of models from server
         const names = await WebappConfigurator.getInstance().serverEnv?.loadModelList();
         if (names && names.length > 0) {
@@ -70,7 +70,7 @@
 
     // import model unit menuitem
     const importUnit = (id: number) => {
-        console.log('FileMenu.importUnit ' + id);
+        // console.log('FileMenu.importUnit ' + id);
         // open the file browse dialog
         file_selector.click();
     };
