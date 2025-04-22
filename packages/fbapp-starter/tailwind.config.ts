@@ -4,6 +4,9 @@ import flowbitePlugin from "flowbite/plugin";
 export default {
   content: [
     "./src/**/*.{html,js,svelte,ts}",
+    // The following line is here to pick up any tailwind directives from the flowbite-webapp.
+    // In hindsight, it would have been better to style the webapp similar to the core-svelte library.
+    // For now, this remains a todo.
     "../../node_modules/@freon4dsl/flowbite-webapp/src/**/*.{html,js,svelte,ts}",
     "../../node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
   ],
@@ -63,11 +66,11 @@ export default {
           },
           freonAccent: {
             error: "#FF4C4C",
-            editable: "#FFD0B3",
-            optional: "#DB6506",
+            editable: "#FFE8D9",
+            optional: "#FFB88D",
             border: "#47651A",
             dropdown: "#5B7F20",
-            button: "#98CA32",
+            button: "#D6E9BA",
           }
         },
         dark: {

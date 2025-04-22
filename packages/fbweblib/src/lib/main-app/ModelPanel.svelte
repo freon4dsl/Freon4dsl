@@ -61,9 +61,9 @@
         // console.log("saveUnit: " + editorInfo.unitIds[index].name);
         if (editorInfo.unitIds[index].name === editorInfo.currentUnit?.name) {
             WebappConfigurator.getInstance().saveUnit(editorInfo.unitIds[index]);
-            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Warning);
+            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Info);
         } else {
-            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' has no changes.`, FreErrorSeverity.Warning);
+            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' has no changes.`, FreErrorSeverity.Info);
         }
         drawerHidden.value = true;
     };

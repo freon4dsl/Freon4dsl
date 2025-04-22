@@ -32,14 +32,35 @@ At the start of these scenarios, a model unit is available in the editor.
 ## Undo, Redo
 
 ### Scenario 3: undo, redo adding an element
-| Action                                                     | Expected result                             |
-|:-----------------------------------------------------------|:--------------------------------------------|
-| Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
-| Select content from _Theory101_, add a Line with some text | The text appears above the placeholder      |
-| Select _Undo_                                              | The Line disappears                         |
-| Select _Redo_                                              | The Line appears again                      |
+| Action                                                     | Expected result                              |
+|:-----------------------------------------------------------|:---------------------------------------------|
+| Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown  |
+| Select content from _Theory101_, add a Line with some text | The text appears above the placeholder       |
+| Select _Undo_                                              | The Line disappears                          |
+| Select _Redo_                                              | The Line appears again                       |
+| Type _Ctrl-z_                                              | The Line disappears    (NOT FUNCTIONING YET) |
+| Type _Ctrl-y_                                              | The Line appears again (NOT FUNCTIONING YET) |
 
-### Scenario 4: undo, redo within a text component
+### Scenario 4: undo, redo with multiple editor tabs
+| Action                                                     | Expected result                              |
+|:-----------------------------------------------------------|:---------------------------------------------|
+| Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown  |
+| Select content from _Theory101_, add a Line with some text | The text appears above the placeholder       |
+| Open unit Fractions103                                     | Unit Fractions103 is shown                   |
+| Select content from _Theory103_, add a Line with some text | The text appears above the placeholder       |
+| Select _Undo_                                              | The Line from Fractions103 disappears        |
+| Select _Redo_                                              | The Line appears again                       |
+| Type _Ctrl-z_                                              | The Line disappears    (NOT FUNCTIONING YET) |
+| Type _Ctrl-y_                                              | The Line appears again (NOT FUNCTIONING YET) |
+| Select _Undo_                                              | The Line from Fractions103 disappears        |
+| Go back to unit Fractions101                               | Unit Fractions101 is shown                   |
+| Select _Undo_                                              | The Line from Fractions101 disappears        |
+| Select _Redo_                                              | The Line appears again                       |
+| Type _Ctrl-z_                                              | The Line disappears    (NOT FUNCTIONING YET) |
+| Type _Ctrl-y_                                              | The Line appears again (NOT FUNCTIONING YET) |
+| Repeat this type of behavior                               |                                              |
+
+### Scenario 5: undo, redo within a text component
 | Action                                                           | Expected result                                              |
 |:-----------------------------------------------------------------|:-------------------------------------------------------------|
 | Open language Education, model Edu-test, unit Fractions101       | Freon is opened, Fractions101 unit is shown                  |
@@ -57,7 +78,7 @@ At the start of these scenarios, a model unit is available in the editor.
 
 ## Validate, Interpret
 
-### Scenario 5: validate
+### Scenario 6: validate
 | Action                                                  | Expected result                              |
 |:--------------------------------------------------------|:---------------------------------------------|
 | Open language Education, model Edu-test, unit StartFlow | Freon is opened, Fractions101 unit is shown  |
@@ -68,7 +89,7 @@ At the start of these scenarios, a model unit is available in the editor.
 
 ## Views
 
-### Scenario 6: views
+### Scenario 7: views
 | Action                                                       | Expected result                             |
 |:-------------------------------------------------------------|:--------------------------------------------|
 | Open language Education, model Edu-test, unit Fractions101   | Freon is opened, Fractions101 unit is shown |
@@ -77,14 +98,14 @@ At the start of these scenarios, a model unit is available in the editor.
 
 ## Search
 
-### Scenario 7: search text
+### Scenario 8: search text
 | Action                                                     | Expected result                             |
 |:-----------------------------------------------------------|:--------------------------------------------|
 | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
 | Select _Search_, and enter 'pie', ENTER key                | Search results (4) are shown                |
 | Select arrow button after one of the messages              | The found element is selected in the editor |
 
-### Scenario 8: search on element type
+### Scenario 9: search on element type
 | Action                                                     | Expected result                             |
 |:-----------------------------------------------------------|:--------------------------------------------|
 | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |

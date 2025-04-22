@@ -69,7 +69,7 @@ export default {
             optional: "#DB6506",
             border: "#47651A",
             dropdown: "#5B7F20",
-            button: "#98CA32",
+            button: "#D6E9BA",
           }
         },
         dark: {

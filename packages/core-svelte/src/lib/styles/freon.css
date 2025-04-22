@@ -158,7 +158,7 @@
 }
 .contextmenu-button {
     border-radius: 2px;
-    padding: 0px;
+    padding: 0 1px 1px 0;
     margin: 3px;
     cursor: pointer;
     text-align: left;

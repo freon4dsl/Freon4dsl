@@ -32,7 +32,7 @@
 		<img src="./freonlogo.svg" class="me-3 h-6 sm:h-9" alt="Freon Logo" />
 		<span
 			class="self-center whitespace-nowrap text-xl font-semibold text-light-base-700 dark:text-dark-base-150 ">
-			Freon for <span class="text-light-accent-700 dark:text-dark-accent-150">{langInfo.name}.{editorInfo.modelName}</span>
+			Freon for <span class="text-light-accent-700 dark:text-dark-accent-150">{langInfo.name} > {editorInfo.modelName}</span>
 		</span>
 	</NavBrand>
 
