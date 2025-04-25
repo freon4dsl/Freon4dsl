@@ -24,7 +24,7 @@ export abstract class FreScoperBase implements FreScoper {
         metatype?: string,
     ): FreNamedNode {
         this.currentRoleNames.push(doNotSearch);
-        // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
+        // get the names from the namespace where the pathname is found (i.e. the basePosition) to be able to check against this later on
         const elementsFromBasePosition: FreNamedNode[] = this.getVisibleElements(basePosition);
         // start the loop over the set of names in the pathname
         let previousFound: FreNode = basePosition;

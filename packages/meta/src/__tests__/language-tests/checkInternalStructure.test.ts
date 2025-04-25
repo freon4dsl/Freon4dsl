@@ -5,10 +5,8 @@ import {
     FreMetaLanguage,
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
-} from "../../languagedef/metalanguage/index.js";
-import { LangUtil, MetaLogger } from "../../utils/index.js";
-import { net } from "net.akehurst.language-agl-processor";
-import language = net.akehurst.language;
+} from '../../languagedef/metalanguage';
+import { LangUtil, MetaLogger } from '../../utils';
 import { describe, test, expect } from "vitest";
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
@@ -28,8 +26,6 @@ describe("Checking internal structure of language", () => {
                 console.log(e.message + parser.checker.errors.map((err) => err).join("\n") + e.stack);
             }
         }
-        expect(language).not.toBeNull();
-        expect(language).not.toBeUndefined();
         return freLanguage as FreMetaLanguage;
     }
 

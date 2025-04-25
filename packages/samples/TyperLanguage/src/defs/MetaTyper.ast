@@ -1,0 +1,92 @@
+language TyperLanguageX
+
+// begin typer definition
+modelunit FreTyperDef {
+    name: identifier = "TYPER";
+    location?: FreParseLocationX;
+    reference types: FreClassifier[];
+    reference conceptsWithType: FreClassifier[];
+    typeConcepts: FretTypeConcept[];
+    anyTypeSpec?: FretAnyTypeSpec;
+    classifierSpecs: FretClassifierSpec[];
+    reference typeroot?: FreClassifier;
+    file-extension = "type";
+}
+concept FretTypeConcept base FreConcept {
+    properties: FretProperty[];
+    reference base?: FreConcept;
+}
+concept FretProperty base FreProperty {
+}
+concept FretClassifierSpec {
+    reference myClassifier: FreClassifier;
+    rules: FretTypeRule[];
+}
+concept FretAnyTypeSpec {
+    rules: FretTypeRule[];
+}
+abstract concept FretTypeRule {
+    exp: FretExp;
+}
+concept FretInferenceRule base FretTypeRule {
+    reference returnType?: FreClassifier; // not parsed, set by the checker
+}
+concept FretConformanceRule base FretTypeRule {
+}
+concept FretEqualsRule base FretTypeRule {
+}
+concept FretLimitedRule base FretTypeRule {
+}
+concept FretVarDecl {
+    name: identifier;
+    reference type: FreClassifier;
+}
+concept FretPropInstance base FreLangElement {
+    reference property: FreProperty;
+    value: FretExp;
+}
+
+// expressions
+abstract expression FretExp {
+}
+expression FretPropertyCallExp base FretExp {
+    source: FretExp;
+    reference property: FreProperty;
+}
+expression FretSelfExp base FretExp {
+}
+expression FretAnytypeExp base FretExp {
+}
+expression FretVarCallExp base FretExp {
+    reference variable: FretVarDecl;
+}
+expression FretCreateExp base FretExp {
+    reference type: FreClassifier;
+    propertyDefs: FretPropInstance[];
+}
+expression FretFunctionCallExp base FretExp {
+    calledFunction: identifier;
+    reference returnType?: FreClassifier; // not parsed, set by checker
+    arguments: FretExp[];
+}
+expression FretLimitedInstanceExp base FretExp {
+    reference myLimited?: FreLimitedConcept;
+    reference myInstance: FreInstance;
+}
+expression FretWhereExp base FretExp {
+    variable: FretVarDecl; // this object is not part of the AST, it is here to embody e.g. 'x: UnitOfMeasurement'
+    conditions: FretBinaryExp[];
+}
+abstract binary expression FretBinaryExp base FretExp {
+    left: FretExp;
+    right: FretExp;
+//    operand: FretBinaryExpKind; // either 'equalsto' or 'conformsto'
+}
+binary expression FretEquals base FretBinaryExp {
+    priority = 8;
+}
+binary expression FretConforms base FretBinaryExp {
+    priority = 4;
+}
+
+// end typer definition

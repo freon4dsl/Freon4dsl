@@ -5,7 +5,7 @@ import {
     FreMetaLimitedConcept,
 } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger, Names } from "../../utils";
+import { Checker, LOG2USER, MetaLogger, Names } from '../../utils';
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
     ForType,
@@ -55,7 +55,7 @@ describe("Checking FretEditUnit: ", () => {
             let defaultGroup: FreEditProjectionGroup | undefined = editor.getDefaultProjectiongroup();
             if (defaultGroup === null || defaultGroup === undefined) {
                 // no default group, create one
-                console.log("Creating new default group");
+                LOG2USER.log("Creating new default group");
                 defaultGroup = new FreEditProjectionGroup();
                 defaultGroup.name = Names.defaultProjectionName;
                 editor.projectiongroups.push(defaultGroup);
