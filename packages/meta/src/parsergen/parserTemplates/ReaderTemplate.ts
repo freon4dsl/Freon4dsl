@@ -80,6 +80,7 @@ export class ReaderTemplate {
                             parseResult = this.parser.process(sentence, null);
                         }
                     });
+                    if (parseResult) {
                     const errors = parseResult.issues.errors.asJsReadonlyArrayView();
                     if (errors.length > 0) {
                         errors.map((err: LanguageIssue) => {
@@ -116,6 +117,7 @@ export class ReaderTemplate {
                             console.log(e.message);
                             throw e;
                         }
+                    }
                     }
                     return unit;
                 } else {

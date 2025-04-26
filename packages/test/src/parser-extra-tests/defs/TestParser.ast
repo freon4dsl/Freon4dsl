@@ -42,6 +42,14 @@ expression PitWhereExp base PitExp {
     conditions: PitBinaryExp[];
 }
 
+expression PitWhereExpOneCondition base PitExp {
+    condition: PitBinaryExp;
+}
+
+expression PitWhereExpSimple base PitExp {
+    conditions: PitBinaryExp[];
+}
+
 expression PitWhereExpInit base PitExp {
     conditions: PitBinaryExp[];
 }
