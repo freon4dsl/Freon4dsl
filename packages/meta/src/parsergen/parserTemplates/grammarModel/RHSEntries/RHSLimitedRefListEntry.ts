@@ -1,8 +1,8 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { getTypeCall, makeIndent } from "../GrammarUtils.js";
-import { GenerationUtil, Names } from "../../../../utils/index.js";
-import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil.js";
+import { GenerationUtil } from "../../../../utils/index.js";
+import { internalTransformLimitedList, ParserGenUtil } from '../../ParserGenUtil.js';
 
 export class RHSLimitedRefListEntry extends RHSPropEntry {
     constructor(prop: FreMetaProperty) {
@@ -15,9 +15,8 @@ export class RHSLimitedRefListEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        const propType: string = Names.classifier(this.property.type);
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(${nodeName}[${index}], '${propType}'); // RHSLimitedRefListEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformLimitedList}<${baseType}>(${nodeName}[${index}]); // RHSLimitedRefListEntry\n`;
     }
 
     toString(depth: number): string {

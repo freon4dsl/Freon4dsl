@@ -39,6 +39,10 @@ LimitedTest {
         "$typename": "OtherLimited",
         "_FRE_name": "FIRST",
       },
+      "parseLocation": FreParseLocation {
+        "column": 6,
+        "line": 10,
+      },
       "typeName": "OtherLimited",
     },
     "_FRE_otherMulti": [
@@ -57,6 +61,10 @@ LimitedTest {
           "$typename": "OtherLimited",
           "_FRE_name": "SECOND",
         },
+        "parseLocation": FreParseLocation {
+          "column": 6,
+          "line": 11,
+        },
         "typeName": "OtherLimited",
       },
       FreNodeReference {
@@ -73,6 +81,10 @@ LimitedTest {
           "$id": "ID-4",
           "$typename": "OtherLimited",
           "_FRE_name": "FIRST",
+        },
+        "parseLocation": FreParseLocation {
+          "column": 14,
+          "line": 11,
         },
         "typeName": "OtherLimited",
       },
@@ -91,6 +103,10 @@ LimitedTest {
           "$typename": "OtherLimited",
           "_FRE_name": "FIRST",
         },
+        "parseLocation": FreParseLocation {
+          "column": 21,
+          "line": 11,
+        },
         "typeName": "OtherLimited",
       },
       FreNodeReference {
@@ -108,6 +124,10 @@ LimitedTest {
           "$typename": "OtherLimited",
           "_FRE_name": "SECOND",
         },
+        "parseLocation": FreParseLocation {
+          "column": 28,
+          "line": 11,
+        },
         "typeName": "OtherLimited",
       },
       FreNodeReference {
@@ -124,6 +144,10 @@ LimitedTest {
           "$id": "ID-5",
           "$typename": "OtherLimited",
           "_FRE_name": "SECOND",
+        },
+        "parseLocation": FreParseLocation {
+          "column": 36,
+          "line": 11,
         },
         "typeName": "OtherLimited",
       },
@@ -144,6 +168,10 @@ LimitedTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "+",
         },
+        "parseLocation": FreParseLocation {
+          "column": 9,
+          "line": 4,
+        },
         "typeName": "VisibilityKind",
       },
       FreNodeReference {
@@ -161,6 +189,10 @@ LimitedTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "+",
         },
+        "parseLocation": FreParseLocation {
+          "column": 13,
+          "line": 4,
+        },
         "typeName": "VisibilityKind",
       },
       FreNodeReference {
@@ -177,6 +209,10 @@ LimitedTest {
           "$id": "ID-1",
           "$typename": "VisibilityKind",
           "_FRE_name": "+",
+        },
+        "parseLocation": FreParseLocation {
+          "column": 17,
+          "line": 4,
         },
         "typeName": "VisibilityKind",
       },
@@ -197,6 +233,10 @@ LimitedTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "-",
         },
+        "parseLocation": FreParseLocation {
+          "column": 16,
+          "line": 6,
+        },
         "typeName": "VisibilityKind",
       },
       FreNodeReference {
@@ -214,6 +254,10 @@ LimitedTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "+",
         },
+        "parseLocation": FreParseLocation {
+          "column": 9,
+          "line": 7,
+        },
         "typeName": "VisibilityKind",
       },
       FreNodeReference {
@@ -230,6 +274,10 @@ LimitedTest {
           "$id": "ID-2",
           "$typename": "VisibilityKind",
           "_FRE_name": "-",
+        },
+        "parseLocation": FreParseLocation {
+          "column": 9,
+          "line": 8,
         },
         "typeName": "VisibilityKind",
       },
@@ -249,6 +297,10 @@ LimitedTest {
         "$typename": "VisibilityKind",
         "_FRE_name": "-",
       },
+      "parseLocation": FreParseLocation {
+        "column": 16,
+        "line": 5,
+      },
       "typeName": "VisibilityKind",
     },
     "_FRE_visibility": FreNodeReference {
@@ -265,6 +317,10 @@ LimitedTest {
         "$id": "ID-1",
         "$typename": "VisibilityKind",
         "_FRE_name": "+",
+      },
+      "parseLocation": FreParseLocation {
+        "column": 9,
+        "line": 3,
       },
       "typeName": "VisibilityKind",
     },
@@ -295,6 +351,10 @@ LimitedTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "#",
         },
+        "parseLocation": FreParseLocation {
+          "column": 9,
+          "line": 14,
+        },
         "typeName": "VisibilityKind",
       },
       FreNodeReference {
@@ -312,6 +372,10 @@ LimitedTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "#",
         },
+        "parseLocation": FreParseLocation {
+          "column": 13,
+          "line": 14,
+        },
         "typeName": "VisibilityKind",
       },
       FreNodeReference {
@@ -328,6 +392,10 @@ LimitedTest {
           "$id": "ID-3",
           "$typename": "VisibilityKind",
           "_FRE_name": "#",
+        },
+        "parseLocation": FreParseLocation {
+          "column": 17,
+          "line": 14,
         },
         "typeName": "VisibilityKind",
       },
@@ -348,6 +416,10 @@ LimitedTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "-",
         },
+        "parseLocation": FreParseLocation {
+          "column": 16,
+          "line": 16,
+        },
         "typeName": "VisibilityKind",
       },
       FreNodeReference {
@@ -365,6 +437,10 @@ LimitedTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "-",
         },
+        "parseLocation": FreParseLocation {
+          "column": 19,
+          "line": 16,
+        },
         "typeName": "VisibilityKind",
       },
       FreNodeReference {
@@ -381,6 +457,10 @@ LimitedTest {
           "$id": "ID-2",
           "$typename": "VisibilityKind",
           "_FRE_name": "-",
+        },
+        "parseLocation": FreParseLocation {
+          "column": 22,
+          "line": 16,
         },
         "typeName": "VisibilityKind",
       },
@@ -400,6 +480,10 @@ LimitedTest {
         "$typename": "VisibilityKind",
         "_FRE_name": "-",
       },
+      "parseLocation": FreParseLocation {
+        "column": 16,
+        "line": 15,
+      },
       "typeName": "VisibilityKind",
     },
     "_FRE_visibility": FreNodeReference {
@@ -416,6 +500,10 @@ LimitedTest {
         "$id": "ID-1",
         "$typename": "VisibilityKind",
         "_FRE_name": "+",
+      },
+      "parseLocation": FreParseLocation {
+        "column": 9,
+        "line": 13,
       },
       "typeName": "VisibilityKind",
     },
@@ -495,6 +583,10 @@ PartsTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "+",
         },
+        "parseLocation": FreParseLocation {
+          "column": 41,
+          "line": 6,
+        },
         "typeName": "VisibilityKind",
       },
       "parseLocation": FreParseLocation {
@@ -526,6 +618,10 @@ PartsTest {
             "$typename": "VisibilityKind",
             "_FRE_name": "#",
           },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 12,
+          },
           "typeName": "VisibilityKind",
         },
         "parseLocation": FreParseLocation {
@@ -556,6 +652,10 @@ PartsTest {
             "$typename": "VisibilityKind",
             "_FRE_name": "-",
           },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 16,
+          },
           "typeName": "VisibilityKind",
         },
         "parseLocation": FreParseLocation {
@@ -585,6 +685,10 @@ PartsTest {
             "$id": "ID-1",
             "$typename": "VisibilityKind",
             "_FRE_name": "+",
+          },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 20,
           },
           "typeName": "VisibilityKind",
         },
@@ -658,6 +762,10 @@ PartsTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "+",
         },
+        "parseLocation": FreParseLocation {
+          "column": 41,
+          "line": 6,
+        },
         "typeName": "VisibilityKind",
       },
       "parseLocation": FreParseLocation {
@@ -689,6 +797,10 @@ PartsTest {
             "$typename": "VisibilityKind",
             "_FRE_name": "#",
           },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 12,
+          },
           "typeName": "VisibilityKind",
         },
         "parseLocation": FreParseLocation {
@@ -719,6 +831,10 @@ PartsTest {
             "$typename": "VisibilityKind",
             "_FRE_name": "-",
           },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 16,
+          },
           "typeName": "VisibilityKind",
         },
         "parseLocation": FreParseLocation {
@@ -748,6 +864,10 @@ PartsTest {
             "$id": "ID-1",
             "$typename": "VisibilityKind",
             "_FRE_name": "+",
+          },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 20,
           },
           "typeName": "VisibilityKind",
         },
@@ -809,6 +929,10 @@ PartsTest {
                 "$typename": "VisibilityKind",
                 "_FRE_name": "+",
               },
+              "parseLocation": FreParseLocation {
+                "column": 56,
+                "line": 39,
+              },
               "typeName": "VisibilityKind",
             },
             "parseLocation": FreParseLocation {
@@ -839,6 +963,10 @@ PartsTest {
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
                   "_FRE_name": "#",
+                },
+                "parseLocation": FreParseLocation {
+                  "column": 52,
+                  "line": 45,
                 },
                 "typeName": "VisibilityKind",
               },
@@ -884,6 +1012,10 @@ PartsTest {
                 "$typename": "VisibilityKind",
                 "_FRE_name": "-",
               },
+              "parseLocation": FreParseLocation {
+                "column": 56,
+                "line": 51,
+              },
               "typeName": "VisibilityKind",
             },
             "parseLocation": FreParseLocation {
@@ -914,6 +1046,10 @@ PartsTest {
                   "$id": "ID-3",
                   "$typename": "VisibilityKind",
                   "_FRE_name": "#",
+                },
+                "parseLocation": FreParseLocation {
+                  "column": 52,
+                  "line": 57,
                 },
                 "typeName": "VisibilityKind",
               },
@@ -959,6 +1095,10 @@ PartsTest {
               "$id": "ID-1",
               "$typename": "VisibilityKind",
               "_FRE_name": "+",
+            },
+            "parseLocation": FreParseLocation {
+              "column": 65,
+              "line": 29,
             },
             "typeName": "VisibilityKind",
           },
@@ -1019,6 +1159,10 @@ PartsTest {
                   "$typename": "VisibilityKind",
                   "_FRE_name": "+",
                 },
+                "parseLocation": FreParseLocation {
+                  "column": 40,
+                  "line": 116,
+                },
                 "typeName": "VisibilityKind",
               },
               "parseLocation": FreParseLocation {
@@ -1064,6 +1208,10 @@ PartsTest {
                 "$typename": "VisibilityKind",
                 "_FRE_name": "+",
               },
+              "parseLocation": FreParseLocation {
+                "column": 60,
+                "line": 69,
+              },
               "typeName": "VisibilityKind",
             },
             "parseLocation": FreParseLocation {
@@ -1095,6 +1243,10 @@ PartsTest {
                   "$typename": "VisibilityKind",
                   "_FRE_name": "#",
                 },
+                "parseLocation": FreParseLocation {
+                  "column": 56,
+                  "line": 75,
+                },
                 "typeName": "VisibilityKind",
               },
               "parseLocation": FreParseLocation {
@@ -1125,6 +1277,10 @@ PartsTest {
                   "$typename": "VisibilityKind",
                   "_FRE_name": "-",
                 },
+                "parseLocation": FreParseLocation {
+                  "column": 56,
+                  "line": 80,
+                },
                 "typeName": "VisibilityKind",
               },
               "parseLocation": FreParseLocation {
@@ -1154,6 +1310,10 @@ PartsTest {
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
                   "_FRE_name": "+",
+                },
+                "parseLocation": FreParseLocation {
+                  "column": 56,
+                  "line": 85,
                 },
                 "typeName": "VisibilityKind",
               },
@@ -1200,6 +1360,10 @@ PartsTest {
                 "$typename": "VisibilityKind",
                 "_FRE_name": "+",
               },
+              "parseLocation": FreParseLocation {
+                "column": 60,
+                "line": 92,
+              },
               "typeName": "VisibilityKind",
             },
             "parseLocation": FreParseLocation {
@@ -1231,6 +1395,10 @@ PartsTest {
                   "$typename": "VisibilityKind",
                   "_FRE_name": "#",
                 },
+                "parseLocation": FreParseLocation {
+                  "column": 56,
+                  "line": 98,
+                },
                 "typeName": "VisibilityKind",
               },
               "parseLocation": FreParseLocation {
@@ -1261,6 +1429,10 @@ PartsTest {
                   "$typename": "VisibilityKind",
                   "_FRE_name": "-",
                 },
+                "parseLocation": FreParseLocation {
+                  "column": 56,
+                  "line": 103,
+                },
                 "typeName": "VisibilityKind",
               },
               "parseLocation": FreParseLocation {
@@ -1290,6 +1462,10 @@ PartsTest {
                   "$id": "ID-1",
                   "$typename": "VisibilityKind",
                   "_FRE_name": "+",
+                },
+                "parseLocation": FreParseLocation {
+                  "column": 56,
+                  "line": 108,
                 },
                 "typeName": "VisibilityKind",
               },
@@ -1347,6 +1523,10 @@ PartsTest {
                   "$typename": "VisibilityKind",
                   "_FRE_name": "+",
                 },
+                "parseLocation": FreParseLocation {
+                  "column": 44,
+                  "line": 144,
+                },
                 "typeName": "VisibilityKind",
               },
               "parseLocation": FreParseLocation {
@@ -1391,6 +1571,10 @@ PartsTest {
                 "$id": "ID-1",
                 "$typename": "VisibilityKind",
                 "_FRE_name": "+",
+              },
+              "parseLocation": FreParseLocation {
+                "column": 40,
+                "line": 127,
               },
               "typeName": "VisibilityKind",
             },
@@ -1437,6 +1621,10 @@ PartsTest {
                   "$typename": "VisibilityKind",
                   "_FRE_name": "+",
                 },
+                "parseLocation": FreParseLocation {
+                  "column": 44,
+                  "line": 153,
+                },
                 "typeName": "VisibilityKind",
               },
               "parseLocation": FreParseLocation {
@@ -1481,6 +1669,10 @@ PartsTest {
                 "$id": "ID-3",
                 "$typename": "VisibilityKind",
                 "_FRE_name": "#",
+              },
+              "parseLocation": FreParseLocation {
+                "column": 40,
+                "line": 135,
               },
               "typeName": "VisibilityKind",
             },
@@ -1562,6 +1754,10 @@ PartsTest {
             "$typename": "VisibilityKind",
             "_FRE_name": "+",
           },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 31,
+          },
           "typeName": "VisibilityKind",
         },
         "parseLocation": FreParseLocation {
@@ -1591,6 +1787,10 @@ PartsTest {
             "$id": "ID-1",
             "$typename": "VisibilityKind",
             "_FRE_name": "+",
+          },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 35,
           },
           "typeName": "VisibilityKind",
         },
@@ -1623,6 +1823,10 @@ PartsTest {
           "$typename": "VisibilityKind",
           "_FRE_name": "+",
         },
+        "parseLocation": FreParseLocation {
+          "column": 40,
+          "line": 12,
+        },
         "typeName": "VisibilityKind",
       },
       "parseLocation": FreParseLocation {
@@ -1652,6 +1856,10 @@ PartsTest {
           "$id": "ID-1",
           "$typename": "VisibilityKind",
           "_FRE_name": "+",
+        },
+        "parseLocation": FreParseLocation {
+          "column": 41,
+          "line": 6,
         },
         "typeName": "VisibilityKind",
       },
@@ -1684,6 +1892,10 @@ PartsTest {
             "$typename": "VisibilityKind",
             "_FRE_name": "#",
           },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 18,
+          },
           "typeName": "VisibilityKind",
         },
         "parseLocation": FreParseLocation {
@@ -1714,6 +1926,10 @@ PartsTest {
             "$typename": "VisibilityKind",
             "_FRE_name": "-",
           },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 22,
+          },
           "typeName": "VisibilityKind",
         },
         "parseLocation": FreParseLocation {
@@ -1743,6 +1959,10 @@ PartsTest {
             "$id": "ID-1",
             "$typename": "VisibilityKind",
             "_FRE_name": "+",
+          },
+          "parseLocation": FreParseLocation {
+            "column": 40,
+            "line": 26,
           },
           "typeName": "VisibilityKind",
         },
@@ -2127,6 +2347,10 @@ RefsTest {
         "yyy",
       ],
       "_FRE_referred": null,
+      "parseLocation": FreParseLocation {
+        "column": 24,
+        "line": 3,
+      },
       "typeName": "RefConcept",
     },
     "_FRE_refList": [
@@ -2141,6 +2365,10 @@ RefsTest {
           "yuio",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 25,
+          "line": 6,
+        },
         "typeName": "RefConcept",
       },
       FreNodeReference {
@@ -2151,6 +2379,10 @@ RefsTest {
           "name2",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 25,
+          "line": 7,
+        },
         "typeName": "RefConcept",
       },
       FreNodeReference {
@@ -2161,6 +2393,10 @@ RefsTest {
           "name3",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 25,
+          "line": 8,
+        },
         "typeName": "RefConcept",
       },
       FreNodeReference {
@@ -2171,6 +2407,10 @@ RefsTest {
           "name4",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 25,
+          "line": 9,
+        },
         "typeName": "RefConcept",
       },
     ],
@@ -2206,6 +2446,10 @@ RefsTest {
             "yyy",
           ],
           "_FRE_referred": null,
+          "parseLocation": FreParseLocation {
+            "column": 29,
+            "line": 32,
+          },
           "typeName": "RefConcept",
         },
         "_FRE_refList": [
@@ -2220,6 +2464,10 @@ RefsTest {
               "yuio",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 29,
+              "line": 35,
+            },
             "typeName": "RefConcept",
           },
           FreNodeReference {
@@ -2230,6 +2478,10 @@ RefsTest {
               "name2",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 29,
+              "line": 36,
+            },
             "typeName": "RefConcept",
           },
         ],
@@ -2256,6 +2508,10 @@ RefsTest {
             "yyy",
           ],
           "_FRE_referred": null,
+          "parseLocation": FreParseLocation {
+            "column": 29,
+            "line": 40,
+          },
           "typeName": "RefConcept",
         },
         "_FRE_refList": [
@@ -2270,6 +2526,10 @@ RefsTest {
               "yuio",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 29,
+              "line": 43,
+            },
             "typeName": "RefConcept",
           },
           FreNodeReference {
@@ -2280,6 +2540,10 @@ RefsTest {
               "name2",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 29,
+              "line": 44,
+            },
             "typeName": "RefConcept",
           },
         ],
@@ -2306,6 +2570,10 @@ RefsTest {
             "yyy",
           ],
           "_FRE_referred": null,
+          "parseLocation": FreParseLocation {
+            "column": 29,
+            "line": 48,
+          },
           "typeName": "RefConcept",
         },
         "_FRE_refList": [
@@ -2320,6 +2588,10 @@ RefsTest {
               "yuio",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 29,
+              "line": 51,
+            },
             "typeName": "RefConcept",
           },
           FreNodeReference {
@@ -2330,6 +2602,10 @@ RefsTest {
               "name2",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 29,
+              "line": 52,
+            },
             "typeName": "RefConcept",
           },
         ],
@@ -2358,6 +2634,10 @@ RefsTest {
             "yyy",
           ],
           "_FRE_referred": null,
+          "parseLocation": FreParseLocation {
+            "column": 42,
+            "line": 14,
+          },
           "typeName": "RefConcept",
         },
         "_FRE_refList": [
@@ -2372,6 +2652,10 @@ RefsTest {
               "yuio",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 43,
+              "line": 17,
+            },
             "typeName": "RefConcept",
           },
           FreNodeReference {
@@ -2382,6 +2666,10 @@ RefsTest {
               "name2",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 43,
+              "line": 18,
+            },
             "typeName": "RefConcept",
           },
           FreNodeReference {
@@ -2392,6 +2680,10 @@ RefsTest {
               "name3",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 43,
+              "line": 19,
+            },
             "typeName": "RefConcept",
           },
           FreNodeReference {
@@ -2402,6 +2694,10 @@ RefsTest {
               "name4",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 43,
+              "line": 20,
+            },
             "typeName": "RefConcept",
           },
         ],
@@ -2428,6 +2724,10 @@ RefsTest {
             "yyy2",
           ],
           "_FRE_referred": null,
+          "parseLocation": FreParseLocation {
+            "column": 29,
+            "line": 24,
+          },
           "typeName": "RefConcept",
         },
         "_FRE_refList": [
@@ -2442,6 +2742,10 @@ RefsTest {
               "yuio",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 29,
+              "line": 27,
+            },
             "typeName": "RefConcept",
           },
           FreNodeReference {
@@ -2452,6 +2756,10 @@ RefsTest {
               "name2",
             ],
             "_FRE_referred": null,
+            "parseLocation": FreParseLocation {
+              "column": 29,
+              "line": 28,
+            },
             "typeName": "RefConcept",
           },
         ],

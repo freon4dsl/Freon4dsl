@@ -25,6 +25,8 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static FreNode: string = "FreNode";
     // tslint:disable-next-line:variable-name
+    public static FreOwnerDescriptor: string = "FreOwnerDescriptor";
+    // tslint:disable-next-line:variable-name
     public static FreExpressionNode: string = "FreExpressionNode";
     // tslint:disable-next-line:variable-name
     public static FreBinaryExpression: string = "FreBinaryExpression";

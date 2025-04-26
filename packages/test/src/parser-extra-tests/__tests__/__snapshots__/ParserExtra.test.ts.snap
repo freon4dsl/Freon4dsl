@@ -32,6 +32,10 @@ ProductTest {
           "PART3",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 7,
+          "line": 7,
+        },
         "typeName": "InsurancePart",
       },
       FreNodeReference {
@@ -42,6 +46,10 @@ ProductTest {
           "PART4",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 15,
+          "line": 7,
+        },
         "typeName": "InsurancePart",
       },
     ],
@@ -54,6 +62,10 @@ ProductTest {
           "PART1",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 5,
+          "line": 5,
+        },
         "typeName": "InsurancePart",
       },
       FreNodeReference {
@@ -64,6 +76,10 @@ ProductTest {
           "PART2",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 12,
+          "line": 5,
+        },
         "typeName": "InsurancePart",
       },
     ],
@@ -493,6 +509,10 @@ PartsInitiatorTest {
         "$typename": "NonOptionalLimited",
         "_FRE_name": "SECOND",
       },
+      "parseLocation": FreParseLocation {
+        "column": 16,
+        "line": 10,
+      },
       "typeName": "NonOptionalLimited",
     },
     "_FRE_partList": [
@@ -638,6 +658,10 @@ PartsInitiatorTest {
             "InsuranceRef",
           ],
           "_FRE_referred": null,
+          "parseLocation": FreParseLocation {
+            "column": 29,
+            "line": 5,
+          },
           "typeName": "InsurancePart",
         },
         "parseLocation": FreParseLocation {

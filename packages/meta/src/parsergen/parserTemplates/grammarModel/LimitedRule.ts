@@ -40,22 +40,30 @@ export class LimitedRule extends GrammarRule {
         return result + " ;";
     }
 
-    toMethod(): string {
+    toMethod(mainAnalyserName: string): string {
         if (!!this.myMap && this.myMap.size > 0) {
             // found a limited concept with a special projection
             let switchStat: string = "";
             // create all cases for the switch statement
             for (const [key, value] of this.myMap) {
-                switchStat += `case'${value}': return ${key};\n`;
+                switchStat += `case'${value}': {
+                    result = ${Names.FreNodeReference}.create<${Names.classifier(this.concept)}>(${key}, '${Names.classifier(this.concept)}');
+                    break;
+                }\n`;
             }
             // complete the switch statement
             switchStat = `switch (children.toArray()[0]) {
-                ${switchStat} default: return null;
+                ${switchStat} default: result = undefined;
             }`;
             return `
                 ${ParserGenUtil.makeComment(this.toGrammar())}
-                public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${Names.classifier(this.concept)} {
+                public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${Names.FreNodeReference}<${Names.classifier(this.concept)}> {
+                    let result: ${Names.FreNodeReference}<${Names.classifier(this.concept)}> | undefined;
                     ${switchStat}
+                    if (result !== undefined) {
+                        result.parseLocation = this.${mainAnalyserName}.location(sentence, nodeInfo.node);
+                    }
+                    return result;
                 }`;
         }
         return ``;
