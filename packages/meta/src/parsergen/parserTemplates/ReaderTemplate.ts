@@ -35,7 +35,17 @@ export class ReaderTemplate {
         */
         export class ${Names.reader(language)} implements ${Names.FreReader} {
             analyser: ${syntaxAnalyser} = new ${syntaxAnalyser}();
-            parser: LanguageProcessor = Agl.processorFromString(${Names.grammarStr(language)}, this.analyser, null, null);
+            // parser: LanguageProcessor = Agl.processorFromString(${Names.grammarStr(language)}, this.analyser, null, null);
+            private _parser: LanguageProcessor | undefined;
+        
+            get parser(): LanguageProcessor {
+                if (this._parser === undefined) {
+                    console.log("Initializing parser")
+                    this._parser = Agl.processorFromString(${Names.grammarStr(language)}, this.analyser, null, null);
+                    console.log("Parser ready")
+                }
+                return this._parser
+            }
 
             /**
              * Parses and performs a syntax analysis on 'sentence', using the parser and analyser
