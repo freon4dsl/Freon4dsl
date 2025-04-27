@@ -205,6 +205,7 @@ export class ActionBox extends AbstractChoiceBox {
         if (!!option.action) {
             return executeSingleBehavior(option.action, this, option.label, editor);
         }
+        LOGGER.log("<== ActionBox executeOption " );
         return BehaviorExecutionResult.NULL;
     }
 

@@ -31,7 +31,7 @@ export abstract class TableBox extends Box {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         if (!!children) {
-            children.forEach((b) => this.addChild(b));
+            this.addChildren(children);
         }
         this.hasHeaders = hasHeaders;
         this.propertyName = propertyName;
@@ -102,7 +102,10 @@ export abstract class TableBox extends Box {
 
     addChildren(children?: Box[]): TableBox {
         if (!!children) {
-            children.forEach((child) => this.addChild(child));
+            children.forEach((child) => {
+                this._children.push(child);
+                child.parent = this;
+            });
             // console.log("TableBox addChildren dirty")
             this.isDirty();
         }

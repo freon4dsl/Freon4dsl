@@ -3,10 +3,9 @@ import { FreLogger } from "../../logging/index.js";
 import { isIdentifier } from "../../util/index.js";
 import { collectUsedLanguages, FreLionwebSerializer, FreModelSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
-import { IServerCommunication, ModelUnitIdentifier } from "./IServerCommunication.js";
+import { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
-const modelUnitInterfacePostfix: string = "Public";
 
 export class ServerCommunication implements IServerCommunication {
     get nodePort(): any {
@@ -74,7 +73,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param unitId
      * @param unit
      */
-    async putModelUnit(modelName: string, unitId: ModelUnitIdentifier, unit: FreNamedNode): Promise<void> {
+    async putModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitId.name}`);
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
@@ -103,9 +102,9 @@ export class ServerCommunication implements IServerCommunication {
     /**
      * Deletes the unit indicated by 'modelInfo' including its interface.
      * @param modelName
-     * @param unitName
+     * @param unit
      */
-    async deleteModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<void> {
+    async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<void> {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             await this.fetchWithTimeout<any>(`deleteModelUnit`, `folder=${modelName}&name=${unit.name}`);
@@ -125,7 +124,6 @@ export class ServerCommunication implements IServerCommunication {
 
     /**
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
-     * @param modelListCallback
      */
     async loadModelList(): Promise<string[]> {
         LOGGER.log(`ServerCommunication.loadModelList`);
@@ -140,17 +138,16 @@ export class ServerCommunication implements IServerCommunication {
     /**
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
      * @param modelName
-     * @param modelListCallback
      */
-    async loadUnitList(modelName: string): Promise<ModelUnitIdentifier[]> {
+    async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
         LOGGER.log(`ServerCommunication.loadUnitList`);
         let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `folder=${modelName}`);
-        // filter out the modelUnitInterfaces
-        // TODO Remive once all server files have been cleaned of the interfaces
         if (!!modelUnits) {
-            modelUnits = modelUnits.filter((name: string) => name.indexOf(modelUnitInterfacePostfix) === -1);
             return modelUnits.map((u) => {
-                return { name: u, id: u };
+                // The information the unit's type is not available. This is not a problem
+                // at the moment, because this method is only used in InMemoryModel.
+                // Note that whenever this changes, this code may give problems.
+                return { name: u, id: u, type: '' };
             });
         } else {
             return [];
@@ -161,10 +158,9 @@ export class ServerCommunication implements IServerCommunication {
      * Loads the unit named 'unitName' of model 'modelName' from the server and calls 'loadCallBack',
      * which takes the unit as parameter.
      * @param modelName
-     * @param unitName
-     * @param loadCallback
+     * @param unit
      */
-    async loadModelUnit(modelName: string, unit: ModelUnitIdentifier): Promise<FreNode> {
+    async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<FreNode> {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unit.name}`);
@@ -240,9 +236,9 @@ export class ServerCommunication implements IServerCommunication {
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         // put the unit and its interface under the new name
-        this.putModelUnit(modelName, { name: newName, id: unit.freId() }, unit);
+        this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit and interface
-        this.deleteModelUnit(modelName, { name: oldName, id: unit.freId() });
+        this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
     }
 
     // @ts-ignore
@@ -250,6 +246,6 @@ export class ServerCommunication implements IServerCommunication {
 
     // @ts-ignore
     createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
-        this.putModelUnit(modelName, { id: unit.freId(), name: unit.name }, unit)
+        this.putModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
     }
 }

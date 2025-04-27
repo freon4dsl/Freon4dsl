@@ -6,6 +6,7 @@ model ExternalModel {
 
 modelunit ExternalUnit {
     content: AA;
+    toBeReferenced: CC[];
     file-extension = "ext";     // the file extension used by the parser
 }
 

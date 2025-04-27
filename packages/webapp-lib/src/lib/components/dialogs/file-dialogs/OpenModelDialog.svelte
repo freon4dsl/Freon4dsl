@@ -1,27 +1,31 @@
 <Dialog
-        bind:open={$openModelDialogVisible}
+        bind:open={openModelDialogVisible.value}
         aria-labelledby="event-title"
         aria-describedby="event-content"
-        on:SMUIDialog:closed={closeHandler}
-        on:keydown={handleKeydown}
+        onSMUIDialogClosed={closeHandler}
+        onkeydown={handleKeydown}
 >
     <Title id="event-title">Open Model</Title>
     <Content id="event-content">
         <div>
             <br> <!-- br is here to make the label visible when it is moved to the top of the text field -->
             <Textfield variant="outlined" bind:invalid={nameInvalid} bind:value={newName} label="name of model">
-                <HelperText slot="helper">{helperText}</HelperText>
+                {#snippet helper()}
+                <HelperText>{helperText}</HelperText>
+                {/snippet}
             </Textfield>
 
             <LayoutGrid>
-                {#each $modelNames as name}
+                {#each modelNames.list as name}
                     <Cell>
                         <FormField> <!-- FormField ensures that when the label is clicked the checkbox is marked -->
                             <Radio
                                     bind:group={internalSelected}
                                     value={name}
                             />
-                            <span slot="label">{name}</span>
+                            {#snippet label()}
+                            <span>{name}</span>
+                            {/snippet}
                         </FormField>
                     </Cell>
                 {/each}
@@ -46,50 +50,50 @@
     import Radio from '@smui/radio';
     import Textfield from '@smui/textfield';
     import HelperText from '@smui/textfield/helper-text';
-    import { modelNames } from "../../stores/ServerStore.js";
-    import { initializing, openModelDialogVisible } from "../../stores/DialogStore.js";
-    import { setUserMessage } from "../../stores/UserMessageStore.js";
-    import { EditorState } from "../../../language/EditorState.js";
+    import { modelNames } from "../../stores/ServerStore.svelte";
+    import { initializing, openModelDialogVisible } from "../../stores/DialogStore.svelte";
+    import { setUserMessage } from "../../stores/UserMessageStore.svelte";
+    import { EditorState } from "$lib/language/EditorState";
     import * as Keys from "@freon4dsl/core"
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
     const initialHelperText: string = "Enter or select a name.";
-    let internalSelected: string = ""; // used for radio buttons
-    let newName: string = '';
-    $: newName = internalSelected.length > 0 ? internalSelected : '';
-    let nameInvalid: boolean;
-    $: nameInvalid = newName.length > 0 ? newNameInvalid() : false;
-    let helperText: string = initialHelperText;
+    let internalSelected: string = $state(""); // used for radio buttons
+    let newName: string = $state("");
+    $effect(() => {newName = internalSelected.length > 0 ? internalSelected : '';});
+    let nameInvalid: boolean = $state(false);
+    $effect(() => {nameInvalid = newName.length > 0 ? newNameInvalid() : false;});
+    let helperText: string = $state(initialHelperText);
 
     async function doSubmit() {
         let comm = EditorState.getInstance();
         if (internalSelected?.length > 0) { // should be checked first, because newName depends on it
             await comm.openModel(internalSelected);
-            $initializing = false;
+            initializing.value = false;
         } else if (!newNameInvalid() && newName.length > 0) {
             await comm.newModel(newName);
             // console.log("CREATING NEW MODEL: " + newName);
-            $initializing = false;
+            initializing.value = false;
         } else {
             setUserMessage(`Cannot create model ${newName}, because its name is invalid.`);
         }
     }
 
     async function closeHandler(e: CustomEvent<{ action: string }>) {
-        // console.log("initalizing: " + $initializing);
+        // console.log("initalizing: " + initializing.value);
         switch (e.detail.action) {
             case submitStr:
                 await doSubmit();
                 break;
             case cancelStr:
-                if ($initializing) {
+                if (initializing.value) {
                     setUserMessage("You must select or create a model, before you can start!");
                 }
                 break;
             default:
                 // This means the user clicked the scrim or pressed Esc to close the dialog.
-                if ($initializing) {
+                if (initializing.value) {
                     setUserMessage("You must select or create a model, before you can start!");
                 }
                 break;
@@ -131,8 +135,8 @@
     }
 
     function resetVariables() {
-        $modelNames = [];
-        $openModelDialogVisible = false;
+        modelNames.list = [];
+        openModelDialogVisible.value = false;
         newName = "";
         internalSelected = "";
         helperText = initialHelperText;

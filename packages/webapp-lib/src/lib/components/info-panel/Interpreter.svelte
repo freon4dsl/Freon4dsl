@@ -1,5 +1,5 @@
 <script>
-    import { interpreterTrace } from "../stores/InfoPanelStore.js";
+    import { interpreterTrace } from "../stores/InfoPanelStore.svelte";
     const tree = [
         {
             name: "This is a root node",
@@ -36,5 +36,5 @@
 </script>
 
 <pre>
-    {$interpreterTrace}
+    {interpreterTrace.value}
 </pre>

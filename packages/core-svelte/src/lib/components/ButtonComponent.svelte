@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { BUTTON_LOGGER } from "$lib/components/ComponentLoggers.js";
-    import { ButtonBox, FreEditor } from "@freon4dsl/core";
-    import { afterUpdate, onMount } from "svelte";
+    import { ButtonBox } from '@freon4dsl/core';
+    import { BUTTON_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
 
-    const LOGGER = BUTTON_LOGGER
+    let { editor, box }: FreComponentProps<ButtonBox> = $props();
 
-    export let editor: FreEditor;
-    export let box: ButtonBox;
+    const LOGGER = BUTTON_LOGGER;
+    LOGGER.show();
 
     let id: string = box.id;
     let thisButton: HTMLButtonElement;
@@ -21,24 +21,26 @@
         thisButton.focus();
     }
     const refresh = (why?: string): void => {
-        LOGGER.log("REFRESH ButtonBox: " + why);
+        LOGGER.log('REFRESH ButtonBox: ' + why);
     };
-    onMount(() => {
+    $effect(() => {
+        // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
-    afterUpdate(() => {
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
-    const onClick = (event: MouseEvent & {currentTarget: EventTarget & HTMLButtonElement; }) => {
+    const onClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) => {
+        LOGGER.log('execute action');
         box.executeAction(editor);
         event.stopPropagation();
-    }
+    };
 </script>
 
-<button class="button-component-ripple button-component {box.role}" class:button-component-empty="{box.text.length === 0}" id="{id}" on:click={onClick} bind:this={thisButton} >
+<button
+    class="button-component-ripple button-component {box.role}"
+    class:button-component-empty={box.text.length === 0}
+    {id}
+    onclick={onClick}
+    bind:this={thisButton}
+>
     <span>{box.text}</span>
 </button>
-
-

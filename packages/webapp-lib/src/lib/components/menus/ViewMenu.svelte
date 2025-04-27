@@ -3,7 +3,7 @@
         use:Anchor={{addClass: addClass, removeClass: removeClass}}
         bind:this={anchor}
 >
-    <Button variant="raised" on:click={() => menu.setOpen(true)}>
+    <Button variant="raised" onclick={() => menu.setOpen(true)}>
         <Label>View</Label>
     </Button>
     <Menu bind:this={menu}
@@ -24,7 +24,7 @@
             {#each allProjections as option}
                 <SelectionGroup>
                     <Item
-                            on:SMUI:action={() => {if (option.name !== 'default') {option.selected = !option.selected;}  }}
+                            onSMUIAction={() => {if (option.name !== 'default') {option.selected = !option.selected;}  }}
                             bind:selected={option.selected}
                     >
                         <SelectionGroupIcon>
@@ -35,7 +35,7 @@
                 </SelectionGroup>
             {/each}
             <Separator />
-            <Item on:SMUI:action={apply}>
+            <Item onSMUIAction={apply}>
                 <Text style="color:var(--mdc-theme-primary)">Apply changes</Text>
             </Item>
         </List>
@@ -48,9 +48,9 @@
     import MenuComponentDev from "@smui/menu";
     import Menu, { SelectionGroup, SelectionGroupIcon } from "@smui/menu";
     import List, { Item, Separator, Text } from "@smui/list";
-    import { projectionNames, projectionsShown } from "../stores/LanguageStore.js";
+    import { projectionNames, projectionsShown } from "../stores/LanguageStore.svelte";
     import { Anchor } from "@smui/menu-surface";
-    import { EditorRequestsHandler } from "../../language/EditorRequestsHandler.js";
+    import { EditorRequestsHandler } from "$lib/language/EditorRequestsHandler";
 
     let menu: MenuComponentDev;
     // following is used to position the menu
@@ -69,11 +69,15 @@
         }
     };
 
-    let allProjections = [];
-    for (const view of $projectionNames) {
+    interface Projections {
+        name: string;
+        selected: boolean;
+    }
+    let allProjections: Projections[] = [];
+    for (const view of projectionNames.list) {
         let selected: boolean = false;
         if (view !== 'default') {
-            if ($projectionsShown.includes(view)) {
+            if (projectionsShown.list.includes(view)) {
                 selected = true;
             }
             allProjections.push({ name: view, selected: selected });
@@ -89,6 +93,6 @@
             }
         });
         EditorRequestsHandler.getInstance().enableProjections(selection);
-        $projectionsShown = selection;
+        projectionsShown.list = selection;
     }
 </script>

@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/webapp-starter",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -35,12 +35,12 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "@freon4dsl/core": "~1.0.2",
-    "@freon4dsl/core-svelte": "~1.0.2",
-    "@freon4dsl/samples-course-schedule": "~1.0.2",
-    "@freon4dsl/webapp-lib": "~1.0.2",
-    "@smui/snackbar": "^7.0.0",
-    "@smui-extra/accordion": "^7.0.0",
+    "@freon4dsl/core": "~1.1.0",
+    "@freon4dsl/core-svelte": "~1.1.0",
+    "@freon4dsl/samples-course-schedule": "~1.1.0",
+    "@freon4dsl/webapp-lib": "~1.1.0",
+    "@smui/snackbar": "^8.0.0-beta.3",
+    "@smui-extra/accordion": "^8.0.0-beta.3",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",
     "lodash": "^4.17.21",

@@ -1,14 +1,16 @@
 <Dialog
-        bind:open={$findNamedDialogVisible}
+        bind:open={findNamedDialogVisible.value}
         aria-labelledby="event-title"
         aria-describedby="event-content"
-        on:SMUIDialog:closed={closeHandler}
+        onSMUIDialogClosed={closeHandler}
 >
     <Title id="event-title">Search for a named node</Title>
     <Content id="event-content">
         <div>
             <Textfield variant="outlined" bind:value={stringToFind} bind:invalid={nameInvalid} >
-                <HelperText slot="helper">{helperText}</HelperText>
+                {#snippet helper()}
+                <HelperText>{helperText}</HelperText>
+                {/snippet}
             </Textfield>
         </div>
         <div>
@@ -18,7 +20,9 @@
                             bind:group={typeSelected}
                             value={name}
                     />
-                    <span slot="label">{name}</span>
+                    {#snippet label()}
+                    <span>{name}</span>
+                    {/snippet}
                 </FormField>
             {/each}
         </div>
@@ -42,19 +46,20 @@
     import Button, { Label } from "@smui/button";
     import Radio from "@smui/radio";
     import FormField from "@smui/form-field";
-    import { findNamedDialogVisible } from "../../stores/DialogStore.js";
-    import { EditorRequestsHandler } from "../../../language/EditorRequestsHandler.js";
+    import { findNamedDialogVisible } from "../../stores/DialogStore.svelte";
+    import { EditorRequestsHandler } from "$lib/language/EditorRequestsHandler";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
     const initialHelperText: string = "Enter the name of the element to search for";
 
-    let stringToFind: string = "";
-    let typeSelected: string = "";
-    let nameInvalid: boolean;
-    $: nameInvalid = stringToFind.length > 0 ? !!typeSelected ? inputInvalid() : inputInvalid() : false;
+    let stringToFind: string = $state("");
+    let typeSelected: string = $state("");
+    let nameInvalid: boolean = $state(false);
+    $effect(() => {nameInvalid = stringToFind.length > 0 ? !!typeSelected ? inputInvalid() : inputInvalid() : false});
 
-    let helperText: string = initialHelperText;
+
+    let helperText: string = $state(initialHelperText);
 
     function closeHandler(e: CustomEvent<{ action: string }>) {
         switch (e.detail.action) {

@@ -1,29 +1,41 @@
 <!-- adjusted from https://github.com/sveltejs/svelte-repl/blob/master/src/SplitPane.svelte -->
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     // todo comment on changes
     // import { createEventDispatcher, onMount } from 'svelte';
-    // const dispatch = createEventDispatcher();
 
-    export let type = 'vertical'; /* difference with original */
-    export let pos = 50;
-    export let fixed = false;
-    export let buffer = 42;
-    export let min = 10; /* difference with original */
-    export let max = 100; /* difference with original */
-    let w;
-    let h;
-    let wa;  /* width of pane A */ /* difference with original */
-    let ha;  /* height of pane A */ /* difference with original */
-    let wb;  /* width of pane B */ /* difference with original */
-    let hb;  /* height of pane B */ /* difference with original */
-    $: h = ha + hb; /* difference with original */
-    $: w = wa + wb; /* difference with original */
-    $: size = type === 'vertical' ? h : w;
-    $: min = 100 * (buffer / size);
-    $: max = 100 - min;
-    $: pos = clamp(pos, min, max);
-    let container: HTMLElement;
-    let dragging = false;
+
+    interface Props {
+        // const dispatch = createEventDispatcher();
+        type?: string; /* difference with original */
+        pos?: number;
+        fixed?: boolean;
+        buffer?: number;
+        min?: number; /* difference with original */
+        max?: number; /* difference with original */
+        a?: import('svelte').Snippet;
+        b?: import('svelte').Snippet;
+    }
+
+    let {
+        type = 'vertical',
+        pos = $bindable(50),
+        fixed = false,
+        buffer = 42,
+        min = $bindable(10),
+        max = $bindable(100),
+        a,
+        b
+    }: Props = $props();
+    let wa: number = $state(0);  /* width of pane A */ /* difference with original */
+    let ha: number = $state(0);  /* height of pane A */ /* difference with original */
+    let wb: number = $state(0);  /* width of pane B */ /* difference with original */
+    let hb: number = $state(0);  /* height of pane B */
+    let w: number = $derived(wa + wb);
+    let h: number = $derived(ha + hb);
+    let container: HTMLElement = $state()!;
+    let dragging = $state(false);
 
     /* difference with original */
     /**
@@ -33,11 +45,11 @@
      * @param {number} min
      * @param {number} max
      */
-    function clamp(num, min, max) {
+    function clamp(num: number, min: number, max: number) {
         return num < min ? min : num > max ? max : num;
     }
 
-    function setPos(event) {
+    function setPos(event: MouseEvent) {
         const { top, left } = container.getBoundingClientRect();
         const px = type === 'vertical'
             ? (event.clientY - top)
@@ -45,7 +57,7 @@
         pos = 100 * px / size;
         // dispatch('change');
     }
-    function setTouchPos(event) {
+    function setTouchPos(event: TouchEvent) {
         const { top, left } = container.getBoundingClientRect();
         const px = type === 'vertical'
             ? (event.touches[0].clientY - top)
@@ -53,8 +65,8 @@
         pos = 100 * px / size;
         // dispatch('change');
     }
-    function drag(node, callback) {
-        const mousedown = event => {
+    function drag(node: any, callback: (ev: MouseEvent) => void) {
+        const mousedown = (event: UIEvent) => {
             if (event.which !== 1) return;
             event.preventDefault();
             dragging = true;
@@ -73,8 +85,8 @@
             }
         };
     }
-    function touchDrag(node, callback) {
-        const touchdown = event => {
+    function touchDrag(node: any, callback: (event: TouchEvent) => void) {
+        const touchdown = (event: TouchEvent)  => {
             if (event.targetTouches.length > 1) return;
             event.preventDefault();
             dragging = true;
@@ -96,9 +108,22 @@
             }
         };
     }
-    $: side = type === 'horizontal' ? 'left' : 'top';
-    $: dimension = type === 'horizontal' ? 'width' : 'height';
-    $: topB = type === 'horizontal' ? wa : ha; /* difference with original */
+    /* difference with original */
+    /* difference with original */
+    /* difference with original */
+    let size = $derived(type === 'vertical' ? h : w);
+    run(() => {
+        min = 100 * (buffer / size);
+    });
+    run(() => {
+        max = 100 - min;
+    });
+    run(() => {
+        pos = clamp(pos, min, max);
+    });
+    let side = $derived(type === 'horizontal' ? 'left' : 'top');
+    let dimension = $derived(type === 'horizontal' ? 'width' : 'height');
+    let topB = $derived(type === 'horizontal' ? wa : ha); /* difference with original */
 </script>
 
 <style>
@@ -169,11 +194,11 @@
 <!-- we use offsetWidth and offsetHeight instead of clientWidth and clientHeight, because these include any scrollbars -->
 <div class="container" bind:this={container} >
     <div class="pane" style="{dimension}: {pos}%; top: 0px;" bind:offsetWidth={wa} bind:offsetHeight={ha}>
-        <slot name="a"></slot>
+        {@render a?.()}
     </div>
 
     <div class="pane" style="{dimension}: {100 - (pos)}%; top:{ topB}px; overflow: auto;" bind:offsetWidth={wb} bind:offsetHeight={hb}>
-        <slot name="b"></slot>
+        {@render b?.()}
     </div>
 
     {#if !fixed}

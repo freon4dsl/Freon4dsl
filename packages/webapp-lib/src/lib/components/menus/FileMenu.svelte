@@ -3,7 +3,7 @@
 		use:Anchor={{addClass: addClass, removeClass: removeClass}}
 		bind:this={anchor}
 >
-	<Button variant="raised" on:click={() => menu.setOpen(true)}>
+	<Button variant="raised" onclick={() => menu.setOpen(true)}>
 		<Label>File</Label>
 	</Button>
 	<Menu bind:this={menu}
@@ -13,7 +13,7 @@
 	>
 		<List>
 			{#each menuItems as item (item.id)}
-				<Item on:SMUI:action={() => (handleClick(item.id))} disabled={WebappConfigurator.getInstance().isDemo}>
+				<Item onSMUIAction={() => (handleClick(item.id))} disabled={WebappConfigurator.getInstance().isDemo}>
 					<Text>{item.title}</Text>
 				</Item>
 				{#if item.id === 2}
@@ -27,28 +27,28 @@
 <!-- `file_selector` is a hidden element to be able to show a file selection browser -->
 <!-- The `multiple` attribute lets users select multiple files. -->
 <!-- The `accept` attribute sets the file extensions that are allowed.  -->
-<input class:file_selector bind:this={file_selector} {...file_selector_props} on:change={process_files}>
+<input class:file_selector bind:this={file_selector} {...file_selector_props} onchange={process_files}>
 
 <script lang="ts">
-	import { type ModelUnitIdentifier } from "@freon4dsl/core";
+	import {isNullOrUndefined, type FreUnitIdentifier} from "@freon4dsl/core";
 	import MenuComponentDev from "@smui/menu";
 	import Menu from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
 	import Button, { Label } from '@smui/button';
 	import { Anchor } from '@smui/menu-surface';
-	import { currentModelName, currentUnitName, unitNames } from "../stores/ModelStore.js";
+	import { currentModelName, currentUnit, unitNames } from "../stores/ModelStore.svelte";
 	import { MenuItem } from "../ts-utils/MenuItem.js";
-	import { fileExtensions } from "../stores/LanguageStore.js";
-	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../stores/DialogStore.js";
-	import { setUserMessage } from "../stores/UserMessageStore.js";
-	import { modelNames } from "../stores/ServerStore.js";
-	import { EditorState } from "../../language/EditorState.js";
-	import { ImportExportHandler } from "../../language/ImportExportHandler.js";
-	import {WebappConfigurator} from "../../WebappConfigurator.js";
+	import { fileExtensions } from "../stores/LanguageStore.svelte";
+	import { deleteModelDialogVisible, newUnitDialogVisible, openModelDialogVisible } from "../stores/DialogStore.svelte";
+	import { setUserMessage } from "../stores/UserMessageStore.svelte";
+	import { modelNames } from "../stores/ServerStore.svelte";
+	import { EditorState } from "$lib/language/EditorState";
+	import { ImportExportHandler } from "$lib/language/ImportExportHandler";
+	import {WebappConfigurator} from "$lib";
 
 	// variables for the file import
 	let file_selector: HTMLElement;
-	let file_extensions = `${$fileExtensions.map(entry => `${entry}`).join(", ")}`;
+	let file_extensions = `${fileExtensions.list.map(entry => `${entry}`).join(", ")}`;
 	let file_selector_props = {
 		type: "file",
 		multiple: true,
@@ -78,35 +78,37 @@
         // find the item that was clicked
         let menuItem = menuItems.find(item => item.id === id);
         // perform the action associated with the menu item
-        menuItem.action(id);
+		if (!isNullOrUndefined(menuItem)) {
+			menuItem.action(id);
+		}
     };
 
     // new model menuitem
     const changeModel = async () => {
 		// console.log("FileMenu.changeModel");
         // get list of models from server
-        const names = await WebappConfigurator.getInstance().serverCommunication.loadModelList()
+        const names = await WebappConfigurator.getInstance().serverCommunication!.loadModelList()
 		if (names && names.length > 0) {
-			$modelNames = names;
+			modelNames.list = names;
 		} else {
-			$modelNames = [];
+			modelNames.list = [];
 		}
-		$openModelDialogVisible = true;
+		openModelDialogVisible.value = true;
     }
 
     // new unit menuitem
     const newUnit = async () => {
 		// console.log("FileMenu.newUnit");
-		if (!!$currentModelName && $currentModelName.length > 0) {
+		if (!!currentModelName.value && currentModelName.value.length > 0) {
 			// get list of units from server, because new unit may not have the same name as an existing one
-			const names: ModelUnitIdentifier[] = await WebappConfigurator.getInstance().serverCommunication.loadUnitList($currentModelName);
+			const names: FreUnitIdentifier[] = await EditorState.getInstance().modelStore!.getUnitIdentifiers();
 			if (names) {
 				// list may be empty => this is the first unit to be stored
-				$unitNames = names;
+				unitNames.ids = names;
 			} else {
-				$unitNames = [];
+				unitNames.ids = [];
 			}
-			$newUnitDialogVisible = true;
+			newUnitDialogVisible.value = true;
 		} else {
 			setUserMessage("Please, select or create a model first.");
 		}
@@ -114,10 +116,10 @@
 
     // save unit menuitem
     const saveUnit = () => {
-        // console.log("FileMenu.saveUnit: " + $currentUnitName);
-		if ($currentUnitName) {
+        // console.log("FileMenu.saveUnit: " + currentUnit.id);
+		if (currentUnit.id) {
 			EditorState.getInstance().saveCurrentUnit();
-			setUserMessage(`Unit '${$currentUnitName.name}' saved.`);
+			setUserMessage(`Unit '${currentUnit.id.name}' saved.`);
 		} else {
 			setUserMessage('No current unit.')
 		}
@@ -127,11 +129,11 @@
     const deleteModel = async () => {
         // console.log("FileMenu.deleteModel");
         // get list of models from server
-		const names = await WebappConfigurator.getInstance().serverCommunication.loadModelList()
+		const names = await WebappConfigurator.getInstance().serverCommunication!.loadModelList()
 		// if list not empty, show dialog
 		if (names.length > 0) {
-			$modelNames = names;
-			$deleteModelDialogVisible = true;
+			modelNames.list = names;
+			deleteModelDialogVisible.value = true;
 			// console.log("dialog visible is true")
 		}
     }
@@ -142,9 +144,13 @@
         file_selector.click();
     }
 
-    const process_files = (event) => {
-        const fileList: FileList = event.target.files;
-        new ImportExportHandler().importUnits(fileList);
+	// <html>Svelte: Type '(event: MouseEvent) =&gt; void' is not assignable to type 'ChangeEventHandler&lt;HTMLInputElement&gt;'.<br/>Types of parameters 'event' and 'event' are incompatible.<br/>Type 'Event &amp; { currentTarget: EventTarget &amp; HTMLInputElement; }' is missing the following properties from type 'MouseEvent': altKey, button, buttons, clientX, and 21 more.
+    const process_files = (event: Event & { currentTarget: EventTarget & HTMLInputElement; }) => {
+		const input = event.target as HTMLInputElement
+        const fileList: FileList | null = input.files;
+		if (!isNullOrUndefined(fileList)) {
+			new ImportExportHandler().importUnits(fileList);
+		}
     }
 
 	let menuItems: MenuItem[] = [

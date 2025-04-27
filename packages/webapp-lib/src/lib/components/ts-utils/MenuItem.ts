@@ -1,6 +1,6 @@
 export class MenuItem {
-    title: string;
-    action: (id: number) => void;
+    title: string = "";
+    action: (id: number) => void = () => {};
     icon?: Object;
-    id: number;
+    id: number = -1;
 }

@@ -21,13 +21,14 @@ import {
 import { FreError, FreErrorSeverity } from "../validator/index.js";
 import { isExpressionPreOrPost, isNullOrUndefined, LEFT_MOST } from "../util/index.js";
 import {FreErrorDecorator} from "./FreErrorDecorator.js";
+import {ClientRectangle, UndefinedRectangle} from "./ClientRectangleTypes.js";
 
 const LOGGER = new FreLogger("FreEditor").mute();
 
 export class FreEditor {
     private static isOnPreviousLine(ref: Box, other: Box): boolean {
-        const margin = 5;
-        return other.actualY + margin < ref.actualY;
+        const margin = 6;
+        return other.getClientRectangle().y + margin < ref.getClientRectangle().y;
     }
 
     /**
@@ -82,6 +83,11 @@ export class FreEditor {
     // The refresh method from the component that displays this box.
     refreshComponentSelection: (why?: string) => void;
     refreshComponentRootBox: (why?: string) => void;
+    /**
+     * Get the client rectangle of the complete editor in the browser.
+     * This is a callback method to the FreonComponent in the browser.
+     */
+    getClientRectangle: () => ClientRectangle = () => { return UndefinedRectangle }
 
     // Called when the editor selection has changed
     selectionChanged(): void {
@@ -105,7 +111,7 @@ export class FreEditor {
     auto = () => {
         LOGGER.log("CALCULATE NEW ROOTBOX rootelement is " + this?.rootElement?.freLanguageConcept() + " recalc is " + this.forceRecalculateProjection);
         this.forceRecalculateProjection
-        if (this.rootElement !== null) {
+        if (!isNullOrUndefined(this.rootElement)) {
             this._rootBox = this.projection.getBox(this.rootElement);
             this.rootBoxChanged();
         }
@@ -126,8 +132,10 @@ export class FreEditor {
      */
     set rootElement(node: FreNode) {
         this._rootElement = node;
-        // select first editable child
-        this.selectFirstEditableChildBox(node);
+        if (!isNullOrUndefined(node)) {
+            // select first editable child
+            this.selectFirstEditableChildBox(node);
+        }
     }
 
     get rootElement(): FreNode {
@@ -603,7 +611,7 @@ export class FreEditor {
      */
     setUserMessage(message: string, severityType?: FreErrorSeverity) {
         console.error(
-            'This message should be shown elsewhere: "' + message + '", please override this method appropriately.',
+            'This message should be shown elsewhere: "' + message + '", please add an appropriate callback.',
             severityType,
         );
     }
@@ -688,19 +696,20 @@ export class FreEditor {
      * @param box
      */
     private boxAbove(box: Box): Box {
-        // wait(0);
-        const x = box.actualX + this.scrollX ;
-        const y = box.actualY + this.scrollY;
+        const rectangle = box.getClientRectangle()
+        const x = rectangle.x + this.scrollX ;
+        const y = rectangle.y + this.scrollY;
         let result: Box = box.nextLeafLeft;
         let tmpResult = result;
         LOGGER.log(`boxAbove ${box.role}: ${box.kind} actual (${Math.round(x)}, ${Math.round(y)}) `);
         while (result !== null) {
-            LOGGER.log(`previous: ${result.role + result.node.freId()} result (${result.actualX}, ${result.actualY}) scroll-relative (${result.actualX + this.scrollX}, ${result.actualY + this.scrollY})`);
+            const resultRect = result.getClientRectangle()
+            LOGGER.log(`previous: ${result.role + result.node.freId()} result (${resultRect.x}, ${resultRect.y}) scroll-relative (${resultRect.x + this.scrollX}, ${resultRect.y + this.scrollY})`);
             if (FreEditor.isOnPreviousLine(tmpResult, result) && FreEditor.isOnPreviousLine(box, tmpResult)) {
                 return tmpResult;
             }
             if (FreEditor.isOnPreviousLine(box, result)) {
-                if (result.actualX <= x) {
+                if (resultRect.x <= x) {
                     return result;
                 }
             }
@@ -718,26 +727,28 @@ export class FreEditor {
      * @param box
      */
     private boxBelow(box: Box): Box {
-        const x = box.actualX + this.scrollX ;
-        const y = box.actualY + this.scrollY;
+        const rect = box.getClientRectangle()
+        const x = rect.x + this.scrollX ;
+        const y =  rect.y + this.scrollY;
         let result: Box = box.nextLeafRight;
         let tmpResult = result;
         LOGGER.log(`boxBelow ${box.role}: ${box.kind} ${Math.round(x)}, ${Math.round(y)} text: ${(isTextBox(box) ? box.getText() : "NotTextBox")}`);
         while (result !== null) {
+            const resultRect = result.getClientRectangle()
             LOGGER.log(
                 "next : " +
                     result.role +
                     "  " +
-                    Math.round(result.actualX + this.scrollX) +
+                    Math.round(resultRect.x + this.scrollX) +
                     ", " +
-                    Math.round(result.actualY + this.scrollY),
+                    Math.round(resultRect.y + this.scrollY),
             );
             if (FreEditor.isOnNextLine(tmpResult, result) && FreEditor.isOnNextLine(box, tmpResult)) {
                 LOGGER.log("Found box below 1 [" + (!!tmpResult ? tmpResult.role : "null") + "]");
                 return tmpResult;
             }
             if (FreEditor.isOnNextLine(box, result)) {
-                if (result.actualX + this.scrollX + result.actualWidth >= x) {
+                if (resultRect.x + this.scrollX + resultRect.width >= x) {
                     LOGGER.log("Found box below 2 [" + (!!result ? result.role : "null") + "]");
                     return result;
                 }

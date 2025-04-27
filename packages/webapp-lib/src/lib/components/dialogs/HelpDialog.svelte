@@ -1,6 +1,6 @@
 <script>
-    import { versionNumber } from "../stores/UserMessageStore.js";
-    import { helpDialogVisible } from "../stores/DialogStore.js";
+    import { versionNumber } from "../stores/UserMessageStore.svelte";
+    import { helpDialogVisible } from "../stores/DialogStore.svelte";
     import Dialog, { Actions, Title } from "@smui/dialog";
     import Button, { Label } from "@smui/button";
     import List, { Item, Text } from "@smui/list";
@@ -8,7 +8,7 @@
 </script>
 
 <Dialog
-        bind:open={$helpDialogVisible}
+        bind:open={helpDialogVisible.value}
         aria-labelledby="event-title"
         aria-describedby="event-content"
 >
@@ -17,7 +17,7 @@
         <div class="mdc-typography--body2">
             Currently there is no in-build help functionality, other than the following. For more, we refer you to our
             website:
-            <a href="http://www.freon4dsl.dev/" target="_blank" rel="noreferrer">
+            <a href="https://www.freon4dsl.dev/" target="_blank" rel="noreferrer">
                 www.freon4dsl.dev
             </a>
         </div>
@@ -78,7 +78,7 @@
                     <br>
                     Current version: <b>{versionNumber}</b>.
                     <br>
-                    Created by: <a href="http://www.openmodeling.nl/" target="_blank" rel="noreferrer">www.openmodeling.nl</a>.
+                    Created by: <a href="https://www.openmodeling.nl/" target="_blank" rel="noreferrer">www.openmodeling.nl</a>.
                 </div>
             </div>
         </Card>

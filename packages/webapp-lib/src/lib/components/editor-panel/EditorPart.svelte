@@ -1,5 +1,5 @@
 <div class='editor-part'>
-    {#if ($noUnitAvailable)}
+    {#if (noUnitAvailable.value)}
         <div class="message">
         <div class="mdc-typography--subtitle1">
             Please, select, create, or import Unit to be shown.
@@ -12,15 +12,15 @@
 
 <script lang="ts">
     import { FreonComponent } from "@freon4dsl/core-svelte";
-    import { noUnitAvailable } from "../stores/ModelStore.js";
-    import {WebappConfigurator} from "../../WebappConfigurator.js";
+    import { noUnitAvailable } from "../stores/ModelStore.svelte";
+    import {WebappConfigurator} from "$lib";
 </script>
 
 <style>
     .editor-part {
         height: 100%;
         box-sizing: border-box;
-        padding:  0px 4px 4px 4px; /* top padding is 0 because the progress indicator uses 4px height */
+        padding:  0 4px 4px 4px; /* top padding is 0 because the progress indicator uses 4px height */
     }
     .message {
         margin: 30px;

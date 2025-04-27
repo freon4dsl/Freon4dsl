@@ -16,6 +16,7 @@ export * from "./FreCombinedActions.js";
 export * from "./FreStyle.js";
 
 export * from "./projections/index.js";
+export * from "./ClientRectangleTypes.js";
 
 // load FreEditor last, as it needs one or more of the above definitions
 export * from "./FreEditor.js";

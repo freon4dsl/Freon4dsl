@@ -17,8 +17,9 @@ class AstChanger {
      * The function that is called when an error is thrown by the _change_ function in _astChange_.
      * @private
      */
-    private error: errorFunction = (msg: string): void => {
-        console.error("AST.change: " + msg)
+    private error: errorFunction = (e: any): void => {
+        console.error("AST.change: " + e)
+        throw e;
     }
 
     /**

@@ -1,27 +1,30 @@
 <Dialog
-        bind:open={$newUnitDialogVisible}
+        bind:open={newUnitDialogVisible.value}
         aria-labelledby="event-title"
         aria-describedby="event-content"
-        on:SMUIDialog:closed={closeHandler}
-        on:keydown={handleKeydown}
+        onSMUIDialogClosed={closeHandler}
+        onkeydown={handleKeydown}
 >
     <Title id="event-title">Create new unit</Title>
     <Content id="event-content">
         <div>
             <br> <!-- br is here to make the label visible when it is moved to the top of the textfield -->
             <Textfield variant="outlined" bind:invalid={nameInvalid} bind:value={newName} label="name of new unit">
-                <HelperText slot="helper">{helperText}</HelperText>
+                {#snippet helper()}
+                <HelperText>{helperText}</HelperText>
+                {/snippet}
             </Textfield>
-            {#each $unitTypes as name}
+            {#each unitTypes.list as name}
                 <FormField >
                     <Radio
                             bind:group={typeSelected}
                             value={name}
                     />
-                    <span slot="label">{name}</span>
+                    {#snippet label()}
+                    <span>{name}</span>
+                    {/snippet}
                 </FormField>
             {/each}
-
         </div>
     </Content>
     <Actions>
@@ -39,24 +42,26 @@
     import Dialog, { Title, Content, Actions } from "@smui/dialog";
     import Textfield from "@smui/textfield";
     import HelperText from "@smui/textfield/helper-text";
-    import { unitNames } from "../../stores/ModelStore.js";
-    import { newUnitDialogVisible } from "../../stores/DialogStore.js";
+    import { unitNames } from "../../stores/ModelStore.svelte";
+    import { newUnitDialogVisible } from "../../stores/DialogStore.svelte";
 
-    import { unitTypes } from "../../stores/LanguageStore.js";
+    import { unitTypes } from "../../stores/LanguageStore.svelte";
     import Radio from "@smui/radio";
     import FormField from "@smui/form-field";
-    import { EditorState } from "../../../language/EditorState.js";
+    import { EditorState } from "$lib/language/EditorState";
     import * as Keys from "@freon4dsl/core";
+    import type {FreUnitIdentifier} from "@freon4dsl/core";
 
+    // todo use #snippet instead of <span> for label (see SMUI website)
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
     const initialHelperText: string = "Enter a new name.";
 
-    let typeSelected: string = $unitTypes[0]; // initialize to the first type found
-    let newName: string = "";
-    let nameInvalid: boolean;
-    $: nameInvalid = newName.length > 0 ? !!typeSelected ? newNameInvalid() : newNameInvalid() : false;
-    let helperText: string = initialHelperText;
+    let typeSelected: string = $state(unitTypes.list[0]); // initialize to the first type found
+    let newName: string = $state("");
+    let nameInvalid: boolean = $state(false);
+    $effect(() => {nameInvalid = newName.length > 0 ? !!typeSelected ? newNameInvalid() : newNameInvalid() : false});
+    let helperText: string = $state(initialHelperText);
 
     function doSubmit() {
         if (!newNameInvalid()) {
@@ -80,7 +85,7 @@
     }
 
     function newNameInvalid(): boolean {
-        if ($unitNames.map(u => u.name).includes(newName)) {
+        if (unitNames.ids.map((u: FreUnitIdentifier) => u.name).includes(newName)) {
             helperText = "Unit with this name already exists.";
             return true;
         } else if (newName.match(/^[0-9]/)) {
@@ -101,10 +106,10 @@
     function resetVariables() {
         newName = "";
         helperText = initialHelperText;
-        $newUnitDialogVisible = false;
+        newUnitDialogVisible.value = false;
     }
 
-    const handleKeydown = (event) => {
+    const handleKeydown = (event: KeyboardEvent) => {
         switch (event.key) {
             case Keys.ENTER: { // on Enter key try to submit
                 event.stopPropagation();

@@ -4,15 +4,15 @@
 
 // Freon Colors!! (Dark Theme)
 @use '@material/theme/index' as theme with (
-  $primary: #00695c,
-  $secondary: color.scale(#b53d00, $whiteness: +20%),
-  $surface: color-palette.$grey-900,
-  $background: #000,
+  $primary: #E9F6DF,
+  $secondary: #65AD31,
+  $surface: #375F1B,
+  $background: #1B3309,
   $error: #B00020,
   //$on-primary: #ffffb0,
   //$on-primary: purple,     // a slighter darker version of 'secondary'
-  $on-secondary: #4f9a94,   // a slighter darker version of 'primary'
-  $on-surface: color-palette.$grey-300,
+  $on-secondary: #E9F6DF,   // a slighter darker version of 'primary'
+  $on-surface: #E9F6DF,
   //$on-error: black,
   //accessible-ink-color,
   //contrast,
@@ -57,5 +57,4 @@ body {
 .freon-component {
   background-color: #111928; // #{gc.$mac-gray-900};
   color: #EBEEF0; // #{gc.$mac-gray-200};
-
 }

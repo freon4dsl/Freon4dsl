@@ -15,7 +15,6 @@
 
 	import {
 		mdiGithub,
-		mdiWeb,
 		mdiWeatherNight,
 		mdiWeatherSunny,
 		mdiHelp,
@@ -37,18 +36,18 @@
 	import FindTextDialog from "./components/dialogs/edit-dialogs/FindTextDialog.svelte";
 	import HelpDialog from "./components/dialogs/HelpDialog.svelte";
 
-	import { modelNames } from "./components/stores/ServerStore.js";
-	import { drawerOpen } from "./components/stores/DrawerStore.js";
-	import { initializing, openModelDialogVisible } from "./components/stores/DialogStore.js";
-	import { userMessageOpen } from "./components/stores/UserMessageStore.js";
-	import { languageName } from "./components/stores/LanguageStore.js";
-	import {currentModelName, unsavedChanges} from "./components/stores/ModelStore.js";
-	import { helpDialogVisible } from "./components/stores/DialogStore.js";
+	import { modelNames } from "./components/stores/ServerStore.svelte";
+	import { drawerOpen } from "./components/stores/DrawerStore.svelte";
+	import { initializing, openModelDialogVisible } from "./components/stores/DialogStore.svelte";
+	import { userMessageOpen } from "./components/stores/UserMessageStore.svelte";
+	import { languageName } from "./components/stores/LanguageStore.svelte";
+	import {currentModelName, unsavedChanges} from "./components/stores/ModelStore.svelte";
+	import { helpDialogVisible } from "./components/stores/DialogStore.svelte";
 
 	import LinearProgress from '@smui/linear-progress';
 
 	import StatusBar from "./components/editor-panel/StatusBar.svelte";
-	import { editorProgressShown } from "./components/stores/ModelStore.js";
+	import { editorProgressShown } from "./components/stores/ModelStore.svelte";
 	import { EditorState } from "./language/EditorState.js";
 
 	// import this file to set which loggers will be active
@@ -56,6 +55,7 @@
 	import FreonContent from "./FreonContent.svelte";
 	import RenameUnitDialog from "./components/dialogs/file-dialogs/RenameUnitDialog.svelte";
 	import {WebappConfigurator} from "./WebappConfigurator.js";
+	import {isNullOrUndefined} from "@freon4dsl/core";
 
 	// Theming
 	let topAppBar: TopAppBarComponentDev;
@@ -83,8 +83,8 @@
 	 * in the case that there are unsaved changes in the model.
 	 * @param event
 	 */
-	function onBeforeUnload(event) {
-		if ($unsavedChanges) {
+	function onBeforeUnload(event: BeforeUnloadEvent) {
+		if (unsavedChanges.value) {
 			event.preventDefault(); // shows the browser's confirmation dialog according to the specifications
 			event.returnValue = ''; // older browsers may not support this method and a legacy method is used in which the event handler must return a string
 		}
@@ -92,21 +92,21 @@
 
 	onMount(async () => {
 		// get list of models from server
-		const names = await WebappConfigurator.getInstance().serverCommunication.loadModelList()
+		const names = await WebappConfigurator.getInstance().serverCommunication!.loadModelList()
 		if (names.length > 0) {
-			$modelNames = names;
+			modelNames.list = names;
 		}
 		// If a model is given as parameter, open this model
 		// A new model is created when this model does not exist
 		const urlParams = new URLSearchParams(window.location.search);
-		const model = urlParams.get('model');
-		if (model !== null) {
+		const model: string | null = urlParams.get('model');
+		if (!isNullOrUndefined(model)) {
 			openModel(model);
 		} else {
 			// No model given as parameter, ask for it
-			if (!$userMessageOpen) {
+			if (!userMessageOpen.value) {
 				// open the app with the open/new model dialog
-				$openModelDialogVisible = true;
+				openModelDialogVisible.value = true;
 			}
 		}
 	});
@@ -114,22 +114,22 @@
 	function openModel(model: string) {
 		let comm = EditorState.getInstance();
 		comm.openModel(model);
-		$initializing = false;
+		initializing.value = false;
 	}
 </script>
 
-<svelte:window on:beforeunload={onBeforeUnload} />
+<svelte:window onbeforeunload={onBeforeUnload} />
 
 <TopAppBar bind:this={topAppBar} variant="standard" dense>
 	<Row>
 		<Section align="start" >
-			{#if $drawerOpen}
+			{#if drawerOpen.value}
 				<!-- make some space for the menus, otherwise an open menu falls behind the drawer -->
 				<div class="drawer-space-right"></div>
 			{/if}
-			<IconButton on:click={() => ($drawerOpen = !$drawerOpen)}>
+			<IconButton onclick={() => (drawerOpen.value = !drawerOpen.value)}>
 				<Icon tag=svg viewBox="0 0 24 24">
-					<path fill="currentColor" d={$drawerOpen ? mdiChevronLeft : mdiChevronRight} />
+					<path fill="currentColor" d={drawerOpen.value ? mdiChevronLeft : mdiChevronRight} />
 				</Icon>
 			</IconButton>
 
@@ -141,7 +141,7 @@
 			<ViewMenu/>
 		</Section>
 		<Section>
-			<div class="mdc-typography--headline6">Freon for {$languageName}</div>
+			<div class="mdc-typography--headline6">Freon for {languageName.value}</div>
 		</Section>
 		<Section align="end" toolbar>
 			<IconButton aria-label="GitHub" target="_blank" href="https://github.com/freon4dsl/Freon4dsl.git">
@@ -154,12 +154,12 @@
 					<FreonLogo/>
 				</Icon>
 			</IconButton>
-			<IconButton aria-label="Help Page" on:click={() => {$helpDialogVisible = true; console.log($helpDialogVisible)}}>
+			<IconButton aria-label="Help Page" onclick={() => {helpDialogVisible.value = true; console.log(helpDialogVisible.value)}}>
 				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={mdiHelp} />
 				</Icon>
 			</IconButton>
-			<IconButton aria-label="Theme Toggle" on:click={switchTheme}>
+			<IconButton aria-label="Theme Toggle" onclick={switchTheme}>
 				<Icon tag=svg viewBox="0 0 24 24">
 					<path fill="currentColor" d={lightTheme ? mdiWeatherNight : mdiWeatherSunny} />
 				</Icon>
@@ -172,11 +172,11 @@
 	{#if inDevelopment}
 		<StatusBar />
 	{/if}
-	<LinearProgress indeterminate closed={!$editorProgressShown} />
+	<LinearProgress indeterminate closed={!editorProgressShown.value} />
 	<div class='main-frame'>
-		<Drawer variant='dismissible' bind:open={$drawerOpen}>
+		<Drawer variant='dismissible' bind:open={drawerOpen.value}>
 			<Header>
-				<Title>{$currentModelName}</Title>
+				<Title>{currentModelName.value}</Title>
 			</Header>
 			<Content>
 				<ModelInfo />
