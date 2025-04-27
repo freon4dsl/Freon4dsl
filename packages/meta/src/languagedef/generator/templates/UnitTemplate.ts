@@ -14,9 +14,9 @@ export class UnitTemplate {
         // const language = unitDescription.language;
         const myName = Names.classifier(unitDescription);
         const extendsClass = "MobxModelElementImpl";
-        const hasReferences = unitDescription.references().length > 0;
+        const hasReferences = unitDescription.implementedReferences().length > 0;
         const modelImports = this.findModelImports(unitDescription, myName);
-        const coreImports = ClassifierUtil.findMobxImports(unitDescription)
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(false, unitDescription)
             .concat([Names.FreModelUnit, Names.FreParseLocation])
             .concat(hasReferences ? Names.FreNodeReference : "");
         const metaType = Names.metaType();
@@ -42,15 +42,15 @@ export class UnitTemplate {
                     .map((p) => ConceptUtils.makePrimitiveProperty(p))
                     .join("\n")}
                 ${unitDescription
-                    .parts()
+                    .implementedParts()
                     .map((p) => ConceptUtils.makePartProperty(p))
                     .join("\n")}
                 ${unitDescription
-                    .references()
+                    .implementedReferences()
                     .map((p) => ConceptUtils.makeReferenceProperty(p))
                     .join("\n")}
 
-                ${ConceptUtils.makeConstructor(false, unitDescription.allProperties(), coreImports)}
+                ${ConceptUtils.makeConstructor(false, unitDescription.implementedProperties(), coreImports)}
                 ${ConceptUtils.makeBasicMethods(false, metaType, false, true, false, false)}
                 ${ConceptUtils.makeCopyMethod(unitDescription, myName, false)}
                 ${ConceptUtils.makeMatchMethod(false, unitDescription, myName, coreImports)}
@@ -67,10 +67,9 @@ export class UnitTemplate {
         return Array.from(
             new Set(
                 unitDescription
-                    .parts()
-                    .map((part) => Names.classifier(part.type))
+                    .implementedParts().map((part) => Names.classifier(part.type))
                     .concat(unitDescription.interfaces.map((intf) => Names.interface(intf.referred)))
-                    .concat(unitDescription.references().map((part) => Names.classifier(part.type)))
+                    .concat(unitDescription.implementedReferences().map((part) => Names.classifier(part.type)))
                     // .concat(Names.metaType(unitDescription.language))
                     .filter((name) => !(name === myName))
                     .filter((r) => r !== null && r.length > 0),

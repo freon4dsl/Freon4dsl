@@ -6,7 +6,7 @@ import {
 } from "../../metalanguage/index.js";
 
 export class ClassifierUtil {
-    public static findMobxImportsForConcept(hasSuper: boolean, concept: FreMetaConcept): string[] {
+    public static findMobxImportsForConcept(hasSuper: boolean, concept: FreMetaConcept | FreMetaUnitDescription): string[] {
         const mobxImports: string[] = [];
         if (!hasSuper) {
             mobxImports.push("MobxModelElementImpl");
