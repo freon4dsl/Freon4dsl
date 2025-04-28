@@ -6,26 +6,29 @@
     import Interpreter from "./Interpreter.svelte";
     import ErrorList from "./ErrorList.svelte";
     import SearchResults from "./SearchResults.svelte";
-    import { errorTab, searchTab, interpreterTab, activeTab } from "../stores/InfoPanelStore.js";
+    import { errorTab, searchTab, interpreterTab, activeTab } from "../stores/InfoPanelStore.svelte";
 
 </script>
 
-<TabBar tabs={[errorTab, searchTab, interpreterTab]} let:tab bind:active={$activeTab}>
+<TabBar tabs={[errorTab, searchTab, interpreterTab]} bind:active={activeTab.value}>
+   {#snippet tab(tab)}
+        <!-- Note: the `tab` property is required! -->
     <Tab {tab} minWidth>
         <Label>{tab}</Label>
     </Tab>
+   {/snippet}
 </TabBar>
 
 <div class='mdc-typography--body1 infopanel'>
-    {#if $activeTab === errorTab}
+    {#if activeTab.value === errorTab}
         <Card>
             <ErrorList />
         </Card>
-    {:else if $activeTab === searchTab}
+    {:else if activeTab.value === searchTab}
         <Card>
             <SearchResults />
         </Card>
-    {:else if $activeTab === interpreterTab}
+    {:else if activeTab.value === interpreterTab}
         <Card>
             <Interpreter />
         </Card>

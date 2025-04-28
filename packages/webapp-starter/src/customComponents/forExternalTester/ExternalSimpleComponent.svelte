@@ -1,31 +1,29 @@
 <script lang="ts">
-    import {afterUpdate, onMount} from "svelte";
-    import {ExternalSimpleBox, FreEditor} from "@freon4dsl/core";
-    export let box: ExternalSimpleBox;
-    //@ts-ignore The RenderComponent assumes that every svelte component has 'box' and 'editor' as parameters
-    export let editor: FreEditor;
+    import {ExternalSimpleBox} from "@freon4dsl/core";
+    import type {FreComponentProps} from "@freon4dsl/core-svelte";
+
+    // The RenderComponent assumes that every svelte component has 'box' and 'editor' as parameters
+    // Props
+    let { editor, box }: FreComponentProps<ExternalSimpleBox> = $props();
+
     let src = '/cats-kittens.gif';
     let name1 = 'Two kittens licking';
-    let inputElement;
+    let divElement: HTMLDivElement;
 
-    // The following four functions need to be included for the editor to function properly.
+    // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
-        inputElement.focus();
+        divElement.focus();
     }
     const refresh = (why?: string): void => {
         // do whatever needs to be done to refresh the elements that show information from the model
     };
-    onMount(() => {
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
-    afterUpdate(() => {
+    $effect(() => {
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
 </script>
 
-<div class="replacer" bind:this={inputElement}>
+<div class="replacer" bind:this={divElement}>
     <img {src} alt="{name1}" />
 </div>

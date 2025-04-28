@@ -8,20 +8,8 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-//    "strict": true,
+    "strict": true,
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-
-    // the old options, todo: see if we still need them
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "types": ["node", "jest"],
-    "declaration": true,                            /* Generates corresponding '.d.ts' file. */
-    "declarationMap": true,                         /* Generates a sourcemap for each corresponding '.d.ts' file. */
-    "declarationDir": "./dist",
-    "outDir": "./dist",                             /* Redirect output structure to the directory. NB: this works for rollup.,  for tsc it should be "./dist" !!! */
-    "rootDir": "./src",                             /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules/*", "dist"],
+    "moduleResolution": "NodeNext"
+  }
 }

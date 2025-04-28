@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@freon4dsl/test",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -59,12 +59,12 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^2.1.0",
-    "@vitest/ui": "^2.1.0"
+    "vitest": "^3.0.5",
+    "@vitest/ui": "^3.0.5"
   },
   "dependencies": {
-    "@freon4dsl/core": "~1.0.2",
-    "@freon4dsl/meta": "~1.0.2",
+    "@freon4dsl/core": "~1.1.0",
+    "@freon4dsl/meta": "~1.1.0",
     "@lionweb/validation": "^0.6.3",
     "global": "^4.4.0",
     "kotlin": "^1.5.21",

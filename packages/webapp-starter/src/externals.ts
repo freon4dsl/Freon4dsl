@@ -6,6 +6,7 @@
 // import DatePicker from "./customComponents/forInsuranceModel/DatePicker.svelte";
 // import {InsuranceModelEnvironment} from "@freon4dsl/samples-insurance";
 // For ExternalTester
+// import { setCustomComponents } from "@freon4dsl/core-svelte"
 // import BooleanWrapperComponent from "./customComponents/forExternalTester/BooleanWrapperComponent.svelte";
 // import NumberWrapperComponent from "./customComponents/forExternalTester/NumberWrapperComponent.svelte";
 // import StringWrapperComponent from "./customComponents/forExternalTester/StringWrapperComponent.svelte";
@@ -22,13 +23,12 @@
 // import PartListWrapperComponent from "./customComponents/forExternalTester/PartListWrapperComponent.svelte";
 // import RefWrapperComponent from "./customComponents/forExternalTester/RefWrapperComponent.svelte";
 // import RefListWrapperComponent from "./customComponents/forExternalTester/RefListWrapperComponent.svelte";
-// import { ExternalModelEnvironment } from "@freon4dsl/samples-external-tester";
 
-import {setCustomComponents} from "@freon4dsl/core-svelte";
-import PersonIcon from "./customComponents/forCourseSchedule/PersonIcon.svelte";
-import PhoneButton from "./customComponents/forCourseSchedule/PhoneButton.svelte";
-import StaffAccordion from "./customComponents/forCourseSchedule/StaffAccordion.svelte";
-import Schedule from "./customComponents/forCourseSchedule/Schedule.svelte";
+import { setCustomComponents } from "@freon4dsl/core-svelte"
+import PersonIcon from "./customComponents/forCourseSchedule/PersonIcon.svelte"
+import PhoneButton from "./customComponents/forCourseSchedule/PhoneButton.svelte"
+import StaffAccordion from "./customComponents/forCourseSchedule/StaffAccordion.svelte"
+import Schedule from "./customComponents/forCourseSchedule/Schedule.svelte"
 
 /**
  * Configure the external components used, so Freon can find them.
@@ -37,41 +37,41 @@ export function configureExternals() {
     /**
      * Make the external components known to Freon before starting the app!
      */
-// For CourseSchedule:
+    // For CourseSchedule:
     setCustomComponents([
         { component: PersonIcon, knownAs: "PersonIcon" },
         { component: PhoneButton, knownAs: "PhoneButton" },
         { component: StaffAccordion, knownAs: "StaffAccordion" },
         { component: Schedule, knownAs: "Schedule" },
-    ]);
-// For InsuranceModel:
-// setCustomComponents([
-// 	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
-// 	{component: SMUI_Card_Component, knownAs: "SMUI_Card"},
-// 	{component: SMUI_Accordion, knownAs: "SMUI_Accordion"},
-// 	{component: SMUI_Dialog, knownAs: "SMUI_Dialog"},
-// 	{component: DatePicker, knownAs: "DatePicker"}
-// ]);
-// For ExternalTester:
-// setCustomComponents([
-//     { component: BooleanWrapperComponent, knownAs: "booleanWrapper" },
-//     { component: FragmentWrapperComponent, knownAs: "fragmentWrapper" },
-//     { component: NumberWrapperComponent, knownAs: "numberWrapper" },
-//     { component: PartWrapperComponent, knownAs: "partWrapper" },
-//     { component: PartListWrapperComponent, knownAs: "partListWrapper" },
-//     { component: RefWrapperComponent, knownAs: "refWrapper" },
-//     { component: RefListWrapperComponent, knownAs: "refListWrapper" },
-//     { component: StringWrapperComponent, knownAs: "stringWrapper" },
-//
-//     { component: ExternalBooleanComponent, knownAs: "booleanReplacer" },
-//     { component: ExternalNumberComponent, knownAs: "numberReplacer" },
-//     { component: ExternalPartComponent, knownAs: "partReplacer" },
-//     { component: ExternalPartListComponent, knownAs: "partListReplacer" },
-//     { component: ExternalRefComponent, knownAs: "refReplacer" },
-//     { component: ExternalRefListComponent, knownAs: "refListReplacer" },
-//     { component: ExternalSimpleComponent, knownAs: "simple" },
-//     { component: ExternalStringComponent, knownAs: "stringReplacer" },
-// ]);
-
+    ])
+    // For InsuranceModel:
+    // setCustomComponents([
+    // 	{component: ShowAnimatedGif, knownAs: "AnimatedGif"},
+    // 	{component: SMUI_Card_Component, knownAs: "SMUI_Card"},
+    // 	{component: SMUI_Accordion, knownAs: "SMUI_Accordion"},
+    // 	{component: SMUI_Dialog, knownAs: "SMUI_Dialog"},
+    // 	{component: DatePicker, knownAs: "DatePicker"}
+    // ]);
+    // For ExternalTester:
+    // setCustomComponents([
+    //     { component: BooleanWrapperComponent, knownAs: "booleanWrapper" },
+    //     { component: FragmentWrapperComponent, knownAs: "fragmentWrapper" },
+    //     { component: NumberWrapperComponent, knownAs: "numberWrapper" },
+    //     { component: PartWrapperComponent, knownAs: "partWrapper" },
+    //     { component: PartListWrapperComponent, knownAs: "partListWrapper" },
+    //     { component: RefWrapperComponent, knownAs: "refWrapper" },
+    //     { component: RefListWrapperComponent, knownAs: "refListWrapper" },
+    //     { component: StringWrapperComponent, knownAs: "stringWrapper" },
+    //
+    //     { component: ExternalBooleanComponent, knownAs: "booleanReplacer" },
+    //     { component: ExternalNumberComponent, knownAs: "numberReplacer" },
+    //     { component: ExternalPartComponent, knownAs: "partReplacer" },
+    //     { component: ExternalPartListComponent, knownAs: "partListReplacer" },
+    //     { component: ExternalRefComponent, knownAs: "refReplacer" },
+    //     { component: ExternalRefListComponent, knownAs: "refListReplacer" },
+    //     { component: ExternalSimpleComponent, knownAs: "simple" },
+    //     { component: ExternalStringComponent, knownAs: "stringReplacer" },
+    // ]);
 }
 
+// <html>TS2322: Type 'typeof BooleanWrapperComponent__SvelteComponent_' is not assignable to type 'Component&lt;FreComponentProps&lt;any&gt;, {}, string&gt;'.<br/>Type 'typeof BooleanWrapperComponent__SvelteComponent_' provides no match for the signature '(this: void, internals: Brand&lt;&quot;ComponentInternals&quot;&gt;, props: FreComponentProps&lt;any&gt;): { $on?(type: string, callback: (e: any) =&gt; void): () =&gt; void; $set?(props: Partial&lt;...&gt;): void; }'.

@@ -303,7 +303,7 @@ export class ConceptUtils {
         if (isAbstract) {
             return `${comment}
                 copy(): ${myName} {
-                    // console.log("${myName}: copy method should be implemented by concrete subclass");
+                    console.log("${myName}: copy method should be implemented by concrete subclass");
                     return null;
                 }`;
         } else {

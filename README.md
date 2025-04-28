@@ -17,7 +17,7 @@ For more information see the <a href="https://www.freon4dsl.dev" target="_blank"
 ## Using Freon
 
 If you want to use Freon to develop a DSL on the Web, goto the [Freon Documentation](https://www.freon4dsl.dev),
-this repository is mean for developing Freon itself.
+this repository is meant for developing Freon itself.
 
 ## Developing Freon
 

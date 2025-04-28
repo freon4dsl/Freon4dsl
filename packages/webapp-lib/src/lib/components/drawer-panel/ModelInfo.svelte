@@ -1,6 +1,6 @@
 <div>
     <Group>
-        {#each $unitTypes as name}
+        {#each unitTypes.list as name}
             <Separator/>
             <Subtitle>{name}</Subtitle>
             <List class="demo-list" dense>
@@ -12,8 +12,8 @@
                                     use:Anchor={{addClass: addClass, removeClass: removeClass}}
                                     bind:this={anchor[index]}
                             >
-                                <Item activated={(unit.name === $currentUnitName?.name)}
-                                      on:SMUI:action={() => menus[index].setOpen(true)}>
+                                <Item activated={(unit.name === currentUnit.ref?.name)}
+                                      onSMUIAction={() => menus[index].setOpen(true)}>
                                     <Text>{unit.name}</Text>
                                 </Item>
                                 <Menu bind:this={menus[index]}
@@ -22,20 +22,20 @@
                                       anchorCorner="BOTTOM_LEFT"
                                 >
                                     <List>
-                                        <Item on:SMUI:action={() => (openUnit(index))}>
+                                        <Item onSMUIAction={() => (openUnit(index))}>
                                             <Text>Open</Text>
                                         </Item>
-                                        <Item on:SMUI:action={() => (saveUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
+                                        <Item onSMUIAction={() => (saveUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
                                             <Text>Save</Text>
                                         </Item>
-                                        <Item on:SMUI:action={() => (renameUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
+                                        <Item onSMUIAction={() => (renameUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
                                             <Text>Rename</Text>
                                         </Item>
-                                        <Item on:SMUI:action={() => (deleteUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
+                                        <Item onSMUIAction={() => (deleteUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
                                             <Text>Delete</Text>
                                         </Item>
                                         <Separator/>
-                                        <Item on:SMUI:action={() => (exportUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
+                                        <Item onSMUIAction={() => (exportUnit(index))} disabled={WebappConfigurator.getInstance().isDemo}>
                                             <Text>Export</Text>
                                         </Item>
                                     </List>
@@ -58,24 +58,24 @@
 
 <script lang="ts">
     import List, { Group, Item, Separator, Text } from "@smui/list";
-    import { unitTypes } from "../stores/LanguageStore.js";
-    import { currentUnitName, toBeDeleted, toBeRenamed, units } from "../stores/ModelStore.js";
+    import { unitTypes } from "../stores/LanguageStore.svelte";
+    import { currentUnit, toBeDeleted, toBeRenamed, units } from "../stores/ModelStore.svelte";
     import MenuComponentDev from "@smui/menu";
     import Menu from "@smui/menu";
     import { Subtitle } from "@smui/drawer";
-    import { deleteUnitDialogVisible, renameUnitDialogVisible } from "../stores/DialogStore.js";
-    import { EditorState } from "../../language/EditorState.js";
-    import { setUserMessage } from "../stores/UserMessageStore.js";
-    import { ImportExportHandler } from "../../language/ImportExportHandler.js";
+    import { deleteUnitDialogVisible, renameUnitDialogVisible } from "../stores/DialogStore.svelte";
+    import { EditorState } from "$lib/language/EditorState";
+    import { setUserMessage } from "../stores/UserMessageStore.svelte";
+    import { ImportExportHandler } from "$lib/language/ImportExportHandler";
     import { Anchor } from "@smui/menu-surface";
     import { FreErrorSeverity, type FreModelUnit } from "@freon4dsl/core";
     import {WebappConfigurator} from "$lib";
     
     // TODO add rename option to context menu
-    let menus: MenuComponentDev[] = [];
+    let menus: MenuComponentDev[] = $state([]);
     // following is used to position the menu
-    let anchor: HTMLDivElement[] = [];
-    let anchorClasses: { [k: string]: boolean } = {};
+    let anchor: HTMLDivElement[] = $state([]);
+    let anchorClasses: { [k: string]: boolean } = $state({});
 
     const addClass = (className: string) => {
         if (!anchorClasses[className]) {
@@ -90,60 +90,54 @@
     }
     // end positioning
 
-    let myUnits: FreModelUnit[] = [];
-    $: myUnits = !!$units && $units.length > 0
-        ? $units.sort((u1, u2) => {
-            if (u1.name > u2.name) {
-                return 1;
-            }
-            if (u1.name < u2.name) {
-                return -1;
-            }
-            return 0;
-        })
-        : [];
+    let myUnits: FreModelUnit[] = $state([]);
+    $effect(() => {
+        myUnits = !!units.refs && units.refs.length > 0
+            ? units.refs.sort((u1: FreModelUnit, u2: FreModelUnit) => {
+                if (u1.name > u2.name) {
+                    return 1;
+                }
+                if (u1.name < u2.name) {
+                    return -1;
+                }
+                return 0;
+            })
+            : [];
+    });
 
     const openUnit = (index: number) => {
-        EditorState.getInstance().openModelUnit($units[index]);
+        EditorState.getInstance().openModelUnit(units.refs[index]);
     };
 
     const deleteUnit = (index: number) => {
         // console.log("ModelInfo.deleteUnit: " + $units[index].name);
-        $toBeDeleted = $units[index];
-        $deleteUnitDialogVisible = true;
+        toBeDeleted.ref = units.refs[index];
+        deleteUnitDialogVisible.value = true;
     };
 
     const saveUnit = (index: number) => {
-        // console.log("ModelInfo.saveUnit: " + $units[index].name);
-        if ($units[index].name === $currentUnitName.name) {
+        // console.log("ModelInfo.saveUnit: " + units.refs[index].name);
+        if (units.refs[index].name === currentUnit.id?.name) {
             EditorState.getInstance().saveCurrentUnit();
-            setUserMessage(`Unit '${$units[index].name}' saved.`, FreErrorSeverity.Warning);
+            setUserMessage(`Unit '${units.refs[index].name}' saved.`, FreErrorSeverity.Warning);
         } else {
-            setUserMessage(`Unit '${$units[index].name}' has no changes.`, FreErrorSeverity.Warning);
+            setUserMessage(`Unit '${units.refs[index].name}' has no changes.`, FreErrorSeverity.Warning);
         }
     };
 
     const renameUnit = (index: number) => {
-        // console.log("ModelInfo.renameUnit: " + $units[index].name);
-        $toBeRenamed = $units[index];
-        $renameUnitDialogVisible = true;
+        // console.log("ModelInfo.renameUnit: " + units.refs[index].name);
+        toBeRenamed.ref = units.refs[index];
+        renameUnitDialogVisible.value = true;
     };
 
     const exportUnit = (index: number) => {
         // TODO Only allow export of current unit, may be extended to other units.
-        if ($units[index].name !== $currentUnitName.name) {
+        if (units.refs[index].name !== currentUnit.id?.name) {
             // TODO make error message more clear
             setUserMessage('Can only export unit in editor', FreErrorSeverity.Warning);
         } else {
-            new ImportExportHandler().exportUnit($units[index]);
+            new ImportExportHandler().exportUnit(units.refs[index]);
         }
     };
 </script>
-
-<style>
-    * :global(.demo-list) {
-        max-width: 600px;
-        /* todo use color variable here */
-        border-left: 1px solid darkred;
-    }
-</style>

@@ -1,55 +1,52 @@
-<svelte:options immutable={true}/>
 <script lang="ts">
-    import { LABEL_LOGGER } from "$lib/components/ComponentLoggers.js";
+    import { LABEL_LOGGER } from '$lib/components/ComponentLoggers.js';
 
     /**
-     * This component shows to piece of non-editable text.
+     * This component shows a piece of non-editable text.
      */
-    import { onMount, afterUpdate } from "svelte";
-    import { LabelBox } from "@freon4dsl/core";
-    import { componentId } from "./svelte-utils/index.js";
+    import { onMount } from 'svelte';
+    import { isNullOrUndefined, LabelBox } from '@freon4dsl/core';
+    import { componentId } from '$lib';
+    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
 
-    export let box: LabelBox;
+    let { box }: FreComponentProps<LabelBox> = $props();
 
-    const LOGGER = LABEL_LOGGER
+    const LOGGER = LABEL_LOGGER;
 
-    let id: string = !!box ? componentId(box) : 'label-for-unknown-box';
-    let element: HTMLSpanElement = null;
-    let style: string;
-    let cssClass: string;
-    let text: string;
+    let id: string = !isNullOrUndefined(box) ? componentId(box) : 'label-for-unknown-box';
+    let element: HTMLSpanElement | undefined = $state(undefined);
+    let style: string = $state('');
+    let cssClass: string = $state('');
+    let text: string = $state('');
 
-    onMount( () => {
-        if (!!box) {
+    onMount(() => {
+        if (!isNullOrUndefined(box)) {
             box.refreshComponent = refresh;
         }
     });
 
-    afterUpdate( () => {
-        if (!!box) {
+    $effect(() => {
+        if (!isNullOrUndefined(box)) {
             box.refreshComponent = refresh;
         }
     });
 
     const refresh = (why?: string) => {
-        LOGGER.log("REFRESH LabelComponent (" + why + ")");
-        if (!!box) {
+        LOGGER.log('REFRESH LabelComponent (' + why + ')');
+        if (!isNullOrUndefined(box)) {
             text = box.getLabel();
             style = box.cssStyle;
             cssClass = box.cssClass;
         }
     };
 
-    $: { // Evaluated and re-evaluated when the box changes.
-        refresh("FROM component " + box?.id);
-    }
+    $effect(() => {
+        // Evaluated and re-evaluated when the box changes.
+        refresh('FROM component ' + box?.id);
+    });
 </script>
 
-<span class="label-component {text} {cssClass}"
-      style="{style}"
-      bind:this={element}
-      id="{id}"
->
+<!-- todo the 'text' here may contain spaces and other nasty stuff, should clean it up before using it as class-->
+<span class="label-component {text} {cssClass}" {style} bind:this={element} {id}>
     {text}
 </span>
-

@@ -1,44 +1,15 @@
 import { FreNode } from "../../ast/index.js";
 import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util/index.js";
 import { FreLogger } from "../../logging/index.js";
+import {ClientRectangle, UndefinedRectangle} from "../ClientRectangleTypes.js";
 
 const LOGGER = new FreLogger("Box");
+
 
 /**
  * The root of the Box class hierarchy, contains all generic properties and a number of navigation/search functions.
  */
 export abstract class Box {
-    get actualX(): number {
-        return this._actualX;
-    }
-
-    set actualX(value: number) {
-        this._actualX = value;
-    }
-
-    get actualY(): number {
-        return this._actualY;
-    }
-
-    set actualY(value: number) {
-        this._actualY = value;
-    }
-
-    get actualWidth(): number {
-        return this._actualWidth;
-    }
-
-    set actualWidth(value: number) {
-        this._actualWidth = value;
-    }
-
-    get actualHeight(): number {
-        return this._actualHeight;
-    }
-
-    set actualHeight(value: number) {
-        this._actualHeight = value;
-    }
     $id: string;
     kind: string = "";
     role: string = "";
@@ -65,6 +36,11 @@ export abstract class Box {
     protected _errorMessages: string[] = [];
 
     refreshComponent: (why?: string) => void; // The refresh method from the component that displays this box.
+    /**
+     * Get the client rectangle of this box in the browser.
+     * This is a callback method to the corresponding component in the browser.
+     */
+    getClientRectangle: () => ClientRectangle = () => { return UndefinedRectangle }
 
     /**
      *  Called when the box is dirty, refreshes the corresponding component.
@@ -122,15 +98,6 @@ export abstract class Box {
         this._errorMessages = [];
         this.isDirty();
     }
-
-    // Never set these manually, these properties are set after rendering to get the
-    // actual coordinates as rendered in the browser,
-    // TODO see whether these can be set on demand and whether this is useful ??? Probably yes.
-    
-    private _actualX: number = -1;
-    private _actualY: number = -1;
-    private _actualWidth: number = -1;
-    private _actualHeight: number = -1;
 
     protected constructor(node: FreNode, role: string) {
         FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");

@@ -2,22 +2,25 @@
 
 <script lang="ts">
     import { Box, isTextBox } from "@freon4dsl/core";
-	import { selectedBoxes } from "@freon4dsl/core-svelte";
-    import { currentModelName, currentUnitName } from "../stores/ModelStore.js";
-    import { modelErrors } from "../stores/InfoPanelStore.js";
+    import { currentModelName, currentUnit } from "../stores/ModelStore.svelte";
+    import { modelErrors } from "../stores/InfoPanelStore.svelte";
     import { mdiCheckCircle, mdiChevronRight, mdiAlertCircle } from "@mdi/js";
     import { Icon } from "@smui/common";
     import IconButton from "@smui/button";
-	import {WebappConfigurator} from "../../WebappConfigurator.js";
+	import {WebappConfigurator} from "$lib";
+	import {selectedBoxes} from "@freon4dsl/core-svelte";
 
-    let currentBox: Box = null;
-	$: currentBox = $selectedBoxes[0];
+    let currentBox: Box | null = $state(null);
+	$effect(() => {
+		currentBox = selectedBoxes.value[0];
+	});
+	let langEnv = WebappConfigurator.getInstance().editorEnvironment!;
 </script>
 
 <span class="status-bar">
-	<div class='mdc-typography--caption'>
+	<span class='mdc-typography--caption'>
 	<IconButton style="margin-right: -24px; margin-left: -12px;">
-		{#if $modelErrors.length > 0}
+		{#if modelErrors.list.length > 0}
 			<Icon tag=svg viewBox='0 0 24 24'>
 				<path d={mdiAlertCircle}/>
 			</Icon>
@@ -27,13 +30,13 @@
 			</Icon>
 		{/if}
 	</IconButton>
-	{$currentModelName}
+	{currentModelName.value}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon tag=svg viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-	{$currentUnitName?.name ?? "<no unit>"}
+	{currentUnit.id?.name ?? "<no unit>"}
 	<IconButton style="margin-right: -30px; margin-left: -20px;">
 		<Icon tag=svg viewBox="0 0 24 24">
 			<path d={mdiChevronRight}/>
@@ -57,10 +60,10 @@
 			<path d={mdiChevronRight}/>
 		</Icon>
 	</IconButton>
-		(x, y): {(!!currentBox ? Math.round(currentBox.actualX + WebappConfigurator.getInstance().editorEnvironment.editor.scrollX)
-    + ", " + Math.round(currentBox?.actualY + WebappConfigurator.getInstance().editorEnvironment.editor.scrollY) : "NAN")}
-    "{(isTextBox(currentBox) ? currentBox.getText() : "NotTextBox")}"
-		</div>
+<!--		(x, y): {(!!currentBox ? Math.round(currentBox.actualX + langEnv.editor.scrollX)-->
+<!--    + ", " + Math.round(currentBox?.actualY + langEnv.editor.scrollY) : "NAN")}-->
+    "{(!!currentBox && isTextBox(currentBox) ? currentBox.getText() : "NotTextBox")}"
+		</span>
 </span>
 
 <style lang="scss">

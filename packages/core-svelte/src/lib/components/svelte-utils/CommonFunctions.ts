@@ -1,28 +1,44 @@
-import { AST, Box, FreLogger, FreEditor, FreEditorUtil, type FrePostAction, toFreKey, FreAction } from "@freon4dsl/core";
-import { viewport } from "./EditorViewportStore.js";
-import { get } from "svelte/store";
+import {
+    AST,
+    Box,
+    FreEditor,
+    FreEditorUtil,
+    type FrePostAction,
+    toFreKey,
+    FreAction,
+    ElementBox,
+    isNullOrUndefined,
+    FreLanguage,
+    ListElementInfo,
+    type FreNodeReference,
+    type FreNamedNode
+} from '@freon4dsl/core';
+import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
+import {draggedElem, draggedFrom} from "$lib/components/stores/AllStores.svelte";
 
-const LOGGER = new FreLogger("CommonFunctions").mute()
+// const LOGGER = new FreLogger('CommonFunctions').mute();
 
-export function focusAndScrollIntoView(element: HTMLElement) {
-    if (!!element) {
-        element.focus();
-        // check if the element is already within the editor viewport
-        let rect = element.getBoundingClientRect();
+export const dummyBox = new ElementBox(new SimpleElement('dummy'), 'box-role');
 
-        let elemIsVisible =
-            rect.top >= get(viewport).top &&
-            rect.left >= get(viewport).left &&
-            rect.bottom <= get(viewport).height &&
-            rect.right <= get(viewport).width;
-
-        // if the element is not visible then scroll to it
-        // see https://learn.svelte.dev/tutorial/update for example on scrolling
-        if (!elemIsVisible) {
-            element.scrollIntoView();
-        }
-    }
-}
+// export function focusAndScrollIntoView(element: HTMLElement) {
+//     if (!!element) {
+//         element.focus();
+//         // check if the element is already within the editor viewport
+//         let rect = element.getBoundingClientRect();
+//
+//         let elemIsVisible =
+//             rect.top >= get(viewport).top &&
+//             rect.left >= get(viewport).left &&
+//             rect.bottom <= get(viewport).height &&
+//             rect.right <= get(viewport).width;
+//
+//         // if the element is not visible then scroll to it
+//         // see https://learn.svelte.dev/tutorial/update for example on scrolling
+//         if (!elemIsVisible) {
+//             element.scrollIntoView();
+//         }
+//     }
+// }
 
 /**
  * This calculates the position of the context- or sub-menu, either on x-axis or y-axis
@@ -30,7 +46,11 @@ export function focusAndScrollIntoView(element: HTMLElement) {
  * @param contentSize
  * @param mousePosition
  */
-export function calculatePos(viewportSize: number, contentSize: number, mousePosition: number): number {
+export function calculatePos(
+    viewportSize: number,
+    contentSize: number,
+    mousePosition: number
+): number {
     let result: number;
     // see if the menu will fit in the editor view, if not: position it left/up, not right/down of the mouse click
     if (viewportSize - mousePosition < contentSize) {
@@ -45,19 +65,26 @@ export function calculatePos(viewportSize: number, contentSize: number, mousePos
     return result;
 }
 
-export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: number, box: Box, editor: FreEditor) {
+export function executeCustomKeyboardShortCut(
+    event: KeyboardEvent,
+    index: number,
+    box: Box,
+    editor: FreEditor
+) {
     const cmd: FreAction = FreEditorUtil.findKeyboardShortcutAction(toFreKey(event), box, editor);
     if (cmd !== null) {
         let postAction: FrePostAction;
         AST.change(() => {
             // todo KeyboardEvent does not have an "action" prop, so what is happening here?
-            const action = event["action"];
-            if (!!action) {
+            const action = event['action' as keyof KeyboardEvent];
+            if (!isNullOrUndefined(action)) {
+                // @ts-expect-error if present, action is callable
                 action();
             }
             postAction = cmd.execute(box, toFreKey(event), editor, index);
         });
-        if (!!postAction) {
+        // @ts-expect-error this causes no error, because of the if-stat check
+        if (!isNullOrUndefined(postAction)) {
             postAction();
         }
         // todo this method will stop the event from propagating, but does not prevent default!! Should it do so?
@@ -68,21 +95,13 @@ export function executeCustomKeyboardShortCut(event: KeyboardEvent, index: numbe
 export function isOdd(n: number): boolean {
     return (n & 1) === 1;
 }
-export function isEven(n: number): boolean {
-    return (n & 1) === 0;
-}
+
+// export function isEven(n: number): boolean {
+//     return (n & 1) === 0;
+// }
+
 export function componentId(box: Box): string {
     return `${box?.node?.freId()}-${box?.role}`;
-}
-
-export function setBoxSizes(box: Box, rect: DOMRect) {
-    if (box !== null && box !== undefined) {
-        box.actualX = rect.left;
-        box.actualY = rect.top;
-        box.actualHeight = rect.height;
-        box.actualWidth = rect.width;
-        // XLOGGER.log("   actual is (" + Math.round(box.actualX) + ", " + Math.round(box.actualY) + ")");
-    }
 }
 
 /**
@@ -92,5 +111,26 @@ export function setBoxSizes(box: Box, rect: DOMRect) {
  * "<"   => &lt;
  */
 export function replaceHTML(s: string): string {
-    return s.replace(/\s/g, "&nbsp;").replace(/\</, "&lt;");
+    return s.replace(/\s/g, '&nbsp;').replace(/</, '&lt;');
 }
+
+export function rememberDraggedNode(componentId: string, listOrTableBox: Box, draggedElemBox: Box) {
+    console.log(`rememberDraggedNode parentBox: ${listOrTableBox?.kind}, draggedElemBox: ${draggedElemBox.kind}`);
+    let propertyDef = FreLanguage.getInstance().classifierProperty(listOrTableBox?.node.freLanguageConcept(), listOrTableBox?.propertyName);
+    // If the draggedElemBox is a part, then its node is the list element that is being transferred.
+    // But if it is a reference then its node is the parent of the reference, i.e. the complete list.
+    // The same holds for primitive list elements. Therefore, we need to distinguish the following cases.
+    if (propertyDef?.propertyKind === "part") {
+        console.log(`DAD Part ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node?.freLanguageConcept()} ${draggedElemBox.propertyName}`)
+        draggedElem.value = new ListElementInfo(draggedElemBox.node, componentId);
+    } else if (propertyDef?.propertyKind === "reference") {
+        console.log(`DAD Other ${draggedElemBox.id} ${draggedElemBox.kind} ${draggedElemBox.node} ${draggedElemBox.propertyName}`)
+        // @ts-ignore
+        let theNode: FreNodeReference<FreNamedNode> = listOrTableBox.node[draggedElemBox.propertyName][draggedElemBox.propertyIndex] as FreNodeReference<FreNamedNode>
+        draggedElem.value = new ListElementInfo(theNode, componentId);
+    } else { // if ( propertyDef?.propertyKind === "primitive" )
+        // todo implement this if we continue having lists of primitive values, and not comply to LionWeb
+    }
+    draggedFrom.value = componentId;
+}
+

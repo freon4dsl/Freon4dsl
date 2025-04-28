@@ -133,3 +133,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         return toBeMatched.name === this.name;
     }
 }
+
+export function isFreNodeReference(n: any): n is FreNodeReference<FreNamedNode> {
+    return n instanceof FreNodeReference 
+}

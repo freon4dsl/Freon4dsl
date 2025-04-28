@@ -5,7 +5,7 @@ import { LanguageInitializer } from "./language/LanguageInitializer.js";
  * Web configuration singleton.
  */
 export class WebappConfigurator {
-    private static instance: WebappConfigurator = null;
+    private static instance: WebappConfigurator | null = null;
 
     static getInstance(): WebappConfigurator {
         if (WebappConfigurator.instance === null) {
@@ -14,8 +14,8 @@ export class WebappConfigurator {
         return WebappConfigurator.instance;
     }
 
-    serverCommunication: IServerCommunication;
-    editorEnvironment: FreEnvironment;
+    serverCommunication: IServerCommunication | undefined = undefined;
+    editorEnvironment: FreEnvironment | undefined = undefined;
     isDemo: boolean = false;
 
     /**

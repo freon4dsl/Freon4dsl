@@ -4,14 +4,14 @@
 
 // Freon Colors!!
 @use '@material/theme/index' as theme with (
-  $primary: #4f9a94,
-  $secondary: #ffcc80,
-  $surface: #eeeeee,
-  $background: #fff,
+  $primary: #375F1B,
+  $secondary: #9BD770,
+  $surface: #E9F6DF,
+  $background: #E9F6DF,
   $error: #B00020,
   //$on-primary: color-palette.$orange-50,
-  $on-secondary: #00695c,   // a slighter darker version of 'primary'
-  $on-surface: color-palette.$grey-600,
+  $on-secondary: #1B3309,   // a slighter darker version of 'primary'
+  $on-surface: #1B3309,
   //$on-error: black,
   //accessible-ink-color,
   //contrast,
@@ -27,6 +27,15 @@
 // linear-progress is included for the progress indicator in the EditorPart component
 @use '@material/linear-progress/index' as linear-progress;
 
+// set of matching colors:
+html {
+  --color5: #1B3309;
+  --color4: #375F1B;
+  --color3: #65AD31;
+  --color2: #9BD770;
+  --color1: #E9F6DF;
+}
+
 // my-colored-bar style is used for the progress indicator in the EditorPart component
 .my-colored-bar {
   @include linear-progress.bar-color(theme.$red-500);
@@ -39,8 +48,8 @@
 // status-bar style is used for the StatusBar component above the editor
 .status-bar {
   //--freon-colors-bg-status: #4f9a94;
-  --freon-colors-bg-status: #80cbc4;
-  --freon-colors-text-status: black;
+  --freon-colors-bg-status: #375F1B;
+  --freon-colors-text-status: #E9F6DF;
   --freon-text-style-status: italic;
 }
 

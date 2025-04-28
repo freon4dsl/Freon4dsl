@@ -1,56 +1,51 @@
 <script lang='ts'>
     // todo this component can be combined with FreonLayout
-    // import IconButton, { Label, Icon } from "@smui/button";
-    // import { mdiAlertCircle, mdiCheckCircle, mdiInformation, mdiLightbulb, mdiCheck } from "@mdi/js";
-    // import { Svg } from "@smui/common/elements";
     import Banner from "@smui/banner";
     import { Label } from "@smui/button";
 
-    import { userMessage, userMessageOpen, severity } from "./components/stores/UserMessageStore.js";
+    import { userMessage, userMessageOpen, severity } from "./components/stores/UserMessageStore.svelte";
     import SplitPane from "./components/SplitPane.svelte";
     import EditorPart from "./components/editor-panel/EditorPart.svelte";
     import InfoPanel from "./components/info-panel/InfoPanel.svelte";
     import Button from "@smui/button";
     import { FreErrorSeverity } from "@freon4dsl/core";
 
-    // <Icon slot='icon' class="less-padding" tag=svg viewBox='0 0 48 48'>
-    //     {#if $severity === FreErrorSeverity.Info}
-    //     <path d={mdiInformation}/>
-    // {:else if $severity === FreErrorSeverity.Hint}
-    // <path d={mdiLightbulb}/>
-    // {:else if $severity === FreErrorSeverity.Warning}
-    // <path d={mdiAlertCircle}/>
-    // {:else if $severity === FreErrorSeverity.Error}
-    // <path d={mdiCheckCircle}/>
-    // {/if}
-    // </Icon>
-
     // Instead of a button to dismiss the banner, we use a 'normal' text button.
     // Instead of an icon in front of the banner message, which takes up a lot of vertical space,
     // we use a different style/color for the error message.
     // todo use freon variables here
-    let severityClass: string;
-    $: severityClass =
-        $severity === FreErrorSeverity.Info ?
-            "blue"
-        : ($severity === FreErrorSeverity.Hint ?
-                "green"
-           : ($severity === FreErrorSeverity.Warning ?
-                "plum"
-             : ($severity === FreErrorSeverity.Error ?
-                "red"
-                : "none")));
+    let severityClass: string = $state("red");
+    $effect( () => {
+        severityClass =
+            severity.value === FreErrorSeverity.Info ?
+                "blue"
+                : (severity.value === FreErrorSeverity.Hint ?
+                    "green"
+                    : (severity.value === FreErrorSeverity.Warning ?
+                        "plum"
+                        : (severity.value === FreErrorSeverity.Error ?
+                            "red"
+                            : "black")));
+    });
 </script>
 
 <div>
-    <Banner bind:open={$userMessageOpen} mobileStacked content$style='max-width: max-content;'>
-        <Label slot='label' style="color:{severityClass}">
-            {$userMessage}
+    <Banner bind:open={userMessageOpen.value} mobileStacked content$style='max-width: max-content;'>
+        {#snippet label()}
+        <Label style="color:{severityClass}">
+            {userMessage.value}
         </Label>
-        <Button slot="actions">Dismiss</Button>
+        {/snippet}
+        {#snippet actions()}
+        <Button>Dismiss</Button>
+        {/snippet}
     </Banner>
     <SplitPane type='vertical' pos={80}>
-            <EditorPart slot='a'/>
-            <InfoPanel  slot='b'/>
+        {#snippet a()}
+            <EditorPart/>
+        {/snippet}
+        {#snippet b()}
+            <InfoPanel/>
+        {/snippet}
     </SplitPane>
 </div>

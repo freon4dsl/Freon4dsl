@@ -36,7 +36,7 @@ yarn-error.log
 docs/*
 
 # generated files
-gen/
+gen
 packages/docs/.jekyll-cache/*
 packages/docs/*/_site/*
 packages/docs/src/tutorial-language/*/gen/*

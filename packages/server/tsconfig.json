@@ -28,8 +28,7 @@
     "sourceMap": true,
     "strictNullChecks": false,
     "types": [
-      "node",
-      "jest"
+      "node"
     ],
     "baseUrl": "."
   },

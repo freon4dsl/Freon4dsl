@@ -1,5 +1,5 @@
 {
-   "serializationFormatVersion": "2023.1", 
+   "serializationFormatVersion": "2023.1",
    "languages": [
       {
          "key": "-key-Education",
@@ -48,7 +48,21 @@
                ]
             }
          ],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Topic-main"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Fractions",
+                     "reference": "ID-18"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": null
       },

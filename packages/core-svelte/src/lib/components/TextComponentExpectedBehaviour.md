@@ -8,25 +8,27 @@ what is the expected behaviour of these two components, and how these expectatio
 This component should react as follows.
 
 Selection can be done by one of these keystrokes and events.
+
 1. Tabbing into the component, the cursor should be either right or left of the text, depending on tab, or shift-tab.
 2. Arrows (all four of them), the cursor should respond like tabbing.
 3. Mouse click, the cursor should be at the position of the mouse click.
-   1. Note that in Firefox this feature is not functioning!
+    1. Note that in Firefox this feature is not functioning!
 4. Programmatically, e.g. from error pane, the cursor should be at the left of the text.
 
 When selected, the component should react to the following keystrokes and events.
+
 1. Backspace, delete, add character should act 'normal'.
-   1. When the text is empty, and the box has 'deleteWhenEmpty' set to true, and the user types Backspace or Delete,
-      the node of the box should be removed. For instance, when it is part of an optional box, but also in other cases.
-   2. When the cursor is at the end or start of the text, and the added character is not allowed (see box.isCharAllowed), 
-      it should be pushed to the next or previous box.
-   2. When the cursor is on the start of the text, then on Backspace nothing happens. The user needs to use arrow left or 
-      Shift TAB to move to previous field.
-   3. When the cursor is on the end of the text, then on Delete nothing happens. The user needs to use arrow right or 
-      TAB to move to next field.
-4. Mouse click: the user should be able to add a character, backspace, delete at the clicked position.
+    1. When the text is empty, and the box has 'deleteWhenEmpty' set to true, and the user types Backspace or Delete,
+       the node of the box should be removed. For instance, when it is part of an optional box, but also in other cases.
+    2. When the cursor is at the end or start of the text, and the added character is not allowed (see box.isCharAllowed),
+       it should be pushed to the next or previous box.
+    3. When the cursor is on the start of the text, then on Backspace nothing happens. The user needs to use arrow left or
+       Shift TAB to move to previous field.
+    4. When the cursor is on the end of the text, then on Delete nothing happens. The user needs to use arrow right or
+       TAB to move to next field.
+2. Mouse click: the user should be able to add a character, backspace, delete at the clicked position.
     1. Note that in Firefox this feature is not functioning!
-5. Mouse drag: the text between start and end should be selected, and the component should thereafter react using this 
+3. Mouse drag: the text between start and end should be selected, and the component should thereafter react using this
    selection to adding a character, backspace, delete, or to cut, paste, etc.
 6. Ctrl-arrow left or right should go to the end or start of the text.
 7. Ctrl-shift-arrow left or right should select part of the text.

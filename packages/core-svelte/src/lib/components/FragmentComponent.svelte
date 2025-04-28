@@ -1,51 +1,49 @@
 <script lang="ts">
-    import { FRAGMENT_LOGGER } from "$lib/components/ComponentLoggers.js";
-    import RenderComponent from "./RenderComponent.svelte";
-    import { onMount, afterUpdate } from "svelte";
-    import {FreLogger, type FreEditor, Box, FragmentBox} from "@freon4dsl/core";
-    import { componentId } from "$lib/components/svelte-utils/index.js";
+    import { FRAGMENT_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import RenderComponent from './RenderComponent.svelte';
+    import { Box, FragmentBox, isNullOrUndefined } from '@freon4dsl/core';
+    import { componentId } from '$lib/components/svelte-utils/index.js';
+    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
 
-    export let box: FragmentBox;
-    export let editor: FreEditor;
+    let { editor, box }: FreComponentProps<FragmentBox> = $props();
 
-    const LOGGER = FRAGMENT_LOGGER
-    let id: string;
-    let childBox: Box;
-    let cssClass: string;
+    const LOGGER = FRAGMENT_LOGGER;
+    let id: string = $state('');
+    let childBox: Box | undefined = $state(undefined);
+    let cssClass: string = $state('');
 
-    const refresh = (why?: string): void =>  {
-        LOGGER.log("REFRESH FragmentComponent (" + why +")" + box?.node?.freLanguageConcept());
-        if (!!box) {
+    const refresh = (why?: string): void => {
+        LOGGER.log('REFRESH FragmentComponent (' + why + ') ' + box?.node?.freLanguageConcept());
+        if (!isNullOrUndefined(box)) {
             id = componentId(box);
             childBox = box.childBox;
             cssClass = box.cssClass;
         } else {
             id = 'element-for-unknown-box';
         }
-    }
+    };
 
     async function setFocus(): Promise<void> {
-        LOGGER.log("FragmentComponent.setFocus for box " + box.role);
-        if (!!box) {
+        LOGGER.log('FragmentComponent.setFocus for box ' + box.role);
+        if (!isNullOrUndefined(box)) {
             box.childBox.setFocus();
         }
     }
 
-    onMount( () => {
+    $effect(() => {
+        // runs after the initial onMount
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
     });
 
-    afterUpdate( () => {
-        box.refreshComponent = refresh;
-        box.setFocus = setFocus;
-    });
-
-    $: { // Evaluated and re-evaluated when the box changes.
+    $effect(() => {
+        // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
-    }
+    });
 </script>
 
-<span class="fragment-component {cssClass}" id="{id}">
-    <RenderComponent box={childBox} editor={editor}/>
-</span>
+{#if !isNullOrUndefined(childBox)}
+    <span class="fragment-component {cssClass}" {id}>
+        <RenderComponent box={childBox} {editor} />
+    </span>
+{/if}

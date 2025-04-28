@@ -3,7 +3,7 @@
 		use:Anchor={{addClass: addClass, removeClass: removeClass}}
 		bind:this={anchor}
 >
-	<Button variant="raised" on:click={() => menu.setOpen(true)}>
+	<Button variant="raised" onclick={() => menu.setOpen(true)}>
 		<Label>Edit</Label>
 	</Button>
 	<Menu
@@ -14,7 +14,7 @@
 	>
 		<List>
 			{#each menuItems as item (item.id)}
-				<Item on:SMUI:action={() => (handleClick(item.id))} disabled={isDisabled(item.id)}>
+				<Item onSMUIAction={() => (handleClick(item.id))} disabled={isDisabled(item.id)}>
 					<Text>{item.title}</Text>
 				</Item>
 				{#if item.id === 2 || item.id === 5 || item.id === 6 }
@@ -26,7 +26,7 @@
 </div>
 
 <script lang="ts">
-	import {isRtError, type FreNode, type FreEnvironment} from "@freon4dsl/core";
+	import {isRtError, type FreNode, type FreEnvironment, isNullOrUndefined} from "@freon4dsl/core";
 	import MenuComponentDev from '@smui/menu';
 	import Menu from '@smui/menu';
 	import { Anchor } from '@smui/menu-surface';
@@ -36,15 +36,15 @@
 		Text
 	} from '@smui/list';
 	import Button, { Label } from '@smui/button';
-	import { activeTab, interpreterTab, interpreterTrace } from "../stores/InfoPanelStore.js";
+	import { activeTab, interpreterTab, interpreterTrace } from "../stores/InfoPanelStore.svelte";
 	import { MenuItem } from "../ts-utils/MenuItem.js";
 	import {
 		findNamedDialogVisible,
 		findStructureDialogVisible,
 		findTextDialogVisible
-	} from "../stores/DialogStore.js";
-	import { EditorRequestsHandler } from "../../language/EditorRequestsHandler.js";
-	import { setUserMessage } from "../stores/UserMessageStore.js";
+	} from "../stores/DialogStore.svelte";
+	import { EditorRequestsHandler } from "$lib/language/EditorRequestsHandler";
+	import { setUserMessage } from "../stores/UserMessageStore.svelte";
 	import { WebappConfigurator } from "$lib/WebappConfigurator.js";
 
 	let menu: MenuComponentDev;
@@ -67,32 +67,32 @@
 
 	// implementation of all actions
 	const findText = () => {
-		$findTextDialogVisible = true;
+		findTextDialogVisible.value = true;
 	}
 
 	const runInterpreter = () => {
-		const langEnv : FreEnvironment = WebappConfigurator.getInstance().editorEnvironment;
+		const langEnv : FreEnvironment = WebappConfigurator.getInstance().editorEnvironment!;
 		const intp = langEnv.interpreter;
 		intp.setTracing(true);
 		const node: FreNode = langEnv.editor.selectedElement;
 
 		const value = intp.evaluate(node);
 		if(isRtError(value)){
-			interpreterTrace.set(value.toString());
+			interpreterTrace.value =value.toString();
 		} else {
 			const trace = intp.getTrace().root.toStringRecursive();
 			console.log(trace);
-			interpreterTrace.set(trace);
+			interpreterTrace.value = trace;
 		}
-		activeTab.set(interpreterTab);
+		activeTab.value =interpreterTab;
 	}
 
 	const findStructureElement = () => {
-		$findStructureDialogVisible = true;
+		findStructureDialogVisible.value = true;
 	}
 
 	const findNamedElement = () => {
-		$findNamedDialogVisible = true;
+		findNamedDialogVisible.value = true;
 	}
 
 	// when a menu-item is clicked, this function is executed
@@ -100,12 +100,14 @@
 		// find the item that was clicked
 		let menuItem = menuItems.find(item => item.id === id);
 		// perform the action associated with the menu item
-		menuItem.action(id);
+		if (!isNullOrUndefined(menuItem)) {
+			menuItem.action(id);
+		}
 	};
 
-	const notImplemented = () => {
-		setUserMessage("Sorry, this action is not yet implemented.");
-	}
+	// const notImplemented = () => {
+	// 	setUserMessage("Sorry, this action is not yet implemented.");
+	// }
 
 	// all menu items
 	let menuItems : MenuItem[] = [
@@ -121,10 +123,7 @@
 		{ title: 'Run Interpreter', action: runInterpreter, id: 10 },
 	];
 
-	function isDisabled(id): boolean {
-		if ( id === 8 ) { // find structure element
-			return true;
-		}
-		return false;
+	function isDisabled(id: number): boolean {
+		return id === 8;
 	}
 </script>

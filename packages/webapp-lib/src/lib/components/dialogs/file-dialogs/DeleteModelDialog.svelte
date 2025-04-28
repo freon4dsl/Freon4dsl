@@ -1,23 +1,25 @@
 <Dialog
-        bind:open={$deleteModelDialogVisible}
+        bind:open={deleteModelDialogVisible.value}
         aria-labelledby="event-title"
         aria-describedby="event-content"
-        on:SMUIDialog:closed={closeHandler}
+        onSMUIDialogClosed={closeHandler}
 >
     <Title id="event-title">Delete model</Title>
     <Content id="event-content">
         Select the model you want to delete. <br>
         <i>Note that this action cannot be undone!</i>
         <LayoutGrid>
-            {#each $modelNames as name}
-                {#if (name !== $currentModelName)}
+            {#each modelNames.list as name}
+                {#if (name !== currentModelName.value)}
                     <Cell>
                         <FormField> <!-- FormField ensures that when the label is clicked the checkbox is marked -->
                             <Radio
                                     bind:group={modelToBeDeleted}
                                     value={name}
                             />
-                            <span slot="label">{name}</span>
+                            {#snippet label()}
+                            <span>{name}</span>
+                            {/snippet}
                         </FormField>
                     </Cell>
                 {/if}
@@ -41,11 +43,11 @@
     import FormField from "@smui/form-field";
     import LayoutGrid, { Cell } from "@smui/layout-grid";
     import Radio from "@smui/radio";
-    import { currentModelName } from "../../stores/ModelStore.js";
-    import { deleteModelDialogVisible } from "../../stores/DialogStore.js";
+    import { currentModelName } from "../../stores/ModelStore.svelte";
+    import { deleteModelDialogVisible } from "../../stores/DialogStore.svelte";
 
-    import { modelNames } from "../../stores/ServerStore.js";
-    import {WebappConfigurator} from "../../../WebappConfigurator.js";
+    import { modelNames } from "../../stores/ServerStore.svelte";
+    import {WebappConfigurator} from "$lib";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -54,7 +56,7 @@
     function closeHandler(e: CustomEvent<{ action: string }>) {
         switch (e.detail.action) {
             case submitStr:
-                WebappConfigurator.getInstance().serverCommunication.deleteModel(modelToBeDeleted);
+                WebappConfigurator.getInstance().serverCommunication!.deleteModel(modelToBeDeleted);
                 break;
             default:
                 // This means the user clicked the scrim or pressed Esc to close the dialog.
