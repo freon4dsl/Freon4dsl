@@ -16,6 +16,17 @@ InsuranceProduct {
     ]
 }
 
+PitWhereExpOneCondition {[
+    one {
+        ${self.condition}
+    }
+]}
+
+PitWhereExpSimple {[
+    where {
+        ${self.conditions}
+    }
+]}
 
 PitWhereExp {[
     where {

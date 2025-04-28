@@ -18,7 +18,7 @@ export class RHSRefListWithSeparator extends RHSPropPartWithSeparator {
         const propType: string = Names.classifier(this.property.type);
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         return `${ParserGenUtil.internalName(this.property.name)} =
-                        this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}], '${propType}', '${this.separatorText}'); // RHSRefListWithSeparator\n`;
+                        this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}], '${propType}'); // RHSRefListWithSeparator\n`;
     }
 
     toString(depth: number): string {

@@ -31,6 +31,32 @@ describe("Parser on extra elements", () => {
         expect(unit1).toMatchSnapshot();
     });
 
+    test(" RHSBinExp", () => {
+        let input: string = fileHandler.stringFromFile("src/parser-extra-tests/__inputs__/testb.pexp");
+        let model = new TestParserExtra();
+        model.name = "TestParserExtra12";
+        const unit1: PitExpTest = reader.readFromString(input, "PitExpTest", model) as PitExpTest;
+        expect(unit1).not.toBe(null);
+        expect(unit1).not.toBe(undefined);
+        expect(unit1).toBeInstanceOf(PitExpTest);
+        console.log(writer.writeToString(unit1));
+        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        expect(unit1).toMatchSnapshot();
+    });
+
+    test(" RHSBinExpList no terminator or other", () => {
+        let input: string = fileHandler.stringFromFile("src/parser-extra-tests/__inputs__/testa.pexp");
+        let model = new TestParserExtra();
+        model.name = "TestParserExtra12";
+        const unit1: PitExpTest = reader.readFromString(input, "PitExpTest", model) as PitExpTest;
+        expect(unit1).not.toBe(null);
+        expect(unit1).not.toBe(undefined);
+        expect(unit1).toBeInstanceOf(PitExpTest);
+        console.log(writer.writeToString(unit1));
+        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        expect(unit1).toMatchSnapshot();
+    });
+
     test(" RHSBinExpListWithTerminator", () => {
         let input: string = fileHandler.stringFromFile("src/parser-extra-tests/__inputs__/test1.pexp");
         let model = new TestParserExtra();

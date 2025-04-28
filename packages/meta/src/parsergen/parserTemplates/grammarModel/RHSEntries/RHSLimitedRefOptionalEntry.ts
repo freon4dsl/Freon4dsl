@@ -1,8 +1,7 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { getTypeCall, makeIndent } from "../GrammarUtils.js";
-import { GenerationUtil } from "../../../../utils/index.js";
-import { ParserGenUtil } from "../../ParserGenUtil.js";
+import { ParserGenUtil } from '../../ParserGenUtil.js';
 
 export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
     constructor(prop: FreMetaProperty) {
@@ -15,11 +14,9 @@ export class RHSLimitedRefOptionalEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string): string {
-        const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         return  `// RHSLimitedRefOptionalEntry
             if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
-            const subNode = ${nodeName}.asJsReadonlyArrayView()[${index}];
-            ${ParserGenUtil.internalName(this.property.name)} = FreNodeReference.create<${baseType}>(subNode, "${baseType}");
+                ${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}];
         } // end RHSLimitedRefOptionalEntry`;
     }
 

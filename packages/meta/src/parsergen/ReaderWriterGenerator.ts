@@ -12,10 +12,9 @@ import {
 } from "../utils/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
-import net from "net.akehurst.language-agl-processor";
-var Agl = net.net.akehurst.language.agl.processor.Agl;
 import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
-import { GrammarModel } from "./parserTemplates/grammarModel/GrammarModel.js";
+import { GrammarModel } from './parserTemplates/grammarModel/index.js';
+import { Agl } from 'net.akehurst.language-agl-processor';
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
 
@@ -99,7 +98,7 @@ export class ReaderWriterGenerator {
             generatedFilePath = `${this.readerGenFolder}/${Names.unitAnalyser(this.language!, grammarPart.unit)}.ts`;
             indexContent += `export * from "./${Names.unitAnalyser(this.language!, grammarPart.unit)}.js";\n`;
             const analyserContent: string = grammarPart.toMethod(this.language!, relativePath);
-            let message: string = "";
+            let message: string;
             if (!!grammarPart.unit) {
                 message = `syntax analyser for unit ${grammarPart.unit?.name}`;
             } else {
@@ -145,7 +144,7 @@ export class ReaderWriterGenerator {
             let testContent = generatedContent.replace("export const", "// export const ");
             testContent = testContent.replace("}`; // end of grammar", "}");
             testContent = testContent.replace(new RegExp("\\\\\\\\", "gm"), "\\");
-            Agl.processorFromString(testContent, null, null, null);
+            Agl.getInstance().processorFromString(testContent, null);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 generationStatus.numberOfErrors += 1;

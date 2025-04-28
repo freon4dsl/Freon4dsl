@@ -3,7 +3,7 @@ import { FreMetaBinaryExpressionConcept, FreMetaProperty } from "../../../../lan
 import { makeIndent } from "../GrammarUtils.js";
 import { BinaryExpMaker } from "../../BinaryExpMaker.js";
 import { GenerationUtil } from "../../../../utils/index.js";
-import { internalTransformNode, ParserGenUtil } from "../../ParserGenUtil.js";
+import { ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSBinaryExp extends RHSPropEntry {
     type: FreMetaBinaryExpressionConcept;
@@ -18,9 +18,8 @@ export class RHSBinaryExp extends RHSPropEntry {
         return `${BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type))}` + this.doNewline();
     }
 
-    toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        return `
-                ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformNode}(${nodeName}[${index}]) // RHSBinaryExp`;
+    toMethod(index: number, nodeName: string): string {
+        return `${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}] // RHSBinaryExp`;
     }
 
     toString(depth: number): string {

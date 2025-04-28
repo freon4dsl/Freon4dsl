@@ -3,6 +3,7 @@ import { computed, observable, makeObservable } from "mobx";
 import { FreLanguageEnvironment } from "../environment/index.js";
 import { FreLogger } from "../logging/index.js";
 import { MobxModelElementImpl } from "./decorators/index.js";
+import { FreParseLocation } from '../reader/index.js';
 
 const LOGGER = new FreLogger("FreNodeReference").mute();
 /**
@@ -39,6 +40,8 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
 
     // Needed for the scoper to work
     public typeName: string = "";
+
+    public parseLocation: FreParseLocation; // if relevant, the location of this element within the source from which it is parsed
 
     /**
      * The constructor is private, use the create() method

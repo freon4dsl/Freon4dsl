@@ -35,15 +35,22 @@ export class ReaderTemplate {
         *   Class ${Names.reader(language)} is a wrapper for the various parsers of
         *   model units.
         */
-        export class ${Names.reader(language)} implements ${Names.FreReader} {
-            analyser: ${syntaxAnalyser} = new ${syntaxAnalyser}();
-            res: LanguageProcessorResult<any, any> = Agl.getInstance().processorFromString(
-                ${Names.grammarStr(language)},
-                Agl.getInstance().configuration(undefined, (b) => {
-                    b.syntaxAnalyserResolverResult(() => this.analyser);
-                })
-            );
-            parser: LanguageProcessor<${Names.classifier(language.modelConcept)}, MyContext> = this.res.processor;
+        export class ${Names.reader(language)} implements ${Names.FreReader} {          
+            analyser: ${syntaxAnalyser};
+            parser: LanguageProcessor<${Names.classifier(language.modelConcept)}, MyContext>;
+            isInitialized: boolean = false;
+        
+            initialize() {
+                this.analyser = new ${syntaxAnalyser}();
+                const res: LanguageProcessorResult<any, any> = Agl.getInstance().processorFromString(
+                  ${Names.grammarStr(language)},
+                  Agl.getInstance().configuration(undefined, (b) => {
+                      b.syntaxAnalyserResolverResult(() => this.analyser);
+                  }),
+                );
+                this.parser = res.processor;
+                this.isInitialized = true;
+            }
 
             /**
              * Parses and performs a syntax analysis on 'sentence', using the parser and analyser
@@ -55,6 +62,9 @@ export class ReaderTemplate {
              * @param sourceName    the (optional) name of the source that contains 'sentence'
              */
             readFromString(sentence: string, metatype: string, model: ${Names.classifier(language.modelConcept)}, sourceName?: string): ${Names.modelunit()} {
+                if (!this.isInitialized) {
+                    this.initialize();
+                }
                 this.analyser.sourceName = sourceName;
                 let startRule: string = "";
                 // choose the correct parser
@@ -80,6 +90,7 @@ export class ReaderTemplate {
                             parseResult = this.parser.process(sentence, null);
                         }
                     });
+                    if (parseResult) {
                     const errors = parseResult.issues.errors.asJsReadonlyArrayView();
                     if (errors.length > 0) {
                         errors.map((err: LanguageIssue) => {
@@ -116,6 +127,7 @@ export class ReaderTemplate {
                             console.log(e.message);
                             throw e;
                         }
+                    }
                     }
                     return unit;
                 } else {
