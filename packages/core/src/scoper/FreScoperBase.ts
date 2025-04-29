@@ -25,7 +25,7 @@ export abstract class FreScoperBase implements FreScoper {
     ): FreNamedNode {
         this.currentRoleNames.push(doNotSearch);
         // get the names from the namespace where the pathname is found (i.e. the basePostion) to be able to check against this later on
-        const elementsFromBasePosition: FreNamedNode[] = this.getVisibleElements(basePosition);
+        const elementsFromBasePosition: FreNamedNode[] = this.mainScoper.getVisibleElements(basePosition);
         // start the loop over the set of names in the pathname
         let previousFound: FreNode = basePosition;
         let found: FreNamedNode = null;
@@ -143,7 +143,7 @@ export abstract class FreScoperBase implements FreScoper {
         metatype?: string,
         excludeSurrounding?: boolean,
     ): FreNamedNode {
-        const visibleElements = this.getVisibleElements(node, metatype, excludeSurrounding);
+        const visibleElements = this.mainScoper.getVisibleElements(node, metatype, excludeSurrounding);
         if (visibleElements !== null) {
             for (const element of visibleElements) {
                 const n: string = element.name;
@@ -159,7 +159,7 @@ export abstract class FreScoperBase implements FreScoper {
      * See FreScoper.
      */
     public getVisibleNames(node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
-        const visibleElements = this.getVisibleElements(node, metatype, excludeSurrounding);
+        const visibleElements = this.mainScoper.getVisibleElements(node, metatype, excludeSurrounding);
         return visibleElements.map(el => el.name);
     }
 
