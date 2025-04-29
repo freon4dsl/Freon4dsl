@@ -3,8 +3,8 @@ import {
     FreMetaConcept,
     MetaElementReference,
     FreMetaInterface,
-    FreMetaProperty,
-} from "../../languagedef/metalanguage/index.js";
+    FreMetaProperty, FreMetaUnitDescription
+} from '../../languagedef/metalanguage/index.js';
 import { GenerationUtil } from "./GenerationUtil.js";
 
 /**
@@ -82,6 +82,12 @@ export class LangUtil {
                 LangUtil.superClassifiersRecursive(i.referred, result);
             }
         }
+        if (self instanceof FreMetaUnitDescription) {
+            for (const i of self.interfaces) {
+                result.push(i.referred);
+                LangUtil.superClassifiersRecursive(i.referred, result);
+            }
+        }
         if (self instanceof FreMetaInterface) {
             for (const i of self.base) {
                 result.push(i.referred);
@@ -115,6 +121,22 @@ export class LangUtil {
             return [];
         }
         for (const cls of self.language.concepts) {
+            if (LangUtil.superClassifiers(cls).includes(self)) {
+                result.push(cls);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns all concepts AND units of which 'self' is an implemented interface, recursive.
+     * Param 'self' is NOT included in the result.
+     * @param self
+     */
+    public static subClassifiers(self: FreMetaClassifier): FreMetaClassifier[] {
+        const result: FreMetaClassifier[] = this.subConcepts(self);
+        for (const cls of self.language.units) {
+            console.log('checking unit', cls.name)
             if (LangUtil.superClassifiers(cls).includes(self)) {
                 result.push(cls);
             }
