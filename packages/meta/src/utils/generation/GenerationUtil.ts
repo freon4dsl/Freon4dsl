@@ -108,22 +108,21 @@ export class GenerationUtil {
      * Returns a string representation of 'exp' that can be used in TypeScript code.
      * @param exp
      */
-    public static langExpToTypeScript(exp: FreLangExp): string {
-        // tslint:disable-next-line:typedef-whitespace
+    public static langExpToTypeScript(exp: FreLangExp, paramName: string): string {
         let result: string = "";
         if (exp instanceof FreLangSelfExp) {
-            result = `modelelement.${this.langExpToTypeScript(exp.appliedfeature)}`;
+            result = `${paramName}.${this.langExpToTypeScript(exp.appliedfeature, paramName)}`;
         } else if (exp instanceof FreLangFunctionCallExp) {
             if (exp.sourceName === "ancestor") {
-                const metaType: string = this.langExpToTypeScript(exp.actualparams[0]); // there is always 1 param to this function
-                result = `this.ancestor(modelelement, "${metaType}") as ${metaType}`;
+                const metaType: string = this.langExpToTypeScript(exp.actualparams[0], paramName); // there is always 1 param to this function
+                result = `this.ancestor(${paramName}, "${metaType}") as ${metaType}`;
             } else {
                 result = `this.${exp.sourceName} (${exp.actualparams
-                    .map((param) => `${this.langExpToTypeScript(param)}`)
+                    .map((param) => `${this.langExpToTypeScript(param, paramName)}`)
                     .join(", ")})`;
             }
             if (!!exp.appliedfeature) {
-                result = `(${result}).${this.langExpToTypeScript(exp.appliedfeature)}`;
+                result = `(${result}).${this.langExpToTypeScript(exp.appliedfeature, paramName)}`;
             }
         } else if (exp instanceof FreLangAppliedFeatureExp) {
             // TODO this should be replaced by special getters and setters for reference properties
@@ -133,7 +132,7 @@ export class GenerationUtil {
             //     + (exp.appliedfeature ? (`?.${this.langExpToTypeScript(exp.appliedfeature)}`) : "");
             result =
                 (isRef ? Names.refName(exp.referredElement) : exp.sourceName) +
-                (exp.appliedfeature ? `?.${this.langExpToTypeScript(exp.appliedfeature)}` : "");
+                (exp.appliedfeature ? `?.${this.langExpToTypeScript(exp.appliedfeature, paramName)}` : "");
         } else if (exp instanceof FreInstanceExp) {
             result = `${exp.sourceName}.${exp.instanceName}`;
         } else {

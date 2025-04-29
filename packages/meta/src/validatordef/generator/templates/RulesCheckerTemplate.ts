@@ -27,6 +27,8 @@ import {
 import { ValidationUtils } from "../ValidationUtils.js";
 
 export class RulesCheckerTemplate {
+    paramName: string = "modelElement";
+
     generateRulesChecker(language: FreMetaLanguage, validdef: ValidatorDef, relativePath: string): string {
         const defaultWorkerName: string = Names.defaultWorker(language);
         const errorClassName: string = Names.FreError;
@@ -35,9 +37,9 @@ export class RulesCheckerTemplate {
         const writerInterfaceName: string = Names.FreWriter;
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const commentBefore: string = `/**
-                                * Checks 'modelelement' before checking its children.
+                                * Checks '${this.paramName}' before checking its children.
                                 * Found errors are pushed onto 'errorlist'.
-                                * @param modelelement
+                                * @param ${this.paramName}
                                 */`;
         // the template starts here
         return `
@@ -65,7 +67,7 @@ export class RulesCheckerTemplate {
             .map(
                 (ruleSet) =>
                     `${commentBefore}
-            public execBefore${Names.concept(ruleSet.conceptRef?.referred)}(modelelement: ${Names.concept(ruleSet.conceptRef?.referred)}): boolean {
+            public execBefore${Names.concept(ruleSet.conceptRef?.referred)}(${this.paramName}: ${Names.concept(ruleSet.conceptRef?.referred)}): boolean {
                 let hasFatalError: boolean = false;
                 ${this.createRules(ruleSet)}
                 return hasFatalError;
@@ -184,8 +186,8 @@ export class RulesCheckerTemplate {
             message = `"'${r.toFreString()}' is false"`;
         }
         if (!!r.exp1 && !!r.exp2) {
-            return `if (!(${GenerationUtil.langExpToTypeScript(r.exp1)} ${r.comparator} ${GenerationUtil.langExpToTypeScript(r.exp2)})) {
-                    this.errorList.push( new ${Names.FreError}( ${message}, modelelement, ${locationdescription}, ${severity} ));
+            return `if (!(${GenerationUtil.langExpToTypeScript(r.exp1, this.paramName)} ${r.comparator} ${GenerationUtil.langExpToTypeScript(r.exp2, this.paramName)})) {
+                    this.errorList.push( new ${Names.FreError}( ${message}, ${this.paramName}, ${locationdescription}, ${severity} ));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
@@ -201,10 +203,10 @@ export class RulesCheckerTemplate {
     ): string {
         if (!!r.property) {
             if (!message || message.length === 0) {
-                message = `"'" + ${GenerationUtil.langExpToTypeScript(r.property)} + "' is not a valid identifier"`;
+                message = `"'" + ${GenerationUtil.langExpToTypeScript(r.property, this.paramName)} + "' is not a valid identifier"`;
             }
-            return `if (!this.isValidName(${GenerationUtil.langExpToTypeScript(r.property)})) {
-                    this.errorList.push( new ${Names.FreError}( ${message}, modelelement, ${locationdescription}, ${severity} ));
+            return `if (!this.isValidName(${GenerationUtil.langExpToTypeScript(r.property, this.paramName)})) {
+                    this.errorList.push( new ${Names.FreError}( ${message}, ${this.paramName}, ${locationdescription}, ${severity} ));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
@@ -217,8 +219,8 @@ export class RulesCheckerTemplate {
             if (!message || message.length === 0) {
                 message = `"List '${r.property.toFreString()}' may not be empty"`;
             }
-            return `if (${GenerationUtil.langExpToTypeScript(r.property)}.length === 0) {
-                    this.errorList.push(new ${Names.FreError}(${message}, modelelement, ${locationdescription}, "${r.property.toFreString()}", ${severity}));
+            return `if (${GenerationUtil.langExpToTypeScript(r.property, this.paramName)}.length === 0) {
+                    this.errorList.push(new ${Names.FreError}(${message}, ${this.paramName}, ${locationdescription}, "${r.property.toFreString()}", ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
         } else {
@@ -234,11 +236,11 @@ export class RulesCheckerTemplate {
     ): string {
         if (!!r.type1 && !!r.type2) {
             if (!message || message.length === 0) {
-                message = `"Type " + this.typer.inferType(${GenerationUtil.langExpToTypeScript(r.type1)})?.toFreString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1)}) +
-                         "] does not conform to " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2)})`;
+                message = `"Type " + this.typer.inferType(${GenerationUtil.langExpToTypeScript(r.type1, this.paramName)})?.toFreString(this.myWriter) + " of [" + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type1, this.paramName)}) +
+                         "] does not conform to " + this.myWriter.writeNameOnly(${GenerationUtil.langExpToTypeScript(r.type2, this.paramName)})`;
             }
-            return `if (!this.typer.conformsType(${GenerationUtil.langExpToTypeScript(r.type1)}, ${GenerationUtil.langExpToTypeScript(r.type2)})) {
-                    this.errorList.push(new ${Names.FreError}(${message}, ${GenerationUtil.langExpToTypeScript(r.type1)}, ${locationdescription}, ${severity}));
+            return `if (!this.typer.conformsType(${GenerationUtil.langExpToTypeScript(r.type1, this.paramName)}, ${GenerationUtil.langExpToTypeScript(r.type2, this.paramName)})) {
+                    this.errorList.push(new ${Names.FreError}(${message}, ${GenerationUtil.langExpToTypeScript(r.type1, this.paramName)}, ${locationdescription}, ${severity}));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                  }`;
         } else {
@@ -256,8 +258,8 @@ export class RulesCheckerTemplate {
         // TODO change other methods similar to this one, i.e. first determine the types then call typer on types
         // TODO make sure alle errors message use the same format
         if (!!r.type1 && !!r.type2) {
-            const leftElement: string = GenerationUtil.langExpToTypeScript(r.type1);
-            const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2);
+            const leftElement: string = GenerationUtil.langExpToTypeScript(r.type1, this.paramName);
+            const rightElement: string = GenerationUtil.langExpToTypeScript(r.type2, this.paramName);
             if (!message || message.length === 0) {
                 message = `"Type of '"+ this.myWriter.writeNameOnly(${leftElement})
                         + "' (" + leftType${index}?.toFreString(this.myWriter) + ") should equal the type of '"
@@ -290,7 +292,7 @@ export class RulesCheckerTemplate {
             let listpropertyTypescript: string = "";
             if (!!referredListproperty) {
                 listpropertyTypeName = GenerationUtil.getBaseTypeAsString(referredListproperty);
-                listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature);
+                listpropertyTypescript = GenerationUtil.langExpToTypeScript(rule.listproperty.appliedfeature, this.paramName);
             }
             //
             let refAddition: string = "";
@@ -305,10 +307,10 @@ export class RulesCheckerTemplate {
                 message = `\`The value of property '${listpropertyName}' (\"\${${howToWriteName}}\") is not unique in list '${listName}'\``;
             }
             return `let ${uniquelistName}: ${listpropertyTypeName}[] = [];
-        ${GenerationUtil.langExpToTypeScript(rule.list)}.forEach((elem, index) => {
+        ${GenerationUtil.langExpToTypeScript(rule.list, this.paramName)}.forEach((elem, index) => {
             if ((elem === undefined) || (elem === null)) {
                 this.errorList.push(new ${Names.FreError}(\`Element[\$\{index\}] of property '${listName}' has no value\`,
-                 ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
+                 ${GenerationUtil.langExpToTypeScript(rule.list, this.paramName)}[index]${refAddition},
                  ${locationdescription},
                  "${listpropertyName}",
                  ${severity}));
@@ -318,7 +320,7 @@ export class RulesCheckerTemplate {
                     ${uniquelistName}.push(elem.${listpropertyTypescript});
                 } else {
                     this.errorList.push(new ${Names.FreError}(${message},
-                     ${GenerationUtil.langExpToTypeScript(rule.list)}[index]${refAddition},
+                     ${GenerationUtil.langExpToTypeScript(rule.list, this.paramName)}[index]${refAddition},
                      ${locationdescription},
                      "${listpropertyName}",
                      ${severity}));                }
@@ -340,10 +342,10 @@ export class RulesCheckerTemplate {
                     result += `${cont.value}`;
                 } else if (cont instanceof ValidationMessageReference && !!cont.expression) {
                     if (cont.expression.findRefOfLastAppliedFeature() instanceof FreMetaPrimitiveProperty) {
-                        result += `\${${GenerationUtil.langExpToTypeScript(cont.expression)}}`;
+                        result += `\${${GenerationUtil.langExpToTypeScript(cont.expression, this.paramName)}}`;
                     } else {
                         // console.log("FOUND message expression: '" + cont.expression.toFreString() + "'");
-                        result += `\${this.myWriter.writeToString(${GenerationUtil.langExpToTypeScript(cont.expression)})}`;
+                        result += `\${this.myWriter.writeToString(${GenerationUtil.langExpToTypeScript(cont.expression, this.paramName)})}`;
                     }
                 }
                 if (index < numberOfparts - 1) {

@@ -66,7 +66,7 @@ export class ScoperTemplate {
             }
 
              /**
-             * Returns true if there is an alternative scope defined for this 'modelelement'.
+             * Returns true if there is an alternative scope defined for this 'node'.
              * @param hasAlternativeScope
              */
             hasAlternativeScope(node: ${Names.FreNode}): boolean {
@@ -231,7 +231,7 @@ export class ScoperTemplate {
             if (expression.actualparams[0].sourceName === "container") {
                 actualParamToGenerate = `node.freOwnerDescriptor()?.owner`;
             } else {
-                actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0]);
+                actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0], "node");
             }
             result = `let owner = ${actualParamToGenerate};
                 if (!!owner) {
@@ -245,7 +245,7 @@ export class ScoperTemplate {
                 }`;
         } else {
             // normal case: the expression is an ordinary expression over the language
-            result = GenerationUtil.langExpToTypeScript(expression);
+            result = GenerationUtil.langExpToTypeScript(expression, "node");
         }
         return result;
     }
