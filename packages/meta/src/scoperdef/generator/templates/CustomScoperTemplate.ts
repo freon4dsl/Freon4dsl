@@ -17,23 +17,23 @@ export class CustomScoperTemplate {
         export class ${generatedClassName} implements ${scoperInterfaceName} {
             mainScoper: ${Names.FreScoperComposite};
 
-            resolvePathName(modelelement: ${Names.FreNode}, doNotSearch: string, pathname: string[], metatype?: string): ${Names.FreNamedNode} {
+            resolvePathName(node: ${Names.FreNode}, doNotSearch: string, pathname: string[], metatype?: string): ${Names.FreNamedNode} {
                 return undefined;
             }
 
-            isInScope(modelElement: ${Names.FreNode}, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
+            isInScope(node: ${Names.FreNode}, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
                 return undefined;
             }
 
-            getVisibleElements(modelelement: ${Names.FreNode}, metatype?: string, excludeSurrounding?: boolean): ${Names.FreNamedNode}[] {
+            getVisibleElements(node: ${Names.FreNode}, metatype?: string, excludeSurrounding?: boolean): ${Names.FreNamedNode}[] {
                 return undefined;
             }
 
-            getFromVisibleElements(modelelement: ${Names.FreNode}, name: string, metatype?: string, excludeSurrounding?: boolean): ${Names.FreNamedNode} {
+            getFromVisibleElements(node: ${Names.FreNode}, name: string, metatype?: string, excludeSurrounding?: boolean): ${Names.FreNamedNode} {
                 return undefined;
             }
 
-            getVisibleNames(modelelement: ${Names.FreNode}, metatype?: string, excludeSurrounding?: boolean): string[] {
+            getVisibleNames(node: ${Names.FreNode}, metatype?: string, excludeSurrounding?: boolean): string[] {
                 return undefined;
             }
 
