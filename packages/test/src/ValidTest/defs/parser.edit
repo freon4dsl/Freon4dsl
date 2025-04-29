@@ -1,0 +1,15 @@
+editor parser
+
+AAAAAA {[
+    Modelunit AAAAAA
+    Prop of type CC: ${self.AAprop7a}
+    Prop of type BB: ${self.AAprop7}
+]}
+
+CC {[
+    CC \[ CCprop3: ${self.CCprop3} \]
+]}
+
+BB {[
+    BB \[ CCprop3: ${self.CCprop3} \]
+]}

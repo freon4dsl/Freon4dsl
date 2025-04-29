@@ -1,6 +1,6 @@
 import fs from "fs";
 import { FreMetaLanguage } from "../metalanguage/index.js";
-import { FreGenericParser, LOG2USER } from "../../utils/index.js";
+import { FreGenericParser } from "../../utils/index.js";
 import { parseIds } from "./IdParser.js";
 import { parser } from "./LanguageGrammar.js";
 
@@ -18,7 +18,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     }
 
     parse(definitionFile: string): FreMetaLanguage | undefined {
-        LOG2USER.log("ParseFile: " + definitionFile);
+        // LOG2USER.log("ParseFile: " + definitionFile);
         if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);

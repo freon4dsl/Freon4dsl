@@ -1,0 +1,5 @@
+validator TestValidator for language test1
+
+CC {
+    self.CCprop3 >= 12;
+}

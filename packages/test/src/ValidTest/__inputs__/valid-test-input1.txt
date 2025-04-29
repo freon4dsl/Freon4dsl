@@ -1,0 +1,3 @@
+Modelunit AAAAAA
+    Prop of type CC: CC [ CCprop3: 14 ]
+    Prop of type BB: BB [ CCprop3: 400 ]
