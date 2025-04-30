@@ -2,6 +2,8 @@ import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } fro
 import { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 import { ValidationUtils } from "../ValidationUtils.js";
 
+const paramName: string = "modelElement";
+
 export class ReferenceCheckerTemplate {
     imports: string[] = [];
 
@@ -46,14 +48,14 @@ export class ReferenceCheckerTemplate {
 
             ${allMethods}
 
-            private makeErrorMessage(modelelement: ${overallTypeName}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>, propertyName: string, locationDescription: string) {
+            private makeErrorMessage(${paramName}: ${overallTypeName}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>, propertyName: string, locationDescription: string) {
                 const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
-                const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
+                const possibles = scoper.getVisibleElements(${paramName}).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
                         new ${Names.FreError}(
                             \`Reference '\${referredElem.pathnameToString(this.refSeparator)}' should have type '\${referredElem.typeName}', but found type(s) [\${possibles.map(elem => \`\${elem.freLanguageConcept()}\`).join(", ")}]\`,
-                                modelelement,
+                                ${paramName},
                                 \`\${propertyName} of \${locationDescription}\`,
                             \`\${propertyName}\`,
                             ${Names.FreErrorSeverity}.Error
@@ -61,7 +63,7 @@ export class ReferenceCheckerTemplate {
                     );
                 } else {
                     this.errorList.push(
-                        new ${Names.FreError}(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, modelelement, \`\${propertyName} of \${locationDescription}\`, \`\${propertyName}\`, ${Names.FreErrorSeverity}.Error)
+                        new ${Names.FreError}(\`Cannot find reference '\${referredElem.pathnameToString(this.refSeparator)}'\`, ${paramName}, \`\${propertyName} of \${locationDescription}\`, \`\${propertyName}\`, ${Names.FreErrorSeverity}.Error)
                     );
                 }
             }
@@ -71,18 +73,18 @@ export class ReferenceCheckerTemplate {
     private createChecksOnNonOptionalParts(concept: FreMetaClassifier): string {
         let result: string = "";
         // todo check location description, I (A) think that too often 'unnamed' is the result
-        const locationdescription = ValidationUtils.findLocationDescription(concept);
+        const locationdescription = ValidationUtils.findLocationDescription(concept, paramName);
         concept.allProperties().forEach((prop) => {
             if (!prop.isPart) {
                 if (prop.isList) {
-                    result += `for (const referredElem of modelelement.${prop.name} ) {
+                    result += `for (const referredElem of ${paramName}.${prop.name} ) {
                         if (referredElem.referred === null) {
-                            this.makeErrorMessage(modelelement, referredElem, "${prop.name}", \`\${${locationdescription}}\`);
+                            this.makeErrorMessage(${paramName}, referredElem, "${prop.name}", \`\${${locationdescription}}\`);
                         }
                     }`;
                 } else {
-                    result += `if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) {
-                            this.makeErrorMessage(modelelement, modelelement.${prop.name}, "${prop.name}", \`\${${locationdescription}}\`);
+                    result += `if (!!${paramName}.${prop.name} && ${paramName}.${prop.name}.referred === null) {
+                            this.makeErrorMessage(${paramName}, ${paramName}.${prop.name}, "${prop.name}", \`\${${locationdescription}}\`);
                     }`;
                 }
             }
@@ -92,14 +94,14 @@ export class ReferenceCheckerTemplate {
             this.imports.push(Names.classifier(concept));
             return `
             /**
-             * Checks 'modelelement' before checking its children.
+             * Checks '${paramName}' before checking its children.
              * Found errors are pushed onto 'errorlist'.
              * If an error is found, it is considered 'fatal', which means that no other checks on
-             * 'modelelement' are performed.
+             * '${paramName}' are performed.
              *
-             * @param modelelement
+             * @param ${paramName}
              */
-            public execBefore${Names.classifier(concept)}(modelelement: ${Names.classifier(concept)}): boolean {
+            public execBefore${Names.classifier(concept)}(${paramName}: ${Names.classifier(concept)}): boolean {
                 ${result}
                 return false;
             }`;

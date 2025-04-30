@@ -122,7 +122,7 @@ export class RulesCheckerTemplate {
     private createRules(ruleSet: ConceptRuleSet): string {
         let result: string = "";
         // find the property that indicates the location in human terms
-        const locationdescription: string = ValidationUtils.findLocationDescription(ruleSet.conceptRef?.referred);
+        const locationdescription: string = ValidationUtils.findLocationDescription(ruleSet.conceptRef?.referred, this.paramName);
 
         ruleSet.rules.forEach((r, index) => {
             // find the severity for the rule
