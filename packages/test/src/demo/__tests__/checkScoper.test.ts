@@ -1,13 +1,13 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-import { DemoScoper } from "../scoper/gen/index.js";
-import { DemoModel, DemoFunction, Demo } from "../language/gen/index.js";
+import { DemoModel, Demo } from '../language/gen';
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { describe, it, test, expect, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
+import { FreScoperComposite } from '@freon4dsl/core';
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleElements from DemoModel Instance", () => {
         let model: Demo = new DemoModelCreator().createIncorrectModel();
-        let scoper = new DemoScoper();
+        let scoper = DemoEnvironment.getInstance().scoper;
 
         beforeEach(() => {
             DemoEnvironment.getInstance();
@@ -99,7 +99,7 @@ describe("testing Scoper", () => {
 
     describe("testing IsInScope", () => {
         let model: Demo = new DemoModelCreator().createIncorrectModel();
-        let scoper = new DemoScoper();
+        let scoper = DemoEnvironment.getInstance().scoper;
 
         // beforeEach(done => {
         //     done();
@@ -337,7 +337,7 @@ describe("testing Scoper", () => {
     });
 });
 
-function testEntity(scoper: DemoScoper, model: DemoModel, nameTotest: string) {
+function testEntity(scoper: FreScoperComposite, model: DemoModel, nameTotest: string) {
     expect(scoper.isInScope(model, nameTotest, "DemoEntity")).toBe(true);
     // test if nameTotest is known in model functions
     model.functions.forEach((fun) => {
