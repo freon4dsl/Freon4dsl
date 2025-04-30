@@ -27,6 +27,7 @@
     "imports": "bash ../../scripts/freon-test-dev.sh all -d src/testCircularImports/def -o src/testCircularImports",
     "defaultscoper": "bash ../../scripts/freon-test-dev.sh all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
     "definedscoper": "cp src/testDefaultScoper/defs/Language.ast src/testDefinedScoper/defs/Language.ast && cp src/testDefaultScoper/__tests__/SimpleModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && bash ../../scripts/freon-test-dev.sh all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
+    "customscoper": "bash ../../scripts/freon-test-dev.sh all -d src/testCustomScoper/defs -o src/testCustomScoper",
     "langconstr": "bash ../../scripts/freon-test-dev.sh all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "noparser": "bash ../../scripts/freon-test-dev.sh all -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
     "prim-gen": "bash ../../scripts/freon-test-dev.sh all -d src/testPrimPropsGeneration/defs -o src/testPrimPropsGeneration",

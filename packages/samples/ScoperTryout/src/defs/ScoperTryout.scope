@@ -1,0 +1,45 @@
+scoper TEST for language ScoperTryout
+
+isnamespace { Referable, QualifiedName }
+
+UnitUsingReferables {
+    /* Here we add all names from the imported units to the namespace */
+    namespace_addition = self.imports;
+}
+
+QualifiedName {
+    /* Note that QualifiedName is a namespace itself! */
+    /* Here we add all names from the 'part' to the namespace */
+    namespace_addition = self.part;
+    /* Here we use the owning node to determine the contents */
+    scope = container;
+}
+
+/*
+An example.
+
+The setup here is that there is a unit 'Unit1: UnitHoldingReferables', which contains [ 'A', 'B', 'C' ].
+Where each of 'A', 'B', 'C' holds subs called 'A_A', 'A_B', 'B_A', 'B_B', etc.
+
+Say we have an object 'RefUnit: UnitUsingReferables', and within it the chain Unit1.B.B_A.B_A_C.
+This chain consists of 4 QualifiedName instances:
+    Q1 = [ part: Unit1, restName: Q2 ]
+    Q2 = [ part: B, restName: Q3 ]
+    Q3 = [ part: B_A, restName: Q4 ]
+    Q4 = [ part: B_A_C, restName: null ].
+
+Because of the alternative scope for QualifiedName, the visible names for Q1 are all the names in its
+container, which is in this case RefUnit. Because of the namespace_addition in UnitUsingReferables,
+all names from the imports are visible. Thus the namespace contains: ['Unit1', 'RefUnit'].
+
+Again, because of the alternative scope, the visible names for Q2 are all the names in its container,
+which is in this case Q1. Because of the namespace_addition in QualifiedName, all names from the 'part'
+are visible. The 'part' here is 'Unit1', therefore the namespace of Q1 contains: ['A', 'B', 'C'].
+
+The visible names for Q3 are all the names in its container, i.e. Q2. Because of the namespace_addition in
+QualifiedName, all names from the 'part' are visible. The 'part' here is 'B', therefore the namespace of Q3
+contains: ['B_A', 'B_B', 'B_C'].
+
+Etc, etc.
+*/
+
