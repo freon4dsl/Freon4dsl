@@ -5,13 +5,13 @@ import {
 } from "../../languagedef/metalanguage/index.js";
 
 export class ValidationUtils {
-    public static findLocationDescription(concept: FreMetaClassifier | undefined): string {
+    public static findLocationDescription(concept: FreMetaClassifier | undefined, paramName: string): string {
         let nameProp: FreMetaPrimitiveProperty | undefined = concept
             ?.allPrimProperties()
             .find((prop) => prop.name === "name");
         if (!!!nameProp) {
             nameProp = concept?.allPrimProperties().find((prop) => prop.type === FreMetaPrimitiveType.identifier);
         }
-        return !!nameProp ? `modelelement.${nameProp.name}` : `'unnamed'`;
+        return !!nameProp ? `${paramName}.${nameProp.name}` : `'unnamed'`;
     }
 }
