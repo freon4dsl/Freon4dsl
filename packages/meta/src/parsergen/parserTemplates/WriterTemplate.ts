@@ -231,6 +231,8 @@ export class WriterTemplate {
                 break;`,
                     )
                     .join("\n")}
+                default:
+                    console.error("Cannot unparse a " + modelelement.freLanguageConcept())    
                 }
             }
 
