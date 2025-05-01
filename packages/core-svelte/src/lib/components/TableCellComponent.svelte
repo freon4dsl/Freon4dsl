@@ -169,8 +169,9 @@
         // See https://stackoverflow.com/questions/11927309/html5-dnd-datatransfer-setdata-or-getdata-not-working-in-every-browser-except-fi,
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
         // Create the data to be transferred and notify the store that something is being dragged.
-        if (!!box.getParentTableBox()) {
-            rememberDraggedNode(id, box.getParentTableBox()!, box);
+        const parentTableBox: TableBox | undefined = box.getParentTableBox()
+        if (!parentTableBox !== null && parentTableBox !== undefined) {
+            rememberDraggedNode(parentTableBox.id, box.getParentTableBox()!, box);
             // console.log(`dragstart: ${draggedElem.value?.element.freLanguageConcept()}`)
         }
     };
