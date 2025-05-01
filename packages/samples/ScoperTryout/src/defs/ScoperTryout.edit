@@ -6,10 +6,10 @@ UnitHoldingReferables {[
 ]}
 
 UnitUsingReferables {[
-    unitType2 ${self.name}
+    unitType2 ${self.name} imports ${self.imports}
     myReferences: ${self.myReferences vertical}
 ]}
 
 QualifiedName {[
-    Q ${self.part}[?.${self.restName}]
+    ${self.part}[?>>${self.restName}]
 ]}
