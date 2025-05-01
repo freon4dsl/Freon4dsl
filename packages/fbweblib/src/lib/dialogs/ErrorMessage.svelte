@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { messageInfo, userMessageOpen } from '$lib';
+	import { messageInfo, userMessageOpen, WebappConfigurator } from "$lib";
 	import { Alert, Button, Modal } from 'flowbite-svelte';
 	import { InfoCircleSolid } from 'flowbite-svelte-icons';
 	import { fly } from 'svelte/transition';
@@ -13,8 +13,9 @@
 		<InfoCircleSolid slot="icon" class="w-5 h-5"/>
 		{messageInfo.userMessage}
 		<Button slot="close-button" size="xs"
-						onclick={() => {userMessageOpen.value = !userMessageOpen.value}}
-						class="ms-auto dark:text-dark-accent-100 bg-light-accent-800 dark:bg-dark-accent-800">
+						onclick={() => {userMessageOpen.value = !userMessageOpen.value; WebappConfigurator.getInstance().langEnv?.editor.selectionChanged()}}
+						class="ms-auto dark:text-dark-accent-100 bg-light-accent-800 dark:bg-dark-accent-800"
+		>
 			Dismiss
 		</Button>
 	</Alert>
