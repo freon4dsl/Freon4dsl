@@ -14,10 +14,10 @@ describe("Testing Custom Scoper", () => {
 	beforeEach(() => {
 		model = ScoperTryout.create({name: 'test'});
 		let fileName: string = "unit1_1.uni";
-		let input: string = fileHandler.stringFromFile("src/testCustomScoper/__inputs__/" + fileName);
+		let input: string = fileHandler.stringFromFile("src/qualifiedNameScoper/__inputs__/" + fileName);
 		reader.readFromString(input, "Unit", model, fileName);
 		fileName = "unit1_2.uni";
-		input = fileHandler.stringFromFile("src/testCustomScoper/__inputs__/" + fileName);
+		input = fileHandler.stringFromFile("src/qualifiedNameScoper/__inputs__/" + fileName);
 		reader.readFromString(input, "Unit", model, fileName);
 		// model.getUnits().forEach(unit => console.log(writer.writeToString(unit)));
 	})
