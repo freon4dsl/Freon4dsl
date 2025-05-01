@@ -4,8 +4,8 @@ import {
     FreLangExp,
     FreLangFunctionCallExp,
     FreMetaLanguage,
-    FreMetaProperty,
-} from "../../../languagedef/metalanguage/index.js";
+    FreMetaProperty, FreMetaClassifier
+} from '../../../languagedef/metalanguage/index.js';
 import { Names, LANGUAGE_GEN_FOLDER, FREON_CORE, GenerationUtil, LangUtil, ListUtil } from "../../../utils/index.js";
 import { ScopeDef, ScopeConceptDef } from "../../metalanguage/index.js";
 
@@ -67,7 +67,7 @@ export class ScoperTemplate {
 
              /**
              * Returns true if there is an alternative scope defined for this 'node'.
-             * @param hasAlternativeScope
+             * @param node
              */
             hasAlternativeScope(node: ${Names.FreNode}): boolean {
                 ${this.hasAlternativeScopeText}
@@ -104,11 +104,11 @@ export class ScoperTemplate {
                     ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
                     if (myClassifier instanceof FreMetaInterface) {
                         for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
-                            this.makeAdditionalNamespaceTextsForConcept(implementor, def, comment, coreImports);
-                            ListUtil.addIfNotPresent(this.languageImports, Names.concept(implementor));
+                            this.makeAdditionalNamespaceTextsForClassifier(implementor, def, comment, coreImports);
+                            ListUtil.addIfNotPresent(this.languageImports, Names.classifier(implementor));
                         }
                     } else {
-                        this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, comment, coreImports);
+                        this.makeAdditionalNamespaceTextsForClassifier(myClassifier, def, comment, coreImports);
                         ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
                     }
                 }
@@ -116,13 +116,13 @@ export class ScoperTemplate {
         }
     }
 
-    private makeAdditionalNamespaceTextsForConcept(
-        freConcept: FreMetaConcept,
+    private makeAdditionalNamespaceTextsForClassifier(
+        freConcept: FreMetaClassifier,
         def: ScopeConceptDef,
         comment: string,
         coreImports: string[],
     ) {
-        const typeName = Names.concept(freConcept);
+        const typeName = Names.classifier(freConcept);
         // we are adding to three textstrings
         // first, to the import statements
         ListUtil.addIfNotPresent(this.languageImports, typeName);
@@ -224,8 +224,8 @@ export class ScoperTemplate {
 
     private altScopeExpToTypeScript(expression: FreLangExp): string {
         let result;
-        // special case: the expression refers to 'typeof'
         if (expression instanceof FreLangFunctionCallExp && expression.sourceName === "typeof") {
+            // special case: the expression refers to 'typeof'
             let actualParamToGenerate: string = "";
             // we know that typeof has exactly 1 actual parameter
             if (expression.actualparams[0].sourceName === "container") {
@@ -243,6 +243,16 @@ export class ScoperTemplate {
                 } else {
                     console.log("AlternativeScoper for node " + node.freId() + " ")
                 }`;
+        } else if (expression.sourceName === "container") {
+            // special case: the expression refers to 'container'
+            result = `// Note that this code is here to avoid a compile error.
+            // The result is the same as the default behaviour of the scoper.
+            let container = node.freOwner();
+            if (!!container) {
+                return FreNamespace.create(container);
+            } else {
+                console.error("getAlternativeScope: no container found.");
+            }`;
         } else {
             // normal case: the expression is an ordinary expression over the language
             result = GenerationUtil.langExpToTypeScript(expression, "node");
