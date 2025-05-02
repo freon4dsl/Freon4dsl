@@ -27,7 +27,6 @@ import {
     RHSOptionalGroup,
     RHSBooleanWithSingleKeyWord,
     RHSPrimEntry,
-    RHSPrimOptionalEntry,
     RHSPrimListEntry,
     RHSPrimListEntryWithSeparator,
     RHSPartEntry,
@@ -327,7 +326,8 @@ export class ConceptMaker {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSPrimEntry(prop);
             } else {
-                return new RHSPrimOptionalEntry(prop);
+                console.error('Found optional primitive property during parser generation! Primitives should not be optional.')
+                return undefined;
             }
         } else {
             if (!!item.listInfo) {

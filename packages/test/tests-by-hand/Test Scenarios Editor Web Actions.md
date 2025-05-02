@@ -54,7 +54,7 @@ At the start of these scenarios, a model unit is available in the editor.
 :o2: _Ctrl-z_ and _Ctrl-y_ both work (Edge browser, MacOs)
 
 :exclamation: After _Undo_ or _Redo_ from the menu, the cursor and therefore the HTML focus is **not** in the editor.
-That is probably why _Ctrl-z_ and _Ctrl-y_ don't work. The do work if I put the cursor in the editor using a mouse-click
+That is probably why _Ctrl-z_ and _Ctrl-y_ don't work. They do work if I put the cursor in the editor using a mouse-click
  
 ### Scenario 4: undo, redo with multiple editor tabs
 |  | Action                                                                   | Expected result                              |

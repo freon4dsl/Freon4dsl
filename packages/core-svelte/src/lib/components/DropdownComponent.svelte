@@ -34,7 +34,7 @@
                     }}
                     role="none"
                 >
-                    {option.label}
+                    {option.label} {#if option.additional_label} {option.additional_label} {/if}
                 </div>
             {/each}
         {:else}

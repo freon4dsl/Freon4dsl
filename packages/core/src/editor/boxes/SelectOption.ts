@@ -12,7 +12,13 @@ export interface SelectOption {
      * The text as shown to the user, usually also the text that the user needs to type.
      */
     label: string;
-
+    /**
+     * The text as shown to the user, usually also the text that the user needs to type.
+     */
+    additional_label?: string;
+    /**
+     * The action to be executed when this option is selected.
+     */
     action?: FreAction;
     /**
      * A more verbose description, keep this to a single short line.

@@ -21,7 +21,6 @@ export * from "./RHSPrimListEntry.js";
 export * from "./RHSPrimListEntryWithSeparator.js";
 export * from "./RHSPrimListGroup.js";
 export * from "./RHSPrimListGroupWithInitiator.js";
-export * from "./RHSPrimOptionalEntry.js";
 export * from "./RHSPropEntry.js";
 export * from "./RHSPropPartWithSeparator.js";
 export * from "./RHSRefEntry.js";

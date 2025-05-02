@@ -65,14 +65,14 @@ FretTypeRule = FretInferenceRule
     | FretLimitedRule  ;
 
 FretExp = FretPropertyCallExp
-    | FretSelfExp
-    | FretAnytypeExp
-    | FretVarCallExp
-    | FretCreateExp
-    | FretLimitedInstanceExp
-    | FretWhereExp
-    | FretFunctionCallExp
-    | __fre_binary_FretExp ;
+  | FretLimitedInstanceExp
+  | FretFunctionCallExp
+  | FretVarCallExp
+  | FretSelfExp
+  | FretAnytypeExp
+  | FretCreateExp
+  | FretWhereExp
+  | __fre_binary_FretExp ;
 
 __fre_binary_FretExp = [FretExp / __fre_binary_operator]2+ ;
 leaf __fre_binary_operator = 'conformsto' | 'equalsto' ;
