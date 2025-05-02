@@ -7,7 +7,7 @@
     "clean": "rm -rf node_modules/",
     "build": "echo No build for webapp-starter",
     "build-app": "vite build",
-    "build-dev": "cd ../../packages/samples/CourseSchedule && npm run build",
+    "build-dev": "cd ../../packages/samples/Example && npm run build",
     "dev": "vite",
     "preview": "vite preview",
     "start": "sirv public --port 8000",
@@ -26,7 +26,7 @@
   "dependencies": {
     "@freon4dsl/core": "~1.1.0",
     "@freon4dsl/core-svelte": "~1.1.0",
-    "@freon4dsl/samples-course-schedule": "~1.1.0",
+    "@freon4dsl/samples-example": "~1.1.0",
     "@freon4dsl/flowbite-webapp": "~1.1.0",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",

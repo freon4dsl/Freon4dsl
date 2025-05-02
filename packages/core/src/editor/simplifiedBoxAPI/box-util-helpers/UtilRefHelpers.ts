@@ -9,7 +9,7 @@ import {
     SelectOption,
     VerticalListBox,
 } from "../../boxes/index.js";
-import { FreNamedNode, FreNode, FreNodeReference } from "../../../ast/index.js";
+import { FreNamedNode, FreNode, FreNodeReference, qualifiedName } from '../../../ast/index.js';
 import { RoleProvider } from "../RoleProvider.js";
 import { FreScoper } from "../../../scoper/index.js";
 import { BehaviorExecutionResult } from "../../util/index.js";
@@ -52,16 +52,17 @@ export class UtilRefHelpers {
             `<${propertyName}>`,
             () => {
                 return scoper
-                    .getVisibleNames(node, propType)
-                    .filter((name) => !!name && name !== "")
-                    .map((name) => ({
-                        id: name,
-                        label: name,
+                    .getVisibleElements(node, propType)
+                    .filter((node) => !!node.name && node.name !== "")
+                    .map((node) => ({
+                        id: node.name,
+                        label: node.name,
+                        additional_label: this.makeAdditionalLabel(node)
                     }));
             },
             () => {
                 if (!!property) {
-                    return { id: property.name, label: property.name };
+                    return { id: property.name, label: property.name, additional_label: this.makeAdditionalLabel(property) };
                 } else {
                     return null;
                 }
@@ -86,6 +87,27 @@ export class UtilRefHelpers {
         result.propertyName = propertyName;
         result.propertyIndex = index;
         return result;
+    }
+
+    private static makeAdditionalLabel(node: FreNamedNode): string {
+        const additionalLabelSeparator: string = ">>>"
+        // remove the last of qualified name, because this is equal to the name of the node
+        const names: string[] = qualifiedName(node);
+        names.pop(); // Note that pop changes the array!
+        if (names.length >= 1) {
+            let result: string = '';
+            let first: boolean = true;
+            names.forEach(name => {
+                if (!first) {
+                    result += additionalLabelSeparator;
+                }
+                result += name;
+                first = false;
+            })
+            return 'from ' + result;
+        } else {
+            return '';
+        }
     }
 
     public static verticalReferenceListBox(
