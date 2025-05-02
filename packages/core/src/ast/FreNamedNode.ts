@@ -18,12 +18,17 @@ function recursiveQualifiedName(node: FreNamedNode): string[] {
     let next: FreNode = node.freOwner();
     if (next) {
         let typeDescription: FreLanguageClassifier = FreLanguage.getInstance().classifier(next.freLanguageConcept());
-        if (typeDescription.isNamespace) {
-            if (typeDescription.properties.has("name")) {
-                result.push((next as FreNamedNode).name);
+        if (typeDescription) {
+            if (typeDescription.isNamespace) {
+                if (typeDescription.properties.has('name')) {
+                    result.push((next as FreNamedNode).name);
+                }
             }
+            result.push(...recursiveQualifiedName(next as FreNamedNode));
+        } else {
+            console.log(`Node ${next.freId()} of type ${next.freLanguageConcept()} has no type description (searching for ${node.name})`)
+            // throw new Error(`Node ${next.freId()} of type ${next.freLanguageConcept()} has no type description (searching for ${node.name})`)
         }
-        result.push(...recursiveQualifiedName(next as FreNamedNode));
     }
     return result;
 }

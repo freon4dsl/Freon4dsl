@@ -72,7 +72,6 @@ export class FreNamespace {
         const result: FreNamedNode[] = [];
         // TODO check this: for now we push all parts, later public/private annotations can be taken into account
         // set up the 'worker' of the visitor pattern
-        // const myNamesCollector = new ExampleNamesCollector();
         const myNamesCollector = new CollectNamesWorker(origin);
         myNamesCollector.namesList = result;
         if (!!metatype) {
@@ -80,7 +79,6 @@ export class FreNamespace {
         }
 
         // set up the 'walker of the visitor pattern
-        // const myWalker = new ExampleWalker();
         const myWalker = new AstWalker();
         myWalker.myWorkers.push(myNamesCollector);
 
