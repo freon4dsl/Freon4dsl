@@ -2,7 +2,7 @@ import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } fro
 import { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 import { ValidationUtils } from "../ValidationUtils.js";
 
-const paramName: string = "modelElement";
+const paramName: string = "node";
 
 export class ReferenceCheckerTemplate {
     imports: string[] = [];

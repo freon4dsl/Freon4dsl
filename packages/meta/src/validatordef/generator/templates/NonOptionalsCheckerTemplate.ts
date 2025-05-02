@@ -2,7 +2,7 @@ import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } fro
 import { FreMetaLanguage, FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
 import { ValidationUtils } from "../ValidationUtils.js";
 
-const paramName: string = "modelElement";
+const paramName: string = "node";
 const commentBefore = `/**
                         * Checks '${paramName}' before checking its children.
                         * Found errors are pushed onto 'errorlist'.

@@ -1,6 +1,7 @@
 import { FreNode, FreNamedNode } from "../ast/index.js";
 import { FreLogger } from "../logging/index.js";
 import { FreScoper } from "./FreScoper.js";
+import { isNullOrUndefined } from '../util/index.js';
 
 const LOGGER = new FreLogger("FreScoperComposite").mute();
 
@@ -27,7 +28,7 @@ export class FreScoperComposite implements FreScoper {
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.additionalNamespaces(node);
-                if (result !== undefined && result !== null) {
+                if (!isNullOrUndefined(result)) {
                     return result;
                 }
             }
@@ -39,7 +40,7 @@ export class FreScoperComposite implements FreScoper {
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getFromVisibleElements(node, name, metatype, excludeSurrounding);
-                if (result !== undefined) {
+                if (!isNullOrUndefined(result)) {
                     return result;
                 }
             }
@@ -51,7 +52,7 @@ export class FreScoperComposite implements FreScoper {
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getVisibleElements(node, metatype, excludeSurrounding);
-                if (result !== undefined && result !== null) {
+                if (!isNullOrUndefined(result)) {
                     return result;
                 }
             }
@@ -64,7 +65,7 @@ export class FreScoperComposite implements FreScoper {
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getVisibleNames(node, metatype, excludeSurrounding);
-                if (result !== undefined && result !== null) {
+                if (!isNullOrUndefined(result)) {
                     return result;
                 }
             }
@@ -76,7 +77,7 @@ export class FreScoperComposite implements FreScoper {
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.isInScope(node, name, metatype, excludeSurrounding);
-                if (result !== undefined) {
+                if (!isNullOrUndefined(result)) {
                     return result;
                 }
             }
@@ -88,7 +89,7 @@ export class FreScoperComposite implements FreScoper {
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.resolvePathName(node, doNotSearch, pathname, metatype);
-                if (result !== undefined) {
+                if (!isNullOrUndefined(result)) {
                     return result;
                 }
             }
