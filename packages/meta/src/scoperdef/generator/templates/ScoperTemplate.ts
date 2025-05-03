@@ -245,7 +245,9 @@ export class ScoperTemplate {
                 }`;
         } else if (expression.sourceName === "container") {
             // special case: the expression refers to 'container'
-            result = `let container = node.freOwner();
+            result = `// Note that this code is here to avoid a compile error.
+            // The result is the same as the default behaviour of the scoper.
+            let container = node.freOwner();
             if (!!container) {
                 return FreNamespace.create(container);
             } else {
