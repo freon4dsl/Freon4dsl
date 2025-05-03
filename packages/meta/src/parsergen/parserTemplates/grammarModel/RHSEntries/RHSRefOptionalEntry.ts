@@ -2,7 +2,7 @@ import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { GenerationUtil } from "../../../../utils/index.js";
 import { makeIndent, refRuleName } from "../GrammarUtils.js";
-import { internalTransformTempRef } from '../../ParserGenUtil.js';
+import { internalTransformTempRef, ParserGenUtil } from '../../ParserGenUtil.js';
 
 export class RHSRefOptionalEntry extends RHSPropEntry {
     constructor(prop: FreMetaProperty) {
@@ -18,8 +18,8 @@ export class RHSRefOptionalEntry extends RHSPropEntry {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         return `// RHSRefOptionalEntry
             if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
-            __optContent = this.${mainAnalyserName}.${internalTransformTempRef}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}], "${baseType}");
-        } // end RHSRefOptionalEntry`;
+            ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformTempRef}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}], "${baseType}");
+        } // end RHSRefOptionalEntry\n`;
     }
 
     toString(depth: number): string {
