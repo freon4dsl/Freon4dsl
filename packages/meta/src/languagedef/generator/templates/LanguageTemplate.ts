@@ -278,7 +278,7 @@ export class LanguageTemplate {
                         constructor: undefined,
                         creator: undefined,
                         language: "${intface.originalOwningLanguage.NAME}",
-                        subConceptNames: [${LangUtil.subConcepts(intface)
+                        subConceptNames: [${LangUtil.subClassifiers(intface)
                             .map((sub) => '"' + Names.classifier(sub) + '"')
                             .join(", ")}]
                     }

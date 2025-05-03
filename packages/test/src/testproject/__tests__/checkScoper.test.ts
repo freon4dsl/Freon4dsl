@@ -87,7 +87,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super1);
             model.supers.push(super2);
         })
-        let scoper = new TestStartScoper();
+        let scoper = TestStartEnvironment.getInstance().scoper;
         let vi = scoper.getVisibleNames(model);
         expect(vi).toContain("super1");
         expect(vi).toContain("super2");
@@ -100,7 +100,7 @@ describe("Checking scoper for testproject", () => {
         AST.change( () => {
             model.supers.push(super2);
         })
-        let scoper = new TestStartScoper();
+        let scoper = TestStartEnvironment.getInstance().scoper;
         let vi = scoper.getVisibleNames(model);
         // expect(vi).toContain("super1");
         expect(vi).toContain("super2");
@@ -113,7 +113,7 @@ describe("Checking scoper for testproject", () => {
         AST.change( () => {
             model.supers.push(super1);
         })
-        let scoper = new TestStartScoper();
+        let scoper = TestStartEnvironment.getInstance().scoper;
         let vi = scoper.getVisibleNames(model);
         expect(vi).toContain("super1");
         // expect(vi).toContain("super2");
@@ -127,7 +127,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super1);
             model.supers.push(super2);
         })
-        let scoper = new TestStartScoper();
+        let scoper = TestStartEnvironment.getInstance().scoper;
         let vi = scoper.getVisibleElements(model);
         expect(vi).toContain(super1);
         expect(vi).toContain(super2);
@@ -140,7 +140,7 @@ describe("Checking scoper for testproject", () => {
         AST.change( () => {
             model.supers.push(super2);
         })
-        let scoper = new TestStartScoper();
+        let scoper = TestStartEnvironment.getInstance().scoper;
         let vi = scoper.getVisibleElements(model);
         expect(vi).not.toContain(super1);
         expect(vi).toContain(super2);
@@ -153,7 +153,7 @@ describe("Checking scoper for testproject", () => {
         AST.change( () => {
             model.supers.push(super1);
         })
-        let scoper = new TestStartScoper();
+        let scoper = TestStartEnvironment.getInstance().scoper;
         let vi = scoper.getVisibleElements(model);
         expect(vi).toContain(super1);
         expect(vi).not.toContain(super2);

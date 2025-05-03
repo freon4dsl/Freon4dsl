@@ -22,7 +22,7 @@
         <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Delete unit</h3>
         <div class="flex flex-col space-y-6 p-4 bg-light-base-700 dark-bg-light-base-300" role="dialog">
         <Label class="space-y-2 text-light-base-50 dark:text-dark-base-50">
-            Do you want to delete <span class="font-bold">{editorInfo.currentUnit?.name}</span>?
+            Do you want to delete <span class="font-bold">{editorInfo.toBeDeleted?.name}</span>?
         </Label>
         <Label class="italic text-light-base-200 dark:text-dark-base-200">Note that this action cannot be undone.</Label>
         </div>

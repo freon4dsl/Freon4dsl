@@ -36,7 +36,7 @@
 
 .label-component:empty:before {
     content: attr(data-placeholdertext);
-    margin: 1px;
+    margin: 0 1px 0 1px;
     padding: 0px 1px 0px 1px;
 }
 
@@ -77,7 +77,7 @@
 
 .layout-component {
     padding: 0px;
-    margin: 1px;
+    margin: 0 1px 0 1px;
     box-sizing: border-box;
 }
 
@@ -403,7 +403,7 @@
 }
 
 .optional-component {
-    margin: 3px;
+    margin: 0 3px 0 3px;
     white-space: normal;
     display: inline-block;
 }
@@ -413,7 +413,7 @@
 }
 
 .optional-component-show {
-    margin: 3px;
+    margin: 0 3px 0 3px;
     white-space: normal;
     display: inline-block;
 }
