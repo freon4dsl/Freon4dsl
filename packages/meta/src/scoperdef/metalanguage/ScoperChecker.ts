@@ -3,8 +3,8 @@ import {
     FreMetaConcept,
     FreMetaLanguage,
     FreMetaProperty,
-    FreMetaClassifier,
-} from "../../languagedef/metalanguage/index.js";
+    FreMetaClassifier, FreMetaInterface
+} from '../../languagedef/metalanguage/index.js';
 import { FreAlternativeScope, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang.js";
 import { LangUtil, MetaLogger } from "../../utils/index.js";
 // The next import should be separate and the last of the imports.
@@ -73,8 +73,8 @@ export class ScoperChecker extends Checker<ScopeDef> {
                             this.runner.nestedCheck({
                                 check:
                                     !!xx.type &&
-                                    (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription),
-                                error: `A namespace addition should refer to a concept ${ParseLocationUtil.location(exp)}.`,
+                                    (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription || xx.type instanceof FreMetaInterface),
+                                error: `A namespace addition should refer to a concept or a unit ${ParseLocationUtil.location(exp)}.`,
                                 whenOk: () => {
                                     this.runner.simpleCheck(
                                         this.myNamespaces.includes(xx.type),

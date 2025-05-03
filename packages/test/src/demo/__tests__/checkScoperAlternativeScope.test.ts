@@ -11,7 +11,7 @@ describe("testing Alternative Scopes", () => {
         // 'length (Variable1 : Person, VariableNumber2 : Boolean): String =
         //      Variable1.attrFromPerson.attrFromCompany
         // where 'Variable1.attrFromPerson' is of type Company
-        let scoper = new DemoScoper();
+        let scoper = DemoEnvironment.getInstance().scoper;
 
         beforeEach(() => {
             DemoEnvironment.getInstance();

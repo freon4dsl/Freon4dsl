@@ -3,8 +3,8 @@ import {
     FreMetaConcept,
     MetaElementReference,
     FreMetaInterface,
-    FreMetaProperty,
-} from "../../languagedef/metalanguage/index.js";
+    FreMetaProperty, FreMetaUnitDescription
+} from '../../languagedef/metalanguage/index.js';
 import { GenerationUtil } from "./GenerationUtil.js";
 
 /**
@@ -32,8 +32,8 @@ export class LangUtil {
     }
 
     /**
-     * Returns all interfaces that 'self' implements, if 'self' is a concept, recursive.
-     * Returns all interfaces that 'self' inherits from, recursive
+     * Returns all interfaces that 'self' implements, if 'self' is a concept or a unit, recursive.
+     * Returns all interfaces that 'self' inherits from, if 'self' is an interface, recursive.
      * @param self
      */
     public static superInterfaces(self: FreMetaClassifier): FreMetaInterface[] {
@@ -47,6 +47,12 @@ export class LangUtil {
             if (!!self.base) {
                 LangUtil.superInterfacesRecursive(self.base.referred, result);
             }
+            for (const i of self.interfaces) {
+                result.push(i.referred);
+                LangUtil.superInterfacesRecursive(i.referred, result);
+            }
+        }
+        if (self instanceof FreMetaUnitDescription) {
             for (const i of self.interfaces) {
                 result.push(i.referred);
                 LangUtil.superInterfacesRecursive(i.referred, result);
@@ -77,6 +83,12 @@ export class LangUtil {
                 result.push(self.base.referred);
                 LangUtil.superClassifiersRecursive(self.base.referred, result);
             }
+            for (const i of self.interfaces) {
+                result.push(i.referred);
+                LangUtil.superClassifiersRecursive(i.referred, result);
+            }
+        }
+        if (self instanceof FreMetaUnitDescription) {
             for (const i of self.interfaces) {
                 result.push(i.referred);
                 LangUtil.superClassifiersRecursive(i.referred, result);
@@ -123,6 +135,21 @@ export class LangUtil {
     }
 
     /**
+     * Returns all concepts AND units of which 'self' is an implemented interface, recursive.
+     * Param 'self' is NOT included in the result.
+     * @param self
+     */
+    public static subClassifiers(self: FreMetaClassifier): FreMetaClassifier[] {
+        const result: FreMetaClassifier[] = this.subConcepts(self);
+        for (const cls of self.language.units) {
+            if (LangUtil.superClassifiers(cls).includes(self)) {
+                result.push(cls);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Returns all concepts of which 'self' is a super class, or 'self' is an implemented interface, recursive.
      * Param 'self' IS included in the result.
      * @param self
@@ -146,11 +173,16 @@ export class LangUtil {
      */
     public static findImplementorsDirect(
         freInterface: FreMetaInterface | MetaElementReference<FreMetaInterface>,
-    ): FreMetaConcept[] {
+    ): FreMetaClassifier[] {
+        const result: FreMetaClassifier[] = [];
         const myInterface = freInterface instanceof MetaElementReference ? freInterface.referred : freInterface;
-        return myInterface.language.concepts.filter((con) =>
+        result.push(...myInterface.language.concepts.filter((con) =>
             con.interfaces.some((intf) => intf.referred === myInterface),
-        );
+        ));
+        result.push(...myInterface.language.units.filter((con) =>
+          con.interfaces.some((intf) => intf.referred === myInterface),
+        ));
+        return result;
     }
 
     /**
@@ -161,9 +193,9 @@ export class LangUtil {
      */
     public static findImplementorsRecursive(
         freInterface: FreMetaInterface | MetaElementReference<FreMetaInterface>,
-    ): FreMetaConcept[] {
+    ): FreMetaClassifier[] {
         const myInterface = freInterface instanceof MetaElementReference ? freInterface.referred : freInterface;
-        const implementors: FreMetaConcept[] = this.findImplementorsDirect(myInterface);
+        const implementors: FreMetaClassifier[] = this.findImplementorsDirect(myInterface);
 
         // add implementors of sub-interfaces
         for (const sub of myInterface.allSubInterfacesRecursive()) {
@@ -203,7 +235,9 @@ export class LangUtil {
                 for (const implementor of this.findImplementorsDirect(myClassifier)) {
                     if (!result.includes(implementor)) {
                         result.push(implementor);
-                        result = result.concat(implementor.allSubConceptsRecursive());
+                        if (implementor instanceof FreMetaConcept) {
+                            result = result.concat(implementor.allSubConceptsRecursive());
+                        }
                     }
                 }
                 // find all subinterfaces and add their implementors as well
@@ -213,7 +247,9 @@ export class LangUtil {
                         for (const implementor of this.findImplementorsDirect(subInterface)) {
                             if (!result.includes(implementor)) {
                                 result.push(implementor);
-                                result = result.concat(implementor.allSubConceptsRecursive());
+                                if (implementor instanceof FreMetaConcept) {
+                                    result = result.concat(implementor.allSubConceptsRecursive());
+                                }
                             }
                         }
                     }
@@ -222,27 +258,6 @@ export class LangUtil {
         }
         return result;
     }
-
-    // TODO check whether this is a better implementation
-    // private findAllImplementorsAndSubs(myClassifier: FreClassifier): FreClassifier[] {
-    //     const result: FreClassifier[] = [];
-    //     if (myClassifier instanceof FreConcept) {
-    //         ListUtil.addListIfNotPresent<FreClassifier>(result, LangUtil.subConcepts(myClassifier));
-    //     } else if (myClassifier instanceof FreInterface) {
-    //         const implementors = LangUtil.findImplementorsRecursive(myClassifier);
-    //         ListUtil.addListIfNotPresent<FreClassifier>(result, implementors);
-    //         for (const implementor of implementors) {
-    //             ListUtil.addListIfNotPresent<FreClassifier>(result, this.findAllSubs(implementor));
-    //         }
-    //
-    //         const subInterfaces = LangUtil.subInterfaces(myClassifier);
-    //         ListUtil.addListIfNotPresent<FreClassifier>(result, subInterfaces);
-    //         for (const subInterface of subInterfaces) {
-    //             ListUtil.addListIfNotPresent<FreClassifier>(result, this.findAllSubs(subInterface));
-    //         }
-    //     }
-    //     return result;
-    // }
 
     /**
      * Returns true if the names of the types of both parameters are equal.
