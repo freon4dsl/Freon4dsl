@@ -170,7 +170,7 @@
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
         // Create the data to be transferred and notify the store that something is being dragged.
         const parentTableBox: TableBox | undefined = box.getParentTableBox()
-        if (!parentTableBox !== null && parentTableBox !== undefined) {
+        if (!isNullOrUndefined(parentTableBox)) {
             rememberDraggedNode(parentTableBox.id, box.getParentTableBox()!, box);
             // console.log(`dragstart: ${draggedElem.value?.element.freLanguageConcept()}`)
         }

@@ -128,8 +128,8 @@
                 // console.log("moving item within grid");
                 moveListElement(box.node, data.element, box.propertyName, targetIndex);
             } else {
-                LOGGER.log("dropping in another list");
                 // dropping in another list
+                // console.log("moving item to another grid, drop type: " + data.elementType + ", grid cell type: " + elementType);
                 dropListElement(editor, data, myMetaType, box.node, box.propertyName, targetIndex);
             }
         }
