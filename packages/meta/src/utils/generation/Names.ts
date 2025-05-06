@@ -292,6 +292,13 @@ export class Names {
         return "";
     }
 
+    public static startWithLowerCase(word: string): string {
+        if (!!word) {
+            return word[0].toLowerCase() + word.substring(1);
+        }
+        return "";
+    }
+
     public static projectionMethod(proj: FreEditClassifierProjection): string {
         return "get" + this.startWithUpperCase(proj.name);
     }

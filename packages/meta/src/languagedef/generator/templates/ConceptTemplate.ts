@@ -10,8 +10,8 @@ import {
     FreMetaClassifier,
     FreMetaPrimitiveType,
 } from "../../metalanguage/index.js";
-import { ConceptUtils } from "./ConceptUtils.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
+import { ConceptUtils } from "./ConceptUtils.js"
 
 export class ConceptTemplate {
     generateConcept(concept: FreMetaConcept): string {
@@ -36,12 +36,12 @@ export class ConceptTemplate {
         const abstract: string = concept.isAbstract ? "abstract" : "";
         const hasName: boolean = concept.implementedPrimProperties().some((p) => p.name === "name");
         const implementsFre: string = isExpression ? Names.FreExpressionNode : hasName ? Names.FreNamedNode : Names.FreNode;
-        const coreImports: string[] = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
-            .concat(implementsFre)
-            .concat([Names.FreParseLocation])
-            .concat(hasReferences ? Names.FreNodeReference : "");
+        const coreImports: Set<string> = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
+            .add(implementsFre)
+            .add(Names.FreParseLocation)
+             if (hasReferences) coreImports.add(Names.FreNodeReference)
         const metaType: string = Names.metaType();
-        const modelImports: string[] = this.findModelImports(concept, myName);
+        const modelImports: Set<string> = this.findModelImports(concept, myName);
         const interfaces: string[] = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
@@ -80,7 +80,7 @@ export class ConceptTemplate {
         `;
 
         return `
-            ${ConceptUtils.makeImportStatements(coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(concept.language, coreImports, modelImports)}
 
             ${result}`;
     }
@@ -92,15 +92,11 @@ export class ConceptTemplate {
         const isAbstract = concept.isAbstract;
         const baseExpressionName = Names.concept(GenerationUtil.findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([
-            Names.FreBinaryExpression,
-            Names.FreParseLocation,
-        ]);
+        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
+                .add(Names.FreBinaryExpression)
+                .add(Names.FreParseLocation)
         const metaType = Names.metaType();
-        let modelImports = this.findModelImports(concept, myName);
-        if (!modelImports.includes(baseExpressionName)) {
-            modelImports = modelImports.concat(baseExpressionName);
-        }
+        let modelImports: Set<string> = this.findModelImports(concept, myName).add(baseExpressionName);
         const intfaces = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
@@ -172,7 +168,7 @@ export class ConceptTemplate {
         `;
 
         return `
-            ${ConceptUtils.makeImportStatements(coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(concept.language, coreImports, modelImports)}
 
             ${result}`;
     }
@@ -185,12 +181,11 @@ export class ConceptTemplate {
         const hasSuper: boolean = !!concept.base;
         const extendsClass: string = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const abstract: string = concept.isAbstract ? "abstract" : "";
-        const coreImports: string[] = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept).concat([
-            Names.FreNamedNode,
-            Names.FreParseLocation,
-        ]);
+        const coreImports: Set<string> = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
+            .add(Names.FreNamedNode)
+            .add(Names.FreParseLocation)
         const metaType: string = Names.metaType();
-        const imports: string[] = this.findModelImports(concept, myName);
+        const modelImports: Set<string> = this.findModelImports(concept, myName);
         const intfaces: string[] = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
@@ -235,14 +230,13 @@ export class ConceptTemplate {
                 .join(" ")}
             })`;
         return `
-            ${ConceptUtils.makeImportStatements(coreImports, imports)}
+            ${ConceptUtils.makeImportStatements(concept.language, coreImports, modelImports)}
 
             ${result}`;
     }
 
-    private findModelImports(concept: FreMetaConcept, myName: string): string[] {
-        return Array.from(
-            new Set(
+    private findModelImports(concept: FreMetaConcept, myName: string): Set<string> {
+        return new Set<string>(
                 concept.interfaces
                     .map((i) => Names.interface(i.referred))
                     .concat(concept.base ? Names.concept(concept.base.referred) : "")
@@ -250,9 +244,9 @@ export class ConceptTemplate {
                     .concat(concept.implementedReferences().map((part) => Names.classifier(part.type)))
                     // .concat(Names.metaType(concept.language))
                     .filter((name) => !(name === myName))
-                    .filter((r) => r !== null && r.length > 0),
-            ),
-        ).concat(concept.allSingleNonOptionalPartsInitializers().map((pi) => Names.concept(pi.concept)));
+                    .filter((r) => r !== null && r.length > 0)
+                    .concat(concept.allSingleNonOptionalPartsInitializers().map((pi) => Names.concept(pi.concept)))
+            );
     }
 
     private createInstancePropValue(property: FreMetaInstanceProperty): string {

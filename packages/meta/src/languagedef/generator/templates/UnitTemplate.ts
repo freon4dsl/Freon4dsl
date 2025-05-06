@@ -1,5 +1,5 @@
+import { ConceptUtils } from "./ConceptUtils.js"
 import { Names } from "../../../utils/index.js";
-import { ConceptUtils } from "./ConceptUtils.js";
 import { FreMetaUnitDescription } from "../../metalanguage/FreMetaLanguage.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
 
@@ -15,10 +15,11 @@ export class UnitTemplate {
         const myName = Names.classifier(unitDescription);
         const extendsClass = "MobxModelElementImpl";
         const hasReferences = unitDescription.implementedReferences().length > 0;
-        const modelImports = this.findModelImports(unitDescription, myName);
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(false, unitDescription)
-            .concat([Names.FreModelUnit, Names.FreParseLocation])
-            .concat(hasReferences ? Names.FreNodeReference : "");
+        const modelImports: Set<string> = this.findModelImports(unitDescription, myName);
+        const coreImports: Set<string> = ClassifierUtil.findMobxImportsForConcept(false, unitDescription)
+            .add(Names.FreModelUnit)
+            .add(Names.FreParseLocation)
+            if (hasReferences) coreImports.add(Names.FreNodeReference);
         const metaType = Names.metaType();
         const intfaces = Array.from(new Set(unitDescription.interfaces.map((i) => Names.interface(i.referred))));
 
@@ -58,22 +59,21 @@ export class UnitTemplate {
             `;
 
         return `
-            ${ConceptUtils.makeImportStatements(coreImports, modelImports)}
+            ${ConceptUtils.makeImportStatements(unitDescription.language, coreImports, modelImports)}
 
             ${result}`;
     }
 
-    private findModelImports(unitDescription: FreMetaUnitDescription, myName: string): string[] {
-        return Array.from(
-            new Set(
+    private findModelImports(unitDescription: FreMetaUnitDescription, myName: string): Set<string> {
+        return  new Set(
                 unitDescription
                     .implementedParts().map((part) => Names.classifier(part.type))
                     .concat(unitDescription.interfaces.map((intf) => Names.interface(intf.referred)))
                     .concat(unitDescription.implementedReferences().map((part) => Names.classifier(part.type)))
                     // .concat(Names.metaType(unitDescription.language))
                     .filter((name) => !(name === myName))
-                    .filter((r) => r !== null && r.length > 0),
-            ),
-        ).concat(unitDescription.allSingleNonOptionalPartsInitializers().map((pi) => Names.concept(pi.concept)));
+                    .filter((r) => r !== null && r.length > 0)
+                    .concat(unitDescription.allSingleNonOptionalPartsInitializers().map((pi) => Names.concept(pi.concept)))
+        );
     }
 }

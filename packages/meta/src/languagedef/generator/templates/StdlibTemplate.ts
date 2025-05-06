@@ -1,8 +1,8 @@
+import { ConceptUtils } from "./ConceptUtils.js"
 import { FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept } from "../../metalanguage/index.js";
 import {
     LANGUAGE_GEN_FOLDER,
     Names,
-    FREON_CORE,
     CONFIGURATION_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
 } from "../../../utils/index.js";
@@ -13,9 +13,13 @@ export class StdlibTemplate {
 
     generateStdlibClass(language: FreMetaLanguage, relativePath: string): string {
         this.makeTexts(language);
-
+        const coreImports: Set<string> = new Set<string>([
+            Names.FreNamedNode,
+            Names.FreStdlib,
+            Names.FreLanguage
+        ]) 
         return `
-        import { ${Names.FreNamedNode}, ${Names.FreStdlib}, ${Names.FreLanguage} } from "${FREON_CORE}";
+        ${ConceptUtils.makeImportStatements(language, coreImports, new Set<string>())}
         import { ${this.limitedConceptNames.map((name) => `${name}`).join(", ")}
                } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";

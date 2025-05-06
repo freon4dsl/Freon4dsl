@@ -1,5 +1,6 @@
+import { ConceptUtils } from "./ConceptUtils.js"
 import { FreMetaConceptProperty, FreMetaPrimitiveProperty, FreMetaInterface } from "../../metalanguage/index.js";
-import { Names, FREON_CORE, GenerationUtil } from "../../../utils/index.js";
+import { Names, GenerationUtil } from "../../../utils/index.js";
 
 export class InterfaceTemplate {
     generateInterface(intf: FreMetaInterface): string {
@@ -14,21 +15,20 @@ export class InterfaceTemplate {
         const abstract = "";
         const myName = Names.interface(intf);
 
-        const imports = Array.from(
-            new Set(
+        const coreImports: Set<string> = new Set<string>()
+        coreImports.add(Names.FreNode)
+        if (hasReferences) coreImports.add(Names.FreNodeReference)
+        const modelImports: Set<string> = new Set(
                 intf.properties
                     .map((p) => Names.classifier(p.type))
                     .concat(intf.base.map((elem) => Names.interface(elem.referred)))
                     .filter((name) => !(name === myName))
                     .filter((r) => r !== null && r.length > 0),
-            ),
-        );
-
+            )
         // Template starts here
         return `
-            import { ${Names.FreNode} ${hasReferences ? `, ${Names.FreNodeReference}` : ""} } from "${FREON_CORE}";
-            ${imports.length > 0 ? `import { ${imports.join(", ")} } from "./internal.js";` : ""}
-
+            ${ConceptUtils.makeImportStatements(intf.language, coreImports, modelImports)}
+            
             /**
              * Interface ${myName} is the implementation of the interface with the same name in the language definition file.
              */

@@ -1,7 +1,9 @@
 import { FreMetaClassifier, FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil, FREON_CORE } from "../../../utils/index.js";
+import { Names, GenerationUtil, FREON_CORE } from "../../../utils/index.js";
+import { ConceptUtils } from "./ConceptUtils.js"
 
 export class WalkerTemplate {
+    // @ts-ignore TS6133
     generateWalker(language: FreMetaLanguage, relativePath: string): string {
         const allLangConcepts: string = Names.allConcepts();
         const generatedClassName: String = Names.walker(language);
@@ -10,18 +12,12 @@ export class WalkerTemplate {
         classifiersToDo.push(...GenerationUtil.sortConceptsOrRefs(language.concepts));
         classifiersToDo.push(...language.units);
         classifiersToDo.push(language.modelConcept);
-
+        const modelImports: Set<string> = new Set<string>(classifiersToDo.map(c => Names.classifier(c)))
         // Template starts here
         return `
-        // import { ${allLangConcepts} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-        import { ${classifiersToDo
-            .map(
-                (concept) => `
-                ${Names.classifier(concept)}`,
-            )
-            .join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-        import { ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}.js";
-        import { ${Names.FreLogger}, ${Names.FreNode} } from "${FREON_CORE}";
+        ${ConceptUtils.makeImportStatements(language, new Set<string>(), modelImports).replace("./internal.js", "../../language/gen/index.js")}
+        import { type ${Names.workerInterface(language)} } from "./${Names.workerInterface(language)}.js";
+        import { ${Names.FreLogger}, type ${Names.FreNode} } from "${FREON_CORE}";
 
         const LOGGER = new ${Names.FreLogger}("${generatedClassName}");
 

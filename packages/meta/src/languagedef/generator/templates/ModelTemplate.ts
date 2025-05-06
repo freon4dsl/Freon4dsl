@@ -1,5 +1,5 @@
-import { Names, FREON_CORE } from "../../../utils/index.js";
-import { ConceptUtils } from "./ConceptUtils.js";
+import { ConceptUtils } from "./ConceptUtils.js"
+import { Names, FREON_CORE, ImportsUtil } from "../../../utils/index.js"
 import { FreMetaModelDescription } from "../../metalanguage/FreMetaLanguage.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
 
@@ -9,12 +9,11 @@ export class ModelTemplate {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
-        const coreImports = ClassifierUtil.findMobxImports(modelDescription).concat([
-            Names.FreModel,
-            Names.FreLanguage,
-            Names.FreParseLocation,
-            "AST"
-        ]);
+        const coreImports: Set<string> = ClassifierUtil.findMobxImports(modelDescription)
+            .add(Names.FreModel)
+            .add(Names.FreLanguage)
+            .add(Names.FreParseLocation)
+            .add("AST")
         const modelImports = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType();
 
@@ -235,7 +234,8 @@ export class ModelTemplate {
                 }`;
 
         return `
-            import { ${Names.modelunit()}, ${coreImports.join(",")} } from "${FREON_CORE}";
+            // CORE: ${coreImports.values().toArray()}
+            import { ${Names.modelunit()}, ${coreImports.values().toArray().map(v => ImportsUtil.imports(v)).join(",")} } from "${FREON_CORE}";
             import { ${modelImports.join(", ")} } from "./internal.js";
 
             ${result}`;

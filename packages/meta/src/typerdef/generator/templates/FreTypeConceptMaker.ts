@@ -1,6 +1,6 @@
+import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils.js"
 import { FreMetaConcept, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
 import { FretTypeConcept, TyperDef } from "../../metalanguage/index.js";
-import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils.js";
 import { LANGUAGE_GEN_FOLDER, ListUtil, Names, FREON_CORE } from "../../../utils/index.js";
 
 export class FreTypeConceptMaker {
