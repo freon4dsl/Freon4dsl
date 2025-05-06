@@ -234,7 +234,6 @@ export class ModelTemplate {
                 }`;
 
         return `
-            // CORE: ${coreImports.values().toArray()}
             import { ${Names.modelunit()}, ${coreImports.values().toArray().map(v => ImportsUtil.imports(v)).join(",")} } from "${FREON_CORE}";
             import { ${modelImports.join(", ")} } from "./internal.js";
 
