@@ -8,5 +8,4 @@ unitType2 {
 
 QualifiedName {
     namespace_addition = self.part;
-    scope = container;
 }

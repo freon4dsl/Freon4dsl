@@ -3,10 +3,10 @@
     import type { SelectOption } from '@freon4dsl/core';
 
     let filteredOptions: SelectOption[] = [
-        { id: 'xx', label: 'XXX' },
-        { id: 'yy', label: 'YYY' },
-        { id: 'zz', label: 'ZZZ' },
-        { id: 'aa', label: 'AAA' }
+        { id: 'xx', label: 'XXX', additional_label: 'from SS' },
+        { id: 'yy', label: 'YYY', additional_label: 'from ZZZZZZ' },
+        { id: 'zz', label: 'ZZZ', additional_label: 'from Somewhere' },
+        { id: 'aa', label: 'AAA', additional_label: 'from TTT' }
     ];
     let dropdownShown: boolean = $state(true);
     let selected: SelectOption | undefined = $state({ id: 'xx', label: 'XXX' });

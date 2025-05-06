@@ -2,34 +2,9 @@ import { describe, test, expect, beforeEach } from "vitest";
 import { ScoperTryoutEnvironment } from '../config/gen/ScoperTryoutEnvironment';
 import { NamedPart, QualifiedName, ScoperTryout, Unit, UnitType1, UnitType2 } from '../language/gen';
 import { FileHandler } from '../../utils/FileHandler';
-import { AST, FreNodeReference, qualifiedName } from '@freon4dsl/core';
+import { AST, FreNamedNode, FreNodeReference, qualifiedName } from '@freon4dsl/core';
 
-// These tests only work with an adjustment to the generated scoper:
-//     getAlternativeScope(node: FreNode): FreNamespace {
-//         if (!!node && node instanceof QualifiedName) {
-//             // use alternative scope 'container'
-//             let container = node.freOwner();
-//             if (!!container) {
-//                 if (container instanceof QualifiedName) {
-//                     return FreNamespace.create(container.part.referred);
-//                 } else {
-//                     return FreNamespace.create(container);
-//                 }
-//             } else {
-//                 console.error("getAlternativeScope: no container found.");
-//             }
-//         }
-//         return null;
-//     }
-//
-// The problem is that the scope definition must be different depending on the owner of a QualifiedName.
-// I have yet to find how to add this type of code to the Custom<Scoper>.ts.
-// Maybe the 'FreScoper' interface should be extended to include 'getAlternativeScope',
-// 'hasAlternativeScope', and 'additionalNamespaces'. Or, maybe we could introduce another type of entry
-// in the .scope file to accommodate this.
-
-
-describe.skip("Testing Custom Scoper", () => {
+describe("Testing Custom Scoper", () => {
 	const reader = ScoperTryoutEnvironment.getInstance().reader;
 	const writer = ScoperTryoutEnvironment.getInstance().writer;
 	const scoper = ScoperTryoutEnvironment.getInstance().scoper;
@@ -55,6 +30,14 @@ describe.skip("Testing Custom Scoper", () => {
 			referenceUnit.imports.push(FreNodeReference.create<Unit>("unit1_1", "Unit"));
 		})
 		// console.log(scoper.getVisibleNames(referenceUnit));
+
+
+		console.log('SCOPER IS OF TYPE: ', scoper.constructor.name)
+		scoper.getVisibleElements(referenceUnit);
+		console.log('ENDDDDD SCOPER IS OF TYPE: ', scoper.constructor.name)
+
+
+
 		expect(scoper.getVisibleNames(referenceUnit)).toStrictEqual([ 'Z', 'Y', 'X', 'V', 'W', 'U', 'TestRefs1', 'unit1_1', 'unit1_2' ]);
 		// console.log(scoper.getVisibleNames(referenceUnit, "NamedPart"));
 		expect(scoper.getVisibleNames(referenceUnit, "NamedPart")).toStrictEqual([ 'Z', 'Y', 'X', 'V', 'W', 'U']);
@@ -109,7 +92,11 @@ describe.skip("Testing Custom Scoper", () => {
 		})
 		expect(secondQ.part.referred).not.toBeNull;
 		expect(secondQ.part.referred).not.toBeUndefined;
-		expect(secondQ.part.referred).toBe((model.findUnit('unit1_1') as UnitType1).content.find(xx => xx.name === "Z").subParts.find(xx => xx.name === "Z_A"));
+		const Z_A_node: FreNamedNode = (model.findUnit('unit1_1') as UnitType1).content.find(xx => xx.name === "Z").subParts.find(xx => xx.name === "Z_A")
+		expect(Z_A_node).not.toBeNull;
+		expect(Z_A_node).not.toBeUndefined;
+		expect(Z_A_node).toBe(za);
+		expect(secondQ.part.referred).toBe(Z_A_node);
 
 		// create an empty QualifiedName to check the available names
 		const thirdQ: QualifiedName = QualifiedName.create({})

@@ -1,9 +1,10 @@
 import { FreNode, FreNamedNode } from "../ast/index.js";
-import { FreLogger } from "../logging/index.js";
+// import { FreLogger } from "../logging/index.js";
 import { FreScoper } from "./FreScoper.js";
 import { isNullOrUndefined } from '../util/index.js';
+import { FreNamespace } from './FreNamespace.js';
 
-const LOGGER = new FreLogger("FreScoperComposite").mute();
+// const LOGGER = new FreLogger("FreScoperComposite").mute();
 
 export class FreScoperComposite implements FreScoper {
     mainScoper: FreScoperComposite;
@@ -49,6 +50,7 @@ export class FreScoperComposite implements FreScoper {
     }
 
     getVisibleElements(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
+        // console.log('COMPOSITE getVisibleElements for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getVisibleElements(node, metatype, excludeSurrounding);
@@ -61,7 +63,7 @@ export class FreScoperComposite implements FreScoper {
     }
 
     getVisibleNames(node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
-        LOGGER.log("getVisibleNames for " + node?.freLanguageConcept() + " of type " + metatype);
+        // console.log("COMPOSITE getVisibleNames for " + node?.freLanguageConcept() + " of type " + metatype);
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getVisibleNames(node, metatype, excludeSurrounding);
@@ -95,5 +97,34 @@ export class FreScoperComposite implements FreScoper {
             }
         }
         return null; // TODO or undefined?
+    }
+
+    getAlternativeScope(node: FreNode): FreNamespace {
+        // console.log('COMPOSITE getAlternativeScope for ' + node.freId() + " of type " + node.freLanguageConcept());
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result: FreNamespace = scoper.getAlternativeScope(node);
+                if (!isNullOrUndefined(result)) {
+                    return result;
+                }
+            }
+        }
+        return undefined;
+    }
+
+    hasAlternativeScope(node: FreNode): boolean {
+        // console.log('COMPOSITE hasAlternativeScope for ' + node.freId() + " of type " + node.freLanguageConcept());
+
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result: boolean = scoper.hasAlternativeScope(node);
+                if (result) {
+                    // console.log('\t COMPOSITE result is true')
+                    return result;
+                }
+            }
+        }
+        // console.log('\t COMPOSITE result is false')
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 import { FreNode, FreNamedNode } from "../ast/index.js";
 import { FreScoperComposite } from "./FreScoperComposite.js";
+import { FreNamespace } from './FreNamespace.js';
 
 // Part of the Freon Framework
 
@@ -84,6 +85,24 @@ export interface FreScoper {
 
     /**
      * Returns all FreNodes that are defined as additional namespaces for `node'.
+     * @param node
+     */
+    additionalNamespaces(node: FreNode): FreNode[];
+
+    /**
+     * Returns true if an alternative namespace can be found for 'node'.
+     * @param node
+     */
+    hasAlternativeScope(node: FreNode): boolean;
+
+    /**
+     * Returns the alternative namespace that can be found for 'node'.
+     * @param node
+     */
+    getAlternativeScope(node: FreNode): FreNamespace;
+
+    /**
+     * Returns the additional namespace that can be found for 'node'.
      * @param node
      */
     additionalNamespaces(node: FreNode): FreNode[];

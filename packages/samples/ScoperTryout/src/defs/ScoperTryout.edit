@@ -11,5 +11,5 @@ UnitUsingReferables {[
 ]}
 
 QualifiedName {[
-    ${self.part}[?>>${self.restName}]
+    ${self.part}[?>${self.restName}]
 ]}

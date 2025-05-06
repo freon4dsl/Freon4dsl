@@ -90,7 +90,7 @@ export class UtilRefHelpers {
     }
 
     private static makeAdditionalLabel(node: FreNamedNode): string {
-        const additionalLabelSeparator: string = ">>>"
+        const additionalLabelSeparator: string = "."
         // remove the last of qualified name, because this is equal to the name of the node
         const names: string[] = qualifiedName(node);
         names.pop(); // Note that pop changes the array!

@@ -32,11 +32,11 @@ export abstract class FreScoperBase implements FreScoper {
         for (let index = 0; index < pathname.length; index++) {
             if (index === pathname.length - 1) {
                 // it is the last name in the path, use 'metatype'
-                found = this.getFromVisibleElements(previousFound, pathname[index], metatype);
+                found = this.mainScoper.getFromVisibleElements(previousFound, pathname[index], metatype);
             } else {
                 // search the next name of pathname in the namespace of 'previousFound'
                 // but do not use the metatype information, because only the element with the last of the pathname will have the correct type
-                found = this.getFromVisibleElements(previousFound, pathname[index]);
+                found = this.mainScoper.getFromVisibleElements(previousFound, pathname[index]);
                 if (
                     found === null ||
                     found === undefined ||
@@ -86,6 +86,8 @@ export abstract class FreScoperBase implements FreScoper {
      * See FreScoper.
      */
     public getVisibleElements(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
+        // console.log('BASE getVisibleElements for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+
         this.myTyper = FreLanguageEnvironment.getInstance().typer;
         const visitedNamespaces: FreNamespace[] = [];
         const result: FreNamedNode[] = [].concat(this.getElementsFromStdlib(metatype));
@@ -106,8 +108,8 @@ export abstract class FreScoperBase implements FreScoper {
                 excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
             let nearestNamespace: FreNamespace;
             // first, see if we need to use an alternative scope/namespace
-            if (this.hasAlternativeScope(node)) {
-                nearestNamespace = this.getAlternativeScope(node);
+            if (this.mainScoper.hasAlternativeScope(node)) {
+                nearestNamespace = this.mainScoper.getAlternativeScope(node);
                 // do not search surrounding namespaces for alternative scopes
                 doSurrouding = false;
             } else {
@@ -122,7 +124,7 @@ export abstract class FreScoperBase implements FreScoper {
                         result,
                     );
                     visitedNamespaces.push(nearestNamespace);
-                    for (const additionalNamespace of this.additionalNamespaces(nearestNamespace._myElem)) {
+                    for (const additionalNamespace of this.mainScoper.additionalNamespaces(nearestNamespace._myElem)) {
                         this.getVisibleElementsIntern(additionalNamespace, result, visitedNamespaces, metatype, true);
                     }
                 }
@@ -199,9 +201,20 @@ export abstract class FreScoperBase implements FreScoper {
         }
     }
 
-    abstract hasAlternativeScope(node: FreNode): boolean;
+    // @ts-ignore parameter is present to adhere to interface FreScoper
+    additionalNamespaces(node: FreNode): FreNode[] {
+        return [];
+    }
 
-    abstract getAlternativeScope(node: FreNode): FreNamespace;
+    // @ts-ignore parameter is present to adhere to interface FreScoper
+    getAlternativeScope(node: FreNode): FreNamespace {
+        console.log('BASE getAlternativeScope for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+        return undefined;
+    }
 
-    abstract additionalNamespaces(node: FreNode): FreNode[];
+    // @ts-ignore parameter is present to adhere to interface FreScoper
+    hasAlternativeScope(node: FreNode): boolean {
+        console.log('BASE hasAlternativeScope for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+        return false;
+    }
 }
