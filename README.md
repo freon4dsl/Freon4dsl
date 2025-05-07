@@ -4,8 +4,8 @@
 Web-native Language Workbench with projectional editor. 
 The current release (version 1.0.0) can be found on npm.
 
-**This branch is used for maintenance on the 1.0.0 release.**
-Further development takes place in the `development` branch.
+**This branch is used for development towards the 1.1.0 release.**
+In this we moved to Svelte 5, so quite a lot of changes here.
 
 ## What is Freon
 
