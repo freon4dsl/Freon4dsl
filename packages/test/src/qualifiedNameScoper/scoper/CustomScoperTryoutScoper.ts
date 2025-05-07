@@ -142,4 +142,5 @@ export class CustomScoperTryoutScoper implements FreScoper {
         // console.log('CUSTOM result is false')
         return false;
     }
+    // Some changes to this file in the hope that it can be added to Git
 }
