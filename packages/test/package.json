@@ -56,7 +56,8 @@
     "clean-typer-test8": "bash ../../scripts/freon-test-dev.sh clean-it -d src/typer-test8/defs -o src/typer-test8",
     "clean-undo-tester": "bash ../../scripts/freon-test-dev.sh clean-it -d src/UndoTester/defs -o src/UndoTester",
     "clean-vehicles": "bash ../../scripts/freon-test-dev.sh clean-it -f -d src/vehicles/defs -o src/vehicles",
-    "clean-all-projects": "npm run clean-demo && npm run clean-octopus && npm run clean-parser-conc && npm run clean-basic-props && npm run clean-parsergen && npm run clean-imports && npm run clean-defaultscoper && npm run clean-definedscoper && npm run clean-langconstr && npm run clean-noparser && npm run clean-prim-gen && npm run clean-testproject && npm run clean-typer-test8 && npm run clean-vehicles",
+    "clean-qualified-name": "bash ../../scripts/freon-test-dev.sh clean-it -f -d src/qualifiedNameScoper/defs -o src/qualifiedNameScoper",
+    "clean-all-projects": "npm run clean-demo && npm run clean-octopus && npm run clean-parser-conc && npm run clean-basic-props && npm run clean-parsergen && npm run clean-imports && npm run clean-defaultscoper && npm run clean-definedscoper && npm run clean-langconstr && npm run clean-noparser && npm run clean-prim-gen && npm run clean-testproject && npm run clean-typer-test8 && npm run clean-vehicles && npm run clean-qualified-name",
     "test": "vitest run"
   },
   "devDependencies": {

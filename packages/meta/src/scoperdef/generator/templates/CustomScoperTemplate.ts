@@ -8,7 +8,7 @@ export class CustomScoperTemplate {
 
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreNamedNode}, ${Names.FrScoperPart}, ${Names.FreScoperComposite}  } from "${FREON_CORE}";
+        import { ${Names.FreNode}, ${Names.FreNamedNode}, ${Names.FrScoperPart}, ${Names.FreScoperComposite}, ${Names.FreNamespace} } from "${FREON_CORE}";
 
         /**
          * Class '${generatedClassName}' is meant to be a convenient place to add any

@@ -22,52 +22,34 @@ describe("Testing Custom Scoper", () => {
 		// model.getUnits().forEach(unit => console.log(writer.writeToString(unit)));
 	})
 
-	test(" QualifiedName has names from unit", () => {
-		const referenceUnit = new UnitType2("some-id");
-		AST.change( () => {
-			model.addUnit(referenceUnit)
-			referenceUnit.name = "TestRefs1";
-			referenceUnit.imports.push(FreNodeReference.create<Unit>("unit1_1", "Unit"));
-		})
+	function startFQN(): QualifiedName {
+		const referenceUnit = new UnitType2('some-id');
+		AST.change(() => {
+			model.addUnit(referenceUnit);
+			referenceUnit.name = 'TestRefs1';
+			referenceUnit.imports.push(FreNodeReference.create<Unit>('unit1_1', 'Unit'));
+		});
 		// console.log(scoper.getVisibleNames(referenceUnit));
-
-
-		console.log('SCOPER IS OF TYPE: ', scoper.constructor.name)
 		scoper.getVisibleElements(referenceUnit);
-		console.log('ENDDDDD SCOPER IS OF TYPE: ', scoper.constructor.name)
-
-
-
-		expect(scoper.getVisibleNames(referenceUnit)).toStrictEqual([ 'Z', 'Y', 'X', 'V', 'W', 'U', 'TestRefs1', 'unit1_1', 'unit1_2' ]);
+		expect(scoper.getVisibleNames(referenceUnit)).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U', 'TestRefs1', 'unit1_1', 'unit1_2']);
 		// console.log(scoper.getVisibleNames(referenceUnit, "NamedPart"));
-		expect(scoper.getVisibleNames(referenceUnit, "NamedPart")).toStrictEqual([ 'Z', 'Y', 'X', 'V', 'W', 'U']);
+		expect(scoper.getVisibleNames(referenceUnit, 'NamedPart')).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
 
 		// create an empty QualifiedName to check the available names
-		const firstQ: QualifiedName = QualifiedName.create({})
-		AST.change( () => {
+		const firstQ: QualifiedName = QualifiedName.create({});
+		AST.change(() => {
 			referenceUnit.myReferences.push(firstQ);
-		})
-		expect(scoper.getVisibleNames(firstQ)).toStrictEqual([ 'Z', 'Y', 'X', 'V', 'W', 'U' ]);
+		});
+		expect(scoper.getVisibleNames(firstQ)).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
+		return firstQ
+	}
+
+	test(" QualifiedName has names from unit", () => {
+		startFQN();
 	})
 
 	test(" QualifiedName has names from previous", () => {
-		const referenceUnit = new UnitType2("some-id");
-		AST.change( () => {
-			model.addUnit(referenceUnit)
-			referenceUnit.name = "TestRefs1";
-			referenceUnit.imports.push(FreNodeReference.create<Unit>("unit1_1", "Unit"));
-		})
-		// console.log(scoper.getVisibleNames(referenceUnit));
-		expect(scoper.getVisibleNames(referenceUnit)).toStrictEqual([ 'Z', 'Y', 'X', 'V', 'W', 'U', 'TestRefs1', 'unit1_1', 'unit1_2' ]);
-		// console.log(scoper.getVisibleNames(referenceUnit, "NamedPart"));
-		expect(scoper.getVisibleNames(referenceUnit, "NamedPart")).toStrictEqual([ 'Z', 'Y', 'X', 'V', 'W', 'U']);
-
-		// create an empty QualifiedName to check the available names
-		const firstQ: QualifiedName = QualifiedName.create({})
-		AST.change( () => {
-			referenceUnit.myReferences.push(firstQ);
-		})
-		expect(scoper.getVisibleNames(firstQ)).toStrictEqual([ 'Z', 'Y', 'X', 'V', 'W', 'U' ]);
+		const firstQ: QualifiedName = startFQN();
 
 		// add a part to the QualifiedName
 		AST.change( () => {
