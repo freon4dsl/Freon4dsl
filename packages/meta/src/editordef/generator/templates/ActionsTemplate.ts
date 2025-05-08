@@ -14,7 +14,7 @@ export class ActionsTemplate {
              /**
              * Class ${Names.actions(language)} implements the actions available to the user in the editor.
              * These are the actions based on the editor definition. They are merged with the default and
-             * custom editor parts in a three-way manner. For each modelelement,
+             * custom editor parts in a three-way manner. For each node,
              * (1) if a custom build creator/behavior is present, this is used,
              * (2) if a creator/behavior based on the editor definition is present, this is used,
              * (3) if neither (1) nor (2) yields a result, the default is used.

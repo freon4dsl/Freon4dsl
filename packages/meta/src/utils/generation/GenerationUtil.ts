@@ -147,7 +147,7 @@ export class GenerationUtil {
      */
     public static propertyToTypeScript(prop: FreMetaProperty): string {
         const isRef = !prop.isPart;
-        return `modelelement.${prop.name + (isRef ? "?.referred" : "")}`;
+        return `node.${prop.name + (isRef ? "?.referred" : "")}`;
     }
 
     /**
@@ -155,7 +155,7 @@ export class GenerationUtil {
      * @param prop
      */
     public static propertyToTypeScriptWithoutReferred(prop: FreMetaProperty): string {
-        return `modelelement.${prop.name}`;
+        return `node.${prop.name}`;
     }
 
     /**

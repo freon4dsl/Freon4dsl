@@ -6,12 +6,12 @@ export class DefaultWorkerTemplate {
         const workerInterfaceName = Names.workerInterface(language);
         const defaultWorkerClassName = Names.defaultWorker(language);
         const commentBefore = `/**
-                                * Visits 'modelelement' before visiting its children.
-                                * @param modelelement
+                                * Visits 'node' before visiting its children.
+                                * @param node
                                 */`;
         const commentAfter = `/**
-                               * Visits 'modelelement' after visiting its children.
-                               * @param modelelement
+                               * Visits 'node' after visiting its children.
+                               * @param node
                                */`;
         const imports = new Imports(relativePath)
         imports.language = GenerationUtil.allConceptsAndUnits(language)
@@ -32,12 +32,12 @@ export class DefaultWorkerTemplate {
         export class ${defaultWorkerClassName} implements ${workerInterfaceName} {
 
         ${commentBefore}
-        public execBefore${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean {
+        public execBefore${Names.classifier(language.modelConcept)}(node: ${Names.classifier(language.modelConcept)}): boolean {
             return false;
         }
 
         ${commentAfter}
-        public execAfter${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean {
+        public execAfter${Names.classifier(language.modelConcept)}(node: ${Names.classifier(language.modelConcept)}): boolean {
             return false;
         }
 
@@ -45,12 +45,12 @@ export class DefaultWorkerTemplate {
             .map(
                 (unit) =>
                     `${commentBefore}
-            public execBefore${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean {
+            public execBefore${Names.classifier(unit)}(node: ${Names.classifier(unit)}): boolean {
                 return false;
             }
 
             ${commentAfter}
-            public execAfter${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean {
+            public execAfter${Names.classifier(unit)}(node: ${Names.classifier(unit)}): boolean {
                 return false;
             }`,
             )
@@ -60,12 +60,12 @@ export class DefaultWorkerTemplate {
             .map(
                 (concept) =>
                     `${commentBefore}
-            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+            public execBefore${Names.concept(concept)}(node: ${Names.concept(concept)}): boolean {
                 return false;
             }
 
             ${commentAfter}
-            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+            public execAfter${Names.concept(concept)}(node: ${Names.concept(concept)}): boolean {
                 return false;
             }`,
             )

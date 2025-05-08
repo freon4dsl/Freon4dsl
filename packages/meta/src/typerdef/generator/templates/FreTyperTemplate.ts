@@ -49,35 +49,35 @@ export class FreTyperTemplate {
             }
 
             /**
-             * Returns true if 'modelelement' is marked as 'isType' in the Typer definition
-             * @param modelelement
+             * Returns true if 'node' is marked as 'isType' in the Typer definition
+             * @param node
              */
-            public isType(modelelement: ${Names.FreNode}): boolean {
+            public isType(node: ${Names.FreNode}): boolean {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: boolean = typer.isType(modelelement);
+                    let result: boolean = typer.isType(node);
                     if (result) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.isType(modelelement);
+                return this.generatedTyper.isType(node);
             }
 
             /**
-             * Returns the type of 'modelelement' according to the type rules in the Typer Definition
-             * @param modelelement
+             * Returns the type of 'node' according to the type rules in the Typer Definition
+             * @param node
              */
-            public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} {
+            public inferType(node: ${Names.FreNode}): ${Names.FreType} {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: ${Names.FreType} = typer.inferType(modelelement);
+                    let result: ${Names.FreType} = typer.inferType(node);
                     if (result !== null) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.inferType(modelelement);
+                return this.generatedTyper.inferType(node);
             }
 
             /**

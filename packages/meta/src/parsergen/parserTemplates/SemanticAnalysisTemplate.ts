@@ -158,9 +158,9 @@ export class SemanticAnalysisTemplate {
 
                 ${this.possibleProblems.map((poss) => `${this.makeVistorMethod(poss)}`).join("\n")}
 
-                private findReplacement(modelelement: ${Names.allConcepts()}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
+                private findReplacement(node: ${Names.allConcepts()}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
                     const scoper = ${Names.FreLanguageEnvironment}.getInstance().scoper;
-                    const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
+                    const possibles = scoper.getVisibleElements(node).filter(elem => elem.name === referredElem.name);
                     if (possibles.length > 0) {
                         // element probably refers to something with another type
                         let replacement: ${Names.allConcepts()} = null;
@@ -168,7 +168,7 @@ export class SemanticAnalysisTemplate {
                             const metatype = elem.freLanguageConcept();
                             ${replacementIfStat}
                         }
-                        this.changesToBeMade.set(modelelement, replacement);
+                        this.changesToBeMade.set(node, replacement);
                     } else {
                         // true error, or boolean "true" or "false"
                         ${replacementBooleanStat}
@@ -206,20 +206,20 @@ export class SemanticAnalysisTemplate {
         // TODO add replacement of properties that are lists
         return `
             /**
-             * Test whether the references in 'modelelement' are correct.
+             * Test whether the references in 'node' are correct.
              * If not, find possible replacements.
-             * @param modelelement
+             * @param node
              */
-            public execBefore${Names.concept(freConcept)}(modelelement: ${Names.concept(freConcept)}): boolean {
+            public execBefore${Names.concept(freConcept)}(node: ${Names.concept(freConcept)}): boolean {
                 let referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>;
                 ${freConcept
                     .allReferences()
                     .filter((prop) => !prop.isList)
                     .map(
                         (prop) =>
-                            `referredElem = modelelement.${prop.name};
-                if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
-                    this.findReplacement(modelelement, referredElem);
+                            `referredElem = node.${prop.name};
+                if (!!node.${prop.name} && node.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
+                    this.findReplacement(node, referredElem);
                 }`,
                     )
                     .join("\n")}
@@ -251,9 +251,9 @@ export class SemanticAnalysisTemplate {
         for (const [concept, primProp] of this.exprWithBooleanProp) {
             if (concept instanceof FreMetaConcept && !concept.isAbstract) {
                 result += `if (referredElem.name === "true") {
-                    this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: true }));
+                    this.changesToBeMade.set(node, ${Names.classifier(concept)}.create({ ${primProp.name}: true }));
                 } else if (referredElem.name === "false") {
-                    this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: false }));
+                    this.changesToBeMade.set(node, ${Names.classifier(concept)}.create({ ${primProp.name}: false }));
                 }`;
             }
         }

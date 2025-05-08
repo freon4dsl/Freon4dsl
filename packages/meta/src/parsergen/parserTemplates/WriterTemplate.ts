@@ -132,31 +132,31 @@ export class WriterTemplate {
             currentLine: number = 0;   // keeps track of the element in 'output' that we are working on
 
             /**
-             * Returns a string representation of 'modelelement'.
+             * Returns a string representation of 'node'.
              * If 'short' is present and true, then a single-line result will be given.
              * Otherwise, the result is always a multi-line string.
              * Note that the single-line-string cannot be parsed into a correct model.
              *
-             * @param modelelement
+             * @param node
              * @param startIndent
              * @param short
              */
-            public writeToString(modelelement: ${allLangConceptsName}, startIndent?: number, short?: boolean) : string {
-                this.writeToLines(modelelement, startIndent, short);
+            public writeToString(node: ${allLangConceptsName}, startIndent?: number, short?: boolean) : string {
+                this.writeToLines(node, startIndent, short);
                 return \`\$\{this.output.map(line => \`\$\{line.trimEnd()\}\`).join("\\n").trimEnd()}\`;
             }
 
             /**
-             * Returns a string representation of 'modelelement', divided into an array of strings,
+             * Returns a string representation of 'node', divided into an array of strings,
              * each of which contain a single line (without newline).
              * If 'short' is present and true, then a single-line result will be given.
              * Otherwise, the result is always a multi-line string.
              *
-             * @param modelelement
+             * @param node
              * @param startIndent
              * @param short
              */
-            public writeToLines(modelelement: ${allLangConceptsName}, startIndent?: number, short?: boolean): string[] {
+            public writeToLines(node: ${allLangConceptsName}, startIndent?: number, short?: boolean): string[] {
                 // set default for optional parameters
                 if (startIndent === undefined) {
                     startIndent = 0;
@@ -177,41 +177,41 @@ export class WriterTemplate {
                 this.output[this.currentLine] = indentString;
 
                 // do the actual work
-                this.unparse(modelelement, short);
+                this.unparse(node, short);
                 return this.output;
             }
 
             /**
-             * Returns the name of 'modelelement' if it has one, else returns
-             * a short unparsing of 'modelelement'.
+             * Returns the name of 'node' if it has one, else returns
+             * a short unparsing of 'node'.
              * Used by the validator to produce readable error messages.
              *
-             * @param modelelement
+             * @param node
              */
-            public writeNameOnly(modelelement: ${allLangConceptsName}): string {
-                if (!modelelement) { return ""; }
+            public writeNameOnly(node: ${allLangConceptsName}): string {
+                if (!node) { return ""; }
                 ${this.makeWriteOnly(language)}
             }
 
-            private unparse(modelelement: ${allLangConceptsName}, short: boolean) {
-                if (!modelelement) { return; }
-                switch (modelelement.freLanguageConcept()) {
+            private unparse(node: ${allLangConceptsName}, short: boolean) {
+                if (!node) { return; }
+                switch (node.freLanguageConcept()) {
                 ${conceptsToUnparse
                     .map(
                         (concept) =>
-                            `case "${Names.classifier(concept)}": this.unparse${Names.classifier(concept)}(modelelement as ${Names.classifier(concept)}, short);
+                            `case "${Names.classifier(concept)}": this.unparse${Names.classifier(concept)}(node as ${Names.classifier(concept)}, short);
                 break;`,
                     )
                     .join("\n")}
                 ${language.interfaces
                     .map(
                         (concept) =>
-                            `case "${Names.classifier(concept)}": this.unparse${Names.classifier(concept)}(modelelement as ${Names.classifier(concept)}, short);
+                            `case "${Names.classifier(concept)}": this.unparse${Names.classifier(concept)}(node as ${Names.classifier(concept)}, short);
                 break;`,
                     )
                     .join("\n")}
                 default:
-                    console.error("Cannot unparse a " + modelelement.freLanguageConcept())    
+                    console.error("Cannot unparse a " + node.freLanguageConcept())    
                 }
             }
 
@@ -225,9 +225,9 @@ export class WriterTemplate {
             /**
              *
             */
-            private _unparseReference(modelelement: ${Names.FreNodeReference}<${Names.FreNamedNode}>, short: boolean) {
-                if (!!modelelement) {
-                    const type: ${Names.FreNamedNode} = modelelement?.referred;
+            private _unparseReference(node: ${Names.FreNodeReference}<${Names.FreNamedNode}>, short: boolean) {
+                if (!!node) {
+                    const type: ${Names.FreNamedNode} = node?.referred;
                     if (!!type) {
                         ${
                             limitedConcepts.length > 0
@@ -239,12 +239,12 @@ export class WriterTemplate {
                                       )
                                       .join("")}
                             } else {
-                                this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";
+                                this.output[this.currentLine] += node.pathnameToString("${this.refSeparator}") + " ";
                             }`
-                                : `this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";`
+                                : `this.output[this.currentLine] += node.pathnameToString("${this.refSeparator}") + " ";`
                         }
                     } else {
-                        this.output[this.currentLine] += modelelement.pathnameToString("${this.refSeparator}") + " ";
+                        this.output[this.currentLine] += node.pathnameToString("${this.refSeparator}") + " ";
                     }
                 }
             }
@@ -263,7 +263,7 @@ export class WriterTemplate {
              * @private
              */
             private _unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
-        method: (modelelement: ${allLangConceptsName}, short: boolean) => void) {
+        method: (node: ${allLangConceptsName}, short: boolean) => void) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;
                     this.doInitiator(sepText, sepType);
@@ -450,9 +450,9 @@ export class WriterTemplate {
         return `/**
                  * The limited concept '${myConcept.name}' is unparsed as its name.
                  */
-                 private unparse${name}(modelelement: ${name}, short: boolean) {
-                     if (!!modelelement) {
-                         this.output[this.currentLine] += modelelement.name + " ";
+                 private unparse${name}(node: ${name}, short: boolean) {
+                     if (!!node) {
+                         this.output[this.currentLine] += node.name + " ";
                      }
                  }`;
     }
@@ -462,7 +462,7 @@ export class WriterTemplate {
         return `/**
                  * The abstract concept '${myConcept.name}' is not unparsed.
                  */
-                private unparse${name}(modelelement: ${name}, short: boolean) {
+                private unparse${name}(node: ${name}, short: boolean) {
                     throw new Error('Method unparse${name} should be implemented by its (concrete) subclasses.');
                 }`;
     }
@@ -483,7 +483,7 @@ export class WriterTemplate {
             if (lines.length > 1) {
                 return `
                 ${comment}
-                private ${methodName}(modelelement: ${name}, short: boolean) {
+                private ${methodName}(node: ${name}, short: boolean) {
                     const blockIndent = this.output[this.currentLine].length;
                     // do the first line
                     ${this.makeLine(lines[0], false)}
@@ -496,14 +496,14 @@ export class WriterTemplate {
                     // add blockIndent, it is used in the Optional part
                     return `
                         ${comment}
-                        private ${methodName}(modelelement: ${name}, short: boolean) {
+                        private ${methodName}(node: ${name}, short: boolean) {
                             const blockIndent = this.output[this.currentLine].length;
                             ${this.makeLine(lines[0], false)}
                         }`;
                 } else {
                     return `
                         ${comment}
-                        private ${methodName}(modelelement: ${name}, short: boolean) {
+                        private ${methodName}(node: ${name}, short: boolean) {
                             ${this.makeLine(lines[0], false)}
                         }`;
                 }
@@ -511,7 +511,7 @@ export class WriterTemplate {
         } else {
             if (myConcept instanceof FreMetaConcept && myConcept.isAbstract) {
                 return `${comment}
-                    private ${methodName}(modelelement: ${name}, short: boolean) {
+                    private ${methodName}(node: ${name}, short: boolean) {
                         this.output[this.currentLine] += \`'unparse' should be implemented by subclasses of ${myConcept.name}\`;
                 }`;
             }
@@ -601,10 +601,10 @@ export class WriterTemplate {
                     ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, foundProjection);
                 }
                 result += `// SUPER
-                this.unparse${Names.classifier(item.superRef.referred)}_${item.projectionName}(modelelement, short);`;
+                this.unparse${Names.classifier(item.superRef.referred)}_${item.projectionName}(node, short);`;
             } else {
                 // use the normal unparse method
-                result += `this.unparse${Names.classifier(item.superRef.referred)}(modelelement, short);`;
+                result += `this.unparse${Names.classifier(item.superRef.referred)}(node, short);`;
             }
         }
         return result;
@@ -774,7 +774,7 @@ export class WriterTemplate {
                         if (myElem.isPart) {
                             const myTypeScript: string = GenerationUtil.propertyToTypeScript(item.property.referred);
                             result += `this._unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short,
-                            (modelelement, short) => this.${nameOfUnparseMethod}(modelelement${typeCast}, short) )`;
+                            (node, short) => this.${nameOfUnparseMethod}(node${typeCast}, short) )`;
                         } else {
                             const myTypeScript: string = GenerationUtil.propertyToTypeScriptWithoutReferred(
                                 item.property.referred,
@@ -848,14 +848,14 @@ export class WriterTemplate {
                     // do not care about indent, we just need a single line
                     this.output[this.currentLine] = "";
                     // do the actual work
-                    this.unparse(modelelement, true);
+                    this.unparse(node, true);
                     return this.output[0].trimEnd();`;
         if (namedClassifiers.length > 0) {
             return `${namedClassifiers
                 .map(
                     (concept, index) => `
-                ${index === 0 ? `` : `} else `}if (modelelement instanceof ${Names.classifier(concept)}) {
-                    return modelelement.name;`,
+                ${index === 0 ? `` : `} else `}if (node instanceof ${Names.classifier(concept)}) {
+                    return node.name;`,
                 )
                 .join("")}
                 } else {
@@ -876,10 +876,10 @@ export class WriterTemplate {
                           */`;
         if (!!myConcept.symbol) {
             return `${comment}
-            private unparse${xName}(modelelement: ${xName}, short: boolean) {
-                this.unparse(modelelement.left, short);
+            private unparse${xName}(node: ${xName}, short: boolean) {
+                this.unparse(node.left, short);
                 this.output[this.currentLine] += "${myConcept.symbol} ";
-                this.unparse(modelelement.right, short);
+                this.unparse(node.right, short);
         }`;
         }
         return "";
@@ -890,7 +890,7 @@ export class WriterTemplate {
         return `/**
                  * The interface '${freInterface.name}' is not unparsed.
                  */
-                private unparse${name}(modelelement: ${classifierType}, short: boolean) {
+                private unparse${name}(node: ${classifierType}, short: boolean) {
                     throw new Error('Method unparse${name} should be implemented by the classes that implement it.');
                 }`;
     }
