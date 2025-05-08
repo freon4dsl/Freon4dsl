@@ -9,10 +9,6 @@ export class IndexTemplate {
         language.units.forEach((c) => modelImports.add(Names.classifier(c)));
         language.concepts.forEach((c) => modelImports.add(Names.concept(c)));
         language.interfaces.forEach((c) => modelImports.add(Names.interface(c)));
-        // tmp.push(Names.modelunit(language));
-        // tmp.push("ModelUnitMetaType");
-        // tmp.push(Names.allConcepts(language));
-        // tmp.push(Names.metaType(language));
         modelImports.add(Names.initializeLanguage);
 
         // the template starts here
@@ -38,9 +34,6 @@ export class IndexTemplate {
         GenerationUtil.sortConceptsOrRefs(language.concepts)
             .reverse()
             .forEach((c) => modelImports.add(Names.concept(c)));
-
-        // tmp.push(Names.allConcepts(language));
-        // tmp.push(Names.metaType(language));
         modelImports.add(Names.language(language));
 
         // the template starts here
