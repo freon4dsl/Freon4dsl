@@ -12,7 +12,7 @@ DemoEntity {
     self.int_functions;
     self.attrutes;
     self.functions;
-    //DemoAttributeType:Inter;
+    //#DemoAttributeType:Inter;
     container;
     typeof ( self.attributes );
     typeof ( container );
@@ -34,37 +34,37 @@ DemoVariable {
 }
 /*
 DemoAbsExpression {
-    equalsType( self.expr, DemoAttributeType:Integer ) ;
+    equalsType( self.expr, #DemoAttributeType:Integer ) ;
 }
 
 DemoBinaryExpression {
-    equalsType( self.left, DemoAttributeType:Integer );
-    equalsType( self.right, DemoAttributeType:Integer );
+    equalsType( self.left, #DemoAttributeType:Integer );
+    equalsType( self.right, #DemoAttributeType:Integer );
 }
 DemoMultiplyExpression {
-    equalsType( self.left, DemoAttributeType:Integer );
-    equalsType( self.right, DemoAttributeType:Integer );
+    equalsType( self.left, #DemoAttributeType:Integer );
+    equalsType( self.right, #DemoAttributeType:Integer );
 }
 
 DemoPlusExpression {
-    equalsType( self.left, DemoAttributeType:Integer );
-    equalsType( self.right, DemoAttributeType:Integer );
+    equalsType( self.left, #DemoAttributeType:Integer );
+    equalsType( self.right, #DemoAttributeType:Integer );
     conformsTo( self.left, self.right );
 }
 
 DemoDivideExpression {
-    equalsType( self.left, DemoAttributeType:Integer );
-    equalsType( self.right, DemoAttributeType:Integer );
+    equalsType( self.left, #DemoAttributeType:Integer );
+    equalsType( self.right, #DemoAttributeType:Integer );
 }
 
 DemoAndExpression {
-    equalsType( self.left, DemoAttributeType:Boolean );
-    equalsType( self.right, DemoAttributeType:Boolean );
+    equalsType( self.left, #DemoAttributeType:Boolean );
+    equalsType( self.right, #DemoAttributeType:Boolean );
 }
 
 DemoOrExpression {
-    equalsType( self.left, DemoAttributeType:Boolean );
-    equalsType( self.right, DemoAttributeType:Boolean );
+    equalsType( self.left, #DemoAttributeType:Boolean );
+    equalsType( self.right, #DemoAttributeType:Boolean );
 }
 
 DemoComparisonExpression {
@@ -72,7 +72,7 @@ DemoComparisonExpression {
 }
 
 DemoIfExpression {
-    equalsType( self.condition, DemoAttributeType:Boolean );
+    equalsType( self.condition, #DemoAttributeType:Boolean );
     conformsTo( self.whenTrue, self.whenFalse );
 }
 
