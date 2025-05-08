@@ -116,7 +116,7 @@ When we leave out the AST nodes, the difference to the namespace graph will beco
 To define the alternative or replacement namespace in Freon, use the following syntax.
 
 `Z {
-	scope = self.myA;
+	namespace_replacement = self.myA; // used to be 'scope = self.myA'
 }`
 
 ## Namespace Exports 
@@ -164,3 +164,9 @@ additional or replacement namespaces into account.
 Qualified names as shown in Freon in the dropdown menu for references as the single name postfixed by the 
 word 'from' followed by the start of the qualified name. For instance 'D6 from A1.A3.A6'. The separator used
 (here '.') can be set in the .edit file. (Proposal!)
+
+## The Expression for a Namespace Addition or Replacement
+
+For namespace replacements: a path starting with self that refers to an instance of a Namespace Concept.
+For namespace additions: PATH + PATH + ...
+(TBD: check this!)
