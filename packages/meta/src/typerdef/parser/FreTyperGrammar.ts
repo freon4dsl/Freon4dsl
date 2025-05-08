@@ -40,7 +40,7 @@ FretPropInstance = __fre_reference ':' FretExp ;
 
 FretFunctionCallExp = identifier '(' [ FretExp / ',' ]* ')' ;
 
-FretLimitedInstanceExp = ( __fre_reference ':' )?
+FretLimitedInstanceExp = ( '#' __fre_reference ':' )?
 	 __fre_reference ;
 
 FretWhereExp = FretVarDecl 'where' '\{'
