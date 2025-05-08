@@ -1,6 +1,6 @@
-language FreTyper
+language FreTyperLanguage
 
-model FreTyper {
+model FreTyperModel {
     name: identifier;
     typer: FreTyperDef;
 }
