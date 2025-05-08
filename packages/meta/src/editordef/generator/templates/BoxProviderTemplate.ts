@@ -192,7 +192,7 @@ export class BoxProviderTemplate {
             symbol = extras.symbol;
         }
         this.imports.core.add("createDefaultBinaryBox").add("isFreBinaryExpression").add(Names.FreBinaryExpression).add("BoxFactory");
-        this.imports.config.add(Names.LanguageEnvironment);
+        this.imports.root.add(Names.LanguageEnvironment);
         // todo the current implementation does not work on non-global projections, is this a problem?
         return ` /**
                      *  Create a global binary box to ensure binary expressions can be edited easily

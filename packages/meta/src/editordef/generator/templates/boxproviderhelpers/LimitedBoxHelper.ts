@@ -107,7 +107,7 @@ export class LimitedBoxHelper {
     ): string {
         const featureType: string = Names.classifier(appliedFeature.type);
         this._myTemplate.imports.language.add(featureType);
-        this._myTemplate.imports.config.add(Names.LanguageEnvironment);
+        this._myTemplate.imports.root.add(Names.LanguageEnvironment);
         this._myTemplate.imports.core.add(Names.FreNodeReference).add("BoxUtil").add("LimitedDisplay");
         return `BoxUtil.limitedBox(
                                 ${element},

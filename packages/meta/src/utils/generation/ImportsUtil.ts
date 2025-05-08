@@ -47,11 +47,11 @@ const TypesAndInterfaces: Set<string> = new Set<string>([
  */
 export class Imports {
     /**
-     * Imports from various packagesa and folders.
+     * Imports from various packages and folders.
      */
     core = new Set<string>()
     language = new Set<string>()
-    config = new Set<string>()
+    root = new Set<string>()
     typer = new Set<string>()
     editor = new Set<string>()
     utils = new Set<string>()
@@ -65,11 +65,16 @@ export class Imports {
     reset(): void {
         this.core = new Set<string>()
         this.language = new Set<string>()
-        this.config = new Set<string>()
+        this.root = new Set<string>()
         this.typer = new Set<string>()
         this.editor = new Set<string>()
         this.utils = new Set<string>()
     }
+
+    /**
+     * Make the import statements.
+     * @param metaLanguage
+     */
     // @ts-ignore
     makeImports(metaLanguage: FreMetaLanguage): string {
         return this.makeCoreImportStatements() +
@@ -97,7 +102,7 @@ export class Imports {
 
     private makeConfigImportStatements(): string {
         const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}index.js`)
-        return this.makeImportStatement(this.config, fromPath)
+        return this.makeImportStatement(this.root, fromPath)
     }
 
     private makeEditorImportStatements(): string {

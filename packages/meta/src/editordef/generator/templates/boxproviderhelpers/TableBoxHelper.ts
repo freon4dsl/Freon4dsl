@@ -73,7 +73,7 @@ export class TableBoxHelper {
         language: FreMetaLanguage,
     ): string {
         this._myTemplate.imports.core.add("TableUtil");
-        this._myTemplate.imports.config.add(Names.LanguageEnvironment);
+        this._myTemplate.imports.root.add(Names.LanguageEnvironment);
         // return the projection based on the orientation of the table
         if (orientation === FreEditProjectionDirection.Vertical) {
             return `TableUtil.tableBoxColumnOriented(

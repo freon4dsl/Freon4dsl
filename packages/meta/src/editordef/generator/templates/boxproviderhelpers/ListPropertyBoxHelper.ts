@@ -23,7 +23,7 @@ export class ListPropertyBoxHelper {
         element: string
     ): string {
         this._myTemplate.imports.core.add("BoxUtil");
-        this._myTemplate.imports.config.add(Names.LanguageEnvironment);
+        this._myTemplate.imports.root.add(Names.LanguageEnvironment);
         const joinEntry = this.getJoinEntry(listJoin);
         if (listJoin.direction === FreEditProjectionDirection.Vertical) {
             return `BoxUtil.verticalReferenceListBox(${element}, "${reference.name}", ${Names.LanguageEnvironment}.getInstance().scoper, ${joinEntry})`;
