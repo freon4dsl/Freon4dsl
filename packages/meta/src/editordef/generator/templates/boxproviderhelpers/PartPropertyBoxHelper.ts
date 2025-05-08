@@ -1,5 +1,5 @@
 import { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
-import { ListUtil, Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/index.js";
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class PartPropertyBoxHelper {
@@ -10,14 +10,15 @@ export class PartPropertyBoxHelper {
     }
 
     public generateReferenceProjection(
+        // @ts-ignore
         language: FreMetaLanguage,
         appliedFeature: FreMetaConceptProperty,
         element: string,
     ): string {
         const featureType = Names.classifier(appliedFeature.type);
-        ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
-        ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));
-        ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [Names.FreNodeReference, "BoxUtil"]);
+        this._myTemplate.imports.language.add(featureType);
+        this._myTemplate.imports.config.add(Names.LanguageEnvironment);
+        this._myTemplate.imports.core.add(Names.FreNodeReference).add("BoxUtil");
         return `BoxUtil.referenceBox(
                                 ${element},
                                 "${appliedFeature.name}",
@@ -25,7 +26,7 @@ export class PartPropertyBoxHelper {
                                     ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
                                                selected, "${featureType}" );
                                 },
-                                ${Names.environment(language)}.getInstance().scoper
+                                ${Names.LanguageEnvironment}.getInstance().scoper
                )`;
     }
 }

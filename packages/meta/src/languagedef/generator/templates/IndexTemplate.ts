@@ -1,9 +1,9 @@
-import { ConceptUtils } from "./ConceptUtils.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, GenerationUtil } from "../../../utils/index.js";
+import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
 
 export class IndexTemplate {
     generateIndex(language: FreMetaLanguage): string {
+        const imports = new Imports()
         const modelImports: Set<string> = new Set<string>()
         modelImports.add(Names.classifier(language.modelConcept));
         language.units.forEach((c) => modelImports.add(Names.classifier(c)));
@@ -22,7 +22,7 @@ export class IndexTemplate {
          * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)
          * in order to avoid problem with circular imports.
          */
-        ${ConceptUtils.makeExportStatements(language, modelImports)}
+        ${imports.makeExportStatements(modelImports)}
         `
     }
 
@@ -61,6 +61,7 @@ export class IndexTemplate {
     generateUtilsIndex(language: FreMetaLanguage): string {
         return `export * from "./${Names.workerInterface(language)}.js";
                 export * from "./${Names.walker(language)}.js";
-                export * from "./${Names.defaultWorker(language)}.js";`;
+                export * from "./${Names.defaultWorker(language)}.js";
+                export * from "./${Names.listUtil}.js";`;
     }
 }

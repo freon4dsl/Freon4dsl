@@ -1,4 +1,4 @@
-import { LANGUAGE_GEN_FOLDER, Names, FREON_CORE, ListUtil, GenerationUtil } from "../../utils/index.js";
+import { Names, ListUtil, GenerationUtil, Imports } from "../../utils/index.js"
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
@@ -101,34 +101,13 @@ export class WriterTemplate {
                 }
             }
         }
-
+        const imports = new Imports(relativePath)
+        imports.core = new Set([Names.FreNamedNode, Names.FreNodeReference, writerInterfaceName, Names.FreNode])
+        imports.language = GenerationUtil.allConceptsInterfacsesAndUnits(language)
         // Template starts here
         return `
-        import { ${Names.FreNamedNode}, ${Names.FreNodeReference}, ${writerInterfaceName}, ${Names.FreNode} } from "${FREON_CORE}";
-        import { 
-            ${
-                language.interfaces.length > 0
-                    ? language.interfaces
-                          .map(
-                              (concept) => `
-                ${Names.classifier(concept)}, `,
-                          )
-                          .join("")
-                    : ``
-            }
-            ${language.units
-                .map(
-                    (concept) => `
-                ${Names.classifier(concept)}`,
-                )
-                .join(", ")},
-            ${language.concepts
-                .map(
-                    (concept) => `
-                    ${Names.concept(concept)}`,
-                )
-                .join(", ")}
-        } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        // TEMPLATE WriterTemplate.generateUnparser(...)
+        ${imports.makeImports(language)}
 
         /**
          * SeparatorType is used to unparse lists.

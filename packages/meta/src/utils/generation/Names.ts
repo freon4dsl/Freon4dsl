@@ -39,9 +39,7 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static FrScoperPart: string = "FreScoper";
     // tslint:disable-next-line:variable-name
-    public static FreTyperPart: string = "FreTyper"; // todo why not ..Part
-    // tslint:disable-next-line:variable-name
-    public static FreTyper: string = "FreCompositeTyper"; // todo no longer generated, is it still in use?
+    public static FreCompositeTyper: string = "FreCompositeTyper"; 
     // tslint:disable-next-line:variable-name
     public static FreValidator: string = "FreValidator";
     // tslint:disable-next-line:variable-name
@@ -58,6 +56,12 @@ export class Names {
     public static FreErrorSeverity: string = "FreErrorSeverity";
     // tslint:disable-next-line:variable-name
     public static FreActions: string = "FreCombinedActions";
+    // tslint:disable-next-line:variable-name
+    public static ActionsUtil: string = "ActionsUtil";
+    // tslint:disable-next-line:variable-name
+    public static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
+    // tslint:disable-next-line:variable-name
+    public static FreCustomAction: string = "FreCustomAction";
     // tslint:disable-next-line:variable-name
     public static FreEditor: string = "FreEditor";
     // tslint:disable-next-line:variable-name
@@ -83,15 +87,19 @@ export class Names {
     // tslint:disable-next-line:variable-name
     static FreType: string = "FreType";
     // tslint:disable-next-line:variable-name
+    static FreTyper: string = "FreTyper";
+    // tslint:disable-next-line:variable-name
+    static AstType: string = "AstType"
+    // tslint:disable-next-line:variable-name
+    static FreCommonSuperTypeUtil: string = "FreCommonSuperTypeUtil"
+    // tslint:disable-next-line:variable-name
     static FreTableDefinition: string = "FreTableDefinition";
-    // tslint:disable-next-line:variable-name
-    static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
-    // tslint:disable-next-line:variable-name
-    static FreCustomAction: string = "FreCustomAction";
     // tslint:disable-next-line:variable-name
     static FreTriggerType: string = "FreTriggerType";
     // tslint:disable-next-line:variable-name
-    static LanguageEnvironment: string = "FreLanguageEnvironment";
+    static FreLanguageEnvironment: string = "FreLanguageEnvironment";
+    // tslint:disable-next-line:variable-name
+    static LanguageEnvironment: string = "LanguageEnvironment";
     // tslint:disable-next-line:variable-name
     static FreLogger: string = "FreLogger";
     // tslint:disable-next-line:variable-name

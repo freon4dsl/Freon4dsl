@@ -1,14 +1,16 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Names, FREON_CORE } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/index.js"
 
 export class CustomScoperTemplate {
     generateCustomScoperPart(language: FreMetaLanguage): string {
         const scoperInterfaceName: string = Names.FrScoperPart;
         const generatedClassName: string = Names.customScoper(language);
+        const imports = new Imports()
+        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FrScoperPart, Names.FreScoperComposite])
 
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreNamedNode}, ${Names.FrScoperPart}, ${Names.FreScoperComposite}  } from "${FREON_CORE}";
+        ${imports.makeImports(language)}
 
         /**
          * Class '${generatedClassName}' is meant to be a convenient place to add any

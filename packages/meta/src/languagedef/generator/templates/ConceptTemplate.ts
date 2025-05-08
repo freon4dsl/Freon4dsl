@@ -1,4 +1,4 @@
-import { GenerationUtil, Names } from "../../../utils/index.js";
+import { GenerationUtil, Imports, Names } from "../../../utils/index.js"
 import {
     FreMetaPrimitiveProperty,
     FreMetaBinaryExpressionConcept,
@@ -36,12 +36,14 @@ export class ConceptTemplate {
         const abstract: string = concept.isAbstract ? "abstract" : "";
         const hasName: boolean = concept.implementedPrimProperties().some((p) => p.name === "name");
         const implementsFre: string = isExpression ? Names.FreExpressionNode : hasName ? Names.FreNamedNode : Names.FreNode;
-        const coreImports: Set<string> = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
+        const imports = new Imports()
+        imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .add(implementsFre)
             .add(Names.FreParseLocation)
-             if (hasReferences) coreImports.add(Names.FreNodeReference)
+            if (hasReferences) imports.core.add(Names.FreNodeReference)
+        imports.language = this.findModelImports(concept, myName);
+
         const metaType: string = Names.metaType();
-        const modelImports: Set<string> = this.findModelImports(concept, myName);
         const interfaces: string[] = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
@@ -71,16 +73,17 @@ export class ConceptTemplate {
                     .map((p) => ConceptUtils.makeReferenceProperty(p))
                     .join("\n")}
 
-                ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), coreImports)}
+                ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), imports)}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, isExpression, false)}
                 ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}
-                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, coreImports)}
+                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, imports)}
                 ${ConceptUtils.makeConvenienceMethods(concept.references())}
             }
         `;
 
         return `
-            ${ConceptUtils.makeImportStatements(concept.language, coreImports, modelImports)}
+            // TEMPLATE ConceptTemplate.generateConceptPrivate(...)
+            ${imports.makeImports(concept.language)}
 
             ${result}`;
     }
@@ -92,11 +95,12 @@ export class ConceptTemplate {
         const isAbstract = concept.isAbstract;
         const baseExpressionName = Names.concept(GenerationUtil.findExpressionBase(concept));
         const abstract = concept.isAbstract ? "abstract" : "";
-        const coreImports = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
+        const imports = new Imports()
+        imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
                 .add(Names.FreBinaryExpression)
                 .add(Names.FreParseLocation)
+        imports.language = this.findModelImports(concept, myName).add(baseExpressionName);
         const metaType = Names.metaType();
-        let modelImports: Set<string> = this.findModelImports(concept, myName).add(baseExpressionName);
         const intfaces = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
@@ -125,7 +129,7 @@ export class ConceptTemplate {
                     .map((p) => ConceptUtils.makeReferenceProperty(p))
                     .join("\n")}
 
-                ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), coreImports)}
+                ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), imports)}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, true, true)}
                 ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}
 
@@ -168,7 +172,7 @@ export class ConceptTemplate {
         `;
 
         return `
-            ${ConceptUtils.makeImportStatements(concept.language, coreImports, modelImports)}
+            ${imports.makeImports(concept.language)}
 
             ${result}`;
     }
@@ -181,11 +185,12 @@ export class ConceptTemplate {
         const hasSuper: boolean = !!concept.base;
         const extendsClass: string = hasSuper ? Names.concept(concept.base.referred) : "MobxModelElementImpl";
         const abstract: string = concept.isAbstract ? "abstract" : "";
-        const coreImports: Set<string> = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
+        const imports = new Imports()
+        imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .add(Names.FreNamedNode)
             .add(Names.FreParseLocation)
+        imports.language = this.findModelImports(concept, myName);
         const metaType: string = Names.metaType();
-        const modelImports: Set<string> = this.findModelImports(concept, myName);
         const intfaces: string[] = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
@@ -211,10 +216,10 @@ export class ConceptTemplate {
             .map((p) => ConceptUtils.makePrimitiveProperty(p))
             .join("\n")}
 
-                ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), coreImports)}
+                ${ConceptUtils.makeConstructor(hasSuper, concept.implementedProperties(), imports)}
                 ${ConceptUtils.makeBasicMethods(hasSuper, metaType, false, false, false, false)}
                 ${ConceptUtils.makeCopyMethod(concept, myName, concept.isAbstract)}
-                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, coreImports)}
+                ${ConceptUtils.makeMatchMethod(hasSuper, concept, myName, imports)}
             }
 
             // Because of mobx we need to generate the initialisations outside of the class,
@@ -230,7 +235,7 @@ export class ConceptTemplate {
                 .join(" ")}
             })`;
         return `
-            ${ConceptUtils.makeImportStatements(concept.language, coreImports, modelImports)}
+            ${imports.makeImports(concept.language)}
 
             ${result}`;
     }

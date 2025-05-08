@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, CONFIGURATION_GEN_FOLDER } from "../../../utils/index.js";
+import { Names } from "../../../utils/index.js";
 
 export class CommandLineTemplate {
     generateCommandLine(): string {
@@ -73,21 +73,22 @@ export class CommandLineTemplate {
             }`;
     }
 
+    // @ts-ignore
     generateCommandLineRunner(language: FreMetaLanguage): string {
         const configImports = [];
-        configImports.push(Names.environment(language));
+        configImports.push(Names.LanguageEnvironment);
 
         return `// Run this as the main program.
             ${
                 configImports.length > 0
-                    ? configImports.map((c) => `import { ${c} } from "../${CONFIGURATION_GEN_FOLDER}/${c}.js";`)
+                    ? configImports.map((c) => `import { ${c} } from "../${c}.js";`)
                     : ``
             }
             import { FreonCommandLine } from "./FreonCommandLine.js";
             import { DummyAction } from "./DummyAction.js";
             
             // ensure language is initialized
-            const tmp = ${Names.environment(language)}.getInstance();
+            const tmp = ${Names.LanguageEnvironment}.getInstance();
             
             // Create the command line object
             const cli: FreonCommandLine = new FreonCommandLine();

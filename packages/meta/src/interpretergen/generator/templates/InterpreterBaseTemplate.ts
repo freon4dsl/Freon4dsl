@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../utils/index.js";
+import { Imports, Names } from "../../../utils/index.js"
 import { FreInterpreterDef } from "../../metalanguage/FreInterpreterDef.js";
 
 export class InterpreterBaseTemplate {
@@ -9,9 +9,13 @@ export class InterpreterBaseTemplate {
      * @param interpreterDef
      */
     public interpreterBase(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
-        return `// Will be overwritten with every generation.
-        import { InterpreterContext, RtObject, RtError } from "@freon4dsl/core";
-        import { ${interpreterDef.conceptsToEvaluate.map((c) => Names.classifier(c)).join(",")} } from "../../language/gen/index.js";
+        const imports = new Imports("../../")
+        imports.core = new Set<string>(["InterpreterContext", "RtObject", "RtError"])
+        imports.language = new Set<string>(interpreterDef.conceptsToEvaluate.map((c) => Names.classifier(c)))
+
+        return `// TEMPLATE: InterpreterBaseTemplate.interpreterBase(...)
+        // Will be overwritten with every generation.
+        ${imports.makeImports((language))}
 
         /**
          * The base class containing all interpreter functions that should be defined.
@@ -34,9 +38,13 @@ export class InterpreterBaseTemplate {
     }
 
     public interpreterClass(language: FreMetaLanguage): string {
+        const imports = new Imports("../../")
+        imports.core = new Set<string>(["InterpreterContext", "RtObject", "IMainInterpreter"])
+
         const baseName = Names.interpreterBaseClassname(language);
-        return `// Generated once, will NEVER be overwritten.
-        import { InterpreterContext, IMainInterpreter, RtObject } from "@freon4dsl/core";
+        return `// TEMPLATE: InterpreterBaseTemplate.interpreterClass(...)
+        // Generated once, will NEVER be overwritten.
+        ${imports.makeImports(language)}
         import { ${baseName} } from "./gen/${baseName}.js";
 
         let main: IMainInterpreter;
@@ -57,7 +65,9 @@ export class InterpreterBaseTemplate {
 
     public interpreterInit(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
         const interpreter = Names.interpreterClassname(language);
-        return `import { IMainInterpreter } from "@freon4dsl/core";
+        return `
+        // TEMPLATE: InterpreterBaseTemplate.interpreterInit(...)
+        import { type IMainInterpreter } from "@freon4dsl/core";
         import { ${interpreter} } from "../${interpreter}.js";
 
         /**

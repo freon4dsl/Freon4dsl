@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils/index.js";
+import { Imports, Names } from "../../../utils/index.js"
 import { refRuleName } from "./GrammarUtils.js";
 import { GrammarPart } from "./GrammarPart.js";
 import {
@@ -84,17 +84,20 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
 
         handlerRegistration += `super.registerFor('${refRuleName}', (n, c, s) => this.transform${refRuleName}(n, c, s));`
 
+        const imports = new Imports(relativePath)
+        imports.core = new Set([Names.FreParseLocation, Names.FreNamedNode, Names.FreNode, Names.FreNodeReference, Names.FreOwnerDescriptor])
+        imports.language.add(Names.classifier(language.modelConcept))
         // Template starts here
         return `
+        // TEMPLATE: GrammarModel.toMethod(...)
+        ${imports.makeImports(language)}
         import {
             SyntaxAnalyserByMethodRegistrationAbstract,
-            KtList,
-            Sentence,
-            SpptDataNodeInfo
+            type KtList,
+            type Sentence,
+            type SpptDataNodeInfo
         } from "net.akehurst.language-agl-processor/net.akehurst.language-agl-processor.mjs";
-        import { SpptDataNode } from "net.akehurst.language-agl-processor";
-        import { ${Names.FreParseLocation}, ${Names.FreNamedNode}, ${Names.FreNode}, ${Names.FreNodeReference}, ${Names.FreOwnerDescriptor} } from "@freon4dsl/core";
-        import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        import { type SpptDataNode } from "net.akehurst.language-agl-processor";
         import { ${this.parts.map((part) => `${Names.unitAnalyser(this.language, part.unit)}`).join(", ")} } from "./index.js";
 
         export enum PrimValueType {

@@ -1,4 +1,4 @@
-import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils/index.js";
+import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class DefaultWorkerTemplate {
@@ -13,11 +13,14 @@ export class DefaultWorkerTemplate {
                                * Visits 'modelelement' after visiting its children.
                                * @param modelelement
                                */`;
-
+        const imports = new Imports(relativePath)
+        imports.language = GenerationUtil.allConceptsAndUnits(language)
+        
         // the template starts here
         return `
-        import { ${GenerationUtil.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-        import { ${workerInterfaceName} } from "./${Names.workerInterface(language)}.js";
+        // TEMPLATE: DefaultWorkerTemplate.generateDefaultWorker(...)
+        ${imports.makeImports(language)}
+        import { type ${workerInterfaceName} } from "./${Names.workerInterface(language)}.js";
 
         /**
          * Class ${defaultWorkerClassName} is part of the implementation of the visitor pattern on models.

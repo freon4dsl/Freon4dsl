@@ -1,11 +1,15 @@
 import { FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils/index.js";
+import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
 
 export class WorkerInterfaceTemplate {
     generateWorkerInterface(language: FreMetaLanguage, relativePath: string): string {
+        const imports = new Imports(relativePath)
+        imports.language = GenerationUtil.allConceptsAndUnits(language)
+
         // the template starts here
         return `
-        import { ${GenerationUtil.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        // TEMPLATE: WorkerInterfaceTemplate.generateWorkerInterface(...)
+        ${imports.makeImports(language)}
 
         /**
          * Interface ${Names.workerInterface(language)} implements the extended visitor pattern of instances of language ${language.name}.
@@ -15,22 +19,22 @@ export class WorkerInterfaceTemplate {
          */
         export interface ${Names.workerInterface(language)} {
 
-        execBefore${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean;
-        execAfter${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean;
+        execBefore${Names.classifier(language.modelConcept)}(node: ${Names.classifier(language.modelConcept)}): boolean;
+        execAfter${Names.classifier(language.modelConcept)}(node: ${Names.classifier(language.modelConcept)}): boolean;
 
         ${language.units
             .map(
                 (unit) =>
-                    `execBefore${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean;
-            execAfter${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean ;`,
+                    `execBefore${Names.classifier(unit)}(node: ${Names.classifier(unit)}): boolean;
+            execAfter${Names.classifier(unit)}(node: ${Names.classifier(unit)}): boolean ;`,
             )
             .join("\n\n")}
 
         ${language.concepts
             .map(
                 (concept) =>
-                    `execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean;
-            execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean;`,
+                    `execBefore${Names.concept(concept)}(node: ${Names.concept(concept)}): boolean;
+            execAfter${Names.concept(concept)}(node: ${Names.concept(concept)}): boolean;`,
             )
             .join("\n\n")}
         }`;

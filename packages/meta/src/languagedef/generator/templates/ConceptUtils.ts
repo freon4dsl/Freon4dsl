@@ -1,4 +1,4 @@
-import { Names, FREON_CORE, GenerationUtil, ImportsUtil } from "../../../utils/index.js"
+import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
 import {
     FreMetaClassifier,
     FreMetaConcept,
@@ -7,52 +7,11 @@ import {
     FreMetaProperty,
     FreMetaPrimitiveType,
     FreMetaInterface,
-    FreMetaEnumValue, FreMetaLanguage
+    FreMetaEnumValue
 } from "../../metalanguage/index.js"
 
 export class ConceptUtils {
-    public static makeImportStatements(language: FreMetaLanguage, importsFromCore: Set<string>, modelImports: Set<string>): string {
-        return `
-            ${
-            importsFromCore.size > 0
-                ? `import { ${importsFromCore
-                    .values()
-                    .toArray()
-                    .map((imp) => ImportsUtil.imports(imp))
-                    .join(", ")} } from "${FREON_CORE}";`
-                : ""
-        }
-            ${
-            modelImports.size > 0
-                ? `import { ${modelImports
-                    .values()
-                    .toArray()
-                    .map((imp) => this.modelImports(language, imp))
-                    .join(", ")} } from "./internal.js";`
-                : ""
-        }
-            `
-    }
-
-    public static makeExportStatements(language: FreMetaLanguage, modelImports: Set<string>): string {
-        return `
-            ${
-            modelImports.size > 0
-                ? `export { ${modelImports
-                    .values()
-                    .toArray()
-                    .map((imp) => this.modelImports(language, imp))
-                    .join(",\n    ")} } from "./internal.js";`
-                : ""
-        }
-            `
-    }
-
-    private static modelImports(language: FreMetaLanguage, name: string): string {
-        const cls = language.findClassifier(name) ?? language.findClassifier(Names.startWithLowerCase(name))
-        return cls instanceof FreMetaInterface ? `type ${Names.interface(cls)}` : name
-    }
-
+    
     public static makeBasicProperties(metaType: string, conceptName: string, hasSuper: boolean): string {
         return `readonly $typename: ${metaType} = "${conceptName}";    // holds the metatype in the form of a string
                 ${!hasSuper ? "$id: string = '';     // a unique identifier" : ""}
@@ -163,7 +122,7 @@ export class ConceptUtils {
         return result
     }
 
-    public static makeConstructor(hasSuper: boolean, allProps: FreMetaProperty[], importsFromCore: Set<string>): string {
+    public static makeConstructor(hasSuper: boolean, allProps: FreMetaProperty[], imports: Imports): string {
         // console.log("found overriding props: " + allProps.filter(p => p.isOverriding)
         // .map(p => `${p.name} of ${p.owningClassifier.name} [${p.location?.filename}]`).join("\n\t"))
         // console.log("found NON overriding props: " + allProps.filter(p => !p.isOverriding).map(p => `${p.name} of ${p.owningClassifier.name}`).join(", "))
@@ -172,7 +131,7 @@ export class ConceptUtils {
 
         // here we know that FreUtils needs to be imported => add to imports
         if (!hasSuper) {
-            importsFromCore.add(Names.FreUtils)
+            imports.core.add(Names.FreUtils)
         }
         return `constructor(id?: string) {
         ${
@@ -378,7 +337,7 @@ export class ConceptUtils {
         return result
     }
 
-    public static makeMatchMethod(hasSuper: boolean, concept: FreMetaClassifier, myName: string, importsFromCore: Set<string>): string {
+    public static makeMatchMethod(hasSuper: boolean, concept: FreMetaClassifier, myName: string, imports: Imports): string {
         let propsToDo: FreMetaProperty[]
         if (hasSuper && concept instanceof FreMetaConcept) {
             propsToDo = (concept as FreMetaConcept).implementedProperties()
@@ -394,17 +353,17 @@ export class ConceptUtils {
                  */
                 public match(toBeMatched: Partial<${myName}>): boolean {
                     ${hasSuper ? `let result: boolean = super.match(toBeMatched);` : `let result: boolean = true;`}
-                    ${propsToDo.map((freProp) => `${this.makeMatchEntry(freProp, importsFromCore)}`).join("\n")}
+                    ${propsToDo.map((freProp) => `${this.makeMatchEntry(freProp, imports)}`).join("\n")}
                     return result;
                 }`
     }
 
-    private static makeMatchEntry(freProperty: FreMetaProperty, importsFromCore: Set<string>): string {
+    private static makeMatchEntry(freProperty: FreMetaProperty, imports: Imports): string {
         let result: string = ""
         if (freProperty.isPrimitive) {
             if (freProperty.isList) {
                 // here we know that matchPrimitiveList needs to be imported => add to imports
-                importsFromCore.add("matchPrimitiveList")
+                imports.core.add("matchPrimitiveList")
                 result = `if (result && !!toBeMatched.${freProperty.name}) {
                                 result = result && matchPrimitiveList(this.${freProperty.name}, toBeMatched.${freProperty.name});
                           }`
@@ -422,13 +381,13 @@ export class ConceptUtils {
         } else if (freProperty.isList) {
             if (freProperty.isPart) {
                 // here we know that matchElementList needs to be imported => add to imports
-                importsFromCore.add("matchElementList")
+                imports.core.add("matchElementList")
                 result = `if (result && !!toBeMatched.${freProperty.name}) {
                               result = result && matchElementList(this.${freProperty.name}, toBeMatched.${freProperty.name});
                           }`
             } else {
                 // here we know that matchReferenceList needs to be imported => add to imports
-                importsFromCore.add("matchReferenceList")
+                imports.core.add("matchReferenceList")
                 result = `if (result && !!toBeMatched.${freProperty.name}) {
                               result = result && matchReferenceList(this.${freProperty.name}, toBeMatched.${freProperty.name});
                           }`

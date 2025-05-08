@@ -1,16 +1,13 @@
-import { Names, FREON_CORE } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/index.js"
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/FreMetaLanguage.js";
 
 export class ActionsTemplate {
     generate(language: FreMetaLanguage): string {
+        const imports = new Imports() 
+        imports.core.add(Names.FreActions).add(Names.ActionsUtil).add(Names.FreCreateBinaryExpressionAction).add(Names.FreCustomAction)
         return `
-            import {
-                ${Names.FreActions},
-                ActionsUtil,
-                FreCreateBinaryExpressionAction,
-                FreCustomAction
-            } from "${FREON_CORE}";
-
+            // TEMPLATE: ActionsTemplate.generate(...)
+            ${imports.makeImports(language)}
             import { BINARY_EXPRESSION_CREATORS, CUSTOM_ACTIONS } from "./${Names.defaultActions(language)}.js";
             import { MANUAL_BINARY_EXPRESSION_ACTIONS, MANUAL_CUSTOM_ACTIONS } from "../${Names.customActions(language)}.js";
 
@@ -24,8 +21,8 @@ export class ActionsTemplate {
              */
             export class ${Names.actions(language)} implements ${Names.FreActions} {
                 // Combine generated and manually written actions, where manual actions may override the generated ones
-                binaryExpressionActions: FreCreateBinaryExpressionAction[] = ActionsUtil.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_ACTIONS) as FreCreateBinaryExpressionAction[];
-                customActions: FreCustomAction[] = ActionsUtil.join(CUSTOM_ACTIONS, MANUAL_CUSTOM_ACTIONS) as FreCustomAction[];
+                binaryExpressionActions: ${Names.FreCreateBinaryExpressionAction}[] = ${Names.ActionsUtil}.join(BINARY_EXPRESSION_CREATORS, MANUAL_BINARY_EXPRESSION_ACTIONS) as ${Names.FreCreateBinaryExpressionAction}[];
+                customActions: ${Names.FreCustomAction}[] = ${Names.ActionsUtil}.join(CUSTOM_ACTIONS, MANUAL_CUSTOM_ACTIONS) as ${Names.FreCustomAction}[];
             }`;
     }
 }

@@ -1,10 +1,13 @@
-import { Names, FREON_CORE } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/index.js"
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 
 export class CustomProjectionTemplate {
     generate(language: FreMetaLanguage): string {
+        const imports = new Imports()
+        imports.core.add(Names.FreNode).add(Names.Box).add(Names.FreProjection).add(Names.FreTableDefinition)
         return `
-            import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjection}, ${Names.FreTableDefinition} } from "${FREON_CORE}";
+            // TEMPLATE: CustomProjectionTemplate.generate(...)
+            ${imports.makeImports(language)}
 
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to

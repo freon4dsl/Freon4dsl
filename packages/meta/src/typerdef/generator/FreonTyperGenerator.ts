@@ -63,6 +63,8 @@ export class FreonTyperGenerator {
         if (!!typerdef && typerdef.typeConcepts.length > 0) {
             typerdef.typeConcepts.forEach((con) => {
                 LOGGER.log(`Generating type concept: ${this.typerConceptsFolder}/${Names.classifier(con)}.ts`);
+                // @ts-ignore S2322
+                con.language = this.language;
                 const typeConceptFile = FileUtil.pretty(
                     typeConceptMaker.generateTypeConcept(con, relativePath + "../"),
                     "Type Concept",

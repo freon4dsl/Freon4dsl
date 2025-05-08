@@ -1,14 +1,14 @@
-import { Names, FREON_CORE } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/index.js"
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 
 export class CustomActionsTemplate {
     generate(language: FreMetaLanguage): string {
+        const imports = new Imports()
+        imports.core.add(Names.FreCustomAction).add(Names.FreCreateBinaryExpressionAction).add(Names.FreActions)
+
         return `
-            import {
-                ${Names.FreCreateBinaryExpressionAction},
-                ${Names.FreCustomAction},
-                ${Names.FreActions}
-            } from "${FREON_CORE}";
+            // TEMPLATE: CustomActionsTemplate.generate(...)
+            ${imports.makeImports(language)}
 
              /**
              * Class ${Names.customActions(language)} provides an entry point for the language engineer to

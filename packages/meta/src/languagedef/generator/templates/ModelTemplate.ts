@@ -1,5 +1,5 @@
 import { ConceptUtils } from "./ConceptUtils.js"
-import { Names, FREON_CORE, ImportsUtil } from "../../../utils/index.js"
+import { Imports, Names } from "../../../utils/index.js"
 import { FreMetaModelDescription } from "../../metalanguage/FreMetaLanguage.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
 
@@ -9,12 +9,14 @@ export class ModelTemplate {
         const language = modelDescription.language;
         const myName = Names.classifier(modelDescription);
         const extendsClass = "MobxModelElementImpl";
-        const coreImports: Set<string> = ClassifierUtil.findMobxImports(modelDescription)
+        const imports = new Imports()
+        imports.core = ClassifierUtil.findMobxImports(modelDescription)
             .add(Names.FreModel)
             .add(Names.FreLanguage)
             .add(Names.FreParseLocation)
+            .add(Names.modelunit())
             .add("AST")
-        const modelImports = this.findModelImports(modelDescription, myName);
+        imports.language = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType();
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
@@ -37,10 +39,10 @@ export class ModelTemplate {
                     .map((p) => ConceptUtils.makePartProperty(p))
                     .join("\n")}
 
-                ${ConceptUtils.makeConstructor(false, modelDescription.properties, coreImports)}
+                ${ConceptUtils.makeConstructor(false, modelDescription.properties, imports)}
                 ${ConceptUtils.makeBasicMethods(false, metaType, true, false, false, false)}
                 ${ConceptUtils.makeCopyMethod(modelDescription, myName, false)}
-                ${ConceptUtils.makeMatchMethod(false, modelDescription, myName, coreImports)}
+                ${ConceptUtils.makeMatchMethod(false, modelDescription, myName, imports)}
 
                 /**
                  * A convenience method that finds a unit of this model based on its name and 'metatype'.
@@ -234,22 +236,18 @@ export class ModelTemplate {
                 }`;
 
         return `
-            import { ${Names.modelunit()}, ${coreImports.values().toArray().map(v => ImportsUtil.imports(v)).join(",")} } from "${FREON_CORE}";
-            import { ${modelImports.join(", ")} } from "./internal.js";
-
+            ${imports.makeImports(language)}
             ${result}`;
     }
 
-    private findModelImports(modelDescription: FreMetaModelDescription, myName: string): string[] {
-        return Array.from(
-            new Set(
+    private findModelImports(modelDescription: FreMetaModelDescription, myName: string): Set<string> {
+        return new Set(
                 modelDescription
                     .parts()
                     .map((part) => Names.classifier(part.type))
                     // .concat(Names.metaType(modelDescription.language))
                     .filter((name) => !(name === myName))
                     .filter((r) => r !== null && r.length > 0),
-            ),
-        );
+            )
     }
 }

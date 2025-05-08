@@ -1,7 +1,6 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, TYPER_CONCEPTS_FOLDER, LOG2USER } from "../../../utils/index.js";
+import { Names, LOG2USER, Imports } from "../../../utils/index.js"
 import { FreMetaConcept, FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../../metalanguage/index.js";
-import { ListUtil } from "../../../utils/index.js";
 import { FreTypeEqualsMaker } from "./FreTypeEqualsMaker.js";
 import { FreTypeInferMaker } from "./FreTypeInferMaker.js";
 import { FreSuperTypeMaker } from "./FreSuperTypeMaker.js";
@@ -12,7 +11,6 @@ export class FreTyperPartTemplate {
     typerdef: TyperDef;
     // @ts-ignore Property is set in the only public method 'generateTyperPart'.
     language: FreMetaLanguage;
-    imports: string[] = [];
     importedClassifiers: FreMetaClassifier[] = []; // holds all classifiers that need to be imported, either from LANGUAGE_GEN_FOLDER, or from TYPER_CONCEPTS_FOLDER
 
     generateTyperPart(language: FreMetaLanguage, typerdef: TyperDef | undefined, relativePath: string): string {
@@ -30,29 +28,31 @@ export class FreTyperPartTemplate {
 
     private generateDefault(): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const typerInterfaceName: string = Names.FreTyperPart;
         const generatedClassName: string = Names.typerPart(this.language);
+        const imports: Imports = new Imports()
+        imports.core = new Set<string>([Names.FreNode, Names.FreType, Names.FreTyper, Names.FreCompositeTyper])
 
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreType}, FreTyper, FreCompositeTyper} from "${FREON_CORE}";
+        // TEMPLATE: FreTyperPartTemplate.generateDefault(...)
+        ${imports.makeImports(this.language)}
 
-        export class ${generatedClassName} implements ${typerInterfaceName} {
+        export class ${generatedClassName} implements ${Names.FreTyper} {
             mainTyper: FreCompositeTyper;
 
             /**
-             * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
-             * @param modelelement
+             * Returns true if 'node' is marked as 'type' in the Typer definition.
+             * @param node
              */
-            public isType(modelelement: ${Names.FreNode}): boolean | null {
+            public isType(node: ${Names.FreNode}): boolean | null {
                 return false;
             }
 
             /**
-             * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
-             * @param modelelement
+             * Returns the type of 'node' according to the type rules in the Typer Definition.
+             * @param node
              */
-            public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
+            public inferType(node: ${Names.FreNode}): ${Names.FreType} | null {
                 return null;
             }
 
@@ -106,12 +106,12 @@ export class FreTyperPartTemplate {
         this.typerdef = typerdef;
         this.language = this.language;
         const rootType: string = !!typerdef?.typeRoot() ? Names.classifier(typerdef?.typeRoot()!) : "unknown-root-type";
-        ListUtil.addIfNotPresent(this.imports, rootType);
         const generatedClassName: string = Names.typerPart(this.language);
-        const typerInterfaceName: string = Names.FreTyperPart;
         const equalsMaker: FreTypeEqualsMaker = new FreTypeEqualsMaker();
         const inferMaker: FreTypeInferMaker = new FreTypeInferMaker();
         const superTypeMaker: FreSuperTypeMaker = new FreSuperTypeMaker();
+        const imports: Imports = new Imports(relativePath)
+        imports.language.add(rootType);
 
         // TODO see if we need a default type to return from inferType
 
@@ -122,25 +122,25 @@ export class FreTyperPartTemplate {
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
          * otherwise this class implements the default typer.
          */
-        export class ${generatedClassName} implements ${typerInterfaceName} {
+        export class ${generatedClassName} implements ${Names.FreTyper} {
             mainTyper: FreCompositeTyper; //  ${Names.typer(this.language)};
 
             /**
-             * Returns true if 'modelelement' is marked as 'type' in the Typer definition.
-             * @param modelelement
+             * Returns true if 'node' is marked as 'type' in the Typer definition.
+             * @param node
              */
-            public isType(modelelement: ${Names.FreNode}): boolean | null {
-                ${this.makeIsType(typerdef.types)}
+            public isType(node: ${Names.FreNode}): boolean | null {
+                ${this.makeIsType(typerdef.types, imports)}
             }
 
             /**
-             * Returns the type of 'modelelement' according to the type rules in the Typer Definition.
-             * @param modelelement
+             * Returns the type of 'node' according to the type rules in the Typer Definition.
+             * @param node
              */
-            public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
-                if (!modelelement) { return null; }
+            public inferType(node: ${Names.FreNode}): ${Names.FreType} | null {
+                if (!node) { return null; }
                 let result: ${Names.FreType} = null;
-                ${inferMaker.makeInferType(typerdef, "modelelement", this.importedClassifiers)}
+                ${inferMaker.makeInferType(typerdef, "node", this.importedClassifiers)}
                 return result;
             }
 
@@ -234,36 +234,47 @@ export class FreTyperPartTemplate {
             }
         }`;
 
-        const typeConceptImports: string[] = [];
         this.importedClassifiers.forEach((cls) => {
             if (FreTyperGenUtils.isType(cls)) {
                 if (cls.name !== Names.FreType) {
-                    ListUtil.addIfNotPresent(typeConceptImports, Names.classifier(cls));
+                    imports.typer.add(Names.classifier(cls));
                 }
             } else {
-                ListUtil.addIfNotPresent(this.imports, Names.classifier(cls));
+                imports.language.add(Names.classifier(cls));
             }
         });
+        imports.core = new Set<string>([
+            Names.FreTyper,
+            Names.FreCompositeTyper,
+            Names.FreType,
+            Names.AstType,
+            Names.FreNode,
+            Names.FreLanguage,
+            Names.FreCommonSuperTypeUtil
+        ])
+        
+        // `${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map((im) => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}/index.js";` : ``}`;
 
-        const imports = `import { ${typerInterfaceName}, FreCompositeTyper, ${Names.FreType}, AstType, ${Names.FreNode}, ${Names.FreLanguage}, FreCommonSuperTypeUtil } from "${FREON_CORE}";
-        import { ${this.imports.map((im) => im).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-        ${typeConceptImports.length > 0 ? `import { ${typeConceptImports.map((im) => im).join(", ")} } from "${relativePath}${TYPER_CONCEPTS_FOLDER}/index.js";` : ``}`;
+        return `
+            // TEMPLATE: FreTyperPartTemplate.generateFromDefinition(...)
+            ${imports.makeImports(this.language)}
 
-        return imports + baseClass;
+            ${baseClass}
+            `
     }
 
-    private makeIsType(allTypes: FreMetaClassifier[]) {
+    private makeIsType(allTypes: FreMetaClassifier[], imports: Imports) {
         let result: string = "";
         // add statements for all concepts that are marked 'isType'
         // all elements of allTypes should be FreConcepts
         const myList: FreMetaConcept[] = allTypes.filter((t) => t instanceof FreMetaConcept) as FreMetaConcept[];
         myList.forEach((type) => {
-            ListUtil.addIfNotPresent(this.imports, Names.concept(type));
+            imports.language.add(Names.concept(type));
         });
         result = `${myList
             .map(
                 (type) =>
-                    `if (modelelement instanceof ${Names.concept(type)}) {
+                    `if (node instanceof ${Names.concept(type)}) {
                 return true;
             }`,
             )

@@ -2,7 +2,6 @@ export * from "./ConceptTemplate.js";
 export * from "./DefaultWorkerTemplate.js";
 export * from "./EnvironmentTemplate.js";
 export * from "./IndexTemplate.js";
-export * from "./MetaTypeTemplate.js";
 export * from "./WalkerTemplate.js";
 export * from "./WorkerInterfaceTemplate.js";
 export * from "./LanguageTemplate.js";

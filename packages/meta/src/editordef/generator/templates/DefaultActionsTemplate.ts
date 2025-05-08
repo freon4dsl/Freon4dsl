@@ -1,4 +1,4 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER } from "../../../utils/index.js";
+import { Names, FREON_CORE, Imports } from "../../../utils/index.js"
 import {
     FreMetaLanguage,
     FreMetaBinaryExpressionConcept,
@@ -11,35 +11,36 @@ import { FreEditNormalProjection, FreEditUnit, FreOptionalPropertyProjection } f
 
 export class DefaultActionsTemplate {
     generate(language: FreMetaLanguage, editorDef: FreEditUnit, relativePath: string): string {
-        const modelImports: string[] = language
-            .conceptsAndInterfaces()
-            .map((c) => `${Names.classifier(c)}`)
-            .concat(language.units.map((u) => `${Names.classifier(u)}`));
+        const imports = new Imports(relativePath)
+        imports.language = new Set<string>([
+            ...language.conceptsAndInterfaces().map((c) => Names.classifier(c)),
+            ...language.units.map((u) => Names.classifier(u))
+        ])
+        imports.core = new Set<string>([
+            "AFTER_BINARY_OPERATOR",
+            "BEFORE_BINARY_OPERATOR",
+            Names.Box,
+            "MetaKey",
+            Names.FreActions,
+            Names.FreCreateBinaryExpressionAction,
+            "FreCaret",
+            Names.FreCustomAction,
+            Names.FreEditor,
+            Names.FreNode,
+            Names.FreBinaryExpression,
+            "FreKey",
+            "FreLogger",
+            Names.FreTriggerType,
+            "ActionBox",
+            "OptionalBox",
+            Names.FreNodeReference,
+            "LEFT_MOST",
+            "RIGHT_MOST"
+        ])
         return `
+            // TEMPLATE: DefaultActionsTemplate.generate(...)
             import * as Keys from "${FREON_CORE}";
-            import {
-                AFTER_BINARY_OPERATOR,
-                BEFORE_BINARY_OPERATOR,
-                Box,
-                MetaKey,
-                ${Names.FreActions},
-                ${Names.FreCreateBinaryExpressionAction},
-                FreCaret,
-                ${Names.FreCustomAction},
-                ${Names.FreEditor},
-                ${Names.FreNode},
-                ${Names.FreBinaryExpression},
-                FreKey,
-                FreLogger,
-                ${Names.FreTriggerType},
-                ActionBox,
-                OptionalBox,
-                ${Names.FreNodeReference},
-                LEFT_MOST,
-                RIGHT_MOST
-            } from "${FREON_CORE}";
-
-            import { ${modelImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+            ${imports.makeImports(language)}
 
              /**
              * This module implements the actions available to the user in the editor.

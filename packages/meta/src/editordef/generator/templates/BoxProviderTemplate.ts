@@ -14,13 +14,10 @@ import {
     FreMetaLanguage,
 } from "../../../languagedef/metalanguage/index.js";
 import {
-    CONFIGURATION_GEN_FOLDER,
-    EDITOR_GEN_FOLDER,
-    FREON_CORE,
-    LANGUAGE_GEN_FOLDER,
+    Imports,
     ListUtil,
-    Names,
-} from "../../../utils/index.js";
+    Names
+} from "../../../utils/index.js"
 import {
     PrimitivePropertyBoxesHelper,
     LimitedBoxHelper,
@@ -37,9 +34,7 @@ export class BoxProviderTemplate {
     private static bracketProjection: FreEditNormalProjection = new FreEditNormalProjection();
     // The classes, functions, etc. to import are collected during the creation of the content for the generated file,
     // to avoid unused imports. All imports are stored in the following three variables.
-    public modelImports: string[] = []; // imports from ../language/gen
-    public coreImports: string[] = []; // imports from @freon4dsl/core
-    public configImports: string[] = []; // imports from ../config/gen
+    public imports = new Imports()
     // Fragments are generated as two strings: a separate method and a call to this method in the box provider method(s).
     // The methods are stored in 'fragmentMethods'.
     public fragmentMethods: string[] = [];
@@ -87,13 +82,12 @@ export class BoxProviderTemplate {
         relativePath: string,
     ): string {
         // init the imports
-        ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
-        ListUtil.addListIfNotPresent(this.coreImports, [
-            "Box",
-            "BoxUtil",
-            "FreBoxProvider",
-            "FreProjectionHandler",
-        ]);
+        this.imports = new Imports(relativePath)
+        this.imports.language.add(Names.classifier(concept));
+        this.imports.core.add("Box")
+            .add("BoxUtil")
+            .add("FreBoxProvider")
+            .add("FreProjectionHandler")
 
         // see which projections there are for this concept
         // myBoxProjections: all non table projections
@@ -151,39 +145,16 @@ export class BoxProviderTemplate {
             ListUtil.addListIfNotPresent(extraClassifiers, this.supersUsed);
         }
 
-        // create a string for the collected imports
-        const importsText: string = `
-            ${
-                this.coreImports.length > 0
-                    ? `import { ${this.coreImports.map((c) => `${c}`).join(", ")} } from "${FREON_CORE}";`
-                    : ``
-            }
-
-            ${
-                this.modelImports.length > 0
-                    ? `import { ${this.modelImports.map((c) => `${c}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";`
-                    : ``
-            }
-
-            ${
-                this.configImports.length > 0
-                    ? this.configImports.map(
-                          (c) => `import { ${c} } from "${relativePath}${CONFIGURATION_GEN_FOLDER}/${c}.js";`,
-                      )
-                    : ``
-            }
-
-            ${
-                this.supersUsed.length > 0
-                    ? `import { ${this.supersUsed.map((c) => `${Names.boxProvider(c)}`).join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}/index.js";`
-                    : ``
-            }
-            
-            `;
+        if (this.supersUsed.length > 0) {
+            this.supersUsed.forEach((c) => {
+                this.imports.editor.add(Names.boxProvider(c))
+            })
+        }
 
         // create the complete box provider class based on the parts created above
         const classText: string = `
-            ${importsText}
+            // TEMPLATE BoxProviderTemplate.generateBoxProvider(...)
+            ${this.imports.makeImports(language)}
             /**
              * This class implements the box provider for a single node of type ${Names.classifier(concept)}.
              * The box provider is able to create the (tree of) boxes for the node, based
@@ -203,12 +174,6 @@ export class BoxProviderTemplate {
                 
                 ${this.fragmentMethods.map((meth: string) => meth).join("\n\n")}
             }`;
-
-        // reset the imports
-        this.modelImports = [];
-        this.coreImports = [];
-        this.configImports = [];
-
         // reset the fragmentMethods
         this.fragmentMethods = [];
 
@@ -220,13 +185,14 @@ export class BoxProviderTemplate {
         return classText;
     }
 
+    // @ts-ignore
     private generateForBinExp(language: FreMetaLanguage, extras: FreEditExtraClassifierInfo | undefined): string {
         let symbol: string = "";
         if (!!extras) {
             symbol = extras.symbol;
         }
-        this.coreImports.push(...["createDefaultBinaryBox", "isFreBinaryExpression", Names.FreBinaryExpression, "BoxFactory"]);
-        this.configImports.push(Names.environment(language));
+        this.imports.core.add("createDefaultBinaryBox").add("isFreBinaryExpression").add(Names.FreBinaryExpression).add("BoxFactory");
+        this.imports.config.add(Names.LanguageEnvironment);
         // todo the current implementation does not work on non-global projections, is this a problem?
         return ` /**
                      *  Create a global binary box to ensure binary expressions can be edited easily
@@ -235,7 +201,7 @@ export class BoxProviderTemplate {
                         return createDefaultBinaryBox(
                             this._node as ${Names.FreBinaryExpression},
                             "${symbol}",
-                            ${Names.environment(language)}.getInstance().editor,
+                            ${Names.LanguageEnvironment}.getInstance().editor,
                             this.mainHandler
                         );
                     }
@@ -257,7 +223,7 @@ export class BoxProviderTemplate {
     }
 
     private createdGetSuperMethod(supers: FreMetaClassifier[], elementVarName: string): string {
-        ListUtil.addIfNotPresent(this.coreImports, "FreBoxProvider");
+        this.imports.core.add("FreBoxProvider");
         return `
                 /**
                  * This method returns the content for one of the super concepts or interfaces of 'this._node'.
@@ -297,12 +263,12 @@ export class BoxProviderTemplate {
         concept: FreMetaClassifier,
         projection: FreEditClassifierProjection,
     ): string {
-        ListUtil.addIfNotPresent(this.modelImports, Names.classifier(concept));
+        this.imports.language.add(Names.classifier(concept));
         if (projection instanceof FreEditNormalProjection) {
             const elementVarName: string = `(this._node as ${Names.classifier(concept)})`;
             const result: string = this.generateLines(projection.lines, elementVarName, concept.name, language, 1);
             if (concept instanceof FreMetaExpressionConcept) {
-                ListUtil.addIfNotPresent(this.coreImports, "createDefaultExpressionBox");
+                this.imports.core.add("createDefaultExpressionBox");
                 return `private ${Names.projectionMethod(projection)} () : Box {
                     return createDefaultExpressionBox( ${elementVarName}, [${result}], { selectable: false } );
                 }`;
@@ -342,7 +308,7 @@ export class BoxProviderTemplate {
         });
         if (lines.length > 1) {
             // multi-line projection, so surround with vertical box
-            ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
+            this.imports.core.add("BoxFactory");
             result = `BoxFactory.verticalLayout(${elementVarName}, "${boxLabel}-overall", '', [
                 ${result}
             ])`;
@@ -363,7 +329,7 @@ export class BoxProviderTemplate {
     ): string {
         let result: string = "";
         if (line.isEmpty()) {
-            ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
+            this.imports.core.add("BoxUtil");
             result = `BoxUtil.emptyLineBox(${elementVarName}, "${boxLabel}-empty-line-${index}")`;
         } else {
             // do all projection items in the line, separate them with a comma
@@ -384,12 +350,12 @@ export class BoxProviderTemplate {
             if (line.items.length > 1) {
                 // surround with horizontal box
                 // TODO Too many things are now selectable, but if false, you cannot select e.g. an attribute
-                ListUtil.addIfNotPresent(this.coreImports, "BoxFactory");
+                this.imports.core.add("BoxFactory");
                 result = `BoxFactory.horizontalLayout(${elementVarName}, "${boxLabel}-hlist-line-${index}", '', [ ${result} ], { selectable: false } ) `;
             }
             if (line.indent > 0) {
                 // surround with indentBox
-                ListUtil.addIfNotPresent(this.coreImports, "BoxUtil");
+                this.imports.core.add("BoxUtil");
                 result = `BoxUtil.indentBox(${elementVarName}, ${line.indent}, "${index}", ${result} )`;
             }
         }

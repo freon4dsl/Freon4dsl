@@ -7,14 +7,10 @@ import {
 } from "../../../languagedef/metalanguage/index.js";
 import {
     CONFIGURATION_FOLDER,
-    EDITOR_GEN_FOLDER,
     isNullOrUndefined,
-    LANGUAGE_GEN_FOLDER,
-    ListUtil,
     Names,
-    FREON_CORE,
-    LOG2USER,
-} from "../../../utils/index.js";
+    LOG2USER, Imports
+} from "../../../utils/index.js"
 import {
     FreEditExtraClassifierInfo,
     FreEditClassifierProjection,
@@ -36,9 +32,10 @@ export class EditorDefTemplate {
 
         const conceptsWithTrigger: ConceptTriggerElement[] = [];
         const conceptsWithRefShortcut: ConceptShortCutElement[] = [];
-        const languageImports: string[] = [];
-        const editorImports: string[] = [];
-        const coreImports: string[] = [`${Names.FreLanguage}`, "FreProjectionHandler", "FreBoxProvider"];
+        const imports = new Imports(relativePath)
+        // const languageImports: string[] = [];
+        // const editorImports: string[] = [];
+        imports.core.add(Names.FreLanguage).add("FreProjectionHandler").add("FreBoxProvider");
 
         language.concepts
             .filter((c) => !(c instanceof FreMetaLimitedConcept || c.isAbstract))
@@ -57,7 +54,7 @@ export class EditorDefTemplate {
                     if (!!referenceShortCut) {
                         conceptsWithRefShortcut.push(new ConceptShortCutElement(concept, referenceShortCut));
                     }
-                    languageImports.push(Names.concept(concept));
+                    imports.language.add(Names.concept(concept));
                 }
             });
 
@@ -69,21 +66,21 @@ export class EditorDefTemplate {
                 constructors.push(`["${Names.concept(concept)}", () => {
                         return new ${Names.boxProvider(concept)}(${handlerVarName})
                     }]`);
-                ListUtil.addIfNotPresent(editorImports, Names.boxProvider(concept));
+                imports.editor.add(Names.boxProvider(concept));
             }
         });
         language.units.forEach((unit) => {
             constructors.push(`["${Names.classifier(unit)}", () => {
                         return new ${Names.boxProvider(unit)}(${handlerVarName})
                     }]`);
-            ListUtil.addIfNotPresent(editorImports, Names.boxProvider(unit));
+            imports.editor.add(Names.boxProvider(unit));
         });
 
         // get all the table header info
         const tableHeaderInfo: string[] = [];
         language.concepts.forEach((concept) => {
             editorDef.findTableProjectionsForType(concept).map((proj) => {
-                const entry = this.generateHeaderInfo(proj, coreImports);
+                const entry = this.generateHeaderInfo(proj, imports);
                 if (!!entry && entry.length > 0) {
                     tableHeaderInfo.push(entry);
                 }
@@ -180,10 +177,9 @@ export class EditorDefTemplate {
         // todo In what order do we add the projections?  Maybe custom should be last in stead of first?
 
         // template starts here
-        return `import { ${coreImports.join(", ")} } from "${FREON_CORE}";
+        return `    // TEMPLATE: EditorDefTemplate.generateEditorDef(...)
+            ${imports.makeImports(language)}
             import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
-            import { ${languageImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-            import { ${editorImports.join(", ")} } from "${relativePath}${EDITOR_GEN_FOLDER}/index.js";
 
             const map = ${conceptProjectionToPropertyProjectionText(conceptProjectionToPropertyProjection)};
 
@@ -237,10 +233,9 @@ export class EditorDefTemplate {
             }`;
     }
 
-    private generateHeaderInfo(projection: FreEditTableProjection, coreImports: string[]): string {
+    private generateHeaderInfo(projection: FreEditTableProjection, imports: Imports): string {
         if (!!projection && !!projection.headers && projection.headers.length > 0 && !!projection.classifier) {
-            ListUtil.addIfNotPresent(coreImports, "BoxUtil");
-            ListUtil.addIfNotPresent(coreImports, "FreTableHeaderInfo");
+            imports.core.add("BoxUtil").add("FreTableHeaderInfo");
             return `new FreTableHeaderInfo("${projection.classifier.name}", "${projection.name}", [${projection.headers
                 .map((head) => `"${head}"`)
                 .join(",\n")}])`;

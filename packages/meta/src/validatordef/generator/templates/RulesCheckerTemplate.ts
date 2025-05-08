@@ -3,12 +3,10 @@
 // import { FreErrorSeverity } from "@freon4dsl/core";
 import {
     GenerationUtil,
-    LANGUAGE_GEN_FOLDER,
-    LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     FreErrorSeverity,
-    FREON_CORE,
-} from "../../../utils/index.js";
+    Imports
+} from "../../../utils/index.js"
 import { FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
 import {
     CheckConformsRule,
@@ -30,12 +28,14 @@ const paramName: string = "node";
 export class RulesCheckerTemplate {
 
     generateRulesChecker(language: FreMetaLanguage, validdef: ValidatorDef, relativePath: string): string {
-        const defaultWorkerName: string = Names.defaultWorker(language);
-        const errorClassName: string = Names.FreError;
         const checkerClassName: string = Names.rulesChecker(language);
-        const typerInterfaceName: string = Names.FreTyper;
-        const writerInterfaceName: string = Names.FreWriter;
         const checkerInterfaceName: string = Names.checkerInterface(language);
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([
+            Names.FreError, Names.FreErrorSeverity, Names.FreCompositeTyper, Names.FreWriter, Names.FreNamedNode, Names.FreLanguageEnvironment
+        ])
+        imports.language = GenerationUtil.allConceptsInterfacsesAndUnits(language)
+        imports.utils.add(Names.defaultWorker(language))
         const commentBefore: string = `/**
                                 * Checks '${paramName}' before checking its children.
                                 * Found errors are pushed onto 'errorlist'.
@@ -43,25 +43,24 @@ export class RulesCheckerTemplate {
                                 */`;
         // the template starts here
         return `
-        import { ${errorClassName}, ${Names.FreErrorSeverity}, ${typerInterfaceName}, ${writerInterfaceName}, ${Names.FreNamedNode}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
-        import { ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
+        // TEMPLATE: RulesCheckerTemplate.generateRulesChecker(...)
+        ${imports.makeImports(language)}
+        import { type ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
         import { reservedWordsInTypescript } from "./ReservedWords.js";
 
         /**
          * Class ${checkerClassName} is the part of validator that is generated from, if present,
          * the validator definition. As the other checkers, it uses the visitor pattern.
-         * Class ${defaultWorkerName} implements the traversal of the model tree. This class implements
+         * Class ${Names.defaultWorker(language)} implements the traversal of the model tree. This class implements
          * the actual checking of each node in the tree.
          */
-        export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
+        export class ${checkerClassName} extends ${Names.defaultWorker(language)} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = ${Names.LanguageEnvironment}.getInstance().writer;
+            myWriter: ${Names.FreWriter} = ${Names.FreLanguageEnvironment}.getInstance().writer;
             // 'typer' is used to implement the 'typecheck' rules in the validator definition
-            typer: ${typerInterfaceName} = ${Names.LanguageEnvironment}.getInstance().typer;
+            typer: ${Names.FreCompositeTyper} = ${Names.FreLanguageEnvironment}.getInstance().typer;
             // 'errorList' holds the errors found while traversing the model tree
-            errorList: ${errorClassName}[] = [];
+            errorList: ${Names.FreError}[] = [];
 
         ${validdef.conceptRules
             .map(
@@ -94,29 +93,6 @@ export class RulesCheckerTemplate {
             }
         }
         `;
-    }
-
-    private createImports(language: FreMetaLanguage): string {
-        return `${language.concepts
-            ?.map(
-                (concept) => `
-                ${Names.concept(concept)}`,
-            )
-            .concat(
-                language.interfaces
-                    ?.map(
-                        (intf) => `
-                ${Names.interface(intf)}`,
-                    )
-                    .concat(
-                        language.units
-                            ?.map(
-                                (intf) => `
-                ${Names.classifier(intf)}`,
-                            )
-                            .join(", "),
-                    ),
-            )}`;
     }
 
     private createRules(ruleSet: ConceptRuleSet): string {

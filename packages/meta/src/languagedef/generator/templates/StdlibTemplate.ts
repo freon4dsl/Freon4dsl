@@ -1,11 +1,9 @@
-import { ConceptUtils } from "./ConceptUtils.js"
 import { FreMetaConcept, FreMetaInstance, FreMetaLanguage, FreMetaLimitedConcept } from "../../metalanguage/index.js";
 import {
-    LANGUAGE_GEN_FOLDER,
     Names,
     CONFIGURATION_FOLDER,
-    LANGUAGE_UTILS_GEN_FOLDER,
-} from "../../../utils/index.js";
+    Imports
+} from "../../../utils/index.js"
 
 export class StdlibTemplate {
     limitedConceptNames: string[] = [];
@@ -13,17 +11,18 @@ export class StdlibTemplate {
 
     generateStdlibClass(language: FreMetaLanguage, relativePath: string): string {
         this.makeTexts(language);
-        const coreImports: Set<string> = new Set<string>([
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([
             Names.FreNamedNode,
             Names.FreStdlib,
             Names.FreLanguage
         ]) 
+        imports.utils.add(Names.listUtil)
+        imports.language = new Set(this.limitedConceptNames.map(name => name))
         return `
-        ${ConceptUtils.makeImportStatements(language, coreImports, new Set<string>())}
-        import { ${this.limitedConceptNames.map((name) => `${name}`).join(", ")}
-               } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        // TEMPLATE: StdlibTemplate.generateStdlibClass
+        ${imports.makeImports(language)}
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
-        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}.js";
 
         /**
          * Class ${Names.stdlib(language)} provides an entry point for all predefined elements in language ${language.name}.
@@ -86,8 +85,15 @@ export class StdlibTemplate {
     }
 
     generateCustomStdlibClass(language: FreMetaLanguage): string {
+        const imports = new Imports()
+        imports.core = new Set<string>([
+            Names.FreNamedNode,
+            Names.FreStdlib
+        ])
+
         return `
-        import { ${Names.FreNamedNode}, ${Names.FreStdlib} } from "@freon4dsl/core";
+        // TEMPLATE: StdlibTemplate.generateStdlibClass
+        ${imports.makeImports(language)}
 
         export class ${Names.customStdlib(language)} implements ${Names.FreStdlib} {
             // add all your extra predefined instances here

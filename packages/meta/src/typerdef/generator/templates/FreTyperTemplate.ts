@@ -1,11 +1,8 @@
 import {
     Names,
-    FREON_CORE,
-    LANGUAGE_GEN_FOLDER,
     CONFIGURATION_FOLDER,
-    LANGUAGE_UTILS_GEN_FOLDER,
-    LOG2USER,
-} from "../../../utils/index.js";
+    LOG2USER, Imports
+} from "../../../utils/index.js"
 import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../../metalanguage/index.js";
 
@@ -22,20 +19,21 @@ export class FreTyperTemplate {
         // const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
-        const typerInterfaceName: string = Names.FreTyperPart;
+        const typerInterfaceName: string = Names.FreTyper;
         let rootType: string = "";
         if (!!typerdef && !!typerdef.typeRoot()) {
             rootType = Names.classifier(typerdef.typeRoot() as FreMetaClassifier);
         }
-
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([Names.FreNode, Names.FreType, Names.FreLanguage, typerInterfaceName ])
+        if (!!rootType) imports.language.add(rootType)
+        imports.utils.add(Names.listUtil)
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreType}, ${Names.FreLanguage}, ${typerInterfaceName} } from "${FREON_CORE}";
-
-        ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";` : ``}
+        // TEMPLATE: FreTyperTemplate.generateTyper(...)
+        ${imports.makeImports(language)}
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
         import { ${defaultTyperName} } from "./${defaultTyperName}.js";
-        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}.js";
 
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
