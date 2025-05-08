@@ -103,7 +103,7 @@ export class WriterTemplate {
         }
         const imports = new Imports(relativePath)
         imports.core = new Set([Names.FreNamedNode, Names.FreNodeReference, writerInterfaceName, Names.FreNode])
-        imports.language = GenerationUtil.allConceptsInterfacsesAndUnits(language)
+        imports.language = GenerationUtil.allConceptsInterfacesAndUnits(language)
         // Template starts here
         return `
         // TEMPLATE WriterTemplate.generateUnparser(...)

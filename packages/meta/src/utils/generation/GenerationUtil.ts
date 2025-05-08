@@ -253,7 +253,7 @@ export class GenerationUtil {
         ]);
     }
 
-    public static allConceptsInterfacsesAndUnits(language: FreMetaLanguage): Set<string> {
+    public static allConceptsInterfacesAndUnits(language: FreMetaLanguage): Set<string> {
         return new Set<string>([
             ...language.concepts?.map(concept => Names.concept(concept)),
             ...language.interfaces?.map(intf => Names.interface(intf)),

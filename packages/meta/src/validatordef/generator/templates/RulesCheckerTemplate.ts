@@ -34,7 +34,7 @@ export class RulesCheckerTemplate {
         imports.core = new Set<string>([
             Names.FreError, Names.FreErrorSeverity, Names.FreCompositeTyper, Names.FreWriter, Names.FreNamedNode, Names.FreLanguageEnvironment
         ])
-        imports.language = GenerationUtil.allConceptsInterfacsesAndUnits(language)
+        imports.language = GenerationUtil.allConceptsInterfacesAndUnits(language)
         imports.utils.add(Names.defaultWorker(language))
         const commentBefore: string = `/**
                                 * Checks '${paramName}' before checking its children.

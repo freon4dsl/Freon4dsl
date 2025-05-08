@@ -14,7 +14,7 @@ export class ConfigurationTemplate {
         const configurationName = Names.configuration;
         const workerName = Names.checkerInterface(language);
         const imports = new Imports(relativePath)
-        imports.core = new Set<string>([Names.FreProjection, Names.FreActions, Names.FreTyper, Names.FreStdlib, Names.FrScoperPart])
+        imports.core = new Set<string>([Names.FreProjection, Names.FreActions, Names.FreTyper, Names.FreStdlib, Names.FreScoperPart])
         return `
             // TEMPLATE: ConfigurationTemplate.generate(...)
             ${imports.makeImports(language)}
@@ -38,7 +38,7 @@ export class ConfigurationTemplate {
                 // add your custom validations here
                 customValidations: ${workerName}[] = [new ${Names.customValidator(language)}()];
                 // add your custom scopers here
-                customScopers: ${Names.FrScoperPart}[] = [new ${Names.customScoper(language)}()];
+                customScopers: ${Names.FreScoperPart}[] = [new ${Names.customScoper(language)}()];
                 // add your custom type-providers here
                 customTypers: ${Names.FreTyper}[] = [new ${Names.customTyper(language)}()];
                 // add extra predefined instances here

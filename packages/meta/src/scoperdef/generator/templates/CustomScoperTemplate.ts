@@ -3,10 +3,10 @@ import { Names, Imports } from "../../../utils/index.js"
 
 export class CustomScoperTemplate {
     generateCustomScoperPart(language: FreMetaLanguage): string {
-        const scoperInterfaceName: string = Names.FrScoperPart;
+        const scoperInterfaceName: string = Names.FreScoperPart;
         const generatedClassName: string = Names.customScoper(language);
         const imports = new Imports()
-        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FrScoperPart, Names.FreScoperComposite])
+        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreScoperPart, Names.FreScoperComposite])
 
         // Template starts here
         return `

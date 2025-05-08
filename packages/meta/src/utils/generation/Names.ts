@@ -37,7 +37,7 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static FreScoperComposite: string = "FreScoperComposite";
     // tslint:disable-next-line:variable-name
-    public static FrScoperPart: string = "FreScoper";
+    public static FreScoperPart: string = "FreScoper";
     // tslint:disable-next-line:variable-name
     public static FreCompositeTyper: string = "FreCompositeTyper"; 
     // tslint:disable-next-line:variable-name
@@ -66,8 +66,6 @@ export class Names {
     public static FreEditor: string = "FreEditor";
     // tslint:disable-next-line:variable-name
     public static FreProjection: string = "FreProjection";
-    // tslint:disable-next-line:variable-name
-    public static FreCompositeProjection: string = "FreCompositeProjection";
     // tslint:disable-next-line:variable-name
     public static Box: string = "Box";
     // tslint:disable-next-line:variable-name
