@@ -107,7 +107,7 @@ export class CustomScoperTryoutScoper implements FreScoper {
      * Returns the alternative namespace that can be found for 'node'.
      * @param node
      */
-    getAlternativeScope(node: FreNode): FreNamespace {
+    replacementNamespace(node: FreNode): FreNamespace | undefined{
         // console.log('CUSTOM getAlternativeScope for ' + node.freId() + " of type " + node.freLanguageConcept());
 
         if (!!node && node.freLanguageConcept() == "QualifiedName") {
@@ -125,22 +125,6 @@ export class CustomScoperTryoutScoper implements FreScoper {
                 console.error("getAlternativeScope: no owner found.");
             }
         }
-        return null;
+        return undefined;
     }
-
-    /**
-     * Returns true if an alternative namespace can be found for 'node'.
-     * @param node
-     */
-    hasAlternativeScope(node: FreNode): boolean {
-        // console.log('CUSTOM hasAlternativeScope for ' + node.freId() + " of type " + node.freLanguageConcept());
-
-        if (!!node && node.freLanguageConcept() == "QualifiedName") {
-            // console.log('CUSTOM result is true')
-            return true;
-        }
-        // console.log('CUSTOM result is false')
-        return false;
-    }
-    // Some changes to this file in the hope that it can be added to Git
 }

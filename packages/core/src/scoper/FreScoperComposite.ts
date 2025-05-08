@@ -99,32 +99,16 @@ export class FreScoperComposite implements FreScoper {
         return null; // TODO or undefined?
     }
 
-    getAlternativeScope(node: FreNode): FreNamespace {
-        // console.log('COMPOSITE getAlternativeScope for ' + node.freId() + " of type " + node.freLanguageConcept());
+    replacementNamespace(node: FreNode): FreNamespace | undefined {
+        // console.log('COMPOSITE replacementNamespace for ' + node.freId() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
-                const result: FreNamespace = scoper.getAlternativeScope(node);
+                const result: FreNamespace = scoper.replacementNamespace(node);
                 if (!isNullOrUndefined(result)) {
                     return result;
                 }
             }
         }
         return undefined;
-    }
-
-    hasAlternativeScope(node: FreNode): boolean {
-        // console.log('COMPOSITE hasAlternativeScope for ' + node.freId() + " of type " + node.freLanguageConcept());
-
-        if (!!node) {
-            for (const scoper of this.scopers) {
-                const result: boolean = scoper.hasAlternativeScope(node);
-                if (result) {
-                    // console.log('\t COMPOSITE result is true')
-                    return result;
-                }
-            }
-        }
-        // console.log('\t COMPOSITE result is false')
-        return false;
     }
 }

@@ -107,10 +107,10 @@ export abstract class FreScoperBase implements FreScoper {
             let doSurrouding: boolean =
                 excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
             let nearestNamespace: FreNamespace;
-            // first, see if we need to use an alternative scope/namespace
-            if (this.mainScoper.hasAlternativeScope(node)) {
-                nearestNamespace = this.mainScoper.getAlternativeScope(node);
-                // do not search surrounding namespaces for alternative scopes
+            // first, see if we need to use an alternative/replacement namespace
+            nearestNamespace = this.mainScoper.replacementNamespace(node);
+            if (!!nearestNamespace) {
+                // do not search hierarchical namespaces for alternative/replacement namespace
                 doSurrouding = false;
             } else {
                 nearestNamespace = this.findNearestNamespace(node);
@@ -207,14 +207,14 @@ export abstract class FreScoperBase implements FreScoper {
     }
 
     // @ts-ignore parameter is present to adhere to interface FreScoper
-    getAlternativeScope(node: FreNode): FreNamespace {
-        console.log('BASE getAlternativeScope for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+    replacementNamespace(node: FreNode): FreNamespace {
+        console.log('BASE replacementNamespace for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         return undefined;
     }
 
-    // @ts-ignore parameter is present to adhere to interface FreScoper
-    hasAlternativeScope(node: FreNode): boolean {
-        console.log('BASE hasAlternativeScope for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
-        return false;
-    }
+    // // @ts-ignore parameter is present to adhere to interface FreScoper
+    // hasAlternativeScope(node: FreNode): boolean {
+    //     console.log('BASE hasAlternativeScope for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+    //     return false;
+    // }
 }
