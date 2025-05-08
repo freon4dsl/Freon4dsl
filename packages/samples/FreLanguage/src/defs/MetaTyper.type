@@ -10,7 +10,7 @@ FretPropertyCallExp {
 FretSelfExp {
     // TODO this rule should be
     // infertype ownerOfType(FretClassifierRule).myClassifier;
-    infertype FrePrimitiveType:boolean;
+    infertype #FrePrimitiveType:boolean;
 }
 
 FretVarCallExp {
@@ -30,15 +30,15 @@ FretWhereExp {
 
 FretAnytypeExp {
     // TODO this rule should be different
-    infertype FrePrimitiveType:boolean;
+    infertype #FrePrimitiveType:boolean;
 }
 FretLimitedInstanceExp {
     // TODO this rule should be different
-    infertype FrePrimitiveType:boolean;
+    infertype #FrePrimitiveType:boolean;
 }
 FretEquals {
-    infertype FrePrimitiveType:boolean;
+    infertype #FrePrimitiveType:boolean;
 }
 FretConforms {
-    infertype FrePrimitiveType:boolean;
+    infertype #FrePrimitiveType:boolean;
 }

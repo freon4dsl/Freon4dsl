@@ -19,11 +19,11 @@ hastype { Exp, TypeUsage }
 
 // What are the top and bottom types?
 anytype {
-    conformsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
+    conformsto #PredefinedType:ANY; // PredefinedType:ANY is the least specific type
 }
 
 PredefinedType {
-    PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
+    #PredefinedType:NULL conformsto anytype; // PredefinedType:NULL is the most specific type
     NUMBER conformsto STRING;
 }
 
@@ -52,15 +52,15 @@ UnitOfMeasurement {
 }
 
 NumberLiteral {
-    infertype PredefinedType:NUMBER;
+    infertype #PredefinedType:NUMBER;
 }
 
 StringLiteral {
-    infertype PredefinedType:STRING;
+    infertype #PredefinedType:STRING;
 }
 
 BooleanLiteral {
-    infertype PredefinedType:BOOLEAN;
+    infertype #PredefinedType:BOOLEAN;
 }
 
 NamedExp {

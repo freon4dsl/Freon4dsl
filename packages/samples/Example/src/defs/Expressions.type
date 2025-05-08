@@ -6,19 +6,19 @@ istype {  BaseType }
 hastype { Expression }
 
 anytype {
-    conformsto PrimitiveType:ANY;
-    equalsto PrimitiveType:ANY;
+    conformsto #PrimitiveType:ANY;
+    equalsto #PrimitiveType:ANY;
 }
 
 StringLiteralExpression {
-    infertype PrimitiveType:String;
+    infertype #PrimitiveType:String;
 }
 
 NumberLiteralExpression {
-    infertype PrimitiveType:Integer;
+    infertype #PrimitiveType:Integer;
 }
 BooleanLiteralExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 
 AbsExpression {
@@ -26,11 +26,11 @@ AbsExpression {
 }
 
 OrExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 
 AndExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 
 MultiplyExpression {
@@ -39,8 +39,8 @@ MultiplyExpression {
 
 PlusExpression {
     infertype self.left;
-//    infertype self.left == PrimitiveType:Number && self.right == PrimitiveType:Number then self.left == PrimitiveType:Number ;
-//    infertype self.left == PrimitiveType:String && self.right == PrimitiveType:String then self.left == PrimitiveType:String ;
+//    infertype self.left == #PrimitiveType:Number && self.right == #PrimitiveType:Number then self.left == #PrimitiveType:Number ;
+//    infertype self.left == #PrimitiveType:String && self.right == #PrimitiveType:String then self.left == #PrimitiveType:String ;
 }
 
 DivideExpression {
@@ -48,7 +48,7 @@ DivideExpression {
 }
 
 ComparisonExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 
 IfExpression    {
@@ -56,7 +56,7 @@ IfExpression    {
 }
 
 SumExpression {
-    infertype PrimitiveType:Integer;
+    infertype #PrimitiveType:Integer;
 }
 
 GroupedExpression {
@@ -65,18 +65,18 @@ GroupedExpression {
 
 LoopVariableRef {
     // TODO this rule should be different
-    infertype PrimitiveType:Integer;
+    infertype #PrimitiveType:Integer;
 }
 
 LessThenExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 GreaterThenExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 
 EqualsExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 
 // TODO add LoopVariableRef

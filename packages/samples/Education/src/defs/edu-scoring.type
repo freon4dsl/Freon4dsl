@@ -5,20 +5,20 @@ istype { Type }
 hastype { ScoreExpression }
 
 QuestionReference {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 NrOfCorrectAnswers {
-    infertype PrimitiveType:Integer;
+    infertype #PrimitiveType:Integer;
 }
 NumberLiteralExpression {
-    infertype PrimitiveType:Integer;
+    infertype #PrimitiveType:Integer;
 }
 OrExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 AndExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 ComparisonExpression {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
