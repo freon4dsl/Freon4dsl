@@ -97,17 +97,17 @@ export class Imports {
 
     private makeConfigImportStatements(): string {
         const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}index.js`)
-        return this.makeImportStatement(this.typer, fromPath)
+        return this.makeImportStatement(this.config, fromPath)
     }
 
     private makeEditorImportStatements(): string {
         const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}${EDITOR_GEN_FOLDER}/index.js`)
-        return this.makeImportStatement(this.typer, fromPath)
+        return this.makeImportStatement(this.editor, fromPath)
     }
 
     private makeUtilsImportStatements(): string {
         const fromPath = (this.relativePath === undefined ? "./internal.js" : `${this.relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js`)
-        return this.makeImportStatement(this.typer, fromPath)
+        return this.makeImportStatement(this.utils, fromPath)
     }
 
     private makeImportStatement(importSet: Set<string>, fromPath: string): string {
