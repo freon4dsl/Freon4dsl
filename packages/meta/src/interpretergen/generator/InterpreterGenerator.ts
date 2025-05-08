@@ -37,16 +37,19 @@ export class InterpreterGenerator {
         const template = new InterpreterBaseTemplate();
         const mainTemplate = new InterpreterMainTemplate();
 
+        // Set relative path to get the imports right
+        const relativePath = "../../";
+
         // Prepare folders
         FileUtil.createDirIfNotExisting(this.interpreterGenFolder);
         FileUtil.deleteFilesInDir(this.interpreterGenFolder, generationStatus);
 
         let generatedFilePath = `${this.interpreterGenFolder}/${Names.interpreterBaseClassname(this.language)}.ts`;
-        let generatedContent = template.interpreterBase(this.language, interpreterDef);
+        let generatedContent = template.interpreterBase(this.language, interpreterDef, relativePath);
         this.makeFile(generatedFilePath, generatedContent, generationStatus);
 
         generatedFilePath = `${this.interpreterFolder}/${Names.interpreterClassname(this.language)}.ts`;
-        generatedContent = FileUtil.pretty(template.interpreterClass(this.language), "interpreter manual file" ,generationStatus);
+        generatedContent = FileUtil.pretty(template.interpreterClass(this.language, relativePath), "interpreter manual file" ,generationStatus);
         FileUtil.generateManualFile(generatedFilePath, generatedContent, "interpreter class");
         // this.makeFile("interpreter class", generatedFilePath, generatedContent, generationStatus);
 

@@ -8,8 +8,8 @@ export class InterpreterBaseTemplate {
      * @param language
      * @param interpreterDef
      */
-    public interpreterBase(language: FreMetaLanguage, interpreterDef: FreInterpreterDef): string {
-        const imports = new Imports("../../")
+    public interpreterBase(language: FreMetaLanguage, interpreterDef: FreInterpreterDef, relativePath: string): string {
+        const imports = new Imports(relativePath)
         imports.core = new Set<string>(["InterpreterContext", "RtObject", "RtError"])
         imports.language = new Set<string>(interpreterDef.conceptsToEvaluate.map((c) => Names.classifier(c)))
 
@@ -37,8 +37,8 @@ export class InterpreterBaseTemplate {
         `;
     }
 
-    public interpreterClass(language: FreMetaLanguage): string {
-        const imports = new Imports("../../")
+    public interpreterClass(language: FreMetaLanguage, relativePath: string): string {
+        const imports = new Imports(relativePath)
         imports.core = new Set<string>(["InterpreterContext", "RtObject", "IMainInterpreter"])
 
         const baseName = Names.interpreterBaseClassname(language);
