@@ -167,6 +167,31 @@ word 'from' followed by the start of the qualified name. For instance 'D6 from A
 
 ## The Expression for a Namespace Addition or Replacement
 
-For namespace replacements: a path starting with self that refers to an instance of a Namespace Concept.
-For namespace additions: PATH + PATH + ...
-(TBD: check this!)
+(Still in development!)
+
+In Freon you can denote a single namespace by using an expression over the AST. This expression in general
+can be one of the following.
+
+1. An expression denoting an instance of a limited concept, for instance `#BasicConcepts:StringConcept`.
+2. An expression denoting a node in the AST using the path from a start node to this node, for instance `self.myA.myB.myC`.
+3. An expression denoting a special meta-level function. For the scoper the only function currently
+   available is `typeof`, which should get a single node as parameter, or the keyword `container`. The node can be
+   denoted using an expression of type 1 or 2. An example is `typeof(self.myH)`. When you use the keyword `container`
+   as parameter, the typer definition is taken into account. The result of the expression `typeof(container)` is the
+   type found by the typer for the node that is the direct parent of `self` in the AST.
+
+In the scope definition any of these expressions should result in a node that is a namespace.
+
+When defining a namespace replacement only one expression can be used. When defining a namespace addition a number of
+these expression can be combined using a plus sign. For instance, the following scope definition is valid, iff the paths
+conform to the AST definition.
+
+```
+A {
+	namespace-addition = self.myF + self.myG.myH + self.myE.imports.myD;
+}
+
+Z {
+    namespace_replacement = typeof(self.myA); // used to be 'scope = typeof(self.myA)'
+}
+```
