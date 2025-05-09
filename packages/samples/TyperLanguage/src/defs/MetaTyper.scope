@@ -1,4 +1,4 @@
-scoper XX for language FreTyper
+scoper XX for language FreTyperLanguage
 
 //isnamespace { FretClassifierSpec, FreClassifier, FretLimitedInstanceExp }
 isnamespace { FreClassifier }

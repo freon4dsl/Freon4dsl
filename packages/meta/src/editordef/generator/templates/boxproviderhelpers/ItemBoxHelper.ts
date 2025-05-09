@@ -17,7 +17,7 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaProperty,
 } from "../../../../languagedef/metalanguage/index.js";
-import { ListUtil, LOG2USER, Names } from "../../../../utils/index.js";
+import { LOG2USER, Names } from "../../../../utils/index.js";
 import { ParserGenUtil } from "../../../../parsergen/parserTemplates/ParserGenUtil.js";
 import {
     PrimitivePropertyBoxesHelper,
@@ -79,10 +79,10 @@ export class ItemBoxHelper {
     ): string {
         let result: string = "";
         if (item instanceof FreEditProjectionText) {
-            ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
+            this._myTemplate.imports.core.add("BoxUtil");
             result += ` BoxUtil.labelBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "top-${topIndex}-line-${lineIndex}-item-${itemIndex}") `;
         } else if (item instanceof FreEditButtonDef) {
-            ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
+            this._myTemplate.imports.core.add("BoxUtil");
             result += ` BoxUtil.buttonBox(${elementVarName}, "${ParserGenUtil.escapeRelevantChars(item.text.trim())}", "${ParserGenUtil.escapeRelevantChars(item.boxRole.trim())}") `;
         } else if (item instanceof FreOptionalPropertyProjection) {
             result += this.generateOptionalProjection(item, elementVarName, mainBoxLabel, language);
@@ -120,7 +120,7 @@ export class ItemBoxHelper {
             let result: string = this._myTemplate.generateLines(optional.lines, elementVarName, myLabel, language, 2);
 
             // surround with optional box, and add "BoxFactory" to imports
-            ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxFactory");
+            this._myTemplate.imports.core.add("BoxFactory");
             if (optionalLiteral === "") {
                 return result;
             }
@@ -271,7 +271,7 @@ export class ItemBoxHelper {
             }
         } else {
             // single element
-            ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
+            this._myTemplate.imports.core.add("BoxUtil");
             let innerResult: string = `BoxUtil.getBoxOrAction(${elementVarName}, "${property.name}", "${property.type.name}", this.mainHandler) `;
             if (!!item.externalInfo) {
                 // there is information on how to project the property as an external component, wrap the result in an ExternalBox
@@ -319,7 +319,7 @@ export class ItemBoxHelper {
                 language,
                 topIndex,
             );
-            ListUtil.addIfNotPresent(this._myTemplate.coreImports, "FragmentBox");
+            this._myTemplate.imports.core.add("FragmentBox");
 
             this._myTemplate.fragmentMethods.push(
                 `private ${Names.fragment(fragmentDefinition)}(): FragmentBox {

@@ -1,11 +1,8 @@
 import {
     Names,
-    FREON_CORE,
-    LANGUAGE_GEN_FOLDER,
     CONFIGURATION_FOLDER,
-    LANGUAGE_UTILS_GEN_FOLDER,
-    LOG2USER,
-} from "../../../utils/index.js";
+    LOG2USER, Imports
+} from "../../../utils/index.js"
 import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../../metalanguage/index.js";
 
@@ -22,20 +19,21 @@ export class FreTyperTemplate {
         // const allLangConcepts: string = Names.allConcepts(language);
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
-        const typerInterfaceName: string = Names.FreTyperPart;
+        const typerInterfaceName: string = Names.FreTyper;
         let rootType: string = "";
         if (!!typerdef && !!typerdef.typeRoot()) {
             rootType = Names.classifier(typerdef.typeRoot() as FreMetaClassifier);
         }
-
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([Names.FreNode, Names.FreType, Names.FreLanguage, typerInterfaceName ])
+        if (!!rootType) imports.language.add(rootType)
+        imports.utils.add(Names.listUtil)
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreType}, ${Names.FreLanguage}, ${typerInterfaceName} } from "${FREON_CORE}";
-
-        ${!!rootType ? `import { ${rootType} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";` : ``}
+        // TEMPLATE: FreTyperTemplate.generateTyper(...)
+        ${imports.makeImports(language)}
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
         import { ${defaultTyperName} } from "./${defaultTyperName}.js";
-        import { ${Names.listUtil} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/${Names.listUtil}.js";
 
         /**
          * Class ${generatedClassName} implements the typer generated from, if present, the typer definition,
@@ -51,35 +49,35 @@ export class FreTyperTemplate {
             }
 
             /**
-             * Returns true if 'modelelement' is marked as 'isType' in the Typer definition
-             * @param modelelement
+             * Returns true if 'node' is marked as 'isType' in the Typer definition
+             * @param node
              */
-            public isType(modelelement: ${Names.FreNode}): boolean {
+            public isType(node: ${Names.FreNode}): boolean {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: boolean = typer.isType(modelelement);
+                    let result: boolean = typer.isType(node);
                     if (result) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.isType(modelelement);
+                return this.generatedTyper.isType(node);
             }
 
             /**
-             * Returns the type of 'modelelement' according to the type rules in the Typer Definition
-             * @param modelelement
+             * Returns the type of 'node' according to the type rules in the Typer Definition
+             * @param node
              */
-            public inferType(modelelement: ${Names.FreNode}): ${Names.FreType} {
+            public inferType(node: ${Names.FreNode}): ${Names.FreType} {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: ${Names.FreType} = typer.inferType(modelelement);
+                    let result: ${Names.FreType} = typer.inferType(node);
                     if (result !== null) {
                         return result;
                     }
                 }
                 // no result from custom typers => use the generated typer
-                return this.generatedTyper.inferType(modelelement);
+                return this.generatedTyper.inferType(node);
             }
 
             /**

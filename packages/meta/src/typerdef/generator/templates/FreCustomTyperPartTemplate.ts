@@ -1,17 +1,22 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Names, FREON_CORE } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/index.js"
 
 export class FreCustomTyperPartTemplate {
     generateCustomTyperPart(language: FreMetaLanguage): string {
         // const allLangConcepts: string = Names.allConcepts(language);
-        const typerInterfaceName: string = Names.FreTyperPart;
+        const typerInterfaceName: string = Names.FreTyper;
         const generatedClassName: string = Names.customTyper(language);
+        const imports = new Imports()
+        imports.core = new Set<string>([
+            Names.FreNode, Names.FreType, Names.FreTyper
+        ])
 
         // TODO add comments to generated class
         // todo remove commented statements
         // Template starts here
         return `
-        import { ${Names.FreNode}, ${Names.FreType}, FreTyper } from "${FREON_CORE}";
+        // TEMPLATE: FreCustomTyperPartTemplate,generateCustomTyperPart(...)
+        ${imports.makeImports(language)}
 
         /**
          * Class '${generatedClassName}' is meant to be a convenient place to add any
@@ -20,11 +25,11 @@ export class FreCustomTyperPartTemplate {
         export class ${generatedClassName} implements ${typerInterfaceName} {
             mainTyper: FreTyper;
 
-            isType(modelelement: ${Names.FreNode}): boolean | null {
+            isType(node: ${Names.FreNode}): boolean | null {
                 return null;
             }
 
-            inferType(modelelement: ${Names.FreNode}): ${Names.FreType} | null {
+            inferType(node: ${Names.FreNode}): ${Names.FreType} | null {
                 return null;
             }
 

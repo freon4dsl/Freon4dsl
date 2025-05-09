@@ -1,16 +1,19 @@
-import { Names, FREON_CORE } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/index.js"
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 
 export class CustomProjectionTemplate {
     generate(language: FreMetaLanguage): string {
+        const imports = new Imports()
+        imports.core.add(Names.FreNode).add(Names.Box).add(Names.FreProjection).add(Names.FreTableDefinition)
         return `
-            import { ${Names.FreNode}, ${Names.Box}, ${Names.FreProjection}, ${Names.FreTableDefinition} } from "${FREON_CORE}";
+            // TEMPLATE: CustomProjectionTemplate.generate(...)
+            ${imports.makeImports(language)}
 
              /**
              * Class ${Names.customProjection(language)} provides an entry point for the language engineer to
              * define custom build additions to the editor.
              * These are merged with the custom build additions and other definition-based editor parts
-             * in a three-way manner. For each modelelement,
+             * in a three-way manner. For each node,
              * (1) if a custom build creator/behavior is present, this is used,
              * (2) if a creator/behavior based on one of the editor definition is present, this is used,
              * (3) if neither (1) nor (2) yields a result, the default is used.

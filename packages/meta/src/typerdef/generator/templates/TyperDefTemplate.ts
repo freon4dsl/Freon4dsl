@@ -3,7 +3,7 @@ import { CONFIGURATION_FOLDER, Names, FREON_CORE } from "../../../utils/index.js
 
 export class TyperDefTemplate {
     generateTyperDef(language: FreMetaLanguage, relativePath: string): string {
-        return `import { FreCompositeTyper } from "${FREON_CORE}";
+        return `import { type FreCompositeTyper } from "${FREON_CORE}";
 
             import { ${Names.typerPart(language)} } from "./${Names.typerPart(language)}.js";
             import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";

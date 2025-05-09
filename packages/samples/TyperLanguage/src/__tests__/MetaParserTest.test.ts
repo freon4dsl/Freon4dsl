@@ -1,7 +1,7 @@
 import {describe, test, expect} from "vitest";
 import {FreError} from "@freon4dsl/core";
 import {FileHandler} from "./FileHandler.js";
-import { FreStructureDef, FreTyper, FreTyperDef } from '../language/gen';
+import { FreStructureDef, FreTyperModel, FreTyperDef } from '../language/gen';
 import { FreTyperEnvironment } from '../config/gen/FreTyperEnvironment';
 
 describe("Fre Typer Parser", () => {
@@ -12,7 +12,7 @@ describe("Fre Typer Parser", () => {
     const fileHandler = new FileHandler();
 
     test(" on .type file", () => {
-        const completeModel: FreTyper = new FreTyper();
+        const completeModel: FreTyperModel = new FreTyperModel();
         const languageStr = fileHandler.stringFromFile("/typer-test/types.ast");
         const langUnit: FreStructureDef = reader.readFromString(languageStr, "FreStructureDef", completeModel, "typer-test/types.ast") as FreStructureDef;
         expect(langUnit).not.toBe(null);

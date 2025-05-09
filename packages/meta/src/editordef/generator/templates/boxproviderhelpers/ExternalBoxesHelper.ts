@@ -5,7 +5,7 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaProperty,
 } from "../../../../languagedef/metalanguage/index.js";
-import { ListUtil, Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/index.js";
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class ExternalBoxesHelper {
@@ -84,7 +84,7 @@ export class ExternalBoxesHelper {
         if (!!item.params && item.params.length > 0) {
             initializer = `, { params: [${item.params.map((x) => `{key: "${x.key}", value: "${x.value}"}`).join(", ")}] }`;
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "ExternalSimpleBox");
+        this._myTemplate.imports.core.add("ExternalSimpleBox");
         return `new ExternalSimpleBox("${item.name}", ${element}, "${myRole}"${initializer})`;
     }
 
@@ -124,7 +124,7 @@ export class ExternalBoxesHelper {
         if (!property.isPart) {
             methodName = "externalRefBox";
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `BoxUtil`);
+        this._myTemplate.imports.core.add(`BoxUtil`);
         return `BoxUtil.${methodName}(
                         ${elementVarName},
                         "${property.name}",
@@ -137,10 +137,11 @@ export class ExternalBoxesHelper {
         item: FreEditPropertyProjection,
         property: FreMetaConceptProperty,
         elementVarName: string,
+        // @ts-ignore
         language: FreMetaLanguage,
     ) {
         let initializer: string = this.buildInitializer(item);
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `BoxUtil`);
+        this._myTemplate.imports.core.add(`BoxUtil`);
         if (property.isPart) {
             return `BoxUtil.externalPartListBox(
                         ${elementVarName},
@@ -155,7 +156,7 @@ export class ExternalBoxesHelper {
                         ${elementVarName},
                         "${property.name}",
                         "${item.externalInfo!.replaceBy}",
-                        ${Names.environment(language)}.getInstance().scoper
+                        ${Names.LanguageEnvironment}.getInstance().scoper
                         ${initializer}
                     )`;
         }
@@ -179,7 +180,7 @@ export class ExternalBoxesHelper {
                 break;
             }
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `BoxUtil`);
+        this._myTemplate.imports.core.add(`BoxUtil`);
         return `BoxUtil.${methodName}(
                         ${elementVarName},
                         "${propertyConcept.name}",
@@ -206,7 +207,7 @@ export class ExternalBoxesHelper {
                 break;
             }
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, `BoxUtil`);
+        this._myTemplate.imports.core.add(`BoxUtil`);
         return `BoxUtil.${methodName}(${elementVarName}, "${property.name}", "${item.externalInfo!.replaceBy}" ${initializer})`;
     }
 

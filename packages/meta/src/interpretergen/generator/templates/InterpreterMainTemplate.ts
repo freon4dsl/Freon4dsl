@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../utils/index.js";
+import { Imports, Names } from "../../../utils/index.js"
 
 export class InterpreterMainTemplate {
     /**
@@ -8,14 +8,18 @@ export class InterpreterMainTemplate {
      * @param interpreterDef
      */
     public interpreterMain(language: FreMetaLanguage): string {
-        return `// Will be overwritten with every generation.
-        import {
-            ConceptFunction, ${Names.FreInterpreter},
-            IMainInterpreter,
-            InterpreterContext,
-            InterpreterTracer,
-            MainInterpreter, OwningPropertyFunction, ${Names.FreNode}, RtObject, RtError
-        } from "@freon4dsl/core";
+        const imports = new Imports("../../")
+        imports.core = new Set<string>([
+            "ConceptFunction", Names.FreInterpreter,
+            "IMainInterpreter",
+            "InterpreterContext",
+            "InterpreterTracer",
+            "MainInterpreter", "OwningPropertyFunction", Names.FreNode, "RtObject", "RtError"
+        ])
+
+        return `// TEMPLATE: InterpreterBaseTemplate.interpreterInit(...)
+        // Will be overwritten with every generation.
+        ${imports.makeImports(language)}
         import {  ${Names.interpreterInitname(language)} } from "./gen/${Names.interpreterInitname(language)}.js";
 
         const getPropertyFunction: OwningPropertyFunction = (node: Object) => {
