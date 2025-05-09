@@ -1,4 +1,4 @@
-import { Names, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER } from "../../../utils/index.js";
+import { Names, Imports } from "../../../utils/index.js"
 import { FreMetaLanguage, FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
 import { ValidationUtils } from "../ValidationUtils.js";
 
@@ -39,18 +39,22 @@ export class NonOptionalsCheckerTemplate {
          */
         export class ${checkerClassName} extends ${defaultWorkerName} implements ${checkerInterfaceName} {
             // 'myWriter' is used to provide error messages on the nodes in the model tree
-            myWriter: ${writerInterfaceName} = ${Names.LanguageEnvironment}.getInstance().writer;
+            myWriter: ${writerInterfaceName} = ${Names.FreLanguageEnvironment}.getInstance().writer;
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
         ${classifiersToDo.map((concept) => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}
         }`;
 
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([errorClassName, errorSeverityName, writerInterfaceName, Names.FreLanguageEnvironment])
+        imports.language = new Set<string>(this.done.map(cls => Names.classifier(cls)) )
+        imports.utils.add(defaultWorkerName)
+        
         return `
-        import { ${errorClassName}, ${errorSeverityName}, ${writerInterfaceName}, ${Names.LanguageEnvironment} } from "${FREON_CORE}";
-        import { ${this.done.map((cls) => Names.classifier(cls)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-        import { ${defaultWorkerName} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
-        import { ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
+        // TEMPLATE: NonOptionalsCheckerTemplate.generateChecker(...)
+        ${imports.makeImports(language)}
+        import { type ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
         
         ${result}`;
     }

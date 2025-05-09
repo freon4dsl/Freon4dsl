@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { LANGUAGE_GEN_FOLDER, Names, FREON_CORE } from "../../utils/index.js";
+import { Names, Imports } from "../../utils/index.js"
 
 export class ReaderTemplate {
     /**
@@ -9,21 +9,24 @@ export class ReaderTemplate {
     public generateReader(language: FreMetaLanguage, relativePath: string): string {
         const semanticAnalyser: string = Names.semanticAnalyser(language);
         const syntaxAnalyser: string = Names.syntaxAnalyser(language);
-
+        const imports = new Imports(relativePath)
+        imports.core = new Set([Names.FreReader, Names.modelunit(), Names.FreNode, "AST"])
+        imports.language = new Set([Names.classifier(language.modelConcept)])
+        
         // Template starts here
         return `
-        import { ${Names.FreReader}, ${Names.modelunit()}, ${Names.FreNode}, AST } from "${FREON_CORE}";
-        import { ${Names.classifier(language.modelConcept)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
+        // TEMPLATE: ReaderTemplate.generateReader(...)
+        ${imports.makeImports(language)}
         import { ${Names.grammarStr(language)} } from "./${Names.grammar(language)}.js";
         import { ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}.js";
         import { ${semanticAnalyser} } from "./${semanticAnalyser}.js";
         import {
             Agl,
-            LanguageIssue,
-            LanguageProcessor, 
+            type LanguageIssue,
+            type LanguageProcessor, 
             LanguageProcessorResult,
-            ProcessResult,
-            SentenceContext,
+            type ProcessResult,
+            type SentenceContext,
         } from 'net.akehurst.language-agl-processor/net.akehurst.language-agl-processor.mjs';
 
         class MyContext implements SentenceContext<FreNode> {

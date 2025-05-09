@@ -26,9 +26,9 @@ export class GrammarPart {
         const className: string = Names.unitAnalyser(language, this.unit);
 
         return `${this.rules.length > 0 ? `import {
-            KtList,
-            Sentence,
-            SpptDataNodeInfo
+            type KtList,
+            type Sentence,
+            type SpptDataNodeInfo
         } from "net.akehurst.language-agl-processor/net.akehurst.language-agl-processor.mjs";
         import { ${Names.FreNodeReference} } from "@freon4dsl/core";` : ""}
         ${

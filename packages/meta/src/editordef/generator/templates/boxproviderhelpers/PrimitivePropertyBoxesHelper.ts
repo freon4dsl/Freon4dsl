@@ -8,7 +8,7 @@ import {
     FreEditProjectionGroup,
     FreEditPropertyProjection,
 } from "../../../metalanguage/index.js";
-import { ListUtil, Roles } from "../../../../utils/index.js";
+import { Roles } from "../../../../utils/index.js";
 import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 import { ExternalBoxesHelper } from "./ExternalBoxesHelper.js";
@@ -97,8 +97,7 @@ export class PrimitivePropertyBoxesHelper {
             direction = "horizontalList";
             roleDirection = "hList";
         }
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxFactory");
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "Box");
+        this._myTemplate.imports.core.add("BoxFactory").add("Box");
         // TODO Create Action for the role to actually add an element.
         return `BoxFactory.${direction}(${element}, "${Roles.property(property)}-${roleDirection}", "${property.name}",
                             (${element}.${property.name}.map( (item, index)  =>
@@ -115,7 +114,7 @@ export class PrimitivePropertyBoxesHelper {
         displayType?: string,
         boolKeywords?: FreEditBoolKeywords,
     ): string {
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoxUtil");
+        this._myTemplate.imports.core.add("BoxUtil");
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type) {
             case FreMetaPrimitiveType.string:
@@ -129,7 +128,7 @@ export class PrimitivePropertyBoxesHelper {
                 if (!!displayType) {
                     displayTypeToUse1 = DisplayTypeHelper.getTypeScriptForDisplayType(displayType);
                 }
-                ListUtil.addIfNotPresent(this._myTemplate.coreImports, "NumberDisplay");
+                this._myTemplate.imports.core.add("NumberDisplay");
                 return `BoxUtil.numberBox(${element}, "${property.name}"${listAddition}, NumberDisplay.${displayTypeToUse1})`;
             case FreMetaPrimitiveType.boolean:
                 // get the right keywords
@@ -144,7 +143,7 @@ export class PrimitivePropertyBoxesHelper {
                 if (!!displayType) {
                     displayTypeToUse2 = DisplayTypeHelper.getTypeScriptForDisplayType(displayType);
                 }
-                ListUtil.addIfNotPresent(this._myTemplate.coreImports, "BoolDisplay");
+                this._myTemplate.imports.core.add("BoolDisplay");
                 return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, BoolDisplay.${displayTypeToUse2})`;
             default:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;

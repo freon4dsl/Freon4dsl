@@ -4,7 +4,7 @@ import {
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
 } from "../../languagedef/metalanguage/index.js";
-import { LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, Names } from "../../utils/index.js";
+import { Imports, Names } from "../../utils/index.js"
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/FreMetaLanguage.js";
 import { UnitAnalyser } from "./UnitAnalyser.js";
 
@@ -13,7 +13,6 @@ import { UnitAnalyser } from "./UnitAnalyser.js";
 // TODO rethink semantic analysis => should be done on whole model
 // why is common unit not included???
 export class SemanticAnalysisTemplate {
-    imports: FreMetaClassifier[] = [];
     possibleProblems: FreMetaConcept[] = [];
     supersOfProblems: FreMetaClassifier[] = [];
     private exprWithBooleanProp: Map<FreMetaClassifier, FreMetaPrimitiveProperty> = new Map<
@@ -78,17 +77,17 @@ export class SemanticAnalysisTemplate {
     }
 
     makeCorrector(language: FreMetaLanguage, relativePath: string): string {
-        this.imports = [];
         const everyConceptName: string = Names.allConcepts();
         const className: string = Names.semanticAnalyser(language);
         const refWalkerName: string = Names.semanticWalker(language);
         // TODO rethink the replacement of all properties of an object and test it
-
+        const imports = new Imports(relativePath)
+        imports.core = new Set(["FreLanguageConcept", Names.FreLanguage, Names.FreNode, Names.FreNodeReference])
+        imports.utils.add(Names.walker(language))        
         // start Template
-        return `import { ${this.imports.map((concept) => Names.classifier(concept)).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-                import { ${Names.walker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
+        return `// TEMPLATE SematicAnalysisTemplate.makeCorrector(...)
+                ${imports.makeImports(language)}
                 import { ${refWalkerName} } from "./${refWalkerName}.js";
-                import { FreLanguageConcept, ${Names.FreLanguage}, ${Names.FreNode}, ${Names.FreNodeReference} } from "@freon4dsl/core";
 
                 export class ${className} {
 
@@ -131,24 +130,23 @@ export class SemanticAnalysisTemplate {
     }
 
     makeWalker(language: FreMetaLanguage, relativePath: string): string {
-        this.imports = [];
         const className: string = Names.semanticWalker(language);
+        const imports = new Imports(relativePath)
+        imports.core = new Set([Names.FreNamedNode, Names.FreLanguage, Names.FreLanguageEnvironment, Names.FreNodeReference, Names.FreNode])
+        imports.utils.add(Names.workerInterface(language)).add(Names.defaultWorker(language))
         const everyConceptName: string = Names.allConcepts();
-        this.addToImports(this.possibleProblems);
+        this.addToImports(this.possibleProblems, imports);
         const mapKeys: IterableIterator<FreMetaClassifier> = this.exprWithBooleanProp.keys();
         for (const key of mapKeys) {
-            this.addToImports(key);
+            this.addToImports(key, imports);
         }
         // call this method before starting the template; it will fill the 'imports'
-        const replacementIfStat: string = this.makeReplacementIfStat();
+        const replacementIfStat: string = this.makeReplacementIfStat(imports);
         const replacementBooleanStat: string = this.makeBooleanStat();
-
+        
         return `
-            import {
-              ${this.imports.map((concept) => Names.classifier(concept)).join(", ")}
-            } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-            import { ${Names.workerInterface(language)}, ${Names.defaultWorker(language)} } from "${relativePath}${LANGUAGE_UTILS_GEN_FOLDER}/index.js";
-            import { ${Names.FreNamedNode}, ${Names.FreLanguage}, ${Names.LanguageEnvironment}, ${Names.FreNodeReference}, ${Names.FreNode} } from "@freon4dsl/core";
+            // TEMPLATE: SemanticAnalysisTemplate.makeWalker(...)
+            ${imports.makeImports(language)}
 
             export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
                 changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;
@@ -160,9 +158,9 @@ export class SemanticAnalysisTemplate {
 
                 ${this.possibleProblems.map((poss) => `${this.makeVistorMethod(poss)}`).join("\n")}
 
-                private findReplacement(modelelement: ${Names.allConcepts()}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
-                    const scoper = ${Names.LanguageEnvironment}.getInstance().scoper;
-                    const possibles = scoper.getVisibleElements(modelelement).filter(elem => elem.name === referredElem.name);
+                private findReplacement(node: ${Names.allConcepts()}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
+                    const scoper = ${Names.FreLanguageEnvironment}.getInstance().scoper;
+                    const possibles = scoper.getVisibleElements(node).filter(elem => elem.name === referredElem.name);
                     if (possibles.length > 0) {
                         // element probably refers to something with another type
                         let replacement: ${Names.allConcepts()} = null;
@@ -170,7 +168,7 @@ export class SemanticAnalysisTemplate {
                             const metatype = elem.freLanguageConcept();
                             ${replacementIfStat}
                         }
-                        this.changesToBeMade.set(modelelement, replacement);
+                        this.changesToBeMade.set(node, replacement);
                     } else {
                         // true error, or boolean "true" or "false"
                         ${replacementBooleanStat}
@@ -181,7 +179,7 @@ export class SemanticAnalysisTemplate {
     }
 
     // TODO if there are possibles, but still the metatype is not correct, do not make a replacement
-    private makeReplacementIfStat(): string {
+    private makeReplacementIfStat(imports: Imports): string {
         // TODO add replacement of properties that are lists
         let result: string = "";
         for (const poss of this.possibleProblems) {
@@ -190,7 +188,7 @@ export class SemanticAnalysisTemplate {
                 for (const ref of poss.allReferences().filter((prop) => !prop.isList)) {
                     const type: FreMetaClassifier = ref.type;
                     const metatype: string = Names.classifier(type);
-                    this.addToImports(type);
+                    this.addToImports(type, imports);
                     const propName: string = ref.name;
                     result += `if (${Names.FreLanguage}.getInstance().metaConformsToType(elem, "${metatype}")) {
                         replacement = ${toBeCreated}.create({ ${propName}: ${Names.FreNodeReference}.create<${metatype}>(referredElem.name, metatype) });
@@ -208,20 +206,20 @@ export class SemanticAnalysisTemplate {
         // TODO add replacement of properties that are lists
         return `
             /**
-             * Test whether the references in 'modelelement' are correct.
+             * Test whether the references in 'node' are correct.
              * If not, find possible replacements.
-             * @param modelelement
+             * @param node
              */
-            public execBefore${Names.concept(freConcept)}(modelelement: ${Names.concept(freConcept)}): boolean {
+            public execBefore${Names.concept(freConcept)}(node: ${Names.concept(freConcept)}): boolean {
                 let referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>;
                 ${freConcept
                     .allReferences()
                     .filter((prop) => !prop.isList)
                     .map(
                         (prop) =>
-                            `referredElem = modelelement.${prop.name};
-                if (!!modelelement.${prop.name} && modelelement.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
-                    this.findReplacement(modelelement, referredElem);
+                            `referredElem = node.${prop.name};
+                if (!!node.${prop.name} && node.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
+                    this.findReplacement(node, referredElem);
                 }`,
                     )
                     .join("\n")}
@@ -229,16 +227,14 @@ export class SemanticAnalysisTemplate {
             }`;
     }
 
-    private addToImports(extra: FreMetaClassifier | FreMetaClassifier[]) {
+    private addToImports(extra: FreMetaClassifier | FreMetaClassifier[], imports: Imports) {
         if (!!extra) {
             if (Array.isArray(extra)) {
                 for (const ext of extra) {
-                    if (!this.imports.includes(ext)) {
-                        this.imports.push(ext);
-                    }
+                    imports.language.add(Names.classifier(ext));
                 }
-            } else if (!this.imports.includes(extra)) {
-                this.imports.push(extra);
+            } else {
+                imports.language.add(Names.classifier(extra));
             }
         }
     }
@@ -255,9 +251,9 @@ export class SemanticAnalysisTemplate {
         for (const [concept, primProp] of this.exprWithBooleanProp) {
             if (concept instanceof FreMetaConcept && !concept.isAbstract) {
                 result += `if (referredElem.name === "true") {
-                    this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: true }));
+                    this.changesToBeMade.set(node, ${Names.classifier(concept)}.create({ ${primProp.name}: true }));
                 } else if (referredElem.name === "false") {
-                    this.changesToBeMade.set(modelelement, ${Names.classifier(concept)}.create({ ${primProp.name}: false }));
+                    this.changesToBeMade.set(node, ${Names.classifier(concept)}.create({ ${primProp.name}: false }));
                 }`;
             }
         }

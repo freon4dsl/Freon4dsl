@@ -1,4 +1,4 @@
-import { Names, LANGUAGE_GEN_FOLDER, GenerationUtil } from "../../../utils/index.js";
+import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class DefaultWorkerTemplate {
@@ -6,18 +6,21 @@ export class DefaultWorkerTemplate {
         const workerInterfaceName = Names.workerInterface(language);
         const defaultWorkerClassName = Names.defaultWorker(language);
         const commentBefore = `/**
-                                * Visits 'modelelement' before visiting its children.
-                                * @param modelelement
+                                * Visits 'node' before visiting its children.
+                                * @param node
                                 */`;
         const commentAfter = `/**
-                               * Visits 'modelelement' after visiting its children.
-                               * @param modelelement
+                               * Visits 'node' after visiting its children.
+                               * @param node
                                */`;
-
+        const imports = new Imports(relativePath)
+        imports.language = GenerationUtil.allConceptsAndUnits(language)
+        
         // the template starts here
         return `
-        import { ${GenerationUtil.createImports(language)} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";
-        import { ${workerInterfaceName} } from "./${Names.workerInterface(language)}.js";
+        // TEMPLATE: DefaultWorkerTemplate.generateDefaultWorker(...)
+        ${imports.makeImports(language)}
+        import { type ${workerInterfaceName} } from "./${Names.workerInterface(language)}.js";
 
         /**
          * Class ${defaultWorkerClassName} is part of the implementation of the visitor pattern on models.
@@ -29,12 +32,12 @@ export class DefaultWorkerTemplate {
         export class ${defaultWorkerClassName} implements ${workerInterfaceName} {
 
         ${commentBefore}
-        public execBefore${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean {
+        public execBefore${Names.classifier(language.modelConcept)}(node: ${Names.classifier(language.modelConcept)}): boolean {
             return false;
         }
 
         ${commentAfter}
-        public execAfter${Names.classifier(language.modelConcept)}(modelelement: ${Names.classifier(language.modelConcept)}): boolean {
+        public execAfter${Names.classifier(language.modelConcept)}(node: ${Names.classifier(language.modelConcept)}): boolean {
             return false;
         }
 
@@ -42,12 +45,12 @@ export class DefaultWorkerTemplate {
             .map(
                 (unit) =>
                     `${commentBefore}
-            public execBefore${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean {
+            public execBefore${Names.classifier(unit)}(node: ${Names.classifier(unit)}): boolean {
                 return false;
             }
 
             ${commentAfter}
-            public execAfter${Names.classifier(unit)}(modelelement: ${Names.classifier(unit)}): boolean {
+            public execAfter${Names.classifier(unit)}(node: ${Names.classifier(unit)}): boolean {
                 return false;
             }`,
             )
@@ -57,12 +60,12 @@ export class DefaultWorkerTemplate {
             .map(
                 (concept) =>
                     `${commentBefore}
-            public execBefore${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+            public execBefore${Names.concept(concept)}(node: ${Names.concept(concept)}): boolean {
                 return false;
             }
 
             ${commentAfter}
-            public execAfter${Names.concept(concept)}(modelelement: ${Names.concept(concept)}): boolean {
+            public execAfter${Names.concept(concept)}(node: ${Names.concept(concept)}): boolean {
                 return false;
             }`,
             )

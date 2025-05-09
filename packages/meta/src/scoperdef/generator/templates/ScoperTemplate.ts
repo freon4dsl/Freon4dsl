@@ -5,14 +5,12 @@ import {
     FreMetaLanguage,
     FreMetaProperty, FreMetaClassifier
 } from '../../../languagedef/metalanguage/index.js';
-import { Names, LANGUAGE_GEN_FOLDER, FREON_CORE, GenerationUtil, LangUtil, ListUtil } from "../../../utils/index.js";
+import { Names, GenerationUtil, LangUtil, Imports } from "../../../utils/index.js"
 import { ScopeDef, ScopeConceptDef } from "../../metalanguage/index.js";
 
 export class ScoperTemplate {
-    languageImports: string[] = []; // holds the names of all classifiers that need to be imported from the generated language structure
-    replacementNamespaceText: string = "";
-    additionalNamespaceText = "";
-
+    getAlternativeScopeText: string = "";
+    getAdditionalNamespacetext = "";
 
     generateGenIndex(language: FreMetaLanguage): string {
         return `
@@ -32,13 +30,15 @@ export class ScoperTemplate {
 
         // const langConceptType: string = Names.metaType(language);
         const generatedClassName: string = Names.scoper(language);
-        const scoperBaseName: string = Names.FreScoperBase;
 
-        const coreImports: string[] = [scoperBaseName, Names.FreLogger, Names.FreNode, Names.FreNamespace];
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([
+            Names.FreScoperBase, Names.FreLogger, Names.FreNode, Names.FreNamespace
+        ])
         if (!!scopedef) {
             // should always be the case, either the definition read from file or the default
-            this.makeReplacementNamespaceTexts(scopedef);
-            this.makeAdditionalNamespaceTexts(scopedef, coreImports);
+            this.makeReplacementNamespaceTexts(scopedef, imports);
+            this.makeAdditionalNamespaceTexts(scopedef, imports);
         }
         // add the necessary names to the imports
         // ListUtil.addIfNotPresent(this.languageImports, langConceptType);
@@ -49,7 +49,7 @@ export class ScoperTemplate {
          * Class ${generatedClassName} implements the scoper generated from, if present, the scoper definition,
          * otherwise this class implements the default scoper.
          */
-        export class ${generatedClassName} extends  ${scoperBaseName} {
+        export class ${generatedClassName} extends  ${Names.FreScoperBase} {
 
              /**
              * Returns the replacement namespace if it can be found for 'node'.
@@ -73,29 +73,28 @@ export class ScoperTemplate {
         }`;
 
         // now we have enough information to create the correct imports
-        const templateImports: string = `
-        ${coreImports.length > 0 ? `import { ${coreImports.map((name) => name).join(", ")} } from "${FREON_CORE}";` : ""}
-        ${this.languageImports.length > 0 ? `import { ${this.languageImports.map((name) => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";` : ""}
+        return `
+            ${imports.makeImports(language)}
+            
+            ${templateBody}
         `;
-
-        return templateImports + templateBody;
     }
 
-    private makeAdditionalNamespaceTexts(scopedef: ScopeDef, coreImports: string[]) {
+    private makeAdditionalNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceAdditions) {
                 const myClassifier: FreMetaClassifier | undefined = def.conceptRef?.referred;
                 if (!!myClassifier) {
                     const comment = "// based on namespace addition for " + myClassifier.name + "\n";
-                    ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
+                    imports.language.add(Names.classifier(myClassifier));
                     if (myClassifier instanceof FreMetaInterface) {
                         for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
-                            this.makeAdditionalNamespaceTextsForClassifier(implementor, def, comment, coreImports);
-                            ListUtil.addIfNotPresent(this.languageImports, Names.classifier(implementor));
+                            this.makeAdditionalNamespaceTextsForClassifier(implementor, def, comment, imports);
+                            imports.language.add(Names.classifier(implementor));
                         }
                     } else {
-                        this.makeAdditionalNamespaceTextsForClassifier(myClassifier, def, comment, coreImports);
-                        ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
+                        this.makeAdditionalNamespaceTextsForClassifier(myClassifier, def, comment, imports);
+                        imports.language.add(Names.classifier(myClassifier));
                     }
                 }
             }
@@ -106,12 +105,12 @@ export class ScoperTemplate {
         freConcept: FreMetaClassifier,
         def: ScopeConceptDef,
         comment: string,
-        coreImports: string[],
+        imports: Imports,
     ) {
         const typeName = Names.classifier(freConcept);
         // we are adding to three textstrings
         // first, to the import statements
-        ListUtil.addIfNotPresent(this.languageImports, typeName);
+        imports.language.add(typeName);
 
         // second, to the 'replacementNamespace' method
         // Do this always, because the expression can be different for a concrete concept
@@ -123,20 +122,20 @@ export class ScoperTemplate {
         if (!!def.namespaceAdditions) {
             for (const expression of def.namespaceAdditions.expressions) {
                 this.additionalNamespaceText = this.additionalNamespaceText.concat(
-                    this.addNamespaceExpression(expression, coreImports),
+                    this.addNamespaceExpression(expression, imports),
                 );
             }
         }
         this.additionalNamespaceText = this.additionalNamespaceText.concat(`}\n`);
     }
 
-    private makeReplacementNamespaceTexts(scopedef: ScopeDef) {
+    private makeReplacementNamespaceTexts(scopedef: ScopeDef, imports) {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.replacementNamespace && !!def.conceptRef) {
                 const conceptName: string = def.conceptRef.referred.name;
                 // we are adding to three text strings
                 // first, to the import statements
-                ListUtil.addIfNotPresent(this.languageImports, Names.classifier(def.conceptRef.referred));
+                imports.language.add(Names.classifier(def.conceptRef.referred));
 
                 // second, to the 'replacementNamespace' method
                 if (!!def.replacementNamespace.expression) {
@@ -151,14 +150,14 @@ export class ScoperTemplate {
         }
     }
 
-    private addNamespaceExpression(expression: FreLangExp, coreImports: string[]): string {
+    private addNamespaceExpression(expression: FreLangExp, imports: Imports): string {
         let result: string = "";
         const myRef: FreMetaProperty | undefined = expression.findRefOfLastAppliedFeature();
 
         const loopVar: string = "loopVariable";
         if (!!myRef && myRef.isList) {
             // add "FreNodeReference" to imports, because now we know that its is used
-            ListUtil.addIfNotPresent(coreImports, Names.FreNodeReference);
+            imports.core.add(Names.FreNodeReference);
             result = result.concat(`
             // generated based on '${expression.toFreString()}'
             for (let ${loopVar} of element.${expression.appliedfeature.toFreString()}) {
