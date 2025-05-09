@@ -68,42 +68,46 @@ Any namespace can be augmented with the set of names that are declared in anothe
 Note, only the DeclaredNodes of the second namespace are added, not the whole set of VisibleNodes.
 A namespace addition makes the namespace tree actually a graph, like references make a graph from the AST.
 
-For instance, when in the AST a reference is added from node A3 to node A8, we can include 
+For instance, when the namespace A8 is added to namespace A3 (addition), we include 
 the DeclaredNodes of A8 ([F1, D7, D8]) in the VisibleNodes of A3.
 
 ![Graph showing a reference between Namespace nodes](./AST-plus-reference.png)
 
 ### How to Define Namespace Additions in Freon
 
-Suppose the reference to A8 is known in the type of A as a property called `imports`. The .ast file would have
-an entry like this:
+Suppose in the AST definition there is a reference in concept A to another concept A as a property called `imports`.
+The .ast file would have an entry like this:
 
 `concept A {
     ...
-    imports: A[];
+    reference imports: A[];
     ...
 }`
 
-Then in the .scope file we can define the namespace-addition as follows. Note that you can only add a node that is declared
-to be a namespace. So in this example, we could only use a property of type A or Z, or lists of A or lists of Z.
+In the example AST the node A3 the reference `imports` can now refer to A8.
+
+Then in the .scope file we can define the namespace-addition as follows.
 
 `A {
     namespace_addition = self.imports;
 }
 `
 
+Note that you can only add a node that is declared to be a namespace as a namespace_addition.
+Therefore in this example, we could only use a property of type A or Z, or lists of A or lists of Z.
+
 ## Namespace Replacements
 
 It is also possible to break out of the namespace hierarchy. This done by declaring an alternative or replacement
-namespace. In the hierarchical tree the 
+namespace. In the hierarchical namespace tree the 
 link of the namespace with its parent is removed, and a link to another namespace is made. This second namespace 
 takes over the role of the parent, with the exception that only the DeclaredNodes are included, not the 
 complete set of VisibleNodes.
 
 For instance, suppose the Z concept is defined to have a reference to an A concept, held in a property called `myA`. 
-We can then use this property instead of the parent namespace of Z. Suppose, furthermore, that node Z1 has a reference 
-to node A6, as shown in the following figure. In that case, the DeclaredNodes of Z1 
-are [H1, J1, A7], and its VisibleNodes are [H1, J1, A7, A6, F1, D6].
+We can then use this property instead of the parent namespace of Z. 
+Suppose, furthermore, that node Z1 has the namespace replacement A6, as shown in the following figure. In that case, the DeclaredNodes of Z1 
+are [H1, J1, A7], and its VisibleNodes are [A6, F1, D6].
 
 ![Graph showing multiple references](./AST-plus-mult-refs.png)
 
@@ -151,8 +155,8 @@ Then in the .scope file, this property can be declared public or exported, like 
 ## What are Qualified Names in Freon?
 
 Having established the above framework for scoping, the subject of qualified names need to be addressed.
-Qualified names are only relevant when referring to a node. If the referred node is in the same namespace 
-as the reference, its single name suffices. But when the node is in another namespace as the reference, 
+If the referred node is in the visible names of the namespace where it is declared, qualified names are not needed. 
+But when the node is in another namespace as the reference, 
 its qualified name can used to better distinguish which node is referred to. 
 
 The qualified name of a 
@@ -161,7 +165,7 @@ the node is declared in. For example, the node D6 in the depicted AST has the qu
 Note that the qualified name is always determined based on the namespace hierarchy, without taking 
 additional or replacement namespaces into account.
 
-Qualified names as shown in Freon in the dropdown menu for references as the single name postfixed by the 
+Qualified names are shown in Freon in the dropdown menu for references as the single name postfixed by the 
 word 'from' followed by the start of the qualified name. For instance 'D6 from A1.A3.A6'. The separator used
 (here '.') can be set in the .edit file. (Proposal!)
 
