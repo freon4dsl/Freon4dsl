@@ -16,13 +16,13 @@ export class ScopeDef extends FreMetaDefinitionElement {
 export class ScopeConceptDef extends FreMetaDefinitionElement {
     conceptRef: MetaElementReference<FreMetaConcept> | undefined;
     namespaceAdditions: FreNamespaceAddition | undefined;
-    alternativeScope: FreAlternativeScope | undefined;
+    replacementNamespace: FreReplacementNamespace | undefined;
 }
 
 export class FreNamespaceAddition extends FreMetaDefinitionElement {
     expressions: FreLangExp[] = [];
 }
 
-export class FreAlternativeScope extends FreMetaDefinitionElement {
+export class FreReplacementNamespace extends FreMetaDefinitionElement {
     expression: FreLangExp | undefined;
 }

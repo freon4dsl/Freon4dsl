@@ -12,7 +12,7 @@ Type {
 }
 */
 AppliedFeature {
-	scope = typeof( container );
+	namespace_replacement = typeof( container );
 }
 
 //    t = typer.inferType(this.source) exclude: attributes where visibility = 'private'

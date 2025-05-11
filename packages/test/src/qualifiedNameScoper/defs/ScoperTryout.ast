@@ -1,0 +1,31 @@
+language ScoperTryout
+
+model ScoperTryout {
+    series2: unitType2[];
+    series1: unitType1[];
+}
+
+interface Referable {
+    name: identifier;
+}
+
+interface Unit base Referable {
+}
+
+modelunit unitType1 implements Unit {
+    content: NamedPart[];
+}
+
+concept NamedPart implements Referable {
+    subParts: NamedPart[];
+}
+
+modelunit unitType2 implements Unit {
+    reference imports: Unit[];
+    myReferences: QualifiedName[];
+}
+
+concept QualifiedName {
+    reference part: Referable;
+    restName?: QualifiedName;
+}

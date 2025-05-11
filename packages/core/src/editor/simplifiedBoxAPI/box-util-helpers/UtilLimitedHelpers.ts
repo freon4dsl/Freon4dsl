@@ -152,7 +152,7 @@ export class UtilLimitedHelpers {
                     .filter((name) => !!name && name !== "")
                     .map((name) => ({
                         id: name,
-                        label: name,
+                        label: name
                     }));
             },
             () => {

@@ -1,4 +1,4 @@
-import { FreNamedNode } from "./FreNamedNode.js";
+import { FreNamedNode, qualifiedName } from './FreNamedNode.js';
 import { computed, observable, makeObservable } from "mobx";
 import { FreLanguageEnvironment } from "../environment/index.js";
 import { FreLogger } from "../logging/index.js";
@@ -120,7 +120,8 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
 
     set referred(referredElement) {
         if (!!referredElement) {
-            this._FRE_pathname.push(referredElement.name);
+            // this._FRE_pathname.push(referredElement.name);
+            this._FRE_pathname = qualifiedName(referredElement);
         }
         this._FRE_referred = referredElement;
     }

@@ -1,0 +1,13 @@
+Unit A named A1
+    unnamed children: Unnamed node
+                          unnamed children: Unnamed node
+                                                named children: Named node A1-noName-A
+                                                                Named node A1-noName-B
+                          named children: Named node A1-A
+                                          Named node A1-B
+    named children: Named node A1-B
+                        named children: Named node A1-B-A
+                                        Named node A1-B-B
+                                            named children: Named node A1-B-B-A
+                    Named node A1-C1
+                    Named node A1-D1

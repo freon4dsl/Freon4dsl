@@ -1,0 +1,15 @@
+editor qualified
+
+UnitHoldingReferables {[
+    unitType1 ${self.name}
+    ${content vertical};
+]}
+
+UnitUsingReferables {[
+    unitType2 ${self.name} imports ${self.imports}
+    myReferences: ${self.myReferences vertical}
+]}
+
+QualifiedName {[
+    ${self.part}[?>${self.restName}]
+]}

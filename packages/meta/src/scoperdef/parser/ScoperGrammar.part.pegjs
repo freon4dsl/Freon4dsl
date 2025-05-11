@@ -20,7 +20,7 @@ Scoper_Definition
 
 isnamespaceKey          = "isnamespace" rws
 additionKey             = "namespace_addition" rws
-alternativeScopeKey     = "scope" rws
+replacementNamespaceKey     = "namespace_replacement" rws
 
 namespaces = isnamespaceKey curly_begin conceptRefs:(
                                               head:classifierReference
@@ -31,12 +31,12 @@ namespaces = isnamespaceKey curly_begin conceptRefs:(
         return conceptRefs;
     }
 
-conceptDefinition = name:classifierReference curly_begin nsDef:namespaceAddition? alternativeScope:alternativeScope? curly_end
+conceptDefinition = name:classifierReference curly_begin nsDef:namespaceAddition? replacementNamespace:replacementNamespace? curly_end
     {
         return create.createScoperConceptDef({
             "conceptRef":name,
             "namespaceAdditions": nsDef,
-            "alternativeScope": alternativeScope,
+            "replacementNamespace": replacementNamespace,
             "location":location()
         });
     }
@@ -51,9 +51,9 @@ expressionlist =
       tail:(plus_separator v:langExpression { return v; })*
       { return [head].concat(tail); }
 
-alternativeScope = alternativeScopeKey equals_separator exp:langExpression semicolon_separator
+replacementNamespace = replacementNamespaceKey equals_separator exp:langExpression semicolon_separator
     {
-        return create.createAlternativeScope({
+        return create.createReplacementNamespace({
             "expression": exp,
             "location": location()
         });

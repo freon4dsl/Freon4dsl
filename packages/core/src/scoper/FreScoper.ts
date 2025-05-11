@@ -1,5 +1,6 @@
 import { FreNode, FreNamedNode } from "../ast/index.js";
 import { FreScoperComposite } from "./FreScoperComposite.js";
+import { FreNamespace } from './FreNamespace.js';
 
 // Part of the Freon Framework
 
@@ -12,10 +13,10 @@ export interface FreScoper {
      * If present, then the search is limited to elements which type is 'metatype'.
      * If this scoper does not handle the scope for 'modelelement' 'undefined' is returned.
      *
-     * @param node: the containing element, where 'pathname' should be visible
-     * @param doNotSearch: the role or property name of the element that we are searching for
-     * @param pathname: the name or series of names of the element that we are searching for
-     * @param metatype: the metatype of the element that we are searching for
+     * @param node          the containing element, where 'pathname' should be visible
+     * @param doNotSearch   the role or property name of the element that we are searching for
+     * @param pathname      the name or series of names of the element that we are searching for
+     * @param metatype      the metatype of the element that we are searching for
      */
     resolvePathName(node: FreNode, doNotSearch: string, pathname: string[], metatype?: string): FreNamedNode;
 
@@ -83,8 +84,14 @@ export interface FreScoper {
     getVisibleNames(node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[];
 
     /**
-     * Returns all FreNodes that are defined as additional namespaces for `node'.
+     * Returns all FreNodes that are defined as additional namespaces for 'node'.
      * @param node
      */
     additionalNamespaces(node: FreNode): FreNode[];
+
+    /**
+     * Returns the replacement namespace if it can be found for 'node'.
+     * @param node
+     */
+    replacementNamespace(node: FreNode): FreNamespace | undefined;
 }

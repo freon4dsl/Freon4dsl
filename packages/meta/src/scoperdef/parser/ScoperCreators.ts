@@ -1,4 +1,4 @@
-import { ScopeDef, ScopeConceptDef, FreNamespaceAddition, FreAlternativeScope } from "../metalanguage/index.js";
+import { ScopeDef, ScopeConceptDef, FreNamespaceAddition, FreReplacementNamespace } from "../metalanguage/index.js";
 import { MetaLogger } from "../../utils/MetaLogger.js";
 
 const LOGGER = new MetaLogger("ScoperCreator").mute();
@@ -42,8 +42,8 @@ export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeCon
     if (!!data.namespaceAdditions) {
         result.namespaceAdditions = data.namespaceAdditions;
     }
-    if (!!data.alternativeScope) {
-        result.alternativeScope = data.alternativeScope;
+    if (!!data.replacementNamespace) {
+        result.replacementNamespace = data.replacementNamespace;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -63,9 +63,9 @@ export function createNamespaceDef(data: Partial<FreNamespaceAddition>): FreName
     return result;
 }
 
-export function createAlternativeScope(data: Partial<FreAlternativeScope>): FreAlternativeScope {
-    LOGGER.log("createAlternativeScope");
-    const result = new FreAlternativeScope();
+export function createReplacementNamespace(data: Partial<FreReplacementNamespace>): FreReplacementNamespace {
+    LOGGER.log("createReplacementNamespace");
+    const result = new FreReplacementNamespace();
     if (!!data.expression) {
         result.expression = data.expression;
     }

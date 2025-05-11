@@ -2,6 +2,7 @@ import { FreNode, FreNamedNode } from "../ast/index.js";
 import { FreLogger } from "../logging/index.js";
 import { FreScoper } from "./FreScoper.js";
 import { isNullOrUndefined } from '../util/index.js';
+import { FreNamespace } from './FreNamespace.js';
 
 const LOGGER = new FreLogger("FreScoperComposite").mute();
 
@@ -49,6 +50,7 @@ export class FreScoperComposite implements FreScoper {
     }
 
     getVisibleElements(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
+        LOGGER.log('COMPOSITE getVisibleElements for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getVisibleElements(node, metatype, excludeSurrounding);
@@ -61,7 +63,7 @@ export class FreScoperComposite implements FreScoper {
     }
 
     getVisibleNames(node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
-        LOGGER.log("getVisibleNames for " + node?.freLanguageConcept() + " of type " + metatype);
+        LOGGER.log("COMPOSITE getVisibleNames for " + node?.freLanguageConcept() + " of type " + metatype);
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getVisibleNames(node, metatype, excludeSurrounding);
@@ -95,5 +97,18 @@ export class FreScoperComposite implements FreScoper {
             }
         }
         return null; // TODO or undefined?
+    }
+
+    replacementNamespace(node: FreNode): FreNamespace | undefined {
+        LOGGER.log('COMPOSITE replacementNamespace for ' + node.freId() + " of type " + node.freLanguageConcept());
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result: FreNamespace = scoper.replacementNamespace(node);
+                if (!isNullOrUndefined(result)) {
+                    return result;
+                }
+            }
+        }
+        return undefined;
     }
 }
