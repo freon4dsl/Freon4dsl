@@ -37,11 +37,9 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static FreScoperComposite: string = "FreScoperComposite";
     // tslint:disable-next-line:variable-name
-    public static FrScoperPart: string = "FreScoper";
+    public static FreScoperPart: string = "FreScoper";
     // tslint:disable-next-line:variable-name
-    public static FreTyperPart: string = "FreTyper"; // todo why not ..Part
-    // tslint:disable-next-line:variable-name
-    public static FreTyper: string = "FreCompositeTyper"; // todo no longer generated, is it still in use?
+    public static FreCompositeTyper: string = "FreCompositeTyper"; 
     // tslint:disable-next-line:variable-name
     public static FreValidator: string = "FreValidator";
     // tslint:disable-next-line:variable-name
@@ -59,11 +57,15 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static FreActions: string = "FreCombinedActions";
     // tslint:disable-next-line:variable-name
+    public static ActionsUtil: string = "ActionsUtil";
+    // tslint:disable-next-line:variable-name
+    public static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
+    // tslint:disable-next-line:variable-name
+    public static FreCustomAction: string = "FreCustomAction";
+    // tslint:disable-next-line:variable-name
     public static FreEditor: string = "FreEditor";
     // tslint:disable-next-line:variable-name
     public static FreProjection: string = "FreProjection";
-    // tslint:disable-next-line:variable-name
-    public static FreCompositeProjection: string = "FreCompositeProjection";
     // tslint:disable-next-line:variable-name
     public static Box: string = "Box";
     // tslint:disable-next-line:variable-name
@@ -83,15 +85,19 @@ export class Names {
     // tslint:disable-next-line:variable-name
     static FreType: string = "FreType";
     // tslint:disable-next-line:variable-name
+    static FreTyper: string = "FreTyper";
+    // tslint:disable-next-line:variable-name
+    static AstType: string = "AstType"
+    // tslint:disable-next-line:variable-name
+    static FreCommonSuperTypeUtil: string = "FreCommonSuperTypeUtil"
+    // tslint:disable-next-line:variable-name
     static FreTableDefinition: string = "FreTableDefinition";
-    // tslint:disable-next-line:variable-name
-    static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
-    // tslint:disable-next-line:variable-name
-    static FreCustomAction: string = "FreCustomAction";
     // tslint:disable-next-line:variable-name
     static FreTriggerType: string = "FreTriggerType";
     // tslint:disable-next-line:variable-name
-    static LanguageEnvironment: string = "FreLanguageEnvironment";
+    static FreLanguageEnvironment: string = "FreLanguageEnvironment";
+    // tslint:disable-next-line:variable-name
+    static LanguageEnvironment: string = "LanguageEnvironment";
     // tslint:disable-next-line:variable-name
     static FreLogger: string = "FreLogger";
     // tslint:disable-next-line:variable-name
@@ -288,6 +294,13 @@ export class Names {
     public static startWithUpperCase(word: string): string {
         if (!!word) {
             return word[0].toUpperCase() + word.substring(1);
+        }
+        return "";
+    }
+
+    public static startWithLowerCase(word: string): string {
+        if (!!word) {
+            return word[0].toLowerCase() + word.substring(1);
         }
         return "";
     }

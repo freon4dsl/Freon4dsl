@@ -181,7 +181,7 @@ export class SimpleModelCreator {
     static IN = "    ";
     public DSmodelToString(model: DSmodel): string {
         let result: string = "";
-        let indent = "";
+        const indent = "";
         for (const unit of model.units) {
             result += "unit: " + unit.name + "\n";
             for (const part of unit.dsPublics) {

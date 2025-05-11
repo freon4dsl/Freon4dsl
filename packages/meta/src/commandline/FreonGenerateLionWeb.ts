@@ -1,5 +1,3 @@
-
-import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import { LionWebGenerator } from "../lionwebgen/LionWebGenerator.js";
 import { MetaLogger } from "../utils/MetaLogger.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
@@ -8,7 +6,6 @@ const LOGGER = new MetaLogger("FreonGenerateInterpreter").mute();
 
 export class FreonGenerateLionWeb extends FreonGeneratePartAction {
     protected lionWebGenerator: LionWebGenerator = new LionWebGenerator();
-    public language: FreMetaLanguage | undefined;
 
     public constructor() {
         super({
