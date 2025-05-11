@@ -1,10 +1,10 @@
 import { FreNode, FreNamedNode } from "../ast/index.js";
-// import { FreLogger } from "../logging/index.js";
+import { FreLogger } from "../logging/index.js";
 import { FreScoper } from "./FreScoper.js";
 import { isNullOrUndefined } from '../util/index.js';
 import { FreNamespace } from './FreNamespace.js';
 
-// const LOGGER = new FreLogger("FreScoperComposite").mute();
+const LOGGER = new FreLogger("FreScoperComposite").mute();
 
 export class FreScoperComposite implements FreScoper {
     mainScoper: FreScoperComposite;
@@ -50,7 +50,7 @@ export class FreScoperComposite implements FreScoper {
     }
 
     getVisibleElements(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
-        // console.log('COMPOSITE getVisibleElements for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+        LOGGER.log('COMPOSITE getVisibleElements for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getVisibleElements(node, metatype, excludeSurrounding);
@@ -63,7 +63,7 @@ export class FreScoperComposite implements FreScoper {
     }
 
     getVisibleNames(node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
-        // console.log("COMPOSITE getVisibleNames for " + node?.freLanguageConcept() + " of type " + metatype);
+        LOGGER.log("COMPOSITE getVisibleNames for " + node?.freLanguageConcept() + " of type " + metatype);
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getVisibleNames(node, metatype, excludeSurrounding);
@@ -100,7 +100,7 @@ export class FreScoperComposite implements FreScoper {
     }
 
     replacementNamespace(node: FreNode): FreNamespace | undefined {
-        // console.log('COMPOSITE replacementNamespace for ' + node.freId() + " of type " + node.freLanguageConcept());
+        LOGGER.log('COMPOSITE replacementNamespace for ' + node.freId() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result: FreNamespace = scoper.replacementNamespace(node);

@@ -9,8 +9,8 @@ import { Names, GenerationUtil, LangUtil, Imports } from "../../../utils/index.j
 import { ScopeDef, ScopeConceptDef } from "../../metalanguage/index.js";
 
 export class ScoperTemplate {
-    getAlternativeScopeText: string = "";
-    getAdditionalNamespacetext = "";
+    additionalNamespaceText: string = "";
+    replacementNamespaceText = "";
 
     generateGenIndex(language: FreMetaLanguage): string {
         return `
@@ -129,7 +129,7 @@ export class ScoperTemplate {
         this.additionalNamespaceText = this.additionalNamespaceText.concat(`}\n`);
     }
 
-    private makeReplacementNamespaceTexts(scopedef: ScopeDef, imports) {
+    private makeReplacementNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.replacementNamespace && !!def.conceptRef) {
                 const conceptName: string = def.conceptRef.referred.name;
