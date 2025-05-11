@@ -2,13 +2,13 @@ import {describe, test, expect} from "vitest";
 import {FreError} from "@freon4dsl/core";
 import {FileHandler} from "./FileHandler.js";
 import { FreStructureDef, FreTyperModel, FreTyperDef } from '../language/gen';
-import { FreTyperEnvironment } from '../config/gen/FreTyperEnvironment';
+import { LanguageEnvironment } from '../index.js';
 
 describe("Fre Typer Parser", () => {
-    const reader = FreTyperEnvironment.getInstance().reader;
-    const writer = FreTyperEnvironment.getInstance().writer;
-    const validator = FreTyperEnvironment.getInstance().validator;
-    const scoper = FreTyperEnvironment.getInstance().scoper;
+    const reader = LanguageEnvironment.getInstance().reader;
+    const writer = LanguageEnvironment.getInstance().writer;
+    const validator = LanguageEnvironment.getInstance().validator;
+    const scoper = LanguageEnvironment.getInstance().scoper;
     const fileHandler = new FileHandler();
 
     test(" on .type file", () => {

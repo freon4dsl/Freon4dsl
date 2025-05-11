@@ -52,7 +52,7 @@ describe("Checking new typer", () => {
                     ),
                 ).toBeTruthy();
                 expect(
-                    errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [file: type-rules1.type:20:30]."),
+                    errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [file: type-rules1.type:20:31]."),
                 ).toBeTruthy();
                 expect(
                     errors.includes(

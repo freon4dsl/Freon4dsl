@@ -7,15 +7,15 @@ istype { BaseType, Type, Entity, AttributeType }
 hastype { EntityExpression, AttributeWithLimitedType, EntityFunction, Variable, AppliedFeature }
 
 anytype {
-    conformsto AttributeType:ANY;
-    equalsto AttributeType:ANY;
+    conformsto #AttributeType:ANY;
+    equalsto #AttributeType:ANY;
 }
 
 Entity {
     conformsto self.baseEntity;
 }
 StringLiteralExpression {
-    infertype AttributeType:String;
+    infertype #AttributeType:String;
 }
 AttributeWithLimitedType {
     infertype self.declaredType;
@@ -24,10 +24,10 @@ EntityFunction {
     infertype self.declaredType;
 }
 NumberLiteralExpression {
-    infertype AttributeType:Integer;
+    infertype #AttributeType:Integer;
 }
 BooleanLiteralExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 AbsExpression {
     infertype self.expr;
@@ -39,16 +39,16 @@ PlusExpression {
     infertype self.left;
 }
 AndExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 OrExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 DivideExpression {
     infertype self.left;
 }
 ComparisonExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 FunctionCallExpression {
     infertype self.functionDefinition;

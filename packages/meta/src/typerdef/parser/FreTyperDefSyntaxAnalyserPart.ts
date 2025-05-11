@@ -317,7 +317,7 @@ export class FreTyperDefSyntaxAnalyserPart {
 
     /**
      * Method to transform branches that match the following rule:
-     * FretLimitedInstanceExp = ( __fre_reference ':' )?
+     * FretLimitedInstanceExp = ( '#' __fre_reference ':' )?
      *	 __fre_reference ;
      * @param nodeInfo
      * @param children
@@ -334,7 +334,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         // RHSOptionalGroup
         if (!!children.asJsReadonlyArrayView()[0]) {
             const _optGroup = children.asJsReadonlyArrayView()[0] as KtList<any>;
-            __myLimited = this.mainAnalyser.makeMetaElementReference<FreMetaLimitedConcept>(_optGroup.asJsReadonlyArrayView()[0], "FreLimitedConcept"); // RHSRefEntry
+            __myLimited = this.mainAnalyser.makeMetaElementReference<FreMetaLimitedConcept>(_optGroup.asJsReadonlyArrayView()[1], "FreLimitedConcept"); // RHSRefEntry
         }
         // end RHSOptionalGroup
         __myInstance = this.mainAnalyser.makeMetaElementReference<FreMetaInstance>(children.asJsReadonlyArrayView()[1] as ParsedNodeReference, "FreInstance"); // RHSRefEntry

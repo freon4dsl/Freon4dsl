@@ -8,20 +8,20 @@ hastype { Exp, Exp }
 
 // What are the top and bottom types?
 anytype {
-    conformsto PredefinedType:ANY; // PredefinedType:ANY is the least specific type
+    conformsto #PredefinedType:ANY; // #PredefinedType:ANY is the least specific type
 }
 
 PredefinedType {
-    OtherPredefinedType:NULL conformsto NULL; // PredefinedType:NULL is the most specific type
+    #OtherPredefinedType:NULL conformsto NULL; // #PredefinedType:NULL is the most specific type
 }
 
 // Which type does an expression have?
 SimpleExp1 {
-    infertype PredefinedType:Simp;
+    infertype #PredefinedType:Simp;
 }
 
 SimpleExp2 {
-    infertype PredefinedType:Simple2;
+    infertype #PredefinedType:Simple2;
 }
 
 NamedExp {

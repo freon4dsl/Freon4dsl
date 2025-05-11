@@ -5,8 +5,8 @@ istype {  BaseType }
 hastype { ExExpression, Parameter, Attribute, Method, AttributeRef }
 
 anytype {
-    conformsto AttributeType:ANY;
-    equalsto AttributeType:ANY;
+    conformsto #AttributeType:ANY;
+    equalsto #AttributeType:ANY;
 }
 
 Parameter {
@@ -29,22 +29,22 @@ Method {
     infertype self.declaredType;
 }
 StringLiteralExpression {
-    infertype AttributeType:String;
+    infertype #AttributeType:String;
 }
 NumberLiteralExpression {
-    infertype AttributeType:Integer;
+    infertype #AttributeType:Integer;
 }
 BooleanLiteralExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 AbsExpression {
     infertype self.expr;
 }
 OrExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 AndExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 MultiplyExpression {
     infertype self.left;
@@ -58,7 +58,7 @@ DivideExpression {
     infertype self.left;
 }
 ComparisonExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 MethodCallExpression {
     infertype self.methodDefinition;
@@ -71,7 +71,7 @@ AttributeRef   {
 }
 
 SumExpression {
-    infertype AttributeType:Integer;
+    infertype #AttributeType:Integer;
 }
 LoopVariableRef {
     infertype anytype;

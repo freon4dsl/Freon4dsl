@@ -1,13 +1,13 @@
 typer
 
 OrExpression {
-    infertype BASIC_TYPE:Boolean;
+    infertype #BASIC_TYPE:Boolean;
 }
 AndExpression {
-    infertype BASIC_TYPE:Boolean;
+    infertype #BASIC_TYPE:Boolean;
 }
 XorExpression {
-    infertype BASIC_TYPE:Boolean;
+    infertype #BASIC_TYPE:Boolean;
 }
 NotExpression {
     infertype self.inner;
