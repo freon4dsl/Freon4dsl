@@ -51,7 +51,7 @@ Z1, D2, A3, E3, A4, Z2, A5].
 
 ### Shadowing
 
-In case a name appears in the DeclaredNodes of a child namespace as well as in its parent namespace, the name from the 
+In case a name appears in the DeclaredNodes of a child namespace as well as in its parent namespace, the node from the 
 parent is not included in the VisibleNodes of the child.
 
 ## Adapting the Namespace Tree
