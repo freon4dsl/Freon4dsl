@@ -6,7 +6,7 @@ export class CustomScoperTemplate {
         const scoperInterfaceName: string = Names.FreScoperPart;
         const generatedClassName: string = Names.customScoper(language);
         const imports = new Imports()
-        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreScoperPart, Names.FreScoperComposite])
+        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreNamespace, Names.FreScoperPart, Names.FreScoperComposite])
 
         // Template starts here
         return `
