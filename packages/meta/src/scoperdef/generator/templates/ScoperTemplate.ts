@@ -180,7 +180,9 @@ export class ScoperTemplate {
             }`);
         } else {
             // TODO check use of toFreString()
-            const namespaceExpression = `element.${expression.appliedfeature.toFreString()}`;
+            console.log('calling with noRef === true')
+            const namespaceExpression = `element.${GenerationUtil.langExpToTypeScript(expression.appliedfeature, 'element', true)}`;
+
             result = result.concat(`
                // generated based on '${expression.toFreString()}'
                if (!this.currentRoleNames.includes('${expression.appliedfeature.toFreString()}')) {
@@ -189,7 +191,7 @@ export class ScoperTemplate {
                          this.additionalNamespacesVisited.push(${namespaceExpression});
                          const referred = ${namespaceExpression}.referred;
                          if(!!referred) {
-                            result.push(${namespaceExpression}.referred);
+                            result.push(referred);
                          }
                          this.additionalNamespacesVisited.pop();
                       }

@@ -106,33 +106,34 @@ export class GenerationUtil {
     
     /**
      * Returns a string representation of 'exp' that can be used in TypeScript code.
-     * @param exp
+     * @param exp       the expression to turn into TypeScript
+     * @param paramName the name to be used for the
+     * @param noRef
      */
-    public static langExpToTypeScript(exp: FreLangExp, paramName: string): string {
+    public static langExpToTypeScript(exp: FreLangExp, paramName: string, noRef?: boolean): string {
         let result: string = "";
         if (exp instanceof FreLangSelfExp) {
-            result = `${paramName}.${this.langExpToTypeScript(exp.appliedfeature, paramName)}`;
+            result = `${paramName}.${this.langExpToTypeScript(exp.appliedfeature, paramName, noRef)}`;
         } else if (exp instanceof FreLangFunctionCallExp) {
             if (exp.sourceName === "ancestor") {
-                const metaType: string = this.langExpToTypeScript(exp.actualparams[0], paramName); // there is always 1 param to this function
+                const metaType: string = this.langExpToTypeScript(exp.actualparams[0], paramName, noRef); // there is always 1 param to this function
                 result = `this.ancestor(${paramName}, "${metaType}") as ${metaType}`;
             } else {
                 result = `this.${exp.sourceName} (${exp.actualparams
-                    .map((param) => `${this.langExpToTypeScript(param, paramName)}`)
+                    .map((param) => `${this.langExpToTypeScript(param, paramName, noRef)}`)
                     .join(", ")})`;
             }
             if (!!exp.appliedfeature) {
-                result = `(${result}).${this.langExpToTypeScript(exp.appliedfeature, paramName)}`;
+                result = `(${result}).${this.langExpToTypeScript(exp.appliedfeature, paramName, noRef)}`;
             }
         } else if (exp instanceof FreLangAppliedFeatureExp) {
             // TODO this should be replaced by special getters and setters for reference properties
             // and the unparser should be adjusted to this
-            const isRef = this.isReferenceProperty(exp);
-            // result = exp.sourceName + (isRef ? "?.referred" : "")
-            //     + (exp.appliedfeature ? (`?.${this.langExpToTypeScript(exp.appliedfeature)}`) : "");
+            const isRef = noRef ? false : this.isReferenceProperty(exp);
+            console.log('isRef', isRef);
             result =
                 (isRef ? Names.refName(exp.referredElement) : exp.sourceName) +
-                (exp.appliedfeature ? `?.${this.langExpToTypeScript(exp.appliedfeature, paramName)}` : "");
+                (exp.appliedfeature ? `?.${this.langExpToTypeScript(exp.appliedfeature, paramName, noRef)}` : "");
         } else if (exp instanceof FreInstanceExp) {
             result = `${exp.sourceName}.${exp.instanceName}`;
         } else {
