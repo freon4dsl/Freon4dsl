@@ -130,7 +130,6 @@ export class GenerationUtil {
             // TODO this should be replaced by special getters and setters for reference properties
             // and the unparser should be adjusted to this
             const isRef = noRef ? false : this.isReferenceProperty(exp);
-            console.log('isRef', isRef);
             result =
                 (isRef ? Names.refName(exp.referredElement) : exp.sourceName) +
                 (exp.appliedfeature ? `?.${this.langExpToTypeScript(exp.appliedfeature, paramName, noRef)}` : "");

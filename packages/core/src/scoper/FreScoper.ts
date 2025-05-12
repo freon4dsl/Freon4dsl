@@ -1,4 +1,4 @@
-import { FreNode, FreNamedNode } from "../ast/index.js";
+import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreScoperComposite } from "./FreScoperComposite.js";
 import { FreNamespace } from './FreNamespace.js';
 
@@ -14,11 +14,11 @@ export interface FreScoper {
      * If this scoper does not handle the scope for 'modelelement' 'undefined' is returned.
      *
      * @param node          the containing element, where 'pathname' should be visible
-     * @param doNotSearch   the role or property name of the element that we are searching for
+     * @param doNotSearch   the element that we are trying to resolve
      * @param pathname      the name or series of names of the element that we are searching for
      * @param metatype      the metatype of the element that we are searching for
      */
-    resolvePathName(node: FreNode, doNotSearch: string, pathname: string[], metatype?: string): FreNamedNode;
+    resolvePathName(node: FreNode, doNotSearch: FreNodeReference<FreNamedNode>, pathname: string[], metatype?: string): FreNamedNode;
 
     /**
      *   Returns true if 'name' is known in the namespace containing 'node' or one

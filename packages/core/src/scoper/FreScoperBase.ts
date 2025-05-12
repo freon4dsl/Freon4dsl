@@ -15,11 +15,11 @@ export abstract class FreScoperBase implements FreScoper {
     myTyper: FreCompositeTyper;
     // Added to avoid loop when searching for additional namespaces
     additionalNamespacesVisited: FreNodeReference<FreNamedNode>[] = [];
-    protected currentRoleNames: string[] = [];
+    protected currentRoleNames: FreNodeReference<FreNamedNode>[] = [];
 
     public resolvePathName(
         basePosition: FreNode,
-        doNotSearch: string,
+        doNotSearch: FreNodeReference<FreNamedNode>,
         pathname: string[],
         metatype?: string,
     ): FreNamedNode {
