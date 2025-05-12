@@ -1,0 +1,29 @@
+editor default
+
+UnitA {[
+Unit A named ${self.name}
+    [?reference showing what is visible here: ${self.myRef}]
+    [?unnamed children: ${self.childrenNoName}]
+    [?named children: ${self.childrenWithName}]
+]}
+
+UnitB {[
+Unit B named ${self.name}
+    [?reference showing what is visible here: ${self.myRef}]
+    [?unnamed children: ${self.childrenNoName}]
+    [?named children: ${self.childrenWithName}]
+]}
+
+AstNode {[
+Unnamed node
+    [?reference showing what is visible here: ${self.myRef}]
+    [?unnamed children: ${self.childrenNoName}]
+    [?named children: ${self.childrenWithName}]
+]}
+
+AstNodeWithName {[
+Named node ${self.name}
+    [?reference showing what is visible here: ${self.myRef}]
+    [?unnamed children: ${self.childrenNoName}]
+    [?named children: ${self.childrenWithName}]
+]}
