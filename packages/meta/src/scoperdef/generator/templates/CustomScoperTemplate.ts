@@ -6,7 +6,7 @@ export class CustomScoperTemplate {
         const scoperInterfaceName: string = Names.FreScoperPart;
         const generatedClassName: string = Names.customScoper(language);
         const imports = new Imports()
-        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreNamespace, Names.FreScoperPart, Names.FreScoperComposite])
+        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreNodeReference, Names.FreNamespace, Names.FreScoperPart, Names.FreScoperComposite])
 
         // Template starts here
         return `
@@ -26,11 +26,11 @@ export class CustomScoperTemplate {
              * If this scoper does not handle the scope for 'modelelement' 'undefined' is returned.
              *
              * @param _node         the containing element, where 'pathname' should be visible
-             * @param _doNotSearch  the role or property _name of the element that we are searching for
+             * @param _doNotSearch  the element that we are trying to resolve
              * @param _pathname     the name or series of names of the element that we are searching for
              * @param _metatype     the _metatype of the element that we are searching for
              */
-            resolvePathName(_node: ${Names.FreNode}, _doNotSearch: string, _pathname: string[], _metatype?: string): ${Names.FreNamedNode} {
+            resolvePathName(_node: ${Names.FreNode}, _doNotSearch: ${Names.FreNodeReference}<${Names.FreNamedNode}>, _pathname: string[], _metatype?: string): ${Names.FreNamedNode} {
                 return undefined;
             }
 

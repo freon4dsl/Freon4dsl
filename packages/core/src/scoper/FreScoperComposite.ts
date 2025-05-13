@@ -1,4 +1,4 @@
-import { FreNode, FreNamedNode } from "../ast/index.js";
+import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
 import { FreScoper } from "./FreScoper.js";
 import { isNullOrUndefined } from '../util/index.js';
@@ -87,7 +87,7 @@ export class FreScoperComposite implements FreScoper {
         return false; // TODO or undefined?
     }
 
-    resolvePathName(node: FreNode, doNotSearch: string, pathname: string[], metatype?: string): FreNamedNode {
+    resolvePathName(node: FreNode, doNotSearch: FreNodeReference<FreNamedNode>, pathname: string[], metatype?: string): FreNamedNode {
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.resolvePathName(node, doNotSearch, pathname, metatype);

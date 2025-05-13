@@ -33,7 +33,7 @@ export class ScoperTemplate {
 
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([
-            Names.FreScoperBase, Names.FreLogger, Names.FreNode, Names.FreNamespace
+            Names.FreScoperBase, Names.FreLogger, Names.FreNode, Names.FreNamedNode, Names.FreNamespace, Names.FreNodeReference
         ])
         if (!!scopedef) {
             // should always be the case, either the definition read from file or the default
@@ -68,7 +68,17 @@ export class ScoperTemplate {
                 const result: ${Names.FreNode}[] = [];
                 ${this.additionalNamespaceText}
                 return result;
-
+            }
+            
+            private addRefAsNamespace(element: ${Names.FreNodeReference}<${Names.FreNamedNode}>, result: ${Names.FreNode}[]) {
+                if (!!element && !this.currentRoleNames.includes(element) && !this.additionalNamespacesVisited.includes(element)) {
+                    this.additionalNamespacesVisited.push(element);
+                    const referred = element.referred;
+                    if (!!referred) {
+                        result.push(referred);
+                    }
+                    this.additionalNamespacesVisited.pop();
+                }
             }
         }`;
 
@@ -85,7 +95,7 @@ export class ScoperTemplate {
             if (!!def.namespaceAdditions) {
                 const myClassifier: FreMetaClassifier | undefined = def.conceptRef?.referred;
                 if (!!myClassifier) {
-                    const comment = "// based on namespace addition for " + myClassifier.name + "\n";
+                    const comment = "// namespace addition for " + myClassifier.name + "\n";
                     imports.language.add(Names.classifier(myClassifier));
                     if (myClassifier instanceof FreMetaInterface) {
                         for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
@@ -108,21 +118,18 @@ export class ScoperTemplate {
         imports: Imports,
     ) {
         const typeName = Names.classifier(freConcept);
-        // we are adding to three textstrings
+        // we are adding to two elements to the template
         // first, to the import statements
         imports.language.add(typeName);
 
         // second, to the 'replacementNamespace' method
         // Do this always, because the expression can be different for a concrete concept
         // and the interface that its implements. Both should be added!
-        this.additionalNamespaceText = this.additionalNamespaceText.concat(comment);
-        this.additionalNamespaceText = this.additionalNamespaceText.concat(
-            `if (element instanceof ${typeName}) {`,
-        );
+        this.additionalNamespaceText += comment + `if (element instanceof ${typeName}) {`;
         if (!!def.namespaceAdditions) {
             for (const expression of def.namespaceAdditions.expressions) {
                 this.additionalNamespaceText = this.additionalNamespaceText.concat(
-                    this.addNamespaceExpression(expression, imports),
+                    this.addNamespaceExpression(expression),
                 );
             }
         }
@@ -142,7 +149,7 @@ export class ScoperTemplate {
                     this.replacementNamespaceText = this.replacementNamespaceText.concat(
                         `if (!!node && node instanceof ${conceptName}) {
                         // use replacement namespace '${def.replacementNamespace.expression.toFreString()}'
-                        ${this.altScopeExpToTypeScript(def.replacementNamespace.expression)}
+                        ${this.replacementNamespaceExpToTypeScript(def.replacementNamespace.expression)}
                     }`,
                     );
                 }
@@ -150,56 +157,33 @@ export class ScoperTemplate {
         }
     }
 
-    private addNamespaceExpression(expression: FreLangExp, imports: Imports): string {
+    private addNamespaceExpression(expression: FreLangExp): string {
         let result: string = "";
         const myRef: FreMetaProperty | undefined = expression.findRefOfLastAppliedFeature();
 
         const loopVar: string = "loopVariable";
         if (!!myRef && myRef.isList) {
-            // add "FreNodeReference" to imports, because now we know that its is used
-            imports.core.add(Names.FreNodeReference);
+            const namespaceExpression = `element.${GenerationUtil.langExpToTypeScript(expression.appliedfeature, 'element', true)}`;
             result = result.concat(`
             // generated based on '${expression.toFreString()}'
-            for (let ${loopVar} of element.${expression.appliedfeature.toFreString()}) {
+            for (let ${loopVar} of ${namespaceExpression}) {
                 if (loopVariable instanceof ${Names.FreNodeReference}) {
-                    if (!this.currentRoleNames.includes('${expression.appliedfeature.toFreString()}')) {
-                        if (!!loopVariable.referred) {
-                            if (!this.additionalNamespacesVisited.includes(loopVariable)){
-                                this.additionalNamespacesVisited.push(loopVariable);
-                                const referred = loopVariable.referred;
-                                if(!!referred) {
-                                    result.push(loopVariable.referred);
-                                }
-                                this.additionalNamespacesVisited.pop();
-                            }
-                        }
-                    }
+                    this.addRefAsNamespace(loopVariable, result);
                 } else {
                     result.push(loopVariable);
                 }
             }`);
         } else {
-            // TODO check use of toFreString()
-            const namespaceExpression = `element.${expression.appliedfeature.toFreString()}`;
+            const namespaceExpression = `element.${GenerationUtil.langExpToTypeScript(expression.appliedfeature, 'element', true)}`;
             result = result.concat(`
                // generated based on '${expression.toFreString()}'
-               if (!this.currentRoleNames.includes('${expression.appliedfeature.toFreString()}')) {
-                   if (!!${namespaceExpression}) {
-                      if (!this.additionalNamespacesVisited.includes(${namespaceExpression})){
-                         this.additionalNamespacesVisited.push(${namespaceExpression});
-                         const referred = ${namespaceExpression}.referred;
-                         if(!!referred) {
-                            result.push(${namespaceExpression}.referred);
-                         }
-                         this.additionalNamespacesVisited.pop();
-                      }
-                   }
-               }`);
+               this.addRefAsNamespace(${namespaceExpression}, result);
+            `);
         }
         return result;
     }
 
-    private altScopeExpToTypeScript(expression: FreLangExp): string {
+    private replacementNamespaceExpToTypeScript(expression: FreLangExp): string {
         let result;
         if (expression instanceof FreLangFunctionCallExp && expression.sourceName === "typeof") {
             // special case: the expression refers to 'typeof'
