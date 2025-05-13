@@ -89,8 +89,8 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
-    "@freon4dsl/core": "1.1.0-beta.0",
-    "@freon4dsl/core-svelte": "1.1.0-beta.0",
+    "@freon4dsl/core": "1.1.0-beta.3",
+    "@freon4dsl/core-svelte": "1.1.0-beta.3",
     "svelte": "5.25.3",
     "click-outside": "^2.0.2",
     "mobx": "^6.12.13",
