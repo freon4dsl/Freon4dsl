@@ -5,7 +5,7 @@ HeatingPlan {
 }
 */
 DailyPlan {
-	isunique start in self.items;
+	 in self.items isunique start;
 }
 
 ChangeEvent  {

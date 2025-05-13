@@ -268,7 +268,7 @@ describe("Checking editor definition ", () => {
         }
     });
 
-    test("on standard displays for primitives and limiteds", () => {
+    test("on standard displays for primitives and limiteds in test10.edit", () => {
         try {
             parser.parse(testdir + "test10.edit");
         } catch (e: unknown) {
@@ -305,7 +305,7 @@ describe("Checking editor definition ", () => {
         }
     });
 
-    test("on display types for limiteds", () => {
+    test("on display types for limiteds in test11.edit", () => {
         try {
             parser.parse(testdir + "test11.edit");
         } catch (e: unknown) {
@@ -372,14 +372,14 @@ describe("Checking editor definition ", () => {
         }
     });
 
-    test("on multiple standard definitions", () => {
+    test("on multiple standard definitions in test11.edit and test12.edit", () => {
         try {
             parser.parseMulti([testdir + "test11.edit", testdir + "test12.edit"]);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (11).`); // these are checked in the previous test
                 expect(checker.hasWarnings()).toBeTruthy;
-                // console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
+                console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
                 expect(checker.warnings.length).toBe(1);
                 expect(
                     checker.warnings.includes(

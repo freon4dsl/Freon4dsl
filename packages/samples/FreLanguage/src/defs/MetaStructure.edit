@@ -84,10 +84,10 @@ FreLimitedConcept {
 }
 // the following two could be using the abstract box definition of FreProperty, but they are not
 FreConceptProperty {
-    [${isPublic [public]} ${isPart [reference]} ${name} ${isOptional [?]} : ${type} ${isList [\[\]]}]
+    [${isPublic [public]} ${isPart [reference]} ${name} ${isOptional [\?]} : ${type} ${isList [\[\]]}]
 }
 FrePrimitiveProperty {
-    [${isPublic [public]} ${name} ${isOptional [?]} : ${type} ${isList [\[\]]}]
+    [${isPublic [public]} ${name} ${isOptional [\?]} : ${type} ${isList [\[\]]}]
 }
 
 FreInstance {

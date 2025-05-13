@@ -105,7 +105,7 @@ GenericType {
 }
 
 GenericKind {
-    Set conformsto Collection;
-    Sequence conformsto Collection;
-    Bag conformsto Collection;
+    Set conformsto #GenericKind:Collection;
+    Sequence conformsto #GenericKind:Collection;
+    Bag conformsto #GenericKind:Collection;
 }
