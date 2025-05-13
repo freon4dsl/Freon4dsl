@@ -111,7 +111,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         } else {
             return FreLanguageEnvironment.getInstance().scoper.resolvePathName(
                 this.freOwnerDescriptor().owner,
-                this.freOwnerDescriptor().propertyName,
+                this,
                 this._FRE_pathname,
                 this.typeName,
             ) as T;
