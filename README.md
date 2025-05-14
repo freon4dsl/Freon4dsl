@@ -4,12 +4,17 @@
 Web-native Language Workbench with projectional editor. 
 The current release (version 1.0.0) can be found on npm.
 
-**This branch is used for development towards the 1.1.0 release.**
-In this we moved to Svelte 5, so quite a lot of changes here.
+**May 13, 2025: Version 1.1.0-beta.3 released**
+
+- Updated to use Svelte 5 instead of Svelte 4.
+- Performance improvements in generation and really fast hot reloading thanks to vite.
+
+**May 13, 2025: IDE plugin version 0.0.4 released**
+- See [https://github.com/freon4dsl/freon-ide/blob/main/README.md](https://github.com/freon4dsl/freon-ide/blob/main/README.md)
 
 ## What is Freon
 
-Freon is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs). 
+Freon is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs) running natively in the browser. 
 Additional to the core framework, there are generators for many parts of the work environment for your DSL.
 
 For more information see the <a href="https://www.freon4dsl.dev" target="_blank">Freon</a> website.
