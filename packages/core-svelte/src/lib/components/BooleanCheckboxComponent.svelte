@@ -65,7 +65,7 @@
     };
 </script>
 
-<span {id} class="boolean-checkbox-component">
+<span {id} class="boolean-checkbox-component {box.cssClass}">
     <!-- svelte-ignore a11y_click_events_have_key_events   -->
     <md-checkbox
         aria-label={id}

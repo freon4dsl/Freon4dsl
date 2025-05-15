@@ -153,7 +153,7 @@
     role="group"
     aria-labelledby={ariaLabel}
     {id}
-    class="limited-checkbox-component-group"
+    class="limited-checkbox-component-group {box.cssClass}"
     class:limited-checkbox-component-vertical={!isHorizontal}
 >
     {#each myEnum as nn, i}
