@@ -42,7 +42,7 @@ export class FreTypeInferMaker {
         ) as FreMetaLimitedConcept[];
         allLimited.map((lim) =>
             result.push(`if (${Names.FreLanguage}.getInstance().metaConformsToType(${varName}, "${Names.classifier(lim)}")) {
-                result = AstType.create({ astElement: modelelement });
+                result = AstType.create({ astElement: ${varName} });
              }`),
         );
         // add an entry for classifiers that do not have an inferType rule

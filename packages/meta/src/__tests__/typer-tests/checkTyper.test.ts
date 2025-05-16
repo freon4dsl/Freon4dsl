@@ -43,16 +43,16 @@ describe("Checking new typer", () => {
                 expect(e.message).toBe(`checking errors (8).`);
                 expect(
                     errors.includes(
-                        "Concept or interface 'Type' occurs more than once in this list [file: type-rules1.type:4:10].",
+                        "Concept or interface 'Type' occurs more than once in this list [file: type-rules1.type:4:33].",
                     ),
                 ).toBeTruthy();
                 expect(
                     errors.includes(
-                        "Concept or interface 'Exp' occurs more than once in this list [file: type-rules1.type:7:11].",
+                        "Concept or interface 'Exp' occurs more than once in this list [file: type-rules1.type:7:16].",
                     ),
                 ).toBeTruthy();
                 expect(
-                    errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [file: type-rules1.type:20:30]."),
+                    errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [file: type-rules1.type:20:31]."),
                 ).toBeTruthy();
                 expect(
                     errors.includes(

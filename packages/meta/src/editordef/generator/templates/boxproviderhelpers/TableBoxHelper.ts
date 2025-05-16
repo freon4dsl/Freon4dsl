@@ -4,7 +4,7 @@ import {
     FreMetaConceptProperty,
     FreMetaLanguage,
 } from "../../../../languagedef/metalanguage/index.js";
-import { ListUtil, Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/index.js";
 import { ItemBoxHelper } from "./ItemBoxHelper.js";
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
@@ -31,7 +31,7 @@ export class TableBoxHelper {
             const cellDefs: string[] = [];
             projection.cells.forEach((cell, index) => {
                 // because we need the index, this is done outside the template
-                ListUtil.addIfNotPresent(this._myTemplate.modelImports, Names.classifier(concept));
+                this._myTemplate.imports.language.add(Names.classifier(concept));
                 cellDefs.push(
                     this._myItemHelper.generateItem(
                         cell,
@@ -44,8 +44,7 @@ export class TableBoxHelper {
                     ),
                 );
             });
-            ListUtil.addIfNotPresent(this._myTemplate.coreImports, "TableRowBox");
-            ListUtil.addIfNotPresent(this._myTemplate.coreImports, "TableUtil");
+            this._myTemplate.imports.core.add("TableRowBox").add("TableUtil");
             return `private ${Names.tableProjectionMethod(projection)}(): TableRowBox {
                         const cells: Box[] = [];
                         ${cellDefs.map((cellDef) => `cells.push(${cellDef})`).join(";\n")}
@@ -70,10 +69,11 @@ export class TableBoxHelper {
         orientation: FreEditProjectionDirection,
         property: FreMetaConceptProperty,
         elementVarName: string,
+        // @ts-ignore
         language: FreMetaLanguage,
     ): string {
-        ListUtil.addIfNotPresent(this._myTemplate.coreImports, "TableUtil");
-        ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));
+        this._myTemplate.imports.core.add("TableUtil");
+        this._myTemplate.imports.root.add(Names.LanguageEnvironment);
         // return the projection based on the orientation of the table
         if (orientation === FreEditProjectionDirection.Vertical) {
             return `TableUtil.tableBoxColumnOriented(

@@ -60,6 +60,7 @@ packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-
 /packages/test/src/*/config/
 /packages/test/src/*/editor/
 /packages/test/src/*/interpreter/
+!/packages/test/src/qualifiedNameScoper/scoper/
 /packages/test/src/*/scoper/
 /packages/test/src/*/stdlib/
 /packages/test/src/*/typer/

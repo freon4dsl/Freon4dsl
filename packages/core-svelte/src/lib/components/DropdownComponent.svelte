@@ -34,7 +34,15 @@
                     }}
                     role="none"
                 >
-                    {option.label}
+                    {#if option.additional_label}
+                        <span class="dropdown-entry-with-additional-label">
+                            <span class="column-for-dropdown-entry-with-additional-label">{option.label}</span>
+                            <span class="gap-for-dropdown-entry-with-additional-label">&nbsp;</span>
+                            <span class="column-for-dropdown-entry-with-additional-label">{option.additional_label}</span>
+                        </span>
+                    {:else}
+                        {option.label}
+                    {/if}
                 </div>
             {/each}
         {:else}
@@ -46,5 +54,21 @@
 <style>
     .dropdown-component-container {
         position: relative;
+    }
+    .dropdown-entry-with-additional-label {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        box-sizing: border-box;
+        width: 100%;
+    }
+    .column-for-dropdown-entry-with-additional-label {
+        display: flex;
+        flex-direction: column;
+        /*flex: 1;*/
+    }
+    .gap-for-dropdown-entry-with-additional-label {
+        margin: 0 0.7rem 0 0.7rem;
+        flex: 1;
     }
 </style>

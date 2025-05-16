@@ -1,9 +1,10 @@
 import { FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, CONFIGURATION_GEN_FOLDER } from "../../../utils/index.js";
+import { Imports, Names } from "../../../utils/index.js"
 
 export class CommandLineTemplate {
     generateCommandLine(): string {
-        return `import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
+        return `// TEMPLATE: CommandLineTemplate.generateCommandLine() 
+            import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
 
             export class FreonCommandLine extends CommandLineParser {
                 private verboseArg: CommandLineFlagParameter;
@@ -73,21 +74,19 @@ export class CommandLineTemplate {
             }`;
     }
 
+    // @ts-ignore
     generateCommandLineRunner(language: FreMetaLanguage): string {
-        const configImports = [];
-        configImports.push(Names.environment(language));
+        const imports = new Imports("../")
+        imports.root.add(Names.LanguageEnvironment);
 
-        return `// Run this as the main program.
-            ${
-                configImports.length > 0
-                    ? configImports.map((c) => `import { ${c} } from "../${CONFIGURATION_GEN_FOLDER}/${c}.js";`)
-                    : ``
-            }
+        return `// TEMPLATE: CommandLineTemplate.generateCommandLineRunner()
+            // Run this as the main program.
+            ${imports.makeImports(language)}
             import { FreonCommandLine } from "./FreonCommandLine.js";
             import { DummyAction } from "./DummyAction.js";
             
             // ensure language is initialized
-            const tmp = ${Names.environment(language)}.getInstance();
+            const tmp = ${Names.LanguageEnvironment}.getInstance();
             
             // Create the command line object
             const cli: FreonCommandLine = new FreonCommandLine();

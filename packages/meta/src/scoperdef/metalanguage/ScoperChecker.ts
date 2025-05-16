@@ -3,9 +3,9 @@ import {
     FreMetaConcept,
     FreMetaLanguage,
     FreMetaProperty,
-    FreMetaClassifier,
-} from "../../languagedef/metalanguage/index.js";
-import { FreAlternativeScope, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang.js";
+    FreMetaClassifier, FreMetaInterface
+} from '../../languagedef/metalanguage/index.js';
+import { FreReplacementNamespace, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang.js";
 import { LangUtil, MetaLogger } from "../../utils/index.js";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -48,8 +48,8 @@ export class ScoperChecker extends Checker<ScopeDef> {
                     if (!!def.namespaceAdditions) {
                         this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referred);
                     }
-                    if (!!def.alternativeScope) {
-                        this.checkAlternativeScope(def.alternativeScope, def.conceptRef.referred);
+                    if (!!def.replacementNamespace) {
+                        this.checkReplacementNamespace(def.replacementNamespace, def.conceptRef.referred);
                     }
                 }
             }
@@ -73,8 +73,8 @@ export class ScoperChecker extends Checker<ScopeDef> {
                             this.runner.nestedCheck({
                                 check:
                                     !!xx.type &&
-                                    (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription),
-                                error: `A namespace addition should refer to a concept ${ParseLocationUtil.location(exp)}.`,
+                                    (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription || xx.type instanceof FreMetaInterface),
+                                error: `A namespace addition should refer to a concept or a unit ${ParseLocationUtil.location(exp)}.`,
                                 whenOk: () => {
                                     this.runner.simpleCheck(
                                         this.myNamespaces.includes(xx.type),
@@ -89,10 +89,10 @@ export class ScoperChecker extends Checker<ScopeDef> {
         });
     }
 
-    private checkAlternativeScope(alternativeScope: FreAlternativeScope, enclosingConcept: FreMetaConcept) {
-        LOGGER.log("Checking alternative scope definition for " + enclosingConcept?.name);
-        if (!!this.myExpressionChecker && !!alternativeScope.expression) {
-            this.myExpressionChecker.checkLangExp(alternativeScope.expression, enclosingConcept);
+    private checkReplacementNamespace(replacementNamespace: FreReplacementNamespace, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("Checking replacement scope definition for " + enclosingConcept?.name);
+        if (!!this.myExpressionChecker && !!replacementNamespace.expression) {
+            this.myExpressionChecker.checkLangExp(replacementNamespace.expression, enclosingConcept);
         }
     }
 

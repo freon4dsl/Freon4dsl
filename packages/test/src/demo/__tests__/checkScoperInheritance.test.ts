@@ -7,7 +7,7 @@ import { describe, it, test, expect, beforeEach } from "vitest";
 describe("testing Scoper", () => {
     let modelCreator = new DemoModelCreator();
     let inheritanceModel: Demo = modelCreator.createInheritanceModel();
-    let scoper = new DemoScoper();
+    let scoper = DemoEnvironment.getInstance().scoper;
 
     beforeEach(() => {
         DemoEnvironment.getInstance();

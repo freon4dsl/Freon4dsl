@@ -1,0 +1,5 @@
+PitExpTest NAME {
+  value one {
+	 self == self
+  }
+}

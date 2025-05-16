@@ -106,34 +106,33 @@ export class GenerationUtil {
     
     /**
      * Returns a string representation of 'exp' that can be used in TypeScript code.
-     * @param exp
+     * @param exp       the expression to turn into TypeScript
+     * @param paramName the name to be used for the
+     * @param noRef
      */
-    public static langExpToTypeScript(exp: FreLangExp): string {
-        // tslint:disable-next-line:typedef-whitespace
+    public static langExpToTypeScript(exp: FreLangExp, paramName: string, noRef?: boolean): string {
         let result: string = "";
         if (exp instanceof FreLangSelfExp) {
-            result = `modelelement.${this.langExpToTypeScript(exp.appliedfeature)}`;
+            result = `${paramName}.${this.langExpToTypeScript(exp.appliedfeature, paramName, noRef)}`;
         } else if (exp instanceof FreLangFunctionCallExp) {
             if (exp.sourceName === "ancestor") {
-                const metaType: string = this.langExpToTypeScript(exp.actualparams[0]); // there is always 1 param to this function
-                result = `this.ancestor(modelelement, "${metaType}") as ${metaType}`;
+                const metaType: string = this.langExpToTypeScript(exp.actualparams[0], paramName, noRef); // there is always 1 param to this function
+                result = `this.ancestor(${paramName}, "${metaType}") as ${metaType}`;
             } else {
                 result = `this.${exp.sourceName} (${exp.actualparams
-                    .map((param) => `${this.langExpToTypeScript(param)}`)
+                    .map((param) => `${this.langExpToTypeScript(param, paramName, noRef)}`)
                     .join(", ")})`;
             }
             if (!!exp.appliedfeature) {
-                result = `(${result}).${this.langExpToTypeScript(exp.appliedfeature)}`;
+                result = `(${result}).${this.langExpToTypeScript(exp.appliedfeature, paramName, noRef)}`;
             }
         } else if (exp instanceof FreLangAppliedFeatureExp) {
             // TODO this should be replaced by special getters and setters for reference properties
             // and the unparser should be adjusted to this
-            const isRef = this.isReferenceProperty(exp);
-            // result = exp.sourceName + (isRef ? "?.referred" : "")
-            //     + (exp.appliedfeature ? (`?.${this.langExpToTypeScript(exp.appliedfeature)}`) : "");
+            const isRef = noRef ? false : this.isReferenceProperty(exp);
             result =
                 (isRef ? Names.refName(exp.referredElement) : exp.sourceName) +
-                (exp.appliedfeature ? `?.${this.langExpToTypeScript(exp.appliedfeature)}` : "");
+                (exp.appliedfeature ? `?.${this.langExpToTypeScript(exp.appliedfeature, paramName, noRef)}` : "");
         } else if (exp instanceof FreInstanceExp) {
             result = `${exp.sourceName}.${exp.instanceName}`;
         } else {
@@ -148,7 +147,7 @@ export class GenerationUtil {
      */
     public static propertyToTypeScript(prop: FreMetaProperty): string {
         const isRef = !prop.isPart;
-        return `modelelement.${prop.name + (isRef ? "?.referred" : "")}`;
+        return `node.${prop.name + (isRef ? "?.referred" : "")}`;
     }
 
     /**
@@ -156,7 +155,7 @@ export class GenerationUtil {
      * @param prop
      */
     public static propertyToTypeScriptWithoutReferred(prop: FreMetaProperty): string {
-        return `modelelement.${prop.name}`;
+        return `node.${prop.name}`;
     }
 
     /**
@@ -246,15 +245,20 @@ export class GenerationUtil {
         return type;
     }
 
-    public static createImports(language: FreMetaLanguage): string {
-        // sort all names alphabetically
-        let tmp: string[] = [];
-        language.concepts.map((c) => tmp.push(Names.concept(c)));
-        language.units.map((c) => tmp.push(Names.classifier(c)));
-        tmp.push(Names.classifier(language.modelConcept));
-        tmp = tmp.sort();
+    public static allConceptsAndUnits(language: FreMetaLanguage): Set<string> {
+        return new Set<string>([
+            ...language.concepts.map((c) => Names.concept(c)),
+            ...language.units.map((c) => Names.classifier(c)),
+            Names.classifier(language.modelConcept)
+        ]);
+    }
 
-        return `${tmp.map((c) => `${c}`).join(", ")}`;
+    public static allConceptsInterfacesAndUnits(language: FreMetaLanguage): Set<string> {
+        return new Set<string>([
+            ...language.concepts?.map(concept => Names.concept(concept)),
+            ...language.interfaces?.map(intf => Names.interface(intf)),
+            ...language.units?.map(intf => Names.classifier(intf))
+        ])
     }
 
     public static findExpressionBase(exp: FreMetaExpressionConcept): FreMetaExpressionConcept {
@@ -263,16 +267,5 @@ export class GenerationUtil {
         } else {
             return exp;
         }
-    }
-
-    public static sortUnitNames(language: FreMetaLanguage, unitNames: string[]) {
-        // sort all names alphabetically
-        const tmp: string[] = [];
-        language.concepts.map((c) => tmp.push(Names.concept(c)));
-        language.interfaces.map((c) => tmp.push(Names.interface(c)));
-        tmp.push(...unitNames);
-        tmp.push(Names.classifier(language.modelConcept));
-
-        return tmp.sort();
     }
 }

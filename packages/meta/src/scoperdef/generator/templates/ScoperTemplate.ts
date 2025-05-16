@@ -1,19 +1,16 @@
 import {
-    FreMetaConcept,
     FreMetaInterface,
     FreLangExp,
     FreLangFunctionCallExp,
     FreMetaLanguage,
-    FreMetaProperty,
-} from "../../../languagedef/metalanguage/index.js";
-import { Names, LANGUAGE_GEN_FOLDER, FREON_CORE, GenerationUtil, LangUtil, ListUtil } from "../../../utils/index.js";
+    FreMetaProperty, FreMetaClassifier
+} from '../../../languagedef/metalanguage/index.js';
+import { Names, GenerationUtil, LangUtil, Imports } from "../../../utils/index.js"
 import { ScopeDef, ScopeConceptDef } from "../../metalanguage/index.js";
 
 export class ScoperTemplate {
-    languageImports: string[] = []; // holds the names of all classifiers that need to be imported from the generated language structure
-    hasAlternativeScopeText: string = "";
-    getAlternativeScopeText: string = "";
-    getAdditionalNamespacetext = "";
+    additionalNamespaceText: string = "";
+    replacementNamespaceText = "";
 
     generateGenIndex(language: FreMetaLanguage): string {
         return `
@@ -29,49 +26,38 @@ export class ScoperTemplate {
     }
 
     generateScoper(language: FreMetaLanguage, scopedef: ScopeDef, relativePath: string): string {
-        this.hasAlternativeScopeText = "";
-        this.getAlternativeScopeText = "";
+        this.replacementNamespaceText = "";
 
         // const langConceptType: string = Names.metaType(language);
         const generatedClassName: string = Names.scoper(language);
-        const scoperBaseName: string = Names.FreScoperBase;
 
-        const coreImports: string[] = [scoperBaseName, Names.FreLogger, Names.FreNode, Names.FreNamespace];
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([
+            Names.FreScoperBase, Names.FreLogger, Names.FreNode, Names.FreNamedNode, Names.FreNamespace, Names.FreNodeReference
+        ])
         if (!!scopedef) {
             // should always be the case, either the definition read from file or the default
-            this.makeAlternativeScopeTexts(scopedef);
-            this.makeAdditionalNamespaceTexts(scopedef, coreImports);
+            this.makeReplacementNamespaceTexts(scopedef, imports);
+            this.makeAdditionalNamespaceTexts(scopedef, imports);
         }
         // add the necessary names to the imports
         // ListUtil.addIfNotPresent(this.languageImports, langConceptType);
-        // console.log("Adding 222: " + langConceptType + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
 
         // Template starts here - without imports, they are calculated while creating this text and added later
         const templateBody: string = `
-        const LOGGER = new ${Names.FreLogger}("${generatedClassName}");
-
         /**
          * Class ${generatedClassName} implements the scoper generated from, if present, the scoper definition,
          * otherwise this class implements the default scoper.
          */
-        export class ${generatedClassName} extends  ${scoperBaseName} {
+        export class ${generatedClassName} extends  ${Names.FreScoperBase} {
 
              /**
-             * Returns the namespace to be used as alternative scope for 'node'.
+             * Returns the replacement namespace if it can be found for 'node'.
              * @param node
              */
-            getAlternativeScope(node: ${Names.FreNode}): ${Names.FreNamespace} {
-                ${this.getAlternativeScopeText}
+            public replacementNamespace(node: ${Names.FreNode}): ${Names.FreNamespace} | undefined {
+                ${this.replacementNamespaceText}
                 return null;
-            }
-
-             /**
-             * Returns true if there is an alternative scope defined for this 'modelelement'.
-             * @param hasAlternativeScope
-             */
-            hasAlternativeScope(node: ${Names.FreNode}): boolean {
-                ${this.hasAlternativeScopeText}
-                return false;
             }
 
             /**
@@ -80,92 +66,90 @@ export class ScoperTemplate {
              */
             public additionalNamespaces(element: ${Names.FreNode}): ${Names.FreNode}[] {
                 const result: ${Names.FreNode}[] = [];
-                ${this.getAdditionalNamespacetext}
+                ${this.additionalNamespaceText}
                 return result;
-
+            }
+            
+            private addRefAsNamespace(element: ${Names.FreNodeReference}<${Names.FreNamedNode}>, result: ${Names.FreNode}[]) {
+                if (!!element && !this.currentRoleNames.includes(element) && !this.additionalNamespacesVisited.includes(element)) {
+                    this.additionalNamespacesVisited.push(element);
+                    const referred = element.referred;
+                    if (!!referred) {
+                        result.push(referred);
+                    }
+                    this.additionalNamespacesVisited.pop();
+                }
             }
         }`;
 
         // now we have enough information to create the correct imports
-        const templateImports: string = `
-        ${coreImports.length > 0 ? `import { ${coreImports.map((name) => name).join(", ")} } from "${FREON_CORE}";` : ""}
-        ${this.languageImports.length > 0 ? `import { ${this.languageImports.map((name) => name).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";` : ""}
+        return `
+            ${imports.makeImports(language)}
+            
+            ${templateBody}
         `;
-
-        return templateImports + templateBody;
     }
 
-    private makeAdditionalNamespaceTexts(scopedef: ScopeDef, coreImports: string[]) {
+    private makeAdditionalNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceAdditions) {
-                const myClassifier: FreMetaConcept | undefined = def.conceptRef?.referred;
+                const myClassifier: FreMetaClassifier | undefined = def.conceptRef?.referred;
                 if (!!myClassifier) {
-                    const comment = "// based on namespace addition for " + myClassifier.name + "\n";
-                    ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
+                    const comment = "// namespace addition for " + myClassifier.name + "\n";
+                    imports.language.add(Names.classifier(myClassifier));
                     if (myClassifier instanceof FreMetaInterface) {
                         for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
-                            this.makeAdditionalNamespaceTextsForConcept(implementor, def, comment, coreImports);
-                            ListUtil.addIfNotPresent(this.languageImports, Names.concept(implementor));
+                            this.makeAdditionalNamespaceTextsForClassifier(implementor, def, comment, imports);
+                            imports.language.add(Names.classifier(implementor));
                         }
                     } else {
-                        this.makeAdditionalNamespaceTextsForConcept(myClassifier, def, comment, coreImports);
-                        ListUtil.addIfNotPresent(this.languageImports, Names.classifier(myClassifier));
+                        this.makeAdditionalNamespaceTextsForClassifier(myClassifier, def, comment, imports);
+                        imports.language.add(Names.classifier(myClassifier));
                     }
                 }
             }
         }
     }
 
-    private makeAdditionalNamespaceTextsForConcept(
-        freConcept: FreMetaConcept,
+    private makeAdditionalNamespaceTextsForClassifier(
+        freConcept: FreMetaClassifier,
         def: ScopeConceptDef,
         comment: string,
-        coreImports: string[],
+        imports: Imports,
     ) {
-        const typeName = Names.concept(freConcept);
-        // we are adding to three textstrings
+        const typeName = Names.classifier(freConcept);
+        // we are adding to two elements to the template
         // first, to the import statements
-        ListUtil.addIfNotPresent(this.languageImports, typeName);
+        imports.language.add(typeName);
 
-        // second, to the 'getAlternativeScope' method
+        // second, to the 'replacementNamespace' method
         // Do this always, because the expression can be different for a concrete concept
         // and the interface that its implements. Both should be added!
-        this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(comment);
-        this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
-            `if (element instanceof ${typeName}) {`,
-        );
+        this.additionalNamespaceText += comment + `if (element instanceof ${typeName}) {`;
         if (!!def.namespaceAdditions) {
             for (const expression of def.namespaceAdditions.expressions) {
-                this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(
-                    this.addNamespaceExpression(expression, coreImports),
+                this.additionalNamespaceText = this.additionalNamespaceText.concat(
+                    this.addNamespaceExpression(expression),
                 );
             }
         }
-        this.getAdditionalNamespacetext = this.getAdditionalNamespacetext.concat(`}\n`);
+        this.additionalNamespaceText = this.additionalNamespaceText.concat(`}\n`);
     }
 
-    private makeAlternativeScopeTexts(scopedef: ScopeDef) {
+    private makeReplacementNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
         for (const def of scopedef.scopeConceptDefs) {
-            if (!!def.alternativeScope && !!def.conceptRef) {
+            if (!!def.replacementNamespace && !!def.conceptRef) {
                 const conceptName: string = def.conceptRef.referred.name;
                 // we are adding to three text strings
                 // first, to the import statements
-                ListUtil.addIfNotPresent(this.languageImports, Names.classifier(def.conceptRef.referred));
-                // console.log("Adding 444: " + Names.classifier(def.conceptRef.referred)  + ", list: [" + this.languageImports.map(n => n).join(", ") + "]");
+                imports.language.add(Names.classifier(def.conceptRef.referred));
 
-                // second, to the 'hasAlternativeScope' method
-                this.hasAlternativeScopeText = this.hasAlternativeScopeText.concat(
-                    `if (!!node && node instanceof ${conceptName}) {
-                        return true;
-                     }`,
-                );
-
-                // third, to the 'getAlternativeScope' method
-                if (!!def.alternativeScope.expression) {
-                    this.getAlternativeScopeText = this.getAlternativeScopeText.concat(
+                // second, to the 'replacementNamespace' method
+                if (!!def.replacementNamespace.expression) {
+                    this.replacementNamespaceText = this.replacementNamespaceText.concat(
                         `if (!!node && node instanceof ${conceptName}) {
-                        // use alternative scope '${def.alternativeScope.expression.toFreString()}'
-                        ${this.altScopeExpToTypeScript(def.alternativeScope.expression)}
+                        // use replacement namespace '${def.replacementNamespace.expression.toFreString()}'
+                        ${this.replacementNamespaceExpToTypeScript(def.replacementNamespace.expression)}
                     }`,
                     );
                 }
@@ -173,65 +157,42 @@ export class ScoperTemplate {
         }
     }
 
-    private addNamespaceExpression(expression: FreLangExp, coreImports: string[]): string {
+    private addNamespaceExpression(expression: FreLangExp): string {
         let result: string = "";
         const myRef: FreMetaProperty | undefined = expression.findRefOfLastAppliedFeature();
 
         const loopVar: string = "loopVariable";
         if (!!myRef && myRef.isList) {
-            // add "FreNodeReference" to imports, because now we know that its is used
-            ListUtil.addIfNotPresent(coreImports, Names.FreNodeReference);
+            const namespaceExpression = `element.${GenerationUtil.langExpToTypeScript(expression.appliedfeature, 'element', true)}`;
             result = result.concat(`
             // generated based on '${expression.toFreString()}'
-            for (let ${loopVar} of element.${expression.appliedfeature.toFreString()}) {
+            for (let ${loopVar} of ${namespaceExpression}) {
                 if (loopVariable instanceof ${Names.FreNodeReference}) {
-                    if (!this.currentRoleNames.includes('${expression.appliedfeature.toFreString()}')) {
-                        if (!!loopVariable.referred) {
-                            if (!this.additionalNamespacesVisited.includes(loopVariable)){
-                                this.additionalNamespacesVisited.push(loopVariable);
-                                const referred = loopVariable.referred;
-                                if(!!referred) {
-                                    result.push(loopVariable.referred);
-                                }
-                                this.additionalNamespacesVisited.pop();
-                            }
-                        }
-                    }
+                    this.addRefAsNamespace(loopVariable, result);
                 } else {
                     result.push(loopVariable);
                 }
             }`);
         } else {
-            // TODO check use of toFreString()
-            const namespaceExpression = `element.${expression.appliedfeature.toFreString()}`;
+            const namespaceExpression = `element.${GenerationUtil.langExpToTypeScript(expression.appliedfeature, 'element', true)}`;
             result = result.concat(`
                // generated based on '${expression.toFreString()}'
-               if (!this.currentRoleNames.includes('${expression.appliedfeature.toFreString()}')) {
-                   if (!!${namespaceExpression}) {
-                      if (!this.additionalNamespacesVisited.includes(${namespaceExpression})){
-                         this.additionalNamespacesVisited.push(${namespaceExpression});
-                         const referred = ${namespaceExpression}.referred;
-                         if(!!referred) {
-                            result.push(${namespaceExpression}.referred);
-                         }
-                         this.additionalNamespacesVisited.pop();
-                      }
-                   }
-               }`);
+               this.addRefAsNamespace(${namespaceExpression}, result);
+            `);
         }
         return result;
     }
 
-    private altScopeExpToTypeScript(expression: FreLangExp): string {
+    private replacementNamespaceExpToTypeScript(expression: FreLangExp): string {
         let result;
-        // special case: the expression refers to 'typeof'
         if (expression instanceof FreLangFunctionCallExp && expression.sourceName === "typeof") {
-            let actualParamToGenerate: string = "";
+            // special case: the expression refers to 'typeof'
+            let actualParamToGenerate: string;
             // we know that typeof has exactly 1 actual parameter
             if (expression.actualparams[0].sourceName === "container") {
                 actualParamToGenerate = `node.freOwnerDescriptor()?.owner`;
             } else {
-                actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0]);
+                actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.actualparams[0], "node");
             }
             result = `let owner = ${actualParamToGenerate};
                 if (!!owner) {
@@ -241,11 +202,19 @@ export class ScoperTemplate {
                         return ${Names.FreNamespace}.create(newScopeElement);
                     }
                 } else {
-                    console.log("AlternativeScoper for node " + node.freId() + " ")
+                    console.log("Replacement Namespace for node " + node.freId() + " ")
                 }`;
+        } else if (expression.sourceName === "container") {
+            // special case: the expression refers to 'container'
+            result = `let container = node.freOwner();
+            if (!!container) {
+                return FreNamespace.create(container);
+            } else {
+                console.error("getReplacementNamespace: no container found.");
+            }`;
         } else {
             // normal case: the expression is an ordinary expression over the language
-            result = GenerationUtil.langExpToTypeScript(expression);
+            result = GenerationUtil.langExpToTypeScript(expression, "node");
         }
         return result;
     }

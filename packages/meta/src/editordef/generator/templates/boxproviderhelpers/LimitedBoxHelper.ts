@@ -1,5 +1,5 @@
 import { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
-import { ListUtil, Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/index.js";
 import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
 import { ForType, FreEditListInfo, FreEditProjectionGroup } from "../../../metalanguage/index.js";
 import { ListPropertyBoxHelper } from "./ListPropertyBoxHelper.js";
@@ -81,12 +81,8 @@ export class LimitedBoxHelper {
         displayType: string,
     ): string {
         const featureType: string = Names.classifier(appliedFeature.type);
-        ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
-        ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [
-            Names.FreNodeReference,
-            "BoxUtil",
-            "LimitedDisplay",
-        ]);
+        this._myTemplate.imports.language.add(featureType);
+        this._myTemplate.imports.core.add(Names.FreNodeReference).add("BoxUtil").add("LimitedDisplay");
         // get the right displayType
         let displayTypeToUse: string = DisplayTypeHelper.getTypeScriptForDisplayType(this.stdLimitedSingleDisplayType);
         if (!!displayType) {
@@ -104,14 +100,15 @@ export class LimitedBoxHelper {
     }
 
     private generateSingleSelectProjection(
+        // @ts-ignore
         language: FreMetaLanguage,
         appliedFeature: FreMetaConceptProperty,
         element: string,
     ): string {
         const featureType: string = Names.classifier(appliedFeature.type);
-        ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
-        ListUtil.addIfNotPresent(this._myTemplate.configImports, Names.environment(language));
-        ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [Names.FreNodeReference, "BoxUtil", "LimitedDisplay"]);
+        this._myTemplate.imports.language.add(featureType);
+        this._myTemplate.imports.root.add(Names.LanguageEnvironment);
+        this._myTemplate.imports.core.add(Names.FreNodeReference).add("BoxUtil").add("LimitedDisplay");
         return `BoxUtil.limitedBox(
                                 ${element},
                                 "${appliedFeature.name}",
@@ -120,7 +117,7 @@ export class LimitedBoxHelper {
                                                selected, "${featureType}" );
                                 },
                                 LimitedDisplay.SELECT,
-                                ${Names.environment(language)}.getInstance().scoper
+                                ${Names.LanguageEnvironment}.getInstance().scoper
                )`;
     }
     private generateLimitedListProjection(
@@ -129,12 +126,8 @@ export class LimitedBoxHelper {
         displayType: string,
     ) {
         const featureType: string = Names.classifier(appliedFeature.type);
-        ListUtil.addIfNotPresent(this._myTemplate.modelImports, featureType);
-        ListUtil.addListIfNotPresent(this._myTemplate.coreImports, [
-            Names.FreNodeReference,
-            "BoxUtil",
-            "LimitedDisplay",
-        ]);
+        this._myTemplate.imports.language.add(featureType);
+        this._myTemplate.imports.core.add(Names.FreNodeReference).add("BoxUtil").add("LimitedDisplay");
         // get the right displayType
         let displayTypeToUse: string = DisplayTypeHelper.getTypeScriptForDisplayType(this.stdLimitedListDisplayType);
         if (!!displayType) {

@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@freon4dsl/test",
-  "version": "1.1.0",
+  "version": "1.1.0-beta.3",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,6 +27,7 @@
     "imports": "bash ../../scripts/freon-test-dev.sh all -d src/testCircularImports/def -o src/testCircularImports",
     "defaultscoper": "bash ../../scripts/freon-test-dev.sh all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
     "definedscoper": "cp src/testDefaultScoper/defs/Language.ast src/testDefinedScoper/defs/Language.ast && cp src/testDefaultScoper/__tests__/SimpleModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && bash ../../scripts/freon-test-dev.sh all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
+    "qualified-name": "bash ../../scripts/freon-test-dev.sh all -d src/qualifiedNameScoper/defs -o src/qualifiedNameScoper",
     "langconstr": "bash ../../scripts/freon-test-dev.sh all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "noparser": "bash ../../scripts/freon-test-dev.sh all -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
     "prim-gen": "bash ../../scripts/freon-test-dev.sh all -d src/testPrimPropsGeneration/defs -o src/testPrimPropsGeneration",
@@ -36,7 +37,7 @@
     "undo-tester": "bash ../../scripts/freon-test-dev.sh all -d src/UndoTester/defs -o src/UndoTester",
     "valid-test": "bash ../../scripts/freon-test-dev.sh all -d src/ValidTest/defs -o src/ValidTest",
     "vehicles": "bash ../../scripts/freon-test-dev.sh all -d src/vehicles/defs -o src/vehicles",
-    "build": "npm run demo && npm run storage && npm run octopus && npm run parser-conc && npm run basic-props && npm run parsergen && npm run parser-extra && npm run imports && npm run defaultscoper && npm run definedscoper && npm run langconstr && npm run noparser && npm run prim-gen && npm run testproject && npm run typer-test8 && npm run undo-tester && npm run vehicles && tsc",
+    "build": "npm run demo && npm run storage && npm run octopus && npm run parser-conc && npm run basic-props && npm run parsergen && npm run parser-extra && npm run imports && npm run defaultscoper && npm run definedscoper && npm run langconstr && npm run noparser && npm run prim-gen && npm run testproject && npm run typer-test8 && npm run undo-tester && npm run vehicles && npm run qualified-name && tsc",
     "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
@@ -56,7 +57,8 @@
     "clean-typer-test8": "bash ../../scripts/freon-test-dev.sh clean-it -d src/typer-test8/defs -o src/typer-test8",
     "clean-undo-tester": "bash ../../scripts/freon-test-dev.sh clean-it -d src/UndoTester/defs -o src/UndoTester",
     "clean-vehicles": "bash ../../scripts/freon-test-dev.sh clean-it -f -d src/vehicles/defs -o src/vehicles",
-    "clean-all-projects": "npm run clean-demo && npm run clean-octopus && npm run clean-parser-conc && npm run clean-basic-props && npm run clean-parsergen && npm run clean-imports && npm run clean-defaultscoper && npm run clean-definedscoper && npm run clean-langconstr && npm run clean-noparser && npm run clean-prim-gen && npm run clean-testproject && npm run clean-typer-test8 && npm run clean-vehicles",
+    "clean-qualified-name": "bash ../../scripts/freon-test-dev.sh clean-it -f -d src/qualifiedNameScoper/defs -o src/qualifiedNameScoper",
+    "clean-all-projects": "npm run clean-demo && npm run clean-octopus && npm run clean-parser-conc && npm run clean-basic-props && npm run clean-parsergen && npm run clean-imports && npm run clean-defaultscoper && npm run clean-definedscoper && npm run clean-langconstr && npm run clean-noparser && npm run clean-prim-gen && npm run clean-testproject && npm run clean-typer-test8 && npm run clean-vehicles && npm run clean-qualified-name",
     "test": "vitest run"
   },
   "devDependencies": {
@@ -64,8 +66,8 @@
     "@vitest/ui": "^3.0.5"
   },
   "dependencies": {
-    "@freon4dsl/core": "~1.1.0",
-    "@freon4dsl/meta": "~1.1.0",
+    "@freon4dsl/core": "1.1.0-beta.3",
+    "@freon4dsl/meta": "1.1.0-beta.3",
     "@lionweb/validation": "^0.6.3",
     "global": "^4.4.0",
     "kotlin": "^1.5.21",

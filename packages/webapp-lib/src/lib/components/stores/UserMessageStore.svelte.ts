@@ -1,7 +1,7 @@
 import { FreErrorSeverity } from "@freon4dsl/core";
 
 // info about Freon
-export const versionNumber: string = "1.1.0-beta";
+export const versionNumber: string = "1.1.0-beta.3";
 
 export let severity: {value: FreErrorSeverity} = $state({ value: FreErrorSeverity.Error });
 export let userMessage: {value: string} = $state({

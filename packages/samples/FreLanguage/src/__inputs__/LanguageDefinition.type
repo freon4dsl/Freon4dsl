@@ -4,8 +4,8 @@ typer ExampleTyper for language Example
 istype {  BaseType }
 
 anytype {
-    conformsto AttributeType:ANY;
-    equalsto AttributeType:ANY;
+    conformsto #AttributeType:ANY;
+    equalsto #AttributeType:ANY;
 }
 
 Parameter {
@@ -31,22 +31,22 @@ ExExpression {
     abstract infertype  ;
 }
 StringLiteralExpression {
-    infertype AttributeType:String;
+    infertype #AttributeType:String;
 }
 NumberLiteralExpression {
-    infertype AttributeType:Integer;
+    infertype #AttributeType:Integer;
 }
 BooleanLiteralExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 AbsExpression {
     infertype self.expr;
 }
 OrExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 AndExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 MultiplyExpression {
     infertype self.left;
@@ -60,7 +60,7 @@ DivideExpression {
     infertype self.left;
 }
 ComparisonExpression {
-    infertype AttributeType:Boolean;
+    infertype #AttributeType:Boolean;
 }
 MethodCallExpression {
     infertype self.methodDefinition;
@@ -72,7 +72,7 @@ AttributeRef   {
     infertype self.attribute.declaredType;
 }
 SumExpression {
-    infertype AttributeType:Integer;
+    infertype #AttributeType:Integer;
 }
 GroupedExpression {
     infertype self.inner;

@@ -1,0 +1,37 @@
+language ScoperTest
+
+model ScoperTestModel {
+    noNameSpaceUnits: UnitA[];
+    nameSpaceUnits: UnitB[];
+}
+
+modelunit UnitA implements IAstNodeWithName {
+}
+
+modelunit UnitB implements IAstNodeWithName {
+    qualifiedName: QualifiedName;
+}
+
+interface IAstNode {
+    childrenNoName: IAstNode[];
+    childrenWithName: IAstNodeWithName[];
+    reference myRef?: IAstNodeWithName;
+}
+
+interface IAstNodeWithName base IAstNode {
+    name: identifier;
+}
+
+concept AstNode implements IAstNode {
+}
+
+concept AstNodeWithName implements IAstNodeWithName {
+}
+
+concept NamespaceNode implements IAstNodeWithName {
+}
+
+concept QualifiedName {
+    reference part: IAstNodeWithName;
+    restName?: QualifiedName;
+}

@@ -88,7 +88,7 @@ export class FreTyperGenUtils {
                     if (!!exp.returnType && FreTyperGenUtils.isType(exp.returnType)) {
                         result = `${FreTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)} /* FretPropertyCallExp B */`;
                     } else {
-                        // if (varName === "modelelement" && varIsType) {
+                        // if (varName === "node" && varIsType) {
                         //     throw new Error("FOUTTTTT: " + varName + ": " + varIsType);
                         // }
                         result = `this.mainTyper.${inferFunctionName}(${FreTyperGenUtils.makeExpAsElement(exp, varName, varIsType, imports)}) /* FretPropertyCallExp C */`;

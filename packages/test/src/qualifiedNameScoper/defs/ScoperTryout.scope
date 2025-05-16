@@ -1,0 +1,11 @@
+scoper TEST for language ScoperTryout
+
+isnamespace { Referable, QualifiedName }
+
+unitType2 {
+    namespace_addition = self.imports;
+}
+
+QualifiedName {
+    namespace_addition = self.part;
+}

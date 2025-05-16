@@ -5,11 +5,11 @@ typer
 //}
 
 HasAnyValue {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 
 HasNoValue {
-    infertype PrimitiveType:Boolean;
+    infertype #PrimitiveType:Boolean;
 }
 
 DateLiteral {

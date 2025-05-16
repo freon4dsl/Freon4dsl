@@ -13,5 +13,5 @@ Type {
 */
 
 AppliedFeature {
-	scope = typeof( container );
+	namespace_replacement = typeof( container );
 }

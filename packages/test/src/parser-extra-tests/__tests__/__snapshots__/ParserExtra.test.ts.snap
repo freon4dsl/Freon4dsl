@@ -32,6 +32,10 @@ ProductTest {
           "PART3",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 7,
+          "line": 7,
+        },
         "typeName": "InsurancePart",
       },
       FreNodeReference {
@@ -42,6 +46,10 @@ ProductTest {
           "PART4",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 15,
+          "line": 7,
+        },
         "typeName": "InsurancePart",
       },
     ],
@@ -54,6 +62,10 @@ ProductTest {
           "PART1",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 5,
+          "line": 5,
+        },
         "typeName": "InsurancePart",
       },
       FreNodeReference {
@@ -64,12 +76,204 @@ ProductTest {
           "PART2",
         ],
         "_FRE_referred": null,
+        "parseLocation": FreParseLocation {
+          "column": 12,
+          "line": 5,
+        },
         "typeName": "InsurancePart",
       },
     ],
     "parseLocation": FreParseLocation {
       "column": 1,
       "line": 3,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
+exports[`Parser on extra elements >  RHSBinExp 1`] = `
+PitExpTest {
+  "$$owner": null,
+  "$$propertyIndex": undefined,
+  "$$propertyName": "",
+  "$id": "ID-6",
+  "$typename": "PitExpTest",
+  "_FRE_name": "NAME",
+  "_FRE_value": PitWhereExpOneCondition {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "value",
+    "$id": "ID-5",
+    "$typename": "PitWhereExpOneCondition",
+    "_FRE_condition": PitBinaryExp {
+      "$$owner": [Circular],
+      "$$propertyIndex": undefined,
+      "$$propertyName": "condition",
+      "$id": "ID-4",
+      "$typename": "PitBinaryExp",
+      "_FRE_left": PitSelfExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": undefined,
+        "$$propertyName": "left",
+        "$id": "ID-2",
+        "$typename": "PitSelfExp",
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 3,
+        },
+      },
+      "_FRE_right": PitSelfExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": undefined,
+        "$$propertyName": "right",
+        "$id": "ID-3",
+        "$typename": "PitSelfExp",
+        "parseLocation": FreParseLocation {
+          "column": 11,
+          "line": 3,
+        },
+      },
+      "parseLocation": FreParseLocation {
+        "column": 3,
+        "line": 3,
+      },
+    },
+    "parseLocation": FreParseLocation {
+      "column": 9,
+      "line": 2,
+    },
+  },
+  "fileExtension": "",
+  "parseLocation": FreParseLocation {
+    "column": 1,
+    "line": 1,
+  },
+}
+`;
+
+exports[`Parser on extra elements >  RHSBinExpList no terminator or other 1`] = `
+PitExpTest {
+  "$$owner": null,
+  "$$propertyIndex": undefined,
+  "$$propertyName": "",
+  "$id": "ID-12",
+  "$typename": "PitExpTest",
+  "_FRE_name": "NAME",
+  "_FRE_value": PitWhereExpSimple {
+    "$$owner": [Circular],
+    "$$propertyIndex": undefined,
+    "$$propertyName": "value",
+    "$id": "ID-11",
+    "$typename": "PitWhereExpSimple",
+    "_FRE_conditions": [
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 0,
+        "$$propertyName": "conditions",
+        "$id": "ID-4",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-2",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 3,
+            "line": 3,
+          },
+        },
+        "_FRE_right": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-3",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 11,
+            "line": 3,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 3,
+        },
+      },
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 1,
+        "$$propertyName": "conditions",
+        "$id": "ID-7",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-5",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 3,
+            "line": 4,
+          },
+        },
+        "_FRE_right": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-6",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 14,
+            "line": 4,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 4,
+        },
+      },
+      PitBinaryExp {
+        "$$owner": [Circular],
+        "$$propertyIndex": 2,
+        "$$propertyName": "conditions",
+        "$id": "ID-10",
+        "$typename": "PitBinaryExp",
+        "_FRE_left": PitSelfExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "left",
+          "$id": "ID-8",
+          "$typename": "PitSelfExp",
+          "parseLocation": FreParseLocation {
+            "column": 3,
+            "line": 5,
+          },
+        },
+        "_FRE_right": PitAnytypeExp {
+          "$$owner": [Circular],
+          "$$propertyIndex": undefined,
+          "$$propertyName": "right",
+          "$id": "ID-9",
+          "$typename": "PitAnytypeExp",
+          "parseLocation": FreParseLocation {
+            "column": 11,
+            "line": 5,
+          },
+        },
+        "parseLocation": FreParseLocation {
+          "column": 3,
+          "line": 5,
+        },
+      },
+    ],
+    "parseLocation": FreParseLocation {
+      "column": 9,
+      "line": 2,
     },
   },
   "fileExtension": "",
@@ -493,6 +697,10 @@ PartsInitiatorTest {
         "$typename": "NonOptionalLimited",
         "_FRE_name": "SECOND",
       },
+      "parseLocation": FreParseLocation {
+        "column": 16,
+        "line": 10,
+      },
       "typeName": "NonOptionalLimited",
     },
     "_FRE_partList": [
@@ -638,6 +846,10 @@ PartsInitiatorTest {
             "InsuranceRef",
           ],
           "_FRE_referred": null,
+          "parseLocation": FreParseLocation {
+            "column": 29,
+            "line": 5,
+          },
           "typeName": "InsurancePart",
         },
         "parseLocation": FreParseLocation {

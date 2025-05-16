@@ -24,9 +24,9 @@ describe("Checking generation of virtual props", () => {
         const parseFile: string = testdir + "prop_test7.ast";
         const model: FreMetaLanguage | undefined = parseCorrectModel(parser, parseFile);
         // check the one primitive property
-        model?.concepts.forEach((concept) => {
-            console.log("Concept " + concept.name);
-        });
+        // model?.concepts.forEach((concept) => {
+        //     console.log("Concept " + concept.name);
+        // });
         const rightOne: FreMetaConcept | undefined = model?.concepts.find((concept) => concept.name === "Right");
         expect(rightOne).not.toBeNull();
         expect(rightOne).not.toBeUndefined();

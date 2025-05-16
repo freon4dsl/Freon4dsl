@@ -1,11 +1,11 @@
 typer
 
 StringLiteral {
-    infertype BASIC_TYPE:String;
+    infertype #BASIC_TYPE:String;
 }
 NumberLiteral {
-    infertype BASIC_TYPE:Integer;
+    infertype #BASIC_TYPE:Integer;
 }
 BooleanLiteral {
-    infertype BASIC_TYPE:Boolean;
+    infertype #BASIC_TYPE:Boolean;
 }

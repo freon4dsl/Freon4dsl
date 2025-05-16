@@ -35,7 +35,6 @@ export class FretFunctionCallExp extends FretExp {
     }
 
     baseSource(): FretExp {
-        // TODO is this the right object to return?
-        return super.baseSource();
+        return this;
     }
 }

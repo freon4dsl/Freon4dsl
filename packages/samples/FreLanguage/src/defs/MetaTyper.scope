@@ -4,7 +4,7 @@ scoper XX for language FreLanguageX
 isnamespace { FreClassifier }
 
 //FretPropertyCallExp {
-//    scope = typeof( self.source );
+//    namespace_replacement = typeof( self.source );
 //}
 //
 //FretLimitedInstanceExp {

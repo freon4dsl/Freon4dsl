@@ -1,7 +1,7 @@
+import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils.js"
 import { FreMetaConcept, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
 import { FretTypeConcept, TyperDef } from "../../metalanguage/index.js";
-import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils.js";
-import { LANGUAGE_GEN_FOLDER, ListUtil, Names, FREON_CORE } from "../../../utils/index.js";
+import { ListUtil, Names, Imports } from "../../../utils/index.js"
 
 export class FreTypeConceptMaker {
     freTypeName: string = Names.FreType;
@@ -12,17 +12,19 @@ export class FreTypeConceptMaker {
         const extendsClass = hasSuper
             ? `extends ${Names.classifier(concept.base.referred)}`
             : `implements ${this.freTypeName}`;
-        const coreImports: string[] = [Names.FreUtils, Names.FreWriter, Names.FreParseLocation];
+        const imports = new Imports(relativePath)
+        imports.core = new Set<string>([Names.FreUtils, Names.FreWriter, Names.FreParseLocation]);
         if (!hasSuper) {
-            coreImports.push(this.freTypeName);
-            coreImports.push(Names.FreNode);
+            imports.core.add(this.freTypeName);
+            imports.core.add(Names.FreNode);
         }
-        const modelImports: string[] = this.findModelImports(concept);
-        const typeImports: string[] = this.findTypeImports(concept, hasSuper);
+        imports.language = this.findModelImports(concept);
+        imports.typer = this.findTypeImports(concept, hasSuper);
 
         // Template starts here
         return `
-            ${this.makeImportStatements(relativePath, coreImports, modelImports, typeImports)}
+            // Template: FreTyperConceptMaker.generateTypeConcept(...)
+            ${imports.makeImports(concept.language)}
 
             /**
              * Class ${myName} is the implementation of the type concept with the same name in the typer definition file.
@@ -78,19 +80,6 @@ export class FreTypeConceptMaker {
         return result;
     }
 
-    private makeImportStatements(
-        relativePath: string,
-        importsFromCore: string[],
-        modelImports: string[],
-        typeImports: string[],
-    ): string {
-        return `
-            ${importsFromCore.length > 0 ? `import { ${importsFromCore.join(",")} } from "${FREON_CORE}";` : ``}
-            ${modelImports.length > 0 ? `import { ${modelImports.join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";` : ``}
-            ${typeImports.length > 0 ? `import { ${typeImports.join(", ")} } from "./internal.js";` : ``}
-            `;
-    }
-
     private makeConstructor(hasSuper: boolean): string {
         return `constructor(id?: string) {
                     ${
@@ -106,30 +95,30 @@ export class FreTypeConceptMaker {
                 }`;
     }
 
-    private findModelImports(concept: FretTypeConcept): string[] {
+    private findModelImports(concept: FretTypeConcept): Set<string> {
         // return the names of all property types that are not FretTypeConcepts
-        const result: string[] = [];
+        const result: Set<string> = new Set<string>();
         concept.implementedParts().forEach((part) => {
             if (
                 !(part.type instanceof FretTypeConcept) &&
                 part.type.name !== this.freTypeName &&
                 !(part.type instanceof FreMetaPrimitiveType)
             ) {
-                result.push(Names.classifier(part.type));
+                result.add(Names.classifier(part.type));
             }
         });
         return result;
     }
 
-    private findTypeImports(concept: FretTypeConcept, hasSuper: boolean): string[] {
+    private findTypeImports(concept: FretTypeConcept, hasSuper: boolean): Set<string> {
         // return the names of all property types that are FretTypeConcepts
-        const result: string[] = [];
+        const result: Set<string> = new Set<string>()
         if (hasSuper) {
-            result.push(Names.classifier(concept.base.referred));
+            result.add(Names.classifier(concept.base.referred));
         }
         concept.implementedParts().forEach((part) => {
             if (part.type instanceof FretTypeConcept && part.type.name !== Names.FreType) {
-                result.push(Names.classifier(part.type));
+                result.add(Names.classifier(part.type));
             }
         });
         return result;
@@ -138,6 +127,7 @@ export class FreTypeConceptMaker {
     public makeIndexFile(typerdef: TyperDef) {
         const tmp: string[] = typerdef.typeConcepts.map((con) => Names.classifier(con));
         return `
+        // Template: FreTyperConceptMaker.makeIndexFile(...)
         /**
          * This index deploys the pattern from Michael Weststrate
          * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)
@@ -162,6 +152,7 @@ export class FreTypeConceptMaker {
         });
         // the template starts here
         return `
+        // Template: FreTyperConceptMaker.makeInternalFile(...)
         /**
          * This index deploys the pattern from Michael Weststrate
          * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)

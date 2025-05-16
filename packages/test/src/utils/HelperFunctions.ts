@@ -1,6 +1,6 @@
-import {AST, FreModelSerializer, FreModel, FreModelUnit, FreReader, FreWriter, FreNode} from "@freon4dsl/core";
-import {FileHandler} from "./FileHandler.js";
-import {expect} from "vitest";
+import { FreModelSerializer, type FreModel, type FreModelUnit, type FreReader, type FreWriter } from "@freon4dsl/core";
+import { FileHandler } from "./FileHandler.js";
+import { expect}  from "vitest";
 
 const serial: FreModelSerializer = new FreModelSerializer();
 const handler: FileHandler = new FileHandler();
@@ -13,8 +13,8 @@ export function compareReadAndWrittenUnits(
     metatype: string,
 ) {
     const langSpec: string = handler.stringFromFile(filepath);
-    let unit1 = reader.readFromString(langSpec, metatype, model);
-    let result: string = writer.writeToString(unit1, 0, false);
+    const unit1 = reader.readFromString(langSpec, metatype, model);
+    const result: string = writer.writeToString(unit1, 0, false);
     // console.log(result);
     // handler.stringToFile(filepath+ "out", result);
     expect(result.length).toBeGreaterThan(0);
