@@ -43,7 +43,7 @@ export class RulesCheckerTemplate {
         imports.utils.add(Names.defaultWorker(language))
         const commentBefore: string = `/**
                                 * Checks '${paramName}' before checking its children.
-                                * Found errors are pushed onto 'errorlist'.
+                                * Found errors are pushed onto 'errorList'.
                                 * @param ${paramName}
                                 */`;
         // the template starts here
@@ -185,13 +185,26 @@ export class RulesCheckerTemplate {
         // this method makes sure that we do not depend on the name of the severity to be the same as its value
         // e.g. FreErrorSeverity.NONE = "none",
         let result: string = `${Names.FreErrorSeverity}.`;
+
         switch (r.severity.severity) {
             case FreErrorSeverity.Error: {
                 result += `Error`;
                 break;
             }
+            case FreErrorSeverity.Warning: {
+                result += `Warning`;
+                break;
+            }
+            case FreErrorSeverity.Hint: {
+                result += `Hint`;
+                break;
+            }
             case FreErrorSeverity.Improvement: {
                 result += `Improvement`;
+                break;
+            }
+            case FreErrorSeverity.ToDo: {
+                result += `ToDo`;
                 break;
             }
             case FreErrorSeverity.Info: {
@@ -202,9 +215,8 @@ export class RulesCheckerTemplate {
                 result += `NONE`;
                 break;
             }
-            case FreErrorSeverity.ToDo: {
+            default: {
                 result += `ToDo`;
-                break;
             }
         }
         return result;

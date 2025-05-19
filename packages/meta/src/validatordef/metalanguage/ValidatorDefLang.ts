@@ -49,14 +49,12 @@ export class ValidationMessageReference extends FreMetaDefinitionElement {
 }
 
 export abstract class ValidationRule extends FreMetaDefinitionElement {
+    // @ts-ignore this.severity is set during checking
     severity: ValidationSeverity;
     message: ValidationMessage | undefined;
 
     constructor() {
         super();
-        this.severity = new ValidationSeverity();
-        this.severity.severity = FreErrorSeverity.NONE;
-        this.severity.value = "";
     }
     toFreString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.Rule'";
