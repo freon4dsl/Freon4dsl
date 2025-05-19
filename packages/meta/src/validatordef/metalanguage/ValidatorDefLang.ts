@@ -1,13 +1,7 @@
-import { FreLangExp, FreMetaConcept } from "../../languagedef/metalanguage/index.js";
-// The next import should be separate and the last of the imports.
-// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
-// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
-// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference.js";
-import { FreMetaDefinitionElement } from "../../utils/index.js";
-// Note that the following import cannot be from "@freon4dsl/core", because
+import { FreLangExp, FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
+// Note that FreErrorSeverity cannot be imported from "@freon4dsl/core", because
 // this leads to a load error
-import { FreErrorSeverity } from "../../utils/generation/FreErrorSeverity.js";
+import { FreMetaDefinitionElement, FreErrorSeverity } from "../../utils/index.js";
 
 export class ValidatorDef extends FreMetaDefinitionElement {
     validatorName: string = "";
@@ -16,7 +10,7 @@ export class ValidatorDef extends FreMetaDefinitionElement {
 }
 
 export class ConceptRuleSet extends FreMetaDefinitionElement {
-    conceptRef: MetaElementReference<FreMetaConcept> | undefined;
+    conceptRef: MetaElementReference<FreMetaClassifier> | undefined;
     rules: ValidationRule[] = [];
 }
 

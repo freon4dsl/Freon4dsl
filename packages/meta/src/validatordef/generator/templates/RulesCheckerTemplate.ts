@@ -1,13 +1,16 @@
 // Note that the following import cannot be from "@freon4dsl/core", because
 // this leads to a load error
 // import { FreErrorSeverity } from "@freon4dsl/core";
+import { FreErrorSeverity, GenerationUtil, Imports, LangUtil, Names } from '../../../utils/index.js';
 import {
-    GenerationUtil,
-    Names,
-    FreErrorSeverity,
-    Imports
-} from "../../../utils/index.js"
-import { FreMetaLanguage, FreMetaPrimitiveProperty, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
+    FreMetaClassifier,
+    FreMetaConcept,
+    FreMetaInterface,
+    FreMetaLanguage,
+    FreMetaPrimitiveProperty,
+    FreMetaProperty,
+    MetaElementReference
+} from '../../../languagedef/metalanguage/index.js';
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
@@ -15,19 +18,21 @@ import {
     ExpressionRule,
     IsUniqueRule,
     NotEmptyRule,
-    ValidatorDef,
     ValidationMessage,
     ValidationMessageText,
     ValidationRule,
-    ValidNameRule,
-} from "../../metalanguage/index.js";
-import { ValidationUtils } from "../ValidationUtils.js";
+    ValidatorDef,
+    ValidNameRule
+} from '../../metalanguage/index.js';
+import { ValidationUtils } from '../ValidationUtils.js';
 
 const paramName: string = "node";
 
 export class RulesCheckerTemplate {
 
     generateRulesChecker(language: FreMetaLanguage, validdef: ValidatorDef, relativePath: string): string {
+        this.distributeInheritedRules(validdef);
+        this.removeInterfaceSets(validdef);
         const checkerClassName: string = Names.rulesChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const imports = new Imports(relativePath)
@@ -66,7 +71,7 @@ export class RulesCheckerTemplate {
             .map(
                 (ruleSet) =>
                     `${commentBefore}
-            public execBefore${Names.concept(ruleSet.conceptRef?.referred)}(${paramName}: ${Names.concept(ruleSet.conceptRef?.referred)}): boolean {
+            public execBefore${Names.classifier(ruleSet.conceptRef?.referred)}(${paramName}: ${Names.classifier(ruleSet.conceptRef?.referred)}): boolean {
                 let hasFatalError: boolean = false;
                 ${this.createRules(ruleSet)}
                 return hasFatalError;
@@ -93,6 +98,54 @@ export class RulesCheckerTemplate {
             }
         }
         `;
+    }
+
+    /**
+     * This method takes all validation rules for super concepts and interfaces and
+     * copies them to every concept that implements or inherits from them.
+     *
+     * @param validdef
+     * @private
+     */
+    private distributeInheritedRules(validdef: ValidatorDef) {
+        // add rules of super types to each concept
+        const newConceptRules: ConceptRuleSet[] = [];
+        validdef.conceptRules.forEach(rule => {
+            const ruleClassifier: FreMetaClassifier | undefined = rule.conceptRef?.referred;
+            if (!!ruleClassifier) {
+                const implementors: FreMetaClassifier[] = LangUtil.findAllImplementorsAndSubs(ruleClassifier);
+                implementors.forEach(implementor => {
+                    if (implementor !== ruleClassifier && implementor instanceof FreMetaConcept) {
+                        // see if there is a ConceptRuleSet for the implementor
+                        let implementorRule: ConceptRuleSet | undefined = validdef.conceptRules.find(rule2 =>
+                          rule2.conceptRef?.referred === implementor
+                        );
+                        if (!!implementorRule) {
+                            // add to existing ConceptRuleSet
+                            implementorRule.rules.push(...rule.rules);
+                        } else {
+                            // create new conceptRule
+                            const xx = new ConceptRuleSet();
+                            xx.conceptRef = MetaElementReference.create<FreMetaConcept>(implementor, 'FreMetaConcept');
+                            xx.rules.push(...rule.rules);
+                            newConceptRules.push(xx);
+                        }
+                    }
+                });
+            }
+        });
+        validdef.conceptRules.push(...newConceptRules);
+    }
+
+    /**
+     * This method removes all rule sets that are defined for interfaces, because they are not
+     * present in the model, only the concepts that implement them are.
+     *
+     * @param validdef
+     * @private
+     */
+    private removeInterfaceSets(validdef: ValidatorDef) {
+        validdef.conceptRules = validdef.conceptRules.filter(rule => !(rule.conceptRef?.referred instanceof FreMetaInterface));
     }
 
     private createRules(ruleSet: ConceptRuleSet): string {
@@ -162,7 +215,7 @@ export class RulesCheckerTemplate {
             message = `"'${r.toFreString()}' is false"`;
         }
         if (!!r.exp1 && !!r.exp2) {
-            return `if (!(${GenerationUtil.langExpToTypeScript(r.exp1, paramName)} ${r.comparator} ${GenerationUtil.langExpToTypeScript(r.exp2, paramName)})) {
+            return `if (!(${GenerationUtil.langExpToTypeScript(r.exp1, paramName)} ${ValidationUtils.freComparatorToTypeScript(r.comparator)} ${GenerationUtil.langExpToTypeScript(r.exp2, paramName)})) {
                     this.errorList.push( new ${Names.FreError}( ${message}, ${paramName}, ${locationdescription}, ${severity} ));
                     ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
                 }`;
@@ -334,4 +387,5 @@ export class RulesCheckerTemplate {
         }
         return result;
     }
+
 }

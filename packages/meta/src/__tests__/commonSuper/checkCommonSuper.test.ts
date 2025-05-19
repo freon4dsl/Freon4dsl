@@ -3,8 +3,8 @@ import {
     FreMetaConcept,
     MetaElementReference,
     FreMetaInterface,
-} from "../../languagedef/metalanguage/index.js";
-import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil";
+} from '../../languagedef/metalanguage';
+import { CommonSuperTypeUtil } from '../../languagedef/checking';
 import { describe, test, expect } from "vitest";
 
 function concept(name: string): FreMetaConcept {

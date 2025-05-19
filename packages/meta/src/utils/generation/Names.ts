@@ -190,8 +190,12 @@ export class Names {
         }
     }
 
-    public static classifier(concept: FreMetaClassifier): string {
-        return this.startWithUpperCase(concept?.name);
+    public static classifier(classifier: FreMetaClassifier | undefined): string {
+        if (classifier !== null && classifier !== undefined) {
+            return this.startWithUpperCase(classifier?.name);
+        } else {
+            return '<unknown classifier';
+        }
     }
 
     public static primitivePropertyField(property: FreMetaPrimitiveProperty): string {

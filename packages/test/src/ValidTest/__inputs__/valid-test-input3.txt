@@ -1,0 +1,9 @@
+Modelunit AAAAAA
+    Prop of type CC: CC [ CCprop3: 10 ]
+    // CCprop3 should be <=12, need not be <= 6 ===> Result is 0 error
+    Prop of type BB: BB [ CCprop3: 8 ]
+    // CCprop3 should be <=12, need not be <= 6 ===> Result is 0 error
+    Prop of type SubCC: SubCC [ CCprop3: 4, DDprop3: 20, FFprop3: 10 ]
+    // CCprop3 should be <=12, and be <= 6 ===> Result is 0 error
+    // DDprop3 should be >= 10 ===> Result is 0 error
+    // FFprop3 should be < 4 ===> Result is 1 error

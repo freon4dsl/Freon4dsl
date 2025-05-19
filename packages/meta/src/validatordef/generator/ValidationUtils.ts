@@ -3,6 +3,8 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
 } from "../../languagedef/metalanguage/index.js";
+import { FreComparator } from '../../validatordef/metalanguage/index.js';
+
 
 export class ValidationUtils {
     public static findLocationDescription(concept: FreMetaClassifier | undefined, paramName: string): string {
@@ -13,5 +15,16 @@ export class ValidationUtils {
             nameProp = concept?.allPrimProperties().find((prop) => prop.type === FreMetaPrimitiveType.identifier);
         }
         return !!nameProp ? `${paramName}.${nameProp.name}` : `'unnamed'`;
+    }
+
+    public static freComparatorToTypeScript(comparator: FreComparator | undefined): string {
+        switch (comparator) {
+            case FreComparator.Equals: return '===';
+            case FreComparator.SmallerIncluding: return '<=';
+            case FreComparator.LargerIncluding: return '>=';
+            case FreComparator.LargerThen: return '>';
+            case FreComparator.SmallerThen: return '<';
+        }
+        return '=== /* error: comparator undefined */';
     }
 }
