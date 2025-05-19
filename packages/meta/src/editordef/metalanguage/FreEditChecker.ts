@@ -55,6 +55,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     runner: CheckRunner;
     private readonly myExpressionChecker: FreLangExpressionChecker | undefined;
     private propsWithTableProjection: FreEditPropertyProjection[] = [];
+    private fragmentNamesPerClassifier: Map<FreMetaClassifier, string[]> = new Map();
 
     constructor(language: FreMetaLanguage) {
         super(language);
@@ -310,8 +311,12 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     );
                 } else {
                     if (projection instanceof FreEditNormalProjection) {
-                        const knownFragments: string[] = projection.fragmentDefinitions.map((fr) => fr.name);
-                        this.checkNormalProjection(projection, myClassifier!, editor, knownFragments);
+                        // first check whether the names of all fragment definitions are unique
+                        // (2) get the fragment names from this projection set
+                        const fragmentsFromThisProjectionSet: string[] = projection.fragmentDefinitions.map((fr) => fr.name);
+                        this.checkUniquenessOfFragmentNames(myClassifier, projection, fragmentsFromThisProjectionSet);
+                        // now, do the 'normal' check
+                        this.checkNormalProjection(projection, myClassifier!, editor, fragmentsFromThisProjectionSet);
                     } else if (projection instanceof FreEditTableProjection) {
                         this.checkTableProjection(projection, myClassifier!, editor);
                     }
@@ -331,6 +336,22 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 }
             },
         });
+    }
+
+    private checkUniquenessOfFragmentNames(myClassifier: FreMetaClassifier | undefined, projection: FreEditNormalProjection, fragmentsFromThisProjectionSet: string[]) {
+        // (1) get the fragment names that are defined in other projection sets
+        let knownFragments: string[] | undefined = this.fragmentNamesPerClassifier.get(myClassifier!);
+        if (knownFragments && knownFragments.length > 0) {
+            // (2) check the known names against the ones in this projection set
+            fragmentsFromThisProjectionSet.forEach(fragmentName => {
+                this.runner.simpleCheck(!knownFragments?.includes(fragmentName), `Fragment '${fragmentName}' has already been defined for ${myClassifier!.name} ${ParseLocationUtil.location(projection)}.`);
+            });
+        } else {
+            knownFragments = [];
+        }
+        // (3) add the new fragment names to the complete set of names
+        knownFragments = knownFragments.concat(fragmentsFromThisProjectionSet);
+        this.fragmentNamesPerClassifier.set(myClassifier!, knownFragments);
     }
 
     private checkRecursionInFragments(
