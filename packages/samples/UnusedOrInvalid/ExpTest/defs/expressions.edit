@@ -1,6 +1,8 @@
 editor default
 
-referenceSeparator [::]
+global {
+    referenceSeparator [::]
+}
 
 Unit1 {
     [${unitPart}]

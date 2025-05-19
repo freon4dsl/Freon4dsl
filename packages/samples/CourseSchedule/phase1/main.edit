@@ -23,7 +23,6 @@ Person {[
 fragment name [
 Nickname: ${self.name}
 Full Name: ${self.fullName}
-Phone number: ${self.phone}
 ]
 }
 
