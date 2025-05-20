@@ -34,7 +34,7 @@ export class FreChangeManager {
 
     // the callbacks to be executed upon the different kind of changes to the model
     changePrimCallbacks: callback[] = [];
-    changePartCallbacks: callback[] = []; // references are also parts here: the FreElementReference object is treated as part
+    changePartCallbacks: callback[] = []; // references are also parts here: the FreNodeReference object is treated as part
     changeListElemCallbacks: callback[] = [];
     changeListCallbacks: callback[] = [];
 

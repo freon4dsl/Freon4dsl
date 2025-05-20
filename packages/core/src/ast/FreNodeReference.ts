@@ -7,7 +7,7 @@ import { FreParseLocation } from '../reader/index.js';
 
 const LOGGER = new FreLogger("FreNodeReference").mute();
 /**
- * Class FreElementReference provides the implementation for a (named) reference in Freon.
+ * Class FreNodeReference provides the implementation for a (named) reference in Freon.
  * References can be set with either a referred object, or with a name.
  */
 export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementImpl {
@@ -99,7 +99,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
 
     get referred(): T {
         LOGGER.log(
-            "FreElementReference " +
+            "FreNodeReference " +
                 this._FRE_pathname +
                 " property " +
                 this.freOwnerDescriptor().propertyName +
