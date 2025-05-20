@@ -5,7 +5,7 @@ import { FreError, FreErrorSeverity } from "@freon4dsl/core";
 import { XXEnvironment } from "../config/gen/XXEnvironment.js";
 import { ExpWithType } from "../language/gen/index.js";
 import { XXDefaultWorker } from "../utils/gen/index.js";
-import { type XXCheckerInterface } from "./gen/XXValidator.js";
+import { type XXCheckerInterface } from "./gen/index.js";
 
 export class CustomXXValidator extends XXDefaultWorker implements XXCheckerInterface {
     errorList: FreError[] = [];

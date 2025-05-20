@@ -105,7 +105,7 @@ export class CustomScoperTryoutScoper implements FreScoper {
 
     /**
      * Returns the replacement namespace that can be found for '_node'.
-     * @param _node
+     * @param node
      */
     replacementNamespace(node: FreNode): FreNamespace | undefined{
         // console.log('CUSTOM getAlternativeScope for ' + node.freId() + " of type " + node.freLanguageConcept());
