@@ -167,9 +167,9 @@ export class LanguageGenerator {
         // set relative path to an extra level to get the imports right
         relativePath = "../../";
 
-        // LOGGER.log(`Generating FreNodeReference: ${this.languageGenFolder}/${Names.FreElementReference}.ts`);
-        // const referenceFile = FileUtil.pretty(freReferenceTemplate.generateFreReference(language, relativePath), "FreElementReference", generationStatus);
-        // fs.writeFileSync(`${this.languageGenFolder}/${Names.FreElementReference}.ts`, referenceFile);
+        // LOGGER.log(`Generating FreNodeReference: ${this.languageGenFolder}/${Names.FreNodeReference}.ts`);
+        // const referenceFile = FileUtil.pretty(freReferenceTemplate.generateFreReference(language, relativePath), "FreNodeReference", generationStatus);
+        // fs.writeFileSync(`${this.languageGenFolder}/${Names.FreNodeReference}.ts`, referenceFile);
 
         LOGGER.log(
             `Generating language structure information: ${this.languageGenFolder}/${Names.language(language)}.ts`,
