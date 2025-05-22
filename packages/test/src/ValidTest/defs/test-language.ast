@@ -1,0 +1,35 @@
+language test1 // without 'implements'
+
+model ROOT {
+    aa: AAAAAA[];
+}
+
+modelunit AAAAAA  {
+    name: identifier;
+    // properties with concept as type
+    AAprop7: BB;
+    AAprop7a: CC;
+    AAprop7b: SubCC;
+}
+
+concept BB base CC {
+}
+
+concept CC {
+    CCprop3: number;
+}
+
+concept SubCC base CC implements DD {
+}
+
+interface DD base EE {
+    DDprop3: number;
+}
+
+interface EE base FF {
+}
+
+interface FF {
+    FFprop3: number;
+}
+

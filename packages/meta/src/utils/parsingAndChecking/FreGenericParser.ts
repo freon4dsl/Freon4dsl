@@ -56,7 +56,7 @@ export class FreGenericParser<DEFINITION> {
     checker: Checker<DEFINITION>;
 
     parse(definitionFile: string): DEFINITION | undefined {
-        LOG2USER.log("FreGenericParser.Parse: " + definitionFile);
+        // LOG2USER.log("FreGenericParser.Parse: " + definitionFile);
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");

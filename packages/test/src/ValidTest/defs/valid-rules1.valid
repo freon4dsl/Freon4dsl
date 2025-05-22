@@ -1,0 +1,20 @@
+validator TestValidator for language test1
+
+CC {
+    // this rule should be checked for CC and for all subtypes of C, i.e. also on B and SubCC
+    self.CCprop3 <= 12;
+}
+
+SubCC {
+    self.CCprop3 <= 6;
+}
+
+DD {
+    // this rule should be checked all concepts that implement interface DD, i.e. on SubCC
+    self.DDprop3 >= 10;
+}
+
+FF {
+    // this rule should be checked all concepts that implement interface FF, also though sub interfaces, i.e. on SubCC
+    self.FFprop3 < 4;
+}

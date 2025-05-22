@@ -1,14 +1,7 @@
-// Note that the following import cannot be from "@freon4dsl/core", because
-import { FreLangExp, FreMetaConcept } from "../../languagedef/metalanguage/index.js";
-// The next import should be separate and the last of the imports.
-// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
-// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
-// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference.js";
-import { FreMetaDefinitionElement } from "../../utils/index.js";
-// this leads to a load error
-// import { FreErrorSeverity } from "@freon4dsl/core"; // todo remove this bug
-import { FreErrorSeverity } from "../../utils/generation/FreErrorSeverity.js";
+import { FreLangExp, FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
+// Note that FreErrorSeverity cannot be imported from "@freon4dsl/core", because
+// "@freon4dsl/meta" does not have a dependency on "@freon4dsl/core".
+import { FreMetaDefinitionElement, FreErrorSeverity } from "../../utils/index.js";
 
 export class ValidatorDef extends FreMetaDefinitionElement {
     validatorName: string = "";
@@ -17,7 +10,7 @@ export class ValidatorDef extends FreMetaDefinitionElement {
 }
 
 export class ConceptRuleSet extends FreMetaDefinitionElement {
-    conceptRef: MetaElementReference<FreMetaConcept> | undefined;
+    conceptRef: MetaElementReference<FreMetaClassifier> | undefined;
     rules: ValidationRule[] = [];
 }
 
@@ -56,14 +49,12 @@ export class ValidationMessageReference extends FreMetaDefinitionElement {
 }
 
 export abstract class ValidationRule extends FreMetaDefinitionElement {
+    // @ts-ignore this.severity is set during checking
     severity: ValidationSeverity;
     message: ValidationMessage | undefined;
 
     constructor() {
         super();
-        this.severity = new ValidationSeverity();
-        this.severity.severity = FreErrorSeverity.NONE;
-        this.severity.value = "";
     }
     toFreString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.Rule'";

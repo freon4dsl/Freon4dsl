@@ -7,8 +7,6 @@ import {
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
     FreMetaProperty,
-} from "../../languagedef/metalanguage/index.js";
-import {
     FreInstanceExp,
     FreLangAppliedFeatureExp,
     FreLangExp,
@@ -29,7 +27,7 @@ export class GenerationUtil {
      * An entry for a subconcept must precede an entry for its base concept,
      * otherwise the unparse${concept.name} for the base concept will be called.
      *
-     * @param freConcepts: the list of concepts to be sorted
+     * @param freConcepts the list of concepts to be sorted
      */
     public static sortConceptsOrRefs(
         freConcepts: FreMetaConcept[] | MetaElementReference<FreMetaConcept>[],
@@ -39,7 +37,7 @@ export class GenerationUtil {
         freConcepts.forEach((p) => {
             if (p instanceof FreMetaConcept) {
                 newList.push(p);
-            } else if (p instanceof MetaElementReference) {
+            } else {
                 newList.push(p.referred);
             }
         });
@@ -95,7 +93,7 @@ export class GenerationUtil {
                 if (xx.referred === element) {
                     return true;
                 }
-            } else if (element instanceof MetaElementReference) {
+            } else {
                 if (xx.referred === element.referred) {
                     return true;
                 }
@@ -111,7 +109,7 @@ export class GenerationUtil {
      * @param noRef
      */
     public static langExpToTypeScript(exp: FreLangExp, paramName: string, noRef?: boolean): string {
-        let result: string = "";
+        let result: string;
         if (exp instanceof FreLangSelfExp) {
             result = `${paramName}.${this.langExpToTypeScript(exp.appliedfeature, paramName, noRef)}`;
         } else if (exp instanceof FreLangFunctionCallExp) {
@@ -184,7 +182,7 @@ export class GenerationUtil {
     }
 
     /**
-     * Returns true if 'freClasssifier' has a property that represents it name, i.e. a property
+     * Returns true if 'freClassifier' has a property that represents it name, i.e. a property
      * that is called 'name' and has as type 'identifier'.
      * @param freClassifier
      */

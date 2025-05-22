@@ -103,7 +103,8 @@ export class LangUtil {
     }
 
     /**
-     * Returns all concepts that 'self' is a super interface of, recursive. Param 'self' is NOT included in the result.
+     * Returns all interfaces that 'self' is a super interface of, recursive.
+     * Param 'self' is NOT included in the result.
      * @param self
      */
     public static subInterfaces(self: FreMetaInterface): FreMetaInterface[] {
@@ -167,7 +168,7 @@ export class LangUtil {
 
     /**
      * Takes a FreInterface and returns a list of concepts that directly implement it,
-     * without taking into account subinterfaces.
+     * without taking into account sub interfaces.
      *
      * @param freInterface
      */
