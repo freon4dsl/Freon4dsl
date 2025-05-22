@@ -11,8 +11,8 @@ import {
     DemoFunction,
     DemoVariable,
     Demo,
-} from "../language/gen";
-import { DemoValidator } from "../validator/gen";
+} from "../language/gen/index.js";
+import { DemoValidator } from "../validator/gen/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
 import { describe, test, expect, beforeEach } from "vitest";
