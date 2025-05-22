@@ -194,7 +194,7 @@ export class Names {
         if (classifier !== null && classifier !== undefined) {
             return this.startWithUpperCase(classifier?.name);
         } else {
-            return '<unknown classifier';
+            return '<unknown classifier>';
         }
     }
 

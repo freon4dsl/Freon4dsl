@@ -120,16 +120,13 @@ export class RulesCheckerTemplate {
                         let implementorRule: ConceptRuleSet | undefined = validdef.conceptRules.find(rule2 =>
                           rule2.conceptRef?.referred === implementor
                         );
-                        if (!!implementorRule) {
-                            // add to existing ConceptRuleSet
-                            implementorRule.rules.push(...rule.rules);
-                        } else {
+                        if (implementorRule === undefined) {
                             // create new conceptRule
-                            const xx = new ConceptRuleSet();
-                            xx.conceptRef = MetaElementReference.create<FreMetaConcept>(implementor, 'FreMetaConcept');
-                            xx.rules.push(...rule.rules);
-                            newConceptRules.push(xx);
+                            implementorRule = new ConceptRuleSet();
+                            implementorRule.conceptRef = MetaElementReference.create<FreMetaConcept>(implementor, 'FreMetaConcept');
+                            newConceptRules.push(implementorRule);
                         }
+                        implementorRule.rules.push(...rule.rules);
                     }
                 });
             }
