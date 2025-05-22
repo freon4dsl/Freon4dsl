@@ -556,4 +556,46 @@ describe("Checking editor definition ", () => {
             }
         }
     });
+
+    test("on fragment definitions in multiple projection sets", () => {
+        try {
+            parser.parseMulti([testdir + "test15.edit", testdir + "test15-non-default.edit"]);
+        } catch (e: unknown) {
+            // console.log("in test15 plus test15-non-default: " + e);
+            // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+            // console.log(
+            //     "Warnings [" + checker.warnings.length + "]:\n" + checker.warnings.map((err) => `"${err}"`).join("\n"),
+            // );
+            if (e instanceof Error) {
+                expect(e.message).toBe(`checking errors (3).`);
+                expect(
+                  checker.errors.includes(
+                    "No empty projections allowed [file: test15.edit:3:5].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Fragment 'xx' has already been defined for BB [file: test15-non-default.edit:3:5].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Fragment 'zz' has already been defined for BB [file: test15-non-default.edit:3:5].",
+                  ),
+                ).toBeTruthy();
+                expect(checker.hasWarnings()).toBeTruthy;
+                expect(checker.warnings.length).toBe(2);
+                expect(
+                  checker.warnings.includes(
+                    "Fragment 'xx' is defined, but not used [file: test15.edit:5:1].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.warnings.includes(
+                    "Fragment 'yy' is defined, but not used [file: test15.edit:9:1].",
+                  ),
+                ).toBeTruthy();
+            }
+        }
+    });
 });
