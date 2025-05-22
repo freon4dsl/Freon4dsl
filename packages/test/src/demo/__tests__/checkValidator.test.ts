@@ -12,7 +12,7 @@ import {
     DemoVariable,
     Demo,
 } from "../language/gen";
-import { DemoValidator } from "../validator/gen/index.js";
+import { DemoValidator } from "../validator/gen";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
 import { describe, test, expect, beforeEach } from "vitest";
@@ -147,7 +147,7 @@ describe("Testing Validator", () => {
             // Type of [' "Hello Demo" '] should equal Integer in unnamed of severity Improvement
             // Type of [' "Goodbye" '] should equal Integer in unnamed of severity Improvement
             // Property 'declaredType' must have a value in AAP of severity Error
-            // expect(errors.length).toBe(5);
+            expect(errors.length).toBe(5);
         })
     });
 
@@ -216,11 +216,39 @@ describe("Testing Validator", () => {
         //     console.log(DemoEnvironment.getInstance().writer.writeToString(mm))
         // );
         errors = validator.validate(model, true);
-        // errors.forEach(e =>
-        //     console.log(e.message + " => " + e.locationdescription + " prop: " + e.propertyName + " node: " + p(e.reportedOn) + " of severity " + e.severity)
-        // );
-        // TODO check every one of the messages
-        expect(errors.length).toBe(24);
+        const reports: string[] = [];
+        errors.forEach(e => {
+            reports.push(e.message + " => " + e.locationdescription + " prop: " + e.propertyName + " node: " + p(e.reportedOn) + " of severity " + e.severity);
+            // console.log(e.message + " => " + e.locationdescription + " prop: " + e.propertyName + " node: " + p(e.reportedOn) + " of severity " + e.severity);
+        });
+        // two extra errors because the validations on interfaces are taken into account
+        expect(errors.length).toBe(26);
+        expect(reports.includes("length EXPRESSION TYPE IS NOT CORRECT!! => length prop: Improvement node: ID-60 of severity TODO")).toBeTruthy();
+        expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => length prop: Error node: ID-46 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"Person\" '' (String) should equal the type of 'Integer' (Integer) => unnamed prop: TODO node: ID-59 of severity TODO")).toBeTruthy();
+        expect(reports.includes("determine EXPRESSION TYPE IS NOT CORRECT!! => determine prop: Improvement node: ID-63 of severity TODO")).toBeTruthy();
+        expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => determine prop: Error node: ID-61 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"Hello Demo\" '' (String) should equal the type of 'Integer' (Integer) => unnamed prop: Improvement node: ID-64 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"Goodbye\" '' (String) should equal the type of 'Integer' (Integer) => unnamed prop: Improvement node: ID-65 of severity TODO")).toBeTruthy();
+        expect(reports.includes("last EXPRESSION TYPE IS NOT CORRECT!! => last prop: Improvement node: ID-67 of severity TODO")).toBeTruthy();
+        expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => last prop: Error node: ID-66 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"woord\" '' (String) should equal the type of 'Integer' (Integer) => unnamed prop: Improvement node: ID-69 of severity TODO")).toBeTruthy();
+        expect(reports.includes("WAT IS DIT LEUK!! => unnamed prop: Info node: ID-68 of severity TODO")).toBeTruthy();
+        expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => manyParams prop: Error node: ID-23 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"Person\" '' (String) should equal the type of 'Integer' (Integer) => unnamed prop: TODO node: ID-44 of severity TODO")).toBeTruthy();
+        expect(reports.includes("first EXPRESSION TYPE IS NOT CORRECT!! => first prop: Improvement node: ID-75 of severity TODO")).toBeTruthy();
+        expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => first prop: Error node: ID-73 of severity TODO")).toBeTruthy();
+        expect(reports.includes("another EXPRESSION TYPE IS NOT CORRECT!! => another prop: Improvement node: ID-100 of severity TODO")).toBeTruthy();
+        expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => another prop: Error node: ID-81 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"Yes\" ' or ' \"No\" ' == NOOT or ' \"Hello World\" ' < ' \"Hello Universe\" ' and ' \"x\" ' < 122' (Boolean) should equal the type of 'Integer' (Integer) => unnamed prop: Improvement node: ID-95 of severity TODO")).toBeTruthy();
+        expect(reports.includes("WAT IS DIT LEUK!! => unnamed prop: Info node: ID-95 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"Yes\" '' (String) should equal the type of 'Boolean' (Boolean) => unnamed prop: TODO node: ID-87 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"No\" '' (String) should equal the type of 'NOOT' (Company2) => unnamed prop: TODO node: ID-85 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"x\" '' (String) should equal the type of '122' (Integer) => unnamed prop: TODO node: ID-89 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Property 'right' must have a value => unnamed prop: right node: ID-99 of severity Error")).toBeTruthy();
+        expect(reports.includes("Type of '' (undefined) should equal the type of 'Integer' (Integer) => unnamed prop: TODO node: null-undefined of severity TODO")).toBeTruthy();
+        expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => doClean prop: Error node: ID-10 of severity TODO")).toBeTruthy();
+        expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => requestClean prop: Error node: ID-18 of severity TODO")).toBeTruthy();
     });
 });
 

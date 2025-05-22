@@ -165,9 +165,9 @@ export class FreTyperGenUtils {
     ): string {
         let result: string = FreTyperGenUtils.makeExpAsTypeOrElement(propExp.value, varName, varIsType, imports);
         if (!!propExp.property && !propExp.property.isPart) {
-            // it is a reference, wrap it in a FreElementReference
+            // it is a reference, wrap it in a FreNodeReference
             // TODO find solution for this import, currently it is imported always
-            // ListUtil.addIfNotPresent(imports, Names.FreElementReference);
+            // ListUtil.addIfNotPresent(imports, Names.FreNodeReference);
             const typeName: string = Names.classifier(propExp.property.type);
             ListUtil.addIfNotPresent(imports, propExp.property.type);
             result = `${Names.FreNodeReference}.create<${typeName}>(${result}, "${typeName}") /* PropValue */ `;

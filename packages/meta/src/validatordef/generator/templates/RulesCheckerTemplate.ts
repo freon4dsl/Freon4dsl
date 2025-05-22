@@ -336,7 +336,7 @@ export class RulesCheckerTemplate {
             let refAddition: string = "";
             let howToWriteName: string = "this.myWriter.writeNameOnly(elem)";
             if (!!rule.list.findRefOfLastAppliedFeature() && !rule.list.findRefOfLastAppliedFeature()!.isPart) {
-                // the elements in the list are all FreElementReferences
+                // the elements in the list are all FreNodeReferences
                 refAddition += ".referred";
                 howToWriteName = "elem.name"; // if the list element is a reference there is no need to call the writer
             }

@@ -96,7 +96,7 @@ export function matchElementList(list: FreNode[], toBeMatched: Partial<FreNode>[
 }
 
 /**
- * matchReferenceList implements the match functionality on a list of FreElementReferences.
+ * matchReferenceList implements the match functionality on a list of FreNodeReferences.
  */
 export function matchReferenceList<T extends FreNamedNode>(
     list: FreNodeReference<T>[],
