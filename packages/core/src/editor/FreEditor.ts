@@ -16,7 +16,7 @@ import {
     // wait,
     isTextBox,
     ElementBox,
-    RoleProvider
+    RoleProvider, isSelectBox, isActionBox, isElementBox
 } from "./index.js";
 import { FreError, FreErrorSeverity } from "../validator/index.js";
 import { isExpressionPreOrPost, isNullOrUndefined, LEFT_MOST } from "../util/index.js";
@@ -353,7 +353,14 @@ export class FreEditor {
     }
 
     selectParent() {
-        this.selectParentForBox(this.selectedBox);
+        LOGGER.log(`SELECTION WAS: ${this.selectedBox.kind} node ${this.selectedBox?.node?.freLanguageConcept()} parent box ${this.selectedBox.parent?.kind}`)
+        if (isElementBox(this.selectedBox.parent)  || isSelectBox(this.selectedBox.parent) || isActionBox(this.selectedBox.parent)) {
+            LOGGER.log("selectParent: Ignore parent, go up 'parent.parent'")
+            this.selectParentForBox(this.selectedBox.parent)
+        } else {
+            this.selectParentForBox(this.selectedBox);
+        }
+        LOGGER.log(`SELECTION NOW: ${this.selectedBox.kind} node ${this.selectedBox?.node?.freLanguageConcept()}`)
     }
 
     private selectParentForBox(box: Box) {
@@ -363,8 +370,10 @@ export class FreEditor {
         if (!!parent) {
             // todo too much recursion when called from a Dropdown!!!
             if (parent.selectable) {
+                LOGGER.log(`selectParent.isSelectable; ${parent.kind} node ${parent.node.freLanguageConcept()}`)
                 this.selectElementForBox(parent);
             } else {
+                LOGGER.log(`selectParent.notSelectable; ${parent.kind} node ${parent.node.freLanguageConcept()}`)
                 this.selectParentForBox(parent);
             }
         }
