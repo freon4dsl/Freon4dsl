@@ -4,6 +4,7 @@ import { AA, BB, CC, KK, TestLimited, XX, ZZ } from "../language/gen";
 import { TestStartScoper } from "../scoper/gen";
 import { TestStartStdlib } from "../stdlib/gen/TestStartStdlib";
 import { describe, test, expect, beforeEach } from "vitest";
+import { getVisibleNames } from '../../utils/HelperFunctions';
 
 describe("Checking stdlib for Demo", () => {
     TestStartEnvironment.getInstance();
@@ -88,7 +89,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super2);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
-        let vi = scoper.getVisibleNames(model);
+        let vi = getVisibleNames(scoper, model);
         expect(vi).toContain("super1");
         expect(vi).toContain("super2");
         expect(vi).toContain("myCC1");
@@ -101,7 +102,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super2);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
-        let vi = scoper.getVisibleNames(model);
+        let vi = getVisibleNames(scoper, model);
         // expect(vi).toContain("super1");
         expect(vi).toContain("super2");
         // expect(vi).toContain("myCC1");
@@ -114,7 +115,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super1);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
-        let vi = scoper.getVisibleNames(model);
+        let vi = getVisibleNames(scoper, model);
         expect(vi).toContain("super1");
         // expect(vi).toContain("super2");
         expect(vi).toContain("myCC1");
@@ -128,7 +129,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super2);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
-        let vi = scoper.getVisibleElements(model);
+        let vi = scoper.getVisibleNodes(model);
         expect(vi).toContain(super1);
         expect(vi).toContain(super2);
         expect(vi).toContain(super1.AAprop21); // myCC1
@@ -141,7 +142,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super2);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
-        let vi = scoper.getVisibleElements(model);
+        let vi = scoper.getVisibleNodes(model);
         expect(vi).not.toContain(super1);
         expect(vi).toContain(super2);
         expect(vi).not.toContain(super1.AAprop21); // myCC1
@@ -154,7 +155,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super1);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
-        let vi = scoper.getVisibleElements(model);
+        let vi = scoper.getVisibleNodes(model);
         expect(vi).toContain(super1);
         expect(vi).not.toContain(super2);
         expect(vi).toContain(super1.AAprop21); // myCC1

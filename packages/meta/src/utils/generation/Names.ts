@@ -35,7 +35,7 @@ export class Names {
     // tslint:disable-next-line:variable-name
     public static FreScoperBase: string = "FreScoperBase";
     // tslint:disable-next-line:variable-name
-    public static FreScoperComposite: string = "FreScoperComposite";
+    public static FreCompositeScoper: string = "FreCompositeScoper";
     // tslint:disable-next-line:variable-name
     public static FreScoperPart: string = "FreScoper";
     // tslint:disable-next-line:variable-name

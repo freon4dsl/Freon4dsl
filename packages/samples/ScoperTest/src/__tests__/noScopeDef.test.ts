@@ -3,11 +3,11 @@ import { beforeEach, describe, test, expect } from 'vitest';
 import { FileHandler } from './FileHandler';
 import { ScoperTestModel } from '@freon4dsl/samples-scoper-test';
 import { ScoperTestModelEnvironment } from '../config/gen/ScoperTestModelEnvironment';
-import { FreNamedNode, FreScoperComposite } from '@freon4dsl/core';
+import { FreNamedNode, FreCompositeScoper } from '@freon4dsl/core';
 import { IAstNode, UnitA, UnitB } from '../language/gen';
 
 
-function doRecursive(child: IAstNode, scoper: FreScoperComposite, visFromModel: FreNamedNode[]) {
+function doRecursive(child: IAstNode, scoper: FreCompositeScoper, visFromModel: FreNamedNode[]) {
 	child.childrenNoName.forEach(grandchild => {
 		const subList = scoper.getVisibleElements(grandchild);
 		expect(visFromModel).toStrictEqual(subList);

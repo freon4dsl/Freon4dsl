@@ -2,6 +2,7 @@ import { DSmodel } from "../language/gen";
 import { SimpleModelCreator } from "./ModelCreator";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment";
 import { describe, test, expect } from "vitest";
+import { getVisibleNames } from '../../utils/HelperFunctions';
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";
@@ -31,14 +32,14 @@ describe("Testing Defined Scoper, where unit is namespace", () => {
     test("model with 1 unit of depth 2: names visible in model are all unit names", () => {
         const model: DSmodel = creator.createModel(1, 2);
         expect(model.units[0]).not.toBeNull();
-        const visibleNames = scoper.getVisibleNames(model);
+        const visibleNames = getVisibleNames(scoper, model);
         expect(visibleNames.length).toBe(1);
         expect(visibleNames).toContain(model.units[0].name);
     });
 
     test("model with 10 units of depth 2: names visible in model are all unit names", () => {
         const model: DSmodel = creator.createModel(10, 2);
-        const visibleNames = scoper.getVisibleNames(model);
+        const visibleNames = getVisibleNames(scoper, model);
         expect(visibleNames.length).toBe(10);
         for (const xx of model.units) {
             expect(visibleNames).toContain(xx.name);
@@ -47,9 +48,9 @@ describe("Testing Defined Scoper, where unit is namespace", () => {
 
     test("unit in model with 5 units of depth 2: names should only be visible within the same unit", () => {
         const model: DSmodel = creator.createModel(5, 2);
-        const visibleUnitNames = scoper.getVisibleNames(model);
+        const visibleUnitNames = getVisibleNames(scoper, model);
         for (const myUnit of model.units) {
-            const visibleNames = scoper.getVisibleNames(myUnit);
+            const visibleNames = getVisibleNames(scoper, myUnit);
             expect(visibleNames).toContain(myUnit.name);
             for (const anyName of creator.allNames) {
                 if (anyName.includes(myUnit.name)) {
@@ -69,9 +70,9 @@ describe("Testing Defined Scoper, where unit is namespace", () => {
     test("visible names of a part of a unit should be the same list as the visible names of the unit", () => {
         const model: DSmodel = creator.createModel(5, 3);
         for (const myUnit of model.units) {
-            const namesInUnit = scoper.getVisibleNames(myUnit);
+            const namesInUnit = getVisibleNames(scoper, myUnit);
             for (const dsPublic of myUnit.dsPublics) {
-                const namesInPart = scoper.getVisibleNames(dsPublic);
+                const namesInPart = getVisibleNames(scoper, dsPublic);
                 for (const myName of namesInPart) {
                     expect(namesInUnit.includes(myName)).toBeTruthy();
                 }
@@ -85,10 +86,10 @@ describe("Testing Defined Scoper, where unit is namespace", () => {
     test("dsPrivate in model with 5 units of depth 3", () => {
         const model: DSmodel = creator.createModel(5, 3);
         for (const myUnit of model.units) {
-            const namesInUnit = scoper.getVisibleNames(myUnit);
+            const namesInUnit = getVisibleNames(scoper, myUnit);
             for (const dsPrivate of myUnit.dsPrivates) {
                 // visible names of a part of a unit should be the same list as the visible names of the unit
-                const namesInPart = scoper.getVisibleNames(dsPrivate);
+                const namesInPart = getVisibleNames(scoper, dsPrivate);
                 for (const myName of namesInPart) {
                     expect(namesInUnit.includes(myName)).toBeTruthy();
                 }
@@ -101,7 +102,7 @@ describe("Testing Defined Scoper, where unit is namespace", () => {
 
     test.skip("names in model with 1 unit of depth 2, with interfaces", () => {
         const model: DSmodel = creator.createModelWithInterfaces(1, 2, 0);
-        const visibleNames = scoper.getVisibleNames(model);
+        const visibleNames = getVisibleNames(scoper, model);
         for (const x of creator.allNames) {
             expect(visibleNames).toContain(x);
         }
@@ -110,7 +111,7 @@ describe("Testing Defined Scoper, where unit is namespace", () => {
     test.skip("names in model with 4 units of depth 3, with interfaces", () => {
         const primaryIndex = 0;
         const model: DSmodel = creator.createModelWithInterfaces(4, 3, primaryIndex);
-        const visibleNames = scoper.getVisibleNames(model);
+        const visibleNames = getVisibleNames(scoper, model);
         // all names from primary unit, and only public names from other units should be visible
         const primaryUnit = model.units[primaryIndex];
         for (const anyName of creator.allNames) {

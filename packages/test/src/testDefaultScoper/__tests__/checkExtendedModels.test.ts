@@ -4,6 +4,7 @@ import { SimpleModelCreator } from "./SimpleModelCreator.js";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment.js";
 import { ExtendedModelCreator } from "./ExtendedModelCreator.js";
 import { describe, test, expect, beforeEach } from "vitest";
+import { getVisibleNames } from '../../utils/HelperFunctions';
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";
@@ -38,7 +39,7 @@ describe("Testing Default Scoper", () => {
     test("validator messages in model with 1 unit of depth 3", () => {
         const model: DSmodel = creator.createModel(1, 3);
         // run the scoper to test all names in the model
-        const visibleNames = scoper.getVisibleNames(model.getUnits()[0]);
+        const visibleNames = getVisibleNames(scoper, model.getUnits()[0]);
 
         // There is only one modelunit, so all names should be visible
         for (const x of creator.allNames) {
@@ -92,10 +93,10 @@ describe("Testing Default Scoper", () => {
             otherUnit.dsRefs.push(ref4);
 
             // try to resolve them
-            expect(ref1.referred).toBeNull();
+            expect(ref1.referred).toBeUndefined();
             expect(ref2.referred?.name).toBe("public2_OF_unit1_OF_model");
-            expect(ref3.referred).toBeNull();
-            expect(ref4.referred).toBeNull();
+            expect(ref3.referred).toBeUndefined();
+            expect(ref4.referred).toBeUndefined();
 
             // now add them to the same unit
             let sameUnit = model.findUnit("unit1_OF_model") as DSunit;
@@ -109,8 +110,8 @@ describe("Testing Default Scoper", () => {
             expect(ref1.referred?.name).toBe("private9_OF_unit1_OF_model");
             expect(ref2.referred?.name).toBe("public2_OF_unit1_OF_model");
             // Next two are incorrect pathnames because second part is not a namespace
-            expect(ref3.referred).toBeNull();
-            expect(ref4.referred).toBeNull();
+            expect(ref3.referred).toBeUndefined();
+            expect(ref4.referred).toBeUndefined();
         })
     });
 

@@ -52,7 +52,7 @@ export class UtilRefHelpers {
             `<${propertyName}>`,
             () => {
                 return scoper
-                    .getVisibleElements(node, propType)
+                    .getVisibleNodes(node, propType)
                     .filter((node) => !!node.name && node.name !== "")
                     .map((node) => ({
                         id: node.name,

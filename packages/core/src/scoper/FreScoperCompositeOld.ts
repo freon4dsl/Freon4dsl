@@ -1,26 +1,26 @@
 import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
-import { FreScoper } from "./FreScoper.js";
+import { FreScoperOld } from "./FreScoperOld.js";
 import { isNullOrUndefined } from '../util/index.js';
 import { FreNamespace } from './FreNamespace.js';
 
-const LOGGER = new FreLogger("FreScoperComposite").mute();
+const LOGGER = new FreLogger("FreCompositeScoper").mute();
 
-export class FreScoperComposite implements FreScoper {
-    mainScoper: FreScoperComposite;
-    private scopers: FreScoper[] = [];
+export class FreScoperCompositeOld implements FreScoperOld {
+    mainScoper: FreScoperCompositeOld;
+    private scopers: FreScoperOld[] = [];
     name: string = "";
 
     constructor(name: string) {
         this.name = name;
     }
 
-    appendScoper(t: FreScoper) {
+    appendScoper(t: FreScoperOld) {
         this.scopers.push(t);
         t.mainScoper = this;
     }
 
-    insertScoper(t: FreScoper) {
+    insertScoper(t: FreScoperOld) {
         this.scopers.splice(0, 0, t);
         t.mainScoper = this;
     }
@@ -50,7 +50,7 @@ export class FreScoperComposite implements FreScoper {
     }
 
     getVisibleElements(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
-        LOGGER.log('COMPOSITE getVisibleElements for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+        LOGGER.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 const result = scoper.getVisibleElements(node, metatype, excludeSurrounding);

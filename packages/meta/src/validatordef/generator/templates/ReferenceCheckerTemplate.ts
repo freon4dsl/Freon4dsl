@@ -52,7 +52,7 @@ export class ReferenceCheckerTemplate {
 
             private makeErrorMessage(${paramName}: ${overallTypeName}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>, propertyName: string, locationDescription: string) {
                 const scoper = ${Names.FreLanguageEnvironment}.getInstance().scoper;
-                const possibles = scoper.getVisibleElements(${paramName}).filter(elem => elem.name === referredElem.name);
+                const possibles = scoper.getVisibleNodes(${paramName}).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
                         new ${Names.FreError}(

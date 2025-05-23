@@ -1,4 +1,11 @@
-import { FreModelSerializer, type FreModel, type FreModelUnit, type FreReader, type FreWriter } from "@freon4dsl/core";
+import {
+    FreModelSerializer,
+    type FreModel,
+    type FreModelUnit,
+    type FreReader,
+    type FreWriter,
+    FreNode, FreNamedNode, FreCompositeScoper
+} from '@freon4dsl/core';
 import { FileHandler } from "./FileHandler.js";
 import { expect}  from "vitest";
 
@@ -39,4 +46,32 @@ function getShortFileName(filename: string): string {
         names = filename.split("/");
     }
     return names[names.length - 1];
+}
+
+export function isInScope(scoper: FreCompositeScoper, node: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
+    return getFromVisibleElements(scoper, node, name, metatype, excludeSurrounding) !== null;
+}
+
+export function getFromVisibleElements(
+  scoper: FreCompositeScoper,
+  node: FreNode,
+  name: string,
+  metatype?: string,
+  excludeSurrounding?: boolean,
+): FreNamedNode {
+    const visibleElements = scoper.getVisibleNodes(node, metatype, excludeSurrounding);
+    if (visibleElements !== null) {
+        for (const element of visibleElements) {
+            const n: string = element.name;
+            if (name === n) {
+                return element;
+            }
+        }
+    }
+    return null;
+}
+
+export function getVisibleNames(scoper: FreCompositeScoper, node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
+    const visibleElements = scoper.getVisibleNodes(node, metatype, excludeSurrounding);
+    return visibleElements.map(el => el.name);
 }

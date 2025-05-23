@@ -28,12 +28,12 @@ describe("Fre Typer Parser", () => {
         const conc = langUnit.concepts.find(x => x.name === "SimpleExp1");
         expect(conc).not.toBeNull();
         expect(conc).not.toBeUndefined();
-        // console.log(`visible in langUnit: ${scoper.getVisibleElements(langUnit).map(elem => `${elem.name}`).join(", ")}`);
-        // console.log(`visible in typeUnit: ${scoper.getVisibleElements(typeUnit).map(elem => `${elem.name}`).join(", ")}`);
-        // console.log(`visible in complete model: ${scoper.getVisibleElements(completeModel).map(elem => `${elem.name}`).join(", ")}`);
+        // console.log(`visible in langUnit: ${scoper.getVisibleNodes(langUnit).map(elem => `${elem.name}`).join(", ")}`);
+        // console.log(`visible in typeUnit: ${scoper.getVisibleNodes(typeUnit).map(elem => `${elem.name}`).join(", ")}`);
+        // console.log(`visible in complete model: ${scoper.getVisibleNodes(completeModel).map(elem => `${elem.name}`).join(", ")}`);
 
         const simpleExpRule = typeUnit.classifierSpecs.find(rule => rule.myClassifier.name === "SimpleExp1");
-        // console.log(`visible in simpleExpRule: ${scoper.getVisibleElements(simpleExpRule).map(elem => `${elem.name}`).join(", ")}`);
+        // console.log(`visible in simpleExpRule: ${scoper.getVisibleNodes(simpleExpRule).map(elem => `${elem.name}`).join(", ")}`);
 
         const errors: FreError[] = validator.validate(typeUnit);
         // TODO MetaType.scope and .valid are not yet adjusted to the new structure in MetaType.ast

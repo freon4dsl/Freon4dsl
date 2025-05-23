@@ -2,7 +2,8 @@ import { describe, test, expect, beforeEach } from "vitest";
 import { ScoperTryoutEnvironment } from '../config/gen/ScoperTryoutEnvironment';
 import { NamedPart, QualifiedName, ScoperTryout, Unit, UnitType1, UnitType2 } from '../language/gen';
 import { FileHandler } from '../../utils/FileHandler';
-import { AST, FreNamedNode, FreNodeReference, qualifiedName } from '@freon4dsl/core';
+import { AST, FreNamedNode, FreNodeReference } from '@freon4dsl/core';
+import { getVisibleNames } from '../../utils/HelperFunctions';
 
 describe("Testing Custom Scoper", () => {
 	const reader = ScoperTryoutEnvironment.getInstance().reader;
@@ -29,18 +30,18 @@ describe("Testing Custom Scoper", () => {
 			referenceUnit.name = 'TestRefs1';
 			referenceUnit.imports.push(FreNodeReference.create<Unit>('unit1_1', 'Unit'));
 		});
-		// console.log(scoper.getVisibleNames(referenceUnit));
-		scoper.getVisibleElements(referenceUnit);
-		expect(scoper.getVisibleNames(referenceUnit)).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U', 'TestRefs1', 'unit1_1', 'unit1_2']);
-		// console.log(scoper.getVisibleNames(referenceUnit, "NamedPart"));
-		expect(scoper.getVisibleNames(referenceUnit, 'NamedPart')).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
+		// console.log(getVisibleNames(scoper, referenceUnit));
+		scoper.getVisibleNodes(referenceUnit);
+		expect(getVisibleNames(scoper, referenceUnit)).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U', 'TestRefs1', 'unit1_1', 'unit1_2']);
+		// console.log(getVisibleNames(scoper, referenceUnit, "NamedPart"));
+		expect(getVisibleNames(scoper, referenceUnit, 'NamedPart')).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
 
 		// create an empty QualifiedName to check the available names
 		const firstQ: QualifiedName = QualifiedName.create({});
 		AST.change(() => {
 			referenceUnit.myReferences.push(firstQ);
 		});
-		expect(scoper.getVisibleNames(firstQ)).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
+		expect(getVisibleNames(scoper, firstQ)).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
 		return firstQ
 	}
 
@@ -64,9 +65,9 @@ describe("Testing Custom Scoper", () => {
 		AST.change( () => {
 			firstQ.restName = secondQ;
 		})
-		expect(scoper.getVisibleNames(secondQ)).toStrictEqual([ 'Z_A', 'Z_B' ]);
+		expect(getVisibleNames(scoper, secondQ)).toStrictEqual([ 'Z_A', 'Z_B' ]);
 
-		const elems = scoper.getVisibleElements(secondQ, 'NamedPart');
+		const elems = scoper.getVisibleNodes(secondQ, 'NamedPart');
 		const za: NamedPart = elems.find(e => e.name === "Z_A") as NamedPart;
 		// add a part to the QualifiedName
 		AST.change( () => {
@@ -86,7 +87,7 @@ describe("Testing Custom Scoper", () => {
 			secondQ.restName = thirdQ;
 		})
 		// console.log(writer.writeToString(referenceUnit))
-		expect(scoper.getVisibleNames(thirdQ)).toStrictEqual([ 'Z_A_A', 'Z_A_B' ]);
+		expect(getVisibleNames(scoper, thirdQ)).toStrictEqual([ 'Z_A_A', 'Z_A_B' ]);
 
 	})
 })

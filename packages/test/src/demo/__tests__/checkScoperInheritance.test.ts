@@ -1,8 +1,8 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-import { DemoScoper } from "../scoper/gen/index.js";
 import { DemoEntity, Demo } from "../language/gen/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { describe, it, test, expect, beforeEach } from "vitest";
+import { getVisibleNames } from '../../utils/HelperFunctions.js';
+import { describe, test, expect, beforeEach } from "vitest";
 
 describe("testing Scoper", () => {
     let modelCreator = new DemoModelCreator();
@@ -36,7 +36,7 @@ describe("testing Scoper", () => {
 
     test("inheritance on loop", () => {
         modelCreator.createInheritanceWithLoop().models[0].entities.forEach((ent) => {
-            let vis = scoper.getVisibleNames(ent);
+            let vis = getVisibleNames(scoper, ent);
             expect(vis).toContain(ent.name);
             ent.attributes.forEach((attr) => {
                 expect(vis).toContain(attr.name);
@@ -51,7 +51,7 @@ describe("testing Scoper", () => {
 
     test("inheritance", () => {
         inheritanceModel.models[0].entities.forEach((ent) => {
-            let vis = scoper.getVisibleNames(ent);
+            let vis = getVisibleNames(scoper, ent);
             expect(vis).toContain(ent.name);
             ent.attributes.forEach((attr) => {
                 expect(vis).toContain(attr.name);
