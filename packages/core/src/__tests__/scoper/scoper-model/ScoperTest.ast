@@ -1,0 +1,28 @@
+language ScoperTest
+
+model ScoperModel {
+    noNameSpaceUnits: UnitA[];
+    nameSpaceUnits: UnitB[];
+}
+
+modelunit UnitA implements IWithName {
+}
+
+modelunit UnitB implements IWithName {
+}
+
+interface IWithoutName {
+    childrenNoName: IWithoutName[];
+    childrenWithName: IWithName[];
+    reference myRef: IWithName[];
+}
+
+interface IWithName base IWithoutName {
+    name: identifier;
+}
+
+concept NodeX implements IWithName {
+}
+
+concept NodeY implements IWithName {
+}

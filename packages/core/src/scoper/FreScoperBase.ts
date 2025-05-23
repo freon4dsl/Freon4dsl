@@ -1,5 +1,4 @@
-import { modelUnit } from "../ast-utils/index.js";
-import { FreNode, FreNodeReference, FreModelUnit, FreNamedNode } from "../ast/index.js";
+import { FreNode, FreNodeReference, FreNamedNode } from "../ast/index.js";
 import { FreLanguageEnvironment } from "../environment/index.js";
 import { FreLanguage } from "../language//index.js";
 import { FreLogger } from "../logging/index.js";
@@ -97,15 +96,15 @@ export abstract class FreScoperBase implements FreScoper {
         return result;
     }
 
-    private getVisibleElementsIntern(
-        node: FreNode,
+    private getVisibleElementsOfNamespace(
+        namespace: FreNamespace,
         result: FreNamedNode[],
         visitedNamespaces: FreNamespace[],
         metatype?: string,
         excludeSurrounding?: boolean,
     ): void {
-        if (!!node) {
-            const origin: FreModelUnit = modelUnit(node);
+        if (!!namespace) {
+            let node: FreNode = namespace._myElem;
             let doSurrouding: boolean =
                 excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
             let nearestNamespace: FreNamespace;
@@ -121,13 +120,47 @@ export abstract class FreScoperBase implements FreScoper {
             while (!!nearestNamespace) {
                 // Second, get the elements from the found namespace
                 if (!visitedNamespaces.includes(nearestNamespace)) {
-                    FreNamespace.joinResultsWithShadowing(
-                        nearestNamespace.getVisibleElements(origin, metatype),
-                        result,
-                    );
+                    result.concat(...nearestNamespace.getVisibleNodes());
                     visitedNamespaces.push(nearestNamespace);
                     for (const additionalNamespace of this.mainScoper.additionalNamespaces(nearestNamespace._myElem)) {
-                        this.getVisibleElementsIntern(additionalNamespace, result, visitedNamespaces, metatype, true);
+                        this.getVisibleElementsOfNamespace(additionalNamespace, result, visitedNamespaces, metatype, true);
+                    }
+                }
+                node = node.freOwner();
+                nearestNamespace = doSurrouding ? this.findNearestNamespace(node) : null;
+            }
+        } else {
+            LOGGER.error("getVisibleNodes: node is null");
+        }
+    }
+
+    private getVisibleElementsIntern(
+      node: FreNode,
+      result: FreNamedNode[],
+      visitedNamespaces: FreNamespace[],
+      metatype?: string,
+      excludeSurrounding?: boolean,
+    ): void {
+        if (!!node) {
+            let doSurrouding: boolean =
+              excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
+            let nearestNamespace: FreNamespace;
+            // first, see if we need to use an alternative/replacement namespace
+            nearestNamespace = this.mainScoper.replacementNamespace(node);
+            if (!!nearestNamespace) {
+                // do not search hierarchical namespaces for alternative/replacement namespace
+                doSurrouding = false;
+            } else {
+                nearestNamespace = this.findNearestNamespace(node);
+            }
+
+            while (!!nearestNamespace) {
+                // Second, get the elements from the found namespace
+                if (!visitedNamespaces.includes(nearestNamespace)) {
+                    result.concat(...nearestNamespace.getVisibleNodes());
+                    visitedNamespaces.push(nearestNamespace);
+                    for (const additionalNamespace of this.mainScoper.additionalNamespaces(nearestNamespace._myElem)) {
+                        this.getVisibleElementsOfNamespace(additionalNamespace, result, visitedNamespaces, metatype, true);
                     }
                 }
                 node = node.freOwner();
@@ -143,18 +176,16 @@ export abstract class FreScoperBase implements FreScoper {
         name: string,
         metatype?: string,
         excludeSurrounding?: boolean,
-    ): FreNamedNode {
+    ): FreNamedNode | undefined {
         const visibleElements = this.mainScoper.getVisibleNodes(node, metatype, excludeSurrounding);
         console.log('visibleElements:\n\t\t ', visibleElements.map(elem => elem.name).join('\n\t\t'));
-        if (visibleElements !== null) {
-            for (const element of visibleElements) {
-                const n: string = element.name;
-                if (name === n) {
-                    return element;
-                }
+        for (const element of visibleElements) {
+            const n: string = element.name;
+            if (name === n) {
+                return element;
             }
         }
-        return null;
+        return undefined;
     }
 
     /**

@@ -1,10 +1,10 @@
 /**
  * This worker class collects all visible names in the model.
  */
-import { FreNode, FreModelUnit, FreNamedNode } from "../ast/index.js";
-import { AstWorker, modelUnit } from "../ast-utils/index.js";
-import { FreLanguage, FreLanguageProperty } from "../language/index.js";
-import { FreLogger } from "../logging/index.js";
+import { FreNode, FreModelUnit, FreNamedNode } from "../../ast/index.js";
+import { AstWorker, modelUnit } from "../../ast-utils/index.js";
+import { FreLanguage, FreLanguageProperty } from "../../language/index.js";
+import { FreLogger } from "../../logging/index.js";
 
 const LOGGER = new FreLogger("CollectNamesWorker").mute();
 

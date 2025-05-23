@@ -1,8 +1,8 @@
-import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
-import { FreLogger } from "../logging/index.js";
+import { FreNode, FreNamedNode, FreNodeReference } from '../../ast/index.js';
+import { FreLogger } from "../../logging/index.js";
 import { FreScoperOld } from "./FreScoperOld.js";
-import { isNullOrUndefined } from '../util/index.js';
-import { FreNamespace } from './FreNamespace.js';
+import { isNullOrUndefined } from '../../util/index.js';
+import { FreNamespaceOLD } from './FreNamespaceOLD.js';
 
 const LOGGER = new FreLogger("FreCompositeScoper").mute();
 
@@ -99,11 +99,11 @@ export class FreScoperCompositeOld implements FreScoperOld {
         return null; // TODO or undefined?
     }
 
-    replacementNamespace(node: FreNode): FreNamespace | undefined {
+    replacementNamespace(node: FreNode): FreNamespaceOLD | undefined {
         LOGGER.log('COMPOSITE replacementNamespace for ' + node.freId() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
-                const result: FreNamespace = scoper.replacementNamespace(node);
+                const result: FreNamespaceOLD = scoper.replacementNamespace(node);
                 if (!isNullOrUndefined(result)) {
                     return result;
                 }

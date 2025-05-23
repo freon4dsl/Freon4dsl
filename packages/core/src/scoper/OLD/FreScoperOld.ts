@@ -1,6 +1,6 @@
-import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
+import { FreNode, FreNamedNode, FreNodeReference } from '../../ast/index.js';
 import { FreScoperCompositeOld } from "./FreScoperCompositeOld.js";
-import { FreNamespace } from './FreNamespace.js';
+import { FreNamespaceOLD } from './FreNamespaceOLD.js';
 
 // Part of the Freon Framework
 
@@ -93,5 +93,5 @@ export interface FreScoperOld {
      * Returns the replacement namespace if it can be found for 'node'.
      * @param node
      */
-    replacementNamespace(node: FreNode): FreNamespace | undefined;
+    replacementNamespace(node: FreNode): FreNamespaceOLD | undefined;
 }

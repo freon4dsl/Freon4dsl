@@ -1,10 +1,10 @@
-import { modelUnit } from "../ast-utils/index.js";
-import { FreNode, FreNodeReference, FreModelUnit, FreNamedNode } from "../ast/index.js";
-import { FreLanguageEnvironment } from "../environment/index.js";
-import { FreLanguage } from "../language//index.js";
-import { FreLogger } from "../logging/index.js";
-import { FreCompositeTyper } from "../typer/index.js";
-import { FreNamespace } from "./FreNamespace.js";
+import { modelUnit } from "../../ast-utils/index.js";
+import { FreNode, FreNodeReference, FreModelUnit, FreNamedNode } from "../../ast/index.js";
+import { FreLanguageEnvironment } from "../../environment/index.js";
+import { FreLanguage } from "../../language//index.js";
+import { FreLogger } from "../../logging/index.js";
+import { FreCompositeTyper } from "../../typer/index.js";
+import { FreNamespaceOLD } from "./FreNamespaceOLD.js";
 import { FreScoperOld } from './FreScoperOld.js';
 import { FreScoperCompositeOld } from './FreScoperCompositeOld.js';
 
@@ -89,7 +89,7 @@ export abstract class FreScoperBaseOld implements FreScoperOld {
         // console.log('BASE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
 
         this.myTyper = FreLanguageEnvironment.getInstance().typer;
-        const visitedNamespaces: FreNamespace[] = [];
+        const visitedNamespaces: FreNamespaceOLD[] = [];
         const result: FreNamedNode[] = [].concat(this.getElementsFromStdlib(metatype));
         this.getVisibleElementsIntern(node, result, visitedNamespaces, metatype, excludeSurrounding);
         return result;
@@ -98,7 +98,7 @@ export abstract class FreScoperBaseOld implements FreScoperOld {
     private getVisibleElementsIntern(
         node: FreNode,
         result: FreNamedNode[],
-        visitedNamespaces: FreNamespace[],
+        visitedNamespaces: FreNamespaceOLD[],
         metatype?: string,
         excludeSurrounding?: boolean,
     ): void {
@@ -106,7 +106,7 @@ export abstract class FreScoperBaseOld implements FreScoperOld {
             const origin: FreModelUnit = modelUnit(node);
             let doSurrouding: boolean =
                 excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
-            let nearestNamespace: FreNamespace;
+            let nearestNamespace: FreNamespaceOLD;
             // first, see if we need to use an alternative/replacement namespace
             nearestNamespace = this.mainScoper.replacementNamespace(node);
             if (!!nearestNamespace) {
@@ -119,7 +119,7 @@ export abstract class FreScoperBaseOld implements FreScoperOld {
             while (!!nearestNamespace) {
                 // Second, get the elements from the found namespace
                 if (!visitedNamespaces.includes(nearestNamespace)) {
-                    FreNamespace.joinResultsWithShadowing(
+                    FreNamespaceOLD.joinResultsWithShadowing(
                         nearestNamespace.getVisibleElements(origin, metatype),
                         result,
                     );
@@ -176,12 +176,12 @@ export abstract class FreScoperBaseOld implements FreScoperOld {
      * Returns the enclosing namespace for 'modelelement'.
      * @param node
      */
-    private findNearestNamespace(node: FreNode): FreNamespace {
+    private findNearestNamespace(node: FreNode): FreNamespaceOLD {
         if (node === null) {
             return null;
         }
         if (FreLanguage.getInstance().classifier(node.freLanguageConcept()).isNamespace) {
-            return FreNamespace.create(node);
+            return FreNamespaceOLD.create(node);
         } else {
             return this.findNearestNamespace(node.freOwner());
         }
@@ -207,7 +207,7 @@ export abstract class FreScoperBaseOld implements FreScoperOld {
     }
 
     // @ts-ignore parameter is present to adhere to interface FreScoper
-    replacementNamespace(node: FreNode): FreNamespace {
+    replacementNamespace(node: FreNode): FreNamespaceOLD {
         console.log('BASE replacementNamespace for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         return undefined;
     }

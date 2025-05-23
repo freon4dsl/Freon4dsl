@@ -2,13 +2,14 @@
  * Class Namespace is a wrapper for a model element that is a namespace (as defined in the scoper definition).
  * It provides the implementation of the algorithm used to search for all names that are visible in the namespace.
  */
-import { FreNode, FreModelUnit, FreNamedNode } from "../ast/index.js";
-import { AstWalker, modelUnit } from "../ast-utils/index.js";
+import { FreNode, FreNamedNode } from "../ast/index.js";
+import { AstWalker } from "../ast-utils/index.js";
 import { FreLanguage } from "../language/index.js";
-import { FreLogger } from "../logging/index.js";
-import { CollectNamesWorker } from "./CollectNamesWorker.js";
+import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js";
+import { isNullOrUndefined } from '../util/index.js';
+// import { FreLogger } from "../logging/index.js";
 
-const LOGGER = new FreLogger("FreonNamespace").mute();
+// const LOGGER = new FreLogger("FreonNamespace").mute();
 
 export class FreNamespace {
     private static allNamespaces: Map<FreNode, FreNamespace> = new Map();
@@ -29,85 +30,61 @@ export class FreNamespace {
         }
     }
 
-    /**
-     * This convenience method merges 'list' and 'result', where if an element is present in both,
-     * the element in 'list' is discarded, thus shadowing names from 'list'.
-     * @param list
-     * @param result
-     */
-    public static joinResultsWithShadowing(list: FreNamedNode[], result: FreNamedNode[]) {
-        list.forEach((elem) => {
-            // shadow name in outer namespace if it is already present
-            if (!result.includes(elem)) {
-                result.push(elem);
-            }
-        });
-    }
-
     public _myElem: FreNode;
 
     private constructor(elem: FreNode) {
+        if (!elem) {
+            console.log('FreNamespace constructed without node!');
+        }
         this._myElem = elem;
+    }
+
+    /**
+     * Returns all elements that are declared in this namespace. Private/public is not taken into account yet.
+     */
+    public getDeclaredNodes(): Set<FreNamedNode> {
+        const result: FreNamedNode[] = [];
+        // set up the 'worker' of the visitor pattern
+        const myNamesCollector = new CollectDeclaredNodesWorker();
+        myNamesCollector.namesList = result;
+
+        // set up the 'walker' of the visitor pattern
+        const myWalker = new AstWalker();
+        myWalker.myWorkers.push(myNamesCollector);
+
+        // collect the elements from the namespace, but not from any child namespace
+        myWalker.walk(this._myElem, (elem: FreNode) => {
+            return !FreLanguage.getInstance().classifier(elem.freLanguageConcept()).isNamespace;
+        });
+        return new Set<FreNamedNode>(result);
     }
 
     /**
      * Returns all elements that are visible in this namespace, including those from additional namespaces
      * as defined in the scoper definition.
      */
-    public getVisibleElements(origin: FreModelUnit, metatype?: string): FreNamedNode[] {
-        let result: FreNamedNode[];
-
-        result = this.getInternalVisibleElements(origin, metatype);
-
+    public getVisibleNodes(): Set<FreNamedNode> {
+        let result: Set<FreNamedNode> = this.getDeclaredNodes();
+        const parentNamespace: FreNamespace = this.findParentNamespace(this);
+        if (parentNamespace) {
+            parentNamespace.getVisibleNodes().forEach(x => {
+                // console.log('adding ', x.name);
+                result.add(x);
+            })
+        }
         return result;
     }
 
-    /**
-     * Returns the elements that are visible in this namespace only, without regard for additional namespaces
-     * @param origin
-     * @param metatype
-     * @private
-     */
-    private getInternalVisibleElements(origin: FreModelUnit, metatype?: string): FreNamedNode[] {
-        const result: FreNamedNode[] = [];
-        // TODO check this: for now we push all parts, later public/private annotations can be taken into account
-        // set up the 'worker' of the visitor pattern
-        const myNamesCollector = new CollectNamesWorker(origin);
-        myNamesCollector.namesList = result;
-        if (!!metatype) {
-            myNamesCollector.metatype = metatype;
+    private findParentNamespace(child: FreNamespace): FreNamespace | undefined {
+        let owner: FreNode = child._myElem.freOwner();
+        while (!isNullOrUndefined(owner) ) {
+            if (FreLanguage.getInstance().classifier(owner.freLanguageConcept()).isNamespace) {
+                console.log('returning namespace ', owner.freLanguageConcept());
+                return FreNamespace.create(owner);
+            } else {
+                owner = owner.freOwner();
+            }
         }
-
-        // set up the 'walker of the visitor pattern
-        const myWalker = new AstWalker();
-        myWalker.myWorkers.push(myNamesCollector);
-
-        // collect the elements from the namespace, but not from any child namespace
-        myWalker.walk(this._myElem, (elem: FreNode) => {
-            const sameModelUnit = modelUnit(elem) === origin;
-            const visit =
-                !FreLanguage.getInstance().classifier(elem.freLanguageConcept()).isNamespace &&
-                (sameModelUnit ||
-                    (!!elem.freOwner() &&
-                        FreLanguage.getInstance().classifierProperty(
-                            elem.freOwner().freLanguageConcept(),
-                            elem.freOwnerDescriptor().propertyName,
-                        ).isPublic));
-            LOGGER.log(
-                "Namespace::Visit " +
-                    elem.freLanguageConcept() +
-                    "(" +
-                    elem["name"] +
-                    ")" +
-                    " ==> " +
-                    visit +
-                    "   same modelunit? " +
-                    sameModelUnit +
-                    "  _elem " +
-                    this._myElem.freLanguageConcept(),
-            );
-            return visit;
-        });
-        return result;
+        return undefined;
     }
 }
