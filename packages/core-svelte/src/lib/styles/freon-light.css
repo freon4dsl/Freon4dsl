@@ -136,8 +136,9 @@
 }
 
 .text-component-input {
-    color: var(--freon-light-base-600);
-    background: var(--freon-light-accent-green);
+    color: var(--freon-light-accent-darkorange);
+    /*color: var(--freon-light-base-600);*/
+    /*background: var(--freon-light-accent-lightgreen);*/
 }
 
 .text-component-text {
@@ -313,5 +314,5 @@
 }
 
 .drag-handle-icon {
-    fill: var(--freon-light-base-250);
+    fill: var(--freon-light-base-400);
 }
