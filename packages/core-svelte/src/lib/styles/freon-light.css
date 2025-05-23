@@ -141,7 +141,7 @@
 }
 
 .text-component-text {
-    color: var(--freon-light-base-600);
+    color: var(--freon-light-accent-darkorange);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-text-error {
