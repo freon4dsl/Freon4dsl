@@ -153,7 +153,7 @@
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-action-placeholder {
-    color: var(--freon-light-base-150);
+    color: var(--freon-light-base-400);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
@@ -309,7 +309,7 @@
 }
 
 .brackets {
-    color: var(--freon-light-base-200);
+    color: var(--freon-light-base-400);
 }
 
 .drag-handle-icon {
