@@ -1,11 +1,12 @@
-import { FreNode, FreNodeReference, FreNamedNode } from "../ast/index.js";
-import { FreLanguageEnvironment } from "../environment/index.js";
+import { FreNode, FreNodeReference, FreNamedNode } from '../ast/index.js';
 import { FreLanguage } from "../language//index.js";
 import { FreLogger } from "../logging/index.js";
 import { FreCompositeTyper } from "../typer/index.js";
 import { FreCompositeScoper } from "./FreCompositeScoper.js";
 import { FreNamespace } from "./FreNamespace.js";
 import { FreScoper } from "./FreScoper.js";
+import { isNullOrUndefined } from '../util/index.js';
+
 
 const LOGGER = new FreLogger("FreScoperBase");
 
@@ -14,201 +15,174 @@ export abstract class FreScoperBase implements FreScoper {
     myTyper: FreCompositeTyper;
     // Added to avoid loop when searching for additional namespaces
     additionalNamespacesVisited: FreNodeReference<FreNamedNode>[] = [];
-    protected currentRoleNames: FreNodeReference<FreNamedNode>[] = [];
+    protected beingResolved: FreNodeReference<FreNamedNode>[] = [];
 
-    public resolvePathName(
-        basePosition: FreNode,
-        doNotSearch: FreNodeReference<FreNamedNode>,
-        pathname: string[],
-        metatype?: string,
-    ): FreNamedNode | undefined {
+    public resolvePathName(toBeResolved: FreNodeReference<FreNamedNode>): FreNamedNode | undefined {
+        const pathname: string[] = toBeResolved.pathname;
         console.log('resolving: ', pathname)
-        this.currentRoleNames.push(doNotSearch);
-        // get the names from the namespace where the pathname is found (i.e. the basePosition) to be able to check against this later on
-        const elementsFromBasePosition: FreNamedNode[] = this.mainScoper.getVisibleNodes(basePosition);
-        // start the loop over the set of names in the pathname
-        let previousFound: FreNode = basePosition;
+        this.beingResolved.push(toBeResolved); // to avoid loops: do not resolve the one that is being resolved
+
+        // We must be able to resolve every name in the path to a namespace, except the last. The last should
+        // be a FreNamedNode of the type indicated by 'toBeResolved.typeName'.
+        // Another requirement is that the first name must be visible in the owning namespace of 'toBeResolved'!
+
+        // Loop over the set of names in the pathname.
+        let previousNamespace: FreNamespace = this.findEnclosingNamespace(toBeResolved);
         let found: FreNamedNode = undefined;
         for (let index = 0; index < pathname.length; index++) {
             if (index === pathname.length - 1) {
-                // it is the last name in the path, use 'metatype'
-                found = this.getFromVisibleElements(previousFound, pathname[index], metatype);
+                // Search the last name in the path, the result need not be a namespace, so use 'typeName'.
+                found = this.getFromVisibleNodes(previousNamespace._myElem, pathname[index], toBeResolved.typeName);
             } else {
-                // search the next name of pathname in the namespace of 'previousFound'
-                // but do not use the metatype information, because only the element with the last of the pathname will have the correct type
-                found = this.getFromVisibleElements(previousFound, pathname[index]);
-                if (
-                    found === null ||
-                    found === undefined ||
-                    !FreLanguage.getInstance().classifier(found.freLanguageConcept()).isNamespace
-                ) {
-                    this.currentRoleNames.splice(this.currentRoleNames.indexOf(doNotSearch), 1);
-                    return null;
+                // Search the next name of pathname in the 'previousNamespace'.
+                // Do not use the 'typeName' information, because we are searching for another namespace, not for an element of type 'typeName'.
+                found = this.getFromVisibleNodes(previousNamespace._myElem, pathname[index]);
+                if ( isNullOrUndefined(found) || !FreLanguage.getInstance().classifier(found.freLanguageConcept()).isNamespace ) {
+                    // The pathname is not correct, it does not lead to a namespace that is visible within 'previousNamespace',
+                    // so clean up and return.
+                    this.beingResolved.splice(this.beingResolved.indexOf(toBeResolved), 1);
+                    return undefined;
                 }
-                previousFound = found;
-            }
-            // check if 'found' is public or 'found' is in the namespace of the basePosition
-            console.log(found?.name, ' is public: ', this.isPublic(found), ' is in base position: ', elementsFromBasePosition.includes(found))
-            if (!this.isPublic(found) && !elementsFromBasePosition.includes(found)) {
-                this.currentRoleNames.splice(this.currentRoleNames.indexOf(doNotSearch), 1);
-                return undefined;
+                // ELSE: found the next namespace in the pathname!
+                // But 'found' is a FreNamedNode, so transform it into a namespace.
+                previousNamespace = FreNamespace.create(found);
             }
         }
-        this.currentRoleNames.splice(this.currentRoleNames.indexOf(doNotSearch), 1);
+        // clean up and return
+        this.beingResolved.splice(this.beingResolved.indexOf(toBeResolved), 1);
         return found;
     }
 
-    private isPublic(found: FreNamedNode): boolean {
-        // find the information about whether this element is public or private within its parent from the owner descriptor:
-        // 1. check the language description to find the concept description of the parent
-        // 2. from the parent find the property description with the right name
-        // 3. check whether the found property is public
-        if (found === null || found === undefined) {
-            return false;
+    /**
+     * Find the node with name 'name' within the visible nodes of the namespace that 'node' resides in.
+     * Often 'node' itself represents this namespace.
+     *
+     * If 'metatype' is present, only return the node if its type conforms to 'metatype'.
+     *
+     * @param node
+     * @param name
+     * @param metatype
+     */
+    public getFromVisibleNodes(
+      node: FreNode,
+      name: string,
+      metatype?: string
+    ): FreNamedNode {
+        const visibleNodes = this.mainScoper.getVisibleNodes(node, metatype);
+        if (visibleNodes !== null) {
+            for (const element of visibleNodes) {
+                const n: string = element.name;
+                if (name === n) {
+                    return element;
+                }
+            }
         }
-        const ownerDescriptor = found.freOwnerDescriptor();
-        if (ownerDescriptor === null || ownerDescriptor === undefined) {
-            return false;
-        }
-        const metaType: string = ownerDescriptor.owner.freLanguageConcept();
-        if (!!FreLanguage.getInstance().modelOfType(metaType)) {
-            return true; // model only has units as properties, all units are public
-        } else if (!!FreLanguage.getInstance().unit(metaType)) {
-            // It's a unit so lookup the unit properties
-            return FreLanguage.getInstance().unit(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
+        return null;
+    }
+
+    /**
+     * Starting point can be any node in the AST!
+     * @param node
+     * @param metatype
+     */
+    public getVisibleNodes(node: FreNode, metatype?: string): FreNamedNode[] {
+        // console.log('BASE getVisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", searching for " + metatype);
+        // Initialize, remember all namespaces that we already included/visited, and add all nodes from the standard library.
+        const visitedNamespaces: FreNamespace[] = [];
+        const result: FreNamedNode[] = [].concat(this.getNodesFromStdlib(metatype));
+        // Now do the work, meanwhile remembering which namespaces  have been visited.
+        result.push(...this.getVisibleNodesIntern(node, visitedNamespaces, metatype));
+        return result;
+    }
+
+    private getVisibleNodesIntern(
+      node: FreNode,
+      visitedNamespaces: FreNamespace[],
+      metatype?: string,
+    ): FreNamedNode[] {
+        if (!isNullOrUndefined(node)) {
+            // First find the namespace that 'node' is in.
+            let nearestNamespace: FreNamespace = this.findEnclosingNamespace(node);
+            if (!isNullOrUndefined(nearestNamespace) &&!visitedNamespaces.includes(nearestNamespace)) {
+                // The namespace has not been visited before, so add all its declared nodes.
+                let innerResult: Set<FreNamedNode> = nearestNamespace.getDeclaredNodes();
+                visitedNamespaces.push(nearestNamespace);
+
+                // Second, determine whether we need to include a replacement or the parent namespace
+                const replacement = this.mainScoper.replacementNamespace(nearestNamespace._myElem);
+                if (!isNullOrUndefined(replacement) && !visitedNamespaces.includes(replacement)) {
+                    replacement.getDeclaredNodes().forEach(node => {
+                        innerResult.add(node);
+                    });
+                    // todo add additional NS-es for replacement
+                    visitedNamespaces.push(replacement);
+                } else {
+                    const parentNamespace: FreNamespace = this.findParentNamespace(nearestNamespace);
+                    if (!isNullOrUndefined(parentNamespace) && !visitedNamespaces.includes(parentNamespace)) {
+                        this.getVisibleNodesIntern(parentNamespace._myElem, visitedNamespaces, metatype).forEach(x => {
+                            innerResult.add(x);
+                        });
+                        visitedNamespaces.push(parentNamespace);
+                    }
+                }
+                this.mainScoper.additionalNamespaces(nearestNamespace._myElem).forEach(ns => {
+                    if (!isNullOrUndefined(ns) && !visitedNamespaces.includes(ns)) {
+                        ns.getDeclaredNodes().forEach(node => {
+                            innerResult.add(node);
+                        })
+                        // todo add additional NS-es for additional ???
+                        visitedNamespaces.push(ns)
+                    }
+                });
+                return Array.from(innerResult);
+            }
         } else {
-            // Must be a concept
-            // const x = FreLanguage.getInstance().concept(metaType);
-            return FreLanguage.getInstance().concept(metaType).properties.get(ownerDescriptor.propertyName).isPublic;
+            LOGGER.error("getVisibleNodes: node is null");
+        }
+        return [];
+    }
+
+    /**
+     * Returns the enclosing namespace for 'node'. The result could be 'node' itself, if this is a namespace.
+     * @param node
+     */
+    private findEnclosingNamespace(node: FreNodeReference<FreNamedNode> | FreNode): FreNamespace | undefined {
+        if (isNullOrUndefined(node)) {
+            return undefined;
+        }
+        if (node instanceof FreNodeReference) {
+            return this.findEnclosingNamespace(node.freOwner());
+        } else {
+            if (FreLanguage.getInstance().classifier(node.freLanguageConcept()).isNamespace) {
+                return FreNamespace.create(node);
+            } else {
+                return this.findEnclosingNamespace(node.freOwner());
+            }
         }
     }
 
     /**
-     * See FreScoper.
+     * Returns the enclosing of parent namespace of 'child'.
+     * @param child
+     * @private
      */
-    public getVisibleNodes(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
-        // console.log('BASE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
-
-        this.myTyper = FreLanguageEnvironment.getInstance().typer;
-        const visitedNamespaces: FreNamespace[] = [];
-        const result: FreNamedNode[] = [].concat(this.getElementsFromStdlib(metatype));
-        this.getVisibleElementsIntern(node, result, visitedNamespaces, metatype, excludeSurrounding);
-        return result;
-    }
-
-    private getVisibleElementsOfNamespace(
-        namespace: FreNamespace,
-        result: FreNamedNode[],
-        visitedNamespaces: FreNamespace[],
-        metatype?: string,
-        excludeSurrounding?: boolean,
-    ): void {
-        if (!!namespace) {
-            let node: FreNode = namespace._myElem;
-            let doSurrouding: boolean =
-                excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
-            let nearestNamespace: FreNamespace;
-            // first, see if we need to use an alternative/replacement namespace
-            nearestNamespace = this.mainScoper.replacementNamespace(node);
-            if (!!nearestNamespace) {
-                // do not search hierarchical namespaces for alternative/replacement namespace
-                doSurrouding = false;
+    private findParentNamespace(child: FreNamespace): FreNamespace | undefined {
+        let owner: FreNode = child._myElem.freOwner();
+        while (!isNullOrUndefined(owner) ) {
+            if (FreLanguage.getInstance().classifier(owner.freLanguageConcept()).isNamespace) {
+                return FreNamespace.create(owner);
             } else {
-                nearestNamespace = this.findNearestNamespace(node);
-            }
-
-            while (!!nearestNamespace) {
-                // Second, get the elements from the found namespace
-                if (!visitedNamespaces.includes(nearestNamespace)) {
-                    result.concat(...nearestNamespace.getVisibleNodes());
-                    visitedNamespaces.push(nearestNamespace);
-                    for (const additionalNamespace of this.mainScoper.additionalNamespaces(nearestNamespace._myElem)) {
-                        this.getVisibleElementsOfNamespace(additionalNamespace, result, visitedNamespaces, metatype, true);
-                    }
-                }
-                node = node.freOwner();
-                nearestNamespace = doSurrouding ? this.findNearestNamespace(node) : null;
-            }
-        } else {
-            LOGGER.error("getVisibleNodes: node is null");
-        }
-    }
-
-    private getVisibleElementsIntern(
-      node: FreNode,
-      result: FreNamedNode[],
-      visitedNamespaces: FreNamespace[],
-      metatype?: string,
-      excludeSurrounding?: boolean,
-    ): void {
-        if (!!node) {
-            let doSurrouding: boolean =
-              excludeSurrounding === null || excludeSurrounding === undefined ? true : !excludeSurrounding;
-            let nearestNamespace: FreNamespace;
-            // first, see if we need to use an alternative/replacement namespace
-            nearestNamespace = this.mainScoper.replacementNamespace(node);
-            if (!!nearestNamespace) {
-                // do not search hierarchical namespaces for alternative/replacement namespace
-                doSurrouding = false;
-            } else {
-                nearestNamespace = this.findNearestNamespace(node);
-            }
-
-            while (!!nearestNamespace) {
-                // Second, get the elements from the found namespace
-                if (!visitedNamespaces.includes(nearestNamespace)) {
-                    result.concat(...nearestNamespace.getVisibleNodes());
-                    visitedNamespaces.push(nearestNamespace);
-                    for (const additionalNamespace of this.mainScoper.additionalNamespaces(nearestNamespace._myElem)) {
-                        this.getVisibleElementsOfNamespace(additionalNamespace, result, visitedNamespaces, metatype, true);
-                    }
-                }
-                node = node.freOwner();
-                nearestNamespace = doSurrouding ? this.findNearestNamespace(node) : null;
-            }
-        } else {
-            LOGGER.error("getVisibleNodes: node is null");
-        }
-    }
-
-    private getFromVisibleElements(
-        node: FreNode,
-        name: string,
-        metatype?: string,
-        excludeSurrounding?: boolean,
-    ): FreNamedNode | undefined {
-        const visibleElements = this.mainScoper.getVisibleNodes(node, metatype, excludeSurrounding);
-        console.log('visibleElements:\n\t\t ', visibleElements.map(elem => elem.name).join('\n\t\t'));
-        for (const element of visibleElements) {
-            const n: string = element.name;
-            if (name === n) {
-                return element;
+                owner = owner.freOwner();
             }
         }
         return undefined;
     }
 
     /**
-     * Returns the enclosing namespace for 'modelelement'.
-     * @param node
-     */
-    private findNearestNamespace(node: FreNode): FreNamespace {
-        if (node === null) {
-            return null;
-        }
-        if (FreLanguage.getInstance().classifier(node.freLanguageConcept()).isNamespace) {
-            console.log('returning namespace ', node.freLanguageConcept());
-            return FreNamespace.create(node);
-        } else {
-            return this.findNearestNamespace(node.freOwner());
-        }
-    }
-
-    /**
-     * Returns all elements that are in the standard library, which types equal 'metatype'.
+     * Returns all Nodes that are in the standard library, which types equal 'metatype'.
      * @param metatype
      */
-    private getElementsFromStdlib(metatype?: string): FreNamedNode[] {
+    private getNodesFromStdlib(metatype?: string): FreNamedNode[] {
         if (!!metatype) {
             return FreLanguage.getInstance().stdLib.elements.filter((elem) =>
                 FreLanguage.getInstance().metaConformsToType(elem, metatype),
@@ -219,7 +193,7 @@ export abstract class FreScoperBase implements FreScoper {
     }
 
     // @ts-ignore parameter is present to adhere to interface FreScoper
-    additionalNamespaces(node: FreNode): FreNode[] {
+    additionalNamespaces(node: FreNode): FreNamespace[] {
         return [];
     }
 

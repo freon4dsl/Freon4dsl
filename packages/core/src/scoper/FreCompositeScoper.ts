@@ -10,11 +10,6 @@ const LOGGER = new FreLogger("FreCompositeScoper").mute();
 export class FreCompositeScoper implements FreScoper {
     mainScoper: FreCompositeScoper;
     private scopers: FreScoper[] = [];
-    name: string = "";
-
-    constructor(name: string) {
-        this.name = name;
-    }
 
     appendScoper(t: FreScoper) {
         this.scopers.push(t);
@@ -26,22 +21,19 @@ export class FreCompositeScoper implements FreScoper {
         t.mainScoper = this;
     }
 
-    public resolvePathName(
-      basePosition: FreNode,
-      doNotSearch: FreNodeReference<FreNamedNode>,
-      pathname: string[],
-      metatype?: string,
-    ): FreNamedNode | undefined {
-        if (!!basePosition) {
-            for (const scoper of this.scopers) {
-                if (scoper instanceof FreScoperBase) {
-                    // console.log('FreCompositeScoper calls: ', scoper.constructor.name);
-                    const result = (scoper as FreScoperBase).resolvePathName(basePosition, doNotSearch, pathname, metatype);
-                    if (!isNullOrUndefined(result)) {
-                        return result;
-                    }
-                // } else {
-                //     console.log('FreCompositeScoper does NOT call: ', scoper.constructor.name);
+    /**
+     * This function is only used by FreNodeReference, therefore we redirect to the generated scoper, in fact to
+     * the implementation of this method in its base class 'FreScoperBase'. Internally, the method 'getVisibleNodes' is
+     * used, which *does* use all available scopers.
+     *
+     * @param nodeToResolve
+     */
+    resolvePathName(nodeToResolve: FreNodeReference<FreNamedNode>): FreNamedNode | undefined {
+        for (const scoper of this.scopers) {
+            if (scoper instanceof FreScoperBase) {
+                const result = (scoper as FreScoperBase).resolvePathName(nodeToResolve);
+                if (!isNullOrUndefined(result)) {
+                    return result;
                 }
             }
         }

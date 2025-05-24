@@ -6,7 +6,6 @@ import { FreNode, FreNamedNode } from "../ast/index.js";
 import { AstWalker } from "../ast-utils/index.js";
 import { FreLanguage } from "../language/index.js";
 import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js";
-import { isNullOrUndefined } from '../util/index.js';
 // import { FreLogger } from "../logging/index.js";
 
 // const LOGGER = new FreLogger("FreonNamespace").mute();
@@ -59,32 +58,44 @@ export class FreNamespace {
         return new Set<FreNamedNode>(result);
     }
 
-    /**
-     * Returns all elements that are visible in this namespace, including those from additional namespaces
-     * as defined in the scoper definition.
-     */
-    public getVisibleNodes(): Set<FreNamedNode> {
-        let result: Set<FreNamedNode> = this.getDeclaredNodes();
-        const parentNamespace: FreNamespace = this.findParentNamespace(this);
-        if (parentNamespace) {
-            parentNamespace.getVisibleNodes().forEach(x => {
-                // console.log('adding ', x.name);
-                result.add(x);
-            })
-        }
-        return result;
-    }
-
-    private findParentNamespace(child: FreNamespace): FreNamespace | undefined {
-        let owner: FreNode = child._myElem.freOwner();
-        while (!isNullOrUndefined(owner) ) {
-            if (FreLanguage.getInstance().classifier(owner.freLanguageConcept()).isNamespace) {
-                console.log('returning namespace ', owner.freLanguageConcept());
-                return FreNamespace.create(owner);
-            } else {
-                owner = owner.freOwner();
-            }
-        }
-        return undefined;
-    }
+    // /**
+    //  * Returns all elements that are visible in this namespace, including those from additional namespaces
+    //  * as defined in the scoper definition.
+    //  */
+    // public getVisibleNodes(mainscoper: FreCompositeScoper): Set<FreNamedNode> {
+    //     let result: Set<FreNamedNode> = this.getDeclaredNodes();
+    //     const replacement = mainscoper.replacementNamespace(this._myElem);
+    //     if (!isNullOrUndefined(replacement)) {
+    //         replacement.getDeclaredNodes().forEach(node => {
+    //             result.add(node);
+    //         })
+    //     } else {
+    //         const parentNamespace: FreNamespace = this.findParentNamespace(this);
+    //         if (parentNamespace) {
+    //             parentNamespace.getVisibleNodes(mainscoper).forEach(x => {
+    //                 // console.log('adding ', x.name);
+    //                 result.add(x);
+    //             });
+    //         }
+    //     }
+    //     mainscoper.additionalNamespaces(this._myElem).forEach(ns => {
+    //         ns.getDeclaredNodes().forEach(node => {
+    //             result.add(node);
+    //         })
+    //     })
+    //     return result;
+    // }
+    //
+    // private findParentNamespace(child: FreNamespace): FreNamespace | undefined {
+    //     let owner: FreNode = child._myElem.freOwner();
+    //     while (!isNullOrUndefined(owner) ) {
+    //         if (FreLanguage.getInstance().classifier(owner.freLanguageConcept()).isNamespace) {
+    //             console.log('returning namespace ', owner.freLanguageConcept());
+    //             return FreNamespace.create(owner);
+    //         } else {
+    //             owner = owner.freOwner();
+    //         }
+    //     }
+    //     return undefined;
+    // }
 }
