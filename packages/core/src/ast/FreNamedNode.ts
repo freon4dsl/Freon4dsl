@@ -12,18 +12,20 @@ export function qualifiedName(node: FreNamedNode): string[] {
     const result: string[] = [node.name];
     let owner = node.freOwner()
     while (!isNullOrUndefined(owner) ){
-        let typeDescription: FreLanguageClassifier = FreLanguage.getInstance().classifier(owner.freLanguageConcept());
-        if (typeDescription) {
-            if(typeDescription.isNamespace) {
-                if (typeDescription.properties.has('name')) {
-                    result.splice(0, 0, (owner as FreNamedNode).name);
+        if (!isNullOrUndefined(owner.freOwner())) { // to avoid adding the name of the model!
+            let typeDescription: FreLanguageClassifier = FreLanguage.getInstance().classifier(owner.freLanguageConcept());
+            if (typeDescription) {
+                if (typeDescription.isNamespace) {
+                    if (typeDescription.properties.has('name')) {
+                        result.splice(0, 0, (owner as FreNamedNode).name);
+                    }
                 }
+            } else {
+                console.error(`Node ${owner.freId()} of type ${owner.freLanguageConcept()} has no type description (searching for ${node.name})`)
+                // throw new Error(`Node ${next.freId()} of type ${next.freLanguageConcept()} has no type description (searching for ${node.name})`)
             }
-        } else {
-            console.error(`Node ${owner.freId()} of type ${owner.freLanguageConcept()} has no type description (searching for ${node.name})`)
-            // throw new Error(`Node ${next.freId()} of type ${next.freLanguageConcept()} has no type description (searching for ${node.name})`)
         }
-        owner = owner.freOwner()
+        owner = owner.freOwner();
     }
     return result;
 }
