@@ -410,11 +410,6 @@
      */
     onMount(() => {
         LOGGER.log(`onMount for ${box?.id}`);
-        if (!isNullOrUndefined(box)) {
-            box.setFocus = setFocus;
-            box.setCaret = calculateCaret;
-            box.refreshComponent = refresh;
-        }
         refresh('from onMount');
     });
 
@@ -493,8 +488,12 @@
     }
 
     $effect(() => {
+        LOGGER.log(`"effect box is ${box?.id}`)
         if (!isNullOrUndefined(box)) {
             box.getClientRectangle = clientRectangle
+            box.setCaret = calculateCaret;
+            box.setFocus = setFocus
+            box.refreshComponent = refresh
         }
     })
 

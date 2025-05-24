@@ -39,17 +39,14 @@
     let selectAbleReference: boolean = $state(false)
 
     $effect(() => {
+        // runs after the initial onMount
         // keeps the textBox variable in state with the box!
         textBox = box?.textBox;
-    });
-
-    onMount(() => {
-        LOGGER.log(`${box.id}: onMount`);
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
         selectAbleReference = isReferenceBox(box) && box.isSelectAble()
     });
-
+    
     let id: string = $state(''); // an id for the html element
     id = !isNullOrUndefined(box) ? componentId(box) : 'textdropdown-with-unknown-box';
     let isEditing: boolean = $state(false); // becomes true when the text field gets focus

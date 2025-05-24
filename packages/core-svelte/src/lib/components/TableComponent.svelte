@@ -79,7 +79,9 @@
         return _cells;
     }
 
-    function init() {
+    $effect(() => {
+        // runs after the initial onMount
+        // console.log('effect init')
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
         // We also set the refresh to each child that is a TableRowBox,
@@ -91,11 +93,6 @@
                 child.refreshComponent = refresh;
             }
         }
-    }
-
-    $effect(() => {
-        // console.log('effect init')
-        init();
     });
 
     $effect(() => {

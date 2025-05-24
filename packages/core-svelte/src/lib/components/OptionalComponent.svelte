@@ -48,6 +48,7 @@
     }
 
     $effect(() => {
+        // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });

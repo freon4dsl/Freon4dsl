@@ -104,6 +104,7 @@
     });
 
     $effect(() => {
+        // runs after the initial onMount
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
         // selection is handled here because TableCells are not included in the RenderComponent

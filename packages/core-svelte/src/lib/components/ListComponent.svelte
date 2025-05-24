@@ -180,6 +180,7 @@
     }
 
     $effect(() => {
+        // runs after the initial onMount
         LOGGER.log('ListComponent.effect for ' + box.role);
         box.setFocus = setFocus;
         box.refreshComponent = refresh;

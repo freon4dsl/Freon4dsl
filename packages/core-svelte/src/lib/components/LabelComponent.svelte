@@ -19,13 +19,8 @@
     let cssClass: string = $state('');
     let text: string = $state('');
 
-    onMount(() => {
-        if (!isNullOrUndefined(box)) {
-            box.refreshComponent = refresh;
-        }
-    });
-
     $effect(() => {
+        // runs after the initial onMount
         if (!isNullOrUndefined(box)) {
             box.refreshComponent = refresh;
         }
