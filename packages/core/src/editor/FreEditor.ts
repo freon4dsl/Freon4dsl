@@ -14,7 +14,7 @@ import {
     FreCaret,
     FreProjectionHandler,
     // wait,
-    isTextBox,
+    // isTextBox,
     ElementBox,
     RoleProvider, isSelectBox, isActionBox, isElementBox
 } from "./index.js";
@@ -26,9 +26,19 @@ import {ClientRectangle, UndefinedRectangle} from "./ClientRectangleTypes.js";
 const LOGGER = new FreLogger("FreEditor").mute();
 
 export class FreEditor {
-    private static isOnPreviousLine(ref: Box, other: Box): boolean {
+    // private static isOnPreviousLine(ref: Box, other: Box): boolean {
+    //     const margin = 6;
+    //     return other.getClientRectangle().y + margin < ref.getClientRectangle().y;
+    // }
+
+    private static isAbove(ref: ClientRectangle, other: ClientRectangle): boolean {
         const margin = 6;
-        return other.getClientRectangle().y + margin < ref.getClientRectangle().y;
+        LOGGER.log(`isBove ${ref.y} < ${other.y}`)
+        return ref.y + margin < (other.y);
+    }
+
+    private static isBelow(ref: ClientRectangle, other: ClientRectangle): boolean {
+        return FreEditor.isAbove(other, ref)
     }
 
     /**
@@ -37,9 +47,9 @@ export class FreEditor {
      * @param other
      * @private
      */
-    private static isOnNextLine(ref: Box, other: Box): boolean {
-        return this.isOnPreviousLine(other, ref);
-    }
+    // private static isOnNextLine(ref: Box, other: Box): boolean {
+    //     return this.isOnPreviousLine(other, ref);
+    // }
 
     readonly actions?: FreCombinedActions; // All actions with which this editor is created.
     readonly projection: FreProjectionHandler; // The root projection with which this editor is created.
@@ -705,71 +715,89 @@ export class FreEditor {
      * @param box
      */
     private boxAbove(box: Box): Box {
+        LOGGER.log(`boxAbove: start with box ${box.id} !!!`)
         const rectangle = box.getClientRectangle()
-        const x = rectangle.x + this.scrollX ;
-        const y = rectangle.y + this.scrollY;
-        let result: Box = box.nextLeafLeft;
-        let tmpResult = result;
-        LOGGER.log(`boxAbove ${box.role}: ${box.kind} actual (${Math.round(x)}, ${Math.round(y)}) `);
+        let result: Box = box.nextLeafLeftWithoutExpressionPlaceHolders;
         while (result !== null) {
-            const resultRect = result.getClientRectangle()
-            LOGGER.log(`previous: ${result.role + result.node.freId()} result (${resultRect.x}, ${resultRect.y}) scroll-relative (${resultRect.x + this.scrollX}, ${resultRect.y + this.scrollY})`);
-            if (FreEditor.isOnPreviousLine(tmpResult, result) && FreEditor.isOnPreviousLine(box, tmpResult)) {
-                return tmpResult;
-            }
-            if (FreEditor.isOnPreviousLine(box, result)) {
-                if (resultRect.x <= x) {
-                    return result;
+            let resultRect = result.getClientRectangle()
+            if (FreEditor.isAbove(resultRect, rectangle)) {
+                let nextResult = result.nextLeafLeftWithoutExpressionPlaceHolders
+                while (nextResult !== null) {
+                    const x_distance = this.distance(resultRect, rectangle)
+                    const nextResultRect = nextResult.getClientRectangle()
+                    if (nextResultRect.y === resultRect.y) {
+                        const x_distanceNext = this.distance(nextResultRect, rectangle)
+                        LOGGER.log(`   distance current ${x_distance} (${result.id}) nect ${x_distanceNext} (${nextResult.id})`)
+                        if (x_distanceNext < x_distance) {
+                            result = nextResult
+                            resultRect = nextResultRect
+                        } else {
+                            return result
+                        }
+                    } else {
+                        // other line, return
+                        return result
+                    }
+                    nextResult = nextResult.nextLeafLeftWithoutExpressionPlaceHolders
                 }
+                return result
             }
-            const next = result.nextLeafLeft;
-            tmpResult = result;
-            result = next;
+            result = result.nextLeafLeftWithoutExpressionPlaceHolders;
         }
-        return result;
+        return result ?? box;
     }
 
-    // TODO rethink the parameter 'box' in all of these methods => should work on currently selected box
-
     /**
-     * Returns the box that is visually below `box`.
+     * Returns the box that is visually above `box`.
      * @param box
      */
     private boxBelow(box: Box): Box {
-        const rect = box.getClientRectangle()
-        const x = rect.x + this.scrollX ;
-        const y =  rect.y + this.scrollY;
-        let result: Box = box.nextLeafRight;
-        let tmpResult = result;
-        LOGGER.log(`boxBelow ${box.role}: ${box.kind} ${Math.round(x)}, ${Math.round(y)} text: ${(isTextBox(box) ? box.getText() : "NotTextBox")}`);
+        LOGGER.log(`boxBelow: start with box ${box.id} !!!`)
+        const rectangle = box.getClientRectangle()
+        let result: Box = box.nextLeafRightWithoutExpressionPlaceHolders;
         while (result !== null) {
-            const resultRect = result.getClientRectangle()
-            LOGGER.log(
-                "next : " +
-                    result.role +
-                    "  " +
-                    Math.round(resultRect.x + this.scrollX) +
-                    ", " +
-                    Math.round(resultRect.y + this.scrollY),
-            );
-            if (FreEditor.isOnNextLine(tmpResult, result) && FreEditor.isOnNextLine(box, tmpResult)) {
-                LOGGER.log("Found box below 1 [" + (!!tmpResult ? tmpResult.role : "null") + "]");
-                return tmpResult;
-            }
-            if (FreEditor.isOnNextLine(box, result)) {
-                if (resultRect.x + this.scrollX + resultRect.width >= x) {
-                    LOGGER.log("Found box below 2 [" + (!!result ? result.role : "null") + "]");
-                    return result;
+            let resultRect = result.getClientRectangle()
+            if (FreEditor.isBelow(resultRect, rectangle)) {
+                let nextResult = result.nextLeafRightWithoutExpressionPlaceHolders
+                while (nextResult !== null) {
+                    const x_distance = this.distance(resultRect, rectangle)
+                    const nextResultRect = nextResult.getClientRectangle()
+                    if (nextResultRect.y === resultRect.y) {
+                        const x_distanceNext = this.distance(nextResultRect, rectangle)
+                        LOGGER.log(`   distance current ${x_distance} (${result.id}) nect ${x_distanceNext} (${nextResult.id})`)
+                        if (x_distanceNext < x_distance) {
+                            result = nextResult
+                            resultRect = nextResultRect
+                        } else {
+                            return result
+                        }
+                    } else {
+                        // other line, return
+                        return result
+                    }
+                    nextResult = nextResult.nextLeafRightWithoutExpressionPlaceHolders
                 }
+                return result
             }
-            const next = result.nextLeafRight;
-            tmpResult = result;
-            result = next;
+            result = result.nextLeafRightWithoutExpressionPlaceHolders;
         }
-        LOGGER.log("Found box below 3 [ null ]");
-        return result;
+        return result ?? box;
     }
 
+    /**
+     * Find the distance from `from` rectangle to `to`.
+     * @param from
+     * @param to
+     */
+    distance(from: ClientRectangle, to: ClientRectangle): number {
+        if (from.x < to.x) {
+            return to.x - from.x + from.width
+        } else {
+            return from.x - to.x + to.width
+        }
+    }
+
+    // TODO rethink the parameter 'box' in all of these methods => should work on currently selected box
     selectBoxBelow(box: Box) {
         const down = this.boxBelow(box);
         if (down !== null && down !== undefined) {
@@ -778,6 +806,7 @@ export class FreEditor {
     }
 
     selectBoxAbove(box: Box) {
+        LOGGER.log(`selectBoxAbove: box is ${box.id}`)
         const up = this.boxAbove(box);
         if (up !== null && up !== undefined) {
             this.selectElementForBox(up);
@@ -792,8 +821,4 @@ export class FreEditor {
     setErrors(list: FreError[]) {
         this._errorDecorator.setErrors(list);
     }
-    //
-    // gatherErrorsPerLine() {
-    //     this._errorDecorator.gatherMessagesForGutter();
-    // }
 }
