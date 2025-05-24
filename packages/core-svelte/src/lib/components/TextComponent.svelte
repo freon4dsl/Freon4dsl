@@ -89,7 +89,7 @@
 
     let surroundingElement: HTMLElement = $state()!; // the element that surrounds all other parts of this component
     let spanElement: HTMLSpanElement = $state()!;
-    let inputElement: HTMLInputElement = $state()!; // the <input> element on the screen
+    let inputElement: HTMLInputElement //= $state()!; // the <input> element on the screen
     let widthSpan: HTMLSpanElement = $state()!; // the width of the <span> element, used to set the width of the <input> element
 
     // We create an extra object that handles a number of the more complex functions for this component
@@ -473,15 +473,19 @@
     }
 
     const clientRectangle = (): ClientRectangle => {
-        LOGGER.log(`clientRectangle ${box.id} ${isEditing} input ${isNullOrUndefined(inputElement)} span ${isNullOrUndefined(spanElement)}`)
+        LOGGER.log(`clientRectangle: ${box.id} isEditing ${isEditing} input ${isNullOrUndefined(inputElement)} span ${isNullOrUndefined(spanElement)}`)
 
         if (!isNullOrUndefined(inputElement)) {
-            LOGGER.log(`clientRectangle ${box.id} using input`)
-            return inputElement.getBoundingClientRect()
+            LOGGER.log(`clientRectangle ${box.id} using input!!!`)
+            const result = inputElement.getBoundingClientRect()
+            LOGGER.log(`    x: ${result.x} y: ${result.y} w: ${result.width} h: ${result.height} `)
+            return result
         }
         if (!isNullOrUndefined(spanElement)) {
             LOGGER.log(`clientRectangle ${box.id} using span`)
-            return spanElement.getBoundingClientRect();
+            const result = spanElement.getBoundingClientRect();
+            LOGGER.log(`    x: ${result.x} y: ${result.y} w: ${result.width} h: ${result.height} `)
+            return result
         }
         LOGGER.log(`clientRectangle ${box.id} is undefined`)
         return UndefinedRectangle

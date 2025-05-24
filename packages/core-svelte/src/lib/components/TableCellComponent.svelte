@@ -103,14 +103,26 @@
         refresh('from onMount');
     });
 
+    // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
+    let selectedCls: string = $state(''); // css class name for when the node is selected
+
     $effect(() => {
         // runs after the initial onMount
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
         // selection is handled here because TableCells are not included in the RenderComponent
-        let isSelected: boolean = selectedBoxes.value.includes(box);
-        cssClass = isSelected ? 'table-cell-component-selected' : 'table-cell-component-unselected';
+        let isSelectedBox: boolean = selectedBoxes.value.includes(box);
+        cssClass = isSelectedBox ? 'table-cell-component-selected' : 'table-cell-component-unselected';
+
+        let isSelected: boolean = box.content.selectable
+            ? selectedBoxes.value.includes(box) || selectedBoxes.value.includes(box.content)
+            : false;
+        selectedCls = isSelected ? 'render-component-selected' : 'render-component-unselected';
+
+        // Evaluated and re-evaluated when the box changes.
+        refresh('New TableCellComponent created for ' + box?.id); //+ " element name: " + box?.element["name"]);
     });
+
 
     const onKeydown = (event: KeyboardEvent) => {
         LOGGER.log("GridCellComponent onKeyDown");
@@ -143,11 +155,6 @@
             }
         }
     };
-
-    $effect(() => {
-        // Evaluated and re-evaluated when the box changes.
-        refresh('New TableCellComponent created for ' + box?.id); //+ " element name: " + box?.element["name"]);
-    });
 
     const drop = (event: DragEvent) => {
         console.log('drop, dispatching');
@@ -242,15 +249,6 @@
             contextMenu.instance.show(event, index, items); // this function sets contextMenu.instanceVisible to true
         }
     }
-
-    // Note that this component is never part of a RenderComponent, therefore we must handle being selected here
-    let selectedCls: string = $state(''); // css class name for when the node is selected
-    $effect(() => {
-        let isSelected: boolean = box.content.selectable
-            ? selectedBoxes.value.includes(box) || selectedBoxes.value.includes(box.content)
-            : false;
-        selectedCls = isSelected ? 'render-component-selected' : 'render-component-unselected';
-    });
 </script>
 
 <!-- on:blur is needed for on:mouseout -->

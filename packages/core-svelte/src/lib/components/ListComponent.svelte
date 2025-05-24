@@ -55,13 +55,22 @@
     // determine the type of the elements in the list
     // this speeds up the check whether an element may be dropped here
     let myMetaType: DragAndDropType;
+    
     $effect(() => {
         // console.log(`EFFECT ${box.conceptName} : ${box.node.freLanguageConcept()}`)
         myMetaType = {
             type: box.conceptName,
             isRef: FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.propertyKind === 'reference'
         }
+        // runs after the initial onMount
+        LOGGER.log('ListComponent.effect for ' + box.role);
+        box.setFocus = setFocus;
+        box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh from ListComponent box changed:   ' + box?.id);
     });
+
+
 
     const drop = (event: DragEvent, targetIndex: number) => {
         const data: ListElementInfo | null = draggedElem.value;
@@ -179,13 +188,6 @@
         }
     }
 
-    $effect(() => {
-        // runs after the initial onMount
-        LOGGER.log('ListComponent.effect for ' + box.role);
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
-    });
-
     const refresh = (why?: string): void => {
         LOGGER.log('REFRESH ListComponent( ' + why + ') ' + box?.node?.freLanguageConcept());
         shownElements = [...box.children];
@@ -194,11 +196,6 @@
             ? box.getDirection() === ListDirection.HORIZONTAL
             : false;
     };
-
-    $effect(() => {
-        // Evaluated and re-evaluated when the box changes.
-        refresh('Refresh from ListComponent box changed:   ' + box?.id);
-    });
 
     const onKeyDown = (event: KeyboardEvent, index: number) => {
         if (event.key === ENTER) {

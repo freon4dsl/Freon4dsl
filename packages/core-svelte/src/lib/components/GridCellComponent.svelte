@@ -84,6 +84,8 @@
         // runs after the initial onMount
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
+        // Evaluated and re-evaluated when the box changes.
+        refresh(box?.id);
     });
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -96,11 +98,6 @@
             executeCustomKeyboardShortCut(event, index, box, editor);
         }
     };
-
-    $effect(() => {
-        // Evaluated and re-evaluated when the box changes.
-        refresh(box?.id);
-    });
 </script>
 
 <div
