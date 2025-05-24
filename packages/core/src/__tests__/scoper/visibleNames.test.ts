@@ -59,77 +59,343 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		}
 	});
 
-	test(" model has all names as visible names", () => {
-		// test namespace for 'model'
-		const namespace = FreNamespace.create(model);
+	// Note that in the whole test the order of the names is important!
 
+	test(" model with []", () => {
+		// test namespace for 'model'
 		const set: FreNamedNode[] = scoper.getVisibleNodes(model);
-		// // printNames(set);;
+		// printNames(set);
 		// visible should be: 50 grandchildren plus 10 children plus 2 units
 		expect(set.length).toBe(62);
+		expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+			'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+			'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+			'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+			'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+			'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+			'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4',
+			'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
+			'B_0_0', 'B_0_1', 'B_0_2', 'B_0_3', 'B_0_4',
+			'B_1_0', 'B_1_1', 'B_1_2', 'B_1_3', 'B_1_4',
+			'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',
+			'B_3_0', 'B_3_1', 'B_3_2', 'B_3_3', 'B_3_4',
+			'B_4_0', 'B_4_1', 'B_4_2', 'B_4_3', 'B_4_4'])
 	})
 
-	test(" unit adds names of parent", () => {
-		// test namespace for 'unit'
-		const unit = model.findUnit('UnitA1');
-		const set: FreNamedNode[] = scoper.getVisibleNodes(unit);
-		// // printNames(set);;
-		// visible should be: visible nodes of model
-		expect(set.length).toBe(62);
-	})
-
-	test(" concept adds names of parents", () => {
-		// test namespace for 'concept'
-		const unit: UnitB = model.findUnit('UnitB1') as UnitB;
-		const concept = unit.childrenWithName.find(child => child.name === 'B_2');
-		if (!!concept) {
-			const set: FreNamedNode[] = scoper.getVisibleNodes(concept);
-			// // printNames(set);;
-			// visible should be: visible nodes of model
-			expect(set.length).toBe(62);
+	test(" model with [NodeX]", () => {
+		// test namespace for 'model'
+		if (!!model) {
+			setNamespaces(['NodeX']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+			// printNames(set);
+			expect(set.length).toBe(37);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
 		}
 	})
 
-	test(" when unit is namespace, inner names are not visible to model", () => {
-		// set the type 'UnitA' to be a namespace, this hides all names of the form 'A_*_*'
-		FreLanguage.getInstance().classifier('UnitA').isNamespace = true;
+	test(" model with with [NodeX, UnitB]", () => {
 		// test namespace for 'model'
-		const set: FreNamedNode[] = scoper.getVisibleNodes(model);
-		// // printNames(set);;
-		// visible should be: 25 grandchildren plus 5 children plus 2 units
-		expect(set.length).toBe(32);
-		// unset namespace
-		FreLanguage.getInstance().classifier('UnitA').isNamespace = false;
+		if (!!model) {
+			setNamespaces(['NodeX', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+			// printNames(set);
+			expect(set.length).toBe(32);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
 	})
 
-	test(" when unit and children are namespaces, inner names are not visible to model", () => {
-		// set the type 'UnitB' to be a namespace, this hides all names of the form 'B_*' and 'B_*_*'
-		FreLanguage.getInstance().classifier('UnitB').isNamespace = true;
-		// set the type 'NodeY' to be a namespace, this hides all names of the form 'A_*_*'.
-		FreLanguage.getInstance().classifier('NodeY').isNamespace = true;
+	test(" model with [NodeX, UnitA]", () => {
 		// test namespace for 'model'
-		const set: FreNamedNode[] = scoper.getVisibleNodes(model);
-		// // printNames(set);;
-		// visible should be: no grandchildren plus 5 children plus 2 units
-		expect(set.length).toBe(7);
-		// unset namespaces, do not interfere with other tests
-		FreLanguage.getInstance().classifier('UnitB').isNamespace = false;
-		FreLanguage.getInstance().classifier('NodeY').isNamespace = false;
+		if (!!model) {
+			setNamespaces(['NodeX', 'UnitA']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+			// printNames(set);
+			expect(set.length).toBe(7);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
 	})
 
-	test(" when child of unit is namespace, inner names are not visible to unit, but names from parent are", () => {
-		// set the type 'NodeX' to be a namespace
-		FreLanguage.getInstance().classifier('NodeX').isNamespace = true;
-		// set the type 'NodeY' to be a namespace
-		FreLanguage.getInstance().classifier('NodeY').isNamespace = true;
-		// test namespace for 'unit'
-		const set: FreNamedNode[] = scoper.getVisibleNodes(model.findUnit('UnitA1'));
-		// // printNames(set);;
-		// visible should be: no grandchildren, 5 own children, plus other unit name, plus, 5 children from other unit
-		expect(set.length).toBe(12);
-		// unset namespaces, do not interfere with other tests
-		FreLanguage.getInstance().classifier('NodeX').isNamespace = false;
-		FreLanguage.getInstance().classifier('NodeY').isNamespace = false;
+	test(" model with [NodeX, UnitA, UnitB]", () => {
+		// test namespace for 'model'
+		if (!!model) {
+			setNamespaces(['NodeY', 'UnitA', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+			// printNames(set);
+			expect(set.length).toBe(2);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" model with [NodeY]", () => {
+		// test namespace for 'model'
+		if (!!model) {
+			setNamespaces(['NodeY']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+			// printNames(set);
+			expect(set.length).toBe(37);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
+				'B_0_0', 'B_0_1', 'B_0_2', 'B_0_3', 'B_0_4',
+				'B_1_0', 'B_1_1', 'B_1_2', 'B_1_3', 'B_1_4',
+				'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',
+				'B_3_0', 'B_3_1', 'B_3_2', 'B_3_3', 'B_3_4',
+				'B_4_0', 'B_4_1', 'B_4_2', 'B_4_3', 'B_4_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" model with [NodeY, UnitA]", () => {
+		// test namespace for 'model'
+		if (!!model) {
+			setNamespaces(['NodeY', 'UnitA']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+			// printNames(set);
+			expect(set.length).toBe(32);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
+				'B_0_0', 'B_0_1', 'B_0_2', 'B_0_3', 'B_0_4',
+				'B_1_0', 'B_1_1', 'B_1_2', 'B_1_3', 'B_1_4',
+				'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',
+				'B_3_0', 'B_3_1', 'B_3_2', 'B_3_3', 'B_3_4',
+				'B_4_0', 'B_4_1', 'B_4_2', 'B_4_3', 'B_4_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" model with [NodeY, UnitB]", () => {
+		// test namespace for 'model'
+		if (!!model) {
+			setNamespaces(['NodeY', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+			// printNames(set);
+			expect(set.length).toBe(7);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" model with [NodeY, UnitA, UnitB]", () => {
+		// test namespace for 'model'
+		if (!!model) {
+			setNamespaces(['NodeY', 'UnitA', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+			// printNames(set);
+			expect(set.length).toBe(2);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1'])
+			unsetNamespaces();
+		}
+	})
+
+	test(" model with [NodeX, NodeY, UnitA, UnitB]", () => {
+		// test namespace for 'model'
+		if (!!model) {
+			setNamespaces(['NodeX', 'NodeY', 'UnitA', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+			// printNames(set);
+			expect(set.length).toBe(2);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with []", () => {
+		// test namespace for 'unitA1'
+		const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+		// printNames(set);
+		// visible should be: 50 grandchildren plus 10 children plus 2 units
+		expect(set.length).toBe(62);
+		expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+			'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+			'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+			'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+			'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+			'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+			'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4',
+			'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
+			'B_0_0', 'B_0_1', 'B_0_2', 'B_0_3', 'B_0_4',
+			'B_1_0', 'B_1_1', 'B_1_2', 'B_1_3', 'B_1_4',
+			'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',
+			'B_3_0', 'B_3_1', 'B_3_2', 'B_3_3', 'B_3_4',
+			'B_4_0', 'B_4_1', 'B_4_2', 'B_4_3', 'B_4_4'])
+	})
+
+	test(" unitA1 with [NodeX]", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeX']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(37);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with with [NodeX, UnitB]", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeX', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(32);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with [NodeX, UnitA]", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeX', 'UnitA']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(37);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4',
+				'UnitA1', 'UnitB1',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with [NodeX, UnitA, UnitB]", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeY', 'UnitA', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(7);
+			expect(set.map(x => x.name)).toStrictEqual(['A_0', 'A_1', 'A_2', 'A_3', 'A_4', 'UnitA1', 'UnitB1'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with [NodeY]", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeY']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(37);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
+				'B_0_0', 'B_0_1', 'B_0_2', 'B_0_3', 'B_0_4',
+				'B_1_0', 'B_1_1', 'B_1_2', 'B_1_3', 'B_1_4',
+				'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',
+				'B_3_0', 'B_3_1', 'B_3_2', 'B_3_3', 'B_3_4',
+				'B_4_0', 'B_4_1', 'B_4_2', 'B_4_3', 'B_4_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with [NodeY, UnitA]", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeY', 'UnitA']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(37);
+			expect(set.map(x => x.name)).toStrictEqual(['A_0', 'A_1', 'A_2', 'A_3', 'A_4', 'UnitA1', 'UnitB1',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
+				'B_0_0', 'B_0_1', 'B_0_2', 'B_0_3', 'B_0_4',
+				'B_1_0', 'B_1_1', 'B_1_2', 'B_1_3', 'B_1_4',
+				'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',
+				'B_3_0', 'B_3_1', 'B_3_2', 'B_3_3', 'B_3_4',
+				'B_4_0', 'B_4_1', 'B_4_2', 'B_4_3', 'B_4_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with [NodeY, UnitB]", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeY', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(7);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with [NodeY, UnitA, UnitB]", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeY', 'UnitA', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(7);
+			expect(set.map(x => x.name)).toStrictEqual(['A_0', 'A_1', 'A_2', 'A_3', 'A_4','UnitA1', 'UnitB1'])
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with [NodeX, NodeY, UnitA, UnitB]", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeX', 'NodeY', 'UnitA', 'UnitB']);
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(7);
+			expect(set.map(x => x.name)).toStrictEqual(['A_0', 'A_1', 'A_2', 'A_3', 'A_4','UnitA1', 'UnitB1'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
 	})
 
 	test(" A_2_2 with []", () => {
@@ -137,9 +403,22 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			// setNamespaces([]);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// // printNames(set);;
+			// printNames(set);
 			// visible should be: whole  AST
 			expect(set.length).toBe(62);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
+				'B_0_0', 'B_0_1', 'B_0_2', 'B_0_3', 'B_0_4',
+				'B_1_0', 'B_1_1', 'B_1_2', 'B_1_3', 'B_1_4',
+				'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',
+				'B_3_0', 'B_3_1', 'B_3_2', 'B_3_3', 'B_3_4',
+				'B_4_0', 'B_4_1', 'B_4_2', 'B_4_3', 'B_4_4'])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}
@@ -150,16 +429,16 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			setNamespaces(['NodeX']);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// // printNames(set);;
-			// visible should be: [UnitA1, UnitB1,
-			// 		A_0, A_1, A_2, A_3, A_4,
-			// 		A_0_0, A_0_1, A_0_2, A_0_3, A_0_4,
-			// 		A_1_0, A_1_1, A_1_2, A_1_3, A_1_4,
-			// 		A_2_0, A_2_1, A_2_2, A_2_3, A_2_4,
-			// 		A_3_0, A_3_1, A_3_2, A_3_3, A_3_4,
-			// 		A_4_0, A_4_1, A_4_2, A_4_3, A_4_4,
-			// 		B_0, B_1, B_2, B_3, B_4]
+			// printNames(set);
 			expect(set.length).toBe(37);
+			expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4'])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}
@@ -170,15 +449,16 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			setNamespaces(['NodeX', 'UnitB']);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// // printNames(set);;
-			// visible should be: [UnitA1, UnitB1,
-			// 	A_0, A_1, A_2, A_3, A_4,
-			// 	A_0_0, A_0_1, A_0_2, A_0_3, A_0_4,
-			// 	A_1_0, A_1_1, A_1_2, A_1_3, A_1_4,
-			// 	A_2_0, A_2_1, A_2_2, A_2_3, A_2_4,
-			// 	A_3_0, A_3_1, A_3_2, A_3_3, A_3_4,
-			// 	A_4_0, A_4_1, A_4_2, A_4_3, A_4_4]
+			// printNames(set);
 			expect(set.length).toBe(32);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4'])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}
@@ -189,16 +469,17 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			setNamespaces(['NodeX', 'UnitA']);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// printNames(set);;
-			// visible should be: [UnitA1, UnitB1,
-			// 		A_0, A_1, A_2, A_3, A_4,
-			// 		A_0_0, A_0_1, A_0_2, A_0_3, A_0_4,
-			// 		A_1_0, A_1_1, A_1_2, A_1_3, A_1_4,
-			// 		A_2_0, A_2_1, A_2_2, A_2_3, A_2_4,
-			// 		A_3_0, A_3_1, A_3_2, A_3_3, A_3_4,
-			// 		A_4_0, A_4_1, A_4_2, A_4_3, A_4_4,
-			// 		B_0, B_1, B_2, B_3, B_4]
+			// printNames(set);
 			expect(set.length).toBe(37);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
+				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
+				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4',
+				'UnitA1', 'UnitB1',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4'])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}
@@ -209,11 +490,12 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			setNamespaces(['NodeY', 'UnitA', 'UnitB']);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// printNames(set);;
-			// visible should be: [A_2_0, A_2_1, A_2_2, A_2_3, A_2_4,
-			// 	A_0, A_1, A_2, A_3, A_4,
-			// 	UnitA1, UnitB1]
+			// printNames(set);
 			expect(set.length).toBe(12);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'UnitA1', 'UnitB1'])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}
@@ -224,17 +506,18 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			setNamespaces(['NodeY']);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// printNames(set);;
-			// visible should be: [A_2_0, A_2_1, A_2_2, A_2_3, A_2_4,
-			// 	UnitA1, UnitB1,
-			// 	A_0, A_1, A_2, A_3, A_4,
-			// 	B_0, B_1, B_2, B_3, B_4,
-			// 	B_0_0, B_0_1, B_0_2, B_0_3, B_0_4,
-			// 	B_1_0, B_1_1, B_1_2, B_1_3, B_1_4,
-			// 	B_2_0, B_2_1, B_2_2, B_2_3, B_2_4,
-			// 	B_3_0, B_3_1, B_3_2, B_3_3, B_3_4,
-			// 	B_4_0, B_4_1, B_4_2, B_4_3, B_4_4]
+			// printNames(set);
 			expect(set.length).toBe(42);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
+				'B_0_0', 'B_0_1', 'B_0_2', 'B_0_3', 'B_0_4',
+				'B_1_0', 'B_1_1', 'B_1_2', 'B_1_3', 'B_1_4',
+				'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',
+				'B_3_0', 'B_3_1', 'B_3_2', 'B_3_3', 'B_3_4',
+				'B_4_0', 'B_4_1', 'B_4_2', 'B_4_3', 'B_4_4'])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}
@@ -245,17 +528,18 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			setNamespaces(['NodeY', 'UnitA']);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// printNames(set);;
-			// visible should be: [A_2_0, A_2_1, A_2_2, A_2_3, A_2_4,
-			// 	A_0, A_1, A_2, A_3, A_4,
-			// 	UnitA1, UnitB1,
-			// 	B_0, B_1, B_2, B_3, B_4,
-			// 	B_0_0, B_0_1, B_0_2, B_0_3, B_0_4,
-			// 	B_1_0, B_1_1, B_1_2, B_1_3, B_1_4,
-			// 	B_2_0, B_2_1, B_2_2, B_2_3, B_2_4,
-			// 	B_3_0, B_3_1, B_3_2, B_3_3, B_3_4,
-			// 	B_4_0, B_4_1, B_4_2, B_4_3, B_4_4]
+			// printNames(set);
 			expect(set.length).toBe(42);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'UnitA1', 'UnitB1',
+				'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
+				'B_0_0', 'B_0_1', 'B_0_2', 'B_0_3', 'B_0_4',
+				'B_1_0', 'B_1_1', 'B_1_2', 'B_1_3', 'B_1_4',
+				'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',
+				'B_3_0', 'B_3_1', 'B_3_2', 'B_3_3', 'B_3_4',
+				'B_4_0', 'B_4_1', 'B_4_2', 'B_4_3', 'B_4_4'])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}
@@ -266,9 +550,13 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			setNamespaces(['NodeY', 'UnitB']);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// printNames(set);;
-			// visible should be: [A_2_0, A_2_1, A_2_2, A_2_3, A_2_4, A_0, A_1, A_2, A_3, A_4, UnitA1, UnitB1]
+			// printNames(set);
 			expect(set.length).toBe(12);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'UnitA1', 'UnitB1',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4'
+			])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}
@@ -279,9 +567,13 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			setNamespaces(['NodeY', 'UnitA', 'UnitB']);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// printNames(set);;
-			// visible should be: [A_0, A_1, A_2, A_3, A_4, A_2_1, A_2_2, UnitA1, UnitB1]
+			// printNames(set);
 			expect(set.length).toBe(12);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4', 'A_0',
+				'A_1', 'A_2', 'A_3', 'A_4',
+				'UnitA1', 'UnitB1'
+			])
 			unsetNamespaces();
 		}
 	})
@@ -291,9 +583,11 @@ describe("FreNamespace visibleNames without replacement or additions", () => {
 		if (!!concept_A_2_2) {
 			setNamespaces(['NodeX', 'NodeY', 'UnitA', 'UnitB']);
 			const set: FreNamedNode[] = scoper.getVisibleNodes(concept_A_2_2);
-			// printNames(set);;
-			// visible should be: [A_2_0, A_2_1, A_2_2, A_2_3, A_2_4, A_0, A_1, A_2, A_3, A_4, UnitA1, UnitB1]
+			// printNames(set);
 			expect(set.length).toBe(12);
+			expect(set.map(x => x.name)).toStrictEqual(['A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
+				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
+				'UnitA1', 'UnitB1'])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}
