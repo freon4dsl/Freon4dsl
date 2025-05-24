@@ -1,3 +1,9 @@
+/*
+ * This set of tests is based on the simple model created by ModelCreator,
+ * which is based on the implementations in scoper-model.
+ * All tests determine whether the set of visible nodes of a namespaces is correct,
+ * taking into account only the hierarchical namespace relationships.
+ */
 import { beforeEach, describe, test, expect } from 'vitest';
 import { ScoperModel } from './scoper-model/ScoperModel';
 import { ModelCreator } from './ModelCreator';
@@ -6,7 +12,6 @@ import { FreCompositeScoper, FreNamespace, FreScoper, FreScoperBase } from '../.
 import { FreNamedNode } from '../../ast';
 import { FreLanguage } from '../../language';
 import { ScoperModelScoper } from './scoper-model/ScoperModelScoper';
-
 
 function printNames(set: FreNamedNode[]) {
 	let names: string = '';

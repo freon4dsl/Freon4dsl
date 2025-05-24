@@ -1,12 +1,11 @@
 import { IWithName, NodeY, NodeX, ScoperModel, UnitA, UnitB } from './scoper-model';
-import { AST } from '@freon4dsl/core';
+import { AST } from '../../change-manager';
 
 export class ModelCreator {
 
 	static createSimpleModel(): ScoperModel {
 		let model: ScoperModel;
 		AST.change( () => {
-
 			let children : IWithName[] = [];
 			for (let i = 0; i < 5; i++) {
 				let grandchildren : IWithName[] = [];

@@ -30,6 +30,7 @@ export abstract class FreScoperBase implements FreScoper {
         let previousNamespace: FreNamespace = this.findEnclosingNamespace(toBeResolved);
         let found: FreNamedNode = undefined;
         for (let index = 0; index < pathname.length; index++) {
+            console.log('searching for: ', pathname[index]);
             if (index === pathname.length - 1) {
                 // Search the last name in the path, the result need not be a namespace, so use 'typeName'.
                 found = this.getFromVisibleNodes(previousNamespace._myElem, pathname[index], toBeResolved.typeName);
@@ -37,6 +38,7 @@ export abstract class FreScoperBase implements FreScoper {
                 // Search the next name of pathname in the 'previousNamespace'.
                 // Do not use the 'typeName' information, because we are searching for another namespace, not for an element of type 'typeName'.
                 found = this.getFromVisibleNodes(previousNamespace._myElem, pathname[index]);
+                console.log(`found number ${index} of path: `, found ? found['name'] : 'undefined')
                 if ( isNullOrUndefined(found) || !FreLanguage.getInstance().classifier(found.freLanguageConcept()).isNamespace ) {
                     // The pathname is not correct, it does not lead to a namespace that is visible within 'previousNamespace',
                     // so clean up and return.

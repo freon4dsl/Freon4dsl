@@ -1,3 +1,7 @@
+/*
+ * This set of tests is based on a simple model using scoper-model implementations.
+ * All tests determine whether the declared nodes of a namespace are correct.
+ */
 import { beforeEach, describe, test, expect } from 'vitest';
 import { ScoperModel } from './scoper-model/ScoperModel';
 import { ModelCreator } from './ModelCreator';
