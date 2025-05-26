@@ -20,30 +20,30 @@ export class AdditionalNamespacesScoper extends FreScoperBase {
      * Returns all FreNodes that are defined as additional namespaces for 'node'.
      * @param node
      */
-    public additionalNamespaces(node: FreNode): FreNamespace[] {
-        const result: FreNamespace[] = [];
+    public additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+        const result: (FreNode | FreNodeReference<FreNamedNode>)[] = [];
         // namespace addition for UnitA
         if (node instanceof UnitA) {
             // generated based on 'imports'
             for (let loopVariable of node.myRef) {
-                if (loopVariable instanceof FreNodeReference) {
-                    this.addRefAsNamespace(loopVariable, result);
-                } else {
+                // if (loopVariable instanceof FreNodeReference) {
+                //     this.addRefAsNamespace(loopVariable, result);
+                // } else {
                     result.push(loopVariable);
-                }
+                // }
             }
         }
         return result;
     }
 
-    private addRefAsNamespace(node: FreNodeReference<FreNamedNode>, result: FreNamespace[]) {
-        if (!!node && !this.additionalNamespacesVisited.includes(node) && !this.additionalNamespacesVisited.includes(node)) {
-            this.additionalNamespacesVisited.push(node);
-            const referred = node.referred;
-            if (!!referred) {
-                result.push(FreNamespace.create(referred));
-            }
-            this.additionalNamespacesVisited.pop();
-        }
-    }
+    // private addRefAsNamespace(node: FreNodeReference<FreNamedNode>, result: FreNamespace[]) {
+    //     if (!!node && !this.additionalNamespacesVisited.includes(node) && !this.additionalNamespacesVisited.includes(node)) {
+    //         this.additionalNamespacesVisited.push(node);
+    //         const referred = node.referred;
+    //         if (!!referred) {
+    //             result.push(FreNamespace.create(referred));
+    //         }
+    //         this.additionalNamespacesVisited.pop();
+    //     }
+    // }
 }

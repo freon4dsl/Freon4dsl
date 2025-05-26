@@ -73,7 +73,7 @@ export class CollectNamesWorker implements AstWorker {
      * @param freNode
      * @private
      */
-    private hasLookedForType(freNode: FreNode) {
+    private hasLookedForType(freNode: FreNode): boolean {
         if (!!this.metatype) {
             return FreLanguage.getInstance().metaConformsToType(freNode, this.metatype);
         } else {

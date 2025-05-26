@@ -56,7 +56,7 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 	beforeEach(() => {
 		// create a simple model where some nodes are namespaces and some are not
 		// and get some handles to nodes in the AST
-		model = ModelCreator.createSimpleModel();
+		model = ModelCreator.createModel2();
 		unitA1 = model.findUnit('UnitA1') as UnitA;
 		concept_A_2 = unitA1.childrenWithName.find(child => child.name === 'A_2') as NodeY;
 		if (!!concept_A_2) {
@@ -74,6 +74,45 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 
 	// Note that in the whole test the order of the names is important!
 
+	test(" model with []", () => {
+		// This test is here to assure that all elements that should be in the model,
+		// are present, and are visible in the model namespace, when no other namespaces are defined.
+		const set: FreNamedNode[] = scoper.getVisibleNodes(model);
+		// printNames(set);
+		// visible should be: 50 grandchildren plus 10 children plus 2 units
+		expect(set.length).toBe(30);
+		expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
+			'A_1', 'A_2',
+			'A_1_1', 'A_1_2',
+			'A_1_1_1', 'A_1_1_2', 'A_1_2_1', 'A_1_2_2',
+			'A_2_1', 'A_2_2',
+			'A_2_1_1', 'A_2_1_2', 'A_2_2_1', 'A_2_2_2',
+			'B_1', 'B_2',
+			'B_1_1', 'B_1_2',
+			'B_1_1_1', 'B_1_1_2', 'B_1_2_1', 'B_1_2_2',
+			'B_2_1', 'B_2_2',
+			'B_2_1_1', 'B_2_1_2', 'B_2_2_1', 'B_2_2_2'])
+	})
+
+	test(" unitA1 with [NodeX, UnitA], and NO additional NS", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeX', 'UnitA']);
+			//
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			// printNames(set);
+			expect(set.length).toBe(10);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_1', 'A_2',
+				'A_1_1', 'A_1_2',
+				'A_2_1', 'A_2_2',
+				'UnitA1', 'UnitB1',
+				'B_1', 'B_2'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
 	test(" unitA1 with [NodeX, UnitA], and B_2 as additional NS", () => {
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
@@ -85,17 +124,69 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 			//
 			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
 			// printNames(set);
-			expect(set.length).toBe(42);
+			expect(set.length).toBe(12);
 			expect(set.map(x => x.name)).toStrictEqual([
-				'A_0', 'A_1', 'A_2', 'A_3', 'A_4',
-				'A_0_0', 'A_0_1', 'A_0_2', 'A_0_3', 'A_0_4',
-				'A_1_0', 'A_1_1', 'A_1_2', 'A_1_3', 'A_1_4',
-				'A_2_0', 'A_2_1', 'A_2_2', 'A_2_3', 'A_2_4',
-				'A_3_0', 'A_3_1', 'A_3_2', 'A_3_3', 'A_3_4',
-				'A_4_0', 'A_4_1', 'A_4_2', 'A_4_3', 'A_4_4',
+				'A_1', 'A_2',
+				'A_1_1', 'A_1_2',
+				'A_2_1', 'A_2_2',
 				'UnitA1', 'UnitB1',
-				'B_0', 'B_1', 'B_2', 'B_3', 'B_4',
-				'B_2_0', 'B_2_1', 'B_2_2', 'B_2_3', 'B_2_4',])
+				'B_1', 'B_2',
+				'B_2_1', 'B_2_2'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with [NodeX, UnitA], B_2 and B_2_3 as additional NS", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			// add reference to B2 to unitA1, otherwise additional namespace will not be found
+			AST.change(() => {
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2_1'], 'NodeX'));
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2'], 'NodeX'));
+			})
+			setNamespaces(['NodeX', 'UnitA']);
+			//
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			printNames(set);
+			expect(set.length).toBe(14);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_1', 'A_2',
+				'A_1_1', 'A_1_2',
+				'A_2_1', 'A_2_2',
+				'UnitA1', 'UnitB1',
+				'B_1', 'B_2',
+				'B_2_1', 'B_2_2',
+				'B_2_1_1', 'B_2_1_2',
+			])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+		}
+	})
+
+	test(" unitA1 with [NodeX, UnitA, UnitB], UnitB, B_2 and B_2_3 as additional NS", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			// add reference to B2 to unitA1, otherwise additional namespace will not be found
+			AST.change(() => {
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2'], 'NodeX'));
+				unitA1.myRef.push(FreNodeReference.create<UnitB>(['UnitB1'], 'UnitB'));
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2_1'], 'NodeX'));
+			})
+			setNamespaces(['NodeX', 'UnitA', 'UnitB']);
+			//
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			printNames(set);
+			expect(set.length).toBe(14);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_1', 'A_2',
+				'A_1_1', 'A_1_2',
+				'A_2_1', 'A_2_2',
+				'UnitA1', 'UnitB1',
+				'B_1', 'B_2',
+				'B_2_1', 'B_2_2',
+				'B_2_1_1', 'B_2_1_2',
+			])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 		}

@@ -38,6 +38,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         }
         this.runner = new CheckRunner(this.errors, this.warnings);
 
+        // TODO add check that every namespace has a name property
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
         this.myNamespaces = this.findAllNamespaces(definition.namespaces);
 

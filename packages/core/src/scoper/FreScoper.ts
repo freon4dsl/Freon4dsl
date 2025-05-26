@@ -1,4 +1,4 @@
-import { FreNode, FreNamedNode } from '../ast/index.js';
+import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreCompositeScoper } from "./FreCompositeScoper.js";
 import { FreNamespace } from './FreNamespace.js';
 
@@ -27,7 +27,7 @@ export interface FreScoper {
      * Returns all FreNamespaces that are defined as additional namespaces for 'node', if 'node' is a namespace.
      * @param node
      */
-    additionalNamespaces(node: FreNode): FreNamespace[];
+    additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[];
 
     /**
      * Returns the replacement namespace if it can be found for 'node'.

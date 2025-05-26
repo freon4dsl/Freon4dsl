@@ -40,7 +40,7 @@ export class FreCompositeScoper implements FreScoper {
         return undefined;
     }
 
-    additionalNamespaces(node: FreNode): FreNamespace[] {
+    additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
