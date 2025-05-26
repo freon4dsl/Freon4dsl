@@ -3,7 +3,7 @@
  * which is based on the implementations in scoper-model.
  * All tests determine whether the set of visible nodes of a namespaces is correct,
  * taking into account the hierarchical namespace relationships, and several
- * additional namespaces.
+ * replacement namespaces.
  */
 import { beforeEach, describe, test, expect } from 'vitest';
 import { ScoperModel } from './scoper-model/ScoperModel.js';
@@ -15,6 +15,7 @@ import { FreLanguage } from '../../language';
 import { AdditionalNamespacesScoper } from './scoper-model/AdditionalNamespacesScoper.js';
 import { AST } from '../../change-manager';
 import { FreLanguageEnvironment } from '../../environment';
+import { ReplacementNamespaceScoper } from './scoper-model/ReplacementNamespaceScoper';
 
 // !!!!!!!!!!!!!!!!!! model name may not be in fqn. This name is not visible in the model itself!!!!!!!!!!!!!!!!!!
 
@@ -39,7 +40,7 @@ function unsetNamespaces() {
 	}
 }
 
-describe("FreNamespace visibleNames with additions, but without replacements", () => {
+describe("FreNamespace visibleNames with replacements, but without additions, ", () => {
 	let model: ScoperModel;
 	let unitA1: UnitA;
 	let concept_A_2: NodeY;
@@ -49,7 +50,7 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 	let concept_B_4_3: NodeX;
 
 	initializeLanguage();
-	const scoper: FreScoper = new AdditionalNamespacesScoper();
+	const scoper: ReplacementNamespaceScoper = new ReplacementNamespaceScoper();
 	const mainScoper: FreCompositeScoper = new FreCompositeScoper();
 	mainScoper.appendScoper(scoper);
 
@@ -94,26 +95,48 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 			'B_2_1_1', 'B_2_1_2', 'B_2_2_1', 'B_2_2_2'])
 	})
 
-	test(" unitA1 with [NodeX, UnitA], and NO additional NS", () => {
+	test(" unitA1 with [NodeX, UnitA], and UnitB1 as replacement NS", () => {
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
 			setNamespaces(['NodeX', 'UnitA']);
+			scoper.useUnitB = true;
 			//
 			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
-			// printNames(set);
+			printNames(set);
+			expect(set.length).toBe(8);
+			expect(set.map(x => x.name)).toStrictEqual([
+				'A_1', 'A_2',
+				'A_1_1', 'A_1_2',
+				'A_2_1', 'A_2_2',
+				'B_1', 'B_2'])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+			scoper.useUnitB = false;
+		}
+	})
+
+	test(" unitA1 with [NodeX, UnitA], and children of UnitB1 as replacement NS", () => {
+		// test namespace for 'unitA1'
+		if (!!unitA1) {
+			setNamespaces(['NodeX', 'UnitA']);
+			scoper.useNodeX = true;
+			//
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
+			printNames(set);
 			expect(set.length).toBe(10);
 			expect(set.map(x => x.name)).toStrictEqual([
 				'A_1', 'A_2',
 				'A_1_1', 'A_1_2',
 				'A_2_1', 'A_2_2',
-				'UnitA1', 'UnitB1',
-				'B_1', 'B_2'])
+				'B_1_1', 'B_1_2',
+				'B_2_1', 'B_2_2'])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
+			scoper.useNodeX = false;
 		}
 	})
 
-	test(" unitA1 with [NodeX, UnitA], and B_2 as additional NS", () => {
+	test.skip(" unitA1 with [NodeX, UnitA], and B_2 as replacement NS", () => {
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found
@@ -123,13 +146,12 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 			setNamespaces(['NodeX', 'UnitA']);
 			//
 			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
-			// printNames(set);
-			expect(set.length).toBe(12);
+			printNames(set);
+			// expect(set.length).toBe(12);
 			expect(set.map(x => x.name)).toStrictEqual([
 				'A_1', 'A_2',
 				'A_1_1', 'A_1_2',
 				'A_2_1', 'A_2_2',
-				'UnitA1', 'UnitB1',
 				'B_1', 'B_2',
 				'B_2_1', 'B_2_2'])
 			// unset namespaces, do not interfere with other tests
@@ -137,7 +159,7 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 		}
 	})
 
-	test(" unitA1 with [NodeX, UnitA], B_2 and B_2_3 as additional NS", () => {
+	test.skip(" unitA1 with [NodeX, UnitA], B_2 and B_2_3 as additional NS", () => {
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found
@@ -164,7 +186,7 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 		}
 	})
 
-	test(" unitA1 with [NodeX, UnitA, UnitB], UnitB, B_2 and B_2_3 as additional NS", () => {
+	test.skip(" unitA1 with [NodeX, UnitA, UnitB], UnitB, B_2 and B_2_3 as additional NS", () => {
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found

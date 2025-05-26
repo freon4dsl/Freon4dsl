@@ -37,11 +37,11 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
         if (!!data.name) {
             result.name = data.name;
         }
-        if (!!data.noNameSpaceUnits) {
-            data.noNameSpaceUnits.forEach((x) => result.noNameSpaceUnits.push(x));
+        if (!!data.A_units) {
+            data.A_units.forEach((x) => result.A_units.push(x));
         }
-        if (!!data.nameSpaceUnits) {
-            data.nameSpaceUnits.forEach((x) => result.nameSpaceUnits.push(x));
+        if (!!data.B_units) {
+            data.B_units.forEach((x) => result.B_units.push(x));
         }
         if (!!data.parseLocation) {
             result.parseLocation = data.parseLocation;
@@ -53,8 +53,8 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
     $id: string = ""; // a unique identifier
     parseLocation: FreParseLocation; // if relevant, the location of this element within the source from which it is parsed
     name: string; // implementation of name
-    noNameSpaceUnits: UnitA[]; // implementation of part 'noNameSpaceUnits'
-    nameSpaceUnits: UnitB[]; // implementation of part 'nameSpaceUnits'
+    A_units: UnitA[]; // implementation of part 'A_units'
+    B_units: UnitB[]; // implementation of part 'B_units'
 
     constructor(id?: string) {
         super();
@@ -67,8 +67,8 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
         // Both 'observablepart' and 'observablepartlist' change the get and set of the attribute
         // such that the parent-part relationship is consistently maintained,
         // and make sure the part is observable. In lists no 'null' or 'undefined' values are allowed.
-        observablepartlist(this, "noNameSpaceUnits");
-        observablepartlist(this, "nameSpaceUnits");
+        observablepartlist(this, "A_units");
+        observablepartlist(this, "B_units");
 
         // Make copy method a mobx action
         makeObservable(this, {
@@ -125,11 +125,11 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
         if (!!this.name) {
             result.name = this.name;
         }
-        if (!!this.noNameSpaceUnits) {
-            this.noNameSpaceUnits.forEach((x) => result.noNameSpaceUnits.push(x.copy()));
+        if (!!this.A_units) {
+            this.A_units.forEach((x) => result.A_units.push(x.copy()));
         }
-        if (!!this.nameSpaceUnits) {
-            this.nameSpaceUnits.forEach((x) => result.nameSpaceUnits.push(x.copy()));
+        if (!!this.B_units) {
+            this.B_units.forEach((x) => result.B_units.push(x.copy()));
         }
         return result;
     }
@@ -143,11 +143,11 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
         if (result && toBeMatched.name !== null && toBeMatched.name !== undefined && toBeMatched.name.length > 0) {
             result = result && this.name === toBeMatched.name;
         }
-        if (result && !!toBeMatched.noNameSpaceUnits) {
-            result = result && matchElementList(this.noNameSpaceUnits, toBeMatched.noNameSpaceUnits);
+        if (result && !!toBeMatched.A_units) {
+            result = result && matchElementList(this.A_units, toBeMatched.A_units);
         }
-        if (result && !!toBeMatched.nameSpaceUnits) {
-            result = result && matchElementList(this.nameSpaceUnits, toBeMatched.nameSpaceUnits);
+        if (result && !!toBeMatched.B_units) {
+            result = result && matchElementList(this.B_units, toBeMatched.B_units);
         }
         return result;
     }
@@ -183,15 +183,15 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
             return false;
         }
         // we must store the interface in the same place as the old unit, which info is held in FreContainer()
-        if (oldUnit.freLanguageConcept() === "UnitA" && oldUnit.freOwnerDescriptor().propertyName === "noNameSpaceUnits") {
+        if (oldUnit.freLanguageConcept() === "UnitA" && oldUnit.freOwnerDescriptor().propertyName === "A_units") {
             AST.changeNamed("removeUnit", () => {
-                const index = this.noNameSpaceUnits.indexOf(oldUnit as UnitA);
-                this.noNameSpaceUnits.splice(index, 1, newUnit as UnitA);
+                const index = this.A_units.indexOf(oldUnit as UnitA);
+                this.A_units.splice(index, 1, newUnit as UnitA);
             });
-        } else if (oldUnit.freLanguageConcept() === "UnitB" && oldUnit.freOwnerDescriptor().propertyName === "nameSpaceUnits") {
+        } else if (oldUnit.freLanguageConcept() === "UnitB" && oldUnit.freOwnerDescriptor().propertyName === "B_units") {
             AST.changeNamed("removeUnit", () => {
-                const index = this.nameSpaceUnits.indexOf(oldUnit as UnitB);
-                this.nameSpaceUnits.splice(index, 1, newUnit as UnitB);
+                const index = this.B_units.indexOf(oldUnit as UnitB);
+                this.B_units.splice(index, 1, newUnit as UnitB);
             });
         } else {
             return false;
@@ -210,13 +210,13 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
             switch (myMetatype) {
                 case "UnitA": {
                     AST.changeNamed("addUnit", () => {
-                        this.noNameSpaceUnits.push(newUnit as UnitA);
+                        this.A_units.push(newUnit as UnitA);
                     });
                     return true;
                 }
                 case "UnitB": {
                     AST.changeNamed("addUnit", () => {
-                        this.nameSpaceUnits.push(newUnit as UnitB);
+                        this.B_units.push(newUnit as UnitB);
                     });
                     return true;
                 }
@@ -236,13 +236,13 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
             switch (myMetatype) {
                 case "UnitA": {
                     AST.changeNamed("removeUnit", () => {
-                        this.noNameSpaceUnits.splice(this.noNameSpaceUnits.indexOf(oldUnit as UnitA), 1);
+                        this.A_units.splice(this.A_units.indexOf(oldUnit as UnitA), 1);
                     });
                     return true;
                 }
                 case "UnitB": {
                     AST.changeNamed("removeUnit", () => {
-                        this.nameSpaceUnits.splice(this.nameSpaceUnits.indexOf(oldUnit as UnitB), 1);
+                        this.B_units.splice(this.B_units.indexOf(oldUnit as UnitB), 1);
                     });
                     return true;
                 }
@@ -264,7 +264,7 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
                     unit = UnitA.create({});
                 });
                 AST.changeNamed("newUnit", () => {
-                    this.noNameSpaceUnits.push(unit as UnitA);
+                    this.A_units.push(unit as UnitA);
                 });
                 return unit;
             }
@@ -274,7 +274,7 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
                     unit = UnitB.create({});
                 });
                 AST.changeNamed("newUnit", () => {
-                    this.nameSpaceUnits.push(unit as UnitB);
+                    this.B_units.push(unit as UnitB);
                 });
                 return unit;
             }
@@ -287,8 +287,8 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
      */
     getUnits(): FreModelUnit[] {
         let result: FreModelUnit[] = [];
-        result = result.concat(this.noNameSpaceUnits);
-        result = result.concat(this.nameSpaceUnits);
+        result = result.concat(this.A_units);
+        result = result.concat(this.B_units);
         return result;
     }
 
@@ -298,10 +298,10 @@ export class ScoperModel extends MobxModelElementImpl implements FreModel {
     getUnitsForType(type: string): FreModelUnit[] {
         switch (type) {
             case "UnitA": {
-                return this.noNameSpaceUnits;
+                return this.A_units;
             }
             case "UnitB": {
-                return this.nameSpaceUnits;
+                return this.B_units;
             }
         }
         return [];

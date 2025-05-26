@@ -55,10 +55,10 @@ function describeScoperModel(): FreLanguageModel {
         language: "-key-ScoperTest",
         propertyKind: "primitive",
     });
-    model.properties.set("noNameSpaceUnits", {
-        name: "noNameSpaceUnits",
-        id: "-id-ScoperModel-noNameSpaceUnits",
-        key: "-key-ScoperModel-noNameSpaceUnits",
+    model.properties.set("A_units", {
+        name: "A_units",
+        id: "-id-ScoperModel-A_units",
+        key: "-key-ScoperModel-A_units",
         type: "UnitA",
         isList: true,
         isPublic: true,
@@ -66,10 +66,10 @@ function describeScoperModel(): FreLanguageModel {
         language: "-key-ScoperTest",
         propertyKind: "part",
     });
-    model.properties.set("nameSpaceUnits", {
-        name: "nameSpaceUnits",
-        id: "-id-ScoperModel-nameSpaceUnits",
-        key: "-key-ScoperModel-nameSpaceUnits",
+    model.properties.set("B_units", {
+        name: "B_units",
+        id: "-id-ScoperModel-B_units",
+        key: "-key-ScoperModel-B_units",
         type: "UnitB",
         isList: true,
         isPublic: true,

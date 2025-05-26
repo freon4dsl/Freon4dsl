@@ -50,6 +50,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
                         this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referred);
                     }
                     if (!!def.replacementNamespace) {
+                        // todo replacements must always be 'typeof(container)' or 'container.<something>'
                         this.checkReplacementNamespace(def.replacementNamespace, def.conceptRef.referred);
                     }
                 }

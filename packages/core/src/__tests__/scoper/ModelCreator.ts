@@ -25,7 +25,7 @@ export class ModelCreator {
 				children.push(NodeX.create({ name: 'B_'+ i, childrenWithName: grandchildren}))
 			}
 			const unit2 = UnitB.create({ name: 'UnitB1', childrenWithName: children })
-			model = ScoperModel.create({ name: 'MODEL', noNameSpaceUnits: [unit1], nameSpaceUnits: [unit2] });
+			model = ScoperModel.create({ name: 'MODEL', A_units: [unit1], B_units: [unit2] });
 		})
 		return model;
 	}
@@ -60,7 +60,7 @@ export class ModelCreator {
 				children.push(NodeX.create({ name: 'B_'+ i, childrenWithName: grandchildren}))
 			}
 			const unit2 = UnitB.create({ name: 'UnitB1', childrenWithName: children })
-			model = ScoperModel.create({ name: 'MODEL', noNameSpaceUnits: [unit1], nameSpaceUnits: [unit2] });
+			model = ScoperModel.create({ name: 'MODEL', A_units: [unit1], B_units: [unit2] });
 		})
 		return model;
 	}

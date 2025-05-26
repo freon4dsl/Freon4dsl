@@ -12,38 +12,23 @@ export class AdditionalNamespacesScoper extends FreScoperBase {
      * Returns the replacement namespace if it can be found for 'node'.
      * @param _node
      */
-    public replacementNamespace(_node: FreNode): FreNamespace | undefined {
-        return null;
+    public replacementNamespace(node: FreNode): FreNamedNode | FreNodeReference<FreNamedNode> | undefined {
+        return undefined;
     }
 
     /**
      * Returns all FreNodes that are defined as additional namespaces for 'node'.
      * @param node
      */
-    public additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
-        const result: (FreNode | FreNodeReference<FreNamedNode>)[] = [];
+    public additionalNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
+        const result: (FreNamedNode | FreNodeReference<FreNamedNode>)[] = [];
         // namespace addition for UnitA
         if (node instanceof UnitA) {
             // generated based on 'imports'
             for (let loopVariable of node.myRef) {
-                // if (loopVariable instanceof FreNodeReference) {
-                //     this.addRefAsNamespace(loopVariable, result);
-                // } else {
-                    result.push(loopVariable);
-                // }
+                result.push(loopVariable);
             }
         }
         return result;
     }
-
-    // private addRefAsNamespace(node: FreNodeReference<FreNamedNode>, result: FreNamespace[]) {
-    //     if (!!node && !this.additionalNamespacesVisited.includes(node) && !this.additionalNamespacesVisited.includes(node)) {
-    //         this.additionalNamespacesVisited.push(node);
-    //         const referred = node.referred;
-    //         if (!!referred) {
-    //             result.push(FreNamespace.create(referred));
-    //         }
-    //         this.additionalNamespacesVisited.pop();
-    //     }
-    // }
 }

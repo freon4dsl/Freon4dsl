@@ -2,7 +2,6 @@ import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
 import { FreScoper } from "./FreScoper.js";
 import { isNullOrUndefined } from '../util/index.js';
-import { FreNamespace } from './FreNamespace.js';
 import { FreScoperBase } from './FreScoperBase.js';
 
 const LOGGER = new FreLogger("FreCompositeScoper").mute();
@@ -40,7 +39,7 @@ export class FreCompositeScoper implements FreScoper {
         return undefined;
     }
 
-    additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+    additionalNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
@@ -53,11 +52,12 @@ export class FreCompositeScoper implements FreScoper {
         return [];
     }
 
-    getVisibleNodes(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
+    getVisibleNodes(node: FreNode, metatype?: string): FreNamedNode[] {
         LOGGER.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
-                const result = scoper.getVisibleNodes(node, metatype, excludeSurrounding);
+                // todo should we concat the results from all scoper parts??
+                const result = scoper.getVisibleNodes(node, metatype);
                 if (!isNullOrUndefined(result)) {
                     return result;
                 }
@@ -66,11 +66,12 @@ export class FreCompositeScoper implements FreScoper {
         return [];
     }
 
-    replacementNamespace(node: FreNode): FreNamespace | undefined {
+    replacementNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
         LOGGER.log('COMPOSITE replacementNamespace for ' + node.freId() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
-                const result: FreNamespace = scoper.replacementNamespace(node);
+                // todo should we concat the results from all scoper parts??
+                const result: (FreNamedNode | FreNodeReference<FreNamedNode>)[] = scoper.replacementNamespaces(node);
                 if (!isNullOrUndefined(result)) {
                     return result;
                 }

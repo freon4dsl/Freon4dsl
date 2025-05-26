@@ -1,8 +1,8 @@
 language ScoperTest
 
 model ScoperModel {
-    noNameSpaceUnits: UnitA[];
-    nameSpaceUnits: UnitB[];
+    A_units: UnitA[];
+    B_units: UnitB[];
 }
 
 modelunit UnitA implements IWithName {
