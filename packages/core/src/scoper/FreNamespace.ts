@@ -9,6 +9,7 @@ import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js";
 import { isNullOrUndefined } from '../util/index.js';
 import { FreCompositeScoper } from './FreCompositeScoper.js';
 import { FreLogger } from "../logging/index.js";
+import { findEnclosingNamespace } from './ScoperUtil.js';
 
 const LOGGER = new FreLogger("FreonNamespace").mute();
 
@@ -20,7 +21,7 @@ export class FreNamespace {
      * The type of element 'node' should be marked as namespace in the scoper definition.
      * @param node
      */
-    public static create(node: FreNode): FreNamespace {
+    public static create(node: FreNamedNode): FreNamespace {
         const existingNS = this.allNamespaces.get(node);
         if (!!existingNS) {
             return existingNS;
@@ -31,9 +32,9 @@ export class FreNamespace {
         }
     }
 
-    public _myElem: FreNode;
+    public _myElem: FreNamedNode;
 
-    private constructor(elem: FreNode) {
+    private constructor(elem: FreNamedNode) {
         if (!elem) {
             console.log('FreNamespace constructed without node!');
         }
@@ -44,6 +45,8 @@ export class FreNamespace {
      * Returns all elements that are declared in this namespace. Private/public is not taken into account yet.
      */
     public getDeclaredNodes(): Set<FreNamedNode> {
+        // When public/private is taken into account, this method could get a parameter on which to decide
+        // to only return public nodes. This parameter could be set in the places marked by 'PUBLIC' in this class.
         const result: FreNamedNode[] = [];
         // set up the 'worker' of the visitor pattern
         const myNamesCollector = new CollectDeclaredNodesWorker();
@@ -56,6 +59,13 @@ export class FreNamespace {
         // collect the elements from the namespace, but not from any child namespace
         myWalker.walk(this._myElem, (elem: FreNode) => {
             return !FreLanguage.getInstance().classifier(elem.freLanguageConcept()).isNamespace;
+            // To not go into namespaces that are private, the old FreNamespace class had this guard as well:
+            // (!!elem.freOwner() &&
+            //   FreLanguage.getInstance().classifierProperty(
+            //     elem.freOwner().freLanguageConcept(),
+            //     elem.freOwnerDescriptor().propertyName,
+            //   ).isPublic))
+            // Maybe this should be reinstated.
         });
         return new Set<FreNamedNode>(result);
     }
@@ -70,8 +80,7 @@ export class FreNamespace {
      */
     public getVisibleNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[]): FreNamedNode[] {
         // First, add all the declared nodes.
-        let resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes();
-        // console.log('NEAREST: namespace ' + this._myElem['name'] + ' is done.');
+        let resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(); // Here 'PUBLIC' could be set to includeAll.
         visitedNamespaces.push(this);
 
         // Second, determine whether we need to include a replacement or the parent namespace
@@ -95,23 +104,23 @@ export class FreNamespace {
     }
 
     private addReplacementNamespaces(replacementNodes: (FreNamedNode | FreNodeReference<FreNamedNode>)[], visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
-        // console.log('doing replacement nodes', replacementNodes.map(n => n?.name).join(', '));
-        // if any of the replacement namespaces is a reference, this reference should be resolved within the parent namespace!!!
         replacementNodes.forEach((replacementNode) => {
             let replacementNamespace: FreNamespace = undefined;
             if (replacementNode instanceof FreNodeReference) {
                 // NB using '.referred' only works when the owner of the reference does not reside in 'this'.
-                // This should be checked in meta!
-                // todo decide whether to create a check here
-                const node = replacementNode.referred;
-                if (!isNullOrUndefined(node)) {
-                    replacementNamespace = FreNamespace.create(node);
-                    // console.log('found replacement: ' + replacementNode.pathname);
+                // This should also be checked in meta!
+                const toBeChecked: FreNamespace = findEnclosingNamespace(replacementNode.freOwner());
+                if (toBeChecked === this) {
+                    LOGGER.error(`Cannot add as namespace one that is defined via a reference '${replacementNode.pathname}' that resides in the same namespace '${this._myElem.name}'`);
+                } else {
+                    const node: FreNamedNode = replacementNode.referred;
+                    if (!isNullOrUndefined(node)) {
+                        replacementNamespace = FreNamespace.create(node);
+                    }
                 }
             } else {
                 replacementNamespace = FreNamespace.create(replacementNode);
             }
-            // console.log('replacement: ' + replacementNamespace?._myElem['name']);
             this.addNS(replacementNamespace, visitedNamespaces, resultSoFar);
         });
     }
@@ -131,12 +140,10 @@ export class FreNamespace {
             if (namespaceNode instanceof FreNodeReference) remainingNS.push(namespaceNode);
         });
         while (remainingNS.length > 0) {
-            // console.log('remaining: ', remainingNS.map(ns => ns.pathname).join(', '));
             const toBeRemoved: (FreNode | FreNodeReference<FreNamedNode>)[] = [];
             remainingNS.forEach(addon => {
                 const node: FreNamedNode = this.findInResultSoFar(addon, resultSoFar);
                 if (!isNullOrUndefined(node)) {
-                    // console.log('found ' + addon.pathname);
                     this.addNS(FreNamespace.create(node), visitedNamespaces, resultSoFar);
                     toBeRemoved.push(addon);
                 }
@@ -154,11 +161,11 @@ export class FreNamespace {
 
     private addNS(ns: FreNamespace, visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
         if (!isNullOrUndefined(ns) && !visitedNamespaces.includes(ns)) {
-            // console.log('\tADDING namespace: ' + ns._myElem['name']);
+            // Here 'PUBLIC' could be set to includePublicOnly.
             ns!.getDeclaredNodes().forEach(node => {
                 resultSoFar.add(node);
             });
-            // todo add additional NS-es ???
+            // todo Design decision: add additional NS-es of 'ns' as well???
             visitedNamespaces.push(ns);
         }
     }
@@ -186,7 +193,11 @@ export class FreNamespace {
         while (!isNullOrUndefined(owner) ) {
             if (FreLanguage.getInstance().classifier(owner.freLanguageConcept()).isNamespace) {
                 console.log('returning namespace ', owner.freLanguageConcept());
-                return FreNamespace.create(owner);
+                // todo this should be replaced by a better test, but we cannot test 'owner instanceof FreNameNode'
+                const nameProp = owner['name'];
+                if (!isNullOrUndefined(nameProp)) {
+                    return FreNamespace.create(owner as FreNamedNode);
+                }
             } else {
                 owner = owner.freOwner();
             }

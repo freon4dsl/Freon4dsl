@@ -6,6 +6,7 @@ import { FreCompositeScoper } from "./FreCompositeScoper.js";
 import { FreNamespace } from "./FreNamespace.js";
 import { FreScoper } from "./FreScoper.js";
 import { isNullOrUndefined } from '../util/index.js';
+import { findEnclosingNamespace } from './ScoperUtil.js';
 
 
 const LOGGER = new FreLogger("FreScoperBase");
@@ -25,7 +26,7 @@ export abstract class FreScoperBase implements FreScoper {
 
         // Loop over the set of names in the pathname.
         const pathname: string[] = toBeResolved.pathname;
-        let previousNamespace: FreNamespace = this.findEnclosingNamespace(toBeResolved);
+        let previousNamespace: FreNamespace = findEnclosingNamespace(toBeResolved);
         let found: FreNamedNode = undefined;
         if (!isNullOrUndefined(previousNamespace)) {
             for (let index = 0; index < pathname.length; index++) {
@@ -91,7 +92,7 @@ export abstract class FreScoperBase implements FreScoper {
             const visitedNamespaces: FreNamespace[] = [];
             let result: FreNamedNode[] = [].concat(FreLanguage.getInstance().stdLib.elements);
             // Find the namespace that 'node' is in
-            let nearestNamespace: FreNamespace = this.findEnclosingNamespace(node);
+            let nearestNamespace: FreNamespace = findEnclosingNamespace(node);
             // Add the visible nodes from the namespace
             if (!isNullOrUndefined(nearestNamespace)) {
                 result.push(...nearestNamespace.getVisibleNodes(this.mainScoper, visitedNamespaces));
@@ -102,25 +103,6 @@ export abstract class FreScoperBase implements FreScoper {
         } else {
             LOGGER.error("getVisibleNodes: node is null");
             return [];
-        }
-    }
-
-    /**
-     * Returns the enclosing namespace for 'node'. The result could be 'node' itself, if this is a namespace.
-     * @param node
-     */
-    private findEnclosingNamespace(node: FreNodeReference<FreNamedNode> | FreNode): FreNamespace | undefined {
-        if (isNullOrUndefined(node)) {
-            return undefined;
-        }
-        if (node instanceof FreNodeReference) {
-            return this.findEnclosingNamespace(node.freOwner());
-        } else {
-            if (FreLanguage.getInstance().classifier(node.freLanguageConcept()).isNamespace) {
-                return FreNamespace.create(node);
-            } else {
-                return this.findEnclosingNamespace(node.freOwner());
-            }
         }
     }
 
