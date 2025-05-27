@@ -7,18 +7,19 @@ export interface FreScoper {
     mainScoper: FreCompositeScoper;
 
     /**
-     *   Returns all elements that are visible in the namespace containing 'node'.
+     *   Returns all elements that are visible in the namespace containing 'node'. Note that 'node' can 
+     *   be any node in the AST, not only namespaces!
      *
-     *   When parameter 'metatype' is present, it returns all elements that are an instance of 'metatype'.
+     *   When parameter 'metaType' is present, it returns all elements that are an instance of 'metaType'.
      *   There is no default setting for this parameter.
      *
      *   When parameter 'excludeSurrounding' is present, it returns all elements that are visible in
      *   the namespace containing 'node', without looking in surrounding namespaces.
      *
      * @param node
-     * @param metatype
+     * @param metaType
      */
-    getVisibleNodes(node: FreNode, metatype?: string): FreNamedNode[];
+    getVisibleNodes(node: FreNode, metaType?: string): FreNamedNode[];
 
     /**
      * Returns todo

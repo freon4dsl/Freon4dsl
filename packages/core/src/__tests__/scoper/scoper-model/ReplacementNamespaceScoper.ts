@@ -23,7 +23,6 @@ export class ReplacementNamespaceScoper extends FreScoperBase {
      * @param _node
      */
     public replacementNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
-        console.log('ReplacementNamespaceScoper, ', node.constructor.name);
         let result: (FreNamedNode | FreNodeReference<FreNamedNode>)[] = [];
         // namespace addition for UnitA
         if (node instanceof UnitA) {
@@ -33,7 +32,6 @@ export class ReplacementNamespaceScoper extends FreScoperBase {
                 result = (node.freOwner() as ScoperModel)?.B_units.map(u => u.childrenWithName).flat(1);
             }
         } else if (node instanceof NodeY) {
-            console.log('ReplacementNamespaceScoper: NodeX');
             if (this.useReference) {
                 AST.change ( () => {
                     // we create a reference in the parent node, which can then be used as replacement namespace

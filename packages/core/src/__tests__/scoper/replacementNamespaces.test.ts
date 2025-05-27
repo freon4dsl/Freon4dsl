@@ -106,7 +106,7 @@ describe("FreNamespace visibleNames with replacements, but without additions, ",
 			scoper.useUnitB = true;
 			//
 			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
-			printNames(set);
+			// printNames(set);
 			expect(set.length).toBe(8);
 			expect(set.map(x => x.name)).toStrictEqual([
 				'A_1', 'A_2',
@@ -126,7 +126,7 @@ describe("FreNamespace visibleNames with replacements, but without additions, ",
 			scoper.useNodeX = true;
 			//
 			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
-			printNames(set);
+			// printNames(set);
 			expect(set.length).toBe(10);
 			expect(set.map(x => x.name)).toStrictEqual([
 				'A_1', 'A_2',
