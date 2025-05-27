@@ -1,0 +1,37 @@
+{
+    "currentIndex": 1,
+    "models": [
+        {
+            "name": "Edu-test",
+            "folder": "Edu-test",
+            "language": "Education",
+            "version": "1",
+            "units": [
+                {
+                    "name": "Fractions",
+                    "file": "Fractions"
+                },
+                {
+                    "name": "Fractions101",
+                    "file": "Fractions101"
+                },
+                {
+                    "name": "Fractions102",
+                    "file": "Fractions102"
+                },
+                {
+                    "name": "Fractions103",
+                    "file": "Fractions103"
+                },
+                {
+                    "name": "StartFlow",
+                    "file": "StartFlow"
+                },
+                {
+                    "name": "TestB",
+                    "file": "TestB"
+                }
+            ]
+        }
+    ]
+}

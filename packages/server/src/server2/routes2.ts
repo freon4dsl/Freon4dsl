@@ -1,0 +1,97 @@
+import Router from "koa-router";
+
+import { ModelRequests2 } from "./ModelRequests2.js";
+
+const router = new Router();
+
+router.get("/", async (ctx: Router.IRouterContext) => {
+    ctx.body = "Freon Model Server";
+});
+
+router.get("/getModelUnit", async (ctx: Router.IRouterContext) => {
+    const modelname = ctx.query["model"];
+    const unitname = ctx.query["unit"];
+    console.log("GetModelUnit: " + modelname + "/" + unitname);
+    if ((!!unitname || modelname) && typeof unitname === "string" && typeof modelname === "string") {
+        ModelRequests2.getModelUnit(modelname, unitname, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'unit' or 'model'";
+    }
+});
+
+router.get("/getModelList", async (ctx: Router.IRouterContext) => {
+    const language = ctx.query["language"];
+    console.log(`getModelList for language '${language}'`);
+    ModelRequests2.getModelList(ctx, language);
+    ctx.status = 201;
+});
+
+router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["model"];
+    // const subfolder = ctx.query["subfolder"];
+    console.log("getUnitList: " + folder);
+    if (!!folder && typeof folder === "string") {
+        ModelRequests2.getUnitList(folder, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'folder'";
+    }
+});
+router.put("/putModel", async (ctx: Router.IRouterContext) => {
+    const model = ctx.query["model"];
+    const language = ctx.query["language"];
+    console.log("PutModel: " + model + ` language: ${language}`);
+    if ((!!model) && typeof model === "string") {
+        ModelRequests2.putModel(model, language, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'model' or 'language'";
+    }
+    ctx.body = { massage: (ctx.request as any).body };
+});
+router.put("/putModelUnit", async (ctx: Router.IRouterContext) => {
+    const model = ctx.query["model"];
+    const unit = ctx.query["unit"];
+    console.log("PutModelUnit: " + model + "/" + unit);
+    if ((!!unit || !!model) && typeof unit === "string" && typeof model === "string") {
+        ModelRequests2.putModelUnit(model, unit, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'unitName' or 'folder'";
+    }
+    ctx.body = { massage: (ctx.request as any).body };
+});
+
+router.get("/deleteModelUnit", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["model"];
+    const name = ctx.query["unit"];
+    console.log("DeleteModelUnit: " + folder + "/" + name);
+    if ((!!name || !!folder) && typeof name === "string" && typeof folder === "string") {
+        ModelRequests2.deleteModelUnit(folder, name, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'unitName' or 'folder'";
+    }
+    ctx.body = { massage: (ctx.request as any).body };
+});
+
+router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
+    const folder = ctx.query["folder"];
+    console.log("DeleteModel: " + folder);
+    if (!!folder && typeof folder === "string") {
+        ModelRequests2.deleteModel(folder, ctx);
+        ctx.status = 201;
+    } else {
+        ctx.status = 412; // Precondition failed
+        ctx.message = "Missing query parameter 'folder'";
+    }
+    ctx.body = { massage: (ctx.request as any).body };
+});
+
+export const routes2 = router.routes();

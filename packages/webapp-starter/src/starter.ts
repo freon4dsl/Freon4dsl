@@ -3,13 +3,13 @@ import { FreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/weba
 import { configureExternals } from "./externals.js"
 import { configureLoggers } from "./loggers.js"
 import { LanguageEnvironment } from "@freon4dsl/samples-education"
-import { ServerCommunication } from "@freon4dsl/core"
+import { ServerCommunication, ServerCommunication2 } from "@freon4dsl/core"
 
 /**
  * Initialize everything
  */
 WebappConfigurator.getInstance().setEditorEnvironment(LanguageEnvironment.getInstance())
-WebappConfigurator.getInstance().setServerCommunication(ServerCommunication.getInstance())
+WebappConfigurator.getInstance().setServerCommunication(ServerCommunication2.getInstance())
 setDevelopment(true)
 configureExternals()
 configureLoggers()
