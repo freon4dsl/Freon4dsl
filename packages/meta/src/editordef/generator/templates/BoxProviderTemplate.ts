@@ -311,7 +311,7 @@ export class BoxProviderTemplate {
             this.imports.core.add("BoxFactory");
             result = `BoxFactory.verticalLayout(${elementVarName}, "${boxLabel}-overall", '', [
                 ${result}
-            ])`;
+            ], {cssClass: "${boxLabel}"})`;
         }
         if (result === "") {
             result = "null";
