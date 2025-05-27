@@ -4,6 +4,10 @@ import { FreNamedNode, FreNode, FreNodeReference } from '../../../ast';
 import { UnitA } from './UnitA';
 import { ScoperModel } from './ScoperModel';
 import { UnitB } from './UnitB';
+import { NodeX } from './NodeX';
+import { AST } from '../../../change-manager';
+import { IWithName } from './IWithName';
+import { NodeY } from './NodeY';
 
 /**
  * Class ReplacementNamespaceScoper implements the scoper generated from, if present, the scoper definition,
@@ -12,12 +16,14 @@ import { UnitB } from './UnitB';
 export class ReplacementNamespaceScoper extends FreScoperBase {
     useUnitB: boolean = false;
     useNodeX: boolean = false;
+    useReference: boolean = false;
 
     /**
      * Returns the replacement namespace if it can be found for 'node'.
      * @param _node
      */
     public replacementNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
+        console.log('ReplacementNamespaceScoper, ', node.constructor.name);
         let result: (FreNamedNode | FreNodeReference<FreNamedNode>)[] = [];
         // namespace addition for UnitA
         if (node instanceof UnitA) {
@@ -25,6 +31,16 @@ export class ReplacementNamespaceScoper extends FreScoperBase {
                 result = (node.freOwner() as ScoperModel)?.B_units;
             } else if (this.useNodeX) {
                 result = (node.freOwner() as ScoperModel)?.B_units.map(u => u.childrenWithName).flat(1);
+            }
+        } else if (node instanceof NodeY) {
+            console.log('ReplacementNamespaceScoper: NodeX');
+            if (this.useReference) {
+                AST.change ( () => {
+                    // we create a reference in the parent node, which can then be used as replacement namespace
+                    const newRef = FreNodeReference.create<NodeX>('B_2', 'NodeX');
+                    (node.freOwner() as IWithName).myRef.push(newRef);
+                    result = (node.freOwner() as IWithName).myRef;
+                })
             }
         }
         return result;
