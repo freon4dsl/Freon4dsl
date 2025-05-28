@@ -10,46 +10,49 @@ import { Referable } from '../language/gen/index.js';
 export class CustomScoperTryoutScoper implements FreScoper {
     mainScoper: FreCompositeScoper;
 
-    resolvePathName(modelelement: FreNode, doNotSearch: FreNodeReference<FreNamedNode>, pathname: string[], metatype?: string): FreNamedNode {
-        return undefined;
+    /**
+     *   Returns all elements that are visible in the namespace containing '_node'. Note that '_node' can
+     *   be any node in the AST, not only namespaces!
+     *
+     *   When parameter '_metaType' is present, it returns all elements that are an instance of '_metaType'.
+     *   There is no default setting for this parameter.
+     *
+     * @param _node
+     * @param _metaType
+     */
+    getVisibleNodes(_node: FreNode, _metaType?: string): FreNamedNode[] {
+        return [];
     }
 
-    isInScope(modelElement: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
-        return undefined;
+    /**
+     * Returns all nodes and/or node references that represent namespaces which should be added to the namespace
+     * represented by '_node'.
+     *
+     * @param _node
+     */
+    additionalNamespaces(_node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+        return [];
     }
 
-    getVisibleElements(modelelement: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
-        // console.log('CUSTOM getVisibleNodes')
-        return undefined;
-    }
-
-    getFromVisibleElements(modelelement: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): FreNamedNode {
-        // console.log('CUSTOM getFromVisibleElements')
-        return undefined;
-    }
-
-    getVisibleNames(modelelement: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
-        // console.log('CUSTOM getVisibleNames')
-        return undefined;
-    }
-
-    additionalNamespaces(element: FreNode): FreNode[] {
-        return undefined;
-    }
-
-    replacementNamespace(node: FreNode): FreNamespace | undefined {
+    /**
+     * Returns all nodes and/or node references that represent namespaces which should be used to replace
+     * the parent namespace of the namespace represented by '_node'.
+     *
+     * @param node
+     */
+    public replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
         // console.log('CUSTOM getAlternativeScope for ' + node.freId() + " of type " + node.freLanguageConcept());
 
         if (!!node && node.freLanguageConcept() == "QualifiedName") {
             let container = node.freOwner();
             if (!!container) {
                 if (container.freLanguageConcept() == "QualifiedName") { // note instanceof does not function here!!
-                    const myPart: Referable = (container as QualifiedName).part.referred;
+                    const myPart:FreNodeReference<Referable> = (container as QualifiedName).part;
                     // console.log('returning PART: ' + myPart.freId() + " of type " + myPart.freLanguageConcept());
-                    return FreNamespace.create(myPart);
+                    return [myPart];
                 } else {
                     // console.log('returning OWNER: ' + container.freId() + " of type " + container.freLanguageConcept());
-                    return FreNamespace.create(container);
+                    return [container as FreNamedNode];
                 }
             } else {
                 console.error("getAlternativeScope: no owner found.");

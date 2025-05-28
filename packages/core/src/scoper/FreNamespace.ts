@@ -21,7 +21,7 @@ export class FreNamespace {
      * The type of element 'node' should be marked as namespace in the scoper definition.
      * @param node
      */
-    public static create(node: FreNamedNode): FreNamespace {
+    public static create(node: FreNode): FreNamespace {
         const existingNS = this.allNamespaces.get(node);
         if (!!existingNS) {
             return existingNS;
@@ -34,7 +34,7 @@ export class FreNamespace {
 
     public _myElem: FreNode;
 
-    private constructor(elem: FreNamedNode) {
+    private constructor(elem: FreNode) {
         if (!elem) {
             console.log('FreNamespace constructed without node!');
         }
@@ -117,8 +117,8 @@ export class FreNamespace {
         return Array.from(resultSoFar);
     }
 
-    private addReplacementNamespaces(replacementNodes: (FreNamedNode | FreNodeReference<FreNamedNode>)[], visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
-        console.log('adding namespaces: ', replacementNodes.map(n => n.name));
+    private addReplacementNamespaces(replacementNodes: (FreNode | FreNodeReference<FreNamedNode>)[], visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
+        // console.log('replacement namespaces: ', replacementNodes.map(n => n['name']));
         replacementNodes.forEach((replacementNode) => {
             let replacementNamespace: FreNamespace = undefined;
             if (replacementNode instanceof FreNodeReference) {
@@ -140,7 +140,7 @@ export class FreNamespace {
         });
     }
 
-    private addAdditionalNamespaces(additionalNS: (FreNamedNode | FreNodeReference<FreNamedNode>)[], visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
+    private addAdditionalNamespaces(additionalNS: (FreNode | FreNodeReference<FreNamedNode>)[], visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
         // First add all additions that are not defined by FreNodeReferences
         additionalNS.forEach(namespaceNode => {
             if (!(namespaceNode instanceof FreNodeReference) && !isNullOrUndefined(namespaceNode)) {
@@ -175,7 +175,7 @@ export class FreNamespace {
     }
 
     private addNS(ns: FreNamespace, visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
-        console.log(`adding NS: ${ns._myElem["name"]}, visited: ${visitedNamespaces.includes(ns)}`);
+        // console.log(`adding NS: ${ns._myElem["name"]}, visited: ${visitedNamespaces.includes(ns)}`);
         if (!isNullOrUndefined(ns) && !visitedNamespaces.includes(ns)) {
             // ns!.getDeclaredNodes(true).forEach(n => console.log(n.name))
             ns!.getDeclaredNodes(true).forEach(node => {

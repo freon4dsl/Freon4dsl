@@ -53,9 +53,9 @@ export class ScoperTemplate {
              * Returns all FreNodes or FreNodeReferences that are defined as replacement namespaces for 'node'.
              * @param node
              */${this.replacementNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
-            public replacementNamespaces(node: ${Names.FreNode}): (${Names.FreNamedNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] {
+            public replacementNamespaces(node: ${Names.FreNode}): (${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] {
                 ${this.replacementNamespaceText.length > 0 ? 
-                    `const result: (${Names.FreNamedNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] = [];
+                    `const result: (${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] = [];
                     ${this.replacementNamespaceText}
                     return result;`
                 : `return [];`}
@@ -65,9 +65,9 @@ export class ScoperTemplate {
              * Returns all FreNodes or FreNodeReferences that are defined as additional namespaces for 'node'.
              * @param node
              */${this.additionalNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
-            public additionalNamespaces(node: ${Names.FreNode}): (${Names.FreNamedNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] {
+            public additionalNamespaces(node: ${Names.FreNode}): (${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] {
                 ${this.additionalNamespaceText.length > 0 ?
-                    `const result: (${Names.FreNamedNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] = [];
+                    `const result: (${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] = [];
                     ${this.additionalNamespaceText}
                     return result;`
                 : `return [];`}

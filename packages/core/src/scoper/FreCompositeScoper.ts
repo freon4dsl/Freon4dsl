@@ -39,7 +39,7 @@ export class FreCompositeScoper implements FreScoper {
         return undefined;
     }
 
-    additionalNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
+    additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
@@ -53,7 +53,7 @@ export class FreCompositeScoper implements FreScoper {
     }
 
     getVisibleNodes(node: FreNode, metatype?: string): FreNamedNode[] {
-        console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+        // console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
@@ -66,13 +66,12 @@ export class FreCompositeScoper implements FreScoper {
         return [];
     }
 
-    replacementNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
+    replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
         LOGGER.log('COMPOSITE replacementNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());
-        console.log('COMPOSITE replacementNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
-                const result: (FreNamedNode | FreNodeReference<FreNamedNode>)[] = scoper.replacementNamespaces(node);
+                const result: (FreNode | FreNodeReference<FreNamedNode>)[] = scoper.replacementNamespaces(node);
                 if (result.length > 0) {
                     return result;
                 }

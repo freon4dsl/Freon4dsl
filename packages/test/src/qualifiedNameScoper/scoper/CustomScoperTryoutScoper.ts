@@ -35,7 +35,7 @@ export class CustomScoperTryoutScoper implements FreScoper {
      *
      * @param _node
      */
-    additionalNamespaces(_node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
+    additionalNamespaces(_node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
         return [];
     }
 
@@ -45,7 +45,7 @@ export class CustomScoperTryoutScoper implements FreScoper {
      *
      * @param node
      */
-    replacementNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
+    replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
         if (!!node && node.freLanguageConcept() == "QualifiedName") {
             let container = node.freOwner();
             if (!!container) {

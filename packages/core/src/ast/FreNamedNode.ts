@@ -18,10 +18,12 @@ export function qualifiedName(node: FreNamedNode): string[] {
                 if (typeDescription.isNamespace) {
                     if (typeDescription.properties.has('name')) {
                         result.splice(0, 0, (owner as FreNamedNode).name);
+                    } else {
+                        result.splice(0, 0, '<anonymous>');
                     }
                 }
             } else {
-                console.error(`Node ${owner.freId()} of type ${owner.freLanguageConcept()} has no type description (searching for ${node.name})`)
+                console.error(`Node ${owner.freId()} of type ${owner.freLanguageConcept()} has no type description (building fqn for ${node.name})`)
                 // throw new Error(`Node ${next.freId()} of type ${next.freLanguageConcept()} has no type description (searching for ${node.name})`)
             }
         }

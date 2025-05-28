@@ -80,7 +80,7 @@ export class ReferenceCheckerTemplate {
             if (!prop.isPart) {
                 if (prop.isList) {
                     result += `for (const referredElem of ${paramName}.${prop.name} ) {
-                        if (referredElem.referred === null) {
+                        if (referredElem.referred === null || referredElem.referred === undefined) {
                             this.makeErrorMessage(${paramName}, referredElem, "${prop.name}", \`\${${locationdescription}}\`);
                         }
                     }`;

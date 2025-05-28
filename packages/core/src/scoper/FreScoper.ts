@@ -24,7 +24,7 @@ export interface FreScoper {
      *
      * @param node
      */
-    additionalNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[];
+    additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[];
 
     /**
      * Returns all nodes and/or node references that represent namespaces which should be used to replace
@@ -32,5 +32,5 @@ export interface FreScoper {
      *
      * @param node
      */
-    replacementNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[];
+    replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[];
 }

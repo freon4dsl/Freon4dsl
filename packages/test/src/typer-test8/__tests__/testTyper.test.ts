@@ -44,8 +44,6 @@ describe("Testing Typer on", () => {
                 ).toBeTruthy();
                 expect(errors.find((e) => e.message === "Type 'BOOLEAN' of [true] is not equal to STRING")).toBeTruthy();
                 expect(errors.find((e) => e.message === "Type 'BOOLEAN' of [true] is not equal to NUMBER")).toBeTruthy();
-
-                // console.log(errors.map(e => e.message).join("\n"));
             }
         })
     });

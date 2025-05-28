@@ -37,7 +37,7 @@ export class CustomScoperTemplate {
              *
              * @param _node
              */
-            additionalNamespaces(_node: ${Names.FreNode}): (${Names.FreNamedNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] {
+            additionalNamespaces(_node: ${Names.FreNode}): (${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] {
                 return [];
             }
 
@@ -47,7 +47,7 @@ export class CustomScoperTemplate {
              * 
              * @param _node
              */
-            public replacementNamespaces(_node: ${Names.FreNode}): (${Names.FreNamedNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[]  {
+            public replacementNamespaces(_node: ${Names.FreNode}): (${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[]  {
                 return [];
             }
         }`;

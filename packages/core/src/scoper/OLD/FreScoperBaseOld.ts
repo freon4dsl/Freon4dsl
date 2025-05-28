@@ -208,7 +208,7 @@ export abstract class FreScoperBaseOld implements FreScoperOld {
 
     // @ts-ignore parameter is present to adhere to interface FreScoper
     replacementNamespace(node: FreNode): FreNamespaceOLD {
-        console.log('BASE replacementNamespace for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+        // console.log('BASE replacementNamespace for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         return undefined;
     }
 

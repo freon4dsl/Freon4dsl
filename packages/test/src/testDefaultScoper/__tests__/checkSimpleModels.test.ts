@@ -1,4 +1,4 @@
-import { DSmodel } from "../language/gen";
+import { DSmodel, DSunit } from '../language/gen';
 import { SimpleModelCreator } from "./SimpleModelCreator.js";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment.js";
 import { describe, test, expect } from "vitest";
@@ -137,8 +137,6 @@ describe("Testing Default Scoper", () => {
 
     test("references in model with 2 units of depth 2, with interfaces", () => {
         const model: DSmodel = creator.createModelWithInterfaces(2, 2, 1);
-        // const writer= environment.writer;
-        // model.units.forEach(unit => console.log(writer.writeToString(unit)));
         const validator = environment.validator;
         const errors = validator.validate(model);
         const errorMessages: string[] = [];

@@ -20,7 +20,7 @@ export abstract class FreScoperBase implements FreScoper {
 
     public resolvePathName(toBeResolved: FreNodeReference<FreNamedNode>): FreNamedNode | undefined {
         this.myTyper = FreLanguageEnvironment.getInstance().typer;
-        // console.log('resolving: ', pathname)
+        // console.log('resolving: ', toBeResolved.pathname)
 
         // We must be able to resolve every name in the path to a namespace without taking its metaType into account,
         // except the last. The last should be a FreNamedNode of the type indicated by 'toBeResolved.typeName'.
@@ -53,6 +53,7 @@ export abstract class FreScoperBase implements FreScoper {
                 } else {
                     // Search the last name in the path, the result need not be a namespace, so use 'typeName'.
                     found = this.getFromVisibleNodes(previousNamespace, pathname[index], publicOnly, toBeResolved.typeName);
+                    // console.log(`found number ${index} of path, using publicOnly is ${publicOnly}: `, found ? found['name'] : 'undefined', previousNamespace.getVisibleNodes(this.mainScoper, [], false).map(e =>e.name))
                 }
             }
         } else {
@@ -81,7 +82,7 @@ export abstract class FreScoperBase implements FreScoper {
       metaType?: string
     ): FreNamedNode | undefined {
         // console.log('BASE get**FROM**VisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", searching for " + metaType);
-        const visibleNodes = namespace.getVisibleNodes(this.mainScoper, [], publicOnly);
+        const visibleNodes = FreLanguage.getInstance().stdLib.elements.concat(namespace.getVisibleNodes(this.mainScoper, [], publicOnly));
         if (visibleNodes !== null) {
             for (const node of visibleNodes) {
                 const n: string = node.name;
@@ -94,7 +95,7 @@ export abstract class FreScoperBase implements FreScoper {
     }
 
     public getVisibleNodes(node: FreNode, metaType?: string): FreNamedNode[] {
-        console.log('BASE getVisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", metaType: " + metaType);
+        // console.log('BASE getVisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", metaType: " + metaType);
         this.myTyper = FreLanguageEnvironment.getInstance().typer;
         if (!isNullOrUndefined(node)) {
             // Initialize: remember all namespaces that we already included/visited, and add all nodes from the standard library.
@@ -136,7 +137,7 @@ export abstract class FreScoperBase implements FreScoper {
     }
 
     // @ts-ignore parameter is present to adhere to interface FreScoper
-    replacementNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
+    replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
         return [];
     }
 
