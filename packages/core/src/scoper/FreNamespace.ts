@@ -32,7 +32,7 @@ export class FreNamespace {
         }
     }
 
-    public _myElem: FreNamedNode;
+    public _myElem: FreNode;
 
     private constructor(elem: FreNamedNode) {
         if (!elem) {
@@ -44,10 +44,11 @@ export class FreNamespace {
     /**
      * Returns all elements that are declared in this namespace. Private/public is not taken into account yet.
      */
-    public getDeclaredNodes(): Set<FreNamedNode> {
+    public getDeclaredNodes(publicOnly: boolean): Set<FreNamedNode> {
+        // console.log('getDeclaredNodes for ', this._myElem.['name'], ' publicOnly', publicOnly);
         // When public/private is taken into account, this method could get a parameter on which to decide
         // to only return public nodes. This parameter could be set in the places marked by 'PUBLIC' in this class.
-        const result: FreNamedNode[] = [];
+        let result: FreNamedNode[] = [];
         // set up the 'worker' of the visitor pattern
         const myNamesCollector = new CollectDeclaredNodesWorker();
         myNamesCollector.namesList = result;
@@ -58,15 +59,26 @@ export class FreNamespace {
 
         // collect the elements from the namespace, but not from any child namespace
         myWalker.walk(this._myElem, (elem: FreNode) => {
-            return !FreLanguage.getInstance().classifier(elem.freLanguageConcept()).isNamespace;
-            // To not go into namespaces that are private, the old FreNamespace class had this guard as well:
-            // (!!elem.freOwner() &&
-            //   FreLanguage.getInstance().classifierProperty(
-            //     elem.freOwner().freLanguageConcept(),
-            //     elem.freOwnerDescriptor().propertyName,
-            //   ).isPublic))
-            // Maybe this should be reinstated.
+            // To not go into nested private nodes, we also check whether the property is public.
+            return !FreLanguage.getInstance().classifier(elem.freLanguageConcept()).isNamespace &&
+              (!publicOnly ||
+                (!!elem.freOwner() &&
+                  FreLanguage.getInstance().classifierProperty(
+                    elem.freOwner().freLanguageConcept(),
+                    elem.freOwnerDescriptor().propertyName,
+                  ).isPublic))
         });
+
+        if (publicOnly) {
+            result = result.filter((elem) => {
+                return (!!elem.freOwner() &&
+                  FreLanguage.getInstance().classifierProperty(
+                    elem.freOwner().freLanguageConcept(),
+                    elem.freOwnerDescriptor().propertyName
+                  ).isPublic);
+            })
+        }
+
         return new Set<FreNamedNode>(result);
     }
 
@@ -77,10 +89,12 @@ export class FreNamespace {
      *
      * @param mainScoper
      * @param visitedNamespaces
+     * @param publicOnly
      */
-    public getVisibleNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[]): FreNamedNode[] {
+    public getVisibleNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[], publicOnly: boolean): FreNamedNode[] {
+        // console.log(`getVisibleNodes ${this._myElem.['name']}`)
         // First, add all the declared nodes.
-        let resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(); // Here 'PUBLIC' could be set to includeAll.
+        let resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(publicOnly);
         visitedNamespaces.push(this);
 
         // Second, determine whether we need to include a replacement or the parent namespace
@@ -90,7 +104,7 @@ export class FreNamespace {
             this.addReplacementNamespaces(replacementNodes, visitedNamespaces, resultSoFar);
         } else {
             if (!isNullOrUndefined(parentNamespace) && !visitedNamespaces.includes(parentNamespace)) {
-                parentNamespace.getVisibleNodes(mainScoper, visitedNamespaces).forEach(x => {
+                parentNamespace.getVisibleNodes(mainScoper, visitedNamespaces, publicOnly).forEach(x => {
                     resultSoFar.add(x);
                 });
                 // no need to add 'parentNamespace' to 'visitedNamespaces', this is done by 'parentNamespace.getVisibleNodes'
@@ -104,6 +118,7 @@ export class FreNamespace {
     }
 
     private addReplacementNamespaces(replacementNodes: (FreNamedNode | FreNodeReference<FreNamedNode>)[], visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
+        console.log('adding namespaces: ', replacementNodes.map(n => n.name));
         replacementNodes.forEach((replacementNode) => {
             let replacementNamespace: FreNamespace = undefined;
             if (replacementNode instanceof FreNodeReference) {
@@ -111,7 +126,7 @@ export class FreNamespace {
                 // This should also be checked in meta!
                 const toBeChecked: FreNamespace = findEnclosingNamespace(replacementNode.freOwner());
                 if (toBeChecked === this) {
-                    LOGGER.error(`Cannot add as namespace one that is defined via a reference '${replacementNode.pathname}' that resides in the same namespace '${this._myElem.name}'`);
+                    LOGGER.error(`Cannot add as namespace one that is defined via a reference '${replacementNode.pathname}' that resides in the same namespace '${this._myElem['name']}'`);
                 } else {
                     const node: FreNamedNode = replacementNode.referred;
                     if (!isNullOrUndefined(node)) {
@@ -128,7 +143,7 @@ export class FreNamespace {
     private addAdditionalNamespaces(additionalNS: (FreNamedNode | FreNodeReference<FreNamedNode>)[], visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
         // First add all additions that are not defined by FreNodeReferences
         additionalNS.forEach(namespaceNode => {
-            if (!(namespaceNode instanceof FreNodeReference)) {
+            if (!(namespaceNode instanceof FreNodeReference) && !isNullOrUndefined(namespaceNode)) {
                 this.addNS(FreNamespace.create(namespaceNode), visitedNamespaces, resultSoFar);
             }
         });
@@ -160,9 +175,10 @@ export class FreNamespace {
     }
 
     private addNS(ns: FreNamespace, visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
+        console.log(`adding NS: ${ns._myElem["name"]}, visited: ${visitedNamespaces.includes(ns)}`);
         if (!isNullOrUndefined(ns) && !visitedNamespaces.includes(ns)) {
-            // Here 'PUBLIC' could be set to includePublicOnly.
-            ns!.getDeclaredNodes().forEach(node => {
+            // ns!.getDeclaredNodes(true).forEach(n => console.log(n.name))
+            ns!.getDeclaredNodes(true).forEach(node => {
                 resultSoFar.add(node);
             });
             // todo Design decision: add additional NS-es of 'ns' as well???
@@ -192,12 +208,7 @@ export class FreNamespace {
         let owner: FreNode = child._myElem.freOwner();
         while (!isNullOrUndefined(owner) ) {
             if (FreLanguage.getInstance().classifier(owner.freLanguageConcept()).isNamespace) {
-                console.log('returning namespace ', owner.freLanguageConcept());
-                // todo this should be replaced by a better test, but we cannot test 'owner instanceof FreNameNode'
-                const nameProp = owner['name'];
-                if (!isNullOrUndefined(nameProp)) {
-                    return FreNamespace.create(owner as FreNamedNode);
-                }
+                return FreNamespace.create(owner as FreNamedNode);
             } else {
                 owner = owner.freOwner();
             }

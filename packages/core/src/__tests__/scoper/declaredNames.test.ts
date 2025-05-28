@@ -29,7 +29,7 @@ describe("FreNamespace declaredNames", () => {
 	test(" model has all names as declared names", () => {
 		// test namespace for 'model'
 		const namespace = FreNamespace.create(model);
-		const set: Set<FreNamedNode> = namespace.getDeclaredNodes();
+		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = 50 grandchildren plus 10 children plus 2 units
 		expect(set.size).toBe(62);
@@ -38,7 +38,7 @@ describe("FreNamespace declaredNames", () => {
 	test(" unit has contained names as declared names", () => {
 		// test namespace for 'unit'
 		const namespace = FreNamespace.create(model.findUnit('UnitA1'));
-		const set: Set<FreNamedNode> = namespace.getDeclaredNodes();
+		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = 25 grandchildren plus 5 children
 		expect(set.size).toBe(30);
@@ -50,7 +50,7 @@ describe("FreNamespace declaredNames", () => {
 		const concept = unit.childrenWithName.find(child => child.name === 'B_2');
 		if (!!concept) {
 			const namespace = FreNamespace.create(concept);
-			const set: Set<FreNamedNode> = namespace.getDeclaredNodes();
+			const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 			// printNames(set);
 			// size = 5 (grand)children
 			expect(set.size).toBe(5);
@@ -62,7 +62,7 @@ describe("FreNamespace declaredNames", () => {
 		FreLanguage.getInstance().classifier('UnitA').isNamespace = true;
 		// test namespace for 'model'
 		const namespace = FreNamespace.create(model);
-		const set: Set<FreNamedNode> = namespace.getDeclaredNodes();
+		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = 25 grandchildren plus 5 children plus 2 units
 		expect(set.size).toBe(32);
@@ -77,7 +77,7 @@ describe("FreNamespace declaredNames", () => {
 		FreLanguage.getInstance().classifier('NodeY').isNamespace = true;
 		// test namespace for 'model'
 		const namespace = FreNamespace.create(model);
-		const set: Set<FreNamedNode> = namespace.getDeclaredNodes();
+		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = no grandchildren plus 5 children plus 2 units
 		expect(set.size).toBe(7);
@@ -93,7 +93,7 @@ describe("FreNamespace declaredNames", () => {
 		FreLanguage.getInstance().classifier('NodeY').isNamespace = true;
 		// test namespace for 'unit'
 		const namespace = FreNamespace.create(model.findUnit('UnitA1'));
-		const set: Set<FreNamedNode> = namespace.getDeclaredNodes();
+		const set: Set<FreNamedNode> = namespace.getDeclaredNodes(false);
 		// printNames(set);
 		// size = no grandchildren, only 5 children
 		expect(set.size).toBe(5);

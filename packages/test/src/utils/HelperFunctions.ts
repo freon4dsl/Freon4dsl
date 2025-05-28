@@ -48,18 +48,18 @@ function getShortFileName(filename: string): string {
     return names[names.length - 1];
 }
 
-export function isInScope(scoper: FreCompositeScoper, node: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
-    return getFromVisibleElements(scoper, node, name, metatype, excludeSurrounding) !== null;
+export function isInScope(scoper: FreCompositeScoper, node: FreNode, name: string, metatype?: string): boolean {
+    return getFromVisibleElements(scoper, node, name, metatype) !== null;
 }
 
 export function getFromVisibleElements(
   scoper: FreCompositeScoper,
   node: FreNode,
   name: string,
-  metatype?: string,
-  excludeSurrounding?: boolean,
+  metatype?: string
 ): FreNamedNode {
-    const visibleElements = scoper.getVisibleNodes(node, metatype, excludeSurrounding);
+    const visibleElements = scoper.getVisibleNodes(node, metatype);
+    console.log(visibleElements.map(v => v.name));
     if (visibleElements !== null) {
         for (const element of visibleElements) {
             const n: string = element.name;
@@ -71,7 +71,7 @@ export function getFromVisibleElements(
     return null;
 }
 
-export function getVisibleNames(scoper: FreCompositeScoper, node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
-    const visibleElements = scoper.getVisibleNodes(node, metatype, excludeSurrounding);
+export function getVisibleNames(scoper: FreCompositeScoper, node: FreNode, metatype?: string): string[] {
+    const visibleElements = scoper.getVisibleNodes(node, metatype);
     return visibleElements.map(el => el.name);
 }

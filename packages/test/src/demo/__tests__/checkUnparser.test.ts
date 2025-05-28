@@ -77,9 +77,15 @@ describe("Testing Unparser", () => {
 
                 const divideExpression = MakePlusExp("1", "2");
                 const multiplyExpression = MakeMultiplyExp(divideExpression, variableExpression);
+
+                // add the variable and the expression to a namespace
+                const xx = DemoFunction.create({ name: "TEST2" });
+                xx.parameters.push(variable);
+                xx.expression = multiplyExpression;
+
                 result = unparser.writeToString(multiplyExpression, 0, false);
                 // result = result.replace(new RegExp("\\s+", "gm"), " ");
-                // expect(result).toBe("1 + 2 * Person");
+                expect(result).toBe("1 + 2 * Person");
             })
         });
 

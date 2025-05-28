@@ -1,6 +1,6 @@
 scoper Demo for language Demo
 
-isnamespace { DemoModel, DemoEntity, DemoFunction }
+isnamespace { DemoModel, DemoEntity, DemoFunction, AppliedFeature }
 
 // Inheritance scope
 DemoEntity {

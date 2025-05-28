@@ -15,7 +15,13 @@ export function findEnclosingNamespace(node: FreNodeReference<FreNamedNode> | Fr
 		return findEnclosingNamespace(node.freOwner());
 	} else {
 		if (FreLanguage.getInstance().classifier(node.freLanguageConcept()).isNamespace) {
-			return FreNamespace.create(node);
+			// todo this should be replaced by a better test, but we cannot test 'owner instanceof FreNameNode'
+			// const nameProp = node['name'];
+			// if (!isNullOrUndefined(nameProp)) {
+				return FreNamespace.create(node as FreNamedNode);
+			// } else {
+			// 	return undefined;
+			// }
 		} else {
 			return findEnclosingNamespace(node.freOwner());
 		}

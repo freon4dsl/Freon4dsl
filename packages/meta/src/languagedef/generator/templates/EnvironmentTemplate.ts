@@ -84,7 +84,7 @@ export class EnvironmentTemplate {
 
             // the parts of the language environment
             editor: ${Names.FreEditor};
-            scoper: ${Names.FreCompositeScoper} = new ${Names.FreCompositeScoper}("main");
+            scoper: ${Names.FreCompositeScoper} = new ${Names.FreCompositeScoper}();
             typer: ${Names.FreCompositeTyper} = new ${Names.FreCompositeTyper}("main");
             validator: ${Names.FreValidator} = new ${Names.validator(language)}();
             writer: ${Names.FreWriter} = new ${Names.writer(language)}();

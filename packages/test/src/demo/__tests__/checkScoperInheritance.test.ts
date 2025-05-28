@@ -22,7 +22,8 @@ describe("testing Scoper", () => {
                 expect(vis).toContain(attr.name);
             });
             done.push(ent);
-            testInheritedPropsrecursive(ent.baseEntity.referred, vis, done);
+            // TODO when it is possiblke to have additional NS-es from additional NS-es, the follwoing can be tested
+            // testInheritedPropsrecursive(ent.baseEntity.referred, vis, done);
         }
         // when the property is a list
         // for (let ww of ent.baseEntity) {

@@ -3,6 +3,8 @@ import { AppliedFeature, DemoAttributeRef, Demo } from "../language/gen/index.js
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe,  test, expect, beforeEach } from "vitest";
 import { isInScope, } from '../../utils/HelperFunctions.js';
+import { FreNamedNode } from '@freon4dsl/core';
+// import { FileHandler } from '../../utils/FileHandler';
 
 describe("testing Alternative Scopes", () => {
     describe("testing IsInScope", () => {
@@ -12,6 +14,7 @@ describe("testing Alternative Scopes", () => {
         //      Variable1.attrFromPerson.attrFromCompany
         // where 'Variable1.attrFromPerson' is of type Company
         let scoper = DemoEnvironment.getInstance().scoper;
+        let writer = DemoEnvironment.getInstance().writer;
 
         beforeEach(() => {
             DemoEnvironment.getInstance();
@@ -88,27 +91,28 @@ describe("testing Alternative Scopes", () => {
         });
 
         test("isInscope 'name' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
+            let testfeat = model.models[0].functions[0].expression.appliedfeature;
+            let appliedFeature: AppliedFeature = testfeat.appliedfeature;
             expect(model.models[0].functions[0].name).toBe("length");
-            expect((model.models[0].functions[0].expression.appliedfeature as DemoAttributeRef).attribute.name).toBe(
+            expect((testfeat as DemoAttributeRef).attribute.name).toBe(
                 "attrFromPerson",
             );
             expect(
-                (model.models[0].functions[0].expression.appliedfeature.appliedfeature as DemoAttributeRef).attribute
+                (testfeat.appliedfeature as DemoAttributeRef).attribute
                     .name,
             ).toBe("attrFromCompany");
-            // let testfeat = model.models[0].functions[0].expression.appliedfeature;
-            // let type = DemoEnvironment.getInstance().typer.inferType(testfeat);
+            // let type = DemoEnvironment.getInstance().typer.inferType(appliedFeature);
             // let names: string = "";
             // for (let name of scoper.getVisibleNodes(appliedFeature)) {
             //     names = names.concat(name.name + ", ");
             // }
-            // console.log("In Scope: " + names + " type: " + (type as FreNamedElement).name);
+            // console.log("In Scope: " + names + " type: " + type?.toAstElement()?.['name']);
             expect(isInScope(scoper, appliedFeature, "name")).toBe(true);
         });
 
         test("isInscope 'Person' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
             let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
+            // console.log(writer.writeToString(model.models[0].functions[0].expression.appliedfeature))
             expect(isInScope(scoper, appliedFeature, "Person")).toBe(false);
         });
 

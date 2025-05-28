@@ -13,9 +13,11 @@ describe("testing Scoper on model units", () => {
         let model: Demo = new DemoModelCreator().createModelWithMultipleUnits();
         let scoper = DemoEnvironment.getInstance().scoper;
         let stdlib = DemoStdlib.getInstance();
+        initializeScoperDef(DemoEnvironment.getInstance().scoper);
 
         beforeEach(() => {
             DemoEnvironment.getInstance();
+
         });
 
         test("visible elements in model", () => {
@@ -69,7 +71,6 @@ describe("testing Scoper on model units", () => {
         });
 
         test("visible elements in units in JSON model", () => {
-            initializeScoperDef(DemoEnvironment.getInstance().scoper);
             let readModel = new DemoUnitCreator().modelToJsonToModel();
             const unit1 = readModel.models[0]; // a 'complete' unit
             const unit2 = readModel.models[1]; // a 'unit interface'
@@ -186,7 +187,7 @@ describe("testing Scoper on model units", () => {
                 // test if nameTotest is known in model functions
                 unit.functions.forEach(fun => {
                     console.log(getVisibleNames(scoper, fun))
-                    expect(isInScope(scoper, fun, nameTotest, "DemoModel", true)).toBe(false);
+                    expect(isInScope(scoper, fun, nameTotest, "DemoModel")).toBe(false);
                 });
                 // test the same on entities and entity functions
                 unit.entities.forEach(ent => {
@@ -226,8 +227,8 @@ describe("testing Scoper on model units", () => {
                 }
                 expect(isInScope(scoper, ent, nameTotest, "DemoAttribute")).toBe(expected);
                 ent.functions.forEach(fun => {
-                    expect(isInScope(scoper, fun, nameTotest, "DemoAttribute", true)).toBe(false);
-                    expect(isInScope(scoper, fun, nameTotest, "DemoAttribute", false)).toBe(expected);
+                    expect(isInScope(scoper, fun, nameTotest, "DemoAttribute")).toBe(false);
+                    expect(isInScope(scoper, fun, nameTotest, "DemoAttribute")).toBe(expected);
                 });
             });
         });

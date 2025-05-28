@@ -14,8 +14,10 @@ import { NodeY } from './NodeY';
  * otherwise this class implements the default scoper.
  */
 export class ReplacementNamespaceScoper extends FreScoperBase {
+    useUnitA: boolean = false;
     useUnitB: boolean = false;
     useNodeX: boolean = false;
+    useNodeY: boolean = false;
     useReference: boolean = false;
 
     /**
@@ -30,6 +32,12 @@ export class ReplacementNamespaceScoper extends FreScoperBase {
                 result = (node.freOwner() as ScoperModel)?.B_units;
             } else if (this.useNodeX) {
                 result = (node.freOwner() as ScoperModel)?.B_units.map(u => u.childrenWithName).flat(1);
+            }
+        } else if (node instanceof UnitB) {
+            if (this.useUnitA) {
+                result = (node.freOwner() as ScoperModel)?.A_units;
+            } else if (this.useNodeY) {
+                result = (node.freOwner() as ScoperModel)?.A_units.map(u => u.childrenWithName).flat(1);
             }
         } else if (node instanceof NodeY) {
             if (this.useReference) {

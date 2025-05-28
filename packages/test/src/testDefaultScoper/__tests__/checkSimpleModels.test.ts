@@ -3,8 +3,6 @@ import { SimpleModelCreator } from "./SimpleModelCreator.js";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment.js";
 import { describe, test, expect } from "vitest";
 import { getVisibleNames } from '../../utils/HelperFunctions';
-import { initializeScoperDef } from '../../demo/scoper/gen';
-import { DemoEnvironment } from '../../demo/config/gen/DemoEnvironment';
 
 function print(prefix: string, visibleNames: string[]) {
     let printable: string = "";

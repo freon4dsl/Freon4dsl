@@ -4,6 +4,7 @@ import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe, test, expect, beforeEach } from "vitest";
 import { FreCompositeScoper } from '@freon4dsl/core';
 import { isInScope, getVisibleNames } from '../../utils/HelperFunctions.js';
+import { initializeScoperDef } from '../scoper/gen';
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleNodes from DemoModel Instance", () => {
@@ -15,18 +16,16 @@ describe("testing Scoper", () => {
         });
 
         test("visible elements in model and unit", () => {
-            // console.log("VI: " + vi);
-            // expect(vi.length).toBe(5);
             for (let unit of model.models) {
-                let innerVi = getVisibleNames(scoper, unit);
-                // console.log(vi);
+                let innerVi = scoper.getVisibleNodes(unit);
+
                 expect(innerVi.length).toBe(13);
                 for (let e of unit.entities) {
-                    expect(innerVi).toContain(e.name);
+                    expect(innerVi).toContain(e);
                 }
 
                 for (let f of unit.functions) {
-                    expect(innerVi).toContain(f.name);
+                    expect(innerVi).toContain(f);
                 }
             }
         });
@@ -34,18 +33,18 @@ describe("testing Scoper", () => {
         test("visible elements in entities", () => {
             for (let unit of model.models) {
                 for (let ent of unit.entities) {
-                    let vis = getVisibleNames(scoper, ent);
+                    let vis = scoper.getVisibleNodes(ent);
 
                     for (let a of ent.attributes) {
-                        expect(vis).toContain(a.name);
+                        expect(vis).toContain(a);
                     }
 
                     for (let f of ent.functions) {
-                        expect(vis).toContain(f.name);
+                        expect(vis).toContain(f);
                     }
 
                     for (let e of unit.entities) {
-                        expect(vis).toContain(e.name);
+                        expect(vis).toContain(e);
                     }
                 }
             }
@@ -177,8 +176,7 @@ describe("testing Scoper", () => {
                 // console.log(`name: ${ent.name}, expected: ${expected}`);
                 expect(isInScope(scoper, ent, nameTotest, "DemoAttribute")).toBe(expected);
                 ent.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun, nameTotest, "DemoAttribute", true)).toBe(false);
-                    expect(isInScope(scoper, fun, nameTotest, "DemoAttribute", false)).toBe(expected);
+                    expect(isInScope(scoper, fun, nameTotest, "DemoAttribute")).toBe(expected);
                 });
             });
         });

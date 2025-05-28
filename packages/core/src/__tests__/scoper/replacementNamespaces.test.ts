@@ -84,7 +84,6 @@ describe("FreNamespace visibleNames with replacements, but without additions, ",
 		// are present, and are visible in the model namespace, when no other namespaces are defined.
 		const set: FreNamedNode[] = scoper.getVisibleNodes(model);
 		// printNames(set);
-		// visible should be: 50 grandchildren plus 10 children plus 2 units
 		expect(set.length).toBe(30);
 		expect(set.map(x => x.name)).toStrictEqual(['UnitA1', 'UnitB1',
 			'A_1', 'A_2',
@@ -166,6 +165,49 @@ describe("FreNamespace visibleNames with replacements, but without additions, ",
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
 			scoper.useReference = false;
+		}
+	})
+
+	test(" unitB1 with [NodeY, UnitB], and children of UnitA1 as replacement NS", () => {
+		// test namespace for 'unitB1'
+		if (!!unitB1) {
+			setNamespaces(['NodeY', 'UnitB']);
+			scoper.useNodeY = true;
+			//
+			const set: FreNamedNode[] = scoper.getVisibleNodes(unitB1);
+			// printNames(set);
+			// expect(set.length).toBe(10);
+			expect(set.map(x => x.name)).toStrictEqual([
+				"B_1",
+				"B_2",
+				"B_1_1",
+				"B_1_2",
+				"B_1_1_1",
+				"B_1_1_2",
+				"B_1_2_1",
+				"B_1_2_2",
+				"B_2_1",
+				"B_2_2",
+				"B_2_1_1",
+				"B_2_1_2",
+				"B_2_2_1",
+				"B_2_2_2",
+				"A_1_1",
+				"A_1_2",
+				"A_1_1_1",
+				"A_1_1_2",
+				"A_1_2_1",
+				"A_1_2_2",
+				"A_2_1",
+				"A_2_2",
+				"A_2_1_1",
+				"A_2_1_2",
+				"A_2_2_1",
+				"A_2_2_2",
+				])
+			// unset namespaces, do not interfere with other tests
+			unsetNamespaces();
+			scoper.useNodeX = false;
 		}
 	})
 })

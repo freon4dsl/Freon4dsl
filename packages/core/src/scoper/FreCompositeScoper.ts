@@ -7,7 +7,7 @@ import { FreScoperBase } from './FreScoperBase.js';
 const LOGGER = new FreLogger("FreCompositeScoper").mute();
 
 export class FreCompositeScoper implements FreScoper {
-    mainScoper: FreCompositeScoper;
+    mainScoper: FreCompositeScoper; // unused, here to adhere to FreScoper interface
     private scopers: FreScoper[] = [];
 
     appendScoper(t: FreScoper) {
@@ -44,7 +44,7 @@ export class FreCompositeScoper implements FreScoper {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
                 const result = scoper.additionalNamespaces(node);
-                if (!isNullOrUndefined(result)) {
+                if (result.length > 0) {
                     return result;
                 }
             }
@@ -53,12 +53,12 @@ export class FreCompositeScoper implements FreScoper {
     }
 
     getVisibleNodes(node: FreNode, metatype?: string): FreNamedNode[] {
-        LOGGER.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+        console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
                 const result = scoper.getVisibleNodes(node, metatype);
-                if (!isNullOrUndefined(result)) {
+                if (result.length > 0) {
                     return result;
                 }
             }
@@ -67,12 +67,13 @@ export class FreCompositeScoper implements FreScoper {
     }
 
     replacementNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
-        LOGGER.log('COMPOSITE replacementNamespace for ' + node.freId() + " of type " + node.freLanguageConcept());
+        LOGGER.log('COMPOSITE replacementNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());
+        console.log('COMPOSITE replacementNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
                 const result: (FreNamedNode | FreNodeReference<FreNamedNode>)[] = scoper.replacementNamespaces(node);
-                if (!isNullOrUndefined(result)) {
+                if (result.length > 0) {
                     return result;
                 }
             }
