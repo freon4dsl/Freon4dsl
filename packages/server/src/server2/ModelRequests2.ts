@@ -2,29 +2,29 @@ import { issuestoString, LanguageRegistry, LionWebJsonChunk, LionWebValidator } 
 import * as fs from "fs";
 import { IRouterContext } from "koa-router";
 import * as path from "node:path"
-import { StoredIndex } from "./ModelIndex.js"
+import { StoreCatalog } from "./StoreCatalog.js"
 // var path = require("path");
 
 const storeFolder = "./modelstore";
 
 export class ModelRequests2 {
     public static validate = false;
-
+    
     public static async putModel(modelname: string, language: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            const index = ModelRequests2.readStoredIndex()
-            let model = index.models.find(m => m.name === modelname)
+            const catalog = ModelRequests2.readStoreCatalog()
+            let model = catalog.models.find(m => m.name === modelname)
             if (model === undefined) {
                 model = {
                     name: modelname,
-                    folder: (isIdentifier(modelname) ? modelname : "model-" + index.currentIndex++),
+                    folder: (isIdentifier(modelname) ? modelname : "model-" + catalog.currentPostfix++),
                     language: language,
                     version: "1",
                     units: []
                 }
-                index.models.push(model)
-                ModelRequests2.writeStoredIndex(index)
+                catalog.models.push(model)
+                ModelRequests2.writeStoreCatalog(catalog)
                 if (!fs.existsSync(path.join(`${storeFolder}`, model.folder))) {
                     fs.mkdirSync(path.join(`${storeFolder}`, model.folder));
                 }
@@ -41,8 +41,8 @@ export class ModelRequests2 {
     public static async putModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            const index = ModelRequests2.readStoredIndex()
-            let model = index.models.find(m => m.name === modelname)
+            const catalog = ModelRequests2.readStoreCatalog()
+            let model = catalog.models.find(m => m.name === modelname)
             if (model === undefined) {
                 // Error, model should be defined.
                 ctx.response.body = `putModelUnit failed because model '${modelname}' does not exist`;
@@ -54,10 +54,10 @@ export class ModelRequests2 {
                 // create new
                 unit = {
                     name: unitname,
-                    file: (isIdentifier(unitname) ? unitname : "unit-" + index.currentIndex++)
+                    file: (isIdentifier(unitname) ? unitname : "unit-" + catalog.currentPostfix++)
                 }
                 model.units.push(unit)
-                ModelRequests2.writeStoredIndex(index)
+                ModelRequests2.writeStoreCatalog(catalog)
             }
             const body = ctx.request.body;
             if (!fs.existsSync(path.join(`${storeFolder}`, model.folder))) {
@@ -74,8 +74,8 @@ export class ModelRequests2 {
     public static async getModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            const index = ModelRequests2.readStoredIndex()
-            const model = index.models.find(m => m.name === modelname)
+            const catalog = ModelRequests2.readStoreCatalog()
+            const model = catalog.models.find(m => m.name === modelname)
             const unit = model.units.find(u => u.name === unitname)
             const result = fs.readFileSync(path.join(`${storeFolder}`, model.folder, `${unit.file}.json`))
             if (ModelRequests2.validate) {
@@ -102,8 +102,8 @@ export class ModelRequests2 {
     public static async getUnitList(modelname: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            const index = ModelRequests2.readStoredIndex()
-            const model = index.models.find(m => m.name === modelname)
+            const catalog = ModelRequests2.readStoreCatalog()
+            const model = catalog.models.find(m => m.name === modelname)
             const dir = model.units.map(u => u.name)
             ctx.response.body = dir;
         } catch (e) {
@@ -115,8 +115,8 @@ export class ModelRequests2 {
     public static async getModelList(ctx: IRouterContext, language: string) {
         try {
             this.checkStoreFolder();
-            const index = ModelRequests2.readStoredIndex()
-            const modelnames = index.models.filter(m => m?.language === language).map(model => model.name);
+            const catalog = ModelRequests2.readStoreCatalog()
+            const modelnames = catalog.models.filter(m => m?.language === language).map(model => model.name);
             ctx.response.body = modelnames;
         } catch (e) {
             console.log(e.message);
@@ -127,14 +127,14 @@ export class ModelRequests2 {
     public static async deleteModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            const index = ModelRequests2.readStoredIndex()
-            const storedModel = index.models.find(m => m.name === modelname)
+            const catalog = ModelRequests2.readStoreCatalog()
+            const storedModel = catalog.models.find(m => m.name === modelname)
             if (storedModel !== undefined) {
                 const unitIndex = storedModel.units.findIndex(u => u.name === unitname)
-                const unitFilename = storedModel.units[unitIndex].file
                 if (unitIndex !== -1) {
+                    const unitFilename = storedModel.units[unitIndex].file
                     storedModel.units.splice(unitIndex, 1) 
-                    ModelRequests2.writeStoredIndex(index)
+                    ModelRequests2.writeStoreCatalog(catalog)
                     fs.unlinkSync(path.join(`${storeFolder}`, storedModel.folder, `${unitFilename}.json`));
                 }
             }
@@ -147,11 +147,14 @@ export class ModelRequests2 {
     public static async deleteModel(modelname: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            const index = ModelRequests2.readStoredIndex()
-            const storedModel = index.models.find(m => m.name === modelname)
-            if (storedModel !== undefined) {
-                console.log("Unlink: " + path.join(`${storeFolder}`, modelname));
-                fs.rmdirSync(path.join(`${storeFolder}`, modelname), { recursive: true });
+            const catalog = ModelRequests2.readStoreCatalog()
+            const storedModelIndex = catalog.models.findIndex(m => m.name === modelname)
+            if (storedModelIndex !== -1) {
+                const storedModel = catalog.models[storedModelIndex]
+                catalog.models.splice(storedModelIndex, 1)
+                ModelRequests2.writeStoreCatalog(catalog)
+                console.log("Unlink: " + path.join(`${storeFolder}`, storedModel.folder));
+                fs.rmdirSync(path.join(`${storeFolder}`, storedModel.folder), { recursive: true });
             }
         } catch (e) {
             console.log(e.message);
@@ -169,12 +172,12 @@ export class ModelRequests2 {
         }
     }
 
-    public static readStoredIndex(): StoredIndex {
+    public static readStoreCatalog(): StoreCatalog {
         try {
             this.checkStoreFolder()
             const text = fs.readFileSync(path.join(`${storeFolder}`, `store.json`))
-            const index = JSON.parse(text.toString()) as StoredIndex
-            return index
+            const catalog = JSON.parse(text.toString()) as StoreCatalog
+            return catalog
         } catch (e) {
             console.log(e.message);
             throw e
@@ -182,10 +185,10 @@ export class ModelRequests2 {
         return undefined
     }
 
-    public static writeStoredIndex(index: StoredIndex): void {
+    public static writeStoreCatalog(catalog: StoreCatalog): void {
         try {
             this.checkStoreFolder()
-            fs.writeFileSync(path.join(`${storeFolder}`, `store.json`), JSON.stringify(index, null, 4))
+            fs.writeFileSync(path.join(`${storeFolder}`, `store.json`), JSON.stringify(catalog, null, 4))
         } catch (e) {
             console.log(e.message);
             throw e

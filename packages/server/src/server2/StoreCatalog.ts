@@ -1,6 +1,9 @@
-export type StoredIndex = {
+/**
+ * Types describing the JSON of the index file: store.json
+ */
+export type StoreCatalog = {
     models: StoredModel[]
-    currentIndex: number
+    currentPostfix: number
 }
 
 export type StoredModel = {
