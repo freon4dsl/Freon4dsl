@@ -9,7 +9,7 @@ import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js";
 import { isNullOrUndefined } from '../util/index.js';
 import { FreCompositeScoper } from './FreCompositeScoper.js';
 import { FreLogger } from "../logging/index.js";
-import { findEnclosingNamespace } from './ScoperUtil.js';
+import { findEnclosingNamespace, resolvePathStartingInNamespace } from './ScoperUtil.js';
 
 const LOGGER = new FreLogger("FreonNamespace").mute();
 
@@ -112,7 +112,7 @@ export class FreNamespace {
         }
         // Third, add nodes from additional namespaces
         const additionalNodes = mainScoper.additionalNamespaces(this._myElem);
-        this.addAdditionalNamespaces(additionalNodes, visitedNamespaces, resultSoFar);
+        this.addAdditionalNamespaces(additionalNodes, visitedNamespaces, resultSoFar, mainScoper);
         // Fourth, return the result
         return Array.from(resultSoFar);
     }
@@ -140,7 +140,7 @@ export class FreNamespace {
         });
     }
 
-    private addAdditionalNamespaces(additionalNS: (FreNode | FreNodeReference<FreNamedNode>)[], visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>) {
+    private addAdditionalNamespaces(additionalNS: (FreNode | FreNodeReference<FreNamedNode>)[], visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>, mainScoper: FreCompositeScoper) {
         // First add all additions that are not defined by FreNodeReferences
         additionalNS.forEach(namespaceNode => {
             if (!(namespaceNode instanceof FreNodeReference) && !isNullOrUndefined(namespaceNode)) {
@@ -157,7 +157,7 @@ export class FreNamespace {
         while (remainingNS.length > 0) {
             const toBeRemoved: (FreNode | FreNodeReference<FreNamedNode>)[] = [];
             remainingNS.forEach(addon => {
-                const node: FreNamedNode = this.findInResultSoFar(addon, resultSoFar);
+                const node: FreNamedNode = this.findInResultSoFar(addon, resultSoFar, mainScoper);
                 if (!isNullOrUndefined(node)) {
                     this.addNS(FreNamespace.create(node), visitedNamespaces, resultSoFar);
                     toBeRemoved.push(addon);
@@ -187,20 +187,29 @@ export class FreNamespace {
     }
 
     /**
-     * Try to find 'addon' in 'innerResult'
-     * @param addon
-     * @param innerResult
-     * @constructor
+     * Try to resolve 'addon' in 'innerResult'
+     *
+     * @param toBeResolved
+     * @param foundSoFar
+     * @param mainScoper
      * @private
      */
-    private findInResultSoFar(addon: FreNodeReference<FreNamedNode>, innerResult: Set<FreNamedNode>): FreNamedNode | undefined{
-        // first taking only one name in the path into account
+    private findInResultSoFar(toBeResolved: FreNodeReference<FreNamedNode>, foundSoFar: Set<FreNamedNode>, mainScoper: FreCompositeScoper): FreNamedNode | undefined{
+        // We have to take all names in the path into account.
+        // Search the first name within the nodes that are found so far.
         let result: FreNamedNode = undefined;
-        innerResult.forEach(node => {
-            if (node.name === addon.name) {
+        let pathname = toBeResolved.pathname;
+        foundSoFar.forEach(node => {
+            if (node.name === pathname[0]) {
                 result = node;
             }
         })
+        // todo write a test that covers this if-statement
+        if (pathname.length > 1 && !isNullOrUndefined(result) && FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
+            let previousNamespace: FreNamespace = FreNamespace.create(result);
+            // Note that we need to pass the pathname without its first element.
+            result = resolvePathStartingInNamespace(this, previousNamespace, pathname.slice(1), mainScoper, toBeResolved.typeName);
+        }
         return result;
     }
 
@@ -215,5 +224,4 @@ export class FreNamespace {
         }
         return undefined;
     }
-
 }

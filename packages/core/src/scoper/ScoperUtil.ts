@@ -2,6 +2,7 @@ import { FreNamedNode, FreNode, FreNodeReference } from '../ast/index.js';
 import { FreNamespace } from './FreNamespace.js';
 import { isNullOrUndefined } from '../util/index.js';
 import { FreLanguage } from '../language/index.js';
+import { FreCompositeScoper } from './FreCompositeScoper.js';
 
 /**
  * Returns the enclosing namespace for 'node'. The result could be 'node' itself, if this is a namespace.
@@ -25,5 +26,85 @@ export function findEnclosingNamespace(node: FreNodeReference<FreNamedNode> | Fr
 		} else {
 			return findEnclosingNamespace(node.freOwner());
 		}
+	}
+}
+
+export function resolvePathStartingInNamespace(baseNamespace: FreNamespace, previousNamespace: FreNamespace, pathname: string[], mainScoper: FreCompositeScoper, typeName: string) {
+	// We must be able to resolve every name in the path to a namespace without taking its metaType into account,
+	// except the last. The last should be a FreNamedNode of the type indicated by 'typeName'.
+	// Another requirement is that the first name must be visible in the owning namespace of 'toBeResolved'!
+
+	let result: FreNamedNode = undefined;
+	// Loop over the set of names in the pathname.
+	for (let index = 0; index < pathname.length; index++) {
+		let publicOnly = baseNamespace !== previousNamespace; // everything in the namespace that this reference is in, is visible
+		// console.log(`searching for: ${pathname[index]}, using publicOnly is ${publicOnly}`);
+		if (index !== pathname.length - 1) {
+			// Search the next name of pathname in the 'previousNamespace'.
+			// Do not use the 'typeName' information, because we are searching for another namespace, not for an element of type 'typeName'.
+			result = getFromVisibleNodes(previousNamespace, pathname[index], mainScoper, publicOnly);
+			// console.log(`result number ${index} of path, using publicOnly is ${publicOnly}: `, result ? result['name'] : 'undefined')
+			if (isNullOrUndefined(result) || !FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
+				// The pathname is not correct, it does not lead to a namespace that is visible within 'previousNamespace',
+				// so return.
+				return undefined;
+			} else {
+				// result the next namespace in the pathname!
+				// But 'result' is a FreNamedNode, so transform it into a namespace.
+				previousNamespace = FreNamespace.create(result);
+			}
+		} else {
+			// Search the last name in the path, the result need not be a namespace, so use 'typeName'.
+			result = getFromVisibleNodes(previousNamespace, pathname[index], mainScoper, publicOnly, typeName);
+			// console.log(`result number ${index} of path, using publicOnly is ${publicOnly}: `, result ? result['name'] : 'undefined', previousNamespace.getVisibleNodes(this.mainScoper, [], false).map(e =>e.name))
+		}
+	}
+	return result;
+}
+
+/**
+ * A convenience method that finds the node with name 'name' within the visible nodes of the namespace that 'node' resides in.
+ * Often 'node' itself represents this namespace.
+ *
+ * If 'metaType' is present, only return the node if its type conforms to 'metaType'.
+ *
+ * @param namespace
+ * @param name
+ * @param mainScoper
+ * @param publicOnly
+ * @param metaType
+ */
+export function getFromVisibleNodes(
+	namespace: FreNamespace,
+	name: string,
+	mainScoper: FreCompositeScoper,
+	publicOnly: boolean,
+	metaType?: string
+): FreNamedNode | undefined {
+	// console.log('BASE get**FROM**VisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", searching for " + metaType);
+	const visibleNodes = FreLanguage.getInstance().stdLib.elements.concat(namespace.getVisibleNodes(mainScoper, [], publicOnly));
+	if (visibleNodes !== null) {
+		for (const node of visibleNodes) {
+			const n: string = node.name;
+			if (name === n && hasCorrectType(node, metaType)) {
+				return node;
+			}
+		}
+	}
+	return undefined;
+}
+
+/**
+ * Checks whether 'freNode' has a type that conforms to 'metaType'.
+ *
+ * @param freNode
+ * @param metaType
+ * @private
+ */
+export function hasCorrectType(freNode: FreNode, metaType: string): boolean {
+	if (!!metaType && metaType.length > 0) {
+		return FreLanguage.getInstance().metaConformsToType(freNode, metaType);
+	} else {
+		return true;
 	}
 }
