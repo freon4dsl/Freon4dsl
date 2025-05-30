@@ -508,7 +508,7 @@
     onblur={onBlur}
     oncontextmenu={() => endEditing()}
     tabindex="-1"
-    class="text-dropdown-component"
+    class="text-dropdown-component {box.cssClass}"
     role="none"
 >
     <TextComponent

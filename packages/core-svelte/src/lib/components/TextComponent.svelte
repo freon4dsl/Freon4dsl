@@ -560,7 +560,7 @@
 				 But ... this is only a problem when this component is inside a draggable element (like List or table)
 			-->
             <span
-                class="{box?.role} text-box-{boxType} text-component-text {errorCls}"
+                class="{box?.cssClass} text-box-{boxType} text-component-text {errorCls}"
                 onmousedown={onMousedown}
                 onfocusin={onFocusIn}
                 {tabindex}

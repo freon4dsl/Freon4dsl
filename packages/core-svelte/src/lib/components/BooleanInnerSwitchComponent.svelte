@@ -49,7 +49,7 @@
     }
 </script>
 
-<span class="inner-switch-component">
+<span class="inner-switch-component {box.cssClass}">
     <button
         {id}
         bind:this={switchElement}

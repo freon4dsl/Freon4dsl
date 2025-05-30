@@ -38,7 +38,7 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <span
     onclick={ignore}
-    class="error-positioning"
+    class="error-positioning {box.cssClass}"
     style="top: {top}px; height: {height}px;"
     role="contentinfo"
 >

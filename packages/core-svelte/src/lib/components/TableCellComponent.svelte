@@ -258,7 +258,7 @@
 <span
     {id}
     role="cell"
-    class="table-cell-component {orientation} {isHeader} {cssClass} {selectedCls}"
+    class="table-cell-component {orientation} {isHeader} {cssClass} {selectedCls} {box.cssClass}"
     style:grid-row={row}
     style:grid-column={column}
     style={cssStyle}
