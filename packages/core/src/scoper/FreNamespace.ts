@@ -109,11 +109,12 @@ export class FreNamespace {
 
         // Second, determine whether we need to include a replacement or the parent namespace
         const parentNamespace: FreNamespace = this.findParentNamespace(this);
-        const replacementNodes = this.mainScoper.replacementNamespaces(this._myNode);
+        const replacementNodes: (FreNode | FreNodeReference<FreNamedNode>)[] = this.mainScoper.replacementNamespaces(this._myNode);
         if (!isNullOrUndefined(replacementNodes) && replacementNodes.length > 0) {
             this.addReplacementNamespaces(replacementNodes, visitedNamespaces, resultSoFar);
         } else {
             if (!isNullOrUndefined(parentNamespace) && !visitedNamespaces.includes(parentNamespace)) {
+                // We include all visible nodes form the parent, not only the declared nodes.
                 parentNamespace.getVisibleNodes(this.mainScoper, visitedNamespaces, publicOnly).forEach(x => {
                     resultSoFar.add(x);
                 });
@@ -121,7 +122,7 @@ export class FreNamespace {
             }
         }
         // Third, add nodes from additional namespaces
-        const additionalNodes = this.mainScoper.additionalNamespaces(this._myNode);
+        const additionalNodes: (FreNode | FreNodeReference<FreNamedNode>)[] = this.mainScoper.additionalNamespaces(this._myNode);
         this.addAdditionalNamespaces(additionalNodes, visitedNamespaces, resultSoFar);
         // Fourth, transform the result to the required type.
         return Array.from(resultSoFar);
@@ -142,6 +143,7 @@ export class FreNamespace {
                 // NB using '.referred' only works when the owner of the reference does not reside in 'this'.
                 // This should also be checked in meta!
                 const toBeChecked: FreNamespace = findEnclosingNamespace(replacementNode.freOwner());
+                // todo what if toBeChecked is a 'child' namespace of 'this'?
                 if (toBeChecked === this) {
                     LOGGER.error(`Cannot add as namespace one that is defined via a reference '${replacementNode.pathname}' that resides in the same namespace '${this._myNode['name']}'`);
                 } else {
@@ -229,10 +231,10 @@ export class FreNamespace {
             }
         })
         if (pathname.length > 1 && !isNullOrUndefined(result) && FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
-            let previousNamespace: FreNamespace = FreNamespace.create(result);
+            let currentNamespace: FreNamespace = FreNamespace.create(result);
             // Note that we need to pass the pathname without its first element,
             // and that the base namespace is different from the previous namespace!
-            result = resolvePathStartingInNamespace(this, previousNamespace, pathname.slice(1), this.mainScoper, toBeResolved.typeName);
+            result = resolvePathStartingInNamespace(this, currentNamespace, pathname.slice(1), this.mainScoper, toBeResolved.typeName);
         }
         return result;
     }

@@ -33,5 +33,6 @@ export interface FreScoper {
      *
      * @param node
      */
+    //todo decide whether this can be a list
     replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[];
 }

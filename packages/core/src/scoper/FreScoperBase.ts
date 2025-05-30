@@ -14,19 +14,18 @@ const LOGGER = new FreLogger("FreScoperBase");
 
 export abstract class FreScoperBase implements FreScoper {
     mainScoper: FreCompositeScoper;
-    myTyper: FreCompositeTyper;
-    // Added to avoid loop when searching for additional namespaces
-    additionalNamespacesVisited: FreNodeReference<FreNamedNode>[] = [];
+    myTyper: FreCompositeTyper; // todo see whether this can be replaced by FreLanguageEnvironment.getInstance().typer
 
+    // todo move to composite scoper
     public resolvePathName(toBeResolved: FreNodeReference<FreNamedNode>): FreNamedNode | undefined {
         this.myTyper = FreLanguageEnvironment.getInstance().typer;
         // console.log('resolving: ', toBeResolved.pathname)
 
         let baseNamespace: FreNamespace = findEnclosingNamespace(toBeResolved);
-        let previousNamespace: FreNamespace = baseNamespace;
+        let currentNamespace: FreNamespace = baseNamespace;
         let found: FreNamedNode = undefined;
-        if (!isNullOrUndefined(previousNamespace)) {
-            found = resolvePathStartingInNamespace(baseNamespace, previousNamespace, toBeResolved.pathname, this.mainScoper, toBeResolved.typeName);
+        if (!isNullOrUndefined(baseNamespace)) {
+            found = resolvePathStartingInNamespace(baseNamespace, currentNamespace, toBeResolved.pathname, this.mainScoper, toBeResolved.typeName);
         } else {
             LOGGER.error('Cannot find enclosing namespace for ' + toBeResolved.pathname);
         }

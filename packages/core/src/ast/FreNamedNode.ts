@@ -19,6 +19,7 @@ export function qualifiedName(node: FreNamedNode): string[] {
                     if (typeDescription.properties.has('name')) {
                         result.splice(0, 0, (owner as FreNamedNode).name);
                     } else {
+                        // todo Decide on how to represent anonymous namespaces
                         result.splice(0, 0, '<anonymous>');
                     }
                 }

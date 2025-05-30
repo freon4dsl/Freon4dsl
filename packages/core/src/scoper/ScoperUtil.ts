@@ -29,7 +29,15 @@ export function findEnclosingNamespace(node: FreNodeReference<FreNamedNode> | Fr
 	}
 }
 
-export function resolvePathStartingInNamespace(baseNamespace: FreNamespace, previousNamespace: FreNamespace, pathname: string[], mainScoper: FreCompositeScoper, typeName: string) {
+/**
+ *
+ * @param baseNamespace
+ * @param currentNamespace
+ * @param pathname
+ * @param mainScoper
+ * @param typeName
+ */
+export function resolvePathStartingInNamespace(baseNamespace: FreNamespace, currentNamespace: FreNamespace, pathname: string[], mainScoper: FreCompositeScoper, typeName: string) {
 	// We must be able to resolve every name in the path to a namespace without taking its metaType into account,
 	// except the last. The last should be a FreNamedNode of the type indicated by 'typeName'.
 	// Another requirement is that the first name must be visible in the owning namespace of 'toBeResolved'!
@@ -37,25 +45,27 @@ export function resolvePathStartingInNamespace(baseNamespace: FreNamespace, prev
 	let result: FreNamedNode = undefined;
 	// Loop over the set of names in the pathname.
 	for (let index = 0; index < pathname.length; index++) {
-		let publicOnly = baseNamespace !== previousNamespace; // everything in the namespace that this reference is in, is visible
+		// todo maybe publicOnly can be a separate parameter
+		let publicOnly = baseNamespace !== currentNamespace; // everything in the namespace that this reference is in, is visible
 		// console.log(`searching for: ${pathname[index]}, using publicOnly is ${publicOnly}`);
 		if (index !== pathname.length - 1) {
 			// Search the next name of pathname in the 'previousNamespace'.
 			// Do not use the 'typeName' information, because we are searching for another namespace, not for an element of type 'typeName'.
-			result = getFromVisibleNodes(previousNamespace, pathname[index], mainScoper, publicOnly);
+			result = getFromVisibleNodes(currentNamespace, pathname[index], mainScoper, publicOnly);
 			// console.log(`result number ${index} of path, using publicOnly is ${publicOnly}: `, result ? result['name'] : 'undefined')
+			// todo if a namespace may contain multiple nodes with the same name but different type, this code needs to be adjusted
 			if (isNullOrUndefined(result) || !FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
 				// The pathname is not correct, it does not lead to a namespace that is visible within 'previousNamespace',
 				// so return.
 				return undefined;
 			} else {
-				// result the next namespace in the pathname!
+				// result is the next namespace in the pathname!
 				// But 'result' is a FreNamedNode, so transform it into a namespace.
-				previousNamespace = FreNamespace.create(result);
+				currentNamespace = FreNamespace.create(result);
 			}
 		} else {
 			// Search the last name in the path, the result need not be a namespace, so use 'typeName'.
-			result = getFromVisibleNodes(previousNamespace, pathname[index], mainScoper, publicOnly, typeName);
+			result = getFromVisibleNodes(currentNamespace, pathname[index], mainScoper, publicOnly, typeName);
 			// console.log(`result number ${index} of path, using publicOnly is ${publicOnly}: `, result ? result['name'] : 'undefined', previousNamespace.getVisibleNodes(this.mainScoper, [], false).map(e =>e.name))
 		}
 	}
@@ -83,12 +93,10 @@ export function getFromVisibleNodes(
 ): FreNamedNode | undefined {
 	// console.log('BASE get**FROM**VisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", searching for " + metaType);
 	const visibleNodes = FreLanguage.getInstance().stdLib.elements.concat(namespace.getVisibleNodes(mainScoper, [], publicOnly));
-	if (visibleNodes !== null) {
-		for (const node of visibleNodes) {
-			const n: string = node.name;
-			if (name === n && hasCorrectType(node, metaType)) {
-				return node;
-			}
+	for (const node of visibleNodes) {
+		const n: string = node.name;
+		if (name === n && hasCorrectType(node, metaType)) {
+			return node;
 		}
 	}
 	return undefined;

@@ -44,7 +44,7 @@ describe("Testing Custom Scoper", () => {
 		return firstQ
 	}
 
-// TODO these tests rely on the fact that the additional NS-es of a replacement NS are also visible
+// TODO these tests rely on the fact that the additional NS-es of a replacement NS are also in the set of visible nodes
 	test.skip(" QualifiedName has names from unit", () => {
 		startFQN();
 	})
