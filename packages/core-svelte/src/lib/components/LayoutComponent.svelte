@@ -61,7 +61,7 @@
     <ErrorMarker {editor} {box} />
 {/if}
 <span
-    class="layout-component {errorCls}"
+    class="layout-component {errorCls} {box.cssClass}"
     {id}
     class:layout-component-horizontal={isHorizontal}
     class:layout-component-vertical={!isHorizontal}

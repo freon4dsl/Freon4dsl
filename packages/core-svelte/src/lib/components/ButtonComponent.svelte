@@ -36,7 +36,7 @@
 </script>
 
 <button
-    class="button-component-ripple button-component {box.role}"
+    class="button-component-ripple button-component {box.cssClass}"
     class:button-component-empty={box.text.length === 0}
     {id}
     onclick={onClick}

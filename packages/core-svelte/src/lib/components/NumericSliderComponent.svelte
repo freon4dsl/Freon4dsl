@@ -67,7 +67,7 @@
     };
 </script>
 
-<span class="numeric-slider-component" {id}>
+<span class="numeric-slider-component {box.cssClass}" {id}>
     <md-slider
         labeled
         ticks={showMarks}

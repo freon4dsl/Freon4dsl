@@ -67,7 +67,7 @@
 </script>
 
 <textarea
-    class="{box.role} multilinetext-box multiline-text-component"
+    class="{box.cssClass} multilinetext-box multiline-text-component"
     {id}
     onfocusout={onFocusOut}
     onkeydown={onKeyDown}

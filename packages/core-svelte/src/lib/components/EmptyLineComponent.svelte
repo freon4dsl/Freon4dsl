@@ -11,6 +11,6 @@
     let id: string = isNullOrUndefined(box) ? componentId(box) : 'empty-line-for-unknown-box';
 </script>
 
-<span {id}>
+<span {id} class="{box.cssClass}">
     <br />
 </span>
