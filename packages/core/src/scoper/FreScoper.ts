@@ -16,6 +16,7 @@ export interface FreScoper {
      * @param node
      * @param metaType
      */
+    // todo should the param type be 'FreNode | FreNodeReference<FreNamedNode>'?
     getVisibleNodes(node: FreNode, metaType?: string): FreNamedNode[];
 
     /**

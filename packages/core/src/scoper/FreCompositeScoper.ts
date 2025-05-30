@@ -40,6 +40,7 @@ export class FreCompositeScoper implements FreScoper {
     }
 
     additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+        // todo should we check whether node 'is' a namespace?
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
@@ -53,6 +54,7 @@ export class FreCompositeScoper implements FreScoper {
     }
 
     getVisibleNodes(node: FreNode, metatype?: string): FreNamedNode[] {
+        // todo should we check whether node 'is' a namespace?
         // console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
@@ -67,6 +69,7 @@ export class FreCompositeScoper implements FreScoper {
     }
 
     replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+        // todo should we check whether node 'is' a namespace?
         LOGGER.log('COMPOSITE replacementNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {

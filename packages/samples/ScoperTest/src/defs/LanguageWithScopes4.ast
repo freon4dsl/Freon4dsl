@@ -1,0 +1,30 @@
+language StarterLanguage
+
+modelunit StarterUnit4 {
+    modules: LangModule4[];
+}
+
+// The case of multiple hierarchical levels with the scope limiting
+// which modules and variables we can reference:
+// - each module can contain module definitions inside it
+// - we introduce an intermediate concept of ModuleReference to overcome the shadowing of
+//      modules that we want to use in our variable reference
+// - the custom scoper limits the choice of references
+
+
+concept LangModule4 implements INamed {
+    reference imports: LangModule4;
+    varDefinitions: Variable[];
+    moduleDefinitions: LangModule4[];
+    varReferences: VarReference4[];
+}
+
+concept VarReference4 {
+    reference target: Variable;
+    module?: ModuleReference4;
+}
+
+concept ModuleReference4 {
+    reference target: LangModule4;
+    module?: ModuleReference4;
+}

@@ -134,3 +134,10 @@ C {
 ```
 
 ====
+
+# Ideas on Recursive additional or replacement namespaces
+
+The notation for this could be `namespace_addition =* self.imports;`. The meaning would be that instead of the declared nodes, the set of 
+publicly visible nodes of the additional namespace is added.
+
+// !!!!!!!!!!!!!!!!!! name of model may not be in fqn. This name is not visible in the model itself!!!!!!!!!!!!!!!!!!
