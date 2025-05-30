@@ -36,7 +36,7 @@ ModuleReference3 {
 // ===================================================================
 
 LangModule4 {
-    namespace_addition =* self.imports;
+    namespace_addition = self.imports;
 }
 
 VarReference4 {
