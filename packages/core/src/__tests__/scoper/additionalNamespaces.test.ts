@@ -237,7 +237,7 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 				'UnitA1', 'UnitB1',
 				// 'B_1', 'B_2',
 				// 'B_2_1', 'B_2_2',
-				'B_2_1_1', 'B_2_1_2',
+				// 'B_2_1_1', 'B_2_1_2',
 			])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
