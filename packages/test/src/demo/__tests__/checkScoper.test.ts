@@ -4,7 +4,6 @@ import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe, test, expect, beforeEach } from "vitest";
 import { FreCompositeScoper } from '@freon4dsl/core';
 import { isInScope, getVisibleNames } from '../../utils/HelperFunctions.js';
-import { initializeScoperDef } from '../scoper/gen';
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleNodes from DemoModel Instance", () => {
@@ -53,7 +52,7 @@ describe("testing Scoper", () => {
         test("visible elements in model functions", () => {
             for (let unit of model.models) {
                 for (let f1 of unit.functions) {
-                    let vis = getVisibleNames(scoper, f1);
+                    let vis = getVisibleNames(scoper.getVisibleNodes(f1));
                     expect(vis).toContain(f1.name);
                     for (let e of unit.entities) {
                         expect(vis).toContain(e.name);
@@ -76,7 +75,7 @@ describe("testing Scoper", () => {
             for (let unit of model.models) {
                 for (let ent of unit.entities) {
                     for (let f1 of ent.functions) {
-                        let vis = getVisibleNames(scoper, f1);
+                        let vis = getVisibleNames(scoper.getVisibleNodes(f1));
                         expect(vis).toContain(f1.name);
                         for (const e of unit.entities) {
                             expect(vis).toContain(e.name);
@@ -108,16 +107,16 @@ describe("testing Scoper", () => {
         test("isInscope 'InCorrectModel'", () => {
             let nameTotest: string = "InCorrectModel";
             for (const unit of model.models) {
-                expect(isInScope(scoper, model, nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
                 // test if nameTotest is known in model functions
                 unit.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun, nameTotest)).toBe(false);
+                    expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(false);
                 });
                 // test the same on entities and entity functions
                 unit.entities.forEach((ent) => {
-                    expect(isInScope(scoper, ent, nameTotest)).toBe(false);
+                    expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(false);
                     ent.functions.forEach((fun) => {
-                        expect(isInScope(scoper, fun, nameTotest)).toBe(false);
+                        expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(false);
                     });
                 });
             }
@@ -126,17 +125,17 @@ describe("testing Scoper", () => {
         test("isInscope 'DemoModel_1'", () => {
             let nameTotest: string = "DemoModel_1";
             for (const unit of model.models) {
-                expect(isInScope(scoper, model, nameTotest)).toBe(true);
+                expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(true);
                 // test if nameTotest is known in model functions
                 unit.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun.expression, nameTotest)).toBe(true);
-                    expect(isInScope(scoper, fun, nameTotest)).toBe(true);
+                    expect(isInScope(scoper.getVisibleNodes(fun.expression), nameTotest)).toBe(true);
+                    expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(true);
                 });
                 // test the same on entities and entity functions
                 unit.entities.forEach((ent) => {
-                    expect(isInScope(scoper, ent, nameTotest)).toBe(true);
+                    expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(true);
                     ent.functions.forEach((fun) => {
-                        expect(isInScope(scoper, fun, nameTotest)).toBe(true);
+                        expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(true);
                     });
                 });
             }
@@ -157,10 +156,10 @@ describe("testing Scoper", () => {
         test("isInscope 'name'", () => {
             // name is Attribute of Person and of Company in DemoModel_1
             let nameTotest: string = "name";
-            expect(isInScope(scoper, model, nameTotest)).toBe(false);
+            expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach((fun) => {
-                expect(isInScope(scoper, fun, nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(false);
             });
             // test the same on entities and entity functions
             model.models[0].entities.forEach((ent) => {
@@ -174,9 +173,9 @@ describe("testing Scoper", () => {
                     expected = true;
                 }
                 // console.log(`name: ${ent.name}, expected: ${expected}`);
-                expect(isInScope(scoper, ent, nameTotest, "DemoAttribute")).toBe(expected);
+                expect(isInScope(scoper.getVisibleNodes(ent, "DemoAttribute"), nameTotest, )).toBe(expected);
                 ent.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun, nameTotest, "DemoAttribute")).toBe(expected);
+                    expect(isInScope(scoper.getVisibleNodes(fun, "DemoAttribute"), nameTotest)).toBe(expected);
                 });
             });
         });
@@ -184,10 +183,10 @@ describe("testing Scoper", () => {
         test("isInscope 'age'", () => {
             // name is Attribute of Person and of Company in DemoModel_1
             let nameTotest: string = "age";
-            expect(isInScope(scoper, model, nameTotest)).toBe(false);
+            expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach((fun) => {
-                expect(isInScope(scoper, fun, nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(false);
             });
             // test the same on entities and entity functions
             model.models[0].entities.forEach((ent) => {
@@ -195,9 +194,9 @@ describe("testing Scoper", () => {
                 if (ent.name === "Person") {
                     expected = true;
                 }
-                expect(isInScope(scoper, ent, nameTotest)).toBe(expected);
+                expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(expected);
                 ent.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun, nameTotest)).toBe(expected);
+                    expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(expected);
                 });
             });
         });
@@ -205,10 +204,10 @@ describe("testing Scoper", () => {
         test("isInscope 'VAT_Number'", () => {
             // VAT_Number is Attribute of Company in DemoModel_1
             let nameTotest: string = "VAT_Number";
-            expect(isInScope(scoper, model, nameTotest)).toBe(false);
+            expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach((fun) => {
-                expect(isInScope(scoper, fun, nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(false);
             });
             // test the same on entities and entity functions
             model.models[0].entities.forEach((ent) => {
@@ -216,10 +215,10 @@ describe("testing Scoper", () => {
                 if (ent.name === "Company" || ent.name === "Company2") {
                     expected = true;
                 }
-                // console.log(`name: ${ent.name}, expected: ${expected}, found: ${isInScope(scoper, ent, nameTotest)}`);
-                expect(isInScope(scoper, ent, nameTotest)).toBe(expected);
+                // console.log(`name: ${ent.name}, expected: ${expected}, found: ${isInScope(scoper.getVisibleNodes(ent, nameTotest)}`);
+                expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(expected);
                 ent.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun, nameTotest)).toBe(expected);
+                    expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(expected);
                 });
             });
         });
@@ -227,16 +226,16 @@ describe("testing Scoper", () => {
         test("isInscope 'length'", () => {
             // length is Function of DemoModel_1
             let nameTotest: string = "length";
-            expect(isInScope(scoper, model.models[0], nameTotest)).toBe(true);
+            expect(isInScope(scoper.getVisibleNodes(model.models[0]), nameTotest)).toBe(true);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach((fun) => {
-                expect(isInScope(scoper, fun, nameTotest)).toBe(true);
+                expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(true);
             });
             // test the same on entities and entity functions
             model.models[0].entities.forEach((ent) => {
-                expect(isInScope(scoper, ent, nameTotest)).toBe(true);
+                expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(true);
                 ent.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun, nameTotest)).toBe(true);
+                    expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(true);
                 });
             });
         });
@@ -244,11 +243,11 @@ describe("testing Scoper", () => {
         test("isInscope 'first'", () => {
             // first is Function of Person in DemoModel_1
             let nameTotest: string = "first";
-            expect(isInScope(scoper, model, nameTotest, "DemoFunction")).toBe(false);
+            expect(isInScope(scoper.getVisibleNodes(model, "DemoFunction"), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach((fun) => {
-                expect(isInScope(scoper, fun, nameTotest)).toBe(false);
-                expect(isInScope(scoper, fun.expression, nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(fun.expression), nameTotest)).toBe(false);
             });
             // test the same on entities and entity functions
             model.models[0].entities.forEach((ent) => {
@@ -256,9 +255,9 @@ describe("testing Scoper", () => {
                 if (ent.name === "Person") {
                     expected = true;
                 }
-                expect(isInScope(scoper, ent, nameTotest)).toBe(expected);
+                expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(expected);
                 ent.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun, nameTotest)).toBe(expected);
+                    expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(expected);
                 });
             });
         });
@@ -266,10 +265,10 @@ describe("testing Scoper", () => {
         test("isInscope 'another'", () => {
             // last is Function of DemoModel_1
             let nameTotest: string = "another";
-            expect(isInScope(scoper, model, nameTotest)).toBe(false);
+            expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach((fun) => {
-                expect(isInScope(scoper, fun, nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(false);
             });
             // test the same on entities and entity functions
             model.models[0].entities.forEach((ent) => {
@@ -277,10 +276,9 @@ describe("testing Scoper", () => {
                 if (ent.name === "Company2") {
                     expected = true;
                 }
-                // console.log(`name: ${ent.name}, expected: ${expected}, found: ${isInScope(scoper, ent, nameTotest)}`);
-                expect(isInScope(scoper, ent, nameTotest)).toBe(expected);
+                expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(expected);
                 ent.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun, nameTotest)).toBe(expected);
+                    expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(expected);
                 });
             });
         });
@@ -288,20 +286,20 @@ describe("testing Scoper", () => {
         test("isInscope 'Variable1'", () => {
             // Variable1 is VarDecl of length of DemoModel_1
             let nameTotest: string = "Variable1";
-            expect(isInScope(scoper, model, nameTotest)).toBe(false);
+            expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach((fun) => {
                 let expected: boolean = false;
                 if (fun.name === "length") {
                     expected = true;
                 }
-                expect(isInScope(scoper, fun, nameTotest)).toBe(expected);
+                expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(expected);
             });
             // test the same on entities and entity functions
             model.models[0].entities.forEach((ent) => {
-                expect(isInScope(scoper, ent, nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(false);
                 ent.functions.forEach((fun) => {
-                    expect(isInScope(scoper, fun, nameTotest)).toBe(false);
+                    expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(false);
                 });
             });
         });
@@ -309,20 +307,20 @@ describe("testing Scoper", () => {
         test("isInscope 'Resultvar'", () => {
             // Resultvar is VarDecl of first of Person of DemoModel_1
             let nameTotest: string = "Resultvar";
-            expect(isInScope(scoper, model, nameTotest)).toBe(false);
+            expect(isInScope(scoper.getVisibleNodes(model), nameTotest)).toBe(false);
             // test if nameTotest is known in model functions
             model.models[0].functions.forEach((fun) => {
-                expect(isInScope(scoper, fun, nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(false);
             });
             // test the same on entities and entity functions
             model.models[0].entities.forEach((ent) => {
-                expect(isInScope(scoper, ent, nameTotest)).toBe(false);
+                expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(false);
                 ent.functions.forEach((fun) => {
                     let expected: boolean = false;
                     if (ent.name === "Person" && fun.name === "first") {
                         expected = true;
                     }
-                    expect(isInScope(scoper, fun, nameTotest)).toBe(expected);
+                    expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(expected);
                 });
             });
         });
@@ -337,20 +335,20 @@ describe("testing Scoper", () => {
 });
 
 function testEntity(scoper: FreCompositeScoper, model: DemoModel, nameTotest: string) {
-    expect(isInScope(scoper, model, nameTotest, "DemoEntity")).toBe(true);
+    expect(isInScope(scoper.getVisibleNodes(model, "DemoEntity"), nameTotest)).toBe(true);
     // test if nameTotest is known in model functions
     model.functions.forEach((fun) => {
-        expect(isInScope(scoper, fun, nameTotest, "DemoEntity")).toBe(true);
-        expect(isInScope(scoper, fun, nameTotest, "DemoFunction")).toBe(false);
-        expect(isInScope(scoper, fun.expression, nameTotest, "DemoEntity")).toBe(true);
-        expect(isInScope(scoper, fun.expression, nameTotest, "DemoFunction")).toBe(false);
+        expect(isInScope(scoper.getVisibleNodes(fun, "DemoEntity"), nameTotest)).toBe(true);
+        expect(isInScope(scoper.getVisibleNodes(fun, "DemoFunction"), nameTotest)).toBe(false);
+        expect(isInScope(scoper.getVisibleNodes(fun.expression, "DemoEntity"), nameTotest)).toBe(true);
+        expect(isInScope(scoper.getVisibleNodes(fun.expression, "DemoFunction"), nameTotest)).toBe(false);
     });
     // test the same on entities and entity functions
     model.entities.forEach((ent) => {
-        expect(isInScope(scoper, ent, nameTotest)).toBe(true);
+        expect(isInScope(scoper.getVisibleNodes(ent), nameTotest)).toBe(true);
         ent.functions.forEach((fun) => {
-            expect(isInScope(scoper, fun, nameTotest)).toBe(true);
-            expect(isInScope(scoper, fun.expression, nameTotest)).toBe(true);
+            expect(isInScope(scoper.getVisibleNodes(fun), nameTotest)).toBe(true);
+            expect(isInScope(scoper.getVisibleNodes(fun.expression), nameTotest)).toBe(true);
         });
     });
 }

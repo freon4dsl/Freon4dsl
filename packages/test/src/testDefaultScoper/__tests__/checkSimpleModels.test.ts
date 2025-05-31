@@ -1,4 +1,4 @@
-import { DSmodel, DSunit } from '../language/gen';
+import { DSmodel } from '../language/gen';
 import { SimpleModelCreator } from "./SimpleModelCreator.js";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment.js";
 import { describe, test, expect } from "vitest";
@@ -33,7 +33,7 @@ describe("Testing Default Scoper", () => {
     test("names in model with 1 unit of depth 2", () => {
         const model: DSmodel = creator.createModel(1, 2);
         // run the scoper to test all names in the model
-        const visibleNames = getVisibleNames(scoper, model.units[0]);
+        const visibleNames = getVisibleNames(scoper.getVisibleNodes(model.units[0]));
         // printDifference(creator, visibleNames);
         // print("names in model of depth 2: ", visibleNames);
         for (const x of creator.allNames) {
@@ -46,7 +46,7 @@ describe("Testing Default Scoper", () => {
 
     test("names in model with 3 units of depth 2, without unit interfaces", () => {
         const model: DSmodel = creator.createModel(3, 2);
-        const visibleNames = getVisibleNames(scoper, model.units[0]);
+        const visibleNames = getVisibleNames(scoper.getVisibleNodes(model.units[0]));
         // the only names that may be visible are the names of all model units, plus all names within the own unit
         // the latter all contain the name of unit
         let namesToTest = creator.allNames.filter(
@@ -60,7 +60,7 @@ describe("Testing Default Scoper", () => {
             expect(namesToTest).toContain(x);
         }
 
-        const visibleNames2 = getVisibleNames(scoper, model.units[1]);
+        const visibleNames2 = getVisibleNames(scoper.getVisibleNodes(model.units[1]));
         // the only names that may be visible are the names of all model units, plus all names within the own unit
         // the latter all contain the name of unit
         namesToTest = creator.allNames.filter(
@@ -73,7 +73,7 @@ describe("Testing Default Scoper", () => {
         for (const x of visibleNames2) {
             expect(namesToTest).toContain(x);
         }
-        const visibleNames3 = getVisibleNames(scoper, model.units[2]);
+        const visibleNames3 = getVisibleNames(scoper.getVisibleNodes(model.units[2]));
         // the only names that may be visible are the names of all model units, plus all names within the own unit
         // the latter all contain the name of unit
         namesToTest = creator.allNames.filter(
@@ -90,7 +90,7 @@ describe("Testing Default Scoper", () => {
 
     test("names in model with 3 units of depth 2, with unit interfaces", () => {
         const model: DSmodel = creator.createModelWithInterfaces(3, 2, 2);
-        let visibleNames = getVisibleNames(scoper, model.units[0]);
+        let visibleNames = getVisibleNames(scoper.getVisibleNodes(model.units[0]));
         // the only names that may be visible in a non-primary unit are the names of all model units, plus all public names within the own unit
         // the latter all contain the name of unit, but do not conatin the word 'private'
         let namesToTest = creator.allNames
@@ -105,7 +105,7 @@ describe("Testing Default Scoper", () => {
         for (const x of visibleNames) {
             expect(namesToTest).toContain(x);
         }
-        visibleNames = getVisibleNames(scoper, model.units[1]);
+        visibleNames = getVisibleNames(scoper.getVisibleNodes(model.units[1]));
         // the only names that may be visible in a non-primary unit are the names of all model units, plus all public names within the own unit
         // the latter all contain the name of unit, but do not conatin the word 'private'
         namesToTest = creator.allNames
@@ -120,7 +120,7 @@ describe("Testing Default Scoper", () => {
         for (const x of visibleNames) {
             expect(namesToTest).toContain(x);
         }
-        visibleNames = getVisibleNames(scoper, model.units[2]);
+        visibleNames = getVisibleNames(scoper.getVisibleNodes(model.units[2]));
         // the only names that may be visible in a primary unit are the names of all model units, plus all names within the own unit
         // the latter all contain the name of unit
         namesToTest = creator.allNames.filter(

@@ -39,7 +39,7 @@ describe("Testing Default Scoper", () => {
     test("validator messages in model with 1 unit of depth 3", () => {
         const model: DSmodel = creator.createModel(1, 3);
         // run the scoper to test all names in the model
-        const visibleNames = getVisibleNames(scoper, model.getUnits()[0]);
+        const visibleNames = getVisibleNames(scoper.getVisibleNodes(model.getUnits()[0]));
 
         // There is only one modelunit, so all names should be visible
         for (const x of creator.allNames) {

@@ -89,7 +89,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super2);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
-        let vi = getVisibleNames(scoper, model);
+        let vi = getVisibleNames(scoper.getVisibleNodes(model));
         expect(vi).toContain("super1");
         expect(vi).toContain("super2");
         expect(vi).toContain("myCC1");
@@ -102,7 +102,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super2);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
-        let vi = getVisibleNames(scoper, model);
+        let vi = getVisibleNames(scoper.getVisibleNodes(model));
         // expect(vi).toContain("super1");
         expect(vi).toContain("super2");
         // expect(vi).toContain("myCC1");
@@ -115,7 +115,7 @@ describe("Checking scoper for testproject", () => {
             model.supers.push(super1);
         })
         let scoper = TestStartEnvironment.getInstance().scoper;
-        let vi = getVisibleNames(scoper, model);
+        let vi = getVisibleNames(scoper.getVisibleNodes(model));
         expect(vi).toContain("super1");
         // expect(vi).toContain("super2");
         expect(vi).toContain("myCC1");

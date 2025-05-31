@@ -14,80 +14,28 @@ describe("testing Alternative Scopes", () => {
         //      Variable1.attrFromPerson.attrFromCompany
         // where 'Variable1.attrFromPerson' is of type Company
         let scoper = DemoEnvironment.getInstance().scoper;
-        let writer = DemoEnvironment.getInstance().writer;
+        // let writer = DemoEnvironment.getInstance().writer;
 
         beforeEach(() => {
             DemoEnvironment.getInstance();
         });
 
-        test("isInscope 'name' of 'Variable1.attrFromPerson', Variable1: Person", () => {
+        test("what isInscope of 'Variable1.attrFromPerson', Variable1: Person", () => {
             let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "name")).toBe(true);
-        });
-
-        test("isInscope 'Person' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "Person")).toBe(false);
-        });
-
-        test("isInscope 'Company' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "Company")).toBe(false);
-        });
-
-        test("isInscope 'VAT_Number' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "VAT_Number")).toBe(false);
-        });
-
-        test("isInscope 'length' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "length")).toBe(false);
-        });
-
-        test("isInscope 'first' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "first")).toBe(true);
-        });
-
-        test("isInscope 'last' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "last")).toBe(false);
-        });
-
-        test("isInscope 'determine' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "determine")).toBe(false);
-        });
-
-        test("isInscope 'another' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "another")).toBe(false);
-        });
-
-        test("isInscope 'Variable1' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "Variable1")).toBe(false);
-        });
-
-        test("isInscope 'VariableNumber2' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "VariableNumber2")).toBe(false);
-        });
-
-        test("isInscope 'AAP' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "AAP")).toBe(false);
-        });
-
-        test("isInscope 'NOOT' of 'Variable1.attrFromPerson', Variable1: Person", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
-            // let names: string = "";
-            // for (let name of scoper.getVisibleNodes(appliedFeature)) {
-            //     names = names.concat(name.name + ", ");
-            // }
-            // console.log("In Scope: " + names);
-            expect(isInScope(scoper, appliedFeature, "NOOT")).toBe(false);
+            const visibleFromVariable1_attrFromPerson: FreNamedNode[] = scoper.getVisibleNodes(appliedFeature);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "name")).toBe(true);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "Person")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "Company")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "VAT_Number")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "length")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "first")).toBe(true);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "last")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "determine")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "another")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "Variable1")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "VariableNumber2")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "AAP")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson, "NOOT")).toBe(false);
         });
 
         test("isInscope 'name' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
@@ -101,74 +49,20 @@ describe("testing Alternative Scopes", () => {
                 (testfeat.appliedfeature as DemoAttributeRef).attribute
                     .name,
             ).toBe("attrFromCompany");
-            // let type = DemoEnvironment.getInstance().typer.inferType(appliedFeature);
-            // let names: string = "";
-            // for (let name of scoper.getVisibleNodes(appliedFeature)) {
-            //     names = names.concat(name.name + ", ");
-            // }
-            // console.log("In Scope: " + names + " type: " + type?.toAstElement()?.['name']);
-            expect(isInScope(scoper, appliedFeature, "name")).toBe(true);
-        });
-
-        test("isInscope 'Person' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            // console.log(writer.writeToString(model.models[0].functions[0].expression.appliedfeature))
-            expect(isInScope(scoper, appliedFeature, "Person")).toBe(false);
-        });
-
-        test("isInscope 'Company' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "Company")).toBe(false);
-        });
-
-        test("isInscope 'VAT_Number' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company2", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "VAT_Number")).toBe(true);
-        });
-
-        test("isInscope 'length' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "length")).toBe(false);
-        });
-
-        test("isInscope 'first' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "first")).toBe(false);
-        });
-
-        test("isInscope 'last' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "last")).toBe(false);
-        });
-
-        test("isInscope 'determine' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "determine")).toBe(false);
-        });
-
-        test("isInscope 'another' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "another")).toBe(true);
-        });
-
-        test("isInscope 'Variable1' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "Variable1")).toBe(false);
-        });
-
-        test("isInscope 'VariableNumber2' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "VariableNumber2")).toBe(false);
-        });
-
-        test("isInscope 'AAP' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "AAP")).toBe(false);
-        });
-
-        test("isInscope 'NOOT' of 'Variable1.attrFromPerson.attrFromCompany', attrFromPerson: Company", () => {
-            let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature.appliedfeature;
-            expect(isInScope(scoper, appliedFeature, "NOOT")).toBe(false);
+            const visibleFromVariable1_attrFromPerson_attrFromCompany: FreNamedNode[] = scoper.getVisibleNodes(appliedFeature);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "name")).toBe(true);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "Person")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "Company")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "VAT_Number")).toBe(true);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "length")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "first")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "last")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "determine")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "another")).toBe(true);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "Variable1")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "VariableNumber2")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "AAP")).toBe(false);
+            expect(isInScope(visibleFromVariable1_attrFromPerson_attrFromCompany, "NOOT")).toBe(false);
         });
     });
 });
