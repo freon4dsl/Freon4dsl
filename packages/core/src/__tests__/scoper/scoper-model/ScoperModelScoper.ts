@@ -19,7 +19,7 @@ export class ScoperModelScoper extends FreScoperBase {
      * Returns all FreNodes that are defined as additional namespaces for 'node'.
      * @param node
      */
-    public additionalNamespaces(node: FreNode): (FreNamedNode | FreNodeReference<FreNamedNode>)[] {
+    public additionalNamespaces(node: FreNode): FreNamespaceInfo[] {
         return [];
     }
 }

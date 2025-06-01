@@ -137,13 +137,13 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 		}
 	})
 
-	test(" unitA1 with [NodeX, UnitA], B_2 and B_2_3 as additional NS", () => {
+	test(" unitA1 with [NodeX, UnitA], B_2 and B_2_1 as additional NS", () => {
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found
 			AST.change(() => {
-				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2_1'], 'NodeX'));
 				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2'], 'NodeX'));
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2', 'B_2_1'], 'NodeX'));
 			})
 			setNamespaces(['NodeX', 'UnitA']);
 			//
@@ -164,14 +164,14 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 		}
 	})
 
-	test(" unitA1 with [NodeX, UnitA, UnitB], UnitB, B_2 and B_2_3 as additional NS", () => {
+	test(" unitA1 with [NodeX, UnitA, UnitB], UnitB1, B_2 and B_2_1 as additional NS", () => {
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found
 			AST.change(() => {
-				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2'], 'NodeX'));
 				unitA1.myRef.push(FreNodeReference.create<UnitB>(['UnitB1'], 'UnitB'));
-				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2_1'], 'NodeX'));
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['UnitB1','B_2'], 'NodeX'));
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['UnitB1','B_2','B_2_1'], 'NodeX'));
 			})
 			setNamespaces(['NodeX', 'UnitA', 'UnitB']);
 			//
@@ -218,10 +218,11 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 		}
 	})
 
-	test(" unitA1 with [NodeX, UnitA, UnitB], B_2.B_2_3 as additional NS", () => {
+	test(" unitA1 with [NodeX, UnitA, UnitB], B_2.B_2_1 as additional NS", () => {
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found
+			// NB this reference will not be found!
 			AST.change(() => {
 				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2', 'B_2_1'], 'NodeX'));
 			})
@@ -229,7 +230,7 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 			//
 			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
 			// printNames(set);
-			// expect(set.length).toBe(10);
+			expect(set.length).toBe(8);
 			expect(set.map(x => x.name)).toStrictEqual([
 				'A_1', 'A_2',
 				'A_1_1', 'A_1_2',

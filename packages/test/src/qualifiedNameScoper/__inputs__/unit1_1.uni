@@ -1,4 +1,4 @@
-unitType1 unit1_1 {
+UnitType1 unit1_1 {
     content
         NamedPart Z {
             subParts

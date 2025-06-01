@@ -4,7 +4,7 @@ import { Names, Imports } from "../../../utils/index.js"
 export class CustomScoperTemplate {
     generateCustomScoperPart(language: FreMetaLanguage): string {
         const imports = new Imports()
-        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreNodeReference, Names.FreScoperPart, Names.FreCompositeScoper])
+        imports.core = new Set([Names.FreNode, Names.FreNamedNode, Names.FreNamespaceInfo, Names.FreScoperPart, Names.FreCompositeScoper])
 
         // Template starts here
         return `
@@ -27,7 +27,7 @@ export class CustomScoperTemplate {
              * @param _node
              * @param _metaType
              */
-            getVisibleNodes(_node: ${Names.FreNode}, _metaType?: string): ${Names.FreNamedNode}[] {
+            getVisibleNodes(_node: ${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>, _metaType?: string): ${Names.FreNamedNode}[] {
                 return [];
             }
 
@@ -37,7 +37,7 @@ export class CustomScoperTemplate {
              *
              * @param _node
              */
-            additionalNamespaces(_node: ${Names.FreNode}): (${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[] {
+            additionalNamespaces(_node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
                 return [];
             }
 
@@ -47,7 +47,7 @@ export class CustomScoperTemplate {
              * 
              * @param _node
              */
-            public replacementNamespaces(_node: ${Names.FreNode}): (${Names.FreNode} | ${Names.FreNodeReference}<${Names.FreNamedNode}>)[]  {
+            public replacementNamespaces(_node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[]  {
                 return [];
             }
         }`;

@@ -5,7 +5,7 @@ import {
     FreMetaProperty,
     FreMetaClassifier, FreMetaInterface
 } from '../../languagedef/metalanguage/index.js';
-import { FreReplacementNamespace, FreNamespaceAddition, ScopeDef } from "./FreScopeDefLang.js";
+import { FreReplacementNamespace, FreNamespaceAddition, ScopeDef, FreNamespaceExpression } from './FreScopeDefLang.js';
 import { LangUtil, MetaLogger } from "../../utils/index.js";
 // The next import should be separate and the last of the imports.
 // Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
@@ -27,18 +27,18 @@ export class ScoperChecker extends Checker<ScopeDef> {
         if (!!this.language) {
             this.myExpressionChecker = new FreLangExpressionChecker(this.language);
         }
+        // todo check if this still holds:
         // in a scope definition an expression may be simply 'self'
         // this.myExpressionChecker.strictUseOfThis = false;
     }
 
     public check(definition: ScopeDef): void {
-        LOGGER.log("Checking scope definition " + definition.scoperName);
+        LOGGER.log("Checking scope definition " + definition.languageName);
         if (this.language === null || this.language === undefined) {
             throw new Error(`Scoper definition checker does not known the language.`);
         }
         this.runner = new CheckRunner(this.errors, this.warnings);
 
-        // TODO add check that every namespace has a name property
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
         this.myNamespaces = this.findAllNamespaces(definition.namespaces);
 
@@ -46,12 +46,12 @@ export class ScoperChecker extends Checker<ScopeDef> {
             if (!!def.conceptRef) {
                 CommonChecker.checkClassifierReference(def.conceptRef, this.runner);
                 if (!!def.conceptRef.referred) {
-                    if (!!def.namespaceAdditions) {
-                        this.checkNamespaceAdditions(def.namespaceAdditions, def.conceptRef.referred);
+                    if (!!def.namespaceAddition) {
+                        this.checkNamespaceAdditions(def.namespaceAddition, def.conceptRef.referred);
                     }
-                    if (!!def.replacementNamespace) {
+                    if (!!def.namespaceReplacement) {
                         // todo replacements must always be 'typeof(container)' or 'container.<something>'
-                        this.checkReplacementNamespace(def.replacementNamespace, def.conceptRef.referred);
+                        this.checkReplacementNamespace(def.namespaceReplacement, def.conceptRef.referred);
                     }
                 }
             }
@@ -62,39 +62,58 @@ export class ScoperChecker extends Checker<ScopeDef> {
     }
 
     private checkNamespaceAdditions(namespaceAddition: FreNamespaceAddition, enclosingConcept: FreMetaConcept) {
-        LOGGER.log("Checking namespace definition for " + enclosingConcept?.name);
+        LOGGER.log("Checking namespace additions for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
             error: `Cannot add namespaces to concept ${enclosingConcept.name} that is not a namespace itself ${ParseLocationUtil.location(namespaceAddition)}.`,
             whenOk: () => {
                 if (!!this.myExpressionChecker) {
                     namespaceAddition.expressions.forEach((exp) => {
-                        this.myExpressionChecker!.checkLangExp(exp, enclosingConcept);
-                        const xx: FreMetaProperty | undefined = exp.findRefOfLastAppliedFeature();
-                        if (!!xx) {
-                            this.runner.nestedCheck({
-                                check:
-                                    !!xx.type &&
-                                    (xx.type instanceof FreMetaConcept || xx.type instanceof FreMetaUnitDescription || xx.type instanceof FreMetaInterface),
-                                error: `A namespace addition should refer to a concept or a unit ${ParseLocationUtil.location(exp)}.`,
-                                whenOk: () => {
-                                    this.runner.simpleCheck(
-                                        this.myNamespaces.includes(xx.type),
-                                        `A namespace addition should refer to a namespace concept ${ParseLocationUtil.location(exp)}.`,
-                                    );
-                                },
-                            });
-                        }
-                    });
+                        this.checkNamespaceExpression(exp, enclosingConcept)
+                    })
                 }
             },
         });
     }
 
-    private checkReplacementNamespace(replacementNamespace: FreReplacementNamespace, enclosingConcept: FreMetaConcept) {
-        LOGGER.log("Checking replacement scope definition for " + enclosingConcept?.name);
-        if (!!this.myExpressionChecker && !!replacementNamespace.expression) {
-            this.myExpressionChecker.checkLangExp(replacementNamespace.expression, enclosingConcept);
+    private checkReplacementNamespace(namespaceReplacement: FreReplacementNamespace, enclosingConcept: FreMetaConcept) {
+        // TODO add check on owner of FreNodeReference, see FreNamespace.addReplacementNamespaces()
+        // LOGGER.log("Checking namespace replacements for " + enclosingConcept?.name);
+        console.log("Checking namespace additions for " + enclosingConcept?.name);
+        console.log(namespaceReplacement.toFreString())
+        this.runner.nestedCheck({
+            check: this.myNamespaces.includes(enclosingConcept),
+            error: `Cannot add namespaces to concept ${enclosingConcept.name} that is not a namespace itself ${ParseLocationUtil.location(namespaceReplacement)}.`,
+            whenOk: () => {
+                if (!!this.myExpressionChecker) {
+                    namespaceReplacement.expressions.forEach((exp) => {
+                        this.checkNamespaceExpression(exp, enclosingConcept)
+                    })
+                }
+            },
+        });
+    }
+
+    private checkNamespaceExpression(namespaceExpression: FreNamespaceExpression, enclosingConcept: FreMetaConcept) {
+        LOGGER.log("Checking namespace expression for " + enclosingConcept?.name);
+        const exp = namespaceExpression.expression;
+        if (!!this.myExpressionChecker && !!exp) {
+            this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
+            const referredProp: FreMetaProperty | undefined = exp.findRefOfLastAppliedFeature();
+            if (!!referredProp) {
+                this.runner.nestedCheck({
+                    check:
+                      !!referredProp.type &&
+                      (referredProp.type instanceof FreMetaConcept || referredProp.type instanceof FreMetaUnitDescription || referredProp.type instanceof FreMetaInterface),
+                    error: `A namespace expression should refer to a concept or a unit ${ParseLocationUtil.location(exp)}.`,
+                    whenOk: () => {
+                        this.runner.simpleCheck(
+                          this.myNamespaces.includes(referredProp.type),
+                          `A namespace expression should refer to a namespace concept ${ParseLocationUtil.location(exp)}.`,
+                        );
+                    },
+                });
+            }
         }
     }
 

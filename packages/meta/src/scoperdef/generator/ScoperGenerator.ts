@@ -39,8 +39,7 @@ export class ScoperGenerator {
 
         const generationStatus: GenerationStatus = new GenerationStatus();
         this.getFolderNames();
-        const name: string = scopedef ? scopedef.scoperName + " " : "";
-        LOGGER.log("Generating scoper " + name + "in folder " + this.scoperGenFolder);
+        LOGGER.log("Generating scoper in folder " + this.scoperGenFolder);
 
         const scoper: ScoperTemplate = new ScoperTemplate();
         const scoperDefTemplate: ScoperDefTemplate = new ScoperDefTemplate();
@@ -98,9 +97,9 @@ export class ScoperGenerator {
         FileUtil.generateManualFile(`${this.scoperFolder}/index.ts`, scoperIndexFile, "Scoper Index");
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(`Generated scoper '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated scoper with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated scoper ${name}`);
+            LOGGER.info(`Succesfully generated scoper`);
         }
     }
 

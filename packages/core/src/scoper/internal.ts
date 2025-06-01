@@ -1,4 +1,5 @@
 export * from "./FreNamespace.js";
+export * from "./FreNamespaceInfo.js";
 export * from "./FreScoper.js";
 export * from "./CollectDeclaredNodesWorker.js";
 export * from "./FreScoperBase.js";

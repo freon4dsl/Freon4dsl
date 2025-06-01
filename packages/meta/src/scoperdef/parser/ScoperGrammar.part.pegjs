@@ -7,10 +7,9 @@
 //}
 
 Scoper_Definition
-  = ws "scoper" ws scoperName:var ws "for" ws "language" ws languageName:var ws ns:namespaces defs:conceptDefinition*
+  = ws "scoper" ws "for" ws "language" ws languageName:var ws ns:namespaces defs:conceptDefinition*
     {
         return create.createScopeDef({
-            "scoperName": scoperName,
             "languageName": languageName,
             "namespaces": ns,
             "scopeConceptDefs": defs,
@@ -20,43 +19,55 @@ Scoper_Definition
 
 isnamespaceKey          = "isnamespace" rws
 additionKey             = "namespace_addition" rws
-replacementNamespaceKey     = "namespace_replacement" rws
+replacementNamespaceKey = "namespace_replacement" rws
+reexportKey             = ws "re_export" ws
 
 namespaces = isnamespaceKey curly_begin conceptRefs:(
                                               head:classifierReference
                                               tail:(comma_separator v:classifierReference { return v; })*
                                               { return [head].concat(tail); }
                                             ) ws curly_end
-    { 
+    {
         return conceptRefs;
     }
 
-conceptDefinition = name:classifierReference curly_begin nsDef:namespaceAddition? replacementNamespace:replacementNamespace? curly_end
+conceptDefinition = name:classifierReference curly_begin nsDef:namespaceAddition namespaceReplacement:namespaceReplacement? curly_end
     {
         return create.createScoperConceptDef({
             "conceptRef":name,
-            "namespaceAdditions": nsDef,
-            "replacementNamespace": replacementNamespace,
+            "namespaceAddition": nsDef,
+            "namespaceReplacement": namespaceReplacement,
             "location":location()
         });
     }
+    / name:classifierReference curly_begin namespaceReplacement:namespaceReplacement nsDef:namespaceAddition? curly_end
+        {
+            return create.createScoperConceptDef({
+                "conceptRef":name,
+                "namespaceAddition": nsDef,
+                "namespaceReplacement": namespaceReplacement,
+                "location":location()
+            });
+        }
 
-namespaceAddition = additionKey equals_separator list:expressionlist semicolon_separator
+namespaceAddition = additionKey curly_begin list:singleNamespaceExpression+ curly_end
     {
-        return create.createNamespaceDef({ "expressions": list, "location":location() });
+        return create.createNamespaceAddition({ "expressions": list, "location": location() });
     }
 
-expressionlist =
-      head:langExpression
-      tail:(plus_separator v:langExpression { return v; })*
-      { return [head].concat(tail); }
-
-replacementNamespace = replacementNamespaceKey equals_separator exp:langExpression semicolon_separator
+namespaceReplacement = replacementNamespaceKey curly_begin list:singleNamespaceExpression+ curly_end
     {
-        return create.createReplacementNamespace({
-            "expression": exp,
+        return create.createNamespaceReplacement({
+            "expressions": list,
             "location": location()
         });
     }
 
-
+singleNamespaceExpression = exp:langExpression reexport:reexportKey? semicolon_separator
+    {
+        return create.createNamespaceExpression({
+            "expression": exp,
+            "reexport": (reexport?true:false),
+            "location": location()
+        });
+    }

@@ -17,6 +17,7 @@ export class ScoperParser extends FreGenericParser<ScopeDef> {
     }
 
     protected merge(submodels: ScopeDef[]): ScopeDef | undefined {
+        console.log('ScoperParser merging submodels ');
         if (submodels.length > 0) {
             const result: ScopeDef = submodels[0];
             submodels.forEach((sub, index) => {

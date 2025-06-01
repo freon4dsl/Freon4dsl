@@ -3,6 +3,7 @@ import { FreLogger } from "../logging/index.js";
 import { FreScoper } from "./FreScoper.js";
 import { isNullOrUndefined } from '../util/index.js';
 import { FreScoperBase } from './FreScoperBase.js';
+import { FreNamespaceInfo } from './FreNamespaceInfo.js';
 
 const LOGGER = new FreLogger("FreCompositeScoper").mute();
 
@@ -39,7 +40,7 @@ export class FreCompositeScoper implements FreScoper {
         return undefined;
     }
 
-    additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+    additionalNamespaces(node: FreNode): FreNamespaceInfo[] {
         // todo should we check whether node 'is' a namespace?
         if (!!node) {
             for (const scoper of this.scopers) {
@@ -68,13 +69,13 @@ export class FreCompositeScoper implements FreScoper {
         return [];
     }
 
-    replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+    alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
         // todo should we check whether node 'is' a namespace?
-        LOGGER.log('COMPOSITE replacementNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());
+        LOGGER.log('COMPOSITE alternativeNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
-                const result: (FreNode | FreNodeReference<FreNamedNode>)[] = scoper.replacementNamespaces(node);
+                const result: FreNamespaceInfo[] = scoper.alternativeNamespaces(node);
                 if (result.length > 0) {
                     return result;
                 }

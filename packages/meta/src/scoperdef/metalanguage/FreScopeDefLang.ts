@@ -7,22 +7,51 @@ import { FreMetaDefinitionElement } from "../../utils/index.js";
 import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
 
 export class ScopeDef extends FreMetaDefinitionElement {
-    scoperName: string = "";
     languageName: string = "";
     namespaces: MetaElementReference<FreMetaClassifier>[] = [];
     scopeConceptDefs: ScopeConceptDef[] = [];
+
+    toFreString(): string {
+        return `scoper for language ${ this.languageName }
+        isnamespace { ${this.namespaces.map(ns => ns.name).join(', ')} }
+        ${this.scopeConceptDefs.map(def => def.toFreString()).join("\n")}`;
+    }
 }
 
 export class ScopeConceptDef extends FreMetaDefinitionElement {
     conceptRef: MetaElementReference<FreMetaConcept> | undefined;
-    namespaceAdditions: FreNamespaceAddition | undefined;
-    replacementNamespace: FreReplacementNamespace | undefined;
+    namespaceAddition: FreNamespaceAddition | undefined;
+    namespaceReplacement: FreReplacementNamespace | undefined;
+
+    toFreString(): string {
+        return `${this.conceptRef?.name} {
+            ${this.namespaceAddition ? this.namespaceAddition.toFreString() : ``}
+            ${this.namespaceReplacement ? this.namespaceReplacement.toFreString() : ``}
+        }`;
+    }
 }
 
 export class FreNamespaceAddition extends FreMetaDefinitionElement {
-    expressions: FreLangExp[] = [];
+    expressions: FreNamespaceExpression[] = [];
+
+    toFreString(): string {
+        return `namespace_addition { ${this.expressions.map(exp => exp.toFreString())} }`;
+    }
 }
 
 export class FreReplacementNamespace extends FreMetaDefinitionElement {
+    expressions: FreNamespaceExpression[] = [];
+
+    toFreString(): string {
+        return `namespace_replacement  { ${this.expressions.map(exp => exp.toFreString())} }`;
+    }
+}
+
+export class FreNamespaceExpression extends FreMetaDefinitionElement {
     expression: FreLangExp | undefined;
+    reexport: boolean = false;
+
+    toFreString(): string {
+        return `${this.expression?.toFreString()} ${this.reexport ? `re_export` : ``};`;
+    }
 }

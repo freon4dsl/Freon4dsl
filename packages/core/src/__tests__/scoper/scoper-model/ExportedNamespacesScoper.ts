@@ -2,12 +2,16 @@
 import { FreNamespaceInfo, FreScoperBase } from '../../../scoper';
 import { FreNamedNode, FreNode, FreNodeReference } from '../../../ast';
 import { UnitA } from './UnitA';
+import { UnitB } from './UnitB';
 
 /**
- * Class AdditionalNamespacesScoper implements the scoper generated from, if present, the scoper definition,
+ * Class ExportedNamespacesScoper implements the scoper generated from, if present, the scoper definition,
  * otherwise this class implements the default scoper.
  */
-export class AdditionalNamespacesScoper extends FreScoperBase {
+export class ExportedNamespacesScoper extends FreScoperBase {
+    recursiveImportsA: boolean = false;
+    recursiveImportsB: boolean = false;
+
     /**
      * Returns the replacement namespace if it can be found for 'node'.
      * @param _node
@@ -26,7 +30,12 @@ export class AdditionalNamespacesScoper extends FreScoperBase {
         if (node instanceof UnitA) {
             // generated based on 'imports'
             for (let loopVariable of node.myRef) {
-                result.push(new FreNamespaceInfo(loopVariable, false));
+                result.push(new FreNamespaceInfo(loopVariable, this.recursiveImportsB));
+            }
+        } else if (node instanceof UnitB) {
+            // generated based on 'imports'
+            for (let loopVariable of node.myRef) {
+                result.push(new FreNamespaceInfo(loopVariable, this.recursiveImportsA));
             }
         }
         return result;

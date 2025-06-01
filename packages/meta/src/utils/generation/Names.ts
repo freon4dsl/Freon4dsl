@@ -102,6 +102,7 @@ export class Names {
     static FreLogger: string = "FreLogger";
     // tslint:disable-next-line:variable-name
     static FreNamespace: string = "FreNamespace";
+    static FreNamespaceInfo: string = "FreNamespaceInfo";
     // tslint:disable-next-line:variable-name
     static FreProjectionHandler: string = "FreProjectionHandler";
     // tslint:disable-next-line:variable-name
@@ -129,6 +130,7 @@ export class Names {
     public static referenceSeparator: string = "/"; // TODO use value from editDef
     public static listUtil: string = "ListUtil";
     public static brackets: string = "Brackets";
+
 
     public static environment(language: FreMetaLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment";

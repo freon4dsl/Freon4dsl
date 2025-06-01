@@ -132,7 +132,11 @@ export class GenerationUtil {
                 (isRef ? Names.refName(exp.referredElement) : exp.sourceName) +
                 (exp.appliedfeature ? `?.${this.langExpToTypeScript(exp.appliedfeature, paramName, noRef)}` : "");
         } else if (exp instanceof FreInstanceExp) {
-            result = `${exp.sourceName}.${exp.instanceName}`;
+            if (exp.sourceName === "container") {
+                result = `${paramName}.freOwner().${exp.instanceName}`;
+            } else {
+                result = `${exp.sourceName}.${exp.instanceName}`;
+            }
         } else {
             result = exp?.toFreString();
         }

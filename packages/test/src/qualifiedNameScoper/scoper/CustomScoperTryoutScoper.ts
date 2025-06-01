@@ -4,7 +4,7 @@ import {
     type FreNamedNode,
     FreNodeReference,
     type FreScoper,
-    FreCompositeScoper,
+    FreCompositeScoper, FreNamespaceInfo
 } from '@freon4dsl/core';
 import { QualifiedName, Referable } from '../language/gen/index.js';
 
@@ -35,7 +35,7 @@ export class CustomScoperTryoutScoper implements FreScoper {
      *
      * @param _node
      */
-    additionalNamespaces(_node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+    additionalNamespaces(_node: FreNode): FreNamespaceInfo[] {
         return [];
     }
 
@@ -45,17 +45,17 @@ export class CustomScoperTryoutScoper implements FreScoper {
      *
      * @param node
      */
-    replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+    replacementNamespaces(node: FreNode): FreNamespaceInfo[] {
         if (!!node && node.freLanguageConcept() == "QualifiedName") {
             let container = node.freOwner();
             if (!!container) {
                 if (container.freLanguageConcept() == "QualifiedName") { // note instanceof does not function here!!
                     const myPart: Referable = (container as QualifiedName).part.referred;
                     // console.log('returning PART: ' + myPart.freId() + " of type " + myPart.freLanguageConcept());
-                    return [myPart];
+                    return [new FreNamespaceInfo(myPart, false)];
                 } else {
                     // console.log('returning OWNER: ' + container.freId() + " of type " + container.freLanguageConcept());
-                    return [container as FreNamedNode];
+                    return [new FreNamespaceInfo(container as FreNamedNode, false)];
                 }
             } else {
                 console.error("getAlternativeScope: no owner found.");

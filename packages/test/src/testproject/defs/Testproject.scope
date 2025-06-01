@@ -1,7 +1,7 @@
-scoper Test for language Testproject
+scoper for language Testproject
 
 isnamespace { AA, BB }
 
 BB {
-    namespace_addition = self.supers;
+    namespace_addition { self.supers;}
 }

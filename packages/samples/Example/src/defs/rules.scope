@@ -1,9 +1,9 @@
-scoper RulesScope for language Example
+scoper for language Example
 
 isnamespace { Rules }
 
 Rules {
-    namespace_addition = self.forEntity;
+    namespace_addition { self.forEntity; }
 }
 
 

@@ -31,25 +31,26 @@ describe("Testing Custom Scoper", () => {
 			referenceUnit.imports.push(FreNodeReference.create<Unit>('unit1_1', 'Unit'));
 		});
 		// console.log(getVisibleNames(scoper, referenceUnit));
-		scoper.getVisibleNodes(referenceUnit);
-		expect(getVisibleNames(scoper, referenceUnit)).toStrictEqual(['TestRefs1', 'unit1_1', 'unit1_2', 'Z', 'Y', 'X', 'V', 'W', 'U', ]);
-		expect(getVisibleNames(scoper, referenceUnit, 'NamedPart')).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
+		const visNodes = scoper.getVisibleNodes(referenceUnit);
+		const visNamedParts = scoper.getVisibleNodes(referenceUnit, 'NamedPart');
+		expect(getVisibleNames(visNodes)).toStrictEqual(['TestRefs1', 'unit1_1', 'unit1_2', 'Z', 'Y', 'X', 'V', 'W', 'U', ]);
+		expect(getVisibleNames(visNamedParts)).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
 
 		// create an empty QualifiedName to check the available names
 		const firstQ: QualifiedName = QualifiedName.create({});
 		AST.change(() => {
 			referenceUnit.myReferences.push(firstQ);
 		});
-		expect(getVisibleNames(scoper, firstQ)).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
+		expect(getVisibleNames(scoper.getVisibleNodes(firstQ))).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
 		return firstQ
 	}
 
 // TODO these tests rely on the fact that the additional NS-es of a replacement NS are also in the set of visible nodes
-	test.skip(" QualifiedName has names from unit", () => {
+	test(" QualifiedName has names from unit", () => {
 		startFQN();
 	})
 
-	test.skip(" QualifiedName has names from previous", () => {
+	test(" QualifiedName has names from previous", () => {
 		const firstQ: QualifiedName = startFQN();
 
 		// add a part to the QualifiedName
@@ -65,7 +66,7 @@ describe("Testing Custom Scoper", () => {
 		AST.change( () => {
 			firstQ.restName = secondQ;
 		})
-		expect(getVisibleNames(scoper, secondQ)).toStrictEqual([ 'Z_A', 'Z_B' ]);
+		expect(getVisibleNames(scoper.getVisibleNodes(secondQ))).toStrictEqual([ 'Z_A', 'Z_B' ]);
 
 		const elems = scoper.getVisibleNodes(secondQ, 'NamedPart');
 		const za: NamedPart = elems.find(e => e.name === "Z_A") as NamedPart;
@@ -87,7 +88,7 @@ describe("Testing Custom Scoper", () => {
 			secondQ.restName = thirdQ;
 		})
 		// console.log(writer.writeToString(referenceUnit))
-		expect(getVisibleNames(scoper, thirdQ)).toStrictEqual([ 'Z_A_A', 'Z_A_B' ]);
+		expect(getVisibleNames(scoper.getVisibleNodes(thirdQ))).toStrictEqual([ 'Z_A_A', 'Z_A_B' ]);
 
 	})
 })

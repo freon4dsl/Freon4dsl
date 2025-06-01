@@ -56,12 +56,12 @@ export abstract class FreScoperBase implements FreScoper {
     }
 
     // @ts-ignore parameter is present to adhere to interface FreScoper
-    additionalNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+    additionalNamespaces(node: FreNode): FreNamespaceInfo[] {
         return [];
     }
 
     // @ts-ignore parameter is present to adhere to interface FreScoper
-    replacementNamespaces(node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+    alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
         return [];
     }
 

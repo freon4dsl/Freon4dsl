@@ -1,4 +1,4 @@
-scoper ExampleScoper for language Example
+scoper for language Example
 
 // isnamespace { Entity,Model }
 
@@ -6,14 +6,14 @@ scoper ExampleScoper for language Example
 
 // 2 isnamespace { Method, Entity }
 
-isnamespace { Method, Entity, ExModel, SumExpression }
+isnamespace { Method, Entity, ExModel, SumExpression, AppliedFeature }
 
 Entity {
-    namespace_addition = self.baseEntity;
+    namespace_addition { self.baseEntity; }
 }
 
 AppliedFeature {
-	namespace_replacement = typeof( container );
+	namespace_replacement { typeof( container ); }
 }
 
 
