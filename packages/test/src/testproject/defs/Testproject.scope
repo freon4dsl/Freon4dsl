@@ -3,5 +3,5 @@ scoper for language Testproject
 isnamespace { AA, BB }
 
 BB {
-    namespace_addition { self.supers;}
+    import { self.supers;}
 }

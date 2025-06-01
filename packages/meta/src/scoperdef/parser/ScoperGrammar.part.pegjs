@@ -18,9 +18,9 @@ Scoper_Definition
     } 
 
 isnamespaceKey          = "isnamespace" rws
-additionKey             = "namespace_addition" rws
-replacementNamespaceKey = "namespace_replacement" rws
-reexportKey             = ws "re_export" ws
+additionKey             = "import" rws
+replacementNamespaceKey = "alternative" rws
+recursiveKey             = "recursive" ws
 
 namespaces = isnamespaceKey curly_begin conceptRefs:(
                                               head:classifierReference
@@ -63,11 +63,11 @@ namespaceReplacement = replacementNamespaceKey curly_begin list:singleNamespaceE
         });
     }
 
-singleNamespaceExpression = exp:langExpression reexport:reexportKey? semicolon_separator
+singleNamespaceExpression = exp:langExpression ws recursive:recursiveKey? semicolon_separator
     {
         return create.createNamespaceExpression({
             "expression": exp,
-            "reexport": (reexport?true:false),
+            "recursive": (recursive?true:false),
             "location": location()
         });
     }

@@ -4,22 +4,22 @@ scoper XX for language FreTyperLanguage
 isnamespace { FreClassifier }
 
 //FretPropertyCallExp {
-//    namespace_replacement = typeof( self.source );
+//    alternative { typeof( self.source ); }
 //}
 //
 //FretLimitedInstanceExp {
-//    namespace_addition = self.myLimited;
+//    import = self.myLimited;
 //}
 
 //FretLimitedRule { // TODO This addition should be on FretClassifierRule, but that results in a MobX cycle
-//    namespace_addition = self.myClassifier;
+//    import = self.myClassifier;
 //}
 
 // scope rules for FreStructureDef
 FreConcept {
-    namespace_addition = self.interfaces + self.base;
+    import = self.interfaces + self.base;
 }
 
 FreInterface {
-    namespace_addition = self.base;
+    import = self.base;
 }

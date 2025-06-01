@@ -3,15 +3,15 @@ scoper for language Entity
 isnamespace { EntityModelUnit, Entity, EntityFunction }
 
 Entity {
-    namespace_addition { self.baseEntity;}
+    import { self.baseEntity;}
 }
 
 /*
 Type {
-    namespace_addition { self.baseInterface}
+    import { self.baseInterface}
 }
 */
 
 AppliedFeature {
-	namespace_replacement { typeof( container );}
+	alternative { typeof( container );}
 }

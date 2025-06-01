@@ -3,7 +3,7 @@ scoper TEST for language ScoperTryout
 isnamespace { Referable, QualifiedName }
 
 UnitUsingReferables {
-    namespace_addition = self.imports;
+    import = self.imports;
 }
 
 

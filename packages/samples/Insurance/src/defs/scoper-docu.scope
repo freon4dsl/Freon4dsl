@@ -3,13 +3,13 @@ scoper DocuScoper for language InsuranceModel
 isnamespace { InsuranceProduct, BaseProduct, CalcFunction, Entity }
 
 InsuranceProduct {
-    namespace_addition = self.basedOn;
+    import {self.basedOn;}
 }
 
 AttributeRef {
-	namespace_replacement = typeof( container );
+	alternative { typeof( container ); }
 }
 
 Entity {
-    namespace_addition = self.baseEntity;
+    import {self.baseEntity;}
 }

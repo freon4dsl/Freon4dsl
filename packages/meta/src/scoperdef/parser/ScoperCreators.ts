@@ -82,8 +82,8 @@ export function createNamespaceExpression(data: Partial<FreNamespaceExpression>)
     if (!!data.expression) {
         result.expression = data.expression;
     }
-    if (!!data.reexport) {
-        result.reexport = data.reexport;
+    if (!!data.recursive) {
+        result.recursive = data.recursive;
     }
     if (!!data.location) {
         result.location = data.location;

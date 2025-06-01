@@ -3,9 +3,9 @@ scoper for language ScoperTryout
 isnamespace { Referable, QualifiedName }
 
 UnitType2 {
-    namespace_addition { self.imports re_export; }
+    import { self.imports recursive; }
 }
 
 QualifiedName {
-    namespace_replacement { container.part re_export; }
+    alternative { container.part recursive; }
 }

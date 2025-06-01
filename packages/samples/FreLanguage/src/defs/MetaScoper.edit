@@ -20,7 +20,7 @@ ${self.conceptRef} {
 }
 
 FreNamespaceAddition {
-[namespace_addition = ${self.expressions horizontal separator[ + ]};]
+[import = ${self.expressions horizontal separator[ + ]};]
 }
 
 FreAlternativeScope {

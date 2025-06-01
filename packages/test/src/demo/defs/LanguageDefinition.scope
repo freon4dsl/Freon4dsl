@@ -4,15 +4,15 @@ isnamespace { DemoModel, DemoEntity, DemoFunction, AppliedFeature }
 
 // Inheritance scope
 DemoEntity {
-    namespace_addition { self.baseEntity; }
+    import { self.baseEntity; }
 }
 /*
 Type {
-    namespace_addition { self.baseInterface; }
+    import { self.baseInterface; }
 }
 */
 AppliedFeature {
-	namespace_replacement { typeof( container ); }
+	alternative { typeof( container ); }
 }
 
 //    t = typer.inferType(this.source) exclude: attributes where visibility = 'private'

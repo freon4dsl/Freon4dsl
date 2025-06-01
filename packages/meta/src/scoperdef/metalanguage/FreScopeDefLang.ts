@@ -35,7 +35,7 @@ export class FreNamespaceAddition extends FreMetaDefinitionElement {
     expressions: FreNamespaceExpression[] = [];
 
     toFreString(): string {
-        return `namespace_addition { ${this.expressions.map(exp => exp.toFreString())} }`;
+        return `import { ${this.expressions.map(exp => exp.toFreString())} }`;
     }
 }
 
@@ -43,15 +43,15 @@ export class FreReplacementNamespace extends FreMetaDefinitionElement {
     expressions: FreNamespaceExpression[] = [];
 
     toFreString(): string {
-        return `namespace_replacement  { ${this.expressions.map(exp => exp.toFreString())} }`;
+        return `alternative  { ${this.expressions.map(exp => exp.toFreString())} }`;
     }
 }
 
 export class FreNamespaceExpression extends FreMetaDefinitionElement {
     expression: FreLangExp | undefined;
-    reexport: boolean = false;
+    recursive: boolean = false;
 
     toFreString(): string {
-        return `${this.expression?.toFreString()} ${this.reexport ? `re_export` : ``};`;
+        return `${this.expression?.toFreString()} ${this.recursive ? `recursive` : ``};`;
     }
 }

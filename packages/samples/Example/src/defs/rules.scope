@@ -3,7 +3,7 @@ scoper for language Example
 isnamespace { Rules }
 
 Rules {
-    namespace_addition { self.forEntity; }
+    import { self.forEntity; }
 }
 
 

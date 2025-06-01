@@ -183,12 +183,12 @@ export class ScoperTemplate {
                     result = result.concat(`
                 // generated based on '${expression.toFreString()}'
                 for (let ${loopVar} of ${namespaceExpression}) {
-                    result.push(new ${Names.FreNamespaceInfo}(${loopVar}, ${expression.reexport}));
+                    result.push(new ${Names.FreNamespaceInfo}(${loopVar}, ${expression.recursive}));
                 }`);
                 } else {
                     result = result.concat(`
                 // generated based on '${expression.toFreString()}'
-                result.push(new ${Names.FreNamespaceInfo}(${namespaceExpression}, ${expression.reexport}));
+                result.push(new ${Names.FreNamespaceInfo}(${namespaceExpression}, ${expression.recursive}));
                 `);
                 }
             }
@@ -213,7 +213,7 @@ export class ScoperTemplate {
                     let newScopeElement = this.myTyper.inferType(owner)?.toAstElement();
                     // 'newScopeElement' could be null, when the type found by the typer does not correspond to an AST node
                     if (!!newScopeElement) {
-                        result.push(new ${Names.FreNamespaceInfo}(newScopeElement as ${Names.FreNamedNode}, ${expression.reexport}));
+                        result.push(new ${Names.FreNamespaceInfo}(newScopeElement as ${Names.FreNamedNode}, ${expression.recursive}));
                     }
                 } else {
                     console.log("Replacement Namespace for node " + node.freId() + " ")
@@ -222,13 +222,13 @@ export class ScoperTemplate {
             // special case: the expression refers to 'container'
             resultStr = `let container = node.freOwner();
             if (!!container) {
-                result.push(new ${Names.FreNamespaceInfo}(container as ${Names.FreNamedNode}, ${expression.reexport}));
+                result.push(new ${Names.FreNamespaceInfo}(container as ${Names.FreNamedNode}, ${expression.recursive}));
             } else {
                 console.error("getReplacementNamespace: no container found.");
             }`;
         } else {
             // normal case: the expression is an ordinary expression over the language
-            resultStr = `result.push(new ${Names.FreNamespaceInfo}(${GenerationUtil.langExpToTypeScript(expression.expression!, "node")}, ${expression.reexport}))`;
+            resultStr = `result.push(new ${Names.FreNamespaceInfo}(${GenerationUtil.langExpToTypeScript(expression.expression!, "node")}, ${expression.recursive}))`;
         }
         return resultStr;
     }

@@ -9,11 +9,11 @@ scoper for language Example
 isnamespace { Method, Entity, ExModel, SumExpression, AppliedFeature }
 
 Entity {
-    namespace_addition { self.baseEntity; }
+    import { self.baseEntity; }
 }
 
 AppliedFeature {
-	namespace_replacement { typeof( container ); }
+	alternative { typeof( container ); }
 }
 
 

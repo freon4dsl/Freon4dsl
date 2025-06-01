@@ -3,5 +3,5 @@ scoper EducationScoper for language Education
 isnamespace { Page, Step }
 
 Step {
-    namespace_addition = self.fromPage;
+    import = self.fromPage;
 }
