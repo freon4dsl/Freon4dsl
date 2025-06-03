@@ -6,11 +6,11 @@ Date: 22 May 2025
 is exposed to language engineers. The only methods that are useful to change are the remaining ones:
   - `resolvePathName`
   - `getVisibleElements`
-  - `additionalNamespaces`
+  - `importedNamespaces`
   - `replacementNamespace`.
 
-- Make this the signature of additionalNamespaces:
-`additionalNamespaces(node: FreNode): FreNamespace[];`.
+- Make this the signature of importedNamespaces:
+`importedNamespaces(node: FreNode): FreNamespace[];`.
 - Change the signature of `resolvePathName` to 
 `resolvePathName(node: FreNode, doNotSearch: FreNodeReference<FreNamedNode>, pathname: string[], filter?: ScoperFilter): FreNamedNode;`.
 Where `ScoperFilter` can be the metatype as it is now, but also other filters - to be defined.
@@ -77,7 +77,7 @@ Visible(C) = Declared(C) + Declared(B) + Declared(A) - [A.B.C] + [Imported: Decl
 ```
 
 (5) The declared nodes of D, and the declared nodes of import F, and the declared nodes of B are added, but 
-none of the parents of the imports. In other words, B is re-exported.
+none of the parents of the imports. In other words, B is re-recursive.
 ```
 Visible(A) = Declared(A)
 Visible(D) = Declared(D) + Declared(A) + [Imported: Declared(F) + Declared(B)]

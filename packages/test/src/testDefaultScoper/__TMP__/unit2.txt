@@ -1,0 +1,115 @@
+DSunit unit16_OF_model {
+    dsPublics
+        DSpublic public17_OF_unit16_OF_model {
+            conceptParts
+                DSpublic public18_OF_public17_OF_unit16_OF_model {
+                    conceptParts
+                        DSpublic public19_OF_public18_OF_public17_OF_unit16_OF_model {
+                            conceptParts
+
+                            conceptPrivates
+
+                            conceptRefs
+
+                        }
+                    conceptPrivates
+                        DSprivate private20_OF_public18_OF_public17_OF_unit16_OF_model {
+                            conceptParts
+
+                            conceptPrivates
+
+                            conceptRefs
+
+                        }
+                    conceptRefs
+
+                }
+            conceptPrivates
+                DSprivate private21_OF_public17_OF_unit16_OF_model {
+                    conceptParts
+                        DSpublic public22_OF_private21_OF_public17_OF_unit16_OF_model {
+                            conceptParts
+
+                            conceptPrivates
+
+                            conceptRefs
+
+                        }
+                    conceptPrivates
+                        DSprivate private23_OF_private21_OF_public17_OF_unit16_OF_model {
+                            conceptParts
+
+                            conceptPrivates
+
+                            conceptRefs
+
+                        }
+                    conceptRefs
+
+                }
+            conceptRefs
+                private21_OF_public17_OF_unit16_OF_model
+                private20_OF_public18_OF_public17_OF_unit16_OF_model
+                unit16_OF_model
+                private15_OF_private13_OF_private9_OF_unit1_OF_model
+        }
+    dsPrivates
+        DSprivate private24_OF_unit16_OF_model {
+            conceptParts
+                DSpublic public25_OF_private24_OF_unit16_OF_model {
+                    conceptParts
+                        DSpublic public26_OF_public25_OF_private24_OF_unit16_OF_model {
+                            conceptParts
+
+                            conceptPrivates
+
+                            conceptRefs
+
+                        }
+                    conceptPrivates
+                        DSprivate private27_OF_public25_OF_private24_OF_unit16_OF_model {
+                            conceptParts
+
+                            conceptPrivates
+
+                            conceptRefs
+
+                        }
+                    conceptRefs
+
+                }
+            conceptPrivates
+                DSprivate private28_OF_private24_OF_unit16_OF_model {
+                    conceptParts
+                        DSpublic public29_OF_private28_OF_private24_OF_unit16_OF_model {
+                            conceptParts
+
+                            conceptPrivates
+
+                            conceptRefs
+
+                        }
+                    conceptPrivates
+                        DSprivate private30_OF_private28_OF_private24_OF_unit16_OF_model {
+                            conceptParts
+
+                            conceptPrivates
+
+                            conceptRefs
+
+                        }
+                    conceptRefs
+
+                }
+            conceptRefs
+                private23_OF_private21_OF_public17_OF_unit16_OF_model
+                public22_OF_private21_OF_public17_OF_unit16_OF_model
+                public18_OF_public17_OF_unit16_OF_model
+                public17_OF_unit16_OF_model
+        }
+    imports
+
+    dsRefs
+        private24_OF_unit16_OF_model
+        public19_OF_public18_OF_public17_OF_unit16_OF_model
+}

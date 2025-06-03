@@ -23,6 +23,8 @@ describe("Testing Custom Scoper", () => {
 		// model.getUnits().forEach(unit => console.log(writer.writeToString(unit)));
 	})
 
+	// The model has three units: unit1_1, unit1_2, and referenceUnit (named 'some-id').
+	// Unit 'unit1_1' imports 'unit1_2'
 	function startFQN(): QualifiedName {
 		const referenceUnit = new UnitType2('some-id');
 		AST.change(() => {
@@ -30,22 +32,72 @@ describe("Testing Custom Scoper", () => {
 			referenceUnit.name = 'TestRefs1';
 			referenceUnit.imports.push(FreNodeReference.create<Unit>('unit1_1', 'Unit'));
 		});
-		// console.log(getVisibleNames(scoper, referenceUnit));
+		expect(referenceUnit.imports[0].referred?.name).toBe('unit1_1');
+
+		const unit1_1 = model.getUnits().find(unit => unit.name === 'unit1_1');
+		// expect(null).toBeUndefined();
+		expect(unit1_1).not.toBeNull();
+		expect(unit1_1).not.toBeUndefined();
+		expect((unit1_1 as UnitType1).imports[0]).not.toBeUndefined();
+		expect(getVisibleNames(scoper.getVisibleNodes(unit1_1))).toStrictEqual([
+			// declared nodes in unit1_1
+			"Z",
+			"Y",
+			"X",
+			"V",
+			"W",
+			"U",
+			// parent nodes of unit1_1
+			"TestRefs1",
+			"unit1_1",
+			"unit1_2",
+			// imported nodes from unit1_2
+			"A",
+			"B",
+			"C",
+			"D",
+			"E",
+			"F",
+			"G",]);
+
 		const visNodes = scoper.getVisibleNodes(referenceUnit);
 		const visNamedParts = scoper.getVisibleNodes(referenceUnit, 'NamedPart');
-		expect(getVisibleNames(visNodes)).toStrictEqual(['TestRefs1', 'unit1_1', 'unit1_2', 'Z', 'Y', 'X', 'V', 'W', 'U', ]);
-		expect(getVisibleNames(visNamedParts)).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
+		expect(getVisibleNames(visNodes)).toStrictEqual([
+			// parent nodes of referenceUnit
+			'TestRefs1', 'unit1_1', 'unit1_2',
+			// recursively imported nodes from unit1_2
+			"A",
+			"B",
+			"C",
+			"D",
+			"E",
+			"F",
+			"G",
+			// imported nodes from unit1_1
+			'Z', 'Y', 'X', 'V', 'W', 'U'
+		]);
+		expect(getVisibleNames(visNamedParts)).toStrictEqual([
+			"A",
+			"B",
+			"C",
+			"D",
+			"E",
+			"F",
+			"G",
+			'Z', 'Y', 'X', 'V', 'W', 'U'
+]);
 
 		// create an empty QualifiedName to check the available names
 		const firstQ: QualifiedName = QualifiedName.create({});
 		AST.change(() => {
 			referenceUnit.myReferences.push(firstQ);
 		});
-		expect(getVisibleNames(scoper.getVisibleNodes(firstQ))).toStrictEqual(['Z', 'Y', 'X', 'V', 'W', 'U']);
-		return firstQ
+		// the container of the reference is a UnitType2, namely 'referenceUnit', thus the visibleNodes should equal those
+		// of 'referenceUnit'
+		expect(getVisibleNames(scoper.getVisibleNodes(firstQ))).toStrictEqual(getVisibleNames(visNodes));
+		return firstQ;
 	}
 
-// TODO these tests rely on the fact that the additional NS-es of a replacement NS are also in the set of visible nodes
 	test(" QualifiedName has names from unit", () => {
 		startFQN();
 	})
@@ -60,6 +112,22 @@ describe("Testing Custom Scoper", () => {
 		expect(firstQ.part.referred).not.toBeNull;
 		expect(firstQ.part.referred).not.toBeUndefined;
 		expect(firstQ.part.referred).toBe((model.findUnit('unit1_1') as UnitType1).content.find(xx => xx.name === "Z"));
+		expect(getVisibleNames(scoper.getVisibleNodes(firstQ.part))).toStrictEqual([   "TestRefs1",
+			"unit1_1",
+			"unit1_2",
+			"A",
+			"B",
+			"C",
+			"D",
+			"E",
+			"F",
+			"G",
+			"Z",
+			"Y",
+			"X",
+			"V",
+			"W",
+			"U", ]);
 
 		// create an empty QualifiedName to check the available names
 		const secondQ: QualifiedName = QualifiedName.create({})

@@ -6,7 +6,7 @@ import {
     type FreScoper,
     FreCompositeScoper, FreNamespaceInfo
 } from '@freon4dsl/core';
-import { QualifiedName, Referable } from '../language/gen/index.js';
+import { QualifiedName, Referable, UnitType2 } from '../language/gen/index.js';
 
 /**
  * Class 'CustomScoperTryoutScoper' is meant to be a convenient place to add any
@@ -35,7 +35,7 @@ export class CustomScoperTryoutScoper implements FreScoper {
      *
      * @param _node
      */
-    additionalNamespaces(_node: FreNode): FreNamespaceInfo[] {
+    importedNamespaces(_node: FreNode): FreNamespaceInfo[] {
         return [];
     }
 
@@ -45,22 +45,21 @@ export class CustomScoperTryoutScoper implements FreScoper {
      *
      * @param node
      */
-    replacementNamespaces(node: FreNode): FreNamespaceInfo[] {
-        if (!!node && node.freLanguageConcept() == "QualifiedName") {
-            let container = node.freOwner();
-            if (!!container) {
-                if (container.freLanguageConcept() == "QualifiedName") { // note instanceof does not function here!!
-                    const myPart: Referable = (container as QualifiedName).part.referred;
-                    // console.log('returning PART: ' + myPart.freId() + " of type " + myPart.freLanguageConcept());
-                    return [new FreNamespaceInfo(myPart, false)];
-                } else {
-                    // console.log('returning OWNER: ' + container.freId() + " of type " + container.freLanguageConcept());
-                    return [new FreNamespaceInfo(container as FreNamedNode, false)];
-                }
-            } else {
-                console.error("getAlternativeScope: no owner found.");
-            }
-        }
+    alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
+        // TO BE GENERATED:
+        // namespace replacement for QualifiedName
+        // if (node instanceof QualifiedName) {
+        //     let container = node.freOwner();
+        //     if (!!container) {
+        //         if (container.freLanguageConcept() === 'UnitType2') {
+        //             result.push(new FreNamespaceInfo((container as UnitType2), true));
+        //         } else if (container.freLanguageConcept() === 'QualifiedName') {
+        //             result.push(new FreNamespaceInfo((container as QualifiedName).part, false));
+        //         }
+        //     } else {
+        //         console.error("getReplacementNamespace: no container found.");
+        //     }
+        // }
         return [];
     }
 }

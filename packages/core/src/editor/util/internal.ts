@@ -3,7 +3,7 @@
  * (https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de)
  * in order to avoid problem with circular imports.
  *
- * The exports are sorted such that basic concepts are exported before the
+ * The exports are sorted such that basic concepts are recursive before the
  * concepts that are using them.
  */
 

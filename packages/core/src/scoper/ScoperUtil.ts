@@ -37,6 +37,7 @@ export function findEnclosingNamespace(node: FreNodeReference<FreNamedNode> | Fr
  * @param mainScoper
  * @param typeName
  */
+// @ts-ignore
 export function resolvePathStartingInNamespace(baseNamespace: FreNamespace, currentNamespace: FreNamespace, pathname: string[], mainScoper: FreCompositeScoper, typeName: string) {
 	// We must be able to resolve every name in the path to a namespace without taking its metaType into account,
 	// except the last. The last should be a FreNamedNode of the type indicated by 'typeName'.
@@ -47,6 +48,7 @@ export function resolvePathStartingInNamespace(baseNamespace: FreNamespace, curr
 	for (let index = 0; index < pathname.length; index++) {
 		// todo maybe publicOnly can be a separate parameter
 		let publicOnly = baseNamespace !== currentNamespace; // everything in the namespace that this reference is in, is visible
+		// let publicOnly = false;
 		// console.log(`searching for: ${pathname[index]}, using publicOnly is ${publicOnly}`);
 		if (index !== pathname.length - 1) {
 			// Search the next name of pathname in the 'previousNamespace'.
@@ -66,7 +68,7 @@ export function resolvePathStartingInNamespace(baseNamespace: FreNamespace, curr
 		} else {
 			// Search the last name in the path, the result need not be a namespace, so use 'typeName'.
 			result = getFromVisibleNodes(currentNamespace, pathname[index], mainScoper, publicOnly, typeName);
-			// console.log(`result number ${index} of path, using publicOnly is ${publicOnly}: `, result ? result['name'] : 'undefined', previousNamespace.getVisibleNodes(this.mainScoper, [], false).map(e =>e.name))
+			// console.log(`result number ${index} of path, using publicOnly is ${publicOnly}: `, result ? result['name'] : 'undefined', currentNamespace.getVisibleNodes(mainScoper, [], false).map(e =>e.name))
 		}
 	}
 	return result;
@@ -91,9 +93,10 @@ export function getFromVisibleNodes(
 	publicOnly: boolean,
 	metaType?: string
 ): FreNamedNode | undefined {
-	// console.log('BASE get**FROM**VisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", searching for " + metaType);
+	// console.log('BASE getFromVisibleNodes, searching for type of ' + metaType);
 	const visibleNodes = FreLanguage.getInstance().stdLib.elements.concat(namespace.getVisibleNodes(mainScoper, [], publicOnly));
 	for (const node of visibleNodes) {
+		// console.log(`visible: ${node.name}`);
 		const n: string = node.name;
 		if (name === n && hasCorrectType(node, metaType)) {
 			return node;

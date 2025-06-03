@@ -20,7 +20,7 @@ export class AdditionalNamespacesScoper extends FreScoperBase {
      * Returns all FreNodes that are defined as additional namespaces for 'node'.
      * @param node
      */
-    public additionalNamespaces(node: FreNode): FreNamespaceInfo[] {
+    public importedNamespaces(node: FreNode): FreNamespaceInfo[] {
         const result: FreNamespaceInfo[] = [];
         // namespace addition for UnitA
         if (node instanceof UnitA) {

@@ -26,7 +26,7 @@ export class IndexTemplate {
         const modelImports: Set<string> = new Set<string>()
         modelImports.add(Names.classifier(language.modelConcept));
         language.units.forEach((c) => modelImports.add(Names.classifier(c)));
-        // The exports need to be sorted such that base concepts/interfaces are exported before the
+        // The exports need to be sorted such that base concepts/interfaces are recursive before the
         // concepts/interfaces that are extending them.
         GenerationUtil.sortClassifiers(language.interfaces)
             .reverse()

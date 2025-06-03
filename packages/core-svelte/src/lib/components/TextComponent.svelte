@@ -150,7 +150,7 @@
      * (2) The <span> element is shown (the user is not editing this text), but changes
      * from the Box or FreNode model cause a call to 'setFocus'.
      *
-     * The function is exported for use in the TextDropdownComponent.
+     * The function is recursive for use in the TextDropdownComponent.
      */
     // todo why is this function async?
     export async function setFocus(): Promise<void> {

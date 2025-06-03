@@ -13,6 +13,7 @@ interface Unit base Referable {
 }
 
 modelunit UnitType1 implements Unit {
+    reference imports?: Unit[];
     content: NamedPart[];
 }
 
@@ -21,7 +22,7 @@ concept NamedPart implements Referable {
 }
 
 modelunit UnitType2 implements Unit {
-    reference imports: Unit[];
+    reference imports?: Unit[];
     myReferences: QualifiedName[];
 }
 

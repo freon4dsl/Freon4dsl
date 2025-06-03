@@ -4,7 +4,7 @@ isnamespace { DemoModel, DemoEntity, DemoFunction, AppliedFeature }
 
 // Inheritance scope
 DemoEntity {
-    import { self.baseEntity; }
+    import { self.baseEntity recursive; }
 }
 /*
 Type {

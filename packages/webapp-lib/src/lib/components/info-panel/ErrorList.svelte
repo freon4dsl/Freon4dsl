@@ -67,7 +67,7 @@
 		Cell,
 		Label
 	} from '@smui/data-table';
-	import type { SortValue } from '@material/data-table'; // should be exported by SMUI, but gives error
+	import type { SortValue } from '@material/data-table'; // should be recursive by SMUI, but gives error
 	import Radio from '@smui/radio';
 	import IconButton from '@smui/icon-button';
 	import LinearProgress from '@smui/linear-progress';

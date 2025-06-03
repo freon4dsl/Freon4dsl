@@ -2,8 +2,9 @@ import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
 import { FreScoper } from "./FreScoper.js";
 import { isNullOrUndefined } from '../util/index.js';
-import { FreScoperBase } from './FreScoperBase.js';
 import { FreNamespaceInfo } from './FreNamespaceInfo.js';
+import { FreNamespace } from './FreNamespace.js';
+import { findEnclosingNamespace, resolvePathStartingInNamespace } from './ScoperUtil.js';
 
 const LOGGER = new FreLogger("FreCompositeScoper").mute();
 
@@ -22,30 +23,29 @@ export class FreCompositeScoper implements FreScoper {
     }
 
     /**
-     * This function is only used by FreNodeReference, therefore we redirect to the generated scoper, in fact to
-     * the implementation of this method in its base class 'FreScoperBase'. Internally, the method 'getVisibleNodes' is
-     * used, which *does* use all available scopers.
-     *
-     * @param nodeToResolve
+     * Returns the node the 'refToResolve' refers to.
+     * @param refToResolve
      */
-    resolvePathName(nodeToResolve: FreNodeReference<FreNamedNode>): FreNamedNode | undefined {
-        for (const scoper of this.scopers) {
-            if (scoper instanceof FreScoperBase) {
-                const result = (scoper as FreScoperBase).resolvePathName(nodeToResolve);
-                if (!isNullOrUndefined(result)) {
-                    return result;
-                }
-            }
+    resolvePathName(refToResolve: FreNodeReference<FreNamedNode>): FreNamedNode | undefined {
+        // console.log('resolving: ', toBeResolved.pathname)
+        let baseNamespace: FreNamespace = findEnclosingNamespace(refToResolve);
+        let currentNamespace: FreNamespace = baseNamespace;
+        let found: FreNamedNode = undefined;
+        if (!isNullOrUndefined(baseNamespace)) {
+            found = resolvePathStartingInNamespace(baseNamespace, currentNamespace, refToResolve.pathname, this, refToResolve.typeName);
+        } else {
+            LOGGER.error('Cannot find enclosing namespace for ' + refToResolve.pathname);
         }
-        return undefined;
+        // console.log('resolved: ', found?.name);
+        return found;
     }
 
-    additionalNamespaces(node: FreNode): FreNamespaceInfo[] {
-        // todo should we check whether node 'is' a namespace?
+    getVisibleNodes(node: FreNode | FreNodeReference<FreNamedNode>, metatype?: string): FreNamedNode[] {
+        // console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
-                const result = scoper.additionalNamespaces(node);
+                const result = scoper.getVisibleNodes(node, metatype);
                 if (result.length > 0) {
                     return result;
                 }
@@ -54,13 +54,12 @@ export class FreCompositeScoper implements FreScoper {
         return [];
     }
 
-    getVisibleNodes(node: FreNode, metatype?: string): FreNamedNode[] {
+    importedNamespaces(node: FreNode): FreNamespaceInfo[] {
         // todo should we check whether node 'is' a namespace?
-        // console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
             for (const scoper of this.scopers) {
                 // todo should we concat the results from all scoper parts??
-                const result = scoper.getVisibleNodes(node, metatype);
+                const result = scoper.importedNamespaces(node);
                 if (result.length > 0) {
                     return result;
                 }

@@ -2,10 +2,17 @@ scoper for language ScoperTryout
 
 isnamespace { Referable, QualifiedName }
 
+UnitType1 {
+    import { self.imports ; }
+}
+
 UnitType2 {
     import { self.imports recursive; }
 }
 
 QualifiedName {
-    alternative { container.part recursive; }
+    alternative {
+        container<QualifiedName>.part ;
+        container<UnitType2> recursive;
+    }
 }

@@ -145,7 +145,7 @@ In the .ast file the concept A must be declared to have a property of type F, fo
     ...
 }`
 
-Then in the .scope file, this property can be declared public or exported, like this, where 
+Then in the .scope file, this property can be declared public or recursive, like this, where 
 'export' is a keyword:
 
 `A {

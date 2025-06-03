@@ -30,7 +30,7 @@ export class CustomScoperTryoutScoper implements FreScoper {
      *
      * @param _node
      */
-    additionalNamespaces(_node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
+    importedNamespaces(_node: FreNode): (FreNode | FreNodeReference<FreNamedNode>)[] {
         return [];
     }
 

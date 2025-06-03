@@ -3,7 +3,7 @@ import { Names } from "./Names.js"
 import { EDITOR_GEN_FOLDER, FREON_CORE, LANGUAGE_GEN_FOLDER, LANGUAGE_UTILS_GEN_FOLDER, TYPER_CONCEPTS_FOLDER } from "./PathProvider.js"
 
 /**
- * All the types and interfaces exported from Freon core and core-svelte.
+ * All the types and interfaces recursive from Freon core and core-svelte.
  */
 const TypesAndInterfaces: Set<string> = new Set<string>([
     "FreNode",

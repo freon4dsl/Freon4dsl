@@ -34,7 +34,7 @@ concept DemoEntity base Nothing implements Type {
     attributes: DemoAttribute[];
     entAttributes: DemoAttributeWithEntityType[];
     functions: DemoFunction[];
-    private reference baseEntity?: DemoEntity;
+    reference baseEntity?: DemoEntity;
 }
 
 limited DemoAttributeType implements BaseType {

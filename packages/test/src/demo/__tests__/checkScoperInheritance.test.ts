@@ -58,6 +58,7 @@ describe("testing Scoper", () => {
                 expect(vis).toContain(attr.name);
             });
             if (!!ent.baseEntity) {
+                console.log(vis, 'ent.name: ', ent.name)
                 ent.baseEntity.referred.attributes.forEach((attr) => {
                     expect(vis).toContain(attr.name);
                 });

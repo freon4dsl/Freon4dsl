@@ -52,7 +52,7 @@ export class ScoperTemplate {
              * Returns all FreNodes or FreNodeReferences that are defined as replacement namespaces for 'node'.
              * @param node
              */${this.replacementNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
-            public replacementNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
+            public alternativeNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
                 ${this.replacementNamespaceText.length > 0 ? 
                     `const result: ${Names.FreNamespaceInfo}[] = [];
                     ${this.replacementNamespaceText}
@@ -64,7 +64,7 @@ export class ScoperTemplate {
              * Returns all FreNodes or FreNodeReferences that are defined as additional namespaces for 'node'.
              * @param node
              */${this.additionalNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
-            public additionalNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
+            public importedNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
                 ${this.additionalNamespaceText.length > 0 ?
                     `const result: ${Names.FreNamespaceInfo}[] = [];
                     ${this.additionalNamespaceText}
@@ -75,15 +75,15 @@ export class ScoperTemplate {
     }
 
     private makeAdditionalNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
-        console.log('makeAdditionalNamespaceTexts')
+        // console.log('makeAdditionalNamespaceTexts')
         for (const def of scopedef.scopeConceptDefs) {
-            console.log('\t found scopeConceptDefs')
+            // console.log('\t found scopeConceptDefs')
             if (!!def.namespaceAddition) {
-                console.log('\tfound additions')
+                // console.log('\tfound additions')
                 const myClassifier: FreMetaClassifier | undefined = def.conceptRef?.referred;
                 if (!!myClassifier) {
                     const comment = "// namespace addition for " + myClassifier.name + "\n";
-                    console.log('\t' + comment)
+                    // console.log('\t' + comment)
                     imports.language.add(Names.classifier(myClassifier));
                     if (myClassifier instanceof FreMetaInterface) {
                         for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
@@ -127,11 +127,11 @@ export class ScoperTemplate {
     private makeReplacementNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceReplacement) {
-                console.log('\tfound replacements')
+                // console.log('\tfound replacements')
                 const myClassifier: FreMetaClassifier | undefined = def.conceptRef?.referred;
                 if (!!myClassifier) {
                     const comment = "// namespace replacement for " + myClassifier.name + "\n";
-                    console.log('\t' + comment)
+                    // console.log('\t' + comment)
                     imports.language.add(Names.classifier(myClassifier));
                     if (myClassifier instanceof FreMetaInterface) {
                         for (const implementor of LangUtil.findImplementorsRecursive(myClassifier)) {
@@ -216,7 +216,7 @@ export class ScoperTemplate {
                         result.push(new ${Names.FreNamespaceInfo}(newScopeElement as ${Names.FreNamedNode}, ${expression.recursive}));
                     }
                 } else {
-                    console.log("Replacement Namespace for node " + node.freId() + " ")
+                    console.log("Alternative Namespace for node " + node.freId() + " ")
                 }`;
         } else if (!!expression.expression && expression.expression.sourceName === "container") {
             // special case: the expression refers to 'container'

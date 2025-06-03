@@ -113,7 +113,6 @@ describe("FreNamespace visibleNames with replacements and private nodes, but wit
 			//
 			const set: FreNamedNode[] = scoper.getVisibleNodes(unitA1);
 			// printNames(set);
-			expect(set.length).toBe(6);
 			expect(set.map(x => x.name)).toStrictEqual([
 				'A_1', 'A_2',
 				'A_1_1', 'A_1_2',

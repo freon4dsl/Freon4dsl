@@ -9,7 +9,7 @@
  * We regulate the actual replacement with a set of boolean properties in this class,
  * e.g. useReference, which is used in test "A_2_2 with [NodeY, UnitB], and B_2 as replacement NS".
  *
- * All imports of UnitA instances are not re-exported, but the imports of UnitB instances are!
+ * All imports of UnitA instances are not re-recursive, but the imports of UnitB instances are!
  */
 import { beforeEach, describe, test, expect } from 'vitest';
 import { ScoperModel } from './scoper-model/ScoperModel.js';
@@ -166,18 +166,18 @@ describe("FreNamespace visibleNames with replacements, but without additions, ",
 				"A1_2_1_1", "A1_2_1_2", "A1_2_2_1", "A1_2_2_2",
 				// in other order:
 				"UnitA1", "UnitA3", "UnitB2", "UnitB4",
-				// nodes from B2
-				"B2_1", "B2_2",
-				"B2_1_1", "B2_1_2",
-				"B2_1_1_1", "B2_1_1_2",	"B2_1_2_1", "B2_1_2_2",
-				"B2_2_1", "B2_2_2",
-				"B2_2_1_1", "B2_2_1_2",	"B2_2_2_1", "B2_2_2_2",
 				// should be available from re-export, but in different order:
 				"A3_1", "A3_2",
 				"A3_1_1", "A3_1_2",
 				"A3_1_1_1", "A3_1_1_2", "A3_1_2_1", "A3_1_2_2",
 				"A3_2_1", "A3_2_2",
 				"A3_2_1_1", "A3_2_1_2", "A3_2_2_1", "A3_2_2_2",
+				// nodes from B2
+				"B2_1", "B2_2",
+				"B2_1_1", "B2_1_2",
+				"B2_1_1_1", "B2_1_1_2",	"B2_1_2_1", "B2_1_2_2",
+				"B2_2_1", "B2_2_2",
+				"B2_2_1_1", "B2_2_1_2",	"B2_2_2_1", "B2_2_2_2",
 				// not available here:
 				// "B4_1", "B4_2",
 				// "B4_1_1", "B4_1_2",

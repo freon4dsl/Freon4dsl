@@ -142,8 +142,8 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found
 			AST.change(() => {
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2_1'], 'NodeX'));
 				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2'], 'NodeX'));
-				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2', 'B_2_1'], 'NodeX'));
 			})
 			setNamespaces(['NodeX', 'UnitA']);
 			//
@@ -169,9 +169,9 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found
 			AST.change(() => {
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2'], 'NodeX'));
 				unitA1.myRef.push(FreNodeReference.create<UnitB>(['UnitB1'], 'UnitB'));
-				unitA1.myRef.push(FreNodeReference.create<NodeX>(['UnitB1','B_2'], 'NodeX'));
-				unitA1.myRef.push(FreNodeReference.create<NodeX>(['UnitB1','B_2','B_2_1'], 'NodeX'));
+				unitA1.myRef.push(FreNodeReference.create<NodeX>(['B_2_1'], 'NodeX'));
 			})
 			setNamespaces(['NodeX', 'UnitA', 'UnitB']);
 			//
@@ -192,7 +192,7 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 		}
 	})
 
-	test(" unitA1 with [NodeX, UnitA, UnitB], UnitB.B_2.B_2_3 as additional NS", () => {
+	test(" unitA1 with [NodeX, UnitA, UnitB], UnitB.B_2.B_2_1 as additional NS", () => {
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found
@@ -219,6 +219,10 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 	})
 
 	test(" unitA1 with [NodeX, UnitA, UnitB], B_2.B_2_1 as additional NS", () => {
+		// NB This test will give an error message:
+		// "ERROR: FreonNamespace: getImportedNodes: cannot resolve imported namespaces for UnitA1 => B_2##B_2_1"
+		// This indicates a succeeded test!
+
 		// test namespace for 'unitA1'
 		if (!!unitA1) {
 			// add reference to B2 to unitA1, otherwise additional namespace will not be found
@@ -236,9 +240,6 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 				'A_1_1', 'A_1_2',
 				'A_2_1', 'A_2_2',
 				'UnitA1', 'UnitB1',
-				// 'B_1', 'B_2',
-				// 'B_2_1', 'B_2_2',
-				// 'B_2_1_1', 'B_2_1_2',
 			])
 			// unset namespaces, do not interfere with other tests
 			unsetNamespaces();
