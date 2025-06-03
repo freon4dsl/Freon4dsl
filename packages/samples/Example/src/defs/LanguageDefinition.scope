@@ -11,8 +11,8 @@ isnamespace { Method, Entity, SumExpression }
 Entity {
     import { self.baseEntity; }
     // How to tell that there is no import for self.baseEntity ??
-    // import = self.baseEntity for Type
-    // NOT import = self.baseEntity for Entity
+    // import { self.baseEntity; } for Type
+    // NOT import { self.baseEntity; } for Entity
 }
 
 AppliedFeature {

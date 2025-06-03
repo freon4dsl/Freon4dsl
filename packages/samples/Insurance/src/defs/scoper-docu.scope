@@ -1,4 +1,4 @@
-scoper DocuScoper for language InsuranceModel
+scoper for language InsuranceModel
 
 isnamespace { InsuranceProduct, BaseProduct, CalcFunction, Entity }
 

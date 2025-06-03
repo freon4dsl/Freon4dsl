@@ -1,4 +1,4 @@
-scoper ExampleScoper for language ExampleLanguage
+scoper for language ExampleLanguage
 
 isnamespace { LangModule1, 
               LangModule2, VarReference2, 
@@ -6,43 +6,43 @@ isnamespace { LangModule1,
               LangModule4, VarReference4, ModuleReference4 }
 
 LangModule1 {
-    import = self.imports;
+    import { self.imports; }
 }
 
 // ===================================================================
 
 LangModule2 {
-    import = self.imports;
+    import { self.imports; }
 }
 
 VarReference2 {
-    import = self.module;
+    import { self.module; }
 }
 
 // ===================================================================
 
 LangModule3 {
-    import = self.imports;
+    import { self.imports; }
 }
 
 VarReference3 {
-    import = self.module.target;
+    import { self.module.target; }
 }
 
 ModuleReference3 {
-     import = self.module.target;
+     import { self.module.target; }
 }
 
 // ===================================================================
 
 LangModule4 {
-    import = self.imports;
+    import { self.imports; }
 }
 
 VarReference4 {
-    import = self.module.target;
+     import { self.module.target; }
 }
 
 ModuleReference4 {
-     import = self.module.target;
+     import { self.module.target; }
 }
