@@ -28,6 +28,13 @@ modelunit AA  {
     reference AAprop14: FF[];
 }
 
+concept Extra {
+    prop: ExtraProp;
+    appel: DD;
+    }
+concept ExtraProp {
+    }
+
 concept BB base CC implements DD {
     reference aa: AA; // to test applied feature
     // the possibilities for primitive properties

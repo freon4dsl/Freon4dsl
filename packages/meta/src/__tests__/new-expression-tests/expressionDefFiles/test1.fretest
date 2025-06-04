@@ -22,19 +22,21 @@ AA {
 
 CC {
     #ZZ:instanceZZ1;
+    self.owner().if(BB);
+    self.if(DD);
 }
 
 DD {
-    self.DDprop7.type (  );
-    owner().typeof (  );
-    self.DDprop6.equalsType( #ZZ:instanceZZ2 ) ;
+    self.DDprop7.type ( );
+    owner().if(EE).type (  );
+    self.DDprop7.equalsType( #ZZ:instanceZZ2 ) ;
     self. DDprop1 . conformsTo( #ZZ:instanceZZ1 );
-    owner().conformsTo( self.DDprop1 );
+    owner().if(AA).conformsTo( self.DDprop1 );
 }
 
 EE {
     owner();
-    self;
+    self.EEprop7;
 }
 
 FF {

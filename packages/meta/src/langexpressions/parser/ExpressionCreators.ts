@@ -2,13 +2,11 @@ import {
     FreLangSimpleExp,
     FreLimitedInstanceExp,
     FreAppliedExp,
-    FreComposedExpression,
-    FreSelfExp,
+    FreVarOrFunctionExp,
     FreFunctionExp,
-    FrePropertyExp
-} from '../metalanguage/FreLangExpressions.js';
+    FreVarExp
+} from '../metalanguage/FreLangExpressionsNew.js';
 import { MetaLogger } from "../../utils/MetaLogger.js";
-import { Names } from "../../utils/index.js";
 import { FreMetaClassifier } from "../../languagedef/metalanguage/FreMetaLanguage.js";
 import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference.js";
 import {
@@ -69,9 +67,9 @@ export function createClassifierReference(
     return result;
 }
 
-export function createFunctionExpression(data: Partial<FreComposedExpression>): FreFunctionExp {
+export function createFunctionExpression(data: Partial<FreFunctionExp>): FreFunctionExp {
     LOGGER.log("createFunctionExpression");
-    let result: FreComposedExpression = new FreFunctionExp();
+    let result: FreFunctionExp = new FreFunctionExp();
     if (!!data.name) {
         result.name = data.name;
     }
@@ -80,6 +78,7 @@ export function createFunctionExpression(data: Partial<FreComposedExpression>): 
     }
     if (!!data.applied) {
         result.applied = data.applied;
+        result.applied.previous = result;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -88,18 +87,15 @@ export function createFunctionExpression(data: Partial<FreComposedExpression>): 
     return result;
 }
 
-export function createVarExpression(data: Partial<FreComposedExpression>): FreComposedExpression {
+export function createVarExpression(data: Partial<FreVarOrFunctionExp>): FreVarExp {
     LOGGER.log("createVarExpression");
-    let result: FreComposedExpression = new FrePropertyExp();
+    let result: FreVarExp = new FreVarExp();
     if (!!data.name) {
-        if (data.name === Names.nameForSelf) {
-            result = new FreSelfExp();
-        } else {
-            result.name = data.name;
-        }
+        result.name = data.name;
     }
     if (!!data.applied) {
         result.applied = data.applied;
+        result.applied.previous = result;
     }
     if (!!data.location) {
         result.location = data.location;

@@ -1,12 +1,12 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/FreMetaLanguage.js";
-// import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker.js";
+import { FreLangExpressionCheckerNew } from "../checking/FreLangExpressionCheckerNew.js";
 import { ParseLocation } from '../../utils/parsingAndChecking/FreGenericParser.js';
 import { LanguageExpressionTesterNew } from "./LanguageExpressionTesterNew.js";
 import { parse } from "./ExpressionGrammar.js";
 import { setCurrentFileName } from "./ExpressionCreators.js";
 import fs from 'fs';
-import { LOG2USER, ParseLocationUtil } from '../../utils/index.js';
-import { parser } from 'pegjs';
+import { Checker, LOG2USER, ParseLocationUtil } from '../../utils/index.js';
+import { parser } from 'peggy';
 
 function isPegjsError(object: any): object is parser.SyntaxError {
     return "location" in object;
@@ -15,12 +15,12 @@ function isPegjsError(object: any): object is parser.SyntaxError {
 export class LanguageExpressionParserNew {
     public language: FreMetaLanguage;
     parseFunction: Function;
-    // checker: Checker<LanguageExpressionTesterNew>;
+    checker: Checker<LanguageExpressionTesterNew>;
 
     constructor(language: FreMetaLanguage) {
         this.parseFunction = parse;
         this.language = language;
-        // this.checker = new FreLangExpressionChecker(this.language);
+        this.checker = new FreLangExpressionCheckerNew(this.language);
     }
 
     parse(definitionFile: string): LanguageExpressionTesterNew | undefined {
@@ -33,7 +33,7 @@ export class LanguageExpressionParserNew {
         const langSpec: string = fs.readFileSync(definitionFile, { encoding: "utf8" });
         // console.log("FreGenericParser.Parse langSpec: " + langSpec)
         // remove warnings from previous runs
-        // this.checker.warnings = [];
+        this.checker.warnings = [];
         // clean the error list from the creator functions
         this.cleanNonFatalParseErrors();
         // parse definition file
@@ -71,22 +71,22 @@ export class LanguageExpressionParserNew {
 
     //@ts-ignore
     private runChecker(model: LanguageExpressionTesterNew) {
-        // if (model !== undefined && model !== null) {
-        //     this.checker.errors = [];
-        //     this.checker.check(model);
-        //     // this.checker.check makes errorlist empty, thus we must
-        //     // add the non-fatal parse errors after the call
-        //     this.checker.errors.push(...this.getNonFatalParseErrors());
-        //     if (this.checker.hasErrors()) {
-        //         this.checker.errors.forEach((error) => LOG2USER.error(`${error}`));
-        //         throw new Error("checking errors (" + this.checker.errors.length + ").");
-        //     }
-        //     if (this.checker.hasWarnings()) {
-        //         this.checker.warnings.forEach((warn) => LOG2USER.warning(`Warning: ${warn}`));
-        //     }
-        // } else {
-        //     throw new Error("parser does not return a language definition.");
-        // }
+        if (model !== undefined && model !== null) {
+            this.checker.errors = [];
+            this.checker.check(model);
+            // this.checker.check makes errorlist empty, thus we must
+            // add the non-fatal parse errors after the call
+            this.checker.errors.push(...this.getNonFatalParseErrors());
+            if (this.checker.hasErrors()) {
+                this.checker.errors.forEach((error) => LOG2USER.error(`${error}`));
+                throw new Error("checking errors (" + this.checker.errors.length + ").");
+            }
+            if (this.checker.hasWarnings()) {
+                this.checker.warnings.forEach((warn) => LOG2USER.warning(`Warning: ${warn}`));
+            }
+        } else {
+            throw new Error("parser does not return a language definition.");
+        }
     }
 
     // @ts-ignore

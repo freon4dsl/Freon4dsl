@@ -1,0 +1,30 @@
+expressions for language test1
+
+BB {
+    self.owner();
+}
+
+CC {
+    #ZZ:instanceZZ1;
+    self.if(self.AAprop14);
+    self.if(SOMETHING);
+    self.if();
+    self.if(Extra);
+}
+
+EE {
+    owner( self.dd);
+    self;
+    self.owner().if(Extra).aap;
+}
+
+FF {
+    type().self;
+    ee.dd.self.cc;
+}
+
+ExtraProp {
+    self.owner().peer;
+    self.owner().appel;
+}
+
