@@ -2,6 +2,11 @@
  * Class Namespace is a wrapper for a model node that is a namespace (as defined in the scoper definition).
  * It provides the implementation of the algorithm used to search for all names that are visible in the namespace.
  */
+
+/* TODO This code is not adapted to resolving a FreNodeReference that has as pathname a fully qualified name which contains
+    '<anonymous>'. This happens when there is a namespace whose '_myNode' does not have a name, i.e. it is not a FreNamedNode.
+*/
+
 import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { AstWalker } from "../ast-utils/index.js";
 import { FreLanguage } from "../language/index.js";

@@ -1,0 +1,42 @@
+expressions for language test1
+
+AA {
+    // the possibilities for primitive properties
+    self.AAprop1; // : string;
+    self.AAprop2; // : string[];
+    self.AAprop3; // : number;
+    self.AAprop4; // : number[];
+    self.AAprop5; // : boolean;
+    self.AAprop6; // : boolean[];
+    // properties with concept as type
+    self.AAprop7; // : BB;
+    self.AAprop8; // : BB[];
+    self.AAprop9; // : CC; // reference
+    self.AAprop10; // : CC[]; // reference
+    // properties with interface as type
+    self.AAprop11; // : DD;
+    self.AAprop12; // : DD[];
+    self.AAprop13; // : FF; // reference
+    self.AAprop14; // : FF[]; // reference
+}
+
+CC {
+    #ZZ:instanceZZ1;
+}
+
+DD {
+    self.DDprop7.type (  );
+    owner().typeof (  );
+    self.DDprop6.equalsType( #ZZ:instanceZZ2 ) ;
+    self. DDprop1 . conformsTo( #ZZ:instanceZZ1 );
+    owner().conformsTo( self.DDprop1 );
+}
+
+EE {
+    owner();
+    self;
+}
+
+FF {
+    self.ee.dd.cc.bb.aa;
+}

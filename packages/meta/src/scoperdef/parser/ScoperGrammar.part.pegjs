@@ -20,7 +20,7 @@ Scoper_Definition
 isnamespaceKey          = "isnamespace" rws
 additionKey             = "import" rws
 replacementNamespaceKey = "alternative" rws
-recursiveKey             = "recursive" ws
+recursiveKey            = "recursive" ws
 
 namespaces = isnamespaceKey curly_begin conceptRefs:(
                                               head:classifierReference
@@ -31,20 +31,18 @@ namespaces = isnamespaceKey curly_begin conceptRefs:(
         return conceptRefs;
     }
 
-conceptDefinition = name:classifierReference curly_begin nsDef:namespaceAddition namespaceReplacement:namespaceReplacement? curly_end
+conceptDefinition = name:classifierReference curly_begin nsDef:namespaceAddition curly_end
     {
         return create.createScoperConceptDef({
             "conceptRef":name,
             "namespaceAddition": nsDef,
-            "namespaceReplacement": namespaceReplacement,
             "location":location()
         });
     }
-    / name:classifierReference curly_begin namespaceReplacement:namespaceReplacement nsDef:namespaceAddition? curly_end
+    / name:classifierReference curly_begin namespaceReplacement:namespaceReplacement curly_end
         {
             return create.createScoperConceptDef({
                 "conceptRef":name,
-                "namespaceAddition": nsDef,
                 "namespaceReplacement": namespaceReplacement,
                 "location":location()
             });

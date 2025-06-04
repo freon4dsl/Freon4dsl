@@ -25,6 +25,8 @@
     "edit-parser": "peggy src/editordef/parser/FreEditGrammar.pegjs && npm run patch-editor",
     "valid-parser": "peggy src/validatordef/parser/ValidatorGrammar.pegjs && npm run patch-validator",
     "lang-exp-parser": "peggy src/languagedef/parser/ExpressionGrammar.pegjs && npm run patch-expressions",
+    "lang-exp-new": "npm run concat-new && peggy --format es src/langexpressions/parser/ExpressionGrammar.pegjs",
+    "concat-new": "cd src/langexpressions/parser && bash ./concat.sh",
     "start": "echo Starting meta",
     "pegjs-concat-language": "cd src/languagedef/parser && bash ./concat.sh",
     "patch-language": "cd src/languagedef/parser && bash ./patch-language.sh",

@@ -46,7 +46,6 @@ export function resolvePathStartingInNamespace(baseNamespace: FreNamespace, curr
 	let result: FreNamedNode = undefined;
 	// Loop over the set of names in the pathname.
 	for (let index = 0; index < pathname.length; index++) {
-		// todo maybe publicOnly can be a separate parameter
 		let publicOnly = baseNamespace !== currentNamespace; // everything in the namespace that this reference is in, is visible
 		// let publicOnly = false;
 		// console.log(`searching for: ${pathname[index]}, using publicOnly is ${publicOnly}`);

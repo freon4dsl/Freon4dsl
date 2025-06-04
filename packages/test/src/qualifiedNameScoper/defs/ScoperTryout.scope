@@ -12,7 +12,48 @@ UnitType2 {
 
 QualifiedName {
     alternative {
-        container<QualifiedName>.part ;
-        container<UnitType2> recursive;
+        owner().if(QualifiedName).part ;
+        owner().if(QualifiedName).part ;
+        self.owner().if(UnitType2).type().if(...)
+        recursive owner()::UnitType2 recursive;
+        recursive owner()::UnitType2;
+        owner().type()::UnitType2.import
+        self.vervoersmiddel::Fiets.trapper
+        #PrimitiveType.Number.value. > (self.vervoersmiddel::Fiets.trapper.size)
+        vervoersmiddel::Fiets . trapper
+        vervoersmiddel . if( Boot ) . paddel
+        self.body.conformsTo(self.declaredType);
     }
 }
+
+#GRAMMAR
+dottedExpr: name ('(' expression? ')')? dottedApplied?
+dottedApplied: '.' dottedExpr
+expression: dottedExpr
+            | '#' limitedInstance
+            | Number
+
+# STRUCTURE
+Expression {
+}
+
+DottedExpression extends Expression {
+   start: PropRef | Function | 'self' | ClassifierRef
+   appliedDotted: PropRef | Function
+}
+
+LimitedRef extends Expression
+
+Simple   extends Expression
+
+ClassifierRef extends Expression
+
+PropertyRef
+
+Function {
+   name
+   par: Expression
+}
+
+## Possible FunctionNames
+owner() if() type() conformsTo() equalsto() ....
