@@ -2,6 +2,7 @@ expressions for language test1
 
 BB {
     self.owner();
+    ff.aa.ee;
 }
 
 CC {

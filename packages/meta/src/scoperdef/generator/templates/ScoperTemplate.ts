@@ -80,7 +80,7 @@ export class ScoperTemplate {
             // console.log('\t found scopeConceptDefs')
             if (!!def.namespaceAddition) {
                 // console.log('\tfound additions')
-                const myClassifier: FreMetaClassifier | undefined = def.conceptRef?.referred;
+                const myClassifier: FreMetaClassifier | undefined = def.classifierRef?.referred;
                 if (!!myClassifier) {
                     const comment = "// namespace addition for " + myClassifier.name + "\n";
                     // console.log('\t' + comment)
@@ -128,7 +128,7 @@ export class ScoperTemplate {
         for (const def of scopedef.scopeConceptDefs) {
             if (!!def.namespaceReplacement) {
                 // console.log('\tfound replacements')
-                const myClassifier: FreMetaClassifier | undefined = def.conceptRef?.referred;
+                const myClassifier: FreMetaClassifier | undefined = def.classifierRef?.referred;
                 if (!!myClassifier) {
                     const comment = "// namespace replacement for " + myClassifier.name + "\n";
                     // console.log('\t' + comment)
@@ -176,7 +176,7 @@ export class ScoperTemplate {
         let result: string = "";
         if (expression.expression) {
             const myRef: FreMetaProperty | undefined = expression.expression.findRefOfLastAppliedFeature();
-            const namespaceExpression = `node.${GenerationUtil.langExpToTypeScript(expression.expression.appliedfeature, 'node', true)}`;
+            const namespaceExpression = `node.${GenerationUtil.langExpToTypeScript(expression.expression.applied, 'node', true)}`;
             if (!!myRef) {
                 if (myRef.isList) {
                     const loopVar: string = "loopVariable";
@@ -199,11 +199,11 @@ export class ScoperTemplate {
     // @ts-ignore
     private replacementNamespaceExpToTypeScript(expression: FreNamespaceExpression): string {
         let resultStr: string;
-        if (expression.expression instanceof FreLangFunctionCallExp && expression.expression.sourceName === "typeof") {
+        if (expression.expression instanceof FreLangFunctionCallExp && expression.expression.name === "typeof") {
             // special case: the expression refers to 'typeof'
             let actualParamToGenerate: string;
             // we know that typeof has exactly 1 actual parameter
-            if (expression.expression.actualparams[0].sourceName === "container") {
+            if (expression.expression.actualparams[0].name === "container") {
                 actualParamToGenerate = `node.freOwnerDescriptor()?.owner`;
             } else {
                 actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.expression.actualparams[0], "node");
@@ -218,7 +218,7 @@ export class ScoperTemplate {
                 } else {
                     console.log("Alternative Namespace for node " + node.freId() + " ")
                 }`;
-        } else if (!!expression.expression && expression.expression.sourceName === "container") {
+        } else if (!!expression.expression && expression.expression.name === "container") {
             // special case: the expression refers to 'container'
             resultStr = `let container = node.freOwner();
             if (!!container) {

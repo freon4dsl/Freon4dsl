@@ -1,59 +1,66 @@
 import { CheckRunner, Checker, ParseLocationUtil } from "../../utils/index.js";
 import {
-    FreMetaConcept,
     FreMetaLanguage,
-    FreMetaProperty,
-    FreMetaClassifier, FreMetaInterface
+    FreMetaClassifier
 } from '../../languagedef/metalanguage/index.js';
-import { FreReplacementNamespace, FreNamespaceAddition, ScopeDef, FreNamespaceExpression } from './FreScopeDefLang.js';
+import {
+    FreReplacementNamespace,
+    FreNamespaceAddition,
+    ScopeDef,
+    FreNamespaceExpression
+} from './FreScopeDefLang.js';
 import { LangUtil, MetaLogger } from "../../utils/index.js";
-// The next import should be separate and the last of the imports.
-// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
-// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
-// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference, FreMetaUnitDescription } from "../../languagedef/metalanguage/index.js";
-import { FreLangExpressionChecker } from "../../languagedef/checking/index.js";
+import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
 import { CommonChecker } from "../../languagedef/checking/index.js";
+import { FreLangExpressionCheckerNew } from '../../langexpressions/checking/FreLangExpressionCheckerNew.js';
+import { FreFunctionExp } from '../../langexpressions/metalanguage/index.js';
 
 const LOGGER = new MetaLogger("ScoperChecker").mute();
 
 export class ScoperChecker extends Checker<ScopeDef> {
     runner: CheckRunner = new CheckRunner(this.errors, this.warnings);
-    myExpressionChecker: FreLangExpressionChecker | undefined;
+    myExpressionChecker: FreLangExpressionCheckerNew;
     myNamespaces: FreMetaClassifier[] = [];
 
     constructor(language: FreMetaLanguage) {
         super(language);
-        if (!!this.language) {
-            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
-        }
-        // todo check if this still holds:
-        // in a scope definition an expression may be simply 'self'
-        // this.myExpressionChecker.strictUseOfThis = false;
+        // NB This statement is here to avoid checks on the presence of 'myExpressionChecker'.
+        // If 'language' is null or undefined, the 'check' method will not be executed.
+        this.myExpressionChecker = new FreLangExpressionCheckerNew(this.language);
     }
 
     public check(definition: ScopeDef): void {
         LOGGER.log("Checking scope definition " + definition.languageName);
         if (this.language === null || this.language === undefined) {
             throw new Error(`Scoper definition checker does not known the language.`);
+        } else {
+            this.myExpressionChecker = new FreLangExpressionCheckerNew(this.language);
         }
         this.runner = new CheckRunner(this.errors, this.warnings);
 
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
         this.myNamespaces = this.findAllNamespaces(definition.namespaces);
 
+        // check all concept entries, make sure there are no doubles
+        const done: FreMetaClassifier[] = [];
         definition.scopeConceptDefs.forEach((def) => {
-            if (!!def.conceptRef) {
-                CommonChecker.checkClassifierReference(def.conceptRef, this.runner);
-                if (!!def.conceptRef.referred) {
-                    if (!!def.namespaceAddition) {
-                        this.checkNamespaceAdditions(def.namespaceAddition, def.conceptRef.referred);
+            if (!!def.classifierRef) {
+                this.runner.nestedCheck({
+                    check: !done.includes(def.classifierRef.referred),
+                    error: `Double entry (${def.classifierRef?.name}) is not allowed ${ParseLocationUtil.location(def)}.`,
+                    whenOk: () => {
+                        CommonChecker.checkClassifierReference(def.classifierRef!, this.runner);
+                        if (!!def.classifierRef!.referred) {
+                            if (!!def.namespaceAddition) {
+                                this.checkNamespaceAdditions(def.namespaceAddition, def.classifierRef!.referred);
+                            }
+                            if (!!def.namespaceReplacement) {
+                                this.checkReplacementNamespace(def.namespaceReplacement, def.classifierRef!.referred);
+                            }
+                        }
                     }
-                    if (!!def.namespaceReplacement) {
-                        // todo replacements must always be 'typeof(container)' or 'container.<something>'
-                        this.checkReplacementNamespace(def.namespaceReplacement, def.conceptRef.referred);
-                    }
-                }
+                });
+                done.push(def.classifierRef.referred)
             }
         });
         if (!!this.myExpressionChecker) {
@@ -61,29 +68,24 @@ export class ScoperChecker extends Checker<ScopeDef> {
         }
     }
 
-    private checkNamespaceAdditions(namespaceAddition: FreNamespaceAddition, enclosingConcept: FreMetaConcept) {
+    private checkNamespaceAdditions(namespaceAddition: FreNamespaceAddition, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("Checking namespace additions for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
-            error: `Cannot add namespaces to concept ${enclosingConcept.name} that is not a namespace itself ${ParseLocationUtil.location(namespaceAddition)}.`,
+            error: `Cannot change namespace ${enclosingConcept.name}, because it is not defined as namespace ${ParseLocationUtil.location(namespaceAddition)}.`,
             whenOk: () => {
-                if (!!this.myExpressionChecker) {
-                    namespaceAddition.expressions.forEach((exp) => {
-                        this.checkNamespaceExpression(exp, enclosingConcept)
-                    })
-                }
+                namespaceAddition.expressions.forEach((exp) => {
+                    this.checkNamespaceExpression(exp, enclosingConcept)
+                })
             },
         });
     }
 
-    private checkReplacementNamespace(namespaceReplacement: FreReplacementNamespace, enclosingConcept: FreMetaConcept) {
-        // TODO add check on owner of FreNodeReference, see FreNamespace.addReplacementNamespaces()
-        // LOGGER.log("Checking namespace replacements for " + enclosingConcept?.name);
-        console.log("Checking namespace additions for " + enclosingConcept?.name);
-        console.log(namespaceReplacement.toFreString())
+    private checkReplacementNamespace(namespaceReplacement: FreReplacementNamespace, enclosingConcept: FreMetaClassifier) {
+        LOGGER.log("Checking namespace replacements for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
-            error: `Cannot add namespaces to concept ${enclosingConcept.name} that is not a namespace itself ${ParseLocationUtil.location(namespaceReplacement)}.`,
+            error: `Cannot change namespace ${enclosingConcept.name}, because it is not defined as namespace ${ParseLocationUtil.location(namespaceReplacement)}.`,
             whenOk: () => {
                 if (!!this.myExpressionChecker) {
                     namespaceReplacement.expressions.forEach((exp) => {
@@ -94,25 +96,40 @@ export class ScoperChecker extends Checker<ScopeDef> {
         });
     }
 
-    private checkNamespaceExpression(namespaceExpression: FreNamespaceExpression, enclosingConcept: FreMetaConcept) {
+    private checkNamespaceExpression(namespaceExpression: FreNamespaceExpression, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("Checking namespace expression for " + enclosingConcept?.name);
         const exp = namespaceExpression.expression;
-        if (!!this.myExpressionChecker && !!exp) {
+        if (!!exp) {
             this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
-            const referredProp: FreMetaProperty | undefined = exp.findRefOfLastAppliedFeature();
-            if (!!referredProp) {
-                this.runner.nestedCheck({
-                    check:
-                      !!referredProp.type &&
-                      (referredProp.type instanceof FreMetaConcept || referredProp.type instanceof FreMetaUnitDescription || referredProp.type instanceof FreMetaInterface),
-                    error: `A namespace expression should refer to a concept or a unit ${ParseLocationUtil.location(exp)}.`,
-                    whenOk: () => {
-                        this.runner.simpleCheck(
-                          this.myNamespaces.includes(referredProp.type),
-                          `A namespace expression should refer to a namespace concept ${ParseLocationUtil.location(exp)}.`,
-                        );
-                    },
-                });
+            const foundClassifier: FreMetaClassifier | undefined = exp.getResultingClassifier();
+            // NB It is correct that foundClassifier is undefined, when the last of the expression
+            // is either 'owner()' of 'type()', otherwise it is incorrect.
+            // In the case of 'owner()', all the types of all possible owners must be in the set of known namespaces.
+            // In the case of 'type()', we do not test any further. TODO augment checking of 'type()' function in scoper.
+            let doNotCheck: boolean = false;
+            if (!foundClassifier) {
+                const lastExp = exp.getLastExpression();
+                if (lastExp instanceof FreFunctionExp) {
+                    if (lastExp.name === 'owner') {
+                        doNotCheck = true;
+                        const nonNamespaceClassifiers: string[] = this.isSetofNamespaces(lastExp.possibleClassifiers);
+                        this.runner.nestedCheck({
+                            check: !nonNamespaceClassifiers || nonNamespaceClassifiers.length === 0,
+                            error: `One or more of the possible owners is not a namespace ([${nonNamespaceClassifiers}]) ${ParseLocationUtil.location(exp)}.`,
+                            whenOk: () => {
+
+                            }
+                        })
+                    } else if (lastExp.name === 'type') {
+                        doNotCheck = true;
+                    }
+                }
+            }
+            if (!doNotCheck) {
+                this.runner.simpleCheck(
+                  !!foundClassifier && this.myNamespaces.includes(foundClassifier),
+                  `A namespace expression should refer to a namespace (found: '${foundClassifier?.name}') ${ParseLocationUtil.location(exp)}.`
+                );
             }
         }
     }
@@ -127,6 +144,23 @@ export class ScoperChecker extends Checker<ScopeDef> {
                 result = result.concat(LangUtil.findAllImplementorsAndSubs(myClassifier));
             }
         });
+        return result;
+    }
+
+    /**
+     * Checks whether all classifier in 'classifierSet' are namespaces, and returns the names of the ones that are not.
+     *
+     * @param classifierSet
+     * @private
+     */
+    private isSetofNamespaces(classifierSet: MetaElementReference<FreMetaClassifier>[]): string[] {
+        let result: string[] = [];
+        classifierSet.forEach( ref => {
+            const foundClassifier = ref.referred;
+            if (!this.myNamespaces.includes(foundClassifier)) {
+                result.push(foundClassifier.name);
+            }
+        })
         return result;
     }
 }

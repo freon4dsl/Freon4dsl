@@ -9,10 +9,10 @@ import { MetaLogger } from "../../utils/MetaLogger.js";
 
 const LOGGER = new MetaLogger("ScoperCreator").mute();
 
-// let currentFileName: string = "SOME_FILENAME";
-// export function setCurrentFileName(newName: string) {
-//     currentFileName = newName;
-// }
+let currentFileName: string = "SOME_FILENAME";
+export function setCurrentFileName(newName: string) {
+    currentFileName = newName;
+}
 
 export function createScopeDef(data: Partial<ScopeDef>): ScopeDef {
     LOGGER.log("createScopeDef");
@@ -29,16 +29,16 @@ export function createScopeDef(data: Partial<ScopeDef>): ScopeDef {
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
-    console.log("CREATED: " + result.toFreString());
     return result;
 }
 
 export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeConceptDef {
     LOGGER.log("createScoperConceptDef");
     const result = new ScopeConceptDef();
-    if (!!data.conceptRef) {
-        result.conceptRef = data.conceptRef;
+    if (!!data.classifierRef) {
+        result.classifierRef = data.classifierRef;
     }
     if (!!data.namespaceAddition) {
         result.namespaceAddition = data.namespaceAddition;
@@ -48,6 +48,7 @@ export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeCon
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -60,6 +61,7 @@ export function createNamespaceAddition(data: Partial<FreNamespaceAddition>): Fr
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -72,6 +74,7 @@ export function createNamespaceReplacement(data: Partial<FreReplacementNamespace
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
@@ -87,6 +90,7 @@ export function createNamespaceExpression(data: Partial<FreNamespaceExpression>)
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }

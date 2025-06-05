@@ -12,8 +12,8 @@ describe("Checking the expression checker", () => {
     let parser: LanguageExpressionParserNew;
     let checker: Checker<LanguageExpressionTesterNew>;
     let language: FreMetaLanguage | undefined;
-    MetaLogger.muteAllErrors();
-    MetaLogger.muteAllLogs();
+    // MetaLogger.muteAllErrors();
+    // MetaLogger.muteAllLogs();
 
     beforeEach(() => {
         try {
@@ -27,28 +27,27 @@ describe("Checking the expression checker", () => {
         checker = parser.checker;
     });
 
-    test("Error message should be given", () => {
+    test("Error messages should be given", () => {
         if (!!language) {
             try {
                 parser.parse(testdir + "test-faulty1.fretest");
             } catch (e: unknown) {
                 if (e instanceof Error) {
-                    expect(e.message).toBe(`checking errors (15).`);
-                    expect(checker.errors.includes("Cannot find property 'AAprop14' in 'CC' [file: test-faulty1.fretest:9:18].")).toBeTruthy();
-                    expect(checker.errors.includes("Cannot find classifier 'AAprop14' in language 'ROOT' [file: test-faulty1.fretest:9:18].")).toBeTruthy();
-                    expect(checker.errors.includes("Parameter 'self.AAprop14' of if() should denote a classifier [file: test-faulty1.fretest:9:10].")).toBeTruthy();
-                    expect(checker.errors.includes("Cannot find property 'SOMETHING' in 'CC' [file: test-faulty1.fretest:10:13].")).toBeTruthy();
-                    expect(checker.errors.includes("Cannot find classifier 'SOMETHING' in language 'ROOT' [file: test-faulty1.fretest:10:13].")).toBeTruthy();
-                    expect(checker.errors.includes("Parameter 'SOMETHING' of if() should denote a classifier [file: test-faulty1.fretest:10:10].")).toBeTruthy();
-                    expect(checker.errors.includes("Function if() should have a parameter [file: test-faulty1.fretest:11:10].")).toBeTruthy();
-                    expect(checker.errors.includes("Cannot limit to classifier 'Extra', it is not a possible subtype ([BB]) [file: test-faulty1.fretest:12:10].")).toBeTruthy();
-                    expect(checker.errors.includes("Function owner() may not have a parameter [file: test-faulty1.fretest:16:5].")).toBeTruthy();
-                    expect(checker.errors.includes("'self' should be followed by '.', followed by a property [file: test-faulty1.fretest:17:5].")).toBeTruthy();
-                    expect(checker.errors.includes("Cannot limit to classifier 'Extra', it is not a possible subtype ([]) [file: test-faulty1.fretest:18:18].")).toBeTruthy();
-                    expect(checker.errors.includes("Cannot establish the type of 'if(Extra)'. [file: test-faulty1.fretest:18:18].")).toBeTruthy();
-                    expect(checker.errors.includes("A dot-expression is not allowed after 'type()' [file: test-faulty1.fretest:22:5].")).toBeTruthy();
-                    expect(checker.errors.includes("Cannot find property 'peer' in 'Extra' [file: test-faulty1.fretest:27:18].")).toBeTruthy();
-                    expect(checker.errors.includes("Cannot find classifier 'peer' in language 'ROOT' [file: test-faulty1.fretest:27:18].")).toBeTruthy();
+                    expect(e.message).toBe(`checking errors (14).`);
+                    expect(checker.errors.includes("Cannot find property or classifier 'ff' in 'BB' [file: test-faulty1.fretest:5:5].")).toBeTruthy();
+                    expect(checker.errors.includes("Cannot find property or classifier 'AAprop14' in 'CC' [file: test-faulty1.fretest:10:18].")).toBeTruthy();
+                    expect(checker.errors.includes("Parameter 'self.AAprop14' of if() should denote a classifier [file: test-faulty1.fretest:10:10].")).toBeTruthy();
+                    expect(checker.errors.includes("Cannot find property or classifier 'SOMETHING' in 'CC' [file: test-faulty1.fretest:11:13].")).toBeTruthy();
+                    expect(checker.errors.includes("Parameter 'SOMETHING' of if() should denote a classifier [file: test-faulty1.fretest:11:10].")).toBeTruthy();
+                    expect(checker.errors.includes("Function if() should have a parameter [file: test-faulty1.fretest:12:10].")).toBeTruthy();
+                    expect(checker.errors.includes("Cannot limit to classifier 'Extra', it is not a possible subtype ([BB]) [file: test-faulty1.fretest:13:10].")).toBeTruthy();
+                    expect(checker.errors.includes("Function owner() may not have a parameter [file: test-faulty1.fretest:17:5].")).toBeTruthy();
+                    expect(checker.errors.includes("'self' should be followed by '.', followed by a property [file: test-faulty1.fretest:18:5].")).toBeTruthy();
+                    expect(checker.errors.includes("Cannot limit to classifier 'Extra', it is not a possible subtype ([]) [file: test-faulty1.fretest:19:18].")).toBeTruthy();
+                    expect(checker.errors.includes("Cannot establish the type of 'if(Extra)'. [file: test-faulty1.fretest:19:18].")).toBeTruthy();
+                    expect(checker.errors.includes("A dot-expression is not allowed after 'type()' [file: test-faulty1.fretest:23:5].")).toBeTruthy();
+                    expect(checker.errors.includes("'self' may be used only at the start of an expression [file: test-faulty1.fretest:24:10].")).toBeTruthy();
+                    expect(checker.errors.includes("Cannot find property or classifier 'peer' in 'Extra' [file: test-faulty1.fretest:28:18].")).toBeTruthy();
                 }
             }
         }

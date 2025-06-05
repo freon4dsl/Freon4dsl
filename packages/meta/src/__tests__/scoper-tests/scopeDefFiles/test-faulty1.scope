@@ -1,0 +1,79 @@
+scoper for language test1
+
+// in this test all expressions are correct
+
+isNamespace { cc, DD, EE, FF, AA }
+
+AA {
+imports {
+    // the possibilities for primitive properties
+    self.AAprop1; // : string;
+    self.AAprop3; // : number;
+    self.AAprop5; // : boolean;
+    // properties with concept as type
+    self.AAprop7; // : BB;
+    self.AAprop8; // : BB[];
+    self.AAprop9; // : CC; // reference
+    self.AAprop10; // : CC[]; // reference
+    // properties with interface as type
+    self.AAprop11; // : DD;
+    self.AAprop12; // : DD[];
+    self.AAprop13; // : FF; // reference
+    self.AAprop14; // : FF[]; // reference
+    }
+}
+
+BB {
+     imports {
+        ff.aa.ee;
+     }
+}
+
+EE {
+    alternatives {
+        ff.aa.bb;
+        owner();
+    }
+}
+
+BB { // should not be allowed twice
+    imports {
+        self.BBprop15;
+        self.BBprop16;
+        self.BBprop17;
+        self.BBprop18;
+    }
+}
+
+CC {
+     imports {
+        #ZZ:instanceZZ1;
+    }
+}
+
+DD {
+    imports {
+        self.DDprop7.type ( );
+        owner().if(BB).type (  );
+    }
+}
+
+EE { // should not be allowed twice
+    imports {
+        owner();
+    }
+}
+
+FF {
+    imports {
+        self.ee.dd.cc.bb.aa;
+    }
+}
+
+ExtraProp {
+    imports {
+        self.owner().peer;
+        self.owner().appel;
+    }
+}
+

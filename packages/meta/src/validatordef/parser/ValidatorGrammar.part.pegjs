@@ -20,10 +20,10 @@ comparator   = "<=" / "=" / ">=" / ">" / "<"
 modelReferenceStart = "${"
 modelReferenceEnd = "}"
 
-conceptRule = conceptRef:classifierReference curly_begin rules:rule* curly_end
+conceptRule = classifierRef:classifierReference curly_begin rules:rule* curly_end
     {
         return create.createConceptRule({
-          "conceptRef": conceptRef,
+          "classifierRef": classifierRef,
           "rules": rules,
           "location": location()
         });

@@ -14,7 +14,7 @@ modelunit FreValidatorDef {
 
 concept ConceptRuleSet {
 //    location: ParseLocation;
-    reference conceptRef: FreConcept;
+    reference classifierRef: FreConcept;
     rules: ValidationRule[];
 }
 

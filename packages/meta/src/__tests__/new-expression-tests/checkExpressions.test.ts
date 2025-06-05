@@ -1,11 +1,16 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaLanguage } from '../../languagedef/metalanguage';
+import { FreMetaLanguage, FreMetaLimitedConcept } from '../../languagedef/metalanguage';
 
 import { LanguageExpressionTesterNew } from "../../langexpressions/parser/LanguageExpressionTesterNew.js";
 import { LanguageExpressionParserNew } from "../../langexpressions/parser/LanguageExpressionParserNew.js";
 
 import { describe, test, expect, beforeEach } from "vitest";
 import { MetaLogger } from '../../utils';
+import {
+    FreFunctionExp, FreLimitedInstanceExp,
+    FreVarExp,
+    FreVarOrFunctionExp
+} from '../../langexpressions/metalanguage';
 
 describe("Checking expression on referredProperty", () => {
     const testdir = "src/__tests__/new-expression-tests/expressionDefFiles/";
@@ -41,10 +46,15 @@ describe("Checking expression on referredProperty", () => {
             expect(aaConcept).not.toBeNull();
             // for each expression in the set, it should refer to a property of 'AA'
             AAconceptExps!.exps.forEach((exp) => {
-                // expect(exp.$referredClassifier.referred === aaConcept);
-                // const prop = exp.appliedfeature?.$referredClassifier?.referred;
-                // expect(prop).not.toBeNull();
-                // expect(aaConcept.allProperties().includes(prop));
+                const last = exp.getLastExpression();
+                if (last instanceof FreVarOrFunctionExp) {
+                    expect(last.referredClassifier === aaConcept);
+                    const prop = last.referredProperty;
+                    expect(prop).not.toBeNull();
+                    expect(aaConcept.allProperties().includes(prop));
+                } else {
+                    console.log("Error");
+                }
             });
         } else {
             console.log("Language not present");
@@ -60,22 +70,26 @@ describe("Checking expression on referredProperty", () => {
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on BB
-            // tslint:disable-next-line:variable-name
-            // const BBconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "BB");
-            // // set of expressions should refer to some concept or interface in the language
-            // expect(BBconceptExps).not.toBeNull();
-            // expect(BBconceptExps).not.toBeUndefined();
-            // const bbConcept = BBconceptExps!.conceptRef?.referred;
-            // expect(bbConcept).not.toBeNull();
-            // expect(bbConcept).not.toBeUndefined();
-            // // for each expression in the set, it should refer to a property of 'BB'
-            // BBconceptExps!.exps.forEach((exp) => {
-            //     expect(exp.$referredClassifier.referred === bbConcept);
-            //     const prop = exp.appliedfeature?.$referredClassifier?.referred;
-            //     expect(prop).not.toBeNull();
-            //     expect(prop).not.toBeUndefined();
-            //     expect(bbConcept.allProperties().includes(prop));
-            // });
+            const BBconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "BB");
+            // set of expressions should refer to some concept or interface in the language
+            expect(BBconceptExps).not.toBeNull();
+            expect(BBconceptExps).not.toBeUndefined();
+            const bbConcept = BBconceptExps!.conceptRef?.referred;
+            expect(bbConcept).not.toBeNull();
+            expect(bbConcept).not.toBeUndefined();
+            // for each expression in the set, it should refer to a property of 'BB'
+            BBconceptExps!.exps.forEach((exp) => {
+                const last = exp.getLastExpression();
+                if (last instanceof FreVarOrFunctionExp) {
+                    expect(last.referredClassifier === bbConcept);
+                    const prop = last.referredProperty;
+                    expect(prop).not.toBeNull();
+                    expect(prop).not.toBeUndefined();
+                    expect(bbConcept.allProperties().includes(prop));
+                } else {
+                    console.log("Error");
+                }
+            });
         } else {
             console.log("Language not present");
         }
@@ -91,22 +105,26 @@ describe("Checking expression on referredProperty", () => {
             expect(readTest).not.toBeUndefined();
             // check expressions on CC
             // tslint:disable-next-line:variable-name
-            // const CCconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "CC");
-            // // set of expressions should refer to some concept or interface in the language
-            // expect(CCconceptExps).not.toBeNull();
-            // expect(CCconceptExps).not.toBeUndefined();
-            // const zzConcept = language.findConcept("ZZ");
-            // expect(zzConcept).not.toBeNull();
-            // expect(zzConcept).not.toBeUndefined();
-            // expect(zzConcept instanceof FreMetaLimitedConcept);
-            // // for each expression in the set, it should refer to a predefined instance of 'ZZ'
-            // CCconceptExps!.exps.forEach((exp) => {
-            //     expect(exp.$referredClassifier?.referred === zzConcept);
-            //     const freInstance = exp.$referredClassifier.referred;
-            //     expect(freInstance).not.toBeNull();
-            //     expect(freInstance instanceof FreMetaInstance);
-            //     expect((zzConcept as FreMetaLimitedConcept).instances.includes(freInstance as FreMetaInstance));
-            // });
+            const CCconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "CC");
+            // set of expressions should refer to some concept or interface in the language
+            expect(CCconceptExps).not.toBeNull();
+            expect(CCconceptExps).not.toBeUndefined();
+            const zzConcept = language.findConcept("ZZ");
+            expect(zzConcept).not.toBeNull();
+            expect(zzConcept).not.toBeUndefined();
+            expect(zzConcept instanceof FreMetaLimitedConcept);
+            // for each expression in the set, it should refer to a predefined instance of 'ZZ'
+            CCconceptExps!.exps.forEach((exp) => {
+                const last = exp.getLastExpression();
+                if (last instanceof FreLimitedInstanceExp) {
+                    expect(last.referredClassifier === zzConcept);
+                    const freInstance = last.referredInstance;
+                    expect(freInstance).not.toBeNull();
+                    expect((zzConcept as FreMetaLimitedConcept).instances.includes(freInstance));
+                } else {
+                    console.log("Error: ", exp.constructor.name);
+                }
+            });
         } else {
             console.log("Language not present");
         }
@@ -121,23 +139,20 @@ describe("Checking expression on referredProperty", () => {
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on DD
-            // tslint:disable-next-line:variable-name
-            // const DDconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "DD");
-            // expect(DDconceptExps).not.toBeNull();
-            // expect(DDconceptExps).not.toBeUndefined();
-            // // for each expression in the set, it should refer to a function
-            // DDconceptExps!.exps.forEach((exp) => {
-            //     expect(exp instanceof FreLangFunctionCallExp);
-            //     expect(exp.$referredClassifier).toBeUndefined();
-            //     expect((exp as FreLangFunctionCallExp).actualparams.length > 0);
-            //     // every actual parameter should refer to a property, a predefined instance, or to 'owner'
-            //     (exp as FreLangFunctionCallExp).actualparams.forEach((param) => {
-            //         if (param.sourceName !== "container") {
-            //             expect(param.$referredClassifier?.referred).not.toBeNull();
-            //             expect(param.$referredClassifier?.referred).not.toBeUndefined();
-            //         }
-            //     });
-            // });
+            const DDconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "DD");
+            expect(DDconceptExps).not.toBeNull();
+            expect(DDconceptExps).not.toBeUndefined();
+            const ddConcept = DDconceptExps!.conceptRef?.referred;
+            expect(ddConcept).not.toBeNull();
+            expect(ddConcept).not.toBeUndefined();
+            DDconceptExps!.exps.forEach((exp) => {
+                const last = exp.getLastExpression();
+                // for each expression in the set, it should refer to a function
+                expect(last instanceof FreFunctionExp);
+                // for each expression in the set, the resulting classifier is unknown
+                // ('type()' leaves an undefined result)
+                expect(last.getResultingClassifier()).toBeUndefined();
+            });
         } else {
             console.log("Language not present");
         }
@@ -152,24 +167,35 @@ describe("Checking expression on referredProperty", () => {
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on FF
-            // tslint:disable-next-line:variable-name
-            // const FFconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "FF");
-            // expect(FFconceptExps).not.toBeNull();
-            // expect(FFconceptExps).not.toBeUndefined();
-            // const ffConcept = FFconceptExps!.conceptRef?.referred;
-            // expect(ffConcept).not.toBeNull();
-            // // the only expression in the set is an appliedFeature
-            // // its reference should be set correctly
-            // const aaConcept = language.findConcept("AA");
-            // FFconceptExps!.exps.forEach((exp) => {
-            //     expect(exp instanceof FreLangSelfExp);
-            //     expect(exp.$referredClassifier.referred === ffConcept);
-            //     const elem = exp.findRefOfLastAppliedFeature();
-            //     expect(elem).not.toBeNull();
-            //     expect(elem).not.toBeUndefined();
-            //     expect(elem!.name === "aa");
-            //     expect(elem!.type === aaConcept);
-            // });
+            const FFconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "FF");
+            expect(FFconceptExps).not.toBeNull();
+            expect(FFconceptExps).not.toBeUndefined();
+            const ffConcept = FFconceptExps!.conceptRef?.referred;
+            expect(ffConcept).not.toBeNull();
+            // the only expression in the set is an applied feature
+            // its reference should be set correctly, as well as all references in between
+            const aaConcept = language.findConcept("AA");
+            FFconceptExps!.exps.forEach((exp) => {
+                // the first is 'self', handle this differently
+                expect(exp instanceof FreVarExp);
+                expect((exp as FreVarExp).referredClassifier === ffConcept);
+                // check all expressions in the series
+                let nextExp = (exp as FreVarExp).applied.exp;
+                while (!!nextExp) {
+                    console.log('checking: ', nextExp.toErrorString(), nextExp.toFreString())
+                    expect(nextExp instanceof FreVarExp);
+                    expect((nextExp as FreVarExp).referredProperty).not.toBeNull();
+                    expect((nextExp as FreVarExp).referredProperty).not.toBeUndefined();
+                    nextExp = nextExp.applied?.exp;
+                }
+                const last = exp.getLastExpression();
+                expect(last instanceof FreVarExp);
+                const elem = (last as FreVarExp).referredProperty;
+                expect(elem).not.toBeNull();
+                expect(elem).not.toBeUndefined();
+                expect(elem!.name === "aa");
+                expect(elem!.type === aaConcept);
+            });
         } else {
             console.log("Language not present");
         }

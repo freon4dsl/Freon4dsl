@@ -1,17 +1,17 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { FreGenericParser } from "../../utils/index.js";
 import { ScopeDef, ScoperChecker } from "../metalanguage/index.js";
-// import { setCurrentFileName } from "./ScoperCreators";
-import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
+import { setCurrentFileName } from "./ScoperCreators.js";
+import { setCurrentFileName as expressionFileName } from "../../langexpressions/parser/ExpressionCreators.js";
 
-import { parser } from "./ScoperGrammar.js";
+import { parse } from "./ScoperGrammar.js";
+import { FreGenericParserNew } from '../../utils/parsingAndChecking/FreGenericParserNew.js';
 
-export class ScoperParser extends FreGenericParser<ScopeDef> {
+export class ScoperParser extends FreGenericParserNew<ScopeDef> {
     public language: FreMetaLanguage;
 
     constructor(language: FreMetaLanguage) {
         super();
-        this.parser = parser;
+        this.parseFunction = parse;
         this.language = language;
         this.checker = new ScoperChecker(language);
     }
@@ -33,7 +33,7 @@ export class ScoperParser extends FreGenericParser<ScopeDef> {
     }
 
     protected setCurrentFileName(file: string) {
-        // setCurrentFileName(file);
+        setCurrentFileName(file);
         expressionFileName(file);
     }
 

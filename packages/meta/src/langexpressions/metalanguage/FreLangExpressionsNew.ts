@@ -24,7 +24,13 @@ export abstract class FreLangExpNew extends FreMetaLangElement {
     }
 
     getResultingClassifier(): FreMetaClassifier | undefined {
+        // should be overridden by all subclasses
         return undefined;
+    }
+
+    getLastExpression(): FreLangExpNew {
+        // should be overridden by all subclasses that can have an applied expression
+        return this;
     }
 }
 
@@ -32,32 +38,8 @@ export abstract class FreVarOrFunctionExp extends FreLangExpNew {
     // @ts-ignore
     name: string;
     applied: FreAppliedExp | undefined;
-
-    toErrorString(): string {
-        // should be overridden by all subclasses
-        return '';
-    }
-
-    getLocalClassifier(): FreMetaClassifier | undefined {
-        // should be overridden by all subclasses
-        return undefined;
-    }
-}
-
-export class FreVarExp extends FreVarOrFunctionExp {
-    // @ts-ignore
-    $referredProperty: MetaElementReference<FreMetaProperty>;
     // @ts-ignore
     $referredClassifier: MetaElementReference<FreMetaClassifier>;
-
-    get referredProperty(): FreMetaProperty {
-        return this.$referredProperty?.referred;
-    }
-
-    set referredProperty(p: FreMetaProperty) {
-        this.$referredProperty = MetaElementReference.create<FreMetaProperty>(p, "FreProperty");
-        this.$referredProperty.owner = this;
-    }
 
     get referredClassifier(): FreMetaClassifier {
         return this.$referredClassifier?.referred;
@@ -68,6 +50,39 @@ export class FreVarExp extends FreVarOrFunctionExp {
         this.$referredClassifier.owner = this;
     }
 
+    // @ts-ignore
+    $referredProperty: MetaElementReference<FreMetaProperty>;
+
+    get referredProperty(): FreMetaProperty {
+        return this.$referredProperty?.referred;
+    }
+
+    set referredProperty(p: FreMetaProperty) {
+        this.$referredProperty = MetaElementReference.create<FreMetaProperty>(p, "FreProperty");
+        this.$referredProperty.owner = this;
+    }
+
+    toErrorString(): string {
+        // should be overridden by all subclasses
+        return '';
+    }
+
+    getLocalClassifier(): FreMetaClassifier | undefined {
+        // should be overridden by all subclasses
+        return undefined;
+    }
+
+    getLastExpression(): FreLangExpNew {
+        // should be overridden by all subclasses
+        if (this.applied) {
+            return this.applied.getLastExpression();
+        } else {
+            return this;
+        }
+    }
+}
+
+export class FreVarExp extends FreVarOrFunctionExp {
     getLocalClassifier(): FreMetaClassifier | undefined {
         if (this.$referredProperty) {
             return this.referredProperty?.typeReference?.referred;
@@ -96,17 +111,7 @@ export class FreVarExp extends FreVarOrFunctionExp {
 export class FreFunctionExp extends FreVarOrFunctionExp {
     // @ts-ignore
     param: FreLangExpNew | undefined;
-    // @ts-ignore
-    $referredClassifier: MetaElementReference<FreMetaClassifier>;
-
-    get referredClassifier(): FreMetaClassifier {
-        return this.$referredClassifier?.referred;
-    }
-
-    set referredClassifier(p: FreMetaClassifier) {
-        this.$referredClassifier = MetaElementReference.create<FreMetaClassifier>(p, "FreMetaClassifier");
-        this.$referredClassifier.owner = this;
-    }
+    possibleClassifiers: MetaElementReference<FreMetaClassifier>[] = [];
 
     toFreString(): string {
         return this.name + '(' + (this.param ? this.param.toFreString() : '') + ')' + (this.applied ? this.applied.toFreString() : '');
@@ -135,6 +140,10 @@ export class FreAppliedExp extends FreLangExpNew {
     // @ts-ignore
     previous: FreVarOrFunctionExp;
 
+    get referredProperty(): FreMetaProperty {
+        return this.exp.referredProperty;
+    }
+
     toFreString(): string {
         return '.' + this.exp?.toFreString();
     }
@@ -145,6 +154,10 @@ export class FreAppliedExp extends FreLangExpNew {
 
     getResultingClassifier(): FreMetaClassifier | undefined {
         return this.exp.getResultingClassifier();
+    }
+
+    getLastExpression(): FreLangExpNew {
+        return this.exp.getLastExpression();
     }
 }
 

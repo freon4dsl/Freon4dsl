@@ -12,10 +12,10 @@ LanguageExpressions_Definition
         });
     }
 
-conceptExps = conceptRef:classifierReference ws curly_begin ws exps:expWithSeparator* curly_end
+conceptExps = classifierRef:classifierReference ws curly_begin ws exps:expWithSeparator* curly_end
     {
         return expCreate.createConceptExps({
-          "conceptRef": conceptRef,
+          "classifierRef": classifierRef,
           "exps": exps,
           "location": location()
         });

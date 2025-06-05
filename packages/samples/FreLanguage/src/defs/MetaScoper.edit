@@ -12,7 +12,7 @@ scoper
 
 ScopeConceptDef {
 [
-${self.conceptRef} {
+${self.classifierRef} {
     [?${self.namespaceAddition}]
     [?${self.alternativeScope}]
 }

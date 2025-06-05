@@ -8,7 +8,7 @@ modelunit FreScoperDef {
 }
 
 concept ScopeConceptDef {
-    reference conceptRef: FreConcept;
+    reference classifierRef: FreConcept;
     namespaceAddition?: FreNamespaceAddition;
     alternativeScope?: FreAlternativeScope;
 }

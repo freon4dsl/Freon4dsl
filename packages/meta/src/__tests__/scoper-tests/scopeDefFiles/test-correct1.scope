@@ -1,0 +1,43 @@
+scoper for language test1
+
+// in this test all expressions are correct
+
+isNamespace { DD, EE, FF, AA }
+
+AA {
+    imports {
+        self.AAprop7; // : BB;
+        self.AAprop8; // : BB[];
+        // properties with interface as type
+        self.AAprop11; // : DD;
+        self.AAprop12; // : DD[];
+        self.AAprop13; // : FF; // reference
+        self.AAprop14; // : FF[]; // reference
+    }
+}
+
+EE {
+     alternatives {
+        self.owner();
+     }
+}
+
+BB {
+    imports {
+        self.BBprop11;
+    }
+}
+
+DD {
+    imports {
+        self.DDprop7.type ( );
+        owner().if(BB).type (  );
+    }
+}
+
+FF {
+    imports {
+        self.ee.dd.cc.bb.aa;
+    }
+}
+
