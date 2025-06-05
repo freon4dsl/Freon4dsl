@@ -6,7 +6,7 @@ scope graph theory that was developed at Delft University by Eelco Visser e.a.
 
 ## The Namespace Tree and the Abstract Syntax Tree
 In Freon you can declare that certain types of abstract syntax nodes are namespaces. A namespace is 
-the container that holds of a set of declarations of named AST nodes. 
+a container that holds of a set of declarations of named AST nodes. 
 
 All namespaces together form a tree. This tree is similar to, but not equal to the AST. The namespace tree 
 is an overlay over the AST, where some nodes in the AST are namespaces, and some are not.
@@ -38,21 +38,37 @@ using the following syntax.
 `isNamespace { A, Z }`
 
 ## DeclaredNodes and VisibleNodes
+The set of named nodes that are visible in a namespace (called '_VisibleNodes_') is not equal to the named nodes that
+are declared in that namespace (called '_DeclaredNodes_'). 
+Most of the time the set of visible names is larger 
+The reason is that namespaces are hierarchical (also called lexical scope), that is,
+the named nodes that are declared in the parent namespace are also visible in the child namespace. 
+On the other hand, the parent namespace does not know the named nodes from the child.
+(Note that the parent namespace does know the name of the child namespace itself.)
+A namespace has a set of _declared nodes_: all the child nodes of the
+namespace node (recursively) until a child which is a namespace itself.
 
-The set of named nodes that are visible in a namespace (called '_VisibleNodes_') is not equal to the named nodes that 
-are declared in that namespace (called '_DeclaredNodes_'). Most of the time the set of visible names is larger. The reason is 
-that namespaces are hierarchical, that is, the named nodes that are declared in the parent namespace are also visible 
-in the child namespace. On the other hand, the parent namespace does not know the named nodes from the 
-child. (Note that the parent namespace does know the name of the child namespace itself.)
+Let's define what these ste's are precisey.
 
-For instance, in the above example, the DeclaredNodes in A8 are [F1, D7, D8], whereas the VisibleNodes include also the 
-DeclaredNodes from Z2 and A1: [F1, D7, D8, H2, D4, A8, B1, C3, C1, B2, C2, D1, E1, A2, E2,
-Z1, D2, A3, E3, A4, Z2, A5]. 
+A namespace has a set of **declared nodes**: all the child nodes od the namespace node (recursively) until a child is a namespace itself.
+
+A namespace also has a set of **parent nodes**: all the _visible nodes_ from its parent namespace. 
+
+The set of **visible nodes** now is: all the _declared nodes_ plus all the _parent nodes_.
+
+**NB** The definition of visible nodes will be enhanced later when we introduce namespace imports
+
+For instance, in the above example, the DeclaredNodes in A8 are [F1, D7, D8],
+whereas the VisibleNodes include also the DeclaredNodes from Z2 and A1: 
+[F1, D7, D8, H2, D4, A8, B1, C3, C1, B2, C2, D1, E1, A2, E2, Z1, D2, A3, E3, A4, Z2, A5]. 
 
 ### Shadowing
 
-In case a name appears in the DeclaredNodes of a child namespace as well as in its parent namespace, the node from the 
-parent is not included in the VisibleNodes of the child.
+In the scope graph theory, shadowing is used to determine which node to choose if there are two nodes with the same name.
+This is nessecary because scope graphs are orininally defined for use with text based parsers.
+In Freon, we are using the AST as the basis for scoping, not a text that needs to be parsed.
+
+Therefore we don't need the concept of shadowing, as we can explicitly point to any of the nodes with the same name using either the node-id, or the (qualified) path to the node.
 
 ## Adapting the Namespace Tree
 
@@ -62,20 +78,21 @@ There are three ways in which the namespace tree can be changed.
 2. Replacements (or Alternatives)
 3. Exports (to be implemented)
 
-## Namespace Additions
+## Namespace Imports
 
 Any namespace can be augmented with the set of names that are declared in another namespace.
-Note, only the DeclaredNodes of the second namespace are added, not the whole set of VisibleNodes.
-A namespace addition makes the namespace tree actually a graph, like references make a graph from the AST.
 
-For instance, when the namespace A8 is added to namespace A3 (addition), we include 
+[//]: # (Note, only the DeclaredNodes of the second namespace are added, not the whole set of VisibleNodes.)
+[//]: # (A namespace addition makes the namespace tree actually a graph, like references make a graph from the AST.)
+[//]: # ()
+For instance, when the namespace A8 is imported in namespace A3, we include 
 the DeclaredNodes of A8 ([F1, D7, D8]) in the VisibleNodes of A3.
 
 ![Graph showing a reference between Namespace nodes](./AST-plus-reference.png)
 
-### How to Define Namespace Additions in Freon
+### How to Define Namespace Imports in Freon
 
-Suppose in the AST definition there is a reference in concept A to another concept A as a property called `imports`.
+Suppose in the AST definition there is a reference in concept A to another instance of concept A as a property called `imports`.
 The .ast file would have an entry like this:
 
 `concept A {
@@ -86,7 +103,7 @@ The .ast file would have an entry like this:
 
 In the example AST the node A3 the reference `imports` can now refer to A8.
 
-Then in the .scope file we can define the namespace-addition as follows.
+Then in the .scope file we can define the namespace-import as follows.
 
 `A {
     namespace_addition = self.imports;
@@ -98,11 +115,11 @@ Therefore in this example, we could only use a property of type A or Z, or lists
 
 ## Namespace Replacements
 
-It is also possible to break out of the namespace hierarchy. This done by declaring an alternative or replacement
-namespace. In the hierarchical namespace tree the 
-link of the namespace with its parent is removed, and a link to another namespace is made. This second namespace 
-takes over the role of the parent, with the exception that only the DeclaredNodes are included, not the 
-complete set of VisibleNodes.
+It is also possible to break out of the namespace hierarchy.
+This done by declaring an alternative or replacement namespace.
+In the hierarchical namespace tree the link of the namespace with its parent is removed,
+and a link to another namespace is made.
+This second namespace takes over the role of the parent, with the exception that only the DeclaredNodes are included, not the complete set of VisibleNodes.
 
 For instance, suppose the Z concept is defined to have a reference to an A concept, held in a property called `myA`. 
 We can then use this property instead of the parent namespace of Z. 

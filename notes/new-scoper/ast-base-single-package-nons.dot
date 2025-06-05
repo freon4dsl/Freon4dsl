@@ -1,0 +1,25 @@
+define('SHOW_NAMESPACES', '1')
+
+digraph G   {
+ifdef('SHOW_NAME_SPACES', '
+//    Mod1 [peripheries=2]
+//    ClassA [peripheries=2]
+//    ClassB [peripheries=2]
+//    A1 [peripheries=2]
+')
+    Mod1 -> ClassA
+    Mod1 -> ClassB 
+
+    ClassA -> A1;
+    ClassA -> A2;
+    A1 -> A1_1;
+    A1 -> A1_2;
+    ClassB -> B1;
+    B1 -> B1_1;  
+    B1 -> B1_2;
+    ClassB -> B2;
+
+    ClassA -> ClassB [style=dashed, label="base"]
+
+    {rank=same; ClassA; ClassB}
+}

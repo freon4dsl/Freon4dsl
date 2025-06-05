@@ -1,0 +1,28 @@
+
+
+
+digraph G   {
+
+
+
+
+    ClassA -> ClassB [style=dashed, label=extends]
+
+
+
+    Mod1 -> ClassA
+    Mod1 -> ClassB 
+
+    ClassA -> A1;
+    ClassA -> A2;
+    A1 -> A1_1;
+    A1 -> A1_2;
+    ClassB -> B1;
+    B1 -> B1_1;  
+    B1 -> B1_2;
+    ClassB -> B2;
+
+    {rank=same; ClassA; ClassB}
+    
+
+}
