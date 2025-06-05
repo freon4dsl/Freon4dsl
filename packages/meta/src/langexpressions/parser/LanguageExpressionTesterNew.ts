@@ -1,15 +1,16 @@
-import { FreLangExpNew } from "../metalanguage/FreLangExpressions.js";
-// import { ParseLocation } from "../../utils";
+import { FreLangExpNew } from "../metalanguage/FreLangExpressionsNew.js";
 import { FreMetaConcept, FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { FreMetaLangElement } from "../../languagedef/metalanguage/FreMetaLanguage.js";
-// The next import should be separate and the last of the imports.
-// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
-// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
-// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference.js";
+import { FreMetaLangElement, MetaElementReference } from '../../languagedef/metalanguage/index.js';
+
+// These classes are helpers to test the parsing and checking of expressions over the metamodel.
+// They are not used in the actual generation.
+
+// Some properties of the classes defined here are marked @ts-ignore to avoid the error:
+// TS2564: ... has no initializer and is not definitely assigned in the constructor.
+// These properties need to be undefined during parsing and checking. After the checking process
+// has been executed without errors, we can assume that these properties are initialized.
 
 export class LanguageExpressionTesterNew extends FreMetaLangElement {
-    // location: ParseLocation;
     languageName: string = "";
     // @ts-ignore
     language: FreMetaLanguage;
@@ -21,7 +22,6 @@ export class LanguageExpressionTesterNew extends FreMetaLangElement {
 }
 
 export class TestExpressionsForConcept extends FreMetaLangElement {
-    // location: ParseLocation;
     // @ts-ignore
     conceptRef: MetaElementReference<FreMetaConcept>;
     // @ts-ignore

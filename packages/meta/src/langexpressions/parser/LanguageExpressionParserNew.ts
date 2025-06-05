@@ -1,12 +1,15 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/FreMetaLanguage.js";
+import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
+import { ParseLocation } from '../../utils/index.js';
 import { FreLangExpressionCheckerNew } from "../checking/FreLangExpressionCheckerNew.js";
-import { ParseLocation } from '../../utils/parsingAndChecking/FreGenericParser.js';
 import { LanguageExpressionTesterNew } from "./LanguageExpressionTesterNew.js";
 import { parse } from "./ExpressionGrammar.js";
 import { setCurrentFileName } from "./ExpressionCreators.js";
 import fs from 'fs';
 import { Checker, LOG2USER, ParseLocationUtil } from '../../utils/index.js';
 import { parser } from 'peggy';
+
+// These classes are helpers to test the parsing and checking of expressions over the metamodel.
+// They are not used in the actual generation.
 
 function isPegjsError(object: any): object is parser.SyntaxError {
     return "location" in object;
@@ -89,9 +92,9 @@ export class LanguageExpressionParserNew {
         }
     }
 
-    // @ts-ignore
     // error TS6133: 'submodels' is declared but its value is never read.
     // This error is ignored because this class is only used for tests.
+    // @ts-ignore
     protected merge(submodels: LanguageExpressionTesterNew[]): LanguageExpressionTesterNew | undefined {
         // no need to merge submodels, LanguageExpressionTester is only used for tests
         return undefined;

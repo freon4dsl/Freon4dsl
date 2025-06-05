@@ -20,23 +20,24 @@ AA {
     self.AAprop14; // : FF[]; // reference
 }
 
+BB { // properties with limited concepts as type
+    self.BBprop15;
+    self.BBprop16;
+    self.BBprop17;
+    self.BBprop18;
+}
+
 CC {
     #ZZ:instanceZZ1;
-    self.owner().if(BB);
-    self.if(DD);
 }
 
 DD {
     self.DDprop7.type ( );
-    owner().if(EE).type (  );
-    self.DDprop7.equalsType( #ZZ:instanceZZ2 ) ;
-    self. DDprop1 . conformsTo( #ZZ:instanceZZ1 );
-    owner().if(AA).conformsTo( self.DDprop1 );
+    owner().if(BB).type (  );
 }
 
 EE {
     owner();
-    self.EEprop7;
 }
 
 FF {

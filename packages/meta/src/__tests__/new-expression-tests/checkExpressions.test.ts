@@ -5,10 +5,13 @@ import { LanguageExpressionTesterNew } from "../../langexpressions/parser/Langua
 import { LanguageExpressionParserNew } from "../../langexpressions/parser/LanguageExpressionParserNew.js";
 
 import { describe, test, expect, beforeEach } from "vitest";
+import { MetaLogger } from '../../utils';
 
 describe("Checking expression on referredProperty", () => {
     const testdir = "src/__tests__/new-expression-tests/expressionDefFiles/";
     let language: FreMetaLanguage | undefined;
+    MetaLogger.muteAllErrors();
+    MetaLogger.muteAllLogs();
 
     beforeEach(() => {
         try {
@@ -28,7 +31,6 @@ describe("Checking expression on referredProperty", () => {
             );
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
-            console.log(readTest.toFreString());
             // check expressions on AA
 
             const AAconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "AA");

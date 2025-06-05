@@ -140,37 +140,58 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
                 });
             }
         } else {
-            // see if variable refers to a property
+            // see if variable refers to a property: case 1
             for (const e of enclosingConcept.allProperties()) {
                 if (e.name === freVarExp.name) {
                     freVarExp.referredProperty = e;
 
                 }
             }
+            // see if variable refers to a classifier, not to a property: case 2
             if (!freVarExp.referredProperty) {
-                // variable may refer to a Classifier, not to a property
+                // variable could refer to a classifier, not to a property
                 const myClassifier = this.language?.classifiers().find(cls => cls.name === freVarExp.name)
                 if (!!myClassifier) {
                     freVarExp.referredClassifier = myClassifier;
                 }
             }
-            this.runner.nestedCheck({
-                check: !!freVarExp.referredProperty || !!freVarExp.referredClassifier,
-                error: `Cannot find property '${freVarExp.name}' in '${enclosingConcept.name}' ${ParseLocationUtil.location(freVarExp)}.`,
-                whenOk: () => {
-                    if (!!freVarExp.applied) {
-                        this.runner.nestedCheck({
-                            check: !freVarExp.referredProperty.isList,
-                            error: `List property '${freVarExp.referredProperty.name}' cannot have an applied expression (.${freVarExp.applied.toFreString()})` +
-                              ` ${ParseLocationUtil.location(freVarExp)}.`,
-                            whenOk: () => {
-                                freVarExp.applied!.language = freVarExp.language;
-                                this.checkAppliedExp(freVarExp.applied!, enclosingConcept);
-                            }
-                        });
-                    }
-                },
-            });
+            // NB To give a good error message we distinguish between the two above cases. But only when neither of them can be found.
+            if (!freVarExp.referredProperty && !freVarExp.referredClassifier) {
+                this.runner.nestedCheck({
+                    check: !!freVarExp.referredProperty,
+                    error: `Cannot find property '${freVarExp.name}' in '${enclosingConcept.name}' ${ParseLocationUtil.location(freVarExp)}.`,
+                    whenOk: () => {
+                        if (!!freVarExp.applied) {
+                            this.runner.nestedCheck({
+                                check: !freVarExp.referredProperty.isList,
+                                error: `List property '${freVarExp.referredProperty.name}' cannot have an applied expression (.${freVarExp.applied.toFreString()})` +
+                                  ` ${ParseLocationUtil.location(freVarExp)}.`,
+                                whenOk: () => {
+                                    freVarExp.applied!.language = freVarExp.language;
+                                    this.checkAppliedExp(freVarExp.applied!, enclosingConcept);
+                                }
+                            });
+                        }
+                    },
+                });
+                this.runner.nestedCheck({
+                    check: !!freVarExp.referredClassifier,
+                    error: `Cannot find classifier '${freVarExp.name}' in language '${this.language?.name}' ${ParseLocationUtil.location(freVarExp)}.`,
+                    whenOk: () => {
+                        if (!!freVarExp.applied) {
+                            this.runner.nestedCheck({
+                                check: !freVarExp.referredProperty.isList,
+                                error: `List property '${freVarExp.referredProperty.name}' cannot have an applied expression (.${freVarExp.applied.toFreString()})` +
+                                  ` ${ParseLocationUtil.location(freVarExp)}.`,
+                                whenOk: () => {
+                                    freVarExp.applied!.language = freVarExp.language;
+                                    this.checkAppliedExp(freVarExp.applied!, enclosingConcept);
+                                }
+                            });
+                        }
+                    },
+                });
+            }
         }
     }
 
@@ -191,9 +212,14 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
                     case validFunctionNames[4]: { this.checkIfFunction(freFunctionExp, enclosingConcept); break;}
                 }
                 if (!!freFunctionExp.applied) {
-                    LOGGER.log('doing applied');
-                    freFunctionExp.applied!.language = freFunctionExp.language;
-                    this.checkAppliedExp(freFunctionExp.applied!, enclosingConcept);
+                    this.runner.nestedCheck({
+                        check: freFunctionExp.name !== validFunctionNames[2],
+                        error: `A dot-expression is not allowed after '${validFunctionNames[2]}()' ${ParseLocationUtil.location(freFunctionExp)}.`,
+                        whenOk: () => {
+                            freFunctionExp.applied!.language = freFunctionExp.language;
+                            this.checkAppliedExp(freFunctionExp.applied!, enclosingConcept);
+                        }
+                    })
                 }
             }
         });
@@ -219,7 +245,6 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
 
     //@ts-ignore
     private checkTypeFunction(freFunctionExp: FreFunctionExp, enclosingConcept: FreMetaClassifier) {
-        // TODO
         LOGGER.log("checkTypeFunction " + freFunctionExp?.toFreString() + " in " + enclosingConcept.name);
         this.runner.simpleCheck(
           freFunctionExp.param === undefined || freFunctionExp.param === null,
@@ -260,11 +285,11 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
 
                 this.runner.nestedCheck({
                     check: !!paramValue,
-                    error: `Parameter '${freFunctionExp.param!.toFreString()}' of ${freFunctionExp.name}() should denote a Classifier ${ParseLocationUtil.location(freFunctionExp)}.`,
+                    error: `Parameter '${freFunctionExp.param!.toFreString()}' of ${freFunctionExp.name}() should denote a classifier ${ParseLocationUtil.location(freFunctionExp)}.`,
                     whenOk: () => {
                         this.runner.nestedCheck({
                             check: subtypes.includes(paramValue!),
-                            error: `Cannot limit to Classifier '${paramValue!.name}', it is not a possible subtype ([${subtypes.map(xx => xx.name).join(", ")}]) ${ParseLocationUtil.location(freFunctionExp)}.`,
+                            error: `Cannot limit to classifier '${paramValue!.name}', it is not a possible subtype ([${subtypes.map(xx => xx.name).join(", ")}]) ${ParseLocationUtil.location(freFunctionExp)}.`,
                             whenOk: () => {
                                 // Set the resulting classifier
                                 freFunctionExp.referredClassifier = paramValue!;
@@ -283,16 +308,21 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
               check: freAppliedExp.exp.name !== Names.nameForSelf,
               error: `'self' may be used only at the start of an expression ${ParseLocationUtil.location(freAppliedExp)}.`,
               whenOk: () => {
-                  // get enclosing concept from previous expression, i.e. get type of 'a' in 'a.b'
+                  // Get enclosing concept from previous expression, i.e. get type of 'a' in 'a.b'
                   let innerConcept: FreMetaClassifier | undefined = freAppliedExp.previous.getLocalClassifier();
-                  // get the error message right
-                  let errorStr: string = ', maybe add \'.if()\'';
+
+                  // NB The following check is to see whether the classifier of the previous expression could be established.
+                  // Not knowing the classifier of the previous expression is valid, only when the current expression if an 'if()',
+                  // because the 'if()' limits the number of possible types to one.
+                  // Therefore, the normal error message contains a suggestion to use the 'if()'. But when the previous expression
+                  // was an 'if()', this suggestion is not very useful. We do not want to suggest '.if().if()'.
+                  let errorStr: string = ` Maybe add '.${validFunctionNames[4]}()'.`;
                   if (freAppliedExp.previous instanceof FreFunctionExp && freAppliedExp.previous.name === validFunctionNames[4]) {
                       errorStr = '';
                   }
                   this.runner.nestedCheck({
                       check: !!innerConcept || freAppliedExp.exp.name === validFunctionNames[4],
-                      error: `Cannot establish the type of '${freAppliedExp.previous.toErrorString()}'${errorStr} ${ParseLocationUtil.location(freAppliedExp.previous)}.`,
+                      error: `Cannot establish the type of '${freAppliedExp.previous.toErrorString()}'.${errorStr} ${ParseLocationUtil.location(freAppliedExp.previous)}.`,
                       whenOk: () => {
                           freAppliedExp.exp!.language = freAppliedExp.language;
                           if (!!innerConcept) {
@@ -315,6 +345,10 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
             classifier.allProperties().forEach(property => {
                 if (LangUtil.conforms(property.typeReference.referred, innerConcept)) {
                     foundOwners.add(classifier);
+                    // add all its subtypes as well
+                    LangUtil.subClassifiers(classifier).forEach( cls => {
+                        foundOwners.add(cls);
+                    })
                 }
             })
         });
