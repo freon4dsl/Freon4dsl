@@ -1,8 +1,9 @@
-expressions for language test1
-/*
+expressions for language test1 TRANSLATED into TypeScript
+
 AA {
     // the possibilities for primitive properties
     self.AAprop1; // : string;
+    ==> this.AAprop1, rest idem
     self.AAprop2; // : string[];
     self.AAprop3; // : number;
     self.AAprop4; // : number[];
@@ -22,25 +23,29 @@ AA {
 
 BB { // properties with limited concepts as type
     self.BBprop15; // : ZZ;
+    ===> this.BBprop15, rest idem
     self.BBprop16; // : ZZ[];
     BBprop17; // : reference ZZ;
+    ===> this.BBprop15, rest idem 'this' REQUIRED
     BBprop18; // : reference ZZ[];
 }
 
 CC {
     #ZZ:instanceZZ1;
+        ===> ZZ.instanceZZ1
 }
 
 DD {
     self.DDprop7.type ( );
+    ===> LanguageEnvironment.getInstance().type.inferType( this.DDprop7 )
+    owner()
+    ===> this.freOwner()
+    owner().if(BB)
+    ===> (this.freOwner() as BB)
     owner().if(BB).type (  );
+    ===> LanguageEnvironment.getInstance().type.inferType( (this.freOwner() as BB) )
 }
 
-EE {
-    owner();
-}
-*/
 FF {
-    // self.ee.dd.cc.bb.aa;
-    ee.owner().if(FF).type();
+    self.ee.dd.cc.bb.aa;
 }

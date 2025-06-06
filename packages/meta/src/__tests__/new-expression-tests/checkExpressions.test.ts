@@ -15,8 +15,8 @@ import {
 describe("Checking expression on referredProperty", () => {
     const testdir = "src/__tests__/new-expression-tests/expressionDefFiles/";
     let language: FreMetaLanguage | undefined;
-    MetaLogger.muteAllErrors();
-    MetaLogger.muteAllLogs();
+    // MetaLogger.muteAllErrors();
+    // MetaLogger.muteAllLogs();
 
     beforeEach(() => {
         try {

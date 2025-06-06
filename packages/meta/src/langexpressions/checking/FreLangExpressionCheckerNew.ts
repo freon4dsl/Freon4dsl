@@ -12,11 +12,10 @@ import {
     FreLangExpNew, FreLangSimpleExp,
     FreLimitedInstanceExp, FreVarExp
 } from '../metalanguage/FreLangExpressionsNew.js';
+import { MetaFunctionNames } from "../../utils/MetaFunctionNames.js"
 
 //@ts-ignore
 const LOGGER = new MetaLogger("FreLangExpressionChecker").mute();
-//@ts-ignore
-const validFunctionNames: string[] = ["conformsTo", "equalsType", "type", "owner", "if"];
 
 export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTesterNew> {
     strictUseOfSelf: boolean = true; // if true, then a FreSelfExp must have an applied expression
@@ -183,24 +182,24 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
 
     private checkFunctionExp(freFunctionExp: FreFunctionExp, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("checkFunctionExp " + freFunctionExp?.toFreString() + " in " + enclosingConcept.name);
-        const functionName = validFunctionNames.find((name) => name === freFunctionExp.name);
+        const functionName = MetaFunctionNames.allNames.find((name) => name === freFunctionExp.name);
         this.runner.nestedCheck({
             check: functionName !== undefined && functionName !== null,
-            error: `${freFunctionExp.name} is not a valid function ${ParseLocationUtil.location(freFunctionExp)}.`,
+            error: `'${freFunctionExp.name}' is not a valid function ${ParseLocationUtil.location(freFunctionExp)}.`,
             whenOk: () => {
                 LOGGER.log('checking functions');
                 switch (freFunctionExp.name) {
                     // Possible values ["conformsTo", "equalsType", "type", "owner", "if"];
-                    case validFunctionNames[0]: { this.checkConformsFunction(freFunctionExp, enclosingConcept); break;}
-                    case validFunctionNames[1]: { this.checkEqualsFunction(freFunctionExp, enclosingConcept); break;}
-                    case validFunctionNames[2]: { this.checkTypeFunction(freFunctionExp, enclosingConcept); break;}
-                    case validFunctionNames[3]: { this.checkOwnerFunction(freFunctionExp, enclosingConcept); break;}
-                    case validFunctionNames[4]: { this.checkIfFunction(freFunctionExp, enclosingConcept); break;}
+                    case MetaFunctionNames.conformsToFunc: { this.checkConformsFunction(freFunctionExp, enclosingConcept); break;}
+                    case MetaFunctionNames.equalsTypeFunc: { this.checkEqualsFunction(freFunctionExp, enclosingConcept); break;}
+                    case MetaFunctionNames.typeFunc: { this.checkTypeFunction(freFunctionExp, enclosingConcept); break;}
+                    case MetaFunctionNames.ownerFunc: { this.checkOwnerFunction(freFunctionExp, enclosingConcept); break;}
+                    case MetaFunctionNames.ifFunc: { this.checkIfFunction(freFunctionExp, enclosingConcept); break;}
                 }
                 if (!!freFunctionExp.applied) {
                     this.runner.nestedCheck({
-                        check: freFunctionExp.name !== validFunctionNames[2],
-                        error: `A dot-expression is not allowed after '${validFunctionNames[2]}()' ${ParseLocationUtil.location(freFunctionExp)}.`,
+                        check: freFunctionExp.name !== MetaFunctionNames.typeFunc,
+                        error: `A dot-expression is not allowed after '${MetaFunctionNames.typeFunc}()' ${ParseLocationUtil.location(freFunctionExp)}.`,
                         whenOk: () => {
                             freFunctionExp.applied!.language = freFunctionExp.language;
                             this.checkAppliedExp(freFunctionExp.applied!, enclosingConcept);
@@ -247,6 +246,7 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
             whenOk: () => {
                 // Try to find the resulting classifier
                 const owners: FreMetaClassifier[] = this.findPossibleOwnersOf(enclosingConcept);
+                console.log('owners', owners.map(oo => oo.name));
                 if (owners.length === 1) {
                     freFunctionExp.referredClassifier = owners[0];
                 } else {
@@ -297,19 +297,24 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
               whenOk: () => {
                   // Get enclosing concept from previous expression, i.e. get type of 'a' in 'a.b'
                   let innerConcept: FreMetaClassifier | undefined = freAppliedExp.previous.getLocalClassifier();
+                  console.log(freAppliedExp.previous.toErrorString(), innerConcept?.name)
 
                   // NB The following check is to see whether the classifier of the previous expression could be established.
                   // Not knowing the classifier of the previous expression is valid, only when the current expression if an 'if()',
                   // because the 'if()' limits the number of possible types to one.
                   // Therefore, the normal error message contains a suggestion to use the 'if()'. But when the previous expression
                   // was an 'if()', this suggestion is not very useful. We do not want to suggest '.if().if()'.
-                  let errorStr: string = ` Maybe add '.${validFunctionNames[4]}()'.`;
-                  if (freAppliedExp.previous instanceof FreFunctionExp && freAppliedExp.previous.name === validFunctionNames[4]) {
-                      errorStr = '';
+                  let errorStr: string = `. Maybe add '.${MetaFunctionNames.ifFunc}()'.`;
+                  if (freAppliedExp.previous instanceof FreFunctionExp) {
+                      if (freAppliedExp.previous.name === MetaFunctionNames.ifFunc) {
+                          errorStr = '';
+                      } else if (freAppliedExp.previous.possibleClassifiers.length !== 0) {
+                          errorStr = `, too many possibilities: [${freAppliedExp.previous.possibleClassifiers.map(pos => pos.name).join(', ')}]` + errorStr;
+                      }
                   }
                   this.runner.nestedCheck({
-                      check: !!innerConcept || freAppliedExp.exp.name === validFunctionNames[4],
-                      error: `Cannot establish the type of '${freAppliedExp.previous.toErrorString()}'.${errorStr} ${ParseLocationUtil.location(freAppliedExp.previous)}.`,
+                      check: !!innerConcept || freAppliedExp.exp.name === MetaFunctionNames.ifFunc,
+                      error: `Cannot establish the type of '${freAppliedExp.previous.toErrorString()}'${errorStr} ${ParseLocationUtil.location(freAppliedExp.previous)}.`,
                       whenOk: () => {
                           freAppliedExp.exp!.language = freAppliedExp.language;
                           if (!!innerConcept) {

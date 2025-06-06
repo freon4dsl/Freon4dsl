@@ -107,9 +107,9 @@ export class CommonChecker {
     }
 
     /**
-     * returns true if the 'limited' conforms to 'primType'
-     * @param value
-     * @param type
+     * returns true if the 'sub' conforms to 'superType'
+     * @param sub
+     * @param superType
      */
     public static checkLimitedType(sub: FreMetaLimitedConcept, superType: FreMetaLimitedConcept): boolean {
         return CommonSuperTypeUtil.getSupers(sub).includes(superType);

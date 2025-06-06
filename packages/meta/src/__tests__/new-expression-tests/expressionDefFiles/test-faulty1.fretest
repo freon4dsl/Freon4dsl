@@ -22,6 +22,8 @@ EE {
 FF {
     type().self;
     ee.dd.self.cc;
+    ee.owner().if(FF).type();
+    ee.owner().type();
 }
 
 ExtraProp {
