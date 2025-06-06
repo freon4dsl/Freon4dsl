@@ -2,7 +2,7 @@ import {
     FreMetaInterface,
     FreLangFunctionCallExp,
     FreMetaLanguage,
-    FreMetaProperty, FreMetaClassifier
+    FreMetaClassifier
 } from '../../../languagedef/metalanguage/index.js';
 import { Names, GenerationUtil, LangUtil, Imports } from "../../../utils/index.js"
 import { ScopeDef, ScopeConceptDef, FreNamespaceExpression } from '../../metalanguage/index.js';
@@ -175,23 +175,23 @@ export class ScoperTemplate {
     private addNamespaceExpression(expression: FreNamespaceExpression): string {
         let result: string = "";
         if (expression.expression) {
-            const myRef: FreMetaProperty | undefined = expression.expression.findRefOfLastAppliedFeature();
-            const namespaceExpression = `node.${GenerationUtil.langExpToTypeScript(expression.expression.applied, 'node', true)}`;
-            if (!!myRef) {
-                if (myRef.isList) {
-                    const loopVar: string = "loopVariable";
-                    result = result.concat(`
-                // generated based on '${expression.toFreString()}'
-                for (let ${loopVar} of ${namespaceExpression}) {
-                    result.push(new ${Names.FreNamespaceInfo}(${loopVar}, ${expression.recursive}));
-                }`);
-                } else {
-                    result = result.concat(`
-                // generated based on '${expression.toFreString()}'
-                result.push(new ${Names.FreNamespaceInfo}(${namespaceExpression}, ${expression.recursive}));
-                `);
-                }
-            }
+            // const myRef: FreMetaProperty | undefined = expression.expression.findRefOfLastAppliedFeature();
+            // const namespaceExpression = `node.${GenerationUtil.langExpToTypeScript(expression.expression.applied, 'node', true)}`;
+            // if (!!myRef) {
+            //     if (myRef.isList) {
+            //         const loopVar: string = "loopVariable";
+            //         result = result.concat(`
+            //     // generated based on '${expression.toFreString()}'
+            //     for (let ${loopVar} of ${namespaceExpression}) {
+            //         result.push(new ${Names.FreNamespaceInfo}(${loopVar}, ${expression.recursive}));
+            //     }`);
+            //     } else {
+            //         result = result.concat(`
+            //     // generated based on '${expression.toFreString()}'
+            //     result.push(new ${Names.FreNamespaceInfo}(${namespaceExpression}, ${expression.recursive}));
+            //     `);
+            //     }
+            // }
         }
         return result;
     }
@@ -228,7 +228,8 @@ export class ScoperTemplate {
             }`;
         } else {
             // normal case: the expression is an ordinary expression over the language
-            resultStr = `result.push(new ${Names.FreNamespaceInfo}(${GenerationUtil.langExpToTypeScript(expression.expression!, "node")}, ${expression.recursive}))`;
+            // resultStr = `result.push(new ${Names.FreNamespaceInfo}(${GenerationUtil.langExpToTypeScript(expression.expression!, "node")}, ${expression.recursive}))`;
+            resultStr = `ONZIN`
         }
         return resultStr;
     }

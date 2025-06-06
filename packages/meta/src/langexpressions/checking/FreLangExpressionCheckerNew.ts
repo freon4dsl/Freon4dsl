@@ -56,10 +56,10 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
 
     // ConceptName { exp exp exp }
     private checkLangExpSet(rule: TestExpressionsForConcept) {
-        LOGGER.log("checkLangSetExp");
-        CommonChecker.checkClassifierReference(rule.conceptRef, this.runner);
+        LOGGER.log("checkLangSetExp " + rule.toFreString());
+        CommonChecker.checkClassifierReference(rule.classifierRef, this.runner);
 
-        const enclosingConcept = rule.conceptRef.referred;
+        const enclosingConcept = rule.classifierRef?.referred;
         if (!!enclosingConcept) {
             rule.exps.forEach((tr) => {
                 // tr.language = this.language;
@@ -161,14 +161,20 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
                 whenOk: () => {
                     if (!!freVarExp.applied) {
                         this.runner.nestedCheck({
-                            check: !freVarExp.referredProperty.isList,
-                            error: `List property '${freVarExp.referredProperty.name}' cannot have an applied expression (.${freVarExp.applied.toFreString()})` +
-                              ` ${ParseLocationUtil.location(freVarExp)}.`,
+                            check: !!freVarExp.referredProperty,
+                            error: `A dot-expression is not allowed after a classifier, maybe you meant '#${freVarExp.name}:<instance>' ${ParseLocationUtil.location(freVarExp)}.`,
                             whenOk: () => {
-                                freVarExp.applied!.language = freVarExp.language;
-                                this.checkAppliedExp(freVarExp.applied!, freVarExp.referredClassifier);
+                                this.runner.nestedCheck({
+                                    check: !freVarExp.referredProperty.isList,
+                                    error: `List property '${freVarExp.referredProperty.name}' cannot have an applied expression (${freVarExp.applied!.toFreString()})` +
+                                        ` ${ParseLocationUtil.location(freVarExp)}.`,
+                                    whenOk: () => {
+                                        freVarExp.applied!.language = freVarExp.language;
+                                        this.checkAppliedExp(freVarExp.applied!, freVarExp.referredClassifier);
+                                    }
+                                });
                             }
-                        });
+                        })
                     }
                 },
             });

@@ -12,8 +12,8 @@ describe("Checking the expression checker", () => {
     let parser: LanguageExpressionParserNew;
     let checker: Checker<LanguageExpressionTesterNew>;
     let language: FreMetaLanguage | undefined;
-    // MetaLogger.muteAllErrors();
-    // MetaLogger.muteAllLogs();
+    MetaLogger.muteAllErrors();
+    MetaLogger.muteAllLogs();
 
     beforeEach(() => {
         try {
@@ -33,6 +33,7 @@ describe("Checking the expression checker", () => {
                 parser.parse(testdir + "test-faulty1.fretest");
             } catch (e: unknown) {
                 if (e instanceof Error) {
+                    console.log(e.message, e.stack)
                     expect(e.message).toBe(`checking errors (14).`);
                     expect(checker.errors.includes("Cannot find property or classifier 'ff' in 'BB' [file: test-faulty1.fretest:5:5].")).toBeTruthy();
                     expect(checker.errors.includes("Cannot find property or classifier 'AAprop14' in 'CC' [file: test-faulty1.fretest:10:18].")).toBeTruthy();

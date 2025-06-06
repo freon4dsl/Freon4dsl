@@ -34,16 +34,17 @@ export function createTest(data: Partial<LanguageExpressionTesterNew>): Language
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    LOGGER.log(result.toFreString())
     return result;
 }
 
-export function createConceptExps(data: Partial<TestExpressionsForConcept>): TestExpressionsForConcept {
-    LOGGER.log("createConceptExps");
+export function createClassifierExps(data: Partial<TestExpressionsForConcept>): TestExpressionsForConcept {
+    LOGGER.log("createClassifierExps");
     const result = new TestExpressionsForConcept();
-    result.name = data.conceptRef?.name + "ExpressionSet";
-    if (!!data.conceptRef) {
-        result.conceptRef = data.conceptRef;
-        result.conceptRef.owner = result;
+    result.name = data.classifierRef?.name + "ExpressionSet";
+    if (!!data.classifierRef) {
+        result.classifierRef = data.classifierRef;
+        result.classifierRef.owner = result;
     }
     if (!!data.exps) {
         result.exps = data.exps;
@@ -52,6 +53,7 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    LOGGER.log(result.toFreString())
     return result;
 }
 
@@ -64,6 +66,7 @@ export function createClassifierReference(
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    LOGGER.log(result.referred.name)
     return result;
 }
 

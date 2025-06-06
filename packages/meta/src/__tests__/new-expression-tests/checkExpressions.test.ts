@@ -38,11 +38,11 @@ describe("Checking expression on referredProperty", () => {
             expect(readTest).not.toBeUndefined();
             // check expressions on AA
 
-            const AAconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "AA");
+            const AAconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "AA");
             // set of expressions should refer to some concept or interface in the language
             expect(AAconceptExps).not.toBeNull();
             expect(AAconceptExps).not.toBeUndefined();
-            const aaConcept = AAconceptExps!.conceptRef?.referred;
+            const aaConcept = AAconceptExps!.classifierRef?.referred;
             expect(aaConcept).not.toBeNull();
             // for each expression in the set, it should refer to a property of 'AA'
             AAconceptExps!.exps.forEach((exp) => {
@@ -70,11 +70,11 @@ describe("Checking expression on referredProperty", () => {
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on BB
-            const BBconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "BB");
+            const BBconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "BB");
             // set of expressions should refer to some concept or interface in the language
             expect(BBconceptExps).not.toBeNull();
             expect(BBconceptExps).not.toBeUndefined();
-            const bbConcept = BBconceptExps!.conceptRef?.referred;
+            const bbConcept = BBconceptExps!.classifierRef?.referred;
             expect(bbConcept).not.toBeNull();
             expect(bbConcept).not.toBeUndefined();
             // for each expression in the set, it should refer to a property of 'BB'
@@ -105,7 +105,7 @@ describe("Checking expression on referredProperty", () => {
             expect(readTest).not.toBeUndefined();
             // check expressions on CC
             // tslint:disable-next-line:variable-name
-            const CCconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "CC");
+            const CCconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "CC");
             // set of expressions should refer to some concept or interface in the language
             expect(CCconceptExps).not.toBeNull();
             expect(CCconceptExps).not.toBeUndefined();
@@ -139,10 +139,10 @@ describe("Checking expression on referredProperty", () => {
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on DD
-            const DDconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "DD");
+            const DDconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "DD");
             expect(DDconceptExps).not.toBeNull();
             expect(DDconceptExps).not.toBeUndefined();
-            const ddConcept = DDconceptExps!.conceptRef?.referred;
+            const ddConcept = DDconceptExps!.classifierRef?.referred;
             expect(ddConcept).not.toBeNull();
             expect(ddConcept).not.toBeUndefined();
             DDconceptExps!.exps.forEach((exp) => {
@@ -167,10 +167,10 @@ describe("Checking expression on referredProperty", () => {
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on FF
-            const FFconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "FF");
+            const FFconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "FF");
             expect(FFconceptExps).not.toBeNull();
             expect(FFconceptExps).not.toBeUndefined();
-            const ffConcept = FFconceptExps!.conceptRef?.referred;
+            const ffConcept = FFconceptExps!.classifierRef?.referred;
             expect(ffConcept).not.toBeNull();
             // the only expression in the set is an applied feature
             // its reference should be set correctly, as well as all references in between

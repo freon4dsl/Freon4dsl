@@ -1,5 +1,5 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
+import { LanguageExpressionParserNew } from "../../langexpressions/parser/LanguageExpressionParserNew";
 import { MetaLogger } from "../../utils/index.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { describe, test, expect } from "vitest";
@@ -23,59 +23,65 @@ describe("Checking expression parser on syntax errors", () => {
         const demoLanguage: FreMetaLanguage | undefined = new LanguageParser().parse(testdir + "demoLanguage.ast");
         expect(demoLanguage).not.toBeNull();
         expect(demoLanguage).not.toBeUndefined();
-        const parser = new LanguageExpressionParser(demoLanguage!);
+        const parser = new LanguageExpressionParserNew(demoLanguage!);
         const checker = parser.checker;
         const demoExpressionFile = testdir + "demoExpressions.fretest";
         try {
-            parser.parse(demoExpressionFile);
+            const xx = parser.parse(demoExpressionFile);
+            console.log(xx.toFreString())
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
-                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-                expect(e.message).toBe(`checking errors (9).`);
+                console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (10).`);
                 expect(
                     checker.errors.includes(
-                        "List property 'entities' should not have an applied expression (.expr) [file: demoExpressions.fretest:5:9].",
+                        "List property 'entities' cannot have an applied expression (.expr) [file: demoExpressions.fretest:5:10].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "Cannot find property 'expr' in 'DemoEntity' [file: demoExpressions.fretest:5:18].",
+                        "Cannot find property or classifier 'int_attr' in 'DemoEntity' [file: demoExpressions.fretest:11:10].",
+                    ),
+                ).toBeTruthy();
+                expect(
+                    checker.errors.includes(
+                        "Cannot find property or classifier 'attrutes' in 'DemoEntity' [file: demoExpressions.fretest:13:10].",
+                    ),
+                ).toBeTruthy();
+                expect(
+                    checker.errors.includes(
+                        "Inter is not a predefined instance of DemoAttributeType [file: demoExpressions.fretest:15:5].",
+                    ),
+                ).toBeTruthy();
+                expect(
+                    checker.errors.includes(
+                        "List property 'attributes' cannot have an applied expression (.type()) [file: demoExpressions.fretest:17:10].",
                     ),
                 );
                 expect(
                     checker.errors.includes(
-                        "Cannot find property 'int_attr' in 'DemoEntity' [file: demoExpressions.fretest:11:9].",
+                        "Cannot establish the type of 'owner()'. Maybe add '.if()'. [file: demoExpressions.fretest:18:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "Cannot find property 'attrutes' in 'DemoEntity' [file: demoExpressions.fretest:13:9].",
+                        "Cannot find property or classifier 'xx' in 'DemoEntity' [file: demoExpressions.fretest:19:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "Expression should start with 'self' [file: demoExpressions.fretest:19:14].",
+                        "Cannot find property or classifier 'extra' in 'DemoVariable' [file: demoExpressions.fretest:33:10].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "Expression should start with 'self' [file: demoExpressions.fretest:23:6].",
+                        "A dot-expression is not allowed after a classifier, maybe you meant '#DemoVariable:<instance>' [file: demoExpressions.fretest:23:6].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "Function 'conformsTo' in 'DemoFunction' should have 2 parameters, found 1 [file: demoExpressions.fretest:27:5].",
-                    ),
-                ).toBeTruthy();
-                expect(
-                    checker.errors.includes(
-                        "Expression should start with 'self' [file: demoExpressions.fretest:29:5].",
-                    ),
-                ).toBeTruthy();
-                expect(
-                    checker.errors.includes(
-                        "Cannot find property 'extra' in 'DemoVariable' [file: demoExpressions.fretest:33:9].",
+                        "A dot-expression is not allowed after a classifier, maybe you meant '#DemoFunction:<instance>' [file: demoExpressions.fretest:29:5].",
                     ),
                 ).toBeTruthy();
             }

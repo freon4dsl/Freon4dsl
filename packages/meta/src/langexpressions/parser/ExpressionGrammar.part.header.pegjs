@@ -14,7 +14,7 @@ LanguageExpressions_Definition
 
 conceptExps = classifierRef:classifierReference ws curly_begin ws exps:expWithSeparator* curly_end
     {
-        return expCreate.createConceptExps({
+        return expCreate.createClassifierExps({
           "classifierRef": classifierRef,
           "exps": exps,
           "location": location()
