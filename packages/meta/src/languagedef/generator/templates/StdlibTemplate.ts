@@ -3,7 +3,7 @@ import {
     Names,
     CONFIGURATION_FOLDER,
     Imports
-} from "../../../utils/index.js"
+} from "../../../utils/on-lang/index.js"
 
 export class StdlibTemplate {
     limitedConceptNames: string[] = [];

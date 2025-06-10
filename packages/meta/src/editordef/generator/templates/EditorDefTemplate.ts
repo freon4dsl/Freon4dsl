@@ -5,12 +5,10 @@ import {
     FreMetaLimitedConcept,
     FreMetaProperty,
 } from "../../../languagedef/metalanguage/index.js";
-import {
-    CONFIGURATION_FOLDER,
-    isNullOrUndefined,
-    Names,
-    LOG2USER, Imports
-} from "../../../utils/index.js"
+import { CONFIGURATION_FOLDER, Names, Imports } from "../../../utils/on-lang/index.js";
+import { LOG2USER } from "../../../utils/basic-dependencies/index.js";
+import { isNullOrUndefined } from "../../../utils/file-utils/index.js";
+import { NamesForEditor } from "../../../utils/on-lang-and-editor/index.js";
 import {
     FreEditExtraClassifierInfo,
     FreEditClassifierProjection,
@@ -191,7 +189,7 @@ export class EditorDefTemplate {
                 ${hasBinExps ? `${handlerVarName}.addProjection("${Names.brackets}");` : ``}
                 ${editorDef
                     .getAllNonDefaultProjectiongroups()
-                    .map((group) => `${handlerVarName}.addProjection("${Names.projection(group)}")`)
+                    .map((group) => `${handlerVarName}.addProjection("${NamesForEditor.projection(group)}")`)
                     .join(";\n")}
                 for (const p of freonConfiguration.customProjection) {
                     ${handlerVarName}.addCustomProjection(p);

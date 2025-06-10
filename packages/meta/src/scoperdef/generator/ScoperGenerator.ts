@@ -1,19 +1,20 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import {
-    GenerationStatus,
-    FileUtil,
-    isNullOrUndefined,
     Names,
     SCOPER_FOLDER,
     SCOPER_GEN_FOLDER,
-} from "../../utils/index.js";
+} from "../../utils/on-lang/index.js";
 import { ScopeDef } from "../metalanguage/index.js";
 import { CustomScoperTemplate } from "./templates/CustomScoperTemplate.js";
 import { ScoperDefTemplate } from "./templates/ScoperDefTemplate.js";
 import { ScoperTemplate } from "./templates/ScoperTemplate.js";
-import { MetaElementReference, FreMetaModelDescription } from "../../languagedef/metalanguage/index.js";
+import {
+    GenerationStatus,
+    FileUtil,
+    isNullOrUndefined
+} from '../../utils/file-utils/index.js';
 
 const LOGGER: MetaLogger = new MetaLogger("ScoperGenerator").mute();
 export class ScoperGenerator {
@@ -33,7 +34,7 @@ export class ScoperGenerator {
             scopedef.languageName = this.language.name;
             scopedef.namespaces = [];
             scopedef.namespaces.push(
-                MetaElementReference.create<FreMetaModelDescription>(this.language.modelConcept, "FreModelDescription"),
+                this.language.modelConcept,
             );
         }
 

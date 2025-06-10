@@ -1,12 +1,11 @@
-import { Checker, FreErrorSeverity, MetaLogger, ParseLocationUtil, CheckRunner } from "../../utils/index.js";
 import {
     FreMetaClassifier,
-    FreLangAppliedFeatureExp,
-    FreLangSelfExp,
-    FreLangSimpleExp,
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
     FreMetaProperty,
+    FreLangAppliedFeatureExp,
+    FreLangSelfExp,
+    FreLangSimpleExp
 } from "../../languagedef/metalanguage/index.js";
 import {
     CheckConformsRule,
@@ -24,6 +23,8 @@ import {
 } from "./ValidatorDefLang.js";
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/index.js";
 import { CommonChecker, FreLangExpressionChecker } from "../../languagedef/checking/index.js";
+import { FreErrorSeverity, MetaLogger } from '../../utils/no-dependencies/index.js';
+import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 
 const LOGGER: MetaLogger = new MetaLogger("ValidatorChecker");
 const equalsTypeName: string = "equalsType";

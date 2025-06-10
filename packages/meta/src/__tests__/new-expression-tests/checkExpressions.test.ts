@@ -1,11 +1,8 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaLanguage, FreMetaLimitedConcept } from '../../languagedef/metalanguage';
-
+import { FreMetaLanguage, FreMetaLimitedConcept } from '../../languagedef/metalanguage/index.js';
 import { LanguageExpressionTesterNew } from "../../langexpressions/parser/LanguageExpressionTesterNew.js";
 import { LanguageExpressionParserNew } from "../../langexpressions/parser/LanguageExpressionParserNew.js";
-
 import { describe, test, expect, beforeEach } from "vitest";
-import { MetaLogger } from '../../utils';
 import {
     FreFunctionExp, FreLimitedInstanceExp,
     FreVarExp,
@@ -44,6 +41,7 @@ describe("Checking expression on referredProperty", () => {
             expect(AAconceptExps).not.toBeUndefined();
             const aaConcept = AAconceptExps!.classifierRef?.referred;
             expect(aaConcept).not.toBeNull();
+            expect(aaConcept).not.toBeUndefined();
             // for each expression in the set, it should refer to a property of 'AA'
             AAconceptExps!.exps.forEach((exp) => {
                 const last = exp.getLastExpression();
@@ -51,7 +49,9 @@ describe("Checking expression on referredProperty", () => {
                     expect(last.referredClassifier === aaConcept);
                     const prop = last.referredProperty;
                     expect(prop).not.toBeNull();
+                    expect(prop).not.toBeUndefined();
                     expect(aaConcept.allProperties().includes(prop));
+                    console.log(last.previous.referredProperty?.isList)
                 } else {
                     console.log("Error");
                 }
@@ -180,13 +180,12 @@ describe("Checking expression on referredProperty", () => {
                 expect(exp instanceof FreVarExp);
                 expect((exp as FreVarExp).referredClassifier === ffConcept);
                 // check all expressions in the series
-                let nextExp = (exp as FreVarExp).applied.exp;
+                let nextExp = (exp as FreVarExp).applied;
                 while (!!nextExp) {
-                    console.log('checking: ', nextExp.toErrorString(), nextExp.toFreString())
                     expect(nextExp instanceof FreVarExp);
                     expect((nextExp as FreVarExp).referredProperty).not.toBeNull();
                     expect((nextExp as FreVarExp).referredProperty).not.toBeUndefined();
-                    nextExp = nextExp.applied?.exp;
+                    nextExp = nextExp.applied;
                 }
                 const last = exp.getLastExpression();
                 expect(last instanceof FreVarExp);

@@ -1,4 +1,5 @@
-import { Checker, MetaLogger, CheckRunner, ParseLocationUtil } from "../../utils/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
+import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester.js";
 import {
     FreMetaLanguage,
@@ -12,10 +13,10 @@ import {
     FreLangFunctionCallExp,
     FreInstanceExp,
     FreLangSimpleExp,
-    FreMetaEnvironment,
-    MetaElementReference,
-} from "../metalanguage/index.js";
-import { CommonChecker } from "./CommonChecker.js";
+    FreLangScoper,
+    MetaElementReference
+} from '../metalanguage/index.js';
+import { CommonChecker } from "../checking/CommonChecker.js";
 
 const LOGGER = new MetaLogger("FreLangExpressionChecker").mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof", "commonSuperTypeOf", "ancestor"];
@@ -38,9 +39,9 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
             );
         }
         // Note: this should be done first, otherwise the references will not be resolved
-        FreMetaEnvironment.metascoper.language = this.language;
+        FreLangScoper.metascoper.language = this.language;
         this.runner.nestedCheck({
-            // TODO Do we still need to report this?
+            // TODO Do we still need to report this? Yes, when language composition is implemented
             check: true, //this.language.name === definition.languageName,
             error:
                 `Language reference ('${definition.languageName}') in Test expression checker does not match language '${this.language.name}' ` +

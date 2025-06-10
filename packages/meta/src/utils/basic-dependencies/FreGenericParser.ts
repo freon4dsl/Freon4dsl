@@ -1,48 +1,13 @@
 import * as fs from "fs";
 import { Checker } from "./Checker.js";
 import { Parser, parser } from "pegjs";
-import { LOG2USER } from "../UserLogger.js";
-import { FreMetaDefinitionElement } from "../FreMetaDefinitionElement.js";
-import { ParseLocationUtil } from "./ParseLocationUtil.js";
+import { LOG2USER } from "./UserLogger.js";
+import { FreMetaDefinitionElement, ParseLocation } from '../no-dependencies/FreMetaDefinitionElement.js';
+import { ParseLocationUtil } from './ParseLocationUtil.js';
 
-// The following two types are used to store the location information from the PEGJS parser
-// todo rethink how to adjust the errors from the PegJs parser
-export type ParseLocation = {
-    filename: string;
-    start: Location;
-    end: Location;
-};
-
-export type Location = {
-    offset: number;
-    line: number;
-    column: number;
-};
 
 function isPegjsError(object: any): object is parser.SyntaxError {
     return "location" in object;
-}
-
-/**
- * This class is used to store the location information from the AGL parser.
- */
-export class FreParseLocation {
-    static create(data: Partial<FreParseLocation>): FreParseLocation {
-        const result = new FreParseLocation();
-        if (!!data.filename) {
-            result.filename = data.filename;
-        }
-        if (!!data.line) {
-            result.line = data.line;
-        }
-        if (!!data.column) {
-            result.column = data.column;
-        }
-        return result;
-    }
-    filename: string = "";
-    line: number = 0;
-    column: number = 0;
 }
 
 /**

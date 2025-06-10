@@ -1,5 +1,6 @@
 import { CommandLineAction, CommandLineStringParameter, ICommandLineActionOptions } from "@rushstack/ts-command-line";
-import { GenerationStatus, FileUtil, LOG2USER } from "../utils/index.js";
+import { GenerationStatus, FileUtil } from "../utils/file-utils/index.js";
+import { LOG2USER } from "../utils/basic-dependencies/index.js";
 
 /**
  * Generic generator action. The only option defined here is the -o flag for the output folder.

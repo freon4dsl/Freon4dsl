@@ -1,4 +1,4 @@
-import { FreLangExp } from "../metalanguage/FreLangExpressions.js";
+import { FreLangExp } from "../../languagedef/metalanguage/FreLangExpressions.js";
 // import { ParseLocation } from "../../utils";
 import { FreMetaConcept, FreMetaLanguage } from "../metalanguage/index.js";
 import { FreMetaLangElement } from "../metalanguage/FreMetaLanguage.js";

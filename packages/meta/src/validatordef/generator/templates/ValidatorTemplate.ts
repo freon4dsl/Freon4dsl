@@ -2,7 +2,7 @@ import {
     CONFIGURATION_FOLDER,
     Names,
     Imports
-} from "../../../utils/index.js"
+} from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { ValidatorDef } from "../../metalanguage/index.js";
 

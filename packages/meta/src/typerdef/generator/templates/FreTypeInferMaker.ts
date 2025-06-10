@@ -1,6 +1,6 @@
 import { FretInferenceRule, TyperDef } from "../../metalanguage/index.js";
-import { Names, GenerationUtil } from "../../../utils/index.js";
-import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
+import { Names } from "../../../utils/on-lang/index.js";
+import { FreMetaClassifier, FreMetaLimitedConcept, LangUtil } from '../../../languagedef/metalanguage/index.js';
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
 import { FretEqualsRule } from "../../metalanguage/FretEqualsRule.js";
 
@@ -22,7 +22,7 @@ export class FreTypeInferMaker {
             inferRules.push(...spec.rules.filter((r) => r instanceof FretInferenceRule));
         });
         // sort the types such that any type comes before its super type
-        const sortedTypes = GenerationUtil.sortClassifiers(typerDef.conceptsWithType);
+        const sortedTypes = LangUtil.sortClassifiers(typerDef.conceptsWithType);
         // make an entry for all classifiers that have an infertype rule
         sortedTypes.forEach((type) => {
             // find the equalsRule, if present

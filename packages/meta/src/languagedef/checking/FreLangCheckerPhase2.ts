@@ -1,4 +1,5 @@
-import { CheckerPhase, CheckRunner, isNullOrUndefined, ParseLocationUtil } from "../../utils/index.js";
+import { CheckerPhase, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 import {
     FreMetaConcept,
     FreMetaInstance,

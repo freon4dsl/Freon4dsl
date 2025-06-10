@@ -9,21 +9,19 @@ import {
     FreMetaClassifier,
     FreMetaLimitedConcept,
     MetaElementReference,
-    FreMetaEnvironment,
     FreMetaPrimitiveType,
     FreMetaModelDescription,
     FreMetaUnitDescription,
     FreMetaConceptProperty,
     FreMetaEnumValue,
-} from "../metalanguage/index.js";
+    FreLangScoper
+} from '../metalanguage/index.js';
 import {
     CheckRunner,
     CheckerPhase,
-    MetaLogger,
-    freReservedWords,
-    reservedWordsInTypescript,
     ParseLocationUtil,
-} from "../../utils/index.js";
+} from "../../utils/basic-dependencies/index.js";
+import { freReservedWords, MetaLogger, reservedWordsInTypescript } from '../../utils/no-dependencies/index.js';
 import { CommonChecker } from "./CommonChecker.js";
 
 const LOGGER = new MetaLogger("FreLanguageChecker").mute();
@@ -39,7 +37,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
 
         this.language = language;
         // Note: this should be done first, otherwise the references will not be resolved
-        FreMetaEnvironment.metascoper.language = language;
+        FreLangScoper.metascoper.language = language;
 
         // now check the whole language
         this.checkModel(language.modelConcept);

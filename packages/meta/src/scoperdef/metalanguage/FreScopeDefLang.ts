@@ -1,11 +1,11 @@
 import { FreMetaClassifier } from "../../languagedef/metalanguage/index.js";
-import { FreMetaDefinitionElement } from "../../utils/index.js";
-import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
-import { FreLangExpNew } from '../../langexpressions/metalanguage/index.js';
+import { FreMetaDefinitionElement } from "../../utils/no-dependencies/index.js";
+import { FreLangExpNew, ClassifierReference } from '../../langexpressions/metalanguage/index.js';
 
 export class ScopeDef extends FreMetaDefinitionElement {
     languageName: string = "";
-    namespaces: MetaElementReference<FreMetaClassifier>[] = [];
+    parsedNamespaces: ClassifierReference[] = [];
+    namespaces: FreMetaClassifier[] = [];
     scopeConceptDefs: ScopeConceptDef[] = [];
 
     toFreString(): string {
@@ -16,7 +16,7 @@ export class ScopeDef extends FreMetaDefinitionElement {
 }
 
 export class ScopeConceptDef extends FreMetaDefinitionElement {
-    classifierRef: MetaElementReference<FreMetaClassifier> | undefined;
+    classifierRef: ClassifierReference | undefined;
     namespaceAddition: FreNamespaceAddition | undefined;
     namespaceReplacement: FreReplacementNamespace | undefined;
 

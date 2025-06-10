@@ -23,7 +23,7 @@ import {
     FreEditExternalInfo,
     FreEditSimpleExternal,
 } from "../metalanguage/index.js";
-import { ListUtil } from "../../utils/index.js";
+import { ListUtil } from "../../utils/no-dependencies/index.js";
 import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
 import { FreEditParseUtil } from "./FreEditParseUtil.js";
 // The next import should be separate and the last of the imports.

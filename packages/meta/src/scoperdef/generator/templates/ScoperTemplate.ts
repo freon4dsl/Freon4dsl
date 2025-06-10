@@ -1,11 +1,13 @@
 import {
     FreMetaInterface,
-    FreLangFunctionCallExp,
     FreMetaLanguage,
     FreMetaClassifier
 } from '../../../languagedef/metalanguage/index.js';
-import { Names, GenerationUtil, LangUtil, Imports } from "../../../utils/index.js"
+import { Names, Imports } from '../../../utils/on-lang/index.js';
 import { ScopeDef, ScopeConceptDef, FreNamespaceExpression } from '../../metalanguage/index.js';
+// @ts-ignore
+// import { ExpressionGenerationUtil } from '../../../langexpressions/generator/ExpressionGenerationUtil.js';
+import { FreFunctionExp, LangUtil } from '../../../langexpressions/metalanguage/index.js';
 
 export class ScoperTemplate {
     additionalNamespaceText: string = "";
@@ -176,7 +178,7 @@ export class ScoperTemplate {
         let result: string = "";
         if (expression.expression) {
             // const myRef: FreMetaProperty | undefined = expression.expression.findRefOfLastAppliedFeature();
-            // const namespaceExpression = `node.${GenerationUtil.langExpToTypeScript(expression.expression.applied, 'node', true)}`;
+            // const namespaceExpression = `node.${XXX.langExpToTypeScript(expression.expression.applied, 'node', true)}`;
             // if (!!myRef) {
             //     if (myRef.isList) {
             //         const loopVar: string = "loopVariable";
@@ -198,34 +200,34 @@ export class ScoperTemplate {
 
     // @ts-ignore
     private replacementNamespaceExpToTypeScript(expression: FreNamespaceExpression): string {
-        let resultStr: string;
-        if (expression.expression instanceof FreLangFunctionCallExp && expression.expression.name === "typeof") {
-            // special case: the expression refers to 'typeof'
-            let actualParamToGenerate: string;
-            // we know that typeof has exactly 1 actual parameter
-            if (expression.expression.actualparams[0].name === "container") {
-                actualParamToGenerate = `node.freOwnerDescriptor()?.owner`;
-            } else {
-                actualParamToGenerate = GenerationUtil.langExpToTypeScript(expression.expression.actualparams[0], "node");
-            }
-            resultStr = `let owner = ${actualParamToGenerate};
-                if (!!owner) {
-                    let newScopeElement = this.myTyper.inferType(owner)?.toAstElement();
-                    // 'newScopeElement' could be null, when the type found by the typer does not correspond to an AST node
-                    if (!!newScopeElement) {
-                        result.push(new ${Names.FreNamespaceInfo}(newScopeElement as ${Names.FreNamedNode}, ${expression.recursive}));
-                    }
-                } else {
-                    console.log("Alternative Namespace for node " + node.freId() + " ")
-                }`;
+        let resultStr: string = '';
+        if (expression.expression instanceof FreFunctionExp && expression.expression.name === "typeof") {
+            // // special case: the expression refers to 'typeof'
+            // let actualParamToGenerate: string;
+            // // we know that typeof has exactly 1 actual parameter
+            // if (expression.expression.param.name === "container") {
+            //     actualParamToGenerate = `node.freOwnerDescriptor()?.owner`;
+            // } else {
+            //     actualParamToGenerate = ExpressionGenerationUtil.langExpToTypeScript(expression.expression.actualparams[0], "node");
+            // }
+            // resultStr = `let owner = ${actualParamToGenerate};
+            //     if (!!owner) {
+            //         let newScopeElement = this.myTyper.inferType(owner)?.toAstElement();
+            //         // 'newScopeElement' could be null, when the type found by the typer does not correspond to an AST node
+            //         if (!!newScopeElement) {
+            //             result.push(new ${Names.FreNamespaceInfo}(newScopeElement as ${Names.FreNamedNode}, ${expression.recursive}));
+            //         }
+            //     } else {
+            //         console.log("Alternative Namespace for node " + node.freId() + " ")
+            //     }`;
         } else if (!!expression.expression && expression.expression.name === "container") {
-            // special case: the expression refers to 'container'
-            resultStr = `let container = node.freOwner();
-            if (!!container) {
-                result.push(new ${Names.FreNamespaceInfo}(container as ${Names.FreNamedNode}, ${expression.recursive}));
-            } else {
-                console.error("getReplacementNamespace: no container found.");
-            }`;
+            // // special case: the expression refers to 'container'
+            // resultStr = `let container = node.freOwner();
+            // if (!!container) {
+            //     result.push(new ${Names.FreNamespaceInfo}(container as ${Names.FreNamedNode}, ${expression.recursive}));
+            // } else {
+            //     console.error("getReplacementNamespace: no container found.");
+            // }`;
         } else {
             // normal case: the expression is an ordinary expression over the language
             // resultStr = `result.push(new ${Names.FreNamespaceInfo}(${GenerationUtil.langExpToTypeScript(expression.expression!, "node")}, ${expression.recursive}))`;

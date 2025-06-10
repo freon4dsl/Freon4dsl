@@ -1,10 +1,10 @@
 import fs from "fs";
-import { LOG2USER } from "../../utils/UserLogger.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../metalanguage/index.js";
 import { FreTyperReader } from "./FreTyperReader.js";
 import { FreTyperChecker } from "./FreTyperChecker.js";
-import { ParseLocationUtil } from "../../utils/parsingAndChecking/ParseLocationUtil.js";
+import { LOG2USER, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+
 
 /**
  * This class parses one of more .type files and merges them into a single TyperDef object, which is then

@@ -6,7 +6,7 @@ import {
     FreMetaLimitedConcept,
     FreMetaProperty, FreMetaUnitDescription
 } from "../../languagedef/metalanguage/index.js";
-import { ListUtil } from "../../utils/index.js";
+import { ListUtil } from "../../utils/no-dependencies/index.js";
 
 export class DiagramTemplate {
     withHtml: boolean;

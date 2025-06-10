@@ -1,23 +1,12 @@
 import {
-    CheckRunner,
-    CheckerPhase,
-    LangUtil,
-    ListUtil,
-    Names,
-    ParseLocationUtil,
-    reservedWordsInTypescript,
-    freReservedWords,
-} from "../../utils/index.js";
-import {
     FreMetaClassifier,
     FreMetaConcept,
     FreMetaInstance,
-    FreMetaEnvironment,
     FreMetaLimitedConcept,
     FreMetaPrimitiveType,
     FreMetaProperty,
-    MetaElementReference,
-} from "../../languagedef/metalanguage/index.js";
+    MetaElementReference, LangUtil, FreLangScoper
+} from '../../languagedef/metalanguage/index.js';
 import {
     FretAnytypeExp,
     FretAnyTypeSpec,
@@ -43,6 +32,9 @@ import {
 import { FretScoper } from "./FretScoper.js";
 import { FretOwnerSetter } from "./FretOwnerSetter.js";
 import { CommonChecker, CommonSuperTypeUtil } from "../../languagedef/checking/index.js";
+import { CheckerPhase, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import { freReservedWords, ListUtil, reservedWordsInTypescript } from '../../utils/no-dependencies/index.js';
+import { Names } from '../../utils/on-lang/index.js';
 
 // const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
@@ -70,8 +62,8 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
 
         // To be able to find references in the type defintion to nodes other than those from the language
         // we need an extra scoper, and we need to set the opposites of all 'parts': their owning nodes
-        FreMetaEnvironment.metascoper.language = this.language;
-        FreMetaEnvironment.metascoper.extraScopers.push(new FretScoper(definition));
+        FreLangScoper.metascoper.language = this.language;
+        FreLangScoper.metascoper.extraScopers.push(new FretScoper(definition));
         FretOwnerSetter.setNodeOwners(definition);
 
         this.runner = runner;
@@ -156,7 +148,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
             this.definition.classifierSpecs.find((spec) => spec.myClassifier === con),
         );
         // try finding specs for a superclassifier
-        const supers: FreMetaClassifier[] = LangUtil.superClassifiers(con);
+        const supers: FreMetaClassifier[] = FreMetaClassifier.superClassifiers(con);
         for (const super1 of supers) {
             ListUtil.addIfNotPresent(
                 result,

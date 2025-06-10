@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import synchronizedPrettier from "@prettier/sync";
-import { MetaLogger } from "../MetaLogger.js";
+import { MetaLogger } from "../no-dependencies/MetaLogger.js";
 
 const LOGGER = new MetaLogger("FileUtil").mute();
 import * as path from "path";

@@ -1,5 +1,5 @@
 import { FreMetaConceptProperty, FreMetaLanguage } from "../../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/on-lang/index.js";
 import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
 import { ForType, FreEditListInfo, FreEditProjectionGroup } from "../../../metalanguage/index.js";
 import { ListPropertyBoxHelper } from "./ListPropertyBoxHelper.js";

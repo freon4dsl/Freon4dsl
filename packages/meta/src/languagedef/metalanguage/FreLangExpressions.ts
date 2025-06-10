@@ -5,13 +5,10 @@ import {
     FreMetaInstance,
     FreMetaLanguage,
     FreMetaProperty,
-} from "./internal.js";
-import { Names } from "../../utils/index.js";
-// The next import should be separate and the last of the imports.
-// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
-// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
-// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference } from "./index.js";
+    MetaElementReference
+} from './internal.js';
+
+export const nameForSelf: string = 'self';
 
 /** This module contains classes that implement Expressions over the FreLanguage structure.
  *  There are five types of Expressions:
@@ -78,7 +75,7 @@ export class FreLangSelfExp extends FreLangExp {
         const result = new FreLangSelfExp();
         result.$referredElement = MetaElementReference.create<FreMetaClassifier>(referred, "FreClassifier");
         result.$referredElement.owner = result;
-        result.sourceName = Names.nameForSelf;
+        result.sourceName = nameForSelf;
         return result;
     }
 
@@ -86,7 +83,7 @@ export class FreLangSelfExp extends FreLangExp {
     $referredElement: MetaElementReference<FreMetaClassifier>; // is not needed, can be determined based on its parent
 
     toFreString(): string {
-        if (!!this.sourceName && this.sourceName !== Names.nameForSelf) {
+        if (!!this.sourceName && this.sourceName !== nameForSelf) {
             return this.sourceName + (this.appliedfeature ? "." + this.appliedfeature.toFreString() : "");
         } else {
             // e.g. in isunique validation rules

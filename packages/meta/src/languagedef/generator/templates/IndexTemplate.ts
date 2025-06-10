@@ -1,5 +1,5 @@
-import { FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
+import { FreMetaLanguage, LangUtil } from '../../metalanguage/index.js';
+import { Names, Imports } from "../../../utils/on-lang/index.js"
 
 export class IndexTemplate {
     generateIndex(language: FreMetaLanguage): string {
@@ -28,10 +28,10 @@ export class IndexTemplate {
         language.units.forEach((c) => modelImports.add(Names.classifier(c)));
         // The exports need to be sorted such that base concepts/interfaces are recursive before the
         // concepts/interfaces that are extending them.
-        GenerationUtil.sortClassifiers(language.interfaces)
+        LangUtil.sortClassifiers(language.interfaces)
             .reverse()
             .forEach((c) => modelImports.add(Names.classifier(c)));
-        GenerationUtil.sortConceptsOrRefs(language.concepts)
+        LangUtil.sortConceptsOrRefs(language.concepts)
             .reverse()
             .forEach((c) => modelImports.add(Names.concept(c)));
         modelImports.add(Names.language(language));

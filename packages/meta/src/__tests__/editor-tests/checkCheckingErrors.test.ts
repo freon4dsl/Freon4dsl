@@ -1,6 +1,7 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../utils";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
+import { Checker } from "../../utils/basic-dependencies/index.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import { FreEditUnit } from "../../editordef/metalanguage";
 import { describe, test, expect, beforeEach } from "vitest";
@@ -22,7 +23,7 @@ describe("Checking editor definition ", () => {
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
-                console.log("Language could not be read");
+                console.log("Language could not be read", e.message);
             }
         }
     });

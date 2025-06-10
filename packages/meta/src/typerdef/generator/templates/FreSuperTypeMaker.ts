@@ -11,8 +11,9 @@ import {
     FretEqualsRule,
 } from "../../metalanguage/index.js";
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
-import { ListUtil, Names, GenerationUtil } from "../../../utils/index.js";
-import { FreMetaClassifier, FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
+import { Names } from "../../../utils/on-lang/index.js";
+import { FreMetaClassifier, FreMetaLimitedConcept, LangUtil } from "../../../languagedef/metalanguage/index.js";
+import { ListUtil } from '../../../utils/no-dependencies/index.js';
 
 /**
  * This class generates the code for all 'conformsto' entries in the .type file.
@@ -39,7 +40,7 @@ export class FreSuperTypeMaker {
             }
         });
         // sort the types such that any type comes before its super type
-        const sortedTypes = GenerationUtil.sortClassifiers(typerdef.types);
+        const sortedTypes = LangUtil.sortClassifiers(typerdef.types);
         // make sub-entries for each rule defined for an ast-element
         const astSubRules: string[] = [];
         sortedTypes.forEach((type) => {

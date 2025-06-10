@@ -1,14 +1,12 @@
 import {
-    FreLangSimpleExp,
+    FreLangSimpleExpNew,
     FreLimitedInstanceExp,
-    FreAppliedExp,
     FreVarOrFunctionExp,
     FreFunctionExp,
-    FreVarExp
+    FreVarExp,
+    ClassifierReference
 } from '../metalanguage/FreLangExpressionsNew.js';
-import { MetaLogger } from "../../utils/MetaLogger.js";
-import { FreMetaClassifier } from "../../languagedef/metalanguage/FreMetaLanguage.js";
-import { MetaElementReference } from "../../languagedef/metalanguage/MetaElementReference.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import {
     LanguageExpressionTesterNew,
     TestExpressionsForConcept
@@ -44,7 +42,6 @@ export function createClassifierExps(data: Partial<TestExpressionsForConcept>): 
     result.name = data.classifierRef?.name + "ExpressionSet";
     if (!!data.classifierRef) {
         result.classifierRef = data.classifierRef;
-        result.classifierRef.owner = result;
     }
     if (!!data.exps) {
         result.exps = data.exps;
@@ -58,15 +55,18 @@ export function createClassifierExps(data: Partial<TestExpressionsForConcept>): 
 }
 
 export function createClassifierReference(
-    data: Partial<MetaElementReference<FreMetaClassifier>>,
-): MetaElementReference<FreMetaClassifier> {
+    data: Partial<ClassifierReference>,
+): ClassifierReference {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : "", "FreClassifier");
+    const result = new ClassifierReference();
+    if (!!data.name) {
+        result.name = data.name;
+    }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    LOGGER.log(result.referred.name)
+    LOGGER.log(result.name)
     return result;
 }
 
@@ -107,19 +107,6 @@ export function createVarExpression(data: Partial<FreVarOrFunctionExp>): FreVarE
     return result;
 }
 
-export function createAppliedExpression(data: Partial<FreAppliedExp>): FreAppliedExp {
-    LOGGER.log("createAppliedExpression");
-    const result: FreAppliedExp = new FreAppliedExp();
-    if (!!data.exp) {
-        result.exp = data.exp;
-    }
-    if (!!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
-    }
-    return result;
-}
-
 export function createLimitedInstanceExp(data: Partial<FreLimitedInstanceExp>): FreLimitedInstanceExp {
     LOGGER.log("createLimitedInstanceExp");
     const result: FreLimitedInstanceExp = new FreLimitedInstanceExp();
@@ -136,9 +123,9 @@ export function createLimitedInstanceExp(data: Partial<FreLimitedInstanceExp>): 
     return result;
 }
 
-export function createSimpleExpression(data: Partial<FreLangSimpleExp>): FreLangSimpleExp {
+export function createSimpleExpression(data: Partial<FreLangSimpleExpNew>): FreLangSimpleExpNew {
     LOGGER.log("createSimpleExpression");
-    const result: FreLangSimpleExp = new FreLangSimpleExp();
+    const result: FreLangSimpleExpNew = new FreLangSimpleExpNew();
     // when the normal check is present, a value of 0 will not be passed to result
     result.value = data.value ? data.value : 0;
     return result;

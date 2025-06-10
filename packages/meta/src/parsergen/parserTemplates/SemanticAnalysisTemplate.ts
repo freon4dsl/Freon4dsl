@@ -4,7 +4,7 @@ import {
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
 } from "../../languagedef/metalanguage/index.js";
-import { Imports, Names } from "../../utils/index.js"
+import { Imports, Names } from "../../utils/on-lang/index.js"
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/FreMetaLanguage.js";
 import { UnitAnalyser } from "./UnitAnalyser.js";
 

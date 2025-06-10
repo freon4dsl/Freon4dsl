@@ -9,105 +9,100 @@ import {
     FreMetaModelDescription,
     FreMetaUnitDescription,
 } from "../../languagedef/metalanguage/index.js";
-import {
-    FreEditClassifierProjection, FreEditFragmentDefinition,
-    FreEditProjectionGroup,
-    FreEditTableProjection,
-} from "../../editordef/metalanguage/index.js";
 
 /**
  * Defines all names that are used in the generation, to ensure they are identical
  * at each usage.
  */
 export class Names {
-    // tslint:disable-next-line:variable-name
+    
     public static FreNamedNode: string = "FreNamedNode";
-    // tslint:disable-next-line:variable-name
+    
     public static FreNode: string = "FreNode";
-    // tslint:disable-next-line:variable-name
+    
     public static FreOwnerDescriptor: string = "FreOwnerDescriptor";
-    // tslint:disable-next-line:variable-name
+    
     public static FreExpressionNode: string = "FreExpressionNode";
-    // tslint:disable-next-line:variable-name
+    
     public static FreBinaryExpression: string = "FreBinaryExpression";
-    // tslint:disable-next-line:variable-name
+    
     public static FreScoper: string = "FreScoper";
-    // tslint:disable-next-line:variable-name
+    
     public static FreScoperBase: string = "FreScoperBase";
-    // tslint:disable-next-line:variable-name
+    
     public static FreCompositeScoper: string = "FreCompositeScoper";
-    // tslint:disable-next-line:variable-name
+    
     public static FreScoperPart: string = "FreScoper";
-    // tslint:disable-next-line:variable-name
+    
     public static FreCompositeTyper: string = "FreCompositeTyper"; 
-    // tslint:disable-next-line:variable-name
+    
     public static FreValidator: string = "FreValidator";
-    // tslint:disable-next-line:variable-name
+    
     public static FreStdlib: string = "FreStdlib";
-    // tslint:disable-next-line:variable-name
+    
     public static FreWriter: string = "FreWriter";
-    // tslint:disable-next-line:variable-name
+    
     public static FreReader: string = "FreReader";
-    // tslint:disable-next-line:variable-name
+    
     public static FreError: string = "FreError";
-    // tslint:disable-next-line:variable-name
+    
     public static FreInterpreter: string = "FreInterpreter";
-    // tslint:disable-next-line:variable-name
+    
     public static FreErrorSeverity: string = "FreErrorSeverity";
-    // tslint:disable-next-line:variable-name
+    
     public static FreActions: string = "FreCombinedActions";
-    // tslint:disable-next-line:variable-name
+    
     public static ActionsUtil: string = "ActionsUtil";
-    // tslint:disable-next-line:variable-name
+    
     public static FreCreateBinaryExpressionAction: string = "FreCreateBinaryExpressionAction";
-    // tslint:disable-next-line:variable-name
+    
     public static FreCustomAction: string = "FreCustomAction";
-    // tslint:disable-next-line:variable-name
+    
     public static FreEditor: string = "FreEditor";
-    // tslint:disable-next-line:variable-name
+    
     public static FreProjection: string = "FreProjection";
-    // tslint:disable-next-line:variable-name
+    
     public static Box: string = "Box";
-    // tslint:disable-next-line:variable-name
+    
     public static FreNodeReference: string = "FreNodeReference";
-    // tslint:disable-next-line:variable-name
+    
     public static FreEnvironment: string = "FreEnvironment";
-    // tslint:disable-next-line:variable-name
+    
     public static FreParseLocation: string = "FreParseLocation";
-    // tslint:disable-next-line:variable-name
+    
     public static FreUtils: string = "FreUtils";
-    // tslint:disable-next-line:variable-name
+    
     public static FreModel: string = "FreModel";
-    // tslint:disable-next-line:variable-name
+    
     public static FreModelUnit: string = "FreModelUnit";
-    // tslint:disable-next-line:variable-name
+    
     public static FreLanguage: string = "FreLanguage";
-    // tslint:disable-next-line:variable-name
+    
     static FreType: string = "FreType";
-    // tslint:disable-next-line:variable-name
+    
     static FreTyper: string = "FreTyper";
-    // tslint:disable-next-line:variable-name
+    
     static AstType: string = "AstType"
-    // tslint:disable-next-line:variable-name
+    
     static FreCommonSuperTypeUtil: string = "FreCommonSuperTypeUtil"
-    // tslint:disable-next-line:variable-name
+    
     static FreTableDefinition: string = "FreTableDefinition";
-    // tslint:disable-next-line:variable-name
+    
     static FreTriggerType: string = "FreTriggerType";
-    // tslint:disable-next-line:variable-name
+    
     static FreLanguageEnvironment: string = "FreLanguageEnvironment";
-    // tslint:disable-next-line:variable-name
+    
     static LanguageEnvironment: string = "LanguageEnvironment";
-    // tslint:disable-next-line:variable-name
+    
     static FreLogger: string = "FreLogger";
-    // tslint:disable-next-line:variable-name
+    
     static FreNamespace: string = "FreNamespace";
     static FreNamespaceInfo: string = "FreNamespaceInfo";
-    // tslint:disable-next-line:variable-name
+    
     static FreProjectionHandler: string = "FreProjectionHandler";
-    // tslint:disable-next-line:variable-name
+    
     public static ProjectionalEditor: string = "ProjectionalEditor";
-    // tslint:disable-next-line:variable-name
+    
     public static mainProjectionalEditor: string = "MainProjectionalEditor";
     public static configuration: string = "FreonConfiguration";
     public static nameForSelf: string = "self";
@@ -168,9 +163,6 @@ export class Names {
         return "Custom" + this.stdlib(language);
     }
 
-    public static projection(group: FreEditProjectionGroup): string {
-        return group.name;
-    }
 
     public static customProjection(language: FreMetaLanguage): string {
         return "Custom" + this.startWithUpperCase(language?.name) + "Projection";
@@ -311,21 +303,8 @@ export class Names {
         return "";
     }
 
-    public static projectionMethod(proj: FreEditClassifierProjection): string {
-        return "get" + this.startWithUpperCase(proj.name);
-    }
 
-    public static tableProjectionMethod(proj: FreEditClassifierProjection): string {
-        return "get" + this.startWithUpperCase(proj.name);
-    }
 
-    public static tabelDefinitionFunctionNew(projectionName: string): string {
-        return "getRowFor" + this.startWithUpperCase(projectionName);
-    }
-
-    public static tableHeadersMethod(proj: FreEditTableProjection): string {
-        return "getHeadersFor" + this.startWithUpperCase(proj.name);
-    }
 
     public static writer(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "ModelUnitWriter";
@@ -404,9 +383,5 @@ export class Names {
 
     public static boxProvider(concept: FreMetaClassifier): string {
         return Names.startWithUpperCase(concept.name) + "BoxProvider";
-    }
-
-    static fragment(fragmentDefinition: FreEditFragmentDefinition) {
-        return "getFragmentBox_" + fragmentDefinition.name;
     }
 }

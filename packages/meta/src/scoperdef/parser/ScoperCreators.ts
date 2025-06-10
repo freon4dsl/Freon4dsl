@@ -5,7 +5,7 @@ import {
     FreReplacementNamespace,
     FreNamespaceExpression
 } from '../metalanguage/index.js';
-import { MetaLogger } from "../../utils/MetaLogger.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 
 const LOGGER = new MetaLogger("ScoperCreator").mute();
 
@@ -21,8 +21,8 @@ export function createScopeDef(data: Partial<ScopeDef>): ScopeDef {
     if (!!data.languageName) {
         result.languageName = data.languageName;
     }
-    if (!!data.namespaces) {
-        result.namespaces = data.namespaces;
+    if (!!data.parsedNamespaces) {
+        result.parsedNamespaces = data.parsedNamespaces;
     }
     if (!!data.scopeConceptDefs) {
         result.scopeConceptDefs = data.scopeConceptDefs;

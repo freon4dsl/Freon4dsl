@@ -3,7 +3,7 @@ import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import {internalTransformPrimValue, ParserGenUtil} from "../../ParserGenUtil.js";
 import { makeIndent } from "../GrammarUtils.js";
-import {GenerationUtil} from "../../../../utils/index.js";
+import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
 export class RHSPrimListGroup extends RHSPropPartWithSeparator {
     // `(${propTypeName} '${joinText}' )* /* option C */`

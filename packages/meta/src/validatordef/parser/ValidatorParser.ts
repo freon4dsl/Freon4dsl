@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { FreGenericParser } from "../../utils/index.js";
+import { FreGenericParser } from "../../utils/basic-dependencies/index.js";
 import { ValidatorChecker } from "../metalanguage/index.js";
 import { ValidatorDef } from "../metalanguage/index.js";
 import { setCurrentFileName } from "./ValidatorCreators.js";

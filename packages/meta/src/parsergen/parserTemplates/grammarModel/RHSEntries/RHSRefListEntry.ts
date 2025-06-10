@@ -1,8 +1,9 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
-import { GenerationUtil, Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/on-lang/index.js";
 import { internalTransformRefList, ParserGenUtil } from "../../ParserGenUtil.js";
 import { makeIndent, refRuleName } from "../GrammarUtils.js";
+import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
 export class RHSRefListEntry extends RHSPropEntry {
     constructor(prop: FreMetaProperty) {

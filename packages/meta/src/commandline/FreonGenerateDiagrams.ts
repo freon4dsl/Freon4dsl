@@ -1,5 +1,5 @@
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
-import { MetaLogger } from "../utils/MetaLogger.js";
+import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { DiagramGenerator } from "../diagramgen/DiagramGenerator.js";
 
 const LOGGER = new MetaLogger("FreonGenerateDiagrams"); // .mute();

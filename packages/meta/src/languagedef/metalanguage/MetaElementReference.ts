@@ -1,5 +1,4 @@
-import { FreMetaLangElement, FreMetaEnvironment } from "./internal.js";
-import { ParseLocation, FreMetaDefinitionElement, FreParseLocation } from "../../utils/index.js";
+import { FreMetaLangElement, FreLangScoper } from './internal.js';
 
 /**
  * Implementation for a (named) reference in Freon.
@@ -29,7 +28,7 @@ export class MetaElementReference<T extends FreMetaLangElement> {
 
     // Need for the scoper to work
     private typeName: string = "";
-    private scoper = FreMetaEnvironment.metascoper;
+    private scoper = new FreLangScoper();
 
     private constructor(referredElement: T | undefined, typeName: string) {
         // super();

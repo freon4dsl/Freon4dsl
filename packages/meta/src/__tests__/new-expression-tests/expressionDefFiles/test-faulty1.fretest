@@ -2,32 +2,40 @@ expressions for language test1
 
 BB {
     self.owner();
-    ff.aa.ee;
+    ff.aa.ee;               // ff not found in BB
 }
 
 CC {
-    #ZZ:instanceZZ1;
-    self.if(self.AAprop14);
-    self.if(SOMETHING);
-    self.if();
-    self.if(Extra);
+    #ZZ:instanceZ1;         // instance not found in ZZ
+    self.if(self.AAprop14); // param should be classifier
+    self.if(SOMETHING);     // SOMETHING not a classifier
+    self.if();              // if should have a param
+    self.if(Extra);         // Extra not subtype of CC
 }
 
 EE {
-    owner( self.dd);
-    self;
-    self.owner().if(Extra).aap;
+    owner( self.dd);            // owner() may not have param
+    self;                       // self should be followed by a dot
+    self.owner().if(CC);        // CC not possible value
+    self.owner().if(FF).aap;    // aap not found in CC
 }
 
 FF {
-    type().self;
-    ee.dd.self.cc;
+    type().self;                // no dot-expression after type()
+    ee.dd.self.cc;              // self only at start
     ee.owner().if(FF).type();
     ee.owner().type();
+    ee.cc;                      // cc not found in EE
 }
 
 ExtraProp {
-    self.owner().peer;
+    self.owner().peer;          // peer not found in Extra
     self.owner().appel;
 }
+
+AA {
+    self.AAprop12.DDprop8.BBprop5.type(); // TODO: cannot get type from a list of elements?? Or is the result a list itself?
+}
+
+
 

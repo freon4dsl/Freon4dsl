@@ -1,7 +1,6 @@
-import { CheckRunner, Checker, ParseLocationUtil } from "../../utils/index.js";
 import {
     FreMetaLanguage,
-    FreMetaClassifier
+    FreMetaClassifier, LangUtil
 } from '../../languagedef/metalanguage/index.js';
 import {
     FreReplacementNamespace,
@@ -9,11 +8,11 @@ import {
     ScopeDef,
     FreNamespaceExpression
 } from './FreScopeDefLang.js';
-import { LangUtil, MetaLogger } from "../../utils/index.js";
-import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
-import { CommonChecker } from "../../languagedef/checking/index.js";
 import { FreLangExpressionCheckerNew } from '../../langexpressions/checking/FreLangExpressionCheckerNew.js';
-import { FreFunctionExp } from '../../langexpressions/metalanguage/index.js';
+import { FreFunctionExp, ClassifierReference } from '../../langexpressions/metalanguage/index.js';
+import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import { MetaLogger } from '../../utils/no-dependencies/index.js';
+
 
 const LOGGER = new MetaLogger("ScoperChecker").mute();
 
@@ -39,7 +38,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         this.runner = new CheckRunner(this.errors, this.warnings);
 
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
-        this.myNamespaces = this.findAllNamespaces(definition.namespaces);
+        this.myNamespaces = this.findAllNamespaces(definition.parsedNamespaces);
 
         // check all concept entries, make sure there are no doubles
         const done: FreMetaClassifier[] = [];
@@ -49,7 +48,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
                     check: !done.includes(def.classifierRef.referred),
                     error: `Double entry (${def.classifierRef?.name}) is not allowed ${ParseLocationUtil.location(def)}.`,
                     whenOk: () => {
-                        CommonChecker.checkClassifierReference(def.classifierRef!, this.runner);
+                        this.myExpressionChecker.checkClassifierReference(def.classifierRef!);
                         if (!!def.classifierRef!.referred) {
                             if (!!def.namespaceAddition) {
                                 this.checkNamespaceAdditions(def.namespaceAddition, def.classifierRef!.referred);
@@ -134,10 +133,10 @@ export class ScoperChecker extends Checker<ScopeDef> {
         }
     }
 
-    private findAllNamespaces(namespaces: MetaElementReference<FreMetaClassifier>[]): FreMetaClassifier[] {
+    private findAllNamespaces(namespaces: ClassifierReference[]): FreMetaClassifier[] {
         let result: FreMetaClassifier[] = [];
         namespaces.forEach((ref) => {
-            CommonChecker.checkClassifierReference(ref, this.runner);
+            this.myExpressionChecker.checkClassifierReference(ref);
             const myClassifier = ref.referred;
             if (!!myClassifier) {
                 // error message handled by checkClassifierReference()
@@ -153,12 +152,11 @@ export class ScoperChecker extends Checker<ScopeDef> {
      * @param classifierSet
      * @private
      */
-    private isSetofNamespaces(classifierSet: MetaElementReference<FreMetaClassifier>[]): string[] {
+    private isSetofNamespaces(classifierSet: FreMetaClassifier[]): string[] {
         let result: string[] = [];
         classifierSet.forEach( ref => {
-            const foundClassifier = ref.referred;
-            if (!this.myNamespaces.includes(foundClassifier)) {
-                result.push(foundClassifier.name);
+            if (!this.myNamespaces.includes(ref)) {
+                result.push(ref.name);
             }
         })
         return result;

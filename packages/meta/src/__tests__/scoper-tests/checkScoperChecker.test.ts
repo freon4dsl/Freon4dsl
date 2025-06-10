@@ -1,7 +1,8 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { FreMetaLanguage } from '../../languagedef/metalanguage';
 import { describe, test, expect, beforeEach } from "vitest";
-import { Checker, MetaLogger } from '../../utils';
+import { MetaLogger } from '../../utils/no-dependencies/index.js';
+import { Checker } from '../../utils/basic-dependencies/index.js';
 import { ScoperParser } from '../../scoperdef/parser/ScoperParser';
 import { ScopeDef } from '../../scoperdef/metalanguage';
 

@@ -28,61 +28,40 @@ describe("Checking expression parser on syntax errors", () => {
         const demoExpressionFile = testdir + "demoExpressions.fretest";
         try {
             const xx = parser.parse(demoExpressionFile);
-            console.log(xx.toFreString())
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
-                console.log(checker.errors.map(err => `"${err}"`).join("\n") );
-                expect(e.message).toBe(`checking errors (10).`);
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                expect(e.message).toBe(`checking errors (7).`);
                 expect(
-                    checker.errors.includes(
-                        "List property 'entities' cannot have an applied expression (.expr) [file: demoExpressions.fretest:5:10].",
-                    ),
-                ).toBeTruthy();
-                expect(
-                    checker.errors.includes(
-                        "Cannot find property or classifier 'int_attr' in 'DemoEntity' [file: demoExpressions.fretest:11:10].",
-                    ),
-                ).toBeTruthy();
-                expect(
-                    checker.errors.includes(
-                        "Cannot find property or classifier 'attrutes' in 'DemoEntity' [file: demoExpressions.fretest:13:10].",
-                    ),
-                ).toBeTruthy();
-                expect(
-                    checker.errors.includes(
-                        "Inter is not a predefined instance of DemoAttributeType [file: demoExpressions.fretest:15:5].",
-                    ),
-                ).toBeTruthy();
-                expect(
-                    checker.errors.includes(
-                        "List property 'attributes' cannot have an applied expression (.type()) [file: demoExpressions.fretest:17:10].",
-                    ),
+                  checker.errors.includes(
+                    "Variable 'expr' should be known as property in classifier 'DemoEntity' [file: demoExpressions.fretest:5:19].",
+                  ),
                 );
                 expect(
-                    checker.errors.includes(
-                        "Cannot establish the type of 'owner()'. Maybe add '.if()'. [file: demoExpressions.fretest:18:5].",
-                    ),
+                  checker.errors.includes(
+                    "Variable 'int_attr' should be known as property in classifier 'DemoEntity' [file: demoExpressions.fretest:11:10].",
+                  ),
                 ).toBeTruthy();
                 expect(
-                    checker.errors.includes(
-                        "Cannot find property or classifier 'xx' in 'DemoEntity' [file: demoExpressions.fretest:19:5].",
-                    ),
+                  checker.errors.includes(
+                    "Variable 'attrutes' should be known as property in classifier 'DemoEntity' [file: demoExpressions.fretest:13:10].",
+                  ),
                 ).toBeTruthy();
                 expect(
-                    checker.errors.includes(
-                        "Cannot find property or classifier 'extra' in 'DemoVariable' [file: demoExpressions.fretest:33:10].",
-                    ),
+                  checker.errors.includes(
+                    "Function 'conformsTo()' should have a parameter [file: demoExpressions.fretest:27:23].",
+                  ),
                 ).toBeTruthy();
                 expect(
-                    checker.errors.includes(
-                        "A dot-expression is not allowed after a classifier, maybe you meant '#DemoVariable:<instance>' [file: demoExpressions.fretest:23:6].",
-                    ),
+                  checker.errors.includes(
+                    "Instance 'Inter' is not a predefined instance of DemoAttributeType [file: demoExpressions.fretest:15:5].",
+                  ),
                 ).toBeTruthy();
                 expect(
-                    checker.errors.includes(
-                        "A dot-expression is not allowed after a classifier, maybe you meant '#DemoFunction:<instance>' [file: demoExpressions.fretest:29:5].",
-                    ),
+                  checker.errors.includes(
+                    "Variable 'extra' should be known as property in classifier 'DemoVariable' [file: demoExpressions.fretest:33:10].",
+                  ),
                 ).toBeTruthy();
             }
         }

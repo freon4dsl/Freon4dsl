@@ -9,7 +9,7 @@ import { FretTypeConcept } from "./FretTypeConcept.js";
 import { FretClassifierSpec } from "./FretClassifierSpec.js";
 import { FretAnyTypeSpec } from "./FretAnyTypeSpec.js";
 import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil.js";
-import { Names } from "../../utils/index.js";
+import { Names } from "../../utils/on-lang/index.js";
 
 export class TyperDef extends FreTyperElement {
     static freonType: FreMetaClassifier = this.makeFreType();

@@ -4,10 +4,9 @@ import {
     FreMetaLanguage,
     FreLangAppliedFeatureExp,
     FreMetaPrimitiveType,
-    FreMetaLimitedConcept,
-} from "./internal.js";
-import { MetaLogger } from "../../utils/MetaLogger.js";
-import { FreMetaDefinitionElement } from "../../utils/index.js";
+    FreMetaLimitedConcept
+} from './internal.js';
+import { MetaLogger, FreMetaDefinitionElement } from "../../utils/no-dependencies/index.js";
 
 const LOGGER = new MetaLogger("FreLangScoper"); // .mute();
 // const anyElement = "_$anyElement";
@@ -21,6 +20,7 @@ export interface FreMetaScoper {
 }
 
 export class FreLangScoper {
+    static metascoper = new FreLangScoper();
     // @ts-ignore this property will be set by users of FreLangScoper
     public language: FreMetaLanguage;
     extraScopers: FreMetaScoper[] = [];
@@ -53,7 +53,7 @@ export class FreLangScoper {
         ) {
             if (owner instanceof FreLangAppliedFeatureExp) {
                 const xx = owner.sourceExp.$referredElement?.referred;
-                if (!!!xx) {
+                if (!xx) {
                     LOGGER.error(
                         `Incorrect use of applied feature, source expression has unknown reference: '${owner.sourceExp.sourceName}'.`,
                     );

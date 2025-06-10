@@ -1,5 +1,5 @@
-import { Names, Imports } from "../../../utils/index.js"
-import { FreMetaLanguage } from "../../../languagedef/metalanguage/FreMetaLanguage.js";
+import { Names, Imports } from '../../../utils/on-lang/index.js';
+import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 
 export class ActionsTemplate {
     generate(language: FreMetaLanguage): string {

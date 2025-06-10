@@ -2,7 +2,8 @@ import { FreMetaScoper } from "../../languagedef/metalanguage/FreLangScoper.js";
 import { FreMetaClassifier, FreMetaLangElement } from "../../languagedef/metalanguage/index.js";
 import { FretCreateExp, FretPropertyCallExp, FretVarCallExp, FretWhereExp } from "../metalanguage/expressions/index.js";
 import { FretProperty, TyperDef, FreTyperElement } from "../metalanguage/index.js";
-import { FreMetaDefinitionElement, Names } from "../../utils/index.js";
+import { Names } from "../../utils/on-lang/index.js";
+import { FreMetaDefinitionElement } from '../../utils/no-dependencies/index.js';
 
 /**
  * This class makes sure that references to parts of the typer definition can be found.

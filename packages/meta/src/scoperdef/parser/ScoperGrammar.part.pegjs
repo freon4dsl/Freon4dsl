@@ -11,7 +11,7 @@ Scoper_Definition
     {
         return create.createScopeDef({
             "languageName"      :languageName,
-            "namespaces"        :ns,
+            "parsedNamespaces"  :ns,
             "scopeConceptDefs"  :defs,
             "location"          :location()
         });

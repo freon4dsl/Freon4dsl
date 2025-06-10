@@ -1,5 +1,5 @@
 import { FreMetaClassifier, FreMetaLimitedConcept } from "../../languagedef/metalanguage/index.js";
-import { Names } from "../../utils/index.js";
+import { Names } from "../../utils/on-lang/index.js";
 import { GrammarRule } from "./grammarModel/GrammarRule.js";
 import { LimitedRule } from "./grammarModel/LimitedRule.js";
 

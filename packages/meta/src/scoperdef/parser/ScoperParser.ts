@@ -4,7 +4,7 @@ import { setCurrentFileName } from "./ScoperCreators.js";
 import { setCurrentFileName as expressionFileName } from "../../langexpressions/parser/ExpressionCreators.js";
 
 import { parse } from "./ScoperGrammar.js";
-import { FreGenericParserNew } from '../../utils/parsingAndChecking/FreGenericParserNew.js';
+import { FreGenericParserNew } from '../../utils/basic-dependencies/FreGenericParserNew.js';
 
 export class ScoperParser extends FreGenericParserNew<ScopeDef> {
     public language: FreMetaLanguage;

@@ -24,7 +24,7 @@ DemoAttribute {
 }
 
 DemoFunction {
-    self.conformsTo (self.declaredType);
+    self.declaredType.conformsTo ();
     self.parameters;
     DemoFunction.parameters;
 }

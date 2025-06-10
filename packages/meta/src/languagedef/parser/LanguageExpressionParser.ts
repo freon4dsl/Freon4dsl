@@ -1,6 +1,6 @@
 import { FreMetaLanguage } from "../metalanguage/FreMetaLanguage.js";
-import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker.js";
-import { FreGenericParser } from "../../utils/parsingAndChecking/FreGenericParser.js";
+import { FreLangExpressionChecker } from "../../languagedef/checking/FreLangExpressionChecker.js";
+import { FreGenericParser } from "../../utils/basic-dependencies/FreGenericParser.js";
 import { LanguageExpressionTester } from "./LanguageExpressionTester.js";
 import { parser } from "./ExpressionGrammar.js";
 import { setCurrentFileName } from "./ExpressionCreators.js";

@@ -47,7 +47,8 @@
     "lang-exp-new": "npm run lang-exp-concat-new && peggy --format es src/langexpressions/parser/ExpressionGrammar.pegjs",
     "scop-parser-new": "npm run scop-parser-concat-new && peggy --format es src/scoperdef/parser/ScoperGrammar.pegjs",
     "lang-exp-concat-new": "cd src/langexpressions/parser && bash ./concat.sh",
-    "scop-parser-concat-new": "cd src/scoperdef/parser && bash ./concat.sh"
+    "scop-parser-concat-new": "cd src/scoperdef/parser && bash ./concat.sh",
+    "circular": "madge --circular src/* > DEPENDENCIES.md"
   },
   "devDependencies": {
     "vitest": "^3.0.5",

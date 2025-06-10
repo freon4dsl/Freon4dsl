@@ -1,4 +1,4 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage/FreMetaLanguage.js";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { Names } from "./Names.js";
 
 // files need to be generated into folders ...

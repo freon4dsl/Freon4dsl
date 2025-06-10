@@ -1,4 +1,4 @@
-import { FreMetaDefinitionElement } from "../../../utils/index.js";
+import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
 import { FreLangExp, FreMetaProperty, MetaElementReference } from "../../../languagedef/metalanguage/index.js";
 import { FreEditBoolKeywords, DisplayType, FreEditListInfo, FreEditExternalInfo } from "./internal.js";
 

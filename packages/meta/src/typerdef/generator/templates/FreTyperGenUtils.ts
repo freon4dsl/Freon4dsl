@@ -9,9 +9,10 @@ import {
     FretTypeConcept,
     FretWhereExp,
 } from "../../metalanguage/index.js";
-import { ListUtil, Names } from "../../../utils/index.js";
+import { Names } from "../../../utils/on-lang/index.js";
 import { FreMetaClassifier, FreMetaProperty } from "../../../languagedef/metalanguage/index.js";
 import { FretBinaryExp, FretCreateExp, FretVarCallExp } from "../../metalanguage/expressions/index.js";
+import { ListUtil } from '../../../utils/no-dependencies/index.js';
 
 const inferFunctionName: string = "inferType";
 const typeofName: string = "typeof";

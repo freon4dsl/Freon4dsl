@@ -1,9 +1,12 @@
 import {
     FreMetaLangElement,
     FreMetaInstance,
-    FreMetaLanguage, FreMetaClassifier, FreMetaProperty, FreMetaPrimitiveType, FreMetaConcept
+    FreMetaLanguage,
+    FreMetaClassifier,
+    FreMetaProperty,
+    FreMetaPrimitiveType,
+    FreMetaConcept
 } from '../../languagedef/metalanguage/index.js';
-import { MetaElementReference } from '../../languagedef/metalanguage/index.js';
 
 // Some properties of the classes defined here are marked @ts-ignore to avoid the error:
 // TS2564: ... has no initializer and is not definitely assigned in the constructor.
@@ -37,29 +40,30 @@ export abstract class FreLangExpNew extends FreMetaLangElement {
 export abstract class FreVarOrFunctionExp extends FreLangExpNew {
     // @ts-ignore
     name: string;
-    applied: FreAppliedExp | undefined;
+    applied: FreVarOrFunctionExp | undefined;
+    previous: FreVarOrFunctionExp | undefined;
     // @ts-ignore
-    $referredClassifier: MetaElementReference<FreMetaClassifier>;
+    $referredClassifier: FreMetaClassifier;
 
     get referredClassifier(): FreMetaClassifier {
-        return this.$referredClassifier?.referred;
+        return this.$referredClassifier;
     }
 
     set referredClassifier(p: FreMetaClassifier) {
-        this.$referredClassifier = MetaElementReference.create<FreMetaClassifier>(p, "FreMetaClassifier");
-        this.$referredClassifier.owner = this;
+        this.$referredClassifier = p;
+        // this.$referredClassifier.owner = this;
     }
 
     // @ts-ignore
-    $referredProperty: MetaElementReference<FreMetaProperty>;
+    $referredProperty: FreMetaProperty;
 
     get referredProperty(): FreMetaProperty {
-        return this.$referredProperty?.referred;
+        return this.$referredProperty;
     }
 
     set referredProperty(p: FreMetaProperty) {
-        this.$referredProperty = MetaElementReference.create<FreMetaProperty>(p, "FreProperty");
-        this.$referredProperty.owner = this;
+        this.$referredProperty = p;
+        // this.$referredProperty.owner = this;
     }
 
     toErrorString(): string {
@@ -100,7 +104,7 @@ export class FreVarExp extends FreVarOrFunctionExp {
     }
 
     toFreString(): string {
-        return this.name  + (this.applied ? this.applied.toFreString() : '');
+        return this.name  + (this.applied ? '.' + this.applied.toFreString() : '');
     }
 
     toErrorString(): string {
@@ -111,10 +115,10 @@ export class FreVarExp extends FreVarOrFunctionExp {
 export class FreFunctionExp extends FreVarOrFunctionExp {
     // @ts-ignore
     param: FreLangExpNew | undefined;
-    possibleClassifiers: MetaElementReference<FreMetaClassifier>[] = [];
+    possibleClassifiers: FreMetaClassifier[] = [];
 
     toFreString(): string {
-        return this.name + '(' + (this.param ? this.param.toFreString() : '') + ')' + (this.applied ? this.applied.toFreString() : '');
+        return this.name + '(' + (this.param ? this.param.toFreString() : '') + ')' + (this.applied ? '.' + this.applied.toFreString() : '');
     }
 
     toErrorString(): string {
@@ -134,57 +138,30 @@ export class FreFunctionExp extends FreVarOrFunctionExp {
     }
 }
 
-export class FreAppliedExp extends FreLangExpNew {
-    // @ts-ignore
-    exp: FreVarOrFunctionExp;
-    // @ts-ignore
-    previous: FreVarOrFunctionExp;
-
-    get referredProperty(): FreMetaProperty {
-        return this.exp.referredProperty;
-    }
-
-    toFreString(): string {
-        return '.' + this.exp?.toFreString();
-    }
-
-    toErrorString(): string {
-        return this.previous.toErrorString();
-    }
-
-    getResultingClassifier(): FreMetaClassifier | undefined {
-        return this.exp.getResultingClassifier();
-    }
-
-    getLastExpression(): FreLangExpNew {
-        return this.exp.getLastExpression();
-    }
-}
-
 export class FreLimitedInstanceExp extends FreLangExpNew {
     conceptName: string = ''; // should be the name of a limited concept
     instanceName: string = ''; // should be the name of one of the predefined instances of 'sourceName'
     // @ts-ignore
-    $referredInstance: MetaElementReference<FreMetaInstance>;
+    $referredInstance: FreMetaInstance;
     // @ts-ignore
-    $referredClassifier: MetaElementReference<FreMetaConcept>;
+    $referredClassifier: FreMetaConcept;
 
     get referredInstance(): FreMetaInstance {
-        return this.$referredInstance?.referred;
+        return this.$referredInstance;
     }
 
     set referredInstance(p: FreMetaInstance) {
-        this.$referredInstance = MetaElementReference.create<FreMetaInstance>(p, "FreMetaInstance");
-        this.$referredInstance.owner = this;
+        this.$referredInstance = p;
+        // this.$referredInstance.owner = this;
     }
 
     get referredClassifier(): FreMetaConcept {
-        return this.$referredClassifier?.referred;
+        return this.$referredClassifier;
     }
 
     set referredClassifier(p: FreMetaConcept) {
-        this.$referredClassifier = MetaElementReference.create<FreMetaConcept>(p, "FreMetaConcept");
-        this.$referredClassifier.owner = this;
+        this.$referredClassifier = p;
+        // this.$referredClassifier.owner = this;
     }
 
     toFreString(): string {
@@ -196,7 +173,7 @@ export class FreLimitedInstanceExp extends FreLangExpNew {
     }
 }
 
-export class FreLangSimpleExp extends FreLangExpNew {
+export class FreLangSimpleExpNew extends FreLangExpNew {
     // @ts-ignore
     value: number;
 
@@ -207,4 +184,11 @@ export class FreLangSimpleExp extends FreLangExpNew {
     getResultingClassifier(): FreMetaClassifier | undefined {
         return FreMetaPrimitiveType.number;
     }
+}
+
+export class ClassifierReference extends FreMetaLangElement {
+    // @ts-ignore
+    name: string;
+    // @ts-ignore
+    referred: FreMetaClassifier;
 }

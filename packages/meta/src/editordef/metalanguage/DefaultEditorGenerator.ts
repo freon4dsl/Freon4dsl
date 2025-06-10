@@ -25,7 +25,8 @@ import {
     ForType,
     EditorDefaults,
 } from "../metalanguage/index.js";
-import { LOG2USER, Names } from "../../utils/index.js";
+import { LOG2USER } from "../../utils/basic-dependencies/index.js";
+import { Names } from "../../utils/on-lang/index.js";
 
 export class DefaultEditorGenerator {
     private static interfacesUsed: FreMetaInterface[] = []; // holds all interfaces that are used as type of a property

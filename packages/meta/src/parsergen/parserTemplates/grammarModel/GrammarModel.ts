@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Imports, Names } from "../../../utils/index.js"
+import { Imports, Names } from "../../../utils/on-lang/index.js"
 import { refRuleName } from "./GrammarUtils.js";
 import { GrammarPart } from "./GrammarPart.js";
 import {

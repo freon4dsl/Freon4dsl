@@ -1,5 +1,5 @@
-import { FreMetaClassifier, FreMetaConcept, FreMetaInterface, FreMetaProperty } from "../metalanguage/index.js";
-import { CheckRunner, LangUtil, ParseLocationUtil } from "../../utils/index.js";
+import { FreMetaClassifier, FreMetaConcept, FreMetaInterface, FreMetaProperty, LangUtil } from "../metalanguage/index.js";
+import { CheckRunner, ParseLocationUtil } from "../../utils/basic-dependencies/index.js";
 import { CommonChecker } from "./CommonChecker.js";
 
 /**

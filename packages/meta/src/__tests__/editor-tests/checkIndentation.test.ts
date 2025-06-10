@@ -1,6 +1,6 @@
 import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker } from "../../utils/index.js";
+import { Checker } from "../../utils/basic-dependencies/index.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import {
     FreEditNormalProjection,

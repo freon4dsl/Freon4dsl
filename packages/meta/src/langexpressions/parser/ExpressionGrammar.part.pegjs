@@ -12,11 +12,11 @@ classifierReference = referredName:var
     return expCreate.createClassifierReference({"name": referredName, "location": location()})
 }
 
-langExpression = exp:composedExpression {return exp;}
+langExpression = exp:appliedExpression {return exp;}
       / exp:instanceExpression {return exp;}
       / exp:simpleExpression {return exp;}
 
-composedExpression = name:var ws '(' ws param:langExpression? ws ')' ws applied:appliedExpression?
+appliedExpression = name:var ws '(' ws param:langExpression? ws ')' ws applied:dotExpression?
 {
     return expCreate.createFunctionExpression({
         "name": name,
@@ -25,7 +25,7 @@ composedExpression = name:var ws '(' ws param:langExpression? ws ')' ws applied:
         "location": location()
     })
 }
-/ name:var applied:appliedExpression?
+/ name:var applied:dotExpression?
 {
     return expCreate.createVarExpression({
         "name": name,
@@ -34,12 +34,9 @@ composedExpression = name:var ws '(' ws param:langExpression? ws ')' ws applied:
     })
 }
 
-appliedExpression = ws '.' ws exp:composedExpression
+dotExpression = ws '.' ws exp:appliedExpression
 {
-    return expCreate.createAppliedExpression({
-        "exp": exp,
-        "location": location()
-    })
+    return exp;
 }
 
 instanceExpression = '#'conceptName:var ':' instance:var

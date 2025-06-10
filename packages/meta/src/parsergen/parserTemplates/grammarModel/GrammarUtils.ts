@@ -1,5 +1,5 @@
 import { FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../utils/index.js";
+import { Names } from "../../../utils/on-lang/index.js";
 import { ChoiceRuleMaker } from "../ChoiceRuleMaker.js";
 
 export function getPrimCall(propType: FreMetaClassifier): string {

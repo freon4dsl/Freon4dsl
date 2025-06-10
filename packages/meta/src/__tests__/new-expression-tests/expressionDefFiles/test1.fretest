@@ -1,5 +1,5 @@
 expressions for language test1
-/*
+
 AA {
     // the possibilities for primitive properties
     self.AAprop1; // : string;
@@ -18,6 +18,7 @@ AA {
     self.AAprop12; // : DD[];
     self.AAprop13; // : FF; // reference
     self.AAprop14; // : FF[]; // reference
+    self.AAprop12.DDprop8.BBprop5; // : DD[] => BB[] ==> boolean;
 }
 
 BB { // properties with limited concepts as type
@@ -33,14 +34,15 @@ CC {
 
 DD {
     self.DDprop7.type ( );
+    self.DDprop8.type ( );
     owner().if(BB).type (  );
+    owner().type (  );
 }
 
 EE {
     owner();
 }
-*/
+
 FF {
-    // self.ee.dd.cc.bb.aa;
-    ee.owner().if(FF).type();
+    self.ee.dd.cc.bb.aa;
 }

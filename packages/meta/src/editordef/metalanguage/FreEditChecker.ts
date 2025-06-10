@@ -8,16 +8,11 @@ import {
     FreMetaPrimitiveType,
     FreMetaProperty,
     MetaElementReference,
+    LangUtil
 } from "../../languagedef/metalanguage/index.js";
-import {
-    Checker,
-    CheckRunner,
-    FreMetaDefinitionElement,
-    LangUtil,
-    MetaLogger,
-    Names,
-    ParseLocationUtil,
-} from "../../utils/index.js";
+import { Checker, CheckRunner, ParseLocationUtil } from "../../utils/basic-dependencies/index.js";
+import { FreMetaDefinitionElement, MetaLogger } from "../../utils/no-dependencies/index.js";
+import { Names } from "../../utils/on-lang/index.js";
 import { FreEditParseUtil } from "../parser/FreEditParseUtil.js";
 import {
     DisplayType,

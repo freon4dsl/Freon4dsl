@@ -1,6 +1,6 @@
 import { GrammarRule } from "./GrammarRule.js";
 import { FreMetaClassifier, FreMetaExpressionConcept } from "../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../utils/index.js";
+import { Names } from "../../../utils/on-lang/index.js";
 import { getTypeCall } from "./GrammarUtils.js";
 
 export class BinaryExpressionRule extends GrammarRule {

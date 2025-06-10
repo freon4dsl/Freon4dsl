@@ -18,7 +18,8 @@ import {
     MetaElementReference,
     FreMetaEnumValue,
 } from "../metalanguage/index.js";
-import { ParseLocation, ParseLocationUtil } from "../../utils/index.js";
+import { ParseLocationUtil } from "../../utils/basic-dependencies/index.js";
+import { ParseLocation } from '../../utils/no-dependencies/index.js';
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";

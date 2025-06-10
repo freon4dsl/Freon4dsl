@@ -1,6 +1,6 @@
 import { GrammarRule } from "./GrammarRule.js";
 import { FreMetaClassifier, FreMetaLanguage, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
-import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils/index.js";
+import { LANGUAGE_GEN_FOLDER, Names } from "../../../utils/on-lang/index.js";
 import { FreMetaUnitDescription } from "../../../languagedef/metalanguage/FreMetaLanguage.js";
 
 export class GrammarPart {

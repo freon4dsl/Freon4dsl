@@ -1,6 +1,6 @@
-import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Names, CONFIGURATION_FOLDER, LangUtil, Imports } from "../../../utils/index.js"
+import { FreMetaClassifier, FreMetaLanguage, LangUtil } from "../../../languagedef/metalanguage/index.js";
 import { ScopeDef } from "../../metalanguage/index.js";
+import { CONFIGURATION_FOLDER, Imports, Names } from '../../../utils/on-lang/index.js';
 
 export class ScoperDefTemplate {
     generateScoperDef(language: FreMetaLanguage, scoperDef: ScopeDef, relativePath: string): string {

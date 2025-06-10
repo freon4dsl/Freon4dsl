@@ -5,7 +5,7 @@ import {
     FreMetaPrimitiveProperty,
     FreMetaProperty,
 } from "../../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../../utils/index.js";
+import { Names } from '../../../../utils/on-lang/index.js';
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
 export class ExternalBoxesHelper {

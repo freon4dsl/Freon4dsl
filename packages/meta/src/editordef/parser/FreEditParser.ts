@@ -1,6 +1,7 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
-import { Names, ParseLocationUtil, FreGenericParser } from "../../utils/index.js";
+import { Names } from "../../utils/on-lang/index.js";
+import { ParseLocationUtil, FreGenericParser } from "../../utils/basic-dependencies/index.js";
 import {
     FreEditExtraClassifierInfo,
     FreEditProjectionGroup,
