@@ -238,18 +238,21 @@ export class ServerCommunication2 implements IServerCommunication {
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication2.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         // put the unit and its interface under the new name
-        this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
+        await this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit and interface
-        this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
+        await this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
     }
 
     // @ts-ignore
     async createModel(modelName: string): any {
-        await this.putWithTimeout(`putModel`, {}, `model=${modelName}&language=${FreLanguage.getInstance().name}`);
+        LOGGER.log(`ServerCommunication2.createModel ${modelName}`)
+        const language = FreLanguage.getInstance().name
+        await this.putWithTimeout(`putModel`, {}, `model=${modelName}&language=${language}`);
     }
 
     // @ts-ignore
-    createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
-        this.putModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
+    async createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
+        LOGGER.log(`ServerCommunication2.createModelUnit ${modelName}::${unit.name}`)
+        await this.putModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
     }
 }

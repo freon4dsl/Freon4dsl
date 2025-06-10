@@ -11,6 +11,7 @@ export class ModelRequests2 {
     public static validate = false;
     
     public static async putModel(modelname: string, language: string, ctx: IRouterContext) {
+        console.log(`ModelRequest2.putModel ${modelname} language ${language}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests2.readStoreCatalog()
@@ -32,13 +33,14 @@ export class ModelRequests2 {
                 console.log(`ModelRequest2.puModel: model; ${modelname} already exists, ignoring`,)
             }
         } catch (e) {
-            console.log(`ModelRequest2.putModelUnit: ${e.message}`);
-            console.log(e.stack)
-            ctx.response.body = e.message
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
     
     public static async putModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
+        console.log(`ModelRequest2.putModelUnit ${modelname}::${unitname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests2.readStoreCatalog()
@@ -65,13 +67,14 @@ export class ModelRequests2 {
             }
             fs.writeFileSync(path.join(`${storeFolder}`, modelname, `${unit.file}.json`), JSON.stringify(body, null, 3));
         } catch (e) {
-            console.log(`ModelRequest2.putModelUnit: ${e.message}`);
-            console.log(e.stack)
-            ctx.response.body = e.message
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
     public static async getModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
+        console.log(`ModelRequest2.getModelUnit ${modelname}::${unitname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests2.readStoreCatalog()
@@ -94,12 +97,14 @@ export class ModelRequests2 {
             }
             ctx.response.body = result;
         } catch (e) {
-            console.log(e.message);
-            ctx.response.body = e.message
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
     public static async getUnitList(modelname: string, ctx: IRouterContext) {
+        console.log(`ModelRequest2.getUnitList ${modelname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests2.readStoreCatalog()
@@ -107,24 +112,28 @@ export class ModelRequests2 {
             const dir = model.units.map(u => u.name)
             ctx.response.body = dir;
         } catch (e) {
-            console.log(e.message);
-            ctx.response.body = e.message
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
     public static async getModelList(ctx: IRouterContext, language: string) {
+        console.log(`ModelRequest2.getModelList`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests2.readStoreCatalog()
             const modelnames = catalog.models.filter(m => m?.language === language).map(model => model.name);
             ctx.response.body = modelnames;
         } catch (e) {
-            console.log(e.message);
-            ctx.response.body = e.message
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
     public static async deleteModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
+        console.log(`ModelRequest2.deleteModelUnit ${modelname}::${unitname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests2.readStoreCatalog()
@@ -139,26 +148,30 @@ export class ModelRequests2 {
                 }
             }
         } catch (e) {
-            console.log(e.message);
-            ctx.request.body = e.message;
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
     public static async deleteModel(modelname: string, ctx: IRouterContext) {
+        console.log(`ModelRequest2.deleteModel ${modelname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests2.readStoreCatalog()
             const storedModelIndex = catalog.models.findIndex(m => m.name === modelname)
+            console.log(`ModelRequest2.deleteModel index ${storedModelIndex}`)
             if (storedModelIndex !== -1) {
                 const storedModel = catalog.models[storedModelIndex]
                 catalog.models.splice(storedModelIndex, 1)
                 ModelRequests2.writeStoreCatalog(catalog)
                 console.log("Unlink: " + path.join(`${storeFolder}`, storedModel.folder));
-                fs.rmdirSync(path.join(`${storeFolder}`, storedModel.folder), { recursive: true });
+                fs.rmSync(path.join(`${storeFolder}`, storedModel.folder), { recursive: true });
             }
         } catch (e) {
-            console.log(e.message);
-            ctx.request.body = e.message;
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
@@ -168,7 +181,8 @@ export class ModelRequests2 {
                 fs.mkdirSync(`${storeFolder}`);
             }
         } catch (e) {
-            console.log(e.message);
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
         }
     }
 
@@ -179,7 +193,8 @@ export class ModelRequests2 {
             const catalog = JSON.parse(text.toString()) as StoreCatalog
             return catalog
         } catch (e) {
-            console.log(e.message);
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
             throw e
         }
         return undefined
@@ -190,8 +205,8 @@ export class ModelRequests2 {
             this.checkStoreFolder()
             fs.writeFileSync(path.join(`${storeFolder}`, `store.json`), JSON.stringify(catalog, null, 4))
         } catch (e) {
-            console.log(e.message);
-            throw e
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
         }
     }
 

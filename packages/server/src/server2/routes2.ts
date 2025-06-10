@@ -68,11 +68,11 @@ router.put("/putModelUnit", async (ctx: Router.IRouterContext) => {
 });
 
 router.get("/deleteModelUnit", async (ctx: Router.IRouterContext) => {
-    const folder = ctx.query["model"];
+    const model = ctx.query["model"];
     const name = ctx.query["unit"];
-    console.log("DeleteModelUnit: " + folder + "/" + name);
-    if ((!!name || !!folder) && typeof name === "string" && typeof folder === "string") {
-        ModelRequests2.deleteModelUnit(folder, name, ctx);
+    console.log("DeleteModelUnit: " + model + "/" + name);
+    if ((!!name || !!model) && typeof name === "string" && typeof model === "string") {
+        ModelRequests2.deleteModelUnit(model, name, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
@@ -82,10 +82,10 @@ router.get("/deleteModelUnit", async (ctx: Router.IRouterContext) => {
 });
 
 router.get("/deleteModel", async (ctx: Router.IRouterContext) => {
-    const folder = ctx.query["folder"];
-    console.log("DeleteModel: " + folder);
-    if (!!folder && typeof folder === "string") {
-        ModelRequests2.deleteModel(folder, ctx);
+    const model = ctx.query["model"];
+    console.log("DeleteModel: " + model);
+    if (!!model && typeof model === "string") {
+        ModelRequests2.deleteModel(model, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed

@@ -18,7 +18,8 @@ export class ModelRequests {
             }
             fs.writeFileSync(path.join(`${storeFolder}`, foldername, `${name}.json`), JSON.stringify(body, null, 3));
         } catch (e) {
-            console.log(e.message);
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
         }
     }
 
@@ -42,7 +43,9 @@ export class ModelRequests {
             }
             ctx.response.body = result;
         } catch (e) {
-            console.log(e.message);
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
@@ -65,7 +68,9 @@ export class ModelRequests {
             // FIXME End
             ctx.response.body = dir;
         } catch (e) {
-            console.log(e.message);
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
@@ -75,7 +80,9 @@ export class ModelRequests {
             const dir = fs.readdirSync(`${storeFolder}`);
             ctx.response.body = dir;
         } catch (e) {
-            console.log(e.message);
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
@@ -84,8 +91,9 @@ export class ModelRequests {
             this.checkStoreFolder();
             fs.unlinkSync(path.join(`${storeFolder}`, foldername, `${name}.json`));
         } catch (e) {
-            console.log(e.message);
-            ctx.request.body = e.message;
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
@@ -95,8 +103,9 @@ export class ModelRequests {
             console.log("Unlink: " + path.join(`${storeFolder}`, foldername));
             fs.rmdirSync(path.join(`${storeFolder}`, foldername), { recursive: true });
         } catch (e) {
-            console.log(e.message);
-            ctx.request.body = e.message;
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
+            ctx.request.body = message;
         }
     }
 
@@ -106,7 +115,8 @@ export class ModelRequests {
                 fs.mkdirSync(`${storeFolder}`);
             }
         } catch (e) {
-            console.log(e.message);
+            const message = (e instanceof Error? e.message : e.toString())
+            console.log(message);
         }
     }
 }
