@@ -323,7 +323,7 @@ export class ItemBoxHelper {
 
             this._myTemplate.fragmentMethods.push(
                 `private ${Names.fragment(fragmentDefinition)}(): FragmentBox {
-                    return new FragmentBox(${elementVarName}, "${myRole}", ${fragmentDefinitionStr});
+                    return new FragmentBox(${elementVarName}, "${myRole}", ${fragmentDefinitionStr}, {cssClass: "${myRole}"});
                 }`
             );
             return `this.${Names.fragment(fragmentDefinition)}()`;

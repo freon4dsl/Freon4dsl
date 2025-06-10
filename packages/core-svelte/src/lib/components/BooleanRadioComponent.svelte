@@ -99,7 +99,7 @@
 <span
     role="radiogroup"
     aria-labelledby={ariaLabel}
-    class="boolean-radio-component-group"
+    class="boolean-radio-component-group {box.cssClass}"
     class:boolean-radio-component-vertical={!isHorizontal}
     {id}
 >

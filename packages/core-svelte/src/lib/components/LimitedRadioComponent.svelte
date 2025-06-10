@@ -101,7 +101,7 @@
     role="radiogroup"
     aria-labelledby={ariaLabel}
     {id}
-    class="limited-radio-component-group"
+    class="limited-radio-component-group {box.cssClass}"
     class:limited-radio-component-vertical={!isHorizontal}
 >
     {#each myEnum as nn, i}

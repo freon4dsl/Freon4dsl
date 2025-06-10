@@ -224,7 +224,7 @@
 
 <!-- onblur is needed for onmouseout -->
 <span
-    class={isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'}
+    class="{isHorizontal ? 'list-component-horizontal' : 'list-component-vertical'} {box.cssClass}"
     {id}
     bind:this={htmlElement}
     style:grid-template-columns="auto"

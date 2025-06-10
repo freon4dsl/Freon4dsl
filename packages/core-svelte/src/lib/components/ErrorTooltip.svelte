@@ -53,7 +53,7 @@
 </span>
 
 {#if isHovered}
-    <div style="top: {top}px; left: {left}px;" class="error-tooltip">
+    <div style="top: {top}px; left: {left}px;" class="error-tooltip {box.cssClass}">
         {#if content.length > 1}
             <ol class="error-tooltip-list-content">
                 {#each content as item}
