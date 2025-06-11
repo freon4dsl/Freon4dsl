@@ -13,7 +13,6 @@ import {
     FreLangFunctionCallExp,
     FreInstanceExp,
     FreLangSimpleExp,
-    FreLangScoper,
     MetaElementReference
 } from '../metalanguage/index.js';
 import { CommonChecker } from "../checking/CommonChecker.js";
@@ -38,8 +37,6 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                     `${ParseLocationUtil.location(definition)}.`,
             );
         }
-        // Note: this should be done first, otherwise the references will not be resolved
-        FreLangScoper.metascoper.language = this.language;
         this.runner.nestedCheck({
             // TODO Do we still need to report this? Yes, when language composition is implemented
             check: true, //this.language.name === definition.languageName,
@@ -59,7 +56,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     // ConceptName { exp exp exp }
     private checkLangExpSet(rule: TestExpressionsForConcept) {
         LOGGER.log("checkLangSetExp");
-        CommonChecker.checkClassifierReference(rule.conceptRef, this.runner);
+        CommonChecker.checkClassifierReference(rule.conceptRef, this.runner, this.language!);
 
         const enclosingConcept = rule.conceptRef.referred;
         if (!!enclosingConcept) {
@@ -120,8 +117,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                                 );
                                 if (!!foundInstance) {
                                     langExp.$referredElement = MetaElementReference.create<FreMetaInstance>(
-                                        foundInstance,
-                                        "FreInstance",
+                                        foundInstance
                                     );
                                 }
                             },
@@ -135,7 +131,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     // self.XXX
     private checkSelfExpression(langExp: FreLangSelfExp, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("checkSelfExpression " + langExp?.toFreString());
-        langExp.$referredElement = MetaElementReference.create<FreMetaClassifier>(enclosingConcept, "FreConcept");
+        langExp.$referredElement = MetaElementReference.create<FreMetaClassifier>(enclosingConcept);
         langExp.$referredElement.owner = langExp;
         if (this.strictUseOfSelf) {
             this.runner.nestedCheck({
@@ -158,8 +154,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
             error: `Expression should start with 'self' ${ParseLocationUtil.location(langExp)}.`,
             whenOk: () => {
                 langExp.$referredElement = MetaElementReference.create<FreMetaClassifier>(
-                    enclosingConcept,
-                    "FreClassifier",
+                    enclosingConcept
                 );
                 langExp.$referredElement.owner = langExp;
             },
@@ -206,10 +201,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
                                     error: `Cannot find reference to ${p.sourceName} ${ParseLocationUtil.location(langExp)}`,
                                     whenOk: () => {
                                         functionType = foundClassifier;
-                                        p.$referredElement = MetaElementReference.create<FreMetaClassifier>(
-                                            foundClassifier!,
-                                            "FreClassifier",
-                                        );
+                                        p.$referredElement = MetaElementReference.create<FreMetaClassifier>(foundClassifier!);
                                         p.$referredElement.owner = p;
                                     },
                                 });

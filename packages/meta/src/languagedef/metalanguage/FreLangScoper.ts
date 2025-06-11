@@ -11,7 +11,7 @@ import { MetaLogger, FreMetaDefinitionElement } from "../../utils/no-dependencie
 const LOGGER = new MetaLogger("FreLangScoper"); // .mute();
 // const anyElement = "_$anyElement";
 
-export interface FreMetaScoper {
+export interface FreMetaScoper2 {
     getFromVisibleElements(
         owner: FreMetaDefinitionElement,
         name: string,
@@ -19,11 +19,11 @@ export interface FreMetaScoper {
     ): FreMetaLangElement | undefined;
 }
 
-export class FreLangScoper {
-    static metascoper = new FreLangScoper();
+export class FreLangScoper2 {
+    static metascoper = new FreLangScoper2();
     // @ts-ignore this property will be set by users of FreLangScoper
     public language: FreMetaLanguage;
-    extraScopers: FreMetaScoper[] = [];
+    extraScopers: FreMetaScoper2[] = [];
 
     public getFromVisibleElements(
         owner: FreMetaDefinitionElement,

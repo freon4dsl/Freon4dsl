@@ -706,10 +706,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     classifierInfo.referenceShortcutExp.findRefOfLastAppliedFeature();
                 // checking is done by 'myExpressionChecker', still, to be sure, we surround this with an if-stat
                 if (!!xx) {
-                    classifierInfo.referenceShortCut = MetaElementReference.create<FreMetaProperty>(
-                        xx as FreMetaProperty,
-                        "FreProperty",
-                    );
+                    classifierInfo.referenceShortCut = MetaElementReference.create<FreMetaProperty>(xx as FreMetaProperty);
                     classifierInfo.referenceShortCut.owner = this.language!;
                 }
             }
@@ -786,7 +783,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     error: `Cannot find property '${item.expression!.toFreString()}' ${ParseLocationUtil.location(item)}`,
                     whenOk: () => {
                         // set the 'property' attribute of the projection
-                        item.property = MetaElementReference.create<FreMetaProperty>(myProp!, "FreProperty");
+                        item.property = MetaElementReference.create<FreMetaProperty>(myProp!);
                         item.property.owner = this.language!;
                         item.expression = undefined;
                         // check the rest
@@ -881,10 +878,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
     }
 
     private copyReference(reference: MetaElementReference<FreMetaProperty>): MetaElementReference<FreMetaProperty> {
-        const result: MetaElementReference<FreMetaProperty> = MetaElementReference.create<FreMetaProperty>(
-            reference.referred,
-            "FreProperty",
-        );
+        const result: MetaElementReference<FreMetaProperty> = MetaElementReference.create<FreMetaProperty>(reference.referred);
         result.owner = this.language!;
         return result;
     }

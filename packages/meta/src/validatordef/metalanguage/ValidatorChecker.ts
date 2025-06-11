@@ -68,7 +68,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         LOGGER.log("Check concept rule");
         if (!!rule.conceptRef) {
             // todo check whether this option needs to throw an error
-            CommonChecker.checkClassifierReference(rule.conceptRef, this.runner);
+            CommonChecker.checkClassifierReference(rule.conceptRef, this.runner, this.language!);
 
             const enclosingConcept: FreMetaClassifier = rule.conceptRef.referred;
             if (enclosingConcept) {
@@ -131,7 +131,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                     tr.property = FreLangSelfExp.create(enclosingConcept);
                     tr.property.appliedfeature = FreLangAppliedFeatureExp.create(tr.property, "name", testedProp);
                     // tr.property.appliedfeature.sourceName = "unitName";
-                    // tr.property.appliedfeature.referredElement = MetaElementReference.create<FreProperty>(myProp, "FreProperty");
+                    // tr.property.appliedfeature.referredElement = MetaElementReference.create<FreProperty>(myProp);
                     tr.property.location = tr.location;
                     tr.property.language = this.language!;
                 },

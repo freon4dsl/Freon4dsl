@@ -54,7 +54,7 @@ export class TyperDef extends FreTyperElement {
         // internal: FreElement
         const prop: FreMetaProperty = new FreMetaProperty();
         prop.name = "internal";
-        prop.typeReference = MetaElementReference.create<FreMetaClassifier>("FreNode", "FreClassifier");
+        prop.typeReference = MetaElementReference.create<FreMetaClassifier>("FreNode");
         prop.typeReference.owner = prop;
         result.properties.push(prop);
         return result;
@@ -86,7 +86,7 @@ export class TyperDef extends FreTyperElement {
     set types(newTypes: FreMetaClassifier[]) {
         this.$types = [];
         newTypes.forEach((t) => {
-            const xx = MetaElementReference.create<FreMetaClassifier>(t, "FreClassifier");
+            const xx = MetaElementReference.create<FreMetaClassifier>(t);
             xx.owner = this.language;
             this.$types.push(xx);
         });
@@ -105,7 +105,7 @@ export class TyperDef extends FreTyperElement {
     set conceptsWithType(newTypes: FreMetaClassifier[]) {
         this.$conceptsWithType = [];
         newTypes.forEach((t) => {
-            const xx = MetaElementReference.create<FreMetaClassifier>(t, "FreClassifier");
+            const xx = MetaElementReference.create<FreMetaClassifier>(t);
             xx.owner = this.language;
             this.$conceptsWithType.push(xx);
         });

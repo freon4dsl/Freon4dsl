@@ -5,7 +5,7 @@ import {
     FreMetaLimitedConcept,
     FreMetaPrimitiveType,
     FreMetaProperty,
-    MetaElementReference, LangUtil, FreLangScoper
+    MetaElementReference, LangUtil
 } from '../../languagedef/metalanguage/index.js';
 import {
     FretAnytypeExp,
@@ -29,7 +29,6 @@ import {
     FretWhereExp,
     TyperDef,
 } from "../metalanguage/index.js";
-import { FretScoper } from "./FretScoper.js";
 import { FretOwnerSetter } from "./FretOwnerSetter.js";
 import { CommonChecker, CommonSuperTypeUtil } from "../../languagedef/checking/index.js";
 import { CheckerPhase, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
@@ -60,10 +59,11 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         }
         definition.language = this.language;
 
-        // To be able to find references in the type defintion to nodes other than those from the language
+        // To be able to find references in the type definition to nodes other than those from the language
         // we need an extra scoper, and we need to set the opposites of all 'parts': their owning nodes
-        FreLangScoper.metascoper.language = this.language;
-        FreLangScoper.metascoper.extraScopers.push(new FretScoper(definition));
+        // TODO replace this
+        // FreLangScoper.metascoper.language = this.language;
+        // FreLangScoper.metascoper.extraScopers.push(new FretScoper(definition));
         FretOwnerSetter.setNodeOwners(definition);
 
         this.runner = runner;
@@ -162,7 +162,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // LOGGER.log("Checking types: '" + types.map(t => t.name).join(", ") + "'");
         if (!!types) {
             for (const t of types) {
-                CommonChecker.checkClassifierReference(t, this.runner);
+                CommonChecker.checkClassifierReference(t, this.runner, this.language);
                 if (!!t.referred) {
                     // error message given by myExpressionChecker
                     this.runner.nestedCheck({
@@ -198,7 +198,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
     }
 
     private checkClassifierSpec(spec: FretClassifierSpec) {
-        CommonChecker.checkClassifierReference(spec.$myClassifier, this.runner);
+        CommonChecker.checkClassifierReference(spec.$myClassifier, this.runner, this.language);
         if (!!spec.myClassifier) {
             spec.rules.forEach((rule) => {
                 // check the rule, using the overall model as enclosing concept
@@ -286,7 +286,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
     private changeVarCallIntoInstanceExp(myVarCall: FretVarCallExp): FretLimitedInstanceExp {
         const result: FretLimitedInstanceExp = new FretLimitedInstanceExp();
         result.owner = myVarCall.owner;
-        result.$myInstance = MetaElementReference.create<FreMetaInstance>(myVarCall.$variable.name, "FreInstance");
+        result.$myInstance = MetaElementReference.create<FreMetaInstance>(myVarCall.$variable.name);
         result.$myInstance.owner = result;
         result.aglParseLocation = myVarCall.aglParseLocation;
         return result;
@@ -576,7 +576,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         if (freProperty instanceof FretProperty) {
             this.checkTypeReference(freProperty.typeReference, false);
         } else {
-            CommonChecker.checkClassifierReference(freProperty.typeReference, this.runner);
+            CommonChecker.checkClassifierReference(freProperty.typeReference, this.runner, this.language);
         }
         // the following checks are done in phase2
         // (5) property names must be unique within one concept

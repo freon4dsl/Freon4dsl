@@ -79,17 +79,19 @@ export class ClassifierChecker {
             // 2. all props defined in this classifier should be different from the props of its super concepts/interfaces
             //      except when their types conform, then props of the sub should be marked 'implementedInBase' - but only if
             //      base is a concept
-            if (classifier instanceof FreMetaConcept && !!classifier.base) {
+            if (classifier instanceof FreMetaConcept && !!classifier.base && !!classifier.base.referred) {
                 this.checkPropsOfBase(classifier.base.referred, prop);
             } else if (classifier instanceof FreMetaInterface) {
                 classifier.base.forEach((intfRef) => {
-                    const inSuper: FreMetaProperty | undefined = this.searchLocalProps(intfRef.referred, prop);
-                    if (!!inSuper) {
-                        // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
-                        this.runner!.simpleCheck(
-                            LangUtil.compareTypes(prop, inSuper),
-                            `Property '${prop.name}' with non conforming type already exists in base interface '${intfRef.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSuper)}.`,
-                        );
+                    if (!!intfRef.referred) {
+                        const inSuper: FreMetaProperty | undefined = this.searchLocalProps(intfRef.referred, prop);
+                        if (!!inSuper) {
+                            // @ts-ignore Todo find out why this error occurs. Imho, it shouldn't.
+                            this.runner!.simpleCheck(
+                              LangUtil.compareTypes(prop, inSuper),
+                              `Property '${prop.name}' with non conforming type already exists in base interface '${intfRef.name}' ${ParseLocationUtil.location(prop)} and ${ParseLocationUtil.location(inSuper)}.`
+                            );
+                        }
                     }
                 });
             }
@@ -200,8 +202,10 @@ export class ClassifierChecker {
         propsToCheck.push(...concept.properties);
         if (includeInterfaces && concept.interfaces.length > 0) {
             concept.interfaces.forEach((intf) => {
-                propsToCheck.push(...intf.referred.allPrimProperties());
-                propsToCheck.push(...intf.referred.allProperties());
+                if (!!intf.referred) {
+                    propsToCheck.push(...intf.referred.allPrimProperties());
+                    propsToCheck.push(...intf.referred.allProperties());
+                }
             });
         }
         let implementedProp: FreMetaProperty | undefined = propsToCheck.find((prevProp) => prevProp.name === prop.name);

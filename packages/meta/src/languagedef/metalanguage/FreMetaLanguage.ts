@@ -12,7 +12,6 @@ type PartInitializer = {
     concept: FreMetaConcept; // The class that needs to be constructed
 };
 
-
 // root of the inheritance structure of all elements in a language definition
 export abstract class FreMetaLangElement extends FreMetaDefinitionElement {
     protected _name: string = "";
@@ -701,7 +700,7 @@ export class FreMetaProperty extends FreMetaLangElement {
         return this.$type?.referred;
     }
     set type(t: FreMetaClassifier) {
-        this.$type = MetaElementReference.create<FreMetaClassifier>(t, "FreClassifier");
+        this.$type = MetaElementReference.create<FreMetaClassifier>(t);
         this.$type.owner = this;
     }
     get typeReference(): MetaElementReference<FreMetaClassifier> {

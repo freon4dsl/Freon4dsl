@@ -7,5 +7,4 @@
 export * from "./MetaElementReference.js";
 export * from "./FreMetaLanguage.js";
 export * from "./FreLangExpressions.js";
-export * from "./FreLangScoper.js";
 export * from "./LangUtil.js";

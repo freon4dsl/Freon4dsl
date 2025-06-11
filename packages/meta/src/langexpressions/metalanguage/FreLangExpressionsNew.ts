@@ -186,6 +186,7 @@ export class FreLangSimpleExpNew extends FreLangExpNew {
     }
 }
 
+// todo remove in favor of MetaElementReference
 export class ClassifierReference extends FreMetaLangElement {
     // @ts-ignore
     name: string;

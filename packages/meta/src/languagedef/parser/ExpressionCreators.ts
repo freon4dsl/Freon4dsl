@@ -58,7 +58,7 @@ export function createClassifierReference(
     data: Partial<MetaElementReference<FreMetaClassifier>>,
 ): MetaElementReference<FreMetaClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : "", "FreClassifier");
+    const result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : "");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;

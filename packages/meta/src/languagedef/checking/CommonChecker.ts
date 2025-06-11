@@ -7,8 +7,8 @@ import {
     FreMetaPrimitiveValue,
     FreMetaProperty,
     FreMetaLimitedConcept,
-    FreMetaEnumValue,
-} from "../metalanguage/index.js";
+    FreMetaEnumValue, FreMetaLanguage
+} from '../metalanguage/index.js';
 import { CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { Names } from '../../utils/on-lang/index.js';
@@ -17,20 +17,30 @@ import { CommonSuperTypeUtil } from "./common-super/CommonSuperTypeUtil.js";
 const LOGGER = new MetaLogger("CommonChecker").mute();
 
 export class CommonChecker {
-    public static checkClassifierReference(reference: MetaElementReference<FreMetaClassifier>, runner: CheckRunner) {
+    public static checkClassifierReference(classifierRef: MetaElementReference<FreMetaClassifier>, runner: CheckRunner, language: FreMetaLanguage) {
         if (!runner) {
             LOGGER.log("NO RUNNER in CommonChecker.checkClassifierReference");
             return;
         }
 
         runner.nestedCheck({
-            check: !!reference && reference.name !== undefined,
-            error: `Classifier reference should have a name ${ParseLocationUtil.location(reference)}.`,
+            check: !!classifierRef && classifierRef.name !== undefined,
+            error: `Classifier reference should have a name ${ParseLocationUtil.location(classifierRef)}.`,
             whenOk: () => {
-                runner.nestedCheck({
-                    check: reference.referred !== undefined,
-                    error: `Reference to classifier '${reference.name}' cannot be resolved ${ParseLocationUtil.location(reference)}.`,
-                });
+                if (!classifierRef.referred) {
+                    // set reference
+                    if (!!language) {
+                        language.classifiers().forEach(classifier => {
+                            if (classifier.name === classifierRef.name) {
+                                classifierRef.referred = classifier;
+                            }
+                        });
+                    }
+                    runner.nestedCheck({
+                        check: classifierRef.referred !== undefined,
+                        error: `Reference to classifier '${classifierRef.name}' cannot be resolved ${ParseLocationUtil.location(classifierRef)}.`,
+                    });
+                }
             },
         });
     }

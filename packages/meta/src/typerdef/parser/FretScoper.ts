@@ -1,4 +1,4 @@
-import { FreMetaScoper } from "../../languagedef/metalanguage/FreLangScoper.js";
+import { FreMetaScoper2 } from "../../languagedef/metalanguage/FreLangScoper.js"; // TODO remove!!
 import { FreMetaClassifier, FreMetaLangElement } from "../../languagedef/metalanguage/index.js";
 import { FretCreateExp, FretPropertyCallExp, FretVarCallExp, FretWhereExp } from "../metalanguage/expressions/index.js";
 import { FretProperty, TyperDef, FreTyperElement } from "../metalanguage/index.js";
@@ -10,7 +10,7 @@ import { FreMetaDefinitionElement } from '../../utils/no-dependencies/index.js';
  * It is called by FreLangScoper, when it is added to its 'extraScopers'. The latter is
  * done by the typer checker.
  */
-export class FretScoper implements FreMetaScoper {
+export class FretScoper implements FreMetaScoper2 {
     definition: TyperDef;
 
     constructor(definition: TyperDef) {

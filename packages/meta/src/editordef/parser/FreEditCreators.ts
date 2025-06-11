@@ -60,10 +60,7 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
             if (!!proj.tableProjection) {
                 const myProj: FreEditTableProjection = new FreEditTableProjection();
                 if (!!proj.classifier) {
-                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(
-                        proj.classifier.name,
-                        "FreClassifier",
-                    );
+                    myProj.classifier = MetaElementReference.create<FreMetaClassifier>(proj.classifier.name);
                 }
                 if (!!proj.tableProjection.cells) {
                     myProj.cells = proj.tableProjection.cells;
@@ -86,8 +83,7 @@ function extractProjections(data: Partial<FreEditProjectionGroup>, result: FreEd
                 const myProj: FreEditNormalProjection = new FreEditNormalProjection();
                 if (!!proj.classifier) {
                     myProj.classifier = MetaElementReference.create<FreMetaClassifier>(
-                        proj.classifier.name,
-                        "FreClassifier",
+                        proj.classifier.name
                     );
                 }
                 if (!!proj.projection.lines) {

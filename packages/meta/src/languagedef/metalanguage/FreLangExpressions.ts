@@ -73,7 +73,7 @@ export class FreLangSimpleExp extends FreLangExp {
 export class FreLangSelfExp extends FreLangExp {
     static create(referred: FreMetaClassifier): FreLangSelfExp {
         const result = new FreLangSelfExp();
-        result.$referredElement = MetaElementReference.create<FreMetaClassifier>(referred, "FreClassifier");
+        result.$referredElement = MetaElementReference.create<FreMetaClassifier>(referred);
         result.$referredElement.owner = result;
         result.sourceName = nameForSelf;
         return result;
@@ -131,7 +131,7 @@ export class FreLangAppliedFeatureExp extends FreLangExp {
     }
 
     set referredElement(p: FreMetaProperty) {
-        this.$referredElement = MetaElementReference.create<FreMetaProperty>(p, "FreProperty");
+        this.$referredElement = MetaElementReference.create<FreMetaProperty>(p);
         this.$referredElement.owner = this;
     }
 

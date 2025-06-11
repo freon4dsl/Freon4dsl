@@ -53,7 +53,7 @@ export class FretLimitedInstanceExp extends FretExp {
 
     set myLimited(limitedConcept: FreMetaLimitedConcept) {
         if (!!limitedConcept) {
-            this.$myLimited = MetaElementReference.create<FreMetaLimitedConcept>(limitedConcept, "FreLimitedConcept");
+            this.$myLimited = MetaElementReference.create<FreMetaLimitedConcept>(limitedConcept);
             this.$myLimited.owner = this.language;
         }
     }
@@ -67,7 +67,7 @@ export class FretLimitedInstanceExp extends FretExp {
 
     set myInstance(cls: FreMetaInstance) {
         if (!!cls) {
-            this.$myInstance = MetaElementReference.create<FreMetaInstance>(cls, "FreInstance");
+            this.$myInstance = MetaElementReference.create<FreMetaInstance>(cls);
             this.$myInstance.owner = this.language;
         }
     }

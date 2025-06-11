@@ -125,7 +125,7 @@ export class RulesCheckerTemplate {
                         if (implementorRule === undefined) {
                             // create new conceptRule
                             implementorRule = new ConceptRuleSet();
-                            implementorRule.conceptRef = MetaElementReference.create<FreMetaConcept>(implementor, 'FreMetaConcept');
+                            implementorRule.conceptRef = MetaElementReference.create<FreMetaConcept>(implementor);
                             newConceptRules.push(implementorRule);
                         }
                         implementorRule.rules.push(...rule.rules);

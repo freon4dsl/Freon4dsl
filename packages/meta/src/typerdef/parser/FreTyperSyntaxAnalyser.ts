@@ -126,13 +126,13 @@ export class FreTyperSyntaxAnalyser extends SyntaxAnalyserByMethodRegistrationAb
      * result from transform__fre_reference. However, the input may also contain objects of type String,
      * which hold the separator between the elements of the reference list, not the 'reference separator' ("::").
      */
-    public transformRefList<T extends FreMetaLangElement>(list: KtList<T>, typeName: string): MetaElementReference<T>[] {
+    public transformRefList<T extends FreMetaLangElement>(list: KtList<T>): MetaElementReference<T>[] {
         // console.log("transformRefList called: " + JSON.stringify(list));
         let result: MetaElementReference<T>[] = [];
         if (!!list) {
             for (const child of list.asJsReadonlyArrayView()) {
                 if (child.constructor.name === 'ParsedNodeReference') {
-                    result.push(this.makeMetaElementReference<T>(child as unknown as ParsedNodeReference, typeName));
+                    result.push(this.makeMetaElementReference<T>(child as unknown as ParsedNodeReference));
                 }
             }
         }
@@ -170,17 +170,16 @@ export class FreTyperSyntaxAnalyser extends SyntaxAnalyserByMethodRegistrationAb
      * there is only one element in the array).
      *
      * @param referred
-     * @param freMetaConcept
      * @private
      */
-    public makeMetaElementReference<T extends FreMetaLangElement>(referred: ParsedNodeReference, freMetaConcept: string) {
+    public makeMetaElementReference<T extends FreMetaLangElement>(referred: ParsedNodeReference) {
         let name: string | T;
         if (Array.isArray(referred.pathname)) {
             name = referred.pathname[0];
         } else {
             name = referred.pathname;
         }
-        const result = MetaElementReference.create<T>(name, freMetaConcept);
+        const result = MetaElementReference.create<T>(name);
         result.aglParseLocation = (referred as ParsedNodeReference).aglParseLocation;
         return result;
     }

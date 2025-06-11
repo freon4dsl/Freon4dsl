@@ -181,7 +181,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
     }
 
     private checkInstance(freInstance: FreMetaInstance) {
-        CommonChecker.checkClassifierReference(freInstance.concept, this.runner);
+        CommonChecker.checkClassifierReference(freInstance.concept, this.runner, this.language);
         this.runner.nestedCheck({
             check: freInstance.concept.referred !== null,
             error: `Predefined instance '${freInstance.name}' should belong to a concept ${ParseLocationUtil.location(freInstance)}.`,
@@ -212,10 +212,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
                             error: `Predefined property '${freInstanceProperty.name}' should have a primitive type ${ParseLocationUtil.location(freInstanceProperty)}.`,
                             whenOk: () => {
                                 if (!!myProp) {
-                                    freInstanceProperty.property = MetaElementReference.create<FreMetaProperty>(
-                                        myProp,
-                                        "FreProperty",
-                                    );
+                                    freInstanceProperty.property = MetaElementReference.create<FreMetaProperty>(myProp);
                                     const myPropType: FreMetaPrimitiveType = myProp.type as FreMetaPrimitiveType;
                                     if (!myProp.isList) {
                                         this.runner.simpleCheck(

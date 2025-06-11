@@ -6,7 +6,7 @@ import {
     FreMetaLanguage,
     FreMetaClassifier,
     FreMetaLimitedConcept,
-    LangUtil, FreLangScoper
+    LangUtil
 } from '../../languagedef/metalanguage/index.js';
 import {
     ClassifierReference,
@@ -38,8 +38,6 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
                     `${ParseLocationUtil.location(definition)}.`,
             );
         }
-        // Note: this should be done first, otherwise the references will not be resolved
-        FreLangScoper.metascoper.language = this.language;
         this.runner.nestedCheck({
             // TODO We need to test on the language, when we add language composition.
             check: true, //this.language.name === definition.languageName,
@@ -165,7 +163,9 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
                 for (const e of myContext!.allProperties()) {
                     if (e.name === freVarExp.name) {
                         freVarExp.referredProperty = e;
-                        freVarExp.referredClassifier = e.typeReference.referred;
+                        if (!!e.typeReference.referred) {
+                            freVarExp.referredClassifier = e.typeReference.referred;
+                        }
                     }
                 }
                 this.runner.nestedCheck({
@@ -354,12 +354,14 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
         const foundOwners: Set<FreMetaClassifier> = new Set<FreMetaClassifier>();
         this.language?.classifiers().forEach(classifier => {
             classifier.allProperties().forEach(property => {
-                if (LangUtil.conforms(property.typeReference.referred, innerConcept)) {
-                    foundOwners.add(classifier);
-                    // add all its subtypes as well
-                    LangUtil.subClassifiers(classifier).forEach(cls => {
-                        foundOwners.add(cls);
-                    })
+                if (!!property.typeReference.referred) {
+                    if (LangUtil.conforms(property.typeReference.referred, innerConcept)) {
+                        foundOwners.add(classifier);
+                        // add all its subtypes as well
+                        LangUtil.subClassifiers(classifier).forEach(cls => {
+                            foundOwners.add(cls);
+                        });
+                    }
                 }
             })
         });
