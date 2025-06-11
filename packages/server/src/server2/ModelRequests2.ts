@@ -103,6 +103,12 @@ export class ModelRequests2 {
         }
     }
 
+    /** Get all model names
+     * 
+     * @param modelname The name of the model
+     * @param ctx
+     * @returns The list names of all units in the model with name `modelname`. 
+     */
     public static async getUnitList(modelname: string, ctx: IRouterContext) {
         console.log(`ModelRequest2.getUnitList ${modelname}`)
         try {
@@ -118,12 +124,24 @@ export class ModelRequests2 {
         }
     }
 
-    public static async getModelList(ctx: IRouterContext, language: string) {
+    /**
+     * Get a list of all model names on the server, optionally filtered by `language`.
+     * @param ctx
+     * @param language The name of the language to filter on if it has a value.
+     * @returns The list of all model names on the server.
+     * 
+     * If `language` is `undefined`  the list of models for `language`
+     */
+    public static getModelList(ctx: IRouterContext, language?: string) {
         console.log(`ModelRequest2.getModelList`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests2.readStoreCatalog()
-            const modelnames = catalog.models.filter(m => m?.language === language).map(model => model.name);
+            const modelnames = (
+                language === undefined ?
+                    catalog.models :
+                    catalog.models.filter(m => m?.language === language).map(model => model.name)
+            )
             ctx.response.body = modelnames;
         } catch (e) {
             const message = (e instanceof Error? e.message : e.toString())

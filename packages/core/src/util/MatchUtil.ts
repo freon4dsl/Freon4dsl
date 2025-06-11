@@ -3,7 +3,7 @@ import { isNullOrUndefined } from "./FreUtils.js";
 
 export function isIdentifier(str: string): boolean {
     if (!isNullOrUndefined(str)) {
-        const match = str.match(/^[a-z,A-Z][a-z,A-Z0-9_\-\.]*$/)
+        const match = str.match(/^[0-9,a-z,A-Z~!@\#\$%^&*\()_\-+={}[\]|\\:;"'<>?\,\./][0-9,a-z,A-Z~!@\#\$%^&*\()_\-+={}[\]|\\:;"'<>?\,\./ ]*$/)
         return match !== null && match.length > 0
     } else {
         return false

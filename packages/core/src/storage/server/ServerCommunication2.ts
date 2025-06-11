@@ -8,6 +8,11 @@ import { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.
 
 const LOGGER = new FreLogger("ServerCommunication2"); // .mute();
 
+type ParameterType = {
+    model?: string,
+    unit?: string,
+    language?: string
+}
 export class ServerCommunication2 implements IServerCommunication {
     get nodePort(): any {
         return this._nodePort;
@@ -44,9 +49,23 @@ export class ServerCommunication2 implements IServerCommunication {
         return ServerCommunication2.instance;
     }
 
-    static findParams(params?: string) {
-        if (!!params && params.length > 0) {
-            return "?" + params;
+    static findParams(params: ParameterType) {
+        let result = ""
+        let first = true
+        if (params.model !== undefined) {
+            result += `model=${encodeURIComponent(params.model)}`
+            first = false
+        }
+        if (params.unit !== undefined) {
+            result += `${(first?"":"&")}unit=${encodeURIComponent(params.unit)}`
+            first = false
+        }
+        if (params.language !== undefined) {
+            result += `${(first?"":"&")}language=${encodeURIComponent(params.language)}`
+            first = false
+        }
+        if (result.length > 0) {
+            return "?" + result;
         } else {
             return "";
         }
@@ -84,7 +103,7 @@ export class ServerCommunication2 implements IServerCommunication {
                 // "__version": "1234abcdef",
                 nodes: model,
             };
-            await this.putWithTimeout(`putModelUnit`, output, `model=${modelName}&unit=${unitId.name}`);
+            await this.putWithTimeout(`putModelUnit`, output, {model:modelName,unit: unitId.name});
         } else {
             LOGGER.error(
                 "Name of Unit '" +
@@ -108,7 +127,7 @@ export class ServerCommunication2 implements IServerCommunication {
     async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<void> {
         LOGGER.log(`ServerCommunication2.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
-            await this.fetchWithTimeout<any>(`deleteModelUnit`, `model=${modelName}&unit=${unit.name}`);
+            await this.fetchWithTimeout<any>(`deleteModelUnit`, {model:modelName, unit: unit.name});
         }
     }
 
@@ -119,7 +138,7 @@ export class ServerCommunication2 implements IServerCommunication {
     async deleteModel(modelName: string): Promise<void> {
         LOGGER.log(`ServerCommunication2.deleteModel ${modelName}`);
         if (!!modelName && modelName.length > 0) {
-            await this.fetchWithTimeout<any>(`deleteModel`, `model=${modelName}`);
+            await this.fetchWithTimeout<any>(`deleteModel`, { model: modelName });
         }
     }
 
@@ -129,7 +148,7 @@ export class ServerCommunication2 implements IServerCommunication {
     async loadModelList(): Promise<string[]> {
         LOGGER.log(`ServerCommunication2.loadModelList`);
         const language = FreLanguage.getInstance().name
-        const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`, `language=${language}`);
+        const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`, { language: language });
         if (!!res) {
             return res;
         } else {
@@ -143,7 +162,7 @@ export class ServerCommunication2 implements IServerCommunication {
      */
     async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
         LOGGER.log(`ServerCommunication2.loadUnitList`);
-        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `model=${modelName}`);
+        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, {model: modelName });
         if (!!modelUnits) {
             return modelUnits.map((u) => {
                 // The information the unit's type is not available. This is not a problem
@@ -165,7 +184,7 @@ export class ServerCommunication2 implements IServerCommunication {
     async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<FreNode> {
         LOGGER.log(`ServerCommunication2.loadModelUnit ${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
-            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `model=${modelName}&unit=${unit.name}`);
+            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, {model: modelName, unit: unit.name});
             if (!!res) {
                 try {
                     let unit: FreNode;
@@ -185,14 +204,14 @@ export class ServerCommunication2 implements IServerCommunication {
         return null;
     }
 
-    async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
-        params = ServerCommunication2.findParams(params);
-        LOGGER.log("fetchWithTimeout Params = " + params);
+    async fetchWithTimeout<T>(method: string, params: ParameterType): Promise<T> {
+        const parameters = ServerCommunication2.findParams(params);
+        LOGGER.log("fetchWithTimeout Params = " + parameters);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
-            LOGGER.log("Input: " + `${this._SERVER_URL}${method}${params}`);
-            const promise = await fetch(`${this._SERVER_URL}${method}${params}`, {
+            LOGGER.log("Input: " + `${this._SERVER_URL}${method}${parameters}`);
+            const promise = await fetch(`${this._SERVER_URL}${method}${parameters}`, {
                 signal: controller.signal,
                 method: "get",
                 headers: {
@@ -207,12 +226,12 @@ export class ServerCommunication2 implements IServerCommunication {
         return null;
     }
 
-    private async putWithTimeout(method: string, data: Object, params?: string) {
-        params = ServerCommunication2.findParams(params);
+    private async putWithTimeout(method: string, data: Object, params: ParameterType) {
+        const parameters = ServerCommunication2.findParams(params);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
-            await fetch(`${this._SERVER_URL}${method}${params}`, {
+            await fetch(`${this._SERVER_URL}${method}${parameters}`, {
                 signal: controller.signal,
                 method: "put",
                 headers: {
@@ -247,7 +266,7 @@ export class ServerCommunication2 implements IServerCommunication {
     async createModel(modelName: string): any {
         LOGGER.log(`ServerCommunication2.createModel ${modelName}`)
         const language = FreLanguage.getInstance().name
-        await this.putWithTimeout(`putModel`, {}, `model=${modelName}&language=${language}`);
+        await this.putWithTimeout(`putModel`, {}, { model: modelName, language: language });
     }
 
     // @ts-ignore
