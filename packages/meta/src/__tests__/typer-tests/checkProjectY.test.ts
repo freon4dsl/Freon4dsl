@@ -79,8 +79,8 @@ describe("Checking new typer", () => {
                 if (e instanceof Error) {
                     // console.log(e.stack);
                     const errors: string[] = parser.checker.errors;
-                    expect(errors.length).toBe(0);
                     // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
+                    expect(errors.length).toBe(0);
                 }
             }
 

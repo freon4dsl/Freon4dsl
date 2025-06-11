@@ -52,14 +52,14 @@ describe("Checking new typer", () => {
                     ),
                 ).toBeTruthy();
                 expect(
-                    errors.includes("Cannot find instance 'Simp' of 'PredefinedType' [file: type-rules1.type:20:31]."),
+                    errors.includes("Cannot find instance 'Simp' of limited concept 'PredefinedType' [file: type-rules1.type:20:31]."),
                 ).toBeTruthy();
                 expect(
                     errors.includes(
                         "Cannot find property 'inn' in classifier 'UnitLiteral' [file: type-rules1.type:38:37].",
                     ),
                 ).toBeTruthy();
-                expect(errors.includes("Cannot find property 'base' [file: type-rules1.type:38:19].")).toBeTruthy();
+                expect(errors.includes("Cannot find property 'base' in classifier 'UnitLiteral' [file: type-rules1.type:38:19].")).toBeTruthy();
                 expect(
                     errors.includes(
                         "Type of 'typeof( self.content )' (FreType) does not conform to TypeDeclaration [file: type-rules1.type:46:9].",
@@ -101,7 +101,7 @@ describe("Checking new typer", () => {
                         "Cannot find property 'inn' in classifier 'UnitLiteral' [file: type-rules2.type:38:37].",
                     ),
                 ).toBeTruthy();
-                expect(errors.includes("Cannot find property 'base' [file: type-rules2.type:38:19].")).toBeTruthy();
+                expect(errors.includes("Cannot find property 'base' in classifier 'UnitLiteral' [file: type-rules2.type:38:19].")).toBeTruthy();
                 expect(
                     errors.includes(
                         "Type of 'typeof( self.content )' (FreType) does not conform to TypeDeclaration [file: type-rules2.type:46:9].",
@@ -157,7 +157,7 @@ describe("Checking new typer", () => {
                 const errors: string[] = parser.checker.errors;
                 // console.log("found " + errors.length + " errors: " + errors.map(e => e).join("\n"));
                 expect(e.message).toBe(`checking errors (3).`);
-                expect(errors.includes("Cannot find property 'base' [file: type-rules4.type:38:19].")).toBeTruthy();
+                expect(errors.includes("Cannot find property 'base' in classifier 'UnitLiteral' [file: type-rules4.type:38:19].")).toBeTruthy();
                 expect(
                     errors.includes(
                         "Type of 'typeof( self.content )' (FreType) does not conform to TypeDeclaration [file: type-rules4.type:46:9].",

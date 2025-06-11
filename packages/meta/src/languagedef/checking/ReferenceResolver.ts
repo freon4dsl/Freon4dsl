@@ -1,7 +1,7 @@
 import {
     FreMetaClassifier,
     MetaElementReference,
-    FreMetaLanguage, FreMetaProperty
+    FreMetaLanguage, FreMetaProperty, FreMetaLimitedConcept, FreMetaInstance
 } from '../metalanguage/index.js';
 import { CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
@@ -10,7 +10,7 @@ const LOGGER = new MetaLogger("ReferenceResolver").mute();
 
 export class ReferenceResolver {
 
-    public static resolveClassifierReference(classifierRef: MetaElementReference<FreMetaClassifier> | undefined, runner: CheckRunner, language: FreMetaLanguage) {
+    static resolveClassifierReference(classifierRef: MetaElementReference<FreMetaClassifier> | undefined, runner: CheckRunner, language: FreMetaLanguage) {
         if (!runner) {
             LOGGER.log("NO RUNNER in ReferenceResolver.resolveClassifierReference");
             return;
@@ -33,7 +33,7 @@ export class ReferenceResolver {
                         // if no result, give error message
                         runner.simpleCheck(
                             classifierRef.referred !== undefined,
-                            `Reference to classifier '${classifierRef.name}' cannot be resolved ${ParseLocationUtil.location(classifierRef)}.`,
+                            `Cannot find classifier '${classifierRef.name}' ${ParseLocationUtil.location(classifierRef)}.`,
                         );
                     }
                 },
@@ -41,8 +41,6 @@ export class ReferenceResolver {
         }
     }
 
-
-    // @ts-ignore
     static resolvePropertyReference(propertyRef: MetaElementReference<FreMetaProperty> | undefined, context: FreMetaClassifier, runner: CheckRunner) {
         if (!runner) {
             LOGGER.log("NO RUNNER in ReferenceResolver.resolvePropertyReference");
@@ -58,10 +56,26 @@ export class ReferenceResolver {
             // check the result
             runner.nestedCheck({
                 check: !!myProp,
-                error: `Reference to property '${propertyRef.name}' cannot be resolved in ${context.name} ${ParseLocationUtil.location(propertyRef)}.`,
+                error: `Cannot find property '${propertyRef.name}' in classifier '${context.name}' ${ParseLocationUtil.location(propertyRef)}.`,
                 whenOk: () => {
                     // set the 'property' attribute of the projection
                     propertyRef.referred = myProp!;
+                }
+            });
+        }
+    }
+
+    static resolveInstanceReference(myInstanceRef: MetaElementReference<FreMetaInstance>, context: FreMetaLimitedConcept, runner: CheckRunner) {
+        if (!!myInstanceRef) {
+            const foundInstance = context.instances.find(
+              (l) => l.name === myInstanceRef.name,
+            );
+            // check the result
+            runner.nestedCheck({
+                check: !!foundInstance,
+                error: `Cannot find instance '${myInstanceRef.name}' of limited concept '${context.name}' ${ParseLocationUtil.location(myInstanceRef)}.`,
+                whenOk: () => {
+                    myInstanceRef.referred = foundInstance!;
                 }
             });
         }

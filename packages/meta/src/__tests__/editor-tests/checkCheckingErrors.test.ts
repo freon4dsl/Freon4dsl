@@ -197,12 +197,12 @@ describe("Checking editor definition ", () => {
                 ).toBeTruthy();
                 expect(
                   checker.errors.includes(
-                    "Reference to property 'ZZprop8' cannot be resolved in ZZ [file: test7.edit:4:8].",
+                    "Cannot find property 'ZZprop8' in classifier 'ZZ' [file: test7.edit:4:8].",
                   ),
                 ).toBeTruthy();
                 expect(
                   checker.errors.includes(
-                    "Reference to property 'ZZprop11' cannot be resolved in ZZ [file: test7.edit:6:9].",
+                    "Cannot find property 'ZZprop11' in classifier 'ZZ' [file: test7.edit:6:9].",
                   ),
                 ).toBeTruthy();
                 expect(

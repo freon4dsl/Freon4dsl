@@ -34,7 +34,8 @@ import { CommonSuperTypeUtil } from "../../languagedef/checking/index.js";
 import { CheckerPhase, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { freReservedWords, ListUtil, reservedWordsInTypescript } from '../../utils/no-dependencies/index.js';
 import { Names } from '../../utils/on-lang/index.js';
-import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
+import { FretResolver } from './FretResolver.js';
+import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 
 // const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
@@ -63,8 +64,8 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // To be able to find references in the type definition to nodes other than those from the language
         // we need an extra scoper, and we need to set the opposites of all 'parts': their owning nodes
         // TODO replace this
-        // FreLangScoper.metascoper.language = this.language;
-        // FreLangScoper.metascoper.extraScopers.push(new FretScoper(definition));
+        FretResolver.language = this.language;
+        FretResolver.definition = definition;
         FretOwnerSetter.setNodeOwners(definition);
 
         this.runner = runner;
@@ -163,7 +164,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // LOGGER.log("Checking types: '" + types.map(t => t.name).join(", ") + "'");
         if (!!types) {
             for (const t of types) {
-                ReferenceResolver.resolveClassifierReference(t, this.runner, this.language);
+                FretResolver.resolveClassifierReference(t, this.runner, this.language);
                 if (!!t.referred) {
                     // error message given by myExpressionChecker
                     this.runner.nestedCheck({
@@ -199,7 +200,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
     }
 
     private checkClassifierSpec(spec: FretClassifierSpec) {
-        ReferenceResolver.resolveClassifierReference(spec.$myClassifier, this.runner, this.language);
+        FretResolver.resolveClassifierReference(spec.$myClassifier, this.runner, this.language);
         if (!!spec.myClassifier) {
             spec.rules.forEach((rule) => {
                 // check the rule, using the overall model as enclosing concept
@@ -341,49 +342,47 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // console.log("TYPE: " + exp.type?.name + " with props: " + exp.type?.allProperties().map(p => p.name).join(", "))
         exp.propertyDefs.forEach((propDef) => {
             this.checkFretExp(propDef.value, classifier, surroundingExp);
-            this.runner.nestedCheck({
-                check: !!propDef.property,
-                error: `Cannot find property '${propDef.$property.name}' ${ParseLocationUtil.location(propDef.$property)}.`,
-                whenOk: () => {
-                    const propType: FreMetaClassifier = propDef.property!.type;
-                    const valueType: FreMetaClassifier | undefined = propDef.value.returnType;
-                    let doesConform: boolean = false;
-                    this.runner.nestedCheck({
-                        check: !!valueType,
-                        error: `Checking against unknown value type (TODO: better message), ${ParseLocationUtil.location(propDef.$property)}.`,
-                        whenOk: () => {
-                            if (propType !== TyperDef.freonType) {
-                                const typeCheck: FreMetaClassifier[] = CommonSuperTypeUtil.commonSuperType([
-                                    propType,
-                                    valueType!,
-                                ]);
-                                doesConform = typeCheck.length > 0 && typeCheck[0] === propType;
+            FretResolver.resolvePropertyReference(propDef.$property, classifier, this.runner);
+            if (!!propDef.property) {
+                const propType: FreMetaClassifier = propDef.property!.type;
+                const valueType: FreMetaClassifier | undefined = propDef.value.returnType;
+                let doesConform: boolean = false;
+                this.runner.nestedCheck({
+                    check: !!valueType,
+                    error: `Checking against unknown value type (TODO: better message), ${ParseLocationUtil.location(propDef.$property)}.`,
+                    whenOk: () => {
+                        if (propType !== TyperDef.freonType) {
+                            const typeCheck: FreMetaClassifier[] = CommonSuperTypeUtil.commonSuperType([
+                                propType,
+                                valueType!,
+                            ]);
+                            doesConform = typeCheck.length > 0 && typeCheck[0] === propType;
+                        } else {
+                            // valueType conforms to FreType if
+                            if (valueType === TyperDef.freonType) {
+                                // (0) it is equal to FreType
+                                doesConform = true;
+                            } else if (valueType instanceof FretTypeConcept) {
+                                // (1) it is a TypeConcept, or
+                                doesConform = this.definition.typeConcepts.includes(valueType);
                             } else {
-                                // valueType conforms to FreType if
-                                if (valueType === TyperDef.freonType) {
-                                    // (0) it is equal to FreType
-                                    doesConform = true;
-                                } else if (valueType instanceof FretTypeConcept) {
-                                    // (1) it is a TypeConcept, or
-                                    doesConform = this.definition.typeConcepts.includes(valueType);
-                                } else {
-                                    // (2) it is marked 'isType'
-                                    doesConform = this.definition.types.includes(valueType!);
-                                }
+                                // (2) it is marked 'isType'
+                                doesConform = this.definition.types.includes(valueType!);
                             }
-                        },
-                    });
-                    this.runner.simpleCheck(
-                        doesConform,
-                        `Type of '${propDef.value.toFreString()}' (${valueType?.name}) does not conform to ${propType?.name} ${ParseLocationUtil.location(propDef)}.`,
-                    );
-                },
-            });
+                        }
+                    },
+                });
+                this.runner.simpleCheck(
+                  doesConform,
+                  `Type of '${propDef.value.toFreString()}' (${valueType?.name}) does not conform to ${propType?.name} ${ParseLocationUtil.location(propDef)}.`,
+                );
+            }
         });
     }
 
     private checkWhereExp(exp: FretWhereExp, classifier: FreMetaClassifier) {
         // LOGGER.log("Checking FretWhereExp '" + exp.toFreString() + "'");
+        FretResolver.resolveClassifierReference(exp.variable.$type, this.runner, this.language!)
         this.runner.nestedCheck({
             check: !!exp.variable.type,
             error: `Cannot find type '${exp.variable.$type.name}' ${ParseLocationUtil.location(exp.variable.$type)}.`,
@@ -399,6 +398,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
 
     private checkInstanceExp(exp: FretLimitedInstanceExp, classifier: FreMetaClassifier) {
         if (!!exp.$myLimited) {
+            FretResolver.resolveClassifierReference(exp.$myLimited, this.runner, this.language!);
             this.runner.simpleCheck(
                 !!exp.myLimited,
                 `Cannot find limited concept '${exp.$myLimited.name}' ${ParseLocationUtil.location(exp.$myLimited)}.`,
@@ -409,22 +409,13 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
                 exp.myLimited = classifier;
             }
         }
-        this.runner.simpleCheck(
-            !!exp.myLimited,
-            `Cannot find limited concept or enclosing classifier ${ParseLocationUtil.location(exp)}.`,
-        );
-        if (!!exp.myLimited) {
-            this.runner.nestedCheck({
-                check: !!exp.myInstance,
-                error: `Cannot find instance '${exp.$myInstance.name}' of '${exp.$myLimited?.name}' ${ParseLocationUtil.location(exp.$myInstance)}.`,
-                whenOk: () => {
-                    this.runner.simpleCheck(
-                        !!exp.myLimited!.findInstance(exp.$myInstance.name),
-                        `Instance '${exp.$myInstance.name}' is not of type '${exp.$myLimited!.name}' ${ParseLocationUtil.location(exp.$myInstance)}.`,
-                    );
-                },
-            });
-        }
+        this.runner.nestedCheck({
+            check: !!exp.myLimited,
+            error: `Cannot find limited concept or enclosing classifier ${ParseLocationUtil.location(exp)}.`,
+            whenOk: () => {
+                FretResolver.resolveInstanceReference(exp.$myInstance, exp.myLimited!, this.runner);
+            }
+        });
     }
 
     private checkPropertyCallExp(
@@ -437,18 +428,18 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         if (!!exp.source) {
             this.checkFretExp(exp.source, enclosingConcept, surroundingExp, surroundingAllowed);
             // console.log("found source: " + exp.source.toFreString() + " of type " + exp.source.returnType.name);
-            this.runner.nestedCheck({
-                check: !!exp.property,
-                error: `Cannot find property '${exp.$property.name}' in classifier '${exp.source.returnType?.name}' ${ParseLocationUtil.location(exp.$property)}.`,
-                whenOk: () => {
+            if (!isNullOrUndefined(exp.source.returnType)) {
+                FretResolver.resolvePropertyReference(exp.$property, exp.source.returnType, this.runner);
+                if (!!exp.property) {
                     exp.returnType = exp.property!.type;
-                },
-            });
+                }
+            }
         }
     }
 
     private checkVarCallExp(exp: FretVarCallExp) {
         // LOGGER.log("Checking checkVarCallExp '" + exp.toFreString() + "'");
+        FretResolver.resolveVariableReference(exp.$variable, this.runner)
         this.runner.nestedCheck({
             check: !!exp.variable,
             error: `Cannot find reference to ${exp.$variable.name} ${ParseLocationUtil.location(exp.$variable)}.`,
@@ -577,7 +568,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         if (freProperty instanceof FretProperty) {
             this.checkTypeReference(freProperty.typeReference, false);
         } else {
-            ReferenceResolver.resolveClassifierReference(freProperty.typeReference, this.runner, this.language);
+            FretResolver.resolveClassifierReference(freProperty.typeReference, this.runner, this.language);
         }
         // the following checks are done in phase2
         // (5) property names must be unique within one concept
@@ -585,6 +576,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
     }
 
     private checkTypeReference(refType: MetaElementReference<FreMetaClassifier>, typeConceptRequired: boolean) {
+        FretResolver.resolveClassifierReference(refType, this.runner, this.language);
         this.runner.nestedCheck({
             check: !!refType.referred,
             error: `Cannot find reference to ${refType.name} ${ParseLocationUtil.location(refType)}.`,
