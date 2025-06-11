@@ -44,6 +44,7 @@ describe("Store test", () => {
 
     it("open existing model", async () => {
         const retrievedModel = (await inMemoryModel.openModel("serverModel")) as RulesModel;
+        console.log(`Model ${retrievedModel?.name} languageConcept: ${retrievedModel?.freLanguageConcept()} units: ${retrievedModel.getUnits().map(u => u.name).join(", ")}`)
         expect(retrievedModel.getUnits().length === 2);
         expect(retrievedModel.freLanguageConcept()).toBe("RulesModel");
         expect(retrievedModel.name).toBe("serverModel");
