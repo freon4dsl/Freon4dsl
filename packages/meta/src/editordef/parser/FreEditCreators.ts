@@ -22,16 +22,12 @@ import {
     FreEditFragmentDefinition,
     FreEditExternalInfo,
     FreEditSimpleExternal,
+    FreEditFragmentProjection
 } from "../metalanguage/index.js";
-import { ListUtil } from "../../utils/no-dependencies/index.js";
-import { FreMetaClassifier, FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
+import { ListUtil, ParseLocation } from '../../utils/no-dependencies/index.js';
+import { FreMetaClassifier, FreMetaProperty } from '../../languagedef/metalanguage/index.js';
 import { FreEditParseUtil } from "./FreEditParseUtil.js";
-// The next import should be separate and the last of the imports.
-// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
-// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
-// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
 import { MetaElementReference } from "../../languagedef/metalanguage/index.js";
-import { FreEditFragmentProjection } from "../metalanguage/editlanguage/FreEditFragmentProjection.js";
 
 // const LOGGER = new MetaLogger("EditorCreators").mute();
 
@@ -287,9 +283,10 @@ export function createClassifierInfo(
         result.trigger = data.trigger;
         hasContent = true;
     }
-    if (!!data.referenceShortcutExp) {
-        result.referenceShortcutExp = data.referenceShortcutExp;
+    if (!!data.referenceShortCut) {
+        result.referenceShortCut = data.referenceShortCut;
         hasContent = true;
+        result.referenceShortCut.owner = result;
     }
     if (!!data.symbol) {
         result.symbol = data.symbol;
@@ -406,8 +403,9 @@ export function createSuperProjection(data: Partial<FreEditSuperProjection>): Fr
 
 export function createSinglePropertyProjection(data: Partial<FreEditPropertyProjection>): FreEditPropertyProjection {
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
-    if (!!data.expression) {
-        result.expression = data.expression;
+    if (!!data.property) {
+        result.property = data.property;
+        result.property.owner = result;
     }
     if (!!data.projectionName) {
         result.projectionName = data.projectionName;
@@ -432,8 +430,9 @@ export function createSinglePropertyProjection(data: Partial<FreEditPropertyProj
 export function createListPropertyProjection(data: Partial<FreEditPropertyProjection>): FreEditPropertyProjection {
     // console.log("Creators.createListPropertyProjection " + data);
     const result: FreEditPropertyProjection = new FreEditPropertyProjection();
-    if (!!data.expression) {
-        result.expression = data.expression;
+    if (!!data.property) {
+        result.property = data.property;
+        result.property.owner = result;
     }
     if (!!data.projectionName) {
         result.projectionName = data.projectionName;
@@ -533,11 +532,11 @@ export function createButtonDef(data: Partial<FreEditButtonDef>): FreEditButtonD
     return result;
 }
 
-export function createSelfExp(data: string): FreLangSelfExp {
-    const result: FreLangSelfExp = new FreLangSelfExp();
-    // we cannot set the sourceName of result, this should be done during checking
-    result.appliedfeature = new FreLangAppliedFeatureExp();
-    result.appliedfeature.sourceName = data;
-    result.appliedfeature.sourceExp = result;
+export function createPropertyReference(data: string, location: ParseLocation): MetaElementReference<FreMetaProperty> {
+    const result = MetaElementReference.create<FreMetaProperty>(data);
+    if (!!location) {
+        result.location = location;
+        result.location.filename = currentFileName;
+    }
     return result;
 }

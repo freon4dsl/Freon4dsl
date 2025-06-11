@@ -22,9 +22,10 @@ import {
     ValidNameRule,
 } from "./ValidatorDefLang.js";
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/index.js";
-import { CommonChecker, FreLangExpressionChecker } from "../../languagedef/checking/index.js";
+import { FreLangExpressionChecker } from "../../languagedef/checking/index.js";
 import { FreErrorSeverity, MetaLogger } from '../../utils/no-dependencies/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 
 const LOGGER: MetaLogger = new MetaLogger("ValidatorChecker");
 const equalsTypeName: string = "equalsType";
@@ -68,7 +69,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
         LOGGER.log("Check concept rule");
         if (!!rule.conceptRef) {
             // todo check whether this option needs to throw an error
-            CommonChecker.checkClassifierReference(rule.conceptRef, this.runner, this.language!);
+            ReferenceResolver.resolveClassifierReference(rule.conceptRef, this.runner, this.language!);
 
             const enclosingConcept: FreMetaClassifier = rule.conceptRef.referred;
             if (enclosingConcept) {

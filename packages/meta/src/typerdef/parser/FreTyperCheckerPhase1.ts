@@ -30,10 +30,11 @@ import {
     TyperDef,
 } from "../metalanguage/index.js";
 import { FretOwnerSetter } from "./FretOwnerSetter.js";
-import { CommonChecker, CommonSuperTypeUtil } from "../../languagedef/checking/index.js";
+import { CommonSuperTypeUtil } from "../../languagedef/checking/index.js";
 import { CheckerPhase, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { freReservedWords, ListUtil, reservedWordsInTypescript } from '../../utils/no-dependencies/index.js';
 import { Names } from '../../utils/on-lang/index.js';
+import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 
 // const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
@@ -162,7 +163,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // LOGGER.log("Checking types: '" + types.map(t => t.name).join(", ") + "'");
         if (!!types) {
             for (const t of types) {
-                CommonChecker.checkClassifierReference(t, this.runner, this.language);
+                ReferenceResolver.resolveClassifierReference(t, this.runner, this.language);
                 if (!!t.referred) {
                     // error message given by myExpressionChecker
                     this.runner.nestedCheck({
@@ -198,7 +199,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
     }
 
     private checkClassifierSpec(spec: FretClassifierSpec) {
-        CommonChecker.checkClassifierReference(spec.$myClassifier, this.runner, this.language);
+        ReferenceResolver.resolveClassifierReference(spec.$myClassifier, this.runner, this.language);
         if (!!spec.myClassifier) {
             spec.rules.forEach((rule) => {
                 // check the rule, using the overall model as enclosing concept
@@ -336,7 +337,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         // LOGGER.log("Checking FretCreateExp '" + exp.toFreString() + "'");
         this.checkTypeReference(exp.$type, false);
         // console.log("TYPE of Create: " + exp.__type.name + ", " + exp.__type.owner + ", " + exp.type?.name);
-        // this.myExpressionthis.runner.checkClassifierReference(exp.__type);
+        // this.myExpressionthis.runner.resolveClassifierReference(exp.__type);
         // console.log("TYPE: " + exp.type?.name + " with props: " + exp.type?.allProperties().map(p => p.name).join(", "))
         exp.propertyDefs.forEach((propDef) => {
             this.checkFretExp(propDef.value, classifier, surroundingExp);
@@ -576,7 +577,7 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         if (freProperty instanceof FretProperty) {
             this.checkTypeReference(freProperty.typeReference, false);
         } else {
-            CommonChecker.checkClassifierReference(freProperty.typeReference, this.runner, this.language);
+            ReferenceResolver.resolveClassifierReference(freProperty.typeReference, this.runner, this.language);
         }
         // the following checks are done in phase2
         // (5) property names must be unique within one concept

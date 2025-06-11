@@ -1,13 +1,12 @@
 import {
     FreMetaClassifier,
     FreMetaConcept,
-    MetaElementReference,
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
     FreMetaPrimitiveValue,
     FreMetaProperty,
     FreMetaLimitedConcept,
-    FreMetaEnumValue, FreMetaLanguage
+    FreMetaEnumValue
 } from '../metalanguage/index.js';
 import { CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
@@ -17,34 +16,6 @@ import { CommonSuperTypeUtil } from "./common-super/CommonSuperTypeUtil.js";
 const LOGGER = new MetaLogger("CommonChecker").mute();
 
 export class CommonChecker {
-    public static checkClassifierReference(classifierRef: MetaElementReference<FreMetaClassifier>, runner: CheckRunner, language: FreMetaLanguage) {
-        if (!runner) {
-            LOGGER.log("NO RUNNER in CommonChecker.checkClassifierReference");
-            return;
-        }
-
-        runner.nestedCheck({
-            check: !!classifierRef && classifierRef.name !== undefined,
-            error: `Classifier reference should have a name ${ParseLocationUtil.location(classifierRef)}.`,
-            whenOk: () => {
-                if (!classifierRef.referred) {
-                    // set reference
-                    if (!!language) {
-                        language.classifiers().forEach(classifier => {
-                            if (classifier.name === classifierRef.name) {
-                                classifierRef.referred = classifier;
-                            }
-                        });
-                    }
-                    runner.nestedCheck({
-                        check: classifierRef.referred !== undefined,
-                        error: `Reference to classifier '${classifierRef.name}' cannot be resolved ${ParseLocationUtil.location(classifierRef)}.`,
-                    });
-                }
-            },
-        });
-    }
-
     public static checkOrCreateNameProperty(classifier: FreMetaClassifier, runner: CheckRunner) {
         if (!runner) {
             LOGGER.log("NO RUNNER in CommonChecker.checkOrCreateNameProperty");

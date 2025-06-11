@@ -22,6 +22,7 @@ import {
 } from "../../utils/basic-dependencies/index.js";
 import { freReservedWords, MetaLogger, reservedWordsInTypescript } from '../../utils/no-dependencies/index.js';
 import { CommonChecker } from "./CommonChecker.js";
+import { ReferenceResolver } from './ReferenceResolver.js';
 
 const LOGGER = new MetaLogger("FreLanguageChecker").mute();
 
@@ -101,10 +102,10 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
         );
 
         if (!!freConcept.base) {
-            CommonChecker.checkClassifierReference(freConcept.base, this.runner, this.language);
+            ReferenceResolver.resolveClassifierReference(freConcept.base, this.runner, this.language);
             const myBase = freConcept.base.referred;
             if (!!myBase) {
-                // error message taken care of by checkClassifierReference
+                // error message taken care of by resolveClassifierReference
                 this.runner.nestedCheck({
                     check: myBase instanceof FreMetaConcept,
                     error:
@@ -138,9 +139,9 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
         // do the interfaces
         const newInterfaces: MetaElementReference<FreMetaInterface>[] = [];
         for (const intf of freConcept.interfaces) {
-            CommonChecker.checkClassifierReference(intf, this.runner, this.language);
+            ReferenceResolver.resolveClassifierReference(intf, this.runner, this.language);
             if (!!intf.referred) {
-                // error message taken care of by checkClassifierReference
+                // error message taken care of by resolveClassifierReference
                 this.runner.nestedCheck({
                     check: intf.referred instanceof FreMetaInterface,
                     error: `Concept '${intf.name}' is not an interface ${ParseLocationUtil.location(intf)}.`,
@@ -234,10 +235,10 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
             check: !!freProperty.typeReference,
             error: `Element '${freProperty.name}' should have a type ${ParseLocationUtil.location(freProperty)}.`,
             whenOk: () => {
-                CommonChecker.checkClassifierReference(freProperty.typeReference, this.runner, this.language);
+                ReferenceResolver.resolveClassifierReference(freProperty.typeReference, this.runner, this.language);
                 const realPropertyType = freProperty.type;
                 if (!!realPropertyType) {
-                    // error message handled by checkClassifierReference
+                    // error message handled by resolveClassifierReference
                     const owningClassifier = freProperty.owningClassifier;
                     this.checkPropertyType(freProperty, realPropertyType);
 
@@ -271,7 +272,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                                             init.sourceName
                                         );
                                         enumRef.location = freProperty.location;
-                                        CommonChecker.checkClassifierReference(enumRef, this.runner, this.language);
+                                        ReferenceResolver.resolveClassifierReference(enumRef, this.runner, this.language);
                                         if (!!enumRef.referred) {
                                             this.runner.nestedCheck({
                                                 check: CommonChecker.checkLimitedType(
@@ -332,7 +333,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
 
     private checkPropertyType(freProperty: FreMetaProperty, realType: FreMetaClassifier) {
         if (!!realType) {
-            // error message taken care of by checkClassifierReference
+            // error message taken care of by resolveClassifierReference
             if (realType instanceof FreMetaLimitedConcept) {
                 // this situation is OK, but property with limited concept as type should always be a reference property.
                 // the property should refer to one of the predefined instances of the limited concept.
@@ -364,7 +365,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
             check: !!element.typeReference,
             error: `Property '${element.name}' should have a type ${ParseLocationUtil.location(element)}.`,
             whenOk: () => {
-                CommonChecker.checkClassifierReference(element.typeReference, this.runner, this.language);
+                ReferenceResolver.resolveClassifierReference(element.typeReference, this.runner, this.language);
                 const myType = element.type; // there is a type found, now check whether this reference resolves to a primitive type
                 this.checkPrimitiveType(myType, element);
                 if (element.isOptional) {
@@ -447,9 +448,9 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
         );
 
         for (const intf of freInterface.base) {
-            CommonChecker.checkClassifierReference(intf, this.runner, this.language);
+            ReferenceResolver.resolveClassifierReference(intf, this.runner, this.language);
             if (!!intf.referred) {
-                // error message taken care of by checkClassifierReference
+                // error message taken care of by resolveClassifierReference
                 this.runner.simpleCheck(
                     intf.referred instanceof FreMetaInterface,
                     `Base concept '${intf.name}' must be an interface concept ` + `${ParseLocationUtil.location(intf)}`,
@@ -471,20 +472,20 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
         // language.modelConcept does not have base or implemented classifiers
         language.units.forEach((unit) => {
             unit.interfaces.forEach(implemented => {
-                CommonChecker.checkClassifierReference(implemented, this.runner, this.language);
+                ReferenceResolver.resolveClassifierReference(implemented, this.runner, this.language);
             })
         });
         language.concepts.forEach((concept) => {
             if (!!concept.base) {
-                CommonChecker.checkClassifierReference(concept.base, this.runner, this.language);
+                ReferenceResolver.resolveClassifierReference(concept.base, this.runner, this.language);
             }
             concept.interfaces.forEach(implemented => {
-                CommonChecker.checkClassifierReference(implemented, this.runner, this.language);
+                ReferenceResolver.resolveClassifierReference(implemented, this.runner, this.language);
             })
         });
         language.interfaces.forEach((intf) => {
             intf.base.forEach(implemented => {
-                CommonChecker.checkClassifierReference(implemented, this.runner, this.language);
+                ReferenceResolver.resolveClassifierReference(implemented, this.runner, this.language);
             })
         });
 

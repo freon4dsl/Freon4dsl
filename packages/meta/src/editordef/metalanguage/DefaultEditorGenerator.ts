@@ -159,10 +159,7 @@ export class DefaultEditorGenerator {
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);
-                const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(
-                    con,
-                    language,
-                );
+                const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(con);
                 defaultGroup.projections.push(projection);
             }
             // find or create the extra info
@@ -189,10 +186,7 @@ export class DefaultEditorGenerator {
         if (!foundProjection) {
             // create a new projection
             // console.log("Adding default projection for " + con.name);
-            const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(
-                con,
-                language,
-            );
+            const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(con);
             defaultGroup.projections.push(projection);
         }
         // find or create the extra info
@@ -213,14 +207,11 @@ export class DefaultEditorGenerator {
         // console.log("defaultsForSupers done ");
     }
 
-    private static defaultClassifierProjection(
-        con: FreMetaClassifier,
-        language: FreMetaLanguage,
-    ): FreEditNormalProjection {
+    private static defaultClassifierProjection( con: FreMetaClassifier ): FreEditNormalProjection {
         const projection = new FreEditNormalProjection();
         projection.name = Names.defaultProjectionName;
-        projection.classifier = MetaElementReference.create<FreMetaClassifier>(con.name);
-        projection.classifier.owner = language;
+        projection.classifier = MetaElementReference.create<FreMetaClassifier>(con);
+        projection.classifier.owner = projection;
         // add first line with type name - object name - start bracket: "Dog Jack {"
         const startLine = new FreEditProjectionLine();
         startLine.items.push(FreEditProjectionText.create(con.name));
@@ -371,10 +362,7 @@ export class DefaultEditorGenerator {
             if (!foundProjection) {
                 // create a new projection
                 // console.log("Adding default projection for " + con.name);
-                const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(
-                    con,
-                    language,
-                );
+                const projection: FreEditNormalProjection = DefaultEditorGenerator.defaultClassifierProjection(con);
                 defaultGroup.projections.push(projection);
             }
         }

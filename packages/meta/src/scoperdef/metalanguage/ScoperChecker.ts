@@ -139,7 +139,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
             this.myExpressionChecker.checkClassifierReference(ref);
             const myClassifier = ref.referred;
             if (!!myClassifier) {
-                // error message handled by checkClassifierReference()
+                // error message handled by resolveClassifierReference()
                 result = result.concat(LangUtil.findAllImplementorsAndSubs(myClassifier));
             }
         });

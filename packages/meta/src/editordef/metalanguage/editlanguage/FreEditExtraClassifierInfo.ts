@@ -1,6 +1,5 @@
 import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
 import {
-    FreLangExp,
     FreMetaClassifier,
     FreMetaProperty,
     MetaElementReference,
@@ -14,9 +13,8 @@ export class FreEditExtraClassifierInfo extends FreMetaDefinitionElement {
     // The string that triggers the creation of an object of this class in the editor.
     trigger: string = "";
     // The property to be used when an element of type 'classifier' is used within a reference.
-    referenceShortCut?: MetaElementReference<FreMetaProperty> = undefined;
-    // The parsed expression that refers to the referenceShortcut. Deleted during checking!
-    referenceShortcutExp?: FreLangExp = undefined;
+    // @ts-ignore
+    referenceShortCut: MetaElementReference<FreMetaProperty> = undefined;
     // Only for binary expressions: the operator between left and right parts.
     symbol: string = "";
 
@@ -24,7 +22,7 @@ export class FreEditExtraClassifierInfo extends FreMetaDefinitionElement {
         return `${this.classifier?.name} {
             trigger = ${this.trigger}
             symbol = ${this.symbol}
-            referenceShortcut = ${this.referenceShortCut ? this.referenceShortCut.name : this.referenceShortcutExp}
+            referenceShortcut = ${this.referenceShortCut.name}
         }`;
     }
 }

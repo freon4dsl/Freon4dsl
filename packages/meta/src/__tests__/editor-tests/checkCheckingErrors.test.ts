@@ -74,12 +74,12 @@ describe("Checking editor definition ", () => {
                 expect(e.message).toBe(`checking errors (5).`);
                 expect(
                     checker.errors.includes(
-                        "Trigger ee of EE is not unique (found 1 similar ones) [file: test3.edit:42:5].",
+                        "Trigger ee of EE is not unique (found 1 similar one/ones) [file: test3.edit:42:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "Trigger ee of FF is not unique (found 1 similar ones) [file: test3.edit:50:5].",
+                        "Trigger ee of FF is not unique (found 1 similar one/ones) [file: test3.edit:50:5].",
                     ),
                 ).toBeTruthy();
                 expect(
@@ -107,26 +107,26 @@ describe("Checking editor definition ", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
-                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 expect(e.message).toBe(`checking errors (4).`);
                 expect(
                     checker.errors.includes(
-                        "trigger for classifier AAAAAA is already defined: [file: test4a.edit:21:4] and [file: test4a.edit:11:4].",
+                        "Trigger for classifier AAAAAA is already defined: [file: test4a.edit:21:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "trigger for classifier AAAAAA is already defined: [file: test4b.edit:11:4] and [file: test4a.edit:11:4].",
+                        "Trigger for classifier AAAAAA is already defined: [file: test4b.edit:11:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "symbol for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
+                        "Symbol for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "trigger for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
+                        "Trigger for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
             }
@@ -188,12 +188,22 @@ describe("Checking editor definition ", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
-                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-                expect(e.message).toBe(`checking errors (2).`);
+                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                expect(e.message).toBe(`checking errors (4).`);
                 expect(
-                    checker.errors.includes(
-                        "A limited concept cannot have a projection, it can only be used as reference [file: test7.edit:3:5].",
-                    ),
+                  checker.errors.includes(
+                    "A limited concept cannot have a projection, it can only be used as reference [file: test7.edit:3:5].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Reference to property 'ZZprop8' cannot be resolved in ZZ [file: test7.edit:4:8].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Reference to property 'ZZprop11' cannot be resolved in ZZ [file: test7.edit:6:9].",
+                  ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(

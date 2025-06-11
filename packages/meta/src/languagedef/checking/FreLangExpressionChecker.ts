@@ -15,7 +15,7 @@ import {
     FreLangSimpleExp,
     MetaElementReference
 } from '../metalanguage/index.js';
-import { CommonChecker } from "../checking/CommonChecker.js";
+import { ReferenceResolver } from './ReferenceResolver.js';
 
 const LOGGER = new MetaLogger("FreLangExpressionChecker").mute();
 const validFunctionNames: string[] = ["conformsTo", "equalsType", "typeof", "commonSuperTypeOf", "ancestor"];
@@ -56,7 +56,7 @@ export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> 
     // ConceptName { exp exp exp }
     private checkLangExpSet(rule: TestExpressionsForConcept) {
         LOGGER.log("checkLangSetExp");
-        CommonChecker.checkClassifierReference(rule.conceptRef, this.runner, this.language!);
+        ReferenceResolver.resolveClassifierReference(rule.conceptRef, this.runner, this.language!);
 
         const enclosingConcept = rule.conceptRef.referred;
         if (!!enclosingConcept) {
