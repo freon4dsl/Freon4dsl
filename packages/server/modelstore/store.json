@@ -32,6 +32,22 @@
                     "file": "TestB"
                 }
             ]
+        },
+        {
+            "name": "serverModel",
+            "folder": "serverModel",
+            "language": "RulesModel",
+            "version": "1",
+            "units": [
+                {
+                    "name": "rulesUnit1",
+                    "file": "rulesUnit1"
+                },
+                {
+                    "name": "dataUnit1-changed",
+                    "file": "dataUnit1-changed"
+                }
+            ]
         }
     ]
 }

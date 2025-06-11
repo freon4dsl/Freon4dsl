@@ -2,7 +2,7 @@ import { EditorState } from "./EditorState.js";
 import { setUserMessage } from "../components/stores/UserMessageStore.svelte";
 import {type FreEnvironment, type FreModelUnit, isNullOrUndefined} from "@freon4dsl/core";
 import { editorProgressShown } from "../components/stores/ModelStore.svelte";
-import { WebappConfigurator } from "$lib";
+import { WebappConfigurator } from "$lib/index.js";
 
 // TODO rethink this class using Workers, see https://developer.mozilla.org/en-US/docs/Web/API/Worker
 

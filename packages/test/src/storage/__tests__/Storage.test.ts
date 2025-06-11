@@ -51,13 +51,13 @@ describe("Store test", () => {
         console.log("=====================================")
         expect(retrievedModel.getUnits().length === 2);
 
-        expect(retrievedModel.freLanguageConcept()).toBe("RulesModel");
+        expect(retrievedModel.freLanguageConcept(), `Model ${retrievedModel.freLanguageConcept()}`).toBe("RulesModel");
 
-        expect(retrievedModel.name).toBe("serverModel");
+        expect(retrievedModel.name).toBe("serverModel", `Model ${retrievedModel.name}`);
 
-        expect(retrievedModel.getUnits().some((unit) => unit.name === "dataUnit1")).toBeTruthy();
+        expect(retrievedModel.getUnits().some((unit) => unit.name === "dataUnit1"), `Unit ${retrievedModel?.getUnits()?.map(u => u.name).join(", ")}`).toBeTruthy();
 
-        expect(retrievedModel.getUnits().some((unit) => unit.name === "rulesUnit1")).toBeTruthy();
+        expect(retrievedModel.getUnits().some((unit) => unit.name === "rulesUnit1"), `Unit ${retrievedModel?.getUnits()?.map(u => u.name).join(", ")}`).toBeTruthy();
 
         expect(
             retrievedModel
