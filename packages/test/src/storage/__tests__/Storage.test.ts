@@ -53,7 +53,7 @@ describe("Store test", () => {
 
         expect(retrievedModel.freLanguageConcept(), `Model ${retrievedModel.freLanguageConcept()}`).toBe("RulesModel");
 
-        expect(retrievedModel.name).toBe("serverModel", `Model ${retrievedModel.name}`);
+        expect(retrievedModel.name, `Model ${retrievedModel.name}`).toBe("serverModel");
 
         expect(retrievedModel.getUnits().some((unit) => unit.name === "dataUnit1"), `Unit ${retrievedModel?.getUnits()?.map(u => u.name).join(", ")}`).toBeTruthy();
 
