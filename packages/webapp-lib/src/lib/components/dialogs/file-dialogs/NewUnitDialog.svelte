@@ -48,7 +48,7 @@
     import { unitTypes } from "../../stores/LanguageStore.svelte";
     import Radio from "@smui/radio";
     import FormField from "@smui/form-field";
-    import { EditorState } from "$lib/language/EditorState";
+    import { EditorState } from "$lib/language/EditorState.js";
     import * as Keys from "@freon4dsl/core";
     import { type FreUnitIdentifier, isIdentifier } from "@freon4dsl/core";
 
@@ -60,7 +60,7 @@
     let typeSelected: string = $state(unitTypes.list[0]); // initialize to the first type found
     let newName: string = $state("");
     let nameInvalid: boolean = $state(false);
-    $effect(() => {nameInvalid = (newName.length > 0 ? !!typeSelected ? newNameInvalid() : newNameInvalid() : false});
+    $effect(() => {nameInvalid = newName.length > 0 ? !!typeSelected ? newNameInvalid() : newNameInvalid() : false});
     let helperText: string = $state(initialHelperText);
 
     function doSubmit() {
