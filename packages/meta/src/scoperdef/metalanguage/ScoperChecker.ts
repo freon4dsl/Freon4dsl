@@ -1,6 +1,6 @@
 import {
     FreMetaLanguage,
-    FreMetaClassifier, LangUtil
+    FreMetaClassifier, LangUtil, MetaElementReference
 } from '../../languagedef/metalanguage/index.js';
 import {
     FreReplacementNamespace,
@@ -9,9 +9,10 @@ import {
     FreNamespaceExpression
 } from './FreScopeDefLang.js';
 import { FreLangExpressionCheckerNew } from '../../langexpressions/checking/FreLangExpressionCheckerNew.js';
-import { FreFunctionExp, ClassifierReference } from '../../langexpressions/metalanguage/index.js';
+import { FreFunctionExp } from '../../langexpressions/metalanguage/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
+import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 
 
 const LOGGER = new MetaLogger("ScoperChecker").mute();
@@ -38,32 +39,34 @@ export class ScoperChecker extends Checker<ScopeDef> {
         this.runner = new CheckRunner(this.errors, this.warnings);
 
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
-        this.myNamespaces = this.findAllNamespaces(definition.parsedNamespaces);
+        this.myNamespaces = this.findAllNamespaces(definition.namespaceRefs);
 
         // check all concept entries, make sure there are no doubles
         const done: FreMetaClassifier[] = [];
         definition.scopeConceptDefs.forEach((def) => {
             if (!!def.classifierRef) {
-                this.runner.nestedCheck({
-                    check: !done.includes(def.classifierRef.referred),
-                    error: `Double entry (${def.classifierRef?.name}) is not allowed ${ParseLocationUtil.location(def)}.`,
-                    whenOk: () => {
-                        this.myExpressionChecker.checkClassifierReference(def.classifierRef!);
-                        if (!!def.classifierRef!.referred) {
-                            if (!!def.namespaceAddition) {
-                                this.checkNamespaceAdditions(def.namespaceAddition, def.classifierRef!.referred);
-                            }
-                            if (!!def.namespaceReplacement) {
-                                this.checkReplacementNamespace(def.namespaceReplacement, def.classifierRef!.referred);
+                ReferenceResolver.resolveClassifierReference(def.classifierRef, this.runner, this.language!);
+                if (!!def.classifierRef.referred) {
+                    this.runner.nestedCheck({
+                        check: !done.includes(def.classifierRef.referred),
+                        error: `Double entry (${def.classifierRef?.name}) is not allowed ${ParseLocationUtil.location(def)}.`,
+                        whenOk: () => {
+                            if (!!def.classifierRef!.referred) {
+                                if (!!def.namespaceAddition) {
+                                    this.checkNamespaceAdditions(def.namespaceAddition, def.classifierRef!.referred);
+                                }
+                                if (!!def.namespaceReplacement) {
+                                    this.checkReplacementNamespace(def.namespaceReplacement, def.classifierRef!.referred);
+                                }
                             }
                         }
-                    }
-                });
-                done.push(def.classifierRef.referred)
+                    });
+                    done.push(def.classifierRef.referred);
+                }
             }
         });
         if (!!this.myExpressionChecker) {
-            this.errors = this.errors.concat(this.myExpressionChecker.errors);
+            this.errors = this.myExpressionChecker.errors.concat(this.errors);
         }
     }
 
@@ -133,13 +136,13 @@ export class ScoperChecker extends Checker<ScopeDef> {
         }
     }
 
-    private findAllNamespaces(namespaces: ClassifierReference[]): FreMetaClassifier[] {
+    private findAllNamespaces(namespaces: MetaElementReference<FreMetaClassifier>[]): FreMetaClassifier[] {
         let result: FreMetaClassifier[] = [];
         namespaces.forEach((ref) => {
-            this.myExpressionChecker.checkClassifierReference(ref);
+            ReferenceResolver.resolveClassifierReference(ref, this.runner, this.language!);
             const myClassifier = ref.referred;
             if (!!myClassifier) {
-                // error message handled by resolveClassifierReference()
+                // error message handled by checkClassifierReference()
                 result = result.concat(LangUtil.findAllImplementorsAndSubs(myClassifier));
             }
         });

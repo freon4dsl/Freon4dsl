@@ -185,11 +185,3 @@ export class FreLangSimpleExpNew extends FreLangExpNew {
         return FreMetaPrimitiveType.number;
     }
 }
-
-// todo remove in favor of MetaElementReference
-export class ClassifierReference extends FreMetaLangElement {
-    // @ts-ignore
-    name: string;
-    // @ts-ignore
-    referred: FreMetaClassifier;
-}

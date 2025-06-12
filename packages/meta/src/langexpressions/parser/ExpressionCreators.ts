@@ -3,14 +3,14 @@ import {
     FreLimitedInstanceExp,
     FreVarOrFunctionExp,
     FreFunctionExp,
-    FreVarExp,
-    ClassifierReference
+    FreVarExp
 } from '../metalanguage/FreLangExpressionsNew.js';
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import {
     LanguageExpressionTesterNew,
     TestExpressionsForConcept
 } from './LanguageExpressionTesterNew.js';
+import { FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
 
 const LOGGER = new MetaLogger("FreLanguageExpressionCreator").mute();
 
@@ -54,19 +54,16 @@ export function createClassifierExps(data: Partial<TestExpressionsForConcept>): 
     return result;
 }
 
+// todo there is a createClassifierReference in LanguageCreators as well, find out whether we can use it here
 export function createClassifierReference(
-    data: Partial<ClassifierReference>,
-): ClassifierReference {
+  data: Partial<MetaElementReference<FreMetaClassifier>>,
+): MetaElementReference<FreMetaClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = new ClassifierReference();
-    if (!!data.name) {
-        result.name = data.name;
-    }
+    const result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : "");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
-    LOGGER.log(result.name)
     return result;
 }
 

@@ -1,5 +1,10 @@
 import { FreLangExpNew } from "../metalanguage/FreLangExpressionsNew.js";
-import { FreMetaLanguage, FreMetaLangElement } from '../../languagedef/metalanguage/index.js';
+import {
+    FreMetaLanguage,
+    FreMetaLangElement,
+    MetaElementReference,
+    FreMetaClassifier
+} from '../../languagedef/metalanguage/index.js';
 
 // These classes are helpers to test the parsing and checking of expressions over the metamodel.
 // They are not used in the actual generation.
@@ -22,7 +27,7 @@ export class LanguageExpressionTesterNew extends FreMetaLangElement {
 
 export class TestExpressionsForConcept extends FreMetaLangElement {
     // @ts-ignore
-    classifierRef: ClassifierReference;
+    classifierRef: MetaElementReference<FreMetaClassifier>;
     // @ts-ignore
     language: FreMetaLanguage;
     exps: FreLangExpNew[] = [];

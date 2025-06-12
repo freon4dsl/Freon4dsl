@@ -1,12 +1,33 @@
-import { FreMetaClassifier } from "../../languagedef/metalanguage/index.js";
+import { FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
 import { FreMetaDefinitionElement } from "../../utils/no-dependencies/index.js";
-import { FreLangExpNew, ClassifierReference } from '../../langexpressions/metalanguage/index.js';
+import { FreLangExpNew } from '../../langexpressions/metalanguage/index.js';
+import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 
 export class ScopeDef extends FreMetaDefinitionElement {
     languageName: string = "";
-    parsedNamespaces: ClassifierReference[] = [];
-    namespaces: FreMetaClassifier[] = [];
+    namespaceRefs: MetaElementReference<FreMetaClassifier>[] = [];
     scopeConceptDefs: ScopeConceptDef[] = [];
+
+    /**
+     * Convenience method only to be used after checking, because in that process
+     * each MetaElementReference<FreMetaClassifier> is resolved, if possible.
+     */
+    get namespaces(): FreMetaClassifier[] {
+        const result: FreMetaClassifier[] = [];
+        this.namespaceRefs.forEach(namespaceRef => {
+            if (!isNullOrUndefined(namespaceRef.referred)) {
+                result.push(namespaceRef.referred);
+            }
+        })
+        return result;
+    }
+
+    set namespaces(newNS: FreMetaClassifier[]) {
+        this.namespaceRefs = [];
+        newNS.forEach(namespaceRef => {
+            this.namespaceRefs.push(MetaElementReference.create<FreMetaClassifier>(namespaceRef));
+        });
+    }
 
     toFreString(): string {
         return `scoper for language ${ this.languageName }
@@ -16,9 +37,20 @@ export class ScopeDef extends FreMetaDefinitionElement {
 }
 
 export class ScopeConceptDef extends FreMetaDefinitionElement {
-    classifierRef: ClassifierReference | undefined;
+    classifierRef: MetaElementReference<FreMetaClassifier> | undefined;
     namespaceAddition: FreNamespaceAddition | undefined;
     namespaceReplacement: FreReplacementNamespace | undefined;
+
+    /**
+     * Convenience method only to be used after checking, because in that process
+     * each MetaElementReference<FreMetaClassifier> is resolved, if possible.
+     */
+    get classifier(): FreMetaClassifier | undefined {
+        if (!isNullOrUndefined(this.classifierRef)) {
+            return this.classifierRef.referred;
+        }
+        return undefined;
+    }
 
     toFreString(): string {
         return `${this.classifierRef?.name} {

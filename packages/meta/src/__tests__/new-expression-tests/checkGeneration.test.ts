@@ -126,7 +126,6 @@ describe("Checking expression on referredProperty", () => {
             let resultStr: string = "";
             EEconceptExps!.exps.forEach((exp) => {
                 resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node");
-                console.log(ExpressionGenerationUtil.langExpToTypeScript(exp, "node"))
             });
             expect(resultStr.includes("node.freOwner()")).toBeTruthy();
         } else {
@@ -144,7 +143,6 @@ describe("Checking expression on referredProperty", () => {
             let resultStr: string = "";
             FFconceptExps!.exps.forEach((exp) => {
                 resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node");
-                console.log(ExpressionGenerationUtil.langExpToTypeScript(exp, "node"))
             });
             expect(resultStr.includes("node.ee.dd.cc.bb.aa")).toBeTruthy();
         } else {

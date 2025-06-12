@@ -9,13 +9,13 @@ import {
     LangUtil
 } from '../../languagedef/metalanguage/index.js';
 import {
-    ClassifierReference,
     FreFunctionExp,
     FreLangExpNew,
     FreLangSimpleExpNew,
     FreLimitedInstanceExp,
     FreVarExp
 } from '../metalanguage/index.js';
+import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 
 //@ts-ignore
 const LOGGER = new MetaLogger("FreLangExpressionChecker").mute();
@@ -57,7 +57,7 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
     // ConceptName { exp exp exp }
     private checkLangExpSet(rule: TestExpressionsForConcept) {
         LOGGER.log("checkLangSetExp " + rule.toFreString());
-        this.checkClassifierReference(rule.classifierRef);
+        ReferenceResolver.resolveClassifierReference(rule.classifierRef, this.runner, this.language!);
 
         const enclosingConcept = rule.classifierRef?.referred;
         if (!!enclosingConcept) {
@@ -170,7 +170,7 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
                 }
                 this.runner.nestedCheck({
                     check: !!freVarExp.referredProperty,
-                    error: `Variable '${freVarExp.name}' should be known as property in classifier '${myContext!.name}' ${ParseLocationUtil.location(freVarExp)}.`,
+                    error: `Cannot find property '${freVarExp.name}' in classifier '${myContext!.name}' ${ParseLocationUtil.location(freVarExp)}.`,
                     whenOk: () => {
                         // check applied expression
                         this.checkAppliedExp(freVarExp, enclosingConcept);
@@ -366,13 +366,5 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
             })
         });
         return Array.from(foundOwners);
-    }
-
-    public checkClassifierReference(classifierRef: ClassifierReference): void {
-        this.language?.classifiers().forEach(classifier => {
-            if (classifier.name === classifierRef.name) {
-                classifierRef.referred = classifier;
-            }
-        });
     }
 }

@@ -32,10 +32,7 @@ export class ScoperGenerator {
         if (isNullOrUndefined(scopedef)) {
             scopedef = new ScopeDef();
             scopedef.languageName = this.language.name;
-            scopedef.namespaces = [];
-            scopedef.namespaces.push(
-                this.language.modelConcept,
-            );
+            scopedef.namespaces = [this.language.modelConcept];
         }
 
         const generationStatus: GenerationStatus = new GenerationStatus();

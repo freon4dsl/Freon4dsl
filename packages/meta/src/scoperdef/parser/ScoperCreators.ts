@@ -21,8 +21,8 @@ export function createScopeDef(data: Partial<ScopeDef>): ScopeDef {
     if (!!data.languageName) {
         result.languageName = data.languageName;
     }
-    if (!!data.parsedNamespaces) {
-        result.parsedNamespaces = data.parsedNamespaces;
+    if (!!data.namespaceRefs) {
+        result.namespaceRefs = data.namespaceRefs;
     }
     if (!!data.scopeConceptDefs) {
         result.scopeConceptDefs = data.scopeConceptDefs;
