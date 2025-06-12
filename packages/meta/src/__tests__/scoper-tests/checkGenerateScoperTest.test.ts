@@ -11,7 +11,7 @@ import { FileUtil } from '../../utils/file-utils';
 
 describe("Checking the scoper generator", () => {
     const testdir = "src/__tests__/scoper-tests/scopeDefFiles/";
-    const outputDir = "src/__tests__/scoper-tests/generated1/";
+    const outputDir = "src/__tests__/scoper-tests/generated2/";
     let parser: ScoperParser;
     let language: FreMetaLanguage | undefined;
     let generator: ScoperGenerator = new ScoperGenerator();
@@ -20,7 +20,7 @@ describe("Checking the scoper generator", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse(testdir + "testLanguage.ast");
+            language = new LanguageParser().parse(testdir + "ScoperTest.ast");
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log("Language could not be read");
@@ -35,17 +35,24 @@ describe("Checking the scoper generator", () => {
         FileUtil.deleteDirAndContent(outputDir);
     });
 
-    test("scope file for 'test-correct1' is correctly generated", () => {
+    test("scope file for 'ScoperTest' is correctly generated", () => {
         if (!!language) {
-            //
-            const scopeDef: ScopeDef = parser.parse(testdir + "test-correct1.scope");
+            let scopeDef: ScopeDef;
+            try {
+                scopeDef = parser.parse(testdir + "ScoperTest.scope");
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    console.log(e.message + e.stack);
+                    console.log(parser.checker.errors.map(err => `"${err}"`).join("\n"));
+                }
+            }
             expect(scopeDef).not.toBeNull();
             expect(scopeDef).not.toBeUndefined();
             //
             generator.language = language;
             generator.outputfolder = outputDir;
             generator.generate(scopeDef!);
-            const outputFile = outputDir + "scoper/gen/ROOTscoper.ts";
+            const outputFile = outputDir + "scoper/gen/ScoperModelScoper.ts";
             const isPresent: boolean = fs.existsSync(outputFile);
             expect(isPresent).toBe(true);
             if (isPresent) {
@@ -54,4 +61,5 @@ describe("Checking the scoper generator", () => {
             }
         }
     });
+
 });

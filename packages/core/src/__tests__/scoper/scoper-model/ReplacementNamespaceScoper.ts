@@ -29,23 +29,27 @@ export class ReplacementNamespaceScoper extends FreScoperBase {
         // namespace addition for UnitA
         if (node instanceof UnitA) {
             if (this.useUnitB) {
-                (node.freOwner() as ScoperModel)?.B_units.forEach( u => {
+                // owner().if(ScoperModel).B_units
+                for (let u of (node.freOwner() as ScoperModel)?.B_units) {
                     result.push(new FreNamespaceInfo(u, false));
-                })
+                }
             } else if (this.useNodeX) {
-                (node.freOwner() as ScoperModel)?.B_units.map(u => u.childrenWithName).flat(1).forEach((u: FreNamedNode) => {
+                // owner().if(ScoperModel).B_units.childrenWithName
+                for (let u of (node.freOwner() as ScoperModel)?.B_units.map(u => u.childrenWithName).flat(1)) {
                     result.push(new FreNamespaceInfo(u, false));
-                })
+                }
             }
         } else if (node instanceof UnitB) {
             if (this.useUnitA) {
-                (node.freOwner() as ScoperModel)?.A_units.forEach( u => {
+                // owner().if(ScoperModel).A_units
+                for (let u of (node.freOwner() as ScoperModel)?.A_units) {
                     result.push(new FreNamespaceInfo(u, false));
-                })
+                }
             } else if (this.useNodeY) {
-                (node.freOwner() as ScoperModel)?.A_units.map(u => u.childrenWithName).flat(1).forEach((u: FreNamedNode) => {
+                // owner().if(ScoperModel).A_units.childrenWithName
+                for (let u of (node.freOwner() as ScoperModel)?.A_units.map(u => u.childrenWithName).flat(1)) {
                     result.push(new FreNamespaceInfo(u, false));
-                })
+                }
             }
         } else if (node instanceof NodeY) {
             if (this.useReference) {

@@ -39,7 +39,7 @@ export class ScopeDef extends FreMetaDefinitionElement {
 export class ScopeConceptDef extends FreMetaDefinitionElement {
     classifierRef: MetaElementReference<FreMetaClassifier> | undefined;
     namespaceAddition: FreNamespaceAddition | undefined;
-    namespaceReplacement: FreReplacementNamespace | undefined;
+    namespaceReplacement: FreNamespaceReplacement | undefined;
 
     /**
      * Convenience method only to be used after checking, because in that process
@@ -61,22 +61,22 @@ export class ScopeConceptDef extends FreMetaDefinitionElement {
 }
 
 export class FreNamespaceAddition extends FreMetaDefinitionElement {
-    expressions: FreNamespaceExpression[] = [];
+    nsInfoList: FreMetaNamespaceInfo[] = [];
 
     toFreString(): string {
-        return `imports { ${this.expressions.map(exp => exp.toFreString()).join(' ')} }`;
+        return `imports { ${this.nsInfoList.map(exp => exp.toFreString()).join(' ')} }`;
     }
 }
 
-export class FreReplacementNamespace extends FreMetaDefinitionElement {
-    expressions: FreNamespaceExpression[] = [];
+export class FreNamespaceReplacement extends FreMetaDefinitionElement {
+    nsInfoList: FreMetaNamespaceInfo[] = [];
 
     toFreString(): string {
-        return `alternatives  { ${this.expressions.map(exp => exp.toFreString()).join(' ')} }`;
+        return `alternatives  { ${this.nsInfoList.map(exp => exp.toFreString()).join(' ')} }`;
     }
 }
 
-export class FreNamespaceExpression extends FreMetaDefinitionElement {
+export class FreMetaNamespaceInfo extends FreMetaDefinitionElement {
     expression: FreLangExpNew | undefined;
     recursive: boolean = false;
 

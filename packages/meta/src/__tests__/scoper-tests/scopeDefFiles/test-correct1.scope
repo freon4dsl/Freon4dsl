@@ -1,6 +1,6 @@
 scoper for language test1
 
-// in this test all expressions are correct
+// in this test all nsInfoList are correct
 
 isNamespace { DD, EE, FF, AA }
 
@@ -10,16 +10,10 @@ AA {
         self.AAprop8; // : BB[];
         // properties with interface as type
         self.AAprop11; // : DD;
-        self.AAprop12; // : DD[];
+        recursive self.AAprop12; // : DD[];
         self.AAprop13; // : FF; // reference
         self.AAprop14; // : FF[]; // reference
     }
-}
-
-EE {
-     alternatives {
-        self.owner();
-     }
 }
 
 BB {
@@ -30,13 +24,19 @@ BB {
 
 DD {
     imports {
-        self.DDprop7.type ( );
+        self.DDprop8.type ( );
         owner().if(BB).type (  );
     }
 }
 
+EE {
+     alternatives {
+        self.owner();
+     }
+}
+
 FF {
-    imports {
+    alternatives {
         self.ee.dd.cc.bb.aa;
     }
 }

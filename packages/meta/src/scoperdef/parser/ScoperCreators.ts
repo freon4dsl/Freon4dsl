@@ -2,8 +2,8 @@ import {
     ScopeDef,
     ScopeConceptDef,
     FreNamespaceAddition,
-    FreReplacementNamespace,
-    FreNamespaceExpression
+    FreNamespaceReplacement,
+    FreMetaNamespaceInfo
 } from '../metalanguage/index.js';
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 
@@ -56,8 +56,8 @@ export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeCon
 export function createNamespaceAddition(data: Partial<FreNamespaceAddition>): FreNamespaceAddition {
     LOGGER.log("createNamespaceAddition");
     const result = new FreNamespaceAddition();
-    if (!!data.expressions) {
-        result.expressions = data.expressions;
+    if (!!data.nsInfoList) {
+        result.nsInfoList = data.nsInfoList;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -66,11 +66,11 @@ export function createNamespaceAddition(data: Partial<FreNamespaceAddition>): Fr
     return result;
 }
 
-export function createNamespaceReplacement(data: Partial<FreReplacementNamespace>): FreReplacementNamespace {
+export function createNamespaceReplacement(data: Partial<FreNamespaceReplacement>): FreNamespaceReplacement {
     LOGGER.log("createNamespaceReplacement");
-    const result = new FreReplacementNamespace();
-    if (!!data.expressions) {
-        result.expressions = data.expressions;
+    const result = new FreNamespaceReplacement();
+    if (!!data.nsInfoList) {
+        result.nsInfoList = data.nsInfoList;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -79,9 +79,9 @@ export function createNamespaceReplacement(data: Partial<FreReplacementNamespace
     return result;
 }
 
-export function createNamespaceExpression(data: Partial<FreNamespaceExpression>): FreNamespaceExpression {
+export function createNamespaceExpression(data: Partial<FreMetaNamespaceInfo>): FreMetaNamespaceInfo {
     LOGGER.log("createNamespaceExpression");
-    const result = new FreNamespaceExpression();
+    const result = new FreMetaNamespaceInfo();
     if (!!data.expression) {
         result.expression = data.expression;
     }

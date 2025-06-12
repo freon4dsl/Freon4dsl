@@ -1,6 +1,6 @@
 scoper for language test1
 
-// in this test all expressions are correct
+// in this test all nsInfoList are correct
 
 isNamespace { cc, DD, EE, FF, AA } // error: 'cc' is not a classifier
 

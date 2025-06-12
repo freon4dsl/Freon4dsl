@@ -4,11 +4,13 @@ import { LanguageExpressionTesterNew } from "../../langexpressions/parser/Langua
 import { LanguageExpressionParserNew } from "../../langexpressions/parser/LanguageExpressionParserNew.js";
 import { describe, test, expect, beforeEach } from "vitest";
 import { ExpressionGenerationUtil } from '../../langexpressions/generator/ExpressionGenerationUtil';
+import { Imports } from '../../utils/on-lang';
 
-describe("Checking expression on referredProperty", () => {
+describe("Checking generation of expressions", () => {
     const testdir = "src/__tests__/new-expression-tests/expressionDefFiles/";
     let language: FreMetaLanguage | undefined;
     let expressionDefs: LanguageExpressionTesterNew | undefined;
+    let imports: Imports = new Imports();
     // MetaLogger.muteAllErrors();
     // MetaLogger.muteAllLogs();
 
@@ -39,8 +41,9 @@ describe("Checking expression on referredProperty", () => {
 
             let resultStr: string = "";
             AAconceptExps!.exps.forEach((exp) => {
-                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node");
+                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports) + "\n";
             });
+            // console.log(resultStr);
             expect(resultStr.includes("node.AAprop1")).toBeTruthy();
             expect(resultStr.includes("node.AAprop2")).toBeTruthy();
             expect(resultStr.includes("node.AAprop3")).toBeTruthy();
@@ -55,7 +58,7 @@ describe("Checking expression on referredProperty", () => {
             expect(resultStr.includes("node.AAprop12")).toBeTruthy();
             expect(resultStr.includes("node.AAprop13")).toBeTruthy();
             expect(resultStr.includes("node.AAprop14")).toBeTruthy();
-            expect(resultStr.includes("node.AAprop12.map(_x => _x.DDprop8).flat().map(_x => _x.BBprop5)")).toBeTruthy();
+            expect(resultStr.includes("node.AAprop12.map((x: DD) => x.DDprop8).flat().map((x: BB) => x.BBprop5)")).toBeTruthy();
         } else {
             console.log("Language or Expressions not present");
         }
@@ -70,7 +73,7 @@ describe("Checking expression on referredProperty", () => {
 
             let resultStr: string = "";
             BBconceptExps!.exps.forEach((exp) => {
-                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node");
+                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports);
             });
             expect(resultStr.includes("node.BBprop15")).toBeTruthy();
             expect(resultStr.includes("node.BBprop16")).toBeTruthy();
@@ -90,7 +93,7 @@ describe("Checking expression on referredProperty", () => {
 
             let resultStr: string = "";
             CCconceptExps!.exps.forEach((exp) => {
-                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node");
+                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports);
             });
             expect(resultStr.includes("ZZ.instanceZZ1")).toBeTruthy();
         } else {
@@ -107,10 +110,11 @@ describe("Checking expression on referredProperty", () => {
 
             let resultStr: string = "";
             DDconceptExps!.exps.forEach((exp) => {
-                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node");
+                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports) + "\n";
             });
+            // console.log(resultStr)
             expect(resultStr.includes("LanguageEnvironment.getInstance().typer.inferType(node.DDprop7)")).toBeTruthy();
-            expect(resultStr.includes("node.DDprop8.map(_x => LanguageEnvironment.getInstance().typer.inferType(_x))")).toBeTruthy();
+            expect(resultStr.includes("node.DDprop8.map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x))")).toBeTruthy();
         } else {
             console.log("Language or Expressions not present");
         }
@@ -125,7 +129,7 @@ describe("Checking expression on referredProperty", () => {
 
             let resultStr: string = "";
             EEconceptExps!.exps.forEach((exp) => {
-                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node");
+                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports);
             });
             expect(resultStr.includes("node.freOwner()")).toBeTruthy();
         } else {
@@ -142,7 +146,7 @@ describe("Checking expression on referredProperty", () => {
 
             let resultStr: string = "";
             FFconceptExps!.exps.forEach((exp) => {
-                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node");
+                resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports);
             });
             expect(resultStr.includes("node.ee.dd.cc.bb.aa")).toBeTruthy();
         } else {

@@ -26,27 +26,29 @@ namespaces = isnamespaceKey curly_begin conceptRefs:(
         return conceptRefs;
     }
 
-conceptDefinition = name:classifierReference curly_begin nsDef:namespaceAddition curly_end
+conceptDefinition = name:classifierReference curly_begin nsAddition:namespaceAddition nsReplacement:namespaceReplacement? curly_end
     {
         return create.createScoperConceptDef({
-            "classifierRef"     :name,
-            "namespaceAddition" :nsDef,
-            "location"          :location()
+            "classifierRef"         :name,
+            "namespaceReplacement"  :nsReplacement,
+            "namespaceAddition"     :nsAddition,
+            "location"              :location()
         });
     }
-    / name:classifierReference curly_begin namespaceReplacement:namespaceReplacement curly_end
-        {
-            return create.createScoperConceptDef({
-                "classifierRef"         :name,
-                "namespaceReplacement"  :namespaceReplacement,
-                "location"              :location()
-            });
-        }
+/ name:classifierReference curly_begin nsReplacement:namespaceReplacement nsAddition:namespaceAddition? curly_end
+    {
+        return create.createScoperConceptDef({
+            "classifierRef"         :name,
+            "namespaceReplacement"  :nsReplacement,
+            "namespaceAddition"     :nsAddition,
+            "location"              :location()
+        });
+    }
 
 namespaceAddition = additionKey curly_begin list:singleNamespaceExpression+ curly_end
     {
         return create.createNamespaceAddition({
-            "expressions"   :list,
+            "nsInfoList"   :list,
             "location"      :location()
         });
     }
@@ -54,7 +56,7 @@ namespaceAddition = additionKey curly_begin list:singleNamespaceExpression+ curl
 namespaceReplacement = replacementNamespaceKey curly_begin list:singleNamespaceExpression+ curly_end
     {
         return create.createNamespaceReplacement({
-            "expressions"   :list,
+            "nsInfoList"   :list,
             "location"      :location()
         });
     }

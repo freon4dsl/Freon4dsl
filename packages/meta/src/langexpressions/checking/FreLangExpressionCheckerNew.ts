@@ -6,7 +6,7 @@ import {
     FreMetaLanguage,
     FreMetaClassifier,
     FreMetaLimitedConcept,
-    LangUtil
+    LangUtil, FreMetaUnitDescription
 } from '../../languagedef/metalanguage/index.js';
 import {
     FreFunctionExp,
@@ -350,21 +350,25 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
         }
     }
 
-    private findPossibleOwnersOf(innerConcept: FreMetaClassifier): FreMetaClassifier[] {
+    private findPossibleOwnersOf(child: FreMetaClassifier): FreMetaClassifier[] {
         const foundOwners: Set<FreMetaClassifier> = new Set<FreMetaClassifier>();
-        this.language?.classifiers().forEach(classifier => {
-            classifier.allProperties().forEach(property => {
-                if (!!property.typeReference.referred) {
-                    if (LangUtil.conforms(property.typeReference.referred, innerConcept)) {
-                        foundOwners.add(classifier);
-                        // add all its subtypes as well
-                        LangUtil.subClassifiers(classifier).forEach(cls => {
-                            foundOwners.add(cls);
-                        });
+        if (child instanceof FreMetaUnitDescription) {
+            foundOwners.add(this.language!.modelConcept);
+        } else {
+            this.language?.classifiers().forEach(classifier => {
+                classifier.allProperties().forEach(property => {
+                    if (!!property.typeReference.referred) {
+                        if (LangUtil.conforms(property.typeReference.referred, child)) {
+                            foundOwners.add(classifier);
+                            // add all its subtypes as well
+                            LangUtil.subClassifiers(classifier).forEach(cls => {
+                                foundOwners.add(cls);
+                            });
+                        }
                     }
-                }
-            })
-        });
+                })
+            });
+        }
         return Array.from(foundOwners);
     }
 }

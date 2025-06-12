@@ -3,16 +3,17 @@ import {
     FreMetaClassifier, LangUtil, MetaElementReference
 } from '../../languagedef/metalanguage/index.js';
 import {
-    FreReplacementNamespace,
+    FreNamespaceReplacement,
     FreNamespaceAddition,
     ScopeDef,
-    FreNamespaceExpression
+    FreMetaNamespaceInfo, ScopeConceptDef
 } from './FreScopeDefLang.js';
 import { FreLangExpressionCheckerNew } from '../../langexpressions/checking/FreLangExpressionCheckerNew.js';
 import { FreFunctionExp } from '../../langexpressions/metalanguage/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
+import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 
 
 const LOGGER = new MetaLogger("ScoperChecker").mute();
@@ -40,10 +41,13 @@ export class ScoperChecker extends Checker<ScopeDef> {
 
         // check the namespaces and find any subclasses or implementors of interfaces that are mentioned in the list of namespaces in the definition
         this.myNamespaces = this.findAllNamespaces(definition.namespaceRefs);
+        // disregard the namespaces in the definition (definition.namespaceRefs), instead use the complete set that we have found here!
+        definition.namespaces = this.myNamespaces;
 
         // check all concept entries, make sure there are no doubles
         const done: FreMetaClassifier[] = [];
         definition.scopeConceptDefs.forEach((def) => {
+            // NB we cannot use 'def.classifier', because all references still need to be resolved.
             if (!!def.classifierRef) {
                 ReferenceResolver.resolveClassifierReference(def.classifierRef, this.runner, this.language!);
                 if (!!def.classifierRef.referred) {
@@ -51,20 +55,79 @@ export class ScoperChecker extends Checker<ScopeDef> {
                         check: !done.includes(def.classifierRef.referred),
                         error: `Double entry (${def.classifierRef?.name}) is not allowed ${ParseLocationUtil.location(def)}.`,
                         whenOk: () => {
-                            if (!!def.classifierRef!.referred) {
-                                if (!!def.namespaceAddition) {
-                                    this.checkNamespaceAdditions(def.namespaceAddition, def.classifierRef!.referred);
+                            this.runner.nestedCheck({
+                                check: !(!!def.namespaceAddition && !!def.namespaceReplacement),
+                                error: `Namespace may be defined by either 'imports' or 'alternatives', not both ${ParseLocationUtil.location(def)}.`,
+                                whenOk: () => {
+                                    if (!!def.namespaceAddition) {
+                                        this.checkNamespaceAdditions(def.namespaceAddition, def.classifierRef!.referred);
+                                    }
+                                    if (!!def.namespaceReplacement) {
+                                        this.checkReplacementNamespace(def.namespaceReplacement, def.classifierRef!.referred);
+                                    }
                                 }
-                                if (!!def.namespaceReplacement) {
-                                    this.checkReplacementNamespace(def.namespaceReplacement, def.classifierRef!.referred);
-                                }
-                            }
+                            });
                         }
                     });
                     done.push(def.classifierRef.referred);
                 }
             }
         });
+
+        // distribute the scope information over sub classifiers and implementing classifiers
+        definition.namespaces.forEach((parent) => {
+            // find the scopeDef associated with 'parent'
+            const parentDef = definition.scopeConceptDefs.find((def) => def.classifier === parent);
+            if (!isNullOrUndefined(parentDef)) {
+                // find all implementors and subs
+                const children = LangUtil.findAllImplementorsAndSubs(parent);
+                // add parent scopeDef to all children
+                children.forEach((child) => {
+                    if (child !== parent) {
+                        // try to find child scopeDef
+                        const childDef = definition.scopeConceptDefs.find((def) => def.classifier === child);
+                        if (isNullOrUndefined(childDef)) {
+                            // create a new scopeDef
+                            const newDef = new ScopeConceptDef();
+                            if (!isNullOrUndefined(parentDef.namespaceAddition)) {
+                                newDef.namespaceAddition = new FreNamespaceAddition();
+                                newDef.namespaceAddition.nsInfoList = this.copyNamespaceExpressions(parentDef.namespaceAddition.nsInfoList);
+                            }
+                            if (!isNullOrUndefined(parentDef.namespaceReplacement)) {
+                                newDef.namespaceReplacement = new FreNamespaceReplacement();
+                                newDef.namespaceReplacement.nsInfoList = this.copyNamespaceExpressions(parentDef.namespaceReplacement.nsInfoList);
+                            }
+                        } else {
+                            // add additions to existing scopeDef, but first check if this is correct
+                            if (!isNullOrUndefined(parentDef.namespaceAddition)) {
+                                this.runner.nestedCheck({
+                                    check: isNullOrUndefined(childDef.namespaceReplacement),
+                                    error: `Parent scope definition (${parent.name}) does not comply with scope definition for ${child.name} ${ParseLocationUtil.location(child)}.`,
+                                    whenOk: () => {
+                                        if (!isNullOrUndefined(childDef.namespaceAddition)) {
+                                            childDef.namespaceAddition?.nsInfoList.push(...this.copyNamespaceExpressions(parentDef.namespaceAddition?.nsInfoList));
+                                        }
+                                    }
+                                })
+                            }
+                            if (!isNullOrUndefined(parentDef.namespaceReplacement)) {
+                                this.runner.nestedCheck({
+                                    check: isNullOrUndefined(childDef.namespaceAddition),
+                                    error: `Parent scope definition (${parent.name}) does not comply with scope definition for ${child.name} ${ParseLocationUtil.location(child)}.`,
+                                    whenOk: () => {
+                                        if (!isNullOrUndefined(childDef.namespaceReplacement)) {
+                                            childDef.namespaceReplacement?.nsInfoList.push(...this.copyNamespaceExpressions(parentDef.namespaceReplacement?.nsInfoList));
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    }
+                })
+            }
+        })
+
+        // add any errors on the nsInfoList used
         if (!!this.myExpressionChecker) {
             this.errors = this.myExpressionChecker.errors.concat(this.errors);
         }
@@ -76,21 +139,21 @@ export class ScoperChecker extends Checker<ScopeDef> {
             check: this.myNamespaces.includes(enclosingConcept),
             error: `Cannot change namespace ${enclosingConcept.name}, because it is not defined as namespace ${ParseLocationUtil.location(namespaceAddition)}.`,
             whenOk: () => {
-                namespaceAddition.expressions.forEach((exp) => {
+                namespaceAddition.nsInfoList.forEach((exp) => {
                     this.checkNamespaceExpression(exp, enclosingConcept)
                 })
             },
         });
     }
 
-    private checkReplacementNamespace(namespaceReplacement: FreReplacementNamespace, enclosingConcept: FreMetaClassifier) {
+    private checkReplacementNamespace(namespaceReplacement: FreNamespaceReplacement, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("Checking namespace replacements for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
             error: `Cannot change namespace ${enclosingConcept.name}, because it is not defined as namespace ${ParseLocationUtil.location(namespaceReplacement)}.`,
             whenOk: () => {
                 if (!!this.myExpressionChecker) {
-                    namespaceReplacement.expressions.forEach((exp) => {
+                    namespaceReplacement.nsInfoList.forEach((exp) => {
                         this.checkNamespaceExpression(exp, enclosingConcept)
                     })
                 }
@@ -98,7 +161,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         });
     }
 
-    private checkNamespaceExpression(namespaceExpression: FreNamespaceExpression, enclosingConcept: FreMetaClassifier) {
+    private checkNamespaceExpression(namespaceExpression: FreMetaNamespaceInfo, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("Checking namespace expression for " + enclosingConcept?.name);
         const exp = namespaceExpression.expression;
         if (!!exp) {
@@ -162,6 +225,20 @@ export class ScoperChecker extends Checker<ScopeDef> {
                 result.push(ref.name);
             }
         })
+        return result;
+    }
+
+    private copyNamespaceExpressions(infos: FreMetaNamespaceInfo[] | undefined): FreMetaNamespaceInfo[] {
+        let result: FreMetaNamespaceInfo[] = [];
+        if (!isNullOrUndefined(infos)) {
+            infos.forEach(info => {
+                const xx = new FreMetaNamespaceInfo();
+                // NB we do not need to make a true copy of the expressions. They are not altered, just read.
+                xx.expression = info.expression;
+                xx.recursive = info.recursive;
+                result.push(xx);
+            })
+        }
         return result;
     }
 }
