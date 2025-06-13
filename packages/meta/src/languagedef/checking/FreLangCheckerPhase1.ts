@@ -172,6 +172,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                 check: !!left,
                 error: `Binary expression concept ${freConcept.name} should have a left part ${ParseLocationUtil.location(freConcept)}.`,
                 whenOk: () => {
+                    ReferenceResolver.resolveClassifierReference(left?.typeReference, this.runner, this.language);
                     this.runner.simpleCheck(
                         !!left && left.type instanceof FreMetaExpressionConcept,
                         `Concept ${freConcept.name}.left should be an expression concept ${ParseLocationUtil.location(freConcept)}.`,
@@ -183,6 +184,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                 check: !!right,
                 error: `Binary expression concept ${freConcept.name} should have a right part ${ParseLocationUtil.location(freConcept)}.`,
                 whenOk: () => {
+                    ReferenceResolver.resolveClassifierReference(right?.typeReference, this.runner, this.language);
                     this.runner.simpleCheck(
                         !!right && right.type instanceof FreMetaExpressionConcept,
                         `Concept ${freConcept.name}.right should be an expression concept ${ParseLocationUtil.location(freConcept)}.`,

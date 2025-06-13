@@ -6,7 +6,7 @@ scoper for language Example
 
 // 2 isNamespace { Method, Entity }
 
-isNamespace { Method, Entity, SumExpression }
+isNamespace { Method, Entity, SumExpression, AppliedFeature }
 
 Entity {
     imports { self.baseEntity; }

@@ -20,11 +20,11 @@ concept LangModule4 implements INamed {
 }
 
 concept VarReference4 {
-    reference target: Variable;
+    reference targetVariable: Variable;
     module?: ModuleReference4;
 }
 
 concept ModuleReference4 {
-    reference target: LangModule4;
+    reference targetModule: LangModule4;
     module?: ModuleReference4;
 }

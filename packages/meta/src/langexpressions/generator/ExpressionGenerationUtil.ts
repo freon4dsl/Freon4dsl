@@ -128,6 +128,7 @@ export class ExpressionGenerationUtil {
     }
 
     private static ifFuncToTypeScript(exp: FreFunctionExp, paramName: string, imports: Imports, previousExpAsTS: string): string {
+        imports.language.add(exp.referredClassifier.name);
         if (!!exp.previous && !!previousExpAsTS && previousExpAsTS.length > 0) {
             // NB if there is a previous expression, there should also be a 'previousExpAsTS'
             imports.core.add(Names.FreLanguage);

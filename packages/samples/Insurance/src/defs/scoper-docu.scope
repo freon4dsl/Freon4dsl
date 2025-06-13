@@ -1,6 +1,6 @@
 scoper for language InsuranceModel
 
-isNamespace { InsuranceProduct, BaseProduct, CalcFunction, Entity }
+isNamespace { InsuranceProduct, BaseProduct, CalcFunction, Entity, AttributeRef }
 
 InsuranceProduct {
     imports {self.basedOn;}

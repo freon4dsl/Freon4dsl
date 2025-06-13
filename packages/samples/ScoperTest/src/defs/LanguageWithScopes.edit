@@ -36,12 +36,3 @@ LangModule4 {[
         ref ${self.varReferences}
     }
 ]}
-
-LangModule5 {[
-    module ${self.name} {
-        import ${self.imports}
-        modules ${self.moduleDefinitions}
-        var ${self.varDefinitions horizontal separator[,]}
-        ref ${self.varReferences}
-    }
-]}

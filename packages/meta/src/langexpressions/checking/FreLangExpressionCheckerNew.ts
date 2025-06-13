@@ -6,7 +6,8 @@ import {
     FreMetaLanguage,
     FreMetaClassifier,
     FreMetaLimitedConcept,
-    LangUtil, FreMetaUnitDescription
+    FreMetaUnitDescription,
+    LangUtil
 } from '../../languagedef/metalanguage/index.js';
 import {
     FreFunctionExp,
@@ -16,6 +17,7 @@ import {
     FreVarExp
 } from '../metalanguage/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
+
 
 //@ts-ignore
 const LOGGER = new MetaLogger("FreLangExpressionChecker").mute();
@@ -358,7 +360,7 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
             this.language?.classifiers().forEach(classifier => {
                 classifier.allProperties().forEach(property => {
                     if (!!property.typeReference.referred) {
-                        if (LangUtil.conforms(property.typeReference.referred, child)) {
+                        if (LangUtil.conforms(child, property.typeReference.referred)) {
                             foundOwners.add(classifier);
                             // add all its subtypes as well
                             LangUtil.subClassifiers(classifier).forEach(cls => {

@@ -1,6 +1,6 @@
 scoper for language Entity
 
-isNamespace { EntityModelUnit, Entity, EntityFunction }
+isNamespace { EntityModelUnit, Entity, EntityFunction, AppliedFeature }
 
 Entity {
     imports { self.baseEntity;}
