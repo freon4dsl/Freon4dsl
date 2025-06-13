@@ -1,9 +1,9 @@
 scoper for language ScoperTryout
 
-isnamespace { Referable, QualifiedName }
+isNamespace { Referable, QualifiedName }
 
 UnitUsingReferables {
-    import { self.imports; }
+    imports { self.imports; }
 }
 
 

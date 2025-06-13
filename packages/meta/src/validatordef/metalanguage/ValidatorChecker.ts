@@ -1,11 +1,14 @@
+import { FreErrorSeverity, MetaLogger } from '../../utils/no-dependencies/index.js';
+import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 import {
     FreMetaClassifier,
+    FreLangAppliedFeatureExp,
+    FreLangSelfExp,
+    FreLangSimpleExp,
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
     FreMetaProperty,
-    FreLangAppliedFeatureExp,
-    FreLangSelfExp,
-    FreLangSimpleExp
 } from "../../languagedef/metalanguage/index.js";
 import {
     CheckConformsRule,
@@ -23,9 +26,7 @@ import {
 } from "./ValidatorDefLang.js";
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/index.js";
 import { FreLangExpressionChecker } from "../../languagedef/checking/index.js";
-import { FreErrorSeverity, MetaLogger } from '../../utils/no-dependencies/index.js';
-import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
-import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
+
 
 const LOGGER: MetaLogger = new MetaLogger("ValidatorChecker");
 const equalsTypeName: string = "equalsType";
@@ -66,12 +67,12 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
     }
 
     private checkConceptRule(rule: ConceptRuleSet): void {
-        LOGGER.log("Check concept rule");
-        if (!!rule.conceptRef) {
+        LOGGER.log("Check concept rule " + rule.classifierRef?.name);
+        if (!!rule.classifierRef) {
             // todo check whether this option needs to throw an error
-            ReferenceResolver.resolveClassifierReference(rule.conceptRef, this.runner, this.language!);
+            ReferenceResolver.resolveClassifierReference(rule.classifierRef, this.runner, this.language!);
 
-            const enclosingConcept: FreMetaClassifier = rule.conceptRef.referred;
+            const enclosingConcept: FreMetaClassifier = rule.classifierRef.referred;
             if (enclosingConcept) {
                 rule.rules.forEach((tr) => {
                     this.checkRule(tr, enclosingConcept);

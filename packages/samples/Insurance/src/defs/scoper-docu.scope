@@ -1,15 +1,15 @@
 scoper for language InsuranceModel
 
-isnamespace { InsuranceProduct, BaseProduct, CalcFunction, Entity }
+isNamespace { InsuranceProduct, BaseProduct, CalcFunction, Entity }
 
 InsuranceProduct {
-    import {self.basedOn;}
+    imports {self.basedOn;}
 }
 
 AttributeRef {
-	alternative { typeof( container ); }
+	alternatives { owner().type(); }
 }
 
 Entity {
-    import {self.baseEntity;}
+    imports {self.baseEntity;}
 }

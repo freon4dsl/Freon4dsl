@@ -1,9 +1,9 @@
 scoper for language RulesLanguage
 
-isnamespace { Data, Rules, Entity, Type }
+isNamespace { Data, Rules, Entity, Type }
 
 Rules {
-    import { self.imports; self.forEntity; }
+    imports { self.imports; self.forEntity; }
 }
 
 

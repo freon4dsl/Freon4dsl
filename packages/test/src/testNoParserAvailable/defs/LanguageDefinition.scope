@@ -1,19 +1,19 @@
 scoper for language Example
 
-// isnamespace { Entity,Model }
+// isNamespace { Entity,Model }
 
-// isnamespace { Entity, Model }
+// isNamespace { Entity, Model }
 
-// 2 isnamespace { Method, Entity }
+// 2 isNamespace { Method, Entity }
 
-isnamespace { Method, Entity, ExModel, SumExpression, AppliedFeature }
+isNamespace { Method, Entity, ExModel, SumExpression, AppliedFeature }
 
 Entity {
-    import { self.baseEntity; }
+    imports { self.baseEntity; }
 }
 
 AppliedFeature {
-	alternative { typeof( container ); }
+	alternatives { owner().type(); }
 }
 
 

@@ -1,22 +1,22 @@
 scoper for language Example
 
-// isnamespace { Entity,Model }
+// isNamespace { Entity,Model }
 
-// isnamespace { Entity, Model }
+// isNamespace { Entity, Model }
 
-// 2 isnamespace { Method, Entity }
+// 2 isNamespace { Method, Entity }
 
-isnamespace { Method, Entity, SumExpression }
+isNamespace { Method, Entity, SumExpression }
 
 Entity {
-    import { self.baseEntity; }
-    // How to tell that there is no import for self.baseEntity ??
-    // import { self.baseEntity; } for Type
-    // NOT import { self.baseEntity; } for Entity
+    imports { self.baseEntity; }
+    // How to tell that there is no imports for self.baseEntity ??
+    // imports { self.baseEntity; } for Type
+    // NOT imports { self.baseEntity; } for Entity
 }
 
 AppliedFeature {
-	alternative { typeof( container ); }
+	alternatives { owner().type(); }
 }
 
 

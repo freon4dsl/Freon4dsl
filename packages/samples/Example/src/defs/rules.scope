@@ -1,9 +1,9 @@
 scoper for language Example
 
-isnamespace { Rules }
+isNamespace { Rules }
 
 Rules {
-    import { self.forEntity; }
+    imports { self.forEntity; }
 }
 
 

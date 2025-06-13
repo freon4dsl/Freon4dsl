@@ -5,6 +5,7 @@ import {
 import { Names, Imports } from '../../../utils/on-lang/index.js';
 import { ScopeDef, FreMetaNamespaceInfo } from '../../metalanguage/index.js';
 import { ExpressionGenerationUtil } from '../../../langexpressions/generator/ExpressionGenerationUtil.js';
+import { isNullOrUndefined } from '../../../utils/file-utils/index.js';
 
 export class ScoperTemplate {
     additionalNamespaceText: string = "";
@@ -84,9 +85,9 @@ export class ScoperTemplate {
                     const comment = "// namespace addition for " + myClassifier.name + "\n";
                     imports.language.add(Names.classifier(myClassifier));
                     this.additionalNamespaceText += comment + `if (node instanceof ${myClassifier.name}) {`;
-                    def.namespaceAddition.nsInfoList.forEach((expression) => {
+                    def.namespaceAddition.nsInfoList.forEach((expression, index) => {
                         this.additionalNamespaceText = this.additionalNamespaceText.concat(
-                          this.addNamespaceExpression(expression, imports),
+                          this.addNamespaceExpression(expression, imports, index),
                         );
                     });
                     this.additionalNamespaceText = this.additionalNamespaceText.concat(`}\n`);
@@ -105,11 +106,11 @@ export class ScoperTemplate {
                     imports.language.add(Names.classifier(myClassifier));
                     this.replacementNamespaceText += comment + `if (node instanceof ${myClassifier.name}) {`;
                     if (!!def.namespaceReplacement) {
-                        for (const expression of def.namespaceReplacement.nsInfoList) {
+                        def.namespaceReplacement.nsInfoList.forEach((expression, index) => {
                             this.replacementNamespaceText = this.replacementNamespaceText.concat(
-                              this.addNamespaceExpression(expression, imports),
+                              this.addNamespaceExpression(expression, imports, index),
                             );
-                        }
+                        })
                     }
                     this.replacementNamespaceText = this.replacementNamespaceText.concat(`}\n`);
                 }
@@ -117,23 +118,42 @@ export class ScoperTemplate {
         }
     }
 
-    private addNamespaceExpression(namespaceInfo: FreMetaNamespaceInfo, imports: Imports): string {
+    private addNamespaceExpression(namespaceInfo: FreMetaNamespaceInfo, imports: Imports, index: number): string {
         let result: string = "";
         if (namespaceInfo.expression) {
-            const namespaceExpression: string = ExpressionGenerationUtil.langExpToTypeScript(namespaceInfo.expression, "node", imports);
+            const namespaceExpressionStr: string = ExpressionGenerationUtil.langExpToTypeScript(namespaceInfo.expression, "node", imports);
             // see whether the expression results in a list, because we need to distinguish between lists and non-lists
             const previousIsList = ExpressionGenerationUtil.previousIsList;
             if (previousIsList) {
                 const loopVar: string = "loopVariable";
+                imports.core.add('isNullOrUndefined');
                 result = result.concat(`
                     // generated from '${namespaceInfo.toFreString()}'
-                    for (let ${loopVar} of ${namespaceExpression}) {
-                        result.push(new ${Names.FreNamespaceInfo}(${loopVar}, ${namespaceInfo.recursive}));
+                    for (let ${loopVar} of ${namespaceExpressionStr}) {
+                        if (!isNullOrUndefined(${loopVar})) {
+                            result.push(new ${Names.FreNamespaceInfo}(${loopVar}, ${namespaceInfo.recursive}));
+                        }
                     }`);
             } else {
+                // try to determine the type of the node from the last of the chain of expressions
+                const lastExp = namespaceInfo.expression.getLastExpression();
+                let xxType = lastExp.getResultingClassifier()?.name;
+                if (!isNullOrUndefined(xxType)) {
+                    imports.language.add(xxType);
+                }
+                const isPart: boolean = lastExp.getIsPart();
+                if (!isPart) {
+                    xxType = `${Names.FreNodeReference}<${xxType}>`;
+                    imports.core.add(Names.FreNodeReference);
+                }
+                // add core import
+                imports.core.add('isNullOrUndefined');
                 result = result.concat(`
                     // generated from '${namespaceInfo.toFreString()}'
-                    result.push(new ${Names.FreNamespaceInfo}(${namespaceExpression}, ${namespaceInfo.recursive}));
+                    const xx${index} ${xxType ? `: ${xxType} | undefined` : `` } = ${namespaceExpressionStr};
+                    if (!isNullOrUndefined(xx${index})) { 
+                        result.push(new ${Names.FreNamespaceInfo}(xx${index}, ${namespaceInfo.recursive}));
+                    }
                     `);
             }
         }

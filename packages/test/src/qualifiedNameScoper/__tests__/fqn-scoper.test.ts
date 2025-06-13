@@ -5,6 +5,8 @@ import { FileHandler } from '../../utils/FileHandler';
 import { AST, FreNamedNode, FreNodeReference } from '@freon4dsl/core';
 import { getVisibleNames } from '../../utils/HelperFunctions';
 
+
+
 describe("Testing Custom Scoper", () => {
 	const reader = ScoperTryoutEnvironment.getInstance().reader;
 	const writer = ScoperTryoutEnvironment.getInstance().writer;
@@ -98,6 +100,15 @@ describe("Testing Custom Scoper", () => {
 		return firstQ;
 	}
 
+	function addPart(firstQ: QualifiedName, nodeToAdd: NamedPart) {
+		AST.change(() => {
+			firstQ.part = FreNodeReference.create<NamedPart>(nodeToAdd.name, 'NamedPart');
+		});
+		expect(firstQ.part.referred).not.toBeNull;
+		expect(firstQ.part.referred).not.toBeUndefined;
+		expect(firstQ.part.referred).toBe(nodeToAdd);
+	}
+
 	test(" QualifiedName has names from unit", () => {
 		startFQN();
 	})
@@ -105,13 +116,9 @@ describe("Testing Custom Scoper", () => {
 	test(" QualifiedName has names from previous", () => {
 		const firstQ: QualifiedName = startFQN();
 
-		// add a part to the QualifiedName
-		AST.change( () => {
-			firstQ.part = FreNodeReference.create<NamedPart>("Z", "NamedPart");
-		})
-		expect(firstQ.part.referred).not.toBeNull;
-		expect(firstQ.part.referred).not.toBeUndefined;
-		expect(firstQ.part.referred).toBe((model.findUnit('unit1_1') as UnitType1).content.find(xx => xx.name === "Z"));
+		// add a part to the first QualifiedName
+		const nodeToAdd = (model.findUnit('unit1_1') as UnitType1).content.find(xx => xx.name === "Z")
+		addPart(firstQ, nodeToAdd);
 		expect(getVisibleNames(scoper.getVisibleNodes(firstQ.part))).toStrictEqual([   "TestRefs1",
 			"unit1_1",
 			"unit1_2",
@@ -129,34 +136,41 @@ describe("Testing Custom Scoper", () => {
 			"W",
 			"U", ]);
 
-		// create an empty QualifiedName to check the available names
+		// create the next QualifiedName (empty) to check the available names
 		const secondQ: QualifiedName = QualifiedName.create({})
 		AST.change( () => {
 			firstQ.restName = secondQ;
 		})
 		expect(getVisibleNames(scoper.getVisibleNodes(secondQ))).toStrictEqual([ 'Z_A', 'Z_B' ]);
 
-		const elems = scoper.getVisibleNodes(secondQ, 'NamedPart');
-		const za: NamedPart = elems.find(e => e.name === "Z_A") as NamedPart;
-		// add a part to the QualifiedName
-		AST.change( () => {
-			secondQ.part = FreNodeReference.create<NamedPart>('Z_A', "NamedPart");
-		})
-		expect(secondQ.part.referred).not.toBeNull;
-		expect(secondQ.part.referred).not.toBeUndefined;
+		// add a part to the next QualifiedName, and check its reference
+		const za: NamedPart = scoper.getVisibleNodes(secondQ, 'NamedPart').find(e => e.name === "Z_A") as NamedPart;
+		addPart(secondQ, za);
 		const Z_A_node: FreNamedNode = (model.findUnit('unit1_1') as UnitType1).content.find(xx => xx.name === "Z").subParts.find(xx => xx.name === "Z_A")
 		expect(Z_A_node).not.toBeNull;
 		expect(Z_A_node).not.toBeUndefined;
 		expect(Z_A_node).toBe(za);
-		expect(secondQ.part.referred).toBe(Z_A_node);
 
-		// create an empty QualifiedName to check the available names
+		// create the next QualifiedName (empty) to check the available names
 		const thirdQ: QualifiedName = QualifiedName.create({})
 		AST.change( () => {
 			secondQ.restName = thirdQ;
 		})
-		// console.log(writer.writeToString(referenceUnit))
 		expect(getVisibleNames(scoper.getVisibleNodes(thirdQ))).toStrictEqual([ 'Z_A_A', 'Z_A_B' ]);
 
+		// add a part to the next QualifiedName, and check its reference
+		const zab: NamedPart = scoper.getVisibleNodes(thirdQ, 'NamedPart').find(e => e.name === "Z_A_B") as NamedPart;
+		addPart(thirdQ, zab);
+		const Z_A_B_node: FreNamedNode = (model.findUnit('unit1_1') as UnitType1).content.find(xx => xx.name === "Z").subParts.find(xx => xx.name === "Z_A").subParts.find(xx => xx.name === "Z_A_B")
+		expect(Z_A_B_node).not.toBeNull;
+		expect(Z_A_B_node).not.toBeUndefined;
+		expect(Z_A_B_node).toBe(zab);
+
+		// create the next QualifiedName (empty) to check the available names
+		const fourthQ: QualifiedName = QualifiedName.create({})
+		AST.change( () => {
+			thirdQ.restName = fourthQ;
+		})
+		expect(getVisibleNames(scoper.getVisibleNodes(fourthQ))).toStrictEqual([ ]);
 	})
 })

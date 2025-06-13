@@ -1,48 +1,48 @@
 scoper for language ExampleLanguage
 
-isnamespace { LangModule1, 
+isNamespace { LangModule1,
               LangModule2, VarReference2, 
               LangModule3, VarReference3, ModuleReference3,
               LangModule4, VarReference4, ModuleReference4 }
 
 LangModule1 {
-    import { self.imports; }
+    imports { self.imports; }
 }
 
 // ===================================================================
 
 LangModule2 {
-    import { self.imports; }
+    imports { self.imports; }
 }
 
 VarReference2 {
-    import { self.module; }
+    imports { self.module; }
 }
 
 // ===================================================================
 
 LangModule3 {
-    import { self.imports; }
+    imports { self.imports; }
 }
 
 VarReference3 {
-    import { self.module.target; }
+    imports { self.module.target; }
 }
 
 ModuleReference3 {
-     import { self.module.target; }
+     imports { self.module.target; }
 }
 
 // ===================================================================
 
 LangModule4 {
-    import { self.imports; }
+    imports { self.imports; }
 }
 
 VarReference4 {
-     import { self.module.target; }
+     imports { self.module.target; }
 }
 
 ModuleReference4 {
-     import { self.module.target; }
+     imports { self.module.target; }
 }

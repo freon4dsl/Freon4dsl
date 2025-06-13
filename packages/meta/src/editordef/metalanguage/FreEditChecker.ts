@@ -620,6 +620,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             return;
         }
         LOGGER.log("checking super projection: " + cls?.name);
+        ReferenceResolver.resolveClassifierReference(item.superRef, this.runner, this.language!);
         const myParent = item.superRef.referred;
         this.runner.nestedCheck({
             check: !!myParent,

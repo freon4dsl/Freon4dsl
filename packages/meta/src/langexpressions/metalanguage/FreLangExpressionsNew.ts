@@ -26,6 +26,11 @@ export abstract class FreLangExpNew extends FreMetaLangElement {
         return '';
     }
 
+    getIsPart(): boolean {
+        // only overridden by FreVarExp, it's result depends on the property it refers to
+        return true;
+    }
+
     getResultingClassifier(): FreMetaClassifier | undefined {
         // should be overridden by all subclasses
         return undefined;
@@ -87,6 +92,14 @@ export abstract class FreVarOrFunctionExp extends FreLangExpNew {
 }
 
 export class FreVarExp extends FreVarOrFunctionExp {
+
+    getIsPart(): boolean {
+        if (this.$referredProperty) {
+            return this.referredProperty?.isPart;
+        }
+        return true;
+    }
+
     getLocalClassifier(): FreMetaClassifier | undefined {
         if (this.$referredProperty) {
             return this.referredProperty?.typeReference?.referred;

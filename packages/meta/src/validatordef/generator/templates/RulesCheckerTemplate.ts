@@ -8,7 +8,8 @@ import {
     FreMetaInterface,
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
-    FreMetaProperty, LangUtil,
+    FreMetaProperty,
+    LangUtil,
     MetaElementReference
 } from '../../../languagedef/metalanguage/index.js';
 import {
@@ -73,7 +74,7 @@ export class RulesCheckerTemplate {
             .map(
                 (ruleSet) =>
                     `${commentBefore}
-            public execBefore${Names.classifier(ruleSet.conceptRef?.referred)}(${paramName}: ${Names.classifier(ruleSet.conceptRef?.referred)}): boolean {
+            public execBefore${Names.classifier(ruleSet.classifier)}(${paramName}: ${Names.classifier(ruleSet.classifier)}): boolean {
                 let hasFatalError: boolean = false;
                 ${this.createRules(ruleSet)}
                 return hasFatalError;
@@ -113,19 +114,19 @@ export class RulesCheckerTemplate {
         // add rules of super types to each concept
         const newConceptRules: ConceptRuleSet[] = [];
         validdef.conceptRules.forEach(rule => {
-            const ruleClassifier: FreMetaClassifier | undefined = rule.conceptRef?.referred;
+            const ruleClassifier: FreMetaClassifier | undefined = rule.classifier;
             if (!!ruleClassifier) {
                 const implementors: FreMetaClassifier[] = LangUtil.findAllImplementorsAndSubs(ruleClassifier);
                 implementors.forEach(implementor => {
                     if (implementor !== ruleClassifier && implementor instanceof FreMetaConcept) {
                         // see if there is a ConceptRuleSet for the implementor
                         let implementorRule: ConceptRuleSet | undefined = validdef.conceptRules.find(rule2 =>
-                          rule2.conceptRef?.referred === implementor
+                          rule2.classifier === implementor
                         );
                         if (implementorRule === undefined) {
                             // create new conceptRule
                             implementorRule = new ConceptRuleSet();
-                            implementorRule.conceptRef = MetaElementReference.create<FreMetaConcept>(implementor);
+                            implementorRule.classifierRef = MetaElementReference.create<FreMetaConcept>(implementor);
                             newConceptRules.push(implementorRule);
                         }
                         implementorRule.rules.push(...rule.rules);
@@ -144,13 +145,13 @@ export class RulesCheckerTemplate {
      * @private
      */
     private removeInterfaceSets(validdef: ValidatorDef) {
-        validdef.conceptRules = validdef.conceptRules.filter(rule => !(rule.conceptRef?.referred instanceof FreMetaInterface));
+        validdef.conceptRules = validdef.conceptRules.filter(rule => !(rule.classifier instanceof FreMetaInterface));
     }
 
     private createRules(ruleSet: ConceptRuleSet): string {
         let result: string = "";
         // find the property that indicates the location in human terms
-        const locationdescription: string = ValidationUtils.findLocationDescription(ruleSet.conceptRef?.referred, paramName);
+        const locationdescription: string = ValidationUtils.findLocationDescription(ruleSet.classifier, paramName);
 
         ruleSet.rules.forEach((r, index) => {
             // find the severity for the rule

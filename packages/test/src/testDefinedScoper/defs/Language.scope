@@ -3,5 +3,5 @@ scoper for language ScoperTest
 // the language definition in this project is the same as in testDefaultScoper
 // here we also add a scoper definition to the test
 
-isnamespace { DSunit }
+isNamespace { DSunit }
 

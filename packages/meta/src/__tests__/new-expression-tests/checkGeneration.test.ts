@@ -112,9 +112,9 @@ describe("Checking generation of expressions", () => {
             DDconceptExps!.exps.forEach((exp) => {
                 resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports) + "\n";
             });
-            // console.log(resultStr)
-            expect(resultStr.includes("LanguageEnvironment.getInstance().typer.inferType(node.DDprop7)")).toBeTruthy();
-            expect(resultStr.includes("node.DDprop8.map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x))")).toBeTruthy();
+            // console.log(resultStr);
+            expect(resultStr.includes("LanguageEnvironment.getInstance().typer.inferType(node.DDprop7).toAstElement()")).toBeTruthy();
+            expect(resultStr.includes("node.DDprop8.map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x).toAstElement())")).toBeTruthy();
         } else {
             console.log("Language or Expressions not present");
         }
@@ -148,7 +148,8 @@ describe("Checking generation of expressions", () => {
             FFconceptExps!.exps.forEach((exp) => {
                 resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports);
             });
-            expect(resultStr.includes("node.ee.dd.cc.bb.aa")).toBeTruthy();
+            // console.log(resultStr);
+            expect(resultStr.includes("node.ee?.dd?.cc?.bb?.aa")).toBeTruthy();
         } else {
             console.log("Language or Expressions not present");
         }

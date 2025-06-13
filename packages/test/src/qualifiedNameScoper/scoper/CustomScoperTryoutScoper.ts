@@ -4,7 +4,7 @@ import {
     type FreNamedNode,
     FreNodeReference,
     type FreScoper,
-    FreCompositeScoper, FreNamespaceInfo
+    FreCompositeScoper, FreNamespaceInfo, isNullOrUndefined
 } from '@freon4dsl/core';
 import { QualifiedName, Referable, UnitType2 } from '../language/gen/index.js';
 
@@ -59,6 +59,19 @@ export class CustomScoperTryoutScoper implements FreScoper {
         //     } else {
         //         console.error("getReplacementNamespace: no container found.");
         //     }
+        // }
+
+
+        // // generated from 'owner().if(UnitType2);'
+        // const xx1: UnitType2 | undefined = node.freOwner().freLanguageConcept() === 'UnitType2' ? node.freOwner() as UnitType2 : undefined;
+        // if (!isNullOrUndefined(xx1)) {
+        //     result.push(new FreNamespaceInfo(xx1, true));
+        // }
+        //
+        // // generated from 'recursive owner().if(QualifiedName).part;'
+        // const xx2: FreNodeReference<FreNamedNode> | undefined = (node.freOwner().freLanguageConcept() === 'QualifiedName' ? node.freOwner() as QualifiedName : undefined)?.part;
+        // if (!isNullOrUndefined(xx2)) {
+        //     result.push(new FreNamespaceInfo(xx2, false));
         // }
         return [];
     }

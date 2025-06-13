@@ -1,18 +1,18 @@
 scoper for language ScoperTryout
 
-isnamespace { Referable, QualifiedName }
+isNamespace { Referable, QualifiedName }
 
 UnitType1 {
-    import { self.imports ; }
+    imports { self.imports ; }
 }
 
 UnitType2 {
-    import { self.imports recursive; }
+    imports { recursive self.imports; }
 }
 
 QualifiedName {
-    alternative {
-        owner().if(UnitType2) ;
-        recursive owner().if(QualifiedName).part ;
+    alternatives {
+        recursive owner().if(UnitType2) ;
+        owner().if(QualifiedName).part ;
     }
 }

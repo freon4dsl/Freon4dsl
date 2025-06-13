@@ -15,9 +15,11 @@ import { MetaFunctionNames } from '../../utils/no-dependencies/index.js';
  */
 export class ExpressionGenerationUtil {
     static previousIsList: boolean = false;
+    static previousMaybeUndefined: boolean = false;
 
     public static langExpToTypeScript(exp: FreLangExpNew, paramName: string, imports: Imports): string {
         this.previousIsList = false;
+        this.previousMaybeUndefined = false;
         return this.langExpToTypeScriptPrivate(exp, paramName, imports, '');
     }
 
@@ -31,6 +33,7 @@ export class ExpressionGenerationUtil {
             }
             if (!!exp.applied) {
                 this.previousIsList = this.previousIsList || (exp.referredProperty? exp.referredProperty.isList : false);
+                this.previousMaybeUndefined = this.previousMaybeUndefined || (exp.referredProperty? exp.referredProperty.isOptional : false);
                 result = `${this.langExpToTypeScriptPrivate(exp.applied, paramName, imports, result, )}`;
             }
         } else if (exp instanceof FreFunctionExp) {
@@ -52,6 +55,7 @@ export class ExpressionGenerationUtil {
             }
             if (!!exp.applied) {
                 this.previousIsList = this.previousIsList || (exp.referredProperty ? exp.referredProperty.isList : false);
+                this.previousMaybeUndefined = this.previousMaybeUndefined || (exp.referredProperty? exp.referredProperty.isOptional : false);
                 result = `${this.langExpToTypeScriptPrivate(exp.applied, paramName, imports, result)}`;
             }
         } else if (exp instanceof FreLimitedInstanceExp) {
@@ -68,6 +72,9 @@ export class ExpressionGenerationUtil {
         if (!exp.referredClassifier) { // the applied expression must be 'if()', this is established in the checker
             if (!!exp.previous && !!previousExpAsTS && previousExpAsTS.length > 0) {
                 // NB if there is a previous expression, there should also be a 'previousExpAsTS'
+                if (this.previousMaybeUndefined) {
+                    previousExpAsTS += '?';
+                }
                 if (this.previousIsList) {
                     const previousType: FreMetaClassifier = exp.previous.referredClassifier
                     imports.language.add(previousType.name);
@@ -82,6 +89,9 @@ export class ExpressionGenerationUtil {
             imports.language.add(exp.referredClassifier.name);
             if (!!exp.previous && !!previousExpAsTS && previousExpAsTS.length > 0) {
                 // NB if there is a previous expression, there should also be a 'previousExpAsTS'
+                if (this.previousMaybeUndefined) {
+                    previousExpAsTS += '?';
+                }
                 if (this.previousIsList) {
                     const previousType: FreMetaClassifier = exp.previous.referredClassifier
                     imports.language.add(previousType.name);
@@ -100,14 +110,20 @@ export class ExpressionGenerationUtil {
         if (!!exp.previous && !!previousExpAsTS && previousExpAsTS.length > 0) {
             // NB if there is a previous expression, there should also be a 'previousExpAsTS'
             if (this.previousIsList) {
+                if (this.previousMaybeUndefined) {
+                    previousExpAsTS += '?';
+                }
                 const previousType: FreMetaClassifier = exp.previous.referredClassifier
                 imports.language.add(previousType.name);
-                return `${previousExpAsTS}.map((x: ${previousType.name}) => ${Names.LanguageEnvironment}.getInstance().typer.inferType(x))`;
+                this.previousMaybeUndefined = true;
+                return `${previousExpAsTS}.map((x: ${previousType.name}) => ${Names.LanguageEnvironment}.getInstance().typer.inferType(x).toAstElement())`;
             } else {
-                return `${Names.LanguageEnvironment}.getInstance().typer.inferType(${previousExpAsTS})`;
+                this.previousMaybeUndefined = true;
+                return `${Names.LanguageEnvironment}.getInstance().typer.inferType(${previousExpAsTS}).toAstElement()`;
             }
         } else {
-            return `${Names.LanguageEnvironment}.getInstance().typer.inferType(${paramName})`;
+            this.previousMaybeUndefined = true;
+            return `${Names.LanguageEnvironment}.getInstance().typer.inferType(${paramName}).toAstElement()`;
         }
     }
 
@@ -116,24 +132,38 @@ export class ExpressionGenerationUtil {
             // NB if there is a previous expression, there should also be a 'previousExpAsTS'
             imports.core.add(Names.FreLanguage);
             if (this.previousIsList) {
+                if (this.previousMaybeUndefined) {
+                    previousExpAsTS += '?';
+                }
                 const previousType: FreMetaClassifier = exp.previous.referredClassifier
                 imports.language.add(previousType.name);
                 return `${previousExpAsTS}.filter((x: ${previousType.name}) => ${Names.FreLanguage}.getInstance().metaConformsToType(x, ${exp.referredClassifier.name}))`;
             } else {
-                return `(${previousExpAsTS} as ${exp.referredClassifier.name})`;
+                return this.nonListIfFuncToTS(previousExpAsTS, exp);
             }
         } else {
-            return `(${paramName} as ${exp.referredClassifier.name})`;
+            return this.nonListIfFuncToTS(paramName, exp);
         }
     }
 
+    private static nonListIfFuncToTS(previousExpAsTS: string, exp: FreFunctionExp) {
+        this.previousMaybeUndefined = true;
+        return `(${Names.FreLanguage}.getInstance().metaConformsToType(${previousExpAsTS}, '${exp.referredClassifier.name}') ?
+                (${previousExpAsTS} as ${exp.referredClassifier.name}) :
+                undefined)`;
+    }
+
     private static varExpToTypeScript(exp: FreVarExp, paramName: string, imports: Imports, previousExpAsTS: string | undefined) {
+        // LOGGER.log('varExpToTypeScript ' + exp.toErrorString() + ' ' + this.previousMaybeUndefined)
         if (!exp.referredProperty) { // var refers to a classifier
             return exp.name;
         } else { // var refers to a property
             if (!exp.previous) {
                 return `${paramName}.${exp.name}`;
             } else {
+                if (this.previousMaybeUndefined) {
+                    previousExpAsTS += '?';
+                }
                 const thisProperty: FreMetaProperty = exp.referredProperty;
                 if (this.previousIsList) {
                     const previousType: FreMetaClassifier = exp.previous.referredClassifier
@@ -145,6 +175,7 @@ export class ExpressionGenerationUtil {
                     }
                 } else {
                     this.previousIsList = thisProperty?.isList;
+                    this.previousMaybeUndefined = this.previousMaybeUndefined || thisProperty?.isOptional;
                     return `${previousExpAsTS}.${exp.name}`;
                 }
             }

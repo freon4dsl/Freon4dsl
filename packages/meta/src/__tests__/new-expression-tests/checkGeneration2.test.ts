@@ -48,8 +48,8 @@ describe("Checking generation of expressions", () => {
             expect(resultStr.includes("node.AAprop10.map((x: CC) => x.CCprop13)")).toBeTruthy();
             expect(resultStr.includes("node.AAprop10.map((x: CC) => x.CCprop14).flat()")).toBeTruthy();
             expect(resultStr.includes("node.AAprop12.map((x: DD) => x.DDprop8).flat().map((x: BB) => x.BBprop5)")).toBeTruthy();
-            expect(resultStr.includes("node.AAprop12.map((x: DD) => x.DDprop8).flat().map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x))")).toBeTruthy();
-            expect(resultStr.includes("node.AAprop12.map((x: DD) => x.DDprop7).map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x))")).toBeTruthy();
+            expect(resultStr.includes("node.AAprop12.map((x: DD) => x.DDprop8).flat().map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x).toAstElement())")).toBeTruthy();
+            expect(resultStr.includes("node.AAprop12.map((x: DD) => x.DDprop7)?.map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x).toAstElement())")).toBeTruthy();
         } else {
             console.log("Language or Expressions not present");
         }

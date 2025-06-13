@@ -1,7 +1,7 @@
 scoper for language Education
 
-isnamespace { Page, Step }
+isNamespace { Page, Step }
 
 Step {
-    import { self.fromPage; }
+    imports { self.fromPage; }
 }

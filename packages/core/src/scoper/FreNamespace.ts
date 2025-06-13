@@ -4,7 +4,7 @@
  */
 
 /* TODO This code is not adapted to resolving a FreNodeReference that has as pathname a fully qualified name which contains
-    '<anonymous>'. This happens when there is a namespace whose '_myNode' does not have a name, i.e. it is not a FreNamedNode.
+    '<anonymous>'. This situation might occur when there is a namespace whose '_myNode' does not have a name, i.e. it is not a FreNamedNode.
 */
 
 import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';

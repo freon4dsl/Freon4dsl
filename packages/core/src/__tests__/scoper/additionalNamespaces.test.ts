@@ -15,6 +15,7 @@ import { FreLanguage } from '../../language';
 import { AdditionalNamespacesScoper } from './scoper-model/AdditionalNamespacesScoper.js';
 import { AST } from '../../change-manager';
 import { FreLanguageEnvironment } from '../../environment';
+import { FreLogger } from '../../logging';
 
 // !!!!!!!!!!!!!!!!!! model name may not be in fqn. This name is not visible in the model itself!!!!!!!!!!!!!!!!!!
 
@@ -68,7 +69,6 @@ describe("FreNamespace visibleNames with additions, but without replacements", (
 			concept_B_4_3 = concept_B_4.childrenWithName.find(child => child.name === 'B_4_3') as NodeX;
 		}
 
-		//
 		FreLanguageEnvironment.getInstance().scoper = mainScoper;
 	});
 

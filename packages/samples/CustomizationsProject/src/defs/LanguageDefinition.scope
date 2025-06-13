@@ -1,17 +1,17 @@
 scoper for language Entity
 
-isnamespace { EntityModelUnit, Entity, EntityFunction }
+isNamespace { EntityModelUnit, Entity, EntityFunction }
 
 Entity {
-    import { self.baseEntity;}
+    imports { self.baseEntity;}
 }
 
 /*
 Type {
-    import { self.baseInterface}
+    imports { self.baseInterface}
 }
 */
 
 AppliedFeature {
-	alternative { typeof( container );}
+	alternatives { owner().type();}
 }

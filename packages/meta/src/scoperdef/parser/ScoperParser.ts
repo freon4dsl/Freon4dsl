@@ -17,12 +17,12 @@ export class ScoperParser extends FreGenericParserNew<ScopeDef> {
     }
 
     protected merge(submodels: ScopeDef[]): ScopeDef | undefined {
-        console.log('ScoperParser merging submodels ');
         if (submodels.length > 0) {
             const result: ScopeDef = submodels[0];
             submodels.forEach((sub, index) => {
                 if (index > 0) {
-                    result.namespaces.push(...sub.namespaces);
+                    // NB We cannot use 'sub.namespaces' here because the references have not been resolved yet.
+                    result.namespaceRefs.push(...sub.namespaceRefs);
                     result.scopeConceptDefs.push(...sub.scopeConceptDefs);
                 }
             });

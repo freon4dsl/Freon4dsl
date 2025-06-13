@@ -1,7 +1,7 @@
 scoper for language Testproject
 
-isnamespace { AA, BB }
+isNamespace { AA, BB }
 
 BB {
-    import { self.supers;}
+    imports { self.supers;}
 }
