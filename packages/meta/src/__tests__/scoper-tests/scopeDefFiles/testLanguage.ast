@@ -79,8 +79,6 @@ concept CC {
     // properties with interface as type
     CCprop11: DD;
     CCprop12: DD[];
-    reference CCprop13: FF;
-    reference CCprop14: FF[];
 }
 
 limited ZZ {

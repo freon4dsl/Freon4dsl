@@ -1,5 +1,5 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaClassifier, FreMetaLanguage } from '../../languagedef/metalanguage';
+import { FreMetaLanguage } from '../../languagedef/metalanguage';
 import { describe, test, expect, beforeEach } from "vitest";
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { Checker } from '../../utils/basic-dependencies/index.js';
@@ -54,7 +54,7 @@ describe("Checking the scoper checker", () => {
                     expect(checker.errors.includes("A namespace expression should refer to a namespace (found: 'ZZ') [file: test-faulty1.scope:59:9].")).toBeTruthy();
                     expect(checker.errors.includes("Double entry (EE) is not allowed [file: test-faulty1.scope:63:1].")).toBeTruthy();
                     expect(checker.errors.includes("Cannot change namespace ExtraProp, because it is not defined as namespace [file: test-faulty1.scope:76:5].")).toBeTruthy();
-                    expect(checker.errors.includes("Parent scope definition (FF) does not comply with scope definition for EE [file: testLanguage.ast:120:1].")).toBeTruthy();
+                    expect(checker.errors.includes("Parent scope definition (FF) does not comply with scope definition for EE [file: testLanguage.ast:118:1].")).toBeTruthy();
                 }
             }
         }
@@ -101,7 +101,7 @@ describe("Checking the scoper checker", () => {
         // check imports on DD
         const defDD = scopeDef.scopeConceptDefs.find(cd => cd.classifier === classDD);
         expect(defDD.namespaceReplacement).toBeUndefined();
-        console.log(defDD.namespaceAddition.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
+        // console.log(defDD.namespaceAddition.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
         expect(defDD.namespaceAddition.nsInfoList.length).toBe(2);
 
         // check alternatives on FF
