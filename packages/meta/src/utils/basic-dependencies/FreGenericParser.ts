@@ -13,7 +13,7 @@ function isPegjsError(object: any): object is parser.SyntaxError {
 /**
  * Generic Parser, subclasses need to initialize the parser, and checker fields.
  */
-export class FreGenericParser<DEFINITION> {
+export class FreGenericParser333<DEFINITION> {
     // todo find a way to ensure that these props are set by the subclasses, without introducing lots of test of undefined
     // @ts-ignore, the parser is set in each of the subclasses
     parser: Parser;

@@ -1,7 +1,7 @@
-//{
-//    let creator = require("./FreEditCreators");
-//    let expCreate = require("../../languagedef/parser/ExpressionCreators");
-//}
+{{
+import * as creator from "./FreEditCreators.js"
+import * as expCreate from "../../languagedef/parser/ExpressionCreators.js";
+}}
 
 Editor_Definition = group:projectionGroup
 {

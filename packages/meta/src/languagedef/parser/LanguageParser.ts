@@ -1,23 +1,23 @@
 import fs from "fs";
 import { FreMetaLanguage } from "../metalanguage/index.js";
-import { FreGenericParser } from "../../utils/basic-dependencies/index.js";
+import { FreGenericParserNew } from "../../utils/basic-dependencies/index.js";
 import { parseIds } from "./IdParser.js";
-import { parser } from "./LanguageGrammar.js";
+import { parse } from "./LanguageGrammar.js";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName, setIdMap } from "./LanguageCreators.js";
 import { FreLangChecker } from "../checking/index.js";
 
-export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
+export class LanguageParser extends FreGenericParserNew<FreMetaLanguage> {
     idFile: string | undefined;
 
     constructor(idFile?: string) {
         super();
         this.idFile = idFile ? idFile : undefined;
-        this.parser = parser;
+        this.parseFunction = parse;
         this.checker = new FreLangChecker(undefined);
     }
 
     parse(definitionFile: string): FreMetaLanguage | undefined {
-        // LOG2USER.log("ParseFile: " + definitionFile);
+        console.log("ParseFile: " + definitionFile);
         if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);

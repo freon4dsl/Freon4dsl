@@ -21,7 +21,7 @@ export class FreGenericParserNew<DEFINITION> {
     checker: Checker<DEFINITION>;
 
     parse(definitionFile: string): DEFINITION | undefined {
-        // LOG2USER.log("FreGenericParser.Parse: " + definitionFile);
+        console.log("FreGenericParser.Parse: " + definitionFile);
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
@@ -40,6 +40,7 @@ export class FreGenericParserNew<DEFINITION> {
             model = this.parseFunction(langSpec);
             // console.log("FreGenericParser.Parse model: " + langSpec)
         } catch (e: unknown) {
+            console.log("ERR")
             if (isPegjsError(e)) {
                 // syntax error
                 const errorLoc: ParseLocation = {
@@ -52,7 +53,7 @@ export class FreGenericParserNew<DEFINITION> {
                 LOG2USER.error(errorstr);
                 throw new Error("syntax error: " + errorstr);
             } else {
-                LOG2USER.error("FreGenericParser.Parse unknown error: " + e);
+                console.error("FreGenericParser.Parse unknown error: " + e);
             }
         }
 

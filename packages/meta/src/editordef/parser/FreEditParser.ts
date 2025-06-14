@@ -1,7 +1,7 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
 import { Names } from "../../utils/on-lang/index.js";
-import { ParseLocationUtil, FreGenericParser } from "../../utils/basic-dependencies/index.js";
+import { ParseLocationUtil, FreGenericParserNew } from "../../utils/basic-dependencies/index.js";
 import {
     FreEditExtraClassifierInfo,
     FreEditProjectionGroup,
@@ -9,15 +9,15 @@ import {
     FreEditChecker,
 } from "../metalanguage/index.js";
 import { setCurrentFileName as editFileName } from "./FreEditCreators.js";
-import { parser } from "./FreEditGrammar.js";
+import { parse } from "./FreEditGrammar.js";
 
-export class FreEditParser extends FreGenericParser<FreEditUnit> {
+export class FreEditParser extends FreGenericParserNew<FreEditUnit> {
     language: FreMetaLanguage;
 
     constructor(language: FreMetaLanguage) {
         super();
         this.language = language;
-        this.parser = parser;
+        this.parseFunction = parse;
         this.checker = new FreEditChecker(language);
     }
 
