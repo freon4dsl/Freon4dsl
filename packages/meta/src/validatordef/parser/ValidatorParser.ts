@@ -1,12 +1,12 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { FreGenericParserNew } from "../../utils/basic-dependencies/index.js";
+import { FreGenericParser } from "../../utils/basic-dependencies/index.js";
 import { ValidatorChecker } from "../metalanguage/index.js";
 import { ValidatorDef } from "../metalanguage/index.js";
 import { setCurrentFileName } from "./ValidatorCreators.js";
 import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
 import { parse } from "./ValidatorGrammar.js";
 
-export class ValidatorParser extends FreGenericParserNew<ValidatorDef> {
+export class ValidatorParser extends FreGenericParser<ValidatorDef> {
     public language: FreMetaLanguage;
 
     constructor(language: FreMetaLanguage) {

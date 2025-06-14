@@ -51,7 +51,7 @@ describe("Checking expression on referredProperty", () => {
                     expect(prop).not.toBeNull();
                     expect(prop).not.toBeUndefined();
                     expect(aaConcept.allProperties().includes(prop));
-                    console.log(last.previous.referredProperty?.isList)
+                    // console.log(last.previous.referredProperty?.isList)
                 } else {
                     console.log("Error");
                 }

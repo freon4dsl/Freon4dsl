@@ -48,7 +48,7 @@ describe("Checking the scoper generator", () => {
             }
             expect(scopeDef).not.toBeNull();
             expect(scopeDef).not.toBeUndefined();
-            //
+            // a change to make git commit this file again
             generator.language = language;
             generator.outputfolder = outputDir;
             generator.generate(scopeDef!);

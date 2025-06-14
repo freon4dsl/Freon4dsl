@@ -1,11 +1,11 @@
 import { FreMetaLanguage } from "../metalanguage/FreMetaLanguage.js";
 import { FreLangExpressionChecker } from "../../languagedef/checking/FreLangExpressionChecker.js";
-import { FreGenericParserNew } from "../../utils/basic-dependencies/FreGenericParserNew.js";
+import { FreGenericParser } from "../../utils/basic-dependencies/FreGenericParser.js";
 import { LanguageExpressionTester } from "./LanguageExpressionTester.js";
 import { parse } from "./ExpressionGrammar.js";
 import { setCurrentFileName } from "./ExpressionCreators.js";
 
-export class LanguageExpressionParser extends FreGenericParserNew<LanguageExpressionTester> {
+export class LanguageExpressionParser extends FreGenericParser<LanguageExpressionTester> {
     public language: FreMetaLanguage;
 
     constructor(language: FreMetaLanguage) {

@@ -1,8 +1,8 @@
 import * as fs from "fs";
 import { Checker } from "./Checker.js";
-import { Parser, parser } from "pegjs";
+import { parser } from 'peggy';
 import { LOG2USER } from "./UserLogger.js";
-import { FreMetaDefinitionElement, ParseLocation } from '../no-dependencies/FreMetaDefinitionElement.js';
+import { FreMetaDefinitionElement, ParseLocation } from "../no-dependencies/index.js";
 import { ParseLocationUtil } from './ParseLocationUtil.js';
 
 
@@ -13,15 +13,15 @@ function isPegjsError(object: any): object is parser.SyntaxError {
 /**
  * Generic Parser, subclasses need to initialize the parser, and checker fields.
  */
-export class FreGenericParser333<DEFINITION> {
+export class FreGenericParser<DEFINITION> {
     // todo find a way to ensure that these props are set by the subclasses, without introducing lots of test of undefined
     // @ts-ignore, the parser is set in each of the subclasses
-    parser: Parser;
+    parseFunction: (input: string) => DEFINITION;
     // @ts-ignore, the checker is set in each of the subclasses
     checker: Checker<DEFINITION>;
 
     parse(definitionFile: string): DEFINITION | undefined {
-        // LOG2USER.log("FreGenericParser.Parse: " + definitionFile);
+        LOG2USER.log("FreGenericParser.Parse: " + definitionFile);
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
@@ -37,7 +37,7 @@ export class FreGenericParser333<DEFINITION> {
         let model: DEFINITION | undefined = undefined;
         try {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
-            model = this.parser.parse(langSpec);
+            model = this.parseFunction(langSpec);
             // console.log("FreGenericParser.Parse model: " + langSpec)
         } catch (e: unknown) {
             if (isPegjsError(e)) {
@@ -52,7 +52,7 @@ export class FreGenericParser333<DEFINITION> {
                 LOG2USER.error(errorstr);
                 throw new Error("syntax error: " + errorstr);
             } else {
-                LOG2USER.error("FreGenericParser.Parse unknown error: " + e);
+                console.error("FreGenericParser.Parse unknown error: " + e);
             }
         }
 
@@ -82,7 +82,7 @@ export class FreGenericParser333<DEFINITION> {
                 langSpec += fs.readFileSync(file, { encoding: "utf8" }) + "\n";
                 try {
                     this.setCurrentFileName(file); // sets the filename in the creator functions to the right value
-                    submodels.push(this.parser.parse(langSpec));
+                    submodels.push(this.parseFunction(langSpec));
                 } catch (e: unknown) {
                     if (isPegjsError(e)) {
                         // throw syntax error, but adjust the location first

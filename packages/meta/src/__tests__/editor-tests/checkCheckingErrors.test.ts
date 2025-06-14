@@ -107,7 +107,7 @@ describe("Checking editor definition ", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
-                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 expect(e.message).toBe(`checking errors (4).`);
                 expect(
                     checker.errors.includes(
@@ -188,7 +188,7 @@ describe("Checking editor definition ", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
-                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 expect(e.message).toBe(`checking errors (4).`);
                 expect(
                   checker.errors.includes(
@@ -390,7 +390,7 @@ describe("Checking editor definition ", () => {
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (11).`); // these are checked in the previous test
                 expect(checker.hasWarnings()).toBeTruthy;
-                console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
+                // console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
                 expect(checker.warnings.length).toBe(1);
                 expect(
                     checker.warnings.includes(

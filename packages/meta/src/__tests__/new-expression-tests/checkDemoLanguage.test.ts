@@ -31,7 +31,7 @@ describe("Checking expression parser on syntax errors", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
-                console.log(checker.errors.map(err => `"${err}"`).join("\n") );
+                // console.log(checker.errors.map(err => `"${err}"`).join("\n") );
                 expect(e.message).toBe(`checking errors (7).`);
                 expect(
                   checker.errors.includes(
