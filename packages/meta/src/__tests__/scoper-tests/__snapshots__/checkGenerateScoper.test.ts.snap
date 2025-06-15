@@ -25,7 +25,6 @@ export class ROOTScoper extends FreScoperBase {
             if (!isNullOrUndefined(xx0)) {
                 result.push(new FreNamespaceInfo(xx0, false));
             }
-
             // generated from 'self.ee.dd.cc.bb.aa;'
             const xx1: FreNodeReference<AA> | undefined = node.ee?.dd?.cc?.bb?.aa;
             if (!isNullOrUndefined(xx1)) {
@@ -57,7 +56,6 @@ export class ROOTScoper extends FreScoperBase {
             if (!isNullOrUndefined(xx0)) {
                 result.push(new FreNamespaceInfo(xx0, false));
             }
-
             // generated from 'self.AAprop8;'
             for (let loopVariable of node.AAprop8) {
                 if (!isNullOrUndefined(loopVariable)) {
@@ -69,7 +67,6 @@ export class ROOTScoper extends FreScoperBase {
             if (!isNullOrUndefined(xx2)) {
                 result.push(new FreNamespaceInfo(xx2, false));
             }
-
             // generated from 'recursive self.AAprop12;'
             for (let loopVariable of node.AAprop12) {
                 if (!isNullOrUndefined(loopVariable)) {
@@ -81,7 +78,6 @@ export class ROOTScoper extends FreScoperBase {
             if (!isNullOrUndefined(xx4)) {
                 result.push(new FreNamespaceInfo(xx4, false));
             }
-
             // generated from 'self.AAprop14;'
             for (let loopVariable of node.AAprop14) {
                 if (!isNullOrUndefined(loopVariable)) {
@@ -96,7 +92,6 @@ export class ROOTScoper extends FreScoperBase {
             if (!isNullOrUndefined(xx0)) {
                 result.push(new FreNamespaceInfo(xx0, false));
             }
-
             // generated from 'self.DDprop8.type();'
             for (let loopVariable of node.DDprop8.map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x).toAstElement())) {
                 if (!isNullOrUndefined(loopVariable)) {

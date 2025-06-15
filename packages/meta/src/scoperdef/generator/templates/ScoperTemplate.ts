@@ -153,8 +153,7 @@ export class ScoperTemplate {
                     const xx${index} ${xxType ? `: ${xxType} | undefined` : `` } = ${namespaceExpressionStr};
                     if (!isNullOrUndefined(xx${index})) { 
                         result.push(new ${Names.FreNamespaceInfo}(xx${index}, ${namespaceInfo.recursive}));
-                    }
-                    `);
+                    }`);
             }
         }
         return result;

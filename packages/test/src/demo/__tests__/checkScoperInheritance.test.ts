@@ -22,9 +22,9 @@ describe("testing Scoper", () => {
                 expect(vis).toContain(attr.name);
             });
             done.push(ent);
-            // TODO when it is possiblke to have additional NS-es from additional NS-es, the follwoing can be tested
-            // testInheritedPropsrecursive(ent.baseEntity.referred, vis, done);
+            testInheritedPropsrecursive(ent.baseEntity.referred, vis, done);
         }
+        // TODO make the following into a separate test, that runs every time
         // when the property is a list
         // for (let ww of ent.baseEntity) {
         //     // extra props should be visible
@@ -58,7 +58,7 @@ describe("testing Scoper", () => {
                 expect(vis).toContain(attr.name);
             });
             if (!!ent.baseEntity) {
-                console.log(vis, 'ent.name: ', ent.name)
+                // console.log(vis, 'ent.name: ', ent.name)
                 ent.baseEntity.referred.attributes.forEach((attr) => {
                     expect(vis).toContain(attr.name);
                 });

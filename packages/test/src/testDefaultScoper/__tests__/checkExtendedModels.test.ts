@@ -40,7 +40,7 @@ describe("Testing Default Scoper", () => {
         // only model itself is a namespace, so every name should be visible
         const model: DSmodel = creator.createModel(2, 2);
         const allNames = getVisibleNames(scoper.getVisibleNodes(model));
-        console.log(allNames);
+        // console.log(allNames);
 
         // There is only one namespace, so all names should be visible
         for (const x of creator.allNames) {

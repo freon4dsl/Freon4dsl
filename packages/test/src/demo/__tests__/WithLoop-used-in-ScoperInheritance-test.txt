@@ -1,0 +1,121 @@
+model DemoModel_with_inheritance {
+main:
+types:
+
+entities:
+    DemoEntity Vehicle {
+        baseInterface_attr 0
+        simpleprop "simple"
+        x "xxx"
+        attributes
+            brand : String
+            type : String
+        entAttributes
+
+        functions
+            DemoFunction SOME_VEHICLE {
+                expression if ( 4 < 80 ) then
+                                     87
+                           else
+                              1345
+                           endif
+                parameters
+
+                declaredType Integer
+            }
+        int_attrs
+
+        int_functions
+
+        baseEntity DemoModel_with_inheritance.RaceBike
+    }
+    DemoEntity Car {
+        baseInterface_attr 0
+        simpleprop "simple"
+        x "xxx"
+        attributes
+            numberplate : Integer
+            make : String
+        entAttributes
+
+        functions
+            DemoFunction SOME_CAR {
+                expression if ( 4 < 80 ) then
+                                     87
+                           else
+                              1345
+                           endif
+                parameters
+
+                declaredType Integer
+            }
+        int_attrs
+
+        int_functions
+
+        baseEntity Vehicle
+    }
+    DemoEntity Bike {
+        baseInterface_attr 0
+        simpleprop "simple"
+        x "xxx"
+        attributes
+            backseat : Boolean
+            gears : Integer
+        entAttributes
+
+        functions
+            DemoFunction SOME_BIKE {
+                expression if ( 4 < 80 ) then
+                                     87
+                           else
+                              1345
+                           endif
+                parameters
+
+                declaredType Integer
+            }
+        int_attrs
+
+        int_functions
+
+        baseEntity Vehicle
+    }
+    DemoEntity RaceBike {
+        baseInterface_attr 0
+        simpleprop "simple"
+        x "xxx"
+        attributes
+            color : String
+            wheelsize : Integer
+        entAttributes
+
+        functions
+            DemoFunction SOME_RACEBIKE {
+                expression if ( 4 < 80 ) then
+                                     87
+                           else
+                              1345
+                           endif
+                parameters
+
+                declaredType Integer
+            }
+        int_attrs
+
+        int_functions
+
+        baseEntity Bike
+    }
+model wide functions:
+    DemoFunction SOME_MODEL {
+        expression if ( 4 < 80 ) then
+                             87
+                   else
+                      1345
+                   endif
+        parameters
+
+        declaredType Integer
+    }
+}
