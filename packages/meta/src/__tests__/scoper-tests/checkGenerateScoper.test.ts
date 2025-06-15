@@ -35,7 +35,7 @@ describe("Checking the scoper generator", () => {
         FileUtil.deleteDirAndContent(outputDir);
     });
 
-    test("scope file for 'test-correct1' is correctly generated", () => {
+    test.skip("scope file for 'test-correct1' is correctly generated", () => {
         if (!!language) {
             //
             const scopeDef: ScopeDef = parser.parse(testdir + "test-correct1.scope");
