@@ -37,6 +37,7 @@ EE {
     alternatives {
         ff.aa.bb; // 2 errors: ff cannot be found and 'should refer to namespace (undefined)'
         owner();
+        self.EEprop13;
     }
 }
 

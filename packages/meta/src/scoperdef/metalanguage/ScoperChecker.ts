@@ -9,11 +9,12 @@ import {
     FreMetaNamespaceInfo, ScopeConceptDef
 } from './FreScopeDefLang.js';
 import { FreLangExpressionCheckerNew } from '../../langexpressions/checking/FreLangExpressionCheckerNew.js';
-import { FreFunctionExp } from '../../langexpressions/metalanguage/index.js';
+import { FreFunctionExp, FreLangExpNew, FreVarExp } from '../../langexpressions/metalanguage/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 import { isNullOrUndefined } from '../../utils/file-utils/index.js';
+import { Names } from '../../utils/on-lang/index.js';
 
 
 const LOGGER = new MetaLogger("ScoperChecker").mute();
@@ -63,7 +64,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
                                         this.checkNamespaceAdditions(def.namespaceAddition, def.classifierRef!.referred);
                                     }
                                     if (!!def.namespaceReplacement) {
-                                        this.checkReplacementNamespace(def.namespaceReplacement, def.classifierRef!.referred);
+                                        this.checkAlternativeNamespace(def.namespaceReplacement, def.classifierRef!.referred);
                                     }
                                 }
                             });
@@ -146,15 +147,28 @@ export class ScoperChecker extends Checker<ScopeDef> {
         });
     }
 
-    private checkReplacementNamespace(namespaceReplacement: FreNamespaceReplacement, enclosingConcept: FreMetaClassifier) {
+    private checkAlternativeNamespace(namespaceReplacement: FreNamespaceReplacement, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("Checking namespace replacements for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
             error: `Cannot change namespace ${enclosingConcept.name}, because it is not defined as namespace ${ParseLocationUtil.location(namespaceReplacement)}.`,
             whenOk: () => {
                 if (!!this.myExpressionChecker) {
-                    namespaceReplacement.nsInfoList.forEach((exp) => {
-                        this.checkNamespaceExpression(exp, enclosingConcept)
+                    namespaceReplacement.nsInfoList.forEach((nsInfo) => {
+                        this.checkNamespaceExpression(nsInfo, enclosingConcept);
+                        const myExpression = nsInfo.expression;
+                        let toBeTested: FreLangExpNew | undefined;
+                        if (myExpression instanceof FreVarExp && myExpression.name === Names.nameForSelf) {
+                            toBeTested = myExpression.applied;
+                        } else {
+                            toBeTested = myExpression;
+                        }
+                        if (!!toBeTested) {
+                            this.runner.simpleCheck(
+                              toBeTested.getIsPart(),
+                              `Cannot use a reference (${toBeTested.toErrorString()}) as alternative namespace for ${enclosingConcept.name}, because its needs to be resolved within the namespace it is altering ${ParseLocationUtil.location(nsInfo)}.`
+                            )
+                        }
                     })
                 }
             },
