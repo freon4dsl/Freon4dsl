@@ -36,7 +36,7 @@ describe("Checking the scoper generator", () => {
     });
 
     // todo remove '.skip'
-    test.skip("scope file for 'ScoperTest' is correctly generated", () => {
+    test("scope file for 'ScoperTest' is correctly generated", () => {
         if (!!language) {
             let scopeDef: ScopeDef;
             try {
