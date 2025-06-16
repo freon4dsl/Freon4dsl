@@ -35,7 +35,7 @@ describe("Checking the scoper generator", () => {
         FileUtil.deleteDirAndContent(outputDir);
     });
 
-    test.skip("scope file for 'test-correct1' is correctly generated", () => {
+    test("scope file for 'test-correct1' is correctly generated", () => {
         if (!!language) {
             //
             const scopeDef: ScopeDef = parser.parse(testdir + "test-correct1.scope");
@@ -45,7 +45,7 @@ describe("Checking the scoper generator", () => {
             generator.language = language;
             generator.outputfolder = outputDir;
             generator.generate(scopeDef!);
-            const outputFile = outputDir + "scoper/gen/ROOTscoper.ts";
+            const outputFile = outputDir + "scoper/gen/ROOTScoper.ts";
             const isPresent: boolean = fs.existsSync(outputFile);
             expect(isPresent).toBe(true);
             if (isPresent) {
