@@ -42,7 +42,7 @@ export class ModelStoreWorker implements DirectoryWorker {
             return;
         }
         const unit: StoredUnit = {
-            file: shortFile,
+            file: shortFile + ".json",
             name: shortFile
         }
         this.currentModel.units.push(unit)
@@ -61,6 +61,6 @@ export class ModelStoreWorker implements DirectoryWorker {
     private shortName(longName: string): string {
         const splits = longName.split("/")
         const shortFile = splits[splits.length-1]
-        return shortFile
+        return (shortFile.endsWith(".json") ? shortFile.substring(0, shortFile.length - 5) : shortFile)
     }
 }
