@@ -1,67 +1,67 @@
-unitType1 unit1_1 {
+unitType1 `unit1_1` {
     content
-        NamedPart Z {
+        NamedPart `Z` {
             subParts
-                NamedPart Z_A {
+                NamedPart `Z_A` {
                     subParts
-                        NamedPart Z_A_A {
+                        NamedPart `Z_A_A` {
                             subParts
 
                         }
-                        NamedPart Z_A_B {
+                        NamedPart `Z_A_B` {
                             subParts
 
                         }
                 }
-                NamedPart Z_B {
+                NamedPart `Z_B` {
                     subParts
-                        NamedPart Z_B_A {
+                        NamedPart `Z_B_A` {
                             subParts
 
                         }
-                        NamedPart Z_B_B {
-                            subParts
-
-                        }
-                }
-        }
-        NamedPart Y {
-            subParts
-                NamedPart Y_A {
-                    subParts
-                        NamedPart Y_A_A {
-                            subParts
-
-                        }
-                        NamedPart Y_A_B {
+                        NamedPart `Z_B_B` {
                             subParts
 
                         }
                 }
         }
-        NamedPart X {
+        NamedPart `Y` {
             subParts
-                NamedPart X_A {
+                NamedPart `Y_A` {
                     subParts
-                        NamedPart X_A_A {
+                        NamedPart `Y_A_A` {
+                            subParts
+
+                        }
+                        NamedPart `Y_A_B` {
                             subParts
 
                         }
                 }
-                NamedPart X_B {
+        }
+        NamedPart `X` {
+            subParts
+                NamedPart `X_A` {
+                    subParts
+                        NamedPart `X_A_A` {
+                            subParts
+
+                        }
+                }
+                NamedPart `X_B` {
                     subParts
 
                 }
         }
-        NamedPart V {
+        NamedPart `V` {
             subParts
 
         }
-        NamedPart W {
+        NamedPart `W` {
             subParts
 
         }
-        NamedPart U {
+        NamedPart `U` {
             subParts
 
         }

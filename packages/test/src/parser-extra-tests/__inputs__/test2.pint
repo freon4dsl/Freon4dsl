@@ -1,4 +1,4 @@
-PartsInitiatorTest identifier {
+PartsInitiatorTest `identifier` {
 	 value WithDirectParts {
              	 partList ## PartConcept {
                           	 content "stringLiteralABC"
@@ -7,6 +7,6 @@ PartsInitiatorTest identifier {
                           ## PartConcept {
                           	 content "stringLiteralXYZ"
                           	 }
-             	 SECOND
+             	 `SECOND`
              	 }
 	 }

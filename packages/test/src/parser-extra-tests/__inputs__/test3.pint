@@ -1,8 +1,8 @@
-PartsInitiatorTest identifier {
+PartsInitiatorTest `identifier` {
 	 value WithDirectParts {
              	 partList ## PartConcept {
                           	 content "stringLiteralABC"
-                          	 InsuranceRef
+                          	 `InsuranceRef`
                          	 }
                           ## PartConcept {
                           	 content "stringLiteralXYZ"

@@ -1,4 +1,6 @@
-import { AST, FreModelSerializer, FreError, FreModelUnit } from "@freon4dsl/core";
+import { AST, FreModelSerializer, FreError, FreModelUnit, ast2string } from "@freon4dsl/core";
+import { DemoEnvironment } from "../../demo/config/gen/DemoEnvironment";
+import { LanguageEnvironment } from "../index";
 import { XXunit, XX } from "../language/gen/index.js";
 import { XXEnvironment } from "../config/gen/XXEnvironment.js";
 import { FileHandler } from "../../utils/FileHandler.js";
@@ -32,18 +34,18 @@ describe("Testing Typer on", () => {
             expect(unit1).not.toBeNull();
             if (!!unit1) {
                 const errors: FreError[] = validator.validate(unit1);
-                // console.log("ERRORS: " + errors.map(e => e.message + "\n"));
+                console.log("ERRORS: " + errors.map(e => e.message).join("\n"));
                 expect(errors.length).toBe(6);
-                expect(errors.find((e) => e.message === "Type 'NUMBER' of [456] is not equal to STRING")).toBeTruthy();
-                expect(errors.find((e) => e.message === "Type 'NUMBER' of [456] is not equal to BOOLEAN")).toBeTruthy();
+                expect(errors.find((e) => e.message === "Type 'NUMBER' of [456] is not equal to `STRING`")).toBeTruthy();
+                expect(errors.find((e) => e.message === "Type 'NUMBER' of [456] is not equal to `BOOLEAN`")).toBeTruthy();
                 expect(
-                    errors.find((e) => e.message === "Type 'STRING' of [\"string\"] is not equal to NUMBER"),
+                    errors.find((e) => e.message === "Type 'STRING' of [\"string\"] is not equal to `NUMBER`"),
                 ).toBeTruthy();
                 expect(
-                    errors.find((e) => e.message === "Type 'STRING' of [\"string\"] is not equal to BOOLEAN"),
+                    errors.find((e) => e.message === "Type 'STRING' of [\"string\"] is not equal to `BOOLEAN`"),
                 ).toBeTruthy();
-                expect(errors.find((e) => e.message === "Type 'BOOLEAN' of [true] is not equal to STRING")).toBeTruthy();
-                expect(errors.find((e) => e.message === "Type 'BOOLEAN' of [true] is not equal to NUMBER")).toBeTruthy();
+                expect(errors.find((e) => e.message === "Type 'BOOLEAN' of [true] is not equal to `STRING`")).toBeTruthy();
+                expect(errors.find((e) => e.message === "Type 'BOOLEAN' of [true] is not equal to `NUMBER`")).toBeTruthy();
 
                 // console.log(errors.map(e => e.message).join("\n"));
             }
@@ -62,29 +64,31 @@ describe("Testing Typer on", () => {
             if (!!unit1) {
                 const errors: FreError[] = validator.validate(unit1);
                 expect(errors.length).toBe(6);
+                console.log(ast2string(unit1, "    "))
+                console.log(errors.map(e => e.message).join("\n"))
                 expect(
-                    errors.find((e) => e.message === "Type 'NUMBER' of [12] is not equal to kWh < NUMBER >"),
+                    errors.find((e) => e.message === "Type 'NUMBER' of [12] is not equal to `kWh` < `NUMBER` >"),
                 ).toBeTruthy();
                 expect(
                     errors.find(
-                        (e) => e.message === "Type 'NUMBER' of [456] is not equal to Collection < Grams < NUMBER > >",
+                        (e) => e.message === "Type 'NUMBER' of [456] is not equal to `Collection` < `Grams` < `NUMBER` > >",
                     ),
                 ).toBeTruthy();
                 expect(
                     errors.find(
                         (e) =>
-                            e.message === "Type 'STRING' of [\"string\"] is not equal to Set < Bag < Hours < NUMBER > > >",
+                            e.message === "Type 'STRING' of [\"string\"] is not equal to `Set` < `Bag` < `Hours` < `NUMBER` > > >",
                     ),
                 ).toBeTruthy();
                 expect(
-                    errors.find((e) => e.message === "Type 'BOOLEAN' of [true] is not equal to Meters < NUMBER >"),
+                    errors.find((e) => e.message === "Type 'BOOLEAN' of [true] is not equal to `Meters` < `NUMBER` >"),
                 ).toBeTruthy();
                 expect(
-                    errors.find((e) => e.message === "Type 'NUMBER' of [100] is not equal to Set < BOOLEAN >"),
+                    errors.find((e) => e.message === "Type 'NUMBER' of [100] is not equal to `Set` < `BOOLEAN` >"),
                 ).toBeTruthy();
                 expect(
                     errors.find(
-                        (e) => e.message === "Type 'STRING' of [\"string\"] is not equal to Bag < Set < NUMBER > >",
+                        (e) => e.message === "Type 'STRING' of [\"string\"] is not equal to `Bag` < `Set` < `NUMBER` > >",
                     ),
                 ).toBeTruthy();
 
@@ -116,34 +120,34 @@ describe("Testing Typer on", () => {
                 // expect(errors.find(e => e.message === "Type 'Bag < Set < Set < NUMBER > > >' of [Bag { Set { Set { 2, 3, 4 }, Set { 12, 13, 14 } }, Set { Set { 2, 3, 4 } } }] is not equal to NUMBER")).toBeTruthy();
                 // expect(errors.find(e => e.message === "Type 'Set < ANY >' of [Set { }] is not equal to STRING")).toBeTruthy();
                 expect(
-                    errors.find((e) => e.message.endsWith("of [Set { true, true, false }] is not equal to BOOLEAN")),
+                    errors.find((e) => e.message.endsWith("of [`Set` { true, true, false }] is not equal to `BOOLEAN`")),
                 ).toBeTruthy();
                 expect(
-                    errors.find((e) => e.message.endsWith("of [Sequence { true, 12 }] is not equal to STRING")),
-                ).toBeTruthy();
-                expect(
-                    errors.find((e) =>
-                        e.message.endsWith(
-                            'of [Bag { Set { 12, 13, 14 }, Sequence { "string", "Str", "STRING" } }] is not equal to NUMBER',
-                        ),
-                    ),
-                ).toBeTruthy();
-                expect(
-                    errors.find((e) => e.message.endsWith("of [Set { 12, 13, 14 }] is not equal to NUMBER")),
-                ).toBeTruthy();
-                expect(
-                    errors.find((e) =>
-                        e.message.endsWith("of [Bag { Set { 12, 13, 14 }, Set { 2, 3, 4 } }] is not equal to NUMBER"),
-                    ),
+                    errors.find((e) => e.message.endsWith("of [`Sequence` { true, 12 }] is not equal to `STRING`")),
                 ).toBeTruthy();
                 expect(
                     errors.find((e) =>
                         e.message.endsWith(
-                            "of [Bag { Set { Set { 2, 3, 4 }, Set { 12, 13, 14 } }, Set { Set { 2, 3, 4 } } }] is not equal to NUMBER",
+                            'of [`Bag` { `Set` { 12, 13, 14 }, `Sequence` { "string", "Str", "STRING" } }] is not equal to `NUMBER`',
                         ),
                     ),
                 ).toBeTruthy();
-                expect(errors.find((e) => e.message.endsWith("of [Set { }] is not equal to STRING"))).toBeTruthy();
+                expect(
+                    errors.find((e) => e.message.endsWith("of [`Set` { 12, 13, 14 }] is not equal to `NUMBER`")),
+                ).toBeTruthy();
+                expect(
+                    errors.find((e) =>
+                        e.message.endsWith("of [`Bag` { `Set` { 12, 13, 14 }, `Set` { 2, 3, 4 } }] is not equal to `NUMBER`"),
+                    ),
+                ).toBeTruthy();
+                expect(
+                    errors.find((e) =>
+                        e.message.endsWith(
+                            "of [`Bag` { `Set` { `Set` { 2, 3, 4 }, `Set` { 12, 13, 14 } }, `Set` { `Set` { 2, 3, 4 } } }] is not equal to `NUMBER`",
+                        ),
+                    ),
+                ).toBeTruthy();
+                expect(errors.find((e) => e.message.endsWith("of [`Set` { }] is not equal to `STRING`"))).toBeTruthy();
                 // console.log(errors.map(e => e.message).join("\n"));
             }
         })
@@ -160,18 +164,19 @@ describe("Testing Typer on", () => {
             expect(unit1).not.toBeNull();
             if (!!unit1) {
                 const errors: FreError[] = validator.validate(unit1);
+                console.log(errors.map(e => e.message).join("\n"))
                 expect(
-                    errors.find((e) => e.message.endsWith("of [Set { true, true, false }] is not equal to Set < NUMBER >")),
+                    errors.find((e) => e.message.endsWith("of [`Set` { true, true, false }] is not equal to `Set` < `NUMBER` >")),
                 ).toBeTruthy();
                 expect(
                     errors.find((e) =>
                         e.message.endsWith(
-                            'of [Bag { Set { 12, 13, 14 }, Sequence { "string", "Str", "STRING" } }] is not equal to Bag < Sequence < NUMBER > >',
+                            'of [`Bag` { `Set` { 12, 13, 14 }, `Sequence` { "string", "Str", "STRING" } }] is not equal to `Bag` < `Sequence` < `NUMBER` > >',
                         ),
                     ),
                 ).toBeTruthy();
                 expect(
-                    errors.find((e) => e.message.endsWith("of [124 Meters] is not equal to kWh < NUMBER >")),
+                    errors.find((e) => e.message.endsWith("of [124 `Meters`] is not equal to `kWh` < `NUMBER` >")),
                 ).toBeTruthy();
                 expect(errors.length).toBe(3);
 
@@ -181,6 +186,7 @@ describe("Testing Typer on", () => {
     });
 
     test("expressions with correct types", () => {
+
         AST.change( () => {
             const model = new XX();
             const unit1 = reader.readFromString(
@@ -191,9 +197,9 @@ describe("Testing Typer on", () => {
             expect(unit1).not.toBeNull();
             if (!!unit1) {
                 const errors: FreError[] = validator.validate(unit1);
-                expect(errors.length).toBe(0);
+                console.log(errors.map(e => e.message).join("\n"));
 
-                // console.log(errors.map(e => e.message).join("\n"));
+                expect(errors.length).toBe(0);
             }
         })
     });

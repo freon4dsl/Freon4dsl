@@ -1,10 +1,10 @@
-ProductTest TEST1 {
+ProductTest `TEST1` {
 
-InsuranceProduct NAME
+InsuranceProduct `NAME`
     With terminator:
-    PART1; PART2 ;
+    `PART1`; `PART2` ;
     With initiator:
-    $ PART3 $ PART4
+    $ `PART3` $ `PART4`
 }
 
 
