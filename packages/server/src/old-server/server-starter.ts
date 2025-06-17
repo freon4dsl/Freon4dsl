@@ -1,4 +1,4 @@
-import { app } from "./server-def2.js";
+import { app } from "./server-def.js";
 import { config } from "./config.js";
 
 app.listen(config.port);

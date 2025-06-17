@@ -2,7 +2,7 @@ import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import cors from "koa2-cors";
 
-import { routes2 } from "./routes2.js";
+import { routes } from "./routes.js";
 
 export const app = new Koa();
 
@@ -19,7 +19,7 @@ app.use(
 app.use(bodyParser());
 
 // app.use(logger);
-app.use(routes2);
+app.use(routes);
 
 // app.listen(config.port);
 //
