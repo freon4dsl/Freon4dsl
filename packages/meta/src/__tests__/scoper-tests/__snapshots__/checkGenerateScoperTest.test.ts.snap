@@ -11,7 +11,7 @@ import { UnitA, ScoperModel, UnitB } from "../../language/gen/index.js";
  */
 export class ScoperModelScoper extends FreScoperBase {
     /**
-     * Returns all FreNodes or FreNodeReferences that are defined as replacement namespaces for 'node'.
+     * Returns all FreNodes or FreNodeReferences that are defined as alternative namespaces for 'node'.
      * @param node
      */
     // @ts-ignore
@@ -20,7 +20,7 @@ export class ScoperModelScoper extends FreScoperBase {
     }
 
     /**
-     * Returns all FreNodes or FreNodeReferences that are defined as additional namespaces for 'node'.
+     * Returns all FreNodes or FreNodeReferences that are defined as imported namespaces for 'node'.
      * @param node
      */
     public importedNamespaces(node: FreNode): FreNamespaceInfo[] {
