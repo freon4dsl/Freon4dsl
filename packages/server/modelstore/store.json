@@ -9,45 +9,30 @@
             "units": [
                 {
                     "name": "Fractions",
-                    "file": "Fractions"
+                    "file": "Fractions.json"
                 },
                 {
                     "name": "Fractions101",
-                    "file": "Fractions101"
+                    "file": "Fractions101.json"
                 },
                 {
                     "name": "Fractions102",
-                    "file": "Fractions102"
+                    "file": "Fractions102.json"
                 },
                 {
                     "name": "Fractions103",
-                    "file": "Fractions103"
+                    "file": "Fractions103.json"
                 },
                 {
                     "name": "StartFlow",
-                    "file": "StartFlow"
+                    "file": "StartFlow.json"
                 },
                 {
                     "name": "TestB",
-                    "file": "TestB"
-                }
-            ]
-        },
-        {
-            "name": "serverModel",
-            "folder": "serverModel",
-            "language": "RulesModel",
-            "version": "1",
-            "units": [
-                {
-                    "name": "rulesUnit1",
-                    "file": "rulesUnit1"
-                },
-                {
-                    "name": "dataUnit1-changed",
-                    "file": "dataUnit1-changed"
+                    "file": "TestB.json"
                 }
             ]
         }
-    ]
+    ],
+    "currentPostfix": 4
 }
