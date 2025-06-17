@@ -14,8 +14,6 @@ describe.skip("Store test", () => {
     let lionWebServer = new LionWebRepositoryCommunication();
     const communication = freonServer;
     let originalModel: RulesModel;
-    let keep = false
-    // FreLogger.unmute("LionWebRepositoryCommunication")
 
     beforeEach(async () => {
         // FreLogger.unmute("ServerCommunication2")
@@ -37,9 +35,7 @@ describe.skip("Store test", () => {
     });
 
     afterEach(async () => {
-        if (!keep) {
-            await inMemoryModel.deleteModel();
-        }
+        await inMemoryModel.deleteModel();
     });
 
     it("open existing model", async () => {
@@ -85,14 +81,12 @@ describe.skip("Store test", () => {
         const unit1 = await inMemoryModel.getUnitByName("dataUnit1");
         expect(unit1).toBeDefined();
         unit1.name = "dataUnit1-changed"
-        await freonServer.renameModelUnit(inMemoryModel.model.name, "dataUnit1", "dataUnit1-changed", unit1)
+        await freonServer.renameModelUnit(inMemoryModel.model.name, "dataUnit1", "dataUnit1 has <changed>@#$% !", unit1)
 
         const newInMemoryModel = new InMemoryModel(env, communication);
         const retrievedModel = (await newInMemoryModel.openModel("serverModel")) as RulesModel;
         expect(retrievedModel.getUnits().length === 2);
-        expect(retrievedModel.getUnits().map(u => u.name).includes("dataUnit1-changed"));
+        expect(retrievedModel.getUnits().map(u => u.name).includes("dataUnit1 has <changed>@#$% !"));
         expect(retrievedModel.getUnits().map(u => u.name).includes("rulesUnit1"));
-        keep = true
-
     })
 });
