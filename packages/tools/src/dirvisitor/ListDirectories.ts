@@ -1,5 +1,8 @@
 import { DirectoryWorker } from "./DirectoryWalker";
 
+/**
+ * Worker that prints a line for each directory and file visited by a DirectoryWalker.
+ */
 export class ListDirectoriesWorker implements DirectoryWorker {
     dirs: string[]= []
     
