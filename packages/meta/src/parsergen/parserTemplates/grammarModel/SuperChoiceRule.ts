@@ -60,7 +60,7 @@ export class SuperChoiceRule extends GrammarRule {
         return `
             ${ParserGenUtil.makeComment(this.toGrammar())}
             public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.classifier(this.myConcept)} {
-                // console.log('transform${this.ruleName} called: ' + children.toString());
+                // console.log('1 transform${this.ruleName} called: ' + children.toString());
                 return children.asJsReadonlyArrayView()[0]; // SuperChoiceRule
             }`;
     }
