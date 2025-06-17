@@ -73,4 +73,7 @@ Used to be typeof(<SOME_EXPRESSION>).
 !! May not be followed '.'.
 ```
 
-What is not allowed in the .scope: `self` without `.<PROP_OR_FUNCTION>`.
+## What is not allowed in the .scope
+
+- `self` without `.<PROP_OR_FUNCTION>`.
+- `type()` as parameter of `if()` or any other function.
