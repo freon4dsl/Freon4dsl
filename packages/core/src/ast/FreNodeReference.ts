@@ -116,7 +116,6 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
     set referred(referredElement) {
         if (!!referredElement) {
             // this._FRE_pathname.push(referredElement.name);
-            // todo change this back to the line above
             this._FRE_pathname = qualifiedName(referredElement);
         }
         this._FRE_referred = referredElement;

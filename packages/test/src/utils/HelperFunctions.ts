@@ -4,7 +4,7 @@ import {
     type FreModelUnit,
     type FreReader,
     type FreWriter,
-    FreNode, FreNamedNode
+    FreNamedNode
 } from '@freon4dsl/core';
 import { FileHandler } from "./FileHandler.js";
 import { expect}  from "vitest";

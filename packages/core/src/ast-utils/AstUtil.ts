@@ -166,6 +166,10 @@ function skipReferences(key: string, value: Object) {
 
 const INDENT = "|   "
 
+/**
+ * Convenience method to transform a model into a more or less readable string. Used for debugging purposes.
+ * @param node
+ */
 export function ast2string(node: FreNode): string {
     return ast2stringIntern(node, "")
 }

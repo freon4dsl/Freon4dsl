@@ -29,7 +29,7 @@ function ast2dotRecursive(node: FreNode): string {
 }
 
 /**
- * Fund all children of `node`.
+ * Find all children of `node`.
  * Needs to use the language info in FreLanguage, as there is no _children()_ getter in FreNode.
  * @param node
  */

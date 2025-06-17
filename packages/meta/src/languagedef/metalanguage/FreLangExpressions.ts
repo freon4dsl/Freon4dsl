@@ -8,6 +8,8 @@ import {
     MetaElementReference
 } from './internal.js';
 
+// TODO If we use Names.nameForSelf, then we need to import Names. This introduces extra circular dependencies.
+//  Furthermore, these classes need to be replaced by FreLangExpNew. Therefore we use a constant here.
 export const nameForSelf: string = 'self';
 
 /** This module contains classes that implement Expressions over the FreLanguage structure.

@@ -21,7 +21,8 @@ export interface FreScoper {
 
     /**
      * Returns all nodes and/or node references that represent namespaces which should be added to the namespace
-     * represented by 'node'.
+     * represented by 'node'. Combined with every element is a property called 'recursive', which indicates whether
+     * to include the imported namespaces from imported namespaces.
      *
      * @param node
      */
@@ -29,7 +30,8 @@ export interface FreScoper {
 
     /**
      * Returns all nodes and/or node references that represent namespaces which should be used to replace
-     * the parent namespace of the namespace represented by 'node'.
+     * the parent namespace of the namespace represented by 'node'. Combined with every element is a property
+     * called 'recursive', which indicates whether to include the imported namespaces from alternative namespaces.
      *
      * @param node
      */

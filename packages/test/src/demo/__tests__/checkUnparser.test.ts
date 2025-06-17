@@ -84,7 +84,6 @@ describe("Testing Unparser", () => {
                 xx.expression = multiplyExpression;
 
                 result = unparser.writeToString(multiplyExpression, 0, false);
-                // result = result.replace(new RegExp("\\s+", "gm"), " ");
                 expect(result).toBe("1 + 2 * Person");
             })
         });

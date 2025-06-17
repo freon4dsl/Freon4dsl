@@ -18,8 +18,6 @@ import {
 } from '../metalanguage/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 
-
-//@ts-ignore
 const LOGGER = new MetaLogger("FreLangExpressionChecker").mute();
 
 export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTesterNew> {
@@ -127,6 +125,13 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
         });
     }
 
+    /**
+     * Method used for any parsed identifier, which may be resolved to
+     * (1) 'self', (2) a property, (3), the name of a classifier.
+     * @param freVarExp
+     * @param enclosingConcept
+     * @private
+     */
     private checkVarExp(freVarExp: FreVarExp, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("checkVarExp " + freVarExp?.toFreString() + " in " + enclosingConcept.name);
         if (freVarExp.name === Names.nameForSelf) {
@@ -240,7 +245,7 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
     }
 
     private checkConformsFunction(freFunctionExp: FreFunctionExp, enclosingConcept: FreMetaClassifier, myContext: FreMetaClassifier | undefined) {
-        // TODO
+        // TODO checkConformsFunction needs to be extended when FreLangExpNew is used for the conforms function
         LOGGER.log("checkConformsFunction " + freFunctionExp?.toFreString() + " in " + enclosingConcept.name + " with context " + myContext?.name);
         this.runner.nestedCheck({
             check: !!freFunctionExp.param,
@@ -253,7 +258,7 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
     }
 
     private checkEqualsFunction(freFunctionExp: FreFunctionExp, enclosingConcept: FreMetaClassifier, myContext: FreMetaClassifier | undefined) {
-        // TODO
+        // TODO checkEqualsFunction needs to be extended when FreLangExpNew is used for the equals function
         LOGGER.log("checkEqualsFunction " + freFunctionExp?.toFreString() + " in " + enclosingConcept.name + " with context " + myContext?.name);
         this.runner.nestedCheck({
             check: !!freFunctionExp.param,

@@ -38,8 +38,8 @@ export class ScopeDef extends FreMetaDefinitionElement {
 
 export class ScopeConceptDef extends FreMetaDefinitionElement {
     classifierRef: MetaElementReference<FreMetaClassifier> | undefined;
-    namespaceAddition: FreNamespaceAddition | undefined;
-    namespaceReplacement: FreNamespaceReplacement | undefined;
+    namespaceImports: FreNamespaceImport | undefined;
+    namespaceAlternatives: FreNamespaceAlternative | undefined;
 
     /**
      * Convenience method only to be used after checking, because in that process
@@ -54,13 +54,13 @@ export class ScopeConceptDef extends FreMetaDefinitionElement {
 
     toFreString(): string {
         return `${this.classifierRef?.name} {
-            ${this.namespaceAddition ? this.namespaceAddition.toFreString() : ``}
-            ${this.namespaceReplacement ? this.namespaceReplacement.toFreString() : ``}
+            ${this.namespaceImports ? this.namespaceImports.toFreString() : ``}
+            ${this.namespaceAlternatives ? this.namespaceAlternatives.toFreString() : ``}
         }`;
     }
 }
 
-export class FreNamespaceAddition extends FreMetaDefinitionElement {
+export class FreNamespaceImport extends FreMetaDefinitionElement {
     nsInfoList: FreMetaNamespaceInfo[] = [];
 
     toFreString(): string {
@@ -68,7 +68,7 @@ export class FreNamespaceAddition extends FreMetaDefinitionElement {
     }
 }
 
-export class FreNamespaceReplacement extends FreMetaDefinitionElement {
+export class FreNamespaceAlternative extends FreMetaDefinitionElement {
     nsInfoList: FreMetaNamespaceInfo[] = [];
 
     toFreString(): string {

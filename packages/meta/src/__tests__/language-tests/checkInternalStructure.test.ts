@@ -1,4 +1,4 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import {
     FreMetaClassifier,
     FreMetaConcept,
@@ -7,7 +7,7 @@ import {
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
     LangUtil
-} from '../../languagedef/metalanguage';
+} from '../../languagedef/metalanguage/index.js';
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { describe, test, expect } from "vitest";
 

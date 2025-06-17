@@ -90,7 +90,7 @@ export class CommonChecker {
     }
 
     /**
-     * returns true if the 'sub' conforms to 'superType'
+     * Returns true if the 'sub' conforms to 'superType'.
      * @param sub
      * @param superType
      */

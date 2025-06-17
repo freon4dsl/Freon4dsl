@@ -1,4 +1,4 @@
-import { FreMetaLanguage } from "../metalanguage/FreMetaLanguage.js";
+import { FreMetaLanguage } from "../metalanguage/index.js";
 import { FreLangExpressionChecker } from "../../languagedef/checking/FreLangExpressionChecker.js";
 import { FreGenericParser } from "../../utils/basic-dependencies/FreGenericParser.js";
 import { LanguageExpressionTester } from "./LanguageExpressionTester.js";

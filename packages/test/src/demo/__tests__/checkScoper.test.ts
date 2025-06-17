@@ -4,6 +4,7 @@ import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe, test, expect, beforeEach } from "vitest";
 import { FreCompositeScoper } from '@freon4dsl/core';
 import { isInScope, getVisibleNames } from '../../utils/HelperFunctions.js';
+import { initializeScoperDef } from '../scoper/gen';
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleNodes from DemoModel Instance", () => {

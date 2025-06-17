@@ -3,6 +3,7 @@ import { DemoEntity, Demo } from "../language/gen/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { getVisibleNames } from '../../utils/HelperFunctions.js';
 import { describe, test, expect, beforeEach } from "vitest";
+import { initializeScoperDef } from '../scoper/gen';
 
 describe("testing Scoper", () => {
     let modelCreator = new DemoModelCreator();
@@ -13,7 +14,6 @@ describe("testing Scoper", () => {
         DemoEnvironment.getInstance();
     });
 
-    // TODO make this two separate tests, that each run every time
     function testInheritedPropsrecursive(ent: DemoEntity, vis: string[], done: DemoEntity[]) {
         // when the property is not a list:
         if (!done.includes(ent) && !!ent.baseEntity) {

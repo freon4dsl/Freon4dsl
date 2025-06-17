@@ -17,6 +17,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     }
 
     parse(definitionFile: string): FreMetaLanguage | undefined {
+        // LOG2USER.log("ParseFile: " + definitionFile);
         if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);

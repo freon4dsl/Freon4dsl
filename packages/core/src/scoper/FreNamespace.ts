@@ -7,6 +7,43 @@
     '<anonymous>'. This situation might occur when there is a namespace whose '_myNode' does not have a name, i.e. it is not a FreNamedNode.
 */
 
+/*
+To clarify the algorithm, we include the pseudocode for this class.
+FreNamespace {
+    getDeclaredNodes(publicOnly: boolean): FreNamedNode[] {
+        return all AST nodes in the subtree of which this namespace is the top,
+        and the leafs are AST nodes that are themselves namespaces.
+        The parameter 'publicOnly' indicates whether to include AST nodes that are marked private.
+    }
+    getParentNodes(): FreNamedNode[] {
+        THIS.parentNamespace.getVisibleNodes();
+    }
+    getImportedNodes(list: NamespaceImports): FreNamedNode[] {
+        list.forEach( NS => {
+            NS.getDeclaredNodes(PUBLIC_ONLY)
+        plus
+            if (import is recursive) {
+                NS.getImportedNodes(NS.imports)
+            }
+        })
+    }
+    getAlternativeNodes(): FreNamedNode[] {
+            getDeclaredNodes(ALL) plus
+            getImportedNodes(THIS.alternatives)
+    }
+    getVisibleNodes(): FreNamedNode[] {
+        if (has replacement) then
+            getAlternativeNodes()
+        else
+            getDeclaredNodes(ALL) plus
+            getParentNodes() plus
+            getImportedNodes(THIS.imports)
+        endif
+    }
+}
+
+*/
+
 import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { AstWalker } from "../ast-utils/index.js";
 import { FreLanguage } from "../language/index.js";
@@ -24,7 +61,6 @@ export const PUBLIC_ONLY: boolean = true;
 
 export class FreNamespace {
     private static allNamespaces: Map<FreNode, FreNamespace> = new Map();
-    // private mainScoper: FreCompositeScoper = undefined;
 
     /**
      * This method ensures that every node in the model has one and only one associated namespace object.
@@ -53,7 +89,7 @@ export class FreNamespace {
     }
 
     /**
-     * Returns all nodes that are declared in this namespace.
+     * Returns all named nodes that are declared in this namespace.
      *
      * If the parameter 'publicOnly' is true, no private nodes are returned,
      * only the public ones.
@@ -100,23 +136,30 @@ export class FreNamespace {
         return new Set<FreNamedNode>(result);
     }
 
+    /**
+     * Returns all named nodes that are visible in the parent namespace of this namespace.
+     * @param mainScoper
+     * @param visitedNamespaces
+     */
     public getParentNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[]): FreNamedNode[] {
         const parentNamespace: FreNamespace = this.findParentNamespace(this);
         let resultSoFar: Set<FreNamedNode> = new Set();
         if (!isNullOrUndefined(parentNamespace) && !visitedNamespaces.includes(parentNamespace)) {
-            // We include all visible nodes form the parent, not only the declared nodes.
+            // We include all visible nodes from the parent, not only the declared nodes.
             parentNamespace.getVisibleNodes(mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE).forEach(x => {
                 resultSoFar.add(x);
             });
-            // no need to add 'parentNamespace' to 'visitedNamespaces', this is done by 'parentNamespace.getVisibleNodes'
+            // No need to add 'parentNamespace' to 'visitedNamespaces', this is done by 'parentNamespace.getVisibleNodes'
         }
         // Transform the result to the required type.
         return Array.from(resultSoFar);
     }
 
     /**
+     * Returns all named nodes that are visible in this namespace because of a namespace import statement in the .scope file.
+     *
      * The parameter resultSoFar holds all visible nodes that are gathered so far in the process. These are used to
-     * resolve any FreNodeReference in the set of additional namespace.
+     * resolve any FreNodeReference in the set of imported namespaces. If any of these cannot be resolved, an error is logged.
      *
      * @param mainScoper
      * @param visitedNamespaces
@@ -125,7 +168,7 @@ export class FreNamespace {
     public getImportedNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>): FreNamedNode[] {
         const additionals: FreNamespaceInfo[] = mainScoper.importedNamespaces(this._myNode);
 
-        // First add all additions that are not defined by FreNodeReferences
+        // First add all imports that are not defined by FreNodeReferences
         additionals.forEach(namespaceInfo => {
             const nsNode = namespaceInfo._myNode;
             if (!isNullOrUndefined(nsNode) && !(nsNode instanceof FreNodeReference)) {
@@ -134,7 +177,7 @@ export class FreNamespace {
                 })
             }
         });
-        // Second, add additions that ARE defined by FreNodeReferences
+        // Second, add imports that ARE defined by FreNodeReferences
         // This done after the 'normal' ones because the references may depend on the visible nodes of the other namespaces.
         // We loop over the references that are not resolved yet, until every one is done. If not every reference can be resolved,
         // an error is logged.
@@ -168,6 +211,14 @@ export class FreNamespace {
         return Array.from(resultSoFar);
     }
 
+    /**
+     * Returns all named nodes that are visible in this namespace from a namespace alternative statement in the .scope file.
+     *
+     * Any references must be resolvable within the parent namespace of this namespace, because otherwise it would not be resolvable.
+     *
+     * @param mainScoper
+     * @param visitedNamespaces
+     */
     public getAlternativeNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[]): FreNamedNode[] {
         const alternatives: FreNamespaceInfo[] = mainScoper.alternativeNamespaces(this._myNode);
         let resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(PUBLIC_AND_PRIVATE);
@@ -201,7 +252,23 @@ export class FreNamespace {
         // Transform the result to the required type.
         return Array.from(resultSoFar);
     }
-    
+
+    /**
+     * Returns all visible nodes in this namespace, taking into account any alternative namespace declarations, any import namespace
+     * declarations, and the names from the parent namespace in the following order.
+     *
+     * 1. The declared nodes in this namespace itself. When 'publicOnly' is true, only public nodes are included.
+     *    Otherwise, all declared nodes are included.
+     * 2. If there are alternative namespace declarations, the declared nodes from these namespace are added.
+     *    Based on the 'recursive' info in the alternative namespace declaration, its imported nodes are also included.
+     * 3. If there are no alternative namespace declarations, all visible nodes from the parent namespace are included,
+     *    followed by the declared nodes of the imports. Here too, based on the 'recursive' info in the import
+     *    namespace declaration, its imported nodes are also included.
+     *
+     * @param mainScoper
+     * @param visitedNamespaces
+     * @param publicOnly
+     */
     public getVisibleNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[], publicOnly: boolean): FreNamedNode[] {
         // console.log(`getVisibleNodes ${this._myNode.['name']}`)
         visitedNamespaces.push(this);
@@ -222,6 +289,16 @@ export class FreNamespace {
         }
     }
 
+    /**
+     * Returns all declared nodes from namespace 'nsNode'. If 'recursive' is true, the nodes from the imported namespaces for 'nsNode' are also included.
+     *
+     * @param mainScoper
+     * @param nsNode
+     * @param visitedNamespaces
+     * @param resultSoFar
+     * @param recursive
+     * @private
+     */
     private internalAddSingleImport(mainScoper: FreCompositeScoper, nsNode: FreNode, visitedNamespaces: FreNamespace[], resultSoFar: Set<FreNamedNode>, recursive: boolean): Set<FreNamedNode> {
         const myResult: Set<FreNamedNode> = new Set<FreNamedNode>();
         const addedNs = FreNamespace.create(nsNode);

@@ -379,7 +379,7 @@ export function createInstance(data: Partial<FreMetaInstance>): FreMetaInstance 
     // if the user has not provided a value for the 'name' property,
     // or the instance was defined using the shorthand that simulates enumeration
     // create a value for the 'name' property based on 'data.name'
-    if (!!!data.props || !data.props.some((prop) => prop.name === "name")) {
+    if (!data.props || !data.props.some((prop) => prop.name === "name")) {
         const prop = new FreMetaInstanceProperty();
         prop.name = "name";
         prop.value = data.name ? data.name : "";

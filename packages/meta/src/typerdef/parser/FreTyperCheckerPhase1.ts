@@ -61,9 +61,8 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
         }
         definition.language = this.language;
 
-        // To be able to find references in the type definition to nodes other than those from the language
-        // we need an extra scoper, and we need to set the opposites of all 'parts': their owning nodes
-        // TODO replace this
+        // To be able to find references in the type definition to nodes other than those from the language,
+        // we need an extra resolver, and we need to set the opposites of all 'parts': their owning nodes
         FretResolver.language = this.language;
         FretResolver.definition = definition;
         FretOwnerSetter.setNodeOwners(definition);
@@ -337,9 +336,6 @@ export class FreTyperCheckerPhase1 extends CheckerPhase<TyperDef> {
     private checkCreateExp(exp: FretCreateExp, classifier: FreMetaClassifier, surroundingExp?: FretWhereExp) {
         // LOGGER.log("Checking FretCreateExp '" + exp.toFreString() + "'");
         this.checkTypeReference(exp.$type, false);
-        // console.log("TYPE of Create: " + exp.__type.name + ", " + exp.__type.owner + ", " + exp.type?.name);
-        // this.myExpressionthis.runner.resolveClassifierReference(exp.__type);
-        // console.log("TYPE: " + exp.type?.name + " with props: " + exp.type?.allProperties().map(p => p.name).join(", "))
         exp.propertyDefs.forEach((propDef) => {
             this.checkFretExp(propDef.value, classifier, surroundingExp);
             FretResolver.resolvePropertyReference(propDef.$property, classifier, this.runner);

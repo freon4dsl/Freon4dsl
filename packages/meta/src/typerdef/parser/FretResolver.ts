@@ -1,15 +1,22 @@
 import {
-    FreMetaClassifier, FreMetaInstance,
-    FreMetaLangElement,
-    FreMetaLanguage, FreMetaLimitedConcept, FreMetaProperty,
+    FreMetaClassifier,
+    FreMetaInstance,
+    FreMetaLanguage,
+    FreMetaLimitedConcept,
+    FreMetaProperty,
     MetaElementReference
 } from '../../languagedef/metalanguage/index.js';
 import {
-    FretCreateExp, FretPropertyCallExp, FretVarCallExp, FretWhereExp,
-    FretProperty, TyperDef, FreTyperElement, FretVarDecl, FretTypeConcept
+    FretCreateExp,
+    FretPropertyCallExp,
+    FretVarCallExp,
+    FretWhereExp,
+    TyperDef,
+    FreTyperElement,
+    FretVarDecl,
+    FretTypeConcept
 } from '../metalanguage/index.js';
 import { Names } from "../../utils/on-lang/index.js";
-import { FreMetaDefinitionElement } from '../../utils/no-dependencies/index.js';
 import { CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
@@ -21,57 +28,6 @@ export class FretResolver {
     static definition: TyperDef;
     // @ts-ignore Set during checking
     static language: FreMetaLanguage;
-
-    static getFromVisibleElements(
-      owner: FreMetaDefinitionElement,
-      name: string,
-      typeName: string,
-    ): FreMetaLangElement | undefined {
-        let result: FreMetaLangElement | undefined;
-        // if (name === "base2" ) {
-        //     console.log("NEW SCOPER CALLED " + name + ": " + typeName + ", owner type: " + owner?.constructor.name);
-        // }
-        if (owner instanceof FretProperty || owner instanceof FreTyperElement) {
-            // FretProperty does not inherit from FretTyperElement!!
-            if (typeName === "FreProperty") {
-                let nameSpace: FreMetaClassifier | undefined;
-                if (owner instanceof FretCreateExp) {
-                    nameSpace = owner.type;
-                } else if (owner instanceof FretPropertyCallExp) {
-                    nameSpace = owner.source.returnType;
-                }
-                result = nameSpace?.allProperties().find((prop) => prop.name === name);
-            } else if (typeName === "FretVarDecl") {
-                if (owner instanceof FretVarCallExp) {
-                    // find the only place in the typer definition where a variable can be declared: a FretWhereExp
-                    const whereExp: FretWhereExp | undefined = this.findSurroudingWhereExp(owner);
-                    if (whereExp?.variable.name === name) {
-                        result = whereExp.variable;
-                    }
-                }
-            } else if (typeName === "FretTypeConcept" || typeName === "FreClassifier") {
-                if (name === Names.FreType || name === "FreonType") {
-                    result = TyperDef.freonType;
-                } else {
-                    // search the typeConcepts only, 'normal' classifiers will have been found already by FreLangScoper
-                    result = this.definition.typeConcepts.find((con) => con.name === name);
-                }
-            }
-        }
-        return result;
-    }
-
-    private static findSurroudingWhereExp(owner: FreTyperElement): FretWhereExp | undefined {
-        if (owner instanceof FretWhereExp) {
-            return owner;
-        } else {
-            if (owner.owner) {
-                return this.findSurroudingWhereExp(owner.owner);
-            } else {
-                return undefined;
-            }
-        }
-    }
 
     static resolveClassifierReference(classifierRef: MetaElementReference<FreMetaClassifier> | undefined, runner: CheckRunner, language: FreMetaLanguage) {
         if (!!classifierRef) {
@@ -105,7 +61,7 @@ export class FretResolver {
             let myRef;
             if (variableRef.owner instanceof FretVarCallExp) {
                 // find the only place in the typer definition where a variable can be declared: a FretWhereExp
-                const whereExp: FretWhereExp | undefined = this.findSurroudingWhereExp(variableRef.owner);
+                const whereExp: FretWhereExp | undefined = this.findSurroundingWhereExp(variableRef.owner);
                 if (!isNullOrUndefined(whereExp) && whereExp?.variable.name === variableRef.name) {
                     myRef = whereExp.variable;
                 }
@@ -145,5 +101,17 @@ export class FretResolver {
 
     static resolveInstanceReference(myInstanceRef: MetaElementReference<FreMetaInstance>, context: FreMetaLimitedConcept, runner: CheckRunner) {
         ReferenceResolver.resolveInstanceReference(myInstanceRef, context, runner);
+    }
+
+    private static findSurroundingWhereExp(owner: FreTyperElement): FretWhereExp | undefined {
+        if (owner instanceof FretWhereExp) {
+            return owner;
+        } else {
+            if (owner.owner) {
+                return this.findSurroundingWhereExp(owner.owner);
+            } else {
+                return undefined;
+            }
+        }
     }
 }

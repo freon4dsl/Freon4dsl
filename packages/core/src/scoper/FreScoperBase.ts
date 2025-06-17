@@ -9,13 +9,22 @@ import { isNullOrUndefined } from '../util/index.js';
 import { findEnclosingNamespace, hasCorrectType } from './ScoperUtil.js';
 import { FreLanguageEnvironment } from '../environment/index.js';
 
-
 const LOGGER = new FreLogger("FreScoperBase");
+
+/**
+ * This class is the main implementation of the scoper algorithm. Every generated scoper inherits from this class, thus
+ * its methods are used by every generated scoper.
+ */
 
 export abstract class FreScoperBase implements FreScoper {
     mainScoper: FreCompositeScoper;
     myTyper: FreCompositeTyper; // todo see whether this can be replaced by FreLanguageEnvironment.getInstance().typer
 
+    /**
+     * @see FreScoper
+     * @param node
+     * @param metaType
+     */
     public getVisibleNodes(node: FreNode, metaType?: string): FreNamedNode[] {
         // console.log('BASE getVisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", metaType: " + metaType);
         this.myTyper = FreLanguageEnvironment.getInstance().typer;
@@ -38,14 +47,23 @@ export abstract class FreScoperBase implements FreScoper {
         }
     }
 
+    /**
+     * @see FreScoper
+     * @param node
+     */
     // @ts-ignore parameter is present to adhere to interface FreScoper
     importedNamespaces(node: FreNode): FreNamespaceInfo[] {
+        // This method may be overridden by any subclass of this class.
         return [];
     }
 
+    /**
+     * @see FreScoper
+     * @param node
+     */
     // @ts-ignore parameter is present to adhere to interface FreScoper
     alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
+        // This method may be overridden by any subclass of this class.
         return [];
     }
-
 }

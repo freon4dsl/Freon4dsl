@@ -43,11 +43,11 @@ export interface TableCellProps<T extends Box> extends FreComponentProps<T> {
  * Properties for a TextComponent
  */
 export interface TextComponentProps<T extends Box> extends FreComponentProps<T> {
-    // Indication whether this component is currently being edited by the user, needs to be recursive for binding in TextDropdownComponent
+    // Indication whether this component is currently being edited by the user, needs to be exported for binding in TextDropdownComponent
     isEditing: boolean;
     // Indication whether this text component is part of an TextDropdownComponent
     partOfDropdown: boolean;
-    // The text to be displayed, needs to be recursive for binding in TextDropdownComponent
+    // The text to be displayed, needs to be exported for binding in TextDropdownComponent
     text: string;
 
     // This function replaces the event handling in version 1.0.0 (for svelte v4). What used to be an event,

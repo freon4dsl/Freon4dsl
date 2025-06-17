@@ -1,8 +1,8 @@
 import {
     ScopeDef,
     ScopeConceptDef,
-    FreNamespaceAddition,
-    FreNamespaceReplacement,
+    FreNamespaceImport,
+    FreNamespaceAlternative,
     FreMetaNamespaceInfo
 } from '../metalanguage/index.js';
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
@@ -40,11 +40,11 @@ export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeCon
     if (!!data.classifierRef) {
         result.classifierRef = data.classifierRef;
     }
-    if (!!data.namespaceAddition) {
-        result.namespaceAddition = data.namespaceAddition;
+    if (!!data.namespaceImports) {
+        result.namespaceImports = data.namespaceImports;
     }
-    if (!!data.namespaceReplacement) {
-        result.namespaceReplacement = data.namespaceReplacement;
+    if (!!data.namespaceAlternatives) {
+        result.namespaceAlternatives = data.namespaceAlternatives;
     }
     if (!!data.location) {
         result.location = data.location;
@@ -53,9 +53,9 @@ export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeCon
     return result;
 }
 
-export function createNamespaceAddition(data: Partial<FreNamespaceAddition>): FreNamespaceAddition {
-    LOGGER.log("createNamespaceAddition");
-    const result = new FreNamespaceAddition();
+export function createNamespaceImport(data: Partial<FreNamespaceImport>): FreNamespaceImport {
+    LOGGER.log("createNamespaceImport");
+    const result = new FreNamespaceImport();
     if (!!data.nsInfoList) {
         result.nsInfoList = data.nsInfoList;
     }
@@ -66,9 +66,9 @@ export function createNamespaceAddition(data: Partial<FreNamespaceAddition>): Fr
     return result;
 }
 
-export function createNamespaceReplacement(data: Partial<FreNamespaceReplacement>): FreNamespaceReplacement {
-    LOGGER.log("createNamespaceReplacement");
-    const result = new FreNamespaceReplacement();
+export function createNamespaceAlternative(data: Partial<FreNamespaceAlternative>): FreNamespaceAlternative {
+    LOGGER.log("createNamespaceAlternative");
+    const result = new FreNamespaceAlternative();
     if (!!data.nsInfoList) {
         result.nsInfoList = data.nsInfoList;
     }

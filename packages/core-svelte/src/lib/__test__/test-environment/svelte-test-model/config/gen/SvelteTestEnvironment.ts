@@ -72,7 +72,7 @@ export class SvelteTestEnvironment implements FreEnvironment {
 
     // the parts of the language environment
     editor: FreEditor;
-    scoper: FreCompositeScoper = new FreCompositeScoper("main");
+    scoper: FreCompositeScoper = new FreCompositeScoper();
     typer: FreCompositeTyper = new FreCompositeTyper("main");
     validator: FreValidator = new SvelteTestValidator();
     // writer: FreWriter = new SvelteTestModelUnitWriter();

@@ -1,9 +1,10 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-import { AppliedFeature, DemoAttributeRef, Demo } from "../language/gen/index.js";
+import { AppliedFeature, DemoAttributeRef, Demo, initializeLanguage } from '../language/gen/index.js';
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { describe,  test, expect, beforeEach } from "vitest";
 import { isInScope, } from '../../utils/HelperFunctions.js';
 import { FreNamedNode } from '@freon4dsl/core';
+import { initializeScoperDef } from '../scoper/gen';
 // import { FileHandler } from '../../utils/FileHandler';
 
 describe("testing Alternative Scopes", () => {
@@ -14,9 +15,11 @@ describe("testing Alternative Scopes", () => {
         //      Variable1.attrFromPerson.attrFromCompany
         // where 'Variable1.attrFromPerson' is of type Company
         let scoper = DemoEnvironment.getInstance().scoper;
-        // let writer = DemoEnvironment.getInstance().writer;
+
 
         beforeEach(() => {
+            // todo the following statement should have been executed during 'DemoEnvironment.getInstance().scoper',
+            //  find out why  there are still errors of kind: "Node ID-6 of type DemoModel has no type description"
             DemoEnvironment.getInstance();
         });
 

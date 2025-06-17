@@ -6,12 +6,6 @@ import { MetaElementReference } from './internal.js';
 // These properties need to be undefined during parsing and checking. After the checking process
 // has been executed without errors, we can assume that these properties are initialized.
 
-export // Type to keep info about a part that needs to be initialized and its implementing concept
-type PartInitializer = {
-    part: FreMetaConceptProperty; // the part that needs initializing
-    concept: FreMetaConcept; // The class that needs to be constructed
-};
-
 // root of the inheritance structure of all elements in a language definition
 export abstract class FreMetaLangElement extends FreMetaDefinitionElement {
     protected _name: string = "";
@@ -94,6 +88,12 @@ export class FreMetaLanguage extends FreMetaLangElement {
         return this.units.find((u) => u.name === name);
     }
 }
+
+export // Type to keep info about a part that needs to be initialized and its implementing concept
+type PartInitializer = {
+    part: FreMetaConceptProperty; // the part that needs initializing
+    concept: FreMetaConcept; // T he class that needs tp be constructed
+};
 
 export abstract class FreMetaClassifier extends FreMetaLangElement {
     private static __ANY: FreMetaClassifier;

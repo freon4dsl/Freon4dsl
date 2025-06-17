@@ -9,7 +9,7 @@ import { findEnclosingNamespace, resolvePathStartingInNamespace } from './Scoper
 const LOGGER = new FreLogger("FreCompositeScoper").mute();
 
 export class FreCompositeScoper implements FreScoper {
-    mainScoper: FreCompositeScoper; // unused, here to adhere to FreScoper interface
+    mainScoper: FreCompositeScoper; // NB the value is always undefined, here to adhere to FreScoper interface
     private scopers: FreScoper[] = [];
 
     appendScoper(t: FreScoper) {
@@ -40,6 +40,12 @@ export class FreCompositeScoper implements FreScoper {
         return found;
     }
 
+    /**
+     * Returns all named nodes that are visible within the namespace that 'node' resides in. If
+     * 'metatype' is present, only nodes that conform to this 'metatype' are returned.
+     * @param node
+     * @param metatype
+     */
     getVisibleNodes(node: FreNode | FreNodeReference<FreNamedNode>, metatype?: string): FreNamedNode[] {
         // console.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
         if (!!node) {
@@ -54,6 +60,12 @@ export class FreCompositeScoper implements FreScoper {
         return [];
     }
 
+    /**
+     * Loops over all known scopers to find the information on namespace imports.
+     * Note that currently as soon as a result is found, the remaining scopers are not
+     * queried.
+     * @param node
+     */
     importedNamespaces(node: FreNode): FreNamespaceInfo[] {
         // todo should we check whether node 'is' a namespace?
         if (!!node) {
@@ -68,6 +80,12 @@ export class FreCompositeScoper implements FreScoper {
         return [];
     }
 
+    /**
+     * Loops over all known scopers to find the information on namespace alternatives.
+     * Note that currently as soon as a result is found, the remaining scopers are not
+     * queried.
+     * @param node
+     */
     alternativeNamespaces(node: FreNode): FreNamespaceInfo[] {
         // todo should we check whether node 'is' a namespace?
         LOGGER.log('COMPOSITE alternativeNamespaces for ' + node.freId() + " of type " + node.freLanguageConcept());

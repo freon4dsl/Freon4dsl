@@ -13,11 +13,9 @@ describe("testing Scoper on model units", () => {
         let model: Demo = new DemoModelCreator().createModelWithMultipleUnits();
         let scoper = DemoEnvironment.getInstance().scoper;
         let stdlib = DemoStdlib.getInstance();
-        initializeScoperDef(DemoEnvironment.getInstance().scoper);
 
         beforeEach(() => {
             DemoEnvironment.getInstance();
-
         });
 
         test("visible elements in model", () => {

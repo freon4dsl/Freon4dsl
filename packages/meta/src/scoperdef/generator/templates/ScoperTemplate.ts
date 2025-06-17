@@ -8,8 +8,8 @@ import { ExpressionGenerationUtil } from '../../../langexpressions/generator/Exp
 import { isNullOrUndefined } from '../../../utils/file-utils/index.js';
 
 export class ScoperTemplate {
-    additionalNamespaceText: string = "";
-    replacementNamespaceText = "";
+    importedNamespaceText: string = "";
+    alternativeNamespaceText: string = "";
 
     generateGenIndex(language: FreMetaLanguage): string {
         return `
@@ -25,8 +25,8 @@ export class ScoperTemplate {
     }
 
     generateScoper(language: FreMetaLanguage, scopedef: ScopeDef, relativePath: string): string {
-        this.replacementNamespaceText = "";
-        this.additionalNamespaceText = "";
+        this.alternativeNamespaceText = "";
+        this.importedNamespaceText = "";
 
         const imports = new Imports(relativePath);
         imports.core = new Set<string>([
@@ -34,8 +34,8 @@ export class ScoperTemplate {
         ]);
         if (!!scopedef) {
             // should always be the case, either the definition read from file or the default
-            this.makeReplacementNamespaceTexts(scopedef, imports);
-            this.makeAdditionalNamespaceTexts(scopedef, imports);
+            this.makeAlternativeNamespaceTexts(scopedef, imports);
+            this.makeImportedNamespaceTexts(scopedef, imports);
         }
 
         // Template starts here
@@ -49,70 +49,70 @@ export class ScoperTemplate {
         export class ${Names.scoper(language)} extends ${Names.FreScoperBase} {
 
              /**
-             * Returns all FreNodes or FreNodeReferences that are defined as replacement namespaces for 'node'.
+             * Returns all FreNodes or FreNodeReferences that are defined as alternative namespaces for 'node'.
              * @param node
-             */${this.replacementNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
+             */${this.alternativeNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
             public alternativeNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
-                ${this.replacementNamespaceText.length > 0 ? 
+                ${this.alternativeNamespaceText.length > 0 ? 
                     `const result: ${Names.FreNamespaceInfo}[] = [];
-                    ${this.replacementNamespaceText}
+                    ${this.alternativeNamespaceText}
                     return result;`
                 : `return [];`}
             }
 
             /**
-             * Returns all FreNodes or FreNodeReferences that are defined as additional namespaces for 'node'.
+             * Returns all FreNodes or FreNodeReferences that are defined as imported namespaces for 'node'.
              * @param node
-             */${this.additionalNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
+             */${this.importedNamespaceText.length === 0 ? `\n// @ts-ignore` : ``}
             public importedNamespaces(node: ${Names.FreNode}): ${Names.FreNamespaceInfo}[] {
-                ${this.additionalNamespaceText.length > 0 ?
+                ${this.importedNamespaceText.length > 0 ?
                     `const result: ${Names.FreNamespaceInfo}[] = [];
-                    ${this.additionalNamespaceText}
+                    ${this.importedNamespaceText}
                     return result;`
                 : `return [];`}
             }
         }`;
     }
 
-    private makeAdditionalNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
+    private makeImportedNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
         // console.log('makeAdditionalNamespaceTexts')
         for (const def of scopedef.scopeConceptDefs) {
             // console.log('\t found scopeConceptDefs')
-            if (!!def.namespaceAddition) {
+            if (!!def.namespaceImports) {
                 // console.log('\tfound additions')
                 const myClassifier: FreMetaClassifier | undefined = def.classifier;
                 if (!!myClassifier) {
                     const comment = "// namespace addition for " + myClassifier.name + "\n";
                     imports.language.add(Names.classifier(myClassifier));
-                    this.additionalNamespaceText += comment + `if (node instanceof ${myClassifier.name}) {`;
-                    def.namespaceAddition.nsInfoList.forEach((expression, index) => {
-                        this.additionalNamespaceText = this.additionalNamespaceText.concat(
+                    this.importedNamespaceText += comment + `if (node instanceof ${myClassifier.name}) {`;
+                    def.namespaceImports.nsInfoList.forEach((expression, index) => {
+                        this.importedNamespaceText = this.importedNamespaceText.concat(
                           this.addNamespaceExpression(expression, imports, index),
                         );
                     });
-                    this.additionalNamespaceText = this.additionalNamespaceText.concat(`}\n`);
+                    this.importedNamespaceText = this.importedNamespaceText.concat(`}\n`);
                 }
             }
         }
     }
 
-    private makeReplacementNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
+    private makeAlternativeNamespaceTexts(scopedef: ScopeDef, imports: Imports) {
         for (const def of scopedef.scopeConceptDefs) {
-            if (!!def.namespaceReplacement) {
-                // console.log('\tfound replacements')
+            if (!!def.namespaceAlternatives) {
+                // console.log('\tfound alternatives')
                 const myClassifier: FreMetaClassifier | undefined = def.classifierRef?.referred;
                 if (!!myClassifier) {
                     const comment = "// namespace replacement for " + myClassifier.name + "\n";
                     imports.language.add(Names.classifier(myClassifier));
-                    this.replacementNamespaceText += comment + `if (node instanceof ${myClassifier.name}) {`;
-                    if (!!def.namespaceReplacement) {
-                        def.namespaceReplacement.nsInfoList.forEach((expression, index) => {
-                            this.replacementNamespaceText = this.replacementNamespaceText.concat(
+                    this.alternativeNamespaceText += comment + `if (node instanceof ${myClassifier.name}) {`;
+                    if (!!def.namespaceAlternatives) {
+                        def.namespaceAlternatives.nsInfoList.forEach((expression, index) => {
+                            this.alternativeNamespaceText = this.alternativeNamespaceText.concat(
                               this.addNamespaceExpression(expression, imports, index),
                             );
                         })
                     }
-                    this.replacementNamespaceText = this.replacementNamespaceText.concat(`}\n`);
+                    this.alternativeNamespaceText = this.alternativeNamespaceText.concat(`}\n`);
                 }
             }
         }

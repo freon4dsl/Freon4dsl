@@ -89,32 +89,32 @@ describe("Checking the scoper checker", () => {
 
         // check imports on AA
         const defAA = scopeDef.scopeConceptDefs.find(cd => cd.classifier === classAA);
-        expect(defAA.namespaceReplacement).toBeUndefined();
-        // console.log(defAA.namespaceAddition.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
-        expect(defAA.namespaceAddition.nsInfoList.length).toBe(6);
+        expect(defAA.namespaceAlternatives).toBeUndefined();
+        // console.log(defAA.namespaceImports.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
+        expect(defAA.namespaceImports.nsInfoList.length).toBe(6);
 
         // check imports on BB
         const defBB = scopeDef.scopeConceptDefs.find(cd => cd.classifier === classBB);
-        expect(defBB.namespaceReplacement).toBeUndefined();
-        // console.log(defBB.namespaceAddition.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
-        expect(defBB.namespaceAddition.nsInfoList.length).toBe(3);
+        expect(defBB.namespaceAlternatives).toBeUndefined();
+        // console.log(defBB.namespaceImports.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
+        expect(defBB.namespaceImports.nsInfoList.length).toBe(3);
 
         // check imports on DD
         const defDD = scopeDef.scopeConceptDefs.find(cd => cd.classifier === classDD);
-        expect(defDD.namespaceReplacement).toBeUndefined();
-        // console.log(defDD.namespaceAddition.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
-        expect(defDD.namespaceAddition.nsInfoList.length).toBe(2);
+        expect(defDD.namespaceAlternatives).toBeUndefined();
+        // console.log(defDD.namespaceImports.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
+        expect(defDD.namespaceImports.nsInfoList.length).toBe(2);
 
         // check alternatives on FF
         const defFF = scopeDef.scopeConceptDefs.find(cd => cd.classifier === classFF);
-        expect(defFF.namespaceAddition).toBeUndefined();
-        // console.log(defFF.namespaceReplacement.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
-        expect(defFF.namespaceReplacement.nsInfoList.length).toBe(1);
+        expect(defFF.namespaceImports).toBeUndefined();
+        // console.log(defFF.namespaceAlternatives.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
+        expect(defFF.namespaceAlternatives.nsInfoList.length).toBe(1);
 
         // check alternatives on EE
         const defEE = scopeDef.scopeConceptDefs.find(cd => cd.classifier === classEE);
-        expect(defEE.namespaceAddition).toBeUndefined();
-        // console.log(defEE.namespaceReplacement.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
-        expect(defEE.namespaceReplacement.nsInfoList.length).toBe(2);
+        expect(defEE.namespaceImports).toBeUndefined();
+        // console.log(defEE.namespaceAlternatives.nsInfoList.map(xx => xx.expression.toFreString()).join('\n'));
+        expect(defEE.namespaceAlternatives.nsInfoList.length).toBe(2);
     });
 });

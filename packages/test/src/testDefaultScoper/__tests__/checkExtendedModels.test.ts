@@ -1,4 +1,4 @@
-import { AST, FreNamedNode, FreNamespace, FreNodeReference } from '@freon4dsl/core';
+import { AST, FreNodeReference } from '@freon4dsl/core';
 import { DSmodel, DSref, DSunit } from "../language/gen/index.js";
 import { SimpleModelCreator } from "./SimpleModelCreator.js";
 import { DSmodelEnvironment } from "../config/gen/DSmodelEnvironment.js";

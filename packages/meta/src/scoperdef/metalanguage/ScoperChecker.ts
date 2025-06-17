@@ -3,8 +3,8 @@ import {
     FreMetaClassifier, LangUtil, MetaElementReference
 } from '../../languagedef/metalanguage/index.js';
 import {
-    FreNamespaceReplacement,
-    FreNamespaceAddition,
+    FreNamespaceAlternative,
+    FreNamespaceImport,
     ScopeDef,
     FreMetaNamespaceInfo, ScopeConceptDef
 } from './FreScopeDefLang.js';
@@ -57,14 +57,14 @@ export class ScoperChecker extends Checker<ScopeDef> {
                         error: `Double entry (${def.classifierRef?.name}) is not allowed ${ParseLocationUtil.location(def)}.`,
                         whenOk: () => {
                             this.runner.nestedCheck({
-                                check: !(!!def.namespaceAddition && !!def.namespaceReplacement),
+                                check: !(!!def.namespaceImports && !!def.namespaceAlternatives),
                                 error: `Namespace may be defined by either 'imports' or 'alternatives', not both ${ParseLocationUtil.location(def)}.`,
                                 whenOk: () => {
-                                    if (!!def.namespaceAddition) {
-                                        this.checkNamespaceAdditions(def.namespaceAddition, def.classifierRef!.referred);
+                                    if (!!def.namespaceImports) {
+                                        this.checkNamespaceAdditions(def.namespaceImports, def.classifierRef!.referred);
                                     }
-                                    if (!!def.namespaceReplacement) {
-                                        this.checkAlternativeNamespace(def.namespaceReplacement, def.classifierRef!.referred);
+                                    if (!!def.namespaceAlternatives) {
+                                        this.checkAlternativeNamespace(def.namespaceAlternatives, def.classifierRef!.referred);
                                     }
                                 }
                             });
@@ -90,34 +90,34 @@ export class ScoperChecker extends Checker<ScopeDef> {
                         if (isNullOrUndefined(childDef)) {
                             // create a new scopeDef
                             const newDef = new ScopeConceptDef();
-                            if (!isNullOrUndefined(parentDef.namespaceAddition)) {
-                                newDef.namespaceAddition = new FreNamespaceAddition();
-                                newDef.namespaceAddition.nsInfoList = this.copyNamespaceExpressions(parentDef.namespaceAddition.nsInfoList);
+                            if (!isNullOrUndefined(parentDef.namespaceImports)) {
+                                newDef.namespaceImports = new FreNamespaceImport();
+                                newDef.namespaceImports.nsInfoList = this.copyNamespaceExpressions(parentDef.namespaceImports.nsInfoList);
                             }
-                            if (!isNullOrUndefined(parentDef.namespaceReplacement)) {
-                                newDef.namespaceReplacement = new FreNamespaceReplacement();
-                                newDef.namespaceReplacement.nsInfoList = this.copyNamespaceExpressions(parentDef.namespaceReplacement.nsInfoList);
+                            if (!isNullOrUndefined(parentDef.namespaceAlternatives)) {
+                                newDef.namespaceAlternatives = new FreNamespaceAlternative();
+                                newDef.namespaceAlternatives.nsInfoList = this.copyNamespaceExpressions(parentDef.namespaceAlternatives.nsInfoList);
                             }
                         } else {
                             // add additions to existing scopeDef, but first check if this is correct
-                            if (!isNullOrUndefined(parentDef.namespaceAddition)) {
+                            if (!isNullOrUndefined(parentDef.namespaceImports)) {
                                 this.runner.nestedCheck({
-                                    check: isNullOrUndefined(childDef.namespaceReplacement),
+                                    check: isNullOrUndefined(childDef.namespaceAlternatives),
                                     error: `Parent scope definition (${parent.name}) does not comply with scope definition for ${child.name} ${ParseLocationUtil.location(child)}.`,
                                     whenOk: () => {
-                                        if (!isNullOrUndefined(childDef.namespaceAddition)) {
-                                            childDef.namespaceAddition?.nsInfoList.push(...this.copyNamespaceExpressions(parentDef.namespaceAddition?.nsInfoList));
+                                        if (!isNullOrUndefined(childDef.namespaceImports)) {
+                                            childDef.namespaceImports?.nsInfoList.push(...this.copyNamespaceExpressions(parentDef.namespaceImports?.nsInfoList));
                                         }
                                     }
                                 })
                             }
-                            if (!isNullOrUndefined(parentDef.namespaceReplacement)) {
+                            if (!isNullOrUndefined(parentDef.namespaceAlternatives)) {
                                 this.runner.nestedCheck({
-                                    check: isNullOrUndefined(childDef.namespaceAddition),
+                                    check: isNullOrUndefined(childDef.namespaceImports),
                                     error: `Parent scope definition (${parent.name}) does not comply with scope definition for ${child.name} ${ParseLocationUtil.location(child)}.`,
                                     whenOk: () => {
-                                        if (!isNullOrUndefined(childDef.namespaceReplacement)) {
-                                            childDef.namespaceReplacement?.nsInfoList.push(...this.copyNamespaceExpressions(parentDef.namespaceReplacement?.nsInfoList));
+                                        if (!isNullOrUndefined(childDef.namespaceAlternatives)) {
+                                            childDef.namespaceAlternatives?.nsInfoList.push(...this.copyNamespaceExpressions(parentDef.namespaceAlternatives?.nsInfoList));
                                         }
                                     }
                                 })
@@ -134,7 +134,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         }
     }
 
-    private checkNamespaceAdditions(namespaceAddition: FreNamespaceAddition, enclosingConcept: FreMetaClassifier) {
+    private checkNamespaceAdditions(namespaceAddition: FreNamespaceImport, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("Checking namespace additions for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),
@@ -147,7 +147,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         });
     }
 
-    private checkAlternativeNamespace(namespaceReplacement: FreNamespaceReplacement, enclosingConcept: FreMetaClassifier) {
+    private checkAlternativeNamespace(namespaceReplacement: FreNamespaceAlternative, enclosingConcept: FreMetaClassifier) {
         LOGGER.log("Checking namespace replacements for " + enclosingConcept?.name);
         this.runner.nestedCheck({
             check: this.myNamespaces.includes(enclosingConcept),

@@ -14,8 +14,8 @@ export class ClassifierChecker {
     /**
      * Returns true if there is a circularity found in the inheritance tree of this classifier.
      *
-     * @param names: all names of classifier that are encountered so far
-     * @param classifier: the classifier to check
+     * @param names         all names of classifier that are encountered so far
+     * @param classifier    the classifier to check
      * @param runner
      */
     public checkClassifier(names: string[], classifier: FreMetaClassifier, runner: CheckRunner): boolean {
