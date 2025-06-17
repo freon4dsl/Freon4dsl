@@ -252,13 +252,11 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
              * The 'reference separator' ("${this.refSeparator}") is removed in the process.
              */
             public transform__fre_reference(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${tempReferenceClassName} {
-                console.log("transform__fre_reference called: " + JSON.stringify(children));
                 let pathname: string[] = [];
                 for (const child of children.asJsReadonlyArrayView()) {
                     if (child !== null && child !== undefined && (typeof child === 'string' ? child !== '${this.refSeparator}' : false)) {
                         // todo make sure we remove only the outer quotes
                         const name = child.toString().replace(/\`/g, "") ;
-                        console.log(\`transfor_fre_reference: \${child.toString()} => \${name}\`)
                         pathname.push(name);
                     }
                 }
