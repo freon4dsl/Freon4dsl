@@ -13,7 +13,7 @@ const contentHgUnit = {
     methods: [
         {
             $typename: "Method",
-            name: "gfah ",
+            name: "gfah",
             body: null,
             parameters: [],
             declaredType: null,

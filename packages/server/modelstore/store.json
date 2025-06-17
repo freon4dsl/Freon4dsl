@@ -32,6 +32,22 @@
                     "file": "TestB.json"
                 }
             ]
+        },
+        {
+            "name": "__TEST__",
+            "folder": "__TEST__",
+            "language": "",
+            "version": "1",
+            "units": [
+                {
+                    "name": "hg",
+                    "file": "hg.json"
+                },
+                {
+                    "name": "xng",
+                    "file": "xng.json"
+                }
+            ]
         }
     ],
     "currentPostfix": 4
