@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, test } from "vitest";
-import { AST, FreLogger, InMemoryModel, LionWebRepositoryCommunication, ServerCommunication2 } from "@freon4dsl/core";
+import { AST, FreLogger, InMemoryModel, LionWebRepositoryCommunication, ServerCommunication } from "@freon4dsl/core";
 import { RulesModelEnvironment } from "../config/gen/RulesModelEnvironment.js";
 import { Data, Rules, RulesModel } from "../language/gen/index.js";
 import { fillDataUnit, fillRulesUnit, modelToString } from "./StoreModelCreator.js";
@@ -10,7 +10,7 @@ import { fillDataUnit, fillRulesUnit, modelToString } from "./StoreModelCreator.
 describe.skip("Store test", () => {
     let inMemoryModel: InMemoryModel;
     let env = RulesModelEnvironment.getInstance();
-    let freonServer = new ServerCommunication2();
+    let freonServer = new ServerCommunication();
     let lionWebServer = new LionWebRepositoryCommunication();
     const communication = freonServer;
     let originalModel: RulesModel;
