@@ -42,10 +42,17 @@ describe("Freon Model Server", () => {
         expect(response.text).toBe("Freon Model Server");
     });
 
+    test(" create a model", async () => {
+        const response2 = await serv.put(`/putModel?model=${encodeURIComponent("631(&$][:) 12!")}&language=MyLang`);
+        expect(response2.status).toBe(201);
+    });
+
     test(" serves all models", async () => {
         const response2 = await serv.get("/getModelList");
         expect(response2.status).toBe(201);
+        console.log(JSON.stringify(response2.text))
         expect(response2.text).toContain("__TEST__");
+        expect(response2.text).toContain("631(&$][:) 12!");
     });
 
     test(" serves all model units", async () => {

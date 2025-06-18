@@ -67,7 +67,7 @@ router.put("/putModelUnit", async (ctx: Router.IRouterContext) => {
         ctx.status = 412; // Precondition failed
         ctx.message = "Missing query parameter 'unitName' or 'folder'";
     }
-    ctx.body = { massage: (ctx.request as any).body };
+    ctx.body = { message: (ctx.request as any).body };
 });
 
 router.get("/deleteModelUnit", async (ctx: Router.IRouterContext) => {

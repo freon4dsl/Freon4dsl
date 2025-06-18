@@ -257,9 +257,9 @@ export class ServerCommunication implements IServerCommunication {
 
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
-        // put the unit and its interface under the new name
+        // put the unit under the new name
         await this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
-        // remove the old unit and interface
+        // remove the old unit
         await this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
     }
 

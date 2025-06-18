@@ -144,15 +144,15 @@ export class ModelRequests {
      * If `language` is `undefined`  the list of models for `language`
      */
     public static getModelList(ctx: IRouterContext, language?: string) {
-        console.log(`ModelRequest2.getModelList`)
+        console.log(`ModelRequest2.getModelList ${language}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
             const modelnames = (
                 language === undefined ?
                     catalog.models :
-                    catalog.models.filter(m => m?.language === language).map(model => model.name)
-            )
+                    catalog.models.filter(m => m?.language === language)
+            ).map(model => model.name)
             ctx.response.body = modelnames;
         } catch (e) {
             const message = (e instanceof Error? e.message : e.toString())
