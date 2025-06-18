@@ -89,7 +89,7 @@
             helperText = "Unit with this name already exists.";
             return true;
         } else if (!isIdentifier(newName)) {
-            helperText = "Name may contain only characters and numbers, and must start with a character.";
+            helperText = "Name syntx invalid.";
             return true;
         } else if (!(!!typeSelected && typeSelected.length > 0)) {
             helperText = "Please, select the type of the unit below.";
