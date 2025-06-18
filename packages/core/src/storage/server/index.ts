@@ -5,4 +5,4 @@ export * from "./ServerCommunication.js";
 export * from "./LionWebCommunicationWithMPS.js";
 export * from "./LionWebRepositoryCommunication.js";
 export * from "./UsedLanguages.js";
-export * from "./ServerCommunication2.js"
+export * from "./ServerCommunication.js"

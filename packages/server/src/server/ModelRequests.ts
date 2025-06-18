@@ -70,7 +70,7 @@ export class ModelRequests {
             if (!fs.existsSync(path.join(`${storeFolder}`, model.folder))) {
                 fs.mkdirSync(path.join(`${storeFolder}`, model.folder));
             }
-            fs.writeFileSync(path.join(`${storeFolder}`, modelname, `${unit.file}`), JSON.stringify(body, null, 3));
+            fs.writeFileSync(path.join(`${storeFolder}`, model.folder, `${unit.file}`), JSON.stringify(body, null, 3));
         } catch (e) {
             const message = (e instanceof Error? e.message : e.toString())
             console.log(message);
