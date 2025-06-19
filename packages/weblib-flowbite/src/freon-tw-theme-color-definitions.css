@@ -1,14 +1,3 @@
-/*********************************************
- *
- * Theming color definitions for Freon Svelte components.
- *
- * To be used with Tailwind theming. In the tailwind.config
- * four colors palettes should be defined, called light.freon,
- * light.freonAccent, dark.freon, and dark.freonAccent, which
- * define the theme colors.
- *
- *********************************************/
-
 :root {
     --freon-light-base-900: var(--colors-light-freon-900, #6495ed);
     --freon-light-base-800: var(--colors-light-freon-800);
