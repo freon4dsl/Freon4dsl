@@ -200,6 +200,11 @@ export abstract class Box {
         return this.parent.nextLeafRight;
     }
 
+    /**
+     * Get the left (previous) leaf box, but ignore the expression placeholders at the start and end of an expression
+     * and the placeholders arounf binary symbols.
+     * Used when tabbing through an expression.
+     */
     get nextLeafLeftWithoutExpressionPlaceHolders(): Box {
         const boxLeft: Box = this.nextLeafLeft;
         if (!isNullOrUndefined(boxLeft)) {
@@ -213,6 +218,11 @@ export abstract class Box {
         return null
     }
 
+    /**
+     * Get the right (next) leaf box, but ignore the expression placeholders at the start and end of an expression
+     * and the placeholders arounf binary symbols.
+     * Used when tabbing through an expression.
+     */
     get nextLeafRightWithoutExpressionPlaceHolders(): Box {
         const boxRight: Box = this.nextLeafRight;
         if (!isNullOrUndefined(boxRight)) {
