@@ -28,8 +28,15 @@ based on the manner in which the dark mode option is implemented.
 
 # Styling the Flowbite Webapp
 
-The styles used in the Flowbite webapp are, although they are Tailwind based, provide as plain css
+The styles used in the Flowbite webapp are, although they are provided as a Tailwind based css
 in the file 'lib-styles.css'. It can be found in (location). This file must also be included in the main css.
 
 It is not minified, so human-readable, and styles can be changed at will. For a smaller css to be 
 used in your project minify the resulting main.css.
+
+The theme colors can be overridden. For this purpose the file './styles/theme-colors-override.css' is provided.
+As is, it holds the precise definitions that are used as default in core-svelte and weblib-flowbite, but
+when changed the default values will be overridden. Make sure to add this file after all other imports in the
+main css file.
+
+The main css file is './styles/webapp-styles.css'.

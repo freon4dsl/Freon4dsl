@@ -58,7 +58,7 @@
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^2.46.1",
-		"flowbite": "^3.0.0",
+		"flowbite": "3.1.2",
 		"globals": "^15.14.0",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",
@@ -73,7 +73,7 @@
 		"@freon4dsl/core": "1.1.0-beta.3",
 		"@freon4dsl/core-svelte": "1.1.0-beta.3",
 		"flowbite-svelte": "1.7.1",
-		"flowbite-svelte-icons": "^2.1.1",
+		"flowbite-svelte-icons": "2.2.1",
 		"mobx": "^6.13.6",
 		"svelte": "^5.25.3"
 	}

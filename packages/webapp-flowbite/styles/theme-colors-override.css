@@ -1,27 +1,30 @@
 :root {
-    --color-light-accent-50: #FFF9F5;
-    --color-light-accent-100: #FFE8D9;
-    --color-light-accent-150: #FFD0B3;
-    --color-light-accent-200: #FFB88D;
-    --color-light-accent-250: #FF9F66;
-    --color-light-accent-300: #FC7307;
-    --color-light-accent-350: #FC7307;
-    --color-light-accent-400: #DB6506;
-    --color-light-accent-500: #DB6506;
-    --color-light-accent-600: #B95805;
-    --color-light-accent-700: #974A04;
-    --color-light-accent-800: #753D03;
-    --color-light-accent-900: #532F02;
-    --color-light-base-50: #EEF7E4;
-    --color-light-base-100: #D6E9BA;
-    --color-light-base-200: #BFD98F;
-    --color-light-base-300: #A8CA65;
-    --color-light-base-400: #98CA32;
-    --color-light-base-500: #85B42C;
-    --color-light-base-600: #709A27;
-    --color-light-base-700: #5B7F20;
-    --color-light-base-800: #47651A;
-    --color-light-base-900: #334C14;
+    /* Colors for the Flowbite webapp Light mode */
+    --color-light-base-50: #FFF9F5;
+    --color-light-base-100: #FFE8D9;
+    --color-light-base-150: #FFD0B3;
+    --color-light-base-200: #FFB88D;
+    --color-light-base-250: #FF9F66;
+    --color-light-base-300: #FC7307;
+    --color-light-base-350: #FC7307;
+    --color-light-base-400: #DB6506;
+    --color-light-base-500: #DB6506;
+    --color-light-base-600: #B95805;
+    --color-light-base-700: #974A04;
+    --color-light-base-800: #753D03;
+    --color-light-base-900: #532F02;
+    --color-light-accent-50: #EEF7E4;
+    --color-light-accent-100: #D6E9BA;
+    --color-light-accent-200: #BFD98F;
+    --color-light-accent-300: #A8CA65;
+    --color-light-accent-400: #98CA32;
+    --color-light-accent-500: #85B42C;
+    --color-light-accent-600: #709A27;
+    --color-light-accent-700: #5B7F20;
+    --color-light-accent-800: #47651A;
+    --color-light-accent-900: #334C14;
+
+    /* Colors for the Freon editor Light mode */
     --color-light-freon-50: #FFF9F5;
     --color-light-freon-100: #FFE8D9;
     --color-light-freon-150: #FFD0B3;
@@ -42,29 +45,32 @@
     --color-light-freon-dropdown: #5B7F20;
     --color-light-freon-button: #D6E9BA;
 
-    --color-dark-accent-50: #FEFEFA;
-    --color-dark-accent-100: #EEF7E4;
-    --color-dark-accent-150: #D6E9BA;
-    --color-dark-accent-200: #C6E29F;
-    --color-dark-accent-250: #BFD98F;
-    --color-dark-accent-300: #A8CA65;
-    --color-dark-accent-350: #98CA32;
-    --color-dark-accent-400: #85B42C;
-    --color-dark-accent-500: #709A27;
-    --color-dark-accent-600: #5B7F20;
-    --color-dark-accent-700: #47651A;
-    --color-dark-accent-800: #334C14;
-    --color-dark-accent-900: #213409;
-    --color-dark-base-50: #FFE8D9;
-    --color-dark-base-100: #FFD0B3;
-    --color-dark-base-200: #FFB88D;
-    --color-dark-base-300: #FF9F66;
-    --color-dark-base-400: #FC7307;
-    --color-dark-base-500: #DB6506;
-    --color-dark-base-600: #B95805;
-    --color-dark-base-700: #974A04;
-    --color-dark-base-800: #753D03;
-    --color-dark-base-900: #532F02;
+    /* Colors for the Flowbite webapp Dark mode */
+    --color-dark-base-50: #FEFEFA;
+    --color-dark-base-100: #EEF7E4;
+    --color-dark-base-150: #D6E9BA;
+    --color-dark-base-200: #C6E29F;
+    --color-dark-base-250: #BFD98F;
+    --color-dark-base-300: #A8CA65;
+    --color-dark-base-350: #98CA32;
+    --color-dark-base-400: #85B42C;
+    --color-dark-base-500: #709A27;
+    --color-dark-base-600: #5B7F20;
+    --color-dark-base-700: #47651A;
+    --color-dark-base-800: #334C14;
+    --color-dark-base-900: #213409;
+    --color-dark-accent-50: #FFE8D9;
+    --color-dark-accent-100: #FFD0B3;
+    --color-dark-accent-200: #FFB88D;
+    --color-dark-accent-300: #FF9F66;
+    --color-dark-accent-400: #FC7307;
+    --color-dark-accent-500: #DB6506;
+    --color-dark-accent-600: #B95805;
+    --color-dark-accent-700: #974A04;
+    --color-dark-accent-800: #753D03;
+    --color-dark-accent-900: #532F02;
+
+    /* Colors for the Freon editor Dark mode */
     --color-dark-freon-50: #FEFEFA;
     --color-dark-freon-100: #EEF7E4;
     --color-dark-freon-150: #D6E9BA;
@@ -84,4 +90,5 @@
     --color-dark-freon-border: #47651A;
     --color-dark-freon-dropdown: #5B7F20;
     --color-dark-freon-button: #98CA32;
+
 }
