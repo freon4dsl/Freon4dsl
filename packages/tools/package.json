@@ -6,14 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "ip",
-    "geo",
-    "country"
-  ],
-  "author": "Sammy sammy@your_domain (https://your_domain)",
-  "license": "ISC",
   "dependencies": {
+    "tsm": "^2.3.0",
+    "zod": "3.25.36",
+    "@duplojs/zod-to-typescript": "0.4.2",
     "@types/node": "20.12.11",
     "@rushstack/ts-command-line": "4.11.0",
     "lodash": "4.17.21",

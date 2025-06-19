@@ -410,11 +410,6 @@
      */
     onMount(() => {
         LOGGER.log(`onMount for ${box?.id}`);
-        if (!isNullOrUndefined(box)) {
-            box.setFocus = setFocus;
-            box.setCaret = calculateCaret;
-            box.refreshComponent = refresh;
-        }
         refresh('from onMount');
     });
 
@@ -478,23 +473,31 @@
     }
 
     const clientRectangle = (): ClientRectangle => {
-        LOGGER.log(`clientRectangle ${box.id} ${isEditing} input ${isNullOrUndefined(inputElement)} span ${isNullOrUndefined(spanElement)}`)
+        LOGGER.log(`clientRectangle: ${box.id} isEditing ${isEditing} input ${isNullOrUndefined(inputElement)} span ${isNullOrUndefined(spanElement)}`)
 
         if (!isNullOrUndefined(inputElement)) {
-            LOGGER.log(`clientRectangle ${box.id} using input`)
-            return inputElement.getBoundingClientRect()
+            // LOGGER.log(`clientRectangle ${box.id} using input!!!`)
+            const result = inputElement.getBoundingClientRect()
+            // LOGGER.log(`    x: ${result.x} y: ${result.y} w: ${result.width} h: ${result.height} `)
+            return result
         }
         if (!isNullOrUndefined(spanElement)) {
-            LOGGER.log(`clientRectangle ${box.id} using span`)
-            return spanElement.getBoundingClientRect();
+            // LOGGER.log(`clientRectangle ${box.id} using span`)
+            const result = spanElement.getBoundingClientRect();
+            // LOGGER.log(`    x: ${result.x} y: ${result.y} w: ${result.width} h: ${result.height} `)
+            return result
         }
-        LOGGER.log(`clientRectangle ${box.id} is undefined`)
+        // LOGGER.log(`clientRectangle ${box.id} is undefined`)
         return UndefinedRectangle
     }
 
     $effect(() => {
+        LOGGER.log(`"effect box is ${box?.id}`)
         if (!isNullOrUndefined(box)) {
             box.getClientRectangle = clientRectangle
+            box.setCaret = calculateCaret;
+            box.setFocus = setFocus
+            box.refreshComponent = refresh
         }
     })
 
