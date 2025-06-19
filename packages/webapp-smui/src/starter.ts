@@ -1,5 +1,5 @@
 import { mount } from 'svelte'
-import { FreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/webapp-lib"
+import { FreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/weblib-smui"
 import { configureExternals } from "./externals.js"
 import { configureLoggers } from "./loggers.js"
 import { LanguageEnvironment } from "@freon4dsl/samples-education"
