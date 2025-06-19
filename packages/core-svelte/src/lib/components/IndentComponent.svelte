@@ -24,6 +24,8 @@
     $effect(() => {
         // runs after the initial onMount
         box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh(box?.$id);
     });
 
     const refresh = (why?: string): void => {
@@ -33,11 +35,6 @@
         child = box?.child;
         style = `margin-left: ${box?.indent * indentWidth}px;`;
     };
-
-    $effect(() => {
-        // Evaluated and re-evaluated when the box changes.
-        refresh(box?.$id);
-    });
 </script>
 
 {#if !isNullOrUndefined(child)}

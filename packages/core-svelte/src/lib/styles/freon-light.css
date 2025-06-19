@@ -136,12 +136,13 @@
 }
 
 .text-component-input {
-    color: var(--color-light-freon-600);
-    background: var(--color-light-freon-accent-button);
+    color: var(--color-light-freon-accent-darkorange);
+    /*color: var(--freon-light-base-600);*/
+    /*background: var(--freon-light-accent-lightgreen);*/
 }
 
 .text-component-text {
-    color: var(--color-light-freon-600);
+    color: var(--color-light-freon-accent-darkorange);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-text-error {
@@ -153,7 +154,7 @@
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-action-placeholder {
-    color: var(--color-light-freon-150);
+    color: var(--color-light-freon-400);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
@@ -309,9 +310,9 @@
 }
 
 .brackets {
-    color: var(--color-light-freon-200);
+    color: var(--color-light-freon-400);
 }
 
 .drag-handle-icon {
-    fill: var(--color-light-freon-250);
+    fill: var(--color-light-freon-400);
 }

@@ -26,6 +26,8 @@ export class AstActionExecutor {
             LOGGER.log(`redo called: '${FreUndoManager.getInstance().nextRedoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'`);
             if (!!unitInEditor) {
                 FreUndoManager.getInstance().executeRedo(unitInEditor);
+                // TODO Get cursor back in editor, works for some cases
+                this.editor.selectionChanged()
             }
         }
     }
@@ -36,6 +38,8 @@ export class AstActionExecutor {
             LOGGER.log(`undo called: '${FreUndoManager.getInstance().nextUndoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'`);
             if (!!unitInEditor) {
                 FreUndoManager.getInstance().executeUndo(unitInEditor);
+                // TODO Get cursor back in editor, works for some cases
+                this.editor.selectionChanged()
             }
         }
     }

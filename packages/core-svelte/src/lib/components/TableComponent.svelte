@@ -36,12 +36,27 @@
     let cssClass: string = $state('');
     let htmlElement: HTMLElement;
     let myMetaType: DragAndDropType;
+    
     $effect(() => {
         // console.log(`EFFECT ${box.conceptName} : ${box.node.freLanguageConcept()}`)
         myMetaType = {
             type: box.conceptName,
             isRef: FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.propertyKind === 'reference'
         }
+
+        box.refreshComponent = refresh;
+        box.setFocus = setFocus;
+        // We also set the refresh to each child that is a TableRowBox,
+        // because TableRowBoxes do not have an equivalent Svelte component.
+        for (const child of box.children) {
+            if (isTableRowBox(child)) {
+                child.refreshComponent = refresh;
+            } else if (isElementBox(child) && isTableRowBox(child.content)) {
+                child.refreshComponent = refresh;
+            }
+        }
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh new box: ' + box?.id);
     });
 
     const refresh = (why?: string): void => {
@@ -78,31 +93,6 @@
         });
         return _cells;
     }
-
-    function init() {
-        box.refreshComponent = refresh;
-        box.setFocus = setFocus;
-        // We also set the refresh to each child that is a TableRowBox,
-        // because TableRowBoxes do not have an equivalent Svelte component.
-        for (const child of box.children) {
-            if (isTableRowBox(child)) {
-                child.refreshComponent = refresh;
-            } else if (isElementBox(child) && isTableRowBox(child.content)) {
-                child.refreshComponent = refresh;
-            }
-        }
-    }
-
-    $effect(() => {
-        // console.log('effect init')
-        init();
-    });
-
-    $effect(() => {
-        // console.log('effect refresh')
-        // Evaluated and re-evaluated when the box changes.
-        refresh('Refresh new box: ' + box?.id);
-    });
 
     const drop = (details: TableDetails) => {
         const data: ListElementInfo | null = draggedElem.value;

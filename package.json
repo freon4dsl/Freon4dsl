@@ -5,6 +5,7 @@
     "rebuild": "npm run clean && npm install && npm run build && npm run test",
     "rebuild-dev": "npm run clean && npm install && npm run build-dev",
     "clean": "rm -f package-lock.json && rm -rf node_modules/ && npm run clean --workspaces --if-present",
+    "clean-all": "npm run clean-all --workspaces --if-present",
     "start": "npm run start --stream --parallel",
     "build": "npm run build --workspaces --if-present",
     "build-dev": "npm run build-dev --workspaces --if-present",

@@ -39,8 +39,6 @@
 
     onMount(() => {
         value = box.getBoolean();
-        box.setFocus = setFocus;
-        box.refreshComponent = refresh;
     });
 
     $effect(() => {
