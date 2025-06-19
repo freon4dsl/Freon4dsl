@@ -24,8 +24,8 @@ describe.skip("Store test", () => {
         let unit1
         let unit2
         originalModel = (await inMemoryModel.createModel("serverModel")) as RulesModel;
-        unit1 = (await inMemoryModel.createUnit("dataUnit1", "Data")) as Data;
-        unit2 = (await inMemoryModel.createUnit("rulesUnit1", "Rules")) as Rules;
+        unit1 = (await inMemoryModel.createUnit("data Unit1", "Data")) as Data;
+        unit2 = (await inMemoryModel.createUnit("rules Unit1", "Rules")) as Rules;
         AST.change(() => {
             fillDataUnit(unit1);
             fillRulesUnit(unit2);
@@ -37,24 +37,32 @@ describe.skip("Store test", () => {
     afterEach(async () => {
         await inMemoryModel.deleteModel();
     });
+    
+    it("create new model", async () => {
+        const newModel = (await inMemoryModel.createModel(("New Model")) as RulesModel)
+        const retrievedModel = (await inMemoryModel.openModel("New Model")) as RulesModel;
+        expect(retrievedModel !== undefined).toBeTruthy()
+        expect(retrievedModel.freLanguageConcept(), `Model ${retrievedModel.freLanguageConcept()}`).toBe("RulesModel");
+        expect(retrievedModel.name, `Model ${retrievedModel.name}`).toBe("New Model");
+    })
 
     it("open existing model", async () => {
         const retrievedModel = (await inMemoryModel.openModel("serverModel")) as RulesModel;
         expect(retrievedModel.getUnits().length === 2);
         expect(retrievedModel.freLanguageConcept(), `Model ${retrievedModel.freLanguageConcept()}`).toBe("RulesModel");
         expect(retrievedModel.name, `Model ${retrievedModel.name}`).toBe("serverModel");
-        expect(retrievedModel.getUnits().some((unit) => unit.name === "dataUnit1"), `Unit ${retrievedModel?.getUnits()?.map(u => u.name).join(", ")}`).toBeTruthy();
-        expect(retrievedModel.getUnits().some((unit) => unit.name === "rulesUnit1"), `Unit ${retrievedModel?.getUnits()?.map(u => u.name).join(", ")}`).toBeTruthy();
+        expect(retrievedModel.getUnits().some((unit) => unit.name === "data Unit1"), `Unit ${retrievedModel?.getUnits()?.map(u => u.name).join(", ")}`).toBeTruthy();
+        expect(retrievedModel.getUnits().some((unit) => unit.name === "rules Unit1"), `Unit ${retrievedModel?.getUnits()?.map(u => u.name).join(", ")}`).toBeTruthy();
         expect(
             retrievedModel
                 .getUnits()
-                .find((unit) => unit.name === "dataUnit1")
+                .find((unit) => unit.name === "data Unit1")
                 .freLanguageConcept() === "Data",
         );
         expect(
             retrievedModel
                 .getUnits()
-                .find((unit) => unit.name === "rulesUnit1")
+                .find((unit) => unit.name === "rules Unit1")
                 .freLanguageConcept() === "Rules",
         );
 
@@ -64,9 +72,9 @@ describe.skip("Store test", () => {
     });
 
     test("delete unit model", async () => {
-        const unit1 = await inMemoryModel.getUnitByName("dataUnit1");
+        const unit1 = await inMemoryModel.getUnitByName("data Unit1");
         expect(unit1).toBeDefined();
-        const unit2 = await inMemoryModel.getUnitByName("rulesUnit1");
+        const unit2 = await inMemoryModel.getUnitByName("rules Unit1");
         expect(unit2).toBeDefined();
         expect(inMemoryModel.model.getUnits().length).toBe(2);
         await inMemoryModel.deleteUnit(unit1);
@@ -78,15 +86,16 @@ describe.skip("Store test", () => {
     })
     
     test("rename  unit", async () => {
-        const unit1 = await inMemoryModel.getUnitByName("dataUnit1");
+        const unit1 = await inMemoryModel.getUnitByName("data Unit1");
         expect(unit1).toBeDefined();
-        unit1.name = "dataUnit1-changed"
-        await freonServer.renameModelUnit(inMemoryModel.model.name, "dataUnit1", "dataUnit1 has <changed>@#$% !", unit1)
+        unit1.name = "data Unit1 has <changed>@#$% !"
+        await freonServer.renameModelUnit(inMemoryModel.model.name, "data Unit1", "data Unit1 has <changed>@#$% !", unit1)
 
         const newInMemoryModel = new InMemoryModel(env, communication);
         const retrievedModel = (await newInMemoryModel.openModel("serverModel")) as RulesModel;
         expect(retrievedModel.getUnits().length === 2);
-        expect(retrievedModel.getUnits().map(u => u.name).includes("dataUnit1 has <changed>@#$% !"));
-        expect(retrievedModel.getUnits().map(u => u.name).includes("rulesUnit1"));
+        expect(!retrievedModel.getUnits().map(u => u.name).includes("data Unit1"));
+        expect(retrievedModel.getUnits().map(u => u.name).includes("data Unit1 has <changed>@#$% !"));
+        expect(retrievedModel.getUnits().map(u => u.name).includes("rules Unit1"));
     })
 });
