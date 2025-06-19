@@ -151,7 +151,7 @@ export class ModelRequests {
             const modelnames = (
                 language === undefined ?
                     catalog.models :
-                    catalog.models.filter(m => m?.language === language)
+                    catalog.models.filter(m => m?.language === language  || m?.language === "")
             ).map(model => model.name)
             ctx.response.body = modelnames;
         } catch (e) {

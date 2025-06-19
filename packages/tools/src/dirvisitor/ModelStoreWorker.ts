@@ -22,7 +22,7 @@ export class ModelStoreWorker implements DirectoryWorker {
         console.log(`Visit dir ${dir}` )
         this.currentModel = {
             folder: this.shortName(dir),
-            language: "unknow",
+            language: "",
             name: this.shortName(dir),
             units: [],
             version: "1"

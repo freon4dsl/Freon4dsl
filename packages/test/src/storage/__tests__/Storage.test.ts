@@ -5,7 +5,7 @@ import { Data, Rules, RulesModel } from "../language/gen/index.js";
 import { fillDataUnit, fillRulesUnit, modelToString } from "./StoreModelCreator.js";
 
 /**
- * For these test to run, a server should be up and running
+ * For these test to run, a server should be up and running 
  */
 describe.skip("Store test", () => {
     let inMemoryModel: InMemoryModel;
