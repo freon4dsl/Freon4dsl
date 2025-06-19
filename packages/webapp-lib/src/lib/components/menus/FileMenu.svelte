@@ -9,7 +9,8 @@
 	<Menu bind:this={menu}
 		  anchor={false}
 		  bind:anchorElement={anchor}
-		  anchorCorner="BOTTOM_LEFT"
+		  anchorCorner="BOTTOM_LEFT" 
+		  class="app-menu"
 	>
 		<List>
 			{#each menuItems as item (item.id)}

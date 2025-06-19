@@ -72,7 +72,7 @@
 
 .drag-handle {
     cursor: move;
-    z-index: 10;
+    z-index: 5;
 }
 
 .layout-component {

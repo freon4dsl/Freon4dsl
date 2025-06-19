@@ -15,11 +15,8 @@
     let viewBoxHeight: number = $state(0);
     let css: string = $state('');
 
-    onMount(() => {
-        box.refreshComponent = refresh;
-    });
-
     $effect(() => {
+        // runs after the initial onMount
         box.refreshComponent = refresh;
     });
 

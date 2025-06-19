@@ -137,12 +137,14 @@
 }
 
 .text-component-input {
-    color: var(--freon-dark-base-600);
-    background: var(--freon-dark-accent-green);
+    /*color: var(--freon-dark-base-600);*/
+    color: var(--freon-dark-accent-orange);
+    /*background: var(--freon-dark-accent-green);*/
+    background: var(--freon-dark-base-600);
 }
 
 .text-component-text {
-    color: var(--freon-dark-base-600);
+    color: var(--freon-dark-accent-orange);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-text-error {
@@ -150,11 +152,11 @@
 }
 
 .text-component-placeholder {
-    color: var(--freon-dark-base-600);
+    color: var(--freon-dark-base-350);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-action-placeholder {
-    color: var(--freon-dark-base-150);
+    color: var(--freon-dark-base-350);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
@@ -295,10 +297,11 @@
 
 .reference-button {
     background-color: transparent;
+    color: var(--freon-dark-base-300)
 }
 
 .text-dropdown-component .text-component-text {
-    color: var(--freon-dark-accent-darkgreen);
+    color: var(--freon-dark-accent-green);
 }
 
 .text-dropdown-component .text-component-input {
@@ -306,7 +309,7 @@
 }
 
 .brackets {
-    color: var(--freon-dark-base-200);
+    color: var(--freon-dark-base-400);
 }
 
 .drag-handle-icon {

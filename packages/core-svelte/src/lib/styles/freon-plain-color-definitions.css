@@ -16,10 +16,10 @@
     --freon-light-base-350: #A0A0A0; /* Soft, clean light gray */
     --freon-light-base-300: #C0C0C0; /* Pale, elegant gray */
     --freon-light-base-250: #E0E0E0; /* Near-white subtle gray */
-    --freon-dark-base-200: #FAEBD7; /* Antique White */
-    --freon-dark-base-150: #FFFAF0; /* Floral White */
-    --freon-dark-base-100: #F4F4F4; /* Light Smoke */
-    --freon-dark-base-50: #FFFFFF;  /* Pure White */
+    --freon-light-base-200: #FAEBD7; /* Antique White */
+    --freon-light-base-150: #FFFAF0; /* Floral White */
+    --freon-light-base-100: #F4F4F4; /* Light Smoke */
+    --freon-light-base-50: #FFFFFF;  /* Pure White */
 
     --freon-light-accent-red: #FF4C4C;
     --freon-light-accent-amber: #FFD0B3;
@@ -27,9 +27,10 @@
     --freon-light-border-green: #47651A;
     --freon-light-accent-darkgreen: #5B7F20;
     --freon-light-accent-green: #98CA32;
-}
+    --freon-light-accent-lightgreen: rgba(152, 202, 50, 0.27);
+/*}*/
 
-.dark {
+/*.dark {*/
     --freon-dark-base-900: #1F1F1F; /* Near-black, deep charcoal gray */
     --freon-dark-base-800: #2D2D2D; /* Very dark neutral gray */
     --freon-dark-base-700: #444444; /* Balanced deep gray */
@@ -46,6 +47,7 @@
 
     --freon-dark-accent-red: #FF4C4C;
     --freon-dark-accent-amber: #FFD0B3;
+    --freon-dark-accent-orange: orange;
     --freon-dark-accent-darkorange: #DB6506;
     --freon-dark-border-green: #47651A;
     --freon-dark-accent-darkgreen: #5B7F20;
