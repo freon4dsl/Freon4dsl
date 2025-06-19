@@ -101,20 +101,24 @@
     const iconCls: string = "w-4 h-4 ";
 </script>
 
+
+
 <!-- buttons for open and new model -->
-<div class="flex items-center">
+<div class="flex items-center justify-between">
     <ButtonGroup class="*:!ring-light-base-700 ">
-        <Button class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
+        <Button id="open-model-button" class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class={iconCls}/>
         </Button>
-        <Tooltip class={tooltipClass} placement="bottom">Open existing model</Tooltip>
-        <Button class={buttonCls} name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
+        <Button id="create-model-button" class={buttonCls} name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
             <FolderPlusSolid class={iconCls}/>
         </Button>
-        <Tooltip class={tooltipClass} placement="bottom">Create new model</Tooltip>
     </ButtonGroup>
     <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-dark-base-50"/>
 </div>
+<!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
+<Tooltip triggeredBy="#open-model-button" class={tooltipClass} placement="bottom">Open existing model</Tooltip>
+<Tooltip triggeredBy="#create-model-button" class={tooltipClass} placement="bottom">Create new model</Tooltip>
+
 
 <!-- buttons that address the current model -->
 <div class="flex justify-between items-center p-3 mb-3 bg-light-base-500">
@@ -122,19 +126,20 @@
         {editorInfo.modelName}
     </span>
     <ButtonGroup class="*:!ring-light-base-700 ">
-        <Button disabled class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
+        <Button id="rename-model-button" disabled class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
             <PenSolid class="{iconCls} me-2 "/>
         </Button>
-        <Tooltip class={tooltipClass} placement="bottom">Rename model</Tooltip>
-        <Button class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
+        <Button id="delete-model-button" class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
             <TrashBinSolid class="{iconCls} me-2"/>
         </Button>
-        <Tooltip class={tooltipClass} placement="bottom">Delete model</Tooltip>
-        <Button class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
+        <Button id="import-unit-button" class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
             <ArrowDownToBracketOutline class="{iconCls} me-2"/>
         </Button>
-        <Tooltip class={tooltipClass} placement="bottom">Import Unit(s)...</Tooltip>
     </ButtonGroup>
+    <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
+    <Tooltip triggeredBy="#rename-model-button" class={tooltipClass} placement="bottom">Rename model</Tooltip>
+    <Tooltip triggeredBy="#delete-model-button" class={tooltipClass} placement="bottom">Delete model</Tooltip>
+    <Tooltip triggeredBy="#import-unit-button" class={tooltipClass} placement="bottom">Import Unit(s)...</Tooltip>
 </div>
 
 <!-- buttons for the model's units -->

@@ -79,6 +79,9 @@
 			event.returnValue = ''; // older browsers may not support this method and a legacy method is used in which the event handler must return a string
 		}
 	}
+
+	const normal_tab_style: string = "transition duration-200 focus:outline-none border border-transparent opacity-70";
+	const active_tab_style: string = "border border-light-base-900 dark:border-dark-base-900 opacity-100";
 </script>
 
 <svelte:window onbeforeunload={onBeforeUnload} />
@@ -90,8 +93,9 @@
 	<div class="w-full pl-2 pr-2 mx-auto dark:bg-dark-base-800 bg-light-base-100">
 		<div class="flex space-x-1 mt-1" role="tablist">
 			{#each editorInfo.unitsInTabs as unitInfo, index}
-				<div class="relative tab-button dark:bg-dark-base-500 bg-light-base-200 dark:text-dark-base-50 text-light-base-900
-					{editorInfo.currentOpenTab === index ? 'opacity-100' : 'opacity-70'}">
+				<div class="relative dark:bg-dark-base-500 bg-light-base-200 dark:text-dark-base-50 text-light-base-900 p-1 text-sm rounded-t-lg font-medium
+					flex flex-wrap items-center
+					{editorInfo.currentOpenTab === index ? active_tab_style : normal_tab_style}">
 					<button
 						class:active={editorInfo.currentOpenTab === index}
 						onclick={() => openTab(index)}
@@ -170,16 +174,3 @@
 <ViewDialog />
 <AboutDialog />
 <ErrorMessage />
-
-<!--todo add these styles differently -->
-<!--<style>-->
-<!--    @reference "../../app.css";-->
-<!--    .tab-button {-->
-<!--        @apply px-2 py-2 text-sm font-medium transition duration-200 rounded-t-lg focus:outline-none-->
-<!--				border border-transparent flex flex-wrap items-center;-->
-<!--    }-->
-
-<!--    .tab-button.active {-->
-<!--        @apply bg-light-base-50 dark:border-dark-base-900 text-light-base-900 dark:text-dark-base-100 border border-light-base-300 border-b-0 ;-->
-<!--    }-->
-<!--</style>-->

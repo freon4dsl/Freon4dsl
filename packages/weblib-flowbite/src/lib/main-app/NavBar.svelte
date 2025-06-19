@@ -38,31 +38,27 @@
 
 	<ButtonGroup class="*:!ring-dark-base-900 {colorCls}">
       <!--  Dark mode button and tooltip      -->
-      <DarkMode class="{buttonCls} {colorCls} rounded-none focus-within:ring-2 focus-within:z-10 px-4
+      <DarkMode id="dark-mode-button" class="{buttonCls} {colorCls} rounded-none focus-within:ring-2 focus-within:z-10 px-4
 		    border [&:not(:first-child)]:-ms-px first:rounded-s-lg last:rounded-e-lg" />
-      <Tooltip placement="bottom" class="{tooltipClass}">Dark/Light Mode</Tooltip>
 
 		<!--  Github button and tooltip      -->
-		<Button class="{buttonCls} {colorCls} "
+		<Button id="github-button" class="{buttonCls} {colorCls} "
 						tag="View on GitHub"
 						href="https://github.com/freon4dsl/Freon4dsl"
 						target="_blank"
 		>
 			<GitHub />
 		</Button>
-		<Tooltip placement="bottom" class="{tooltipClass}">View on GitHub</Tooltip>
 
 		<!--  Documentation button and tooltip      -->
-		<Button class="{buttonCls} {colorCls} " tag="View Documentation" href="https://www.freon4dsl.dev/" target="_blank">
+		<Button id="docu-button" class="{buttonCls} {colorCls} " tag="View Documentation" href="https://www.freon4dsl.dev/" target="_blank">
 			<AnnotationOutline class="{iconCls}" />
 		</Button>
-		<Tooltip placement="bottom" class="{tooltipClass}">Go to Documentation</Tooltip>
 
 		<!--  About button and tooltip      -->
-		<Button class="{buttonCls} {colorCls} " name="About" onclick={() => (dialogs.aboutDialogVisible = true)}>
+		<Button id="about-button" class="{buttonCls} {colorCls} " name="About" onclick={() => (dialogs.aboutDialogVisible = true)}>
 			<QuestionCircleOutline class="{iconCls}" />
 		</Button>
-		<Tooltip placement="bottom" class="{tooltipClass}">About</Tooltip>
 
 <!--		&lt;!&ndash;  Model panel button and tooltip      &ndash;&gt;-->
 <!--		<Button class="{buttonCls} {colorCls} " onclick={() => (drawerHidden.value = false)}>-->
@@ -70,6 +66,11 @@
 <!--		</Button>-->
 <!--		<Tooltip placement="bottom" class="{tooltipClass}">Show Model Info</Tooltip>-->
 	</ButtonGroup>
+	<!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
+	<Tooltip triggeredBy="#dark-mode-button" placement="bottom" class="{tooltipClass}">Dark/Light Mode</Tooltip>
+	<Tooltip triggeredBy="#github-button" placement="bottom" class="{tooltipClass}">View on GitHub</Tooltip>
+	<Tooltip triggeredBy="#docu-button" placement="bottom" class="{tooltipClass}">Go to Documentation</Tooltip>
+	<Tooltip triggeredBy="#about-button" placement="bottom" class="{tooltipClass}">About</Tooltip>
 </Navbar>
 <!--  end::navbar   -->
 
