@@ -1,22 +1,6 @@
 @import 'tailwindcss';
-@import './theme-colors.css';
 @import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon.css';
 @import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-light.css';
 @import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-tw-dark.css';
-@import '../../../node_modules/@freon4dsl/weblib-flowbite/src/lib/lib-styles.css';
-
-@custom-variant dark (&:where(.dark, .dark *));
-
-@layer base {
-    /* disable chrome cancel button */
-    input[type="search"]::-webkit-search-cancel-button {
-        display: none;
-    }
-}
-
-@layer components {
-    /* overwrite runeswebkit.css using !important */
-    .dark_bg_theme {
-        @apply dark:bg-stone-900;
-    }
-}
+@import '../../../node_modules/@freon4dsl/weblib-flowbite/dist/styles/lib-styles.css';
+@import './theme-colors-override.css';

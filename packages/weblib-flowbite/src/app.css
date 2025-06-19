@@ -1,9 +1,8 @@
 @import 'tailwindcss';
 @import './theme-colors.css';
-@import './freon-tw-theme-color-definitions.css';
 @import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon.css';
-@import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-tw-dark.css';
 @import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-light.css';
+@import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-tw-dark.css';
 
 @source "../node_modules/flowbite-svelte/dist";
 @source "../node_modules/flowbite-svelte-icons/dist";

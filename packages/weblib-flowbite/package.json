@@ -16,7 +16,7 @@
 	"scripts": {
 		"clean": "rm -rf node_modules/",
 		"dev": "vite dev",
-		"build": "vite build && npm run prepack && publint",
+		"build": "npm run styles && vite build && npm run prepack && publint",
 		"build-dev": "vite build && npm run prepack",
 		"build-release": "npm run build",
 		"preview": "vite preview",
@@ -35,7 +35,7 @@
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
-		"styles": "cross-env NODE_ENV=production npx @tailwindcss/cli -i src/lib-only.css -o src/lib/lib-styles.css"
+		"styles": "cross-env NODE_ENV=production npx @tailwindcss/cli -i src/lib-only.css -o src/lib/styles/lib-styles.css --minify"
 	},
 	"exports": {
 		".": {
