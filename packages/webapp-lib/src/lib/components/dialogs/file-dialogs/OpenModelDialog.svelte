@@ -127,7 +127,7 @@
             return false; // one of the existing models is selected, this is ok => not invalid
         } else {
             if (!isIdentifier(newName)) {
-                helperText = "Name not valid.";
+                helperText = "Name syntax is not valid.";
                 return true;
             } else {
                 return false;

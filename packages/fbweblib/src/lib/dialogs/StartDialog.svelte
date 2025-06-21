@@ -18,7 +18,7 @@
     let modelToOpen = $state('');
 
     function modelNameValid() {
-        errorText = checkName(newName, false);
+        errorText = checkName(newName);
     }
 
     function resetVariables() {
@@ -39,7 +39,7 @@
 
     async function newModel() {
         // console.log('newModel": ' + newName)
-        if (newName.length > 0 && checkName(newName, false).length === 0) {
+        if (newName.length > 0 && checkName(newName).length === 0) {
             await WebappConfigurator.getInstance().newModel(newName);
             initializing.value = false;
         } else {

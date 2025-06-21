@@ -36,7 +36,7 @@ describe("Testing Parser", () => {
 
             // unparse the first unit to a string and write it to File
             const unparsed = unparser.writeToString(originalModel.models[0])
-            console.log(unparsed)
+            // console.log(unparsed)
             fileHandler.stringToFile(path, unparsed);
             // read it back in, in a completely new model
 

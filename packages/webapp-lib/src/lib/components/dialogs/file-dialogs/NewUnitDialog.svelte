@@ -89,7 +89,7 @@
             helperText = "Unit with this name already exists.";
             return true;
         } else if (!isIdentifier(newName)) {
-            helperText = "Name syntx invalid.";
+            helperText = "Name syntax invalid.";
             return true;
         } else if (!(!!typeSelected && typeSelected.length > 0)) {
             helperText = "Please, select the type of the unit below.";

@@ -65,13 +65,11 @@ export class FreLionwebSerializer implements FreSerializer {
         if (!isLionWebJsonChunk(jsonObject)) {
             LOGGER.error(`Cannot read json: jsonObject is not a LionWeb chunk:`);
         }
-        // LOGGER.log(`jsonObject ${JSON.stringify(jsonObject)}`);
         const chunk = jsonObject as LionWebJsonChunk;
         const serVersion = chunk.serializationFormatVersion;
         LOGGER.log("SerializationFormatVersion: " + serVersion);
         // First read all nodes without children, and store them in a map.
         const nodes: LionWebJsonNode[] = chunk.nodes;
-        // Not using AST.change(...) here, because we don't need an undo for this code
         AST.change( () => {
             for (const object of nodes) {
                 // LOGGER.log("node: " + object.concept.key + "     with id " + object.id)

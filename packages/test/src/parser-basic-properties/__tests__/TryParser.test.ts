@@ -50,7 +50,7 @@ describe("Parser properties of type", () => {
             "LimitedTest",
             new TestParserModel(),
         ) as LimitedTest;
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
     });
 

@@ -1,17 +1,12 @@
 import { AST, FreModelSerializer, FreError, FreModelUnit, ast2string } from "@freon4dsl/core";
-import { DemoEnvironment } from "../../demo/config/gen/DemoEnvironment";
-import { LanguageEnvironment } from "../index";
 import { XXunit, XX } from "../language/gen/index.js";
 import { XXEnvironment } from "../config/gen/XXEnvironment.js";
 import { FileHandler } from "../../utils/FileHandler.js";
 import { describe, test, expect, beforeEach } from "vitest";
 
-const writer = XXEnvironment.getInstance().writer;
 const reader = XXEnvironment.getInstance().reader;
 const validator = XXEnvironment.getInstance().validator;
-const serial: FreModelSerializer = new FreModelSerializer();
 const handler = new FileHandler();
-const metatype: string = "XXunit";
 const testdir = "src/typer-test8/__inputs__/";
 
 // TODO test the PlusExp and introduce some NamedTypes
@@ -34,7 +29,6 @@ describe("Testing Typer on", () => {
             expect(unit1).not.toBeNull();
             if (!!unit1) {
                 const errors: FreError[] = validator.validate(unit1);
-                console.log("ERRORS: " + errors.map(e => e.message).join("\n"));
                 expect(errors.length).toBe(6);
                 expect(errors.find((e) => e.message === "Type 'NUMBER' of [456] is not equal to `STRING`")).toBeTruthy();
                 expect(errors.find((e) => e.message === "Type 'NUMBER' of [456] is not equal to `BOOLEAN`")).toBeTruthy();
@@ -64,8 +58,6 @@ describe("Testing Typer on", () => {
             if (!!unit1) {
                 const errors: FreError[] = validator.validate(unit1);
                 expect(errors.length).toBe(6);
-                console.log(ast2string(unit1, "    "))
-                console.log(errors.map(e => e.message).join("\n"))
                 expect(
                     errors.find((e) => e.message === "Type 'NUMBER' of [12] is not equal to `kWh` < `NUMBER` >"),
                 ).toBeTruthy();
@@ -164,7 +156,6 @@ describe("Testing Typer on", () => {
             expect(unit1).not.toBeNull();
             if (!!unit1) {
                 const errors: FreError[] = validator.validate(unit1);
-                console.log(errors.map(e => e.message).join("\n"))
                 expect(
                     errors.find((e) => e.message.endsWith("of [`Set` { true, true, false }] is not equal to `Set` < `NUMBER` >")),
                 ).toBeTruthy();
@@ -197,8 +188,6 @@ describe("Testing Typer on", () => {
             expect(unit1).not.toBeNull();
             if (!!unit1) {
                 const errors: FreError[] = validator.validate(unit1);
-                console.log(errors.map(e => e.message).join("\n"));
-
                 expect(errors.length).toBe(0);
             }
         })

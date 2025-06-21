@@ -30,8 +30,7 @@ export async function openStartDialog() {
  * @param newName
  * @param strict
  */
-export function checkName(newName: string, strict: boolean): string {
-    const initialErrorText: string = '';
+export function checkName(newName: string): string {
     if (!isIdentifier(newName)) {
         return `${newName} is not a valid name`
     } else {

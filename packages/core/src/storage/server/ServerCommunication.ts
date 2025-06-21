@@ -11,7 +11,8 @@ const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 export type ParameterType = {
     model?: string,
     unit?: string,
-    language?: string
+    language?: string,
+    version?: string
 }
 
 export class ServerCommunication implements IServerCommunication {
@@ -65,6 +66,10 @@ export class ServerCommunication implements IServerCommunication {
             result += `${(first?"":"&")}language=${encodeURIComponent(params.language)}`
             first = false
         }
+        if (params.version !== undefined) {
+            result += `${(first?"":"&")}version=${encodeURIComponent(params.version)}`
+            first = false
+        }
         if (result.length > 0) {
             return "?" + result;
         } else {
@@ -95,13 +100,12 @@ export class ServerCommunication implements IServerCommunication {
      * @param unit
      */
     async putModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<void> {
-        LOGGER.log(`ServerCommunication.2putModelUnit ${modelName}/${unitId.name}`);
+        LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitId.name}`);
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
             let output = {
                 serializationFormatVersion: "2023.1",
                 languages: collectUsedLanguages(model),
-                // "__version": "1234abcdef",
                 nodes: model,
             };
             await this.putWithTimeout(`putModelUnit`, output, {model:modelName,unit: unitId.name});

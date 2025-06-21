@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, test } from "vitest";
-import { AST, FreLogger, InMemoryModel, LionWebRepositoryCommunication, ServerCommunication } from "@freon4dsl/core";
+import { AST, InMemoryModel, ServerCommunication } from "@freon4dsl/core";
 import { RulesModelEnvironment } from "../config/gen/RulesModelEnvironment.js";
 import { Data, Rules, RulesModel } from "../language/gen/index.js";
 import { fillDataUnit, fillRulesUnit, modelToString } from "./StoreModelCreator.js";
@@ -11,21 +11,15 @@ describe.skip("Store test", () => {
     let inMemoryModel: InMemoryModel;
     let env = RulesModelEnvironment.getInstance();
     let freonServer = new ServerCommunication();
-    let lionWebServer = new LionWebRepositoryCommunication();
     const communication = freonServer;
     let originalModel: RulesModel;
 
     beforeEach(async () => {
-        // FreLogger.unmute("ServerCommunication2")
-        // FreLogger.unmute("InMemoryModel")
         inMemoryModel = new InMemoryModel(env, communication);
         // Create a model in the server
-
-        let unit1
-        let unit2
         originalModel = (await inMemoryModel.createModel("serverModel")) as RulesModel;
-        unit1 = (await inMemoryModel.createUnit("data Unit1", "Data")) as Data;
-        unit2 = (await inMemoryModel.createUnit("rules Unit1", "Rules")) as Rules;
+        let unit1 = (await inMemoryModel.createUnit("data Unit1", "Data")) as Data;
+        let unit2 = (await inMemoryModel.createUnit("rules Unit1", "Rules")) as Rules;
         AST.change(() => {
             fillDataUnit(unit1);
             fillRulesUnit(unit2);
