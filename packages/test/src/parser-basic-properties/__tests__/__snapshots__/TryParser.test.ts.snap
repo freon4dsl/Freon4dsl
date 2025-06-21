@@ -520,8 +520,6 @@ LimitedTest {
     "$typename": "LimitedOptional",
     "_FRE_visMulti": [],
     "_FRE_visMultiWithExtra": [],
-    "_FRE_visWithExtra": null,
-    "_FRE_visibility": null,
     "parseLocation": FreParseLocation {
       "column": 17,
       "line": 18,
