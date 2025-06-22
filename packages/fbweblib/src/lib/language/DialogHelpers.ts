@@ -28,7 +28,6 @@ export async function openStartDialog() {
  * Returns an error message when 'newName' does not adhere to certain restrictions.
  * Returns an empty string if everything is alright.
  * @param newName
- * @param strict
  */
 export function checkName(newName: string): string {
     if (!isIdentifier(newName)) {

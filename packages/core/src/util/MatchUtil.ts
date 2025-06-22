@@ -3,6 +3,9 @@ import { isNullOrUndefined } from "./FreUtils.js";
 
 export function isIdentifier(str: string): boolean {
     if (!isNullOrUndefined(str)) {
+        // We choose not to use 'any' or 'any but' in the regexp, because then all kinds of characters (with accents
+        // and from other keyboards) also become possible, and we can't oversee what consequences this has. Therefore,
+        // we prefer a positive statement of what is possible.
         const match = str.match(/^[0-9,a-z,A-Z~!@\#\$%^&*\()_\-+={}[\]|\\:;"'<>?\,\./][0-9,a-z,A-Z~!@\#\$%^&*\()_\-+={}[\]|\\:;"'<>?\,\./ ]*$/)
         return match !== null && match.length > 0
     } else {
