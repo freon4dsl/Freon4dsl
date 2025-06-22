@@ -1,2 +1,2 @@
-PrimsTest testName
+PrimsTest `testName`
 	 !! 45 !! 1345 !! 890

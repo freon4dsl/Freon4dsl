@@ -31,7 +31,7 @@ export class LimitedRule extends GrammarRule {
                 } else {
                     result += "\n\t| ";
                 }
-                result += `\'${value}\'`;
+                result += `'\\\`${value}\\\`'`;
             }
         } else {
             // make a 'normal' reference rule
@@ -52,13 +52,17 @@ export class LimitedRule extends GrammarRule {
                 }\n`;
             }
             // complete the switch statement
-            switchStat = `switch (children.toArray()[0]) {
+            switchStat = `switch (name) {
                 ${switchStat} default: result = undefined;
             }`;
             return `
                 ${ParserGenUtil.makeComment(this.toGrammar())}
                 public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${Names.FreNodeReference}<${Names.classifier(this.concept)}> {
+                    // console.log('5 transform${this.ruleName} called: ' + children.toString());
                     let result: ${Names.FreNodeReference}<${Names.classifier(this.concept)}> | undefined;
+                    const child = children.toArray()[0]
+                    // todo make sure we remove only the outer quotes
+                    const name = child.replace(/\`/g, "") ;
                     ${switchStat}
                     if (result !== undefined) {
                         result.parseLocation = this.${mainAnalyserName}.location(sentence, nodeInfo.node);

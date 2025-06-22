@@ -1,4 +1,4 @@
-PrimsWithKeywordTest myName {
+PrimsWithKeywordTest `myName` {
 	primWith
 	    PrimWithKeywordProj <BOOL>
         PrimWithKeywordProj

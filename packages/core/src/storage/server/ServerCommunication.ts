@@ -1,4 +1,5 @@
 import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
+import { FreLanguage } from "../../language/index.js"
 import { FreLogger } from "../../logging/index.js";
 import { isIdentifier } from "../../util/index.js";
 import { collectUsedLanguages, FreLionwebSerializer, FreModelSerializer } from "../index.js";
@@ -6,6 +7,13 @@ import { FreErrorSeverity } from "../../validator/index.js";
 import { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
+
+export type ParameterType = {
+    model?: string,
+    unit?: string,
+    language?: string,
+    version?: string
+}
 
 export class ServerCommunication implements IServerCommunication {
     get nodePort(): any {
@@ -43,9 +51,27 @@ export class ServerCommunication implements IServerCommunication {
         return ServerCommunication.instance;
     }
 
-    static findParams(params?: string) {
-        if (!!params && params.length > 0) {
-            return "?" + params;
+    static findParams(params: ParameterType) {
+        let result = ""
+        let first = true
+        if (params.model !== undefined) {
+            result += `model=${encodeURIComponent(params.model)}`
+            first = false
+        }
+        if (params.unit !== undefined) {
+            result += `${(first?"":"&")}unit=${encodeURIComponent(params.unit)}`
+            first = false
+        }
+        if (params.language !== undefined) {
+            result += `${(first?"":"&")}language=${encodeURIComponent(params.language)}`
+            first = false
+        }
+        if (params.version !== undefined) {
+            result += `${(first?"":"&")}version=${encodeURIComponent(params.version)}`
+            first = false
+        }
+        if (result.length > 0) {
+            return "?" + result;
         } else {
             return "";
         }
@@ -80,10 +106,9 @@ export class ServerCommunication implements IServerCommunication {
             let output = {
                 serializationFormatVersion: "2023.1",
                 languages: collectUsedLanguages(model),
-                // "__version": "1234abcdef",
                 nodes: model,
             };
-            await this.putWithTimeout(`putModelUnit`, output, `folder=${modelName}&name=${unitId.name}`);
+            await this.putWithTimeout(`putModelUnit`, output, {model:modelName,unit: unitId.name});
         } else {
             LOGGER.error(
                 "Name of Unit '" +
@@ -107,7 +132,7 @@ export class ServerCommunication implements IServerCommunication {
     async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<void> {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
-            await this.fetchWithTimeout<any>(`deleteModelUnit`, `folder=${modelName}&name=${unit.name}`);
+            await this.fetchWithTimeout<any>(`deleteModelUnit`, {model:modelName, unit: unit.name});
         }
     }
 
@@ -118,7 +143,7 @@ export class ServerCommunication implements IServerCommunication {
     async deleteModel(modelName: string): Promise<void> {
         LOGGER.log(`ServerCommunication.deleteModel ${modelName}`);
         if (!!modelName && modelName.length > 0) {
-            await this.fetchWithTimeout<any>(`deleteModel`, `folder=${modelName}`);
+            await this.fetchWithTimeout<any>(`deleteModel`, { model: modelName });
         }
     }
 
@@ -127,7 +152,8 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadModelList(): Promise<string[]> {
         LOGGER.log(`ServerCommunication.loadModelList`);
-        const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`);
+        const language = FreLanguage.getInstance().name
+        const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`, { language: language });
         if (!!res) {
             return res;
         } else {
@@ -141,7 +167,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
         LOGGER.log(`ServerCommunication.loadUnitList`);
-        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `folder=${modelName}`);
+        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, {model: modelName });
         if (!!modelUnits) {
             return modelUnits.map((u) => {
                 // The information the unit's type is not available. This is not a problem
@@ -163,7 +189,7 @@ export class ServerCommunication implements IServerCommunication {
     async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<FreNode> {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
-            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, `folder=${modelName}&name=${unit.name}`);
+            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, {model: modelName, unit: unit.name});
             if (!!res) {
                 try {
                     let unit: FreNode;
@@ -183,14 +209,14 @@ export class ServerCommunication implements IServerCommunication {
         return null;
     }
 
-    async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
-        params = ServerCommunication.findParams(params);
-        LOGGER.log("fetchWithTimeout Params = " + params);
+    async fetchWithTimeout<T>(method: string, params: ParameterType): Promise<T> {
+        const parameters = ServerCommunication.findParams(params);
+        LOGGER.log("fetchWithTimeout Params = " + parameters);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
-            LOGGER.log("Input: " + `${this._SERVER_URL}${method}${params}`);
-            const promise = await fetch(`${this._SERVER_URL}${method}${params}`, {
+            LOGGER.log("Input: " + `${this._SERVER_URL}${method}${parameters}`);
+            const promise = await fetch(`${this._SERVER_URL}${method}${parameters}`, {
                 signal: controller.signal,
                 method: "get",
                 headers: {
@@ -205,12 +231,12 @@ export class ServerCommunication implements IServerCommunication {
         return null;
     }
 
-    private async putWithTimeout(method: string, data: Object, params?: string) {
-        params = ServerCommunication.findParams(params);
+    private async putWithTimeout(method: string, data: Object, params: ParameterType) {
+        const parameters = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
-            await fetch(`${this._SERVER_URL}${method}${params}`, {
+            await fetch(`${this._SERVER_URL}${method}${parameters}`, {
                 signal: controller.signal,
                 method: "put",
                 headers: {
@@ -235,17 +261,22 @@ export class ServerCommunication implements IServerCommunication {
 
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
-        // put the unit and its interface under the new name
-        this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
-        // remove the old unit and interface
-        this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
+        // put the unit under the new name
+        await this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
+        // remove the old unit
+        await this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
     }
 
     // @ts-ignore
-    createModel(modelName: string): any {}
+    async createModel(modelName: string): any {
+        LOGGER.log(`ServerCommunication.createModel ${modelName}`)
+        const language = FreLanguage.getInstance().name
+        await this.putWithTimeout(`putModel`, {}, { model: modelName, language: language });
+    }
 
     // @ts-ignore
-    createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
-        this.putModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
+    async createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
+        LOGGER.log(`ServerCommunication.createModelUnit ${modelName}::${unit.name}`)
+        await this.putModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
     }
 }

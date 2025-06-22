@@ -240,10 +240,10 @@ describe("Testing Validator", () => {
         expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => first prop: Error node: ID-73 of severity TODO")).toBeTruthy();
         expect(reports.includes("another EXPRESSION TYPE IS NOT CORRECT!! => another prop: Improvement node: ID-100 of severity TODO")).toBeTruthy();
         expect(reports.includes("ER IS IETS FLINK MIS MET DIT DING => another prop: Error node: ID-81 of severity TODO")).toBeTruthy();
-        expect(reports.includes("Type of '' \"Yes\" ' or ' \"No\" ' == NOOT or ' \"Hello World\" ' < ' \"Hello Universe\" ' and ' \"x\" ' < 122' (Boolean) should equal the type of 'Integer' (Integer) => unnamed prop: Improvement node: ID-95 of severity TODO")).toBeTruthy();
+        expect(reports.includes(`Type of '' "Yes" ' or ' "No" ' == \`NOOT\` or ' "Hello World" ' < ' "Hello Universe" ' and ' "x" ' < 122' (Boolean) should equal the type of 'Integer' (Integer) => unnamed prop: Improvement node: ID-95 of severity TODO`)).toBeTruthy();
         expect(reports.includes("WAT IS DIT LEUK!! => unnamed prop: Info node: ID-95 of severity TODO")).toBeTruthy();
         expect(reports.includes("Type of '' \"Yes\" '' (String) should equal the type of 'Boolean' (Boolean) => unnamed prop: TODO node: ID-87 of severity TODO")).toBeTruthy();
-        expect(reports.includes("Type of '' \"No\" '' (String) should equal the type of 'NOOT' (Company2) => unnamed prop: TODO node: ID-85 of severity TODO")).toBeTruthy();
+        expect(reports.includes("Type of '' \"No\" '' (String) should equal the type of '`NOOT`' (Company2) => unnamed prop: TODO node: ID-85 of severity TODO")).toBeTruthy();
         expect(reports.includes("Type of '' \"x\" '' (String) should equal the type of '122' (Integer) => unnamed prop: TODO node: ID-89 of severity TODO")).toBeTruthy();
         expect(reports.includes("Property 'right' must have a value => unnamed prop: right node: ID-99 of severity Error")).toBeTruthy();
         expect(reports.includes("Type of '' (undefined) should equal the type of 'Integer' (Integer) => unnamed prop: TODO node: null-undefined of severity TODO")).toBeTruthy();

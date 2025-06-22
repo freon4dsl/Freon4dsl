@@ -1,23 +1,23 @@
-PartsTest myName {
+PartsTest `myName` {
 	directParts WithDirectParts {{
                   	part PartConcept {
                             	content "stringLiteral"
                             	optContent 10
-                            	visibility +
+                            	visibility `+`
                             	}
                   	partList
                         PartConcept {
                             content "otherString"
                             // optContent not present
-                            visibility #  },
+                            visibility `#`  },
                         PartConcept {
                             content "stringLiteralXXX"
                             optContent 123
-                            visibility -  },
+                            visibility `-`  },
                         PartConcept {
                             content "stringLiteralYYY"
                             // optContent not present
-                            visibility + }
+                            visibility `+` }
                     // optList not present
     }}
 }

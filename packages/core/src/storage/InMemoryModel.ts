@@ -77,6 +77,7 @@ export class InMemoryModel {
      * Get a list of all model names that are available on the server.
      */
     async getModels(): Promise<string[]> {
+        LOGGER.log(`getModels`);
         return await this.server.loadModelList();
     }
 
@@ -124,6 +125,7 @@ export class InMemoryModel {
      * @param name
      */
     getUnitByName(name: string) {
+        LOGGER.log(`getUnitByName`);
         return this.model.findUnit(name);
     }
 
@@ -152,6 +154,7 @@ export class InMemoryModel {
      * Get all units of the current model.
      */
     getUnits(): FreModelUnit[] {
+        LOGGER.log(`getUnits`);
         const units = this?.model?.getUnits()
         if (isNullOrUndefined(units)) {
             return []
@@ -164,6 +167,7 @@ export class InMemoryModel {
      * Get all unit identifiers of the current model.
      */
     getUnitIdentifiers(): FreUnitIdentifier[] {
+        LOGGER.log(`getUnitIdentifiers`);
         const units = this.model?.getUnits()
         if (isNullOrUndefined(units)) {
             return []
@@ -181,6 +185,7 @@ export class InMemoryModel {
      * @param unit
      */
     async saveUnit(unit: FreModelUnit): Promise<void> {
+        LOGGER.log(`saveUnit`);
         await this.server.putModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
     }
 

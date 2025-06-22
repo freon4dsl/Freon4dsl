@@ -228,7 +228,28 @@ export class GenerationUtil {
             return Names.classifier(myType);
         }
     }
-
+    
+    /**
+     * Returns the type of the property 'prop' without taking into account 'isList' or 'isPart'
+     * This returns the Freon type, so also 'identifier', different from the method above.
+     */
+    public static getFreonBaseTypeAsString(property: FreMetaProperty): string {
+        const myType = property.type;
+        if (property instanceof FreMetaPrimitiveProperty) {
+            if (myType === FreMetaPrimitiveType.identifier) {
+                return "identifier";
+            } else if (myType === FreMetaPrimitiveType.string) {
+                return "string";
+            } else if (myType === FreMetaPrimitiveType.boolean) {
+                return "boolean";
+            } else if (myType === FreMetaPrimitiveType.number) {
+                return "number";
+            }
+            return "any";
+        } else {
+            return Names.classifier(myType);
+        }
+    }
     /**
      * Returns the type of the property 'prop' TAKING INTO ACCOUNT 'isList' or 'isPart'
      */

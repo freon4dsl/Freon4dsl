@@ -8,6 +8,7 @@ import {
     FreNamedNode,
     FreNodeReference,
 } from "../ast/index.js";
+import { isNullOrUndefined } from "../util/index.js";
 
 export function isFreModel(node: FreNode): node is FreModel {
     return !!node && node.freIsModel && node.freIsModel();
@@ -160,5 +161,65 @@ function skipReferences(key: string, value: Object) {
         return "REF => " + value.name;
     }else {
         return value;
+    }
+}
+
+let INDENT = "    "
+
+export function ast2string(node: FreNode, indent: string): string {
+    if (isNullOrUndefined(node)) {
+        return "NNN NODE IS NULL or UNDEFINED"
+    } else {
+        // console.log(`NNN node '${node.freId()}'`)
+    }
+    INDENT = indent
+    const result: string[] = []
+    ast2StringPrivate(node, result, INDENT)
+    return result.join("\n")
+}
+
+export function ast2StringPrivate(node: FreNode, result: string[], indent: string): void {
+    if (isNullOrUndefined(node)) {
+        return
+    } else {
+        // console.log(`1 node '${node.freId}'`)
+        // console.log(`2 node '${node.freId()}'`)
+    }
+    const classifier = FreLanguage.getInstance().classifier(node.freLanguageConcept())
+    const nameProperty = classifier.properties.get("name")
+    if (nameProperty !== undefined) {
+        result.push(`${indent}${classifier.typeName} ${node["name"]}`)
+    } else {
+        result.push(`${indent}${classifier.typeName}}`)
+    }
+    for(const prop of Array.from(classifier.properties.values())) {
+        switch (prop.propertyKind) {
+            case "primitive": {
+                result.push(`${indent}${indent}${prop.name}: ${node[prop.name]}`)
+                break
+            }
+            case "reference": {
+                if (prop.isList) {
+                    result.push(`${indent}${indent}${prop.name}: reference `)
+                    for(const ref of node[prop.name]) {
+                        result.push(`${indent}${indent}${indent} ref ${(ref as FreNodeReference<any>).name} / ${ref.pathname}`)
+                    }
+                } else {
+                    result.push(`${indent}${indent}${prop.name}: reference ${(node[prop.name] as FreNodeReference<any>)?.name} / ${(node[prop.name] as FreNodeReference<any>)?.pathname}`)
+                }
+                break
+            }
+            case "part": {
+                result.push(`${indent}${indent}Part ${prop.name}`)
+                if (prop.isList) {
+                    for(const part of node[prop.name]) {
+                        ast2StringPrivate(part, result, indent + INDENT + INDENT)
+                    }
+                } else {
+                    ast2StringPrivate(node[prop.name], result, indent  + INDENT + INDENT)
+                }
+                break
+            }
+        }
     }
 }

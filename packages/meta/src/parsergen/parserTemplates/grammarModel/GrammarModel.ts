@@ -48,7 +48,7 @@ skip SINGLE_LINE_COMMENT = "//[^\\\\r\\\\n]*" ;
 skip MULTI_LINE_COMMENT = "/\\\\*[^*]*\\\\*+(?:[^*/][^*]*\\\\*+)*/" ;
 
 // the predefined basic types
-leaf identifier          = "[a-zA-Z_][a-zA-Z0-9-_]*" ;
+leaf identifier          = "\\\`[a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/][a-zA-Z0-9-_~!@#$%^&*()+={\\\\[}\\\\]|\\\:;\\\\"'<>,.?/]*\\\`" ;
 /* see https://stackoverflow.com/questions/37032620/regex-for-matching-a-string-literal-in-java */
 leaf stringLiteral       = '"' "[^\\\\"\\\\\\\\]*(\\\\\\\\.[^\\\\"\\\\\\\\]*)*" '"' ;
 leaf numberLiteral       = "[0-9]+";
@@ -200,9 +200,11 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
                         const num = parseFloat(element);
                         return (isNaN(num) ? 0 : num) as T; // Handle invalid number gracefully.
                     case PrimValueType.string:
-                    case PrimValueType.identifier:
                         // todo make sure we remove only the outer quotes
                         return element.replace(/"/g, "") as T;
+                    case PrimValueType.identifier:
+                        // todo make sure we remove only the outer quotes
+                        return element.replace(/\`/g, "") as T;
                     case PrimValueType.boolean:
                         return (element.toLowerCase() === "true") as T; // Case-insensitive matching for booleans.
                     default:
@@ -250,11 +252,12 @@ leaf booleanLiteral      = '${this.falseValue}' | '${this.trueValue}';
              * The 'reference separator' ("${this.refSeparator}") is removed in the process.
              */
             public transform__fre_reference(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): ${tempReferenceClassName} {
-                // console.log("transform__fre_reference called: " + JSON.stringify(children));
                 let pathname: string[] = [];
                 for (const child of children.asJsReadonlyArrayView()) {
                     if (child !== null && child !== undefined && (typeof child === 'string' ? child !== '${this.refSeparator}' : false)) {
-                        pathname.push(child.toString());
+                        // todo make sure we remove only the outer quotes
+                        const name = child.toString().replace(/\`/g, "") ;
+                        pathname.push(name);
                     }
                 }
                 return new ${tempReferenceClassName}(pathname, this.location(sentence, nodeInfo.node));

@@ -239,12 +239,12 @@ export class WriterTemplate {
                                       )
                                       .join("")}
                             } else {
-                                this.output[this.currentLine] += node.pathnameToString("${this.refSeparator}") + " ";
+                                this.output[this.currentLine] += node.pathname.map(s => "\`" + s + "\`").join("${this.refSeparator}") + " ";
                             }`
-                                : `this.output[this.currentLine] += node.pathnameToString("${this.refSeparator}") + " ";`
+                                : `this.output[this.currentLine] += node.pathname.map(s => "\`" + s + "\`").join("${this.refSeparator}") + " ";`
                         }
                     } else {
-                        this.output[this.currentLine] += node.pathnameToString("${this.refSeparator}") + " ";
+                        this.output[this.currentLine] += node.pathname.map(s => "\`" + s + "\`").join("${this.refSeparator}") + " ";
                     }
                 }
             }
@@ -319,6 +319,8 @@ export class WriterTemplate {
                         this.doInitiator(sepText, sepType);
                         if (typeof listElem === "string" && !isIdentifier) {
                             this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
+                        } else if (typeof listElem === "string" && isIdentifier) {
+                            this.output[this.currentLine] += \`\\\`\$\{listElem\}\\\`\`;
                         } else {
                             this.output[this.currentLine] += \`\$\{listElem\}\`;
                         }
@@ -452,7 +454,7 @@ export class WriterTemplate {
                  */
                  private unparse${name}(node: ${name}, short: boolean) {
                      if (!!node) {
-                         this.output[this.currentLine] += node.name + " ";
+                         this.output[this.currentLine] += "\`" + node.name + "\` " /* 9 */;
                      }
                  }`;
     }
@@ -705,6 +707,10 @@ export class WriterTemplate {
                             this.output[this.currentLine] += \`${myFalseKeyword} \`
                           }`;
                 }
+            } else if (myType === FreMetaPrimitiveType.number) {
+                myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \` /* 2 */`;
+            } else if (myType === FreMetaPrimitiveType.identifier) {
+                myCall = `this.output[this.currentLine] += \`\\\`\$\{${elemStr}\}\\\` \` /* 3 */`;
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }

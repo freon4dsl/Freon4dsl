@@ -1,43 +1,43 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Test the parser > : read two units and create a model 1`] = `
-"unit eenNaam {
-main: entity1 base anotherEntity,
-                   andAnother,
-                   andYetAnother
+"unit \`eenNaam\` {
+main: \`entity1\` base \`anotherEntity\`,
+                     \`andAnother\`,
+                     \`andYetAnother\`
           start
-              attr1 : String = "myString",
-              attr2 : Integer = "TEKST"
+              \`attr1\` : \`String\` = "myString",
+              \`attr2\` : \`Integer\` = "TEKST"
           end
 unit wide functions:
-    DemoFunction functionXXX {
-        expression CALL funct555 (  )
+    DemoFunction \`functionXXX\` {
+        expression CALL \`funct555\` (  )
         parameters
-            DemoVariable variableYYY {
-                declaredType entity1
+            DemoVariable \`variableYYY\` {
+                declaredType \`entity1\`
             }
-        declaredType String
+        declaredType \`String\`
     }
 }"
 `;
 
 exports[`Test the parser > : read two units and create a model 2`] = `
-"unit andereNaam {
-main: entity56 base anotherEntity,
-                    andAnother,
-                    andYetAnother
+"unit \`andereNaam\` {
+main: \`entity56\` base \`anotherEntity\`,
+                      \`andAnother\`,
+                      \`andYetAnother\`
           start
-              attr78 : Boolean = "myString",
-              attr9 : String = "TEKST"
+              \`attr78\` : \`Boolean\` = "myString",
+              \`attr9\` : \`String\` = "TEKST"
           end
 unit wide functions:
-    DemoFunction functionYYY {
-        expression CALL funct555 (  )
+    DemoFunction \`functionYYY\` {
+        expression CALL \`funct555\` (  )
         parameters
-            DemoVariable variableZZZ {
-                declaredType entity56
+            DemoVariable \`variableZZZ\` {
+                declaredType \`entity56\`
             }
-        declaredType Integer
+        declaredType \`Integer\`
     }
 }"
 `;
