@@ -6,13 +6,9 @@ import { describe, test, expect, beforeEach } from "vitest";
 import { initializeScoperDef } from '../scoper/gen';
 
 describe("testing Scoper", () => {
+    let scoper = DemoEnvironment.getInstance().scoper;
     let modelCreator = new DemoModelCreator();
     let inheritanceModel: Demo = modelCreator.createInheritanceModel();
-    let scoper = DemoEnvironment.getInstance().scoper;
-
-    beforeEach(() => {
-        DemoEnvironment.getInstance();
-    });
 
     function testInheritedPropsrecursive(ent: DemoEntity, vis: string[], done: DemoEntity[]) {
         // when the property is not a list:

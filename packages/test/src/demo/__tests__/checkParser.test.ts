@@ -12,10 +12,10 @@ describe("Testing Parser", () => {
     });
 
     test("complete example model unparsed and parsed again", () => {
-        const originalModel = new DemoModelCreator().createCorrectModel();
+        const validator = DemoEnvironment.getInstance().validator;
         const unparser = DemoEnvironment.getInstance().writer;
         const parser = DemoEnvironment.getInstance().reader;
-        const validator = DemoEnvironment.getInstance().validator;
+        const originalModel = new DemoModelCreator().createCorrectModel();
 
         // first do a check on the input model
         expect(originalModel.models.length).toBeGreaterThan(0);

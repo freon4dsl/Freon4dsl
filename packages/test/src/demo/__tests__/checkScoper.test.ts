@@ -8,12 +8,8 @@ import { initializeScoperDef } from '../scoper/gen';
 
 describe("testing Scoper", () => {
     describe("Scoper.getVisibleNodes from DemoModel Instance", () => {
-        let model: Demo = new DemoModelCreator().createIncorrectModel();
         let scoper = DemoEnvironment.getInstance().scoper;
-
-        beforeEach(() => {
-            DemoEnvironment.getInstance();
-        });
+        let model: Demo = new DemoModelCreator().createIncorrectModel();
 
         test("visible elements in model and unit", () => {
             for (let unit of model.models) {
@@ -98,8 +94,8 @@ describe("testing Scoper", () => {
     });
 
     describe("testing IsInScope", () => {
-        let model: Demo = new DemoModelCreator().createIncorrectModel();
         let scoper = DemoEnvironment.getInstance().scoper;
+        let model: Demo = new DemoModelCreator().createIncorrectModel();
 
         // beforeEach(done => {
         //     done();

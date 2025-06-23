@@ -10,13 +10,9 @@ import { isInScope, getVisibleNames } from '../../utils/HelperFunctions.js';
 
 describe("testing Scoper on model units", () => {
     describe("Scoper.getVisibleNodes from DemoModel with Units", () => {
-        let model: Demo = new DemoModelCreator().createModelWithMultipleUnits();
         let scoper = DemoEnvironment.getInstance().scoper;
         let stdlib = DemoStdlib.getInstance();
-
-        beforeEach(() => {
-            DemoEnvironment.getInstance();
-        });
+        let model: Demo = new DemoModelCreator().createModelWithMultipleUnits();
 
         test("visible elements in model", () => {
             let vi = getVisibleNames(scoper.getVisibleNodes(model));
@@ -169,8 +165,8 @@ describe("testing Scoper on model units", () => {
         });
 
     describe("testing IsInScope", () => {
-        let model: Demo = new DemoModelCreator().createIncorrectModel();
         const scoper = DemoEnvironment.getInstance().scoper;
+        let model: Demo = new DemoModelCreator().createIncorrectModel();
         // const writer = DemoEnvironment.getInstance().writer;
 
         test("isInscope 'DemoModel_1'", () => {

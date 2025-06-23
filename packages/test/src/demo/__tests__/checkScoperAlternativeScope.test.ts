@@ -7,21 +7,17 @@ import { FreNamedNode } from '@freon4dsl/core';
 import { initializeScoperDef } from '../scoper/gen';
 // import { FileHandler } from '../../utils/FileHandler';
 
+
 describe("testing Alternative Scopes", () => {
+    DemoEnvironment.getInstance();
+
     describe("testing IsInScope", () => {
+        let scoper = DemoEnvironment.getInstance().scoper;
         let model: Demo = new DemoModelCreator().createModelWithAppliedfeature();
         // in correctModel function length is changed into:
         // 'length (Variable1 : Person, VariableNumber2 : Boolean): String =
         //      Variable1.attrFromPerson.attrFromCompany
         // where 'Variable1.attrFromPerson' is of type Company
-        let scoper = DemoEnvironment.getInstance().scoper;
-
-
-        beforeEach(() => {
-            // todo the following statement should have been executed during 'DemoEnvironment.getInstance().scoper',
-            //  find out why  there are still errors of kind: "Node ID-6 of type DemoModel has no type description"
-            DemoEnvironment.getInstance();
-        });
 
         test("what isInscope of 'Variable1.attrFromPerson', Variable1: Person", () => {
             let appliedFeature: AppliedFeature = model.models[0].functions[0].expression.appliedfeature;
