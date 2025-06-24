@@ -1,6 +1,6 @@
 import { LanguageGenerator } from "../languagedef/generator/LanguageGenerator.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
-import { MetaLogger } from "../utils/MetaLogger.js";
+import { MetaLogger } from "../utils/no-dependencies/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateLanguage"); // .mute();
 export class FreonGenerateLanguage extends FreonGeneratePartAction {

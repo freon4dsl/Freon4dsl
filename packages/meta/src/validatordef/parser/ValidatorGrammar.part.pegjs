@@ -1,3 +1,8 @@
+{{
+import * as create from "./ValidatorCreators.js"
+import * as expCreate from "../../languagedef/parser/ExpressionCreators.js"
+}}
+
 Validator_Definition
   = ws "validator" ws validatorName:var ws "for" ws "language" ws languageName:var ws cr:(conceptRule)*
     {
@@ -20,12 +25,12 @@ comparator   = "<=" / "=" / ">=" / ">" / "<"
 modelReferenceStart = "${"
 modelReferenceEnd = "}"
 
-conceptRule = conceptRef:classifierReference curly_begin rules:rule* curly_end
+conceptRule = classifierRef:classifierReference curly_begin rules:rule* curly_end
     {
         return create.createConceptRule({
-          "conceptRef": conceptRef,
-          "rules": rules,
-          "location": location()
+          "classifierRef"   : classifierRef,
+          "rules"           : rules,
+          "location"        : location()
         });
     }
 
@@ -45,15 +50,15 @@ ruleExtras = curly_begin severity:severity message:(comma_separator e:errormessa
 
 severity = severityKey colon_separator value:var {
   return create.createSeverity( {
-    "value": value,
-    "location": location()
+    "value"     : value,
+    "location"  : location()
   });
 }
 
 errormessage = messageKey colon_separator "\"" content:messageContent "\"" {
   return create.createErrorMessage( {
-    "content": content,
-    "location": location()
+    "content"   : content,
+    "location"  : location()
   });
 }
 
@@ -63,15 +68,15 @@ messageContent = head:messagePart tail:(" " v:messagePart { return v; })*
 messagePart = ref:modelReference { return ref; }
             / value:text {
     return create.createValidationMessageText({
-      "value": value,
-      "location": location()
+      "value"       : value,
+      "location"    : location()
     });
 }
 
 modelReference = modelReferenceStart ws exp:expression ws modelReferenceEnd {
     return create.createValidationMessageReference({
-      "expression": exp,
-      "location": location()
+      "expression"  : exp,
+      "location"    : location()
     });
 }
 
@@ -87,62 +92,62 @@ anythingBut = !(" ${") src:char
 
 validNameRule = validnameKey property:langExpression? ws extra:ruleExtras? {
   return create.createValidNameRule( {
-    "property": property,
-    "severity": (!!extra ? extra.severity : undefined),
-    "message": (!!extra ? extra.message : undefined),
-    "location": location()
+    "property"  : property,
+    "severity"  : (!!extra ? extra.severity : undefined),
+    "message"   : (!!extra ? extra.message : undefined),
+    "location"  : location()
   });
 }
 
 notEmptyRule = notEmptyKey property:langExpression ws extra:ruleExtras? {
   return create.createNotEmptyRule( {
-    "property": property,
-    "severity": (!!extra ? extra.severity : undefined),
-    "message": (!!extra ? extra.message : undefined),
-    "location": location()
+    "property"  : property,
+    "severity"  : (!!extra ? extra.severity : undefined),
+    "message"   : (!!extra ? extra.message : undefined),
+    "location"  : location()
   })
 }
 
 // TODO change this grammar rule into something else than a function call
 typeEqualsRule = typecheckKey "equalsType" round_begin type1:langExpression comma_separator type2:langExpression round_end extra:ruleExtras? {
   return create.createTypeEqualsRule( {
-    "type1": type1,
-    "type2": type2,
-    "severity": (!!extra ? extra.severity : undefined),
-    "message": (!!extra ? extra.message : undefined),
-    "location": location()
+    "type1"     : type1,
+    "type2"     : type2,
+    "severity"  : (!!extra ? extra.severity : undefined),
+    "message"   : (!!extra ? extra.message : undefined),
+    "location"  : location()
   });
 }
 
 // TODO change this grammar rule into something else than a function call
 typeConformsRule = typecheckKey "conformsTo" round_begin type1:langExpression comma_separator type2:langExpression round_end extra:ruleExtras? {
   return create.createTypeConformsRule( {
-    "type1": type1,
-    "type2": type2,
-    "severity": (!!extra ? extra.severity : undefined),
-    "message": (!!extra ? extra.message : undefined),
-    "location": location()
+    "type1"     : type1,
+    "type2"     : type2,
+    "severity"  : (!!extra ? extra.severity : undefined),
+    "message"   : (!!extra ? extra.message : undefined),
+    "location"  : location()
   });
 }
 
 expressionRule = exp1:langExpression ws comparator:comparator ws exp2:langExpression extra:ruleExtras? {
   return create.createExpressionRule( {
-    "exp1": exp1,
-    "exp2": exp2,
+    "exp1"      : exp1,
+    "exp2"      : exp2,
     "comparator": comparator,
-    "severity": (!!extra ? extra.severity : undefined),
-    "message": (!!extra ? extra.message : undefined),
-    "location": location()
+    "severity"  : (!!extra ? extra.severity : undefined),
+    "message"   : (!!extra ? extra.message : undefined),
+    "location"  : location()
   });
 }
 
 //isuniqueRule = isuniqueKey exp1:langExpression rws inKey exp2:langExpression extra:ruleExtras? {
 isuniqueRule = inKey exp2:langExpression rws isuniqueKey exp1:langExpression ws extra:ruleExtras? {
   return create.createIsuniqueRule( {
-    "listproperty": exp1,
-    "list": exp2,
-    "severity": (!!extra ? extra.severity : undefined),
-    "message": (!!extra ? extra.message : undefined),
-    "location": location()
+    "listproperty"  : exp1,
+    "list"          : exp2,
+    "severity"      : (!!extra ? extra.severity : undefined),
+    "message"       : (!!extra ? extra.message : undefined),
+    "location"      : location()
   });
 }

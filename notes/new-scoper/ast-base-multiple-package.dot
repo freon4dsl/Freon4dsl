@@ -1,0 +1,40 @@
+digraph G {
+    
+    Model [peripheries=2] 
+    P1 [peripheries=2]
+    P2 [peripheries=2]
+    ClassA [peripheries=2]
+    ClassB [peripheries=2]
+    ClassC [peripheries=2]
+    A1 [peripheries=2]
+    A1, A2, ClassA, ClassB, ClassC, P1, P2 [color=green]
+    B1, B2, C1, C2 [color=magenta]
+
+    P1 -> ClassA
+    P1 -> ClassB
+    P1 -> ClassC
+    ClassA -> A1;
+    ClassA -> A2;
+    A1 -> "A1-1";
+    A1 -> "A1-2";
+    ClassB -> B1;
+    B1 -> B1_1;
+    B1 -> B1_2;
+    ClassB -> B2;
+    ClassB -> ClassC [color=magenta, style=dashed, label="base", fontcolor=magenta]
+
+    ClassC -> C1;
+    ClassC -> C2;
+
+    IntfaceD [peripheries=2]
+    P2 -> IntfaceD
+    IntfaceD -> D1
+    ClassA -> IntfaceD [color=red, style=dotted, label="implements", fontcolor=red  ]
+
+    Model -> P1
+    Model -> P2
+    ClassA -> ClassB [color=magenta, style=dashed, label="base", fontcolor=magenta]
+
+    {rank=same; ClassA; ClassB; ClassC; IntfaceD}
+    {rank=same; P1; P2}
+}

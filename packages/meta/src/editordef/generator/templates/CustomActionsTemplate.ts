@@ -1,4 +1,4 @@
-import { Names, Imports } from "../../../utils/index.js"
+import { Names, Imports } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 
 export class CustomActionsTemplate {

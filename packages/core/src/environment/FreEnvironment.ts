@@ -1,7 +1,7 @@
 import { FreEditor, FreProjectionHandler } from "../editor/index.js"
 import { FreInterpreter } from "../interpreter/index.js";
 import { FreValidator } from "../validator/index.js";
-import { FreScoperComposite } from "../scoper/index.js";
+import { FreCompositeScoper } from "../scoper/index.js";
 import { FreCompositeTyper } from "../typer/index.js";
 import { FreWriter } from "../writer/index.js";
 import { FreReader } from "../reader/index.js";
@@ -14,7 +14,7 @@ export interface FreEnvironment {
      */
     newModel(modelName: string): FreModel;
 
-    scoper: FreScoperComposite;
+    scoper: FreCompositeScoper;
     typer: FreCompositeTyper;
     validator: FreValidator;
     editor: FreEditor;

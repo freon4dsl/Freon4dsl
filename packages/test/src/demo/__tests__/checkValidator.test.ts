@@ -18,12 +18,9 @@ import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.
 import { describe, test, expect, beforeEach } from "vitest";
 
 describe("Testing Validator", () => {
+    DemoEnvironment.getInstance();
     const model: Demo = new DemoModelCreator().createIncorrectModel();
     const validator = new DemoValidator();
-
-    beforeEach(() => {
-        DemoEnvironment.getInstance();
-    });
 
     test("multiplication 3 * 10", () => {
         let errors: FreError[];

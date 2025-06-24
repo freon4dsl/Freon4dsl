@@ -3,7 +3,8 @@ import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import {internalTransformRefList, ParserGenUtil} from "../../ParserGenUtil.js";
 import { makeIndent } from "../GrammarUtils.js";
-import {GenerationUtil} from "../../../../utils/index.js";
+import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
+
 
 export class RHSRefListWithInitiator extends RHSPropPartWithSeparator {
     // `("joinText" propTypeName)*`

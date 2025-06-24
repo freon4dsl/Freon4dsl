@@ -1,4 +1,5 @@
-import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
+import { Names, Imports } from "../../../utils/on-lang/index.js"
+import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
 import {
     FreMetaClassifier,
     FreMetaConcept,

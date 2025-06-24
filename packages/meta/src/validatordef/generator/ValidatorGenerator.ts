@@ -1,14 +1,15 @@
 import * as fs from "fs";
-import { MetaLogger } from "../../utils/MetaLogger.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { GenerationStatus, FileUtil, Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils/index.js";
+import { Names, VALIDATOR_FOLDER, VALIDATOR_GEN_FOLDER } from "../../utils/on-lang/index.js";
+import { FileUtil, GenerationStatus } from '../../utils/file-utils/index.js';
 import { ValidatorDef } from "../metalanguage/index.js";
 import { RulesCheckerTemplate } from "./templates/RulesCheckerTemplate.js";
 import { ValidatorTemplate } from "./templates/ValidatorTemplate.js";
 import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate.js";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate.js";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate.js";
-import { LOG2USER } from "../../utils/UserLogger.js";
+import { LOG2USER } from "../../utils/basic-dependencies/UserLogger.js";
 
 // TODO use new AstWalker and AstWorker
 

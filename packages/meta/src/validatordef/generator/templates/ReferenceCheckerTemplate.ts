@@ -1,4 +1,4 @@
-import { Names, Imports } from "../../../utils/index.js"
+import { Names, Imports } from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 import { ValidationUtils } from "../ValidationUtils.js";
 
@@ -52,7 +52,7 @@ export class ReferenceCheckerTemplate {
 
             private makeErrorMessage(${paramName}: ${overallTypeName}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>, propertyName: string, locationDescription: string) {
                 const scoper = ${Names.FreLanguageEnvironment}.getInstance().scoper;
-                const possibles = scoper.getVisibleElements(${paramName}).filter(elem => elem.name === referredElem.name);
+                const possibles = scoper.getVisibleNodes(${paramName}).filter(elem => elem.name === referredElem.name);
                 if (possibles.length > 0) {
                     this.errorList.push(
                         new ${Names.FreError}(
@@ -80,7 +80,7 @@ export class ReferenceCheckerTemplate {
             if (!prop.isPart) {
                 if (prop.isList) {
                     result += `for (const referredElem of ${paramName}.${prop.name} ) {
-                        if (referredElem.referred === null) {
+                        if (referredElem.referred === null || referredElem.referred === undefined) {
                             this.makeErrorMessage(${paramName}, referredElem, "${prop.name}", \`\${${locationdescription}}\`);
                         }
                     }`;

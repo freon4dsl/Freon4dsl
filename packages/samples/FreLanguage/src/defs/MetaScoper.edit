@@ -12,17 +12,17 @@ scoper
 
 ScopeConceptDef {
 [
-${self.conceptRef} {
-    [?${self.namespaceAdditions}]
+${self.classifierRef} {
+    [?${self.namespaceImports}]
     [?${self.alternativeScope}]
 }
 ]
 }
 
-FreNamespaceAddition {
-[namespace_addition = ${self.expressions horizontal separator[ + ]};]
+FreNamespaceImport {
+[imports { ${self.expressions horizontal terminator[;]} } ]
 }
-
+// todo adjust to new structure and concrete syntax
 FreAlternativeScope {
-[scope = ${self.expression};]
+[alternatives { ${self.expression } }]
 }

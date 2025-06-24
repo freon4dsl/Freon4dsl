@@ -5,8 +5,8 @@ import { ReaderWriterGenerator } from "../parsergen/ReaderWriterGenerator.js";
 import { ScoperGenerator } from "../scoperdef/generator/ScoperGenerator.js";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator.js";
 import { FreonTyperGenerator } from "../typerdef/generator/FreonTyperGenerator.js";
-import { MetaLogger } from "../utils/index.js";
-import { GenerationStatus, FileUtil } from "../utils/index.js";
+import { MetaLogger } from "../utils/no-dependencies/index.js";
+import { GenerationStatus, FileUtil } from "../utils/file-utils/index.js";
 import { LanguageParser } from "../languagedef/parser/LanguageParser.js";
 import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 

@@ -52,9 +52,10 @@ import {
     RHSBinExpListWithSeparator,
     RHSBinExpListWithTerminator,
 } from "./grammarModel/index.js";
-import { LOG2USER, ListUtil } from "../../utils/index.js";
+import { ListUtil } from "../../utils/no-dependencies/index.js";
 import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator.js";
 import {RHSRefListWithInitiator} from "./grammarModel/RHSEntries/RHSRefListWithInitiator.js";
+import { LOG2USER } from '../../utils/basic-dependencies/index.js';
 
 export class ConceptMaker {
     imports: FreMetaClassifier[] = [];

@@ -1,6 +1,6 @@
 import { GrammarRule } from "./GrammarRule.js";
 import { FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../utils/index.js";
+import { Names } from "../../../utils/on-lang/index.js";
 import { ParserGenUtil } from "../ParserGenUtil.js";
 
 export class LimitedRule extends GrammarRule {

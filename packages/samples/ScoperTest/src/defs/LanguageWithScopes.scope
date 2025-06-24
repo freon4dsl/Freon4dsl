@@ -1,0 +1,64 @@
+scoper for language ExampleLanguage
+
+isNamespace { LangModule1,
+              LangModule2, VarReference2, 
+              LangModule3, VarReference3, ModuleReference3,
+              LangModule4, VarReference4, ModuleReference4,
+              LangModule5, VarReference5 }
+
+LangModule1 {
+    imports { self.imports; }
+}
+
+// ===================================================================
+
+LangModule2 {
+    imports { self.imports; }
+}
+
+VarReference2 {
+    imports { self.module; }
+}
+
+// ===================================================================
+
+LangModule3 {
+    imports { self.imports; }
+}
+
+VarReference3 {
+    imports { self.module.target; }
+}
+
+ModuleReference3 {
+     imports { self.module.target; }
+}
+
+// ===================================================================
+
+LangModule4 {
+    imports { self.imports; }
+}
+
+VarReference4 {
+     imports { self.module.targetModule; }
+}
+
+ModuleReference4 {
+     imports { self.module.targetModule; }
+}
+
+// ===================================================================
+
+LangModule5 {
+    imports { self.imports; }
+}
+
+// do not only define the scope of ComplexVarReference5, because then the
+// SimpleVarReference5 will still have the scope of its parent
+VarReference5 {
+    alternatives {
+        owner().if(ComplexVarReference5).module;
+        recursive owner().if(LangModule5);
+    }
+}

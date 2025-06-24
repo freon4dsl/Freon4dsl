@@ -1,18 +1,19 @@
 import * as fs from "fs";
-import { MetaLogger, LOG2USER, COMMAND_LINE_FOLDER } from "../../utils/index.js";
+import { LOG2USER } from "../../utils/basic-dependencies/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import {
+    COMMAND_LINE_FOLDER,
     CONFIGURATION_FOLDER,
     CONFIGURATION_GEN_FOLDER,
-    GenerationStatus,
-    FileUtil,
     LANGUAGE_FOLDER,
     LANGUAGE_GEN_FOLDER,
     LANGUAGE_UTILS_FOLDER,
     LANGUAGE_UTILS_GEN_FOLDER,
     Names,
     STDLIB_FOLDER,
-    STDLIB_GEN_FOLDER,
-} from "../../utils/index.js";
+    STDLIB_GEN_FOLDER
+} from '../../utils/on-lang/index.js';
+import { FileUtil, GenerationStatus } from '../../utils/file-utils/index.js';
 import { FreMetaLanguage } from "../metalanguage/index.js";
 import {
     // AllConceptsTemplate,

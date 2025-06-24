@@ -1,0 +1,46 @@
+
+
+
+
+
+digraph G   {
+
+//    Mod1, ClassA , ClassB, A1 [peripheries=2]
+//    Mod1, ClassA , ClassB, A1 [style=bold]
+    Mod1, ClassA , ClassB, A1, B1 [style=filled, color=lightgrey]
+
+
+
+    ClassA -> ClassB [color=magenta, style=dashed, label="extends", fontcolor=magenta]
+    B1, B2  [fontcolor=magenta]
+
+
+
+
+    Mod1 -> ClassA
+    Mod1 -> ClassB 
+
+    ClassA -> A1;
+    ClassA -> A2;
+    A1 -> A1_1;
+    A1 -> A1_2;
+    ClassB -> B1;
+    B1 -> B1_1;  
+    B1 -> B1_2;
+    ClassB -> B2;
+
+    {rank=same; ClassA; ClassB}
+    
+
+    Mod1 -> ClassC
+    ClassC -> C1
+    ClassC -> C2
+    
+    ClassB -> ClassC [color=magenta, fontcolor=magenta, style=dashed, label="extends"]
+    
+    C1, C2 [ fontcolor=magenta ]
+    ClassC [style=filled, color=lightgrey]
+   {rank=same; ClassA, ClassC}
+
+
+}

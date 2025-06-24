@@ -7,7 +7,7 @@ import {
     WRITER_GEN_FOLDER,
     READER_GEN_FOLDER,
     INTERPRETER_FOLDER, Imports
-} from "../../../utils/index.js"
+} from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class EnvironmentTemplate {
@@ -16,7 +16,7 @@ export class EnvironmentTemplate {
         imports.core = new Set<string>([
             Names.FreEditor, Names.FreEnvironment, Names.FreReader,
             Names.FreCompositeTyper, Names.FreValidator, Names.FreStdlib,
-            Names.FreWriter, Names.FreInterpreter, Names.FreScoperComposite, Names.FreLanguageEnvironment, Names.FreProjectionHandler
+            Names.FreWriter, Names.FreInterpreter, Names.FreCompositeScoper, Names.FreLanguageEnvironment, Names.FreProjectionHandler
         ])
         imports.editor = new Set<string>([
             Names.actions(language), "initializeEditorDef", "initializeProjections"
@@ -84,7 +84,7 @@ export class EnvironmentTemplate {
 
             // the parts of the language environment
             editor: ${Names.FreEditor};
-            scoper: ${Names.FreScoperComposite} = new ${Names.FreScoperComposite}("main");
+            scoper: ${Names.FreCompositeScoper} = new ${Names.FreCompositeScoper}();
             typer: ${Names.FreCompositeTyper} = new ${Names.FreCompositeTyper}("main");
             validator: ${Names.FreValidator} = new ${Names.validator(language)}();
             writer: ${Names.FreWriter} = new ${Names.writer(language)}();

@@ -1,4 +1,5 @@
-import { Names } from "../../../../utils/index.js";
+import { Names } from '../../../../utils/on-lang/index.js';
+import { NamesForEditor } from '../../../../utils/on-lang-and-editor/index.js';
 import { FreMetaClassifier } from "../../../../languagedef/metalanguage/index.js";
 import { FreEditClassifierProjection, FreEditTableProjection } from "../../../metalanguage/index.js";
 
@@ -31,7 +32,7 @@ export class BoxProviderCoreTextTemplate {
                             ${allProjections
                                 .map(
                                     (proj) => `if (projectionName === '${proj.name}') {
-                                return this.${Names.projectionMethod(proj)}();
+                                return this.${NamesForEditor.projectionMethod(proj)}();
                             }`,
                                 )
                                 .join(" else ")}

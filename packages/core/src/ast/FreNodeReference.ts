@@ -109,12 +109,7 @@ export class FreNodeReference<T extends FreNamedNode> extends MobxModelElementIm
         if (!!this._FRE_referred) {
             return this._FRE_referred;
         } else {
-            return FreLanguageEnvironment.getInstance().scoper.resolvePathName(
-                this.freOwnerDescriptor().owner,
-                this,
-                this._FRE_pathname,
-                this.typeName,
-            ) as T;
+            return FreLanguageEnvironment.getInstance().scoper.resolvePathName(this) as T;
         }
     }
 

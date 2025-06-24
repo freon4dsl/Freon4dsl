@@ -1,4 +1,4 @@
-unitType1 `unit1_2` {
+UnitType1 `unit1_2` {
     content
         NamedPart `A` {
             subParts
@@ -41,4 +41,5 @@ unitType1 `unit1_2` {
             subParts
 
         }
+                imports
 }

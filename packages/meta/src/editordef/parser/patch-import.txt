@@ -1,6 +1,0 @@
-/**
-  * Patch to import in ESM style, because peggy only generates commonjs style
-  */
-import * as creator from "./FreEditCreators.js"
-import * as expCreate from "../../languagedef/parser/ExpressionCreators.js";
-

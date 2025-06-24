@@ -1,8 +1,8 @@
 language ScoperTryout
 
 model ScoperTryout {
-    series2: unitType2[];
-    series1: unitType1[];
+    series2: UnitType2[];
+    series1: UnitType1[];
 }
 
 interface Referable {
@@ -12,7 +12,8 @@ interface Referable {
 interface Unit base Referable {
 }
 
-modelunit unitType1 implements Unit {
+modelunit UnitType1 implements Unit {
+    reference imports?: Unit[];
     content: NamedPart[];
 }
 
@@ -20,8 +21,8 @@ concept NamedPart implements Referable {
     subParts: NamedPart[];
 }
 
-modelunit unitType2 implements Unit {
-    reference imports: Unit[];
+modelunit UnitType2 implements Unit {
+    reference imports?: Unit[];
     myReferences: QualifiedName[];
 }
 

@@ -1,38 +1,21 @@
 import {
     FreMetaClassifier,
     FreMetaConcept,
-    MetaElementReference,
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
     FreMetaPrimitiveValue,
     FreMetaProperty,
     FreMetaLimitedConcept,
-    FreMetaEnumValue,
-} from "../metalanguage/index.js";
-import { CheckRunner, MetaLogger, Names, ParseLocationUtil } from "../../utils/index.js";
+    FreMetaEnumValue
+} from '../metalanguage/index.js';
+import { CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import { MetaLogger } from '../../utils/no-dependencies/index.js';
+import { Names } from '../../utils/on-lang/index.js';
 import { CommonSuperTypeUtil } from "./common-super/CommonSuperTypeUtil.js";
 
 const LOGGER = new MetaLogger("CommonChecker").mute();
 
 export class CommonChecker {
-    public static checkClassifierReference(reference: MetaElementReference<FreMetaClassifier>, runner: CheckRunner) {
-        if (!runner) {
-            LOGGER.log("NO RUNNER in CommonChecker.checkClassifierReference");
-            return;
-        }
-
-        runner.nestedCheck({
-            check: reference.name !== undefined,
-            error: `Classifier reference should have a name ${ParseLocationUtil.location(reference)}.`,
-            whenOk: () => {
-                runner.nestedCheck({
-                    check: reference.referred !== undefined,
-                    error: `Reference to classifier '${reference.name}' cannot be resolved ${ParseLocationUtil.location(reference)}.`,
-                });
-            },
-        });
-    }
-
     public static checkOrCreateNameProperty(classifier: FreMetaClassifier, runner: CheckRunner) {
         if (!runner) {
             LOGGER.log("NO RUNNER in CommonChecker.checkOrCreateNameProperty");
@@ -107,9 +90,9 @@ export class CommonChecker {
     }
 
     /**
-     * returns true if the 'limited' conforms to 'primType'
-     * @param value
-     * @param type
+     * Returns true if the 'sub' conforms to 'superType'.
+     * @param sub
+     * @param superType
      */
     public static checkLimitedType(sub: FreMetaLimitedConcept, superType: FreMetaLimitedConcept): boolean {
         return CommonSuperTypeUtil.getSupers(sub).includes(superType);

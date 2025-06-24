@@ -148,11 +148,11 @@ export class UtilLimitedHelpers {
             `<${propertyName}>`,
             () => {
                 return scoper
-                    .getVisibleNames(node, propType)
-                    .filter((name) => !!name && name !== "")
-                    .map((name) => ({
-                        id: name,
-                        label: name
+                    .getVisibleNodes(node, propType)
+                    .filter((node) => !!node.name && node.name !== "")
+                    .map((node) => ({
+                        id: node.name,
+                        label: node.name
                     }));
             },
             () => {

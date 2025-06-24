@@ -9,7 +9,7 @@ import { FretTypeConcept } from "./FretTypeConcept.js";
 import { FretClassifierSpec } from "./FretClassifierSpec.js";
 import { FretAnyTypeSpec } from "./FretAnyTypeSpec.js";
 import { CommonSuperTypeUtil } from "../../languagedef/checking/common-super/CommonSuperTypeUtil.js";
-import { Names } from "../../utils/index.js";
+import { Names } from "../../utils/on-lang/index.js";
 
 export class TyperDef extends FreTyperElement {
     static freonType: FreMetaClassifier = this.makeFreType();
@@ -54,7 +54,7 @@ export class TyperDef extends FreTyperElement {
         // internal: FreElement
         const prop: FreMetaProperty = new FreMetaProperty();
         prop.name = "internal";
-        prop.typeReference = MetaElementReference.create<FreMetaClassifier>("FreNode", "FreClassifier");
+        prop.typeReference = MetaElementReference.create<FreMetaClassifier>("FreNode");
         prop.typeReference.owner = prop;
         result.properties.push(prop);
         return result;
@@ -86,7 +86,7 @@ export class TyperDef extends FreTyperElement {
     set types(newTypes: FreMetaClassifier[]) {
         this.$types = [];
         newTypes.forEach((t) => {
-            const xx = MetaElementReference.create<FreMetaClassifier>(t, "FreClassifier");
+            const xx = MetaElementReference.create<FreMetaClassifier>(t);
             xx.owner = this.language;
             this.$types.push(xx);
         });
@@ -105,7 +105,7 @@ export class TyperDef extends FreTyperElement {
     set conceptsWithType(newTypes: FreMetaClassifier[]) {
         this.$conceptsWithType = [];
         newTypes.forEach((t) => {
-            const xx = MetaElementReference.create<FreMetaClassifier>(t, "FreClassifier");
+            const xx = MetaElementReference.create<FreMetaClassifier>(t);
             xx.owner = this.language;
             this.$conceptsWithType.push(xx);
         });

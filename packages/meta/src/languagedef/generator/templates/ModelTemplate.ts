@@ -1,5 +1,5 @@
 import { ConceptUtils } from "./ConceptUtils.js"
-import { Imports, Names } from "../../../utils/index.js"
+import { Imports, Names } from "../../../utils/on-lang/index.js"
 import { FreMetaModelDescription } from "../../metalanguage/FreMetaLanguage.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
 

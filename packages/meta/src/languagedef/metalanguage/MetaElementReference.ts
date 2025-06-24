@@ -1,25 +1,30 @@
-import { FreMetaLangElement, FreMetaEnvironment } from "./internal.js";
-import { ParseLocation, FreMetaDefinitionElement, FreParseLocation } from "../../utils/index.js";
+import { FreMetaLangElement } from './internal.js';
+
 
 /**
  * Implementation for a (named) reference in Freon.
  * Reference can be set with either a referred object, or with a unitName.
  */
 export class MetaElementReference<T extends FreMetaLangElement> {
-    public static create<T extends FreMetaLangElement>(name: string | T, typeName: string): MetaElementReference<T> {
-        const result: MetaElementReference<T> = new MetaElementReference<T>(undefined, typeName);
+    public static create<T extends FreMetaLangElement>(name: string | T): MetaElementReference<T> {
+        const result: MetaElementReference<T> = new MetaElementReference<T>();
         if (typeof name === "string") {
             result.name = name;
         } else if (typeof name === "object") {
             result.referred = name;
+            result.name = result.referred.name;
         }
-        result.typeName = typeName;
         return result;
     }
 
-    private _FRE_name: string = "";
-    private _FRE_referred: T | undefined = undefined;
+    name: string;
+    // Some properties defined here are marked @ts-ignore to avoid the error:
+    // TS2564: ... has no initializer and is not definitely assigned in the constructor.
+    // These properties need to be undefined during parsing and checking. After the checking process
+    // has been executed without errors, we can assume that these properties are initialized.
 
+    // @ts-ignore
+    referred: T;
     // @ts-ignore
     public owner: FreMetaDefinitionElement;
     // @ts-ignore
@@ -27,43 +32,7 @@ export class MetaElementReference<T extends FreMetaLangElement> {
     // @ts-ignore
     public aglParseLocation: FreParseLocation;
 
-    // Need for the scoper to work
-    private typeName: string = "";
-    private scoper = FreMetaEnvironment.metascoper;
-
-    private constructor(referredElement: T | undefined, typeName: string) {
-        // super();
-        this.referred = referredElement;
-        this.typeName = typeName;
-    }
-
-    set name(value: string) {
-        this._FRE_name = value;
-        this._FRE_referred = undefined;
-    }
-
-    get name(): string {
-        if (!!this._FRE_referred) {
-            return this.referred.name;
-        }
-        return this._FRE_name;
-    }
-
-    get referred(): T {
-        if (!!this._FRE_referred) {
-            return this._FRE_referred;
-        } else {
-            this._FRE_referred = this.scoper.getFromVisibleElements(this.owner, this._FRE_name, this.typeName) as T;
-        }
-        return this._FRE_referred;
-    }
-
-    set referred(referredElement: T | undefined) {
-        if (!!referredElement) {
-            this._FRE_name = referredElement.name;
-        } else {
-            this._FRE_name = "";
-        }
-        this._FRE_referred = referredElement;
+    private constructor() {
+        this.name = 'unknown';
     }
 }

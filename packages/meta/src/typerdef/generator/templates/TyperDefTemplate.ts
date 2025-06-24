@@ -1,5 +1,6 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { CONFIGURATION_FOLDER, Names, FREON_CORE } from "../../../utils/index.js";
+import { CONFIGURATION_FOLDER, FREON_CORE, Names } from '../../../utils/on-lang/index.js';
+
 
 export class TyperDefTemplate {
     generateTyperDef(language: FreMetaLanguage, relativePath: string): string {

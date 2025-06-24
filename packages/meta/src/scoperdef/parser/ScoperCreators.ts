@@ -1,76 +1,96 @@
-import { ScopeDef, ScopeConceptDef, FreNamespaceAddition, FreReplacementNamespace } from "../metalanguage/index.js";
-import { MetaLogger } from "../../utils/MetaLogger.js";
+import {
+    ScopeDef,
+    ScopeConceptDef,
+    FreNamespaceImport,
+    FreNamespaceAlternative,
+    FreMetaNamespaceInfo
+} from '../metalanguage/index.js';
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 
 const LOGGER = new MetaLogger("ScoperCreator").mute();
 
-// let currentFileName: string = "SOME_FILENAME";
-// export function setCurrentFileName(newName: string) {
-//     currentFileName = newName;
-// }
+let currentFileName: string = "SOME_FILENAME";
+export function setCurrentFileName(newName: string) {
+    currentFileName = newName;
+}
 
 export function createScopeDef(data: Partial<ScopeDef>): ScopeDef {
     LOGGER.log("createScopeDef");
     const result = new ScopeDef();
 
-    if (!!data.scoperName) {
-        result.scoperName = data.scoperName;
-    }
     if (!!data.languageName) {
         result.languageName = data.languageName;
     }
-    if (!!data.namespaces) {
-        result.namespaces = data.namespaces;
+    if (!!data.namespaceRefs) {
+        result.namespaceRefs = data.namespaceRefs;
     }
     if (!!data.scopeConceptDefs) {
         result.scopeConceptDefs = data.scopeConceptDefs;
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
-    // result.namespaces.forEach(ns => {
-    //     LOGGER.log("namespace: " + ns.unitName + " created");
-    // });
     return result;
 }
 
 export function createScoperConceptDef(data: Partial<ScopeConceptDef>): ScopeConceptDef {
     LOGGER.log("createScoperConceptDef");
     const result = new ScopeConceptDef();
-    if (!!data.conceptRef) {
-        result.conceptRef = data.conceptRef;
+    if (!!data.classifierRef) {
+        result.classifierRef = data.classifierRef;
     }
-    if (!!data.namespaceAdditions) {
-        result.namespaceAdditions = data.namespaceAdditions;
+    if (!!data.namespaceImports) {
+        result.namespaceImports = data.namespaceImports;
     }
-    if (!!data.replacementNamespace) {
-        result.replacementNamespace = data.replacementNamespace;
+    if (!!data.namespaceAlternatives) {
+        result.namespaceAlternatives = data.namespaceAlternatives;
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
 
-export function createNamespaceDef(data: Partial<FreNamespaceAddition>): FreNamespaceAddition {
-    LOGGER.log("createNamespaceDef");
-    const result = new FreNamespaceAddition();
-    if (!!data.expressions) {
-        result.expressions = data.expressions;
+export function createNamespaceImport(data: Partial<FreNamespaceImport>): FreNamespaceImport {
+    LOGGER.log("createNamespaceImport");
+    const result = new FreNamespaceImport();
+    if (!!data.nsInfoList) {
+        result.nsInfoList = data.nsInfoList;
     }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }
 
-export function createReplacementNamespace(data: Partial<FreReplacementNamespace>): FreReplacementNamespace {
-    LOGGER.log("createReplacementNamespace");
-    const result = new FreReplacementNamespace();
+export function createNamespaceAlternative(data: Partial<FreNamespaceAlternative>): FreNamespaceAlternative {
+    LOGGER.log("createNamespaceAlternative");
+    const result = new FreNamespaceAlternative();
+    if (!!data.nsInfoList) {
+        result.nsInfoList = data.nsInfoList;
+    }
+    if (!!data.location) {
+        result.location = data.location;
+        result.location.filename = currentFileName;
+    }
+    return result;
+}
+
+export function createNamespaceExpression(data: Partial<FreMetaNamespaceInfo>): FreMetaNamespaceInfo {
+    LOGGER.log("createNamespaceExpression");
+    const result = new FreMetaNamespaceInfo();
     if (!!data.expression) {
         result.expression = data.expression;
     }
+    if (!!data.recursive) {
+        result.recursive = data.recursive;
+    }
     if (!!data.location) {
         result.location = data.location;
+        result.location.filename = currentFileName;
     }
     return result;
 }

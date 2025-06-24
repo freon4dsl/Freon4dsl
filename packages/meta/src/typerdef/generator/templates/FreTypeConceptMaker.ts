@@ -1,7 +1,8 @@
 import { ConceptUtils } from "../../../languagedef/generator/templates/ConceptUtils.js"
 import { FreMetaConcept, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
 import { FretTypeConcept, TyperDef } from "../../metalanguage/index.js";
-import { ListUtil, Names, Imports } from "../../../utils/index.js"
+import { Names, Imports } from "../../../utils/on-lang/index.js"
+import { ListUtil } from '../../../utils/no-dependencies/index.js';
 
 export class FreTypeConceptMaker {
     freTypeName: string = Names.FreType;

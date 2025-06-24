@@ -156,70 +156,62 @@ const ownerprops: string[] = ["$$owner", "$$propertyName", "$$propertyIndex"];
 
 function skipReferences(key: string, value: Object) {
     if (ownerprops.includes(key)) {
-        return undefined;
-    } else if( value instanceof FreNodeReference) {
-        return "REF => " + value.name;
-    }else {
-        return value;
+        return undefined
+    } else if (value instanceof FreNodeReference) {
+        return "REF => " + value.name
+    } else {
+        return value
     }
 }
 
-let INDENT = "    "
+const INDENT = "|   "
 
-export function ast2string(node: FreNode, indent: string): string {
-    if (isNullOrUndefined(node)) {
-        return "NNN NODE IS NULL or UNDEFINED"
-    } else {
-        // console.log(`NNN node '${node.freId()}'`)
-    }
-    INDENT = indent
-    const result: string[] = []
-    ast2StringPrivate(node, result, INDENT)
-    return result.join("\n")
+/**
+ * Convenience method to transform a model into a more or less readable string. Used for debugging purposes.
+ * @param node
+ */
+export function ast2string(node: FreNode): string {
+    return ast2stringIntern(node, "")
 }
 
-export function ast2StringPrivate(node: FreNode, result: string[], indent: string): void {
-    if (isNullOrUndefined(node)) {
-        return
-    } else {
-        // console.log(`1 node '${node.freId}'`)
-        // console.log(`2 node '${node.freId()}'`)
-    }
+function ast2stringIntern(node: FreNode, indent: string): string {
+    let result = ""
     const classifier = FreLanguage.getInstance().classifier(node.freLanguageConcept())
-    const nameProperty = classifier.properties.get("name")
-    if (nameProperty !== undefined) {
-        result.push(`${indent}${classifier.typeName} ${node["name"]}`)
-    } else {
-        result.push(`${indent}${classifier.typeName}}`)
-    }
-    for(const prop of Array.from(classifier.properties.values())) {
+    classifier.properties.forEach((prop) => {
         switch (prop.propertyKind) {
-            case "primitive": {
-                result.push(`${indent}${indent}${prop.name}: ${node[prop.name]}`)
+            case "primitive":
+                result += `   |${indent}${prop.name}: ${node[prop.name]}\n`
                 break
-            }
-            case "reference": {
+            case "reference":
                 if (prop.isList) {
-                    result.push(`${indent}${indent}${prop.name}: reference `)
-                    for(const ref of node[prop.name]) {
-                        result.push(`${indent}${indent}${indent} ref ${(ref as FreNodeReference<any>).name} / ${ref.pathname}`)
+                    const refs: FreNodeReference<FreNamedNode>[] = node[prop.name] as FreNodeReference<FreNamedNode>[]
+                    if (refs.length > 0) {
+                        result += `   |${indent}${prop.name}: ref [${refs.map((ref) => ref.name).join(", ")}]\n`
                     }
                 } else {
-                    result.push(`${indent}${indent}${prop.name}: reference ${(node[prop.name] as FreNodeReference<any>)?.name} / ${(node[prop.name] as FreNodeReference<any>)?.pathname}`)
+                    const ref: FreNodeReference<FreNamedNode> = node[prop.name] as FreNodeReference<FreNamedNode>
+                    if (!isNullOrUndefined(ref)) {
+                        result += `   |${indent}${prop.name}: ref ${ref.name}\n`
+                    }
                 }
                 break
-            }
-            case "part": {
-                result.push(`${indent}${indent}Part ${prop.name}`)
+            case "part":
                 if (prop.isList) {
-                    for(const part of node[prop.name]) {
-                        ast2StringPrivate(part, result, indent + INDENT + INDENT)
+                    const parts: FreNode[] = node[prop.name] as FreNode[]
+                    if (parts.length > 0) {
+                        result += `   |${indent}${prop.name}: ${prop.type} ${classifier.isNamespace ? "*" : ""}\n`
+                        parts.forEach((part) => {
+                            result += ast2stringIntern(part, indent + INDENT)
+                        })
                     }
                 } else {
-                    ast2StringPrivate(node[prop.name], result, indent  + INDENT + INDENT)
+                    const part: FreNode = node[prop.name] as FreNode
+                    if (!isNullOrUndefined(part)) {
+                        result += ast2stringIntern(part, indent + INDENT)
+                    }
                 }
                 break
-            }
         }
-    }
+    })
+    return result
 }

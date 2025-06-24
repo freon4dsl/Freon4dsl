@@ -3,7 +3,7 @@ import { FreMetaBinaryExpressionConcept, FreMetaClassifier } from "../../../lang
 import { getTypeCall } from "./GrammarUtils.js";
 import { BinaryExpMaker } from "../BinaryExpMaker.js";
 import { ParserGenUtil } from "../ParserGenUtil.js";
-import { Names } from "../../../utils/index.js";
+import { Names } from "../../../utils/on-lang/index.js";
 
 export class ChoiceRule extends GrammarRule {
     implementors: FreMetaClassifier[];

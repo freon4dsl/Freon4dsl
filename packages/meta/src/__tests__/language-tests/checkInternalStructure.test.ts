@@ -1,12 +1,14 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import {
+    FreMetaClassifier,
     FreMetaConcept,
     FreMetaExpressionConcept,
     FreMetaLanguage,
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
-} from '../../languagedef/metalanguage';
-import { LangUtil, MetaLogger } from '../../utils';
+    LangUtil
+} from '../../languagedef/metalanguage/index.js';
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { describe, test, expect } from "vitest";
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
@@ -109,7 +111,7 @@ describe("Checking internal structure of language", () => {
         });
 
         // we can find all subconcepts, also recursive
-        let list = LangUtil.subConcepts(baseConcept);
+        let list = FreMetaClassifier.subConcepts(baseConcept);
         expect(list).toContain(freLanguage.findConcept("BaseBB"));
         expect(list).toContain(freLanguage.findConcept("DD"));
         expect(list).not.toContain(freLanguage.findConcept("Model"));

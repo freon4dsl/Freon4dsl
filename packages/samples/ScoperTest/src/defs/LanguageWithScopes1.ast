@@ -1,0 +1,18 @@
+language StarterLanguage
+
+modelunit StarterUnit1 {
+    modules: LangModule1[];
+}
+
+// Simple module with imports:
+// - each module defines a set of variables
+// - in a module we can reference its local variables and the variables from the imported module
+// - variable shadowing is in work: if there are multiple variables with the same name,
+//          the local one is chosen
+concept LangModule1 implements INamed {
+    reference imports: LangModule1;
+    varDefinitions: Variable[];
+    reference varReferences: Variable[];
+}
+
+

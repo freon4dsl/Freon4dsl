@@ -7,7 +7,7 @@ import {
     FreMetaLanguage,
     FreMetaLimitedConcept,
 } from "../../languagedef/metalanguage/index.js";
-import { MetaLogger } from "../../utils/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { LanguageExpressionTester } from "../../languagedef/parser/LanguageExpressionTester";
 import { describe, test, expect, beforeEach } from "vitest";
 

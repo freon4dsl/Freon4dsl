@@ -1,18 +1,18 @@
-scoper Demo for language Demo
+scoper for language Demo
 
-isnamespace { DemoModel, DemoEntity, DemoFunction }
+isNamespace { DemoModel, DemoEntity, DemoFunction, AppliedFeature }
 
 // Inheritance scope
 DemoEntity {
-    namespace_addition = self.baseEntity;
+    imports { recursive self.baseEntity; }
 }
 /*
 Type {
-    namespace_addition = self.baseInterface
+    imports { self.baseInterface; }
 }
 */
 AppliedFeature {
-	namespace_replacement = typeof( container );
+	alternatives { owner().type(); }
 }
 
 //    t = typer.inferType(this.source) exclude: attributes where visibility = 'private'

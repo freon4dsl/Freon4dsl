@@ -1,8 +1,8 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { getTypeCall, makeIndent } from "../GrammarUtils.js";
-import { GenerationUtil } from "../../../../utils/index.js";
 import { ParserGenUtil } from "../../ParserGenUtil.js";
+import { GenerationUtil } from '../../../../utils/on-lang/GenerationUtil.js';
 
 export class RHSPartEntry extends RHSPropEntry {
     private readonly projectionName: string = "";

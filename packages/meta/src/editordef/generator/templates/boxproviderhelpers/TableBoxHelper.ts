@@ -4,7 +4,8 @@ import {
     FreMetaConceptProperty,
     FreMetaLanguage,
 } from "../../../../languagedef/metalanguage/index.js";
-import { Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/on-lang/index.js";
+import { NamesForEditor } from "../../../../utils/on-lang-and-editor/index.js";
 import { ItemBoxHelper } from "./ItemBoxHelper.js";
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 
@@ -45,7 +46,7 @@ export class TableBoxHelper {
                 );
             });
             this._myTemplate.imports.core.add("TableRowBox").add("TableUtil");
-            return `private ${Names.tableProjectionMethod(projection)}(): TableRowBox {
+            return `private ${NamesForEditor.tableProjectionMethod(projection)}(): TableRowBox {
                         const cells: Box[] = [];
                         ${cellDefs.map((cellDef) => `cells.push(${cellDef})`).join(";\n")}
                         return TableUtil.rowBox(this._node, this._node.freOwnerDescriptor().propertyName, "${Names.classifier(concept)}", cells, this._node.freOwnerDescriptor().propertyIndex, ${hasHeaders});
@@ -62,8 +63,6 @@ export class TableBoxHelper {
      * @param property          The property to be projected
      * @param elementVarName    The name of the variable that holds the property at runtime
      * @param language          The language for which this projection is made
-     * @param coreImports
-     * @param configImports
      */
     public generatePropertyAsTable(
         orientation: FreEditProjectionDirection,

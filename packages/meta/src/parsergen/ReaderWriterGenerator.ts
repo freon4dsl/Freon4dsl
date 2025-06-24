@@ -1,20 +1,19 @@
 import * as fs from "fs";
-import { MetaLogger } from "../utils/index.js";
 import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import {
-    GenerationStatus,
-    FileUtil,
     Names,
     READER_FOLDER,
     READER_GEN_FOLDER,
     WRITER_FOLDER,
     WRITER_GEN_FOLDER,
-} from "../utils/index.js";
+} from "../utils/on-lang/index.js";
 import { FreEditUnit } from "../editordef/metalanguage/index.js";
 import { WriterTemplate, ReaderTemplate, GrammarGenerator } from "./parserTemplates/index.js";
 import { LanguageAnalyser } from "./parserTemplates/LanguageAnalyser.js";
 import { GrammarModel } from './parserTemplates/grammarModel/index.js';
-// import { Agl } from 'net.akehurst.language-agl-processor';
+import { MetaLogger } from '../utils/no-dependencies/index.js';
+import { FileUtil, GenerationStatus } from '../utils/file-utils/index.js';
+
 
 const LOGGER = new MetaLogger("ReaderWriterGenerator").mute();
 

@@ -1,6 +1,7 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { FileUtil, MetaLogger } from "../../utils/index.js";
+import { FileUtil, } from "../../utils/file-utils/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { ReaderWriterGenerator } from "../../parsergen/ReaderWriterGenerator";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import * as fs from "fs";

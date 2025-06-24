@@ -1,4 +1,5 @@
-import { CheckerPhase, CheckRunner, isNullOrUndefined, ParseLocationUtil } from "../../utils/index.js";
+import { CheckerPhase, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
+import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 import {
     FreMetaConcept,
     FreMetaInstance,
@@ -13,6 +14,7 @@ import {
 } from "../metalanguage/index.js";
 import { CommonChecker } from "./CommonChecker.js";
 import { ClassifierChecker } from "./ClassifierChecker.js";
+import { ReferenceResolver } from './ReferenceResolver.js';
 
 export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
     // @ts-ignore This property is set in the 'check' method, therefore we can assume that it is initialized in the private methods.
@@ -180,7 +182,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
     }
 
     private checkInstance(freInstance: FreMetaInstance) {
-        CommonChecker.checkClassifierReference(freInstance.concept, this.runner);
+        ReferenceResolver.resolveClassifierReference(freInstance.concept, this.runner, this.language);
         this.runner.nestedCheck({
             check: freInstance.concept.referred !== null,
             error: `Predefined instance '${freInstance.name}' should belong to a concept ${ParseLocationUtil.location(freInstance)}.`,
@@ -211,10 +213,7 @@ export class FreLangCheckerPhase2 extends CheckerPhase<FreMetaLanguage> {
                             error: `Predefined property '${freInstanceProperty.name}' should have a primitive type ${ParseLocationUtil.location(freInstanceProperty)}.`,
                             whenOk: () => {
                                 if (!!myProp) {
-                                    freInstanceProperty.property = MetaElementReference.create<FreMetaProperty>(
-                                        myProp,
-                                        "FreProperty",
-                                    );
+                                    freInstanceProperty.property = MetaElementReference.create<FreMetaProperty>(myProp);
                                     const myPropType: FreMetaPrimitiveType = myProp.type as FreMetaPrimitiveType;
                                     if (!myProp.isList) {
                                         this.runner.simpleCheck(
