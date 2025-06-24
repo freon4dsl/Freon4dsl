@@ -65,5 +65,5 @@ UnitType1 `unit1_1` {
             subParts
 
         }
-        imports unit1_2
+        imports `unit1_2`
 }
