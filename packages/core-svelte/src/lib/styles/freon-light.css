@@ -136,12 +136,13 @@
 }
 
 .text-component-input {
-    color: var(--freon-light-base-600);
-    background: var(--freon-light-accent-green);
+    color: var(--freon-light-accent-darkorange);
+    /*color: var(--freon-light-base-600);*/
+    /*background: var(--freon-light-accent-lightgreen);*/
 }
 
 .text-component-text {
-    color: var(--freon-light-base-600);
+    color: var(--freon-light-accent-darkorange);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-text-error {
@@ -153,7 +154,7 @@
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-action-placeholder {
-    color: var(--freon-light-base-150);
+    color: var(--freon-light-base-400);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
@@ -309,9 +310,9 @@
 }
 
 .brackets {
-    color: var(--freon-light-base-200);
+    color: var(--freon-light-base-400);
 }
 
 .drag-handle-icon {
-    fill: var(--freon-light-base-250);
+    fill: var(--freon-light-base-400);
 }

@@ -16,9 +16,10 @@ export class RHSPrimListEntryWithSeparator extends RHSPropPartWithSeparator {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        const tsBaseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        const freonBaseType: string = GenerationUtil.getFreonBaseTypeAsString(this.property);
         return `${ParserGenUtil.internalName(this.property.name)} = 
-            this.${mainAnalyserName}.${internalTransformPrimList}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}].toArray(), PrimValueType.${baseType}, '${this.separatorText}') as ${baseType}[]; // RHSPrimListEntryWithSeparator\n`;
+            this.${mainAnalyserName}.${internalTransformPrimList}<${tsBaseType}>(${nodeName}.asJsReadonlyArrayView()[${index}].toArray(), PrimValueType.${freonBaseType}, '${this.separatorText}') as ${tsBaseType}[]; // RHSPrimListEntryWithSeparator\n`;
     }
 
     toString(depth: number): string {

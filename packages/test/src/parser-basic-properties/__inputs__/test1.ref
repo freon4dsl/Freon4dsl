@@ -1,55 +1,55 @@
-RefsTest myName {
+RefsTest `myName` {
 	directRefs WithDirectRefs {
-                  	ref someName.otherName.xxx.yyy
+                  	ref `someName`.`otherName`.`xxx`.`yyy`
                   	// optRef not present
                   	refList
-                        name1.ff.gg.yuio
-                        name2
-                        name3
-                        name4
+                        `name1`.`ff`.`gg`.`yuio`
+                        `name2`
+                        `name3`
+                        `name4`
                     // optRefList not present
     }
     // indirectRefs not present
     withSeparator WithDirectRefs {
-                                    	ref someName.otherName.xxx.yyy
+                                    	ref `someName`.`otherName`.`xxx`.`yyy`
                                     	// optRef not present
                                     	refList
-                                          name1.ff.gg.yuio
-                                          name2
-                                          name3
-                                          name4
+                                          `name1`.`ff`.`gg`.`yuio`
+                                          `name2`
+                                          `name3`
+                                          `name4`
                                       // optRefList not present
                     } !
                     WithDirectRefs {
-                        ref someName2.otherName2.xxx2.yyy2
+                        ref `someName2`.`otherName2`.`xxx2`.`yyy2`
                         // optRef not present
                         refList
-                            name1.ff.gg.yuio
-                            name2
+                            `name1`.`ff`.`gg`.`yuio`
+                            `name2`
                         // optRefList not present
                     }
                     WithDirectRefs {
-                        ref someName.otherName.xxx.yyy
+                        ref `someName`.`otherName`.`xxx`.`yyy`
                         // optRef not present
                         refList
-                            name1.ff.gg.yuio
-                            name2
+                            `name1`.`ff`.`gg`.`yuio`
+                            `name2`
                         // optRefList not present
                     } !!
                     WithDirectRefs {
-                        ref someName.otherName.xxx.yyy
+                        ref `someName`.`otherName`.`xxx`.`yyy`
                         // optRef not present
                         refList
-                            name1.ff.gg.yuio
-                            name2
+                            `name1`.`ff`.`gg`.`yuio`
+                            `name2`
                         // optRefList not present
                     } !!
                     WithDirectRefs {
-                        ref someName.otherName.xxx.yyy
+                        ref `someName`.`otherName`.`xxx`.`yyy`
                         // optRef not present
                         refList
-                            name1.ff.gg.yuio
-                            name2
+                            `name1`.`ff`.`gg`.`yuio`
+                            `name2`
                         // optRefList not present
                     }
 }

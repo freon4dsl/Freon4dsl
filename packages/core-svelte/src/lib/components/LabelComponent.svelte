@@ -19,16 +19,13 @@
     let cssClass: string = $state('');
     let text: string = $state('');
 
-    onMount(() => {
-        if (!isNullOrUndefined(box)) {
-            box.refreshComponent = refresh;
-        }
-    });
-
     $effect(() => {
+        // runs after the initial onMount
         if (!isNullOrUndefined(box)) {
             box.refreshComponent = refresh;
         }
+        // Evaluated and re-evaluated when the box changes.
+        refresh('FROM component ' + box?.id);
     });
 
     const refresh = (why?: string) => {
@@ -39,11 +36,6 @@
             cssClass = box.cssClass;
         }
     };
-
-    $effect(() => {
-        // Evaluated and re-evaluated when the box changes.
-        refresh('FROM component ' + box?.id);
-    });
 </script>
 
 <!-- todo the 'text' here may contain spaces and other nasty stuff, should clean it up before using it as class-->

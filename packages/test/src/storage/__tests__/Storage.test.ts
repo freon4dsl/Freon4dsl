@@ -1,29 +1,29 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { InMemoryModel, LionWebRepositoryCommunication, ServerCommunication } from "@freon4dsl/core";
+import { describe, it, expect, beforeEach, afterEach, test } from "vitest";
+import { AST, InMemoryModel, ServerCommunication } from "@freon4dsl/core";
 import { RulesModelEnvironment } from "../config/gen/RulesModelEnvironment.js";
 import { Data, Rules, RulesModel } from "../language/gen/index.js";
 import { fillDataUnit, fillRulesUnit, modelToString } from "./StoreModelCreator.js";
 
 /**
- * For these test to run, a server should be up and running
+ * For these test to run, a server should be up and running 
  */
 describe.skip("Store test", () => {
     let inMemoryModel: InMemoryModel;
     let env = RulesModelEnvironment.getInstance();
     let freonServer = new ServerCommunication();
-    let lionWebServer = new LionWebRepositoryCommunication();
     const communication = freonServer;
     let originalModel: RulesModel;
-    // FreLogger.unmute("LionWebRepositoryCommunication")
 
     beforeEach(async () => {
         inMemoryModel = new InMemoryModel(env, communication);
         // Create a model in the server
         originalModel = (await inMemoryModel.createModel("serverModel")) as RulesModel;
-        const unit1 = (await inMemoryModel.createUnit("dataUnit1", "Data")) as Data;
-        const unit2 = (await inMemoryModel.createUnit("rulesUnit1", "Rules")) as Rules;
-        fillDataUnit(unit1);
-        fillRulesUnit(unit2);
+        let unit1 = (await inMemoryModel.createUnit("data Unit1", "Data")) as Data;
+        let unit2 = (await inMemoryModel.createUnit("rules Unit1", "Rules")) as Rules;
+        AST.change(() => {
+            fillDataUnit(unit1);
+            fillRulesUnit(unit2);
+        })
         await inMemoryModel.saveUnit(unit1);
         await inMemoryModel.saveUnit(unit2);
     });
@@ -31,24 +31,32 @@ describe.skip("Store test", () => {
     afterEach(async () => {
         await inMemoryModel.deleteModel();
     });
+    
+    it("create new model", async () => {
+        const newModel = (await inMemoryModel.createModel(("New Model")) as RulesModel)
+        const retrievedModel = (await inMemoryModel.openModel("New Model")) as RulesModel;
+        expect(retrievedModel !== undefined).toBeTruthy()
+        expect(retrievedModel.freLanguageConcept(), `Model ${retrievedModel.freLanguageConcept()}`).toBe("RulesModel");
+        expect(retrievedModel.name, `Model ${retrievedModel.name}`).toBe("New Model");
+    })
 
     it("open existing model", async () => {
         const retrievedModel = (await inMemoryModel.openModel("serverModel")) as RulesModel;
         expect(retrievedModel.getUnits().length === 2);
-        expect(retrievedModel.freLanguageConcept()).toBe("RulesModel");
-        expect(retrievedModel.getUnits().some((unit) => unit.name === "dataUnit1")).toBeTruthy();
-        expect(retrievedModel.getUnits().some((unit) => unit.name === "rulesUnit1")).toBeTruthy();
-
+        expect(retrievedModel.freLanguageConcept(), `Model ${retrievedModel.freLanguageConcept()}`).toBe("RulesModel");
+        expect(retrievedModel.name, `Model ${retrievedModel.name}`).toBe("serverModel");
+        expect(retrievedModel.getUnits().some((unit) => unit.name === "data Unit1"), `Unit ${retrievedModel?.getUnits()?.map(u => u.name).join(", ")}`).toBeTruthy();
+        expect(retrievedModel.getUnits().some((unit) => unit.name === "rules Unit1"), `Unit ${retrievedModel?.getUnits()?.map(u => u.name).join(", ")}`).toBeTruthy();
         expect(
             retrievedModel
                 .getUnits()
-                .find((unit) => unit.name === "dataUnit1")
+                .find((unit) => unit.name === "data Unit1")
                 .freLanguageConcept() === "Data",
         );
         expect(
             retrievedModel
                 .getUnits()
-                .find((unit) => unit.name === "rulesUnit1")
+                .find((unit) => unit.name === "rules Unit1")
                 .freLanguageConcept() === "Rules",
         );
 
@@ -57,9 +65,11 @@ describe.skip("Store test", () => {
         );
     });
 
-    it("delete unit model", async () => {
-        const unit1 = inMemoryModel.getUnitByName("dataUnit1");
-        expect(unit1).toBeDefined;
+    test("delete unit model", async () => {
+        const unit1 = await inMemoryModel.getUnitByName("data Unit1");
+        expect(unit1).toBeDefined();
+        const unit2 = await inMemoryModel.getUnitByName("rules Unit1");
+        expect(unit2).toBeDefined();
         expect(inMemoryModel.model.getUnits().length).toBe(2);
         await inMemoryModel.deleteUnit(unit1);
         expect(inMemoryModel.model.getUnits().length).toBe(1);
@@ -67,5 +77,19 @@ describe.skip("Store test", () => {
         const newInMemoryModel = new InMemoryModel(env, communication);
         const retrievedModel = (await newInMemoryModel.openModel("serverModel")) as RulesModel;
         expect(retrievedModel.getUnits().length === 1);
-    });
+    })
+    
+    test("rename  unit", async () => {
+        const unit1 = await inMemoryModel.getUnitByName("data Unit1");
+        expect(unit1).toBeDefined();
+        unit1.name = "data Unit1 has <changed>@#$% !"
+        await freonServer.renameModelUnit(inMemoryModel.model.name, "data Unit1", "data Unit1 has <changed>@#$% !", unit1)
+
+        const newInMemoryModel = new InMemoryModel(env, communication);
+        const retrievedModel = (await newInMemoryModel.openModel("serverModel")) as RulesModel;
+        expect(retrievedModel.getUnits().length === 2);
+        expect(!retrievedModel.getUnits().map(u => u.name).includes("data Unit1"));
+        expect(retrievedModel.getUnits().map(u => u.name).includes("data Unit1 has <changed>@#$% !"));
+        expect(retrievedModel.getUnits().map(u => u.name).includes("rules Unit1"));
+    })
 });

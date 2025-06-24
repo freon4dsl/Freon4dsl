@@ -1,7 +1,7 @@
 export class ReservedWordsTemplate {
     generateConst(): string {
         // console.log("Generating ReservedWords...", );
-        return `export const reservedWordsInTypescript = [
+        return `export const reservedWordsInTypescript: string[] = [
     // The following keywords are reserved and cannot be used as an Identifier:
     "break",
     "case",

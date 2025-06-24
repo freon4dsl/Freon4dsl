@@ -29,15 +29,15 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^3.0.5",
-    "@vitest/ui": "^3.0.5"
+    "vitest": "3.2.4",
+    "@vitest/ui": "3.2.4"
   },
   "dependencies": {
-    "@types/koa": "^2.13.4",
+    "@types/koa": "2.15.0",
     "@lionweb/validation": "^0.6.3",
-    "koa": "2.13.1",
-    "koa-bodyparser": "4.3.0",
-    "koa-router": "10.0.0",
+    "koa": "3.0.0",
+    "koa-bodyparser": "4.4.1",
+    "koa-router": "13.0.1",
     "koa2-cors": "2.0.6",
     "supertest": "^7.0.0",
     "tslib": "^2.6.3"

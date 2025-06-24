@@ -8,7 +8,7 @@ import {
     FreNamedNode,
     FreNodeReference,
 } from "../ast/index.js";
-import { isNullOrUndefined } from '../util/index.js';
+import { isNullOrUndefined } from "../util/index.js";
 
 export function isFreModel(node: FreNode): node is FreModel {
     return !!node && node.freIsModel && node.freIsModel();

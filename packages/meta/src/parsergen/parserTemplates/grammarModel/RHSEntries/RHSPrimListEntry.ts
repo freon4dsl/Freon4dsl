@@ -16,9 +16,10 @@ export class RHSPrimListEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
-        const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        const tsBaseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        const freonBaseType: string = GenerationUtil.getFreonBaseTypeAsString(this.property);
         return `${ParserGenUtil.internalName(this.property.name)} = 
-            this.${mainAnalyserName}.${internalTransformPrimList}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView(), PrimValueType.${baseType}); // RHSPrimListEntry\n`;
+            this.${mainAnalyserName}.${internalTransformPrimList}<${tsBaseType}>(${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView(), PrimValueType.${freonBaseType}); // RHSPrimListEntry\n`;
     }
 
     toString(depth: number): string {

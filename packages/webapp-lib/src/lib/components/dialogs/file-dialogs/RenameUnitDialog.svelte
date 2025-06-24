@@ -35,7 +35,7 @@
     import { renameUnitDialogVisible } from "../../stores/DialogStore.svelte";
     import { EditorState } from "$lib/language/EditorState";
     import * as Keys from "@freon4dsl/core";
-    import {isNullOrUndefined, type FreUnitIdentifier} from "@freon4dsl/core";
+    import { isNullOrUndefined, type FreUnitIdentifier, isIdentifier } from "@freon4dsl/core";
 
     const cancelStr: string = "cancel";
     const submitStr: string = "submit";
@@ -70,11 +70,8 @@
         if (unitNames.ids.map((u: FreUnitIdentifier) => u.name).includes(newName)) {
             helperText = "Unit with this name already exists.";
             return true;
-        } else if (newName.match(/^[0-9]/)) {
-            helperText = "Name must start with a character.";
-            return true;
-        } else if (!newName.match(/^[a-z,A-Z][a-z,A-Z0-9_]*$/)) {
-            helperText = "Name may contain only characters and numbers, and must start with a character.";
+        } else if (!isIdentifier(newName)) {
+            helperText = "Name syntax invalid.";
             return true;
         } else {
             helperText = initialHelperText;

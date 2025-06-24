@@ -1,5 +1,5 @@
 import { FreNode } from "../../ast/index.js";
-import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT } from "../../util/index.js";
+import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT, isExpressionPreOrPost } from "../../util/index.js";
 import { FreLogger } from "../../logging/index.js";
 import {ClientRectangle, UndefinedRectangle} from "../ClientRectangleTypes.js";
 
@@ -198,6 +198,42 @@ export abstract class Box {
         }
         LOGGER.log(`${this.id} nextLeafRight: referring to parent`)
         return this.parent.nextLeafRight;
+    }
+
+    /**
+     * Get the left (previous) leaf box, but ignore the expression placeholders at the start and end of an expression
+     * and the placeholders arounf binary symbols.
+     * Used when tabbing through an expression.
+     */
+    get nextLeafLeftWithoutExpressionPlaceHolders(): Box {
+        const boxLeft: Box = this.nextLeafLeft;
+        if (!isNullOrUndefined(boxLeft)) {
+            if (isExpressionPreOrPost(boxLeft)) {
+                // Special expression prefix or postfix box, don't return it
+                return boxLeft.nextLeafLeftWithoutExpressionPlaceHolders;
+            } else {
+                return boxLeft;
+            }
+        }
+        return null
+    }
+
+    /**
+     * Get the right (next) leaf box, but ignore the expression placeholders at the start and end of an expression
+     * and the placeholders arounf binary symbols.
+     * Used when tabbing through an expression.
+     */
+    get nextLeafRightWithoutExpressionPlaceHolders(): Box {
+        const boxRight: Box = this.nextLeafRight;
+        if (!isNullOrUndefined(boxRight)) {
+            if (isExpressionPreOrPost(boxRight)) {
+                // Special expression prefix or postfix box, don't return it
+                return boxRight.nextLeafRightWithoutExpressionPlaceHolders;
+            } else {
+                return boxRight;
+            }
+        }
+        return null
     }
 
     // TODO change name into nextSelectableLeafLeft or something similar?

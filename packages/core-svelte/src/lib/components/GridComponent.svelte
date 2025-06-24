@@ -45,9 +45,6 @@
         LOGGER.log('GridComponent afterUpdate for girdBox ' + box.node.freLanguageConcept());
         box.refreshComponent = refresh;
         box.setFocus = setFocus;
-    });
-
-    $effect(() => {
         // Evaluated and re-evaluated when the box changes.
         refresh(box?.$id);
     });

@@ -1,4 +1,4 @@
-PitExpTest NAME {
+PitExpTest `NAME` {
 	 value where {
 	 // expressions with initiator
 	 $ self == self

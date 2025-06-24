@@ -84,7 +84,8 @@ describe("Testing Unparser", () => {
                 xx.expression = multiplyExpression;
 
                 result = unparser.writeToString(multiplyExpression, 0, false);
-                expect(result).toBe("1 + 2 * Person");
+                result = result.replace(new RegExp("\\s+", "gm"), " ");
+                expect(result).toBe("1 + 2 * `Person`");
             })
         });
 
@@ -103,7 +104,7 @@ describe("Testing Unparser", () => {
                 // determine(AAP: TEST1) : TEST2 = "Hello Demo" + "Goodbye" has been created
                 // unparse using a short notation
                 result = unparser.writeToString(determine, 0, true);
-                expect(result).toBe("DemoFunction determine {");
+                expect(result).toBe("DemoFunction `determine` {");
                 // unparse using a long notation
                 result = unparser.writeToString(determine);
                 expect(result).toMatchSnapshot();
@@ -132,21 +133,21 @@ describe("Testing Unparser", () => {
                 result = unparser.writeToString(personEnt, 0, false);
                 // console.log(result)
                 expect(result).toBe(
-                    "DemoEntity Person {\n" +
+                    "DemoEntity `Person` {\n" +
                     "    baseInterface_attr 0\n" +
                     '    simpleprop ""\n' +
                     '    x ""\n' +
                     "    attributes\n" +
-                    "        age : Boolean\n" +
-                    "        name : String\n" +
+                    "        `age` : `Boolean`\n" +
+                    "        `name` : `String`\n" +
                     "    entAttributes\n" +
                     "\n" +
                     "    functions\n" +
-                    "        DemoFunction first {\n" +
+                    "        DemoFunction `first` {\n" +
                     "            expression 5 + 24\n" +
                     "            parameters\n" +
-                    "                Resultvar : someOtherEntity\n" +
-                    "            declaredType Boolean\n" +
+                    "                `Resultvar` : `someOtherEntity`\n" +
+                    "            declaredType `Boolean`\n" +
                     "        }\n" +
                     "    int_attrs\n" +
                     "\n" +

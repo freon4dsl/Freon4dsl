@@ -19,7 +19,8 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
     }
 
     toMethod(index: number, nodeName: string): string {
-        const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        const tsBaseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        const freonBaseType: string = GenerationUtil.getFreonBaseTypeAsString(this.property);
         // return `// RHSPrimListGroup
         //     if (!!${nodeName}[${index}]) {
         //         // get the group that represents the optional primitive
@@ -31,7 +32,7 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
             if (!!${nodeName}.toArray()[${index}]) {
                 ${ParserGenUtil.internalName(this.property.name)} = [];
                 ${nodeName}.toArray()[${index}].toArray().forEach((item) => {
-                    const val = this.mainAnalyser.${internalTransformPrimValue}<${baseType}>(item.asJsReadonlyArrayView()[0], PrimValueType.${baseType})
+                    const val = this.mainAnalyser.${internalTransformPrimValue}<${tsBaseType}>(item.asJsReadonlyArrayView()[0], PrimValueType.${freonBaseType})
                     ${ParserGenUtil.internalName(this.property.name)}.push(val);
                 })
             }`;

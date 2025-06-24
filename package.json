@@ -5,6 +5,7 @@
     "rebuild": "npm run clean && npm install && npm run build && npm run test",
     "rebuild-dev": "npm run clean && npm install && npm run build-dev",
     "clean": "rm -f package-lock.json && rm -rf node_modules/ && npm run clean --workspaces --if-present",
+    "clean-all": "npm run clean-all --workspaces --if-present",
     "start": "npm run start --stream --parallel",
     "build": "npm run build --workspaces --if-present",
     "build-dev": "npm run build-dev --workspaces --if-present",
@@ -23,10 +24,6 @@
     "@rollup/plugin-node-resolve": "16.0.0",
     "@rollup/plugin-typescript": "12.1.2",
     "@tsconfig/svelte": "5.0.4",
-    "@types/koa": "2.0.48",
-    "@types/koa-bodyparser": "4.2.2",
-    "@types/koa-router": "7.0.40",
-    "@types/koa2-cors": "2.0.1",
     "@types/lodash": "4.17.4",
     "@types/node": "20.14.1",
     "@types/pegjs": "0.10.6",
@@ -48,7 +45,7 @@
     "tslib": "^2.6.3",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.29.0",
-    "@vitest/ui": "^3.0.5"
+    "@vitest/ui": "3.2.4"
   },
   "workspaces": [
     "packages/core",

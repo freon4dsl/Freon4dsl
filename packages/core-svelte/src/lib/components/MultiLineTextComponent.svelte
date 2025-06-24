@@ -22,6 +22,7 @@
     /**
      */
     $effect(() => {
+        // runs after the initial onMount
         LOGGER.log('Start afterUpdate id: ' + id);
         placeholder = box.placeHolder;
         box.setFocus = setFocus;

@@ -1,6 +1,6 @@
 import { FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { FreLionwebSerializer } from "../index.js";
+import { FreLionwebSerializer, ParameterType } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 import { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 import { ServerCommunication } from "./ServerCommunication.js";
@@ -60,7 +60,7 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
     async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNamedNode) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName.length > 0) {
-            const res = await this.fetchWithTimeout<Object>(modelPath, ``);
+            const res = await this.fetchWithTimeout<Object>(modelPath, {});
             if (!!res) {
                 try {
                     const serializer = new FreLionwebSerializer();
@@ -102,12 +102,13 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
         }
     }
 
-    override async fetchWithTimeout<T>(path: string, params?: string): Promise<T> {
-        LOGGER.log(`LIONWEB FETCHG: ${SERVER_URL}${path}${params}`);
+    override async fetchWithTimeout<T>(path: string, params: ParameterType): Promise<T> {
+        const parameters = ServerCommunication.findParams(params);
+        LOGGER.log(`LIONWEB FETCHG: ${SERVER_URL}${path}${parameters}`);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
-            const promise = await fetch(`${SERVER_URL}${path}${params}`, {
+            const promise = await fetch(`${SERVER_URL}${path}${parameters}`, {
                 signal: controller.signal,
                 method: "get",
                 headers: {
