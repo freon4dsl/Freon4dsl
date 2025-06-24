@@ -75,11 +75,11 @@
     "@smui/tooltip": "^8.0.0-beta.3",
     "@smui/top-app-bar": "^8.0.0-beta.3",
     "@sveltejs/adapter-auto": "^4.0.0",
-    "@sveltejs/kit": "2.17.2",
+    "@sveltejs/kit": "^2.22.0",
     "@sveltejs/package": "^2.3.10",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
-    "mobx": "^6.12.13",
     "click-outside": "^2.0.2",
+    "mobx": "^6.12.13",
     "publint": "^0.3.5",
     "sass": "^1.77.6",
     "smui-theme": "^8.0.0-beta.3",
@@ -91,12 +91,11 @@
   "dependencies": {
     "@freon4dsl/core": "1.1.0-beta.3",
     "@freon4dsl/core-svelte": "1.1.0-beta.3",
-    "svelte": "5.25.3",
-    "click-outside": "^2.0.2",
-    "mobx": "^6.12.13",
     "@material/theme": "^14.0.0",
     "@material/typography": "^14.0.0",
-    "@mdi/js": "^7.4.47"
+    "@mdi/js": "^7.4.47",
+    "click-outside": "^2.0.2",
+    "mobx": "^6.12.13",
+    "svelte": "5.25.3"
   }
 }
-
