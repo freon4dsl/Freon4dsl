@@ -136,13 +136,13 @@
 }
 
 .text-component-input {
-    color: var(--freon-light-accent-darkorange);
+    color: var(--freon-light-accent-darkgreen);
     /*color: var(--freon-light-base-600);*/
     /*background: var(--freon-light-accent-lightgreen);*/
 }
 
 .text-component-text {
-    color: var(--freon-light-accent-darkorange);
+    color: var(--freon-light-accent-darkgreen);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-text-error {
