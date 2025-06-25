@@ -159,10 +159,10 @@ export class FreUndoManager {
      * Constructor subscribes to all changes in the model.
      */
     private constructor() {
-        FreChangeManager.getInstance().changePrimCallbacks.push((delta: FreDelta) => this.addDelta(delta));
-        FreChangeManager.getInstance().changePartCallbacks.push((delta: FreDelta) => this.addDelta(delta));
-        FreChangeManager.getInstance().changeListElemCallbacks.push((delta: FreDelta) => this.addDelta(delta));
-        FreChangeManager.getInstance().changeListCallbacks.push((delta: FreDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().subscribeToPrimitive((delta: FreDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().subscribeToPart((delta: FreDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().subscribeToListElement((delta: FreDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().subscribeToList((delta: FreDelta) => this.addDelta(delta));
     }
 
     private addDelta(delta: FreDelta) {

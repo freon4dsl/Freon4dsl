@@ -33,10 +33,26 @@ export class FreChangeManager {
     private constructor() {}
 
     // the callbacks to be executed upon the different kind of changes to the model
-    changePrimCallbacks: callback[] = [];
-    changePartCallbacks: callback[] = []; // references are also parts here: the FreNodeReference object is treated as part
-    changeListElemCallbacks: callback[] = [];
-    changeListCallbacks: callback[] = [];
+    private changePrimCallbacks: callback[] = [];
+    private changePartCallbacks: callback[] = []; // references are also parts here: the FreNodeReference object is treated as part
+    private changeListElemCallbacks: callback[] = [];
+    private changeListCallbacks: callback[] = [];
+
+    public subscribeToPrimitive(callback: callback) {
+        FreChangeManager.getInstance().changePrimCallbacks.push(callback);
+    }
+
+    public subscribeToPart(callback: callback) {
+        FreChangeManager.getInstance().changePartCallbacks.push(callback);
+    }
+
+    public subscribeToListElement(callback: callback) {
+        FreChangeManager.getInstance().changeListElemCallbacks.push(callback);
+    }
+
+    public subscribeToList(callback: callback) {
+        FreChangeManager.getInstance().changeListCallbacks.push(callback);
+    }
 
     /**
      * Reacts to the change of the value of a part property
