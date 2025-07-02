@@ -10,7 +10,7 @@ export class ImportExportHandler {
             this.langEnv = WebappConfigurator.getInstance().langEnv;
             progressIndicatorShown.value = true;
             let showIt: boolean = true; // only show the first of the imported units
-            for (let file of fileList) {
+            for (const file of fileList) {
                 this.readSingleFile(file, showIt);
                 showIt = false;
             }
@@ -42,8 +42,12 @@ export class ImportExportHandler {
                                 showIt,
                             );
                         }
-                    } catch (e: any) {
-                        setUserMessage(`${e.message}`);
+                    } catch (e: unknown) {
+                        if (e instanceof Error) {
+                            setUserMessage(`${e.message}`);
+                        } else {
+                            setUserMessage("Unknown error while importing file")
+                        }
                     }
                 }
             };
@@ -78,11 +82,11 @@ export class ImportExportHandler {
             return;
         }
         // create a text string from the unit
-        let text: string = this.langEnv!.writer.writeToString(unit);
+        const text: string = this.langEnv!.writer.writeToString(unit);
 
         // get the default file name from the unit
         const fileExtension: string | undefined = this.langEnv!.fileExtensions.get(unit.freLanguageConcept());
-        let defaultFileName: string = unit.name + "." + fileExtension;
+        const defaultFileName: string = unit.name + "." + fileExtension;
 
         // create an HTML element that contains the text string
         let textFile = null;
@@ -104,7 +108,7 @@ export class ImportExportHandler {
 
         // wait for the link to be added to the document
         window.requestAnimationFrame(function () {
-            let event = new MouseEvent("click");
+            const event = new MouseEvent("click");
             link.dispatchEvent(event);
             document.body.removeChild(link);
         });
@@ -115,7 +119,8 @@ export class ImportExportHandler {
         let result: string = "";
         const size: number = this.langEnv!.fileExtensions.size;
         let i: number = 0;
-        for (let [key, value] of this.langEnv!.fileExtensions) {
+        // eslint-disable-next-line  @typescript-eslint/no-unused-vars
+        for (const [key, value] of this.langEnv!.fileExtensions) {
             result += value;
             if (i < size - 1) {
                 // only add a comma between, not after, the extensions.
@@ -127,7 +132,7 @@ export class ImportExportHandler {
     }
 
     private metaTypeForExtension(extension: string) {
-        for (let [key, value] of this.langEnv!.fileExtensions) {
+        for (const [key, value] of this.langEnv!.fileExtensions) {
             if (value === extension) return key;
         }
         return "";

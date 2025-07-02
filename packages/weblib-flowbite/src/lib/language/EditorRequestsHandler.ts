@@ -163,7 +163,6 @@ export class EditorRequestsHandler {
     private showSearchResults(results: FreNode[], stringToFind: string) {
         const itemsToShow: FreError[] = [];
         if (!results || results.length === 0) {
-            // @ts-ignore
             itemsToShow.push(new FreError("No results for " + stringToFind, null, "", ""));
         } else {
             for (const elem of results) {

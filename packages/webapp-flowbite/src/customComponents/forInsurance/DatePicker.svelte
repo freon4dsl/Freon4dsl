@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {ExternalStringBox} from "@freon4dsl/core";
+    import { ExternalStringBox, notNullOrUndefined } from "@freon4dsl/core"
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
     // Props
@@ -33,7 +33,7 @@
 
     function getValue() {
         let startStr: string | undefined = box.getPropertyValue();
-        if (!!startStr && startStr.length > 0) {
+        if (notNullOrUndefined(startStr) && startStr.length > 0) {
             value = startStr;
         } else {
             value = "2024-02-24";

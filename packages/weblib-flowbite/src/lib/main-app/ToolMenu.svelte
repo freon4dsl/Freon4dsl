@@ -4,9 +4,11 @@
 	import type { MenuItem } from '$lib/ts-utils/MenuItem.js';
 	import {dialogs} from "$lib";
 
+	// eslint-disable-next-line  @typescript-eslint/no-unused-vars
 	const runInterpreter = (id: number) => {
 		// console.log('runInterpreter ' + id);
 	};
+	// eslint-disable-next-line  @typescript-eslint/no-unused-vars
 	const validate = (id: number) => {
 		// console.log('validate ' + id);
 	};

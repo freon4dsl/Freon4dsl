@@ -66,5 +66,5 @@ export function indexForTab(unit: FreUnitIdentifier): number {
 	return -1;
 }
 
-export let progressIndicatorShown = $state({ value: false });
-export let noUnitAvailable = $state({ value: true });
+export const progressIndicatorShown = $state({ value: false });
+export const noUnitAvailable = $state({ value: true });

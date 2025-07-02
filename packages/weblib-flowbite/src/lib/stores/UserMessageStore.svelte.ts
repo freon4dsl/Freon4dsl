@@ -13,7 +13,7 @@ export const messageInfo: MessageInfo = $state({
     userMessage: "This is an important message. Once you've read it, you can dismiss it."
 })
 
-export let userMessageOpen: { value: boolean } =  $state({ value: false })
+export const userMessageOpen: { value: boolean } =  $state({ value: false })
 
 export function setUserMessage(message: string, sever?: FreErrorSeverity) {
     messageInfo.userMessage = message;

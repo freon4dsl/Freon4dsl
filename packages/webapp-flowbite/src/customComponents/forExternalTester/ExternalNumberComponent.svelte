@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {ExternalNumberBox, isNullOrUndefined} from "@freon4dsl/core";
+    import { ExternalNumberBox, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import { type FreComponentProps } from "@freon4dsl/core-svelte";
 
     // Props
@@ -19,7 +19,7 @@
     getValue();
 
     const onChange = () => {
-        if (!!value && value.length > 0) {
+        if (notNullOrUndefined(value) && value.length > 0) {
             box.setPropertyValue(Number.parseInt(value));
         }
     }

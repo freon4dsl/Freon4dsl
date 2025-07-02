@@ -1,37 +1,37 @@
 <script lang="ts">
-    import {Button, Modal, Radio, Helper} from 'flowbite-svelte';
-    import {dialogs, initializing} from '$lib/stores/WebappStores.svelte';
-    import {serverInfo} from '$lib/stores/ModelInfo.svelte';
-    import {WebappConfigurator} from '$lib/language';
-    import {setUserMessage} from '$lib/stores/UserMessageStore.svelte';
-    import {FolderOpenSolid} from "flowbite-svelte-icons";
-    import { cancelButtonClass, okButtonClass, radioInputClass, radioLabelClass } from '$lib/stores/StylesStore.svelte';
+    import { Button, Modal } from "flowbite-svelte"
+    import { dialogs, initializing } from "$lib/stores/WebappStores.svelte"
+    import { serverInfo } from "$lib/stores/ModelInfo.svelte"
+    import { WebappConfigurator } from "$lib/language"
+    import { setUserMessage } from "$lib/stores/UserMessageStore.svelte"
+    import { FolderOpenSolid } from "flowbite-svelte-icons"
+    import { cancelButtonClass, okButtonClass, radioInputClass, radioLabelClass } from "$lib/stores/StylesStore.svelte"
 
-    let errorText: string = $state('');
-    let modelToOpen = $state('');
+    // let errorText: string = $state("")
+    let modelToOpen = $state("")
 
     function resetVariables() {
-        dialogs.openModelDialogVisible = false;
-        serverInfo.allModelNames = [];
-        modelToOpen = "";
-        errorText = '';
+        dialogs.openModelDialogVisible = false
+        serverInfo.allModelNames = []
+        modelToOpen = ""
+        // errorText = ""
     }
 
     function cancel() {
         if (initializing.value) {
-            setUserMessage("You must select or create a model, before you can start!");
+            setUserMessage("You must select or create a model, before you can start!")
         }
-        resetVariables();
+        resetVariables()
     }
 
     async function openModel() {
         // console.log('openModel: ' + modelToOpen)
         if (modelToOpen.length > 0) {
-            await WebappConfigurator.getInstance().openModel(modelToOpen);
-            initializing.value = false;
-            resetVariables();
+            await WebappConfigurator.getInstance().openModel(modelToOpen)
+            initializing.value = false
+            resetVariables()
         } else {
-            errorText = 'Please, select one of the models below.'
+            // errorText = "Please, select one of the models below."
         }
     }
 

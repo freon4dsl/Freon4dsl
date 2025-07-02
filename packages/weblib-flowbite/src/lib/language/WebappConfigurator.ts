@@ -71,7 +71,7 @@ export class WebappConfigurator {
      * and make sure that the editor is able to get user messages to the webapp.
      */
     static initialize(editorEnvironment: FreEnvironment): void {
-        let langEnv: FreEnvironment = editorEnvironment
+        const langEnv: FreEnvironment = editorEnvironment
         // the language name
         langInfo.name = langEnv.languageName
 
@@ -233,7 +233,7 @@ export class WebappConfigurator {
         noUnitAvailable.value = true
     }
 
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line  @typescript-eslint/no-unused-vars
     renameModel(newName: string) {
         // todo implement renaming in the server
         // console.log(newName)

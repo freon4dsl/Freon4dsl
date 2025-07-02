@@ -47,6 +47,7 @@
     };
 
     // save unit menuitem
+    // eslint-disable-next-line  @typescript-eslint/no-unused-vars
     const saveUnit = (id: number) => {
         // console.log('FileMenu.saveUnit: ' + id); // + $currentUnitName);
         if (editorInfo.currentUnit) {
@@ -58,6 +59,7 @@
     };
 
     // delete model menuitem
+    // eslint-disable-next-line  @typescript-eslint/no-unused-vars
     const deleteModel = async (id: number) => {
         // console.log('FileMenu.deleteModel ' + id);
         // get list of models from server
@@ -70,6 +72,7 @@
     };
 
     // import model unit menuitem
+    // eslint-disable-next-line  @typescript-eslint/no-unused-vars
     const importUnit = (id: number) => {
         // console.log('FileMenu.importUnit ' + id);
         // open the file browse dialog

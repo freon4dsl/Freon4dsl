@@ -5,24 +5,24 @@ export const infoPanelShown = $state({
     value: false,
 });
 
-export let searchResultLoading = $state({value: true});
-export let interpreterResultLoading = $state({value: true});
+export const searchResultLoading = $state({value: true});
+export const interpreterResultLoading = $state({value: true});
 
 export interface ErrorInfoInterface {
     list: FreError[];
 }
 // the current list of search results that is shown in the editor
-export let searchResults: ErrorInfoInterface = $state({list: []});
+export const searchResults: ErrorInfoInterface = $state({list: []});
 
 
-export let errorsLoading = $state({value: true});
+export const errorsLoading = $state({value: true});
 // the current list of errors in the model unit that is shown in the editor
-export let modelErrors: ErrorInfoInterface = $state({list: []});
+export const modelErrors: ErrorInfoInterface = $state({list: []});
 // the trace of the last call to the interpreter
-export let interpreterTrace: {value: TreeNodeData | undefined} = $state({value: undefined});
+export const interpreterTrace: {value: TreeNodeData | undefined} = $state({value: undefined});
 
 // the currently active tab and constants to indicate the tabs
 export const errorTab = "Errors";
 export const searchTab = "Search";
 export const interpreterTab = "Interpreter";
-export let activeTab = $state({value: errorTab});
+export const activeTab = $state({value: errorTab});

@@ -1,6 +1,6 @@
 <script lang="ts">
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
-    import {FragmentWrapperBox} from "@freon4dsl/core";
+    import { FragmentWrapperBox, notNullOrUndefined } from "@freon4dsl/core"
     import { Card } from 'flowbite-svelte';
 
     // Props
@@ -9,7 +9,7 @@
     // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
-        if (!!box.childBox) {
+        if (notNullOrUndefined(box.childBox)) {
             box.childBox.setFocus();
         }
     }

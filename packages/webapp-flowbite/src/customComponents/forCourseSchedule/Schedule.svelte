@@ -4,8 +4,8 @@
         ExternalPartListBox,
         type FreNode,
         FreNodeReference,
-        AST, isNullOrUndefined, LabelBox
-    } from "@freon4dsl/core";
+        AST, isNullOrUndefined, LabelBox, notNullOrUndefined
+    } from "@freon4dsl/core"
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
     import {Slot, TimeStamp} from "@freon4dsl/samples-course-schedule";
     import IconButton from "@smui/icon-button";
@@ -155,7 +155,7 @@
     /* Sort the list of slots based on the time */
     function initialize() {
         let startVal: FreNode[] | undefined = box.getPropertyValue();
-        if (!!startVal && box.getPropertyType() === "Slot") {
+        if (notNullOrUndefined(startVal) && box.getPropertyType() === "Slot") {
             // cast the startVal to the expected type, in this case "Slot[]".
             // sort the slots based on the time and remember which box belongs to which slot
             sortSlots(startVal as Slot[]);

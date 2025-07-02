@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Spinner, Table, TableBody, TableBodyCell, TableBodyRow } from "flowbite-svelte"
+    import { Spinner } from "flowbite-svelte"
     import { type FreError } from "@freon4dsl/core"
     import { searchResultLoading, searchResults } from "$lib/stores/InfoPanelStore.svelte"
     import { goToNode } from "$lib/ts-utils/CommonFunctions.js"

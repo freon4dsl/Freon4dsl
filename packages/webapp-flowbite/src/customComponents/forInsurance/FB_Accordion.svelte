@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import { AccordionItem, Accordion } from 'flowbite-svelte';
-    import {ExternalPartListBox} from "@freon4dsl/core";
+    import { ExternalPartListBox, notNullOrUndefined } from "@freon4dsl/core"
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
     // Props
@@ -9,13 +9,13 @@
 
     let panelOpen: boolean[] = $state([]);
     let multipleStr: string | undefined = box.findParam("multi");
-    let multiplePar: boolean = $state(!!multipleStr && multipleStr.length > 0);
+    let multiplePar: boolean = $state(notNullOrUndefined(multipleStr) && multipleStr.length > 0);
     let headerContent: string[] = $state([]);
     // <html>Svelte: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'FreNode'.<br/>No index signature with a parameter of type 'string' was found on type 'FreNode'.
 
     function initialize() {
         let multipleStr: string | undefined = box.findParam("multi");
-        multiplePar = !!multipleStr && multipleStr.length > 0;
+        multiplePar = notNullOrUndefined(multipleStr) && multipleStr.length > 0;
         let tmpHeaderContent: string[] = []; // to avoid triggering the effect multiple times.
         for (let i = 0; i < box.children.length; i++) {
             // this also sets the length of panelOpen!

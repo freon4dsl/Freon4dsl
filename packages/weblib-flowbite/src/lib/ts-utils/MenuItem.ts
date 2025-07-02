@@ -1,7 +1,7 @@
 export class MenuItem {
   title: string = "";
   action: (id: number) => void = () => {};
-  icon?: Object;
+  icon?: object;
   id: number = -1;
 }
 

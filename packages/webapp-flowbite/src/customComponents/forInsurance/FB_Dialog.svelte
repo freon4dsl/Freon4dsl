@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {ExternalStringBox, isNullOrUndefined} from "@freon4dsl/core";
+    import { ExternalStringBox, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
     import type {SvelteComponent} from "svelte";
     import { Button, Modal, Input, Helper } from 'flowbite-svelte';
@@ -16,7 +16,7 @@
 
     function initialize() {
         let tmpLabel: string | undefined = box.findParam('buttonLabel');
-        buttonLabel = (!!tmpLabel && tmpLabel.length > 0) ? tmpLabel : 'Open Dialog';
+        buttonLabel = (notNullOrUndefined(tmpLabel) && tmpLabel.length > 0) ? tmpLabel : 'Open Dialog';
         let tmpValue: string | undefined = box.getPropertyValue();
         if (!isNullOrUndefined(tmpValue)) {
             value = tmpValue;
