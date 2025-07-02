@@ -1,11 +1,12 @@
 @import 'tailwindcss';
+@import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-color-definitions.css';
 @import './theme-colors.css';
 @import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon.css';
 @import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-light.css';
 @import '../../../node_modules/@freon4dsl/core-svelte/dist/styles/freon-tw-dark.css';
 
-@source "../node_modules/flowbite-svelte/dist";
-@source "../node_modules/flowbite-svelte-icons/dist";
+@source "../../../node_modules/flowbite-svelte/dist";
+@source "../../../node_modules/flowbite-svelte-icons/dist";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

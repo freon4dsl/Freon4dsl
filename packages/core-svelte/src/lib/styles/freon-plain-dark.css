@@ -138,13 +138,13 @@
 
 .text-component-input {
     /*color: var(--freon-dark-base-600);*/
-    color: var(--color-dark-freon-accent-orange);
+    color: var(--freon-dark-accent-darkorange);
     /*background: var(--freon-dark-accent-green);*/
     background: var(--color-dark-freon-600);
 }
 
 .text-component-text {
-    color: var(--color-dark-freon-accent-orange);
+    color: var(--freon-dark-accent-darkorange);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
 .text-component-text-error {

@@ -161,21 +161,18 @@
 
 .dark .text-component-text {
     color: var(--color-dark-freon-accent-editable);
-    /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
 .dark .text-component-placeholder {
     color: var(--color-dark-freon-accent-editable);
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    opacity: 0.5;
 }
 .dark .text-component-action-placeholder {
-    color: var(--freon-white-400);
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    color: var(--freon-light-accent-lightgreen);
 }
 
 .dark .multiline-text-component {
     color: var(--color-dark-freon-accent-editable);
-    /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
 .dark .numeric-slider-component {
@@ -192,11 +189,11 @@
 .dark .dropdown-component {
     border-color: var(--color-dark-freon--100);
     box-shadow: 0 0 6px 0 var(--color-dark-freon--150);
-    background: var(--color-dark-freon--250);
+    background: var(--freon-light-accent-lightgreen);
 }
 
 .dark .dropdown-component-item {
-    color: var(--color-dark-freon--900);
+    color: var(--color-light-freon-accent-dropdown);
     /*background-color: var(--freon-dropdownitem-component-background-color, inherit);*/
     background: none;
 }
@@ -207,13 +204,14 @@
 }
 
 .dark .dropdown-component-item:hover {
-    color: var(--color-dark-freon--900);
-    background-color: var(--color-dark-freon--100);
+    color: var(--color-dark-freon--100);
+    background-color: var(--color-light-freon-accent-dropdown);
 }
 
 .dark .dropdown-component-selected {
-    color: var(--color-dark-freon--900);
-    background-color: var(--color-dark-freon--300);
+    color: var(--color-light-freon-accent-dropdown);
+    font-weight: bold;
+    background-color: var(--freon-light-accent-lightgreen);
 }
 
 /******************************************************************

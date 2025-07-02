@@ -136,31 +136,29 @@
 }
 
 .text-component-input {
-    color: var(--color-light-freon-accent-darkorange);
-    /*color: var(--freon-light-base-600);*/
-    /*background: var(--freon-light-accent-lightgreen);*/
+    color: var(--color-light-freon-400);
+    background: var(--freon-light-accent-lightgreen);
 }
 
 .text-component-text {
-    color: var(--color-light-freon-accent-darkorange);
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    color: var(--color-light-freon-400);
+
 }
 .text-component-text-error {
     text-decoration-color: var(--color-light-freon-accent-error);
 }
 
 .text-component-placeholder {
-    color: var(--color-light-freon-600);
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    color: var(--color-light-freon-400);
+    opacity: 0.5;
 }
 .text-component-action-placeholder {
-    color: var(--color-light-freon-400);
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    color: var(--color-light-freon-accent-dropdown);
+    opacity: 0.5;
 }
 
 .multiline-text-component {
     color: var(--color-light-freon-600);
-    /*background: var(--freon-text-component-background-color, inherit);*/
 }
 
 .numeric-slider-component {
@@ -179,12 +177,12 @@
  */
 .dropdown-component {
     border-color: var(--color-light-freon-900);
-    box-shadow: 0 0 6px 0 var(--color-light-freon-250);
-    background: var(--color-light-freon-250);
+    /*box-shadow: 0 0 6px 0 var(--color-light-freon-250);*/
+    background: var(--freon-light-accent-lightgreen);
 }
 
 .dropdown-component-item {
-    color: var(--color-light-freon-900);
+    color: var(--color-light-freon-accent-dropdown);
     background: none;
 }
 
@@ -194,13 +192,14 @@
 }
 
 .dropdown-component-item:hover {
-    color: var(--color-light-freon-900);
-    background-color: var(--color-light-freon-100);
+    color: var(--color-light-freon-50);
+    background-color: var(--color-light-freon-accent-dropdown);
 }
 
 .dropdown-component-selected {
-    color: var(--color-light-freon-900);
-    background-color: var(--color-light-freon-300);
+    color: var(--color-light-freon-accent-dropdown);
+    font-weight: bold;
+    background-color: var(--freon-light-accent-lightgreen);
 }
 
 /******************************************************************

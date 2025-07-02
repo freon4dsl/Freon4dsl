@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 @import './theme-colors.css';
 
-@source "../node_modules/flowbite-svelte/dist";
-@source "../node_modules/flowbite-svelte-icons/dist";
+@source "../../../node_modules/flowbite-svelte/dist";
+@source "../../../node_modules/flowbite-svelte-icons/dist";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
