@@ -6,7 +6,7 @@
     import {editorInfo, serverInfo} from "$lib/stores/ModelInfo.svelte";
     import {dialogs, langInfo} from "$lib/stores";
     import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
-    import {isNullOrUndefined} from "@freon4dsl/core";
+    import { isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import {ImportExportHandler} from "$lib/language/ImportExportHandler";
 
     // variables for the file import
@@ -36,9 +36,10 @@
     // new unit menuitem
     const newUnit = async () => {
         // console.log('FileMenu.newUnit');
-        if (!!editorInfo.modelName && editorInfo.modelName.length > 0) {
+        if (notNullOrUndefined(editorInfo.modelName) && editorInfo.modelName.length > 0) {
             // get list of units from server, because new unit may not have the same name as an existing one
-            await WebappConfigurator.getInstance().updateUnitList();
+            // TODO Review: commented out next line, because updateUnitList() does not exist on WebAppConfigurator.
+            // await WebappConfigurator.getInstance().updateUnitList();
             dialogs.newUnitDialogVisible = true;
         } else {
             setUserMessage("Please, select or create a model first.");

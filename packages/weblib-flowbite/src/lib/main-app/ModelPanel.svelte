@@ -7,7 +7,7 @@
         Tooltip,
     } from 'flowbite-svelte';
     import {PlusOutline, FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
-    import {FreErrorSeverity, type FreUnitIdentifier} from "@freon4dsl/core";
+    import { FreErrorSeverity, type FreUnitIdentifier, notNullOrUndefined } from "@freon4dsl/core"
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
     import {editorInfo} from "$lib/stores/ModelInfo.svelte";
@@ -20,7 +20,7 @@
     let selectedIndex: number = $state(-1);
 
     $effect(() => {
-        myUnits = !!editorInfo.unitIds && editorInfo.unitIds.length > 0
+        myUnits = (notNullOrUndefined(editorInfo.unitIds) && editorInfo.unitIds.length > 0)
             ? editorInfo.unitIds.sort((u1: FreUnitIdentifier, u2: FreUnitIdentifier) => {
                 if (u1.name > u2.name) {
                     return 1;

@@ -10,8 +10,8 @@ import {
     InMemoryModel,
     type IServerCommunication,
     isNullOrUndefined,
-    type FreUnitIdentifier, AST
-} from '@freon4dsl/core';
+    type FreUnitIdentifier, AST, notNullOrUndefined
+} from "@freon4dsl/core"
 import { replaceProjectionsShown } from "$lib/stores/Projections.svelte.js"
 import { langInfo } from "$lib/stores/LanguageInfo.svelte.js"
 import { autorun, runInAction } from "mobx"
@@ -80,7 +80,7 @@ export class WebappConfigurator {
 
         // the names of the projections / views
         const proj: FreProjectionHandler = langEnv.editor.projection
-        let nameList: string[] = !!proj ? proj.projectionNames() : ["default"]
+        const nameList: string[] = notNullOrUndefined(proj) ? proj.projectionNames() : ["default"]
         // remove any old values
         langInfo.projectionNames.splice(0, langInfo.projectionNames.length)
         // push the right ones
@@ -110,7 +110,7 @@ export class WebappConfigurator {
      * @param modelName
      */
     async openModel(modelName: string) {
-        if (!!this.modelStore) {
+        if (notNullOrUndefined(this.modelStore)) {
             // const oldEditorInfo = editorInfo;
             // todo restore oldEditorInfo when anything goes wrong
             resetEditorInfo();
@@ -118,7 +118,7 @@ export class WebappConfigurator {
             await this.modelStore.openModel(modelName)
             const unitIdentifiers: FreUnitIdentifier[] = this.modelStore.getUnitIdentifiers()
             // console.log("unit identifiers: " + JSON.stringify(unitIdentifiers))
-            if (!!unitIdentifiers && unitIdentifiers.length > 0) {
+            if (notNullOrUndefined(unitIdentifiers) && unitIdentifiers.length > 0) {
                 // load the first unit and show it
                 let first: boolean = true
                 for (const unitIdentifier of unitIdentifiers) {
@@ -138,7 +138,7 @@ export class WebappConfigurator {
     }
 
     async getAllModelNames(): Promise<string[]> {
-        if (!!this.serverEnv) {
+        if (notNullOrUndefined(this.serverEnv)) {
             return await this.serverEnv?.loadModelList()
         } else {
             return []
@@ -161,9 +161,9 @@ export class WebappConfigurator {
      */
     private showUnit(toBeShown: FreModelUnit, unitId: FreUnitIdentifier) {
         // console.log("showUnit called, unitName: " + toBeShown?.name)
-        if (!!toBeShown) {
+        if (notNullOrUndefined(toBeShown)) {
             runInAction(() => {
-                if (!!this.langEnv) {
+                if (notNullOrUndefined(this.langEnv)) {
                     // console.log("setting rootElement to " + newUnit.name)
                     noUnitAvailable.value = false
                     // set the unit in the editor
@@ -198,7 +198,7 @@ export class WebappConfigurator {
         LOGGER.log("new model called: " + modelName)
         progressIndicatorShown.value = true
         // create a new model
-        if (!!this.modelStore) {
+        if (notNullOrUndefined(this.modelStore)) {
             resetEditorInfo();
             await this.modelStore.createModel(modelName)
             runInAction(() => {
@@ -217,7 +217,7 @@ export class WebappConfigurator {
         resetEditorInfo()
         await this.modelStore?.deleteModel()
         runInAction(() => {
-            if (!!this.langEnv) {
+            if (notNullOrUndefined(this.langEnv)) {
                 // console.log("setting rootElement to undefined")
                 this.setEditorToUndefined()
             }
@@ -226,13 +226,14 @@ export class WebappConfigurator {
 
     private setEditorToUndefined() {
         // todo change rootElement setter to accept null
-        // @ts-ignore
+        // @ts-expect-error TS2322
         this.langEnv.editor.rootElement = undefined
         BoxFactory.clearCaches()
         this.langEnv?.projectionHandler.clear()
         noUnitAvailable.value = true
     }
 
+    // eslint-disable-next-line no-unused-vars
     renameModel(newName: string) {
         // todo implement renaming in the server
         // console.log(newName)
@@ -257,12 +258,12 @@ export class WebappConfigurator {
     async saveUnit(unitId: FreUnitIdentifier | undefined) {
         if (!unitId) return
 
-        let unit: FreModelUnit | undefined = this.modelStore?.getUnitByName(unitId.name)
+        const unit: FreModelUnit | undefined = this.modelStore?.getUnitByName(unitId.name)
         LOGGER.log("saveUnit: " + editorInfo.currentUnit?.name + `real name is ${(this.langEnv!.editor.rootElement as FreModelUnit)?.name}`)
-        if (!!unit) {
-            if (!!editorInfo.modelName && editorInfo.modelName.length) {
-                if (!!unit.name && unit.name.length > 0) {
-                    if (!isNullOrUndefined(editorInfo.currentUnit)) {
+        if (notNullOrUndefined(unit)) {
+            if (notNullOrUndefined(editorInfo.modelName) && editorInfo.modelName.length > 0) {
+                if (notNullOrUndefined(unit.name) && unit.name.length > 0) {
+                    if (notNullOrUndefined(editorInfo.currentUnit)) {
                         if (editorInfo.currentUnit.id === unit.freId() && editorInfo.currentUnit.name !== unit.name) {
                             // Saved unit already exists but its name has changed.
                             LOGGER.log(`Saving unit that changed name, do a rename from ${editorInfo.currentUnit.name} to ${unit.name}`)
@@ -294,7 +295,7 @@ export class WebappConfigurator {
     private async createNewUnit(newName: string, unitType: string) {
         LOGGER.log("private createNewUnit called, unitType: " + unitType + " name: " + newName)
         const newUnit: FreModelUnit | undefined = await this.modelStore?.createUnit(newName, unitType)
-        if (!!newUnit) {
+        if (notNullOrUndefined(newUnit)) {
             // await this.updateUnitList()
             // show the new unit in the editor
             this.showUnit(newUnit, { id:newUnit.freId(), name:newUnit.name, type:newUnit.freLanguageConcept()})
@@ -309,7 +310,7 @@ export class WebappConfigurator {
      */
     async openModelUnit(unitId: FreUnitIdentifier) {
         LOGGER.log("openModelUnit called, unitName: " + unitId)
-        if (!!editorInfo.currentUnit && unitId.name === editorInfo.currentUnit.name && unitId.id === editorInfo.currentUnit.id) {
+        if (notNullOrUndefined(editorInfo.currentUnit) && unitId.name === editorInfo.currentUnit.name && unitId.id === editorInfo.currentUnit.id) {
             // the unit to open is the same as the unit in the editor, so we are doing nothing
             LOGGER.log("openModelUnit doing NOTHING")
         } else {
@@ -319,7 +320,7 @@ export class WebappConfigurator {
                     toBeOpened = this.modelStore.getUnitById(unitId)
                 }
             })
-            if (!isNullOrUndefined(toBeOpened)) {
+            if (notNullOrUndefined(toBeOpened)) {
                 // save the old current unit, if there is one
                 await this.saveUnit(editorInfo.currentUnit)
                 // ... and show the new one
@@ -335,7 +336,7 @@ export class WebappConfigurator {
      * @param unitId
      */
     async deleteModelUnit(unitId: FreUnitIdentifier | undefined) {
-        if (!!unitId) {
+        if (notNullOrUndefined(unitId)) {
             // console.log("delete called for unit: " + unitId.name)
             // get rid of the unit on the server
             await this.modelStore?.deleteUnitById(unitId)
@@ -346,7 +347,7 @@ export class WebappConfigurator {
             if (tabIndex > -1) { // there is a tab for this unit
                 if (editorInfo.unitsInTabs.length === 1) { // this tab is the only one
                     // the unit is shown in the editor, so get rid of that one, as well
-                    if (!isNullOrUndefined(editorInfo.currentUnit) && editorInfo.currentUnit.id === unitId.id) {
+                    if (notNullOrUndefined(editorInfo.currentUnit) && editorInfo.currentUnit.id === unitId.id) {
                         // console.log("removing currently shown unit")
                         runInAction(() => {
                             this.setEditorToUndefined()
@@ -356,7 +357,7 @@ export class WebappConfigurator {
                     }
                 } else { // other tabs left
                     this.switchToOtherTab(tabIndex);
-                    if (editorInfo.currentUnit) {
+                    if (notNullOrUndefined(editorInfo.currentUnit)) {
                         const newUnit = this.modelStore?.getUnitById(editorInfo.currentUnit);
                         if (this.langEnv?.editor && newUnit) {
                             this.langEnv.editor.rootElement = newUnit;
@@ -413,17 +414,17 @@ export class WebappConfigurator {
         let unit: FreModelUnit | null = null
         try {
             // the following also adds the new unit to the model
-            if (!isNullOrUndefined(editorInfo.modelName) && editorInfo.modelName.length > 0) {
+            if (notNullOrUndefined(editorInfo.modelName) && editorInfo.modelName.length > 0) {
                 const model: FreModel | undefined = this.modelStore?.model
-                if (!!model) {
+                if (notNullOrUndefined(model)) {
                     unit = this.langEnv!.reader.readFromString(content, metaType, model, fileName) as FreModelUnit
                 }
             }
-            if (!!unit) {
+            if (notNullOrUndefined(unit)) {
                 // if the element does not yet have a name, try to use the file name
-                if (!unit.name || unit.name.length === 0) {
+                if (isNullOrUndefined(unit.name) || unit.name.length === 0) {
                     AST.changeNamed('unitfromFile', () => {
-                        if(!!unit) {
+                        if(unit) {
                             unit.name = this.makeUnitName(fileName);
                         }
                     })
@@ -441,14 +442,14 @@ export class WebappConfigurator {
     }
 
     private makeUnitName(fileName: string): string {
-        const nameExist: boolean = !!editorInfo.unitIds
-            .find((existing: FreUnitIdentifier) => existing.name === fileName)
+        const nameExist: boolean = notNullOrUndefined(editorInfo.unitIds
+            .find((existing: FreUnitIdentifier) => existing.name === fileName))
         if (nameExist) {
             setUserMessage(`Unit named '${fileName}' already exists, adding number.`, FreErrorSeverity.Error)
             // find the existing names that start with the file name
             const unitsWithSimilarName: FreModelUnit[] | undefined = this.modelStore?.getUnits()
                 .filter((existing: FreModelUnit) => existing.name.startsWith(fileName))
-            if (!isNullOrUndefined(unitsWithSimilarName) && unitsWithSimilarName.length > 1) {
+            if (notNullOrUndefined(unitsWithSimilarName) && unitsWithSimilarName.length > 1) {
                 // there are already numbered units
                 // find the biggest number that is in use after the filename, e.g. Home12, Home3 => 12
                 let biggestNr: number = 1
@@ -499,11 +500,11 @@ export class WebappConfigurator {
      */
     getErrors() {
         // console.log("WebappConfigurator.getErrors() for " + editorInfo.currentUnit?.name)
-        if (!!editorInfo.currentUnit) {
+        if (notNullOrUndefined(editorInfo.currentUnit)) {
             const toBeChecked: FreModelUnit | undefined = this.modelStore?.getUnitById(editorInfo.currentUnit)
             if (toBeChecked) {
                 try {
-                    if (!!this.langEnv) {
+                    if (notNullOrUndefined(this.langEnv)) {
                         const list: FreError[] = this.langEnv.validator.validate(toBeChecked);
                         this.langEnv.editor.setErrors(list);
                         modelErrors.list = list;
@@ -541,7 +542,7 @@ export class WebappConfigurator {
 
     modelChanged(store: InMemoryModel): void {
         LOGGER.log(`modelChanged: ${store?.model?.name}`);
-        if (!isNullOrUndefined(store?.model)) {
+        if (notNullOrUndefined(store?.model)) {
             editorInfo.modelName = store?.model?.name;
             editorInfo.unitIds = store.getUnitIdentifiers();
         }

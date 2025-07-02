@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Button, Modal, Input, Radio, Card, Helper } from 'flowbite-svelte';
     import { dialogs } from "$lib/stores/WebappStores.svelte"
-    import { FreLanguage } from "@freon4dsl/core"
+    import { FreLanguage, notNullOrUndefined } from "@freon4dsl/core"
     import { EditorRequestsHandler } from '$lib/language';
     import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
     import { PenSolid } from 'flowbite-svelte-icons';
@@ -30,7 +30,7 @@
     }
 
     function inputInvalid(): boolean {
-        if (!(!!nodeType && nodeType.length > 0)) {
+        if (!(notNullOrUndefined(nodeType) && nodeType.length > 0)) {
             helperText = "Please, select the type of the unit below.";
             return true;
         } else {

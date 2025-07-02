@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { notNullOrUndefined } from "@freon4dsl/core"
     import { Button, Modal, Input, Card } from "flowbite-svelte"
     import { dialogs } from "$lib/stores/WebappStores.svelte"
     import { EditorRequestsHandler } from "$lib/language"
@@ -13,7 +14,7 @@
     }
 
     async function handleSubmit() {
-        if (!!textToFind && textToFind.length > 0) {
+        if (notNullOrUndefined(textToFind) && textToFind.length > 0) {
             EditorRequestsHandler.getInstance().findText(textToFind);
             textToFind = '';
         }

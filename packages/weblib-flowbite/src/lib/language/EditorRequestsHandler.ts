@@ -4,7 +4,7 @@ import {
     FreLogger,
     FreSearcher,
     type FreEnvironment,
-    AstActionExecutor, type FreModelUnit, isRtError
+    AstActionExecutor, type FreModelUnit, isRtError, isNullOrUndefined, notNullOrUndefined
 } from "@freon4dsl/core"
 import type { FreNode, TraceNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
@@ -86,7 +86,7 @@ export class EditorRequestsHandler {
         WebappConfigurator.getInstance().getErrors();
         // console.log("Errors: " + modelErrors.list.map(err => err.message).join("\n"));
         errorsLoading.value = false;
-        if (!!modelErrors.list[0]) {
+        if (!isNullOrUndefined(modelErrors.list[0])) {
             const nodes: FreNode | FreNode[] = modelErrors.list[0].reportedOn;
             if (Array.isArray(nodes)) {
                 WebappConfigurator.getInstance().selectElement(nodes[0]);
@@ -123,10 +123,10 @@ export class EditorRequestsHandler {
     }
 
     private makeTreeNode(trace: TraceNode): TreeNodeData {
-        let name: string = trace.toResultString();
+        const name: string = trace.toResultString();
         if (trace.children && trace.children.length > 0) {
             const children: TreeNodeData[] = [];
-            for (let child of trace.children) {
+            for (const child of trace.children) {
                 children.push(this.makeTreeNode(child));
             }
             // todo remove the type cast when TraceNode has changed its signature
@@ -143,10 +143,10 @@ export class EditorRequestsHandler {
         searchResults.list = [];
         activeTab.value = searchTab;
         const searcher = new FreSearcher();
-        if (!!editorInfo.currentUnit) {
+        if (notNullOrUndefined(editorInfo.currentUnit)) {
             // console.log('has current unit')
             const unit: FreModelUnit | undefined = WebappConfigurator.getInstance().getUnit(editorInfo.currentUnit);
-            if (!!unit) {
+            if (notNullOrUndefined(unit)) {
                 // console.log('found unit')
                 const results: FreNode[] = searcher.findString(
                     stringToFind,

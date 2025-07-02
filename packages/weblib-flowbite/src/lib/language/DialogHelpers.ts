@@ -1,9 +1,10 @@
 import {WebappConfigurator} from "$lib/language/WebappConfigurator";
 import {dialogs, serverInfo} from "$lib";
+import { notNullOrUndefined } from "@freon4dsl/core"
 
 async function getModelNamesFromServer() {
     const names: string[] = await WebappConfigurator.getInstance().getAllModelNames();
-    if (!!names && names.length > 0) {
+    if (notNullOrUndefined(names) && names.length > 0) {
         // Make the names available for the dialog
         serverInfo.allModelNames = names;
     }

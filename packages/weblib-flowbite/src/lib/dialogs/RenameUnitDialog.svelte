@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { notNullOrUndefined } from "@freon4dsl/core"
     import {Button, Modal, Input, Helper} from 'flowbite-svelte';
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
@@ -28,7 +29,7 @@
         // console.log("RENAMING UNIT TO: " + newName);
         if (newName.length > 0 && checkName(newName, true).length === 0) {
             const existing: string[] = await WebappConfigurator.getInstance().getUnitNames();
-            if (!!existing && existing.length > 0 && existing.indexOf(newName) !== -1) {
+            if (notNullOrUndefined(existing) && existing.length > 0 && existing.indexOf(newName) !== -1) {
                 errorText = `Cannot rename unit to '${newName}', because a unit with that name already exists on the server.`;
             } else {
                 // WebappConfigurator.getInstance().renameUnit(newName);

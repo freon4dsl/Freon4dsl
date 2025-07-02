@@ -4,7 +4,7 @@
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {ProjectionItem} from "$lib/ts-utils/MenuItem";
     import {dialogs} from "$lib";
-    import {isNullOrUndefined} from "@freon4dsl/core";
+    import { isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import { EditorRequestsHandler, WebappConfigurator } from "$lib/language"
     import { cancelButtonClass, okButtonClass } from '$lib/stores/StylesStore.svelte';
     import { PenSolid } from 'flowbite-svelte-icons';
@@ -26,7 +26,7 @@
         // store the selection and enable/disable the projection
         const selection: string[] = [];
         allProjections.forEach(proj => {
-            if (!!proj && proj.selected) {
+            if (notNullOrUndefined(proj) && proj.selected) {
                 selection.push(proj.name);
             }
         });
