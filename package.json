@@ -29,7 +29,6 @@
     "@types/lodash": "4.17.4",
     "@types/node": "20.14.1",
     "@types/pegjs": "0.10.6",
-    "@vitest/ui": "^3.0.5",
     "cross-env": "7.0.3",
     "identity-obj-proxy": "3.0.0",
     "nodemon": "3.1.3",
