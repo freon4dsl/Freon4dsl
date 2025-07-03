@@ -1,4 +1,4 @@
-ExpressionTest simpleExpressions {
+ExpressionTest `simpleExpressions` {
 	normalEx
 	binEx
 	StringLiteralEx {value "literal1"} + StringLiteralEx {value "literal2"}

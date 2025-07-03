@@ -1,7 +1,7 @@
 import { InterpreterGenerator } from "../interpretergen/generator/InterpreterGenerator.js";
 import { FreInterpreterDef } from "../interpretergen/metalanguage/FreInterpreterDef.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
-import { MetaLogger } from "../utils/MetaLogger.js";
+import { MetaLogger } from "../utils/no-dependencies/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateInterpreter").mute();
 

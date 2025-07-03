@@ -1,5 +1,5 @@
 // info about the language
-import type {stringList} from "$lib/components/stores/StoreInterfaces";
+import type {stringList} from "$lib/components/stores/StoreInterfaces.js";
 
 // name of the language
 export let languageName = $state({ value: "FreLanguage ..."});

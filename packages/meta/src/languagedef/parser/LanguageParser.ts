@@ -1,11 +1,10 @@
 import fs from "fs";
 import { FreMetaLanguage } from "../metalanguage/index.js";
-import { FreGenericParser } from "../../utils/index.js";
+import { FreGenericParser } from "../../utils/basic-dependencies/index.js";
 import { parseIds } from "./IdParser.js";
-import { parser } from "./LanguageGrammar.js";
-
+import { parse } from "./LanguageGrammar.js";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName, setIdMap } from "./LanguageCreators.js";
-import { FreLangChecker } from "../checking/FreLangChecker.js";
+import { FreLangChecker } from "../checking/index.js";
 
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     idFile: string | undefined;
@@ -13,7 +12,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     constructor(idFile?: string) {
         super();
         this.idFile = idFile ? idFile : undefined;
-        this.parser = parser;
+        this.parseFunction = parse;
         this.checker = new FreLangChecker(undefined);
     }
 

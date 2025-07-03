@@ -8,7 +8,7 @@ import {
     FreEditProjectionGroup,
     FreEditPropertyProjection,
 } from "../../../metalanguage/index.js";
-import { Roles } from "../../../../utils/index.js";
+import { Roles } from "../../../../utils/on-lang/index.js";
 import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
 import { ExternalBoxesHelper } from "./ExternalBoxesHelper.js";

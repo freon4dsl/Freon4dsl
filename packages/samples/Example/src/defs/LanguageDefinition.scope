@@ -1,22 +1,22 @@
-scoper ExampleScoper for language Example
+scoper for language Example
 
-// isnamespace { Entity,Model }
+// isNamespace { Entity,Model }
 
-// isnamespace { Entity, Model }
+// isNamespace { Entity, Model }
 
-// 2 isnamespace { Method, Entity }
+// 2 isNamespace { Method, Entity }
 
-isnamespace { Method, Entity, SumExpression }
+isNamespace { Method, Entity, SumExpression, AppliedFeature }
 
 Entity {
-    namespace_addition = self.baseEntity;
-    // How to tell that there is no namespace_addition for self.baseEntity ??
-    // namespace_addition = self.baseEntity for Type
-    // NOT namespace_addition = self.baseEntity for Entity
+    imports { self.baseEntity; }
+    // How to tell that there is no imports for self.baseEntity ??
+    // imports { self.baseEntity; } for Type
+    // NOT imports { self.baseEntity; } for Entity
 }
 
 AppliedFeature {
-	namespace_replacement = typeof( container );
+	alternatives { owner().type(); }
 }
 
 

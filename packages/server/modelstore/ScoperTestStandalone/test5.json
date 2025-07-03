@@ -1,0 +1,2056 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-StarterLanguage",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-54",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-StarterUnit5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-StarterUnit5-name"
+               },
+               "value": "test5"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-StarterUnit5-modules"
+               },
+               "children": [
+                  "ID-55",
+                  "ID-56"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-55",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "A"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-69",
+                  "ID-70",
+                  "ID-71"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": [
+                  "ID-59",
+                  "ID-60"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": [
+                  "ID-85",
+                  "ID-87"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-54"
+      },
+      {
+         "id": "ID-69",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "a1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-70",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "a2"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-71",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-59",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "A_A"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-82",
+                  "ID-83"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": [
+                  "ID-61",
+                  "ID-62"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": [
+                  "ID-84",
+                  "ID-88"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-imports"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B",
+                     "reference": "ID-56"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-82",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "aa1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-59"
+      },
+      {
+         "id": "ID-83",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "aa2"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-59"
+      },
+      {
+         "id": "ID-61",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "A_A_A"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-63"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": [
+                  "ID-86",
+                  "ID-89",
+                  "ID-94",
+                  "ID-95",
+                  "ID-100",
+                  "ID-80",
+                  "ID-93",
+                  "ID-105",
+                  "ID-107",
+                  "ID-109",
+                  "ID-115"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-imports"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B_A",
+                     "reference": "ID-57"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-59"
+      },
+      {
+         "id": "ID-63",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "aaa1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-86",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "aaa1",
+                     "reference": "ID-63"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-89",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "a1",
+                     "reference": "ID-69"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-94",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-96"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B",
+                     "reference": "ID-56"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-96",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-97"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B_A",
+                     "reference": "ID-57"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-94"
+      },
+      {
+         "id": "ID-97",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-98"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B_A_A",
+                     "reference": "ID-75"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-96"
+      },
+      {
+         "id": "ID-98",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "baa1",
+                     "reference": "ID-76"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-97"
+      },
+      {
+         "id": "ID-95",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-99"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B",
+                     "reference": "ID-56"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-99",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "b1",
+                     "reference": "ID-79"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-95"
+      },
+      {
+         "id": "ID-100",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-101"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B",
+                     "reference": "ID-56"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-101",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-102"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B_B",
+                     "reference": "ID-58"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-100"
+      },
+      {
+         "id": "ID-102",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "bb1",
+                     "reference": "ID-78"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-101"
+      },
+      {
+         "id": "ID-80",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-81"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "A_A_A",
+                     "reference": "ID-61"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-81",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "aaa1",
+                     "reference": "ID-63"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-80"
+      },
+      {
+         "id": "ID-93",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-103"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "A_B",
+                     "reference": "ID-60"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-103",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-104"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "A_B_A",
+                     "reference": "ID-67"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-93"
+      },
+      {
+         "id": "ID-104",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "aba1",
+                     "reference": "ID-68"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-103"
+      },
+      {
+         "id": "ID-105",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-106"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B_A_A",
+                     "reference": "ID-75"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-106",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "baa1",
+                     "reference": "ID-76"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-105"
+      },
+      {
+         "id": "ID-107",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-108"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B_A_A",
+                     "reference": "ID-75"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-108",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "baa1",
+                     "reference": "ID-76"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-107"
+      },
+      {
+         "id": "ID-109",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-110"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B",
+                     "reference": "ID-56"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-110",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-111"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B_B",
+                     "reference": "ID-58"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-109"
+      },
+      {
+         "id": "ID-111",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-target"
+               },
+               "children": [
+                  "ID-112"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-ComplexVarReference5-module"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B_B_A",
+                     "reference": "ID-77"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-110"
+      },
+      {
+         "id": "ID-112",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "bba2",
+                     "reference": "ID-113"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-111"
+      },
+      {
+         "id": "ID-115",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-ComplexVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-61"
+      },
+      {
+         "id": "ID-62",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "A_A_B"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-64"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": [
+                  "ID-90",
+                  "ID-91",
+                  "ID-92"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-imports"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "B",
+                     "reference": "ID-56"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-59"
+      },
+      {
+         "id": "ID-64",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "aab1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-62"
+      },
+      {
+         "id": "ID-90",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "aab1",
+                     "reference": "ID-64"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-62"
+      },
+      {
+         "id": "ID-91",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "a1",
+                     "reference": "ID-69"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-62"
+      },
+      {
+         "id": "ID-92",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "b1",
+                     "reference": "ID-79"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-62"
+      },
+      {
+         "id": "ID-84",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "aa1",
+                     "reference": "ID-82"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-59"
+      },
+      {
+         "id": "ID-88",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "a1",
+                     "reference": "ID-69"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-59"
+      },
+      {
+         "id": "ID-60",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "A_B"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-65",
+                  "ID-66"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": [
+                  "ID-67"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-65",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "ab1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-60"
+      },
+      {
+         "id": "ID-66",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "ab2"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-60"
+      },
+      {
+         "id": "ID-67",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "A_B_A"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-68"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-60"
+      },
+      {
+         "id": "ID-68",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "aba1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-67"
+      },
+      {
+         "id": "ID-85",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-SimpleVarReference5-target"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "a1",
+                     "reference": "ID-69"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-87",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-SimpleVarReference5"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-55"
+      },
+      {
+         "id": "ID-56",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "B"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-79"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": [
+                  "ID-57",
+                  "ID-58"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-54"
+      },
+      {
+         "id": "ID-79",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "b1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-56"
+      },
+      {
+         "id": "ID-57",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "B_A"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-72",
+                  "ID-73",
+                  "ID-74"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": [
+                  "ID-75"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-56"
+      },
+      {
+         "id": "ID-72",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "ba1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-73",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "ba2"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-74",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "ba3"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-75",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "B_A_A"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-76"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-57"
+      },
+      {
+         "id": "ID-76",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "baa1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-75"
+      },
+      {
+         "id": "ID-58",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "B_B"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-78"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": [
+                  "ID-77"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-56"
+      },
+      {
+         "id": "ID-78",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "bb1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-58"
+      },
+      {
+         "id": "ID-77",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-LangModule5"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "B_B_A"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varDefinitions"
+               },
+               "children": [
+                  "ID-113",
+                  "ID-114"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-moduleDefinitions"
+               },
+               "children": []
+            },
+            {
+               "containment": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-LangModule5-varReferences"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-58"
+      },
+      {
+         "id": "ID-113",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "bba2"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-77"
+      },
+      {
+         "id": "ID-114",
+         "classifier": {
+            "language": "-key-StarterLanguage",
+            "version": "2023.1",
+            "key": "-key-Variable"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-StarterLanguage",
+                  "version": "2023.1",
+                  "key": "-key-INamed-name"
+               },
+               "value": "bba1"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-77"
+      }
+   ]
+}

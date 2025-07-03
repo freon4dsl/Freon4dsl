@@ -40,7 +40,7 @@ export class FretVarCallExp extends FretExp {
 
     set variable(newOne: FretVarDecl) {
         if (!!newOne) {
-            this.$variable = MetaElementReference.create<FretVarDecl>(newOne, "FretVarDecl");
+            this.$variable = MetaElementReference.create<FretVarDecl>(newOne);
             // this.__variable.owner = this;
         }
     }

@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { ListUtil, MetaLogger } from "../../utils/index.js";
+import { ListUtil, MetaLogger } from "../../utils/no-dependencies/index.js";
 import {
     FreMetaClassifier,
     FreMetaConcept,
@@ -9,16 +9,18 @@ import {
 import {
     EDITOR_FOLDER,
     EDITOR_GEN_FOLDER,
+    Names
+} from "../../utils/on-lang/index.js";
+import {
     GenerationStatus,
     FileUtil,
-    isNullOrUndefined,
-    Names
-} from "../../utils/index.js";
+    isNullOrUndefined
+} from "../../utils/file-utils/index.js";
 import { FreEditUnit } from "../metalanguage/index.js";
 import { ActionsTemplate, EditorIndexTemplate, BoxProviderTemplate } from "./templates/index.js";
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate } from "./templates/index.js";
 import { EditorDefTemplate } from "./templates/index.js";
-import { LOG2USER } from "../../utils/index.js";
+import { LOG2USER } from "../../utils/basic-dependencies/index.js";
 
 const LOGGER = new MetaLogger("EditorGenerator").mute();
 

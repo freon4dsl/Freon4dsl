@@ -27,6 +27,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": false,
+    "strict": true,
     "types": [
       "node"
     ],

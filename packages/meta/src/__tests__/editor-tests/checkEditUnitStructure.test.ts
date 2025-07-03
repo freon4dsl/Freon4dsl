@@ -4,9 +4,11 @@ import {
     FreMetaLanguage,
     FreMetaLimitedConcept,
 } from "../../languagedef/metalanguage";
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, LOG2USER, MetaLogger, Names } from '../../utils';
-import { FreEditParser } from "../../editordef/parser/FreEditParser";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
+import { Checker, LOG2USER } from "../../utils/basic-dependencies/index.js";
+import { Names } from '../../utils/on-lang/index.js';
+import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
 import {
     ForType,
     FreEditClassifierProjection,
@@ -16,8 +18,8 @@ import {
     FreEditPropertyProjection,
     FreEditUnit,
     ListJoinType,
-} from "../../editordef/metalanguage";
-import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator";
+} from "../../editordef/metalanguage/index.js";
+import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator.js";
 import { describe, test, expect } from "vitest";
 
 describe("Checking FretEditUnit: ", () => {

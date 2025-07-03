@@ -14,7 +14,8 @@ import {
     ValidNameRule,
 } from "../metalanguage/index.js";
 import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
-import { FreMetaDefinitionElement, ParseLocationUtil } from "../../utils/index.js";
+import { FreMetaDefinitionElement } from '../../utils/no-dependencies/index.js';
+import { ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 
 // Functions used to create instances of the language classes (in ValidatorDefLang)
 // from the parsed data objects (from ValidatorGrammar.pegjs).
@@ -45,8 +46,8 @@ export function createValidatorDef(data: Partial<ValidatorDef>): ValidatorDef {
 export function createConceptRule(data: Partial<ConceptRuleSet>): ConceptRuleSet {
     const result = new ConceptRuleSet();
 
-    if (!!data.conceptRef) {
-        result.conceptRef = data.conceptRef;
+    if (!!data.classifierRef) {
+        result.classifierRef = data.classifierRef;
     }
     if (!!data.rules) {
         result.rules = data.rules;

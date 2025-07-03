@@ -11,7 +11,8 @@ import { MetaTyperGrammarStr } from "./FreTyperGrammar.js";
 import { FreTyperSyntaxAnalyser } from "./FreTyperSyntaxAnalyser.js";
 import { FreMetaLangElement } from '../../languagedef/metalanguage/index.js';
 import { TyperDef } from '../metalanguage/index.js';
-import { MetaLogger } from '../../utils/index.js';
+import { MetaLogger } from '../../utils/no-dependencies/index.js';
+
 
 const LOGGER = new MetaLogger("FreonTyperReader");
 

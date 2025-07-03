@@ -1,8 +1,0 @@
-/**
-  * Patch to export in ESM style,because peggy only generates commonjs style
-  */
-export const parser = {
-  StartRules: ["Editor_Definition"],
-  SyntaxError: peg$SyntaxError,
-  parse: peg$parse
-};

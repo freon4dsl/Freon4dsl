@@ -1,17 +1,9 @@
 import * as fs from "fs";
 import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
-import { MetaLogger } from "../utils/index.js";
-import {
-    GenerationStatus,
-    FileUtil,
-    LANGUAGE_FOLDER,
-    LANGUAGE_GEN_FOLDER,
-    Names,
-} from "../utils/index.js";
-import {
-
-} from "./templates/index.js";
 import { LionWebTemplate } from "./templates/LionWebTemplate.js";
+import { MetaLogger } from '../utils/no-dependencies/index.js';
+import { FileUtil, GenerationStatus } from '../utils/file-utils/index.js';
+import { LANGUAGE_FOLDER, LANGUAGE_GEN_FOLDER, Names } from '../utils/on-lang/index.js';
 
 const LOGGER = new MetaLogger("LionWebGenerator").mute();
 export class LionWebGenerator {

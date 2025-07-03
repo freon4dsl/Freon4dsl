@@ -1,4 +1,4 @@
-import { Names, ListUtil, GenerationUtil, Imports } from "../../utils/index.js"
+import { Names, Imports } from "../../utils/on-lang/index.js"
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
@@ -8,8 +8,8 @@ import {
     FreMetaLimitedConcept,
     FreMetaPrimitiveProperty,
     FreMetaPrimitiveType,
-    FreMetaProperty,
-} from "../../languagedef/metalanguage/index.js";
+    FreMetaProperty, LangUtil
+} from '../../languagedef/metalanguage/index.js';
 import {
     FreEditBoolKeywords,
     FreEditExtraClassifierInfo,
@@ -28,6 +28,8 @@ import {
     ListJoinType,
 } from "../../editordef/metalanguage/index.js";
 import { ParserGenUtil } from "./ParserGenUtil.js";
+import { GenerationUtil } from '../../utils/on-lang/GenerationUtil.js';
+import { ListUtil } from '../../utils/no-dependencies/index.js';
 
 // TODO more preconditions should be added to avoid null pointer errors
 
@@ -239,12 +241,12 @@ export class WriterTemplate {
                                       )
                                       .join("")}
                             } else {
-                                this.output[this.currentLine] += node.pathnameToString("${this.refSeparator}") + " ";
+                                this.output[this.currentLine] += node.pathname.map(s => "\`" + s + "\`").join("${this.refSeparator}") + " ";
                             }`
-                                : `this.output[this.currentLine] += node.pathnameToString("${this.refSeparator}") + " ";`
+                                : `this.output[this.currentLine] += node.pathname.map(s => "\`" + s + "\`").join("${this.refSeparator}") + " ";`
                         }
                     } else {
-                        this.output[this.currentLine] += node.pathnameToString("${this.refSeparator}") + " ";
+                        this.output[this.currentLine] += node.pathname.map(s => "\`" + s + "\`").join("${this.refSeparator}") + " ";
                     }
                 }
             }
@@ -319,6 +321,8 @@ export class WriterTemplate {
                         this.doInitiator(sepText, sepType);
                         if (typeof listElem === "string" && !isIdentifier) {
                             this.output[this.currentLine] += \`\"\$\{listElem\}\"\`;
+                        } else if (typeof listElem === "string" && isIdentifier) {
+                            this.output[this.currentLine] += \`\\\`\$\{listElem\}\\\`\`;
                         } else {
                             this.output[this.currentLine] += \`\$\{listElem\}\`;
                         }
@@ -452,7 +456,7 @@ export class WriterTemplate {
                  */
                  private unparse${name}(node: ${name}, short: boolean) {
                      if (!!node) {
-                         this.output[this.currentLine] += node.name + " ";
+                         this.output[this.currentLine] += "\`" + node.name + "\` " /* 9 */;
                      }
                  }`;
     }
@@ -552,9 +556,9 @@ export class WriterTemplate {
             const myElem: FreMetaProperty | undefined = item.property?.referred;
             let myTypeScript: string = "";
             if (!!myElem) {
-                myTypeScript = GenerationUtil.propertyToTypeScript(myElem);
+                myTypeScript = LangUtil.propertyToTypeScript(myElem);
                 if (!myElem.isPart) {
-                    myTypeScript = GenerationUtil.propertyToTypeScriptWithoutReferred(myElem);
+                    myTypeScript = LangUtil.propertyToTypeScriptWithoutReferred(myElem);
                 }
                 if (myElem.isList) {
                     myTypeScript += " && " + myTypeScript + ".length > 0";
@@ -649,7 +653,7 @@ export class WriterTemplate {
         if (!item.property) {
             return result;
         }
-        const elemStr: string = GenerationUtil.propertyToTypeScript(item.property.referred);
+        const elemStr: string = LangUtil.propertyToTypeScript(item.property.referred);
         if (myElem.isList && !!item.listInfo) {
             let isIdentifier: string = "false";
             if (myElem.type === FreMetaPrimitiveType.identifier) {
@@ -705,6 +709,10 @@ export class WriterTemplate {
                             this.output[this.currentLine] += \`${myFalseKeyword} \`
                           }`;
                 }
+            } else if (myType === FreMetaPrimitiveType.number) {
+                myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \` /* 2 */`;
+            } else if (myType === FreMetaPrimitiveType.identifier) {
+                myCall = `this.output[this.currentLine] += \`\\\`\$\{${elemStr}\}\\\` \` /* 3 */`;
             } else {
                 myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
             }
@@ -772,11 +780,11 @@ export class WriterTemplate {
                                 ? item.listInfo.joinText + " "
                                 : "";
                         if (myElem.isPart) {
-                            const myTypeScript: string = GenerationUtil.propertyToTypeScript(item.property.referred);
+                            const myTypeScript: string = LangUtil.propertyToTypeScript(item.property.referred);
                             result += `this._unparseList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short,
                             (node, short) => this.${nameOfUnparseMethod}(node${typeCast}, short) )`;
                         } else {
-                            const myTypeScript: string = GenerationUtil.propertyToTypeScriptWithoutReferred(
+                            const myTypeScript: string = LangUtil.propertyToTypeScriptWithoutReferred(
                                 item.property.referred,
                             );
                             result += `this._unparseReferenceList(${myTypeScript}, "${myJoinText}", ${joinType}, ${vertical}, this.output[this.currentLine].length, short) `;
@@ -787,10 +795,10 @@ export class WriterTemplate {
                 let myCall: string = "";
                 let myTypeScript: string = "";
                 if (myElem.isPart) {
-                    myTypeScript = GenerationUtil.propertyToTypeScript(item.property.referred);
+                    myTypeScript = LangUtil.propertyToTypeScript(item.property.referred);
                     myCall += `this.${nameOfUnparseMethod}(${myTypeScript}, short) `;
                 } else {
-                    myTypeScript = GenerationUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
+                    myTypeScript = LangUtil.propertyToTypeScriptWithoutReferred(item.property.referred);
                     myCall += `this._unparseReference(${myTypeScript}, short);`;
                 }
                 if (myElem.isOptional && !inOptionalGroup) {
@@ -827,12 +835,12 @@ export class WriterTemplate {
     private findNamedClassifiers(language: FreMetaLanguage): FreMetaClassifier[] {
         const result: FreMetaClassifier[] = [];
         for (const elem of language.units) {
-            if (GenerationUtil.hasNameProperty(elem)) {
+            if (LangUtil.hasNameProperty(elem)) {
                 result.push(elem);
             }
         }
         for (const elem of language.concepts) {
-            if (GenerationUtil.hasNameProperty(elem)) {
+            if (LangUtil.hasNameProperty(elem)) {
                 result.push(elem);
             }
         }

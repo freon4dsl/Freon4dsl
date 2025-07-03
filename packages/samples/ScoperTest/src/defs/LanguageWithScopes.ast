@@ -1,0 +1,21 @@
+language StarterLanguage
+
+model StarterModel {
+    units1: StarterUnit1[];
+    units2: StarterUnit2[];
+    units3: StarterUnit3[];
+    units4: StarterUnit4[];
+    units5: StarterUnit5[];
+}
+
+interface INamed {
+    name: identifier;
+}
+
+concept Variable implements INamed {}
+
+
+
+
+
+

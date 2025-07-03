@@ -1,0 +1,23 @@
+editor qualifiednames precedence 1
+
+LangModule5 {[
+    ${self.name} {
+        import ${self.imports}
+        var ${self.varDefinitions horizontal separator[,]}
+        ref ${self.varReferences}
+
+        child modules ${self.moduleDefinitions}
+    }
+]}
+
+ComplexVarReference5 {[
+    ${module} >>> ${target}
+]
+referenceShortcut = ${module}
+}
+
+SimpleVarReference5 {[
+    ${target}
+]
+referenceShortcut = ${target}
+}

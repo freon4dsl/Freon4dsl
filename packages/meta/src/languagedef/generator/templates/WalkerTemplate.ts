@@ -1,5 +1,5 @@
-import { FreMetaClassifier, FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
+import { FreMetaClassifier, FreMetaLanguage, LangUtil } from '../../metalanguage/index.js';
+import { Names, Imports } from "../../../utils/on-lang/index.js"
 
 export class WalkerTemplate {
     // @ts-ignore TS6133
@@ -8,7 +8,7 @@ export class WalkerTemplate {
         const generatedClassName: String = Names.walker(language);
         const classifiersToDo: FreMetaClassifier[] = [];
         // take care of the order, it is important
-        classifiersToDo.push(...GenerationUtil.sortConceptsOrRefs(language.concepts));
+        classifiersToDo.push(...LangUtil.sortConceptsOrRefs(language.concepts));
         classifiersToDo.push(...language.units);
         classifiersToDo.push(language.modelConcept);
         const imports = new Imports(relativePath)

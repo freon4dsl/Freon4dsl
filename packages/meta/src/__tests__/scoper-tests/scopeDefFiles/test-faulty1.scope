@@ -1,0 +1,82 @@
+scoper for language test1
+
+// in this test all nsInfoList are correct
+
+isNamespace { cc, DD, EE, FF, AA } // error: 'cc' is not a classifier
+
+AA {
+imports {
+    // 5 errors: 'should refer to namespace' for all but BB, DD, and FF
+    self.AAprop1; // : string;
+    self.AAprop3; // : number;
+    self.AAprop5; // : boolean;
+    // properties with concept as type
+    self.AAprop7; // : BB;
+    self.AAprop8; // : BB[];
+    self.AAprop9; // : CC; // reference
+    self.AAprop10; // : CC[]; // reference
+    // properties with interface as type
+    self.AAprop11; // : DD;
+    self.AAprop12; // : DD[];
+    self.AAprop13; // : FF; // reference
+    self.AAprop14; // : FF[]; // reference
+    }
+}
+
+BB {
+     imports {
+        ff.aa.ee; // 2 errors: ff cannot be found and 'should refer to namespace (undefined)'
+        self.BBprop15; // 4 errors: 'should refer to namespace (ZZ)'
+        self.BBprop16;
+        self.BBprop17;
+        self.BBprop18;
+     }
+}
+
+EE {
+    alternatives {
+        ff.aa.bb; // 2 errors: ff cannot be found and 'should refer to namespace (undefined)'
+        owner();
+        self.EEprop13;
+    }
+}
+
+BB { // error: should not be allowed twice
+    imports {
+        self.BBprop15; // no error because of earlier one
+    }
+}
+
+CC { // error: not a namespace
+     imports {
+        #ZZ:instanceZZ1; // error ???
+    }
+}
+
+DD {
+    imports {
+        self.DDprop7.type ( );
+        owner().if(BB).type (  );
+        #ZZ:instanceZZ1; // error ???
+    }
+}
+
+EE { // error: should not be allowed twice
+    imports {
+        owner();
+    }
+}
+
+FF {
+    imports {
+        self.ee.dd.cc.bb.aa;
+    }
+}
+
+ExtraProp { // error: not a namespace
+    imports {
+        self.owner().peer;
+        self.owner().appel;  // no error: cannot be found, because of earlier one
+    }
+}
+

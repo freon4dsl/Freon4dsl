@@ -48,9 +48,9 @@
     import { unitTypes } from "../../stores/LanguageStore.svelte";
     import Radio from "@smui/radio";
     import FormField from "@smui/form-field";
-    import { EditorState } from "$lib/language/EditorState";
+    import { EditorState } from "$lib/language/EditorState.js";
     import * as Keys from "@freon4dsl/core";
-    import type {FreUnitIdentifier} from "@freon4dsl/core";
+    import { type FreUnitIdentifier, isIdentifier } from "@freon4dsl/core";
 
     // todo use #snippet instead of <span> for label (see SMUI website)
     const cancelStr: string = "cancel";
@@ -88,11 +88,8 @@
         if (unitNames.ids.map((u: FreUnitIdentifier) => u.name).includes(newName)) {
             helperText = "Unit with this name already exists.";
             return true;
-        } else if (newName.match(/^[0-9]/)) {
-            helperText = "Name must start with a character.";
-            return true;
-        } else if (!newName.match(/^[a-z,A-Z][a-z,A-Z0-9_]*$/)) {
-            helperText = "Name may contain only characters and numbers, and must start with a character.";
+        } else if (!isIdentifier(newName)) {
+            helperText = "Name syntax invalid.";
             return true;
         } else if (!(!!typeSelected && typeSelected.length > 0)) {
             helperText = "Please, select the type of the unit below.";

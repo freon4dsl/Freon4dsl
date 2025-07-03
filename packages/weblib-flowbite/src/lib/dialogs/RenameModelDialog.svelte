@@ -11,7 +11,7 @@
     let newName: string = $state('');
 
     function modelNameValid(){
-        errorText = checkName(newName, false);
+        errorText = checkName(newName);
     }
 
     function resetVariables() {
@@ -27,7 +27,7 @@
 
     async function handleSubmit() {
         // console.log("RENAMING MODEL TO: " + newName);
-        if (newName.length > 0 && checkName(newName, false).length === 0) {
+        if (newName.length > 0 && checkName(newName).length === 0) {
             const existing: string[] = await WebappConfigurator.getInstance().getAllModelNames();
             if (notNullOrUndefined(existing) && existing.length > 0 && existing.indexOf(newName) !== -1) {
                 errorText = `Cannot create model '${newName}', because a model with that name already exists on the server.`;

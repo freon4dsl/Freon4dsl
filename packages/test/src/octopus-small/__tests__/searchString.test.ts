@@ -42,7 +42,7 @@ describe("Testing Search String", () => {
     test("search '<-> + Ch' in Book", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
         if (!!myUnit) {
-            const found: FreNode[] = searcher.findString("<-> + Ch", myUnit, writer);
+            const found: FreNode[] = searcher.findString("<-> `+` `Ch", myUnit, writer);
             expect(found.length).toBe(3);
             // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
         } else {

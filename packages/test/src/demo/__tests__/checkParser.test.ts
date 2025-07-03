@@ -12,10 +12,10 @@ describe("Testing Parser", () => {
     });
 
     test("complete example model unparsed and parsed again", () => {
-        const originalModel = new DemoModelCreator().createCorrectModel();
+        const validator = DemoEnvironment.getInstance().validator;
         const unparser = DemoEnvironment.getInstance().writer;
         const parser = DemoEnvironment.getInstance().reader;
-        const validator = DemoEnvironment.getInstance().validator;
+        const originalModel = new DemoModelCreator().createCorrectModel();
 
         // first do a check on the input model
         expect(originalModel.models.length).toBeGreaterThan(0);
@@ -35,7 +35,9 @@ describe("Testing Parser", () => {
             const fileHandler = new FileHandler();
 
             // unparse the first unit to a string and write it to File
-            fileHandler.stringToFile(path, unparser.writeToString(originalModel.models[0]));
+            const unparsed = unparser.writeToString(originalModel.models[0])
+            // console.log(unparsed)
+            fileHandler.stringToFile(path, unparsed);
             // read it back in, in a completely new model
 
             let readModel

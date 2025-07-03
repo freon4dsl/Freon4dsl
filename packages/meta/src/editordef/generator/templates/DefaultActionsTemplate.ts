@@ -1,4 +1,4 @@
-import { Names, FREON_CORE, Imports } from "../../../utils/index.js"
+import { Names, FREON_CORE, Imports, Roles } from "../../../utils/on-lang/index.js"
 import {
     FreMetaLanguage,
     FreMetaBinaryExpressionConcept,
@@ -6,7 +6,6 @@ import {
     FreMetaProperty,
     FreMetaPrimitiveType,
 } from "../../../languagedef/metalanguage/index.js";
-import { Roles } from "../../../utils/index.js";
 import { FreEditNormalProjection, FreEditUnit, FreOptionalPropertyProjection } from "../../metalanguage/index.js";
 
 export class DefaultActionsTemplate {

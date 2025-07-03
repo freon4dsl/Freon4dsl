@@ -7,7 +7,7 @@ import { FreonGenerateLionWeb } from "./FreonGenerateLionWeb.js";
 import { FreonGenerateScoper } from "./FreonGenerateScoper.js";
 import { FreonGenerateValidator } from "./FreonGenerateValidator.js";
 import { FreonGenerateTyper } from "./FreonGenerateTyper.js";
-import { MetaLogger } from "../utils/index.js";
+import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { FreonGenerateParser } from "./FreonGenerateParser.js";
 import { FreonGenerateDiagrams } from "./FreonGenerateDiagrams.js";
 import { FreonCleanAction } from "./FreonCleanAction.js";

@@ -1,10 +1,11 @@
 import {
     Names,
     CONFIGURATION_FOLDER,
-    LOG2USER, Imports
-} from "../../../utils/index.js"
+    Imports
+} from "../../../utils/on-lang/index.js"
 import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../../metalanguage/index.js";
+import { LOG2USER } from '../../../utils/basic-dependencies/index.js';
 
 /**
  * This class generates the main typer, the one that hanldes the switch between the generated typer and the custom

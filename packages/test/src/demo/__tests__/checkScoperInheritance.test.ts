@@ -1,19 +1,15 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-import { DemoScoper } from "../scoper/gen/index.js";
 import { DemoEntity, Demo } from "../language/gen/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { describe, it, test, expect, beforeEach } from "vitest";
+import { getVisibleNames } from '../../utils/HelperFunctions.js';
+import { describe, test, expect, beforeEach } from "vitest";
+import { initializeScoperDef } from '../scoper/gen';
 
 describe("testing Scoper", () => {
+    let scoper = DemoEnvironment.getInstance().scoper;
     let modelCreator = new DemoModelCreator();
     let inheritanceModel: Demo = modelCreator.createInheritanceModel();
-    let scoper = DemoEnvironment.getInstance().scoper;
 
-    beforeEach(() => {
-        DemoEnvironment.getInstance();
-    });
-
-    // TODO make this two separate tests, that each run every time
     function testInheritedPropsrecursive(ent: DemoEntity, vis: string[], done: DemoEntity[]) {
         // when the property is not a list:
         if (!done.includes(ent) && !!ent.baseEntity) {
@@ -24,6 +20,7 @@ describe("testing Scoper", () => {
             done.push(ent);
             testInheritedPropsrecursive(ent.baseEntity.referred, vis, done);
         }
+        // TODO make the following into a separate test, that runs every time
         // when the property is a list
         // for (let ww of ent.baseEntity) {
         //     // extra props should be visible
@@ -36,7 +33,7 @@ describe("testing Scoper", () => {
 
     test("inheritance on loop", () => {
         modelCreator.createInheritanceWithLoop().models[0].entities.forEach((ent) => {
-            let vis = scoper.getVisibleNames(ent);
+            let vis = getVisibleNames(scoper.getVisibleNodes(ent));
             expect(vis).toContain(ent.name);
             ent.attributes.forEach((attr) => {
                 expect(vis).toContain(attr.name);
@@ -51,12 +48,13 @@ describe("testing Scoper", () => {
 
     test("inheritance", () => {
         inheritanceModel.models[0].entities.forEach((ent) => {
-            let vis = scoper.getVisibleNames(ent);
+            let vis = getVisibleNames(scoper.getVisibleNodes(ent));
             expect(vis).toContain(ent.name);
             ent.attributes.forEach((attr) => {
                 expect(vis).toContain(attr.name);
             });
             if (!!ent.baseEntity) {
+                // console.log(vis, 'ent.name: ', ent.name)
                 ent.baseEntity.referred.attributes.forEach((attr) => {
                     expect(vis).toContain(attr.name);
                 });

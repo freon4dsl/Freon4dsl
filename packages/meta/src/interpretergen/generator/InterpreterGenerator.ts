@@ -1,13 +1,8 @@
 import * as fs from "fs";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import {
-    GenerationStatus,
-    FileUtil,
-    MetaLogger,
-    INTERPRETER_FOLDER,
-    INTERPRETER_GEN_FOLDER,
-    Names,
-} from "../../utils/index.js";
+import { INTERPRETER_FOLDER, INTERPRETER_GEN_FOLDER, Names } from "../../utils/on-lang/index.js";
+import { GenerationStatus, FileUtil } from "../../utils/file-utils/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreInterpreterDef } from "../metalanguage/FreInterpreterDef.js";
 import { InterpreterBaseTemplate } from "./templates/InterpreterBaseTemplate.js";
 import { InterpreterMainTemplate } from "./templates/InterpreterMainTemplate.js";

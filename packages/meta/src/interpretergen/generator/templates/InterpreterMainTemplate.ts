@@ -1,11 +1,10 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Imports, Names } from "../../../utils/index.js"
+import { Imports, Names } from "../../../utils/on-lang/index.js"
 
 export class InterpreterMainTemplate {
     /**
      * The base class containing all interpreter functions that should be defined.
      * @param language
-     * @param interpreterDef
      */
     public interpreterMain(language: FreMetaLanguage): string {
         const imports = new Imports("../../")

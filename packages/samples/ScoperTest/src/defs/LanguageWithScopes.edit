@@ -1,0 +1,38 @@
+editor qualifiednames precedence 1
+
+
+Variable {[${self.name}]}
+
+LangModule1 {[
+    module ${self.name} {
+        import ${self.imports}
+        var ${self.varDefinitions horizontal separator[,]}
+        ref ${self.varReferences}
+    }
+]}
+
+LangModule2 {[
+    module ${self.name} {
+        import ${self.imports}
+        var ${self.varDefinitions horizontal separator[,]}
+        ref ${self.varReferences}
+    }
+]}
+
+LangModule3 {[
+    module ${self.name} {
+        import ${self.imports}
+        modules ${self.moduleDefinitions}
+        var ${self.varDefinitions horizontal separator[,]}
+        ref ${self.varReferences}
+    }
+]}
+
+LangModule4 {[
+    module ${self.name} {
+        import ${self.imports}
+        modules ${self.moduleDefinitions}
+        var ${self.varDefinitions horizontal separator[,]}
+        ref ${self.varReferences}
+    }
+]}

@@ -1,0 +1,35 @@
+DSunit unit1_OF_model {
+    dsPublics
+        DSpublic public2_OF_unit1_OF_model {
+            conceptParts
+                DSpublic public3_OF_public2_OF_unit1_OF_model {
+                    conceptParts
+                        DSpublic public4_OF_public3_OF_public2_OF_unit1_OF_model {
+                            conceptParts
+
+                            conceptPrivates
+
+                            conceptRefs
+
+                        }
+                    conceptPrivates
+
+                    conceptRefs
+
+                }
+            conceptPrivates
+
+            conceptRefs
+                public29_OF_private28_OF_private24_OF_unit16_OF_model
+                private28_OF_private24_OF_unit16_OF_model
+                public26_OF_public25_OF_private24_OF_unit16_OF_model
+                public25_OF_private24_OF_unit16_OF_model
+        }
+    dsPrivates
+
+    imports
+
+    dsRefs
+        private30_OF_private28_OF_private24_OF_unit16_OF_model
+        private27_OF_public25_OF_private24_OF_unit16_OF_model
+}

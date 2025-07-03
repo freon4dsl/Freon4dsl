@@ -1,75 +1,75 @@
-<package> Book
- + <abstract> <class> Bookpart
+<package> `Book`
+ `+` <abstract> <class> `Bookpart`
     <attributes>
-     # startPageNr: Integer;
-     + nrOfPages: Integer;
-     + title: String;
+     `#` `startPageNr`: `Integer`;
+     `+` `nrOfPages`: `Integer`;
+     `+` `title`: `String`;
     <operations>
-     + determineStartPageNumber(): Integer;
-     + getLastPageNumber(): Integer;
-     + getNext(): Bookpart;
+     `+` `determineStartPageNumber`(): `Integer`;
+     `+` `getLastPageNumber`(): `Integer`;
+     `+` `getNext`(): `Bookpart`;
 <endclass>
- + <class> Prependix <specializes> Bookpart
+ `+` <class> `Prependix` <specializes> `Bookpart`
     <attributes>
-     + kind: PrependixKind;
+     `+` `kind`: `PrependixKind`;
     <operations>
-     + isFirstBookpart() : Boolean;
-     + needsEmptyLastPage() : Boolean;
+     `+` `isFirstBookpart`() : `Boolean`;
+     `+` `needsEmptyLastPage`() : `Boolean`;
 <endclass>
- + <class> Chapter <specializes> Bookpart
+ `+` <class> `Chapter` <specializes> `Bookpart`
     <attributes>
-     + author: String;
-     + subject: String;
+     `+` `author`: `String`;
+     `+` `subject`: `String`;
     <operations>
-     + determineDurationTillFinished(<inout> from: Date) : Period;
+     `+` `determineDurationTillFinished`(`<inout>` `from`: `Date`) : `Period`;
 <endclass>
- + <class> Appendix <specializes> Bookpart <implements> TwoColumnPart
+ `+` <class> `Appendix` <specializes> `Bookpart` <implements> `TwoColumnPart`
     <attributes>
-     + kind: AppendixKind;
-     + twoColumn: Boolean;
+     `+` `kind`: `AppendixKind`;
+     `+` `twoColumn`: `Boolean`;
     <operations>
-     + needsEmptyLastPage(): Boolean;
+     `+` `needsEmptyLastPage`(): `Boolean`;
 <endclass>
 
- + <enumeration> AppendixKind
+ `+` <enumeration> `AppendixKind`
     <values>
-    bibliography;
-    glossary;
-    index;
+    `bibliography`;
+    `glossary`;
+    `index`;
 <endenumeration>
- + <enumeration> PrependixKind
+ `+` <enumeration> `PrependixKind`
     <values>
-    contents;
-    figures;
-    preface;
-    tables;
+    `contents`;
+    `figures`;
+    `preface`;
+    `tables`;
 <endenumeration>
- + <interface> TwoColumnPart
+ `+` <interface> `TwoColumnPart`
     <operations>
-     + transformToOneColumn();
-     + transformToTwoColumn();
+     `+` `transformToOneColumn`();
+     `+` `transformToTwoColumn`();
 <endinterface>
- + <associationclass> ChapterDependency
-     + Chapter.sourceChapter [0..1]    <->  + Chapter.dependantChapters [0..*]
+ `+` <associationclass> `ChapterDependency`
+     `+` `Chapter`.`sourceChapter` [0..1]    <->  `+` `Chapter`.`dependantChapters` [0..*]
     <attributes>
-     + sameAuthor: Boolean;
-     + sameSubject: Boolean;
+     `+` `sameAuthor`: `Boolean`;
+     `+` `sameSubject`: `Boolean`;
 <endassociationclass>
- + <datatype> Date
+ `+` <datatype> `Date`
     <attributes>
-     + day: Integer;
-     + month: Integer;
-     + year: Integer;
+     `+` `day`: `Integer`;
+     `+` `month`: `Integer`;
+     `+` `year`: `Integer`;
 <enddatatype>
- + <datatype> Period
+ `+` <datatype> `Period`
     <attributes>
-     + nrOfDays: Integer;
-     + nrOfWorkingDays: Integer;
+     `+` `nrOfDays`: `Integer`;
+     `+` `nrOfWorkingDays`: `Integer`;
 <enddatatype>
 <associations>
- + Appendix.nextApp [0..1]    <->  + Appendix.prevApp [0..1]   ;
- + Chapter.prevChap [1..1]    <->  + Appendix.nextApp [0..1]   ;
- + Prependix.prevPrep [0..1]    <->  + Chapter.nextChap [0..1]   ;
- + Prependix.nextPrep [0..1]    <->  + Prependix.prevPrep [0..1]   ;
- + Chapter.nextChap [0..1]    <->  + Chapter.prevChap [0..1]   ;
+ `+` `Appendix`.`nextApp` [0..1]    <->  `+` `Appendix`.`prevApp` [0..1]   ;
+ `+` `Chapter`.`prevChap` [1..1]    <->  `+` `Appendix`.`nextApp` [0..1]   ;
+ `+` `Prependix`.`prevPrep` [0..1]    <->  `+` `Chapter`.`nextChap` [0..1]   ;
+ `+` `Prependix`.`nextPrep` [0..1]    <->  `+` `Prependix`.`prevPrep` [0..1]   ;
+ `+` `Chapter`.`nextChap` [0..1]    <->  `+` `Chapter`.`prevChap` [0..1]   ;
 <endpackage>

@@ -42,9 +42,9 @@ export class FretPropertyCallExp extends FretExp {
         }
         return undefined;
     }
-    set property(cls: FreMetaProperty) {
-        if (!!cls) {
-            this.$property = MetaElementReference.create<FreMetaProperty>(cls, "FreProperty");
+    set property(prop: FreMetaProperty) {
+        if (!!prop) {
+            this.$property = MetaElementReference.create<FreMetaProperty>(prop);
             this.$property.owner = this.language;
         }
     }

@@ -1,4 +1,4 @@
-Modelunit AAAAAA1
+Modelunit `AAAAAA1`
     Prop of type CC: CC [ CCprop3: 13 ]
     // CCprop3 should be <=12, need not be <= 6 ===> Result is 1 error
     Prop of type BB: BB [ CCprop3: 14 ]

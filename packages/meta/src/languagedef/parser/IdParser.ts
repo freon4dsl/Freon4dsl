@@ -1,5 +1,5 @@
 import { IdMap } from "../../commandline/IdMap.js";
-import { LOG2USER } from "../../utils/index.js";
+import { LOG2USER } from "../../utils/basic-dependencies/index.js";
 
 export type IdProperty = {
     name: string
