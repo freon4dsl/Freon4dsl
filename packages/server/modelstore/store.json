@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 1,
+    "currentPostfix": 2,
     "models": [
         {
             "folder": "modelstore",
@@ -591,6 +591,13 @@
                 }
             ],
             "version": "1"
+        },
+        {
+            "name": "631(&$][:) 12!",
+            "folder": "model-1",
+            "language": "MyLang",
+            "version": "1",
+            "units": []
         }
     ]
 }
