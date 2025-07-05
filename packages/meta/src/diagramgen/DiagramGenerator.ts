@@ -98,7 +98,7 @@ export class DiagramGenerator {
                 `Generated diagrams for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`,
             );
         } else {
-            LOGGER.info(`Succesfully generated diagrams.`);
+            LOGGER.info(`Successfully generated diagrams.`);
         }
     }
 

@@ -33,7 +33,7 @@ export class LionWebGenerator {
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(`Generated language '${this.language.name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated language '${this.language.name}'`);
+            LOGGER.info(`Successfully generated language '${this.language.name}'`);
         }
     }
 

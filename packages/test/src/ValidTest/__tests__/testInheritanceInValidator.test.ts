@@ -33,16 +33,16 @@ describe("Testing Validator on Inheritance", () => {
         expect(errors.length).toBe(4);
         const messages: string[] = errors.map(error => error.message);
         // console.log(messages);
-        expect(messages.includes("'CCprop3 <= 12' is false")).toBeTruthy();
-        expect(messages.includes("'CCprop3 <= 6' is false")).toBeTruthy();
+        expect(messages.includes("'self.CCprop3 <= 12' is false")).toBeTruthy();
+        expect(messages.includes("'self.CCprop3 <= 6' is false")).toBeTruthy();
 
         errors.forEach((error: FreError) => {
-            if (error.message === "'CCprop3 <= 12' is false") {
+            if (error.message === "'self.CCprop3 <= 12' is false") {
                 if (!Array.isArray(error.reportedOn)) {
                     expect(error.reportedOn.freLanguageConcept()).toBeOneOf(["CC", "BB", "SubCC"]);
                 }
             }
-            if (error.message === "'CCprop3 <= 6' is false") {
+            if (error.message === "'self.CCprop3 <= 6' is false") {
                 if (!Array.isArray(error.reportedOn)) {
                     expect(error.reportedOn.freLanguageConcept()).toBeOneOf(["SubCC"]);
                 }
@@ -67,10 +67,11 @@ describe("Testing Validator on Inheritance", () => {
         const errors: FreError[] = validator.validate(unit1);
         expect(errors.length).toBe(1);
         const messages: string[] = errors.map(error => error.message);
+        // console.log(messages);
 
-        expect(messages.includes("'DDprop3 >= 10' is false")).toBeTruthy();
+        expect(messages.includes("'self.DDprop3 >= 10' is false")).toBeTruthy();
         errors.forEach((error: FreError) => {
-            if (error.message == "'DDprop3 >= 10' is false") {
+            if (error.message == "'self.DDprop3 >= 10' is false") {
                 if (!Array.isArray(error.reportedOn)) {
                     expect(error.reportedOn.freLanguageConcept()).toBe("SubCC");
                 }
@@ -94,9 +95,9 @@ describe("Testing Validator on Inheritance", () => {
         const errors: FreError[] = validator.validate(unit1);
         expect(errors.length).toBe(1);
         const messages: string[] = errors.map(error => error.message);
-        expect(messages.includes("'FFprop3 < 4' is false")).toBeTruthy();
+        expect(messages.includes("'self.FFprop3 < 4' is false")).toBeTruthy();
         errors.forEach((error: FreError) => {
-            if (error.message == "'FFprop3 < 4' is false") {
+            if (error.message == "'self.FFprop3 < 4' is false") {
                 if (!Array.isArray(error.reportedOn)) {
                     expect(error.reportedOn.freLanguageConcept()).toBe("SubCC");
                 }

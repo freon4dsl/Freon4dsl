@@ -12,6 +12,7 @@ import {
     FreMetaPrimitiveType,
     FreMetaConcept
 } from '../../languagedef/metalanguage/index.js';
+import { MetaFunctionNames } from '../../utils/no-dependencies/index.js';
 
 // Some properties of the classes defined here are marked @ts-ignore to avoid the error:
 // TS2564: ... has no initializer and is not definitely assigned in the constructor.
@@ -39,10 +40,19 @@ export abstract class FreLangExpNew extends FreMetaLangElement {
 
     /**
      * Returns true if this expression refers to a property and that property is a 'part' (not a 'reference').
+     * Also returns true if this expression is one of the functions 'owner', 'type, or 'if'.
      */
     getIsPart(): boolean {
         // only overridden by FreVarExp, it's result depends on the property it may refer to
-        return true;
+        return false;
+    }
+
+    /**
+     * Returns true if this expression refers to a property and that property is a list.
+     */
+    getIsList(): boolean {
+        // only overridden by FreVarExp, it's result depends on the property it may refer to
+        return false;
     }
 
     /**
@@ -149,6 +159,13 @@ export class FreVarExp extends FreVarOrFunctionExp {
     toErrorString(): string {
         return this.name;
     }
+
+    getIsList() {
+        if (this.$referredProperty) {
+            return this.referredProperty?.isList;
+        }
+        return true;
+    }
 }
 
 /**
@@ -169,6 +186,14 @@ export class FreFunctionExp extends FreVarOrFunctionExp {
 
     getLocalClassifier(): FreMetaClassifier | undefined {
         return this.referredClassifier;
+    }
+
+    getIsPart(): boolean {
+        // None of these functions result ina FreNodeReference object
+        if (this.name === MetaFunctionNames.ownerFunc || this.name === MetaFunctionNames.ifFunc || this.name === MetaFunctionNames.typeFunc) {
+            return true;
+        }
+        return false;
     }
 }
 

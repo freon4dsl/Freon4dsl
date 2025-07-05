@@ -17,24 +17,41 @@ export class ExpressionGenerationUtil {
     static previousIsList: boolean = false;
     static previousMaybeUndefined: boolean = false;
 
-    public static langExpToTypeScript(exp: FreLangExpNew, paramName: string, imports: Imports): string {
+    /**
+     * Generates the typescript code for 'exp', which is an expression over the metamodel.
+     * In the generated code 'paramName' is used to represent the 'self' object.
+     * Anything that needs to be imported because it is used in the generated code is added to 'imports'.
+     * If 'asFreNodeReference' is true, the expression is generated without '.referred', i.e. its result is
+     * a FreNodeReference, not a FreNode. The default value if false. Note that only the last element of
+     * a 'dotted' expression responds to this parameter. That is 'self.refProp1.refProp2', where both
+     * 'refProp1' and 'refProp2' are references, is by default generated as 'paramName.refProp1.referred.refProp2.referred'.
+     * Only when 'asFreNodeReference' is true, it is generated as 'paramName.refProp1.referred.refProp2'.
+     * Actually, we use the $-sign notation, for which a getter function is generated: 'paramName.$refProp1.$refProp2'
+     *
+     * @param exp
+     * @param paramName
+     * @param imports
+     * @param asFreNodeReference    if true, the expression is generated without '.referred', i.e. its result is a FreNodeReference, not a FreNode
+     * @private
+     */
+    public static langExpToTypeScript(exp: FreLangExpNew, paramName: string, imports: Imports, asFreNodeReference?: boolean): string {
         this.previousIsList = false;
         this.previousMaybeUndefined = false;
-        return this.langExpToTypeScriptPrivate(exp, paramName, imports, '');
+        return this.langExpToTypeScriptPrivate(exp, paramName, imports, '', asFreNodeReference ? asFreNodeReference : false);
     }
 
-    private static langExpToTypeScriptPrivate(exp: FreLangExpNew, paramName: string, imports: Imports, previousExpAsTS: string): string {
+    private static langExpToTypeScriptPrivate(exp: FreLangExpNew, paramName: string, imports: Imports, previousExpAsTS: string, asFreNodeReference: boolean): string {
         let result: string = '';
         if (exp instanceof FreVarExp) {
             if (exp.name === Names.nameForSelf) {
                 result = paramName;
             } else {
-                result = this.varExpToTypeScript(exp, paramName, imports, previousExpAsTS);
+                result = this.varExpToTypeScript(exp, paramName, imports, previousExpAsTS, asFreNodeReference);
             }
             if (!!exp.applied) {
                 this.previousIsList = this.previousIsList || (exp.referredProperty? exp.referredProperty.isList : false);
                 this.previousMaybeUndefined = this.previousMaybeUndefined || (exp.referredProperty? exp.referredProperty.isOptional : false);
-                result = `${this.langExpToTypeScriptPrivate(exp.applied, paramName, imports, result, )}`;
+                result = `${this.langExpToTypeScriptPrivate(exp.applied, paramName, imports, result, asFreNodeReference)}`;
             }
         } else if (exp instanceof FreFunctionExp) {
             switch (exp.name) {
@@ -56,9 +73,10 @@ export class ExpressionGenerationUtil {
             if (!!exp.applied) {
                 this.previousIsList = this.previousIsList || (exp.referredProperty ? exp.referredProperty.isList : false);
                 this.previousMaybeUndefined = this.previousMaybeUndefined || (exp.referredProperty? exp.referredProperty.isOptional : false);
-                result = `${this.langExpToTypeScriptPrivate(exp.applied, paramName, imports, result)}`;
+                result = `${this.langExpToTypeScriptPrivate(exp.applied, paramName, imports, result, asFreNodeReference)}`;
             }
         } else if (exp instanceof FreLimitedInstanceExp) {
+            imports.language.add(exp.conceptName);
             result = `${exp.conceptName}.${exp.instanceName}`;
         } else if (exp instanceof FreLangSimpleExpNew) {
             result = exp.value.toString();
@@ -68,6 +86,14 @@ export class ExpressionGenerationUtil {
         return result;
     }
 
+    /**
+     *
+     * @param exp
+     * @param paramName
+     * @param imports
+     * @param previousExpAsTS
+     * @private
+     */
     private static ownerFunctoTypescript(exp: FreFunctionExp, paramName: string, imports: Imports, previousExpAsTS: string): string {
         if (!exp.referredClassifier) { // the applied expression must be 'if()', this is established in the checker
             if (!!exp.previous && !!previousExpAsTS && previousExpAsTS.length > 0) {
@@ -154,7 +180,7 @@ export class ExpressionGenerationUtil {
                 undefined)`;
     }
 
-    private static varExpToTypeScript(exp: FreVarExp, paramName: string, imports: Imports, previousExpAsTS: string | undefined) {
+    private static varExpToTypeScript(exp: FreVarExp, paramName: string, imports: Imports, previousExpAsTS: string | undefined, asFreNodeReference: boolean) {
         // LOGGER.log('varExpToTypeScript ' + exp.toErrorString() + ' ' + this.previousMaybeUndefined)
         if (!exp.referredProperty) { // var refers to a classifier
             return exp.name;
@@ -177,7 +203,13 @@ export class ExpressionGenerationUtil {
                 } else {
                     this.previousIsList = thisProperty?.isList;
                     this.previousMaybeUndefined = this.previousMaybeUndefined || thisProperty?.isOptional;
-                    return `${previousExpAsTS}.${exp.name}`;
+                    if (!thisProperty?.isPart && !exp.applied && !asFreNodeReference) {
+                        // Use a $-sign, for example 'node.$referredProp', to get the referred node from a FreNodeReference
+                        // We could also use 'node.referredProp.referred'.
+                        return `${previousExpAsTS}.\$${exp.name}`;
+                    } else {
+                        return `${previousExpAsTS}.${exp.name}`;
+                    }
                 }
             }
         }

@@ -179,7 +179,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         LOGGER.log("Checking namespace expression for " + enclosingConcept?.name);
         const exp = namespaceExpression.expression;
         if (!!exp) {
-            this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
+            this.myExpressionChecker.checkLangExp(exp, enclosingConcept, this.runner);
             const foundClassifier: FreMetaClassifier | undefined = exp.getResultingClassifier();
             // NB It is correct that foundClassifier is undefined, when the last of the expression
             // is either 'owner()' of 'type()', otherwise it is incorrect.

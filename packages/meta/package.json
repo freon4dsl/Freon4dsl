@@ -21,11 +21,11 @@
     "cleanup": "bash ../../scripts/cleanup.sh",
     "start": "echo Starting meta",
 
-    "peggy-concat-language": "cd src/languagedef/parser && bash ./concat.sh",
-    "peggy-concat-editor": "cd src/editordef/parser && bash ./concat.sh",
-    "peggy-concat-validator": "cd src/validatordef/parser && bash ./concat.sh",
-    "peggy-concat-scoper"     : "cd src/scoperdef/parser && bash ./concat.sh",
-    "peggy-concat-lang-exp-new": "cd src/langexpressions/parser && bash ./concat.sh",
+    "peggy-concat-language"     : "cd src/languagedef/parser && bash ./concat.sh",
+    "peggy-concat-editor"       : "cd src/editordef/parser && bash ./concat.sh",
+    "peggy-concat-validator"    : "cd src/validatordef/parser && bash ./concat.sh",
+    "peggy-concat-scoper"       : "cd src/scoperdef/parser && bash ./concat.sh",
+    "peggy-concat-lang-exp-new" : "cd src/langexpressions/parser && bash ./concat.sh",
     "all-concats": "npm run peggy-concat-language && npm run peggy-concat-editor && npm run peggy-concat-scoper && npm run peggy-concat-validator && npm run peggy-concat-lang-exp-new",
 
     "lang-parser": "peggy --format es src/languagedef/parser/LanguageGrammar.pegjs",

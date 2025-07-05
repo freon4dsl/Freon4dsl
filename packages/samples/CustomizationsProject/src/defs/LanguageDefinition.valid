@@ -1,4 +1,4 @@
-validator Entity for language Entity
+validator for language Entity
 
 AttributeType  {
 	self.extra >= 12;

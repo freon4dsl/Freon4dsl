@@ -3,10 +3,10 @@ editor default
 // begin validator definition
 FreValidatorDef {[
     validator ${name} for language ${languageName}
-    ${conceptRules}
+    ${classifierRules}
 ]}
 
-ConceptRuleSet {[
+ClassifierRuleSet {[
     ${classifierRef} {
         ${rules terminator[;]}
     }
@@ -24,12 +24,12 @@ ValidationMessage {[
 ]}
 
 CheckEqualsTypeRule {[
-    typecheck equalsType ( ${type1}, ${type2})
+    typecheck equalsType ( ${type1Exp}, ${type2Exp})
     [=> ValidationRule ]
 ]}
 
 CheckConformsRule {[
-    typecheck conformsTo ( ${type1}, ${type2})
+    typecheck conformsTo ( ${type1Exp}, ${type2Exp})
     [=> ValidationRule ]
 ]}
 

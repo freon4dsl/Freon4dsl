@@ -52,12 +52,12 @@ describe("Checking generation of expressions", () => {
             expect(resultStr.includes("node.AAprop6")).toBeTruthy();
             expect(resultStr.includes("node.AAprop7")).toBeTruthy();
             expect(resultStr.includes("node.AAprop8")).toBeTruthy();
-            expect(resultStr.includes("node.AAprop9")).toBeTruthy();
-            expect(resultStr.includes("node.AAprop10")).toBeTruthy();
+            expect(resultStr.includes("node.$AAprop9")).toBeTruthy();
+            expect(resultStr.includes("node.$AAprop10")).toBeTruthy();
             expect(resultStr.includes("node.AAprop11")).toBeTruthy();
             expect(resultStr.includes("node.AAprop12")).toBeTruthy();
-            expect(resultStr.includes("node.AAprop13")).toBeTruthy();
-            expect(resultStr.includes("node.AAprop14")).toBeTruthy();
+            expect(resultStr.includes("node.$AAprop13")).toBeTruthy();
+            expect(resultStr.includes("node.$AAprop14")).toBeTruthy();
             expect(resultStr.includes("node.AAprop12.map((x: DD) => x.DDprop8).flat().map((x: BB) => x.BBprop5)")).toBeTruthy();
         } else {
             console.log("Language or Expressions not present");
@@ -75,8 +75,8 @@ describe("Checking generation of expressions", () => {
             BBconceptExps!.exps.forEach((exp) => {
                 resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports);
             });
-            expect(resultStr.includes("node.BBprop15")).toBeTruthy();
-            expect(resultStr.includes("node.BBprop16")).toBeTruthy();
+            expect(resultStr.includes("node.$BBprop15")).toBeTruthy();
+            expect(resultStr.includes("node.$BBprop16")).toBeTruthy();
             expect(resultStr.includes("node.BBprop17")).toBeTruthy();
             expect(resultStr.includes("node.BBprop18")).toBeTruthy();
         } else {
@@ -149,7 +149,7 @@ describe("Checking generation of expressions", () => {
                 resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports);
             });
             // console.log(resultStr);
-            expect(resultStr.includes("node.ee?.dd?.cc?.bb?.aa")).toBeTruthy();
+            expect(resultStr.includes("node.ee?.dd?.cc?.bb?.$aa")).toBeTruthy();
         } else {
             console.log("Language or Expressions not present");
         }
