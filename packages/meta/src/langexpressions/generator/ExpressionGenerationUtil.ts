@@ -64,7 +64,7 @@ export class ExpressionGenerationUtil {
                     break;
                 }
                 case MetaFunctionNames.ownerFunc: {
-                    result = this.ownerFunctoTypescript(exp, paramName, imports, previousExpAsTS);
+                    result = this.ownerFuncToTypescript(exp, paramName, imports, previousExpAsTS);
                     break;
                 }
                 case MetaFunctionNames.conformsToFunc: { result = '/* TODO conformTo */'; break;}
@@ -94,7 +94,7 @@ export class ExpressionGenerationUtil {
      * @param previousExpAsTS
      * @private
      */
-    private static ownerFunctoTypescript(exp: FreFunctionExp, paramName: string, imports: Imports, previousExpAsTS: string): string {
+    private static ownerFuncToTypescript(exp: FreFunctionExp, paramName: string, imports: Imports, previousExpAsTS: string): string {
         if (!exp.referredClassifier) { // the applied expression must be 'if()', this is established in the checker
             if (!!exp.previous && !!previousExpAsTS && previousExpAsTS.length > 0) {
                 // NB if there is a previous expression, there should also be a 'previousExpAsTS'
@@ -180,13 +180,13 @@ export class ExpressionGenerationUtil {
                 undefined)`;
     }
 
-    private static varExpToTypeScript(exp: FreVarExp, paramName: string, imports: Imports, previousExpAsTS: string | undefined, asFreNodeReference: boolean) {
+    private static varExpToTypeScript(exp: FreVarExp, paramName: string, imports: Imports, previousExpAsTS: string, asFreNodeReference: boolean) {
         // LOGGER.log('varExpToTypeScript ' + exp.toErrorString() + ' ' + this.previousMaybeUndefined)
         if (!exp.referredProperty) { // var refers to a classifier
             return exp.name;
         } else { // var refers to a property
             if (!exp.previous) {
-                return `${paramName}.${exp.name}`;
+                return this.generateNodeOrReference(exp, asFreNodeReference, paramName);
             } else {
                 if (this.previousMaybeUndefined) {
                     previousExpAsTS += '?';
@@ -203,15 +203,29 @@ export class ExpressionGenerationUtil {
                 } else {
                     this.previousIsList = thisProperty?.isList;
                     this.previousMaybeUndefined = this.previousMaybeUndefined || thisProperty?.isOptional;
-                    if (!thisProperty?.isPart && !exp.applied && !asFreNodeReference) {
-                        // Use a $-sign, for example 'node.$referredProp', to get the referred node from a FreNodeReference
-                        // We could also use 'node.referredProp.referred'.
-                        return `${previousExpAsTS}.\$${exp.name}`;
-                    } else {
-                        return `${previousExpAsTS}.${exp.name}`;
-                    }
+                    return this.generateNodeOrReference(exp, asFreNodeReference, previousExpAsTS);
                 }
             }
+        }
+    }
+
+    /**
+     * Generates the expression as a FreNodeReference or a FreNode, depending on 'asFreNodeReference'.
+     * Note that only the last of the expression may be an instance of FreNodeReference, all other parts are generated as FreNodes.
+     *
+     * @param exp
+     * @param asFreNodeReference
+     * @param previousExpAsTS
+     * @private
+     *
+     */
+    private static generateNodeOrReference(exp: FreVarExp, asFreNodeReference: boolean, previousExpAsTS: string) {
+        if (!exp.referredProperty.isPart && !exp.referredProperty.isList && !exp.applied && !asFreNodeReference) {
+            // Use a $-sign, for example 'node.$referredProp', to get the referred node from a FreNodeReference
+            // We could also use 'node.referredProp.referred'.
+            return `${previousExpAsTS}.\$${exp.name}`;
+        } else {
+            return `${previousExpAsTS}.${exp.name}`;
         }
     }
 }

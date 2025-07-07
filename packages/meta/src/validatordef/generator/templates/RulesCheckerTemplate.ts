@@ -390,6 +390,7 @@ export class RulesCheckerTemplate {
             }
 
             // add imports
+            imports.core.add('isNullOrUndefined');
             // ... but do not add the primitive types
             if (listpropertyTypeName !== 'number' && listpropertyTypeName !== 'string' && listpropertyTypeName !== 'boolean') {
                 imports.language.add(listpropertyTypeName);
