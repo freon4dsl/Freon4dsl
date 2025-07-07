@@ -7,3 +7,8 @@ fi
 
 pid=$(lsof -i4TCP:$PORT -Fp | grep ^p | sed "s/p//")
 kill $pid
+
+# on windows use:
+# taskkill /PID process-id /F
+# find process-id via the command:
+# netstat -ano | findstr :8001
