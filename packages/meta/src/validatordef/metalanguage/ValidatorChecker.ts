@@ -1,11 +1,11 @@
-import { FreErrorSeverity, MetaLogger } from '../../utils/no-dependencies/index.js';
+import { FreErrorSeverity, MetaLogger, nameForSelf } from '../../utils/no-dependencies/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 import {
     FreMetaClassifier,
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
-    FreMetaProperty, nameForSelf
+    FreMetaProperty
 } from '../../languagedef/metalanguage/index.js';
 import {
     CheckConformsRule,
@@ -22,8 +22,8 @@ import {
     ValidNameRule,
 } from "./ValidatorDefLang.js";
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/index.js";
-import { FreLangExpressionCheckerNew } from '../../langexpressions/checking/FreLangExpressionCheckerNew.js';
-import { FreLangSimpleExpNew, FreVarExp } from '../../langexpressions/metalanguage/index.js';
+import { FreLangExpressionChecker } from '../../langexpressions/checking/FreLangExpressionChecker.js';
+import { FreLangSimpleExp, FreVarExp } from '../../langexpressions/metalanguage/index.js';
 import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 
 const LOGGER: MetaLogger = new MetaLogger("ValidatorChecker");
@@ -35,7 +35,7 @@ const conformsToName: string = "conformsTo";
 const severityLevels: string[] = ["error", "warning", "hint", "improvement", "todo", "info"];
 
 export class ValidatorChecker extends Checker<ValidatorDef> {
-    myExpressionChecker: FreLangExpressionCheckerNew | undefined;
+    myExpressionChecker: FreLangExpressionChecker | undefined;
     // @ts-ignore runner gets its value in the 'check' method
     runner: CheckRunner;
 
@@ -52,7 +52,7 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
             );
         } else {
             this.runner = new CheckRunner(this.errors, this.warnings);
-            this.myExpressionChecker = new FreLangExpressionCheckerNew(this.language);
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
             // in all private methods that are called by method 'check' we can assume that 'this.myExpressionChecker !== undefined'
         }
 
@@ -201,13 +201,13 @@ export class ValidatorChecker extends Checker<ValidatorDef> {
                 const type1 = rule.exp1!.getResultingClassifier();
                 const type2 = rule.exp2!.getResultingClassifier();
                 // types of exp1 and exp2 should conform
-                if (rule.exp1 instanceof FreLangSimpleExpNew) {
+                if (rule.exp1 instanceof FreLangSimpleExp) {
                     // test if type2Exp is a number
                     this.runner.simpleCheck(
                       type2?.name === 'number',
                       `Type of '${rule.exp2!.toFreString()}' does not conform to 'number' ${ParseLocationUtil.location(rule)}.`
                     );
-                } else if (rule.exp2 instanceof FreLangSimpleExpNew) {
+                } else if (rule.exp2 instanceof FreLangSimpleExp) {
                     // test if type1Exp is a number
                     this.runner.simpleCheck(
                       type1?.name === 'number',

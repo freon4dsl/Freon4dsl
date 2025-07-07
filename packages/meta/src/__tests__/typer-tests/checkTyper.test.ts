@@ -5,7 +5,7 @@ import { TyperDef } from "../../typerdef/metalanguage/index.js";
 import { FreTyperMerger } from "../../typerdef/parser/FreTyperMerger";
 import { describe, test, expect, beforeEach } from "vitest";
 
-describe("Checking new typer", () => {
+describe("Checking typer", () => {
     const testdir = "src/__tests__/typer-tests/faultyDefFiles/";
     let parser: FreTyperMerger;
     let language: FreMetaLanguage | undefined;

@@ -1,7 +1,7 @@
 import { Names } from '../../utils/on-lang/index.js';
 import { MetaLogger, MetaFunctionNames } from '../../utils/no-dependencies/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
-import { LanguageExpressionTesterNew, TestExpressionsForConcept } from "../parser/LanguageExpressionTesterNew.js";
+import { LanguageExpressionTester, TestExpressionsForConcept } from "../parser/LanguageExpressionTester.js";
 import {
     FreMetaLanguage,
     FreMetaClassifier,
@@ -11,8 +11,8 @@ import {
 } from '../../languagedef/metalanguage/index.js';
 import {
     FreFunctionExp,
-    FreLangExpNew,
-    FreLangSimpleExpNew,
+    FreLangExp,
+    FreLangSimpleExp,
     FreLimitedInstanceExp,
     FreVarExp
 } from '../metalanguage/index.js';
@@ -21,7 +21,7 @@ import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 
 const LOGGER = new MetaLogger("FreLangExpressionChecker").mute();
 
-export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTesterNew> {
+export class FreLangExpressionChecker extends Checker<LanguageExpressionTester> {
     strictUseOfSelf: boolean = true; // if true, then a FreSelfExp must have an applied expression
     runner: CheckRunner = new CheckRunner(this.errors, this.warnings);
 
@@ -30,11 +30,11 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
     }
 
     /**
-     * This method is only used in tests. It checks a complete 'LanguageExpressionTesterNew'.
+     * This method is only used in tests. It checks a complete 'LanguageExpressionTester'.
      * Runtime, the method 'checkLangExp' is used to check a single expression that occurs for instance in a scope or valid file.
      * @param definition
      */
-    public check(definition: LanguageExpressionTesterNew): void {
+    public check(definition: LanguageExpressionTester): void {
         LOGGER.log("Checking test expressions");
         // Because a rerun of the parser removes the errors and warnings, we create a new runner instance.
         this.runner = new CheckRunner(this.errors, this.warnings);
@@ -76,7 +76,7 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
     }
 
     // exp
-    public checkLangExp(langExp: FreLangExpNew, enclosingConcept: FreMetaClassifier, runner: CheckRunner) {
+    public checkLangExp(langExp: FreLangExp, enclosingConcept: FreMetaClassifier, runner: CheckRunner) {
         LOGGER.log("checkLangExp " + langExp.toFreString());
         if (!enclosingConcept) {
             LOGGER.error("enclosingConcept is null in 'checkLangExp'.");
@@ -90,7 +90,7 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
             this.checkVarExp(langExp, enclosingConcept, runner);
         } else if (langExp instanceof FreFunctionExp) {
             this.checkFunctionExp(langExp, enclosingConcept, runner);
-        } else if (langExp instanceof FreLangSimpleExpNew) {
+        } else if (langExp instanceof FreLangSimpleExp) {
             // no need to check a simple expression
         }
     }
@@ -253,7 +253,6 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
     }
 
     private checkConformsFunction(freFunctionExp: FreFunctionExp, enclosingConcept: FreMetaClassifier, myContext: FreMetaClassifier | undefined, runner: CheckRunner) {
-        // TODO checkConformsFunction needs to be extended when FreLangExpNew is used for the conforms function
         LOGGER.log("checkConformsFunction " + freFunctionExp?.toFreString() + " in " + enclosingConcept.name + " with context " + myContext?.name);
         runner.nestedCheck({
             check: !!freFunctionExp.param,
@@ -266,7 +265,6 @@ export class FreLangExpressionCheckerNew extends Checker<LanguageExpressionTeste
     }
 
     private checkEqualsFunction(freFunctionExp: FreFunctionExp, enclosingConcept: FreMetaClassifier, myContext: FreMetaClassifier | undefined, runner: CheckRunner) {
-        // TODO checkEqualsFunction needs to be extended when FreLangExpNew is used for the equals function
         LOGGER.log("checkEqualsFunction " + freFunctionExp?.toFreString() + " in " + enclosingConcept.name + " with context " + myContext?.name);
         runner.nestedCheck({
             check: !!freFunctionExp.param,

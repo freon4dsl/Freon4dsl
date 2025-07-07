@@ -1,7 +1,7 @@
 import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
 import { ParseLocation } from '../../utils/no-dependencies/index.js';
-import { FreLangExpressionCheckerNew } from "../checking/FreLangExpressionCheckerNew.js";
-import { LanguageExpressionTesterNew } from "./LanguageExpressionTesterNew.js";
+import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker.js";
+import { LanguageExpressionTester } from "./LanguageExpressionTester.js";
 import { parse } from "./ExpressionGrammar.js";
 import { setCurrentFileName } from "./ExpressionCreators.js";
 import fs from 'fs';
@@ -15,18 +15,18 @@ function isPegjsError(object: any): object is parser.SyntaxError {
     return "location" in object;
 }
 
-export class LanguageExpressionParserNew {
+export class LanguageExpressionParser {
     public language: FreMetaLanguage;
-    parseFunction: (input: string) => LanguageExpressionTesterNew;
-    checker: Checker<LanguageExpressionTesterNew>;
+    parseFunction: (input: string) => LanguageExpressionTester;
+    checker: Checker<LanguageExpressionTester>;
 
     constructor(language: FreMetaLanguage) {
         this.parseFunction = parse;
         this.language = language;
-        this.checker = new FreLangExpressionCheckerNew(this.language);
+        this.checker = new FreLangExpressionChecker(this.language);
     }
 
-    parse(definitionFile: string): LanguageExpressionTesterNew | undefined {
+    parse(definitionFile: string): LanguageExpressionTester | undefined {
         // LOG2USER.log("FreGenericParser.Parse: " + definitionFile);
         // Check if language file exists
         if (!fs.existsSync(definitionFile)) {
@@ -40,7 +40,7 @@ export class LanguageExpressionParserNew {
         // clean the error list from the creator functions
         this.cleanNonFatalParseErrors();
         // parse definition file
-        let model: LanguageExpressionTesterNew | undefined = undefined;
+        let model: LanguageExpressionTester | undefined = undefined;
         try {
             this.setCurrentFileName(definitionFile); // sets the filename in the creator functions to the right value
             model = this.parseFunction(langSpec);
@@ -72,7 +72,7 @@ export class LanguageExpressionParserNew {
     }
 
     //@ts-ignore
-    private runChecker(model: LanguageExpressionTesterNew) {
+    private runChecker(model: LanguageExpressionTester) {
         if (model !== undefined && model !== null) {
             this.checker.errors = [];
             this.checker.check(model);
@@ -94,7 +94,7 @@ export class LanguageExpressionParserNew {
     // error TS6133: 'submodels' is declared but its value is never read.
     // This error is ignored because this class is only used for tests.
     // @ts-ignore
-    protected merge(submodels: LanguageExpressionTesterNew[]): LanguageExpressionTesterNew | undefined {
+    protected merge(submodels: LanguageExpressionTester[]): LanguageExpressionTester | undefined {
         // no need to merge submodels, LanguageExpressionTester is only used for tests
         return undefined;
     }

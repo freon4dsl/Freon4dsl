@@ -1,7 +1,7 @@
 import {
     FreFunctionExp,
-    FreLangExpNew,
-    FreLangSimpleExpNew,
+    FreLangExp,
+    FreLangSimpleExp,
     FreLimitedInstanceExp,
     FreVarExp
 } from "../metalanguage/index.js"
@@ -11,7 +11,7 @@ import { MetaFunctionNames } from '../../utils/no-dependencies/index.js';
 
 /**
  * This class should replace the use of GenerationUtil.langExpToTypeScript,
- * when all meta languages are adjusted to the new language expressions: FreLangExpNew.
+ * when all meta languages are adjusted to the new language expressions: FreLangExp.
  */
 export class ExpressionGenerationUtil {
     static previousIsList: boolean = false;
@@ -34,13 +34,13 @@ export class ExpressionGenerationUtil {
      * @param asFreNodeReference    if true, the expression is generated without '.referred', i.e. its result is a FreNodeReference, not a FreNode
      * @private
      */
-    public static langExpToTypeScript(exp: FreLangExpNew, paramName: string, imports: Imports, asFreNodeReference?: boolean): string {
+    public static langExpToTypeScript(exp: FreLangExp, paramName: string, imports: Imports, asFreNodeReference?: boolean): string {
         this.previousIsList = false;
         this.previousMaybeUndefined = false;
         return this.langExpToTypeScriptPrivate(exp, paramName, imports, '', asFreNodeReference ? asFreNodeReference : false);
     }
 
-    private static langExpToTypeScriptPrivate(exp: FreLangExpNew, paramName: string, imports: Imports, previousExpAsTS: string, asFreNodeReference: boolean): string {
+    private static langExpToTypeScriptPrivate(exp: FreLangExp, paramName: string, imports: Imports, previousExpAsTS: string, asFreNodeReference: boolean): string {
         let result: string = '';
         if (exp instanceof FreVarExp) {
             if (exp.name === Names.nameForSelf) {
@@ -78,7 +78,7 @@ export class ExpressionGenerationUtil {
         } else if (exp instanceof FreLimitedInstanceExp) {
             imports.language.add(exp.conceptName);
             result = `${exp.conceptName}.${exp.instanceName}`;
-        } else if (exp instanceof FreLangSimpleExpNew) {
+        } else if (exp instanceof FreLangSimpleExp) {
             result = exp.value.toString();
         } else {
             result = 'Error: unknown expression';
@@ -220,7 +220,7 @@ export class ExpressionGenerationUtil {
      *
      */
     private static generateNodeOrReference(exp: FreVarExp, asFreNodeReference: boolean, previousExpAsTS: string) {
-        if (!exp.referredProperty.isPart && !exp.referredProperty.isList && !exp.applied && !asFreNodeReference) {
+        if (!exp.referredProperty.isPart && !exp.applied && !asFreNodeReference) {
             // Use a $-sign, for example 'node.$referredProp', to get the referred node from a FreNodeReference
             // We could also use 'node.referredProp.referred'.
             return `${previousExpAsTS}.\$${exp.name}`;

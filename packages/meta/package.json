@@ -32,9 +32,8 @@
     "edit-parser": "peggy --format es src/editordef/parser/FreEditGrammar.pegjs",
     "valid-parser": "peggy --format es src/validatordef/parser/ValidatorGrammar.pegjs",
     "scop-parser": "peggy --format es src/scoperdef/parser/ScoperGrammar.pegjs",
-    "lang-exp-parser": "peggy --format es src/languagedef/parser/ExpressionGrammar.pegjs",
     "lang-exp-new-parser": "peggy --format es src/langexpressions/parser/ExpressionGrammar.pegjs",
-    "all-parsers": "npm run lang-parser && npm run edit-parser && npm run valid-parser && npm run scop-parser && npm run lang-exp-parser && npm run lang-exp-new-parser",
+    "all-parsers": "npm run lang-parser && npm run edit-parser && npm run valid-parser && npm run scop-parser && npm run lang-exp-new-parser",
 
     "build": "npm run all-concats && npm run all-parsers && tsc",
     "build-dev": "npm run build",

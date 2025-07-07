@@ -44,9 +44,6 @@ export class RulesCheckerTemplate {
             // cannot start with number
             if (/[0-9]/.test( name[0]) ) return false;
             // may contain letters, numbers, '$', and '_', but no other characters
-            // if (/[.|,|!|?|@|~|%|^|&|*|-|=|+|(|)|{|}|"|'|:|;|<|>|?]/.test( name ) ) return false;
-            // if (/\\\\/.test(name)) return false;
-            // if (/[\/|\[|\]]/.test(name)) return false;
             if (/[.|,!?@~%^&*|-|=+(){}"':;<>]/.test( name ) ) return false;
             if (/\\\\/.test(name)) return false;
             // may not contain whitespaces

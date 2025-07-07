@@ -2,7 +2,7 @@ import { FreMetaClassifier, MetaElementReference } from '../../languagedef/metal
 // Note that FreErrorSeverity cannot be imported from "@freon4dsl/core", because
 // "@freon4dsl/meta" does not have a dependency on "@freon4dsl/core".
 import { FreMetaDefinitionElement, FreErrorSeverity } from '../../utils/no-dependencies/index.js';
-import { FreLangExpNew, FreVarExp } from '../../langexpressions/metalanguage/index.js';
+import { FreLangExp, FreVarExp } from '../../langexpressions/metalanguage/index.js';
 
 export class ValidatorDef extends FreMetaDefinitionElement {
     languageName: string = "";
@@ -60,7 +60,7 @@ export class ValidationMessageText extends FreMetaDefinitionElement {
 }
 
 export class ValidationMessageReference extends FreMetaDefinitionElement {
-    expression: FreLangExpNew | undefined;
+    expression: FreLangExp | undefined;
 
     toFreString(): string {
         if (!!this.expression) {
@@ -86,8 +86,8 @@ export abstract class ValidationRule extends FreMetaDefinitionElement {
 }
 
 export class CheckEqualsTypeRule extends ValidationRule {
-    type1Exp: FreLangExpNew | undefined;
-    type2Exp: FreLangExpNew | undefined;
+    type1Exp: FreLangExp | undefined;
+    type2Exp: FreLangExp | undefined;
 
     toFreString(): string {
         if (!!this.type1Exp && !!this.type2Exp) {
@@ -99,8 +99,8 @@ export class CheckEqualsTypeRule extends ValidationRule {
 }
 
 export class CheckConformsRule extends ValidationRule {
-    type1Exp: FreLangExpNew | undefined;
-    type2Exp: FreLangExpNew | undefined;
+    type1Exp: FreLangExp | undefined;
+    type2Exp: FreLangExp | undefined;
 
     toFreString(): string {
         if (!!this.type1Exp && !!this.type2Exp) {
@@ -112,8 +112,8 @@ export class CheckConformsRule extends ValidationRule {
 }
 
 export class ExpressionRule extends ValidationRule {
-    exp1: FreLangExpNew | undefined;
-    exp2: FreLangExpNew | undefined;
+    exp1: FreLangExp | undefined;
+    exp2: FreLangExp | undefined;
     comparator: FreComparator | undefined;
 
     toFreString(): string {
@@ -152,7 +152,7 @@ export class NotEmptyRule extends ValidationRule {
     }
 }
 export class ValidNameRule extends ValidationRule {
-    property: FreLangExpNew | undefined;
+    property: FreLangExp | undefined;
 
     toFreString(): string {
         if (!!this.property) {

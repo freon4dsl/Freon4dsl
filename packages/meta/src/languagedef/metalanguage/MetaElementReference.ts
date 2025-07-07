@@ -3,7 +3,7 @@ import { FreMetaLangElement } from './internal.js';
 
 /**
  * Implementation for a (named) reference in Freon.
- * Reference can be set with either a referred object, or with a unitName.
+ * Reference can be set with either a referred object, or with a name.
  */
 export class MetaElementReference<T extends FreMetaLangElement> {
     public static create<T extends FreMetaLangElement>(name: string | T): MetaElementReference<T> {

@@ -1,6 +1,6 @@
 {{
 import * as creator from "./FreEditCreators.js"
-import * as expCreate from "../../languagedef/parser/ExpressionCreators.js";
+import * as expCreate from "../../languagedef/parser/LanguageCreators.js";
 }}
 
 Editor_Definition = group:projectionGroup
@@ -80,6 +80,11 @@ singleGlobalProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 
 listOfExternals = list:var|.., ws "," ws|
 { return list; }
+
+classifierReference = referredName:var
+{
+    return expCreate.createClassifierReference({"name": referredName, "location": location()})
+}
 
 classifierProjection =
             classifier:classifierReference curly_begin ws
