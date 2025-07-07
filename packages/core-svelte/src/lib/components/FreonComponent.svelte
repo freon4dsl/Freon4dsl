@@ -208,7 +208,8 @@
         setTimeout(() => {
             editor.scrollX = element.scrollLeft;
             editor.scrollY = element.scrollTop;
-        }, 400); // Might use another value for the delay, but this seems ok.
+        }, 400); 
+        // Might use another value for the delay, but this seems ok.
     }
 
     const clientRectangle = (): ClientRectangle => {

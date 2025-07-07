@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@import '../../core-svelte/src/lib/styles/freon.css';
+@import '../../core-svelte/src/lib/styles/freon-light.css';
+@import '../../core-svelte/src/lib/styles/freon-color-definitions.css';
+@import '../../core-svelte/src/lib/styles/freon-tw-dark.css';
+@import '../../../node_modules/@freon4dsl/weblib-flowbite/dist/styles/lib-styles.css';
+@import './theme-colors-override.css';

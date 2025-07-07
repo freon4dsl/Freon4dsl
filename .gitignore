@@ -75,8 +75,8 @@ packages/meta/src/validatordef/parser/ValidatorGrammar.pegjs
 /packages/server/modelstore-example/NEXT/
 /packages/server/modelstore-example/QWER/
 /packages/server/modelstore-example/www/
-
-/packages/webapp-lib/.svelte-kit/
+/packages/weblib-smui/.svelte-kit/
+/packages/weblib-flowbite/.svelte-kit/
+/packages/webapp-smui/.svelte-kit/
+/packages/webapp-flowbite/.svelte-kit/
 /packages/core-svelte/.svelte-kit/
-/packages/fbweblib/.svelte-kit/
-/packages/fbapp-starter/.svelte-kit/

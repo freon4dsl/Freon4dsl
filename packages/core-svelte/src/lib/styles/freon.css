@@ -284,6 +284,7 @@
     /* To set the height of the input element we must use padding and line-height properties. The height property does not function! */
     padding: 0px;
     margin: 1px;
+    outline: none; 
     /*width: 100%;*/
     box-sizing: border-box;
     border: none;

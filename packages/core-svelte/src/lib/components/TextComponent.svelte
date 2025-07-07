@@ -218,7 +218,9 @@
         isEditing = true;
         editStart = true;
         originalText = text;
-        await tick(); // wait till the <input> is rendered // todo see whether this is really needed
+        await tick(); 
+        // wait till the <input> is rendered 
+        // todo see whether this is really needed
         // Now set the width of <input>, and the caret position,
         // either based on the input from the editor, or from the UI.
         setInputWidth();
@@ -240,7 +242,8 @@
      */
     function onMousedown(event: MouseEvent) {
         LOGGER.log(`onMousedown for ${box?.id}`);
-        if (event.button === 0) { // a 'left' click
+        if (event.button === 0) { 
+            // a 'left' click
             event.preventDefault();
             event.stopPropagation();
             // Because we do not propagate the event, we need to hide any context menu 'manually'.
@@ -250,8 +253,8 @@
                 // Tell the TextDropdown that the edit has started.
                 toParent('startEditing', { content: text, caret: myHelper.from });
             }
-        } // 'right' clicks are handled by parent => should open context menu
-        else {
+        } else {
+            // 'right' clicks are handled by parent => should open context menu
             LOGGER.log('text component: right click mouse down')
         }
     }
@@ -309,12 +312,15 @@
         );
         if (event.key === TAB) {
 			// Do nothing, browser handles this
-		} else if (event.key === SHIFT || event.key === CONTROL || event.key === ALT) { // ignore meta keys
+		} else if (event.key === SHIFT || event.key === CONTROL || event.key === ALT) { 
+            // ignore meta keys
 			LOGGER.log("META KEY: stop propagation")
 			event.stopPropagation();
-		} else if (event.altKey || event.ctrlKey) { // No shift, because that is handled as normal text
+		} else if (event.altKey || event.ctrlKey) { 
+            // No shift, because that is handled as normal text
 			myHelper.handleAltOrCtrlKey(event, editor);
-		} else { // handle non meta keys
+		} else { 
+            // handle non meta keys
 			switch (event.key) {
 				case ESCAPE: {
 					if (partOfDropdown) toParent('hideDropdown');
@@ -349,7 +355,8 @@
 					myHelper.handleDelete(event, editor);
 					break;
 				}
-				default: { // the event.key is SHIFT or a printable character
+				default: { 
+                    // the event.key is SHIFT or a printable character
 					if (partOfDropdown) toParent('showDropdown');
 					myHelper.getCaretPosition(event);
 					if (event.shiftKey && event.key === 'Shift') {
@@ -364,15 +371,18 @@
 							myHelper.from += 1;
 							event.stopPropagation();
 							break;
-						case CharAllowed.NOT_OK: // ignore
+						case CharAllowed.NOT_OK: 
+                            // ignore
 							LOGGER.log('KeyPressAction.NOT_OK');
 							event.preventDefault();
 							event.stopPropagation();
 							break;
-						case CharAllowed.GOTO_NEXT: // try in previous or next box
+						case CharAllowed.GOTO_NEXT: 
+                            // try in previous or next box
 							myHelper.handleGoToNext(event, editor, id);
 							break;
-						case CharAllowed.GOTO_PREVIOUS: // try in previous or next box
+						case CharAllowed.GOTO_PREVIOUS: 
+                            // try in previous or next box
 							myHelper.handleGoToPrevious(event, editor, id);
 							break;
 					}
