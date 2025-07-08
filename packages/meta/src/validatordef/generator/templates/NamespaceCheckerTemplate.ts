@@ -1,6 +1,5 @@
 import { Names, Imports } from "../../../utils/on-lang/index.js"
-import { FreMetaLanguage, FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/metalanguage/index.js";
-import { ValidationUtils } from "../ValidationUtils.js";
+import { FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 
 const paramName: string = "node";
 const commentBefore = `/**
@@ -12,14 +11,14 @@ const commentBefore = `/**
                         * @param ${paramName}
                         */`;
 
-export class NonOptionalsCheckerTemplate {
+export class NamespaceCheckerTemplate {
     done: FreMetaClassifier[] = [];
 
     generateChecker(language: FreMetaLanguage, relativePath: string): string {
         const defaultWorkerName = Names.defaultWorker(language);
         const errorClassName: string = Names.FreError;
         const errorSeverityName: string = Names.FreErrorSeverity;
-        const checkerClassName: string = Names.nonOptionalsChecker(language);
+        const checkerClassName: string = Names.namespaceChecker(language);
         const checkerInterfaceName: string = Names.checkerInterface(language);
         const writerInterfaceName: string = Names.FreWriter;
         const classifiersToDo: FreMetaClassifier[] = [];
@@ -32,8 +31,8 @@ export class NonOptionalsCheckerTemplate {
         const result = `
         /**
          * Class ${checkerClassName} is part of the implementation of the default validator.
-         * It checks whether non-optional properties, as such defined in the .ast definition, indeed
-         * have a value.
+         * It checks whether namespaces, as such defined in the .scope definition, have more than one node 
+         * with the same name.
          * Class ${Names.walker(language)} implements the traversal of the model tree. This class implements
          * the actual checking of each node in the tree.
          */
@@ -43,56 +42,49 @@ export class NonOptionalsCheckerTemplate {
             // 'errorList' holds the errors found while traversing the model tree
             errorList: ${errorClassName}[] = [];
 
-        ${classifiersToDo.map((concept) => `${this.createChecksOnNonOptionalParts(concept)}`).join("\n\n")}
+        ${classifiersToDo.map((concept) => `${this.createChecksOnNamespaces(concept)}`).join("\n\n")}
+        
+        private checkDoubleNamesInNamespace(node: FreNode) {
+            const declaredNodes: Set<FreNamedNode> = FreNamespace.create(node).getDeclaredNodes(false);
+            const declaredNames: string[] = [];
+            const doubleNames: string[] = [];
+            declaredNodes.forEach(nn => {
+                if (declaredNames.indexOf(nn.name) > -1) {
+                    doubleNames.push(nn.name);
+                } else {
+                    declaredNames.push(nn.name);
+                }
+            });
+            if (doubleNames.length > 0) {
+                this.errorList.push(new FreError(\`Namespace \${node['name']} has multiple nodes with the same name [\${doubleNames.map(n => n).join(', ')}].\`, node, node['name'], 'name', FreErrorSeverity.Error));
+            }
+        }
         }`;
 
         const imports = new Imports(relativePath)
-        imports.core = new Set<string>([errorClassName, errorSeverityName, writerInterfaceName, Names.FreLanguageEnvironment, Names.isNullOrUndefined])
+        imports.core = new Set<string>([
+            errorClassName, errorSeverityName, writerInterfaceName,
+            Names.FreLanguageEnvironment, Names.FreLanguage, Names.FreNamespace, Names.FreNode, Names.FreNamedNode, Names.isNullOrUndefined
+        ])
         imports.language = new Set<string>(this.done.map(cls => Names.classifier(cls)) )
         imports.utils.add(defaultWorkerName)
         
         return `
-        // TEMPLATE: NonOptionalsCheckerTemplate.generateChecker(...)
+        // TEMPLATE: NamespaceCheckerTemplate.generateChecker(...)
         ${imports.makeImports(language)}
         import { type ${checkerInterfaceName} } from "./${Names.validator(language)}.js";
         
         ${result}`;
     }
 
-    private createChecksOnNonOptionalParts(concept: FreMetaClassifier): string {
-        let result: string = "";
-        const locationdescription = ValidationUtils.findLocationDescription(concept, paramName);
-
-        concept.allProperties().forEach((prop) => {
-            // the following is added only for non-list properties
-            // empty lists should be checked using one of the validation rules
-            if (!prop.isOptional && !prop.isList) {
-                // if the property is of type `string`
-                // then add a check on the length of the string
-                let additionalStringCheck: string = "";
-                if (
-                    prop.isPrimitive &&
-                    (prop.type === FreMetaPrimitiveType.string || prop.type === FreMetaPrimitiveType.identifier)
-                ) {
-                    additionalStringCheck = `|| ${paramName}.${prop.name}?.length === 0`;
-                }
-
-                result += `if (${Names.isNullOrUndefined}(${paramName}.${prop.name}) ${additionalStringCheck}) {
-                    this.errorList.push(new ${Names.FreError}("Property '${prop.name}' must have a value", ${paramName}, ${locationdescription}, '${prop.name}', ${Names.FreErrorSeverity}.Error));
-                }
-                `;
-            }
-        });
-
-        if (result.length > 0) {
-            this.done.push(concept);
-            return `${commentBefore}
+    private createChecksOnNamespaces(concept: FreMetaClassifier): string {
+        this.done.push(concept);
+        return `${commentBefore}
                 public execBefore${Names.classifier(concept)}(${paramName}: ${Names.classifier(concept)}): boolean {
-                    ${result}
+                    if (!isNullOrUndefined(node) && FreLanguage.getInstance().classifier("${Names.classifier(concept)}").isNamespace) {
+                        this.checkDoubleNamesInNamespace(node);
+                    }
                     return false;
                 }`;
-        } else {
-            return ``;
-        }
     }
 }
