@@ -63,4 +63,17 @@ describe("Update references when name changes", () => {
         expect(((model.calc[1].outputFields[1].expression as
             PlusExpression).right as InputFieldReference).field.name).toBe("z");
     })
+
+    test(" for referred fields with the same name", ()=>{
+        let model: CalculatorModel = ModelCreator.createModelWithClashingNames();
+        ReferenceUpdateManager.getInstance().freModel = model;
+
+        AST.change(() => {
+            model.calc[0].inputFields[0].name = "z"
+        })
+        expect(model.calc[0].inputFields[0].name).toBe("z");
+        expect(model.calc[1].inputFields[0].name).toBe("x");
+        expect((model.calc[1].outputFields[0].expression as InputFieldReference).field.name).toBe("z");
+        expect((model.calc[1].outputFields[1].expression as InputFieldReference).field.name).toBe("x");
+    })
 })

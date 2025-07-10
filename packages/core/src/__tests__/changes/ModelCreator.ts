@@ -100,4 +100,29 @@ export class ModelCreator {
         })
         return model;
     }
+
+    static createModelWithClashingNames(): CalculatorModel {
+        let model: CalculatorModel;
+        AST.change(()=>{
+            let inputField1: InputField = InputField.create({name: "x"})
+            let inputField2: InputField = InputField.create({name: "x"})
+            let outputField1: OutputField = OutputField.create({expression:
+                    InputFieldReference.create({field: FreNodeReference.create(inputField1, "InputField")})})
+            let outputField2: OutputField = OutputField.create({expression:
+                    InputFieldReference.create({field: FreNodeReference.create(inputField2, "InputField")})})
+
+            const unit1 = Calculator.create({
+                name: "unit1",
+                inputFields: [inputField1],
+                outputFields: []})
+            const unit2 = Calculator.create({
+                name: "unit2",
+                inputFields: [inputField2],
+                outputFields: [outputField1, outputField2]})
+            model = CalculatorModel.create({
+                name: "ReferredFieldsHaveTheSameName",
+                calc: [unit1, unit2]})
+        })
+        return model;
+    }
 }
