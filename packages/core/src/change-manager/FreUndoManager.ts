@@ -1,7 +1,7 @@
 import { FreLogger } from "../logging/index.js";
 import { FreChangeManager } from "./FreChangeManager.js";
 import { FreModelUnit } from "../ast/index.js";
-import { FreDelta } from "./FreDelta.js";
+import { FreDelta, FrePrimDelta, FrePartDelta, FrePartListDelta, FrePrimListDelta } from "./FreDelta.js";
 import { FreUndoStackManager } from "./FreUndoStackManager.js";
 
 const LOGGER = new FreLogger("FreUndoManager").mute()
@@ -159,10 +159,10 @@ export class FreUndoManager {
      * Constructor subscribes to all changes in the model.
      */
     private constructor() {
-        FreChangeManager.getInstance().subscribeToPrimitive((delta: FreDelta) => this.addDelta(delta));
-        FreChangeManager.getInstance().subscribeToPart((delta: FreDelta) => this.addDelta(delta));
-        FreChangeManager.getInstance().subscribeToListElement((delta: FreDelta) => this.addDelta(delta));
-        FreChangeManager.getInstance().subscribeToList((delta: FreDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().subscribeToPrimitive((delta: FrePrimDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().subscribeToPart((delta: FrePartDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().subscribeToListElement((delta: FrePartDelta | FrePrimDelta) => this.addDelta(delta));
+        FreChangeManager.getInstance().subscribeToList((delta: FrePartListDelta | FrePrimListDelta) => this.addDelta(delta));
     }
 
     private addDelta(delta: FreDelta) {

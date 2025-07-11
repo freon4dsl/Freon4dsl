@@ -5,6 +5,10 @@ import { PrimType } from "../language/index.js";
 import { modelUnit } from "../ast-utils/index.js";
 
 export type callback = (delta: FreDelta) => void;
+export type PrimChangeCallback = (delta: FrePrimDelta) => void;
+export type PartChangeCallback = (delta: FrePartDelta) => void;
+export type ListElementChangeCallback = (delta: FrePartDelta | FrePrimDelta) => void;
+export type ListChangeCallback = (delta: FrePartListDelta | FrePrimListDelta) => void;
 
 const LOGGER: FreLogger = new FreLogger("FreChangeManager").mute();
 
@@ -33,24 +37,24 @@ export class FreChangeManager {
     private constructor() {}
 
     // the callbacks to be executed upon the different kind of changes to the model
-    private changePrimCallbacks: callback[] = [];
-    private changePartCallbacks: callback[] = []; // references are also parts here: the FreNodeReference object is treated as part
-    private changeListElemCallbacks: callback[] = [];
-    private changeListCallbacks: callback[] = [];
+    private changePrimCallbacks: PrimChangeCallback[] = [];
+    private changePartCallbacks: PartChangeCallback[] = []; // references are also parts here: the FreNodeReference object is treated as part
+    private changeListElemCallbacks: ListElementChangeCallback[] = [];
+    private changeListCallbacks: ListChangeCallback[] = [];
 
-    public subscribeToPrimitive(callback: callback) {
+    public subscribeToPrimitive(callback: PrimChangeCallback) {
         FreChangeManager.getInstance().changePrimCallbacks.push(callback);
     }
 
-    public subscribeToPart(callback: callback) {
+    public subscribeToPart(callback: PartChangeCallback) {
         FreChangeManager.getInstance().changePartCallbacks.push(callback);
     }
 
-    public subscribeToListElement(callback: callback) {
+    public subscribeToListElement(callback: ListElementChangeCallback) {
         FreChangeManager.getInstance().changeListElemCallbacks.push(callback);
     }
 
-    public subscribeToList(callback: callback) {
+    public subscribeToList(callback: ListChangeCallback) {
         FreChangeManager.getInstance().changeListCallbacks.push(callback);
     }
 
@@ -140,7 +144,7 @@ export class FreChangeManager {
         if (!!this.changeListElemCallbacks) {
             const unit = modelUnit(owner);
             if (!!unit?.freOwner() || owner.freIsModel()) {
-                const delta: FreDelta = new FrePartDelta(unit, owner, propertyName, oldValue, newValue, index);
+                const delta: FrePartDelta = new FrePartDelta(unit, owner, propertyName, oldValue, newValue, index);
                 if (delta !== null && delta !== undefined) {
                     for (const cb of this.changeListElemCallbacks) {
                         cb(delta);
@@ -226,7 +230,7 @@ export class FreChangeManager {
         if (!!this.changeListElemCallbacks) {
             const unit = modelUnit(listOwner);
             if (!!unit?.freOwner() || listOwner.freIsModel()) {
-                const delta: FreDelta = new FrePrimDelta(unit, listOwner, propertyName, oldValue, newValue, index);
+                const delta: FrePrimDelta = new FrePrimDelta(unit, listOwner, propertyName, oldValue, newValue, index);
                 if (delta !== null && delta !== undefined) {
                     for (const cb of this.changeListElemCallbacks) {
                         cb(delta);
