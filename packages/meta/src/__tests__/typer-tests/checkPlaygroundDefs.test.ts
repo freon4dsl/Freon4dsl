@@ -1,6 +1,6 @@
 import { FreMetaLanguage } from '../../languagedef/metalanguage';
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { MetaLogger } from '../../utils';
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { TyperDef } from '../../typerdef/metalanguage';
 import { FreTyperMerger } from '../../typerdef/parser';
 import { describe, test, expect, beforeEach } from "vitest";

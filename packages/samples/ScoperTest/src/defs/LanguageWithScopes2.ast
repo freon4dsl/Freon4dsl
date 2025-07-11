@@ -1,0 +1,20 @@
+language StarterLanguage
+
+modelunit StarterUnit2 {
+    modules: LangModule2[];
+}
+
+// We introduce an intermediate concept of VariableReference that allows to choose
+// a variable from a specific module, thus we can overcome the variable shadowing
+// and choose a variable from not a local scope
+
+concept LangModule2 implements INamed {
+    reference imports: LangModule2;
+    varDefinitions: Variable[];
+    varReferences: VarReference2[];
+}
+
+concept VarReference2 {
+    reference target: Variable;
+    reference module?: LangModule2;
+}

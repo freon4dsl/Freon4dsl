@@ -39,7 +39,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(null);
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PitExpTest);
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
@@ -52,7 +52,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(null);
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PitExpTest);
-        console.log(writer.writeToString(unit1));
+        // console.log(writer.writeToString(unit1));
         // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });

@@ -8,30 +8,4 @@ const LOGGER = new FreLogger("SvelteTestScoper");
  * otherwise this class implements the default scoper.
  */
 export class SvelteTestScoper extends FreScoperBase {
-    /**
-     * Returns the namespace to be used as alternative scope for 'node'.
-     * @param node
-     */
-    getAlternativeScope(node: FreNode): FreNamespace {
-        // @ts-ignore
-        return null;
-    }
-
-    /**
-     * Returns true if there is an alternative scope defined for this 'modelelement'.
-     * @param hasAlternativeScope
-     */
-    hasAlternativeScope(node: FreNode): boolean {
-        return false;
-    }
-
-    /**
-     * Returns all FreNodes that are defined as additional namespaces for `element'.
-     * @param element
-     */
-    public additionalNamespaces(element: FreNode): FreNode[] {
-        const result: FreNode[] = [];
-
-        return result;
-    }
 }

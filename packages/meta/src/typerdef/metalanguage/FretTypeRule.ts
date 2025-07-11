@@ -32,7 +32,7 @@ export abstract class FretTypeRule extends FreTyperElement {
     }
     set returnType(cls: FreMetaClassifier) {
         if (!!cls) {
-            this.$returnType = MetaElementReference.create<FreMetaClassifier>(cls, "FreClassifier");
+            this.$returnType = MetaElementReference.create<FreMetaClassifier>(cls);
             this.$returnType.owner = this;
         }
     }

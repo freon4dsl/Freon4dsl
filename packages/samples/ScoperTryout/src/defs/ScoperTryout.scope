@@ -1,9 +1,9 @@
-scoper TEST for language ScoperTryout
+scoper for language ScoperTryout
 
-isnamespace { Referable, QualifiedName }
+isNamespace { Referable, QualifiedName }
 
 UnitUsingReferables {
-    namespace_addition = self.imports;
+    imports { self.imports; }
 }
 
 

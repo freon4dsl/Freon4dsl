@@ -1,10 +1,11 @@
-import { Names, LOG2USER, Imports } from "../../../utils/index.js"
+import { Names, Imports } from "../../../utils/on-lang/index.js"
 import { FreMetaConcept, FreMetaLanguage, FreMetaClassifier } from "../../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../../metalanguage/index.js";
 import { FreTypeEqualsMaker } from "./FreTypeEqualsMaker.js";
 import { FreTypeInferMaker } from "./FreTypeInferMaker.js";
 import { FreSuperTypeMaker } from "./FreSuperTypeMaker.js";
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
+import { LOG2USER } from '../../../utils/basic-dependencies/index.js';
 
 export class FreTyperPartTemplate {
     // @ts-ignore Property is set in the only public method 'generateTyperPart'.

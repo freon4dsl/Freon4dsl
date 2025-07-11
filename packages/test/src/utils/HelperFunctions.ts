@@ -1,4 +1,11 @@
-import { FreModelSerializer, type FreModel, type FreModelUnit, type FreReader, type FreWriter } from "@freon4dsl/core";
+import {
+    FreModelSerializer,
+    type FreModel,
+    type FreModelUnit,
+    type FreReader,
+    type FreWriter,
+    FreNamedNode
+} from '@freon4dsl/core';
 import { FileHandler } from "./FileHandler.js";
 import { expect}  from "vitest";
 
@@ -39,4 +46,27 @@ function getShortFileName(filename: string): string {
         names = filename.split("/");
     }
     return names[names.length - 1];
+}
+
+export function isInScope(visibleElements: FreNamedNode[], name: string): boolean {
+    return getFromVisibleElements(visibleElements, name) !== null;
+}
+
+export function getFromVisibleElements(
+  visibleElements: FreNamedNode[],
+  name: string,
+): FreNamedNode {
+    if (visibleElements !== null) {
+        for (const element of visibleElements) {
+            const n: string = element.name;
+            if (name === n) {
+                return element;
+            }
+        }
+    }
+    return null;
+}
+
+export function getVisibleNames(visibleElements: FreNamedNode[]): string[] {
+    return visibleElements.map(el => el.name);
 }

@@ -3,11 +3,12 @@
 These scenarios test the functionality available through the webapp, like cut/copy, paste, validate, search.
 At the start of these scenarios, a model unit is available in the editor.
 
-## Cut, Copy, Paste 
+## Cut, Copy, Paste
 
 ### Scenario 1: correct placement of pasted element
+
 |     | Action                                                                       | Expected result                             |
-|:----|:-----------------------------------------------------------------------------|:--------------------------------------------|
+|:--- |:---------------------------------------------------------------------------- |:------------------------------------------- |
 |     | Open language Education, model Edu-test, unit Fractions101                   | Freon is opened, Fractions101 unit is shown |
 |     | Select first question (_pie_) from _Theory101_ completely, choose _Cut_      | The question is removed                     |
 |     | Select first question from _Practice1_ (_lollipops1_), choose _Paste_ button | The question appears below (_lollipops1_)   |
@@ -20,8 +21,9 @@ At the start of these scenarios, a model unit is available in the editor.
 :a: Appears at the top of the list, not before the placeholder
 
 ### Scenario 2: incorrect placement of pasted element
+
 |     | Action                                                                    | Expected result                             |
-|:----|:--------------------------------------------------------------------------|:--------------------------------------------|
+|:--- |:------------------------------------------------------------------------- |:------------------------------------------- |
 |     | Open language Education, model Edu-test, unit Fractions101                | Freon is opened, Fractions101 unit is shown |
 |     | Select first question (_pie_) from _Theory101_ completely, choose _Cut_   | The question is removed                     |
 | :x: | Select Score>GradeA from _Theory101_, choose _Paste_                      | Message: cannot paste a Question here  :a:  |
@@ -36,8 +38,9 @@ At the start of these scenarios, a model unit is available in the editor.
 ## Undo, Redo
 
 ### Scenario 3: undo, redo adding an element
+
 |     | Action                                                                   | Expected result                                   |
-|:----|:-------------------------------------------------------------------------|:--------------------------------------------------|
+|:--- |:------------------------------------------------------------------------ |:------------------------------------------------- |
 |     | Open language Education, model Edu-test, unit Fractions101               | Freon is opened, Fractions101 unit is shown       |
 |     | Select <content> placeholder from _Theory101_, add a Line with some text | The text appears above the placeholder            |
 | :x: | Select _Undo_                                                            | The Line disappears :a:                           |
@@ -55,29 +58,31 @@ At the start of these scenarios, a model unit is available in the editor.
 
 :exclamation: After _Undo_ or _Redo_ from the menu, the cursor and therefore the HTML focus is **not** in the editor.
 That is probably why _Ctrl-z_ and _Ctrl-y_ don't work. They do work if I put the cursor in the editor using a mouse-click
- 
+
 ### Scenario 4: undo, redo with multiple editor tabs
-|  | Action                                                                   | Expected result                              |
-|:-|:-------------------------------------------------------------------------|:---------------------------------------------|
-|  | Open language Education, model Edu-test, unit Fractions101               | Freon is opened, Fractions101 unit is shown  |
-|  | Select <content> placeholder from _Theory101_, add a Line with some text | The text appears above the placeholder       |
-|  | Open unit Fractions103                                                   | Unit Fractions103 is shown                   |
-|  | Select <content> plaveholder from _Theory103_, add a Line with some text | The text appears above the placeholder       |
-|  | Select _Undo_                                                            | The Line from Fractions103 disappears        |
-|  | Select _Redo_                                                            | The Line appears again                       |
-|  | Type _Ctrl-z_                                                            | The Line disappears    (NOT FUNCTIONING YET) |
-|  | Type _Ctrl-y_                                                            | The Line appears again (NOT FUNCTIONING YET) |
-|  | Select _Undo_                                                            | The Line from Fractions103 disappears        |
-|  | Go back to unit Fractions101                                             | Unit Fractions101 is shown                   |
-|  | Select _Undo_                                                            | The Line from Fractions101 disappears        |
-|  | Select _Redo_                                                            | The Line appears again                       |
-|  | Type _Ctrl-z_                                                            | The Line disappears    (NOT FUNCTIONING YET) |
-|  | Type _Ctrl-y_                                                            | The Line appears again (NOT FUNCTIONING YET) |
-|  | Repeat this type of behavior                                             |                                              |
+
+|     | Action                                                                   | Expected result                              |
+|:--- |:------------------------------------------------------------------------ |:-------------------------------------------- |
+|     | Open language Education, model Edu-test, unit Fractions101               | Freon is opened, Fractions101 unit is shown  |
+|     | Select <content> placeholder from _Theory101_, add a Line with some text | The text appears above the placeholder       |
+|     | Open unit Fractions103                                                   | Unit Fractions103 is shown                   |
+|     | Select <content> plaveholder from _Theory103_, add a Line with some text | The text appears above the placeholder       |
+|     | Select _Undo_                                                            | The Line from Fractions103 disappears        |
+|     | Select _Redo_                                                            | The Line appears again                       |
+|     | Type _Ctrl-z_                                                            | The Line disappears    (NOT FUNCTIONING YET) |
+|     | Type _Ctrl-y_                                                            | The Line appears again (NOT FUNCTIONING YET) |
+|     | Select _Undo_                                                            | The Line from Fractions103 disappears        |
+|     | Go back to unit Fractions101                                             | Unit Fractions101 is shown                   |
+|     | Select _Undo_                                                            | The Line from Fractions101 disappears        |
+|     | Select _Redo_                                                            | The Line appears again                       |
+|     | Type _Ctrl-z_                                                            | The Line disappears    (NOT FUNCTIONING YET) |
+|     | Type _Ctrl-y_                                                            | The Line appears again (NOT FUNCTIONING YET) |
+|     | Repeat this type of behavior                                             |                                              |
 
 ### Scenario 5: undo, redo within a text component
+
 |     | Action                                                           | Expected result                                                  |
-|:----|:-----------------------------------------------------------------|:-----------------------------------------------------------------|
+|:--- |:---------------------------------------------------------------- |:---------------------------------------------------------------- |
 |     | Open language Education, model Edu-test, unit Fractions101       | Freon is opened, Fractions101 unit is shown                      |
 |     | Select the text of the first question (_pie_) from _Theory101_   | The text appears editable                                        |
 |     | Change something in the text, like deleting or adding characters | The text is changed                                              |
@@ -98,8 +103,9 @@ That is probably why _Ctrl-z_ and _Ctrl-y_ don't work. They do work if I put the
 ## Validate, Interpret
 
 ### Scenario 6: validate
+
 |     | Action                                                  | Expected result                              |
-|:----|:--------------------------------------------------------|:---------------------------------------------|
+|:--- |:------------------------------------------------------- |:-------------------------------------------- |
 |     | Open language Education, model Edu-test, unit StartFlow | Freon is opened, Fractions101 unit is shown  |
 | :x: | Select _Validate_                                       | Errors found shown   :a:                     |
 |     | Select arrow button after one of the messages           | The faulty element is selected in the editor |
@@ -114,25 +120,34 @@ This is ok.
 ## Views
 
 ### Scenario 7: views
-|  | Action                                                       | Expected result                             |
-|:-|:-------------------------------------------------------------|:--------------------------------------------|
-|  | Open language Education, model Edu-test, unit Fractions101   | Freon is opened, Fractions101 unit is shown |
-|  | Select _View(s)_                                             | View dialog shown                           |
-|  | Select or deselect some of the views, choose _Apply changes_ | The editor shows the correct view           |
+
+|     | Action                                                       | Expected result                             |
+|:--- |:------------------------------------------------------------ |:------------------------------------------- |
+|     | Open language Education, model Edu-test, unit Fractions101   | Freon is opened, Fractions101 unit is shown |
+|     | Select _View(s)_                                             | View dialog shown                           |
+|     | Select or deselect some of the views, choose _Apply changes_ | The editor shows the correct view :a:       |
+
+:a: After changing the views/projections, moving to text fields with the keyboard does not set the HTML focus, so you cannot edit the text.
+
+**Solved**: the Box cache is cleared when new views/projections are chosen. The `box` in the Svelte component is a new box, buit it does not have the `setFocus` attached to it. This used to be done in the `afterUpdate` in Svelte 4.
+
+Solved by attaching `setFocus` in `effect(...)` in `TextComponent`. 
 
 ## Search
 
 ### Scenario 8: search text
-|  | Action                                                     | Expected result                             |
-|:-|:-----------------------------------------------------------|:--------------------------------------------|
-|  | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
-|  | Select _Search_, and enter 'pie', ENTER key                | Search results (4) are shown                |
-|  | Select arrow button after one of the messages              | The found element is selected in the editor |
+
+|     | Action                                                     | Expected result                             |
+|:--- |:---------------------------------------------------------- |:------------------------------------------- |
+|     | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
+|     | Select _Search_, and enter 'pie', ENTER key                | Search results (4) are shown                |
+|     | Select arrow button after one of the messages              | The found element is selected in the editor |
 
 ### Scenario 9: search on element type
-|  | Action                                                     | Expected result                             |
-|:-|:-----------------------------------------------------------|:--------------------------------------------|
-|  | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
-|  | Select _Element..._                                        | Search element dialog is shown              |
-|  | Enter some text, ENTER key                                 | Search results are shown                    |
-|  | Select arrow button after one of the messages              | The found element is selected in the editor |
+
+|     | Action                                                     | Expected result                             |
+|:--- |:---------------------------------------------------------- |:------------------------------------------- |
+|     | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
+|     | Select _Element..._                                        | Search element dialog is shown              |
+|     | Enter some text, ENTER key                                 | Search results are shown                    |
+|     | Select arrow button after one of the messages              | The found element is selected in the editor |

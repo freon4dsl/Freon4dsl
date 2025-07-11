@@ -1,8 +1,12 @@
 import { RHSPropEntry } from "./RHSPropEntry.js";
-import { FreMetaBinaryExpressionConcept, FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
+import {
+    FreMetaBinaryExpressionConcept,
+    FreMetaProperty,
+    LangUtil
+} from '../../../../languagedef/metalanguage/index.js';
 import { makeIndent } from "../GrammarUtils.js";
 import { BinaryExpMaker } from "../../BinaryExpMaker.js";
-import { GenerationUtil, Names } from "../../../../utils/index.js";
+import { Names } from "../../../../utils/on-lang/index.js";
 import { internalTransformPartList, ParserGenUtil } from "../../ParserGenUtil.js";
 
 export class RHSBinExpListWithSeparator extends RHSPropEntry {
@@ -18,7 +22,7 @@ export class RHSBinExpListWithSeparator extends RHSPropEntry {
 
     toGrammar(): string {
         return (
-            `[ ${BinaryExpMaker.getBinaryRuleName(GenerationUtil.findExpressionBase(this.type))} / '${this.separatorText}' ]*` +
+            `[ ${BinaryExpMaker.getBinaryRuleName(LangUtil.findExpressionBase(this.type))} / '${this.separatorText}' ]*` +
             this.doNewline()
         );
     }

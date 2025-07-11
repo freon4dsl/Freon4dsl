@@ -1,6 +1,6 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
-import { MetaLogger } from "../../utils/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { describe, test, expect } from "vitest";
 

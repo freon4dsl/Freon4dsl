@@ -13,11 +13,9 @@ import {
     FreMetaExpressionConcept,
     FreMetaLanguage,
 } from "../../../languagedef/metalanguage/index.js";
-import {
-    Imports,
-    ListUtil,
-    Names
-} from "../../../utils/index.js"
+import { ListUtil } from "../../../utils/no-dependencies/index.js";
+import { Names, Imports } from "../../../utils/on-lang/index.js";
+import { NamesForEditor } from "../../../utils/on-lang-and-editor/index.js";
 import {
     PrimitivePropertyBoxesHelper,
     LimitedBoxHelper,
@@ -269,11 +267,11 @@ export class BoxProviderTemplate {
             const result: string = this.generateLines(projection.lines, elementVarName, concept.name, language, 1);
             if (concept instanceof FreMetaExpressionConcept) {
                 this.imports.core.add("createDefaultExpressionBox");
-                return `private ${Names.projectionMethod(projection)} () : Box {
+                return `private ${NamesForEditor.projectionMethod(projection)} () : Box {
                     return createDefaultExpressionBox( ${elementVarName}, [${result}], { selectable: false } );
                 }`;
             } else {
-                return `private ${Names.projectionMethod(projection)} () : Box {
+                return `private ${NamesForEditor.projectionMethod(projection)} () : Box {
                     return ${result};
                 }`;
             }

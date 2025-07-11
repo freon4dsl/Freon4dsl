@@ -23,6 +23,7 @@
     "defaultscoper": "bash ../../scripts/freon-test-dev.sh all -d src/testDefaultScoper/defs -o src/testDefaultScoper",
     "definedscoper": "cp src/testDefaultScoper/defs/Language.ast src/testDefinedScoper/defs/Language.ast && cp src/testDefaultScoper/__tests__/SimpleModelCreator.ts src/testDefinedScoper/__tests__/ModelCreator.ts && bash ../../scripts/freon-test-dev.sh all -d src/testDefinedScoper/defs -o src/testDefinedScoper",
     "qualified-name": "bash ../../scripts/freon-test-dev.sh all -d src/qualifiedNameScoper/defs -o src/qualifiedNameScoper",
+    "scoper-test": "bash ../../scripts/freon-test-dev.sh all -d src/scoperTest/defs -o src/scoperTest",
     "langconstr": "bash ../../scripts/freon-test-dev.sh all -d src/testLangConstructs/defs -o src/testLangConstructs",
     "noparser": "bash ../../scripts/freon-test-dev.sh all -d src/testNoParserAvailable/defs -o src/testNoParserAvailable",
     "prim-gen": "bash ../../scripts/freon-test-dev.sh all -d src/testPrimPropsGeneration/defs -o src/testPrimPropsGeneration",
@@ -32,7 +33,7 @@
     "undo-tester": "bash ../../scripts/freon-test-dev.sh all -d src/UndoTester/defs -o src/UndoTester",
     "valid-test": "bash ../../scripts/freon-test-dev.sh all -d src/ValidTest/defs -o src/ValidTest",
     "vehicles": "bash ../../scripts/freon-test-dev.sh all -d src/vehicles/defs -o src/vehicles",
-    "build": "npm run demo && npm run storage && npm run octopus && npm run parser-conc && npm run basic-props && npm run parsergen && npm run parser-extra && npm run imports && npm run defaultscoper && npm run definedscoper && npm run langconstr && npm run noparser && npm run prim-gen && npm run testproject && npm run typer-test8 && npm run undo-tester && npm run vehicles && npm run qualified-name && npm run valid-test && tsc",
+    "build": "npm run demo && npm run storage && npm run octopus && npm run parser-conc && npm run basic-props && npm run parsergen && npm run parser-extra && npm run imports && npm run defaultscoper && npm run definedscoper && npm run langconstr && npm run noparser && npm run prim-gen && npm run testproject && npm run typer-test8 && npm run undo-tester && npm run vehicles && npm run qualified-name && npm run valid-test && npm run scoper-test && tsc",
     "clean-config": "rm */*/config/FreonConfiguration.ts",
     "clean-custom": "rm */*/*/Custom*.ts",
     "clean-parser": "rm -r */*/*parse*",
@@ -58,8 +59,8 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "vitest": "^3.0.5",
-    "@vitest/ui": "^3.0.5"
+    "vitest": "3.2.4",
+    "@vitest/ui": "3.2.4"
   },
   "dependencies": {
     "@freon4dsl/core": "1.1.0-beta.3",

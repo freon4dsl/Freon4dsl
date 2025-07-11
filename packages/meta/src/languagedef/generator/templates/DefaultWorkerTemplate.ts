@@ -1,4 +1,4 @@
-import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
+import { Names, Imports, GenerationUtil } from '../../../utils/on-lang/index.js';
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class DefaultWorkerTemplate {

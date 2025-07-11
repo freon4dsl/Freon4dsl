@@ -1,5 +1,6 @@
-import { FreMetaLanguage } from "../../metalanguage/index.js";
-import { Names, GenerationUtil, Imports } from "../../../utils/index.js"
+import { FreMetaLanguage } from '../../metalanguage/index.js';
+import { Names, Imports } from "../../../utils/on-lang/index.js"
+import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
 
 export class WorkerInterfaceTemplate {
     generateWorkerInterface(language: FreMetaLanguage, relativePath: string): string {

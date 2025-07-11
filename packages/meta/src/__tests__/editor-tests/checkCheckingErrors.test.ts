@@ -1,6 +1,7 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { Checker, MetaLogger } from "../../utils";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
+import { Checker } from "../../utils/basic-dependencies/index.js";
 import { FreEditParser } from "../../editordef/parser/FreEditParser";
 import { FreEditUnit } from "../../editordef/metalanguage";
 import { describe, test, expect, beforeEach } from "vitest";
@@ -22,7 +23,7 @@ describe("Checking editor definition ", () => {
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
-                console.log("Language could not be read");
+                console.log("Language could not be read", e.message);
             }
         }
     });
@@ -73,12 +74,12 @@ describe("Checking editor definition ", () => {
                 expect(e.message).toBe(`checking errors (5).`);
                 expect(
                     checker.errors.includes(
-                        "Trigger ee of EE is not unique (found 1 similar ones) [file: test3.edit:42:5].",
+                        "Trigger ee of EE is not unique (found 1 similar one/ones) [file: test3.edit:42:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "Trigger ee of FF is not unique (found 1 similar ones) [file: test3.edit:50:5].",
+                        "Trigger ee of FF is not unique (found 1 similar one/ones) [file: test3.edit:50:5].",
                     ),
                 ).toBeTruthy();
                 expect(
@@ -110,22 +111,22 @@ describe("Checking editor definition ", () => {
                 expect(e.message).toBe(`checking errors (4).`);
                 expect(
                     checker.errors.includes(
-                        "trigger for classifier AAAAAA is already defined: [file: test4a.edit:21:4] and [file: test4a.edit:11:4].",
+                        "Trigger for classifier AAAAAA is already defined: [file: test4a.edit:21:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "trigger for classifier AAAAAA is already defined: [file: test4b.edit:11:4] and [file: test4a.edit:11:4].",
+                        "Trigger for classifier AAAAAA is already defined: [file: test4b.edit:11:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "symbol for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
+                        "Symbol for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "trigger for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
+                        "Trigger for classifier AAAAAA is already defined: [file: test4b.edit:21:4] and [file: test4a.edit:11:4].",
                     ),
                 ).toBeTruthy();
             }
@@ -188,11 +189,21 @@ describe("Checking editor definition ", () => {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
                 // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
-                expect(e.message).toBe(`checking errors (2).`);
+                expect(e.message).toBe(`checking errors (4).`);
                 expect(
-                    checker.errors.includes(
-                        "A limited concept cannot have a projection, it can only be used as reference [file: test7.edit:3:5].",
-                    ),
+                  checker.errors.includes(
+                    "A limited concept cannot have a projection, it can only be used as reference [file: test7.edit:3:5].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Cannot find property 'ZZprop8' in classifier 'ZZ' [file: test7.edit:4:8].",
+                  ),
+                ).toBeTruthy();
+                expect(
+                  checker.errors.includes(
+                    "Cannot find property 'ZZprop11' in classifier 'ZZ' [file: test7.edit:6:9].",
+                  ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
@@ -379,7 +390,7 @@ describe("Checking editor definition ", () => {
             if (e instanceof Error) {
                 expect(e.message).toBe(`checking errors (11).`); // these are checked in the previous test
                 expect(checker.hasWarnings()).toBeTruthy;
-                console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
+                // console.log("Warnings [" + checker.warnings.length +"]:" + checker.warnings.map(err => `"${err}"`).join("\n"));
                 expect(checker.warnings.length).toBe(1);
                 expect(
                     checker.warnings.includes(

@@ -1,8 +1,8 @@
-import { LOG2USER } from "../utils/index.js";
+import { LOG2USER } from "../utils/basic-dependencies/index.js";
 import { ValidatorGenerator } from "../validatordef/generator/ValidatorGenerator.js";
 import { ValidatorParser } from "../validatordef/parser/ValidatorParser.js";
 import { FreonGeneratePartAction } from "./FreonGeneratePartAction.js";
-import { MetaLogger } from "../utils/MetaLogger.js";
+import { MetaLogger } from "../utils/no-dependencies/index.js";
 import { ValidatorDef } from "../validatordef/metalanguage/index.js";
 
 const LOGGER = new MetaLogger("FreonGenerateValidator"); // .mute();

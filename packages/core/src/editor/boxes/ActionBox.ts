@@ -129,11 +129,11 @@ export class ActionBox extends AbstractChoiceBox {
             newElement["$$owner"] = this.node;
             result.push(
                 ...editor.environment.scoper
-                    .getVisibleNames(newElement, concept.referenceShortcut.conceptName)
-                    .filter((name) => !!name && name !== "")
-                    .map((name) => ({
-                        id: concept.trigger + "-" + name,
-                        label: name,
+                    .getVisibleNodes(newElement, concept.referenceShortcut.conceptName)
+                    .filter((node) => !!node.name && node.name !== "")
+                    .map((node) => ({
+                        id: concept.trigger + "-" + node.name,
+                        label: node.name,
                         description: "create " + concept.referenceShortcut.conceptName,
                         action: new FreCreatePartAction({
                             referenceShortcut: {
@@ -174,17 +174,17 @@ export class ActionBox extends AbstractChoiceBox {
             // newElement["$$owner"] = this.element;
             result.push(
                 ...editor.environment.scoper
-                    .getVisibleNames(parentNode, propType)
-                    .filter((name) => !!name && name !== "")
-                    .map((name) => ({
-                        id: parentNode.freLanguageConcept() + "-" + name,
-                        label: name,
+                    .getVisibleNodes(parentNode, propType)
+                    .filter((node) => !!node.name && node.name !== "")
+                    .map((node) => ({
+                        id: parentNode.freLanguageConcept() + "-" + node.name,
+                        label: node.name,
                         description: "create ref to " + propType,
                         action: FreCustomAction.create({
                             activeInBoxRoles: [],
                             // @ts-ignore
                             action: (box: Box, trigger: FreTriggerType, ed: FreEditor): FreNode | null => {
-                                parentNode[property.name].push(FreNodeReference.create(name, null));
+                                parentNode[property.name].push(FreNodeReference.create(node.name, null));
                                 return null;
                             },
                             boxRoleToSelect: "REFERENCE"

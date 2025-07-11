@@ -1,0 +1,37 @@
+expressions for language test1
+
+AA {
+    // expressions that result in lists of lists
+    self.AAprop8.BBprop12; // : BB[] => DD[];
+    self.AAprop10.CCprop13; // : CC[] => FF; // via reference CC
+    self.AAprop10.CCprop14; // : CC[] => FF[]; // via reference CC
+    self.AAprop12.DDprop8.BBprop5; // : DD[] => BB[] ==> boolean;
+    self.AAprop12.DDprop8.type();
+    self.AAprop12.DDprop7.type();
+}
+
+BB { // properties with limited concepts as type
+    self.BBprop15; // : ZZ;
+    self.BBprop16; // : ZZ[];
+    BBprop17; // : reference ZZ;
+    BBprop18; // : reference ZZ[];
+}
+
+CC {
+    #ZZ:instanceZZ1;
+}
+
+DD {
+    self.DDprop7.type ( );
+    self.DDprop8.type ( );
+    owner().if(BB).type (  );
+    owner().type (  );
+}
+
+EE {
+    owner();
+}
+
+FF {
+    self.ee.dd.cc.bb.aa;
+}

@@ -1,7 +1,7 @@
 import { FreLangExp, FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
 // Note that FreErrorSeverity cannot be imported from "@freon4dsl/core", because
 // "@freon4dsl/meta" does not have a dependency on "@freon4dsl/core".
-import { FreMetaDefinitionElement, FreErrorSeverity } from "../../utils/index.js";
+import { FreMetaDefinitionElement, FreErrorSeverity } from '../../utils/no-dependencies/index.js';
 
 export class ValidatorDef extends FreMetaDefinitionElement {
     validatorName: string = "";
@@ -10,8 +10,12 @@ export class ValidatorDef extends FreMetaDefinitionElement {
 }
 
 export class ConceptRuleSet extends FreMetaDefinitionElement {
-    conceptRef: MetaElementReference<FreMetaClassifier> | undefined;
+    classifierRef: MetaElementReference<FreMetaClassifier> | undefined;
     rules: ValidationRule[] = [];
+
+    get classifier(): FreMetaClassifier | undefined{
+        return this.classifierRef?.referred;
+    }
 }
 
 export class ValidationSeverity extends FreMetaDefinitionElement {

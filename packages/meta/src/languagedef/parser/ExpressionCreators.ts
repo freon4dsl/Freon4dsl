@@ -7,15 +7,11 @@ import {
     FreInstanceExp,
     FreLangConceptExp,
     FreLangSimpleExp,
-} from "../metalanguage/FreLangExpressions.js";
-import { MetaLogger } from "../../utils/MetaLogger.js";
-import { Names } from "../../utils/index.js";
-import { FreMetaClassifier } from "../metalanguage/FreMetaLanguage.js";
-// The next import should be separate and the last of the imports.
-// Otherwise, the run-time error 'Cannot read property 'create' of undefined' occurs.
-// See: https://stackoverflow.com/questions/48123645/error-when-accessing-static-properties-when-services-include-each-other
-// and: https://stackoverflow.com/questions/45986547/property-undefined-typescript
-import { MetaElementReference } from "../metalanguage/MetaElementReference.js";
+    FreMetaClassifier,
+    MetaElementReference
+} from "../metalanguage/index.js";
+import { MetaLogger } from "../../utils/no-dependencies/index.js";
+import { Names } from "../../utils/on-lang/index.js";
 
 const LOGGER = new MetaLogger("FreLanguageExpressionCreator").mute();
 
@@ -58,11 +54,12 @@ export function createConceptExps(data: Partial<TestExpressionsForConcept>): Tes
     return result;
 }
 
+// todo there is a createClassifierReference in LanguageCreators as well, find out whether we can use it here
 export function createClassifierReference(
     data: Partial<MetaElementReference<FreMetaClassifier>>,
 ): MetaElementReference<FreMetaClassifier> {
     LOGGER.log("createClassifierReference " + data.name);
-    const result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : "", "FreClassifier");
+    const result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : "");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;

@@ -1,11 +1,18 @@
-scoper TEST for language ScoperTryout
+scoper for language ScoperTryout
 
-isnamespace { Referable, QualifiedName }
+isNamespace { Referable, QualifiedName }
 
-unitType2 {
-    namespace_addition = self.imports;
+UnitType1 {
+    imports { self.imports ; }
+}
+
+UnitType2 {
+    imports { recursive self.imports; }
 }
 
 QualifiedName {
-    namespace_addition = self.part;
+    alternatives {
+        recursive owner().if(UnitType2) ;
+        owner().if(QualifiedName).part ;
+    }
 }

@@ -1,5 +1,6 @@
-import { FreMetaLanguage, FreMetaLimitedConcept } from "../../metalanguage/index.js";
-import { Names, LangUtil, GenerationUtil, STDLIB_GEN_FOLDER, Imports } from "../../../utils/index.js"
+import { FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept, LangUtil } from '../../metalanguage/index.js';
+import { Names, STDLIB_GEN_FOLDER, Imports } from "../../../utils/on-lang/index.js"
+import { GenerationUtil } from '../../../utils/on-lang/GenerationUtil.js';
 
 export class LanguageTemplate {
     generateLanguage(language: FreMetaLanguage, relativePath: string): string {
@@ -212,7 +213,7 @@ export class LanguageTemplate {
                         creator: (data: Partial<MyLanguage.${Names.concept(concept)}>) => { return ${concept.isAbstract ? "null" : `MyLanguage.${Names.concept(concept)}.create(data)`}; },
                         properties: new Map< string, FreLanguageProperty>(),
                         baseName: ${!!concept.base ? `"${Names.classifier(concept.base.referred)}"` : "null"},
-                        subConceptNames: [${LangUtil.subConcepts(concept)
+                        subConceptNames: [${FreMetaClassifier.subConcepts(concept)
                             .map((sub) => '"' + Names.classifier(sub) + '"')
                             .join(", ")}]
                     }

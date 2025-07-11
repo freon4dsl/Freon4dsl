@@ -1,5 +1,5 @@
 import { FreMetaClassifier } from "../../languagedef/metalanguage/index.js";
-import { FreMetaDefinitionElement } from "../../utils/index.js";
+import { FreMetaDefinitionElement } from "../../utils/no-dependencies/index.js";
 
 export class FreInterpreterDef extends FreMetaDefinitionElement {
     readonly $typename: string = "FreInterpreterDef";

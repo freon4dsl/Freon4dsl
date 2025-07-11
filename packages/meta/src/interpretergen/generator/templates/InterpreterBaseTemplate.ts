@@ -1,5 +1,5 @@
 import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
-import { Imports, Names } from "../../../utils/index.js"
+import { Imports, Names } from "../../../utils/on-lang/index.js"
 import { FreInterpreterDef } from "../../metalanguage/FreInterpreterDef.js";
 
 export class InterpreterBaseTemplate {

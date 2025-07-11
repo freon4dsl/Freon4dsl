@@ -6,7 +6,7 @@ import {
     VALIDATOR_FOLDER,
     STDLIB_FOLDER,
     SCOPER_FOLDER, Imports
-} from "../../../utils/index.js"
+} from "../../../utils/on-lang/index.js"
 import { FreMetaLanguage } from "../../metalanguage/index.js";
 
 export class ConfigurationTemplate {

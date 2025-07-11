@@ -6,14 +6,14 @@ modelunit FreScoperDef {
     scopeConceptDefs: ScopeConceptDef[];
     file-extension = "scope";
 }
-
+// todo use new structure of scope language here
 concept ScopeConceptDef {
-    reference conceptRef: FreConcept;
-    namespaceAdditions?: FreNamespaceAddition;
+    reference classifierRef: FreConcept;
+    namespaceImports?: FreNamespaceImport;
     alternativeScope?: FreAlternativeScope;
 }
 
-concept FreNamespaceAddition {
+concept FreNamespaceImport {
     expressions: FretExp[];
 }
 

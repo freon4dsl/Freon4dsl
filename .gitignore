@@ -32,44 +32,36 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
-# generated docs
-docs/*
-
 # generated files
 gen
-packages/docs/.jekyll-cache/*
-packages/docs/*/_site/*
-packages/docs/src/tutorial-language/*/gen/*
-packages/meta/src/languagedef/parser/LanguageGrammar2.js
-packages/meta/src/scoperdef/parser/ScoperGrammar.js
-packages/meta/src/editordef/parser/EditorGrammar.js
 packages/meta/src/editordef/parser/FreEditGrammar.js
 packages/meta/src/editordef/parser/FreEditGrammar.pegjs
-packages/meta/src/validatordef/parser/ValidatorGrammar.js
-packages/meta/src/typerdef/parser/PiTyperGrammar.js
+packages/meta/src/langexpressions/parser/ExpressionGrammar.js
+packages/meta/src/langexpressions/parser/ExpressionGrammar.pegjs
 packages/meta/src/languagedef/parser/ExpressionGrammar.js
 packages/meta/src/languagedef/parser/ExpressionGrammar.pegjs
+packages/meta/src/languagedef/parser/LanguageGrammar.js
 packages/meta/src/languagedef/parser/LanguageGrammar.pegjs
-packages/meta/src/typerdef/parser/PiTyperGrammar.pegjs
+packages/meta/src/scoperdef/parser/ScoperGrammar.js
 packages/meta/src/scoperdef/parser/ScoperGrammar.pegjs
+packages/meta/src/validatordef/parser/ValidatorGrammar.js
 packages/meta/src/validatordef/parser/ValidatorGrammar.pegjs
-packages/meta/src/editordef/parser/EditorGrammar.pegjs
-
-packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-structure/output/*
 
 /packages/test/src/*/config/
 /packages/test/src/*/editor/
 /packages/test/src/*/interpreter/
-!/packages/test/src/qualifiedNameScoper/scoper/
 /packages/test/src/*/scoper/
+/packages/test/src/*/commandline/
 /packages/test/src/*/stdlib/
 /packages/test/src/*/typer/
 /packages/test/src/*/utils/
 /packages/test/src/*/validator/
+/packages/test/src/*/index.ts
 
+!/packages/test/src/qualifiedNameScoper/scoper/
 /packages/test/src/testDefinedScoper/defs/Language.ast
 /packages/test/src/testDefinedScoper/__tests__/ModelCreator.ts
-/docs/
+
 /packages/server/modelstore-example/APEKOOL/
 /packages/server/modelstore-example/EMPTY-MODEL/
 /packages/server/modelstore-example/ExtraModel/
@@ -83,5 +75,8 @@ packages/meta/src/languagedef/__tests__/language-tests/correctDefFiles/internal-
 /packages/server/modelstore-example/NEXT/
 /packages/server/modelstore-example/QWER/
 /packages/server/modelstore-example/www/
-/packages/webapp-lib/.svelte-kit/
+/packages/weblib-smui/.svelte-kit/
+/packages/weblib-flowbite/.svelte-kit/
+/packages/webapp-smui/.svelte-kit/
+/packages/webapp-flowbite/.svelte-kit/
 /packages/core-svelte/.svelte-kit/

@@ -73,7 +73,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         // RHSOptionalGroup
         if (!!children.asJsReadonlyArrayView()[1]) {
             const _optGroup = children.asJsReadonlyArrayView()[1] as KtList<any>;
-            __types = this.mainAnalyser.transformRefList<FreMetaClassifier>(_optGroup.asJsReadonlyArrayView()[2], "FreClassifier"); // RHSRefListWithSeparator
+            __types = this.mainAnalyser.transformRefList<FreMetaClassifier>(_optGroup.asJsReadonlyArrayView()[2]); // RHSRefListWithSeparator
         }
         // end RHSOptionalGroup
         __typeConcepts = (children.asJsReadonlyArrayView()[2] as KtList<any>).asJsReadonlyArrayView() as FretTypeConcept[]; // RHSPartListEntry
@@ -82,8 +82,7 @@ export class FreTyperDefSyntaxAnalyserPart {
             const _optGroup = children.asJsReadonlyArrayView()[3];
 
             __conceptsWithType = this.mainAnalyser.transformRefList<FreMetaClassifier>(
-              (_optGroup as KtList<any>).asJsReadonlyArrayView()[2],
-              "FreClassifier"
+              (_optGroup as KtList<any>).asJsReadonlyArrayView()[2]
             ); // RHSRefListWithSeparator
         }
         // end RHSOptionalGroup
@@ -123,7 +122,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         // RHSOptionalGroup
         if (!!children.asJsReadonlyArrayView()[2]) {
             const _optGroup = children.asJsReadonlyArrayView()[2] as KtList<any>;
-            __base = this.mainAnalyser.makeMetaElementReference(_optGroup.asJsReadonlyArrayView()[1], "FreConcept");
+            __base = this.mainAnalyser.makeMetaElementReference(_optGroup.asJsReadonlyArrayView()[1]);
         }
         // end RHSOptionalGroup
         // RHSPartListWithTerminator
@@ -193,7 +192,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         let __source: FretExp;
         let __property: MetaElementReference<FreMetaProperty>;
         __source = children.asJsReadonlyArrayView()[0] as FretExp; // RHSPartEntry
-        __property = this.mainAnalyser.makeMetaElementReference<FreMetaProperty>(children.asJsReadonlyArrayView()[2] as ParsedNodeReference, "FreProperty"); // RHSRefEntry
+        __property = this.mainAnalyser.makeMetaElementReference<FreMetaProperty>(children.asJsReadonlyArrayView()[2] as ParsedNodeReference); // RHSRefEntry
 
         return FretPropertyCallExp.create({
             source: __source,
@@ -244,7 +243,7 @@ export class FreTyperDefSyntaxAnalyserPart {
     public transformFretVarCallExp(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence): FretVarCallExp {
         // console.log('transformFretVarCallExp called: ' + children.toString());
         let __variable: MetaElementReference<FretVarDecl>;
-        __variable = this.mainAnalyser.makeMetaElementReference<FretVarDecl>(children.asJsReadonlyArrayView()[0] as ParsedNodeReference, "FretVarDecl"); // RHSRefEntry
+        __variable = this.mainAnalyser.makeMetaElementReference<FretVarDecl>(children.asJsReadonlyArrayView()[0] as ParsedNodeReference); // RHSRefEntry
 
         return FretVarCallExp.create({
             $variable: __variable,
@@ -263,7 +262,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         // console.log('transformFretCreateExp called: ' + children.toString());
         let __type: MetaElementReference<FreMetaClassifier>;
         let __propertyDefs: FretPropInstance[];
-        __type = this.mainAnalyser.makeMetaElementReference<FreMetaClassifier>(children.asJsReadonlyArrayView()[0] as ParsedNodeReference, "FreClassifier"); // RHSRefEntry
+        __type = this.mainAnalyser.makeMetaElementReference<FreMetaClassifier>(children.asJsReadonlyArrayView()[0] as ParsedNodeReference); // RHSRefEntry
         __propertyDefs = this.mainAnalyser.transformPartList<FretPropInstance>(children.asJsReadonlyArrayView()[2] as KtList<any>, ","); // RHSPartListWithSeparator
 
         return FretCreateExp.create({
@@ -284,7 +283,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         // console.log('transformFretPropInstance called: ' + children.toString());
         let __property: MetaElementReference<FreMetaProperty>;
         let __value: FretExp;
-        __property = this.mainAnalyser.makeMetaElementReference<FreMetaProperty>(children.asJsReadonlyArrayView()[0] as ParsedNodeReference, "FreProperty"); // RHSRefEntry
+        __property = this.mainAnalyser.makeMetaElementReference<FreMetaProperty>(children.asJsReadonlyArrayView()[0] as ParsedNodeReference); // RHSRefEntry
         __value = children.asJsReadonlyArrayView()[2] as FretExp; // RHSPartEntry
 
         return FretPropInstance.create({
@@ -334,10 +333,10 @@ export class FreTyperDefSyntaxAnalyserPart {
         // RHSOptionalGroup
         if (!!children.asJsReadonlyArrayView()[0]) {
             const _optGroup = children.asJsReadonlyArrayView()[0] as KtList<any>;
-            __myLimited = this.mainAnalyser.makeMetaElementReference<FreMetaLimitedConcept>(_optGroup.asJsReadonlyArrayView()[1], "FreLimitedConcept"); // RHSRefEntry
+            __myLimited = this.mainAnalyser.makeMetaElementReference<FreMetaLimitedConcept>(_optGroup.asJsReadonlyArrayView()[1]); // RHSRefEntry
         }
         // end RHSOptionalGroup
-        __myInstance = this.mainAnalyser.makeMetaElementReference<FreMetaInstance>(children.asJsReadonlyArrayView()[1] as ParsedNodeReference, "FreInstance"); // RHSRefEntry
+        __myInstance = this.mainAnalyser.makeMetaElementReference<FreMetaInstance>(children.asJsReadonlyArrayView()[1] as ParsedNodeReference); // RHSRefEntry
         return FretLimitedInstanceExp.create({
             $myLimited: __myLimited,
             $myInstance: __myInstance,
@@ -390,7 +389,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         let __name: string;
         let __type: MetaElementReference<FreMetaClassifier>;
         __name = this.mainAnalyser.transformPrimValue<string>(children.asJsReadonlyArrayView()[0].toString(), PrimValueType.identifier); // RHSPrimEntry
-        __type = this.mainAnalyser.makeMetaElementReference<FreMetaClassifier>(children.asJsReadonlyArrayView()[2] as ParsedNodeReference, "FreClassifier"); // RHSRefEntry
+        __type = this.mainAnalyser.makeMetaElementReference<FreMetaClassifier>(children.asJsReadonlyArrayView()[2] as ParsedNodeReference); // RHSRefEntry
 
         return FretVarDecl.create({
             name: __name,
@@ -466,7 +465,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         // console.log('transformFretClassifierSpec called: ' + children.toString());
         let __myClassifier: MetaElementReference<FreMetaClassifier>;
         let __rules: FretTypeRule[];
-        __myClassifier = this.mainAnalyser.makeMetaElementReference<FreMetaClassifier>(children.asJsReadonlyArrayView()[0] as ParsedNodeReference, "FreClassifier"); // RHSRefEntry
+        __myClassifier = this.mainAnalyser.makeMetaElementReference<FreMetaClassifier>(children.asJsReadonlyArrayView()[0] as ParsedNodeReference); // RHSRefEntry
         __rules = (children.asJsReadonlyArrayView()[2] as KtList<any>).asJsReadonlyArrayView() as FretTypeRule[]; // RHSPartListEntry
 
         return FretClassifierSpec.create({
@@ -488,7 +487,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         let __name: string;
         let __type: MetaElementReference<FreMetaClassifier>;
         __name = this.mainAnalyser.transformPrimValue<string>(children.asJsReadonlyArrayView()[0].toString(), PrimValueType.identifier); // RHSPrimEntry
-        __type = this.mainAnalyser.makeMetaElementReference<FreMetaClassifier>(children.asJsReadonlyArrayView()[2] as ParsedNodeReference, "FreClassifier"); // RHSRefEntry
+        __type = this.mainAnalyser.makeMetaElementReference<FreMetaClassifier>(children.asJsReadonlyArrayView()[2] as ParsedNodeReference); // RHSRefEntry
 
         return FretProperty.create({
             name: __name,

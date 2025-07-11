@@ -1,12 +1,12 @@
 editor qualified
 
-unitType1 {[
-    unitType1 ${self.name}
+UnitType1 {[
+    UnitType1 ${self.name}
     ${content vertical};
 ]}
 
-unitType2 {[
-    unitType2 ${self.name}
+UnitType2 {[
+    UnitType2 ${self.name}
     myReferences: ${self.myReferences vertical}
 ]}
 

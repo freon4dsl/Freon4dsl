@@ -4,7 +4,7 @@ import {
     FreEditNormalProjection,
     FreEditTableProjection,
 } from "./internal.js";
-import { FreMetaDefinitionElement } from "../../../utils/index.js";
+import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.js";
 
 /**
  * This class is only used during parsing. It is removed from the model in the creation phase (in FreEditCreators.extractProjections).

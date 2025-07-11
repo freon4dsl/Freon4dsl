@@ -2,6 +2,10 @@
  * Grammar for language definition syntax (.ast files)
  */
 
+{{
+import * as create from "./LanguageCreators.js"
+}}
+
 Language_Definition
   = ws "language" rws name:var rws langparts:(langdef)*
     {

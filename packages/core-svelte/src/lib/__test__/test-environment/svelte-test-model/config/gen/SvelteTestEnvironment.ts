@@ -7,7 +7,7 @@ import {
     type FreValidator,
     type FreWriter,
     type FreInterpreter,
-    FreScoperComposite,
+    FreCompositeScoper,
     FreLanguageEnvironment,
     FreProjectionHandler,
 } from "@freon4dsl/core";
@@ -72,7 +72,7 @@ export class SvelteTestEnvironment implements FreEnvironment {
 
     // the parts of the language environment
     editor: FreEditor;
-    scoper: FreScoperComposite = new FreScoperComposite("main");
+    scoper: FreCompositeScoper = new FreCompositeScoper();
     typer: FreCompositeTyper = new FreCompositeTyper("main");
     validator: FreValidator = new SvelteTestValidator();
     // writer: FreWriter = new SvelteTestModelUnitWriter();

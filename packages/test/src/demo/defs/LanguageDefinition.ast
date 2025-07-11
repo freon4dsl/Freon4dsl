@@ -31,10 +31,10 @@ abstract concept Nothing {
 }
 
 concept DemoEntity base Nothing implements Type {
-    private attributes: DemoAttribute[];
-    private entAttributes: DemoAttributeWithEntityType[];
-    private functions: DemoFunction[];
-    private reference baseEntity?: DemoEntity;
+    attributes: DemoAttribute[];
+    entAttributes: DemoAttributeWithEntityType[];
+    functions: DemoFunction[];
+    reference baseEntity?: DemoEntity;
 }
 
 limited DemoAttributeType implements BaseType {

@@ -4,7 +4,7 @@ import {
     FreMetaLanguage,
     FreMetaPrimitiveProperty,
 } from "../../languagedef/metalanguage/index.js";
-import { Imports, Names } from "../../utils/index.js"
+import { Imports, Names } from "../../utils/on-lang/index.js"
 import { FreMetaPrimitiveType } from "../../languagedef/metalanguage/FreMetaLanguage.js";
 import { UnitAnalyser } from "./UnitAnalyser.js";
 
@@ -160,7 +160,7 @@ export class SemanticAnalysisTemplate {
 
                 private findReplacement(node: ${Names.allConcepts()}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
                     const scoper = ${Names.FreLanguageEnvironment}.getInstance().scoper;
-                    const possibles = scoper.getVisibleElements(node).filter(elem => elem.name === referredElem.name);
+                    const possibles = scoper.getVisibleNodes(node).filter(elem => elem.name === referredElem.name);
                     if (possibles.length > 0) {
                         // element probably refers to something with another type
                         let replacement: ${Names.allConcepts()} = null;

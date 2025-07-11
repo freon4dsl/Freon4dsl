@@ -1,7 +1,7 @@
-scoper EducationScoper for language Education
+scoper for language Education
 
-isnamespace { Page, Step }
+isNamespace { Page, Step }
 
 Step {
-    namespace_addition = self.fromPage;
+    imports { self.fromPage; }
 }

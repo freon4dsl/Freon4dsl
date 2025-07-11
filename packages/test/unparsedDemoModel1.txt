@@ -1,44 +1,44 @@
-model CorrectUnit {
+model `CorrectUnit` {
 main:
 types:
 
 entities:
-    DemoEntity School {
+    DemoEntity `School` {
         baseInterface_attr 0
         simpleprop "simple"
         x "xxx"
         attributes
-            foundedIn : Integer
-            name : String
+            `foundedIn` : `Integer`
+            `name` : `String`
         entAttributes
 
         functions
-            DemoFunction requestClean {
+            DemoFunction `requestClean` {
                 expression 5 + 24
                 parameters
-                    cleaningCompany : Company
-                declaredType Integer
+                    `cleaningCompany` : `Company`
+                declaredType `Integer`
             }
         int_attrs
 
         int_functions
 
     }
-    DemoEntity Company {
+    DemoEntity `Company` {
         baseInterface_attr 0
         simpleprop "simple"
         x "xxx"
         attributes
-            name : String
-            VAT_Number : Integer
+            `name` : `String`
+            `VAT_Number` : `Integer`
         entAttributes
 
         functions
-            DemoFunction doClean {
+            DemoFunction `doClean` {
                 expression 5 + 24
                 parameters
-                    at : Company
-                declaredType Integer
+                    `at` : `Company`
+                declaredType `Integer`
             }
         int_attrs
 
@@ -46,7 +46,7 @@ entities:
 
     }
 model wide functions:
-    DemoFunction compare {
+    DemoFunction `compare` {
         expression if ( 2 < 5 ) then
                              1
                    else
@@ -54,11 +54,11 @@ model wide functions:
                    endif
         parameters
 
-        declaredType Integer
-    } DemoFunction helloString {
+        declaredType `Integer`
+    } DemoFunction `helloString` {
           expression ' "Hello Demo" '
           parameters
 
-          declaredType String
+          declaredType `String`
       }
 }

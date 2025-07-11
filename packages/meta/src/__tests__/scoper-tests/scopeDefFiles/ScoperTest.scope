@@ -1,0 +1,17 @@
+scoper for language ScoperTest
+
+isNamespace { UnitA, IWithName }
+
+UnitA {
+    imports {
+        owner().B_units;
+        owner().B_units.childrenWithName;
+    }
+}
+
+UnitB {
+    imports {
+        owner().A_units;
+        owner().A_units.childrenWithName;
+    }
+}

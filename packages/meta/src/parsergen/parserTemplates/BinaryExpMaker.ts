@@ -1,11 +1,10 @@
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
-    FreMetaExpressionConcept,
-} from "../../languagedef/metalanguage/index.js";
+    FreMetaExpressionConcept, LangUtil
+} from '../../languagedef/metalanguage/index.js';
 import { FreEditExtraClassifierInfo, FreEditProjectionGroup } from "../../editordef/metalanguage/index.js";
 import { GrammarRule, BinaryExpressionRule } from "./grammarModel/index.js";
-import { GenerationUtil } from "../../utils/index.js";
 
 export class BinaryExpMaker {
     private static specialBinaryRuleName = `__fre_binary_`;
@@ -27,7 +26,7 @@ export class BinaryExpMaker {
             FreMetaBinaryExpressionConcept[]
         >();
         binaryConceptsUsed.forEach((bin) => {
-            const expBase: FreMetaExpressionConcept = GenerationUtil.findExpressionBase(bin);
+            const expBase: FreMetaExpressionConcept = LangUtil.findExpressionBase(bin);
             if (groups.has(expBase)) {
                 // @ts-ignore
                 groups.get(expBase).push(bin);

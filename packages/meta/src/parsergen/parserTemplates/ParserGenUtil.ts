@@ -3,16 +3,15 @@ import { EditorDefaults } from "../../editordef/metalanguage/EditorDefaults.js";
 import {
     FreMetaBinaryExpressionConcept,
     FreMetaClassifier,
-    FreMetaExpressionConcept,
-} from "../../languagedef/metalanguage/index.js";
-import { GenerationUtil } from "../../utils/index.js";
+    FreMetaExpressionConcept, LangUtil
+} from '../../languagedef/metalanguage/index.js';
 
 export class ParserGenUtil {
     // find all expression bases for all binaries
     static findAllExpressionBases(list: FreMetaBinaryExpressionConcept[]): FreMetaExpressionConcept[] {
         const bases: FreMetaExpressionConcept[] = [];
         list.forEach((impl) => {
-            const expBase = GenerationUtil.findExpressionBase(impl as FreMetaBinaryExpressionConcept);
+            const expBase = LangUtil.findExpressionBase(impl as FreMetaBinaryExpressionConcept);
             if (bases.indexOf(expBase) === -1) {
                 // add if not present
                 bases.push(expBase);

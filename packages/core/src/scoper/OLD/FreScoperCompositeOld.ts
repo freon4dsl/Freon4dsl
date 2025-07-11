@@ -1,0 +1,114 @@
+import { FreNode, FreNamedNode, FreNodeReference } from '../../ast/index.js';
+import { FreLogger } from "../../logging/index.js";
+import { FreScoperOld } from "./FreScoperOld.js";
+import { isNullOrUndefined } from '../../util/index.js';
+import { FreNamespaceOLD } from './FreNamespaceOLD.js';
+
+const LOGGER = new FreLogger("FreCompositeScoper").mute();
+
+export class FreScoperCompositeOld implements FreScoperOld {
+    mainScoper: FreScoperCompositeOld;
+    private scopers: FreScoperOld[] = [];
+    name: string = "";
+
+    constructor(name: string) {
+        this.name = name;
+    }
+
+    appendScoper(t: FreScoperOld) {
+        this.scopers.push(t);
+        t.mainScoper = this;
+    }
+
+    insertScoper(t: FreScoperOld) {
+        this.scopers.splice(0, 0, t);
+        t.mainScoper = this;
+    }
+
+    additionalNamespaces(node: FreNode): FreNode[] {
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result = scoper.additionalNamespaces(node);
+                if (!isNullOrUndefined(result)) {
+                    return result;
+                }
+            }
+        }
+        return [];
+    }
+
+    getFromVisibleElements(node: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): FreNamedNode {
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result = scoper.getFromVisibleElements(node, name, metatype, excludeSurrounding);
+                if (!isNullOrUndefined(result)) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
+
+    getVisibleElements(node: FreNode, metatype?: string, excludeSurrounding?: boolean): FreNamedNode[] {
+        LOGGER.log('COMPOSITE getVisibleNodes for ' + node.freLanguageConcept() + " of type " + node.freLanguageConcept());
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result = scoper.getVisibleElements(node, metatype, excludeSurrounding);
+                if (!isNullOrUndefined(result)) {
+                    return result;
+                }
+            }
+        }
+        return [];
+    }
+
+    getVisibleNames(node: FreNode, metatype?: string, excludeSurrounding?: boolean): string[] {
+        LOGGER.log("COMPOSITE getVisibleNames for " + node?.freLanguageConcept() + " of type " + metatype);
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result = scoper.getVisibleNames(node, metatype, excludeSurrounding);
+                if (!isNullOrUndefined(result)) {
+                    return result;
+                }
+            }
+        }
+        return [];
+    }
+
+    isInScope(node: FreNode, name: string, metatype?: string, excludeSurrounding?: boolean): boolean {
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result = scoper.isInScope(node, name, metatype, excludeSurrounding);
+                if (!isNullOrUndefined(result)) {
+                    return result;
+                }
+            }
+        }
+        return false; // TODO or undefined?
+    }
+
+    resolvePathName(node: FreNode, doNotSearch: FreNodeReference<FreNamedNode>, pathname: string[], metatype?: string): FreNamedNode {
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result = scoper.resolvePathName(node, doNotSearch, pathname, metatype);
+                if (!isNullOrUndefined(result)) {
+                    return result;
+                }
+            }
+        }
+        return null; // TODO or undefined?
+    }
+
+    replacementNamespace(node: FreNode): FreNamespaceOLD | undefined {
+        LOGGER.log('COMPOSITE replacementNamespace for ' + node.freId() + " of type " + node.freLanguageConcept());
+        if (!!node) {
+            for (const scoper of this.scopers) {
+                const result: FreNamespaceOLD = scoper.replacementNamespace(node);
+                if (!isNullOrUndefined(result)) {
+                    return result;
+                }
+            }
+        }
+        return undefined;
+    }
+}

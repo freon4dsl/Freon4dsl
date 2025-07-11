@@ -1,19 +1,19 @@
-unit eenNaam {
+unit `eenNaam` {
 
 main:
 
-entity1 base anotherEntity, andAnother, andYetAnother start
-    attr1: String = "myString",
-    attr2: Integer = "TEKST"
+`entity1` base `anotherEntity`, `andAnother`, `andYetAnother` start
+    `attr1`: `String` = "myString",
+    `attr2`: `Integer` = "TEKST"
 end
 
 unit wide functions:
-DemoFunction functionXXX {
-	expression CALL funct555 (  )
+DemoFunction `functionXXX` {
+	expression CALL `funct555` (  )
 	parameters
-	DemoVariable variableYYY {
-    	declaredType entity1
+	DemoVariable `variableYYY` {
+    	declaredType `entity1`
     	}
-	declaredType String
+	declaredType `String`
 	}
 }
