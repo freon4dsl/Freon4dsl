@@ -1,10 +1,9 @@
 import { DecoratedModelElement, FreNode } from "../ast/index.js";
-import { FreDelta, FrePartListDelta, FrePartDelta, FrePrimDelta, FrePrimListDelta } from "./FreDelta.js";
+import { FrePartListDelta, FrePartDelta, FrePrimDelta, FrePrimListDelta } from "./FreDelta.js";
 import { FreLogger } from "../logging/index.js";
 import { PrimType } from "../language/index.js";
 import { modelUnit } from "../ast-utils/index.js";
 
-export type callback = (delta: FreDelta) => void;
 export type PrimChangeCallback = (delta: FrePrimDelta) => void;
 export type PartChangeCallback = (delta: FrePartDelta) => void;
 export type ListElementChangeCallback = (delta: FrePartDelta | FrePrimDelta) => void;
