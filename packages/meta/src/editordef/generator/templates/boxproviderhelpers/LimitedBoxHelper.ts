@@ -91,7 +91,7 @@ export class LimitedBoxHelper {
         return `BoxUtil.limitedBox(
                                 ${element},
                                 "${appliedFeature.name}",
-                                (selected: string) => {
+                                (selected: string | ${featureType}) => {
                                     ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
                                                selected, "${featureType}" );
                                 },
@@ -112,7 +112,7 @@ export class LimitedBoxHelper {
         return `BoxUtil.limitedBox(
                                 ${element},
                                 "${appliedFeature.name}",
-                                (selected: string) => {
+                                (selected: string | ${featureType}) => {
                                     ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
                                                selected, "${featureType}" );
                                 },
