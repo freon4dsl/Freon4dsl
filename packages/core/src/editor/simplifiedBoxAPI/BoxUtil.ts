@@ -475,6 +475,17 @@ export class BoxUtil {
         return new NumberWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
     }
 
+    static booleanWrapperBox(
+        node: FreNode,
+        propertyName: string,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<BooleanWrapperBox>,
+    ): BooleanWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
+        return new BooleanWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
+    }
+    
     static fragmentWrapperBox(
         node: FreNode,
         externalComponentName: string,
