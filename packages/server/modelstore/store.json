@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 2,
+    "currentPostfix": 1,
     "models": [
         {
             "folder": "modelstore",
@@ -545,6 +545,34 @@
             "version": "1"
         },
         {
+            "folder": "ScoperTestStandalone",
+            "language": "",
+            "name": "ScoperTestStandalone",
+            "units": [
+                {
+                    "file": "test1.json",
+                    "name": "test1"
+                },
+                {
+                    "file": "test2.json",
+                    "name": "test2"
+                },
+                {
+                    "file": "test3.json",
+                    "name": "test3"
+                },
+                {
+                    "file": "test4.json",
+                    "name": "test4"
+                },
+                {
+                    "file": "test5.json",
+                    "name": "test5"
+                }
+            ],
+            "version": "1"
+        },
+        {
             "folder": "sysmlv2",
             "language": "",
             "name": "sysmlv2",
@@ -593,11 +621,23 @@
             "version": "1"
         },
         {
-            "name": "631(&$][:) 12!",
-            "folder": "model-1",
-            "language": "MyLang",
+            "name": "ScoperTest",
+            "folder": "ScoperTest",
+            "language": "StarterModel",
             "version": "1",
             "units": []
+        },
+        {
+            "name": "XXX",
+            "folder": "XXX",
+            "language": "StarterModel",
+            "version": "1",
+            "units": [
+                {
+                    "name": "XXX-unit5",
+                    "file": "XXX-unit5.json"
+                }
+            ]
         }
     ]
 }
