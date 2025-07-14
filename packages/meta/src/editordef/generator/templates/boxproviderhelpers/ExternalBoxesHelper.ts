@@ -109,7 +109,7 @@ export class ExternalBoxesHelper {
                         ${elementVarName},
                         "${property.name}",
                         "${item.externalInfo!.wrapBy}",
-                    ${innerResult},
+                    ${innerResult}
                     ${initializer}
                     )`;
     }
