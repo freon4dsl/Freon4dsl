@@ -16,6 +16,7 @@ export class ValidatorTemplate {
         const generatedClassName: string = Names.validator(language);
         const rulesChecker: string = Names.rulesChecker(language);
         const nonOptionalsChecker: string = Names.nonOptionalsChecker(language);
+        const namespaceChecker: string = Names.namespaceChecker(language);
         const referenceChecker: string = Names.referenceChecker(language);
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([
@@ -28,6 +29,7 @@ export class ValidatorTemplate {
         // TEMPLATE: ValidatorTemplate.generateValidator(...)
         ${imports.makeImports(language)}
         import { ${nonOptionalsChecker} } from "./${nonOptionalsChecker}.js";
+        import { ${namespaceChecker} } from "./${namespaceChecker}.js";
         ${doValidDef ? `import { ${rulesChecker} } from "./${rulesChecker}.js";` : ``}
         import { ${referenceChecker} } from "./${referenceChecker}.js";
         import { freonConfiguration } from "${relativePath}${CONFIGURATION_FOLDER}/${Names.configuration}.js";
@@ -73,6 +75,12 @@ export class ValidatorTemplate {
 
                 // create the checker on references
                 myChecker = new ${referenceChecker}();
+                myChecker.errorList = errorlist;
+                // and add the checker to the walker
+                myWalker.myWorkers.push( myChecker );
+                
+                // create the checker on (double names in) namespaces
+                myChecker = new ${namespaceChecker}();
                 myChecker.errorList = errorlist;
                 // and add the checker to the walker
                 myWalker.myWorkers.push( myChecker );

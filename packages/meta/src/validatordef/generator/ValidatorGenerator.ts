@@ -10,6 +10,7 @@ import { ReservedWordsTemplate } from "./templates/ReservedWordsTemplate.js";
 import { NonOptionalsCheckerTemplate } from "./templates/NonOptionalsCheckerTemplate.js";
 import { ReferenceCheckerTemplate } from "./templates/ReferenceCheckerTemplate.js";
 import { LOG2USER } from "../../utils/basic-dependencies/UserLogger.js";
+import { NamespaceCheckerTemplate } from './templates/NamespaceCheckerTemplate.js';
 
 // TODO use new AstWalker and AstWorker
 
@@ -32,6 +33,7 @@ export class ValidatorGenerator {
 
         const validatorTemplate = new ValidatorTemplate();
         const nonOptionalsCheckerTemplate = new NonOptionalsCheckerTemplate();
+        const namespaceCheckerTemplate = new NamespaceCheckerTemplate();
         const referenceCheckerTemplate = new ReferenceCheckerTemplate();
         const checkerTemplate = new RulesCheckerTemplate();
         const reservedWordsTemplate = new ReservedWordsTemplate();
@@ -74,6 +76,17 @@ export class ValidatorGenerator {
             generationStatus,
         );
         fs.writeFileSync(`${this.validatorGenFolder}/${Names.referenceChecker(this.language)}.ts`, checkerFile);
+
+        // generate the default checker on namespaces
+        LOGGER.log(
+          `Generating checker for namespaces: ${this.validatorGenFolder}/${Names.namespaceChecker(this.language)}.ts`,
+        );
+        checkerFile = FileUtil.pretty(
+          namespaceCheckerTemplate.generateChecker(this.language, relativePath),
+          "Namespace Checker Class",
+          generationStatus,
+        );
+        fs.writeFileSync(`${this.validatorGenFolder}/${Names.namespaceChecker(this.language)}.ts`, checkerFile);
 
         //  Generate checker
         if (validdef !== null && validdef !== undefined) {

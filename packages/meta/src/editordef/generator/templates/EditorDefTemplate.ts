@@ -62,16 +62,16 @@ export class EditorDefTemplate {
         language.concepts.forEach((concept) => {
             if (!(concept instanceof FreMetaLimitedConcept) && !concept.isAbstract) {
                 constructors.push(`["${Names.concept(concept)}", () => {
-                        return new ${Names.boxProvider(concept)}(${handlerVarName})
+                        return new ${NamesForEditor.boxProvider(concept)}(${handlerVarName})
                     }]`);
-                imports.editor.add(Names.boxProvider(concept));
+                imports.editor.add(NamesForEditor.boxProvider(concept));
             }
         });
         language.units.forEach((unit) => {
             constructors.push(`["${Names.classifier(unit)}", () => {
-                        return new ${Names.boxProvider(unit)}(${handlerVarName})
+                        return new ${NamesForEditor.boxProvider(unit)}(${handlerVarName})
                     }]`);
-            imports.editor.add(Names.boxProvider(unit));
+            imports.editor.add(NamesForEditor.boxProvider(unit));
         });
 
         // get all the table header info

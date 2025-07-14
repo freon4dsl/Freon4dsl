@@ -193,7 +193,7 @@ describe("Testing Validator", () => {
         // errors.forEach(e =>
         //     console.log(e.message + " in " + e.locationdescription + " of severity " + e.severity)
         // );
-        expect(errors.length).toBe(10);
+        expect(errors.length).toBe(13);
     });
 
     test("test correct model", () => {
