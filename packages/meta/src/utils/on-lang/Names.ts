@@ -81,6 +81,7 @@ export class Names {
     static referenceSeparator: string = "/"; // TODO use value from editDef
     static listUtil: string = "ListUtil";
     static brackets: string = "Brackets";
+    static isNullOrUndefined: string = 'isNullOrUndefined';
 
     static environment(language: FreMetaLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment";
@@ -219,6 +220,10 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ReferenceChecker";
     }
 
+    static namespaceChecker(language: FreMetaLanguage) {
+        return this.startWithUpperCase(language?.name) + "NamespaceChecker";
+    }
+
     static typerPart(language: FreMetaLanguage): string {
         return this.startWithUpperCase(language?.name) + "TyperPart";
     }
@@ -300,10 +305,6 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }
 
-    static binaryProjectionFunction(): string {
-        return "_getBinaryExpressionBox";
-    }
-
     static instance(instance: FreMetaInstance): string {
         return instance.name;
     }
@@ -332,7 +333,4 @@ export class Names {
         return "Main" + Names.interpreterClassname(language);
     }
 
-    static boxProvider(concept: FreMetaClassifier): string {
-        return Names.startWithUpperCase(concept.name) + "BoxProvider";
-    }
 }

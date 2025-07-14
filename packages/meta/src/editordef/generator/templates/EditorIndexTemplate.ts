@@ -1,5 +1,6 @@
 import { Names } from "../../../utils/on-lang/index.js";
 import { FreMetaClassifier, FreMetaLanguage, FreMetaLimitedConcept } from "../../../languagedef/metalanguage/index.js";
+import { NamesForEditor } from '../../../utils/on-lang-and-editor/index.js';
 
 export class EditorIndexTemplate {
     generateGenIndex(language: FreMetaLanguage, extraClassifiers: FreMetaClassifier[]): string {
@@ -18,7 +19,7 @@ export class EditorIndexTemplate {
         return ` ${language.usedLanguages.map(lang => `  
             export * from "./${Names.actions(language)}.js";
             export * from "./${Names.defaultActions(language)}.js";`).join("")} 
-        ${boxProviderConcepts.map(cls => `export * from "./${Names.boxProvider(cls)}.js";` ).join("")} 
+        ${boxProviderConcepts.map(cls => `export * from "./${NamesForEditor.boxProvider(cls)}.js";` ).join("")} 
             export * from "./EditorDef.js"; `;
     }
 

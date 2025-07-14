@@ -145,7 +145,7 @@ export class BoxProviderTemplate {
 
         if (this.supersUsed.length > 0) {
             this.supersUsed.forEach((c) => {
-                this.imports.editor.add(Names.boxProvider(c))
+                this.imports.editor.add(NamesForEditor.boxProvider(c))
             })
         }
 
@@ -161,7 +161,7 @@ export class BoxProviderTemplate {
              * a box that will never be rendered itself, only its content will. Thus, we
              * have a stable entry in the complete box tree for every ${Names.FreNode} node.
              */
-            export class ${Names.boxProvider(concept)} extends FreBoxProvider {
+            export class ${NamesForEditor.boxProvider(concept)} extends FreBoxProvider {
                 ${coreText}
                 
                 ${tableText}
@@ -238,7 +238,7 @@ export class BoxProviderTemplate {
                         ${supers
                             .map(
                                 (s) => `case "${s.name}": {
-                            superBoxProvider = new ${Names.boxProvider(s)}(this.mainHandler);
+                            superBoxProvider = new ${NamesForEditor.boxProvider(s)}(this.mainHandler);
                             break;
                         }`,
                             )
