@@ -1,3 +1,4 @@
+import { FileUtil } from "@freon4dsl/server/dist/index"
 import fs from "fs";
 
 /**
@@ -37,7 +38,7 @@ export class DirectoryWalker {
     }
 
     walk(dir: string): void {
-        if(fs.existsSync(dir)) {
+        if(FileUtil.exists(dir)) {
             if (fs.lstatSync(dir).isDirectory()) {
                 this.worker.visitDir(dir)
                 const files = fs.readdirSync(dir)

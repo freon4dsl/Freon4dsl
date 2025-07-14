@@ -1,17 +1,34 @@
 import * as fs from "fs";
+import * as path from "path";
 
-export class FileHandler {
+export class FileUtil {
+    public static separator(): string {
+        return path.sep;
+    }
+
+    /**
+     * Return true if `file` exists in the file system
+     * @param file
+     */
+    public static exists(file: string): boolean {
+        try {
+            fs.statSync(file)
+            return true
+        } catch (e) {
+            return false
+        }
+    }
 
     /**
      * Reads a string from the file located at 'filepath'. If the
      * file is not present an Error will be thrown.
      * @param filepath
      */
-    public stringFromFile(filepath: string): string {
+    public static stringFromFile(filepath: string): string {
         // read language file
-        let startPath = './packages/samples/Octopus/src/__inputs__/';
+        let startPath = './packages/samples/FreLanguage/src/__inputs__/';
         let actualPath = startPath + filepath
-        if (!fs.existsSync(actualPath)) {
+        if (!FileUtil.exists(actualPath)) {
             console.error(this, "File '" + actualPath + "' does not exist, exiting.");
             throw new Error(`File '${actualPath}' not found.`);
         }
@@ -26,8 +43,8 @@ export class FileHandler {
      * @param filepath
      * @param output
      */
-    public stringToFile(filepath: string, output: string) {
-        if (fs.existsSync(filepath)) {
+    public static stringToFile(filepath: string, output: string) {
+        if (FileUtil.exists(filepath)) {
             console.log(this, "FileHandler: file " + filepath + " already exists, overwriting it.");
         }
         fs.writeFileSync(filepath, output);

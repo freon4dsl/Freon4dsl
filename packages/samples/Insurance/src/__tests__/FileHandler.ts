@@ -1,3 +1,4 @@
+import { FileUtil } from "@freon4dsl/core"
 import * as fs from "fs";
 
 export class FileHandler {
@@ -11,7 +12,7 @@ export class FileHandler {
         // read language file
         let startPath = './packages/samples/Insurance/src/__inputs__/';
         let actualPath = startPath + filepath
-        if (!fs.existsSync(actualPath)) {
+        if (!FileUtil.exists(actualPath)) {
             console.error(this, "File '" + actualPath + "' does not exist, exiting.");
             throw new Error(`File '${actualPath}' not found.`);
         }
@@ -27,7 +28,7 @@ export class FileHandler {
      * @param output
      */
     public stringToFile(filepath: string, output: string) {
-        if (fs.existsSync(filepath)) {
+        if (FileUtil.exists(filepath)) {
             console.log(this, "FileHandler: file " + filepath + " already exists, overwriting it.");
         }
         fs.writeFileSync(filepath, output);

@@ -54,7 +54,7 @@ describe("Checking the scoper generator", () => {
             generator.outputfolder = outputDir;
             generator.generate(scopeDef!);
             const outputFile = outputDir + "scoper/gen/ScoperModelScoper.ts";
-            const isPresent: boolean = fs.existsSync(outputFile);
+            const isPresent: boolean = FileUtil.exists(outputFile);
             expect(isPresent).toBe(true);
             if (isPresent) {
                 const result = fs.readFileSync(outputFile, "utf8");
