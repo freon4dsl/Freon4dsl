@@ -305,10 +305,6 @@ export class Names {
         return this.startWithUpperCase(language?.name) + "ModelUnitReader";
     }
 
-    static binaryProjectionFunction(): string {
-        return "_getBinaryExpressionBox";
-    }
-
     static instance(instance: FreMetaInstance): string {
         return instance.name;
     }

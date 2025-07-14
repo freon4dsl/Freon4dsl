@@ -44,7 +44,7 @@ export class NamespaceCheckerTemplate {
 
         ${classifiersToDo.map((concept) => `${this.createChecksOnNamespaces(concept)}`).join("\n\n")}
         
-        private checkDoubleNamesInNamespace(node: FreNode) {
+        private checkDuplicateNamesInNamespace(node: FreNode) {
             const declaredNodes: Set<FreNamedNode> = FreNamespace.create(node).getDeclaredNodes(false);
             const declaredNames: string[] = [];
             const doubleNames: string[] = [];
