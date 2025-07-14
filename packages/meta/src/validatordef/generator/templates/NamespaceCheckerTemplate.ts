@@ -82,7 +82,7 @@ export class NamespaceCheckerTemplate {
         return `${commentBefore}
                 public execBefore${Names.classifier(concept)}(${paramName}: ${Names.classifier(concept)}): boolean {
                     if (!isNullOrUndefined(node) && FreLanguage.getInstance().classifier("${Names.classifier(concept)}").isNamespace) {
-                        this.checkDoubleNamesInNamespace(node);
+                        this.checkDuplicateNamesInNamespace(node);
                     }
                     return false;
                 }`;
