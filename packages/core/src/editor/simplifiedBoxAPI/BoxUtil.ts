@@ -12,7 +12,7 @@ import {
     ExternalPartListBox,
     ExternalRefBox,
     ExternalRefListBox,
-    ExternalStringBox,
+    ExternalStringBox, FragmentWrapperBox,
     HorizontalListBox,
     IndentBox,
     LabelBox,
@@ -29,8 +29,8 @@ import {
     SelectBox,
     StringWrapperBox,
     TextBox,
-    VerticalListBox,
-} from "../boxes/index.js";
+    VerticalListBox
+} from "../boxes/index.js"
 import { FreScoper } from "../../scoper/index.js";
 import { RoleProvider } from "./RoleProvider.js";
 import { FreProjectionHandler } from "../projections/index.js";
@@ -484,6 +484,16 @@ export class BoxUtil {
     ): BooleanWrapperBox {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName) + "-wrapper";
         return new BooleanWrapperBox(externalComponentName, node, roleName, propertyName, childBox, initializer);
+    }
+    
+    static fragmentWrapperBox(
+        node: FreNode,
+        externalComponentName: string,
+        childBox: Box,
+        initializer?: Partial<BooleanWrapperBox>,
+    ): FragmentWrapperBox {
+        const roleName: string = RoleProvider.property(node.freLanguageConcept(), externalComponentName) + "-wrapper-" + childBox.id;
+        return new FragmentWrapperBox(externalComponentName, node, roleName,childBox, initializer);
     }
 
     static partWrapperBox(
