@@ -1,9 +1,0 @@
-scoper for language ScoperTryout
-
-isNamespace { Referable, QualifiedName }
-
-UnitUsingReferables {
-    imports { self.imports; }
-}
-
-

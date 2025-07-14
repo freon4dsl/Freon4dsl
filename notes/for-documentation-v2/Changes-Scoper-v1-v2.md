@@ -26,20 +26,27 @@ scoper for language Demo
 
 OLD:
 ```
-  namespace_addition = self.imports  + self.forEntity;
+  namespace_addition = self.imports + self.forEntity;
   namespace_replacement = typeof( container );
 ```
 NEW
 ```
-  imports { self.imports; self.forEntity; }
-  alternatives { owner().type(); }
+  imports { 
+      self.imports.xxx.rrr; 
+      self.forEntity; 
+  }
+  alternatives { 
+    owner().type(); 
+  }
 ```
 
 - Keyword 'recursive' added => indicates that the imports of the namespace are also included.
 Example: 
 
 ```
-imports { recursive self.baseEntity; }
+imports { 
+    recursive self.baseEntity; 
+}
 ```
 
 - The way the expressions are formed is changed. (Currently only in scoper!) What is allowed are:
@@ -64,7 +71,6 @@ self.prop1.prop2 or prop1.prop2 => the FreNode instance that is the property nam
 ```
 <SOME_EXPRESSION>.if(<CLASSIFIER_NAME>) => the FreNode instance that contains the node indicated by <SOME_EXPRESSION>, but only if it is
 of the type <CLASSIFIER_NAME>, otherwise undefined.
-==> used to be called 'container'
 ```
 
 ```
