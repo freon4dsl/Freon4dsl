@@ -1,14 +1,14 @@
 // This file contains all methods to connect the webapp to the Freon generated language editorEnvironment and to the server that stores the models
 import {
-    BoxFactory,
-    FreError,
-    FreErrorSeverity,
-    FreLogger,
-    FreUndoManager,
-    InMemoryModel,
-    isIdentifier,
-    isNullOrUndefined
-} from "@freon4dsl/core";
+	BoxFactory,
+	FreError,
+	FreErrorSeverity,
+	FreLogger,
+	FreUndoManager,
+	InMemoryModel,
+	isIdentifier,
+	isNullOrUndefined, ReferenceUpdateManager
+} from '@freon4dsl/core';
 import type {
     FreEnvironment,
     FreNode,
@@ -50,6 +50,9 @@ export class EditorState {
         }
         unitNames.ids = store.getUnitIdentifiers();
         units.refs = store.getUnits();
+				if (!isNullOrUndefined(store.model)) {
+					ReferenceUpdateManager.getInstance().freModel = store.model;
+				}
     };
 
     private constructor() {
