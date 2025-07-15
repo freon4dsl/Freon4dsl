@@ -37,7 +37,7 @@ function testTypeUnit(typeUnit: TyperDef) {
     // expect(inferOfPlusExp.returnType.name).toBe(predefType.name);
 }
 
-describe("Checking new typer", () => {
+describe("Checking typer", () => {
     const testdir = "src/__tests__/typer-tests/correctDefFiles/";
     const langParser = new LanguageParser();
 

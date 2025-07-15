@@ -13,3 +13,5 @@ export class MetaFunctionNames {
         this.equalsTypeFunc
     ];
 }
+
+export const nameForSelf = 'self';

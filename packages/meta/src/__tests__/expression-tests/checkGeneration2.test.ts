@@ -1,15 +1,15 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { FreMetaLanguage } from '../../languagedef/metalanguage';
-import { LanguageExpressionTesterNew } from "../../langexpressions/parser/LanguageExpressionTesterNew.js";
-import { LanguageExpressionParserNew } from "../../langexpressions/parser/LanguageExpressionParserNew.js";
+import { LanguageExpressionTester } from "../../langexpressions/parser/LanguageExpressionTester.js";
+import { LanguageExpressionParser } from "../../langexpressions/parser/LanguageExpressionParser.js";
 import { describe, test, expect, beforeEach } from "vitest";
 import { ExpressionGenerationUtil } from '../../langexpressions/generator/ExpressionGenerationUtil';
 import { Imports } from '../../utils/on-lang';
 
 describe("Checking generation of expressions", () => {
-    const testdir = "src/__tests__/new-expression-tests/expressionDefFiles/";
+    const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
     let language: FreMetaLanguage | undefined;
-    let expressionDefs: LanguageExpressionTesterNew | undefined;
+    let expressionDefs: LanguageExpressionTester | undefined;
     let imports: Imports = new Imports();
     // MetaLogger.muteAllErrors();
     // MetaLogger.muteAllLogs();
@@ -24,7 +24,7 @@ describe("Checking generation of expressions", () => {
         }
         if (!!language) {
             const expressionFile = testdir + "test2.fretest";
-            expressionDefs = new LanguageExpressionParserNew(language).parse(
+            expressionDefs = new LanguageExpressionParser(language).parse(
               expressionFile
             );
             expect(expressionDefs).not.toBeNull();

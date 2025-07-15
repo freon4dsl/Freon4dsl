@@ -28,8 +28,7 @@ export class ValidatorGenerator {
         }
         const generationStatus = new GenerationStatus();
         this.getFolderNames();
-        const name = validdef ? validdef.validatorName + " " : "default";
-        LOGGER.log("Generating validator: " + name + "in folder " + this.validatorGenFolder);
+        LOGGER.log("Generating validator in folder " + this.validatorGenFolder);
 
         const validatorTemplate = new ValidatorTemplate();
         const nonOptionalsCheckerTemplate = new NonOptionalsCheckerTemplate();
@@ -141,9 +140,9 @@ export class ValidatorGenerator {
         FileUtil.generateManualFile(`${this.validatorFolder}/index.ts`, indexFile, "Index Class");
 
         if (generationStatus.numberOfErrors > 0) {
-            LOGGER.error(`Generated validator '${name}' with ${generationStatus.numberOfErrors} errors.`);
+            LOGGER.error(`Generated validator with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated validator ${name}`);
+            LOGGER.info(`Successfully generated validator`);
         }
     }
 

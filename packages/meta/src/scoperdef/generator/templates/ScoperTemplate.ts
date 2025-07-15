@@ -121,7 +121,7 @@ export class ScoperTemplate {
     private addNamespaceExpression(namespaceInfo: FreMetaNamespaceInfo, imports: Imports, index: number): string {
         let result: string = "";
         if (namespaceInfo.expression) {
-            const namespaceExpressionStr: string = ExpressionGenerationUtil.langExpToTypeScript(namespaceInfo.expression, "node", imports);
+            const namespaceExpressionStr: string = ExpressionGenerationUtil.langExpToTypeScript(namespaceInfo.expression, "node", imports, true);
             // see whether the expression results in a list, because we need to distinguish between lists and non-lists
             const previousIsList = ExpressionGenerationUtil.previousIsList;
             if (previousIsList) {

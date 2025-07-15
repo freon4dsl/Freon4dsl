@@ -328,9 +328,10 @@ export function createReferenceProperty(data: Partial<FreMetaConceptProperty>): 
 
 export function createClassifierReference(
     data: Partial<MetaElementReference<FreMetaClassifier>>,
-): MetaElementReference<FreMetaClassifier> | undefined {
+): MetaElementReference<FreMetaClassifier> {
     // console.log("createClassifierReference " + data.name);
-    let result: MetaElementReference<FreMetaClassifier> | undefined = undefined;
+    // Create a temp object to avoid the return type 'MetaElementReference<FreMetaClassifier> | undefined'
+    let result = MetaElementReference.create<FreMetaClassifier>(data.name ? data.name : "");
     if (!!data.name) {
         const type: string = data.name;
         if (type === "string") {
@@ -345,23 +346,11 @@ export function createClassifierReference(
             result = MetaElementReference.create<FreMetaClassifier>(data.name);
         }
     }
-    if (!!result && !!data.location) {
-        result.location = data.location;
-        result.location.filename = currentFileName;
-    }
-    // console.log("createClassifierReference " + result?.name + result?.referred?.name);
-    return result;
-}
-
-export function createInterfaceReference(
-    data: Partial<MetaElementReference<FreMetaInterface>>,
-): MetaElementReference<FreMetaInterface> {
-    // console.log("createInterfaceReference " + data.name);
-    const result = MetaElementReference.create<FreMetaInterface>(data.name ? data.name : "");
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;
     }
+    // console.log("createClassifierReference " + result?.name + result?.referred?.name);
     return result;
 }
 

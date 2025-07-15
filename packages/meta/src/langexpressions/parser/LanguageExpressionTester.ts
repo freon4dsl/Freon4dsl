@@ -1,4 +1,4 @@
-import { FreLangExpNew } from "../metalanguage/FreLangExpressionsNew.js";
+import { FreLangExp } from "../metalanguage/FreLangExpressions.js";
 import {
     FreMetaLanguage,
     FreMetaLangElement,
@@ -14,7 +14,7 @@ import {
 // These properties need to be undefined during parsing and checking. After the checking process
 // has been executed without errors, we can assume that these properties are initialized.
 
-export class LanguageExpressionTesterNew extends FreMetaLangElement {
+export class LanguageExpressionTester extends FreMetaLangElement {
     languageName: string = "";
     // @ts-ignore
     language: FreMetaLanguage;
@@ -30,7 +30,7 @@ export class TestExpressionsForConcept extends FreMetaLangElement {
     classifierRef: MetaElementReference<FreMetaClassifier>;
     // @ts-ignore
     language: FreMetaLanguage;
-    exps: FreLangExpNew[] = [];
+    exps: FreLangExp[] = [];
 
     toFreString(): string {
         return this.classifierRef.name + ' {\n\t' + this.exps.map(exp => exp.toFreString()).join("\n\t") + '\n}';

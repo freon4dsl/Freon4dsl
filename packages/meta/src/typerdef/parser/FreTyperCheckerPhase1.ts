@@ -37,7 +37,7 @@ import { Names } from '../../utils/on-lang/index.js';
 import { FretResolver } from './FretResolver.js';
 import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 
-// const LOGGER = new MetaLogger("NewFreTyperChecker"); // .mute();
+// const LOGGER = new MetaLogger("FreTyperCheckerPhase1"); // .mute();
 export const validFunctionNames: string[] = ["typeof", "commonSuperType", "ownerOfType"];
 
 /**

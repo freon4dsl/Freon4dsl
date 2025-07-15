@@ -37,7 +37,6 @@ import {
     FreEditFragmentProjection,
 } from "./editlanguage/index.js";
 import { EditorDefaults } from "./EditorDefaults.js";
-import { FreLangExpressionChecker } from '../../languagedef/checking/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
 import { isNullOrUndefined } from '../../utils/file-utils/index.js';
 
@@ -50,15 +49,11 @@ export class FreEditChecker extends Checker<FreEditUnit> {
 
     // @ts-ignore runner gets its value in the 'check' method
     runner: CheckRunner;
-    private readonly myExpressionChecker: FreLangExpressionChecker | undefined;
     private propsWithTableProjection: FreEditPropertyProjection[] = [];
     private fragmentNamesPerClassifier: Map<FreMetaClassifier, string[]> = new Map();
 
     constructor(language: FreMetaLanguage) {
         super(language);
-        if (!!this.language) {
-            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
-        }
     }
 
     /**
@@ -107,12 +102,6 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             !!editUnit.getDefaultProjectiongroup(),
             `No editor with name 'default' found, a default editor will be generated.`,
         );
-
-        // add any messages found by the expression checker
-        if (!!this.myExpressionChecker) {
-            this.errors = this.errors.concat(this.myExpressionChecker.errors);
-            this.warnings = this.warnings.concat(this.myExpressionChecker.warnings);
-        }
     }
 
     private checkUniqueNameOfProjectionGroup(names: string[], group: FreEditProjectionGroup) {
