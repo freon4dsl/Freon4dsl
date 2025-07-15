@@ -1,7 +1,14 @@
-import { FreNode } from "../../ast/index.js";
-import { isNullOrUndefined, FreUtils, FRE_BINARY_EXPRESSION_LEFT, FRE_BINARY_EXPRESSION_RIGHT, isExpressionPreOrPost } from "../../util/index.js";
+import type { FreNode } from "../../ast/index.js";
+import {
+    notNullOrUndefined,
+    FreUtils,
+    FRE_BINARY_EXPRESSION_LEFT,
+    FRE_BINARY_EXPRESSION_RIGHT,
+    isExpressionPreOrPost
+} from '../../util/index.js';
 import { FreLogger } from "../../logging/index.js";
-import {ClientRectangle, UndefinedRectangle} from "../ClientRectangleTypes.js";
+import type { ClientRectangle } from "../ClientRectangleTypes.js";
+import { UndefinedRectangle } from "../ClientRectangleTypes.js";
 
 const LOGGER = new FreLogger("Box");
 
@@ -207,7 +214,7 @@ export abstract class Box {
      */
     get nextLeafLeftWithoutExpressionPlaceHolders(): Box {
         const boxLeft: Box = this.nextLeafLeft;
-        if (!isNullOrUndefined(boxLeft)) {
+        if (notNullOrUndefined(boxLeft)) {
             if (isExpressionPreOrPost(boxLeft)) {
                 // Special expression prefix or postfix box, don't return it
                 return boxLeft.nextLeafLeftWithoutExpressionPlaceHolders;
@@ -225,7 +232,7 @@ export abstract class Box {
      */
     get nextLeafRightWithoutExpressionPlaceHolders(): Box {
         const boxRight: Box = this.nextLeafRight;
-        if (!isNullOrUndefined(boxRight)) {
+        if (notNullOrUndefined(boxRight)) {
             if (isExpressionPreOrPost(boxRight)) {
                 // Special expression prefix or postfix box, don't return it
                 return boxRight.nextLeafRightWithoutExpressionPlaceHolders;
@@ -305,9 +312,9 @@ export abstract class Box {
      * @param propertyName
      */
     // findBox(elementId: string, propertyName?: string, propertyIndex?: number): Box {
-    //     if (!isNullOrUndefined(this.element) && this.element.freId() === elementId) {
-    //         if (!isNullOrUndefined(propertyName)) {
-    //             if (!isNullOrUndefined(propertyIndex)) {
+    //     if (notNullOrUndefined(this.element) && this.element.freId() === elementId) {
+    //         if (notNullOrUndefined(propertyName)) {
+    //             if (notNullOrUndefined(propertyIndex)) {
     //                 if (this.propertyName === propertyName && this.propertyIndex === propertyIndex) {
     //                     return this;
     //                 }
@@ -344,8 +351,8 @@ export abstract class Box {
         // }
         for (const child of this.children) {
             // console.log('===> child: [' + child.propertyName + ", " + child.propertyIndex + "]")
-            if (!isNullOrUndefined(propertyName)) {
-                if (!isNullOrUndefined(propertyIndex)) {
+            if (notNullOrUndefined(propertyName)) {
+                if (notNullOrUndefined(propertyIndex)) {
                     if (child.propertyName === propertyName && child.propertyIndex === propertyIndex) {
                         return child;
                     }
@@ -359,7 +366,7 @@ export abstract class Box {
                 return child;
             }
             const result: Box = child.findChildBoxForProperty(propertyName, propertyIndex);
-            if (!isNullOrUndefined(result) && result.node === this.node) {
+            if (notNullOrUndefined(result) && result.node === this.node) {
                 return result;
             }
         }

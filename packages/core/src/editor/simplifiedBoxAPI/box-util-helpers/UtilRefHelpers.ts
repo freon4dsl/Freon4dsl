@@ -6,12 +6,13 @@ import {
     ExternalRefListBox,
     HorizontalListBox,
     ReferenceBox,
-    SelectOption,
+    type SelectOption,
     VerticalListBox,
 } from "../../boxes/index.js";
-import { FreNamedNode, FreNode, FreNodeReference, qualifiedName } from '../../../ast/index.js';
+import type { FreNamedNode, FreNode, FreNodeReference } from '../../../ast/index.js';
+import { qualifiedName } from '../../../ast/index.js';
 import { RoleProvider } from "../RoleProvider.js";
-import { FreScoper } from "../../../scoper/index.js";
+import type { FreScoper } from "../../../scoper/index.js";
 import { BehaviorExecutionResult } from "../../util/index.js";
 import { BoxUtil, FreListInfo } from "../BoxUtil.js";
 import { UtilCommon } from "./UtilCommon.js";

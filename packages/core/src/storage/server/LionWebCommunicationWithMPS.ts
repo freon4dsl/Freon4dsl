@@ -1,8 +1,8 @@
-import { FreNamedNode, FreNode } from "../../ast/index.js";
+import type { FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { FreLionwebSerializer, ParameterType } from "../index.js";
+import { FreLionwebSerializer, type ParameterType } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
-import { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
+import type { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 import { ServerCommunication } from "./ServerCommunication.js";
 // import * as process from "process";
 
@@ -60,7 +60,7 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
     async loadModelUnit(modelName: string, unitName: string, loadCallback: (piUnit: FreNamedNode) => void) {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unitName}`);
         if (!!unitName && unitName.length > 0) {
-            const res = await this.fetchWithTimeout<Object>(modelPath, {});
+            const res = await this.getWithTimeout<Object>(modelPath, {});
             if (!!res) {
                 try {
                     const serializer = new FreLionwebSerializer();
@@ -80,7 +80,7 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
 
     // @ts-ignore
     // parameter present to adhere to interface
-    async putModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNode) {
+    async saveModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNode) {
         console.log("unit", unit);
         if (!!unitIdentifier.name && unitIdentifier.name.length > 0 && !!unit) {
             try {
@@ -102,7 +102,7 @@ export class LionWebCommunicationWithMPS extends ServerCommunication implements 
         }
     }
 
-    override async fetchWithTimeout<T>(path: string, params: ParameterType): Promise<T> {
+    override async getWithTimeout<T>(path: string, params: ParameterType): Promise<T> {
         const parameters = ServerCommunication.findParams(params);
         LOGGER.log(`LIONWEB FETCHG: ${SERVER_URL}${path}${parameters}`);
         try {

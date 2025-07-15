@@ -1,5 +1,6 @@
-import { FreNamedNode, FreNode, FreNodeReference, isFreNode, isFreNodeReference } from "../../ast/index.js"
-import { DragAndDropType } from "../../language/index.js"
+import type { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js"
+import { isFreNode, isFreNodeReference } from "../../ast/index.js"
+import type { DragAndDropType } from "../../language/index.js"
 
 /**
  * This class represent information on a single element from a list in the FreNode model.

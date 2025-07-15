@@ -1,4 +1,4 @@
-import { FreNode } from "../../../ast/index.js";
+import type { FreNode } from "../../../ast/index.js";
 import { AST } from "../../../change-manager/index.js";
 import {
     BoolDisplay,
@@ -8,15 +8,15 @@ import {
     CharAllowed,
     NumberControlBox,
     NumberDisplay,
-    NumberDisplayInfo,
+    type NumberDisplayInfo,
     SelectBox,
-    SelectOption,
+    type SelectOption,
     TextBox,
 } from "../../boxes/index.js";
 import { FreEditor } from "../../FreEditor.js";
 import { BehaviorExecutionResult } from "../../util/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";
-import { FreLanguage, FreLanguageProperty } from "../../../language/index.js";
+import { FreLanguage, type FreLanguageProperty } from "../../../language/index.js";
 import { RoleProvider } from "../RoleProvider.js";
 import { FreUtils } from "../../../util/index.js";
 

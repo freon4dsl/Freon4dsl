@@ -1,7 +1,9 @@
-import { FreNode } from "../../../ast/index.js";
-import { FreLanguage, FreLanguageProperty, PropertyKind } from "../../../language/index.js";
-import { FreListInfo } from "../BoxUtil.js";
-import { Box, BoxFactory } from "../../boxes/index.js";
+import type { FreNode } from "../../../ast/index.js";
+import { FreLanguage } from "../../../language/index.js";
+import type { FreLanguageProperty, PropertyKind } from "../../../language/index.js";
+import type { FreListInfo } from "../BoxUtil.js";
+import type { Box } from "../../boxes/index.js";
+import { BoxFactory } from "../../boxes/index.js";
 
 export class UtilCommon {
     static separatorName: string = "Separator";

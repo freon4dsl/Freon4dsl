@@ -1,12 +1,12 @@
 {
   "name": "@freon4dsl/core",
   "version": "1.1.0-beta.3",
-  "description": "The uttermost core part of the Freon library, which enables you to build editors for the web",
+  "description": "The core part of the Freon library, which enables you to build editors for the web",
   "publishConfig": {
     "access": "public"
   }, 
   "license": "MIT",
-  "main": "dist/index.mjs",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "repository": {
@@ -14,24 +14,30 @@
     "url": "git+https://github.com/freon4dsl/Freon4dsl.git"
   },
   "files": [
-    "/dist"
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
   ],
   "scripts": {
-    "build": "rollup -c",
-    "build-dev": "rollup -c",
+    "build": "vite build",
+    "build-dev": "vite build",
+    "build-release": "vite build",
     "clean": "rm -rf node_modules/ && rm -rf dist/",
-    "build-release": "npm run build",
     "cleanup": "bash ../../scripts/cleanup.sh",
+    "format": "prettier --write .",
     "test": "vitest run",
-    "start": "echo Start core",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local"
   },
   "devDependencies": {
-    "vitest": "3.2.4",
-    "@vitest/ui": "3.2.4"
+    "@types/node": "^24.0.14",
+    "prettier": "^3.4.2",
+    "typescript": "^5.0.0",
+    "vite": "^6.0.0",
+    "vitest": "^3.2.4",
+    "vite-plugin-dts": "^4.5.4"
   },
   "dependencies": {
     "lodash": "^4.17.21",

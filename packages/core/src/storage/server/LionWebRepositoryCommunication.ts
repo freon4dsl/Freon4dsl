@@ -1,7 +1,9 @@
-import { ClientResponse, ListPartitionsResponse, RepositoryClient } from "@lionweb/repository-client";
-import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
+import { RepositoryClient } from "@lionweb/repository-client";
+import type { ClientResponse, ListPartitionsResponse } from "@lionweb/repository-client";
+import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { createLionWebJsonNode, FreLionwebSerializer, FreSerializer } from "../index.js";
+import { createLionWebJsonNode, FreLionwebSerializer } from "../index.js";
+import type { FreSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 import type { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 import { collectUsedLanguages } from "./UsedLanguages.js";
@@ -71,7 +73,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param unitIdentifier
      * @param unit
      */
-    async putModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNamedNode) {
+    async saveModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNamedNode) {
         LOGGER.log(`LionWebRepositoryCommunication.putModelUnit ${modelName}/${unitIdentifier.name}`);
         if (
             !!unitIdentifier.name &&
@@ -200,7 +202,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         LOGGER.log(`renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         this.client.repository = modelName;
         // put the unit and its interface under the new name
-        await this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
+        await this.saveModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit and interface
         await this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() });
     }

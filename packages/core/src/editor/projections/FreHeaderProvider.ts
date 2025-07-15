@@ -1,8 +1,8 @@
 import { isNullOrUndefined } from "../../util/index.js";
 import { FreBoxProvider } from "./FreBoxProvider.js";
-import { FreProjectionHandler } from "./FreProjectionHandler.js";
-import { FreNode } from "../../ast/index.js";
-import { Box, TableRowBox } from "../boxes/index.js";
+import type { FreProjectionHandler } from "./FreProjectionHandler.js";
+import type { FreNode } from "../../ast/index.js";
+import type { Box, TableRowBox } from "../boxes/index.js";
 import { BoxUtil, TableUtil } from "../simplifiedBoxAPI/index.js";
 
 export class FreHeaderProvider extends FreBoxProvider {

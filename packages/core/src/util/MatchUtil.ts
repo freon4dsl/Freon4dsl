@@ -1,8 +1,9 @@
-import { FreTriggerType, isProKey, isRegExp, isString } from "../editor/index.js";
-import { isNullOrUndefined } from "./FreUtils.js";
+import type { FreTriggerType } from "../editor/index.js";
+import { isProKey, isRegExp, isString } from "../editor/index.js";
+import { notNullOrUndefined } from "./FreUtils.js";
 
 export function isIdentifier(str: string): boolean {
-    if (!isNullOrUndefined(str)) {
+    if (notNullOrUndefined(str)) {
         // We choose not to use 'any' or 'any but' in the regexp, because then all kinds of characters (with accents
         // and from other keyboards) also become possible, and we can't oversee what consequences this has. Therefore,
         // we prefer a positive statement of what is possible.

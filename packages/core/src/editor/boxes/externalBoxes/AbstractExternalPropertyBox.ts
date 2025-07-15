@@ -1,5 +1,5 @@
 import { AbstractExternalBox } from "./AbstractExternalBox.js";
-import { FreNode } from "../../../ast/index.js";
+import type { FreNode } from "../../../ast/index.js";
 import { FreLanguage } from "../../../language/index.js";
 
 export abstract class AbstractExternalPropertyBox extends AbstractExternalBox {

@@ -1,5 +1,5 @@
-import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
-import { FreErrorSeverity } from "../../validator/index.js";
+import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
+import type { FreErrorSeverity } from "../../validator/index.js";
 
 export type OnError = (errorMsg: string, severity: FreErrorSeverity) => void;
 /**
@@ -34,7 +34,7 @@ export interface IServerCommunication {
      * @param unitId
      * @param unit
      */
-    putModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNode): void;
+    saveModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNode): void;
 
     /**
      * Deletes the unit according to the data in 'modelInfo' from the server

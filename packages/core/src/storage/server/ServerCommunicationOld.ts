@@ -73,7 +73,7 @@ export class ServerCommunicationOld implements IServerCommunication {
      * @param unitId
      * @param unit
      */
-    async putModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<void> {
+    async saveModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunicationOld.putModelUnit ${modelName}/${unitId.name}`);
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunicationOld.lionweb_serial.convertToJSON(unit);
@@ -83,7 +83,7 @@ export class ServerCommunicationOld implements IServerCommunication {
                 // "__version": "1234abcdef",
                 nodes: model,
             };
-            await this.putWithTimeout(`putModelUnit`, output, `folder=${modelName}&name=${unitId.name}`);
+            await this.putWithTimeout(`saveModelUnit`, output, `folder=${modelName}&name=${unitId.name}`);
         } else {
             LOGGER.error(
                 "Name of Unit '" +
@@ -141,7 +141,7 @@ export class ServerCommunicationOld implements IServerCommunication {
      */
     async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
         LOGGER.log(`ServerCommunicationOld.loadUnitList`);
-        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `folder=${modelName}`);
+        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getModelUnitList`, `folder=${modelName}`);
         if (!!modelUnits) {
             return modelUnits.map((u) => {
                 // The information the unit's type is not available. This is not a problem
@@ -185,7 +185,7 @@ export class ServerCommunicationOld implements IServerCommunication {
 
     async fetchWithTimeout<T>(method: string, params?: string): Promise<T> {
         params = ServerCommunicationOld.findParams(params);
-        LOGGER.log("fetchWithTimeout Params = " + params);
+        LOGGER.log("getWithTimeout Params = " + params);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
@@ -236,7 +236,7 @@ export class ServerCommunicationOld implements IServerCommunication {
     async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<void> {
         LOGGER.log(`ServerCommunicationOld.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         // put the unit and its interface under the new name
-        this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
+        this.saveModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit and interface
         this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
     }
@@ -246,6 +246,6 @@ export class ServerCommunicationOld implements IServerCommunication {
 
     // @ts-ignore
     createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
-        this.putModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
+        this.saveModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
     }
 }

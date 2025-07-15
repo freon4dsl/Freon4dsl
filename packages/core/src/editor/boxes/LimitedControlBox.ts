@@ -1,7 +1,7 @@
 import { AST } from "../../change-manager/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { Box } from "./internal.js";
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
 
 const LOGGER: FreLogger = new FreLogger("LimitedControlBox").mute();

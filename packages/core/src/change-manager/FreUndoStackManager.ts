@@ -7,7 +7,7 @@ import {
     FrePrimListDelta,
     FreTransactionDelta,
 } from "./FreDelta.js";
-import { FreModelUnit } from "../ast/index.js";
+import type { FreModelUnit } from "../ast/index.js";
 import { modelUnit } from "../ast-utils/index.js";
 import { FreLogger } from "../logging/index.js";
 import { FreUndoManager } from "./FreUndoManager.js";

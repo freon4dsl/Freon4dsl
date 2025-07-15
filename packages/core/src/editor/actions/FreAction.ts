@@ -1,9 +1,9 @@
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { FreCaret } from "../util/index.js";
-import { Box } from "../boxes/index.js";
+import type { Box } from "../boxes/index.js";
 import { FreEditor } from "../FreEditor.js";
-import { FreTriggerUse, FreTriggerType } from "./FreTriggers.js";
+import type { FreTriggerUse, FreTriggerType } from "./FreTriggers.js";
 
 export const ACTION_LOGGER = new FreLogger("FreAction")
     

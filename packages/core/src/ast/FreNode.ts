@@ -1,4 +1,4 @@
-import { FreOwnerDescriptor } from "./FreOwnerDescriptor.js";
+import type { FreOwnerDescriptor } from "./FreOwnerDescriptor.js";
 import { FreParseLocation } from "../reader/index.js";
 
 /**

@@ -1,19 +1,15 @@
 // import { astToString } from "../../ast-utils/index.js";
-import {
-    LionWebJsonChunk,
-    LionWebJsonContainment,
-    LionWebJsonMetaPointer,
-    LionWebJsonNode,
-    LionWebJsonReference,
-} from "@lionweb/validation";
-// import { runInAction } from "mobx";
-import { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js";
-import { AST } from "../../change-manager/index.js";
-import { FreLanguage, FreLanguageProperty } from "../../language/index.js";
+import type { LionWebJsonChunk, LionWebJsonContainment, LionWebJsonMetaPointer, LionWebJsonNode, LionWebJsonReference } from "@lionweb/validation";
+import { runInAction } from "mobx";
+import type { FreNamedNode, FreNode } from "../../ast/index.js";
+import { FreNodeReference } from "../../ast/index.js";
+import { FreLanguage } from "../../language/index.js";
+import type { FreLanguageProperty } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { FreUtils, isNullOrUndefined } from "../../util/index.js";
-import { FreSerializer } from "./FreSerializer.js";
+import { FreUtils, isNullOrUndefined, notNullOrUndefined } from "../../util/index.js";
+import type { FreSerializer } from "./FreSerializer.js";
 import { createLionWebJsonNode, isLionWebJsonChunk } from "./NewLionwebM3.js";
+
 
 const LOGGER = new FreLogger("FreLionwebSerializer");
 /**
@@ -70,7 +66,8 @@ export class FreLionwebSerializer implements FreSerializer {
         LOGGER.log("SerializationFormatVersion: " + serVersion);
         // First read all nodes without children, and store them in a map.
         const nodes: LionWebJsonNode[] = chunk.nodes;
-        AST.change( () => {
+        // Not using AST.change(...) here, because we don't need an undo for this code
+        runInAction( () => {
             for (const object of nodes) {
                 // LOGGER.log("node: " + object.concept.key + "     with id " + object.id)
                 const parsedNode = this.toTypeScriptInstanceInternal(object);
@@ -288,7 +285,7 @@ export class FreLionwebSerializer implements FreSerializer {
                 "Found child value which is not a Array for property: " + property.name,
             );
             for (const item of jsonValue as []) {
-                if (!isNullOrUndefined(item)) {
+                if (notNullOrUndefined(item)) {
                     parsedChildren.push({ featureName: property.name, isList: property.isList, referredId: item });
                 }
             }
@@ -327,7 +324,7 @@ export class FreLionwebSerializer implements FreSerializer {
                 "Found targets value which is not a Array for property: " + property.name,
             );
             for (const item of jsonValue) {
-                if (!isNullOrUndefined(item)) {
+                if (notNullOrUndefined(item)) {
                     if (typeof item === "object") {
                         // New reference format with resolveInfo
                         parsedReferences.push({

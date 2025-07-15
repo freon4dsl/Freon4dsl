@@ -1,13 +1,7 @@
 import { InterpreterContext } from "./InterpreterContext.js";
 import { InterpreterError } from "./InterpreterException.js";
 import { InterpreterTracer } from "./InterpreterTracer.js";
-import {
-    ConceptFunction,
-    EvaluateFunction,
-    IMainInterpreter,
-    InitFunction,
-    OwningPropertyFunction,
-} from "./IMainInterpreter.js";
+import type { ConceptFunction, EvaluateFunction, IMainInterpreter, InitFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
 import { isRtError, RtObject } from "./runtime/index.js";
 
 /**

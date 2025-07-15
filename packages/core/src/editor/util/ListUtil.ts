@@ -9,9 +9,12 @@ import { jsonAsString } from "../../util/index.js";
 import * as Keys from "./Keys.js";
 import { MetaKey } from "./Keys.js";
 import { FreLogger } from "../../logging/index.js";
-import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index.js";
-import { DragAndDropType, FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language/index.js"
-import { FreNamedNode, FreNode, FreNodeReference, isFreNodeReference } from "../../ast/index.js"
+import { FreCreatePartAction, FreEditor, MenuItem } from "../index.js";
+import type { ListElementInfo } from "../index.js";
+import { FreLanguage } from "../../language/index.js";
+import type { DragAndDropType, FreLanguageClassifier, PropertyKind } from "../../language/index.js";
+import type { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js";
+import { isFreNodeReference } from "../../ast/index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 
 const LOGGER = new FreLogger("ListUtil");

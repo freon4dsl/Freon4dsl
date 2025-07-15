@@ -1,6 +1,6 @@
+import type { FreType } from "./FreType.js";
+import type { FreTyper } from "./FreTyper.js";
 import { FreTypeOrderedList } from "./FreTypeOrderedList.js";
-import { FreTyper } from "./FreTyper.js";
-import { FreType } from "./FreType.js";
 
 // algorithm from https://stackoverflow.com/questions/9797212/finding-the-nearest-common-superclass-or-superinterface-of-a-collection-of-cla
 // 1. Breath First Search of each class hierarchy going "upwards" - result into OrderedList (preserve order + no duplicates).

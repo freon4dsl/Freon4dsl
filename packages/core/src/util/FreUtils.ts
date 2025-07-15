@@ -1,8 +1,8 @@
 import { AST } from "../change-manager/index.js";
-import { FreEditor } from "../editor/index.js";
-import { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast/index.js";
+import type { FreEditor } from "../editor/index.js";
+import type { FreOwnerDescriptor, FreNode, FreExpressionNode } from "../ast/index.js";
 import { isFreExpression } from "../ast-utils/index.js";
-import { IdProvider } from "./IdProvider.js";
+import type { IdProvider } from "./IdProvider.js";
 import { SimpleIdProvider } from "./SimpleIdProvider.js";
 
 // export type BooleanCallback = () => boolean;
@@ -59,7 +59,7 @@ export class FreUtils {
 
     static setContainer(exp: FreNode, freOwnerDescriptor: FreOwnerDescriptor | null, editor: FreEditor): void {
         AST.change( () => {
-            if ( !isNullOrUndefined(freOwnerDescriptor)) {
+            if ( notNullOrUndefined(freOwnerDescriptor)) {
                 if (freOwnerDescriptor.propertyIndex === undefined) {
                     freOwnerDescriptor.owner[freOwnerDescriptor.propertyName] = exp;
                 } else {

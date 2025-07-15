@@ -1,10 +1,10 @@
 import { autorun, makeObservable, observable, runInAction } from 'mobx';
-import {FreModel, FreModelUnit} from "../ast/index.js";
+import type {FreModel, FreModelUnit} from "../ast/index.js";
 import {AST} from "../change-manager/index.js";
-import {FreEnvironment} from "../environment/index.js";
+import type {FreEnvironment} from "../environment/index.js";
 import {FreLogger} from "../logging/index.js";
-import {isNullOrUndefined} from "../util/index.js";
-import {IServerCommunication, FreUnitIdentifier} from "./server/index.js";
+import {isNullOrUndefined, notNullOrUndefined} from "../util/index.js";
+import type {IServerCommunication, FreUnitIdentifier} from "./server/index.js";
 
 export type ModelChangedCallbackFunction = (m: InMemoryModel) => void;
 
@@ -20,7 +20,7 @@ export class InMemoryModel {
         this.server = server;
         makeObservable(this, { model: observable });
         autorun( () => {
-            if (!isNullOrUndefined(this.model)) {
+            if (notNullOrUndefined(this.model)) {
                 this.model.getUnits()
                 this.currentModelChanged()
             }
@@ -185,8 +185,8 @@ export class InMemoryModel {
      * @param unit
      */
     async saveUnit(unit: FreModelUnit): Promise<void> {
-        LOGGER.log(`saveUnit`);
-        await this.server.putModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
+        LOGGER.log(`saveModelUnit`);
+        await this.server.saveModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
     }
 
     /************************************************************

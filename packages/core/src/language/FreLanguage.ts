@@ -1,6 +1,7 @@
-import { ReferenceShortcut } from "../editor/index.js";
-import { FreNode, FreModel, FreModelUnit } from "../ast/index.js";
-import { EmptyStdLib, FreStdlib } from "../stdlib/index.js";
+import type { ReferenceShortcut } from "../editor/index.js";
+import type { FreNode, FreModel, FreModelUnit } from "../ast/index.js";
+import { EmptyStdLib } from "../stdlib/index.js";
+import type { FreStdlib } from "../stdlib/index.js";
 import { isNullOrUndefined } from "../util/index.js";
 // import { FreLogger } from "../logging";
 // const LOGGER = new FreLogger("Language");

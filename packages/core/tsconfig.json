@@ -9,8 +9,8 @@
     /* "module": "es*" must correspond with "type": "module" in package.json */
     "module": "nodenext",                           /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
     // "lib": [],                                   /* Specify library files to be included in the compilation. */
-    "allowJs": false,                                /* Allow javascript files to be compiled. */
-    // "checkJs": true,                             /* Report errors in .js files. */
+    "allowJs": true,                                /* Allow javascript files to be compiled. */
+    "checkJs": true,                             /* Report errors in .js files. */
     // "jsx": "preserve",                           /* Specify JSX code generation: 'preserve', 'react-native', 'react', 'react-jsx' or 'react-jsxdev'. */
     "declaration": true,                            /* Generates corresponding '.d.ts' file. */
     "declarationDir": "dist",
@@ -80,7 +80,7 @@
       "dom",
       "dom.iterable",
       "es6",
-      "es2017", /* needed to use '.include()' for string[] array */
+      "es2017",
       "es2019"
     ],
 //    "newLine": "lf",
@@ -93,7 +93,11 @@
   "exclude": [
     "node_modules",
     "dist",
-    "src/__tests__/**/*"
+    "src/__tests__/**/*",
+    "vite.config.ts",
+    "vite.config.js",
+    "*.config.ts",
+    "*.config.js"
   ]
 }
 

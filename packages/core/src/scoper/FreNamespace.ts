@@ -48,7 +48,7 @@ import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { AstWalker } from "../ast-utils/index.js";
 import { FreLanguage } from "../language/index.js";
 import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js";
-import { isNullOrUndefined } from '../util/index.js';
+import { isNullOrUndefined, notNullOrUndefined } from '../util/index.js';
 import { FreCompositeScoper } from './FreCompositeScoper.js';
 import { FreLogger } from "../logging/index.js";
 import { resolvePathStartingInNamespace } from './ScoperUtil.js';
@@ -144,7 +144,7 @@ export class FreNamespace {
     public getParentNodes(mainScoper: FreCompositeScoper, visitedNamespaces: FreNamespace[]): FreNamedNode[] {
         const parentNamespace: FreNamespace = this.findParentNamespace(this);
         let resultSoFar: Set<FreNamedNode> = new Set();
-        if (!isNullOrUndefined(parentNamespace) && !visitedNamespaces.includes(parentNamespace)) {
+        if (notNullOrUndefined(parentNamespace) && !visitedNamespaces.includes(parentNamespace)) {
             // We include all visible nodes from the parent, not only the declared nodes.
             parentNamespace.getVisibleNodes(mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE).forEach(x => {
                 resultSoFar.add(x);
@@ -171,7 +171,7 @@ export class FreNamespace {
         // First add all imports that are not defined by FreNodeReferences
         additionals.forEach(namespaceInfo => {
             const nsNode = namespaceInfo._myNode;
-            if (!isNullOrUndefined(nsNode) && !(nsNode instanceof FreNodeReference)) {
+            if (notNullOrUndefined(nsNode) && !(nsNode instanceof FreNodeReference)) {
                 this.internalAddSingleImport(mainScoper, nsNode, visitedNamespaces, resultSoFar, namespaceInfo.recursive).forEach(n =>{
                     resultSoFar.add(n);
                 })
@@ -189,7 +189,7 @@ export class FreNamespace {
             const toBeRemoved: FreNamespaceInfo[] = [];
             remainingNS.forEach(addon => {
                 const node: FreNamedNode = this.findInResultSoFar(mainScoper, addon._myNode as FreNodeReference<FreNamedNode>, resultSoFar);
-                if (!isNullOrUndefined(node)) {
+                if (notNullOrUndefined(node)) {
                     this.internalAddSingleImport(mainScoper, node, visitedNamespaces, resultSoFar, addon.recursive).forEach(n =>{
                         resultSoFar.add(n);
                     })
@@ -224,13 +224,13 @@ export class FreNamespace {
         let resultSoFar: Set<FreNamedNode> = this.getDeclaredNodes(PUBLIC_AND_PRIVATE);
         alternatives.forEach(namespaceInfo => {
             const nsNode = namespaceInfo._myNode;
-            if (!isNullOrUndefined(nsNode)) {
+            if (notNullOrUndefined(nsNode)) {
                 const parentNs = this.findParentNamespace(this);
                 const visibleInParent = new Set<FreNamedNode>(parentNs.getVisibleNodes(mainScoper, [], false));
                 if (nsNode instanceof FreNodeReference) {
                     // NB the reference should be resolvable in the parent of this namespace. This should also be checked in meta!
                     // NB this restricts nsNode: it may not be a 'child' namespace of 'this'!
-                    if (!isNullOrUndefined(parentNs)) {
+                    if (notNullOrUndefined(parentNs)) {
                         const resolvedNode = resolvePathStartingInNamespace(this, parentNs, nsNode.pathname, mainScoper, nsNode.typeName);
                         if (isNullOrUndefined(resolvedNode)) {
                             LOGGER.error(`Namespace that is defined via a reference ('${nsNode.pathname}') must be resolvable in the parent namespace of '${this._myNode['name']}' (i.e. in ${parentNs._myNode['name']}).`);
@@ -273,7 +273,7 @@ export class FreNamespace {
         // console.log(`getVisibleNodes ${this._myNode.['name']}`)
         visitedNamespaces.push(this);
         const replacements: FreNamespaceInfo[] = mainScoper.alternativeNamespaces(this._myNode);
-        if (!isNullOrUndefined(replacements) && replacements.length > 0) {
+        if (notNullOrUndefined(replacements) && replacements.length > 0) {
             return this.getAlternativeNodes(mainScoper, visitedNamespaces);
         } else {
             // First, add all the declared nodes.
@@ -324,7 +324,7 @@ export class FreNamespace {
      */
     private findParentNamespace(child: FreNamespace): FreNamespace | undefined {
         let owner: FreNode = child._myNode.freOwner();
-        while (!isNullOrUndefined(owner) ) {
+        while (notNullOrUndefined(owner) ) {
             if (FreLanguage.getInstance().classifier(owner.freLanguageConcept()).isNamespace) {
                 return FreNamespace.create(owner as FreNamedNode);
             } else {
@@ -354,7 +354,7 @@ export class FreNamespace {
                 result = node;
             }
         })
-        if (pathname.length > 1 && !isNullOrUndefined(result) && FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
+        if (pathname.length > 1 && notNullOrUndefined(result) && FreLanguage.getInstance().classifier(result.freLanguageConcept()).isNamespace) {
             let currentNamespace: FreNamespace = FreNamespace.create(result);
             // Note that we need to pass the pathname without its first element,
             // and that the base namespace is different from the previous namespace!

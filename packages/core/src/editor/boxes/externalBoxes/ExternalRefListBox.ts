@@ -1,5 +1,5 @@
 import { Box } from "../Box.js";
-import { FreNode, FreNodeReference } from "../../../ast/index.js";
+import type { FreNode, FreNodeReference } from "../../../ast/index.js";
 import { FreUtils } from "../../../util/index.js";
 import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";
 

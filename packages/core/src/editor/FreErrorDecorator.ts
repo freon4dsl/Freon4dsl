@@ -1,7 +1,8 @@
 import {FreError} from "../validator/index.js";
-import {FreNode} from "../ast/index.js";
-import {isNullOrUndefined} from "../util/index.js";
-import { Box, ElementBox, isActionBox, isSelectBox, isTextBox } from "./boxes/index.js"
+import type {FreNode} from "../ast/index.js";
+import {isNullOrUndefined, notNullOrUndefined} from "../util/index.js";
+import type {Box} from "./boxes/index.js";
+import {ElementBox, isActionBox, isSelectBox, isTextBox} from "./boxes/index.js";
 import {FreEditor} from "./FreEditor.js";
 import {FreLogger} from "../logging/index.js";
 import {UndefinedRectangle} from "./ClientRectangleTypes.js";
@@ -65,7 +66,7 @@ export class FreErrorDecorator {
             `setErrorOnElement ${node?.freLanguageConcept()} with id ${node?.freId()}, property: [${propertyName}, ${propertyIndex}]`
         );
         let box: Box = this.myEditor.findBoxForNode(node, propertyName, propertyIndex);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             if (box instanceof ElementBox) {
                 // box is an elementBox, which is not shown, therefore we set the error on its one and only child
                 box = box.children[0];

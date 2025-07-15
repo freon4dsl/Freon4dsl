@@ -1,6 +1,6 @@
-import { FreNode } from "../../ast/index.js";
-import { Box } from "../boxes/index.js";
-import { FreTableDefinition } from "../FreTableDefinition.js";
+import type { FreNode } from "../../ast/index.js";
+import type { Box } from "../boxes/index.js";
+import type { FreTableDefinition } from "../FreTableDefinition.js";
 
 /**
  * Interface for a custom projection.

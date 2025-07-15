@@ -1,5 +1,5 @@
 import { Box, BoxFactory, ElementBox, ExternalPartListBox, HorizontalListBox, VerticalListBox } from "../../boxes/index.js";
-import { FreNode } from "../../../ast/index.js";
+import type { FreNode } from "../../../ast/index.js";
 import { RoleProvider } from "../RoleProvider.js";
 import { FreLanguage } from "../../../language/index.js";
 import { FreBoxProvider, FreProjectionHandler } from "../../projections/index.js";

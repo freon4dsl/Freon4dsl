@@ -1,5 +1,5 @@
 import { jsonAsString } from "../util/index.js";
-import { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
+import type { ConceptFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
 import { InterpreterContext } from "./InterpreterContext.js";
 import { RtObject } from "./runtime/index.js";
 

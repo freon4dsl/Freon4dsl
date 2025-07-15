@@ -2,10 +2,12 @@ import { SelectBox } from "./SelectBox.js";
 import { Box } from "./Box.js";
 import { FreEditor } from "../FreEditor.js";
 import { FreCaret } from "../util/index.js";
-import { FreModelUnit, FreNode, FreNodeReference } from "../../ast/index.js";
+import type { FreModelUnit, FreNode } from "../../ast/index.js";
+import { FreNodeReference } from "../../ast/index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 import { modelUnit } from "../../ast-utils/index.js";
-import {FreLanguage, FreLanguageConcept} from "../../language/index.js";
+import { FreLanguage } from "../../language/index.js";
+import type { FreLanguageConcept } from "../../language/index.js";
 
 export class ReferenceBox extends SelectBox {
     readonly kind: string = "ReferenceBox";
