@@ -145,17 +145,6 @@ export function createIsUniqueRule(data: Partial<IsUniqueRule>): IsUniqueRule {
         result.listExp = data.listExp;
     }
     if (!!data.listpropertyExp) {
-        // // Normally, an expression would refer to a property of the surrounding classifier,
-        // // as in 'self.something' or 'something',
-        // // but here we need a property of type of the elements in the indicated list.
-        // // Therefore, we insert an extra FreVarExp in front of the property expression,
-        // // which refers to the correct classifier. The latter is determined in the checker.
-        // // So the 'self.something' or 'something' becomes 'list.self.something' or 'list.something'.
-        // // NB the first will be flagged as error in the checker.
-        // const xx = new FreVarExp();
-        // xx.name = "list";
-        // xx.location = data.listpropertyExp.location;
-        // xx.applied = data.listpropertyExp;
         result.listpropertyExp = data.listpropertyExp;
     }
     if (!!data.location) {

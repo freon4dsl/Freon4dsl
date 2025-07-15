@@ -29,11 +29,11 @@ describe("Checking the scoper checker", () => {
     test("error messsage should be given", () => {
         if (!!language) {
             try {
-                parser.parse(testdir + "test-correct1.scope");
+                parser.parse(testdir + "test-faulty1.scope");
             } catch (e: unknown) {
                 if (e instanceof Error) {
                     // console.log(e.message + e.stack);
-                    console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                    // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                     expect(e.message).toBe(`checking errors (21).`);
                     expect(checker.errors.includes("Cannot find property 'ff' in classifier 'BB' [file: test-faulty1.scope:28:9].")).toBeTruthy();
                     expect(checker.errors.includes("Cannot find property 'ff' in classifier 'EE' [file: test-faulty1.scope:38:9].")).toBeTruthy();
