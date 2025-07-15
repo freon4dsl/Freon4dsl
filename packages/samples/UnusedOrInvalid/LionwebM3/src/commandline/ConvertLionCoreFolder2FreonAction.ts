@@ -37,7 +37,7 @@ export class ConvertLionCoreFolder2FreonAction extends CommandLineAction {
         const serialzer = new FreLionwebSerializer();
         // const filename = this.metamodelfile.value;
         this.metamodelFolder.values.forEach(mmFile => {
-            if (fs.existsSync(mmFile)) {
+            if (FileUtil.exists(mmFile)) {
                 const stats = fs.statSync(mmFile);
                 if (stats.isDirectory()) {
                     fs.readdirSync(mmFile).forEach(file => {

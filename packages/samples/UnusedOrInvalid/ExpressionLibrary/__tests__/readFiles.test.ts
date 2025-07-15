@@ -1,12 +1,11 @@
+import { FileUtil } from "@freon4dsl/core"
 import { GenericModelSerializer } from "packages/core/src";
-import { FileHandler } from "./FileHandler";
 import { ExpressionLibraryEnvironment } from "../environment/gen/ExpressionLibraryEnvironment";
 import { ExpressionLibraryModelUnitType, LIB_USAGE, ModelUnitMetaType } from "../language/gen";
 
 const writer = ExpressionLibraryEnvironment.getInstance().writer;
 const reader = ExpressionLibraryEnvironment.getInstance().reader;
 const serial: GenericModelSerializer = new GenericModelSerializer();
-const handler = new FileHandler();
 
 function compareReadAndWrittenOclParts(path: string) {
     const unit1 = readFromFile(path, "LibUnit");
@@ -24,7 +23,7 @@ function compareReadAndWrittenOclParts(path: string) {
 
 function readFromFile(filepath: string, metatype: ModelUnitMetaType): ExpressionLibraryModelUnitType {
     // read language file
-    const langSpec = handler.stringFromFile(filepath);
+    const langSpec = FileUtil.stringFromFile(filepath);
     return reader.readFromString(langSpec, metatype, new LIB_USAGE()) as ExpressionLibraryModelUnitType;
 }
 

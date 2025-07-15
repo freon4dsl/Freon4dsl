@@ -1,4 +1,5 @@
 import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
+import { FileUtil } from "../../utils/file-utils/index.js"
 import { ParseLocation } from '../../utils/no-dependencies/index.js';
 import { FreLangExpressionChecker } from "../checking/FreLangExpressionChecker.js";
 import { LanguageExpressionTester } from "./LanguageExpressionTester.js";
@@ -29,7 +30,7 @@ export class LanguageExpressionParser {
     parse(definitionFile: string): LanguageExpressionTester | undefined {
         // LOG2USER.log("FreGenericParser.Parse: " + definitionFile);
         // Check if language file exists
-        if (!fs.existsSync(definitionFile)) {
+        if (!FileUtil.exists(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
             throw new Error("file '" + definitionFile + "' not found.");
         }

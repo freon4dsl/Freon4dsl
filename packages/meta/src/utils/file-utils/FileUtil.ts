@@ -17,9 +17,22 @@ export class FileUtil {
     public static separator(): string {
         return path.sep;
     }
+    
+    /**
+     * Return true if `file` exists in the file system
+     * @param file
+     */
+    public static exists(file: string): boolean {
+        try {
+            fs.statSync(file)
+            return true
+        } catch (e) {
+            return false
+        }
+    }
 
     public static generateManualFile(pathName: string, contents: string, message: string) {
-        if (!fs.existsSync(pathName)) {
+        if (!FileUtil.exists(pathName)) {
             fs.writeFileSync(pathName, contents);
         } else {
             LOGGER.info("freon-generator: user file " + message + " already exists, skipping it.");
@@ -64,7 +77,7 @@ export class FileUtil {
         let current = ".";
         for (const part of parts) {
             current = current + "/" + part;
-            if (!fs.existsSync(current)) {
+            if (!FileUtil.exists(current)) {
                 LOGGER.log("creating folder: [" + dir + "]");
                 fs.mkdirSync(current);
             }
@@ -79,7 +92,7 @@ export class FileUtil {
     public static deleteFilesInDir(dir: string, status: GenerationStatus) {
         LOGGER.log("deleting files from folder: [" + dir + "]");
         const folder = "./" + dir;
-        if (fs.existsSync(folder)) {
+        if (FileUtil.exists(folder)) {
             fs.readdirSync(folder).forEach((file) => {
                 const completePath = path.join(folder, file);
                 if (!fs.lstatSync(completePath).isDirectory()) {
@@ -101,13 +114,13 @@ export class FileUtil {
     public static deleteDirAndContent(dir: string) {
         LOGGER.log("Deleting complete folder and content: [" + dir + "]");
         const folder = "./" + dir;
-        if (fs.existsSync(folder)) {
+        if (FileUtil.exists(folder)) {
             // all files need to be deleted before the folder can be deleted
             // therefore we use the '..Sync' versions of the 'fs' methods
             fs.readdirSync(folder).forEach((file) => {
                 fs.unlinkSync(path.join(folder, file));
             });
-            fs.rmdirSync(folder);
+            fs.rmSync(folder, { recursive: true });
             // } else {
             // LOGGER.error("Could not find folder: [" + folder + "]");
         }
@@ -116,9 +129,9 @@ export class FileUtil {
     public static deleteDirIfEmpty(dir: string) {
         LOGGER.log("Deleting folder only when it is empty: [" + dir + "]");
         const folder = "./" + dir;
-        if (fs.existsSync(folder)) {
+        if (FileUtil.exists(folder)) {
             if (fs.readdirSync(folder).length === 0) {
-                fs.rmdirSync(folder);
+                fs.rmSync(folder);
             } else {
                 LOGGER.info("Folder has content: [" + folder + "]");
             }
@@ -129,7 +142,7 @@ export class FileUtil {
 
     public static deleteFile(filePath: string) {
         LOGGER.log("deleting file: [" + filePath + "]");
-        if (fs.existsSync(filePath)) {
+        if (FileUtil.exists(filePath)) {
             fs.unlinkSync(filePath);
         }
     }
@@ -138,7 +151,7 @@ export class FileUtil {
      * extension: a regular expression to filter the filenames found
      */
     public static findFiles(startPath: string, status: GenerationStatus, extension?: string): string[] {
-        if (!fs.existsSync(startPath)) {
+        if (!FileUtil.exists(startPath)) {
             LOGGER.error("cannot find folder '" + startPath + "'");
             status.numberOfErrors += 1;
             return [];

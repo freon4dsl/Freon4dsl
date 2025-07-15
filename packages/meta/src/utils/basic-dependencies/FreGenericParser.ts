@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import { FileUtil } from "../file-utils/index.js"
 import { Checker } from "./Checker.js";
 import { parser } from 'peggy';
 import { LOG2USER } from "./UserLogger.js";
@@ -23,7 +24,7 @@ export class FreGenericParser<DEFINITION> {
     parse(definitionFile: string): DEFINITION | undefined {
         // LOG2USER.log("FreGenericParser.Parse: " + definitionFile);
         // Check if language file exists
-        if (!fs.existsSync(definitionFile)) {
+        if (!FileUtil.exists(definitionFile)) {
             LOG2USER.error("definition file '" + definitionFile + "' does not exist, exiting.");
             throw new Error("file '" + definitionFile + "' not found.");
         }
@@ -74,7 +75,7 @@ export class FreGenericParser<DEFINITION> {
         this.cleanNonFatalParseErrors();
         // read the files and parse them separately
         for (const file of filePaths) {
-            if (!fs.existsSync(file)) {
+            if (!FileUtil.exists(file)) {
                 LOG2USER.error("definition file '" + file + "' does not exist, exiting.");
                 throw new Error("definition file '" + file + "' does not exist, exiting.");
             } else {

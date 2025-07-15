@@ -1,13 +1,11 @@
 import {OclPart, OctopusModel, UmlPart} from "../language/gen";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
-import { FreModelSerializer } from "@freon4dsl/core";
-import { FileHandler } from "./FileHandler";
+import { FileUtil, FreModelSerializer } from "@freon4dsl/core"
 import {describe, test, expect} from "vitest";
 
 const writer = OctopusModelEnvironment.getInstance().writer;
 const reader = OctopusModelEnvironment.getInstance().reader;
 const serial: FreModelSerializer = new FreModelSerializer();
-const handler = new FileHandler();
 
 function compareReadAndWrittenOclParts(path: string) {
     const unit1 = readFromFile<OclPart>(path, "OclPart");
@@ -24,7 +22,7 @@ function compareReadAndWrittenOclParts(path: string) {
 
 function readFromFile<T>(filepath: string, metatype: string): T {
     // read language file
-    const langSpec = handler.stringFromFile(filepath);
+    const langSpec = FileUtil.stringFromFile('./packages/samples/Octopus/src/__inputs__/' + filepath);
     return reader.readFromString(langSpec, metatype, new OctopusModel()) as T;
 }
 
