@@ -1,6 +1,7 @@
 import {describe, test, expect} from "vitest";
-import { FileUtil, FreError } from "@freon4dsl/core"
-\import { FreStructureDef, FreTyperModel, FreTyperDef } from '../language/gen';
+import { FreError } from "@freon4dsl/core";
+import { FileUtil } from 'test-helpers';
+import { FreStructureDef, FreTyperModel, FreTyperDef } from '../language/gen';
 import { LanguageEnvironment } from '../index.js';
 
 describe("Fre Typer Parser", () => {

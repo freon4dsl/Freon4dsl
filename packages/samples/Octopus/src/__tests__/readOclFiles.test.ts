@@ -1,6 +1,7 @@
 import {OclPart, OctopusModel, UmlPart} from "../language/gen";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
-import { FileUtil, FreModelSerializer } from "@freon4dsl/core"
+import { FreModelSerializer } from "@freon4dsl/core";
+import { FileUtil } from 'test-helpers';
 import {describe, test, expect} from "vitest";
 
 const writer = OctopusModelEnvironment.getInstance().writer;
