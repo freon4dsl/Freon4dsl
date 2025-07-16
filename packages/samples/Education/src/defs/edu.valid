@@ -1,4 +1,4 @@
-validator EduValidator for language Education
+validator for language Education
 
 AndExpression {
     typecheck equalsType( self.left, #PrimitiveType:Boolean );

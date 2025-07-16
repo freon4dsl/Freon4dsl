@@ -71,10 +71,55 @@
     let { editor, box }: FreComponentProps<Box> = $props();
 
     let id: string = $state('');
+    id = !isNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box';
     let element: HTMLElement | undefined = $state(undefined);
-    let selectedCls: string = $state(''); // css class name for when the node is selected
-    let errorCls: string = $state(''); // css class name for when the node is erroneous
-    let errMess: string[] = $state([]); // error message to be shown when element is hovered
+
+    // css class name for when the node is selected
+    let selectedCls: string = $derived.by(() => {
+        LOGGER.log(`Render derived: selectedCls ${box.id}`)
+        // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
+        LOGGER.log(
+          'setCurrentSelectedElement selectedBoxes: [' +
+          selectedBoxes.value.map(
+            (b) => b?.node?.freId() + '=' + b?.node?.freLanguageConcept() + '=' + b?.kind
+          ) +
+          ']'
+        );
+        let isSelected: boolean = selectedBoxes.value.includes(box);
+        // Ensure that the internal textbox inside an Action/Select/Reference box is selected if its parent box is.
+        if (isActionTextBox(box)) {
+            isSelected = isSelected || selectedBoxes.value.includes(box.parent);
+        }
+        if (isActionBox(box) || isSelectBox(box) || isReferenceBox(box)) {
+            isSelected = isSelected || selectedBoxes.value.includes(box._textBox);
+        }
+        if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
+            // do not set extra class, the control itself handles being selected
+            return 'render-component-unselected';
+        } else {
+            return isSelected ? 'render-component-selected' : 'render-component-unselected';
+        }
+    });
+
+    // css class name for when the node is erroneous
+    let errorCls: string = $derived.by(() => {
+        if (!isNullOrUndefined(box) && box.hasError) {
+            return 'render-component-error';
+        } else {
+            return '';
+        }
+    });
+
+    // error message to be shown when element is hovered
+    let errMess: string[]  = $derived.by(() => {
+        if (!isNullOrUndefined(box) && box.hasError) {
+            return box.errorMessages;
+        } else {
+            return [];
+        }
+    });
+
+    // the component to be rendered, if the box represents an external component
     let ExternalComponent: Component<FreComponentProps<any>> | undefined = $state(undefined);
 
     const onClick = (event: MouseEvent) => {
@@ -87,66 +132,28 @@
         event.preventDefault();
         event.stopPropagation();
     };
-    
+
+    // Two separate effects, because they implement non-associated things
     $effect(() => {
-        let selectedChanged = false
-        // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
-        LOGGER.log(
-            'afterUpdate selectedBoxes: [' +
-                selectedBoxes.value.map(
-                    (b) => b?.node?.freId() + '=' + b?.node?.freLanguageConcept() + '=' + b?.kind
-                ) +
-                ']'
-        );
-        let isSelected: boolean = selectedBoxes.value.includes(box);
-        // Ensure that the internal textbox inside an Action/Select/Reference box is selected if its parent box is.
-        if (isActionTextBox(box)) {
-            isSelected = isSelected || selectedBoxes.value.includes(box.parent);
-        }
+        LOGGER.log(`Render effect1: set external component ${box.id}`)
         if (isExternalBox(box)) {
             ExternalComponent = findCustomComponent(box.externalComponentName);
         }
-        if (isActionBox(box) || isSelectBox(box) || isReferenceBox(box)) {
-            isSelected = isSelected || selectedBoxes.value.includes(box._textBox);
-        }
-        if (isBooleanControlBox(box) || isLimitedControlBox(box)) {
-            // do not set extra class, the control itself handles being selected
-        } else {
-            const newSelectedCls = isSelected ? 'render-component-selected' : 'render-component-unselected'
-            selectedChanged = (newSelectedCls !== selectedCls)
-            selectedCls = newSelectedCls
-        }
     });
 
-    const refresh = (why?: string): void => {
-        LOGGER.log('REFRESH RenderComponent (' + why + ')');
-        id = !isNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box';
-        if (!isNullOrUndefined(box) && box.hasError) {
-            errorCls = 'render-component-error';
-            errMess = box.errorMessages;
-        } else {
-            errorCls = '';
-            errMess = [];
-        }
-    };
-    
-    const clientRectangle = (): ClientRectangle => {
-        LOGGER.log(`Render clientRect ${box.id} `)
-        return element?.getBoundingClientRect() || UndefinedRectangle
-    }
-
-    let first = true;
     $effect(() => {
-        // Evaluated and re-evaluated when the box changes.
-        refresh((first ? 'first' : 'later') + '   ' + box?.id);
+        LOGGER.log(`Render effect3: set client rectangle function ${box.id}`)
         if (!isNullOrUndefined(box) && !isTextBox(box) ) {
-            box.getClientRectangle = clientRectangle
+            box.getClientRectangle = (): ClientRectangle => {
+                LOGGER.log(`Render clientRect ${box.id} `)
+                return element?.getBoundingClientRect() || UndefinedRectangle
+            }
         }
-        first = false;
     });
+
 </script>
 
-<!-- TableRows are not included here, because they use the CSS grid and table cells must in HTML
+<!-- TableRows are not included here, because they use the CSS grid and table cells, which must in HTML
      always be directly under the main grid.
 -->
 <!-- ElementBoxes are without span, because they are not shown themselves.

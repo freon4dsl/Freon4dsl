@@ -1,4 +1,4 @@
-validator RulesValidator for language Example
+validator for language Example
 
 IfStatement {
     typecheck equalsType( self.Condition, #PrimitiveType:Boolean );

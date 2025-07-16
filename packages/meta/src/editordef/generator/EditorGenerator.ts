@@ -175,7 +175,7 @@ export class EditorGenerator {
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(`Generated editor with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated editor`);
+            LOGGER.info(`Successfully generated editor`);
         }
     }
 

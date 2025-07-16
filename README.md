@@ -54,9 +54,15 @@ And run all tests  with:
 
 * Go to the `webapp-starter` package.
   - Open the file `package.json
-  - In the _dependencies_ section change the language dependency to your chosen language
+  - In the _dependencies_ section change the language dependency to your chosen language:
+  ```json lines
+  "@freon4dsl/samples-course-schedule": "1.1.0-beta.3",
+  ```
   - Also open the file `src/starter.ts`
-  - Change lines 7 and 8 to import the correct environment from your chosen language package.
+  - Change line 5 to import the correct environment from your chosen language package:
+  ```typescript
+  import { LanguageEnvironment } from "@freon4dsl/samples-course-schedule" 
+  ```
 
 * Go to directory `packages/server` and start the server:
 ```bash

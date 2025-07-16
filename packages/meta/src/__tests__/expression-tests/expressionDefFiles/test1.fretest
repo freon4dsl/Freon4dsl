@@ -18,13 +18,14 @@ AA {
     self.AAprop12; // : DD[];
     self.AAprop13; // : FF; // reference
     self.AAprop14; // : FF[]; // reference
+    self.AAprop12.DDprop8.BBprop5; // : DD[] => BB[] ==> boolean;
 }
 
 BB { // properties with limited concepts as type
-    self.BBprop15;
-    self.BBprop16;
-    self.BBprop17;
-    self.BBprop18;
+    self.BBprop15; // : ZZ;
+    self.BBprop16; // : ZZ[];
+    BBprop17; // : reference ZZ;
+    BBprop18; // : reference ZZ[];
 }
 
 CC {
@@ -32,15 +33,14 @@ CC {
 }
 
 DD {
-    typeof ( self.DDprop7 );
-    typeof ( container );
-    conformsTo( #ZZ:instanceZZ1, self.DDprop1 );
-    conformsTo( container, self.DDprop1 );
-    equalsType( self.DDprop6, #ZZ:instanceZZ2 ) ;
+    self.DDprop7.type ( );
+    self.DDprop8.type ( );
+    owner().if(BB).type (  );
+    owner().type (  );
 }
 
 EE {
-    container;
+    owner();
 }
 
 FF {

@@ -8,8 +8,8 @@ import {
     ScopeDef,
     FreMetaNamespaceInfo, ScopeConceptDef
 } from './FreScopeDefLang.js';
-import { FreLangExpressionCheckerNew } from '../../langexpressions/checking/FreLangExpressionCheckerNew.js';
-import { FreFunctionExp, FreLangExpNew, FreVarExp } from '../../langexpressions/metalanguage/index.js';
+import { FreLangExpressionChecker } from '../../langexpressions/checking/FreLangExpressionChecker.js';
+import { FreFunctionExp, FreLangExp, FreVarExp } from '../../langexpressions/metalanguage/index.js';
 import { Checker, CheckRunner, ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { ReferenceResolver } from '../../languagedef/checking/ReferenceResolver.js';
@@ -21,14 +21,14 @@ const LOGGER = new MetaLogger("ScoperChecker").mute();
 
 export class ScoperChecker extends Checker<ScopeDef> {
     runner: CheckRunner = new CheckRunner(this.errors, this.warnings);
-    myExpressionChecker: FreLangExpressionCheckerNew;
+    myExpressionChecker: FreLangExpressionChecker;
     myNamespaces: FreMetaClassifier[] = [];
 
     constructor(language: FreMetaLanguage) {
         super(language);
         // NB This statement is here to avoid checks on the presence of 'myExpressionChecker'.
         // If 'language' is null or undefined, the 'check' method will not be executed.
-        this.myExpressionChecker = new FreLangExpressionCheckerNew(this.language);
+        this.myExpressionChecker = new FreLangExpressionChecker(this.language);
     }
 
     public check(definition: ScopeDef): void {
@@ -36,7 +36,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         if (this.language === null || this.language === undefined) {
             throw new Error(`Scoper definition checker does not known the language.`);
         } else {
-            this.myExpressionChecker = new FreLangExpressionCheckerNew(this.language);
+            this.myExpressionChecker = new FreLangExpressionChecker(this.language);
         }
         this.runner = new CheckRunner(this.errors, this.warnings);
 
@@ -157,7 +157,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
                     namespaceReplacement.nsInfoList.forEach((nsInfo) => {
                         this.checkNamespaceExpression(nsInfo, enclosingConcept);
                         const myExpression = nsInfo.expression;
-                        let toBeTested: FreLangExpNew | undefined;
+                        let toBeTested: FreLangExp | undefined;
                         if (myExpression instanceof FreVarExp && myExpression.name === Names.nameForSelf) {
                             toBeTested = myExpression.applied;
                         } else {
@@ -179,7 +179,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
         LOGGER.log("Checking namespace expression for " + enclosingConcept?.name);
         const exp = namespaceExpression.expression;
         if (!!exp) {
-            this.myExpressionChecker.checkLangExp(exp, enclosingConcept);
+            this.myExpressionChecker.checkLangExp(exp, enclosingConcept, this.runner);
             const foundClassifier: FreMetaClassifier | undefined = exp.getResultingClassifier();
             // NB It is correct that foundClassifier is undefined, when the last of the expression
             // is either 'owner()' of 'type()', otherwise it is incorrect.

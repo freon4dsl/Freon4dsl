@@ -1,21 +1,19 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { LanguageExpressionParser } from "../../languagedef/parser/LanguageExpressionParser";
-import {
-    FreMetaInstance,
-    FreLangFunctionCallExp,
-    FreLangSelfExp,
-    FreMetaLanguage,
-    FreMetaLimitedConcept,
-} from "../../languagedef/metalanguage/index.js";
-import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { LanguageExpressionTester } from "../../languagedef/parser/LanguageExpressionTester";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
+import { FreMetaLanguage, FreMetaLimitedConcept } from '../../languagedef/metalanguage/index.js';
+import { LanguageExpressionTester } from "../../langexpressions/parser/LanguageExpressionTester.js";
+import { LanguageExpressionParser } from "../../langexpressions/parser/LanguageExpressionParser.js";
 import { describe, test, expect, beforeEach } from "vitest";
+import {
+    FreFunctionExp, FreLimitedInstanceExp,
+    FreVarExp,
+    FreVarOrFunctionExp
+} from '../../langexpressions/metalanguage';
 
-describe("Checking expression on referredElement", () => {
+describe("Checking expression on referredProperty", () => {
     const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
     let language: FreMetaLanguage | undefined;
-    MetaLogger.muteAllLogs();
     // MetaLogger.muteAllErrors();
+    // MetaLogger.muteAllLogs();
 
     beforeEach(() => {
         try {
@@ -27,35 +25,43 @@ describe("Checking expression on referredElement", () => {
         }
     });
 
-    test("referredElement of simple expressions on AA", () => {
+    test("referredProperty of simple expressions on AA", () => {
         const expressionFile = testdir + "test1.fretest";
         if (!!language) {
             const readTest: LanguageExpressionTester | undefined = new LanguageExpressionParser(language).parse(
-                expressionFile,
+                expressionFile
             );
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on AA
-            // tslint:disable-next-line:variable-name
-            const AAconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "AA");
+
+            const AAconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "AA");
             // set of expressions should refer to some concept or interface in the language
             expect(AAconceptExps).not.toBeNull();
             expect(AAconceptExps).not.toBeUndefined();
-            const aaConcept = AAconceptExps!.conceptRef?.referred;
+            const aaConcept = AAconceptExps!.classifierRef?.referred;
             expect(aaConcept).not.toBeNull();
+            expect(aaConcept).not.toBeUndefined();
             // for each expression in the set, it should refer to a property of 'AA'
             AAconceptExps!.exps.forEach((exp) => {
-                expect(exp.$referredElement.referred === aaConcept);
-                const prop = exp.appliedfeature?.$referredElement?.referred;
-                expect(prop).not.toBeNull();
-                expect(aaConcept.allProperties().includes(prop));
+                const last = exp.getLastExpression();
+                if (last instanceof FreVarOrFunctionExp) {
+                    expect(last.referredClassifier === aaConcept);
+                    const prop = last.referredProperty;
+                    expect(prop).not.toBeNull();
+                    expect(prop).not.toBeUndefined();
+                    expect(aaConcept.allProperties().includes(prop));
+                    // console.log(last.previous.referredProperty?.isList)
+                } else {
+                    console.log("Error");
+                }
             });
         } else {
             console.log("Language not present");
         }
     });
 
-    test("referredElement of simple expressions on BB", () => {
+    test("referredProperty of simple expressions on BB", () => {
         const expressionFile = testdir + "test1.fretest";
         if (!!language) {
             const readTest: LanguageExpressionTester | undefined = new LanguageExpressionParser(language).parse(
@@ -64,28 +70,32 @@ describe("Checking expression on referredElement", () => {
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on BB
-            // tslint:disable-next-line:variable-name
-            const BBconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "BB");
+            const BBconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "BB");
             // set of expressions should refer to some concept or interface in the language
             expect(BBconceptExps).not.toBeNull();
             expect(BBconceptExps).not.toBeUndefined();
-            const bbConcept = BBconceptExps!.conceptRef?.referred;
+            const bbConcept = BBconceptExps!.classifierRef?.referred;
             expect(bbConcept).not.toBeNull();
             expect(bbConcept).not.toBeUndefined();
             // for each expression in the set, it should refer to a property of 'BB'
             BBconceptExps!.exps.forEach((exp) => {
-                expect(exp.$referredElement.referred === bbConcept);
-                const prop = exp.appliedfeature?.$referredElement?.referred;
-                expect(prop).not.toBeNull();
-                expect(prop).not.toBeUndefined();
-                expect(bbConcept.allProperties().includes(prop));
+                const last = exp.getLastExpression();
+                if (last instanceof FreVarOrFunctionExp) {
+                    expect(last.referredClassifier === bbConcept);
+                    const prop = last.referredProperty;
+                    expect(prop).not.toBeNull();
+                    expect(prop).not.toBeUndefined();
+                    expect(bbConcept.allProperties().includes(prop));
+                } else {
+                    console.log("Error");
+                }
             });
         } else {
             console.log("Language not present");
         }
     });
 
-    test("referredElement of limited concept expressions in CC", () => {
+    test("referredProperty of limited concept expressions in CC", () => {
         const expressionFile = testdir + "test1.fretest";
         if (!!language) {
             const readTest: LanguageExpressionTester | undefined = new LanguageExpressionParser(language).parse(
@@ -95,7 +105,7 @@ describe("Checking expression on referredElement", () => {
             expect(readTest).not.toBeUndefined();
             // check expressions on CC
             // tslint:disable-next-line:variable-name
-            const CCconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "CC");
+            const CCconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "CC");
             // set of expressions should refer to some concept or interface in the language
             expect(CCconceptExps).not.toBeNull();
             expect(CCconceptExps).not.toBeUndefined();
@@ -105,18 +115,22 @@ describe("Checking expression on referredElement", () => {
             expect(zzConcept instanceof FreMetaLimitedConcept);
             // for each expression in the set, it should refer to a predefined instance of 'ZZ'
             CCconceptExps!.exps.forEach((exp) => {
-                expect(exp.$referredElement?.referred === zzConcept);
-                const freInstance = exp.$referredElement.referred;
-                expect(freInstance).not.toBeNull();
-                expect(freInstance instanceof FreMetaInstance);
-                expect((zzConcept as FreMetaLimitedConcept).instances.includes(freInstance as FreMetaInstance));
+                const last = exp.getLastExpression();
+                if (last instanceof FreLimitedInstanceExp) {
+                    expect(last.referredClassifier === zzConcept);
+                    const freInstance = last.referredInstance;
+                    expect(freInstance).not.toBeNull();
+                    expect((zzConcept as FreMetaLimitedConcept).instances.includes(freInstance));
+                } else {
+                    console.log("Error: ", exp.constructor.name);
+                }
             });
         } else {
             console.log("Language not present");
         }
     });
 
-    test("referredElement of other kinds of expressions in DD", () => {
+    test("referredProperty of other kinds of expressions in DD", () => {
         const expressionFile = testdir + "test1.fretest";
         if (!!language) {
             const readTest: LanguageExpressionTester | undefined = new LanguageExpressionParser(language).parse(
@@ -125,22 +139,19 @@ describe("Checking expression on referredElement", () => {
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on DD
-            // tslint:disable-next-line:variable-name
-            const DDconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "DD");
+            const DDconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "DD");
             expect(DDconceptExps).not.toBeNull();
             expect(DDconceptExps).not.toBeUndefined();
-            // for each expression in the set, it should refer to a function
+            const ddConcept = DDconceptExps!.classifierRef?.referred;
+            expect(ddConcept).not.toBeNull();
+            expect(ddConcept).not.toBeUndefined();
             DDconceptExps!.exps.forEach((exp) => {
-                expect(exp instanceof FreLangFunctionCallExp);
-                expect(exp.$referredElement).toBeUndefined();
-                expect((exp as FreLangFunctionCallExp).actualparams.length > 0);
-                // every actual parameter should refer to a property, a predefined instance, or to 'owner'
-                (exp as FreLangFunctionCallExp).actualparams.forEach((param) => {
-                    if (param.sourceName !== "container") {
-                        expect(param.$referredElement?.referred).not.toBeNull();
-                        expect(param.$referredElement?.referred).not.toBeUndefined();
-                    }
-                });
+                const last = exp.getLastExpression();
+                // for each expression in the set, it should refer to a function
+                expect(last instanceof FreFunctionExp);
+                // for each expression in the set, the resulting classifier is unknown
+                // ('type()' leaves an undefined result)
+                expect(last.getResultingClassifier()).toBeUndefined();
             });
         } else {
             console.log("Language not present");
@@ -156,19 +167,29 @@ describe("Checking expression on referredElement", () => {
             expect(readTest).not.toBeNull();
             expect(readTest).not.toBeUndefined();
             // check expressions on FF
-            // tslint:disable-next-line:variable-name
-            const FFconceptExps = readTest!.conceptExps.find((ce) => ce.conceptRef.name === "FF");
+            const FFconceptExps = readTest!.conceptExps.find((ce) => ce.classifierRef.name === "FF");
             expect(FFconceptExps).not.toBeNull();
             expect(FFconceptExps).not.toBeUndefined();
-            const ffConcept = FFconceptExps!.conceptRef?.referred;
+            const ffConcept = FFconceptExps!.classifierRef?.referred;
             expect(ffConcept).not.toBeNull();
-            // the only expression in the set is an appliedFeature
-            // its reference should be set correctly
+            // the only expression in the set is an applied feature
+            // its reference should be set correctly, as well as all references in between
             const aaConcept = language.findConcept("AA");
             FFconceptExps!.exps.forEach((exp) => {
-                expect(exp instanceof FreLangSelfExp);
-                expect(exp.$referredElement.referred === ffConcept);
-                const elem = exp.findRefOfLastAppliedFeature();
+                // the first is 'self', handle this differently
+                expect(exp instanceof FreVarExp);
+                expect((exp as FreVarExp).referredClassifier === ffConcept);
+                // check all expressions in the series
+                let nextExp = (exp as FreVarExp).applied;
+                while (!!nextExp) {
+                    expect(nextExp instanceof FreVarExp);
+                    expect((nextExp as FreVarExp).referredProperty).not.toBeNull();
+                    expect((nextExp as FreVarExp).referredProperty).not.toBeUndefined();
+                    nextExp = nextExp.applied;
+                }
+                const last = exp.getLastExpression();
+                expect(last instanceof FreVarExp);
+                const elem = (last as FreVarExp).referredProperty;
                 expect(elem).not.toBeNull();
                 expect(elem).not.toBeUndefined();
                 expect(elem!.name === "aa");

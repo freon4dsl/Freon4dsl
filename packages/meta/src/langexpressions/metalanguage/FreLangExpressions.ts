@@ -12,13 +12,14 @@ import {
     FreMetaPrimitiveType,
     FreMetaConcept
 } from '../../languagedef/metalanguage/index.js';
+import { MetaFunctionNames } from '../../utils/no-dependencies/index.js';
 
 // Some properties of the classes defined here are marked @ts-ignore to avoid the error:
 // TS2564: ... has no initializer and is not definitely assigned in the constructor.
 // These properties need to be undefined during parsing and checking. After the checking process
 // has been executed without errors, we can assume that these properties are initialized.
 
-export abstract class FreLangExpNew extends FreMetaLangElement {
+export abstract class FreLangExp extends FreMetaLangElement {
     // @ts-ignore
     language: FreMetaLanguage; // the language for which this expression is defined
 
@@ -26,7 +27,7 @@ export abstract class FreLangExpNew extends FreMetaLangElement {
      * Returns a string that is equal to the input of the parser for this expression.
      */
     toFreString(): string {
-        return 'SHOULD BE IMPLEMENTED BY SUBCLASSES OF "FreLangExpressionsNew.FreLangExpNew"';
+        return 'SHOULD BE IMPLEMENTED BY SUBCLASSES OF "FreLangExpressions.FreLangExp"';
     }
 
     /**
@@ -39,10 +40,19 @@ export abstract class FreLangExpNew extends FreMetaLangElement {
 
     /**
      * Returns true if this expression refers to a property and that property is a 'part' (not a 'reference').
+     * Also returns true if this expression is one of the functions 'owner', 'type, or 'if'.
      */
     getIsPart(): boolean {
         // only overridden by FreVarExp, it's result depends on the property it may refer to
-        return true;
+        return false;
+    }
+
+    /**
+     * Returns true if this expression refers to a property and that property is a list.
+     */
+    getIsList(): boolean {
+        // only overridden by FreVarExp, it's result depends on the property it may refer to
+        return false;
     }
 
     /**
@@ -56,13 +66,13 @@ export abstract class FreLangExpNew extends FreMetaLangElement {
     /**
      * Returns the last of the applied expressions.
      */
-    getLastExpression(): FreLangExpNew {
+    getLastExpression(): FreLangExp {
         // should be overridden by all subclasses that can have an applied expression
         return this;
     }
 }
 
-export abstract class FreVarOrFunctionExp extends FreLangExpNew {
+export abstract class FreVarOrFunctionExp extends FreLangExp {
     // @ts-ignore
     name: string;
     applied: FreVarOrFunctionExp | undefined;
@@ -101,7 +111,7 @@ export abstract class FreVarOrFunctionExp extends FreLangExpNew {
         return undefined;
     }
 
-    getLastExpression(): FreLangExpNew {
+    getLastExpression(): FreLangExp {
         if (this.applied) {
             return this.applied.getLastExpression();
         } else {
@@ -149,6 +159,13 @@ export class FreVarExp extends FreVarOrFunctionExp {
     toErrorString(): string {
         return this.name;
     }
+
+    getIsList() {
+        if (this.$referredProperty) {
+            return this.referredProperty?.isList;
+        }
+        return true;
+    }
 }
 
 /**
@@ -156,7 +173,7 @@ export class FreVarExp extends FreVarOrFunctionExp {
  */
 export class FreFunctionExp extends FreVarOrFunctionExp {
     // @ts-ignore
-    param: FreLangExpNew | undefined;
+    param: FreLangExp | undefined;
     possibleClassifiers: FreMetaClassifier[] = [];
 
     toFreString(): string {
@@ -170,12 +187,20 @@ export class FreFunctionExp extends FreVarOrFunctionExp {
     getLocalClassifier(): FreMetaClassifier | undefined {
         return this.referredClassifier;
     }
+
+    getIsPart(): boolean {
+        // None of these functions result ina FreNodeReference object
+        if (this.name === MetaFunctionNames.ownerFunc || this.name === MetaFunctionNames.ifFunc || this.name === MetaFunctionNames.typeFunc) {
+            return true;
+        }
+        return false;
+    }
 }
 
 /**
  * This class represents an expression that refers to an instance of a limited concept.
  */
-export class FreLimitedInstanceExp extends FreLangExpNew {
+export class FreLimitedInstanceExp extends FreLangExp {
     conceptName: string = ''; // should be the name of a limited concept
     instanceName: string = ''; // should be the name of one of the predefined instances of 'sourceName'
     // @ts-ignore
@@ -213,7 +238,7 @@ export class FreLimitedInstanceExp extends FreLangExpNew {
 /**
  * This class represents a simple expression, currently just a number.
  */
-export class FreLangSimpleExpNew extends FreLangExpNew {
+export class FreLangSimpleExp extends FreLangExp {
     // @ts-ignore
     value: number;
 

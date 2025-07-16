@@ -97,7 +97,7 @@ export class ScoperGenerator {
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(`Generated scoper with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated scoper`);
+            LOGGER.info(`Successfully generated scoper`);
         }
     }
 

@@ -1,5 +1,4 @@
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { setCurrentFileName as expressionFileName } from "../../languagedef/parser/ExpressionCreators.js";
 import { Names } from "../../utils/on-lang/index.js";
 import { ParseLocationUtil, FreGenericParser } from "../../utils/basic-dependencies/index.js";
 import {
@@ -122,7 +121,6 @@ export class FreEditParser extends FreGenericParser<FreEditUnit> {
 
     protected setCurrentFileName(file: string) {
         editFileName(file);
-        expressionFileName(file);
     }
 
     protected getNonFatalParseErrors(): string[] {

@@ -1,4 +1,4 @@
-validator Demo for language Demo
+validator for language Demo
 
 DemoModel {
     notEmpty self.entities;

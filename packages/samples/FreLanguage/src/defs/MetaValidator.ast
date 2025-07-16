@@ -8,11 +8,11 @@ modelunit FreValidatorDef {
 //    location: ParseLocation;
 //    validatorName: string;
     languageName: identifier;
-    conceptRules: ConceptRuleSet[];
+    classifierRules: ClassifierRuleSet[];
     file-extension = "valid";
 }
 
-concept ConceptRuleSet {
+concept ClassifierRuleSet {
 //    location: ParseLocation;
     reference classifierRef: FreConcept;
     rules: ValidationRule[];
@@ -29,13 +29,13 @@ concept ValidationMessage {
 }
 
 concept CheckEqualsTypeRule base ValidationRule {
-    type1: FreLangExp;
-    type2: FreLangExp;
+    type1Exp: FreLangExp;
+    type2Exp: FreLangExp;
 }
 
 concept CheckConformsRule base ValidationRule {
-    type1: FreLangExp;
-    type2: FreLangExp;
+    type1Exp: FreLangExp;
+    type2Exp: FreLangExp;
 }
 
 concept ExpressionRule base ValidationRule {

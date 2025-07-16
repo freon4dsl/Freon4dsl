@@ -139,7 +139,7 @@ export class FreonTyperGenerator {
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(`Generated typer with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated typer`);
+            LOGGER.info(`Successfully generated typer`);
         }
     }
 

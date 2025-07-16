@@ -23,10 +23,6 @@ export class NamesForEditor {
         return "get" + this.startWithUpperCase(proj.name);
     }
 
-    public static tabelDefinitionFunctionNew(projectionName: string): string {
-        return "getRowFor" + this.startWithUpperCase(projectionName);
-    }
-
     public static tableHeadersMethod(proj: FreEditTableProjection): string {
         return "getHeadersFor" + this.startWithUpperCase(proj.name);
     }
