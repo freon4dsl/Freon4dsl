@@ -141,7 +141,7 @@ export class ServerCommunicationOld implements IServerCommunication {
      */
     async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
         LOGGER.log(`ServerCommunicationOld.loadUnitList`);
-        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getModelUnitList`, `folder=${modelName}`);
+        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, `folder=${modelName}`);
         if (!!modelUnits) {
             return modelUnits.map((u) => {
                 // The information the unit's type is not available. This is not a problem

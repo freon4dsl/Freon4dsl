@@ -108,7 +108,7 @@ export class ServerCommunication implements IServerCommunication {
                 languages: collectUsedLanguages(model),
                 nodes: model,
             };
-            await this.putWithTimeout(`saveModelUnit`, output, {model:modelName,unit: unitId.name});
+            await this.putWithTimeout(`putModelUnit`, output, {model:modelName,unit: unitId.name});
         } else {
             LOGGER.error(
                 "Name of Unit '" +
@@ -167,7 +167,7 @@ export class ServerCommunication implements IServerCommunication {
      */
     async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
         LOGGER.log(`ServerCommunication.loadUnitList`);
-        let modelUnits: string[] = await this.getWithTimeout<string[]>(`getModelUnitList`, {model: modelName });
+        let modelUnits: string[] = await this.getWithTimeout<string[]>(`getUnitList`, {model: modelName });
         if (!!modelUnits) {
             return modelUnits.map((u) => {
                 // The information the unit's type is not available. This is not a problem

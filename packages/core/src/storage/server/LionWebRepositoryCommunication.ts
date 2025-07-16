@@ -174,13 +174,12 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
             const res = await this.client.bulk.retrieve([unit.id]);
             if (!!res) {
                 try {
-                    console.log(JSON.stringify(res, null, 2));
+                    LOGGER.log(JSON.stringify(res, null, 2));
                     let unit = this.lionweb_serial.toTypeScriptInstance(res.body.chunk);
                     return unit as FreNode;
                 } catch (e) {
-                    LOGGER.error("loadModelUnit, " + e.message);
+                    LOGGER.error("loadModelUnit, " + e.message + e.stack);
                     this.onError(e.message, FreErrorSeverity.NONE);
-                    console.log(e.stack);
                 }
             }
         }
