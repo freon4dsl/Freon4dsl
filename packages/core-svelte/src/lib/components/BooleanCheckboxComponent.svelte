@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { CHECKBOX_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { CHECKBOX_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a boolean value as checkbox.
      */
     import { BooleanControlBox, isNullOrUndefined } from '@freon4dsl/core';
-    import { componentId } from '$lib/index.js';
+    import { componentId } from '../index.js';
     import { onMount } from 'svelte';
     import '@material/web/checkbox/checkbox.js';
     import { MdCheckbox } from '@material/web/checkbox/checkbox.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
     let { editor, box }: FreComponentProps<BooleanControlBox> = $props();

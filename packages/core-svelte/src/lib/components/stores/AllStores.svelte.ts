@@ -1,5 +1,6 @@
 import ContextMenu from '$lib/components/ContextMenu.svelte';
 import type { Box, ListElementInfo } from '@freon4dsl/core';
+import { writable } from 'svelte/store';
 
 export type GridIndex = { row: number; column: number };
 export class ViewportSizes {
@@ -33,3 +34,5 @@ export const draggedFrom: { value: string } = $state({ value: '' });
 export const activeElem: { value: GridIndex | undefined } = $state({ value: undefined });
 // id of the svelte component that contains the 'active' element
 export const activeIn: { value: string } = $state({ value: '' });
+
+export const viewport = writable(new ViewportSizes());

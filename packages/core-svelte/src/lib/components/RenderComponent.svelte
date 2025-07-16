@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { RENDER_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { RENDER_LOGGER } from './ComponentLoggers.js';
     import { tick } from "svelte"
     // This component renders any box from the box model.
     // Depending on the box type the right component is used.
@@ -37,33 +37,33 @@
         isActionTextBox,
         isNullOrUndefined, type ClientRectangle, UndefinedRectangle
     } from "@freon4dsl/core"
-    import MultiLineTextComponent from '$lib/components/MultiLineTextComponent.svelte';
-    import EmptyLineComponent from '$lib/components/EmptyLineComponent.svelte';
-    import GridComponent from '$lib/components/GridComponent.svelte';
-    import IndentComponent from '$lib/components/IndentComponent.svelte';
-    import LabelComponent from '$lib/components/LabelComponent.svelte';
-    import LayoutComponent from '$lib/components/LayoutComponent.svelte';
-    import ListComponent from '$lib/components/ListComponent.svelte';
-    import OptionalComponent from '$lib/components/OptionalComponent.svelte';
-    import TableComponent from '$lib/components/TableComponent.svelte';
-    import TextComponent from '$lib/components/TextComponent.svelte';
-    import TextDropdownComponent from '$lib/components/TextDropdownComponent.svelte';
-    import SvgComponent from '$lib/components/SvgComponent.svelte';
-    import ElementComponent from '$lib/components//ElementComponent.svelte';
-    import BooleanCheckboxComponent from '$lib/components/BooleanCheckboxComponent.svelte';
-    import BooleanRadioComponent from '$lib/components/BooleanRadioComponent.svelte';
-    import InnerSwitchComponent from '$lib/components/BooleanInnerSwitchComponent.svelte';
-    import NumericSliderComponent from '$lib/components/NumericSliderComponent.svelte';
-    import LimitedCheckboxComponent from '$lib/components/LimitedCheckboxComponent.svelte';
-    import LimitedRadioComponent from '$lib/components/LimitedRadioComponent.svelte';
-    import SwitchComponent from '$lib/components/BooleanSwitchComponent.svelte';
-    import ButtonComponent from '$lib/components/ButtonComponent.svelte';
-    import FragmentComponent from '$lib/components/FragmentComponent.svelte';
-    import { componentId, findCustomComponent } from '$lib/index.js';
+    import MultiLineTextComponent from './MultiLineTextComponent.svelte';
+    import EmptyLineComponent from './EmptyLineComponent.svelte';
+    import GridComponent from './GridComponent.svelte';
+    import IndentComponent from './IndentComponent.svelte';
+    import LabelComponent from './LabelComponent.svelte';
+    import LayoutComponent from './LayoutComponent.svelte';
+    import ListComponent from './ListComponent.svelte';
+    import OptionalComponent from './OptionalComponent.svelte';
+    import TableComponent from './TableComponent.svelte';
+    import TextComponent from './TextComponent.svelte';
+    import TextDropdownComponent from './TextDropdownComponent.svelte';
+    import SvgComponent from './SvgComponent.svelte';
+    import ElementComponent from './ElementComponent.svelte';
+    import BooleanCheckboxComponent from './BooleanCheckboxComponent.svelte';
+    import BooleanRadioComponent from './BooleanRadioComponent.svelte';
+    import InnerSwitchComponent from './BooleanInnerSwitchComponent.svelte';
+    import NumericSliderComponent from './NumericSliderComponent.svelte';
+    import LimitedCheckboxComponent from './LimitedCheckboxComponent.svelte';
+    import LimitedRadioComponent from './LimitedRadioComponent.svelte';
+    import SwitchComponent from './BooleanSwitchComponent.svelte';
+    import ButtonComponent from './ButtonComponent.svelte';
+    import FragmentComponent from './FragmentComponent.svelte';
+    import { componentId, findCustomComponent } from '../index.js';
 
-    import ErrorMarker from '$lib/components/ErrorMarker.svelte';
-    import { selectedBoxes } from '$lib/components/stores/AllStores.svelte.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import ErrorMarker from './ErrorMarker.svelte';
+    import { selectedBoxes } from './stores/AllStores.svelte.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import type { Component } from 'svelte';
 
     const LOGGER = RENDER_LOGGER;
@@ -76,7 +76,7 @@
 
     // css class name for when the node is selected
     let selectedCls: string = $derived.by(() => {
-        LOGGER.log(`Render derived: selectedCls ${box.id}`)
+        LOGGER.log(`Render derived: selectedCls ${box?.id}`)
         // the following is done in the afterUpdate(), because then we are sure that all boxes are rendered by their respective components
         LOGGER.log(
           'setCurrentSelectedElement selectedBoxes: [' +
@@ -135,14 +135,14 @@
 
     // Two separate effects, because they implement non-associated things
     $effect(() => {
-        LOGGER.log(`Render effect1: set external component ${box.id}`)
+        LOGGER.log(`Render effect1: set external component ${box?.id}`)
         if (isExternalBox(box)) {
             ExternalComponent = findCustomComponent(box.externalComponentName);
         }
     });
 
     $effect(() => {
-        LOGGER.log(`Render effect3: set client rectangle function ${box.id}`)
+        LOGGER.log(`Render effect2: set client rectangle function ${box?.id}`)
         if (!isNullOrUndefined(box) && !isTextBox(box) ) {
             box.getClientRectangle = (): ClientRectangle => {
                 LOGGER.log(`Render clientRect ${box.id} `)
@@ -169,7 +169,7 @@
     <!--	svelte-ignore a11y_click_events_have_key_events -->
     <span
         {id}
-        class="render-component {errorCls} {selectedCls} "
+        class="render-component {errorCls} {selectedCls}"
         onclick={onClick}
         bind:this={element}
         role="group"

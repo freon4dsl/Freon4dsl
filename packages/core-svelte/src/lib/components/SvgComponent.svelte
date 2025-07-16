@@ -1,9 +1,9 @@
 <script lang="ts">
     import { isNullOrUndefined, type SvgBox } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import { componentId } from '$lib';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import { LABEL_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { componentId } from '../index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
+    import { LABEL_LOGGER } from './ComponentLoggers.js';
 
     let { box }: FreComponentProps<SvgBox> = $props();
 

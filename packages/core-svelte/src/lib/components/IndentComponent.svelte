@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { INDENT_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { INDENT_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component indents the child of its (Indent)Box.
@@ -8,8 +8,8 @@
     import { Box, isNullOrUndefined } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
     import type { IndentBox } from '@freon4dsl/core';
-    import { componentId } from '$lib';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { componentId } from '../index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
     let { editor, box }: FreComponentProps<IndentBox> = $props();

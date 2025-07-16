@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { OPTIONAL_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { OPTIONAL_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component display an optional part. It either shows the content of the
@@ -7,8 +7,8 @@
      */
     import RenderComponent from './RenderComponent.svelte';
     import { OptionalBox2, Box, isNullOrUndefined } from '@freon4dsl/core';
-    import { componentId } from '$lib';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { componentId } from '../index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
     let { editor, box }: FreComponentProps<OptionalBox2> = $props();

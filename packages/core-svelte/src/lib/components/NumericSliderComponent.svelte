@@ -1,10 +1,11 @@
 <script lang="ts">
     import '@material/web/slider/slider.js';
-    import { NUMERICSLIDER_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { NUMERICSLIDER_LOGGER } from './ComponentLoggers.js';
     import { MdSlider } from '@material/web/slider/slider.js';
-    import { isNullOrUndefined, NumberControlBox } from '@freon4dsl/core';
+    import { isNullOrUndefined } from '@freon4dsl/core';
+    import type { NumberControlBox } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     const LOGGER = NUMERICSLIDER_LOGGER;
 

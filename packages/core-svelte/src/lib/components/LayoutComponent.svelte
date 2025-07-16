@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LAYOUT_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { LAYOUT_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a list of various boxes (no 'true' list). It can be shown
@@ -8,9 +8,9 @@
      */
     import RenderComponent from './RenderComponent.svelte';
     import { Box, FreLogger, ListDirection, LayoutBox, isNullOrUndefined } from '@freon4dsl/core';
-    import { componentId } from '$lib/index.js';
-    import ErrorMarker from '$lib/components/ErrorMarker.svelte';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { componentId } from '../index.js';
+    import ErrorMarker from './ErrorMarker.svelte';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
     let { editor, box }: FreComponentProps<LayoutBox> = $props();

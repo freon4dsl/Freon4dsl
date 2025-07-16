@@ -10,9 +10,9 @@ import {
     isNullOrUndefined,
     TextBox
 } from '@freon4dsl/core';
-import { executeCustomKeyboardShortCut } from '$lib/components/svelte-utils/CommonFunctions.js';
-import { shouldBeHandledByBrowser } from '$lib/components/stores/AllStores.svelte.js';
-import type { CaretDetails } from '$lib/components/svelte-utils/CaretDetails';
+import { executeCustomKeyboardShortCut } from './CommonFunctions.js';
+import { shouldBeHandledByBrowser } from '../stores/AllStores.svelte.js';
+import type { CaretDetails } from './CaretDetails';
 
 const LOGGER = new FreLogger('TextComponentHelper');
 

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { type SelectOption } from '@freon4dsl/core';
-    import { DROPDOWN_LOGGER } from '$lib/components/ComponentLoggers.js';
-    import type { DropdownProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { DROPDOWN_LOGGER } from './ComponentLoggers.js';
+    import type { DropdownProps } from './svelte-utils/FreComponentProps.js';
 
     let {
         options = $bindable(),
@@ -27,7 +27,7 @@
                     class="dropdown-component-item"
                     class:dropdown-component-selected={options.length === 1 ||
                         option.id === selected?.id}
-                    onmousedown={(event) => {
+                        onmousedown={(event) => {
                         event.preventDefault();
                         event.stopPropagation();
                         handleClick(option);

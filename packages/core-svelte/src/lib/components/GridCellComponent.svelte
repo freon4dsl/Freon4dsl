@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { GRIDCELL_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { GRIDCELL_LOGGER } from './ComponentLoggers.js';
     import { isMetaKey, ENTER, Box, isNullOrUndefined, type GridCellBox } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
-    import { componentId, dummyBox, executeCustomKeyboardShortCut, isOdd } from '$lib';
-    import type { GridCellProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { componentId, dummyBox, executeCustomKeyboardShortCut, isOdd } from '../index.js';
+    import type { GridCellProps } from './svelte-utils/FreComponentProps.js';
 
     // properties
     let { editor, box, parentBox }: GridCellProps<GridCellBox> = $props();

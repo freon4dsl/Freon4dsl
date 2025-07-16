@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LIST_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { LIST_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a list of elements that have the same type (a 'true' list).
@@ -30,8 +30,8 @@
         ENTER
     } from "@freon4dsl/core"
     import RenderComponent from './RenderComponent.svelte';
-    import { componentId, rememberDraggedNode } from '$lib/index.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { componentId, rememberDraggedNode } from '../index.js';
+    import type { ListProps } from './svelte-utils/FreComponentProps.js';
     import {
         activeElem,
         activeIn,
@@ -39,7 +39,7 @@
         contextMenuVisible,
         draggedElem,
         draggedFrom
-    } from '$lib/components/stores/AllStores.svelte.js';
+    } from './stores/AllStores.svelte.js';
     import DragHandle from "$lib/components/images/DragHandle.svelte";
 
     // Props

@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { LABEL_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { LABEL_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a piece of non-editable text.
      */
     import { onMount } from 'svelte';
     import { isNullOrUndefined, LabelBox } from '@freon4dsl/core';
-    import { componentId } from '$lib';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { componentId } from '../index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     let { box }: FreComponentProps<LabelBox> = $props();
 

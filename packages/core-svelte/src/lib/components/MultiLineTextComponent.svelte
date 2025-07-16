@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { MULTILINETEXT_LOGGER } from '$lib/components/ComponentLoggers.js';
-    import { componentId } from '$lib/index.js';
+    import { MULTILINETEXT_LOGGER } from './ComponentLoggers.js';
+    import { componentId } from '../index.js';
     import { isNullOrUndefined, MultiLineTextBox } from '@freon4dsl/core';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Probably needed to code/encode HTML inside <TextArea>
     // import { replaceHTML } from "./svelte-utils/index.js";
@@ -16,7 +16,7 @@
     let id: string = $state(''); // an id for the html element
     id = !isNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box';
     let textArea: HTMLTextAreaElement; // the text area element on the screen
-    let placeholder: string = $state('<..>'); // the placeholder when value of text component is not present
+    const placeholder = $derived(() => box.placeHolder);
     let text: string = $state('');
 
     /**
@@ -24,7 +24,6 @@
     $effect(() => {
         // runs after the initial onMount
         LOGGER.log('Start afterUpdate id: ' + id);
-        placeholder = box.placeHolder;
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
     });
@@ -55,7 +54,6 @@
 
     const refresh = () => {
         LOGGER.log('REFRESH ' + box?.node?.freId() + ' (' + box?.node?.freLanguageConcept() + ')');
-        placeholder = box.placeHolder;
         text = box.getText();
     };
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { RADIO_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { RADIO_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a boolean value as checkbox.
@@ -17,7 +17,7 @@
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
     import { MdRadio } from '@material/web/all.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     const LOGGER = RADIO_LOGGER;
 

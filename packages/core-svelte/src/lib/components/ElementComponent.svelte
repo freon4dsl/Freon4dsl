@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { ELEMENT_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { ELEMENT_LOGGER } from './ComponentLoggers.js';
     import RenderComponent from './RenderComponent.svelte';
     import { Box, ElementBox, isNullOrUndefined } from '@freon4dsl/core';
-    import { componentId } from '$lib';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { componentId } from '../index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     let { editor, box }: FreComponentProps<ElementBox> = $props();
 

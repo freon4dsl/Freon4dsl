@@ -3,9 +3,9 @@
 <!-- (cursor or selected text), when the switch is being made. -->
 
 <script lang="ts">
-    import { TEXT_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { TEXT_LOGGER } from './ComponentLoggers.js';
     import { onMount, tick } from 'svelte';
-    import { componentId, replaceHTML } from '$lib/components/svelte-utils/index.js';
+    import { componentId, replaceHTML } from './svelte-utils/index.js';
     import {
         ActionBox,
         ALT,
@@ -29,11 +29,11 @@
         TAB,
         TextBox, UndefinedRectangle
     } from "@freon4dsl/core"
-    import { TextComponentHelper } from '$lib/components/svelte-utils/TextComponentHelper.js';
-    import ErrorTooltip from '$lib/components/ErrorTooltip.svelte';
-    import ErrorMarker from '$lib/components/ErrorMarker.svelte';
-    import type { TextComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import {contextMenu} from "$lib/components/stores/AllStores.svelte";
+    import { TextComponentHelper } from './svelte-utils/TextComponentHelper.js';
+    import ErrorTooltip from './ErrorTooltip.svelte';
+    import ErrorMarker from './ErrorMarker.svelte';
+    import type { TextComponentProps } from './svelte-utils/FreComponentProps.js';
+    import {contextMenu} from "./stores/AllStores.svelte";
 
     const LOGGER = TEXT_LOGGER;
 
@@ -157,6 +157,7 @@
         LOGGER.log(`setFocus for ${box?.id} ${isEditing} && ${inputElement}`);
         if (isEditing && !isNullOrUndefined(inputElement)) {
             inputElement.focus();
+            inputElement.select(); // selects all the text in the <input> element.
         } else {
             // set the local variables, then the inputElement will be shown
             await startEditing('editor');
@@ -242,7 +243,7 @@
      */
     function onMousedown(event: MouseEvent) {
         LOGGER.log(`onMousedown for ${box?.id}`);
-        if (event.button === 0) { 
+        if (event.button === 0) {
             // a 'left' click
             event.preventDefault();
             event.stopPropagation();
@@ -442,7 +443,7 @@
             }
             // Ensure that HTML tags in value are encoded, otherwise they will be seen as HTML.
             widthSpan.innerHTML = replaceHTML(value);
-            inputElement.style.width = widthSpan.offsetWidth + 'px';
+            inputElement.style.width = widthSpan.offsetWidth + 2 + 'px';
         }
     }
 

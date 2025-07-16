@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LIMITEDCHECKBOX_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { LIMITEDCHECKBOX_LOGGER } from './ComponentLoggers.js';
     import {
         LimitedControlBox,
         SHIFT,
@@ -13,7 +13,7 @@
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
     import { MdCheckbox } from '@material/web/all.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
     let { editor, box }: FreComponentProps<LimitedControlBox> = $props();

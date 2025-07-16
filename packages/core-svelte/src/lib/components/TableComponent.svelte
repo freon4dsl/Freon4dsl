@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TABLE_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { TABLE_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a list of elements that have the same type (a 'true' list) as
@@ -16,13 +16,13 @@
         TableCellBox,
         isNullOrUndefined, isFreNodeReference, isFreNode, type DragAndDropType, FreLanguage
     } from '@freon4dsl/core';
-    import { componentId } from '$lib';
+    import { componentId } from '../index.js';
 
     import { dropListElement, moveListElement } from '@freon4dsl/core';
     import TableCellComponent from './TableCellComponent.svelte';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import { activeElem, activeIn, draggedElem, draggedFrom } from '$lib/components/stores/AllStores.svelte';
-    import type { TableDetails } from '$lib/components/svelte-utils/TableDetails';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
+    import { activeElem, activeIn, draggedElem, draggedFrom } from './stores/AllStores.svelte';
+    import type { TableDetails } from './svelte-utils/TableDetails';
 
     const LOGGER = TABLE_LOGGER;
 

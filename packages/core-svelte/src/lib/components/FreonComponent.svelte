@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { FREON_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { FREON_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a complete projection, by displaying the root box of
@@ -23,15 +23,15 @@
     } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
     import ContextMenu from './ContextMenu.svelte';
-    import { onMount, tick } from 'svelte';
-    import { componentId, dummyBox } from '$lib/components/svelte-utils/index.js';
+    import { tick } from 'svelte';
+    import { componentId, dummyBox } from './svelte-utils/index.js';
     import {
         contextMenu,
         contextMenuVisible,
         selectedBoxes,
         shouldBeHandledByBrowser
-    } from '$lib/components/stores/AllStores.svelte.js';
-    import type { MainComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    } from './stores/AllStores.svelte.js';
+    import type { MainComponentProps } from './svelte-utils/FreComponentProps.js';
 
     let LOGGER = FREON_LOGGER;
 

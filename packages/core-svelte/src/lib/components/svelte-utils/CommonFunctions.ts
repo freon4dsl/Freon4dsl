@@ -13,8 +13,8 @@ import {
     type FreNodeReference,
     type FreNamedNode
 } from '@freon4dsl/core';
-import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
-import {draggedElem, draggedFrom} from "$lib/components/stores/AllStores.svelte";
+import { SimpleElement } from '../../__test__/test-environment/simple-models/SimpleElement.js';
+import {draggedElem, draggedFrom} from "../stores/AllStores.svelte";
 
 // const LOGGER = new FreLogger('CommonFunctions').mute();
 

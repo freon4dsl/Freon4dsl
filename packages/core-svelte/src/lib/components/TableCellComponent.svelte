@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TABLECELL_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { TABLECELL_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component show a single cell in a TableComponent. It supports drag and drop,
@@ -34,7 +34,7 @@
     } from "@freon4dsl/core";
     import { onMount } from "svelte";
     import RenderComponent from './RenderComponent.svelte';
-    import { componentId, rememberDraggedNode } from '$lib/index.js';
+    import { componentId, rememberDraggedNode } from '../index.js';
     import {
         activeElem,
         activeIn,
@@ -42,9 +42,9 @@
         contextMenu,
         contextMenuVisible,
         selectedBoxes
-    } from '$lib/components/stores/AllStores.svelte.js';
-    import type { TableCellProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import DragHandle from "$lib/components/images/DragHandle.svelte";
+    } from './stores/AllStores.svelte.js';
+    import type { TableCellProps } from './svelte-utils/FreComponentProps.js';
+    import DragHandle from "./images/DragHandle.svelte";
 
     // Props
     let {

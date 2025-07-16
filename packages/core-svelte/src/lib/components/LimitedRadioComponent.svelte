@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LIMITEDRADIO_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { LIMITEDRADIO_LOGGER } from './ComponentLoggers.js';
     import {
         ALT,
         ARROW_DOWN,
@@ -14,7 +14,7 @@
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
     import { MdRadio } from '@material/web/all.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
     let { editor, box }: FreComponentProps<LimitedControlBox> = $props();
