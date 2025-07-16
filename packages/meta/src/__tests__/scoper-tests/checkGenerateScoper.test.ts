@@ -3,10 +3,10 @@ import { describe, test, expect, beforeEach, afterAll } from 'vitest';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { ScoperParser } from '../../scoperdef/parser/ScoperParser.js';
 import { ScoperGenerator } from '../../scoperdef/generator/ScoperGenerator.js';
-import { ScopeDef } from '../../scoperdef/metalanguage';
+import { ScopeDef } from '../../scoperdef/metalanguage/index.js';
 import { LanguageParser } from '../../languagedef/parser/LanguageParser.js';
 import * as fs from "fs";
-import { FileUtil } from '../../utils/file-utils';
+import { FileUtil } from '../../utils/file-utils/index.js';
 
 
 describe("Checking the scoper generator", () => {
