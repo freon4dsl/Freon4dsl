@@ -4,9 +4,9 @@
  * The exact bounds for the children are set in FreNamespace.getDeclaredNodes().
  *
  */
-import { FreNode, FreNamedNode } from "../ast/index.js";
-import { AstWorker } from "../ast-utils/index.js";
-import { FreLanguage, FreLanguageProperty } from "../language/index.js";
+import type { FreNode, FreNamedNode } from "../ast/index.js";
+import type { AstWorker } from "../ast-utils/index.js";
+import { FreLanguage, type FreLanguageProperty } from "../language/index.js";
 
 export class CollectDeclaredNodesWorker implements AstWorker {
     // 'namesList' holds the named elements found while traversing the model tree

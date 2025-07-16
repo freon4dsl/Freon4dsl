@@ -1,9 +1,9 @@
-import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
+import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { isIdentifier } from "../../util/index.js";
 import { collectUsedLanguages, FreLionwebSerializer, FreModelSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
-import { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
+import type { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 
 const LOGGER = new FreLogger("ServerCommunicationOld"); // .mute();
 

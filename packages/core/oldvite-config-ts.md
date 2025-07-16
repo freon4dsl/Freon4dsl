@@ -16,7 +16,7 @@ export default defineConfig({
         'reflect-metadata',
         'lodash',
         'tslib'
-      ],
+      ]
     },
   },
   plugins: [dts()],

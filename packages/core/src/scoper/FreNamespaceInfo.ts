@@ -1,4 +1,4 @@
-import { FreNamedNode, FreNode, FreNodeReference } from '../ast/index.js';
+import { type FreNamedNode, type FreNode, FreNodeReference } from '../ast/index.js';
 
 /**
  * This class holds the information on namespace imports and namespace alternatives.

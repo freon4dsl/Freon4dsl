@@ -44,7 +44,7 @@ FreNamespace {
 
 */
 
-import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
+import { type FreNode, type FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { AstWalker } from "../ast-utils/index.js";
 import { FreLanguage } from "../language/index.js";
 import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js";

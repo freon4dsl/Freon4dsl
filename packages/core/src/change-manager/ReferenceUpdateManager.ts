@@ -1,6 +1,6 @@
 import { FreLogger } from "../logging/index.js";
 import { FreChangeManager } from "./FreChangeManager.js";
-import { FreModel } from "../ast/index.js"
+import { type FreModel } from "../ast/index.js"
 import { FreDelta, FrePrimDelta } from "./FreDelta.js"
 import { AstWalker } from "../ast-utils/index.js"
 import { ReferenceUpdateWorker } from "./ReferenceUpdateWorker.js"

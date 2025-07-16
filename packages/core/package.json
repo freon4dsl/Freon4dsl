@@ -18,10 +18,84 @@
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./ast": {
+      "types": "./dist/ast/index.d.ts",
+      "import": "./dist/ast/index.js"
+    },
+    "./ast-utils": {
+      "types": "./dist/ast-utils/index.d.ts",
+      "import": "./dist/ast-utils/index.js"
+    },
+    "./editor": {
+      "types": "./dist/editor/index.d.ts",
+      "import": "./dist/editor/index.js"
+    },
+    "./environment": {
+      "types": "./dist/environment/index.d.ts",
+      "import": "./dist/environment/index.js"
+    },
+    "./language": {
+      "types": "./dist/language/index.d.ts",
+      "import": "./dist/language/index.js"
+    },
+    "./logging": {
+      "types": "./dist/logging/index.d.ts",
+      "import": "./dist/logging/index.js"
+    },
+    "./reader": {
+      "types": "./dist/reader/index.d.ts",
+      "import": "./dist/reader/index.js"
+    },
+    "./scoper": {
+      "types": "./dist/scoper/index.d.ts",
+      "import": "./dist/scoper/index.js"
+    },
+    "./searchers": {
+      "types": "./dist/searchers/index.d.ts",
+      "import": "./dist/searchers/index.js"
+    },
+    "./storage": {
+      "types": "./dist/storage/index.d.ts",
+      "import": "./dist/storage/index.js"
+    },
+    "./stdlib": {
+      "types": "./dist/stdlib/index.d.ts",
+      "import": "./dist/stdlib/index.js"
+    },
+    "./typer": {
+      "types": "./dist/typer/index.d.ts",
+      "import": "./dist/typer/index.js"
+    },
+    "./util": {
+      "types": "./dist/util/index.d.ts",
+      "import": "./dist/util/index.js"
+    },
+    "./validator": {
+      "types": "./dist/validator/index.d.ts",
+      "import": "./dist/validator/index.js"
+    },
+    "./writer": {
+      "types": "./dist/writer/index.d.ts",
+      "import": "./dist/writer/index.js"
+    },
+    "./change-manager": {
+      "types": "./dist/change-manager/index.d.ts",
+      "import": "./dist/change-manager/index.js"
+    },
+    "./interpreter": {
+      "types": "./dist/interpreter/index.d.ts",
+      "import": "./dist/interpreter/index.js"
+    }
+  },
   "scripts": {
-    "build": "vite build",
-    "build-dev": "vite build",
-    "build-release": "vite build",
+    "build": "tsc",
+    "build-dev": "tsc",
+    "build-release": "tsc",
     "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "format": "prettier --write .",
@@ -33,11 +107,10 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.14",
-    "prettier": "^3.4.2",
-    "typescript": "^5.0.0",
-    "vite": "^6.0.0",
-    "vitest": "^3.2.4",
-    "vite-plugin-dts": "^4.5.4"
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.4",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "lodash": "^4.17.21",

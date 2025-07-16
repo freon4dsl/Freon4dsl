@@ -1,4 +1,4 @@
-import { FreNamedNode, FreNode, FreNodeReference } from '../ast/index.js';
+import { type FreNamedNode, type FreNode, FreNodeReference } from '../ast/index.js';
 import { FreNamespace } from './FreNamespace.js';
 import { isNullOrUndefined } from '../util/index.js';
 import { FreLanguage } from '../language/index.js';

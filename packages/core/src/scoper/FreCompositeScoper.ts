@@ -1,6 +1,6 @@
-import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
+import { type FreNode, type FreNamedNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
-import { FreScoper } from "./FreScoper.js";
+import { type FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';
 import { FreNamespaceInfo } from './FreNamespaceInfo.js';
 import { FreNamespace } from './FreNamespace.js';
