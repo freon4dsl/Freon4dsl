@@ -13,7 +13,7 @@
         SHIFT
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import { MdRadio } from '@material/web/all.js';
+    import { MdRadio } from '@material/web/radio/radio.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
@@ -64,6 +64,8 @@
         // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh limited radio box changed ' + box?.id);
     });
 
     const onChange = (event: MouseEvent) => {

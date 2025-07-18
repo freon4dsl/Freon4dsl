@@ -52,7 +52,7 @@
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
         // Evaluated and re-evaluated when the box changes.
-        refresh(box?.$id);
+        refresh('Refresh optional box changed ' + box?.id);
     });
 </script>
 

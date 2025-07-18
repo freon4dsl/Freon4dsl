@@ -23,11 +23,10 @@
         BehaviorExecutionResult,
         isNullOrUndefined
     } from '@freon4dsl/core';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import { selectedBoxes } from '$lib/components/stores/AllStores.svelte.js';
-    import { clickOutsideConditional } from '$lib';
-    import { type CaretDetails } from '$lib/components/svelte-utils/CaretDetails';
-    import { onMount } from 'svelte';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
+    import { selectedBoxes } from './stores/AllStores.svelte.js';
+    import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
+    import { type CaretDetails } from './svelte-utils/CaretDetails';
 
     const LOGGER = TEXTDROPDOWN_LOGGER;
 

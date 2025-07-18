@@ -34,6 +34,7 @@
 </span>
 
 <style>
+<!--   todo move this tyle to freon.css as soon as this component is available through the .edit file -->
     .expandable-component {
         display: flex;
     }

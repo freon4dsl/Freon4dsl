@@ -31,7 +31,7 @@
     } from "@freon4dsl/core"
     import RenderComponent from './RenderComponent.svelte';
     import { componentId, rememberDraggedNode } from '../index.js';
-    import type { ListProps } from './svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import {
         activeElem,
         activeIn,
@@ -70,8 +70,6 @@
         refresh('Refresh from ListComponent box changed:   ' + box?.id);
     });
 
-
-
     const drop = (event: DragEvent, targetIndex: number) => {
         const data: ListElementInfo | null = draggedElem.value;
         event.stopPropagation();
@@ -106,7 +104,7 @@
     };
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
-        console.log('Drag Start ' + box.id + ' index: ' + listIndex);
+        LOGGER.log('Drag Start ' + box.id + ' index: ' + listIndex);
         event.stopPropagation();
         // close any context menu
         contextMenuVisible.value = false;

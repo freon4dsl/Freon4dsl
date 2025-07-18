@@ -259,12 +259,12 @@ export class TextComponentHelper {
      */
     setFromAndTo(inFrom: number | undefined | null, inTo: number | undefined | null) {
         if (!isNullOrUndefined(inFrom) && !isNullOrUndefined(inTo)) {
-            if (inFrom < inTo) {
-                this._from = inFrom;
-                this._to = inTo;
+            if ((inFrom as number) < (inTo as number)) {
+                this._from = inFrom as number;
+                this._to = inTo as number;
             } else {
-                this._from = inTo;
-                this._to = inFrom;
+                this._from = inTo as number;
+                this._to = inFrom as number;
             }
         } else {
             this._from = 0;

@@ -57,6 +57,8 @@
         // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh numeric slider box changed ' + box?.id);
     });
 
     /**

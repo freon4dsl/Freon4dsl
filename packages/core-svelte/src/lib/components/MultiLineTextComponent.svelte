@@ -16,7 +16,7 @@
     let id: string = $state(''); // an id for the html element
     id = !isNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box';
     let textArea: HTMLTextAreaElement; // the text area element on the screen
-    const placeholder = $derived(() => box.placeHolder);
+    let placeholder: string = $state('<enter>'); // the placeholder when value of text component is not present
     let text: string = $state('');
 
     /**
@@ -24,8 +24,11 @@
     $effect(() => {
         // runs after the initial onMount
         LOGGER.log('Start afterUpdate id: ' + id);
+        placeholder = box.placeHolder;
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh multiline text box changed ' + box?.id);
     });
 
     /**
@@ -52,8 +55,9 @@
         }
     };
 
-    const refresh = () => {
-        LOGGER.log('REFRESH ' + box?.node?.freId() + ' (' + box?.node?.freLanguageConcept() + ')');
+    const refresh = (why?: string): void => {
+        LOGGER.log('REFRESH ListComponent( ' + why + ') ' + box?.node?.freLanguageConcept());
+        placeholder = box.placeHolder;
         text = box.getText();
     };
 

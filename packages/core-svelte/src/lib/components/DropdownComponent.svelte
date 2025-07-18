@@ -50,25 +50,3 @@
         {/if}
     </span>
 </span>
-
-<style>
-    .dropdown-component-container {
-        position: relative;
-    }
-    .dropdown-entry-with-additional-label {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        box-sizing: border-box;
-        width: 100%;
-    }
-    .column-for-dropdown-entry-with-additional-label {
-        display: flex;
-        flex-direction: column;
-        /*flex: 1;*/
-    }
-    .gap-for-dropdown-entry-with-additional-label {
-        margin: 0 0.7rem 0 0.7rem;
-        flex: 1;
-    }
-</style>

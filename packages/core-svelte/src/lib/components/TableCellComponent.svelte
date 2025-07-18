@@ -118,7 +118,6 @@
             ? selectedBoxes.value.includes(box) || selectedBoxes.value.includes(box.content)
             : false;
         selectedCls = isSelected ? 'render-component-selected' : 'render-component-unselected';
-
         // Evaluated and re-evaluated when the box changes.
         refresh('New TableCellComponent created for ' + box?.id); //+ " element name: " + box?.element["name"]);
     });

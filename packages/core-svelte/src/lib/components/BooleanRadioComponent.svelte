@@ -16,7 +16,7 @@
         SHIFT
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import { MdRadio } from '@material/web/all.js';
+    import { MdRadio } from '@material/web/radio/radio.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     const LOGGER = RADIO_LOGGER;

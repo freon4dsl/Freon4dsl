@@ -3,18 +3,16 @@ import { defineConfig } from 'vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
+	plugins: [sveltekit()],
 	build: {
 		rollupOptions: {
 			external: [ // Add all dependencies from package.json here, so they remain external to the bundle.
-				'mobx',
-				'@lionweb/repository-client',
-				'@lionweb/validation',
-				'reflect-metadata',
-				'lodash',
-				'tslib'
+				'@freon4dsl/core',
+				'@material/web',
+				'@material/slider',
+				'@material/switch'
 			]
-		},
-	},
-	plugins: [sveltekit()]
+		}
+	}
 });
 
