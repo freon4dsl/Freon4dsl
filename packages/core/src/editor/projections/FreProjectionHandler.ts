@@ -203,6 +203,7 @@ export class FreProjectionHandler {
     addCustomProjection(p: FreProjection) {
         ArrayUtil.addIfNotPresent(this._customProjections, p);
         this.addProjection(p.name);
+        p.handler = this;
     }
 
     /**
