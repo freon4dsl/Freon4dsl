@@ -1,4 +1,4 @@
-import ContextMenu from '$lib/components/ContextMenu.svelte';
+import ContextMenu from '../ContextMenu.svelte';
 import type { Box, ListElementInfo } from '@freon4dsl/core';
 import { writable } from 'svelte/store';
 

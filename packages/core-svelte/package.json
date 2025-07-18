@@ -64,6 +64,7 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "publint": "^0.3.12",
     "svelte-check": "^4.2.2",
+    "@freon/test-helpers": "1.1.0-beta.3",
     "typescript": "^5.8.3",
     "vite": "^7.0.4",
     "vitest": "^3.2.4"
