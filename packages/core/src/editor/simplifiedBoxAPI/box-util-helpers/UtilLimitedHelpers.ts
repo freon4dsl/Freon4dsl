@@ -1,7 +1,7 @@
 import type { FreNode } from "../../../ast/index.js";
 import { AST } from "../../../change-manager/index.js";
-import {BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox} from "../../boxes/index.js";
-import type {SelectOption} from "../../boxes/index.js";
+import { BoxFactory, LimitedControlBox, LimitedDisplay, SelectBox } from "../../boxes/index.js";
+import type { SelectOption } from "../../boxes/index.js";
 import { FreLanguage } from "../../../language/index.js";
 import type { FreLanguageProperty } from "../../../language/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";

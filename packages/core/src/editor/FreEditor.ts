@@ -18,13 +18,14 @@ import {
     ElementBox,
     RoleProvider,
     isElementBox,
-    isSelectBox, isActionBox
+    isSelectBox,
+    isActionBox
 } from './index.js';
 import type { ClientRectangle } from "./ClientRectangleTypes.js";
 import { UndefinedRectangle } from "./ClientRectangleTypes.js";
 import { FreError, FreErrorSeverity } from "../validator/index.js";
 import { isExpressionPreOrPost, isNullOrUndefined, notNullOrUndefined, LEFT_MOST } from "../util/index.js";
-import {FreErrorDecorator} from "./FreErrorDecorator.js";
+import { FreErrorDecorator } from "./FreErrorDecorator.js";
 
 
 const LOGGER = new FreLogger("FreEditor").mute();
