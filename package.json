@@ -53,14 +53,14 @@
     "packages/core",
     "packages/core-svelte",
     "packages/meta",
+    "packages/test-helpers",
     "packages/samples/*",
     "packages/weblib-flowbite",
     "packages/webapp-flowbite",
     "packages/weblib-smui",
     "packages/webapp-smui",
     "packages/server",
-    "packages/test",
-    "packages/test-helpers"
+    "packages/test"
   ],
   "version": "1.1.0-beta.3"
 }
