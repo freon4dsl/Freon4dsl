@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "rm -rf node_modules/",
     "build": "echo No build for webapp-starter",
+    "build-samples": "npm run build",
     "build-app": "rollup -c",
     "build-dev": "cd ../../packages/samples/InsuranceModel && npm run build",
     "dev": "cross-env NODE_PORT=8001 rollup -c -w",

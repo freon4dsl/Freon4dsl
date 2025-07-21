@@ -1,7 +1,7 @@
 import { InsuranceModelEnvironment } from "../config/gen/InsuranceModelEnvironment";
 import { BaseProduct, InsuranceModel, Part, Product } from "../language/gen";
 import { FreReader, FreValidator } from "@freon4dsl/core";
-import { FileUtil } from 'test-helpers';
+import { FileUtil } from '@freon4dsl/test-helpers';
 import { describe, test, expect } from "vitest";
 
 

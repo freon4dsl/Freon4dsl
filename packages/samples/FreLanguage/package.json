@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rm -rf node_modules/",
     "build": "npm run generate && tsc && rollup --config",
+    "build-samples": "npm run build",
     "compile": "tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
     "generate": "bash ../../../scripts/freon-samples-dev.sh -v all -d src/defs -o src/",
@@ -19,7 +20,7 @@
   },
   "devDependencies": {
     "@freon4dsl/meta": "1.1.0-beta.3",
-    "@freon/test-helpers": "1.1.0-beta.3"
+    "@freon4dsl/test-helpers": "1.1.0-beta.3"
   },
   "dependencies": {
     "@freon4dsl/core": "1.1.0-beta.3",

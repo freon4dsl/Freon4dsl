@@ -1,4 +1,4 @@
-import { FileUtil } from "test-helpers"
+import { FileUtil } from '@freon4dsl/test-helpers';
 import * as fs from "fs";
 
 export class FileHandler {
