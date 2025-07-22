@@ -190,6 +190,7 @@
 
     const refresh = (why?: string): void => {
         LOGGER.log('REFRESH ListComponent( ' + why + ') ' + box?.node?.freLanguageConcept());
+        // htmlElement.focus()
         shownElements = [...box.children];
         id = !isNullOrUndefined(box) ? componentId(box) : 'list-for-unknown-box';
         isHorizontal = !isNullOrUndefined(box)
