@@ -1,4 +1,4 @@
-import { type FreNode, type FreNamedNode, FreNodeReference } from '../ast/index.js';
+import type { FreNamedNode, FreNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
 import { type FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';

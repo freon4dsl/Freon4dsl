@@ -114,8 +114,8 @@ export abstract class Box {
     }
 
     get id(): string {
-        if (!!this.node) {
-            return this.node.freId() + (this.role === null ? "" : "-" + this.role);
+        if (notNullOrUndefined(this.node)) {
+            return this.node.freId() + (notNullOrUndefined(this.role) ? "" : "-" + this.role);
         } else {
             return "unknown-element-" + this.role;
         }
