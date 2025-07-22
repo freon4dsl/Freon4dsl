@@ -49,7 +49,7 @@ import { AstWalker } from "../ast-utils/index.js";
 import { FreLanguage } from "../language/index.js";
 import { CollectDeclaredNodesWorker } from "./CollectDeclaredNodesWorker.js";
 import { isNullOrUndefined, notNullOrUndefined } from '../util/index.js';
-import { FreCompositeScoper } from './FreCompositeScoper.js';
+import type { FreCompositeScoper } from './FreCompositeScoper.js';
 import { FreLogger } from "../logging/index.js";
 import { resolvePathStartingInNamespace } from './ScoperUtil.js';
 import { FreNamespaceInfo } from './FreNamespaceInfo.js';

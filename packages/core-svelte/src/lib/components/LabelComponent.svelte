@@ -4,8 +4,7 @@
     /**
      * This component shows a piece of non-editable text.
      */
-    import { onMount } from 'svelte';
-    import { isNullOrUndefined, LabelBox } from '@freon4dsl/core';
+    import { notNullOrUndefined, LabelBox } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
@@ -13,7 +12,7 @@
 
     const LOGGER = LABEL_LOGGER;
 
-    let id: string = !isNullOrUndefined(box) ? componentId(box) : 'label-for-unknown-box';
+    let id: string = notNullOrUndefined(box) ? componentId(box) : 'label-for-unknown-box';
     let element: HTMLSpanElement | undefined = $state(undefined);
     let style: string = $state('');
     let cssClass: string = $state('');
@@ -21,7 +20,7 @@
 
     $effect(() => {
         // runs after the initial onMount
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             box.refreshComponent = refresh;
         }
         // Evaluated and re-evaluated when the box changes.
@@ -30,7 +29,7 @@
 
     const refresh = (why?: string) => {
         LOGGER.log('REFRESH LabelComponent (' + why + ')');
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             text = box.getLabel();
             style = box.cssStyle;
             cssClass = box.cssClass;

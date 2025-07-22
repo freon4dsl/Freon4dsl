@@ -3,7 +3,7 @@ import {
     FreNodeBaseImpl,
     type FreNamedNode,
     FreUtils,
-    isNullOrUndefined
+    notNullOrUndefined
 } from '@freon4dsl/core';
 import { SimpleElement } from './SimpleElement.js';
 import { makeObservable, observable } from 'mobx';
@@ -16,10 +16,10 @@ export class ElementWithOptional extends FreNodeBaseImpl implements FreNamedNode
      */
     static create(data: Partial<ElementWithOptional>): ElementWithOptional {
         const result = new ElementWithOptional();
-        if (!isNullOrUndefined(data.name)) {
+        if (notNullOrUndefined(data.name)) {
             result.name = data.name;
         }
-        if (!isNullOrUndefined(data.myOptional)) {
+        if (notNullOrUndefined(data.myOptional)) {
             result.myOptional = data.myOptional;
         }
         return result;
@@ -34,7 +34,7 @@ export class ElementWithOptional extends FreNodeBaseImpl implements FreNamedNode
 
     constructor(id?: string) {
         super();
-        if (!isNullOrUndefined(id)) {
+        if (notNullOrUndefined(id)) {
             this.$id = id;
         } else {
             this.$id = FreUtils.ID(); // uuid.v4();
@@ -93,10 +93,10 @@ export class ElementWithOptional extends FreNodeBaseImpl implements FreNamedNode
      */
     copy(): ElementWithOptional {
         const result = new ElementWithOptional();
-        if (!isNullOrUndefined(this.name)) {
+        if (notNullOrUndefined(this.name)) {
             result.name = this.name;
         }
-        if (!isNullOrUndefined(this.myOptional)) {
+        if (notNullOrUndefined(this.myOptional)) {
             result.myOptional = this.myOptional.copy();
         }
         return result;

@@ -74,7 +74,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param unit
      */
     async saveModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNamedNode) {
-        LOGGER.log(`LionWebRepositoryCommunication.putModelUnit ${modelName}/${unitIdentifier.name}`);
+        LOGGER.log(`LionWebRepositoryCommunication.saveModelUnit ${modelName}/${unitIdentifier.name}`);
         if (
             !!unitIdentifier.name &&
             unitIdentifier.name.length > 0 &&

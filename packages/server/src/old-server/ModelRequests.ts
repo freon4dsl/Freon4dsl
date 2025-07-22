@@ -10,7 +10,7 @@ const storeFolder = "./modelstore";
 export class ModelRequests {
     public static validate = false;
     
-    public static async putModelUnit(foldername: string, name: string, ctx: IRouterContext) {
+    public static async saveModelUnit(foldername: string, name: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
             const body = ctx.request.body;

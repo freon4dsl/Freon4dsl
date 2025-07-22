@@ -6,7 +6,7 @@
      * corresponding OptionalBox, or its placeholder.
      */
     import RenderComponent from './RenderComponent.svelte';
-    import { OptionalBox2, Box, isNullOrUndefined } from '@freon4dsl/core';
+    import { OptionalBox2, Box, notNullOrUndefined } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
@@ -15,7 +15,7 @@
 
     const LOGGER = OPTIONAL_LOGGER;
     let id: string = $state(''); // an id for the html element showing the optional
-    id = !isNullOrUndefined(box) ? componentId(box) : 'optional2-for-unknown-box';
+    id = notNullOrUndefined(box) ? componentId(box) : 'optional2-for-unknown-box';
     let childBox: Box = $state()!;
     let optionalBox: Box = $state()!;
     let mustShow = $state(false);
@@ -37,10 +37,10 @@
             mustShow ||
             (showByCondition &&
                 !!contentComponent &&
-                !isNullOrUndefined(box.content.firstEditableChild))
+                notNullOrUndefined(box.content.firstEditableChild))
         ) {
             box.content.firstEditableChild!.setFocus();
-        } else if (!isNullOrUndefined(placeholderComponent)) {
+        } else if (notNullOrUndefined(placeholderComponent)) {
             box.placeholder.setFocus();
         } else {
             LOGGER.error('OptionalComponent2 ' + id + ' has no elements to put focus on');

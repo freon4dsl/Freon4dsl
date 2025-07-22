@@ -1,6 +1,6 @@
 <script lang="ts">
     import { GRIDCELL_LOGGER } from './ComponentLoggers.js';
-    import { isMetaKey, ENTER, Box, isNullOrUndefined, type GridCellBox } from '@freon4dsl/core';
+    import { isMetaKey, ENTER, Box, notNullOrUndefined, type GridCellBox } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
     import { componentId, dummyBox, executeCustomKeyboardShortCut, isOdd } from '../index.js';
     import type { GridCellProps } from './svelte-utils/FreComponentProps.js';
@@ -13,7 +13,7 @@
     //local variables
     const LOGGER = GRIDCELL_LOGGER;
     let contentBox: Box = $state(dummyBox);
-    let id: string = !isNullOrUndefined(box) ? componentId(box) : 'gridcell-for-unknown-box';
+    let id: string = notNullOrUndefined(box) ? componentId(box) : 'gridcell-for-unknown-box';
 
     let row: string = $state('');
     let column: string = $state('');
@@ -25,10 +25,10 @@
     let htmlElement: HTMLElement;
 
     function refresh(from?: string): void {
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             LOGGER.log(
                 'REFRESH GridCellComponent ' +
-                    (!isNullOrUndefined(from) ? ' from ' + from + ' ' : '') +
+                    (notNullOrUndefined(from) ? ' from ' + from + ' ' : '') +
                     box?.node?.freLanguageConcept() +
                     '-' +
                     box?.node?.freId()

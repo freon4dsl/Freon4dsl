@@ -12,7 +12,7 @@
         ARROW_UP,
         BooleanControlBox,
         CONTROL,
-        isNullOrUndefined,
+        notNullOrUndefined,
         SHIFT
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
@@ -60,7 +60,7 @@
     });
 
     const onChange = (event: MouseEvent & { currentTarget: EventTarget & HTMLInputElement }) => {
-        if (!isNullOrUndefined(event.target)) {
+        if (notNullOrUndefined(event.target)) {
             LOGGER.log(
                 'BooleanRadioComponent.onChange for box ' +
                     box.role +

@@ -74,7 +74,7 @@ export class ServerCommunicationOld implements IServerCommunication {
      * @param unit
      */
     async saveModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<void> {
-        LOGGER.log(`ServerCommunicationOld.putModelUnit ${modelName}/${unitId.name}`);
+        LOGGER.log(`ServerCommunicationOld.saveModelUnit ${modelName}/${unitId.name}`);
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunicationOld.lionweb_serial.convertToJSON(unit);
             let output = {

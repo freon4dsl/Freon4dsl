@@ -1,10 +1,10 @@
-import { type FreNode, type FreNamedNode } from '../ast/index.js';
-import { FreLanguage } from "../language//index.js";
+import type { FreNode, FreNamedNode } from '../ast/index.js';
+import { FreLanguage } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
 import { FreCompositeTyper } from "../typer/index.js";
-import { FreCompositeScoper } from "./FreCompositeScoper.js";
+import type { FreCompositeScoper } from "./FreCompositeScoper.js";
 import { FreNamespace, PUBLIC_AND_PRIVATE } from './FreNamespace.js';
-import { type FreScoper } from "./FreScoper.js";
+import type { FreScoper } from "./FreScoper.js";
 import { notNullOrUndefined } from '../util/index.js';
 import { findEnclosingNamespace, hasCorrectType } from './ScoperUtil.js';
 import { FreLanguageEnvironment } from '../environment/index.js';

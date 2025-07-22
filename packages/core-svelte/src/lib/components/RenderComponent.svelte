@@ -35,7 +35,7 @@
         BoolDisplay,
         LimitedDisplay,
         isActionTextBox,
-        isNullOrUndefined, type ClientRectangle, UndefinedRectangle
+        notNullOrUndefined, type ClientRectangle, UndefinedRectangle
     } from "@freon4dsl/core"
     import MultiLineTextComponent from './MultiLineTextComponent.svelte';
     import EmptyLineComponent from './EmptyLineComponent.svelte';
@@ -71,7 +71,7 @@
     let { editor, box }: FreComponentProps<Box> = $props();
 
     let id: string = $state('');
-    id = !isNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box';
+    id = notNullOrUndefined(box) ? `render-${componentId(box)}` : 'render-for-unknown-box';
     let element: HTMLElement | undefined = $state(undefined);
 
     // css class name for when the node is selected
@@ -103,7 +103,7 @@
 
     // css class name for when the node is erroneous
     let errorCls: string = $derived.by(() => {
-        if (!isNullOrUndefined(box) && box.hasError) {
+        if (notNullOrUndefined(box) && box.hasError) {
             return 'render-component-error';
         } else {
             return '';
@@ -112,7 +112,7 @@
 
     // error message to be shown when element is hovered
     let errMess: string[]  = $derived.by(() => {
-        if (!isNullOrUndefined(box) && box.hasError) {
+        if (notNullOrUndefined(box) && box.hasError) {
             return box.errorMessages;
         } else {
             return [];
@@ -143,7 +143,7 @@
 
     $effect(() => {
         LOGGER.log(`Render effect2: set client rectangle function ${box?.id}`)
-        if (!isNullOrUndefined(box) && !isTextBox(box) ) {
+        if (notNullOrUndefined(box) && !isTextBox(box) ) {
             box.getClientRectangle = (): ClientRectangle => {
                 LOGGER.log(`Render clientRect ${box.id} `)
                 return element?.getBoundingClientRect() || UndefinedRectangle
@@ -162,7 +162,7 @@
 {#if isElementBox(box)}
     <ElementComponent {box} {editor} />
 {:else}
-    {#if errMess.length > 0 && !isNullOrUndefined(element)}
+    {#if errMess.length > 0 && notNullOrUndefined(element)}
         <ErrorMarker {box} {editor} />
     {/if}
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions a11y_click_events_have_key_events -->
@@ -193,7 +193,7 @@
         {:else if isButtonBox(box)}
             <ButtonComponent {box} {editor} />
         {:else if isExternalBox(box)}
-            {#if !isNullOrUndefined(ExternalComponent)}
+            {#if notNullOrUndefined(ExternalComponent)}
                 <ExternalComponent {box} {editor}></ExternalComponent>
             {:else}
                 <p class="render-component-error">

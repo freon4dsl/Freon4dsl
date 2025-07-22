@@ -27,8 +27,8 @@
         FreCreatePartAction,
         MetaKey,
         AST,
-        ENTER
-    } from "@freon4dsl/core"
+        ENTER, notNullOrUndefined
+    } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
     import { componentId, rememberDraggedNode } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
@@ -74,7 +74,7 @@
         const data: ListElementInfo | null = draggedElem.value;
         event.stopPropagation();
 
-        if (!isNullOrUndefined(data)) {
+        if (notNullOrUndefined(data)) {
             if (isFreNodeReference(data.element)) {
                 LOGGER.log(`DROPPING item [${data.element.name}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
             } else if (isFreNode(data.element)) {
@@ -110,7 +110,7 @@
         contextMenuVisible.value = false;
 
         // give the drag an effect
-        if (!isNullOrUndefined(event.dataTransfer)) {
+        if (notNullOrUndefined(event.dataTransfer)) {
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.dropEffect = 'move';
         }
@@ -181,7 +181,7 @@
 
     async function setFocus(): Promise<void> {
         LOGGER.log('ListComponent.setFocus for box ' + box.role);
-        if (!isNullOrUndefined(htmlElement)) {
+        if (notNullOrUndefined(htmlElement)) {
             htmlElement.focus();
         }
     }
@@ -189,8 +189,8 @@
     const refresh = (why?: string): void => {
         LOGGER.log('REFRESH ListComponent( ' + why + ') ' + box?.node?.freLanguageConcept());
         shownElements = [...box.children];
-        id = !isNullOrUndefined(box) ? componentId(box) : 'list-for-unknown-box';
-        isHorizontal = !isNullOrUndefined(box)
+        id = notNullOrUndefined(box) ? componentId(box) : 'list-for-unknown-box';
+        isHorizontal = notNullOrUndefined(box)
             ? box.getDirection() === ListDirection.HORIZONTAL
             : false;
     };

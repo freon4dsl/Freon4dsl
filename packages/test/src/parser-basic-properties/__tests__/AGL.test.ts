@@ -27,7 +27,7 @@ describe("Parser properties of type", () => {
         model.name = "TestParserModel-new";
         const unit1: RefsTest = reader.readFromString(input, "RefsTest", model) as RefsTest;
         // console.log(writer.writeToString(unit1));
-        ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 });

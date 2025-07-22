@@ -1,12 +1,12 @@
 <script lang="ts">
     import { GRID_LOGGER } from './ComponentLoggers.js';
-    import { GridCellBox, GridBox, isNullOrUndefined } from '@freon4dsl/core';
+    import { GridCellBox, GridBox, notNullOrUndefined } from '@freon4dsl/core';
     import GridCellComponent from './GridCellComponent.svelte';
-    import { componentId, type GridProps } from '../index.js';
+    import { componentId, type FreComponentProps } from '../index.js';
 
     const LOGGER = GRID_LOGGER;
 
-    let { editor, box }: GridProps = $props();
+    let { editor, box }: FreComponentProps<GridBox> = $props();
 
     let id: string = $state('');
     let cells: GridCellBox[] = $state([]);
@@ -17,7 +17,7 @@
 
     const refresh = (why?: string): void => {
         LOGGER.log('refresh ' + why);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             // console.log("REFRESH GridComponent " + box?.element?.freLanguageConcept() + "-" + box?.element?.freId());
             id = componentId(box);
             cells = [...(box as GridBox).cells];

@@ -7,7 +7,7 @@ import {
     toFreKey,
     FreAction,
     ElementBox,
-    isNullOrUndefined,
+    notNullOrUndefined,
     FreLanguage,
     ListElementInfo,
     type FreNodeReference,
@@ -77,14 +77,14 @@ export function executeCustomKeyboardShortCut(
         AST.change(() => {
             // todo KeyboardEvent does not have an "action" prop, so what is happening here?
             const action = event['action' as keyof KeyboardEvent];
-            if (!isNullOrUndefined(action)) {
+            if (notNullOrUndefined(action)) {
                 // @ts-expect-error if present, action is callable
                 action();
             }
             postAction = cmd.execute(box, toFreKey(event), editor, index);
         });
         // @ts-expect-error this causes no error, because of the if-stat check
-        if (!isNullOrUndefined(postAction)) {
+        if (notNullOrUndefined(postAction)) {
             postAction();
         }
         // todo this method will stop the event from propagating, but does not prevent default!! Should it do so?

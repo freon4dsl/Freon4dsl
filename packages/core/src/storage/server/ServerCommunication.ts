@@ -100,7 +100,7 @@ export class ServerCommunication implements IServerCommunication {
      * @param unit
      */
     async saveModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<void> {
-        LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitId.name}`);
+        LOGGER.log(`ServerCommunication.saveModelUnit ${modelName}/${unitId.name}`);
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
             let output = {
@@ -108,7 +108,7 @@ export class ServerCommunication implements IServerCommunication {
                 languages: collectUsedLanguages(model),
                 nodes: model,
             };
-            await this.putWithTimeout(`putModelUnit`, output, {model:modelName,unit: unitId.name});
+            await this.saveWithTimeout(`saveModelUnit`, output, {model:modelName,unit: unitId.name});
         } else {
             LOGGER.error(
                 "Name of Unit '" +
@@ -231,7 +231,7 @@ export class ServerCommunication implements IServerCommunication {
         return null;
     }
 
-    private async putWithTimeout(method: string, data: Object, params: ParameterType) {
+    private async saveWithTimeout(method: string, data: Object, params: ParameterType) {
         const parameters = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();
@@ -271,7 +271,7 @@ export class ServerCommunication implements IServerCommunication {
     async createModel(modelName: string): any {
         LOGGER.log(`ServerCommunication.createModel ${modelName}`)
         const language = FreLanguage.getInstance().name
-        await this.putWithTimeout(`putModel`, {}, { model: modelName, language: language });
+        await this.saveWithTimeout(`saveModel`, {}, { model: modelName, language: language });
     }
 
     // @ts-ignore

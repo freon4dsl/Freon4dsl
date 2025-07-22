@@ -7,7 +7,7 @@ import {
     FreErrorSeverity,
     FreLogger,
     isActionTextBox,
-    isNullOrUndefined,
+    notNullOrUndefined,
     TextBox
 } from '@freon4dsl/core';
 import { executeCustomKeyboardShortCut } from './CommonFunctions.js';
@@ -258,7 +258,7 @@ export class TextComponentHelper {
      * @param inTo
      */
     setFromAndTo(inFrom: number | undefined | null, inTo: number | undefined | null) {
-        if (!isNullOrUndefined(inFrom) && !isNullOrUndefined(inTo)) {
+        if (notNullOrUndefined(inFrom) && notNullOrUndefined(inTo)) {
             if ((inFrom as number) < (inTo as number)) {
                 this._from = inFrom as number;
                 this._to = inTo as number;

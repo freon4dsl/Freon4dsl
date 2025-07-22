@@ -14,7 +14,7 @@
         isTableRowBox,
         isElementBox,
         TableCellBox,
-        isNullOrUndefined, isFreNodeReference, isFreNode, type DragAndDropType, FreLanguage
+        notNullOrUndefined, isFreNodeReference, isFreNode, type DragAndDropType, FreLanguage
     } from '@freon4dsl/core';
     import { componentId } from '../index.js';
 
@@ -29,7 +29,7 @@
     // Props
     let { editor, box }: FreComponentProps<TableBox> = $props();
 
-    let id = !isNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box';
+    let id = notNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box';
     let cells: TableCellBox[] = $state([]);
     let templateColumns: string = $state('');
     let templateRows: string = $state('');
@@ -61,7 +61,7 @@
 
     const refresh = (why?: string): void => {
         LOGGER.log('Refresh TableBox, box: ' + why);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             cells = getCells();
             templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
             templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
@@ -101,7 +101,7 @@
             targetIndex = details.column - 1;
         }
 
-        if (!isNullOrUndefined(data)) {
+        if (notNullOrUndefined(data)) {
             if (isFreNodeReference(data.element)) {
                 LOGGER.log(`DROPPING item [${data.element.name}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
             } else if (isFreNode(data.element)) {

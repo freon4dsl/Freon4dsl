@@ -2,7 +2,7 @@
     import '@material/web/slider/slider.js';
     import { NUMERICSLIDER_LOGGER } from './ComponentLoggers.js';
     import { MdSlider } from '@material/web/slider/slider.js';
-    import { isNullOrUndefined } from '@freon4dsl/core';
+    import { notNullOrUndefined } from '@freon4dsl/core';
     import type { NumberControlBox } from '@freon4dsl/core';
     import { onMount } from 'svelte';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
@@ -27,7 +27,7 @@
         LOGGER.log(
             'NumericSliderComponent.onChange for box ' + box.role + ', value:' + sliderElement.value
         );
-        value = !isNullOrUndefined(sliderElement.value) ? sliderElement.value : 0;
+        value = notNullOrUndefined(sliderElement.value) ? sliderElement.value : 0;
         box.setNumber(value);
         if (box.selectable) {
             editor.selectElementForBox(box);

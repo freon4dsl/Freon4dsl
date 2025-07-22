@@ -7,7 +7,7 @@
      * a break ('<br>').
      */
     import RenderComponent from './RenderComponent.svelte';
-    import { Box, FreLogger, ListDirection, LayoutBox, isNullOrUndefined } from '@freon4dsl/core';
+    import { Box, FreLogger, ListDirection, LayoutBox, notNullOrUndefined } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import ErrorMarker from './ErrorMarker.svelte';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
@@ -25,7 +25,7 @@
     let errMess: string[] = $state([]); // error message to be shown when element is hovered
 
     async function setFocus(): Promise<void> {
-        if (!isNullOrUndefined(element)) {
+        if (notNullOrUndefined(element)) {
             element.focus();
         }
     }
@@ -40,7 +40,7 @@
 
     const refresh = (why?: string): void => {
         LOGGER.log('REFRESH LayoutComponent (' + why + ')' + box?.node?.freLanguageConcept());
-        id = !isNullOrUndefined(box) ? componentId(box) : 'layout-for-unknown-box';
+        id = notNullOrUndefined(box) ? componentId(box) : 'layout-for-unknown-box';
         children = [...box.children];
         isHorizontal = box.getDirection() === ListDirection.HORIZONTAL;
         if (box.hasError) {

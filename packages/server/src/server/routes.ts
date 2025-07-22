@@ -43,12 +43,12 @@ router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
         ctx.message = "Missing query parameter 'folder'";
     }
 });
-router.put("/putModel", async (ctx: Router.IRouterContext) => {
+router.put("/saveModel", async (ctx: Router.IRouterContext) => {
     const model = ctx.query["model"];
     const language = ctx.query["language"];
-    console.log("PutModel: " + model + ` language: ${language}`);
+    console.log("saveModel: " + model + ` language: ${language}`);
     if ((!!model) && typeof model === "string") {
-        ModelRequests.putModel(model, language, ctx);
+        ModelRequests.saveModel(model, language, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
@@ -56,12 +56,12 @@ router.put("/putModel", async (ctx: Router.IRouterContext) => {
     }
     ctx.body = { massage: (ctx.request as any).body };
 });
-router.put("/putModelUnit", async (ctx: Router.IRouterContext) => {
+router.put("/saveModelUnit", async (ctx: Router.IRouterContext) => {
     const model = ctx.query["model"];
     const unit = ctx.query["unit"];
-    console.log("PutModelUnit: " + model + "/" + unit);
+    console.log("saveModelUnit: " + model + "/" + unit);
     if ((!!unit || !!model) && typeof unit === "string" && typeof model === "string") {
-        ModelRequests.putModelUnit(model, unit, ctx);
+        ModelRequests.saveModelUnit(model, unit, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed

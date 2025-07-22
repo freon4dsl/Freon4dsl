@@ -43,7 +43,7 @@ describe("Freon Model Server", () => {
     });
 
     test(" create a model", async () => {
-        const response2 = await serv.put(`/putModel?model=${encodeURIComponent("631(&$][:) 12!")}&language=MyLang`);
+        const response2 = await serv.put(`/saveModel?model=${encodeURIComponent("631(&$][:) 12!")}&language=MyLang`);
         expect(response2.status).toBe(201);
     });
 
@@ -71,7 +71,7 @@ describe("Freon Model Server", () => {
 
     test(" is able to save a unit", async () => {
         const unitName: string = "NIEUW";
-        const response1 = await serv.put(`/putModelUnit?model=${modelName}&unit=${unitName}`);
+        const response1 = await serv.put(`/saveModelUnit?model=${modelName}&unit=${unitName}`);
         expect(response1.status).toBe(201);
         const response3 = await serv.get(`/getModelUnit?model=${modelName}&unit=${unitName}`);
         expect(response3.status).toBe(201);
@@ -82,7 +82,7 @@ describe("Freon Model Server", () => {
     test(" is able to delete a unit", async () => {
         const unitName: string = "NIEUW";
         // create a new unit
-        await serv.put(`/putModelUnit?model=${modelName}&unit=${unitName}`);
+        await serv.put(`/saveModelUnit?model=${modelName}&unit=${unitName}`);
         // and delete it
         const response1 = await serv.get(`/deleteModelUnit?model=${modelName}&unit=${unitName}`);
         expect(response1.status).toBe(201);
@@ -95,7 +95,7 @@ describe("Freon Model Server", () => {
         const modelName2: string = "toBeDeleted";
         const unitName: string = "NIEUW";
         // create a new model and unit
-        await serv.put(`/putModelUnit?model=${modelName2}&unit=${unitName}`);
+        await serv.put(`/saveModelUnit?model=${modelName2}&unit=${unitName}`);
         // and delete it
         const response1 = await serv.get(`/deleteModel?model=${modelName2}`);
         expect(response1.status).toBe(201);

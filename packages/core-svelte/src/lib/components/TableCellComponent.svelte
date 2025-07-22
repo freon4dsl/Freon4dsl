@@ -27,7 +27,7 @@
         isTableBox,
         isElementBox,
         ElementBox,
-        isNullOrUndefined,
+        notNullOrUndefined,
         isFreNodeReference,
         isFreNode,
         MenuItem
@@ -59,7 +59,7 @@
 
     // local variables
     const LOGGER = TABLECELL_LOGGER;
-    let id: string = !isNullOrUndefined(box)
+    let id: string = notNullOrUndefined(box)
         ? `cell-${componentId(box)}`
         : 'table-cell-for-unknown-box';
 
@@ -74,7 +74,7 @@
 
     const refresh = (why?: string) => {
         LOGGER.log('TableCellComponent refresh, why: ' + why);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             if (parentOrientation === TableDirection.HORIZONTAL) {
                 row = box.row;
                 column = box.column;
@@ -167,7 +167,7 @@
         // close any context menu
         contextMenuVisible.value = false;
 
-        if (!isNullOrUndefined(event.dataTransfer)) {
+        if (notNullOrUndefined(event.dataTransfer)) {
             // give the drag an effect
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.dropEffect = 'move';
@@ -177,7 +177,7 @@
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
         // Create the data to be transferred and notify the store that something is being dragged.
         const parentTableBox: TableBox | undefined = box.getParentTableBox()
-        if (!isNullOrUndefined(parentTableBox)) {
+        if (notNullOrUndefined(parentTableBox)) {
             rememberDraggedNode(parentTableBox.id, box.getParentTableBox()!, box);
             // console.log(`dragstart: ${draggedElem.value?.element.freLanguageConcept()}`)
         }
@@ -229,7 +229,7 @@
             }
         }
         // open the context menu
-        if (!isNullOrUndefined(contextMenu.instance)) {
+        if (notNullOrUndefined(contextMenu.instance)) {
             let index: number;
             // determine the contents of the menu based on box
             // if the selected box is the placeholder or a title/header => show different menu items

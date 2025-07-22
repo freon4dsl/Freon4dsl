@@ -15,7 +15,7 @@
         DELETE,
         ENTER,
         ARROW_RIGHT,
-        isNullOrUndefined,
+        notNullOrUndefined,
         isTableRowBox,
         isElementBox,
         AstActionExecutor,
@@ -219,9 +219,9 @@
     // function setViewportSizes(elem?: Element) {
     //     // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
     //     // A: I have no idea why.
-    //     if (!isNullOrUndefined(elem)) {
+    //     if (notNullOrUndefined(elem)) {
     //         let rect = elem.getBoundingClientRect();
-    //         if (!isNullOrUndefined(elem.parentElement)) {
+    //         if (notNullOrUndefined(elem.parentElement)) {
     //             let parentRect = elem.parentElement.getBoundingClientRect();
     //             viewport.value.setSizes(rect.height, rect.width, parentRect.top, parentRect.left);
     //         } else {
@@ -268,7 +268,7 @@
                 ' editor selectedBox is ' +
                 editor?.selectedBox?.kind
         );
-        if (!isNullOrUndefined(editor.selectedBox)) {
+        if (notNullOrUndefined(editor.selectedBox)) {
             //&& !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             await tick();
             selectedBoxes.value = getSelectableChildren(editor.selectedBox);
@@ -300,7 +300,7 @@
                 ' ==================> FreonComponent with rootbox ' +
                 rootBox?.id +
                 ' unit ' +
-                (!isNullOrUndefined(rootBox?.node)
+                (notNullOrUndefined(rootBox?.node)
                     ? rootBox.node['name' as keyof FreNode]
                     : 'undefined')
         );

@@ -4,7 +4,7 @@ import {
     FreNodeBaseImpl,
     type FreNamedNode,
     FreUtils,
-    isNullOrUndefined
+    notNullOrUndefined
 } from '@freon4dsl/core';
 import { SimpleElement } from './SimpleElement.js';
 import { makeObservable, observable } from 'mobx';
@@ -17,10 +17,10 @@ export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode {
      */
     static create(data: Partial<ElementWithList>): ElementWithList {
         const result = new ElementWithList();
-        if (!isNullOrUndefined(data.name)) {
+        if (notNullOrUndefined(data.name)) {
             result.name = data.name;
         }
-        if (!isNullOrUndefined(data.myList)) {
+        if (notNullOrUndefined(data.myList)) {
             data.myList.forEach((x) => result.myList.push(x));
         }
         return result;
@@ -35,7 +35,7 @@ export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode {
 
     constructor(id?: string) {
         super();
-        if (!isNullOrUndefined(id)) {
+        if (notNullOrUndefined(id)) {
             this.$id = id;
         } else {
             this.$id = FreUtils.ID(); // uuid.v4();
@@ -94,10 +94,10 @@ export class ElementWithList extends FreNodeBaseImpl implements FreNamedNode {
      */
     copy(): ElementWithList {
         const result = new ElementWithList();
-        if (!isNullOrUndefined(this.name)) {
+        if (notNullOrUndefined(this.name)) {
             result.name = this.name;
         }
-        if (!isNullOrUndefined(this.myList)) {
+        if (notNullOrUndefined(this.myList)) {
             this.myList.forEach((x) => result.myList.push(x.copy()));
         }
         return result;

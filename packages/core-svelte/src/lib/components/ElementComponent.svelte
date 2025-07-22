@@ -1,7 +1,7 @@
 <script lang="ts">
     import { ELEMENT_LOGGER } from './ComponentLoggers.js';
     import RenderComponent from './RenderComponent.svelte';
-    import { Box, ElementBox, isNullOrUndefined } from '@freon4dsl/core';
+    import { Box, ElementBox, notNullOrUndefined } from '@freon4dsl/core';
     import { componentId } from '../index.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
@@ -15,7 +15,7 @@
 
     const refresh = (why?: string): void => {
         LOGGER.log('REFRESH ElementComponent (' + why + ')' + box?.node?.freLanguageConcept());
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             id = componentId(box);
             childBox = box.content;
         } else {
@@ -25,7 +25,7 @@
 
     async function setFocus(): Promise<void> {
         LOGGER.log('ElementComponent.setFocus for box ' + box.role);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             box.content.setFocus();
         }
     }
@@ -39,6 +39,6 @@
     });
 </script>
 
-{#if !isNullOrUndefined(childBox)}
+{#if notNullOrUndefined(childBox)}
     <RenderComponent box={childBox} {editor} />
 {/if}

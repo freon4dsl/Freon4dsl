@@ -10,8 +10,8 @@ const storeFolder = "./modelstore";
 export class ModelRequests {
     public static validate = false;
     
-    public static async putModel(modelname: string, language: string, ctx: IRouterContext) {
-        console.log(`ModelRequest2.putModel ${modelname} language ${language}`)
+    public static async saveModel(modelname: string, language: string, ctx: IRouterContext) {
+        console.log(`ModelRequest2.saveModel ${modelname} language ${language}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
@@ -45,15 +45,15 @@ export class ModelRequests {
      * @param unitname  The name of the unit to store
      * @param ctx       The `ctx.request.body` is the contents of the `unitname` to be stored.
      */
-    public static async putModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
-        console.log(`ModelRequest2.putModelUnit ${modelname}::${unitname}`)
+    public static async saveModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
+        console.log(`ModelRequest2.saveModelUnit ${modelname}::${unitname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
             let model = catalog.models.find(m => m.name === modelname)
             if (model === undefined) {
                 // Error, model should be defined.
-                ctx.response.body = `putModelUnit failed because model '${modelname}' does not exist`;
+                ctx.response.body = `saveModelUnit failed because model '${modelname}' does not exist`;
                 ctx.response.status = 412
                 return
             }

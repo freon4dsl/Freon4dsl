@@ -21,7 +21,7 @@
         type SelectOption,
         TextBox,
         BehaviorExecutionResult,
-        isNullOrUndefined
+        isNullOrUndefined, notNullOrUndefined
     } from '@freon4dsl/core';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import { selectedBoxes } from './stores/AllStores.svelte.js';
@@ -47,7 +47,7 @@
     });
     
     let id: string = $state(''); // an id for the html element
-    id = !isNullOrUndefined(box) ? componentId(box) : 'textdropdown-with-unknown-box';
+    id = notNullOrUndefined(box) ? componentId(box) : 'textdropdown-with-unknown-box';
     let isEditing: boolean = $state(false); // becomes true when the text field gets focus
     let dropdownShown: boolean = $state(false); // when true the dropdown element is shown
     let text: string = $state(''); // the text in the text field
@@ -82,7 +82,7 @@
      */
     const setFocus = () => {
         LOGGER.log('TextDropdownComponent.setFocus ' + box.kind + id);
-        if (!isNullOrUndefined(textComponent)) {
+        if (notNullOrUndefined(textComponent)) {
             textComponent.setFocus();
         } else {
             LOGGER.error('TextDropdownComponent ' + id + ' has no textComponent');
@@ -108,7 +108,7 @@
         if (isSelectBox(box)) {
             let selectedOption = box.getSelectedOption();
             LOGGER.log('    selectedOption is ' + selectedOption?.label);
-            if (!isNullOrUndefined(selectedOption)) {
+            if (notNullOrUndefined(selectedOption)) {
                 setTextLocalAndInBox(selectedOption.label);
                 selected = selectedOption;
             } else {
@@ -294,7 +294,7 @@
                             }
                         }
                         // store or execute the option
-                        if (!isNullOrUndefined(chosenOption)) {
+                        if (notNullOrUndefined(chosenOption)) {
                             storeOrExecute(chosenOption);
                         } else {
                             //  no valid option, restore the original text
@@ -348,7 +348,7 @@
         const index = filteredOptions.findIndex((o) => o === sel);
         if (index >= 0 && index < filteredOptions.length) {
             const chosenOption = filteredOptions[index];
-            if (!isNullOrUndefined(chosenOption)) {
+            if (notNullOrUndefined(chosenOption)) {
                 storeOrExecute(chosenOption);
             }
         }
@@ -374,7 +374,7 @@
         LOGGER.log(
             `    startEditing allOptions ${allOptions.map((o) => o.label)} dropDown: ${dropdownShown}`
         );
-        if (!isNullOrUndefined(details)) {
+        if (notNullOrUndefined(details)) {
             if (isNullOrUndefined(text) || text.length === 0) {
                 setFiltered(allOptions.filter(() => true));
             } else {

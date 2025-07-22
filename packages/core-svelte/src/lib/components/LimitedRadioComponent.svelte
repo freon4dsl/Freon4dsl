@@ -8,7 +8,7 @@
         ARROW_UP,
         AST,
         CONTROL,
-        isNullOrUndefined,
+        notNullOrUndefined,
         LimitedControlBox,
         SHIFT
     } from '@freon4dsl/core';
@@ -46,7 +46,7 @@
      */
     async function setFocus(): Promise<void> {
         let selected = findSelectedElement();
-        if (!isNullOrUndefined(selected)) {
+        if (notNullOrUndefined(selected)) {
             selected.focus();
         }
     }

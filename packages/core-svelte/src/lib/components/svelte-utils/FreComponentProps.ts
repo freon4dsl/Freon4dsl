@@ -17,14 +17,6 @@ export interface FreComponentProps<T extends Box> extends MainComponentProps {
 }
 
 /**
- * Properties for a GridComponent
- */
-export interface GridProps {
-    editor: FreEditor;
-    box: GridBox;
-}
-
-/**
  * Properties for a GridCellComponent
  */
 export interface GridCellProps<T extends Box> extends FreComponentProps<T> {
