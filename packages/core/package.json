@@ -25,6 +25,7 @@
     "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "format": "prettier --write .",
+    "lint": "eslint",
     "test": "vitest run",
     "release": "npm publish",
     "publish-local": "npm publish --registry http://localhost:4873",

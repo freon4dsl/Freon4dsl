@@ -42,7 +42,6 @@
     "publish-local": "npm publish --verbose --registry http://localhost:4873",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
-    "lint": "tslint -c ./tslint.json './src/**/*.ts*'",
     "test": "vitest run",
     "circular": "madge --circular src/* > DEPENDENCIES.md"
   },

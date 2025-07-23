@@ -25,7 +25,6 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "format": "prettier --write .",
-    "lint": "prettier --check . && eslint .",
     "package": "svelte-kit sync && svelte-package && publint",
     "prepublishOnly": "npm run package",
     "build-release": "npm run build",

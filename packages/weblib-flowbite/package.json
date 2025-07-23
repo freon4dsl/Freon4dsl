@@ -32,7 +32,6 @@
 		"publish-local": "npm publish --registry http://localhost:4873",
 		"unpublish-local": "npm unpublish --force --registry http://localhost:4873",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
 		"styles": "cross-env NODE_ENV=production npx @tailwindcss/cli -i src/lib-only.css -o src/lib/styles/lib-styles.css --minify"
