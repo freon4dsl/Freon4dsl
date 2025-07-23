@@ -8,13 +8,11 @@ This example show a language with Modules containing Classes containing Properti
 modelunit Module {
     name: identifier
     classes: Class[];
-    intfaces: Intface[]
 }
 concept Class {
     name: identifier;
     features: Features[];
     reference extends: Class;
-    reference implememnts: Intface;
 }
 abstract concept Feature {
     name: identifier;
@@ -69,10 +67,10 @@ ClassB declaredNodes = [B1, B2]
        importedNodes = []
        visibleNodes  = [B1, B2, ClassA, ClassB]
 
-Mod1 declaredNodes   = [Class_A, Class_B]
+Mod1 declaredNodes   = [ClassA, ClassB]
      fromParentNodes = []
      additionalNodes = []
-     visibleNodes    = [Class_A, Class_B]
+     visibleNodes    = [ClassA, ClassB]
 
 A1: declaredNodes = [A1_1, A2_2]
     parentNodes   = [A1, A2, ClassA, ClassB]. // up to the root namespace
