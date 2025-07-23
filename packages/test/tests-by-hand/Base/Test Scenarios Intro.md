@@ -11,3 +11,9 @@ There are also test webpages in the core-svelte package, which should also be ch
  * Editor Web Actions: the functionality of the webapp concerning actions with regard to the editor content, like cut, paste.
  * Core Editor Actions: the functionality of the core editor.
  * Editing Expressions: the functionality concerning expressions in the core editor.
+
+## How to work with these Tests
+
+For each mayor test series, take a copy of the test scripts in folder Basis and put them in a designated folder. 
+Then perform the tests and add any errors found and/or comments in the copied file. (This keeps the base files clean!)
+Of course, any errors found need to be fixed and checked again.
