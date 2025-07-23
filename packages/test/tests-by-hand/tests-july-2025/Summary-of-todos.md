@@ -37,6 +37,24 @@ When pasting while first element of gradeA is selected, the cursor moves to the 
 In test Scenario 5 text changes in `pie1`, but the cursor and focus remains in `pie2`. Undo and redo work properly,
 but the selection is not set correctly.
 
+## Core Editor Actions
+
+### CE1
+When opening _Fractions101_, although the filed _Fractions_ is highlighted, you cannot use the TAB to change selection.
+Once you select an element with the mouse, tabbing and arrows work fine.
+
+### CE2
+Deleting a list element: transition is slow and not pretty.
+
+### CE3
+After deleting the denominator of a Fraction, what behaviour do we expect from the delete button? (Scenario 7)
+
+### CE4
+Upon ENTER a new list element is NOT added in the table after _gradeA_ (WHAT BEHAVIOUR DO WE EXPECT?!!!, Scenario 8).
+
+### CE5
+The DELETE key does not remove anything anymore, sometime backspace does, but not in a table. This means that 
+table rows can only be deleted by using the context menu.
 
 ## Remaining Issues from CRCHub
 
@@ -80,6 +98,10 @@ After changing the views/projections, there is no selection on the page.
 ### OR9
 After a text search is done the search field is still the selected color. 
 When removing the text in the field the freon color comes back. 
+
+### OR10
+Remove or comment out console.logs in core and core-svelte (a.o. CommonFunctions, 
+ListUtil, TableCellComponent, InMemoryModel).
 
 ## On documentation project
 

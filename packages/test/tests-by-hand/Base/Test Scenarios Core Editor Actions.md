@@ -110,7 +110,7 @@ These scenarios test the functionality concerning adding and deleting elements i
 
 These scenarios test the functionality concerning adding and deleting elements in a table.
 
-### Scenario 6: adding
+### Scenario 8: adding
 
 |     | Action                                                  | Expected result                                                                                  |
 |:--- |:------------------------------------------------------- |:------------------------------------------------------------------------------------------------ |
@@ -125,7 +125,7 @@ These scenarios test the functionality concerning adding and deleting elements i
 |     | Repeat behavior as you like                             | elements are added                                                                               |
 
 
-### Scenario 7: deleting
+### Scenario 9: deleting
 
 |     | Action                                                  | Expected result                                     |
 |:----|:------------------------------------------------------- |:----------------------------------------------------|
