@@ -13,10 +13,6 @@ The BooleanSwitchComponent on the other hand misses the container color.
 ### CW3
 The font size of the text component changes when it is selected.
 
-### CW4
-In Drag and drop tests, the elements in the tables don't have drag handles and can't be dragged.
-
-
 ## Editor Web Actions
 
 ### EW1
@@ -110,6 +106,9 @@ We might want to add a save button at the top toolbar.
 ### OR12
 Remove or comment out console.logs in core and core-svelte (a.o. CommonFunctions,
 ListUtil, TableCellComponent, InMemoryModel).
+
+### OR13
+When something goes wrong in server communication the user should get a readable error message.
 
 ## On documentation project
 
