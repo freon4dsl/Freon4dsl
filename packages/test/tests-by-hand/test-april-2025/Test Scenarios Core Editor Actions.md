@@ -91,8 +91,8 @@ When typing Enter the dialog should be closed. other keys should be ignored.
 :a: Results in Mobx error and _gradeF_ disappears from the editor.
 
 ```asciidoc
-AstChanger.ts:21 
- AST.change: Error: [MobX] Modification exception: the internal structure of an observable array was changed
+AstChanger.ts:21
+AST.change: Error: [MobX] Modification exception: the internal structure of an observable array was changed
 ```
 
 **Solved** See TableComponent and TableCellComponent
@@ -142,7 +142,7 @@ These scenarios test the functionality concerning adding and deleting elements i
 |     | Use mouse to show context menu, and select _Add before_ | a new list element is added before _gradeA_, cursor is in the <condition> box of the new element |
 |     | Repeat behavior as you like                             | elements are added                                                                               |
 
-:a: Enter is overloaded, inside a reference it shows the dropdown or selects from the dropdown. Elsewhere, it adds an element to the list.
+:a: Enter is overloaded, inside a reference it show the dropdown or selects from the dropdown. Elsewjhere it adds an element to the list.
 I think we should not add elements at typing Enter, as it is confusing.
 
 ### Scenario 7: deleting

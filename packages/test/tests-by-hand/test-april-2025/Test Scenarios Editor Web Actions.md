@@ -8,16 +8,17 @@ At the start of these scenarios, a model unit is available in the editor.
 ### Scenario 1: correct placement of pasted element
 
 |     | Action                                                                       | Expected result                             |
-|:----|:---------------------------------------------------------------------------- |:--------------------------------------------|
+|:--- |:---------------------------------------------------------------------------- |:------------------------------------------- |
 |     | Open language Education, model Edu-test, unit Fractions101                   | Freon is opened, Fractions101 unit is shown |
 |     | Select first question (_pie_) from _Theory101_ completely, choose _Cut_      | The question is removed                     |
 |     | Select first question from _Practice1_ (_lollipops1_), choose _Paste_ button | The question appears below (_lollipops1_)   |
-|     | Select placeholder for questions from _Practice1_, type _Ctlr-v_             | The question appears above the placeholder  |
+| :x: | Select placeholder for questions from _Practice1_, type _Ctlr-v_             | The question appears above the placeholder  |
 |     | Select a line of content from _Theory101_, type _Ctlr-c_                     | Message: text is copied to clipboard        |
-|     | Select <content> placeholder from _Example1_, choose _Paste_ button          | The text appears above the placeholder      |
+| :x: | Select <content> placeholder from _Example1_, choose _Paste_ button          | The text appears above the placeholder      |
 |     | Select Score>GradeA from _Theory101_, type _Ctlr-x_                          | The Grade disappears                        |
-|     | Select Score>GradeA from _Practice1_, choose _Paste_ button                  | The Grade appears above Score>GradeA        |
+|     | Select Score>GradeA from _Practice1_, choose _Paste_ button                  | The Grade appears above the placeholder :a: |
 
+:a: Appears at the top of the list, not before the placeholder
 
 ### Scenario 2: incorrect placement of pasted element
 
@@ -95,7 +96,7 @@ That is probably why _Ctrl-z_ and _Ctrl-y_ don't work. They do work if I put the
 |     | Select Redo                                                      | The text appears again                                           |
 |     | Repeat this type of behavior for whatever element you like       | ...                                                              |
 
-:a: ON a Mac you need to use _Cmd-z_ and _Cmd-y_ in a text field because that is the default Mac behavior 
+:a: ON a Mac you need to use _Cmd-z_ and _Cmd-y_ in a text field because that is the default Mac behavior
 
 :b: text changes in `pie1`, but the cursor and focus remains in `pie2`.
 
@@ -130,7 +131,7 @@ This is ok.
 
 **Solved**: the Box cache is cleared when new views/projections are chosen. The `box` in the Svelte component is a new box, buit it does not have the `setFocus` attached to it. This used to be done in the `afterUpdate` in Svelte 4.
 
-Solved by attaching `setFocus` in `effect(...)` in `TextComponent`. 
+Solved by attaching `setFocus` in `effect(...)` in `TextComponent`.
 
 ## Search
 
