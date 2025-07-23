@@ -49,7 +49,6 @@ Can the indent component not add a new span, but indent it child using css?
 ### CH3
 Is the way Graham uses `initialize` and `singularity` the right way to stop the effects from looping? 
 
-
 ## Other Remaining Issues
 
 ### OR1
@@ -80,6 +79,16 @@ After changing the views/projections, there is no selection on the page.
 ### OR9
 After a text search is done the search field is still the selected color. 
 When removing the text in the field the freon color comes back. 
+
+### OR10
+Add version to language definition, and use it while reading/writing models for migration scenario.
+
+### OR11
+The save current model unit ih the flowbite app is too far away, you need to open thye model/unis pane,
+then goto the current unit, open the menu and select Save.
+
+We might want to add a save button at the top toolbar.
+
 
 ## On documentation project
 
