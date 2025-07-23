@@ -59,93 +59,92 @@ ERR: _Ctrl-z_ and _Ctrl-y_ both work (Edge browser, MacOs), but not in (Chrome, 
 
 ### Scenario 4: undo, redo with multiple editor tabs
 
-|     | Action                                                                   | Expected result                              |
-|:--- |:-------------------------------------------------------------------------|:-------------------------------------------- |
-|     | Open language Education, model Edu-test, unit Fractions101               | Freon is opened, Fractions101 unit is shown  |
-|     | Select <content> placeholder from _Theory101_, add a Line with some text | The text appears above the placeholder       |
-|     | Open unit Fractions103                                                   | Unit Fractions103 is shown                   |
-|     | Select <content> placeholder from _Theory103_, add a Line with some text | The text appears above the placeholder       |
-|     | Select _Undo_                                                            | The Line from Fractions103 disappears        |
-|     | Select _Redo_                                                            | The Line appears again                       |
-|     | Type _Ctrl-z_                                                            | The Line disappears    (NOT FUNCTIONING YET) |
-|     | Type _Ctrl-y_                                                            | The Line appears again (NOT FUNCTIONING YET) |
-|     | Select _Undo_                                                            | The Line from Fractions103 disappears        |
-|     | Go back to unit Fractions101                                             | Unit Fractions101 is shown                   |
-|     | Select _Undo_                                                            | The Line from Fractions101 disappears        |
-|     | Select _Redo_                                                            | The Line appears again                       |
-|     | Type _Ctrl-z_                                                            | The Line disappears    (NOT FUNCTIONING YET) |
-|     | Type _Ctrl-y_                                                            | The Line appears again (NOT FUNCTIONING YET) |
-|     | Repeat this type of behavior                                             |                                              |
+|      | Action                                                                   | Expected result                              |
+|:-----|:-------------------------------------------------------------------------|:---------------------------------------------|
+|      | Open language Education, model Edu-test, unit Fractions101               | Freon is opened, Fractions101 unit is shown  |
+|      | Select <content> placeholder from _Theory101_, add a Line with some text | The text appears above the placeholder       |
+|      | Open unit Fractions103                                                   | Unit Fractions103 is shown                   |
+|      | Select <content> placeholder from _Theory103_, add a Line with some text | The text appears above the placeholder       |
+|      | Select _Undo_                                                            | The Line from Fractions103 disappears        |
+|      | Select _Redo_                                                            | The Line appears again                       |
+|      | Type _Ctrl-z_                                                            | The Line disappears    (NOT FUNCTIONING YET) |
+|      | Type _Ctrl-y_                                                            | The Line appears again (NOT FUNCTIONING YET) |
+|      | Select _Undo_                                                            | The Line from Fractions103 disappears        |
+|      | Go back to unit Fractions101                                             | Unit Fractions101 is shown                   |
+|      | Select _Undo_                                                            | The Line from Fractions101 disappears        |
+|      | Select _Redo_                                                            | The Line appears again                       |
+|      | Type _Ctrl-z_                                                            | The Line disappears    (NOT FUNCTIONING YET) |
+|      | Type _Ctrl-y_                                                            | The Line appears again (NOT FUNCTIONING YET) |
+|      | Repeat this type of behavior                                             |                                              |
+| DONE |                                                                          |                                              |
 
 ### Scenario 5: undo, redo within a text component
 
-|     | Action                                                           | Expected result                                                  |
-|:--- |:---------------------------------------------------------------- |:---------------------------------------------------------------- |
-|     | Open language Education, model Edu-test, unit Fractions101       | Freon is opened, Fractions101 unit is shown                      |
-|     | Select the text of the first question (_pie_) from _Theory101_   | The text appears editable                                        |
-|     | Change something in the text, like deleting or adding characters | The text is changed                                              |
-|     | Type Ctrl-z                                                      | The text appears again  :a:                                      |
-|     | Select the text of the second question (_pie2_) from _Theory101_ | The text from pie2 appears editable                              |
-| :x: | Select Undo                                                      | The text appears again in pie1, and this element is selected :b: |
-| :x: | Select Redo                                                      | The text disappears again, pie1 is still selected                |
-|     | Select the text of the second question (_pie2_) from _Theory101_ | The text from pie2 appears editable                              |
-|     | Change something in the text, like deleting or adding characters | The text is changed                                              |
-|     | Select Undo                                                      | The text appears again                                           |
-|     | Select Redo                                                      | The text appears again                                           |
-|     | Repeat this type of behavior for whatever element you like       | ...                                                              |
+|      | Action                                                             | Expected result                                              |
+|:-----|:-------------------------------------------------------------------|:-------------------------------------------------------------|
+|      | Open language Education, model Edu-test, unit Fractions101         | Freon is opened, Fractions101 unit is shown                  |
+|      | Select the text of the first question (_pie_) from _Theory101_     | The text appears editable                                    |
+|      | Change something in the text, like deleting or adding a character  | The text is changed                                          |
+|      | Type Ctrl-z                                                        | The text becomes as it was before the change                 |
+|      | Type Ctrl-y                                                        | The text is changed back                                     |
+|      | Select the text of the second question (_pie2_) from _Theory101_   | The text from pie2 appears editable                          |
+| ERR  | Select Undo                                                        | The text appears again in pie1, and this element is selected |
+|      | Select Redo                                                        | The text disappears again, pie1 is still selected            |
+|      | Select the text of the second question (_pie2_) from _Theory101_   | The text from pie2 appears editable                          |
+|      | Change something in the text, like deleting or adding characters   | The text is changed                                          |
+|      | Select Undo                                                        | The text appears again                                       |
+|      | Select Redo                                                        | The text appears again                                       |
+|      | Repeat this type of behavior for whatever element you like         | ...                                                          |
+| DONE |                                                                    |                                                              |
 
-:a: ON a Mac you need to use _Cmd-z_ and _Cmd-y_ in a text field because that is the default Mac behavior
-
-:b: text changes in `pie1`, but the cursor and focus remains in `pie2`.
+ERR: selection is not correct.
 
 ## Validate, Interpret
 
 ### Scenario 6: validate
 
-|     | Action                                                  | Expected result                              |
-|:--- |:------------------------------------------------------- |:-------------------------------------------- |
-|     | Open language Education, model Edu-test, unit StartFlow | Freon is opened, Fractions101 unit is shown  |
-| :x: | Select _Validate_                                       | Errors found shown   :a:                     |
-|     | Select arrow button after one of the messages           | The faulty element is selected in the editor |
-|     | Open unit TestB                                         | TestB unit is shown                          |
-|     | Select _Interpret_                                      | Interpreter results shown   :b:              |
+|      | Action                                                  | Expected result                              |
+|:-----|:--------------------------------------------------------|:---------------------------------------------|
+|      | Open language Education, model Edu-test, unit StartFlow | Freon is opened, Fractions101 unit is shown  |
+|      | Select _Validate_                                       | Errors found shown                           |
+|      | Select arrow button after one of the messages           | The faulty element is selected in the editor |
+|      | Open unit TestB                                         | TestB unit is shown                          |
+|      | Select _Interpret_                                      | Interpreter results shown                    |
+| DONE |                                                         |                                              |
 
-:a: No errors  found (text in errors list)
 
-:b: Result in imyterpreter pane: `Error: Next page of step Theory102 => should be Theory103, not Video1.`
+NB Result in interpreter pane: `Error: Next page of step Theory102 => should be Theory103, not Video1.`
 This is ok.
 
 ## Views
 
 ### Scenario 7: views
 
-|     | Action                                                       | Expected result                             |
-|:--- |:------------------------------------------------------------ |:------------------------------------------- |
-|     | Open language Education, model Edu-test, unit Fractions101   | Freon is opened, Fractions101 unit is shown |
-|     | Select _View(s)_                                             | View dialog shown                           |
-|     | Select or deselect some of the views, choose _Apply changes_ | The editor shows the correct view :a:       |
+|      | Action                                                       | Expected result                          |
+|:-----|:-------------------------------------------------------------|:-----------------------------------------|
+|      | Open language Education, model Edu-test, unit _StartFlow_    | Freon is opened, StartFlow unit is shown |
+|      | Select _View(s)_                                             | View dialog shown                        |
+|      | Select or deselect some of the views, choose _Apply changes_ | The editor shows the correct view        |
+| DONE |                                                              |                                          |
 
-:a: After changing the views/projections, moving to text fields with the keyboard does not set the HTML focus, so you cannot edit the text.
-
-**Solved**: the Box cache is cleared when new views/projections are chosen. The `box` in the Svelte component is a new box, buit it does not have the `setFocus` attached to it. This used to be done in the `afterUpdate` in Svelte 4.
-
-Solved by attaching `setFocus` in `effect(...)` in `TextComponent`.
 
 ## Search
 
 ### Scenario 8: search text
 
-|     | Action                                                     | Expected result                             |
-|:--- |:---------------------------------------------------------- |:------------------------------------------- |
-|     | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
-|     | Select _Search_, and enter 'pie', ENTER key                | Search results (4) are shown                |
-|     | Select arrow button after one of the messages              | The found element is selected in the editor |
+|      | Action                                                     | Expected result                             |
+|:-----|:-----------------------------------------------------------|:------------------------------------------- |
+|      | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
+|      | Select _Search_, and enter 'pie', ENTER key                | Search results (4) are shown                |
+|      | Select arrow button after one of the messages              | The found element is selected in the editor |
+| DONE |                                                            |                                              |
 
 ### Scenario 9: search on element type
 
-|     | Action                                                     | Expected result                             |
-|:--- |:---------------------------------------------------------- |:------------------------------------------- |
-|     | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
-|     | Select _Element..._                                        | Search element dialog is shown              |
-|     | Enter some text, ENTER key                                 | Search results are shown                    |
-|     | Select arrow button after one of the messages              | The found element is selected in the editor |
+|      | Action                                                     | Expected result                             |
+|:-----|:-----------------------------------------------------------|:------------------------------------------- |
+|      | Open language Education, model Edu-test, unit Fractions101 | Freon is opened, Fractions101 unit is shown |
+|      | Select _Element..._                                        | Search element dialog is shown              |
+|      | Enter some text, ENTER key                                 | Search results are shown                    |
+|      | Select arrow button after one of the messages              | The found element is selected in the editor |
+| DONE |                                                            |                                              |

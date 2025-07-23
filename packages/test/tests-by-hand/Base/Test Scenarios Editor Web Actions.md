@@ -72,21 +72,23 @@ NB The _Redo_ redo's adding the line and adding the text in two steps. This is n
 
 ### Scenario 5: undo, redo within a text component
 
-|    | Action                                                           | Expected result                                                |
-|:---|:---------------------------------------------------------------- |:---------------------------------------------------------------|
-|    | Open language Education, model Edu-test, unit Fractions101       | Freon is opened, Fractions101 unit is shown                    |
-|    | Select the text of the first question (_pie_) from _Theory101_   | The text appears editable                                      |
-|    | Change something in the text, like deleting or adding characters | The text is changed                                            |
-|    | Type Ctrl-z                                                      | The text appears again                                         |
-|    | Select the text of the second question (_pie2_) from _Theory101_ | The text from pie2 appears editable                            |
-|    | Select Undo                                                      | The text appears again in pie1, and this element is selected   |
-|    | Select Redo                                                      | The text disappears again, pie1 is still selected              |
-|    | Select the text of the second question (_pie2_) from _Theory101_ | The text from pie2 appears editable                            |
-|    | Change something in the text, like deleting or adding characters | The text is changed                                            |
-|    | Select Undo                                                      | The text appears again                                         |
-|    | Select Redo                                                      | The text appears again                                         |
-|    | Repeat this type of behavior for whatever element you like       | ...                                                            |
+|    | Action                                                            | Expected result                                              |
+|:---|:------------------------------------------------------------------|:-------------------------------------------------------------|
+|    | Open language Education, model Edu-test, unit Fractions101        | Freon is opened, Fractions101 unit is shown                  |
+|    | Select the text of the first question (_pie_) from _Theory101_    | The text appears editable                                    |
+|    | Change something in the text, like deleting or adding a character | The text is changed                                          |
+|    | Type Ctrl-z                                                       | The text becomes as it was before the change                 |
+|    | Type Ctrl-y                                                       | The text is changed back                                     |    
+|    | Select the text of the second question (_pie2_) from _Theory101_  | The text from pie2 appears editable                          |
+|    | Select Undo                                                       | The text appears again in pie1, and this element is selected |
+|    | Select Redo                                                       | The text disappears again, pie1 is still selected            |
+|    | Select the text of the second question (_pie2_) from _Theory101_  | The text from pie2 appears editable                          |
+|    | Change something in the text, like deleting or adding characters  | The text is changed                                          |
+|    | Select Undo                                                       | The text appears again                                       |
+|    | Select Redo                                                       | The text appears again                                       |
+|    | Repeat this type of behavior for whatever element you like        | ...                                                          |
 
+NB ON a Mac you need to use _Cmd-z_ and _Cmd-y_ in a text field because that is the default Mac behavior.
 
 ## Validate, Interpret
 
@@ -100,15 +102,18 @@ NB The _Redo_ redo's adding the line and adding the text in two steps. This is n
 |     | Open unit TestB                                         | TestB unit is shown                          |
 |     | Select _Interpret_                                      | Interpreter results shown                    |
 
+NB Result in interpreter pane: `Error: Next page of step Theory102 => should be Theory103, not Video1.`
+This is ok.
+
 ## Views
 
 ### Scenario 7: views
 
-|     | Action                                                       | Expected result                             |
-|:--- |:------------------------------------------------------------ |:------------------------------------------- |
-|     | Open language Education, model Edu-test, unit Fractions101   | Freon is opened, Fractions101 unit is shown |
-|     | Select _View(s)_                                             | View dialog shown                           |
-|     | Select or deselect some of the views, choose _Apply changes_ | The editor shows the correct view :a:       |
+|     | Action                                                       | Expected result                          |
+|:--- |:------------------------------------------------------------ |:-----------------------------------------|
+|     | Open language Education, model Edu-test, unit _StartFlow_    | Freon is opened, StartFlow unit is shown |
+|     | Select _View(s)_                                             | View dialog shown                        |
+|     | Select or deselect some of the views, choose _Apply changes_ | The editor shows the correct view        |
 
 
 ## Search
