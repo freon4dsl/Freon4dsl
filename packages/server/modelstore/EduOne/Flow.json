@@ -5,14 +5,14 @@
       {
          "id": "ID-60",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-FlowDescription"
+            "key": "-key-FlowDescription"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
                   "key": "TODO_set-correct-key"
                },
@@ -22,9 +22,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowDescription-rules"
+                  "key": "-key-FlowDescription-rules"
                },
                "children": [
                   "ID-61",
@@ -36,9 +36,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowDescription-topic"
+                  "key": "-key-FlowDescription-topic"
                },
                "targets": [
                   {
@@ -54,24 +54,24 @@
       {
          "id": "ID-61",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-FlowRule"
+            "key": "-key-FlowRule"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-name"
+                  "key": "-key-FlowRule-name"
                },
                "value": "TheoryRule"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-description"
+                  "key": "-key-FlowRule-description"
                },
                "value": "A rule for Theory page"
             }
@@ -79,9 +79,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-transitions"
+                  "key": "-key-FlowRule-transitions"
                },
                "children": [
                   "ID-62",
@@ -92,9 +92,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-page"
+                  "key": "-key-FlowRule-page"
                },
                "targets": [
                   {
@@ -110,17 +110,17 @@
       {
          "id": "ID-62",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-PageTransition"
+            "key": "-key-PageTransition"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-condition"
+                  "key": "-key-PageTransition-condition"
                },
                "children": [
                   "ID-63"
@@ -130,9 +130,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-toPage"
+                  "key": "-key-PageTransition-toPage"
                },
                "targets": [
                   {
@@ -148,18 +148,18 @@
       {
          "id": "ID-63",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-GradeLiteral"
+            "key": "-key-GradeLiteral"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-GradeLiteral-grade"
+                  "key": "-key-GradeLiteral-grade"
                },
                "targets": [
                   {
@@ -175,17 +175,17 @@
       {
          "id": "ID-64",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-PageTransition"
+            "key": "-key-PageTransition"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-condition"
+                  "key": "-key-PageTransition-condition"
                },
                "children": [
                   "ID-65"
@@ -195,9 +195,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-toPage"
+                  "key": "-key-PageTransition-toPage"
                },
                "targets": [
                   {
@@ -213,18 +213,18 @@
       {
          "id": "ID-65",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-GradeLiteral"
+            "key": "-key-GradeLiteral"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-GradeLiteral-grade"
+                  "key": "-key-GradeLiteral-grade"
                },
                "targets": [
                   {
@@ -240,24 +240,24 @@
       {
          "id": "ID-66",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-FlowRule"
+            "key": "-key-FlowRule"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-name"
+                  "key": "-key-FlowRule-name"
                },
                "value": "Video 2"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-description"
+                  "key": "-key-FlowRule-description"
                },
                "value": "Continue to other page"
             }
@@ -265,9 +265,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-transitions"
+                  "key": "-key-FlowRule-transitions"
                },
                "children": [
                   "ID-67",
@@ -279,9 +279,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-page"
+                  "key": "-key-FlowRule-page"
                },
                "targets": [
                   {
@@ -297,17 +297,17 @@
       {
          "id": "ID-67",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-PageTransition"
+            "key": "-key-PageTransition"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-condition"
+                  "key": "-key-PageTransition-condition"
                },
                "children": [
                   "ID-68"
@@ -317,9 +317,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-toPage"
+                  "key": "-key-PageTransition-toPage"
                },
                "targets": [
                   {
@@ -335,18 +335,18 @@
       {
          "id": "ID-68",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-GradeLiteral"
+            "key": "-key-GradeLiteral"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-GradeLiteral-grade"
+                  "key": "-key-GradeLiteral-grade"
                },
                "targets": [
                   {
@@ -362,17 +362,17 @@
       {
          "id": "ID-69",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-PageTransition"
+            "key": "-key-PageTransition"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-condition"
+                  "key": "-key-PageTransition-condition"
                },
                "children": [
                   "ID-70"
@@ -382,9 +382,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-toPage"
+                  "key": "-key-PageTransition-toPage"
                },
                "targets": [
                   {
@@ -400,18 +400,18 @@
       {
          "id": "ID-70",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-GradeLiteral"
+            "key": "-key-GradeLiteral"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-GradeLiteral-grade"
+                  "key": "-key-GradeLiteral-grade"
                },
                "targets": [
                   {
@@ -427,17 +427,17 @@
       {
          "id": "ID-71",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-PageTransition"
+            "key": "-key-PageTransition"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-condition"
+                  "key": "-key-PageTransition-condition"
                },
                "children": [
                   "ID-72"
@@ -447,9 +447,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-toPage"
+                  "key": "-key-PageTransition-toPage"
                },
                "targets": [
                   {
@@ -465,18 +465,18 @@
       {
          "id": "ID-72",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-GradeLiteral"
+            "key": "-key-GradeLiteral"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-GradeLiteral-grade"
+                  "key": "-key-GradeLiteral-grade"
                },
                "targets": [
                   {
@@ -492,24 +492,24 @@
       {
          "id": "ID-73",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-FlowRule"
+            "key": "-key-FlowRule"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-name"
+                  "key": "-key-FlowRule-name"
                },
                "value": "Video 2"
             },
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-description"
+                  "key": "-key-FlowRule-description"
                },
                "value": "A rule for video 2"
             }
@@ -517,9 +517,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-transitions"
+                  "key": "-key-FlowRule-transitions"
                },
                "children": [
                   "ID-74",
@@ -530,9 +530,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-FlowRule-page"
+                  "key": "-key-FlowRule-page"
                },
                "targets": [
                   {
@@ -548,17 +548,17 @@
       {
          "id": "ID-74",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-PageTransition"
+            "key": "-key-PageTransition"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-condition"
+                  "key": "-key-PageTransition-condition"
                },
                "children": [
                   "ID-75"
@@ -568,9 +568,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-toPage"
+                  "key": "-key-PageTransition-toPage"
                },
                "targets": [
                   {
@@ -586,18 +586,18 @@
       {
          "id": "ID-75",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-GradeLiteral"
+            "key": "-key-GradeLiteral"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-GradeLiteral-grade"
+                  "key": "-key-GradeLiteral-grade"
                },
                "targets": [
                   {
@@ -613,17 +613,17 @@
       {
          "id": "ID-76",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-PageTransition"
+            "key": "-key-PageTransition"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-condition"
+                  "key": "-key-PageTransition-condition"
                },
                "children": [
                   "ID-77"
@@ -633,9 +633,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-PageTransition-toPage"
+                  "key": "-key-PageTransition-toPage"
                },
                "targets": [
                   {
@@ -651,18 +651,18 @@
       {
          "id": "ID-77",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-GradeLiteral"
+            "key": "-key-GradeLiteral"
          },
          "properties": [],
          "containments": [],
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-GradeLiteral-grade"
+                  "key": "-key-GradeLiteral-grade"
                },
                "targets": [
                   {

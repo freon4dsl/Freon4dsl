@@ -5,16 +5,16 @@
       {
          "id": "ID-93",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Test"
+            "key": "-key-Test"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Test-name"
+                  "key": "-key-Test-name"
                },
                "value": "Test1"
             }
@@ -22,9 +22,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Test-scenarios"
+                  "key": "-key-Test-scenarios"
                },
                "children": [
                   "ID-94",
@@ -35,9 +35,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Test-topic"
+                  "key": "-key-Test-topic"
                },
                "targets": [
                   {
@@ -48,9 +48,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Test-flow"
+                  "key": "-key-Test-flow"
                },
                "targets": [
                   {
@@ -66,16 +66,16 @@
       {
          "id": "ID-94",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Scenario"
+            "key": "-key-Scenario"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-description"
+                  "key": "-key-Scenario-description"
                },
                "value": "Test what happens when all answers are correct"
             }
@@ -83,9 +83,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-steps"
+                  "key": "-key-Scenario-steps"
                },
                "children": [
                   "ID-95",
@@ -101,17 +101,17 @@
       {
          "id": "ID-95",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answersGiven"
+                  "key": "-key-Step-answersGiven"
                },
                "children": [
                   "ID-96"
@@ -121,9 +121,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-fromPage"
+                  "key": "-key-Step-fromPage"
                },
                "targets": [
                   {
@@ -134,9 +134,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-expectedPage"
+                  "key": "-key-Step-expectedPage"
                },
                "targets": [
                   {
@@ -152,17 +152,17 @@
       {
          "id": "ID-96",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-expr"
+                  "key": "-key-Answer-expr"
                },
                "children": [
                   "ID-97"
@@ -172,9 +172,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -190,16 +190,16 @@
       {
          "id": "ID-97",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-BooleanLiteralExpression"
+            "key": "-key-BooleanLiteralExpression"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-BooleanLiteralExpression-value"
+                  "key": "-key-BooleanLiteralExpression-value"
                },
                "value": "false"
             }
@@ -212,17 +212,17 @@
       {
          "id": "ID-98",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answersGiven"
+                  "key": "-key-Step-answersGiven"
                },
                "children": [
                   "ID-99",
@@ -233,9 +233,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-fromPage"
+                  "key": "-key-Step-fromPage"
                },
                "targets": [
                   {
@@ -246,9 +246,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-expectedPage"
+                  "key": "-key-Step-expectedPage"
                },
                "targets": [
                   {
@@ -264,17 +264,17 @@
       {
          "id": "ID-99",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-expr"
+                  "key": "-key-Answer-expr"
                },
                "children": [
                   "ID-100"
@@ -284,9 +284,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -302,16 +302,16 @@
       {
          "id": "ID-100",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-NumberLiteralExpression"
+            "key": "-key-NumberLiteralExpression"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-NumberLiteralExpression-value"
+                  "key": "-key-NumberLiteralExpression-value"
                },
                "value": "30"
             }
@@ -324,17 +324,17 @@
       {
          "id": "ID-101",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-expr"
+                  "key": "-key-Answer-expr"
                },
                "children": [
                   "ID-102"
@@ -344,9 +344,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -362,16 +362,16 @@
       {
          "id": "ID-102",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-BooleanLiteralExpression"
+            "key": "-key-BooleanLiteralExpression"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-BooleanLiteralExpression-value"
+                  "key": "-key-BooleanLiteralExpression-value"
                },
                "value": "false"
             }
@@ -384,17 +384,17 @@
       {
          "id": "ID-103",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Step"
+            "key": "-key-Step"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-answersGiven"
+                  "key": "-key-Step-answersGiven"
                },
                "children": [
                   "ID-104"
@@ -404,9 +404,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-fromPage"
+                  "key": "-key-Step-fromPage"
                },
                "targets": [
                   {
@@ -417,9 +417,9 @@
             },
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Step-expectedPage"
+                  "key": "-key-Step-expectedPage"
                },
                "targets": [
                   {
@@ -435,17 +435,17 @@
       {
          "id": "ID-104",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Answer"
+            "key": "-key-Answer"
          },
          "properties": [],
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-expr"
+                  "key": "-key-Answer-expr"
                },
                "children": [
                   "ID-105"
@@ -455,9 +455,9 @@
          "references": [
             {
                "reference": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Answer-question"
+                  "key": "-key-Answer-question"
                },
                "targets": [
                   {
@@ -473,16 +473,16 @@
       {
          "id": "ID-105",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-BooleanLiteralExpression"
+            "key": "-key-BooleanLiteralExpression"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-BooleanLiteralExpression-value"
+                  "key": "-key-BooleanLiteralExpression-value"
                },
                "value": "false"
             }
@@ -495,16 +495,16 @@
       {
          "id": "ID-106",
          "classifier": {
-            "language": "-default-key-Education",
+            "language": "-key-Education",
             "version": "2023.1",
-            "key": "-default-key-Scenario"
+            "key": "-key-Scenario"
          },
          "properties": [
             {
                "property": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-description"
+                  "key": "-key-Scenario-description"
                },
                "value": "Hi"
             }
@@ -512,9 +512,9 @@
          "containments": [
             {
                "containment": {
-                  "language": "-default-key-Education",
+                  "language": "-key-Education",
                   "version": "2023.1",
-                  "key": "-default-key-Scenario-steps"
+                  "key": "-key-Scenario-steps"
                },
                "children": []
             }
