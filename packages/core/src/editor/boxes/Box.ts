@@ -4,8 +4,8 @@ import {
     FreUtils,
     FRE_BINARY_EXPRESSION_LEFT,
     FRE_BINARY_EXPRESSION_RIGHT,
-    isExpressionPreOrPost
-} from '../../util/index.js';
+    isExpressionPreOrPost, isNullOrUndefined
+} from "../../util/index.js"
 import { FreLogger } from "../../logging/index.js";
 import type { ClientRectangle } from "../ClientRectangleTypes.js";
 import { UndefinedRectangle } from "../ClientRectangleTypes.js";
@@ -106,6 +106,7 @@ export abstract class Box {
         this.isDirty();
     }
 
+    i: number = 0
     protected constructor(node: FreNode, role: string) {
         FreUtils.CHECK(!!node, "Element cannot be empty in Box constructor");
         this.node = node;
@@ -115,7 +116,7 @@ export abstract class Box {
 
     get id(): string {
         if (notNullOrUndefined(this.node)) {
-            return this.node.freId() + (notNullOrUndefined(this.role) ? "" : "-" + this.role);
+            return this.node.freId() + (isNullOrUndefined(this.role) ? `-${this.i++}` : "-" + this.role);
         } else {
             return "unknown-element-" + this.role;
         }
