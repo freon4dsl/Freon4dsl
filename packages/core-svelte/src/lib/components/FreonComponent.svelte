@@ -23,7 +23,7 @@
     } from "@freon4dsl/core"
     import RenderComponent from './RenderComponent.svelte';
     import ContextMenu from './ContextMenu.svelte';
-    import { onMount, tick } from 'svelte';
+    import { tick } from 'svelte';
     import { componentId, dummyBox } from '$lib/components/svelte-utils/index.js';
     import {
         contextMenu,

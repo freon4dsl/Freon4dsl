@@ -340,10 +340,9 @@ export abstract class Box {
      */
     findChildBoxForProperty(propertyName?: string, propertyIndex?: number): Box | null {
         // if (propertyName === "value" && propertyIndex === undefined) {
-        console.log(`findChildBoxForProperty ${this.kind}  ` + this.role + "[" + propertyName + ", " + propertyIndex + "]");
+        LOGGER.log(`findChildBoxForProperty ${this.kind}  ` + this.role + "[" + propertyName + ", " + propertyIndex + "]");
         // }
         for (const child of this.children) {
-            console.log(`===> child: ${this.kind} [` + child.propertyName + ", " + child.propertyIndex + "]")
             if (!isNullOrUndefined(propertyName)) {
                 if (!isNullOrUndefined(propertyIndex)) {
                     if (child.propertyName === propertyName && (child.propertyIndex === propertyIndex || child.propertyIndex === undefined)) {
@@ -351,20 +350,17 @@ export abstract class Box {
                     }
                 } else {
                     if (child.propertyName === propertyName) {
-                        // console.log('returning child box ' + child.role);
                         return child;
                     }
                 }
             } else {
                 return child;
             }
-            console.log("no child found")
             const result: Box = child.findChildBoxForProperty(propertyName, propertyIndex);
             if (!isNullOrUndefined(result) && result.node === this.node) {
                 return result;
             }
         }
-        // console.log('not found!!!');
         return null;
     }
 

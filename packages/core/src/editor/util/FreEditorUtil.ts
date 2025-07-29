@@ -75,6 +75,7 @@ export class FreEditorUtil {
     static selectAfterUndo(editor: FreEditor, delta: FreDelta): void {
         LOGGER.log(`selectAfterUndo ${delta.toString()}`)
         editor.selectFirstEditableChildBox(delta.owner)
+        // TODO Make it more precise, to getb focus at better place
         // if (delta instanceof FrePrimDelta) {
         //     editor.selectElement(delta.owner, delta.propertyName)
         //     editor.selectFirstEditableChildBox(delta.owner)
