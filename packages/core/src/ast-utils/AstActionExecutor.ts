@@ -20,7 +20,7 @@ export class AstActionExecutor {
         return AstActionExecutor.instance;
     }
 
-    redo(): FreDelta {
+    redo(): FreDelta | undefined {
         if (this.editor.rootElement.freIsUnit()) {
             const unitInEditor = this.editor.rootElement as FreModelUnit;
             LOGGER.log(`redo called: '${FreUndoManager.getInstance().nextRedoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'`);
@@ -34,7 +34,7 @@ export class AstActionExecutor {
         return undefined
     }
 
-    undo(): FreDelta {
+    undo(): FreDelta | undefined {
         if (this.editor.rootElement.freIsUnit()) {
             const unitInEditor = this.editor.rootElement as FreModelUnit;
             LOGGER.log(`undo called: '${FreUndoManager.getInstance().nextUndoAsText(unitInEditor)}' currentunit '${unitInEditor?.name}'`);

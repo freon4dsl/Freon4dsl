@@ -73,7 +73,7 @@ export class FreEditorUtil {
     }
     
     static selectAfterUndo(editor: FreEditor, delta: FreDelta): void {
-        console.log(`selectAfterUndo ${delta}`)
+        LOGGER.log(`selectAfterUndo ${delta.toString()}`)
         editor.selectFirstEditableChildBox(delta.owner)
         // if (delta instanceof FrePrimDelta) {
         //     editor.selectElement(delta.owner, delta.propertyName)

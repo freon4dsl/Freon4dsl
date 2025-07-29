@@ -77,7 +77,7 @@
                             LOGGER.log('Ctrl-z: UNDO');
                             const delta = AstActionExecutor.getInstance(editor).undo();
                             console.log(`FreonComponent undu '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
-                            if (!editor.isBoxInTree(editor.selectedBox)) {
+                            if (delta !== undefined && !editor.isBoxInTree(editor.selectedBox)) {
                                 FreEditorUtil.selectAfterUndo(editor, delta)
                             }
                             editor.selectionChanged()
@@ -89,8 +89,8 @@
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-y: REDO');
                             const delta = AstActionExecutor.getInstance(editor).redo();
-                            console.log(`FreonComponent undu '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
-                            if (!editor.isBoxInTree(editor.selectedBox)) {
+                            LOGGER.log(`FreonComponent undo '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
+                            if (delta !== undefined && !editor.isBoxInTree(editor.selectedBox)) {
                                 FreEditorUtil.selectAfterUndo(editor, delta)
                             }
                             editor.selectionChanged()

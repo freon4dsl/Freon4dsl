@@ -129,7 +129,7 @@ export class FreUndoManager {
         }
     }
 
-    public executeUndo(unit?: FreModelUnit): FreDelta {
+    public executeUndo(unit?: FreModelUnit): FreDelta | undefined {
         if (unit === undefined) {
             unit = this.currentUnit
         }
@@ -143,7 +143,7 @@ export class FreUndoManager {
         }
     }
 
-    public executeRedo(unit?: FreModelUnit): FreDelta {
+    public executeRedo(unit?: FreModelUnit): FreDelta | undefined {
         LOGGER.log(`executeRedo for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
         LOGGER.log(`   redoAsText: ${this.nextRedoAsText(unit)}`)
         if (unit === undefined) {
