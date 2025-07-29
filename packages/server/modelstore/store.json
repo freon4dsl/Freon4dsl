@@ -92,38 +92,6 @@
                 {
                     "file": "TestBPublic.json",
                     "name": "TestBPublic"
-                },
-                {
-                    "name": "aw",
-                    "file": "aw.json"
-                }
-            ],
-            "version": "1"
-        },
-        {
-            "folder": "EduOne",
-            "language": "",
-            "name": "EduOne",
-            "units": [
-                {
-                    "file": "Flow.json",
-                    "name": "Flow"
-                },
-                {
-                    "file": "Fractions10.json",
-                    "name": "Fractions10"
-                },
-                {
-                    "file": "Multiplication.json",
-                    "name": "Multiplication"
-                },
-                {
-                    "file": "Test1.json",
-                    "name": "Test1"
-                },
-                {
-                    "file": "sssFlowddd.json",
-                    "name": "sssFlowddd"
                 }
             ],
             "version": "1"
@@ -148,10 +116,6 @@
                 {
                     "file": "Test1.json",
                     "name": "Test1"
-                },
-                {
-                    "file": "sssFlowddd.json",
-                    "name": "sssFlowddd"
                 }
             ],
             "version": "1"
@@ -642,41 +606,6 @@
                     "file": "XXX-unit5.json"
                 }
             ]
-        },
-        {
-            "name": "NEWMODEL",
-            "folder": "NEWMODEL",
-            "language": "Education",
-            "version": "1",
-            "units": []
-        },
-        {
-            "name": "MMM",
-            "folder": "MMM",
-            "language": "Education",
-            "version": "1",
-            "units": []
-        },
-        {
-            "name": "NNN",
-            "folder": "NNN",
-            "language": "Education",
-            "version": "1",
-            "units": []
-        },
-        {
-            "name": "ddddd",
-            "folder": "ddddd",
-            "language": "Education",
-            "version": "1",
-            "units": []
-        },
-        {
-            "name": "PPPPP",
-            "folder": "PPPPP",
-            "language": "Education",
-            "version": "2",
-            "units": []
         }
     ]
 }
