@@ -129,28 +129,30 @@ export class FreUndoManager {
         }
     }
 
-    public executeUndo(unit?: FreModelUnit) {
+    public executeUndo(unit?: FreModelUnit): FreDelta | undefined {
         if (unit === undefined) {
             unit = this.currentUnit
         }
         if (!!unit) {
             LOGGER.log(`executeUndo for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
-            this.getUndoStackManager(unit).executeUndo();
+            LOGGER.log(`   undoAsText: ${this.nextUndoAsText(unit)}`)
+            return this.getUndoStackManager(unit).executeUndo();
         } else {
             LOGGER.log("executeUndo for model" )
-            this.modelUndoManager.executeUndo();
+            return this.modelUndoManager.executeUndo();
         }
     }
 
-    public executeRedo(unit?: FreModelUnit) {
+    public executeRedo(unit?: FreModelUnit): FreDelta | undefined {
         LOGGER.log(`executeRedo for unit ${unit?.name} currentUnit is ${this.currentUnit?.name}`)
+        LOGGER.log(`   redoAsText: ${this.nextRedoAsText(unit)}`)
         if (unit === undefined) {
             unit = this.currentUnit
         }
         if (!!unit) {
-            this.getUndoStackManager(unit).executeRedo();
+            return this.getUndoStackManager(unit).executeRedo();
         } else {
-            this.modelUndoManager.executeRedo();
+            return this.modelUndoManager.executeRedo();
         }
     }
 

@@ -19,11 +19,11 @@
         isTableRowBox,
         isElementBox,
         AstActionExecutor,
-        type FreNode, type ClientRectangle, UndefinedRectangle
-    } from '@freon4dsl/core';
+        type FreNode, type ClientRectangle, UndefinedRectangle, FreEditorUtil
+    } from "@freon4dsl/core"
     import RenderComponent from './RenderComponent.svelte';
     import ContextMenu from './ContextMenu.svelte';
-    import { onMount, tick } from 'svelte';
+    import { tick } from 'svelte';
     import { componentId, dummyBox } from '$lib/components/svelte-utils/index.js';
     import {
         contextMenu,
@@ -75,14 +75,25 @@
                     case 'z': // ctrl-z => UNDO
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-z: UNDO');
-                            AstActionExecutor.getInstance(editor).undo();
+                            const delta = AstActionExecutor.getInstance(editor).undo();
+                            console.log(`FreonComponent undu '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
+                            if (delta !== undefined && !editor.isBoxInTree(editor.selectedBox)) {
+                                FreEditorUtil.selectAfterUndo(editor, delta)
+                            }
+                            editor.selectionChanged()
                             stopEvent(event);
+                            
                         }
                         break;
                     case 'y': // ctrl-y => REDO
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-y: REDO');
-                            AstActionExecutor.getInstance(editor).redo();
+                            const delta = AstActionExecutor.getInstance(editor).redo();
+                            LOGGER.log(`FreonComponent undo '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
+                            if (delta !== undefined && !editor.isBoxInTree(editor.selectedBox)) {
+                                FreEditorUtil.selectAfterUndo(editor, delta)
+                            }
+                            editor.selectionChanged()
                             stopEvent(event);
                         }
                         break;

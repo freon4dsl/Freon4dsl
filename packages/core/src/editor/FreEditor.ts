@@ -179,6 +179,7 @@ export class FreEditor {
         LOGGER.log(`selectElement ${node?.freLanguageConcept()} with id ${node?.freId()}, property: [${propertyName}, ${propertyIndex}] ${caretPosition}`)
         const box: Box = this.findBoxForNode(node, propertyName, propertyIndex)
         if (!isNullOrUndefined(box)) {
+            LOGGER.log(`Box found kind ${box.kind}`)
             if (box instanceof ElementBox) {
                 this._selectedBox = box
                 this._selectedProperty = ""
