@@ -101,7 +101,7 @@
       'hover:text-light-base-100    dark:hover:text-dark-base-800 ' +
       'hover:bg-light-base-900      dark:hover:bg-dark-base-700';
     const dropdownButtonCls: string = 'm-1 ' +
-      'bg-light-base-200            dark:bg-dark-base-700 ' +
+      'bg-light-base-100            dark:bg-dark-base-700 ' +
       'text-light-base-900          dark:text-dark-base-50 ' +
       'hover:text-light-base-100    dark:hover:text-dark-base-800 ' +
       'hover:bg-light-base-900      dark:hover:bg-dark-base-700';

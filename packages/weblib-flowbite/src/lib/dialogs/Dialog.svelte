@@ -28,11 +28,3 @@
     </dialog>
 </div>
 
-<style>
-    
-.dialog-class {
-    top: 50%;
-    left: 50%;
-}
-</style>
-

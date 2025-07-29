@@ -23,7 +23,6 @@
         WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
     }
     async function handleSubmit() {
-        console.log("CREATING NEW UNIT: " + newName);
         if (newName.length > 0 && checkName(newName).length === 0) {
             const existing: string[] = await WebappConfigurator.getInstance().getUnitNames();
             if (notNullOrUndefined(existing) && existing.length > 0 && existing.indexOf(newName) !== -1) {
