@@ -68,7 +68,7 @@ export class EditorRequestsHandler {
     }
 
     undo = (): void => {
-        const delta: FreDelta = AstActionExecutor.getInstance(this.langEnv!.editor).undo();console.log(`undo delta '${delta.toString()}'`)
+        const delta = AstActionExecutor.getInstance(this.langEnv!.editor).undo();console.log(`undo delta '${delta?.toString()}'`)
         // TODO TEST
         if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
