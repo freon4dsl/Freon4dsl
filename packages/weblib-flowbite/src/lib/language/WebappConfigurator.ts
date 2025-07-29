@@ -239,6 +239,11 @@ export class WebappConfigurator {
         // console.log(newName)
     }
 
+
+    saveModel() {
+        this.modelStore?.saveModel();
+    }
+
     /**
      * Adds a new unit to the current model and shows it in the editor
      * @param newName
@@ -248,6 +253,7 @@ export class WebappConfigurator {
         LOGGER.log("EditorState.newUnit: unitType: " + unitType + ", name: " + newName + " in model " + editorInfo.modelName)
         progressIndicatorShown.value = true
         // save the old current unit, if there is one
+        // todo check whether this is still needed, shouldn't the new unit open in another tab?
         await this.saveUnit(editorInfo.currentUnit)
         await this.createNewUnit(newName, unitType)
     }
@@ -322,6 +328,7 @@ export class WebappConfigurator {
             // })
             if (notNullOrUndefined(toBeOpened)) {
                 // save the old current unit, if there is one
+                // todo check whether this is still needed, shouldn't the new unit open in another tab?
                 await this.saveUnit(editorInfo.currentUnit)
                 // ... and show the new one
                 this.showUnit(toBeOpened, unitId)
@@ -410,6 +417,7 @@ export class WebappConfigurator {
      */
     async unitFromFile(fileName: string, content: string, metaType: string, showIt: boolean) {
         // save the old current unit, if there is one
+        // todo check whether this is still needed, shouldn't the new unit open in another tab?
         await this.saveUnit(editorInfo.currentUnit)
         let unit: FreModelUnit | null = null
         try {

@@ -11,7 +11,7 @@ import {
     ThumbsUpOutline,
     UndoOutline,
     PlayOutline,
-    ChevronRightOutline
+    ChevronRightOutline, FloppyDiskSolid
 } from 'flowbite-svelte-icons';
 import { Button, Input, Tooltip } from 'flowbite-svelte';
 import { ENTER } from "@freon4dsl/core"
@@ -33,7 +33,7 @@ const buttonCls: string= 'rounded-none font-normal px-2 py-1 mx-2' +
   'text-light-base-50           dark:text-dark-base-900 ' +
   'bg-light-base-600 					  dark:bg-dark-base-200 ' +
   'hover:bg-light-base-900      dark:hover:bg-dark-base-50 ';
-const iconCls: string = "w-4 h-4 me-1";
+const iconCls: string = "w-4 h-4";
 const searchFieldCls: string =
   'text-light-base-50           dark:text-dark-base-900 ' +
   'bg-light-base-600 					  dark:bg-dark-base-200 ' +
@@ -48,6 +48,7 @@ const searchFieldCls: string =
         <div class="flex justify-start flex-nowrap">
         <!--  Model panel button and tooltip      -->
         <Button
+            id="model-button"
             tabindex={-1}
             class="{buttonCls} pill={true} ml-2  bg-light-accent-700 dark:bg-dark-accent-700" onclick={() => (drawerHidden.value = false)}>
             <ChevronRightOutline class="w-5 h-5" />
@@ -56,43 +57,49 @@ const searchFieldCls: string =
         <span id="spacer" class="inline-block min-w-8">&nbsp;</span>
         <div>
             <!--  Buttons for editor actions      -->
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().undo}>
+            <Button id="save-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().saveModel}>
+                <FloppyDiskSolid class="{iconCls}"/>
+            </Button>
+            <Button id="undo-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().undo}>
                 <UndoOutline class={iconCls}/>
-                Undo
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().redo}>
+            <Button id="redo-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().redo}>
                 <RedoOutline class={iconCls}/>
-                Redo
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().cut}>
+            <Button id="cut-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().cut}>
                 <ClipboardOutline class={iconCls}/>
-                Cut
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().copy}>
+            <Button id="copy-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().copy}>
                 <FileCopyOutline class={iconCls}/>
-                Copy
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().paste}>
+            <Button id="paste-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().paste}>
                 <FilePasteOutline class={iconCls}/>
-                Paste
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={() => {dialogs.searchElementDialogVisible = true}}>
+            <Button id="element-search-button" tabindex={-1} class={buttonCls} onclick={() => {dialogs.searchElementDialogVisible = true}}>
                 <SearchOutline tabindex={-1} class={iconCls}/>
-                Element...
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().validate}>
+            <Button id="validate-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().validate}>
                 <ThumbsUpOutline class={iconCls}/>
-                Validate
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().interpret}>
+            <Button id="interpret-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().interpret}>
                 <PlayOutline class={iconCls}/>
-                Interpret
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={() => {dialogs.selectViewsDialogVisible = true}}>
+            <Button id="views-button" tabindex={-1} class={buttonCls} onclick={() => {dialogs.selectViewsDialogVisible = true}}>
                 <EyeOutline class={iconCls}/>
-                View(s)...
             </Button>
         </div>
+            <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
+            <Tooltip tabindex={-1} triggeredBy="#model-button" placement="bottom" class="{tooltipClass}">Show Model Information</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#save-button" placement="bottom" class="{tooltipClass}">Save Model</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#undo-button" placement="bottom" class="{tooltipClass}">Undo</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#redo-button" placement="bottom" class="{tooltipClass}">Redo</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#cut-button" placement="bottom" class="{tooltipClass}">Cut</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#copy-button" placement="bottom" class="{tooltipClass}">Copy</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#paste-button" placement="bottom" class="{tooltipClass}">Paste</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#element-search-button" placement="bottom" class="{tooltipClass}">Search for Type</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#validate-button" placement="bottom" class="{tooltipClass}">Validate</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#interpret-button" placement="bottom" class="{tooltipClass}">Interpret</Tooltip>
+            <Tooltip tabindex={-1} triggeredBy="#views-button" placement="bottom" class="{tooltipClass}">Change Views</Tooltip>
         </div>
         <div class="relative {searchFieldCls}">
             <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none ">

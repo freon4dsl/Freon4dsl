@@ -1,6 +1,13 @@
 import { autorun, makeObservable, observable, runInAction } from 'mobx';
 import type {FreModel, FreModelUnit} from "../ast/index.js";
-import {AST} from "../change-manager/index.js";
+import {
+    AST,
+    FreChangeManager,
+    FrePartDelta,
+    FrePartListDelta,
+    FrePrimDelta,
+    FrePrimListDelta
+} from '../change-manager/index.js';
 import type {FreEnvironment} from "../environment/index.js";
 import {FreLogger} from "../logging/index.js";
 import {isNullOrUndefined, notNullOrUndefined} from "../util/index.js";
@@ -14,6 +21,8 @@ export class InMemoryModel {
     private languageEnvironment: FreEnvironment;
     private server: IServerCommunication;
     model: FreModel | undefined = undefined;
+    // units that have been changed but not saved
+    dirtyUnits: FreModelUnit[] = [];
 
     constructor(languageEnvironment: FreEnvironment, server: IServerCommunication) {
         this.languageEnvironment = languageEnvironment;
@@ -24,7 +33,11 @@ export class InMemoryModel {
                 this.model.getUnits()
                 this.currentModelChanged()
             }
-        })
+        });
+        FreChangeManager.getInstance().subscribeToPart(this.partChanged);
+        FreChangeManager.getInstance().subscribeToPrimitive(this.primChanged);
+        FreChangeManager.getInstance().subscribeToList(this.listChanged);
+        FreChangeManager.getInstance().subscribeToListElement(this.listElementChanged);
     }
 
     /**
@@ -71,6 +84,15 @@ export class InMemoryModel {
             })
         }
         return this.model;
+    }
+
+    async saveModel() {
+        // save all units that are 'dirty', i.e. that have been changed after the previous save
+        await this.dirtyUnits.forEach(unit => {
+            this.saveUnit(unit);
+        })
+        // when done, clean 'dirtyUnits' prop
+        this.dirtyUnits = [];
     }
 
     /**
@@ -187,6 +209,31 @@ export class InMemoryModel {
     async saveUnit(unit: FreModelUnit): Promise<void> {
         LOGGER.log(`saveModelUnit`);
         await this.server.saveModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
+    }
+
+    /************************************************************
+     * Listening to changes in units
+     ***********************************************************/
+
+    primChanged = (delta: FrePrimDelta) => {
+        if (this.getUnits().includes(delta.unit)) {
+            this.dirtyUnits.push(delta.unit);
+        }
+    }
+    partChanged = (delta: FrePartDelta) => {
+        if (this.getUnits().includes(delta.unit)) {
+            this.dirtyUnits.push(delta.unit);
+        }
+    }
+    listElementChanged = (delta: FrePartDelta | FrePrimDelta) => {
+        if (this.getUnits().includes(delta.unit)) {
+            this.dirtyUnits.push(delta.unit);
+        }
+    }
+    listChanged = (delta: FrePartListDelta | FrePrimListDelta) => {
+        if (this.getUnits().includes(delta.unit)) {
+            this.dirtyUnits.push(delta.unit);
+        }
     }
 
     /************************************************************

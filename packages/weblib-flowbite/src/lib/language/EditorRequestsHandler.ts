@@ -4,8 +4,12 @@ import {
     FreLogger,
     FreSearcher,
     type FreEnvironment,
-    AstActionExecutor, type FreModelUnit, isRtError, isNullOrUndefined, notNullOrUndefined
-} from "@freon4dsl/core"
+    AstActionExecutor,
+    type FreModelUnit,
+    isRtError,
+    isNullOrUndefined,
+    notNullOrUndefined, FreErrorSeverity
+} from '@freon4dsl/core';
 import type { FreNode, TraceNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
 import {
@@ -18,7 +22,7 @@ import {
     searchTab
 } from "../stores/InfoPanelStore.svelte"
 import { WebappConfigurator } from "../language/index.js";
-import { editorInfo, infoPanelShown } from "../stores/index.js"
+import { drawerHidden, editorInfo, infoPanelShown, setUserMessage } from '../stores/index.js';
 import { TreeNodeData } from "../tree/TreeNodeData.js"
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
@@ -56,6 +60,11 @@ export class EditorRequestsHandler {
         // redo the validation to set the errors in the new box tree
         // todo reinstate the following statement
         // this.validate();
+    }
+
+    saveModel = async (): Promise<void> => {
+        await WebappConfigurator.getInstance().saveModel();
+        setUserMessage(`Model '${editorInfo.modelName}' saved.`, FreErrorSeverity.Info);
     }
 
     redo = (): void => {
@@ -163,7 +172,7 @@ export class EditorRequestsHandler {
     private showSearchResults(results: FreNode[], stringToFind: string) {
         const itemsToShow: FreError[] = [];
         if (!results || results.length === 0) {
-            itemsToShow.push(new FreError("No results for " + stringToFind, null, "", ""));
+            itemsToShow.push(new FreError("No results for " + stringToFind, results[0], "", ""));
         } else {
             for (const elem of results) {
                 // todo show some part of the text string instead of the element id

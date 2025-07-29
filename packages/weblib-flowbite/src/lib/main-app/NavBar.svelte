@@ -30,9 +30,9 @@
 <Navbar id="freon-navbar" class="bg-light-base-50 dark:bg-dark-base-900 sticky start-0 top-0 z-20 w-full flex-nowrap border-b px-2 sm:px-4">
 	<NavBrand href="/">
 		<img src="./freonlogo.svg" class="me-3 h-6 sm:h-9" alt="Freon Logo" />
-		<span tabindex={-1}
+		<span
 			  class="self-center whitespace-nowrap text-xl font-semibold text-light-base-700 dark:text-dark-base-150 ">
-			Freon for <span tabindex={-1} class="text-light-accent-700 dark:text-dark-accent-150">{langInfo.name} > {editorInfo.modelName}</span>
+			Freon for <span class="text-light-accent-700 dark:text-dark-accent-150">{langInfo.name} > {editorInfo.modelName}</span>
 		</span>
 	</NavBrand>
 

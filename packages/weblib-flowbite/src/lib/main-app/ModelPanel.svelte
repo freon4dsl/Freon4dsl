@@ -58,16 +58,16 @@
         drawerHidden.value = true;
     };
 
-    const saveUnit = (index: number) => {
-        // console.log("saveUnit: " + editorInfo.unitIds[index].name);
-        if (editorInfo.unitIds[index].name === editorInfo.currentUnit?.name) {
-            WebappConfigurator.getInstance().saveUnit(editorInfo.unitIds[index]);
-            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Info);
-        } else {
-            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' has no changes.`, FreErrorSeverity.Info);
-        }
-        drawerHidden.value = true;
-    };
+    // const saveUnit = (index: number) => {
+    //     // console.log("saveUnit: " + editorInfo.unitIds[index].name);
+    //     if (editorInfo.unitIds[index].name === editorInfo.currentUnit?.name) {
+    //         WebappConfigurator.getInstance().saveUnit(editorInfo.unitIds[index]);
+    //         setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Info);
+    //     } else {
+    //         setUserMessage(`Unit '${editorInfo.unitIds[index].name}' has no changes.`, FreErrorSeverity.Info);
+    //     }
+    //     drawerHidden.value = true;
+    // };
 
     const renameUnit = (index: number) => {
         // console.log("renameUnit: " + editorInfo.unitIds[index].name);
@@ -179,10 +179,10 @@
                                 <FolderOpenSolid class="{iconCls} me-2"/>
                                 Open
                             </Button>
-                            <Button class={dropdownButtonCls}  name="Save" size="xs" onclick={() => saveUnit(index)}>
-                                <FloppyDiskSolid class="{iconCls} me-2"/>
-                                Save
-                            </Button>
+<!--                            <Button class={dropdownButtonCls}  name="Save" size="xs" onclick={() => saveUnit(index)}>-->
+<!--                                <FloppyDiskSolid class="{iconCls} me-2"/>-->
+<!--                                Save-->
+<!--                            </Button>-->
                             <Button class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
                                 <PenSolid class="{iconCls} me-2"/>
                                 Rename
