@@ -31,10 +31,16 @@ Using Delete in TextComponent does not remove the component when its empty, Back
 
 ### EW4
 When pasting while first element of gradeA is selected, the cursor moves to the second element, the '==' sign.
+**PROBABLY FIXED**
 
 ### EW5
 In test Scenario 5 text changes in `pie1`, but the cursor and focus remains in `pie2`. Undo and redo work properly,
 but the selection is not set correctly.
+**PROBABLY FIXED**
+
+### EW6
+When there is no open model, the user can still create a new unit, which fails with an exception.
+**JOS**
 
 ## Core Editor Actions
 
@@ -66,6 +72,7 @@ Can the indent component not add a new span, but indent it child using css?
 
 ### CH3
 Is the way Graham uses `initialize` and `singularity` the right way to stop the effects from looping? 
+**ANNEKE**
 
 ## Other Remaining Issues
 
@@ -77,6 +84,7 @@ Remove one of OptionalBox and OptionalBox2.
 
 ### OR3
 Redo the save mechanism now that a rename is able to make changes in many units.
+**IMPORTANT**
 
 ### OR4
 For CI only: silence the error message in core.
@@ -97,15 +105,17 @@ After changing the views/projections, there is no selection on the page.
 ### OR9
 After a text search is done the search field is still the selected color. 
 When removing the text in the field the freon color comes back. 
+**ANNEKE**
 
 ### OR10
 Add version to language definition, and use it while reading/writing models for migration scenario.
+**JOS**
 
 ### OR11
 The save current model unit ih the flowbite app is too far away, you need to open thye model/unis pane,
 then goto the current unit, open the menu and select Save.
-
 We might want to add a save button at the top toolbar.
+**ANNEKE**
 
 ### OR12
 Remove or comment out console.logs in core and core-svelte (a.o. CommonFunctions,
@@ -113,6 +123,7 @@ ListUtil, TableCellComponent, InMemoryModel).
 
 ### OR13
 When something goes wrong in server communication the user should get a readable error message.
+**JOS / ANNEKE**
 
 ### OR14
 Svelte Layout Component crashed with duplicate key error.
