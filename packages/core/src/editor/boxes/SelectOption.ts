@@ -1,5 +1,5 @@
 import { FreAction } from "../actions/index.js";
-import { FreNamedNode } from '../../ast/index.js';
+import type { FreNamedNode } from '../../ast/index.js';
 
 /**
  * Describes an option in a dropdown
