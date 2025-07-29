@@ -39,6 +39,8 @@ but the selection is not set correctly.
 When opening _Fractions101_, although the filed _Fractions_ is highlighted, you cannot use the TAB to change selection.
 Once you select an element with the mouse, tabbing and arrows work fine.
 
+**Solved** by creating our own Dialog.svelte
+
 ### CE2
 Deleting a list element: transition is slow and not pretty.
 
@@ -90,6 +92,8 @@ The 2 columns in the table in Edu-Test/StartFlow are not on the same line.
 ### OR8
 After changing the views/projections, there is no selection on the page.
 
+**Solved** by setting the focus when closing the dialog
+
 ### OR9
 After a text search is done the search field is still the selected color. 
 When removing the text in the field the freon color comes back. 
@@ -112,6 +116,9 @@ When something goes wrong in server communication the user should get a readable
 
 ### OR14
 Svelte Layout Component crashed with duplicate key error.
+
+**Solved** change isNullOrUndefined => notNullOrUndefined at one location
+
 
 ## On documentation project
 
