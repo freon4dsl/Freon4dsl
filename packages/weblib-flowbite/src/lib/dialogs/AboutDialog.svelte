@@ -1,7 +1,7 @@
 <script lang="ts">
     import Dialog from "$lib/dialogs/Dialog.svelte"
     import { dialogs, versionNumber } from "../stores/index.js";
-    import { Card, Modal } from "flowbite-svelte";
+    import { Card } from "flowbite-svelte";
     import {
         BadgeCheckOutline,
         ClockOutline,

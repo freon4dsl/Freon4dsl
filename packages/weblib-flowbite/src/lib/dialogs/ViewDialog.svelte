@@ -1,6 +1,6 @@
 <script lang="ts">
     import Dialog from "$lib/dialogs/Dialog.svelte"
-    import {Button, Checkbox, Modal} from 'flowbite-svelte';
+    import {Button, Checkbox} from 'flowbite-svelte';
     import {projectionsShown, replaceProjectionsShown} from '$lib/stores/Projections.svelte';
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {ProjectionItem} from "$lib/ts-utils/MenuItem";

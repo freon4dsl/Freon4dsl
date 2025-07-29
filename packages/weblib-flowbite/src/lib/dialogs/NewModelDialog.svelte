@@ -1,6 +1,6 @@
 <script lang="ts">
     import { notNullOrUndefined } from "@freon4dsl/core"
-    import {Button, Modal, Input, Helper} from 'flowbite-svelte';
+    import {Button, Input, Helper} from 'flowbite-svelte';
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
