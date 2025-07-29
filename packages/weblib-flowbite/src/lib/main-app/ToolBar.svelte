@@ -1,6 +1,6 @@
 <script lang="ts">
-import { EditorRequestsHandler } from "$lib/language/index.js"
-import { dialogs, drawerHidden } from '$lib';
+    import { EditorRequestsHandler } from "$lib/language/index.js"
+    import { dialogs, drawerHidden, editorInfo } from "$lib"
 import {
     ClipboardOutline,
     EyeOutline,
@@ -41,6 +41,12 @@ const searchFieldCls: string =
   'hover:text-light-base-900    dark:hover:text-dark-base-900' +
   'placeholder-light-base-100   dark:placeholder-dark-base-800';
 
+    /**
+     * disable buttons if there  is no open model and open unit in the editor
+     */
+    let disabled: boolean = $derived(
+     editorInfo.modelName === "<no-model>" || editorInfo.currentUnit === undefined
+)
 </script>
 
 <div id="freon-toolbar" class="p-0">
@@ -56,39 +62,39 @@ const searchFieldCls: string =
         <span id="spacer" class="inline-block min-w-8">&nbsp;</span>
         <div>
             <!--  Buttons for editor actions      -->
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().undo}>
+            <Button tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().undo}>
                 <UndoOutline class={iconCls}/>
                 Undo
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().redo}>
+            <Button tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().redo}>
                 <RedoOutline class={iconCls}/>
                 Redo
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().cut}>
+            <Button tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().cut}>
                 <ClipboardOutline class={iconCls}/>
                 Cut
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().copy}>
+            <Button tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().copy}>
                 <FileCopyOutline class={iconCls}/>
                 Copy
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().paste}>
+            <Button tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().paste}>
                 <FilePasteOutline class={iconCls}/>
                 Paste
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={() => {dialogs.searchElementDialogVisible = true}}>
+            <Button tabindex={-1} {disabled} class={buttonCls} onclick={() => {dialogs.searchElementDialogVisible = true}}>
                 <SearchOutline tabindex={-1} class={iconCls}/>
                 Element...
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().validate}>
+            <Button tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().validate}>
                 <ThumbsUpOutline class={iconCls}/>
                 Validate
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().interpret}>
+            <Button tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().interpret}>
                 <PlayOutline class={iconCls}/>
                 Interpret
             </Button>
-            <Button tabindex={-1} class={buttonCls} onclick={() => {dialogs.selectViewsDialogVisible = true}}>
+            <Button tabindex={-1} {disabled} class={buttonCls} onclick={() => {dialogs.selectViewsDialogVisible = true}}>
                 <EyeOutline class={iconCls}/>
                 View(s)...
             </Button>
@@ -98,7 +104,8 @@ const searchFieldCls: string =
             <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none ">
                 <SearchOutline class="w-4 h-4 " />
             </div>
-            <Input tabindex={-1} 
+            <Input tabindex={-1}
+                   {disabled}
                    id="search-navbar"
                    class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 {searchFieldCls}
                    floatClass="{searchFieldCls}
