@@ -33,8 +33,9 @@ a {
 }
 
 .contextmenu-area {
-    height: 4rem;
+    height: 8rem;
     border: solid black 1px;
+    position: relative;
 }
 
 .limited-checkbox-component-group {

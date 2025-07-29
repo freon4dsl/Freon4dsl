@@ -3,12 +3,13 @@
 ## Test web pages in core-svelte
 
 ### CW1
-
 The context menu is not correctly placed.
+**FIXED**
 
 ### CW2
 The button component in Basic test is completely black, as is the inner switch component. 
 The BooleanSwitchComponent on the other hand misses the container color.
+**FIXED**
 
 ### CW3
 The font size of the text component changes when it is selected.
@@ -18,6 +19,7 @@ The font size of the text component changes when it is selected.
 ### EW1
 After _Undo_ or _Redo_ from the menu, the cursor and therefore the HTML focus is **not** in the editor.
 That is probably why _Ctrl-z_ and _Ctrl-y_ don't work. They do work if I put the cursor in the editor using a mouse-click
+**FIXED**
 
 ### EW2
 Ctrl-v does not function. Ctrl-c does not function. _Ctrl-z_ and _Ctrl-y_ both work in (Edge browser, MacOs) according to 
@@ -36,8 +38,9 @@ but the selection is not set correctly.
 ## Core Editor Actions
 
 ### CE1
-When opening _Fractions101_, although the filed _Fractions_ is highlighted, you cannot use the TAB to change selection.
+When opening _Fractions101_, although the field _Fractions_ is highlighted, you cannot use the TAB to change selection.
 Once you select an element with the mouse, tabbing and arrows work fine.
+**FIXED**
 
 ### CE2
 Deleting a list element: transition is slow and not pretty.
@@ -112,6 +115,7 @@ When something goes wrong in server communication the user should get a readable
 
 ### OR14
 Svelte Layout Component crashed with duplicate key error.
+**FIXED**
 
 ## On documentation project
 
