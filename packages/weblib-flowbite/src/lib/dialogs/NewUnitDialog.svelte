@@ -1,23 +1,18 @@
 <script lang="ts">
+    import { dialogs, editorInfo, setUserMessage, WebappConfigurator } from "$lib"
+    import Dialog from "$lib/dialogs/Dialog.svelte"
+    import { checkName } from "$lib/language/DialogHelpers"
+    import { cancelButtonClass, okButtonClass, textInputClass } from "$lib/stores/StylesStore.svelte"
     import { notNullOrUndefined } from "@freon4dsl/core"
-    import {Button, Modal, Input, Helper} from 'flowbite-svelte';
-    import {dialogs} from '$lib/stores/WebappStores.svelte';
-    import {WebappConfigurator} from '$lib/language';
-    import {checkName} from "$lib/language/DialogHelpers";
-    import {editorInfo, setUserMessage} from "$lib";
-    import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
-    import { FolderOpenSolid } from 'flowbite-svelte-icons';
+    import { Button, Helper, Input } from "flowbite-svelte"
+    import { FolderOpenSolid } from "flowbite-svelte-icons"
 
     const initialHelperText: string = 'Enter the name of the new unit.'
     let helperText: string = $state(initialHelperText);
     let newName: string = $state('');
 
-    function unitNameValid(){
-        helperText = checkName(newName);
-    }
-
     function resetVariables() {
-        dialogs.newUnitDialogVisible = false;
+        // dialogs.newUnitDialogVisible = false;
         newName = "";
         helperText = initialHelperText;
     }
@@ -25,18 +20,20 @@
     function handleCancel() {
         dialogs.newUnitDialogVisible = false;
         resetVariables();
+        WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
     }
-
     async function handleSubmit() {
-        // console.log("CREATING NEW UNIT: " + newName);
+        console.log("CREATING NEW UNIT: " + newName);
         if (newName.length > 0 && checkName(newName).length === 0) {
             const existing: string[] = await WebappConfigurator.getInstance().getUnitNames();
             if (notNullOrUndefined(existing) && existing.length > 0 && existing.indexOf(newName) !== -1) {
                 helperText = `Cannot create unit '${newName}', because a unit with that name already exists on the server.`;
             } else {
                 if (editorInfo.toBeCreated?.type) {
-                    await WebappConfigurator.getInstance().newUnit(newName, editorInfo.toBeCreated?.type);
+                    const name = newName
+                    dialogs.newUnitDialogVisible = false;
                     resetVariables();
+                    await WebappConfigurator.getInstance().newUnit(name, editorInfo.toBeCreated?.type);
                 } else {
                     setUserMessage('Cannot create a new unit, because its type is unknown.')
                 }
@@ -46,13 +43,15 @@
         }
     }
 
-	const onInput = () => {
-		unitNameValid();
-	}
+    const onInput = () => {
+        helperText = checkName(newName);
+    }
+
+    let  a = false
 </script>
 
-<Modal bind:open={dialogs.newUnitDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
-    <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">New unit of type {editorInfo.toBeCreated?.type}</h3>
+<Dialog open={dialogs.newUnitDialogVisible}>
+    <h3 class="text-xl font-medium">New {editorInfo.toBeCreated?.type} unit</h3>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-light-base-700">
             <Input class={textInputClass}
@@ -77,5 +76,5 @@
             New
         </Button>
     </div>
+</Dialog>
 
-</Modal>

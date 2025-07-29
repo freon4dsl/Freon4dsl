@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { Button, Modal } from "flowbite-svelte"
+    import Dialog from "$lib/dialogs/Dialog.svelte"
+    import { Button } from "flowbite-svelte"
     import { dialogs, initializing } from "$lib/stores/WebappStores.svelte"
     import { serverInfo } from "$lib/stores/ModelInfo.svelte"
     import { WebappConfigurator } from "$lib/language"
@@ -37,7 +38,7 @@
 
 </script>
 
-<Modal bind:open={dialogs.openModelDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800" >
+<Dialog open={dialogs.openModelDialogVisible}>
     <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Open model</h3>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="grid grid-cols-3 mb-3 p-2">
@@ -58,5 +59,5 @@
                 Open</Button>
         </div>
     </div>
-</Modal>
+</Dialog>
 

@@ -30,19 +30,19 @@
 <Navbar id="freon-navbar" class="bg-light-base-50 dark:bg-dark-base-900 sticky start-0 top-0 z-20 w-full flex-nowrap border-b px-2 sm:px-4">
 	<NavBrand href="/">
 		<img src="./freonlogo.svg" class="me-3 h-6 sm:h-9" alt="Freon Logo" />
-		<span
-			class="self-center whitespace-nowrap text-xl font-semibold text-light-base-700 dark:text-dark-base-150 ">
-			Freon for <span class="text-light-accent-700 dark:text-dark-accent-150">{langInfo.name} > {editorInfo.modelName}</span>
+		<span tabindex={-1}
+			  class="self-center whitespace-nowrap text-xl font-semibold text-light-base-700 dark:text-dark-base-150 ">
+			Freon for <span tabindex={-1} class="text-light-accent-700 dark:text-dark-accent-150">{langInfo.name} > {editorInfo.modelName}</span>
 		</span>
 	</NavBrand>
 
 	<ButtonGroup class="*:!ring-dark-base-900 {colorCls}">
       <!--  Dark mode button and tooltip      -->
-      <DarkMode id="dark-mode-button" class="{buttonCls} {colorCls} rounded-none focus-within:ring-2 focus-within:z-10 px-4
+      <DarkMode tabindex={-1} id="dark-mode-button" class="{buttonCls} {colorCls} rounded-none focus-within:ring-2 focus-within:z-10 px-4
 		    border [&:not(:first-child)]:-ms-px first:rounded-s-lg last:rounded-e-lg" />
 
 		<!--  Github button and tooltip      -->
-		<Button id="github-button" class="{buttonCls} {colorCls} "
+		<Button tabindex={-1} id="github-button" class="{buttonCls} {colorCls} "
 						tag="View on GitHub"
 						href="https://github.com/freon4dsl/Freon4dsl"
 						target="_blank"
@@ -51,12 +51,12 @@
 		</Button>
 
 		<!--  Documentation button and tooltip      -->
-		<Button id="docu-button" class="{buttonCls} {colorCls} " tag="View Documentation" href="https://www.freon4dsl.dev/" target="_blank">
+		<Button tabindex={-1} id="docu-button" class="{buttonCls} {colorCls} " tag="View Documentation" href="https://www.freon4dsl.dev/" target="_blank">
 			<AnnotationOutline class="{iconCls}" />
 		</Button>
 
 		<!--  About button and tooltip      -->
-		<Button id="about-button" class="{buttonCls} {colorCls} " name="About" onclick={() => (dialogs.aboutDialogVisible = true)}>
+		<Button tabindex={-1} id="about-button" class="{buttonCls} {colorCls} " name="About" onclick={() => (dialogs.aboutDialogVisible = true)}>
 			<QuestionCircleOutline class="{iconCls}" />
 		</Button>
 
@@ -67,10 +67,10 @@
 <!--		<Tooltip placement="bottom" class="{tooltipClass}">Show Model Info</Tooltip>-->
 	</ButtonGroup>
 	<!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
-	<Tooltip triggeredBy="#dark-mode-button" placement="bottom" class="{tooltipClass}">Dark/Light Mode</Tooltip>
-	<Tooltip triggeredBy="#github-button" placement="bottom" class="{tooltipClass}">View on GitHub</Tooltip>
-	<Tooltip triggeredBy="#docu-button" placement="bottom" class="{tooltipClass}">Go to Documentation</Tooltip>
-	<Tooltip triggeredBy="#about-button" placement="bottom" class="{tooltipClass}">About</Tooltip>
+	<Tooltip tabindex={-1} triggeredBy="#dark-mode-button" placement="bottom" class="{tooltipClass}">Dark/Light Mode</Tooltip>
+	<Tooltip tabindex={-1} triggeredBy="#github-button" placement="bottom" class="{tooltipClass}">View on GitHub</Tooltip>
+	<Tooltip tabindex={-1} triggeredBy="#docu-button" placement="bottom" class="{tooltipClass}">Go to Documentation</Tooltip>
+	<Tooltip tabindex={-1} triggeredBy="#about-button" placement="bottom" class="{tooltipClass}">About</Tooltip>
 </Navbar>
 <!--  end::navbar   -->
 

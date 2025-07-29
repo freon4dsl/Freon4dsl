@@ -160,30 +160,30 @@ export class WebappConfigurator {
      * @private
      */
     private showUnit(toBeShown: FreModelUnit, unitId: FreUnitIdentifier) {
-        // console.log("showUnit called, unitName: " + toBeShown?.name)
+        LOGGER.log("showUnit called, unitName: " + toBeShown?.name)
         if (notNullOrUndefined(toBeShown)) {
-            runInAction(() => {
                 if (notNullOrUndefined(this.langEnv)) {
                     // console.log("setting rootElement to " + newUnit.name)
                     noUnitAvailable.value = false
                     // set the unit in the editor
-                    this.langEnv.editor.rootElement = toBeShown
+                    runInAction(() => {
+                        this.langEnv!.editor.rootElement = toBeShown
+                    })
                     // select the right tab
                     const tabIndex: number = indexForTab(unitId);
                     if (tabIndex > -1) { // an existing tab
                         editorInfo.currentOpenTab = tabIndex;
-                        // console.log("opening tab: ", tabIndex, " for unit ", unitId.name)
+                        LOGGER.log(`opening tab: ${tabIndex} for unit ${unitId.name}`)
                     } else { // a new tab
                         editorInfo.unitsInTabs.push(unitId);
                         editorInfo.currentOpenTab = editorInfo.unitsInTabs.length - 1;
-                        // console.log("opening tab: ", editorInfo.unitsInTabs.length - 1, " for unit ", unitId.name)
+                        LOGGER.log(`opening tab: ${editorInfo.unitsInTabs.length - 1} for unit ${unitId.name}`)
                     }
                     // remember the current unit
                     editorInfo.currentUnit = unitId;
                     // alert the undo manager that the current unit has changed
                     FreUndoManager.getInstance().currentUnit = toBeShown;
                 }
-            })
         } else {
             noUnitAvailable.value = true
         }
@@ -309,17 +309,17 @@ export class WebappConfigurator {
      * @param unitId
      */
     async openModelUnit(unitId: FreUnitIdentifier) {
-        LOGGER.log("openModelUnit called, unitName: " + unitId)
+        LOGGER.log("openModelUnit called, unitName: " + unitId.name)
         if (notNullOrUndefined(editorInfo.currentUnit) && unitId.name === editorInfo.currentUnit.name && unitId.id === editorInfo.currentUnit.id) {
             // the unit to open is the same as the unit in the editor, so we are doing nothing
             LOGGER.log("openModelUnit doing NOTHING")
         } else {
             let toBeOpened: FreModelUnit | undefined = undefined
-            autorun(() => {
+            // autorun(() => {
                 if (this.modelStore) {
                     toBeOpened = this.modelStore.getUnitById(unitId)
                 }
-            })
+            // })
             if (notNullOrUndefined(toBeOpened)) {
                 // save the old current unit, if there is one
                 await this.saveUnit(editorInfo.currentUnit)

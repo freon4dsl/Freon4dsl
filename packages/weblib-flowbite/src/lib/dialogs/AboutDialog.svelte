@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Dialog from "$lib/dialogs/Dialog.svelte"
     import { dialogs, versionNumber } from "../stores/index.js";
     import { Card, Modal } from "flowbite-svelte";
     import {
@@ -10,7 +11,7 @@
     } from 'flowbite-svelte-icons';
 </script>
 
-<Modal bind:open={dialogs.aboutDialogVisible} outsideclose={true} size="lg" class="w-full bg-light-base-100 dark:bg-dark-base-800">
+<Dialog open={dialogs.aboutDialogVisible}>
     <Card class="flex flex-col space-y-6 bg-light-base-50 dark:bg-dark-base-900 shadow my-2 p-6 max-w-full" role="dialog">
 <!--        <h3 class="mb-0 text-xl font-semibold text-light-base-900 dark:text-dark-base-50">About the Freon Editor</h3>-->
         <div class="flex flex-col items-center bg-light-base-50 dark:bg-dark-base-900">
@@ -105,6 +106,6 @@
             </p>
         </div>
     </Card>
-</Modal>
+</Dialog>
 
 
