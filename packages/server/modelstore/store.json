@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 3,
+    "currentPostfix": 4,
     "models": [
         {
             "folder": "modelstore",
@@ -92,6 +92,10 @@
                 {
                     "file": "TestBPublic.json",
                     "name": "TestBPublic"
+                },
+                {
+                    "name": "aw",
+                    "file": "aw.json"
                 }
             ],
             "version": "1"
@@ -640,10 +644,38 @@
             ]
         },
         {
-            "name": "631(&$][:) 12!",
-            "folder": "model-2",
-            "language": "MyLang",
+            "name": "NEWMODEL",
+            "folder": "NEWMODEL",
+            "language": "Education",
             "version": "1",
+            "units": []
+        },
+        {
+            "name": "MMM",
+            "folder": "MMM",
+            "language": "Education",
+            "version": "1",
+            "units": []
+        },
+        {
+            "name": "NNN",
+            "folder": "NNN",
+            "language": "Education",
+            "version": "1",
+            "units": []
+        },
+        {
+            "name": "ddddd",
+            "folder": "ddddd",
+            "language": "Education",
+            "version": "1",
+            "units": []
+        },
+        {
+            "name": "PPPPP",
+            "folder": "PPPPP",
+            "language": "Education",
+            "version": "2",
             "units": []
         }
     ]

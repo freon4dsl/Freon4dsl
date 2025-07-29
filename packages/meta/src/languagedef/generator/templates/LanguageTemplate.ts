@@ -26,6 +26,7 @@ export class LanguageTemplate {
              */
              export function initializeLanguage() {
                 ${Names.FreLanguage}.getInstance().name = "${language.name}";
+                ${Names.FreLanguage}.getInstance().languageVersion = "${language.modelConcept.version}";
                 ${Names.FreLanguage}.getInstance().id = ${language.id !== undefined ? `"${language.id}"` : `"${language.name}"`};
                 ${Names.FreLanguage}.getInstance().addModel(describe${Names.classifier(language.modelConcept)}());
                 ${language.units

@@ -103,6 +103,7 @@ export class FreLanguage {
 
     private languageName: string;
     private languageId?: string;
+    public languageVersion: string;
     private pmodel: FreLanguageModel;
     private units: Map<string, FreLanguageModelUnit> = new Map<string, FreLanguageModelUnit>();
     private concepts: Map<string, FreLanguageConcept> = new Map<string, FreLanguageConcept>();
