@@ -26,16 +26,12 @@ function readFile(filepath: string): FreModelUnit {
 describe("Testing Search String", () => {
     test("search associations with text '<-> + Ch' in Book", () => {
         const myUnit = readFile("src/octopus-small/__inputs__/Book.uml2");
-        try {
-            if (!!myUnit) {
-                const found: FreNode[] = searcher.findString("<-> + Ch", myUnit, writer, "Association");
-                expect(found.length).toBe(2);
-                // console.log("FOUND: \n\t" + found.map(f => writer.writeToString(f)).join("\n====\n\t"));
-            } else {
-                console.log("No unit to search");
-            }
-        } catch (e) {
-            console.log(e.stack);
+        if (!!myUnit) {
+            const found: FreNode[] = searcher.findString("<-> `+` `Chapter`", myUnit, writer, "Association");
+            // console.log("Unit: \n" + writer.writeToString(myUnit));
+            expect(found.length).toBe(2);
+        } else {
+            console.log("No unit to search");
         }
     });
 
