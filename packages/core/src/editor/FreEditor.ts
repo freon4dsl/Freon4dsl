@@ -180,7 +180,7 @@ export class FreEditor {
      * @param propertyIndex
      * @param caretPosition
      */
-    selectElement(node: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret) {
+    selectElement(node: FreNode, propertyName?: string, propertyIndex?: number, caretPosition?: FreCaret): void {
         LOGGER.log(
             `selectElement ${node?.freLanguageConcept()} with id ${node?.freId()}, property: [${propertyName}, ${propertyIndex}] ${caretPosition}`
         );

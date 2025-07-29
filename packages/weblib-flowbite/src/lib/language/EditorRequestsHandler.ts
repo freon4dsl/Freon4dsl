@@ -68,11 +68,21 @@ export class EditorRequestsHandler {
     }
 
     redo = (): void => {
-        AstActionExecutor.getInstance(this.langEnv!.editor).redo();
+        const delta = AstActionExecutor.getInstance(this.langEnv!.editor).redo();
+        // TODO TEST
+        if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
+            FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
+        }
+        this.langEnv!.editor.selectionChanged()
     }
 
     undo = (): void => {
-        AstActionExecutor.getInstance(this.langEnv!.editor).undo();
+        const delta: FreDelta = AstActionExecutor.getInstance(this.langEnv!.editor).undo();console.log(`undo delta '${delta.toString()}'`)
+        // TODO TEST
+        if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
+            FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
+        }
+        this.langEnv!.editor.selectionChanged()
     }
 
     cut = (): void => {
@@ -160,7 +170,7 @@ export class EditorRequestsHandler {
                 const results: FreNode[] = searcher.findString(
                     stringToFind,
                     unit,
-                    WebappConfigurator.getInstance().langEnv?.writer!
+                    WebappConfigurator.getInstance().langEnv!.writer!
                 )
                 // console.log(results);
                 this.showSearchResults(results, stringToFind);

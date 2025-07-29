@@ -3,16 +3,16 @@
   "version": "1.1.0-beta.3",
   "description": "Finds the country of origin of the incoming request",
   "main": "index.js",
+  "json": "tsm ./src/json/Json.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "tsm": "^2.3.0",
-    "zod": "3.25.36",
     "@duplojs/zod-to-typescript": "0.4.2",
-    "@types/node": "20.12.11",
     "@rushstack/ts-command-line": "4.11.0",
+    "@types/node": "20.12.11",
     "lodash": "4.17.21",
-    "tsm": "^2.3.0"
+    "tsm": "^2.3.0",
+    "zod": "3.25.36"
   }
 }
