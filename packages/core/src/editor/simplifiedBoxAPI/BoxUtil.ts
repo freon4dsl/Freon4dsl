@@ -1,4 +1,4 @@
-import type { FreNode } from "../../ast/index.js";
+import type { FreNamedNode, FreNode } from '../../ast/index.js';
 import {
     BoolDisplay,
     BooleanWrapperBox,
@@ -268,7 +268,7 @@ export class BoxUtil {
     public static referenceBox(
         node: FreNode,
         propertyName: string,
-        setFunc: (selected: string) => void,
+        setFunc: (selected: string | FreNamedNode) => void,
         scoper: FreScoper,
         index?: number,
     ): ReferenceBox {

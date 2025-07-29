@@ -126,6 +126,7 @@ export function createOperatorBox(editor: FreEditor, exp: FreBinaryExpression, s
                         id: e.trigger as string,
                         label: e.trigger as string,
                         description: "empty description for operator",
+                        // TODO icon and hideInList do not adhere to the SelectOption interface. What is happening here?
                         icon: null,
                         hideInList: false,
                     }));
