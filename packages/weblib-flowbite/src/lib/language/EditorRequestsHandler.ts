@@ -8,7 +8,10 @@ import {
     type FreModelUnit,
     isRtError,
     isNullOrUndefined,
-    notNullOrUndefined, FreErrorSeverity
+    notNullOrUndefined,
+    FreErrorSeverity,
+    FreEditorUtil,
+    FreDelta
 } from '@freon4dsl/core';
 import type { FreNode, TraceNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
@@ -68,7 +71,7 @@ export class EditorRequestsHandler {
     }
 
     redo = (): void => {
-        const delta = AstActionExecutor.getInstance(this.langEnv!.editor).redo();
+        const delta: FreDelta | undefined = AstActionExecutor.getInstance(this.langEnv!.editor).redo();
         // TODO TEST
         if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
@@ -77,7 +80,8 @@ export class EditorRequestsHandler {
     }
 
     undo = (): void => {
-        const delta: FreDelta = AstActionExecutor.getInstance(this.langEnv!.editor).undo();console.log(`undo delta '${delta.toString()}'`)
+        const delta: FreDelta | undefined = AstActionExecutor.getInstance(this.langEnv!.editor).undo();
+        console.log(`undo delta '${delta?.toString()}'`)
         // TODO TEST
         if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
