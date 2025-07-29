@@ -214,7 +214,7 @@ export function getContextMenuOptions(
         // @ts-ignore
         addBefore = new MenuItem(
             `Add before ${contextMsg}`,
-            "Ctrl+A",
+            '', //"Ctrl+A",
             // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) => {},
             submenuItemsBefore,
@@ -222,7 +222,7 @@ export function getContextMenuOptions(
         // @ts-ignore
         addAfter = new MenuItem(
             `Add after ${contextMsg}`,
-            "Ctrl+I",
+          '', //"Ctrl+I",
             // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) => {},
             submenuItemsAfter,
@@ -230,14 +230,14 @@ export function getContextMenuOptions(
     } else {
         addBefore = new MenuItem(
             `Add before ${contextMsg}`,
-            "Ctrl+A",
+          '', //"Ctrl+A",
             // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) =>
                 addListElement(editor, listParent, propertyName, index, conceptName, true),
         );
         addAfter = new MenuItem(
             `Add after ${contextMsg}`,
-            "Ctrl+I",
+          '', //"Ctrl+I",
             // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) =>
                 addListElement(editor, listParent, propertyName, index, conceptName, false),
