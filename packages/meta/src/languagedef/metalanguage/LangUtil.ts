@@ -352,7 +352,7 @@ export class LangUtil {
             return false;
         }
 
-        // console.log("comparing " + type1.name + " and " + type2.name)
+        // console.log("comparing " + type1Exp.name + " and " + type2Exp.name)
         return LangUtil.conforms(type1, type2);
     }
 
@@ -364,16 +364,16 @@ export class LangUtil {
         }
         if (type1 instanceof FreMetaConcept) {
             if (type2 instanceof FreMetaConcept && type2.allSubConceptsRecursive().includes(type1)) {
-                // return true when type1 is subconcept of type2
-                // console.log("\t ==> " + type1.name + " is a sub concept of " + type2.name)
+                // return true when type1Exp is subconcept of type2Exp
+                // console.log("\t ==> " + type1Exp.name + " is a sub concept of " + type2Exp.name)
                 return true;
             } else if (type2 instanceof FreMetaInterface) {
                 return this.doesImplement(type1, type2);
             }
         } else if (type1 instanceof FreMetaInterface) {
             if (type2 instanceof FreMetaInterface && type2.allSubInterfacesRecursive().includes(type1)) {
-                // return true when type1 is subinterface of type2
-                // console.log("\t ==> " + type1.name + " is a sub interface of " + type2.name)
+                // return true when type1Exp is subinterface of type2Exp
+                // console.log("\t ==> " + type1Exp.name + " is a sub interface of " + type2Exp.name)
                 return true;
             }
         }
@@ -383,11 +383,11 @@ export class LangUtil {
     private static doesImplement(concept: FreMetaConcept, interf: FreMetaInterface): boolean {
         let result: boolean = false;
         if (LangUtil.refListIncludes(concept.interfaces, interf)) {
-            // return true when type1 implements type2
+            // return true when type1Exp implements type2Exp
             // console.log("\t ==> " + concept.name + " implements " + interf.name)
             result = true;
         } else {
-            // see if one of the base classes of type1 implements type2
+            // see if one of the base classes of type1Exp implements type2Exp
             for (const super1 of this.superConcepts(concept)) {
                 if (this.doesImplement(super1, interf)) {
                     // console.log("\t ==> " + super1.name + " implements " + interf.name)

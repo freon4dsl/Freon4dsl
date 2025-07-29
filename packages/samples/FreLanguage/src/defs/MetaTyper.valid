@@ -1,4 +1,4 @@
-validator yyy for language FreLanguageX
+validator for language FreLanguageX
 
 FreTyperDef {
     // 1. No two classifier-rules for the same classifier

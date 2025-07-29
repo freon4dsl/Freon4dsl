@@ -1,7 +1,6 @@
 import { InsuranceModelEnvironment } from "../config/gen/InsuranceModelEnvironment";
 import { BaseProduct, InsuranceModel, Part, Product } from "../language/gen";
-import { FreReader, FreValidator} from "@freon4dsl/core";
-import { FileHandler } from "./FileHandler";
+import { FileUtil, FreReader, FreValidator } from "@freon4dsl/core"
 import {describe, test, expect} from "vitest";
 
 
@@ -9,11 +8,10 @@ import {describe, test, expect} from "vitest";
 const reader: FreReader = InsuranceModelEnvironment.getInstance().reader;
 // const scoper = InsuranceModelEnvironment.getInstance().scoper;
 const validator: FreValidator = InsuranceModelEnvironment.getInstance().validator;
-const handler: FileHandler = new FileHandler();
 
 function addPartToModel(model: InsuranceModel, filepath: string) {
     try {
-        const langSpec: string = handler.stringFromFile(filepath);
+        const langSpec: string = FileUtil.stringFromFile('./packages/samples/Insurance/src/__inputs__/' + filepath);
         const unit1 = reader.readFromString(langSpec, "Part", model) as Part;
         // use last name of filepath as name of the unit
         unit1.name = filepath.split("/").pop().split(".").shift();
@@ -25,7 +23,7 @@ function addPartToModel(model: InsuranceModel, filepath: string) {
 
 function addProductToModel(model: InsuranceModel, filepath: string) {
     try {
-        const langSpec: string = handler.stringFromFile(filepath);
+        const langSpec: string = FileUtil.stringFromFile('./packages/samples/Insurance/src/__inputs__/' + filepath);
         const unit1 = reader.readFromString(langSpec, "Product", model) as Product;
         // use last name of filepath as name of the unit
         unit1.name = filepath.split("/").pop().split(".").shift();
@@ -40,31 +38,31 @@ describe("Testing InsuranceModel", () => {
     model.name = "TEST_MODEL";
 
     test("add health base", () => {
-        addPartToModel(model, "/base/Health.base");
+        addPartToModel(model, "base/Health.base");
     });
 
     test("add home base", () => {
-        addPartToModel(model, "/base/Home.base");
+        addPartToModel(model, "base/Home.base");
     });
 
     test("add legal base", () => {
-        addPartToModel(model, "/base/Legal.base");
+        addPartToModel(model, "base/Legal.base");
     });
 
     test("add HealthAll product", () => {
-        addProductToModel(model, "/products/HealthAll.prod");
+        addProductToModel(model, "products/HealthAll.prod");
     });
 
     test("add HomeAll product", () => {
-        addProductToModel(model, "/products/HomeAll.prod");
+        addProductToModel(model, "products/HomeAll.prod");
     });
 
     test("add HomeAndHealth product", () => {
-        addProductToModel(model, "/products/HomeAndHealth.prod");
+        addProductToModel(model, "products/HomeAndHealth.prod");
     });
 
     test("add HomeCheap product", () => {
-        addProductToModel(model, "/products/HomeCheap.prod");
+        addProductToModel(model, "products/HomeCheap.prod");
 
     });
 
@@ -73,7 +71,7 @@ describe("Testing InsuranceModel", () => {
     });
 
     test("add LegalAll product", () => {
-        addProductToModel(model, "/products/LegalAll.prod");
+        addProductToModel(model, "products/LegalAll.prod");
     });
 
     test("check resulting model", () => {

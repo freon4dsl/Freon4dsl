@@ -1,4 +1,4 @@
-validator heat for language heat // long name: jetbrains.mps.samples.heating
+validator for language heat // long name: jetbrains.mps.samples.heating
 /*
 HeatingPlan {
 	dailyPlans: DailyPlan[];

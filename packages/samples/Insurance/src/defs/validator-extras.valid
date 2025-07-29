@@ -1,4 +1,4 @@
-validator DocuValidator for language InsuranceModel
+validator for language InsuranceModel
 
 EntityAttribute {
     self.numVal >= 12;       // in .ast file: "numVal: number;"

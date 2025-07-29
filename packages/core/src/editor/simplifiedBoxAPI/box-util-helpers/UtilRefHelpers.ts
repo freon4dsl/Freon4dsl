@@ -25,7 +25,7 @@ export class UtilRefHelpers {
     public static referenceBox(
         node: FreNode,
         propertyName: string,
-        setFunc: (selected: string) => void,
+        setFunc: (selected: string | FreNamedNode) => void,
         scoper: FreScoper,
         index?: number,
     ): ReferenceBox {
@@ -54,10 +54,11 @@ export class UtilRefHelpers {
                 return scoper
                     .getVisibleNodes(node, propType)
                     .filter((node) => !!node.name && node.name !== "")
-                    .map((node) => ({
-                        id: node.name,
+                    .map((node, index: number) => ({
+                        id: node.name + index,
                         label: node.name,
-                        additional_label: this.makeAdditionalLabel(node)
+                        additional_label: this.makeAdditionalLabel(node),
+                        node: node
                     }));
             },
             () => {
@@ -71,9 +72,15 @@ export class UtilRefHelpers {
             (editor: FreEditor, option: SelectOption): BehaviorExecutionResult => {
                 LOGGER.log("referenceBox ==> SET selected option for property " + propertyName + " of " + (isNullOrUndefined(node)? "NULL" : node["name"]) + " to " + option?.label);
                 if (!!option) {
+                    // check whether the label denotes an ambiguous node, if so store the option.node, not the option.label
+                    const currentVisibleNodes =  scoper.getVisibleNodes(node, propType).filter((node) => !!node.name && node.name !== option.label)
                     // console.log("========> set property [" + propertyName + "] of " + node["name"] + " := " + option.label);
                     AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to ${option.label}`, () => {
-                        setFunc(option.label);
+                        if (currentVisibleNodes.length > 1) {
+                            setFunc(option.node);
+                        } else {
+                            setFunc(option.label);
+                        }
                     });
                 } else {
                     AST.changeNamed(`UtilRefHelpers.referenceBox for property ${propertyName} set to null`, () => {
@@ -258,8 +265,12 @@ export class UtilRefHelpers {
                 "list-item",
                 index,
             );
-            const setFunc = (selected: string) => {
-                listElem.name = selected;
+            const setFunc = (selected: string | FreNamedNode) => {
+                if (typeof selected === 'string') {
+                    listElem.name = selected;
+                } else {
+                    listElem.referred = selected;
+                }
                 return BehaviorExecutionResult.EXECUTED;
             };
             let innerBox = BoxUtil.referenceBox(element, propertyName, setFunc, scoper, index);

@@ -54,9 +54,15 @@ And run all tests  with:
 
 * Go to the `webapp-starter` package.
   - Open the file `package.json
-  - In the _dependencies_ section change the language dependency to your chosen language
+  - In the _dependencies_ section change the language dependency to your chosen language:
+  ```json lines
+  "@freon4dsl/samples-course-schedule": "1.1.0-beta.3",
+  ```
   - Also open the file `src/starter.ts`
-  - Change lines 7 and 8 to import the correct environment from your chosen language package.
+  - Change line 5 to import the correct environment from your chosen language package:
+  ```typescript
+  import { LanguageEnvironment } from "@freon4dsl/samples-course-schedule" 
+  ```
 
 * Go to directory `packages/server` and start the server:
 ```bash
@@ -78,20 +84,20 @@ work in progress.
 
 The source code for Freon is organised into the following packages.
 
-* *docs*: documentation, i.e. this website
 * *packages/core*: framework source code.
 * *packages/core/src/editor*: the editor framework source code.
 * *packages/core/src/language/decorators*: source code for <a href="https://mobx.js.org/" target="_blank">MobX</a> decorators that can be used to easily implement a language that can be
   directly used by Freon.
+* *packages/core-svelte*: framework source code that deals with html and css.
 * *packages/meta*: source code that reads the language definition files and generates the language environment.
 * *packages/meta/src/languagedef*: source code that generates code from a language structure definition (*.ast*) file.
 * *packages/meta/src/editordef*: source code that generates code from an editor definition (*.edit*) file.
 * *packages/meta/src/scoperdef*: source code that generates code from a scoper definition (*.scope*) file.
 * *packages/meta/src/typerdef*: source code that generates code from a typer definition (*.type*) file.
 * *packages/meta/src/validatordef*: source code that generates code from a validator definition (*.valid*) file.
+* *packages/samples/*: source code for a number of sample languages.
 * *packages/server*: source code for a minimalistic model-server used for demonstration purposes.
 * *packages/webapp-lib*: source code for the web-application used for all generated languages.
-* *packages/samples/*: source code for a number of sample languages.
 * *packages/webapp-starter/*: source code for web app including one language.
   This package import the `webapp-lib` for the full web app and one language from `samples` to be used in the webapp.
 * _/*_: the usual suspects.

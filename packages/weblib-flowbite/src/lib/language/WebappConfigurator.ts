@@ -10,7 +10,7 @@ import {
     InMemoryModel,
     type IServerCommunication,
     isNullOrUndefined,
-    type FreUnitIdentifier, AST, notNullOrUndefined
+    type FreUnitIdentifier, AST, notNullOrUndefined, ReferenceUpdateManager
 } from "@freon4dsl/core"
 import { replaceProjectionsShown } from "$lib/stores/Projections.svelte.js"
 import { langInfo } from "$lib/stores/LanguageInfo.svelte.js"
@@ -545,6 +545,7 @@ export class WebappConfigurator {
         if (notNullOrUndefined(store?.model)) {
             editorInfo.modelName = store?.model?.name;
             editorInfo.unitIds = store.getUnitIdentifiers();
+            ReferenceUpdateManager.getInstance().freModel = store.model;
         }
     };
 }

@@ -1,4 +1,4 @@
-validator TestValidator for language test1
+validator for language test1
 
 CC {
     // this rule should be checked for CC and for all subtypes of C, i.e. also on B and SubCC

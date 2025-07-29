@@ -369,8 +369,8 @@ export class FreLionwebSerializer implements FreSerializer {
         LOGGER.log("start converting concept name " + typename + ", publicOnly: " + publicOnly);
 
         const idMap = new Map<string, LionWebJsonNode>();
-        // @ts-expect-error error TS6133: 'root' is declared but its value is never read.
         // TODO untangle function convertToJSONinternal
+        // @ts-expect-error error TS6133: 'root' is declared but its value is never read.
         let root: LionWebJsonNode;
         if (publicOnly !== undefined && publicOnly) {
             console.error("Use of publicOnly in FreLionWebSerializer.ts, should never happen!")

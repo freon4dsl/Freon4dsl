@@ -2,6 +2,7 @@ import { issuestoString, LanguageRegistry, LionWebJsonChunk, LionWebValidator } 
 import * as fs from "fs";
 import { IRouterContext } from "koa-router";
 import * as path from "node:path"
+import { FileUtil } from "./FileUtil.js"
 import { StoreCatalog } from "./StoreCatalog.js"
 
 const storeFolder = "./modelstore";
@@ -25,7 +26,7 @@ export class ModelRequests {
                 }
                 catalog.models.push(model)
                 ModelRequests.writeStoreCatalog(catalog)
-                if (!fs.existsSync(path.join(`${storeFolder}`, model.folder))) {
+                if (!FileUtil.exists(path.join(`${storeFolder}`, model.folder))) {
                     fs.mkdirSync(path.join(`${storeFolder}`, model.folder));
                 }
             } else {
@@ -67,7 +68,7 @@ export class ModelRequests {
                 ModelRequests.writeStoreCatalog(catalog)
             }
             const body = ctx.request.body;
-            if (!fs.existsSync(path.join(`${storeFolder}`, model.folder))) {
+            if (!FileUtil.exists(path.join(`${storeFolder}`, model.folder))) {
                 fs.mkdirSync(path.join(`${storeFolder}`, model.folder));
             }
             fs.writeFileSync(path.join(`${storeFolder}`, model.folder, `${unit.file}`), JSON.stringify(body, null, 3));
@@ -217,7 +218,7 @@ export class ModelRequests {
 
     private static checkStoreFolder() {
         try {
-            if (!fs.existsSync(`${storeFolder}`)) {
+            if (!FileUtil.exists(`${storeFolder}`)) {
                 fs.mkdirSync(`${storeFolder}`);
             }
         } catch (e) {

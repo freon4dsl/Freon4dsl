@@ -1,15 +1,15 @@
 import {
-    FreLangSimpleExpNew,
+    FreLangSimpleExp,
     FreLimitedInstanceExp,
     FreVarOrFunctionExp,
     FreFunctionExp,
     FreVarExp
-} from '../metalanguage/FreLangExpressionsNew.js';
+} from '../metalanguage/FreLangExpressions.js';
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import {
-    LanguageExpressionTesterNew,
+    LanguageExpressionTester,
     TestExpressionsForConcept
-} from './LanguageExpressionTesterNew.js';
+} from './LanguageExpressionTester.js';
 import { FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
 
 const LOGGER = new MetaLogger("FreLanguageExpressionCreator").mute();
@@ -19,9 +19,9 @@ export function setCurrentFileName(newName: string) {
     currentFileName = newName;
 }
 
-export function createTest(data: Partial<LanguageExpressionTesterNew>): LanguageExpressionTesterNew {
+export function createTest(data: Partial<LanguageExpressionTester>): LanguageExpressionTester {
     LOGGER.log("createTest");
-    const result = new LanguageExpressionTesterNew();
+    const result = new LanguageExpressionTester();
     if (!!data.languageName) {
         result.languageName = data.languageName;
     }
@@ -120,9 +120,9 @@ export function createLimitedInstanceExp(data: Partial<FreLimitedInstanceExp>): 
     return result;
 }
 
-export function createSimpleExpression(data: Partial<FreLangSimpleExpNew>): FreLangSimpleExpNew {
+export function createSimpleExpression(data: Partial<FreLangSimpleExp>): FreLangSimpleExp {
     LOGGER.log("createSimpleExpression");
-    const result: FreLangSimpleExpNew = new FreLangSimpleExpNew();
+    const result: FreLangSimpleExp = new FreLangSimpleExp();
     // when the normal check is present, a value of 0 will not be passed to result
     result.value = data.value ? data.value : 0;
     return result;

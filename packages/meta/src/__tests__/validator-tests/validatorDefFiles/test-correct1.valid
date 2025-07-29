@@ -1,0 +1,20 @@
+validator for language test1
+
+AAAAAA {
+    self.AAprop3 >= 10; // : number;
+    // properties with concept as type
+    in self.AAprop8 isunique BBprop15; // : BB[];
+    // properties with interface as type
+    notEmpty self.AAprop2; // : string[];
+    notEmpty self.AAprop10; // : CC[]; // reference
+    // warning: 'self' refers to list elements
+    in self.AAprop12 isunique self.DDprop4; // : DD[];
+    // self.AAprop13; // : FF; // reference
+    // self.AAprop14; // : FF[]; // reference
+    validIdentifier; // default is 'name'
+}
+
+DD {
+    typecheck equalsType( self.DDprop7.BBprop15, #ZZ:ZZinstance1 );
+    typecheck conformsTo( self.DDprop4, self.DDprop14.FFprop8 );
+}

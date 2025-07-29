@@ -1,20 +1,32 @@
-import { FreLangExp, FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
+import { FreMetaClassifier, MetaElementReference } from '../../languagedef/metalanguage/index.js';
 // Note that FreErrorSeverity cannot be imported from "@freon4dsl/core", because
 // "@freon4dsl/meta" does not have a dependency on "@freon4dsl/core".
 import { FreMetaDefinitionElement, FreErrorSeverity } from '../../utils/no-dependencies/index.js';
+import { FreLangExp, FreVarExp } from '../../langexpressions/metalanguage/index.js';
 
 export class ValidatorDef extends FreMetaDefinitionElement {
-    validatorName: string = "";
     languageName: string = "";
-    conceptRules: ConceptRuleSet[] = [];
+    classifierRules: ClassifierRuleSet[] = [];
+
+    toFreString(): string {
+        return `validator for language ${this.languageName}
+        
+${this.classifierRules.map(rule => rule.toFreString()).join('\n\n')}`;
+    }
 }
 
-export class ConceptRuleSet extends FreMetaDefinitionElement {
+export class ClassifierRuleSet extends FreMetaDefinitionElement {
     classifierRef: MetaElementReference<FreMetaClassifier> | undefined;
     rules: ValidationRule[] = [];
 
     get classifier(): FreMetaClassifier | undefined{
         return this.classifierRef?.referred;
+    }
+
+    toFreString(): string {
+        return `${this.classifierRef?.name} {
+    ${this.rules.map(rule => `${rule.toFreString()};`).join('\n\t')}
+}`;
     }
 }
 
@@ -23,10 +35,15 @@ export class ValidationSeverity extends FreMetaDefinitionElement {
     // it will be disregarded after checking, instead 'severity' will be used
     value: string = "";
     severity: FreErrorSeverity | undefined; // is set by the checker
+
+    toFreString(): string {
+        return ``;
+    }
 }
 
 export class ValidationMessage extends FreMetaDefinitionElement {
     content: ValidationMessagePart[] = [];
+
     toFreString(): string {
         return this.content.map((p) => p.toFreString()).join(" ");
     }
@@ -36,6 +53,7 @@ export type ValidationMessagePart = ValidationMessageText | ValidationMessageRef
 
 export class ValidationMessageText extends FreMetaDefinitionElement {
     value: string = "";
+
     toFreString(): string {
         return this.value;
     }
@@ -43,6 +61,7 @@ export class ValidationMessageText extends FreMetaDefinitionElement {
 
 export class ValidationMessageReference extends FreMetaDefinitionElement {
     expression: FreLangExp | undefined;
+
     toFreString(): string {
         if (!!this.expression) {
             return this.expression.toFreString();
@@ -60,18 +79,19 @@ export abstract class ValidationRule extends FreMetaDefinitionElement {
     constructor() {
         super();
     }
+
     toFreString(): string {
         return "SHOULD BE IMPLEMENTED BY SUBCLASSES OF 'ValidatorDefLang.Rule'";
     }
 }
 
 export class CheckEqualsTypeRule extends ValidationRule {
-    type1: FreLangExp | undefined;
-    type2: FreLangExp | undefined;
+    type1Exp: FreLangExp | undefined;
+    type2Exp: FreLangExp | undefined;
 
     toFreString(): string {
-        if (!!this.type1 && !!this.type2) {
-            return `@typecheck equalsType( ${this.type1.toFreString()}, ${this.type2.toFreString()} )`;
+        if (!!this.type1Exp && !!this.type2Exp) {
+            return `typecheck equalsType( ${this.type1Exp.toFreString()}, ${this.type2Exp.toFreString()} )`;
         } else {
             return "<unknown check equals type rule>";
         }
@@ -79,12 +99,12 @@ export class CheckEqualsTypeRule extends ValidationRule {
 }
 
 export class CheckConformsRule extends ValidationRule {
-    type1: FreLangExp | undefined;
-    type2: FreLangExp | undefined;
+    type1Exp: FreLangExp | undefined;
+    type2Exp: FreLangExp | undefined;
 
     toFreString(): string {
-        if (!!this.type1 && !!this.type2) {
-            return `@typecheck conformsTo( ${this.type1.toFreString()}, ${this.type2.toFreString()} )`;
+        if (!!this.type1Exp && !!this.type2Exp) {
+            return `typecheck conformsTo( ${this.type1Exp.toFreString()}, ${this.type2Exp.toFreString()} )`;
         } else {
             return "<unknown check conforms rule>";
         }
@@ -106,13 +126,14 @@ export class ExpressionRule extends ValidationRule {
 }
 
 export class IsUniqueRule extends ValidationRule {
-    list: FreLangExp | undefined;
-    listproperty: FreLangExp | undefined;
-    comparator: FreComparator | undefined;
+    // the list in which the value of a property needs to be unique
+    listExp: FreVarExp | undefined;
+    // the property of each element in the list that should be tested for uniqueness
+    listpropertyExp: FreVarExp | undefined;
 
     toFreString(): string {
-        if (!!this.listproperty && !!this.list) {
-            return `isunique ${this.listproperty.toFreString()} in ${this.list.toFreString()}`;
+        if (!!this.listpropertyExp && !!this.listExp) {
+            return `isunique ${this.listpropertyExp.toFreString()} in ${this.listExp.toFreString()}`;
         } else {
             return "isunique <unknown property> in <unknown expression>";
         }
@@ -120,13 +141,13 @@ export class IsUniqueRule extends ValidationRule {
 }
 
 export class NotEmptyRule extends ValidationRule {
-    property: FreLangExp | undefined;
+    property: FreVarExp | undefined;
 
     toFreString(): string {
         if (!!this.property) {
-            return `@notEmpty ${this.property.toFreString()}`;
+            return `notEmpty ${this.property.toFreString()}`;
         } else {
-            return "@notEmpty <unknown property>";
+            return "notEmpty <unknown property>";
         }
     }
 }
@@ -135,9 +156,9 @@ export class ValidNameRule extends ValidationRule {
 
     toFreString(): string {
         if (!!this.property) {
-            return `@validName ${this.property.toFreString()}`;
+            return `validIdentifier ${this.property.toFreString()}`;
         } else {
-            return "@validName <unknown property>";
+            return "validIdentifier <unknown property>";
         }
     }
 }

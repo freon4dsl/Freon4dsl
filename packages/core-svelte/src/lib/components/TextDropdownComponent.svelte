@@ -381,7 +381,7 @@
             } else {
                 setFiltered(
                     allOptions.filter((o) => {
-                        LOGGER.log(`    startsWith text [${text}], option is ${JSON.stringify(o)}`);
+                        LOGGER.log(`    startsWith text [${text}], option is ${o.id}`);
                         return o?.label?.startsWith(text.substring(0, details.caret));
                     })
                 );

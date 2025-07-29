@@ -1,7 +1,7 @@
 const SERVER_URL = "http://127.0.0.1:8001/";
 
 import request from "supertest";
-import { app } from "../server/server-def";
+import { app } from "../server/server-def.js";
 import { describe, test, expect } from "vitest";
 
 const modelUnitInterfacePostfix: string = "Public";
@@ -42,17 +42,25 @@ describe("Freon Model Server", () => {
         expect(response.text).toBe("Freon Model Server");
     });
 
-    test(" create a model", async () => {
-        const response2 = await serv.put(`/putModel?model=${encodeURIComponent("631(&$][:) 12!")}&language=MyLang`);
-        expect(response2.status).toBe(201);
-    });
-
-    test(" serves all models", async () => {
+    test(" create a model with a non-identifier name, list it and delete it", async () => {
+        const weirdModelName = "631(&$][:) 12!"
+        const response1 = await serv.put(`/putModel?model=${encodeURIComponent(`${weirdModelName}`)}&language=MyLang`);
+        expect(response1.status).toBe(201);
+        
         const response2 = await serv.get("/getModelList");
         expect(response2.status).toBe(201);
         console.log(JSON.stringify(response2.text))
         expect(response2.text).toContain("__TEST__");
         expect(response2.text).toContain("631(&$][:) 12!");
+        
+        const response3 = await serv.get(`/deleteModel?model=${encodeURIComponent(`${weirdModelName}`)}`);
+        expect(response3.status).toBe(201);
+
+        const response4 = await serv.get("/getModelList");
+        expect(response4.status).toBe(201);
+        console.log(JSON.stringify(response4.text))
+        expect(response4.text).toContain("__TEST__");
+        expect(response4.text).to.not.contain("631(&$][:) 12!");
     });
 
     test(" serves all model units", async () => {
@@ -100,7 +108,7 @@ describe("Freon Model Server", () => {
         const response1 = await serv.get(`/deleteModel?model=${modelName2}`);
         expect(response1.status).toBe(201);
         // check whether it is no longer present
-        const response3 = await serv.get(`/getModelList`);
+        const response3 = await serv.get("/getModelList");
         expect(response3.status).toBe(201);
         expect(response3.text).not.toContain(modelName2);
     });

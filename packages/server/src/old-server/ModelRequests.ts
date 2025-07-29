@@ -2,6 +2,7 @@ import { issuestoString, LanguageRegistry, LionWebJsonChunk, LionWebValidator } 
 import * as fs from "fs";
 import { IRouterContext } from "koa-router";
 import * as path from "node:path"
+import { FileUtil } from "../server/FileUtil.js"
 // var path = require("path");
 
 const storeFolder = "./modelstore";
@@ -13,7 +14,7 @@ export class ModelRequests {
         try {
             this.checkStoreFolder();
             const body = ctx.request.body;
-            if (!fs.existsSync(path.join(`${storeFolder}`, foldername))) {
+            if (!FileUtil.exists(path.join(`${storeFolder}`, foldername))) {
                 fs.mkdirSync(path.join(`${storeFolder}`, foldername));
             }
             fs.writeFileSync(path.join(`${storeFolder}`, foldername, `${name}.json`), JSON.stringify(body, null, 3));
@@ -52,7 +53,7 @@ export class ModelRequests {
     public static async getUnitList(foldername: string, ctx: IRouterContext) {
         try {
             this.checkStoreFolder();
-            if (!fs.existsSync(path.join(`${storeFolder}`, foldername))) {
+            if (!FileUtil.exists(path.join(`${storeFolder}`, foldername))) {
                 fs.mkdirSync(path.join(`${storeFolder}`, foldername));
             }
             const dir = fs
@@ -101,7 +102,7 @@ export class ModelRequests {
         try {
             this.checkStoreFolder();
             console.log("Unlink: " + path.join(`${storeFolder}`, foldername));
-            fs.rmdirSync(path.join(`${storeFolder}`, foldername), { recursive: true });
+            fs.rmSync(path.join(`${storeFolder}`, foldername), { recursive: true });
         } catch (e) {
             const message = (e instanceof Error? e.message : e.toString())
             console.log(message);
@@ -111,7 +112,7 @@ export class ModelRequests {
 
     private static checkStoreFolder() {
         try {
-            if (!fs.existsSync(`${storeFolder}`)) {
+            if (!FileUtil.exists(`${storeFolder}`)) {
                 fs.mkdirSync(`${storeFolder}`);
             }
         } catch (e) {

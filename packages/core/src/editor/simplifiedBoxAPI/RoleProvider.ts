@@ -45,4 +45,8 @@ export class RoleProvider {
     static row(owningConceptName: string, propertyName: string, index: number) {
         return RoleProvider.startWithUpperCase(owningConceptName) + "-" + propertyName + "-row-" + index;
     }
+    
+    static fragment(owningConceptName: string, externalName: string) {
+        return RoleProvider.startWithUpperCase(owningConceptName) + "-" + externalName;
+    }
 }

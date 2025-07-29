@@ -21,6 +21,7 @@ import { ActionsTemplate, EditorIndexTemplate, BoxProviderTemplate } from "./tem
 import { CustomActionsTemplate, CustomProjectionTemplate, DefaultActionsTemplate } from "./templates/index.js";
 import { EditorDefTemplate } from "./templates/index.js";
 import { LOG2USER } from "../../utils/basic-dependencies/index.js";
+import { NamesForEditor } from '../../utils/on-lang-and-editor/index.js';
 
 const LOGGER = new MetaLogger("EditorGenerator").mute();
 
@@ -71,7 +72,7 @@ export class EditorGenerator {
                     "Box provider " + concept.name,
                     generationStatus,
                 );
-                fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
+                fs.writeFileSync(`${this.editorGenFolder}/${NamesForEditor.boxProvider(concept)}.ts`, projectionfile);
             }
         });
 
@@ -81,7 +82,7 @@ export class EditorGenerator {
                 "Box provider " + concept.name,
                 generationStatus,
             );
-            fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(concept)}.ts`, projectionfile);
+            fs.writeFileSync(`${this.editorGenFolder}/${NamesForEditor.boxProvider(concept)}.ts`, projectionfile);
         });
 
         const allExtraClassifiers: FreMetaClassifier[] = []; // remember these in order to add them to the index file
@@ -98,7 +99,7 @@ export class EditorGenerator {
                         "Box provider " + cls.name,
                         generationStatus,
                     );
-                    fs.writeFileSync(`${this.editorGenFolder}/${Names.boxProvider(cls)}.ts`, projectionfile);
+                    fs.writeFileSync(`${this.editorGenFolder}/${NamesForEditor.boxProvider(cls)}.ts`, projectionfile);
                 }
             });
             extraClassifiers = newExtraClassifiers;
@@ -174,7 +175,7 @@ export class EditorGenerator {
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.error(`Generated editor with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated editor`);
+            LOGGER.info(`Successfully generated editor`);
         }
     }
 

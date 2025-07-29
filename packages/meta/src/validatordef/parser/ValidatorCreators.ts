@@ -1,7 +1,7 @@
 import {
     CheckConformsRule,
     CheckEqualsTypeRule,
-    ConceptRuleSet,
+    ClassifierRuleSet,
     ExpressionRule,
     IsUniqueRule,
     NotEmptyRule,
@@ -13,7 +13,6 @@ import {
     ValidationSeverity,
     ValidNameRule,
 } from "../metalanguage/index.js";
-import { FreLangAppliedFeatureExp, FreLangSelfExp } from "../../languagedef/metalanguage/index.js";
 import { FreMetaDefinitionElement } from '../../utils/no-dependencies/index.js';
 import { ParseLocationUtil } from '../../utils/basic-dependencies/index.js';
 
@@ -27,15 +26,11 @@ export function setCurrentFileName(newName: string) {
 
 export function createValidatorDef(data: Partial<ValidatorDef>): ValidatorDef {
     const result = new ValidatorDef();
-
-    if (!!data.validatorName) {
-        result.validatorName = data.validatorName;
-    }
     if (!!data.languageName) {
         result.languageName = data.languageName;
     }
-    if (!!data.conceptRules) {
-        result.conceptRules = data.conceptRules;
+    if (!!data.classifierRules) {
+        result.classifierRules = data.classifierRules;
     }
     if (!!data.location) {
         setLocationAndFileName(result, data);
@@ -43,8 +38,8 @@ export function createValidatorDef(data: Partial<ValidatorDef>): ValidatorDef {
     return result;
 }
 
-export function createConceptRule(data: Partial<ConceptRuleSet>): ConceptRuleSet {
-    const result = new ConceptRuleSet();
+export function createConceptRule(data: Partial<ClassifierRuleSet>): ClassifierRuleSet {
+    const result = new ClassifierRuleSet();
 
     if (!!data.classifierRef) {
         result.classifierRef = data.classifierRef;
@@ -95,11 +90,11 @@ export function createTypeEqualsRule(data: Partial<CheckEqualsTypeRule>): CheckE
     const result = new CheckEqualsTypeRule();
 
     createRuleCommonParts(data, result);
-    if (!!data.type1) {
-        result.type1 = data.type1;
+    if (!!data.type1Exp) {
+        result.type1Exp = data.type1Exp;
     }
-    if (!!data.type2) {
-        result.type2 = data.type2;
+    if (!!data.type2Exp) {
+        result.type2Exp = data.type2Exp;
     }
     if (!!data.location) {
         setLocationAndFileName(result, data);
@@ -111,11 +106,11 @@ export function createTypeConformsRule(data: Partial<CheckConformsRule>): CheckC
     const result = new CheckConformsRule();
 
     createRuleCommonParts(data, result);
-    if (!!data.type1) {
-        result.type1 = data.type1;
+    if (!!data.type1Exp) {
+        result.type1Exp = data.type1Exp;
     }
-    if (!!data.type2) {
-        result.type2 = data.type2;
+    if (!!data.type2Exp) {
+        result.type2Exp = data.type2Exp;
     }
     if (!!data.location) {
         setLocationAndFileName(result, data);
@@ -142,25 +137,15 @@ export function createExpressionRule(data: Partial<ExpressionRule>): ExpressionR
     return result;
 }
 
-export function createIsuniqueRule(data: Partial<IsUniqueRule>): IsUniqueRule {
+export function createIsUniqueRule(data: Partial<IsUniqueRule>): IsUniqueRule {
     const result = new IsUniqueRule();
 
     createRuleCommonParts(data, result);
-    if (!!data.list) {
-        result.list = data.list;
+    if (!!data.listExp) {
+        result.listExp = data.listExp;
     }
-    if (!!data.listproperty) {
-        // the expression parser/creator returns a FreLangConceptExp
-        // but we need a FreLangSelfExp where 'self' refers to an element of result.list
-        // therefore we change the received 'listproperty'.
-        result.listproperty = new FreLangSelfExp();
-        // result.listproperty.sourceName = "list";
-        result.listproperty.location = data.listproperty.location;
-        result.listproperty.appliedfeature = new FreLangAppliedFeatureExp();
-        result.listproperty.appliedfeature.sourceName = data.listproperty.sourceName;
-        result.listproperty.appliedfeature.location = data.listproperty.location;
-        result.listproperty.appliedfeature.appliedfeature = data.listproperty.appliedfeature;
-        result.listproperty.appliedfeature.sourceExp = result.listproperty;
+    if (!!data.listpropertyExp) {
+        result.listpropertyExp = data.listpropertyExp;
     }
     if (!!data.location) {
         setLocationAndFileName(result, data);

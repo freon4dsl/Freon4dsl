@@ -22,7 +22,7 @@ export class PartPropertyBoxHelper {
         return `BoxUtil.referenceBox(
                                 ${element},
                                 "${appliedFeature.name}",
-                                (selected: string) => {
+                                (selected: string | ${featureType}) => {
                                     ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
                                                selected, "${featureType}" );
                                 },

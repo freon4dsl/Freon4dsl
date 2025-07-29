@@ -1,6 +1,5 @@
-import {FileHandler} from "./FileHandler.js";
 import {FreStructureDef, FreValidatorDef, FreScoperDef, FreTyperDef, FreLanguageX} from "../language/gen";
-import {FreError} from "@freon4dsl/core";
+import { FileUtil, FreError } from "@freon4dsl/core"
 import {FreLanguageXEnvironment} from "../config/gen/FreLanguageXEnvironment.js";
 import {describe, test, expect} from "vitest";
 
@@ -9,11 +8,11 @@ describe("Fre Language Parser", () => {
     const writer = FreLanguageXEnvironment.getInstance().writer;
     const validator = FreLanguageXEnvironment.getInstance().validator;
     const scoper = FreLanguageXEnvironment.getInstance().scoper;
-    const fileHandler = new FileHandler();
-
+    const path = './packages/samples/FreLanguage/src/__inputs__/'
+    
     test(" on .ast file", () => {
         const completeModel: FreLanguageX = new FreLanguageX();
-        const input = fileHandler.stringFromFile("/LanguageDefinition.ast");
+        const input = FileUtil.stringFromFile(path + "LanguageDefinition.ast");
         const unit1: FreStructureDef = reader.readFromString(input, "FreStructureDef", completeModel, "LanguageDefinition.ast") as FreStructureDef;
         expect(unit1).not.toBe(null);
         expect(unit1).not.toBe(undefined);
@@ -24,7 +23,7 @@ describe("Fre Language Parser", () => {
 
     test(" on .scope file", () => {
         const completeModel: FreLanguageX = new FreLanguageX();
-        const input = fileHandler.stringFromFile("/LanguageDefinition.scope");
+        const input = FileUtil.stringFromFile(path + "LanguageDefinition.scope");
         const unit1: FreScoperDef = reader.readFromString(input, "FreScoperDef", completeModel, 'LanguageDefinition.scope') as FreScoperDef;
         expect(unit1).not.toBe(null);
         expect(unit1).not.toBe(undefined);
@@ -35,7 +34,7 @@ describe("Fre Language Parser", () => {
 
     test.skip(" on .valid file", () => {
         const completeModel: FreLanguageX = new FreLanguageX();
-        const input = fileHandler.stringFromFile("/LanguageDefinition.valid");
+        const input = FileUtil.stringFromFile(path + "LanguageDefinition.valid");
         const unit1: FreValidatorDef = reader.readFromString(input, "FreValidatorDef", completeModel, 'LanguageDefinition.valid') as FreValidatorDef;
         console.log(writer.writeToString(unit1, 0, false));
         // expect(unit1).toMatchSnapshot();
@@ -43,13 +42,13 @@ describe("Fre Language Parser", () => {
 
     test(" on .type file", () => {
         const completeModel: FreLanguageX = new FreLanguageX();
-        const languageStr = fileHandler.stringFromFile("/typer-test/types.ast");
+        const languageStr = FileUtil.stringFromFile(path + "typer-test/types.ast");
         const langUnit: FreStructureDef = reader.readFromString(languageStr, "FreStructureDef", completeModel, "typer-test/types.ast") as FreStructureDef;
         expect(langUnit).not.toBe(null);
         expect(langUnit).not.toBe(undefined);
         expect(langUnit).toBeInstanceOf(FreStructureDef);
 
-        const input = fileHandler.stringFromFile("/typer-test/type-rules.type");
+        const input = FileUtil.stringFromFile(path + "typer-test/type-rules.type");
         const typeUnit: FreTyperDef = reader.readFromString(input, "FreTyperDef", completeModel, "/typer-test/type-rules.type") as FreTyperDef;
         expect(typeUnit).not.toBe(null);
         expect(typeUnit).not.toBe(undefined);

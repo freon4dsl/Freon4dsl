@@ -1,18 +1,16 @@
 import {OctopusModel, UmlPart} from "../language/gen";
 import { OctopusModelEnvironment } from "../config/gen/OctopusModelEnvironment";
-import { FreModelSerializer } from "@freon4dsl/core";
-import { FileHandler } from "./FileHandler";
+import { FileUtil, FreModelSerializer } from "@freon4dsl/core"
 import {describe, test, expect} from "vitest";
 
 const writer = OctopusModelEnvironment.getInstance().writer;
 const reader = OctopusModelEnvironment.getInstance().reader;
 const serial: FreModelSerializer = new FreModelSerializer();
-const handler = new FileHandler();
 
 function compareReadAndWrittenUmlParts(filepath: string) {
     try {
         const model: OctopusModel = new OctopusModel();
-        const langSpec: string = handler.stringFromFile(filepath);
+        const langSpec: string = FileUtil.stringFromFile('./packages/samples/Octopus/src/__inputs__/' + filepath);
         const unit1 = reader.readFromString(langSpec, "UmlPart", model) as UmlPart;
         unit1.name = "unit1";
         let result: string = writer.writeToString(unit1, 0, false);
@@ -35,18 +33,18 @@ function compareReadAndWrittenUmlParts(filepath: string) {
 describe("Testing Parser", () => {
     // TODO use snapshots
     test("book unparsed and parsed again", () => {
-        compareReadAndWrittenUmlParts("/Book.uml2");
+        compareReadAndWrittenUmlParts("Book.uml2");
     });
 
     test("orders model unparsed and parsed again", () => {
-        compareReadAndWrittenUmlParts("/orders.uml2");
+        compareReadAndWrittenUmlParts("orders.uml2");
     });
 
     test("catalog model unparsed and parsed again", () => {
-        compareReadAndWrittenUmlParts("/catalog.uml2");
+        compareReadAndWrittenUmlParts("catalog.uml2");
     });
 
     test("trainWagon model unparsed and parsed again", () => {
-        compareReadAndWrittenUmlParts("/trainWagon.uml2");
+        compareReadAndWrittenUmlParts("trainWagon.uml2");
     });
 });

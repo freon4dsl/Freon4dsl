@@ -328,7 +328,13 @@ export class ItemBoxHelper {
                     return new FragmentBox(${elementVarName}, "${myRole}", ${fragmentDefinitionStr}, {cssClass: "${myRole}"});
                 }`
             );
-            return `this.${NamesForEditor.fragment(fragmentDefinition)}()`;
+            const resultBox = `this.${NamesForEditor.fragment(fragmentDefinition)}()`;
+
+            if (!!item.wrapperInfo) {
+                return this._myExternalHelper.wrapFragmentByExternal(item, elementVarName, resultBox)
+            } else {
+                return resultBox;
+            }
         } else {
             return "";
         }

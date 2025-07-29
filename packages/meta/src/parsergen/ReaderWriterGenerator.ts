@@ -134,7 +134,7 @@ export class ReaderWriterGenerator {
                 `Generated reader and writer for ${this.language.name} with ${generationStatus.numberOfErrors} errors.`,
             );
         } else {
-            LOGGER.info(`Succesfully generated reader and writer.`);
+            LOGGER.info(`Successfully generated reader and writer.`);
         }
     }
 

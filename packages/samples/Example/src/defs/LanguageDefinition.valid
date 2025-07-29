@@ -1,4 +1,4 @@
-validator ExampleValidator for language Example
+validator for language Example
 
 ExampleUnit {
     notEmpty self.entities;

@@ -303,7 +303,7 @@ export class LanguageGenerator {
         if (generationStatus.numberOfErrors > 0) {
             LOGGER.info(`Generated language '${language.name}' with ${generationStatus.numberOfErrors} errors.`);
         } else {
-            LOGGER.info(`Succesfully generated language '${language.name}'`);
+            LOGGER.info(`Successfully generated language '${language.name}'`);
         }
     }
 
