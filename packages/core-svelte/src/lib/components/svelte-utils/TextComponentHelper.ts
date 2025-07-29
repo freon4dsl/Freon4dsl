@@ -178,6 +178,7 @@ export class TextComponentHelper {
                     case 'z': // ctrl-z
                     case 'y': // ctrl-y
                         shouldBeHandledByBrowser.value = this._hasChanges();
+                        this._dispatcher("hideDropdown")
                         break;
                     case 'x': // ctrl-x
                         this.cut();

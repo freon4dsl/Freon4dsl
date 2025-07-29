@@ -65,21 +65,24 @@ export class FreUndoStackManager {
         this.redoStack = [];
     }
 
-    public executeUndo() {
+    public executeUndo(): FreDelta | undefined {
         this.inUndo = true; // make sure incoming changes are stored on redo stack
         const delta = this.undoStack.pop();
-        LOGGER.log(`executing undo for unit: '${this.changeSource.name}', delta '${delta?.toString()}`)
+        LOGGER.log(`executeUndo for unit: '${this.changeSource.name}', delta '${delta?.toString()}`)
         if (!!delta) {
             this.reverseDelta(delta);
         }
         this.inUndo = false;
+        return delta
     }
 
-    public executeRedo() {
+    public executeRedo(): FreDelta | undefined {
         const delta = this.redoStack.pop();
+        LOGGER.log(`executeRedo for unit: '${this.changeSource.name}', delta '${delta?.toString()}`)
         if (!!delta) {
             this.reverseDelta(delta);
         }
+        return delta
     }
 
     public addDelta(delta: FreDelta) {
