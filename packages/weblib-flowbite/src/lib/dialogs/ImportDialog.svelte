@@ -1,5 +1,6 @@
 <script lang="ts">
-    import {Label, Modal} from 'flowbite-svelte';
+    import Dialog from "$lib/dialogs/Dialog.svelte"
+    import {Label} from 'flowbite-svelte';
     import { dialogs, drawerHidden, langInfo } from '$lib';
     import {ArrowDownToBracketOutline} from "flowbite-svelte-icons";
     import {isNullOrUndefined} from "@freon4dsl/core";
@@ -55,7 +56,7 @@
     }
 </script>
 
-<Modal bind:open={dialogs.importDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
+<Dialog open={dialogs.importDialogVisible}>
     <div class="flex flex-col space-y-6" role="dialog">
         <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Import model unit(s)</h3>
         <button class="flex flex-col justify-center items-center w-full h-64 bg-light-base-50 dark:bg-dark-base-50 rounded-lg border-2 border-light-base-300 border-dashed cursor-pointer dark:hover:bg-bray-800 hover:bg-light-base-100 dark:border-dark-base-600 dark:hover:border-light-base-500 dark:hover:bg-light-base-600';"
@@ -76,4 +77,4 @@
         <input class="hidden" type="file" accept={file_extensions} multiple={true} bind:this={file_selector}
                onchange={process_files}>
     </div>
-</Modal>
+</Dialog>

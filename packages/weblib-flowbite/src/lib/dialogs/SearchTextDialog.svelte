@@ -1,10 +1,11 @@
 <script lang="ts">
     import { notNullOrUndefined } from "@freon4dsl/core"
-    import { Button, Modal, Input, Card } from "flowbite-svelte"
+    import { Button, Input, Card } from "flowbite-svelte"
     import { dialogs } from "$lib/stores/WebappStores.svelte"
     import { EditorRequestsHandler } from "$lib/language"
     import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
     import { PenSolid } from 'flowbite-svelte-icons';
+    import Dialog from "$lib/dialogs/Dialog.svelte"
 
     let textToFind: string = $state("")
 
@@ -23,7 +24,7 @@
 
 </script>
 
-<Modal bind:open={dialogs.searchTextDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
+<Dialog open={dialogs.searchTextDialogVisible}>
     <div class="flex flex-col space-y-6" role="dialog">
 
         <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Search for text</h3>
@@ -49,4 +50,4 @@
         </Button>
     </div>
 
-</Modal>
+</Dialog>

@@ -1,6 +1,14 @@
 import {WebappConfigurator} from "$lib/language/WebappConfigurator";
-import {dialogs, serverInfo} from "$lib";
+import { dialogs, drawerHidden, serverInfo } from "$lib"
 import { notNullOrUndefined, isIdentifier } from "@freon4dsl/core"
+
+/**
+ * Properties for the Dialog component
+ */
+export interface DialogProps {
+    children: any
+    open: boolean
+}
 
 async function getModelNamesFromServer() {
     const names: string[] = await WebappConfigurator.getInstance().getAllModelNames();
@@ -15,6 +23,12 @@ export async function openModelDialog() {
     // of models from server every time we open this dialog.
     await getModelNamesFromServer();
     dialogs.openModelDialogVisible = true;
+    drawerHidden.value = true;
+}
+
+export async function newModelDialog() {
+    dialogs.newModelDialogVisible = true;
+    drawerHidden.value = true;
 }
 
 export async function openStartDialog() {

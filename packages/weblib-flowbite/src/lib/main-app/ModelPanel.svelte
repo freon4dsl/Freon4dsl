@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { newModelDialog } from "$lib/language/DialogHelpers.js"
     import {
         Button,
         ButtonGroup,
@@ -86,7 +87,13 @@
         editorInfo.toBeCreated = {name: '', id: '', type: type}
         dialogs.newUnitDialogVisible = true;
         drawerHidden.value = true;
+        
     };
+    
+    const closeDrawer = () => {
+        drawerHidden.value = true
+        WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
+    }
 
     const buttonCls: string = 'text-center ' +
       'bg-light-base-200            dark:bg-dark-base-700 ' +
@@ -109,11 +116,11 @@
         <Button id="open-model-button" class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class={iconCls}/>
         </Button>
-        <Button id="create-model-button" class={buttonCls} name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
+        <Button id="create-model-button" class={buttonCls} name="Create new model" size="xs" onclick={newModelDialog}>
             <FolderPlusSolid class={iconCls}/>
         </Button>
     </ButtonGroup>
-    <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-dark-base-50"/>
+    <CloseButton onclick={closeDrawer} class="mb-4 dark:text-dark-base-50"/>
 </div>
 <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
 <Tooltip triggeredBy="#open-model-button" class={tooltipClass} placement="bottom">Open existing model</Tooltip>
@@ -176,7 +183,7 @@
                                 <FloppyDiskSolid class="{iconCls} me-2"/>
                                 Save
                             </Button>
-                            <Button disabled class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
+                            <Button class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
                                 <PenSolid class="{iconCls} me-2"/>
                                 Rename
                             </Button>

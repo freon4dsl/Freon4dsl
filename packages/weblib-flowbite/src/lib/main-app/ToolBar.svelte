@@ -47,46 +47,48 @@ const searchFieldCls: string =
     <div class="flex w-full justify-between flex-nowrap bg-light-base-100 dark:bg-dark-base-800 border border-light-base-100 dark:border-dark-base-800 ">
         <div class="flex justify-start flex-nowrap">
         <!--  Model panel button and tooltip      -->
-        <Button class="{buttonCls} pill={true} ml-2  bg-light-accent-700 dark:bg-dark-accent-700" onclick={() => (drawerHidden.value = false)}>
+        <Button
+            tabindex={-1}
+            class="{buttonCls} pill={true} ml-2  bg-light-accent-700 dark:bg-dark-accent-700" onclick={() => (drawerHidden.value = false)}>
             <ChevronRightOutline class="w-5 h-5" />
         </Button>
-        <Tooltip placement="bottom" class={tooltipClass}>Show Model Info</Tooltip>
+        <Tooltip tabindex={-1} placement="bottom" class={tooltipClass}>Show Model Info</Tooltip>
         <span id="spacer" class="inline-block min-w-8">&nbsp;</span>
         <div>
             <!--  Buttons for editor actions      -->
-            <Button class={buttonCls} onclick={EditorRequestsHandler.getInstance().undo}>
+            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().undo}>
                 <UndoOutline class={iconCls}/>
                 Undo
             </Button>
-            <Button class={buttonCls} onclick={EditorRequestsHandler.getInstance().redo}>
+            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().redo}>
                 <RedoOutline class={iconCls}/>
                 Redo
             </Button>
-            <Button class={buttonCls} onclick={EditorRequestsHandler.getInstance().cut}>
+            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().cut}>
                 <ClipboardOutline class={iconCls}/>
                 Cut
             </Button>
-            <Button class={buttonCls} onclick={EditorRequestsHandler.getInstance().copy}>
+            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().copy}>
                 <FileCopyOutline class={iconCls}/>
                 Copy
             </Button>
-            <Button class={buttonCls} onclick={EditorRequestsHandler.getInstance().paste}>
+            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().paste}>
                 <FilePasteOutline class={iconCls}/>
                 Paste
             </Button>
-            <Button class={buttonCls} onclick={() => {dialogs.searchElementDialogVisible = true}}>
-                <SearchOutline class={iconCls}/>
+            <Button tabindex={-1} class={buttonCls} onclick={() => {dialogs.searchElementDialogVisible = true}}>
+                <SearchOutline tabindex={-1} class={iconCls}/>
                 Element...
             </Button>
-            <Button class={buttonCls} onclick={EditorRequestsHandler.getInstance().validate}>
+            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().validate}>
                 <ThumbsUpOutline class={iconCls}/>
                 Validate
             </Button>
-            <Button class={buttonCls} onclick={EditorRequestsHandler.getInstance().interpret}>
+            <Button tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().interpret}>
                 <PlayOutline class={iconCls}/>
                 Interpret
             </Button>
-            <Button class={buttonCls} onclick={() => {dialogs.selectViewsDialogVisible = true}}>
+            <Button tabindex={-1} class={buttonCls} onclick={() => {dialogs.selectViewsDialogVisible = true}}>
                 <EyeOutline class={iconCls}/>
                 View(s)...
             </Button>
@@ -96,7 +98,8 @@ const searchFieldCls: string =
             <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none ">
                 <SearchOutline class="w-4 h-4 " />
             </div>
-            <Input id="search-navbar"
+            <Input tabindex={-1} 
+                   id="search-navbar"
                    class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 {searchFieldCls}
                    floatClass="{searchFieldCls}
                    size="sm"
