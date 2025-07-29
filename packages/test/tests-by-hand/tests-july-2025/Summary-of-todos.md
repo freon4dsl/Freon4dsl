@@ -40,7 +40,7 @@ but the selection is not set correctly.
 
 ### EW6
 When there is no open model, the user can still create a new unit, which fails with an exception.
-**JOS**
+**FIXED**
 
 ## Core Editor Actions
 
@@ -109,7 +109,7 @@ When removing the text in the field the freon color comes back.
 
 ### OR10
 Add version to language definition, and use it while reading/writing models for migration scenario.
-**JOS**
+**FIXED**
 
 ### OR11
 The save current model unit ih the flowbite app is too far away, you need to open thye model/unis pane,
