@@ -443,7 +443,7 @@
             }
             // Ensure that HTML tags in value are encoded, otherwise they will be seen as HTML.
             widthSpan.innerHTML = replaceHTML(value);
-            inputElement.style.width = widthSpan.offsetWidth + 2 + 'px';
+            inputElement.style.width = widthSpan.offsetWidth + 'px';
         }
     }
 

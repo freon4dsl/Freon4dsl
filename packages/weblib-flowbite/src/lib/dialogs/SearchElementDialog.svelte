@@ -34,7 +34,7 @@
 
     function inputInvalid(): boolean {
         if (!(notNullOrUndefined(nodeType) && nodeType.length > 0)) {
-            helperText = "Please, select the type of the unit below.";
+            helperText = "Please, select the type of the element below.";
             return true;
         } else {
             helperText = initialHelperText;
@@ -48,7 +48,7 @@
     <div class="flex flex-col space-y-6" role="dialog">
         <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Search for ...</h3>
         <Card class="flex flex-col space-y-6 bg-light-base-50 shadow my-2 p-6 max-w-full">
-        <h4 class="text-l font-medium text-light-base-900 dark:text-dark-base-50">... element with certain type and name: {textToFind}</h4>
+        <h4 class="text-l font-medium text-light-base-900 dark:text-dark-base-50">... element with certain name and type: {textToFind}</h4>
 
         <div class="relative text-light-base-700">
             <Input class={textInputClass}
