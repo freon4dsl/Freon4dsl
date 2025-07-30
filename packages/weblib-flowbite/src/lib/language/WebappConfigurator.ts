@@ -29,7 +29,7 @@ import {
     progressIndicatorShown,
     resetEditorInfo
 } from '$lib/stores/ModelInfo.svelte';
-import { dialogs, setUserMessage } from '$lib';
+import { infoPanelShown, setUserMessage } from '$lib';
 import { modelErrors } from "$lib/stores/InfoPanelStore.svelte"
 
 
@@ -177,7 +177,8 @@ export class WebappConfigurator {
         if (notNullOrUndefined(toBeShown)) {
                 if (notNullOrUndefined(this.langEnv)) {
                     // console.log("setting rootElement to " + newUnit.name)
-                    noUnitAvailable.value = false
+                    noUnitAvailable.value = false;
+                    infoPanelShown.value = false;
                     // set the unit in the editor
                     runInAction(() => {
                         this.langEnv!.editor.rootElement = toBeShown

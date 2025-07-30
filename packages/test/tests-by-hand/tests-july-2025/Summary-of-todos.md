@@ -105,7 +105,6 @@ After changing the views/projections, there is no selection on the page.
 ### OR9
 After a text search is done the search field is still the selected color. 
 When removing the text in the field the freon color comes back. 
-**ANNEKE**
 
 ### OR10
 Add version to language definition, and use it while reading/writing models for migration scenario.
@@ -115,7 +114,7 @@ Add version to language definition, and use it while reading/writing models for 
 The save current model unit ih the flowbite app is too far away, you need to open thye model/unis pane,
 then goto the current unit, open the menu and select Save.
 We might want to add a save button at the top toolbar.
-**ANNEKE**
+**FIXED**
 
 ### OR12
 Remove or comment out console.logs in core and core-svelte (a.o. CommonFunctions,
@@ -128,6 +127,20 @@ When something goes wrong in server communication the user should get a readable
 ### OR14
 Svelte Layout Component crashed with duplicate key error.
 **FIXED**
+
+### OR15
+When unparsing Edu-test/Fractions101 the expressions do not have brackets. So when importing that file
+there are validation errors.
+
+### OR16
+The parser is unable to parse Edu-test/TestB on import.
+
+### OR17
+When a row of a table is selected, the arrow keys do not function to alter the selection.
+
+### OR18
+When tabbing reaches the end of the document, it continues on other parts of the browser. It should go back to the top.
+Arrow keys do not leave the document.
 
 ## On documentation project
 

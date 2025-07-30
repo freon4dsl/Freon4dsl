@@ -88,7 +88,7 @@ ERR: _Ctrl-z_ and _Ctrl-y_ both work (Edge browser, MacOs), but not in (Chrome, 
 |      | Type Ctrl-z                                                        | The text becomes as it was before the change                 |
 |      | Type Ctrl-y                                                        | The text is changed back                                     |
 |      | Select the text of the second question (_pie2_) from _Theory101_   | The text from pie2 appears editable                          |
-| ERR  | Select Undo                                                        | The text appears again in pie1, and this element is selected |
+|      | Select Undo                                                        | The text appears again in pie1, and this element is selected |
 |      | Select Redo                                                        | The text disappears again, pie1 is still selected            |
 |      | Select the text of the second question (_pie2_) from _Theory101_   | The text from pie2 appears editable                          |
 |      | Change something in the text, like deleting or adding characters   | The text is changed                                          |
@@ -96,8 +96,6 @@ ERR: _Ctrl-z_ and _Ctrl-y_ both work (Edge browser, MacOs), but not in (Chrome, 
 |      | Select Redo                                                        | The text appears again                                       |
 |      | Repeat this type of behavior for whatever element you like         | ...                                                          |
 | DONE |                                                                    |                                                              |
-
-ERR: selection is not correct.
 
 ## Validate, Interpret
 

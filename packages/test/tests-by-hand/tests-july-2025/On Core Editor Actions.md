@@ -142,12 +142,10 @@ These scenarios test the functionality concerning adding and deleting elements i
 |      | Open language Education, model Edu-test, unit StartFlow |                                                     |
 |      | Deselect the _Custom_ and _footing_ views               | the list is shown as a table                        |
 |      | Select _inDepth1_ after _gradeA_                        | selected element                                    |
-| ERR  | Type _Delete_ (multiple times)                          | element _inDepth1_ is emptied, placeholder is shown |
+|      | Type _Delete_ (multiple times)                          | element _inDepth1_ is emptied, placeholder is shown |
 |      | Select _inDepth1_ after _gradeA_                        | selected element                                    |
 |      | Use mouse to show context menu, and select _Delete_     | element _gradeA_ is deleted                         |
 |      | Select complete row _gradeC_ using _ctrl-arrow-up_      | selected element                                    |
-| ERR  | Type _Delete_                                           | row _gradeC_ is deleted                             |
+|      | Type _Delete_                                           | row _gradeC_ is deleted                             |
 |      | Repeat behavior as you like                             | elements are deleted                                |
 | DONE |                                                         |                                                                                                  |
-
-ERR: editor does not react to DELETE
