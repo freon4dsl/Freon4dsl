@@ -1,27 +1,35 @@
 import {
+    type FreEnvironment,
+    type FreModel,
+    type FreModelUnit,
+    type FreNode,
+    type FreUnitIdentifier,
+    type IServerCommunication,
+    AST,
     BoxFactory,
-    type FreEnvironment, FreError,
+    FreError,
     FreErrorSeverity,
     FreLanguage,
-    FreLogger, type FreModel,
-    type FreModelUnit, type FreNode,
+    FreLogger,
     FreProjectionHandler,
     FreUndoManager,
     InMemoryModel,
-    type IServerCommunication,
+    ReferenceUpdateManager,
     isNullOrUndefined,
-    type FreUnitIdentifier, AST, notNullOrUndefined, ReferenceUpdateManager
-} from "@freon4dsl/core"
-import { replaceProjectionsShown } from "$lib/stores/Projections.svelte.js"
-import { langInfo } from "$lib/stores/LanguageInfo.svelte.js"
-import { autorun, runInAction } from "mobx"
+    notNullOrUndefined,
+    jsonAsString
+} from '@freon4dsl/core';
+import { replaceProjectionsShown } from "$lib/stores/Projections.svelte.js";
+import { langInfo } from "$lib/stores/LanguageInfo.svelte.js";
+import { runInAction } from "mobx";
 import {
     editorInfo,
     indexForTab,
     noUnitAvailable,
-    progressIndicatorShown, resetEditorInfo
+    progressIndicatorShown,
+    resetEditorInfo
 } from '$lib/stores/ModelInfo.svelte';
-import { setUserMessage } from "$lib"
+import { dialogs, setUserMessage } from '$lib';
 import { modelErrors } from "$lib/stores/InfoPanelStore.svelte"
 
 
@@ -111,24 +119,29 @@ export class WebappConfigurator {
      */
     async openModel(modelName: string) {
         if (notNullOrUndefined(this.modelStore)) {
+            // save any model that is already present
+            if (notNullOrUndefined(this.modelStore.model)) {
+                this.modelStore.saveModel();
+            }
+            // save the old editor info to get back to in case of failure
             // const oldEditorInfo = editorInfo;
             // todo restore oldEditorInfo when anything goes wrong
             resetEditorInfo();
             // create new model instance in memory and set its name
-            await this.modelStore.openModel(modelName)
-            const unitIdentifiers: FreUnitIdentifier[] = this.modelStore.getUnitIdentifiers()
-            // console.log("unit identifiers: " + JSON.stringify(unitIdentifiers))
+            await this.modelStore.openModel(modelName);
+            const unitIdentifiers: FreUnitIdentifier[] = this.modelStore.getUnitIdentifiers();
+            LOGGER.log("unit identifiers: " + jsonAsString(unitIdentifiers))
             if (notNullOrUndefined(unitIdentifiers) && unitIdentifiers.length > 0) {
                 // load the first unit and show it
-                let first: boolean = true
+                let first: boolean = true;
                 for (const unitIdentifier of unitIdentifiers) {
-                    const unit: FreModelUnit = this.modelStore.getUnitByName(unitIdentifier.name)
+                    const unit: FreModelUnit = this.modelStore.getUnitByName(unitIdentifier.name);
                     if (first) {
                         // console.log("UnitId " + unitIdentifier.name + " unit is " + unit?.name)
-                        BoxFactory.clearCaches()
-                        this.langEnv?.projectionHandler.clear()
+                        BoxFactory.clearCaches();
+                        this.langEnv?.projectionHandler.clear();
                         this.showUnit(unit, unitIdentifier);
-                        first = false
+                        first = false;
                     }
                 }
             }
@@ -196,20 +209,23 @@ export class WebappConfigurator {
      */
     async newModel(modelName: string) {
         LOGGER.log("new model called: " + modelName)
-        progressIndicatorShown.value = true
+        progressIndicatorShown.value = true;
         // create a new model
         if (notNullOrUndefined(this.modelStore)) {
+            // save the previous model
+            this.modelStore.saveModel();
+            // reset the editor
             resetEditorInfo();
             await this.modelStore.createModel(modelName)
             runInAction(() => {
                 this.setEditorToUndefined()
             })
-            noUnitAvailable.value = true
-            modelErrors.list = []
-            progressIndicatorShown.value = false;
+            noUnitAvailable.value = true;
+            modelErrors.list = [];
         } else {
             console.error("new model: No modelStore!");
         }
+        progressIndicatorShown.value = false;
     }
 
     async deleteModel() {
@@ -239,9 +255,18 @@ export class WebappConfigurator {
         // console.log(newName)
     }
 
-
     saveModel() {
+        console.log('saving model')
         this.modelStore?.saveModel();
+    }
+
+    hasChanges(): boolean {
+        console.log('hasChanges')
+        if (notNullOrUndefined(this.modelStore)) {
+            return this.modelStore?.hasChanges();
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -252,43 +277,7 @@ export class WebappConfigurator {
     async newUnit(newName: string, unitType: string) {
         LOGGER.log("EditorState.newUnit: unitType: " + unitType + ", name: " + newName + " in model " + editorInfo.modelName)
         progressIndicatorShown.value = true
-        // save the old current unit, if there is one
-        // todo check whether this is still needed, shouldn't the new unit open in another tab?
-        await this.saveUnit(editorInfo.currentUnit)
         await this.createNewUnit(newName, unitType)
-    }
-
-    /**
-     * Pushes the current unit to the server
-     */
-    async saveUnit(unitId: FreUnitIdentifier | undefined) {
-        if (!unitId) return
-
-        const unit: FreModelUnit | undefined = this.modelStore?.getUnitByName(unitId.name)
-        LOGGER.log("saveUnit: " + editorInfo.currentUnit?.name + `real name is ${(this.langEnv!.editor.rootElement as FreModelUnit)?.name}`)
-        if (notNullOrUndefined(unit)) {
-            if (notNullOrUndefined(editorInfo.modelName) && editorInfo.modelName.length > 0) {
-                if (notNullOrUndefined(unit.name) && unit.name.length > 0) {
-                    if (notNullOrUndefined(editorInfo.currentUnit)) {
-                        if (editorInfo.currentUnit.id === unit.freId() && editorInfo.currentUnit.name !== unit.name) {
-                            // Saved unit already exists but its name has changed.
-                            LOGGER.log(`Saving unit that changed name, do a rename from ${editorInfo.currentUnit.name} to ${unit.name}`)
-                            // await this.renameModelUnit(unit, editorInfo.currentUnit.name, unit.name)
-                        } else {
-                            await this.modelStore?.saveUnit(unit)
-                        }
-                    }
-                    // just in case the user has changed the name in the editor
-                    editorInfo.currentUnit = { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() }
-                } else {
-                    setUserMessage(`Unit without name cannot be saved. Please, name it and try again.`)
-                }
-            } else {
-                LOGGER.log("Internal error: cannot save unit because current model is unknown.")
-            }
-        } else {
-            LOGGER.log("No current model unit")
-        }
     }
 
     /**
@@ -327,10 +316,6 @@ export class WebappConfigurator {
                 }
             // })
             if (notNullOrUndefined(toBeOpened)) {
-                // save the old current unit, if there is one
-                // todo check whether this is still needed, shouldn't the new unit open in another tab?
-                await this.saveUnit(editorInfo.currentUnit)
-                // ... and show the new one
                 this.showUnit(toBeOpened, unitId)
             } else {
                 setUserMessage("Cannot open unit " + unitId, FreErrorSeverity.Error)
@@ -395,17 +380,25 @@ export class WebappConfigurator {
      * @param unitId
      */
     async closeModelUnit(unitId: FreUnitIdentifier) {
-        const tabIndex = indexForTab(unitId);
-        this.switchToOtherTab(tabIndex);
-        if (editorInfo.unitsInTabs.length === 0) {
-            runInAction(() => {
-                this.setEditorToUndefined()
-            })
-            noUnitAvailable.value = true
-            modelErrors.list = []
-            editorInfo.currentUnit = undefined
+        if (notNullOrUndefined(unitId)) {
+            // save the unit in this tab
+            await this.modelStore?.saveUnitById(unitId)
+            // switch to other tab
+            const tabIndex = indexForTab(unitId);
+            this.switchToOtherTab(tabIndex);
+
+            // if no tab available, then set editor to undefined
+            if (editorInfo.unitsInTabs.length === 0) {
+                runInAction(() => {
+                    this.setEditorToUndefined()
+                })
+                noUnitAvailable.value = true
+                modelErrors.list = []
+                editorInfo.currentUnit = undefined
+            }
         }
     }
+
 
     /**
      * Parses the string 'content' to create a model unit. If the parsing is ok,
@@ -416,9 +409,6 @@ export class WebappConfigurator {
      * @param showIt
      */
     async unitFromFile(fileName: string, content: string, metaType: string, showIt: boolean) {
-        // save the old current unit, if there is one
-        // todo check whether this is still needed, shouldn't the new unit open in another tab?
-        await this.saveUnit(editorInfo.currentUnit)
         let unit: FreModelUnit | null = null
         try {
             // the following also adds the new unit to the model

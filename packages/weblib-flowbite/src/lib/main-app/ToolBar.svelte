@@ -11,7 +11,8 @@ import {
     ThumbsUpOutline,
     UndoOutline,
     PlayOutline,
-    ChevronRightOutline, FloppyDiskSolid
+    ChevronRightOutline,
+    FloppyDiskSolid
 } from 'flowbite-svelte-icons';
 import { Button, Input, Tooltip } from 'flowbite-svelte';
 import { ENTER } from "@freon4dsl/core"

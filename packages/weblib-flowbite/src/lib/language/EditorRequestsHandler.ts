@@ -86,6 +86,7 @@ export class EditorRequestsHandler {
         if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
         }
+        // todo do we need to warn the user if the delta is undefined?
         this.langEnv!.editor.selectionChanged()
     }
 
@@ -199,6 +200,7 @@ export class EditorRequestsHandler {
         // console.log(`showSearchResults: ${searchResultLoading.value}, ${infoPanelShown.value}, ${searchResults.list.map(it => it.message).join("\n")}`);
     }
 
+    // todo to be added: findStructure based on a partial FreNode
     // findStructure(elemToMatch: Partial<FreNode>) {
     //     LOGGER.log("findStructure called");
     //     searchResultLoaded.value = false;

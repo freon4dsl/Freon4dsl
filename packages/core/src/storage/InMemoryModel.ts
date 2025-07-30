@@ -6,7 +6,7 @@ import {
     FrePartDelta,
     FrePartListDelta,
     FrePrimDelta,
-    FrePrimListDelta
+    FrePrimListDelta, FreUndoManager
 } from '../change-manager/index.js';
 import type {FreEnvironment} from "../environment/index.js";
 import {FreLogger} from "../logging/index.js";
@@ -22,7 +22,7 @@ export class InMemoryModel {
     private server: IServerCommunication;
     model: FreModel | undefined = undefined;
     // units that have been changed but not saved
-    dirtyUnits: FreModelUnit[] = [];
+    dirtyUnits: Set<FreModelUnit> = new Set();
 
     constructor(languageEnvironment: FreEnvironment, server: IServerCommunication) {
         this.languageEnvironment = languageEnvironment;
@@ -51,6 +51,7 @@ export class InMemoryModel {
             this.model = this.languageEnvironment.newModel(name);
         })
         await this.server.createModel(name);
+        FreUndoManager.getInstance().cleanAllStacks();
         return this.model;
     }
 
@@ -63,6 +64,7 @@ export class InMemoryModel {
         runInAction( () => {
             this.model = undefined;
         });
+        FreUndoManager.getInstance().cleanAllStacks();
     }
 
     /**
@@ -83,16 +85,18 @@ export class InMemoryModel {
                 this.model.addUnit(unit as FreModelUnit);
             })
         }
+        FreUndoManager.getInstance().cleanAllStacks();
         return this.model;
     }
 
     async saveModel() {
+        LOGGER.log('InMemoryModel.saveModel()');
         // save all units that are 'dirty', i.e. that have been changed after the previous save
         await this.dirtyUnits.forEach(unit => {
             this.saveUnit(unit);
         })
         // when done, clean 'dirtyUnits' prop
-        this.dirtyUnits = [];
+        this.dirtyUnits.clear();
     }
 
     /**
@@ -168,7 +172,7 @@ export class InMemoryModel {
      * @param id
      */
     getUnitById(id: FreUnitIdentifier): FreModelUnit {
-        console.log(`getUnitById: ${id.name}`);
+        LOGGER.log(`getUnitById: ${id.name}`);
         return this.model.findUnit(id.name);
     }
 
@@ -202,13 +206,29 @@ export class InMemoryModel {
 
     /**
      * Save _unit_ to server.
-     * The _unit_ needs to be part of the current model.
-     * TODO Check whether the above is true.
+     * This is done only when there are unsaved changes.
      * @param unit
      */
     async saveUnit(unit: FreModelUnit): Promise<void> {
         LOGGER.log(`saveModelUnit`);
-        await this.server.saveModelUnit(this.model.name, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
+        if (this.dirtyUnits.has(unit)) {
+            await this.server.saveModelUnit(this.model.name, {
+                name: unit.name,
+                id: unit.freId(),
+                type: unit.freLanguageConcept()
+            }, unit);
+            this.dirtyUnits.delete(unit);
+        }
+    }
+
+    /**
+     * Save the unit with id _unitId_ to server.
+     * This is done only when there are unsaved changes.
+     * @param unitId
+     */
+    async saveUnitById(unitId: FreUnitIdentifier) {
+        const unit: FreModelUnit = this.getUnitById(unitId);
+        this.saveUnit(unit);
     }
 
     /************************************************************
@@ -217,23 +237,26 @@ export class InMemoryModel {
 
     primChanged = (delta: FrePrimDelta) => {
         if (this.getUnits().includes(delta.unit)) {
-            this.dirtyUnits.push(delta.unit);
+            this.dirtyUnits.add(delta.unit);
         }
     }
     partChanged = (delta: FrePartDelta) => {
         if (this.getUnits().includes(delta.unit)) {
-            this.dirtyUnits.push(delta.unit);
+            this.dirtyUnits.add(delta.unit);
         }
     }
     listElementChanged = (delta: FrePartDelta | FrePrimDelta) => {
         if (this.getUnits().includes(delta.unit)) {
-            this.dirtyUnits.push(delta.unit);
+            this.dirtyUnits.add(delta.unit);
         }
     }
     listChanged = (delta: FrePartListDelta | FrePrimListDelta) => {
         if (this.getUnits().includes(delta.unit)) {
-            this.dirtyUnits.push(delta.unit);
+            this.dirtyUnits.add(delta.unit);
         }
+    }
+    hasChanges(): boolean {
+        return this.dirtyUnits.size > 0;
     }
 
     /************************************************************

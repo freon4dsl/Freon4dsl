@@ -67,16 +67,15 @@
 	});
 
 	/**
-	 * This function shows a dialog before the browser window is reloaded or closed, asking the user for confirmation
-	 * in the case that there are unsaved changes in the model.
-	 * @param event
+	 * This function saves the model before the browser or browser tab closes.
+	 *
+	 * Note: it is difficult to show a dialog to ask the user for saving confirmation,
+	 * because this has been blocked due to wacky pages asking if you "want to leave,
+	 * but for sure? Are you 100% sure?" etc.
 	 */
-	function onBeforeUnload(event: BeforeUnloadEvent) {
-		// console.log(`beforeUnload: ${FreUndoManager.getInstance().nextUndoAsText()}`);
-		// todo make this test independent of the actual string
-		if (FreUndoManager.getInstance().nextUndoAsText() !== 'nothing left to undo') {
-			event.preventDefault(); // shows the browser's confirmation dialog according to the specifications
-			event.returnValue = ''; // older browsers may not support this method and a legacy method is used in which the event handler must return a string
+	async function onBeforeUnload() {
+		if (WebappConfigurator.getInstance().hasChanges()) {
+			await WebappConfigurator.getInstance().saveModel();
 		}
 	}
 

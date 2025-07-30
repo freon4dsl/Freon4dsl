@@ -20,21 +20,21 @@ Everywhere the meaning of 'Select (New Model)' is to select the button for this 
 | Choose existing model _<NAME>_, and choose _Open_ | Unit is shown in editor, _currentModelName_ == _<NAME>_ && _currentUnitName_ == _myUnit_ |
 
 ### Scenario 3: new model
-Pre: A model is present.
+Pre: A model is present, and there are unsaved changes.
 
 | Action                                             | Expected result                                                                                                                      |
 |:---------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------|
 | Select `(New Model)` from model panel              | New model dialog is shown                                                                                                            |
-| Type name an existing model name, and choose _New_ | The dialog is still present with an error message                                                                                    |
+| Type name an existing model name, and choose _New_ | The editor shows a message: 'Please, select, create ...', and the previous model is saved.                                           |
 | Type name _<NAME>_, and choose _New_               | All info on previous model are removed, new Unit is shown in editor, _currentModelName_ == _<NAME>_ && _currentUnitName_ == _myUnit_ |
 
 ### Scenario 4: open model
-Pre: A model is present.
+Pre: A model is present, and there are unsaved changes.
 
-| Action                                            | Expected result                                                                                                                      |
-|:--------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------|
-| Select `(Open Model)` from model panel            | New model dialog is shown                                                                                                            |
-| Choose existing model _<NAME>_, and choose _Open_ | All info on previous model are removed, new Unit is shown in editor, _currentModelName_ == _<NAME>_ && _currentUnitName_ == _myUnit_ |
+| Action                                            | Expected result                                                                                                                                                |
+|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Select `(Open Model)` from model panel            | New model dialog is shown                                                                                                                                      |
+| Choose existing model _<NAME>_, and choose _Open_ | All info on previous model are removed, new Unit is shown in editor, _currentModelName_ == _<NAME>_ && _currentUnitName_ == _myUnit_, previous model is saved. |
 
 ### Scenario 5: rename existing model => not yet implemented
 Pre: A model is present.
@@ -68,6 +68,13 @@ Pre: A model is present.
 | Select file from TMP location, choose _Open_               | Unit _<UNIT_NAME>_ is shown in single tab in the editor, unit is of right type, etc. |
 | Select `(Import Unit)` from model panel                    | File dialog is shown                                                                 |
 | Select incorrect file from TMP location, choose _Open_     | Error message '... cannot parse ...' is shown. Model is not altered.                 |
+
+### Scenario 8: closing browser or browser tab
+Pre: A model is present, and there are unsaved changes.
+
+| Action                                             | Expected result                            |
+|:---------------------------------------------------|:-------------------------------------------|
+| Close browser tab                                  | Model is saved, and browser tab is closed. |
 
 
 ## Unit manipulations

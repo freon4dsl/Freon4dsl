@@ -7,10 +7,9 @@
         Dropdown,
         Tooltip,
     } from 'flowbite-svelte';
-    import {PlusOutline, FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
-    import { FreErrorSeverity, type FreUnitIdentifier, notNullOrUndefined } from "@freon4dsl/core"
+    import {PlusOutline, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
+    import { type FreUnitIdentifier, notNullOrUndefined } from "@freon4dsl/core"
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
-    import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
     import {editorInfo} from "$lib/stores/ModelInfo.svelte";
     import {drawerHidden, dialogs} from "$lib/stores";
     import {openModelDialog} from "$lib/language/DialogHelpers";
@@ -58,17 +57,6 @@
         drawerHidden.value = true;
     };
 
-    // const saveUnit = (index: number) => {
-    //     // console.log("saveUnit: " + editorInfo.unitIds[index].name);
-    //     if (editorInfo.unitIds[index].name === editorInfo.currentUnit?.name) {
-    //         WebappConfigurator.getInstance().saveUnit(editorInfo.unitIds[index]);
-    //         setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Info);
-    //     } else {
-    //         setUserMessage(`Unit '${editorInfo.unitIds[index].name}' has no changes.`, FreErrorSeverity.Info);
-    //     }
-    //     drawerHidden.value = true;
-    // };
-
     const renameUnit = (index: number) => {
         // console.log("renameUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeRenamed = editorInfo.unitIds[index];
@@ -87,7 +75,6 @@
         editorInfo.toBeCreated = {name: '', id: '', type: type}
         dialogs.newUnitDialogVisible = true;
         drawerHidden.value = true;
-        
     };
     
     const closeDrawer = () => {
