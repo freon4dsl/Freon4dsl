@@ -1,6 +1,6 @@
 <script lang="ts">
-import { EditorRequestsHandler } from "$lib/language/index.js"
-import { dialogs, drawerHidden } from '$lib';
+    import { EditorRequestsHandler } from "$lib/language/index.js"
+    import { dialogs, drawerHidden, editorInfo } from "$lib"
 import {
     ClipboardOutline,
     EyeOutline,
@@ -42,6 +42,12 @@ const searchFieldCls: string =
   'hover:text-light-base-900    dark:hover:text-dark-base-900' +
   'placeholder-light-base-100   dark:placeholder-dark-base-800';
 
+    /**
+     * disable buttons if there  is no open model and open unit in the editor
+     */
+    let disabled: boolean = $derived(
+     editorInfo.modelName === "<no-model>" || editorInfo.currentUnit === undefined
+)
 </script>
 
 <div id="freon-toolbar" class="p-0">
@@ -58,34 +64,34 @@ const searchFieldCls: string =
         <span id="spacer" class="inline-block min-w-8">&nbsp;</span>
         <div>
             <!--  Buttons for editor actions      -->
-            <Button id="save-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().saveModel}>
+            <Button id="save-button" tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().saveModel}>
                 <FloppyDiskSolid class="{iconCls}"/>
             </Button>
-            <Button id="undo-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().undo}>
+            <Button id="undo-button" tabindex={-1}  {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().undo}>
                 <UndoOutline class={iconCls}/>
             </Button>
-            <Button id="redo-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().redo}>
+            <Button id="redo-button" tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().redo}>
                 <RedoOutline class={iconCls}/>
             </Button>
-            <Button id="cut-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().cut}>
+            <Button id="cut-button" tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().cut}>
                 <ClipboardOutline class={iconCls}/>
             </Button>
-            <Button id="copy-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().copy}>
+            <Button id="copy-button" tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().copy}>
                 <FileCopyOutline class={iconCls}/>
             </Button>
-            <Button id="paste-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().paste}>
+            <Button id="paste-button" tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().paste}>
                 <FilePasteOutline class={iconCls}/>
             </Button>
-            <Button id="element-search-button" tabindex={-1} class={buttonCls} onclick={() => {dialogs.searchElementDialogVisible = true}}>
+            <Button id="element-search-button" tabindex={-1} {disabled} class={buttonCls} onclick={() => {dialogs.searchElementDialogVisible = true}}>
                 <SearchOutline tabindex={-1} class={iconCls}/>
             </Button>
-            <Button id="validate-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().validate}>
+            <Button id="validate-button" tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().validate}>
                 <ThumbsUpOutline class={iconCls}/>
             </Button>
-            <Button id="interpret-button" tabindex={-1} class={buttonCls} onclick={EditorRequestsHandler.getInstance().interpret}>
+            <Button id="interpret-button" tabindex={-1} {disabled} class={buttonCls} onclick={EditorRequestsHandler.getInstance().interpret}>
                 <PlayOutline class={iconCls}/>
             </Button>
-            <Button id="views-button" tabindex={-1} class={buttonCls} onclick={() => {dialogs.selectViewsDialogVisible = true}}>
+            <Button id="views-button" tabindex={-1} {disabled} class={buttonCls} onclick={() => {dialogs.selectViewsDialogVisible = true}}>
                 <EyeOutline class={iconCls}/>
             </Button>
         </div>
@@ -106,7 +112,8 @@ const searchFieldCls: string =
             <div class="flex absolute inset-y-0 start-0 items-center ps-3 pointer-events-none ">
                 <SearchOutline class="w-4 h-4 " />
             </div>
-            <Input tabindex={-1} 
+            <Input tabindex={-1}
+                   {disabled}
                    id="search-navbar"
                    class="rounded-none h-full border-l border-t-0 border-b-0 ps-10 py-1 {searchFieldCls}
                    floatClass="{searchFieldCls}

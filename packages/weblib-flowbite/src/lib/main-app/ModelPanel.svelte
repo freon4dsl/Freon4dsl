@@ -82,6 +82,13 @@
         WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
     }
 
+    /**
+     * disable buttons if there  is no open model
+     */
+    let disabled: boolean = $derived(
+        editorInfo.modelName === "<no-model>"
+    )
+    
     const buttonCls: string = 'text-center ' +
       'bg-light-base-200            dark:bg-dark-base-700 ' +
       'text-light-base-900          dark:text-dark-base-50 ' +
@@ -123,10 +130,10 @@
         <Button id="rename-model-button" disabled class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
             <PenSolid class="{iconCls} me-2 "/>
         </Button>
-        <Button id="delete-model-button" class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
+        <Button id="delete-model-button" {disabled} class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
             <TrashBinSolid class="{iconCls} me-2"/>
         </Button>
-        <Button id="import-unit-button" class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
+        <Button id="import-unit-button" {disabled} class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
             <ArrowDownToBracketOutline class="{iconCls} me-2"/>
         </Button>
     </ButtonGroup>
@@ -143,7 +150,7 @@
             <div class="flex justify-between px-1 py-2 font-semibold text-light-base-900 dark:text-dark-base-50 bg-light-base-200 dark:bg-dark-base-700">
                 <span class="px-1 text-light-base-800 dark:text-dark-base-100">{unitType} units</span>
 
-                <Button class="{buttonCls} p-1" name="New Unit" size="xs" onclick={() => newUnit(unitType)}>
+                <Button {disabled} class="{buttonCls} p-1" name="New Unit" size="xs" onclick={() => newUnit(unitType)}>
                     <PlusOutline class="{iconCls} me-2 mr-0"/>
                 </Button>
                 <Tooltip class={tooltipClass} placement="bottom">New {unitType} unit</Tooltip>

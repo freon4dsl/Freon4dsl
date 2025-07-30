@@ -18,6 +18,7 @@ Language_Definition
 
 abstractKey     = "abstract" rws { return true; }
 modelKey        = "model" rws { return true; }
+versionKey      = "version" rws { return true; }
 unitKey         = "modelunit" rws { return true; }
 privateKey      = "private" rws { return true; }
 limitedKey      = "limited" rws {return true; }
@@ -34,11 +35,12 @@ fileExtensionKey   = "file-extension" rws
 
 langdef = m:model {return m;} / u:unit {return u;} / c:concept { return c;} / t:limited {return t;} / i:interface {return i;} / e:expression {return e;}
 
-model = isModel:modelKey name:var
+model = isModel:modelKey name:var version:(ws hasVersion:versionKey ws "\"" versionIntern:string "\"" {return versionIntern})?
     curly_begin props:property* curly_end    {
         return create.createModel({
             "name": name,
             "properties": props,
+            "version": version,
             "location": location()
         });
     }

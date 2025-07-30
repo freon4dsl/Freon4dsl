@@ -153,7 +153,8 @@ export class ServerCommunication implements IServerCommunication {
     async loadModelList(): Promise<string[]> {
         LOGGER.log(`ServerCommunication.loadModelList`);
         const language = FreLanguage.getInstance().name
-        const res: string[] = await this.getWithTimeout<string[]>(`getModelList`, { language: language });
+        const version = FreLanguage.getInstance().languageVersion
+        const res: string[] = await this.getWithTimeout<string[]>(`getModelList`, { language: language, version: version });
         if (!!res) {
             return res;
         } else {
@@ -271,7 +272,8 @@ export class ServerCommunication implements IServerCommunication {
     async createModel(modelName: string): any {
         LOGGER.log(`ServerCommunication.createModel ${modelName}`)
         const language = FreLanguage.getInstance().name
-        await this.saveWithTimeout(`saveModel`, {}, { model: modelName, language: language });
+        const version = FreLanguage.getInstance().languageVersion
+        await this.saveWithTimeout(`saveModel`, {}, { model: modelName, language: language, version: version });
     }
 
     // @ts-ignore

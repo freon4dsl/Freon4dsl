@@ -27,8 +27,9 @@ router.get("/getModelUnit", async (ctx: Router.IRouterContext) => {
 
 router.get("/getModelList", async (ctx: Router.IRouterContext) => {
     const language = ctx.query["language"];
+    const version = ctx.query["version"];
     console.log(`getModelList for language '${language}'`);
-    ModelRequests.getModelList(ctx, language);
+    ModelRequests.getModelList(ctx, language, version);
     ctx.status = 201;
 });
 
@@ -46,9 +47,10 @@ router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
 router.put("/saveModel", async (ctx: Router.IRouterContext) => {
     const model = ctx.query["model"];
     const language = ctx.query["language"];
+    const version = ctx.query["version"];
     console.log("saveModel: " + model + ` language: ${language}`);
     if ((!!model) && typeof model === "string") {
-        ModelRequests.saveModel(model, language, ctx);
+        ModelRequests.saveModel(model, language, version, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed
