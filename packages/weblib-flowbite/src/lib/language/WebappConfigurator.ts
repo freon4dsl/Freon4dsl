@@ -57,8 +57,6 @@ export class WebappConfigurator {
         WebappConfigurator.initialize(editorEnvironment)
         this.modelStore = new InMemoryModel(editorEnvironment, serverCommunication)
         this.modelStore.addCurrentModelListener(this.modelChanged)
-        console.log("INIT")
-        // this.modelStore.onInMemoryError = setUserMessage;
         this.langEnv.editor.setUserMessage = setUserMessage
     }
 
@@ -150,7 +148,7 @@ export class WebappConfigurator {
         if (notNullOrUndefined(this.modelStore)) {
             const result = await this.modelStore?.getModels()
             if (isInMemoryError(result)) {
-                console.error("NO MODEL NAMES")
+                console.error("getAllModelNames: NO MODEL NAMES")
                 setUserMessage(result.message)
                 return []
             } else {
@@ -263,7 +261,7 @@ export class WebappConfigurator {
     }
 
     async saveModel() {
-        console.log("saving model")
+        LOGGER.log("saving model")
         const response = await this.modelStore?.saveModel()
         if (isInMemoryError(response)) {
             setUserMessage(response.message, FreErrorSeverity.Error)
@@ -271,7 +269,6 @@ export class WebappConfigurator {
     }
 
     hasChanges(): boolean {
-        console.log("hasChanges")
         if (notNullOrUndefined(this.modelStore)) {
             return this.modelStore?.hasChanges()
         } else {
@@ -340,8 +337,6 @@ export class WebappConfigurator {
      */
     async deleteModelUnit(unitId: FreUnitIdentifier | undefined) {
         if (notNullOrUndefined(unitId)) {
-            const tabNumber1 = indexForTab(unitId)
-            console.log(`deleteModelUnit before: tab for unit ${unitId?.name} is ${tabNumber1}`)
             // console.log("delete called for unit: " + unitId.name)
             // get rid of the unit on the server
             const response = await this.modelStore?.deleteUnitById(unitId)
@@ -352,11 +347,10 @@ export class WebappConfigurator {
 
             // get rid of any tab for this unit
             const tabNumber = indexForTab(unitId)
-            console.log(`deleteModelUnit: tab for unit ${unitId?.name} is ${tabNumber}`)
             if (tabNumber > -1) {
                 // there is a tab for this unit
                 if (editorInfo.unitsInTabs.length === 1) {
-                    console.log(`Only one tab editInfo.current ${editorInfo?.currentUnit?.id} deleted ${unitId?.id}`)
+                    LOGGER.log(`Only one tab editInfo.current ${editorInfo?.currentUnit?.id} deleted ${unitId?.id}`)
                     // this tab is the only one
                     // the unit is shown in the editor, so get rid of that one, as well
                     if (notNullOrUndefined(editorInfo.currentUnit) && editorInfo.currentUnit.id === unitId.id) {
