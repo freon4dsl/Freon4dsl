@@ -32,7 +32,7 @@
                     const name = newName
                     dialogs.newUnitDialogVisible = false;
                     resetVariables();
-                    await WebappConfigurator.getInstance().newUnit(name, editorInfo.toBeCreated?.type);
+                    const result = await WebappConfigurator.getInstance().newUnit(name, editorInfo.toBeCreated?.type);
                 } else {
                     setUserMessage('Cannot create a new unit, because its type is unknown.')
                 }

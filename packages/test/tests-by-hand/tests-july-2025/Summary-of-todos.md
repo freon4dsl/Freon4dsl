@@ -122,7 +122,7 @@ ListUtil, TableCellComponent, InMemoryModel).
 
 ### OR13
 When something goes wrong in server communication the user should get a readable error message.
-**JOS / ANNEKE**
+**FIXED**
 
 ### OR14
 Svelte Layout Component crashed with duplicate key error.
