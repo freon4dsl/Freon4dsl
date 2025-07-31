@@ -1,11 +1,10 @@
 <script lang="ts">
-    // todo remove SMUI and add Flowbite components
-    import Accordion, { Panel, Header, Content } from '@smui-extra/accordion';
-    import IconButton from '@smui/icon-button';
+    import { AccordionItem, Accordion, Button } from 'flowbite-svelte';
     import { AST, ExternalPartListBox } from "@freon4dsl/core";
     import { type FreComponentProps, RenderComponent } from "@freon4dsl/core-svelte";
     import { Person } from "@freon4dsl/samples-course-schedule";
-    import { untrack } from "svelte" 
+    import { untrack } from "svelte"
+    import { UserAddOutline, UserRemoveOutline } from 'flowbite-svelte-icons';
     // This component replaces the component for "teachers: Person[];" from model unit "Staff".
     // This property is a parts list, therefore the external box to use is an ExternalPartListBox.
     // Props
@@ -71,32 +70,42 @@
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
         // Needed to get an effect
-        ch = box.children
+        ch = [...box.children]
         // untrack becauise initialize causes a too many  effects error
         untrack( () => {
             initialize()
         })        
     });
 
-
+    const colorCls: string = 'text-light-base-50 dark:text-dark-base-900 ';
+    const buttonCls: string =
+      'bg-light-base-600 					dark:bg-dark-base-200 ' +
+      'hover:bg-light-base-900 		dark:hover:bg-dark-base-50 ' +
+      'border-light-base-100 			dark:border-dark-base-800 ';
+    const iconCls: string = 'ms-0 inline h-6 w-6';
 </script>
 
 <div style="display: flex; align-items: flex-end;">
     <Accordion multiple={multiplePar}>
         {#each ch as childBox, index}
-            <Panel bind:open={panelOpen[index]}>
-                <Header>
+            <AccordionItem bind:open={panelOpen[index]}>
+                {#snippet header()}
                     {childBox.node.freLanguageConcept()} {childBox.node.freId()}
-                </Header>
-                <Content>
+                {/snippet}
+
                     <div style="display: flex; align-items: flex-end;">
                         <RenderComponent box={childBox} editor={editor} />
-                        <IconButton class="material-icons" onclick={() => removePerson(index)}>remove</IconButton>
+<!--                        <IconButton class="material-icons" onclick={() => removePerson(index)}>remove</IconButton>-->
+                        <Button tabindex={-1} id="add-button" class="{buttonCls} {colorCls} " name="removePerson" onclick={() => removePerson(index)}>
+                            <UserRemoveOutline class="{iconCls}" />
+                        </Button>
                     </div>
-                </Content>
-            </Panel>
+            </AccordionItem>
         {/each}
     </Accordion>
 
-    <IconButton class="material-icons" onclick={() => addPerson()}>add</IconButton>
+<!--    <IconButton class="material-icons" onclick={() => addPerson()}>add</IconButton>-->
+    <Button tabindex={-1} id="add-button" class="{buttonCls} {colorCls} " name="addPerson" onclick={() => addPerson()}>
+        <UserAddOutline class="{iconCls}" />
+    </Button>
 </div>

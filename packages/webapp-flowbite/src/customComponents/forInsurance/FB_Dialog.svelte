@@ -70,10 +70,10 @@
           </div>
           <Helper >{buttonLabel}</Helper>
         </Input>
-  <svelte:fragment slot="footer">
-        <Button class="text-light-base-900 dark:text-dark-base-50 bg-light-accent-100 dark:bg-dark-accent-100" on:click={() => alert('Handle "success"')}>I accept</Button>
+    {#snippet footer()}
+        <Button class="text-light-base-900 dark:text-dark-base-50 bg-light-accent-100 dark:bg-dark-accent-100" onclick={() => alert('Handle "success"')}>I accept</Button>
         <Button color="alternative">Decline</Button>
-    </svelte:fragment>
+    {/snippet}
 </Modal>
 
 <Button class="text-light-base-900 dark:text-dark-base-50" onclick={() => (open = true)}>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {AST, ExternalPartListBox, type FreNode} from "@freon4dsl/core";
+    import { AST, ExternalPartListBox, type FreNode, notNullOrUndefined } from '@freon4dsl/core';
     import {BB} from "@freon4dsl/samples-external-tester";
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
@@ -34,7 +34,7 @@
     async function setFocus(): Promise<void> {
         if (!!box.children && box.children.length > 0) {
             box.children[0].setFocus();
-        } else {
+        } else if (notNullOrUndefined(button)) {
             button.focus();
         }
     }

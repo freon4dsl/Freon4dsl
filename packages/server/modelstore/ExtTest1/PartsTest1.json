@@ -1,0 +1,288 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-ExternalTester",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-30",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-ExternalUnit2"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit2-name"
+               },
+               "value": "PartsTest1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit2-content"
+               },
+               "children": [
+                  "ID-31"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit2-content2"
+               },
+               "children": [
+                  "ID-32"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit2-content3"
+               },
+               "children": [
+                  "ID-34"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-31",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-conceptWithPrims"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-name"
+               },
+               "value": "prims2"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-stringProp"
+               },
+               "value": "teksttekst en meer tekst"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-numberProp"
+               },
+               "value": "44"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-booleanProp"
+               },
+               "value": "true"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-32",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-conceptWithParts"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithParts-name"
+               },
+               "value": "parts2"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithParts-conceptProp"
+               },
+               "children": [
+                  "ID-33"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithParts-conceptList"
+               },
+               "children": [
+                  "ID-24",
+                  "ID-25"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-30"
+      },
+      {
+         "id": "ID-33",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-CC"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-name"
+               },
+               "value": "TWEEDENAAM"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-numberProp"
+               },
+               "value": "555"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-32"
+      },
+      {
+         "id": "ID-24",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-CC"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-name"
+               },
+               "value": "jGHJEHGWEGH;"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-numberProp"
+               },
+               "value": "666"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-32"
+      },
+      {
+         "id": "ID-25",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-CC"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-name"
+               },
+               "value": "new element"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-numberProp"
+               },
+               "value": "100"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-32"
+      },
+      {
+         "id": "ID-34",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-conceptWithRefs"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithRefs-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithRefs-referenceProp"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "cc-1",
+                     "reference": "ID-16"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithRefs-referenceList"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-30"
+      }
+   ]
+}

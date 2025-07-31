@@ -5,12 +5,10 @@
     // Props
     let { editor, box }: FreComponentProps<NumberWrapperBox> = $props();
 
-    let inputElement: HTMLInputElement;
-
     // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.
     async function setFocus(): Promise<void> {
-        inputElement.focus();
+        box.childBox.setFocus()
     }
     const refresh = (why?: string): void => {
         // do whatever needs to be done to refresh the elements that show information from the model

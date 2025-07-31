@@ -34,6 +34,16 @@
                "children": [
                   "ID-11"
                ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit-toBeReferenced"
+               },
+               "children": [
+                  "ID-19"
+               ]
             }
          ],
          "references": [],
@@ -54,7 +64,7 @@
                   "version": "2023.1",
                   "key": "-key-AA-name"
                },
-               "value": "someNAme"
+               "value": "someName"
             },
             {
                "property": {
@@ -62,7 +72,7 @@
                   "version": "2023.1",
                   "key": "-key-AA-stringProp"
                },
-               "value": ""
+               "value": "my string is wrapped"
             },
             {
                "property": {
@@ -70,7 +80,7 @@
                   "version": "2023.1",
                   "key": "-key-AA-numberProp"
                },
-               "value": "0"
+               "value": "5621220"
             },
             {
                "property": {
@@ -78,7 +88,7 @@
                   "version": "2023.1",
                   "key": "-key-AA-booleanProp"
                },
-               "value": "false"
+               "value": "true"
             }
          ],
          "containments": [
@@ -114,9 +124,31 @@
                "reference": {
                   "language": "-key-ExternalTester",
                   "version": "2023.1",
+                  "key": "-key-AA-referenceProp"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "firstCC",
+                     "reference": "ID-19"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
                   "key": "-key-AA-referenceList"
                },
-               "targets": []
+               "targets": [
+                  {
+                     "resolveInfo": "cc56",
+                     "reference": "ID-28"
+                  },
+                  {
+                     "resolveInfo": "firstCC",
+                     "reference": "ID-19"
+                  }
+               ]
             },
             {
                "reference": {
@@ -144,7 +176,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-name"
                },
-               "value": ""
+               "value": "secondBB"
             },
             {
                "property": {
@@ -152,7 +184,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-stringProp"
                },
-               "value": ""
+               "value": "DSGHljhgjhEGH"
             },
             {
                "property": {
@@ -160,7 +192,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-numberProp"
                },
-               "value": "0"
+               "value": "450"
             },
             {
                "property": {
@@ -169,6 +201,96 @@
                   "key": "-key-BB-booleanProp"
                },
                "value": "false"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-conceptList"
+               },
+               "children": [
+                  "ID-48"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-interfaceList"
+               },
+               "children": []
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-referenceList"
+               },
+               "targets": []
+            },
+            {
+               "reference": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-intfReferenceList"
+               },
+               "targets": []
+            },
+            {
+               "reference": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-limitedList"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-11"
+      },
+      {
+         "id": "ID-48",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-BB"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-name"
+               },
+               "value": "FIIDDSGgegnew element"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-stringProp"
+               },
+               "value": "sffghhrtyh"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-numberProp"
+               },
+               "value": "100"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-booleanProp"
+               },
+               "value": "true"
             }
          ],
          "containments": [
@@ -216,7 +338,37 @@
             }
          ],
          "annotations": [],
-         "parent": "ID-11"
+         "parent": "ID-12"
+      },
+      {
+         "id": "ID-19",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-CC"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-name"
+               },
+               "value": "firstCC"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-CC-numberProp"
+               },
+               "value": "0"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-10"
       }
    ]
 }

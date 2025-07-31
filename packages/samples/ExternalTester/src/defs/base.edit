@@ -14,9 +14,13 @@ global {
         booleanReplacer,
         numberReplacer,
         partReplacer,
+        partReplacer2,
         partListReplacer,
+        partListReplacer2,
         refReplacer,
         refListReplacer,
+        refReplacer2,
+        refListReplacer2,
         simple,
         stringReplacer
     }

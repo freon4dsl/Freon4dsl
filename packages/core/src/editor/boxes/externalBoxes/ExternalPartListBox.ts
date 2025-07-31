@@ -59,6 +59,9 @@ export class ExternalPartListBox extends AbstractExternalPropertyBox {
     getPropertyValue(): FreNode[] {
         return this.node[this.propertyName];
     }
+
+    // There is no need for a setPropertyValue, because every list property is initialized as an empty list.
+    // Any changes must be done by adding removing to that list.
 }
 
 export function isExternalPartListBox(b: Box): b is ExternalPartListBox {

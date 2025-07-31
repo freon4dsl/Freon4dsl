@@ -1,28 +1,28 @@
 <script lang="ts">
     import { ExternalPartBox, type FreNode, isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
-    import {BB} from "@freon4dsl/samples-external-tester";
+    import {CC} from "@freon4dsl/samples-external-tester";
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
     // Props
     let { editor, box }: FreComponentProps<ExternalPartBox> = $props();
 
     let inputElement: HTMLInputElement;
-    let value: BB | undefined = $state();
+    let value: CC | undefined = $state();
     let nameOfValue: string = $state('');
     let numberOfValue: string = $state('');
 
     function getValue() {
         let startVal: FreNode | undefined = box.getPropertyValue();
-        // you can cast the startVal to the expected type, in this case "BB"
+        // you can cast the startVal to the expected type, in this case "CC"
         // note that the property is optional in the model
-        if (notNullOrUndefined(startVal) && startVal.freLanguageConcept() === "BB") {
-            value = startVal as BB;
+        if (notNullOrUndefined(startVal) && startVal.freLanguageConcept() === "CC") {
+            value = startVal as CC;
             // get whatever you want to expose from the node
             // in this case we are showing its 'name' and 'numberProp'
             nameOfValue = value.name;
             numberOfValue = value.numberProp.toString();
         } else { // the default
-            value = BB.create({name: 'noBB'});
+            value = CC.create({name: 'noConceptwithPart'});
             nameOfValue = "<unknown>";
             numberOfValue = "0";
         }
@@ -31,14 +31,14 @@
 
     const onChange = () => {
         // set the name and numberProp of value
-        if (value instanceof BB) {
+        if (value instanceof CC) {
             if (!!numberOfValue && numberOfValue.length > 0) {
                 value.numberProp = Number.parseInt(numberOfValue);
             }
             if (!!nameOfValue && nameOfValue.length > 0) {
                 value.name = nameOfValue;
             }
-            // check whether there is a previous property of type BB,
+            // check whether there is a previous property of type CC,
             // if not, set the default as property
             let startVal: FreNode | undefined = box.getPropertyValue();
             if (isNullOrUndefined(startVal)) {

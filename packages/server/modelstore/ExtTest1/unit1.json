@@ -82,7 +82,7 @@
                   "version": "2023.1",
                   "key": "-key-AA-numberProp"
                },
-               "value": "0"
+               "value": "951"
             },
             {
                "property": {
@@ -90,7 +90,7 @@
                   "version": "2023.1",
                   "key": "-key-AA-booleanProp"
                },
-               "value": "true"
+               "value": "false"
             }
          ],
          "containments": [
@@ -144,15 +144,15 @@
                "targets": [
                   {
                      "resolveInfo": "cc-1",
-                     "reference": null
+                     "reference": "ID-16"
                   },
                   {
                      "resolveInfo": "cc2",
-                     "reference": null
+                     "reference": "ID-21"
                   },
                   {
                      "resolveInfo": "cc56",
-                     "reference": null
+                     "reference": "ID-28"
                   }
                ]
             },
@@ -182,7 +182,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-name"
                },
-               "value": ""
+               "value": "NAAM"
             },
             {
                "property": {
@@ -198,7 +198,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-numberProp"
                },
-               "value": "0"
+               "value": "50"
             },
             {
                "property": {
@@ -214,11 +214,19 @@
                "containment": {
                   "language": "-key-ExternalTester",
                   "version": "2023.1",
-                  "key": "-key-BB-conceptList"
+                  "key": "-key-BB-conceptProp"
                },
                "children": [
-                  "ID-6"
+                  "ID-54"
                ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-BB-conceptList"
+               },
+               "children": []
             },
             {
                "containment": {
@@ -238,35 +246,43 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "nameOfReferedNode1",
-                     "reference": null
+                     "resolveInfo": "TWEEDENAAM",
+                     "reference": "ID-33"
                   },
                   {
-                     "resolveInfo": "nameOfReferedNode2",
-                     "reference": null
+                     "resolveInfo": "cc-1",
+                     "reference": "ID-16"
                   },
                   {
-                     "resolveInfo": "nameOfReferedNode3",
-                     "reference": null
+                     "resolveInfo": "firstCC",
+                     "reference": "ID-19"
                   },
                   {
-                     "resolveInfo": "nameOfReferedNode4",
-                     "reference": null
+                     "resolveInfo": "cc56",
+                     "reference": "ID-28"
                   },
                   {
-                     "resolveInfo": "nameOfReferedNode5",
-                     "reference": null
+                     "resolveInfo": "jGHJEHGWEGH;",
+                     "reference": "ID-24"
                   },
                   {
-                     "resolveInfo": "nameOfReferedNode6",
-                     "reference": null
+                     "resolveInfo": "cc56",
+                     "reference": "ID-28"
                   },
                   {
-                     "resolveInfo": "nameOfReferedNode7",
-                     "reference": null
+                     "resolveInfo": "new element",
+                     "reference": "ID-25"
                   },
                   {
                      "resolveInfo": "nameOfReferedNode8",
+                     "reference": null
+                  },
+                  {
+                     "resolveInfo": "cc-1",
+                     "reference": "ID-16"
+                  },
+                  {
+                     "resolveInfo": "nameOfReferedNode6",
                      "reference": null
                   }
                ]
@@ -292,7 +308,7 @@
          "parent": "ID-13"
       },
       {
-         "id": "ID-6",
+         "id": "ID-54",
          "classifier": {
             "language": "-key-ExternalTester",
             "version": "2023.1",
@@ -305,7 +321,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-name"
                },
-               "value": "new element"
+               "value": "BBKINGGGGGGGGG"
             },
             {
                "property": {
@@ -321,7 +337,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-numberProp"
                },
-               "value": "100"
+               "value": "1111111"
             },
             {
                "property": {
@@ -329,7 +345,7 @@
                   "version": "2023.1",
                   "key": "-key-BB-booleanProp"
                },
-               "value": "true"
+               "value": "false"
             }
          ],
          "containments": [
@@ -401,7 +417,7 @@
                   "version": "2023.1",
                   "key": "-key-CC-numberProp"
                },
-               "value": "0"
+               "value": "22"
             }
          ],
          "containments": [],

@@ -1,0 +1,250 @@
+{
+   "serializationFormatVersion": "2023.1",
+   "languages": [
+      {
+         "key": "-key-ExternalTester",
+         "version": "2023.1"
+      }
+   ],
+   "nodes": [
+      {
+         "id": "ID-17",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-ExternalUnit2"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit2-name"
+               },
+               "value": "PrimsTest"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit2-content"
+               },
+               "children": [
+                  "ID-18"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit2-content2"
+               },
+               "children": [
+                  "ID-20"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-ExternalUnit2-content3"
+               },
+               "children": [
+                  "ID-23"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": null
+      },
+      {
+         "id": "ID-18",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-conceptWithPrims"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-name"
+               },
+               "value": "prim1"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-stringProp"
+               },
+               "value": "waaaaaaaaaaaaaattttttttt?"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-numberProp"
+               },
+               "value": "5550"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-booleanProp"
+               },
+               "value": "true"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-17"
+      },
+      {
+         "id": "ID-20",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-conceptWithParts"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithParts-name"
+               },
+               "value": "parts1"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithParts-conceptProp"
+               },
+               "children": [
+                  "ID-22"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithParts-conceptList"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-17"
+      },
+      {
+         "id": "ID-22",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-conceptWithPrims"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-name"
+               },
+               "value": "prim2"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-stringProp"
+               },
+               "value": "nog zoiets!!!!!!"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-numberProp"
+               },
+               "value": "8888"
+            },
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithPrims-booleanProp"
+               },
+               "value": "false"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-20"
+      },
+      {
+         "id": "ID-23",
+         "classifier": {
+            "language": "-key-ExternalTester",
+            "version": "2023.1",
+            "key": "-key-conceptWithRefs"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithRefs-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithRefs-referenceProp"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "firstCC",
+                     "reference": "ID-19"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-ExternalTester",
+                  "version": "2023.1",
+                  "key": "-key-conceptWithRefs-referenceList"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "cc2",
+                     "reference": "ID-21"
+                  },
+                  {
+                     "resolveInfo": "cc56",
+                     "reference": "ID-28"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-17"
+      }
+   ]
+}

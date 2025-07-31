@@ -132,6 +132,14 @@
                 {
                     "file": "unit2.json",
                     "name": "unit2"
+                },
+                {
+                    "name": "PrimsTest",
+                    "file": "PrimsTest.json"
+                },
+                {
+                    "name": "PartsTest1",
+                    "file": "PartsTest1.json"
                 }
             ],
             "version": "1"
