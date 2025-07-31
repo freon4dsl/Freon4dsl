@@ -139,18 +139,21 @@ export function observableprim(target: DecoratedModelElement, propertyKey: strin
     };
 
     const setter = function (this: any, newValue: string | number | boolean) {
-        FreChangeManager.getInstance().setPrimitive(this, propertyKey, newValue);
 
         let storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean>;
 
         if (!!storedObserver) {
+            const oldValue = storedObserver.get()
             runInAction(() => {
                 storedObserver.set(newValue);
             });
+            FreChangeManager.getInstance().setPrimitive(this, propertyKey, oldValue, newValue);
         } else {
             storedObserver = observable.box(newValue);
             this[privatePropertyKey] = storedObserver;
+            FreChangeManager.getInstance().setPrimitive(this, propertyKey, undefined, newValue);
         }
+        
     };
     // tslint:disable no-unused-expression
     Reflect.deleteProperty(target, propertyKey);
