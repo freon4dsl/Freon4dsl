@@ -25,7 +25,7 @@ import {
     searchTab
 } from "../stores/InfoPanelStore.svelte"
 import { WebappConfigurator } from "../language/index.js";
-import { drawerHidden, editorInfo, infoPanelShown, setUserMessage } from '../stores/index.js';
+import { editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from "../stores/index.js"
 import { TreeNodeData } from "../tree/TreeNodeData.js"
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
@@ -67,6 +67,9 @@ export class EditorRequestsHandler {
 
     saveModel = async (): Promise<void> => {
         await WebappConfigurator.getInstance().saveModel();
+        if (userMessageOpen.value) {
+            return
+        }
         setUserMessage(`Model '${editorInfo.modelName}' saved.`, FreErrorSeverity.Info);
     }
 
@@ -81,7 +84,7 @@ export class EditorRequestsHandler {
 
     undo = (): void => {
         const delta: FreDelta | undefined = AstActionExecutor.getInstance(this.langEnv!.editor).undo();
-        console.log(`undo delta '${delta?.toString()}'`)
+        LOGGER.log(`undo delta '${delta?.toString()}'`)
         // TODO TEST
         if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)

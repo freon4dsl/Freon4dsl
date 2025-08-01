@@ -6,7 +6,7 @@
 	
 	const close = () => {
 		userMessageOpen.value = false
-		WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
+		WebappConfigurator.getInstance().langEnv?.editor?.selectionChanged()
 	}
 </script>
 

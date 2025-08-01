@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { userMessageOpen } from "$lib"
     import { notNullOrUndefined } from "@freon4dsl/core"
     import {Button, Input, Helper} from 'flowbite-svelte';
     import {dialogs} from '$lib/stores/WebappStores.svelte';
@@ -31,6 +32,10 @@
         // console.log("CREATING NEW MODEL: " + newName);
         if (newName.length > 0 && checkName(newName).length === 0) {
             const existing: string[] = await WebappConfigurator.getInstance().getAllModelNames();
+            if (userMessageOpen.value) {
+                resetVariables();
+                return
+            }
             if (notNullOrUndefined(existing) && existing.length > 0 && existing.indexOf(newName) !== -1) {
                 helperText = `Cannot create model '${newName}', because a model with that name already exists on the server.`;
             } else {

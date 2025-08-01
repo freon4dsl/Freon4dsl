@@ -84,7 +84,7 @@ Remove one of OptionalBox and OptionalBox2.
 
 ### OR3
 Redo the save mechanism now that a rename is able to make changes in many units.
-**IMPORTANT**
+**FIXED**
 
 ### OR4
 For CI only: silence the error message in core.
@@ -122,7 +122,7 @@ ListUtil, TableCellComponent, InMemoryModel).
 
 ### OR13
 When something goes wrong in server communication the user should get a readable error message.
-**JOS / ANNEKE**
+**FIXED**
 
 ### OR14
 Svelte Layout Component crashed with duplicate key error.
@@ -141,6 +141,14 @@ When a row of a table is selected, the arrow keys do not function to alter the s
 ### OR18
 When tabbing reaches the end of the document, it continues on other parts of the browser. It should go back to the top.
 Arrow keys do not leave the document.
+
+### OR19
+Rename of modelunit in editor does not change the name in the model info and server.
+**FIXED**
+
+### OR20
+When a unit is deleted, the editor tab is not closed.
+**FIXED**
 
 ## On documentation project
 
