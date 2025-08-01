@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/weblib-smui",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.2",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -88,8 +88,8 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
-    "@freon4dsl/core": "2.0.0-beta.1",
-    "@freon4dsl/core-svelte": "2.0.0-beta.1",
+    "@freon4dsl/core": "2.0.0-beta.2",
+    "@freon4dsl/core-svelte": "2.0.0-beta.2",
     "@material/theme": "^14.0.0",
     "@material/typography": "^14.0.0",
     "@mdi/js": "^7.4.47",

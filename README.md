@@ -4,7 +4,7 @@
 Web-native Language Workbench with projectional editor. 
 The current release (version 1.0.0) can be found on npm.
 
-**August 1, 2025: Version 2.0.0-beta.1 released**
+**August 1, 2025: Version 2.0.0-beta.2 released**
 
 **May 13, 2025: Version 1.1.0-beta.3 released**
 
@@ -58,7 +58,7 @@ And run all tests  with:
   - Open the file `package.json
   - In the _dependencies_ section change the language dependency to your chosen language:
   ```json lines
-  "@freon4dsl/samples-course-schedule": "2.0.0-beta.1",
+  "@freon4dsl/samples-course-schedule": "2.0.0-beta.2",
   ```
   - Also open the file `src/starter.ts`
   - Change line 5 to import the correct environment from your chosen language package:
