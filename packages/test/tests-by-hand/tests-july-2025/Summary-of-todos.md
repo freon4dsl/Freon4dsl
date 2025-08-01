@@ -142,6 +142,14 @@ When a row of a table is selected, the arrow keys do not function to alter the s
 When tabbing reaches the end of the document, it continues on other parts of the browser. It should go back to the top.
 Arrow keys do not leave the document.
 
+### OR19
+Rename of modelunit in editor does not change the name in the model info and server.
+**FIXED**
+
+### OR20
+When a unit is deleted, the editor tab is not closed.
+**FIXED**
+
 ## On documentation project
 
 ### DP1
