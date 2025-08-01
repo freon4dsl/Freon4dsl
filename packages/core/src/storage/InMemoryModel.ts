@@ -160,14 +160,18 @@ export class InMemoryModel {
     async createUnit(name: string, unitConcept: string): Promise<FreModelUnit | InMemoryError> {
         LOGGER.log(`createUnit ${name} of concept ${unitConcept}`)
         const newUnit = this.model.newUnit(unitConcept)
-        runInAction(() => {
-            newUnit.name = name
-        })
-        const response = await this.server.createModelUnit(this.model.name, newUnit)
-        if (response.errors.length > 0) {
-            return new InMemoryError(response.errors[0])
+        if (notNullOrUndefined(newUnit)) {
+            runInAction(() => {
+                newUnit.name = name
+            })
+            const response = await this.server.createModelUnit(this.model.name, newUnit)
+            if (response.errors.length > 0) {
+                return new InMemoryError(response.errors[0])
+            }
+            return newUnit
+        } else {
+            return new InMemoryError(`Cannot create unit of type '${name}'`)
         }
-        return newUnit
     }
 
     /**
@@ -199,6 +203,20 @@ export class InMemoryModel {
         AST.change(() => {
             this.model.removeUnit(unit)
         })
+    }
+
+    /**
+     * Delete _unit_ from the model.
+     * @param oldName
+     * @param unit
+     */
+    async renameUnit(oldName: string, newName: string, unit: FreModelUnit): Promise<void | InMemoryError> {
+        console.log(`renameUnit from ${oldName} to ${newName}`)
+        const response = await this.server.renameModelUnit(this.model.name, oldName, newName, unit)
+        if (response.errors.length > 0) {
+            this.onInMemoryError(response.errors[0])
+            return new InMemoryError(response.errors[0])
+        }
     }
 
     /**
@@ -302,6 +320,11 @@ export class InMemoryModel {
     primChanged = (delta: FrePrimDelta) => {
         if (this.getUnits().includes(delta.unit)) {
             this.dirtyUnits.add(delta.unit)
+            if (delta.owner.freIsUnit() && delta.propertyName === "name" && typeof(delta.oldValue === "string")) {
+                // Unit name changed !
+                this.renameUnit(delta.oldValue as string, delta.newValue as string, delta.unit)
+                this.currentModelChanged()
+            }
         }
     }
     partChanged = (delta: FrePartDelta) => {

@@ -95,14 +95,14 @@ export class FreChangeManager {
      * @param propertyName
      * @param value
      */
-    public setPrimitive(nodeToChange: FreNode, propertyName: string, value: string | boolean | number): void {
+    public setPrimitive(nodeToChange: FreNode, propertyName: string, oldValue:  string | boolean | number, newValue: string | boolean | number): void {
         LOGGER.log(
             "ChangeManager: set PRIMITIVE value for " +
                 nodeToChange.freLanguageConcept() +
                 "[" +
                 propertyName +
                 "] := " +
-                value,
+                newValue,
         );
         if (!!this.changePrimCallbacks) {
             const unit = modelUnit(nodeToChange);
@@ -111,8 +111,8 @@ export class FreChangeManager {
                     unit,
                     nodeToChange,
                     propertyName,
-                    nodeToChange[propertyName],
-                    value,
+                    oldValue,
+                    newValue,
                 );
                 for (const cb of this.changePrimCallbacks) {
                     cb(delta);

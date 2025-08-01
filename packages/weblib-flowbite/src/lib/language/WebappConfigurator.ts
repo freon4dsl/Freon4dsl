@@ -234,8 +234,12 @@ export class WebappConfigurator {
 
     async deleteModel() {
         // console.log("deleting current model")
+        const result = await this.modelStore?.deleteModel()
+        if (isInMemoryError(result)) {
+            setUserMessage(result.message, FreErrorSeverity.Error)
+            return
+        }
         resetEditorInfo()
-        await this.modelStore?.deleteModel()
         runInAction(() => {
             if (notNullOrUndefined(this.langEnv)) {
                 // console.log("setting rootElement to undefined")
@@ -556,6 +560,13 @@ export class WebappConfigurator {
         if (notNullOrUndefined(store?.model)) {
             editorInfo.modelName = store?.model?.name
             editorInfo.unitIds = store.getUnitIdentifiers()
+            editorInfo.unitsInTabs.forEach(unitInTab => {
+                const unitId = store.getUnitIdentifiers().find(uid => uid.id === unitInTab.id)
+                if (notNullOrUndefined(unitId) && unitInTab.name !== unitId?.name) {
+                    console.log(`Unit with id ${unitInTab.id} changed name from ${unitInTab.name} to ${unitId.name}`)
+                    unitInTab.name = unitId.name
+                }
+            })
             ReferenceUpdateManager.getInstance().freModel = store.model
         }
     }
