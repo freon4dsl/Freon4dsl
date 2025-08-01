@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LIST_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { LIST_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a list of elements that have the same type (a 'true' list).
@@ -27,11 +27,11 @@
         FreCreatePartAction,
         MetaKey,
         AST,
-        ENTER
-    } from "@freon4dsl/core"
+        ENTER, notNullOrUndefined
+    } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
-    import { componentId, rememberDraggedNode } from '$lib/index.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { componentId, rememberDraggedNode } from '../index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import {
         activeElem,
         activeIn,
@@ -39,7 +39,7 @@
         contextMenuVisible,
         draggedElem,
         draggedFrom
-    } from '$lib/components/stores/AllStores.svelte.js';
+    } from './stores/AllStores.svelte.js';
     import DragHandle from "$lib/components/images/DragHandle.svelte";
 
     // Props
@@ -70,13 +70,11 @@
         refresh('Refresh from ListComponent box changed:   ' + box?.id);
     });
 
-
-
     const drop = (event: DragEvent, targetIndex: number) => {
         const data: ListElementInfo | null = draggedElem.value;
         event.stopPropagation();
 
-        if (!isNullOrUndefined(data)) {
+        if (notNullOrUndefined(data)) {
             if (isFreNodeReference(data.element)) {
                 LOGGER.log(`DROPPING item [${data.element.name}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
             } else if (isFreNode(data.element)) {
@@ -106,13 +104,13 @@
     };
 
     const dragstart = (event: DragEvent, listId: string, listIndex: number) => {
-        console.log('Drag Start ' + box.id + ' index: ' + listIndex);
+        LOGGER.log('Drag Start ' + box.id + ' index: ' + listIndex);
         event.stopPropagation();
         // close any context menu
         contextMenuVisible.value = false;
 
         // give the drag an effect
-        if (!isNullOrUndefined(event.dataTransfer)) {
+        if (notNullOrUndefined(event.dataTransfer)) {
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.dropEffect = 'move';
         }
@@ -183,7 +181,7 @@
 
     async function setFocus(): Promise<void> {
         LOGGER.log('ListComponent.setFocus for box ' + box.role);
-        if (!isNullOrUndefined(htmlElement)) {
+        if (notNullOrUndefined(htmlElement)) {
             htmlElement.focus();
         }
     }
@@ -191,8 +189,8 @@
     const refresh = (why?: string): void => {
         LOGGER.log('REFRESH ListComponent( ' + why + ') ' + box?.node?.freLanguageConcept());
         shownElements = [...box.children];
-        id = !isNullOrUndefined(box) ? componentId(box) : 'list-for-unknown-box';
-        isHorizontal = !isNullOrUndefined(box)
+        id = notNullOrUndefined(box) ? componentId(box) : 'list-for-unknown-box';
+        isHorizontal = notNullOrUndefined(box)
             ? box.getDirection() === ListDirection.HORIZONTAL
             : false;
     };

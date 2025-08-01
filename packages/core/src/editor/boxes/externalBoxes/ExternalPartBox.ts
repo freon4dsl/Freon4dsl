@@ -1,6 +1,6 @@
 import { Box } from "../Box.js";
-import { FreNode } from "../../../ast/index.js";
-import { FreUtils } from "../../../util/index.js";
+import type { FreNode } from "../../../ast/index.js";
+import { FreUtils, notNullOrUndefined } from '../../../util/index.js';
 import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";
 
 /**
@@ -21,15 +21,15 @@ export class ExternalPartBox extends AbstractExternalPropertyBox {
     }
 
     getPropertyValue(): FreNode {
-        const val = this.node[this.propertyName];
-        if (typeof val === this.getPropertyType()) {
+        const val: FreNode = this.node[this.propertyName];
+        if (notNullOrUndefined(val) && val.freLanguageConcept() === this.getPropertyType()) {
             return val;
         }
         return undefined;
     }
 
     setPropertyValue(newValue: FreNode) {
-        newValue;
+        this.node[this.propertyName] = newValue;
     }
 }
 

@@ -4,7 +4,7 @@ language InsuranceModel
 //       Main concepts in the Documentation Project           //
 ////////////////////////////////////////////////////////////////
 
-model InsuranceModel {
+model InsuranceModel version "20" {
     parts: Part[];              // units that hold partial definitions of insurance products
     products: Product[];        // units that hold sellable insurance products
 }

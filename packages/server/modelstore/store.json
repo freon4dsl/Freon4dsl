@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 2,
+    "currentPostfix": 4,
     "models": [
         {
             "folder": "modelstore",
@@ -97,34 +97,6 @@
             "version": "1"
         },
         {
-            "folder": "EduOne",
-            "language": "",
-            "name": "EduOne",
-            "units": [
-                {
-                    "file": "Flow.json",
-                    "name": "Flow"
-                },
-                {
-                    "file": "Fractions10.json",
-                    "name": "Fractions10"
-                },
-                {
-                    "file": "Multiplication.json",
-                    "name": "Multiplication"
-                },
-                {
-                    "file": "Test1.json",
-                    "name": "Test1"
-                },
-                {
-                    "file": "sssFlowddd.json",
-                    "name": "sssFlowddd"
-                }
-            ],
-            "version": "1"
-        },
-        {
             "folder": "EduOneFreonStorage",
             "language": "",
             "name": "EduOneFreonStorage",
@@ -144,10 +116,6 @@
                 {
                     "file": "Test1.json",
                     "name": "Test1"
-                },
-                {
-                    "file": "sssFlowddd.json",
-                    "name": "sssFlowddd"
                 }
             ],
             "version": "1"
@@ -164,6 +132,14 @@
                 {
                     "file": "unit2.json",
                     "name": "unit2"
+                },
+                {
+                    "name": "PrimsTest",
+                    "file": "PrimsTest.json"
+                },
+                {
+                    "name": "PartsTest1",
+                    "file": "PartsTest1.json"
                 }
             ],
             "version": "1"

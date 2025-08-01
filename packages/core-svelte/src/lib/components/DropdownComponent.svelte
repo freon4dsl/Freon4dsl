@@ -1,7 +1,7 @@
 <script lang="ts">
     import { type SelectOption } from '@freon4dsl/core';
-    import { DROPDOWN_LOGGER } from '$lib/components/ComponentLoggers.js';
-    import type { DropdownProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { DROPDOWN_LOGGER } from './ComponentLoggers.js';
+    import type { DropdownProps } from './svelte-utils/FreComponentProps.js';
 
     let {
         options = $bindable(),
@@ -27,7 +27,7 @@
                     class="dropdown-component-item"
                     class:dropdown-component-selected={options.length === 1 ||
                         option.id === selected?.id}
-                    onmousedown={(event) => {
+                        onmousedown={(event) => {
                         event.preventDefault();
                         event.stopPropagation();
                         handleClick(option);
@@ -50,25 +50,3 @@
         {/if}
     </span>
 </span>
-
-<style>
-    .dropdown-component-container {
-        position: relative;
-    }
-    .dropdown-entry-with-additional-label {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        box-sizing: border-box;
-        width: 100%;
-    }
-    .column-for-dropdown-entry-with-additional-label {
-        display: flex;
-        flex-direction: column;
-        /*flex: 1;*/
-    }
-    .gap-for-dropdown-entry-with-additional-label {
-        margin: 0 0.7rem 0 0.7rem;
-        flex: 1;
-    }
-</style>

@@ -1,7 +1,7 @@
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
 import { Box } from "./Box.js"
-import {ClientRectangle} from "../ClientRectangleTypes.js";
+import type { ClientRectangle } from "../ClientRectangleTypes.js";
 
 export class ElementBox extends Box {
     kind: string = "ElementBox";

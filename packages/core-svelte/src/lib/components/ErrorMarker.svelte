@@ -1,7 +1,7 @@
 <script lang="ts">
     import { tick } from 'svelte';
-    import ErrorTooltip from '$lib/components/ErrorTooltip.svelte';
-    import type { FreComponentProps } from "$lib";
+    import ErrorTooltip from './ErrorTooltip.svelte';
+    import type { FreComponentProps } from "../index.js";
     import {Box} from "@freon4dsl/core";
 
     let { editor, box }: FreComponentProps<Box> = $props();

@@ -1,5 +1,0 @@
-validator for language ExpressionLibrary
-BinaryExpressionBase {
-    typecheck conformsTo( self.left, self.right );
-//    typecheck conformsTo( self.right, self.left );
-}

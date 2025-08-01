@@ -53,7 +53,7 @@ export class SvelteTestReferenceChecker extends SvelteTestDefaultWorker implemen
         locationDescription: string,
     ) {
         const scoper = FreLanguageEnvironment.getInstance().scoper;
-        const possibles = scoper.getVisibleElements(modelelement).filter((elem) => elem.name === referredElem.name);
+        const possibles = scoper.getVisibleNodes(modelelement).filter((elem) => elem.name === referredElem.name);
         if (possibles.length > 0) {
             this.errorList.push(
                 new FreError(

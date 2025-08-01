@@ -1,14 +1,14 @@
 import { FreLanguage } from "../language/index.js";
-import {
+import type {
     FreBinaryExpression,
     FreNode,
     FreExpressionNode,
     FreModel,
     FreModelUnit,
     FreNamedNode,
-    FreNodeReference,
 } from "../ast/index.js";
-import { isNullOrUndefined } from "../util/index.js";
+import { FreNodeReference } from "../ast/index.js";
+import { notNullOrUndefined } from '../util/index.js';
 
 export function isFreModel(node: FreNode): node is FreModel {
     return !!node && node.freIsModel && node.freIsModel();
@@ -190,7 +190,7 @@ function ast2stringIntern(node: FreNode, indent: string): string {
                     }
                 } else {
                     const ref: FreNodeReference<FreNamedNode> = node[prop.name] as FreNodeReference<FreNamedNode>
-                    if (!isNullOrUndefined(ref)) {
+                    if (notNullOrUndefined(ref)) {
                         result += `   |${indent}${prop.name}: ref ${ref.name}\n`
                     }
                 }
@@ -206,7 +206,7 @@ function ast2stringIntern(node: FreNode, indent: string): string {
                     }
                 } else {
                     const part: FreNode = node[prop.name] as FreNode
-                    if (!isNullOrUndefined(part)) {
+                    if (notNullOrUndefined(part)) {
                         result += ast2stringIntern(part, indent + INDENT)
                     }
                 }

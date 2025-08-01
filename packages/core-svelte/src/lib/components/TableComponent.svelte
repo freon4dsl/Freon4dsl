@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TABLE_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { TABLE_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a list of elements that have the same type (a 'true' list) as
@@ -14,22 +14,22 @@
         isTableRowBox,
         isElementBox,
         TableCellBox,
-        isNullOrUndefined, isFreNodeReference, isFreNode, type DragAndDropType, FreLanguage
+        notNullOrUndefined, isFreNodeReference, isFreNode, type DragAndDropType, FreLanguage
     } from '@freon4dsl/core';
-    import { componentId } from '$lib';
+    import { componentId } from '../index.js';
 
     import { dropListElement, moveListElement } from '@freon4dsl/core';
     import TableCellComponent from './TableCellComponent.svelte';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import { activeElem, activeIn, draggedElem, draggedFrom } from '$lib/components/stores/AllStores.svelte';
-    import type { TableDetails } from '$lib/components/svelte-utils/TableDetails';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
+    import { activeElem, activeIn, draggedElem, draggedFrom } from './stores/AllStores.svelte';
+    import type { TableDetails } from './svelte-utils/TableDetails';
 
     const LOGGER = TABLE_LOGGER;
 
     // Props
     let { editor, box }: FreComponentProps<TableBox> = $props();
 
-    let id = !isNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box';
+    let id = notNullOrUndefined(box) ? componentId(box) : 'table-for-unknown-box';
     let cells: TableCellBox[] = $state([]);
     let templateColumns: string = $state('');
     let templateRows: string = $state('');
@@ -61,7 +61,7 @@
 
     const refresh = (why?: string): void => {
         LOGGER.log('Refresh TableBox, box: ' + why);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             cells = getCells();
             templateColumns = `repeat(${box.numberOfColumns() - 1}, auto)`;
             templateRows = `repeat(${box.numberOfRows() - 1}, auto)`;
@@ -101,7 +101,7 @@
             targetIndex = details.column - 1;
         }
 
-        if (!isNullOrUndefined(data)) {
+        if (notNullOrUndefined(data)) {
             if (isFreNodeReference(data.element)) {
                 LOGGER.log(`DROPPING item [${data.element.name}] from [${data.componentId}] in list [${id}] on position [${targetIndex}]`);
             } else if (isFreNode(data.element)) {

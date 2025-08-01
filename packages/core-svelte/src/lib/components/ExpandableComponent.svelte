@@ -1,7 +1,7 @@
 <script lang="ts">
-    import {type FreComponentProps, RenderComponent} from "$lib";
+    import {type FreComponentProps, RenderComponent} from "../index.js";
     import { FragmentBox} from "@freon4dsl/core";
-    import ArrowForward from "$lib/components/images/ArrowForward.svelte";
+    import ArrowForward from "./images/ArrowForward.svelte";
 
     let { editor, box }: FreComponentProps<FragmentBox> = $props();
 
@@ -33,6 +33,7 @@
     {/key}
 </span>
 
+<!--   todo move this style to freon.css as soon as this component is available through the .edit file -->
 <style>
     .expandable-component {
         display: flex;

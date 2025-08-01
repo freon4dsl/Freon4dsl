@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TABLECELL_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { TABLECELL_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component show a single cell in a TableComponent. It supports drag and drop,
@@ -27,14 +27,14 @@
         isTableBox,
         isElementBox,
         ElementBox,
-        isNullOrUndefined,
+        notNullOrUndefined,
         isFreNodeReference,
         isFreNode,
         MenuItem
     } from "@freon4dsl/core";
     import { onMount } from "svelte";
     import RenderComponent from './RenderComponent.svelte';
-    import { componentId, rememberDraggedNode } from '$lib/index.js';
+    import { componentId, rememberDraggedNode } from '../index.js';
     import {
         activeElem,
         activeIn,
@@ -42,9 +42,9 @@
         contextMenu,
         contextMenuVisible,
         selectedBoxes
-    } from '$lib/components/stores/AllStores.svelte.js';
-    import type { TableCellProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import DragHandle from "$lib/components/images/DragHandle.svelte";
+    } from './stores/AllStores.svelte.js';
+    import type { TableCellProps } from './svelte-utils/FreComponentProps.js';
+    import DragHandle from "./images/DragHandle.svelte";
 
     // Props
     let {
@@ -59,7 +59,7 @@
 
     // local variables
     const LOGGER = TABLECELL_LOGGER;
-    let id: string = !isNullOrUndefined(box)
+    let id: string = notNullOrUndefined(box)
         ? `cell-${componentId(box)}`
         : 'table-cell-for-unknown-box';
 
@@ -74,7 +74,7 @@
 
     const refresh = (why?: string) => {
         LOGGER.log('TableCellComponent refresh, why: ' + why);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             if (parentOrientation === TableDirection.HORIZONTAL) {
                 row = box.row;
                 column = box.column;
@@ -118,7 +118,6 @@
             ? selectedBoxes.value.includes(box) || selectedBoxes.value.includes(box.content)
             : false;
         selectedCls = isSelected ? 'render-component-selected' : 'render-component-unselected';
-
         // Evaluated and re-evaluated when the box changes.
         refresh('New TableCellComponent created for ' + box?.id); //+ " element name: " + box?.element["name"]);
     });
@@ -168,7 +167,7 @@
         // close any context menu
         contextMenuVisible.value = false;
 
-        if (!isNullOrUndefined(event.dataTransfer)) {
+        if (notNullOrUndefined(event.dataTransfer)) {
             // give the drag an effect
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.dropEffect = 'move';
@@ -178,7 +177,7 @@
         // which explains why we cannot use event.dataTransfer.setData. We use a svelte store instead.
         // Create the data to be transferred and notify the store that something is being dragged.
         const parentTableBox: TableBox | undefined = box.getParentTableBox()
-        if (!isNullOrUndefined(parentTableBox)) {
+        if (notNullOrUndefined(parentTableBox)) {
             rememberDraggedNode(parentTableBox.id, box.getParentTableBox()!, box);
             // console.log(`dragstart: ${draggedElem.value?.element.freLanguageConcept()}`)
         }
@@ -230,7 +229,7 @@
             }
         }
         // open the context menu
-        if (!isNullOrUndefined(contextMenu.instance)) {
+        if (notNullOrUndefined(contextMenu.instance)) {
             let index: number;
             // determine the contents of the menu based on box
             // if the selected box is the placeholder or a title/header => show different menu items

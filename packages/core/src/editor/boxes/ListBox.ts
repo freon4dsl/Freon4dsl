@@ -1,5 +1,5 @@
 import { Box } from "./Box.js";
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util/index.js";
 import { LayoutBox, ListDirection } from "./LayoutBox.js";

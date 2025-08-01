@@ -11,6 +11,7 @@
     "build-dev": "npm run build-dev --workspaces --if-present",
     "build-release": "npm run build-release --workspaces --if-present",
     "build-samples": "npm run build-samples --workspaces --if-present",
+    "clean-custom-samples": "npm run clean-custom --workspaces --if-present",
     "publish-local": "npm run publish-local --workspaces --if-present",
     "unpublish-local": "npm run unpublish-local --workspaces --if-present",
     "republish-local": "npm run unpublish-local && npm run publish-local",
@@ -31,6 +32,9 @@
     "@types/node": "20.14.1",
     "@types/pegjs": "0.10.6",
     "cross-env": "7.0.3",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-n": "^17.21.0",
     "identity-obj-proxy": "3.0.0",
     "nodemon": "3.1.3",
     "pegjs": "0.10.0",
@@ -45,13 +49,17 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.29.0",
+    "typescript-eslint": "^8.38.0",
     "@vitest/ui": "3.2.4"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   },
   "workspaces": [
     "packages/core",
     "packages/core-svelte",
     "packages/meta",
+    "packages/test-helpers",
     "packages/samples/*",
     "packages/weblib-flowbite",
     "packages/webapp-flowbite",

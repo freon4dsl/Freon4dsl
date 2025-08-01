@@ -1,5 +1,5 @@
-import { FreNode } from "../ast/index.js";
-import { FreSearchWorker } from "./FreSearchWorker.js";
+import type { FreNode } from "../ast/index.js";
+import type { FreSearchWorker } from "./FreSearchWorker.js";
 
 export class NamedElementSearchWorker implements FreSearchWorker {
     private readonly nameToFind: string;

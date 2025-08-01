@@ -1,0 +1,9 @@
+editor partReplacers
+
+conceptWithParts {[
+    PARTS name   ${self.name} /* Normal box */
+          single
+            ${self.conceptProp replace=partReplacer2} /* Replacer */
+          list
+            ${self.conceptList replace=partListReplacer2} /* Replacer */
+]}

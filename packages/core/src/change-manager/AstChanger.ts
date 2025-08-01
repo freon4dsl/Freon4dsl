@@ -40,11 +40,11 @@ class AstChanger {
     }
 
     /**
-     * This function should always be called when a changeFunction to the nAST is made in the editor.
-     * It will ensure that the full changeFunction is handled as one action in mobx, avoiding spurious UI updates, and
-     * it will ensure that the full changeFunction is handled as one transaction by the undo manager so it will be undone
+     * This function should always be called when a change to the AST is made in the editor.
+     * It will ensure that the full change is handled as one action in mobx, avoiding spurious UI updates, and
+     * it will ensure that the full change is handled as one transaction by the undo manager so it will be undone
      * in one undo operation.
-     * The changeFunction function should return a node if a new node is created, otherwise it should return null
+     * The changeFunction function should return a node if a new node is created, otherwise it should return null.
      * @param changeFunction
      */
     change(changeFunction: () => void): void {

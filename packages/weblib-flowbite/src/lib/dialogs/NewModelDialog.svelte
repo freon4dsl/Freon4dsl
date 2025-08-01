@@ -1,11 +1,13 @@
 <script lang="ts">
+    import { userMessageOpen } from "$lib"
     import { notNullOrUndefined } from "@freon4dsl/core"
-    import {Button, Modal, Input, Helper} from 'flowbite-svelte';
+    import {Button, Input, Helper} from 'flowbite-svelte';
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
     import { FolderOpenSolid } from 'flowbite-svelte-icons';
     import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
+    import Dialog from "$lib/dialogs/Dialog.svelte"
 
     const initialHelperText: string = 'Enter the name of the new model.'
     let helperText: string = $state(initialHelperText);
@@ -30,6 +32,10 @@
         // console.log("CREATING NEW MODEL: " + newName);
         if (newName.length > 0 && checkName(newName).length === 0) {
             const existing: string[] = await WebappConfigurator.getInstance().getAllModelNames();
+            if (userMessageOpen.value) {
+                resetVariables();
+                return
+            }
             if (notNullOrUndefined(existing) && existing.length > 0 && existing.indexOf(newName) !== -1) {
                 helperText = `Cannot create model '${newName}', because a model with that name already exists on the server.`;
             } else {
@@ -46,7 +52,7 @@
 	}
 </script>
 
-<Modal bind:open={dialogs.newModelDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
+<Dialog open={dialogs.newModelDialogVisible}>
     <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">New model</h3>
     <div class="flex flex-col space-y-6" role="dialog">
         <div class="relative text-light-base-700">
@@ -71,4 +77,4 @@
             </Button>
         </div>
     </div>
-</Modal>
+</Dialog>

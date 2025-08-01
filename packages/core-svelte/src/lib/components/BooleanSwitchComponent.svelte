@@ -7,18 +7,18 @@
     // On Designing and Building Toggle Switches by Sara Soueidan https://www.sarasoueidan.com/blog/toggle-switch-design/
     // and this example by Scott O'hara https://codepen.io/scottohara/pen/zLZwNv
 
-    import { SWITCH_LOGGER } from '$lib/components/ComponentLoggers.js';
-    import { BooleanControlBox, isNullOrUndefined } from '@freon4dsl/core';
-    import { componentId } from '$lib/index.js';
+    import { SWITCH_LOGGER } from './ComponentLoggers.js';
+    import { BooleanControlBox, notNullOrUndefined } from '@freon4dsl/core';
+    import { componentId } from '../index.js';
     import { onMount } from 'svelte';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     const LOGGER = SWITCH_LOGGER;
 
     // Props
     let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
 
-    let id: string = !isNullOrUndefined(box) ? componentId(box) : 'switch-for-unknown-box';
+    let id: string = notNullOrUndefined(box) ? componentId(box) : 'switch-for-unknown-box';
     let value = $state(box.getBoolean());
     let switchElement: HTMLButtonElement;
 

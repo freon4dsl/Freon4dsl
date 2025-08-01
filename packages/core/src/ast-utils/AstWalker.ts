@@ -1,7 +1,8 @@
-import { FreLanguage, FreLanguageProperty } from "../language/index.js";
+import { FreLanguage, } from "../language/index.js";
+import type { FreLanguageProperty } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
-import { AstWorker } from "./AstWorker.js";
-import { FreNode } from "../ast/index.js";
+import type { AstWorker } from "./AstWorker.js";
+import type { FreNode } from "../ast/index.js";
 import { isNullOrUndefined } from "../util/index.js"
 
 const LOGGER = new FreLogger("AstWalker");

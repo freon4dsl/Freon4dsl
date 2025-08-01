@@ -1,10 +1,13 @@
-import { FreBinaryExpression } from "../../ast/index.js";
+import type { FreBinaryExpression } from "../../ast/index.js";
 import { AST } from "../../change-manager/index.js";
-import { BTREE, FRE_BINARY_EXPRESSION_LEFT, FreUtils, Selected } from "../../util/index.js";
-import { Box } from "../boxes/index.js";
+import { BTREE, FRE_BINARY_EXPRESSION_LEFT, FreUtils } from "../../util/index.js";
+import type { Selected } from "../../util/index.js";
+import type { Box } from "../boxes/index.js";
 import { FreEditor } from "../FreEditor.js";
-import { ACTION_LOGGER, FreAction, FrePostAction } from "./FreAction.js";
-import { FreTriggerUse, triggerTypeToString } from "./FreTriggers.js";
+import { ACTION_LOGGER, FreAction } from "./FreAction.js";
+import type { FrePostAction } from "./FreAction.js";
+import type { FreTriggerUse } from "./FreTriggers.js";
+import { triggerTypeToString } from "./FreTriggers.js";
 
 
 export class FreCreateBinaryExpressionAction extends FreAction {

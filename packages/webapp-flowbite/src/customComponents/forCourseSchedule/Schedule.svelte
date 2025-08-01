@@ -8,7 +8,8 @@
     } from "@freon4dsl/core"
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
     import {Slot, TimeStamp} from "@freon4dsl/samples-course-schedule";
-    import IconButton from "@smui/icon-button";
+    import { UserAddOutline } from 'flowbite-svelte-icons';
+    import { Button } from 'flowbite-svelte';
 
     // This component replaces the component for "timeSlots: Slot[];" from model unit "Schedule".
     // This property is a parts list, therefore the external box to use is an ExternalPartListBox.
@@ -180,6 +181,12 @@
         }
     }
     initialize();
+    const colorCls: string = 'text-light-base-50 dark:text-dark-base-900 ';
+    const buttonCls: string =
+      'bg-light-base-600 					dark:bg-dark-base-200 ' +
+      'hover:bg-light-base-900 		dark:hover:bg-dark-base-50 ' +
+      'border-light-base-100 			dark:border-dark-base-800 ';
+    const iconCls: string = 'ms-0 inline h-6 w-6';
 </script>
 
 
@@ -221,7 +228,9 @@
             {#each timeStamps as stamp, index}
                 {#if index < 5}
                     <td class="demo-btn-cell">
-                        <IconButton class="material-icons" onclick={() => addSlot(stamp)}>add</IconButton>
+                        <Button tabindex={-1} id="add-button" class="{buttonCls} {colorCls} " name="ToastOpen" onclick={() => addSlot(stamp)}>
+                            <UserAddOutline class="{iconCls}" />
+                        </Button>
                     </td>
                 {/if}
             {/each}
@@ -253,7 +262,9 @@
             {#each timeStamps as stamp, index}
                 {#if index >= 5}
                     <td class="demo-btn-cell">
-                        <IconButton class="material-icons" onclick={() => addSlot(stamp)}>add</IconButton>
+                        <Button tabindex={-1} id="add-button" class="{buttonCls} {colorCls} " name="ToastOpen" onclick={() => addSlot(stamp)}>
+                            <UserAddOutline class="{iconCls}" />
+                        </Button>
                     </td>
                 {/if}
             {/each}

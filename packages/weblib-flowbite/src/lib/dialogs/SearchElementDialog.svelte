@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { Button, Modal, Input, Radio, Card, Helper } from 'flowbite-svelte';
+    import Dialog from "$lib/dialogs/Dialog.svelte"
+    import { Button, Input, Radio, Card, Helper } from 'flowbite-svelte';
     import { dialogs } from "$lib/stores/WebappStores.svelte"
     import { FreLanguage, notNullOrUndefined } from "@freon4dsl/core"
-    import { EditorRequestsHandler } from '$lib/language';
+    import { EditorRequestsHandler, WebappConfigurator } from "$lib/language"
     import { cancelButtonClass, okButtonClass, textInputClass } from '$lib/stores/StylesStore.svelte';
     import { PenSolid } from 'flowbite-svelte-icons';
 
@@ -14,6 +15,7 @@
     function handleCancel() {
         dialogs.searchElementDialogVisible = false
         resetVariables()
+        WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
     }
 
     async function handleSubmit() {
@@ -21,6 +23,7 @@
             dialogs.searchElementDialogVisible = false
             EditorRequestsHandler.getInstance().findNamedElement(textToFind, nodeType);
             resetVariables()
+            WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
         }
     }
 
@@ -31,7 +34,7 @@
 
     function inputInvalid(): boolean {
         if (!(notNullOrUndefined(nodeType) && nodeType.length > 0)) {
-            helperText = "Please, select the type of the unit below.";
+            helperText = "Please, select the type of the element below.";
             return true;
         } else {
             helperText = initialHelperText;
@@ -41,11 +44,11 @@
 
 </script>
 
-<Modal bind:open={dialogs.searchElementDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
+<Dialog open={dialogs.searchElementDialogVisible} >
     <div class="flex flex-col space-y-6" role="dialog">
         <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Search for ...</h3>
         <Card class="flex flex-col space-y-6 bg-light-base-50 shadow my-2 p-6 max-w-full">
-        <h4 class="text-l font-medium text-light-base-900 dark:text-dark-base-50"> Element with certain type and name: {textToFind}</h4>
+        <h4 class="text-l font-medium text-light-base-900 dark:text-dark-base-50">... element with certain name and type: {textToFind}</h4>
 
         <div class="relative text-light-base-700">
             <Input class={textInputClass}
@@ -78,4 +81,4 @@
         </Button>
     </div>
 
-</Modal>
+</Dialog>

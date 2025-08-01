@@ -19,4 +19,3 @@ export * from "./BalanceTreeUtils.js";
 export * from "./IdProvider.js";
 export * from "./SimpleIdProvider.js";
 export * from "./Json.js";
-export * from "./FileUtil.js"

@@ -9,9 +9,12 @@ import { jsonAsString } from "../../util/index.js";
 import * as Keys from "./Keys.js";
 import { MetaKey } from "./Keys.js";
 import { FreLogger } from "../../logging/index.js";
-import { ListElementInfo, MenuItem, FreCreatePartAction, FreEditor } from "../index.js";
-import { DragAndDropType, FreLanguage, FreLanguageClassifier, PropertyKind } from "../../language/index.js"
-import { FreNamedNode, FreNode, FreNodeReference, isFreNodeReference } from "../../ast/index.js"
+import { FreCreatePartAction, FreEditor, MenuItem } from "../index.js";
+import type { ListElementInfo } from "../index.js";
+import { FreLanguage } from "../../language/index.js";
+import type { DragAndDropType, FreLanguageClassifier, PropertyKind } from "../../language/index.js";
+import type { FreNamedNode, FreNode, FreNodeReference } from "../../ast/index.js";
+import { isFreNodeReference } from "../../ast/index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 
 const LOGGER = new FreLogger("ListUtil");
@@ -211,7 +214,7 @@ export function getContextMenuOptions(
         // @ts-ignore
         addBefore = new MenuItem(
             `Add before ${contextMsg}`,
-            "Ctrl+A",
+            '', //"Ctrl+A",
             // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) => {},
             submenuItemsBefore,
@@ -219,7 +222,7 @@ export function getContextMenuOptions(
         // @ts-ignore
         addAfter = new MenuItem(
             `Add after ${contextMsg}`,
-            "Ctrl+I",
+          '', //"Ctrl+I",
             // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) => {},
             submenuItemsAfter,
@@ -227,14 +230,14 @@ export function getContextMenuOptions(
     } else {
         addBefore = new MenuItem(
             `Add before ${contextMsg}`,
-            "Ctrl+A",
+          '', //"Ctrl+A",
             // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) =>
                 addListElement(editor, listParent, propertyName, index, conceptName, true),
         );
         addAfter = new MenuItem(
             `Add after ${contextMsg}`,
-            "Ctrl+I",
+          '', //"Ctrl+I",
             // @ts-ignore
             (element: FreNode, index: number, editor: FreEditor) =>
                 addListElement(editor, listParent, propertyName, index, conceptName, false),

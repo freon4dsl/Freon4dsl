@@ -19,7 +19,8 @@
     "clean-all": "npm run clean-gen && npm run clean-config && npm run clean-custom"
   },
   "devDependencies": {
-    "@freon4dsl/meta": "1.1.0-beta.3"
+    "@freon4dsl/meta": "1.1.0-beta.3",
+    "@freon4dsl/test-helpers": "1.1.0-beta.3"
   },
   "dependencies": {
     "@freon4dsl/core": "1.1.0-beta.3",

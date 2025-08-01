@@ -7,12 +7,12 @@ import {
     FreErrorSeverity,
     FreLogger,
     isActionTextBox,
-    isNullOrUndefined,
+    notNullOrUndefined,
     TextBox
 } from '@freon4dsl/core';
-import { executeCustomKeyboardShortCut } from '$lib/components/svelte-utils/CommonFunctions.js';
-import { shouldBeHandledByBrowser } from '$lib/components/stores/AllStores.svelte.js';
-import type { CaretDetails } from '$lib/components/svelte-utils/CaretDetails';
+import { executeCustomKeyboardShortCut } from './CommonFunctions.js';
+import { shouldBeHandledByBrowser } from '../stores/AllStores.svelte.js';
+import type { CaretDetails } from './CaretDetails';
 
 const LOGGER = new FreLogger('TextComponentHelper');
 
@@ -259,13 +259,13 @@ export class TextComponentHelper {
      * @param inTo
      */
     setFromAndTo(inFrom: number | undefined | null, inTo: number | undefined | null) {
-        if (!isNullOrUndefined(inFrom) && !isNullOrUndefined(inTo)) {
-            if (inFrom < inTo) {
-                this._from = inFrom;
-                this._to = inTo;
+        if (notNullOrUndefined(inFrom) && notNullOrUndefined(inTo)) {
+            if ((inFrom as number) < (inTo as number)) {
+                this._from = inFrom as number;
+                this._to = inTo as number;
             } else {
-                this._from = inTo;
-                this._to = inFrom;
+                this._from = inTo as number;
+                this._to = inFrom as number;
             }
         } else {
             this._from = 0;

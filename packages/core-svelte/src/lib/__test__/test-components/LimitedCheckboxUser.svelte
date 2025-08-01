@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
-    import { LimitedElement } from '$lib/__test__/test-environment/simple-models/LimitedElement.js';
+    import { SimpleElement } from '../test-environment/simple-models/SimpleElement.js';
+    import { LimitedElement } from '../test-environment/simple-models/LimitedElement.js';
     import { LimitedControlBox } from '@freon4dsl/core';
-    import LimitedCheckboxComponent from '$lib/components/LimitedCheckboxComponent.svelte';
-    import type { MainComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import LimitedCheckboxComponent from '../../components/LimitedCheckboxComponent.svelte';
+    import type { MainComponentProps } from '../../components/svelte-utils/FreComponentProps.js';
 
     // Props
     let { editor }: MainComponentProps = $props();

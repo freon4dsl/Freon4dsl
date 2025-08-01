@@ -1,18 +1,22 @@
-import { FreLanguageConcept, FreLanguage, FreLanguageProperty, FreLanguageClassifier } from "../../language/index.js";
+import { FreLanguage, } from "../../language/index.js";
+import type { FreLanguageConcept, FreLanguageProperty, FreLanguageClassifier } from "../../language/index.js";
 import { BehaviorExecutionResult, executeSingleBehavior } from "../util/index.js";
-import {FreCreatePartAction, FreCustomAction, FreTriggerType, isRegExp} from "../actions/index.js";
+import {FreCreatePartAction, FreCustomAction, isRegExp} from "../actions/index.js";
+import type { FreTriggerType } from "../actions/index.js";
 import { triggerTypeToString, FreEditor, isProKey } from "../internal.js";
-import { Box, AbstractChoiceBox, SelectOption } from "./internal.js";
-import { FreNode, FreNodeReference } from "../../ast/index.js";
+import { Box, AbstractChoiceBox } from "./internal.js";
+import type { SelectOption } from "./internal.js";
+import type { FreNode } from "../../ast/index.js";
+import { FreNodeReference } from "../../ast/index.js";
 import { runInAction } from "mobx";
 import { FreLogger } from "../../logging/index.js";
-import { FreUtils, isNullOrUndefined } from "../../util/index.js";
+import { FreUtils, notNullOrUndefined } from '../../util/index.js';
 
 const LOGGER: FreLogger = new FreLogger("ActionBox");
 
 export class ActionBox extends AbstractChoiceBox {
     readonly kind: string = "ActionBox";
-    placeholder: string;
+
     /**
      * Filled with the name of the concept, in case this is used to create new concept instance.
      */
@@ -36,7 +40,7 @@ export class ActionBox extends AbstractChoiceBox {
     getOptions(editor: FreEditor): SelectOption[] {
         LOGGER.log("getOptions for " + this.$id + "- " + this.conceptName + "." + this.propertyName);
         const result: SelectOption[] = [];
-        if (!isNullOrUndefined(this.propertyName) && !isNullOrUndefined(this.conceptName)) {
+        if (notNullOrUndefined(this.propertyName) && notNullOrUndefined(this.conceptName)) {
             LOGGER.log(`  has property ${this.propertyName} and concept ${this.conceptName}`);
             // If the action box has a property and concept name, then this can be used to create element of the
             // concept type and its subtypes.
@@ -49,8 +53,8 @@ export class ActionBox extends AbstractChoiceBox {
             clsOtIntf.subConceptNames.concat(this.conceptName).forEach((creatableConceptname: string) => {
                 const creatableConcept: FreLanguageConcept = FreLanguage.getInstance().concept(creatableConceptname);
                 LOGGER.log(`creatableConcept: ${creatableConcept?.typeName}`);
-                if (!isNullOrUndefined(creatableConcept) && !creatableConcept.isAbstract) {
-                    if (!isNullOrUndefined(creatableConcept.referenceShortcut)) {
+                if (notNullOrUndefined(creatableConcept) && !creatableConcept.isAbstract) {
+                    if (notNullOrUndefined(creatableConcept.referenceShortcut)) {
                         this.addReferenceShortcuts(creatableConcept as FreLanguageConcept, result, editor);
                     } else {
                         result.push(
@@ -63,7 +67,7 @@ export class ActionBox extends AbstractChoiceBox {
                     }
                 }
             });
-        } else if (!isNullOrUndefined(this.propertyName)) {
+        } else if (notNullOrUndefined(this.propertyName)) {
             // Only has a propertyname, so it is a reference property
             const propDef: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(
                 this.node.freLanguageConcept(),
@@ -245,7 +249,7 @@ export class ActionBox extends AbstractChoiceBox {
             return false;
         })
         // If there is a match, execute it.
-        if (!isNullOrUndefined(matchingAction)) {
+        if (notNullOrUndefined(matchingAction)) {
             LOGGER.log(`Found match to regexp: ${triggerTypeToString(matchingAction.trigger)}`);
             if (!!matchingAction) {
                 return executeSingleBehavior(matchingAction, this, text, editor);

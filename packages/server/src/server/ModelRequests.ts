@@ -10,8 +10,8 @@ const storeFolder = "./modelstore";
 export class ModelRequests {
     public static validate = false;
     
-    public static async putModel(modelname: string, language: string, ctx: IRouterContext) {
-        console.log(`ModelRequest2.putModel ${modelname} language ${language}`)
+    public static async saveModel(modelname: string, language: string, version: string, ctx: IRouterContext) {
+        console.log(`ModelRequest.saveModel ${modelname} language ${language}, version ${version}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
@@ -21,7 +21,7 @@ export class ModelRequests {
                     name: modelname,
                     folder: (isIdentifier(modelname) ? modelname : "model-" + catalog.currentPostfix++),
                     language: language,
-                    version: "1",
+                    version: version,
                     units: []
                 }
                 catalog.models.push(model)
@@ -30,7 +30,7 @@ export class ModelRequests {
                     fs.mkdirSync(path.join(`${storeFolder}`, model.folder));
                 }
             } else {
-                console.log(`ModelRequest2.puModel: model; ${modelname} already exists, ignoring`,)
+                console.log(`ModelRequest.putModel: model; ${modelname} already exists, ignoring`,)
             }
         } catch (e) {
             const message = (e instanceof Error? e.message : e.toString())
@@ -45,15 +45,15 @@ export class ModelRequests {
      * @param unitname  The name of the unit to store
      * @param ctx       The `ctx.request.body` is the contents of the `unitname` to be stored.
      */
-    public static async putModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
-        console.log(`ModelRequest2.putModelUnit ${modelname}::${unitname}`)
+    public static async saveModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
+        console.log(`ModelRequest.saveModelUnit ${modelname}::${unitname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
             let model = catalog.models.find(m => m.name === modelname)
             if (model === undefined) {
                 // Error, model should be defined.
-                ctx.response.body = `putModelUnit failed because model '${modelname}' does not exist`;
+                ctx.response.body = `saveModelUnit failed because model '${modelname}' does not exist`;
                 ctx.response.status = 412
                 return
             }
@@ -86,7 +86,7 @@ export class ModelRequests {
      * @param ctx
      */
     public static async getModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
-        console.log(`ModelRequest2.getModelUnit ${modelname}::${unitname}`)
+        console.log(`ModelRequest.getModelUnit ${modelname}::${unitname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
@@ -122,7 +122,7 @@ export class ModelRequests {
      * @returns The list names of all units in the model with name `modelname`. 
      */
     public static async getUnitList(modelname: string, ctx: IRouterContext) {
-        console.log(`ModelRequest2.getUnitList ${modelname}`)
+        console.log(`ModelRequest.getUnitList ${modelname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
@@ -144,8 +144,8 @@ export class ModelRequests {
      * 
      * If `language` is `undefined`  the list of models for `language`
      */
-    public static getModelList(ctx: IRouterContext, language?: string) {
-        console.log(`ModelRequest2.getModelList ${language}`)
+    public static getModelList(ctx: IRouterContext, language?: string, version?: string) {
+        console.log(`ModelRequest.getModelList ${language}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
@@ -169,7 +169,7 @@ export class ModelRequests {
      * @param ctx
      */
     public static async deleteModelUnit(modelname: string, unitname: string, ctx: IRouterContext) {
-        console.log(`ModelRequest2.deleteModelUnit ${modelname}::${unitname}`)
+        console.log(`ModelRequest.deleteModelUnit ${modelname}::${unitname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
@@ -196,12 +196,12 @@ export class ModelRequests {
      * @param ctx
      */
     public static async deleteModel(modelname: string, ctx: IRouterContext) {
-        console.log(`ModelRequest2.deleteModel ${modelname}`)
+        console.log(`ModelRequest.deleteModel ${modelname}`)
         try {
             this.checkStoreFolder();
             const catalog = ModelRequests.readStoreCatalog()
             const storedModelIndex = catalog.models.findIndex(m => m.name === modelname)
-            console.log(`ModelRequest2.deleteModel index ${storedModelIndex}`)
+            console.log(`ModelRequest.deleteModel index ${storedModelIndex}`)
             if (storedModelIndex !== -1) {
                 const storedModel = catalog.models[storedModelIndex]
                 catalog.models.splice(storedModelIndex, 1)

@@ -1,4 +1,5 @@
-import { FreNamedNode, qualifiedName } from './FreNamedNode.js';
+import { qualifiedName } from './FreNamedNode.js';
+import type { FreNamedNode } from './FreNamedNode.js';
 import { computed, observable, makeObservable } from "mobx";
 import { FreLanguageEnvironment } from "../environment/index.js";
 import { FreLogger } from "../logging/index.js";

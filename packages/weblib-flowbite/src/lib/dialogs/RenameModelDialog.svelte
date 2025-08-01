@@ -1,6 +1,7 @@
 <script lang="ts">
+    import Dialog from "$lib/dialogs/Dialog.svelte"
     import { notNullOrUndefined } from "@freon4dsl/core"
-    import {Button, Modal, Input, Helper} from 'flowbite-svelte';
+    import {Button, Input, Helper} from 'flowbite-svelte';
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {WebappConfigurator} from '$lib/language';
     import {checkName} from "$lib/language/DialogHelpers";
@@ -23,6 +24,7 @@
     function handleCancel() {
         dialogs.renameModelDialogVisible = false;
         resetVariables();
+        WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
     }
 
     async function handleSubmit() {
@@ -34,6 +36,7 @@
             } else {
                 WebappConfigurator.getInstance().renameModel(newName);
                 resetVariables();
+                WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
             }
         } else {
             errorText = `Cannot create model '${newName}', because its name is invalid.`;
@@ -45,7 +48,7 @@
 	}
 </script>
 
-<Modal bind:open={dialogs.renameModelDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
+<Dialog open={dialogs.renameModelDialogVisible}>
     <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Rename model</h3>
     <p>This is not yet functioning</p>
 
@@ -72,4 +75,4 @@
             </div>
         </div>
     </div>
-</Modal>
+</Dialog>

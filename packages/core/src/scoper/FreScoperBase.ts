@@ -1,11 +1,11 @@
-import { FreNode, FreNamedNode } from '../ast/index.js';
-import { FreLanguage } from "../language//index.js";
+import type { FreNode, FreNamedNode } from '../ast/index.js';
+import { FreLanguage } from "../language/index.js";
 import { FreLogger } from "../logging/index.js";
 import { FreCompositeTyper } from "../typer/index.js";
-import { FreCompositeScoper } from "./FreCompositeScoper.js";
+import type { FreCompositeScoper } from "./FreCompositeScoper.js";
 import { FreNamespace, PUBLIC_AND_PRIVATE } from './FreNamespace.js';
-import { FreScoper } from "./FreScoper.js";
-import { isNullOrUndefined } from '../util/index.js';
+import type { FreScoper } from "./FreScoper.js";
+import { notNullOrUndefined } from '../util/index.js';
 import { findEnclosingNamespace, hasCorrectType } from './ScoperUtil.js';
 import { FreLanguageEnvironment } from '../environment/index.js';
 
@@ -28,14 +28,14 @@ export abstract class FreScoperBase implements FreScoper {
     public getVisibleNodes(node: FreNode, metaType?: string): FreNamedNode[] {
         // console.log('BASE getVisibleNodes for ' + node['name'] + " of type " + node.freLanguageConcept(), ", metaType: " + metaType);
         this.myTyper = FreLanguageEnvironment.getInstance().typer;
-        if (!isNullOrUndefined(node)) {
+        if (notNullOrUndefined(node)) {
             // Initialize: remember all namespaces that we already included/visited, and add all nodes from the standard library.
             const visitedNamespaces: FreNamespace[] = [];
             let result: FreNamedNode[] = [].concat(FreLanguage.getInstance().stdLib.elements);
             // Find the namespace that 'node' is in
             let nearestNamespace: FreNamespace = findEnclosingNamespace(node);
             // Add the visible nodes from the namespace
-            if (!isNullOrUndefined(nearestNamespace)) {
+            if (notNullOrUndefined(nearestNamespace)) {
                 result.push(...nearestNamespace.getVisibleNodes(this.mainScoper, visitedNamespaces, PUBLIC_AND_PRIVATE));
             }
             // If the 'metaType' parameter is present, filter on metaType

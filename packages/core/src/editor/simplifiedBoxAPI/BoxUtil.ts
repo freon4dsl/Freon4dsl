@@ -1,4 +1,4 @@
-import { FreNamedNode, FreNode } from '../../ast/index.js';
+import type { FreNamedNode, FreNode } from '../../ast/index.js';
 import {
     BoolDisplay,
     BooleanWrapperBox,
@@ -12,14 +12,15 @@ import {
     ExternalPartListBox,
     ExternalRefBox,
     ExternalRefListBox,
-    ExternalStringBox, FragmentWrapperBox,
+    ExternalStringBox,
+    FragmentWrapperBox,
     HorizontalListBox,
     IndentBox,
     LabelBox,
     LimitedControlBox,
     LimitedDisplay,
     NumberDisplay,
-    NumberDisplayInfo,
+    type NumberDisplayInfo,
     NumberWrapperBox,
     PartListWrapperBox,
     PartWrapperBox,
@@ -30,8 +31,8 @@ import {
     StringWrapperBox,
     TextBox,
     VerticalListBox
-} from "../boxes/index.js"
-import { FreScoper } from "../../scoper/index.js";
+} from '../boxes/index.js';
+import type { FreScoper } from "../../scoper/index.js";
 import { RoleProvider } from "./RoleProvider.js";
 import { FreProjectionHandler } from "../projections/index.js";
 import { UtilPrimHelper } from "./box-util-helpers/UtilPrimHelper.js";

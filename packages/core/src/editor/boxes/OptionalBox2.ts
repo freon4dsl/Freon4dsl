@@ -1,7 +1,8 @@
 import { autorun } from "mobx";
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
-import { Box, BoolFunctie } from "./internal.js";
+import { Box } from "./internal.js";
+import type { BoolFunctie } from "./internal.js";
 
 /**
  * OptionalBox holds the content from a projection that is optional. This content is always present in the

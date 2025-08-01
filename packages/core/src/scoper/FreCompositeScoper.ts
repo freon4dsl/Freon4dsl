@@ -1,7 +1,7 @@
-import { FreNode, FreNamedNode, FreNodeReference } from '../ast/index.js';
+import type { FreNamedNode, FreNode, FreNodeReference } from '../ast/index.js';
 import { FreLogger } from "../logging/index.js";
-import { FreScoper } from "./FreScoper.js";
-import { isNullOrUndefined } from '../util/index.js';
+import { type FreScoper } from "./FreScoper.js";
+import { notNullOrUndefined } from '../util/index.js';
 import { FreNamespaceInfo } from './FreNamespaceInfo.js';
 import { FreNamespace } from './FreNamespace.js';
 import { findEnclosingNamespace, resolvePathStartingInNamespace } from './ScoperUtil.js';
@@ -31,7 +31,7 @@ export class FreCompositeScoper implements FreScoper {
         let baseNamespace: FreNamespace = findEnclosingNamespace(refToResolve);
         let currentNamespace: FreNamespace = baseNamespace;
         let found: FreNamedNode = undefined;
-        if (!isNullOrUndefined(baseNamespace)) {
+        if (notNullOrUndefined(baseNamespace)) {
             found = resolvePathStartingInNamespace(baseNamespace, currentNamespace, refToResolve.pathname, this, refToResolve.typeName);
         } else {
             LOGGER.error('Cannot find enclosing namespace for ' + refToResolve.pathname);

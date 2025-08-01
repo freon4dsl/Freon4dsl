@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { RADIO_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { RADIO_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a boolean value as checkbox.
@@ -12,12 +12,12 @@
         ARROW_UP,
         BooleanControlBox,
         CONTROL,
-        isNullOrUndefined,
+        notNullOrUndefined,
         SHIFT
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import { MdRadio } from '@material/web/all.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { MdRadio } from '@material/web/radio/radio.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     const LOGGER = RADIO_LOGGER;
 
@@ -60,7 +60,7 @@
     });
 
     const onChange = (event: MouseEvent & { currentTarget: EventTarget & HTMLInputElement }) => {
-        if (!isNullOrUndefined(event.target)) {
+        if (notNullOrUndefined(event.target)) {
             LOGGER.log(
                 'BooleanRadioComponent.onChange for box ' +
                     box.role +

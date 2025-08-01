@@ -2,7 +2,7 @@
 
 <script lang="ts">
     import { Box } from '@freon4dsl/core';
-    import type {ErrorProps} from "$lib";
+    import type {ErrorProps} from "../index.js";
 
     let { editor, box, hasErr, parentLeft, parentTop, children }: ErrorProps<Box> = $props();
 

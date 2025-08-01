@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
-    import { LimitedElement } from '$lib/__test__/test-environment/simple-models/LimitedElement.js';
+    import { SimpleElement } from '../test-environment/simple-models/SimpleElement.js';
+    import { LimitedElement } from '../test-environment/simple-models/LimitedElement.js';
     import { LimitedControlBox } from '@freon4dsl/core';
-    import type { MainComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import LimitedRadioComponent from '$lib/components/LimitedRadioComponent.svelte';
+    import type { MainComponentProps } from '../../components/svelte-utils/FreComponentProps.js';
+    import LimitedRadioComponent from '../../components/LimitedRadioComponent.svelte';
 
     // Props
     let { editor }: MainComponentProps = $props();

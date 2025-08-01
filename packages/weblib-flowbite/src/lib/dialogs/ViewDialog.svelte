@@ -1,9 +1,10 @@
 <script lang="ts">
-    import {Button, Checkbox, Modal} from 'flowbite-svelte';
+    import Dialog from "$lib/dialogs/Dialog.svelte"
+    import {Button, Checkbox} from 'flowbite-svelte';
     import {projectionsShown, replaceProjectionsShown} from '$lib/stores/Projections.svelte';
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
     import {ProjectionItem} from "$lib/ts-utils/MenuItem";
-    import {dialogs} from "$lib";
+    import { dialogs, WebappConfigurator } from "$lib"
     import { isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import { EditorRequestsHandler } from "$lib/language"
     import { okButtonClass } from '$lib/stores/StylesStore.svelte';
@@ -31,12 +32,13 @@
         });
         replaceProjectionsShown(selection);
         EditorRequestsHandler.getInstance().enableProjections(selection);
-        // console.log('Currently shown: ' + projectionsShown)
+        dialogs.selectViewsDialogVisible = false
+        WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
     }
 </script>
 
-<Modal title="Select the projections to be shown" bind:open={dialogs.selectViewsDialogVisible} size="xs" autoclose outsideclose
-       class="w-full bg-light-base-100 dark:bg-dark-base-800">
+<Dialog open={dialogs.selectViewsDialogVisible}>
+    <h3>"Select the projections to be shown"</h3>
     <Checkbox checked disabled>Default</Checkbox>
     {#each allProjections as option}
         {#if !isNullOrUndefined(option)}
@@ -50,4 +52,4 @@
             Apply changes
         </Button>
     </div>
-</Modal>
+</Dialog>

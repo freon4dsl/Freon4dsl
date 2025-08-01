@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ExternalPartBox, type FreNode} from "@freon4dsl/core";
+    import { ExternalPartBox, type FreNode, isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
     import {BB} from "@freon4dsl/samples-external-tester";
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
@@ -7,7 +7,7 @@
     let { editor, box }: FreComponentProps<ExternalPartBox> = $props();
 
     let inputElement: HTMLInputElement;
-    let value: BB = $state()!;
+    let value: BB | undefined = $state();
     let nameOfValue: string = $state('');
     let numberOfValue: string = $state('');
 
@@ -15,7 +15,7 @@
         let startVal: FreNode | undefined = box.getPropertyValue();
         // you can cast the startVal to the expected type, in this case "BB"
         // note that the property is optional in the model
-        if (!!startVal && startVal.freLanguageConcept() === "BB") {
+        if (notNullOrUndefined(startVal) && startVal.freLanguageConcept() === "BB") {
             value = startVal as BB;
             // get whatever you want to expose from the node
             // in this case we are showing its 'name' and 'numberProp'
@@ -31,16 +31,21 @@
 
     const onChange = () => {
         // set the name and numberProp of value
-        if (!!numberOfValue && numberOfValue.length > 0) {
-            value.numberProp = Number.parseInt(numberOfValue);
+        if (value instanceof BB) {
+            if (!!numberOfValue && numberOfValue.length > 0) {
+                value.numberProp = Number.parseInt(numberOfValue);
+            }
+            if (!!nameOfValue && nameOfValue.length > 0) {
+                value.name = nameOfValue;
+            }
+            // check whether there is a previous property of type BB,
+            // if not, set the default as property
+            let startVal: FreNode | undefined = box.getPropertyValue();
+            if (isNullOrUndefined(startVal)) {
+                console.log('setting value:', value);
+                box.setPropertyValue(value!);
+            }
         }
-        if (!!nameOfValue && nameOfValue.length > 0) {
-            value.name = nameOfValue;
-        }
-        // Because we only change properties of the part, there is no need to communicate the
-        // new state to the box. If you want to change it to a completely different (new?) part,
-        // you should use:
-        // box.setPropertyValue(otherValue);
     }
 
     // The following three functions need to be included for the editor to function properly.

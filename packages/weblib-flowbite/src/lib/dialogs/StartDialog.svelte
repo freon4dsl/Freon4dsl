@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { Button, Modal, Input, Helper } from 'flowbite-svelte';
+    import { Button, Input, Helper } from 'flowbite-svelte';
+    import Dialog from "$lib/dialogs/Dialog.svelte"
     import {dialogs, initializing} from '$lib/stores/WebappStores.svelte';
     import {serverInfo} from '$lib/stores/ModelInfo.svelte';
     import {WebappConfigurator} from '$lib/language';
@@ -66,7 +67,7 @@
 
 </script>
 
-<Modal bind:open={dialogs.startDialogVisible} autoclose={false} class="w-full text-light-base-900 dark:text-dark-base-50 bg-light-base-100 dark:bg-dark-base-800">
+<Dialog open={dialogs.startDialogVisible} >
     {#if serverInfo.allModelNames.length > 0}
         <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Create/Open model</h3>
     {:else }
@@ -117,5 +118,4 @@
             </div>
         {/if}
     </div>
-</Modal>
-
+</Dialog>

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { newModelDialog } from "$lib/language/DialogHelpers.js"
     import {
         Button,
         ButtonGroup,
@@ -6,10 +7,9 @@
         Dropdown,
         Tooltip,
     } from 'flowbite-svelte';
-    import {PlusOutline, FloppyDiskSolid, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
-    import { FreErrorSeverity, type FreUnitIdentifier, notNullOrUndefined } from "@freon4dsl/core"
+    import {PlusOutline, FolderPlusSolid, TrashBinSolid, ChevronDownOutline, FolderOpenSolid, PenSolid, ArrowUpFromBracketOutline, ArrowDownToBracketOutline} from 'flowbite-svelte-icons';
+    import { type FreUnitIdentifier, notNullOrUndefined } from "@freon4dsl/core"
     import {langInfo} from '$lib/stores/LanguageInfo.svelte';
-    import {setUserMessage} from "$lib/stores/UserMessageStore.svelte";
     import {editorInfo} from "$lib/stores/ModelInfo.svelte";
     import {drawerHidden, dialogs} from "$lib/stores";
     import {openModelDialog} from "$lib/language/DialogHelpers";
@@ -57,17 +57,6 @@
         drawerHidden.value = true;
     };
 
-    const saveUnit = (index: number) => {
-        // console.log("saveUnit: " + editorInfo.unitIds[index].name);
-        if (editorInfo.unitIds[index].name === editorInfo.currentUnit?.name) {
-            WebappConfigurator.getInstance().saveUnit(editorInfo.unitIds[index]);
-            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' saved.`, FreErrorSeverity.Info);
-        } else {
-            setUserMessage(`Unit '${editorInfo.unitIds[index].name}' has no changes.`, FreErrorSeverity.Info);
-        }
-        drawerHidden.value = true;
-    };
-
     const renameUnit = (index: number) => {
         // console.log("renameUnit: " + editorInfo.unitIds[index].name);
         editorInfo.toBeRenamed = editorInfo.unitIds[index];
@@ -87,14 +76,26 @@
         dialogs.newUnitDialogVisible = true;
         drawerHidden.value = true;
     };
+    
+    const closeDrawer = () => {
+        drawerHidden.value = true
+        WebappConfigurator.getInstance().langEnv!.editor.selectionChanged()
+    }
 
+    /**
+     * disable buttons if there  is no open model
+     */
+    let disabled: boolean = $derived(
+        editorInfo.modelName === "<no-model>"
+    )
+    
     const buttonCls: string = 'text-center ' +
       'bg-light-base-200            dark:bg-dark-base-700 ' +
       'text-light-base-900          dark:text-dark-base-50 ' +
       'hover:text-light-base-100    dark:hover:text-dark-base-800 ' +
       'hover:bg-light-base-900      dark:hover:bg-dark-base-700';
     const dropdownButtonCls: string = 'm-1 ' +
-      'bg-light-base-200            dark:bg-dark-base-700 ' +
+      'bg-light-base-100            dark:bg-dark-base-700 ' +
       'text-light-base-900          dark:text-dark-base-50 ' +
       'hover:text-light-base-100    dark:hover:text-dark-base-800 ' +
       'hover:bg-light-base-900      dark:hover:bg-dark-base-700';
@@ -109,11 +110,11 @@
         <Button id="open-model-button" class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class={iconCls}/>
         </Button>
-        <Button id="create-model-button" class={buttonCls} name="Create new model" size="xs" onclick={() => {dialogs.newModelDialogVisible = true}}>
+        <Button id="create-model-button" class={buttonCls} name="Create new model" size="xs" onclick={newModelDialog}>
             <FolderPlusSolid class={iconCls}/>
         </Button>
     </ButtonGroup>
-    <CloseButton onclick={() => (drawerHidden.value = true)} class="mb-4 dark:text-dark-base-50"/>
+    <CloseButton onclick={closeDrawer} class="mb-4 dark:text-dark-base-50"/>
 </div>
 <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
 <Tooltip triggeredBy="#open-model-button" class={tooltipClass} placement="bottom">Open existing model</Tooltip>
@@ -129,10 +130,10 @@
         <Button id="rename-model-button" disabled class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
             <PenSolid class="{iconCls} me-2 "/>
         </Button>
-        <Button id="delete-model-button" class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
+        <Button id="delete-model-button" {disabled} class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
             <TrashBinSolid class="{iconCls} me-2"/>
         </Button>
-        <Button id="import-unit-button" class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
+        <Button id="import-unit-button" {disabled} class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
             <ArrowDownToBracketOutline class="{iconCls} me-2"/>
         </Button>
     </ButtonGroup>
@@ -149,7 +150,7 @@
             <div class="flex justify-between px-1 py-2 font-semibold text-light-base-900 dark:text-dark-base-50 bg-light-base-200 dark:bg-dark-base-700">
                 <span class="px-1 text-light-base-800 dark:text-dark-base-100">{unitType} units</span>
 
-                <Button class="{buttonCls} p-1" name="New Unit" size="xs" onclick={() => newUnit(unitType)}>
+                <Button {disabled} class="{buttonCls} p-1" name="New Unit" size="xs" onclick={() => newUnit(unitType)}>
                     <PlusOutline class="{iconCls} me-2 mr-0"/>
                 </Button>
                 <Tooltip class={tooltipClass} placement="bottom">New {unitType} unit</Tooltip>
@@ -172,11 +173,11 @@
                                 <FolderOpenSolid class="{iconCls} me-2"/>
                                 Open
                             </Button>
-                            <Button class={dropdownButtonCls}  name="Save" size="xs" onclick={() => saveUnit(index)}>
-                                <FloppyDiskSolid class="{iconCls} me-2"/>
-                                Save
-                            </Button>
-                            <Button disabled class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
+<!--                            <Button class={dropdownButtonCls}  name="Save" size="xs" onclick={() => saveUnit(index)}>-->
+<!--                                <FloppyDiskSolid class="{iconCls} me-2"/>-->
+<!--                                Save-->
+<!--                            </Button>-->
+                            <Button class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
                                 <PenSolid class="{iconCls} me-2"/>
                                 Rename
                             </Button>

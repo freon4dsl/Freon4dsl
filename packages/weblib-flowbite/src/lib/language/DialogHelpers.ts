@@ -1,27 +1,47 @@
-import {WebappConfigurator} from "$lib/language/WebappConfigurator";
-import {dialogs, serverInfo} from "$lib";
-import { notNullOrUndefined, isIdentifier } from "@freon4dsl/core"
+import { dialogs, drawerHidden, serverInfo, userMessageOpen } from "$lib"
+import { WebappConfigurator } from "$lib/language/WebappConfigurator"
+import { isIdentifier, notNullOrUndefined } from "@freon4dsl/core"
+
+/**
+ * Properties for the Dialog component
+ */
+export interface DialogProps {
+    children: any
+    open: boolean
+}
 
 async function getModelNamesFromServer() {
-    const names: string[] = await WebappConfigurator.getInstance().getAllModelNames();
+    const names: string[] = await WebappConfigurator.getInstance().getAllModelNames()
     if (notNullOrUndefined(names) && names.length > 0) {
         // Make the names available for the dialog
-        serverInfo.allModelNames = names;
+        serverInfo.allModelNames = names
     }
 }
 
 export async function openModelDialog() {
     // To keep list of models in sync with what happens on the server, we get the list
     // of models from server every time we open this dialog.
-    await getModelNamesFromServer();
-    dialogs.openModelDialogVisible = true;
+    await getModelNamesFromServer()
+    if (userMessageOpen.value) {
+        return
+    }
+    dialogs.openModelDialogVisible = true
+    drawerHidden.value = true
+}
+
+export async function newModelDialog() {
+    dialogs.newModelDialogVisible = true
+    drawerHidden.value = true
 }
 
 export async function openStartDialog() {
     // To keep list of models in sync with what happens on the server, we get the list
     // of models from server every time we open this dialog.
-    await getModelNamesFromServer();
-    dialogs.startDialogVisible = true;
+    await getModelNamesFromServer()
+    if (userMessageOpen.value) {
+        return
+    }
+    dialogs.startDialogVisible = true
 }
 
 /**
@@ -36,4 +56,3 @@ export function checkName(newName: string): string {
         return ""
     }
 }
-

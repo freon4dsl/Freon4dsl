@@ -1,4 +1,4 @@
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 
 /**
  * Serializer interface for serialization and deserialization of Fren nodes.

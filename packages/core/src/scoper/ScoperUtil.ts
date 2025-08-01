@@ -1,8 +1,8 @@
-import { FreNamedNode, FreNode, FreNodeReference } from '../ast/index.js';
+import { type FreNamedNode, type FreNode, FreNodeReference } from '../ast/index.js';
 import { FreNamespace } from './FreNamespace.js';
 import { isNullOrUndefined } from '../util/index.js';
 import { FreLanguage } from '../language/index.js';
-import { FreCompositeScoper } from './FreCompositeScoper.js';
+import type { FreCompositeScoper } from './FreCompositeScoper.js';
 
 /**
  * This file contains a few methods that are used by both FreScoperBase and FreNamespace.

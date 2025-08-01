@@ -48,6 +48,8 @@ export function resetEditorInfo() {
 	editorInfo.toBeRenamed = undefined;
 	editorInfo.toBeDeleted = undefined;
 	editorInfo.toBeCreated = undefined;
+    
+    noUnitAvailable.value = true
 }
 
 export function indexForTab(unit: FreUnitIdentifier): number {

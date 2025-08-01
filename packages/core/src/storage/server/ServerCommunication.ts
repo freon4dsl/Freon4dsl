@@ -1,10 +1,10 @@
-import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
-import { FreLanguage } from "../../language/index.js"
+import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
+import { FreLanguage } from "../../language/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { isIdentifier } from "../../util/index.js";
-import { collectUsedLanguages, FreLionwebSerializer, FreModelSerializer } from "../index.js";
+import { isIdentifier } from "../../util/index.js"
+import { collectUsedLanguages, FreLionwebSerializer, FreModelSerializer, type ServerResponse, type VoidServerResponse } from "../index.js"
 import { FreErrorSeverity } from "../../validator/index.js";
-import { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
+import type { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 
 const LOGGER = new FreLogger("ServerCommunication"); // .mute();
 
@@ -88,7 +88,7 @@ export class ServerCommunication implements IServerCommunication {
 
     // @ts-ignore
     // parameters present to adhere to interface
-    async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
+    async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<ServerReturn<string[]>> {
         return null;
     }
 
@@ -99,8 +99,8 @@ export class ServerCommunication implements IServerCommunication {
      * @param unitId
      * @param unit
      */
-    async putModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<void> {
-        LOGGER.log(`ServerCommunication.putModelUnit ${modelName}/${unitId.name}`);
+    async saveModelUnit(modelName: string, unitId: FreUnitIdentifier, unit: FreNamedNode): Promise<VoidServerResponse> {
+        LOGGER.log(`ServerCommunication.saveModelUnit ${modelName}/${unitId.name}`);
         if (isIdentifier(unitId.name)) {
             const model = ServerCommunication.lionweb_serial.convertToJSON(unit);
             let output = {
@@ -108,19 +108,20 @@ export class ServerCommunication implements IServerCommunication {
                 languages: collectUsedLanguages(model),
                 nodes: model,
             };
-            await this.putWithTimeout(`putModelUnit`, output, {model:modelName,unit: unitId.name});
+            const response = await this.saveWithTimeout(`saveModelUnit`, output, {model:modelName,unit: unitId.name})
+            if (response.errors.length > 0) {
+                response.errors[0] = `Server cannot save unit '${unitId.name}' (${response.errors[0]})`
+            }
+            return response
         } else {
-            LOGGER.error(
-                "Name of Unit '" +
-                    unitId.name +
-                    "' may contain only characters, numbers, '_', or '-', and must start with a character.",
-            );
-            this.onError(
-                "Name of Unit '" +
-                    unitId.name +
-                    "' may contain only characters, numbers, '_', or '-', and must start with a character.",
-                FreErrorSeverity.NONE,
-            );
+            const msg = "Name of Unit '" +
+                unitId.name +
+                "' may contain only characters, numbers, '_', or '-', and must start with a character."
+            LOGGER.error(msg);
+            this.onError(msg, FreErrorSeverity.NONE)
+            return {
+                errors: [msg]
+            }
         }
     }
 
@@ -129,54 +130,71 @@ export class ServerCommunication implements IServerCommunication {
      * @param modelName
      * @param unit
      */
-    async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<void> {
+    async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
-            await this.fetchWithTimeout<any>(`deleteModelUnit`, {model:modelName, unit: unit.name});
+            const response = await this.getWithTimeout<any>(`deleteModelUnit`, {model:modelName, unit: unit.name});
+            if (response.errors.length > 0) {
+                response.errors[0] = `Server cannot delete model unit '${unit.name}' (${response.errors[0]})`
+            }
+            return response
         }
+        return { errors: [] }
     }
 
     /**
      * Deletes the complete model named 'modelName'.
      * @param modelName
      */
-    async deleteModel(modelName: string): Promise<void> {
+    async deleteModel(modelName: string): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.deleteModel ${modelName}`);
         if (!!modelName && modelName.length > 0) {
-            await this.fetchWithTimeout<any>(`deleteModel`, { model: modelName });
+            const response = await this.getWithTimeout<any>(`deleteModel`, { model: modelName });
+            if (response.errors.length > 0) {
+                response.errors[0] = `Server cannot delete model '${modelName}' (${response.errors[0]})`
+            }
+            return response
         }
+        return { errors: [] }
     }
 
     /**
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      */
-    async loadModelList(): Promise<string[]> {
+    async loadModelList(): Promise<ServerResponse<string[]>> {
         LOGGER.log(`ServerCommunication.loadModelList`);
         const language = FreLanguage.getInstance().name
-        const res: string[] = await this.fetchWithTimeout<string[]>(`getModelList`, { language: language });
-        if (!!res) {
-            return res;
-        } else {
-            return [];
+        const version = FreLanguage.getInstance().languageVersion
+        const response: ServerResponse<string[]> = await this.getWithTimeout<string[]>(`getModelList`, { language: language, version: version });
+        if (response.errors.length > 0) {
+            response.errors[0] = `Server error: cannot retrieve list of models (${response.errors[0]})`
         }
+        return response
     }
 
     /**
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
      * @param modelName
      */
-    async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
+    async loadUnitList(modelName: string): Promise<ServerResponse<FreUnitIdentifier[]>> {
         LOGGER.log(`ServerCommunication.loadUnitList`);
-        let modelUnits: string[] = await this.fetchWithTimeout<string[]>(`getUnitList`, {model: modelName });
-        if (!!modelUnits) {
-            return modelUnits.map((u) => {
+        let response = await this.getWithTimeout<string[]>(`getUnitList`, {model: modelName });
+        if (response.errors.length > 0) {
+            return {
+                result: null,
+                errors: [`Server error: cannot retrieve list of modelunits (${response.errors[0]})`]
+            }
+        } else {
+            const units = response.result.map((u) => {
                 // The information the unit's type is not available. This is not a problem
                 // at the moment, because this method is only used in InMemoryModel.
                 // Note that whenever this changes, this code may give problems.
                 return { name: u, id: u, type: '' };
             });
-        } else {
-            return [];
+            return {
+                result: units,
+                errors: []
+            }
         }
     }
 
@@ -186,32 +204,49 @@ export class ServerCommunication implements IServerCommunication {
      * @param modelName
      * @param unit
      */
-    async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<FreNode> {
+    async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<ServerResponse<FreNode>> {
         LOGGER.log(`ServerCommunication.loadModelUnit ${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
-            const res = await this.fetchWithTimeout<Object>(`getModelUnit`, {model: modelName, unit: unit.name});
-            if (!!res) {
+            const response = await this.getWithTimeout<Object>(`getModelUnit`, {model: modelName, unit: unit.name});
+            if (response.errors.length > 0) {
+                return {
+                    result: null,
+                    errors: [`Server error: cannot load modelunit '${unit.name}' (${response.errors[0]})`]
+                }
+            } else {
                 try {
                     let unit: FreNode;
-                    if (res["$typename"] === undefined) {
-                        unit = ServerCommunication.lionweb_serial.toTypeScriptInstance(res);
+                    if (response["$typename"] === undefined) {
+                        unit = ServerCommunication.lionweb_serial.toTypeScriptInstance(response.result);
                     } else {
-                        unit = ServerCommunication.serial.toTypeScriptInstance(res);
+                        // Old internal Freon formast
+                        unit = ServerCommunication.serial.toTypeScriptInstance(response.result);
                     }
-                    return unit;
+                    return {
+                        result: unit,
+                        errors: []
+                    }
                 } catch (e) {
                     LOGGER.error("loadModelUnit, " + e.message);
                     this.onError(e.message, FreErrorSeverity.NONE);
                     console.log(e.stack);
+                    return {
+                        result: null,
+                        errors: [e["message"]]
+                    }
                 }
             }
+        } else {
+            return {
+                result: null,
+                errors: [`Cannot load modelunit: name is empty`]
+            }
         }
-        return null;
     }
 
-    async fetchWithTimeout<T>(method: string, params: ParameterType): Promise<T> {
+    async getWithTimeout<T>(method: string, params: ParameterType): Promise<ServerResponse<T>> {
         const parameters = ServerCommunication.findParams(params);
-        LOGGER.log("fetchWithTimeout Params = " + parameters);
+        LOGGER.log("getWithTimeout Params = " + parameters);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 2000);
@@ -224,14 +259,28 @@ export class ServerCommunication implements IServerCommunication {
                 },
             });
             clearTimeout(timeoutId);
-            return await promise.json();
+            if (promise.status >= 200 && promise.status < 300) {
+                console.log("getWithTimeout ok")
+                return  {
+                    result: await promise.json(),
+                    errors: []
+                }
+            } else {
+                // error
+                console.log("getWithTimeout error")
+                throw new Error(await promise.json())
+            }
         } catch (e) {
             this.handleError(e);
+            return {
+                result: undefined,
+                errors: [e["message"]]
+            }
         }
-        return null;
+        return void 0;
     }
 
-    private async putWithTimeout(method: string, data: Object, params: ParameterType) {
+    private async saveWithTimeout(method: string, data: Object, params: ParameterType): Promise<VoidServerResponse> {
         const parameters = ServerCommunication.findParams(params);
         try {
             const controller = new AbortController();
@@ -247,7 +296,11 @@ export class ServerCommunication implements IServerCommunication {
             clearTimeout(timeoutId);
         } catch (e) {
             this.handleError(e);
+            return {
+                errors: [e["message"]]
+            }
         }
+        return {  errors: [] }
     }
 
     private handleError(e: Error) {
@@ -255,28 +308,38 @@ export class ServerCommunication implements IServerCommunication {
         if (e.message.includes("aborted")) {
             errorMess = `Time out: no response from ${this._SERVER_URL}.`;
         }
-        LOGGER.error(errorMess);
+        LOGGER.error("handleError: " + errorMess);
         this.onError(errorMess, FreErrorSeverity.NONE);
     }
 
-    async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<void> {
+    async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         // put the unit under the new name
-        await this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
+        await this.saveModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit
         await this.deleteModelUnit(modelName, { name: oldName, id: unit.freId(), type: unit.freLanguageConcept() });
+        return { errors: [] }
     }
 
     // @ts-ignore
-    async createModel(modelName: string): any {
+    async createModel(modelName: string): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.createModel ${modelName}`)
         const language = FreLanguage.getInstance().name
-        await this.putWithTimeout(`putModel`, {}, { model: modelName, language: language });
+        const version = FreLanguage.getInstance().languageVersion
+        const response = await this.saveWithTimeout(`saveModel`, {}, { model: modelName, language: language, version: version });
+        if (response.errors.length > 0) {
+            response.errors[0] = `Server cannot create model '${modelName}' (${response.errors[0]})`
+        }
+        return response
     }
 
     // @ts-ignore
-    async createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
+    async createModelUnit(modelName: string, unit: FreModelUnit): Promise<VoidServerResponse> {
         LOGGER.log(`ServerCommunication.createModelUnit ${modelName}::${unit.name}`)
-        await this.putModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
+        const response = await this.saveModelUnit(modelName, { id: unit.freId(), name: unit.name, type: unit.freLanguageConcept() }, unit)
+        if (response.errors.length > 0) {
+            response.errors[0] = `Server cannot create model unit'${unit.name}' (${response.errors[0]})`
+        }
+        return response
     }
 }

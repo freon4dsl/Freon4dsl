@@ -1,7 +1,9 @@
-import { ClientResponse, ListPartitionsResponse, RepositoryClient } from "@lionweb/repository-client";
-import { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
+import { RepositoryClient } from "@lionweb/repository-client";
+import type { ClientResponse, ListPartitionsResponse } from "@lionweb/repository-client";
+import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
-import { createLionWebJsonNode, FreLionwebSerializer, FreSerializer } from "../index.js";
+import { createLionWebJsonNode, FreLionwebSerializer, type ServerResponse, type VoidServerResponse } from "../index.js"
+import type { FreSerializer } from "../index.js";
 import { FreErrorSeverity } from "../../validator/index.js";
 import type { IServerCommunication, FreUnitIdentifier } from "./IServerCommunication.js";
 import { collectUsedLanguages } from "./UsedLanguages.js";
@@ -36,12 +38,15 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
 
     // TODO fix callback
     // @ts-ignore
-    async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<string[]> {
+    async generateIds(quantity: number, callback: (strings: string[]) => void): Promise<ServerResponse<string[]>> {
         const ids = await this.client.bulk.ids(quantity);
-        return ids.body.ids;
+        return {
+            result: ids.body.ids,
+            errors: []
+        };
     }
 
-    async createModelUnit(modelName: string, unit: FreModelUnit): Promise<void> {
+    async createModelUnit(modelName: string, unit: FreModelUnit): Promise<VoidServerResponse> {
         const jsonUnit = this.lionweb_serial.convertToJSON(unit); // as LionWebJsonNode[];
         // extract the root only to create a partition in the repository
         const rootNode = createLionWebJsonNode();
@@ -62,6 +67,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         this.client.repository = modelName;
         const requestResult = await this.client.bulk.store(output);
         LOGGER.log("CREATE MODEL UNIT " + JSON.stringify(requestResult));
+        return { errors: [] }
     }
 
     /**
@@ -71,8 +77,8 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param unitIdentifier
      * @param unit
      */
-    async putModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNamedNode) {
-        LOGGER.log(`LionWebRepositoryCommunication.putModelUnit ${modelName}/${unitIdentifier.name}`);
+    async saveModelUnit(modelName: string, unitIdentifier: FreUnitIdentifier, unit: FreNamedNode): Promise<VoidServerResponse> {
+        LOGGER.log(`LionWebRepositoryCommunication.saveModelUnit ${modelName}/${unitIdentifier.name}`);
         if (
             !!unitIdentifier.name &&
             unitIdentifier.name.length > 0 &&
@@ -100,11 +106,13 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
                 FreErrorSeverity.NONE,
             );
         }
+        return { errors: [] }
     }
 
-    async createModel(modelName: string): Promise<any> {
+    async createModel(modelName: string): Promise<VoidServerResponse> {
         await this.client.dbAdmin.createRepository(modelName, false);
         this.client.repository = modelName;
+        return { errors: [] }
     }
 
     /**
@@ -112,36 +120,44 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param modelName
      * @param unit
      */
-    async deleteModelUnit(modelName: string, unit: FreUnitIdentifier) {
+    async deleteModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<VoidServerResponse> {
         LOGGER.log(`LionWebRepositoryCommunication.deleteModelUnit ${modelName}/${unit.name}`);
         if (!!unit.name && unit.name.length > 0) {
             this.client.repository = modelName;
             await this.client.bulk.deletePartitions([unit.id]);
         }
+        return { errors: [] }
     }
 
     /**
      * Deletes the complete model named 'modelName'.
      * @param modelName
      */
-    async deleteModel(modelName: string) {
+    async deleteModel(modelName: string): Promise<VoidServerResponse> {
         LOGGER.log(`LionWebRepositoryCommunication.deleteModel ${modelName}`);
         if (!!modelName && modelName.length > 0) {
             await this.client.dbAdmin.deleteRepository(modelName);
         }
+        return { errors: [] }
     }
 
     /**
      * Reads the list of models that are available on the server and calls 'modelListCallback'.
      */
-    async loadModelList(): Promise<string[]> {
+    async loadModelList(): Promise<ServerResponse<string[]>> {
         LOGGER.log(`loadModelList`);
         const repos = await this.client.dbAdmin.listRepositories();
         const res = repos.body.repositoryNames;
         if (!!res) {
-            return res;
+            return {
+                result: res,
+                errors: []
+            };
         } else {
-            return [];
+            return { 
+                result: null,
+                errors: []
+            };
         }
     }
 
@@ -149,13 +165,17 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * Reads the list of units in model 'modelName' that are available on the server and calls 'modelListCallback'.
      * @param modelName
      */
-    async loadUnitList(modelName: string): Promise<FreUnitIdentifier[]> {
+    async loadUnitList(modelName: string): Promise<ServerResponse<FreUnitIdentifier[]>> {
         LOGGER.log(`loadUnitList`);
         this.client.repository = modelName;
         let modelUnits: ClientResponse<ListPartitionsResponse> = await this.client.bulk.listPartitions();
-        return modelUnits.body.chunk.nodes.map((n) => {
+        const unitIds =  modelUnits.body.chunk.nodes.map((n) => {
             return { name: "name " + n.id, id: n.id, type: FreLanguage.getInstance().classifierByKey(n.classifier.key).typeName };
         });
+        return {
+            result: unitIds,
+            errors: []
+        }
     }
 
     /**
@@ -165,20 +185,22 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
      * @param unit
      * @return the loaded in memory modelunit
      */
-    async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<FreNode> {
+    async loadModelUnit(modelName: string, unit: FreUnitIdentifier): Promise<ServerResponse<FreNode>> {
         LOGGER.log(`loadModelUnit ${unit.name}`);
         this.client.repository = modelName;
         if (!!unit.name && unit.name.length > 0) {
             const res = await this.client.bulk.retrieve([unit.id]);
             if (!!res) {
                 try {
-                    console.log(JSON.stringify(res, null, 2));
+                    LOGGER.log(JSON.stringify(res, null, 2));
                     let unit = this.lionweb_serial.toTypeScriptInstance(res.body.chunk);
-                    return unit as FreNode;
+                    return {
+                        result: unit as FreNode,
+                        errors: []
+                    }
                 } catch (e) {
-                    LOGGER.error("loadModelUnit, " + e.message);
+                    LOGGER.error("loadModelUnit, " + e.message + e.stack);
                     this.onError(e.message, FreErrorSeverity.NONE);
-                    console.log(e.stack);
                 }
             }
         }
@@ -196,12 +218,13 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
         this.onError(errorMess, FreErrorSeverity.NONE);
     }
 
-    async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode) {
+    async renameModelUnit(modelName: string, oldName: string, newName: string, unit: FreNamedNode): Promise<VoidServerResponse> {
         LOGGER.log(`renameModelUnit ${modelName}/${oldName} to ${modelName}/${newName}`);
         this.client.repository = modelName;
         // put the unit and its interface under the new name
-        await this.putModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
+        await this.saveModelUnit(modelName, { name: newName, id: unit.freId(), type: unit.freLanguageConcept() }, unit);
         // remove the old unit and interface
         await this.deleteModelUnit(modelName, { name: unit.name, id: unit.freId(), type: unit.freLanguageConcept() });
+        return { errors: [] }
     }
 }

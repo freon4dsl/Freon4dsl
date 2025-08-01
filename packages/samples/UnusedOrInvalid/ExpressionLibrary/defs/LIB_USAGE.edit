@@ -1,9 +1,0 @@
-editor default
-
-LibUnit {
-    [
-    ${self.name}
-        expressions:
-        ${self.exps vertical terminator[;]}
-    ]
-}

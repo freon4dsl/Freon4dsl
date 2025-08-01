@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "rm -rf node_modules/",
     "build": "echo No build for webapp-starter",
+    "build-samples": "npm run build",
     "build-app": "rollup -c",
     "build-dev": "cd ../../packages/samples/InsuranceModel && npm run build",
     "dev": "cross-env NODE_PORT=8001 rollup -c -w",
@@ -32,7 +33,7 @@
     "smui-theme": "^7.0.0",
     "svelte-check": "^3.8.0",
     "svelte-preprocess": "^5.1.4",
-    "typescript": "5.4.5"
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "@freon4dsl/core": "1.1.0-beta.3",

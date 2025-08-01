@@ -19,7 +19,7 @@ import {
     FreMetaEnumValue,
 } from "../metalanguage/index.js";
 import { ParseLocationUtil } from "../../utils/basic-dependencies/index.js";
-import { ParseLocation } from '../../utils/no-dependencies/index.js';
+import { type ParseLocation } from '../../utils/no-dependencies/index.js';
 
 // Functions used to create instances of the language classes from the parsed data objects.
 let currentFileName: string = "SOME_FILENAME";
@@ -101,7 +101,7 @@ function splitProperties(propList: FreMetaProperty[], result: FreMetaClassifier)
 }
 
 export function createModel(data: Partial<FreMetaModelDescription>): FreMetaModelDescription {
-    // console.log("createModel " + data.name);
+    console.log("createModel " + data?.name);
     const result = new FreMetaModelDescription();
     if (!!data.name) {
         result.name = data.name;
@@ -110,6 +110,10 @@ export function createModel(data: Partial<FreMetaModelDescription>): FreMetaMode
     }
     if (!!data.properties) {
         splitProperties(data.properties, result);
+    }
+    if (!!data.version) {
+        console.log(`createModel version ${data.version}`)
+        result.version = data.version;
     }
     if (!!data.location) {
         result.location = data.location;

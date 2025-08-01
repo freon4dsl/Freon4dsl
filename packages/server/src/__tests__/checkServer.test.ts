@@ -44,15 +44,15 @@ describe("Freon Model Server", () => {
 
     test(" create a model with a non-identifier name, list it and delete it", async () => {
         const weirdModelName = "631(&$][:) 12!"
-        const response1 = await serv.put(`/putModel?model=${encodeURIComponent(`${weirdModelName}`)}&language=MyLang`);
+        const response1 = await serv.put(`/saveModel?model=${encodeURIComponent(`${weirdModelName}`)}&language=MyLang`);
         expect(response1.status).toBe(201);
-        
+
         const response2 = await serv.get("/getModelList");
         expect(response2.status).toBe(201);
         console.log(JSON.stringify(response2.text))
         expect(response2.text).toContain("__TEST__");
         expect(response2.text).toContain("631(&$][:) 12!");
-        
+
         const response3 = await serv.get(`/deleteModel?model=${encodeURIComponent(`${weirdModelName}`)}`);
         expect(response3.status).toBe(201);
 
@@ -79,7 +79,7 @@ describe("Freon Model Server", () => {
 
     test(" is able to save a unit", async () => {
         const unitName: string = "NIEUW";
-        const response1 = await serv.put(`/putModelUnit?model=${modelName}&unit=${unitName}`);
+        const response1 = await serv.put(`/saveModelUnit?model=${modelName}&unit=${unitName}`);
         expect(response1.status).toBe(201);
         const response3 = await serv.get(`/getModelUnit?model=${modelName}&unit=${unitName}`);
         expect(response3.status).toBe(201);
@@ -90,7 +90,7 @@ describe("Freon Model Server", () => {
     test(" is able to delete a unit", async () => {
         const unitName: string = "NIEUW";
         // create a new unit
-        await serv.put(`/putModelUnit?model=${modelName}&unit=${unitName}`);
+        await serv.put(`/saveModelUnit?model=${modelName}&unit=${unitName}`);
         // and delete it
         const response1 = await serv.get(`/deleteModelUnit?model=${modelName}&unit=${unitName}`);
         expect(response1.status).toBe(201);
@@ -103,7 +103,7 @@ describe("Freon Model Server", () => {
         const modelName2: string = "toBeDeleted";
         const unitName: string = "NIEUW";
         // create a new model and unit
-        await serv.put(`/putModelUnit?model=${modelName2}&unit=${unitName}`);
+        await serv.put(`/saveModelUnit?model=${modelName2}&unit=${unitName}`);
         // and delete it
         const response1 = await serv.get(`/deleteModel?model=${modelName2}`);
         expect(response1.status).toBe(201);

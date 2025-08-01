@@ -27,7 +27,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(ProductTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 
@@ -40,7 +40,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PitExpTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 
@@ -53,7 +53,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PitExpTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 
@@ -66,7 +66,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PitExpTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 
@@ -79,7 +79,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PitExpTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 
@@ -92,7 +92,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PitExpTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 
@@ -105,7 +105,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PartsInitiatorTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 
@@ -118,7 +118,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PartsInitiatorTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 
@@ -131,7 +131,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PrimsTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 
@@ -145,7 +145,7 @@ describe("Parser on extra elements", () => {
         expect(unit1).not.toBe(undefined);
         expect(unit1).toBeInstanceOf(PartsInitiatorTest);
         // console.log(writer.writeToString(unit1));
-        // ServerCommunication.getInstance().putModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
+        // ServerCommunication.getInstance().saveModelUnit(model.name, { name: unit1.name, id: unit1.freId() }, unit1);
         expect(unit1).toMatchSnapshot();
     });
 });

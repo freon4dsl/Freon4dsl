@@ -1,10 +1,12 @@
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreLanguage } from "../../language/index.js";
 import { FreUtils } from "../../util/index.js";
-import { Box } from "../boxes/index.js";
+import type { Box } from "../boxes/index.js";
 import { FreEditor } from "../FreEditor.js";
-import { ACTION_LOGGER, EMPTY_POST_ACTION, FreAction, FrePostAction } from "./FreAction.js";
-import { FreTriggerUse, isString, triggerTypeToString } from "./FreTriggers.js";
+import { ACTION_LOGGER, EMPTY_POST_ACTION, FreAction } from "./FreAction.js";
+import type { FrePostAction } from "./FreAction.js";
+import type { FreTriggerUse } from "./FreTriggers.js";
+import { isString, triggerTypeToString } from "./FreTriggers.js";
 
 // import { FreLogger } from "../../logging";
 // const LOGGER = new FreLogger("FreCreateSiblingAction");

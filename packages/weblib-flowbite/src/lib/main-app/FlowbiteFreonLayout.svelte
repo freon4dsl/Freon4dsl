@@ -4,8 +4,8 @@
 		FooterLinkGroup,
 		Drawer,
 		Footer,
-		FooterCopyright, CloseButton
-	} from 'flowbite-svelte';
+		FooterCopyright, CloseButton, Button
+	} from "flowbite-svelte"
 	import { onMount } from 'svelte';
 	import { sineIn } from 'svelte/easing';
 	import { WebappConfigurator } from '$lib/language';
@@ -67,16 +67,15 @@
 	});
 
 	/**
-	 * This function shows a dialog before the browser window is reloaded or closed, asking the user for confirmation
-	 * in the case that there are unsaved changes in the model.
-	 * @param event
+	 * This function saves the model before the browser or browser tab closes.
+	 *
+	 * Note: it is difficult to show a dialog to ask the user for saving confirmation,
+	 * because this has been blocked due to wacky pages asking if you "want to leave,
+	 * but for sure? Are you 100% sure?" etc.
 	 */
-	function onBeforeUnload(event: BeforeUnloadEvent) {
-		// console.log(`beforeUnload: ${FreUndoManager.getInstance().nextUndoAsText()}`);
-		// todo make this test independent of the actual string
-		if (FreUndoManager.getInstance().nextUndoAsText() !== 'nothing left to undo') {
-			event.preventDefault(); // shows the browser's confirmation dialog according to the specifications
-			event.returnValue = ''; // older browsers may not support this method and a legacy method is used in which the event handler must return a string
+	async function onBeforeUnload() {
+		if (WebappConfigurator.getInstance().hasChanges()) {
+			await WebappConfigurator.getInstance().saveModel();
 		}
 	}
 
@@ -97,13 +96,13 @@
 					flex flex-wrap items-center
 					{editorInfo.currentOpenTab === index ? active_tab_style : normal_tab_style}">
 					<button
-						class:active={editorInfo.currentOpenTab === index}
+						tabindex={-1} class:active={editorInfo.currentOpenTab === index}
 						onclick={() => openTab(index)}
 					>
 						{unitInfo.name}
 					</button>
 					<CloseButton size="sm" class="text-light-base-900 dark:text-dark-base-50 pl-1"
-							onclick={(e: MouseEvent) => {
+								 tabindex={-1} onclick={(e: MouseEvent) => {
 								e.stopPropagation(); // Prevent tab change on close
 								closeTab(index);
 							}}
@@ -123,6 +122,7 @@
 	>
 		<div class="flex items-center justify-between">
 			<FooterCopyright
+				tabindex={-1}
 				href="/"
 				by="Freon contributors"
 				year={2025}
@@ -136,7 +136,7 @@
 		<FooterLinkGroup
 			class="flex flex-wrap items-center mt-3 text-xs sm:mt-0 text-light-base-700 dark:text-dark-base-400"
 		>
-			<FooterLink href="https://freon4dsl.dev" class="inline-flex items-center "
+			<FooterLink tabindex={-1} href="https://freon4dsl.dev" class="inline-flex items-center "
 			>freon4dsl.dev
 			</FooterLink
 			>
@@ -148,6 +148,7 @@
 <!-- Normally hidden elements-->
 
 <Drawer
+	tabindex={-1}
 	placement="left"
 	{transitionParams}
 	bind:hidden={drawerHidden.value}

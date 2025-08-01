@@ -6,10 +6,12 @@
      *  such that the complete menu stays within the boundaries of the editor viewport. The state of the editor
      *  viewport is stored in the EditorViewportStore (by FreonComponent).
      */
-    import {calculatePos, clickOutsideConditional, type MainComponentProps} from '$lib';
+    import { calculatePos } from './svelte-utils/CommonFunctions.js';
+    import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
+    import { type MainComponentProps } from './svelte-utils/FreComponentProps.js';
     import { tick } from 'svelte';
-    import {FreEditor, MenuItem} from '@freon4dsl/core';
-    import { contextMenuVisible } from '$lib/components/stores/AllStores.svelte.js';
+    import { type ClientRectangle, MenuItem } from '@freon4dsl/core';
+    import { contextMenuVisible, viewport } from './stores/AllStores.svelte.js';
 
     // items for the context menu
     let { editor }: MainComponentProps = $props();
@@ -20,18 +22,21 @@
     let submenuItems: MenuItem[] = $state([]);
     let elementIndex: number; // the index of the element in a list to which this menu is coupled
 
+    // browser/window dimension (height and width)
+    let innerWidth = $state(0);
+    let innerHeight = $state(0);
     // dimension (height and width) of context menu
-    let menuHeight = 0,
-        menuWidth = 0;
+    let menuHeight = $state(0);
+    let menuWidth = $state(0);
     // position of context menu
-    let top = $state(0),
-        left = $state(0);
+    let top = $state(0);
+    let left = $state(0);
     // dimension (height and width) of sub menu
-    let submenuHeight = 0,
-        submenuWidth = 0;
+    let submenuHeight = $state(0);
+    let submenuWidth = $state(0);
     // position of sub menu
-    let topSub = $state(0),
-        leftSub = $state(0);
+    let topSub = $state(0);
+    let leftSub = $state(0);
     // height of items in menu and sub menu
     let itemHeight = $state(40);
     let submenuOpen = $state(false);
@@ -52,12 +57,27 @@
         // wait for the menu to be rendered, because we need its sizes for the positioning
         await tick();
         // get the position of the mouse relative to the editor view
-        const rect = editor.getClientRectangle();
-        let posX: number = event.pageX - rect.x;
-        let posY: number = event.pageY - rect.y;
-        // calculate the right position of the context menu
-        left = calculatePos(rect.width, menuWidth, posX);
-        top = calculatePos(rect.height, menuHeight, posY);
+        getContextMenuPosition(event);
+    }
+
+    /** This function is used to get the position of the context menu. */
+    function getContextMenuPosition(event: MouseEvent) {
+        const rect: ClientRectangle = editor.getClientRectangle();
+        // Because there can be a navigation bar or anything else above the editor element,
+        // and we have to position the context menu in the editor element,
+        // we use this calculation instead of event.clientX and event.clientY.
+        top = event.pageY - rect.y;
+        left = event.pageX - rect.x;
+        // Determine whether the menu would be shown within the viewport.
+        // Use the event.clientXY for this because this is the distance between the mouse click and the top/left side
+        // of the window. The height/width of the window must be able to contain the menu at this position.
+        if (innerHeight < event.clientY + menuHeight)
+            top = top - menuHeight;
+        if (innerWidth < event.clientX + menuWidth)
+            left = left - menuWidth;
+        LOGGER.log(`ContextMenu posX: ${left}, posY: ${top}, event.pageX: ${event.pageX}, event.pageY: ${event.pageY},
+event.clientX: ${event.clientX}, event.clientY: ${event.clientY}, innerwidth: ${innerWidth}, innerHeight: ${innerHeight},
+editor: ${rect.x} ${rect.y} ${rect.height} ${rect.width}`);
     }
 
     /**
@@ -79,10 +99,9 @@
         // (itemHeight px) lower than the main menu, 20 px left to the end of the item
         topSub = top + itemHeight + itemIndex * (itemHeight + 2 + 3 + 4); // add 2 for gap, 3 for margin, 4 for padding
         leftSub = left + submenuWidth - 20;
-        // calculate the right position of the sub menu based on the size of the editor view
-        const rect = editor.getClientRectangle();
-        topSub = calculatePos(rect.width, submenuWidth, topSub);
-        leftSub = calculatePos(rect.height, submenuHeight, leftSub);
+        // calculate the right position of the sub menu based on the size of the viewport
+        topSub = calculatePos(innerWidth, submenuWidth, topSub);
+        leftSub = calculatePos(innerHeight, submenuHeight, leftSub);
     }
 
     /**
@@ -118,6 +137,8 @@
         return false;
     }
 </script>
+
+<svelte:window bind:innerWidth bind:innerHeight />
 
 <div use:clickOutsideConditional={{ enabled: contextMenuVisible.value }} onclick_outside={hide}>
     {#if contextMenuVisible.value}

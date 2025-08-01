@@ -1,0 +1,8 @@
+editor primReplacers
+
+conceptWithPrims {[
+    PRIMS name   ${self.name} /* Normal box */
+          bool   ${self.booleanProp replace=booleanReplacer} /* Replacer */
+          number ${self.numberProp  replace=numberReplacer} /* Replacer */
+          string ${self.stringProp  replace=stringReplacer} /* Replacer */
+]}

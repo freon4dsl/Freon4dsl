@@ -1,6 +1,6 @@
-import { type Box, FreEditor, type GridBox, MenuItem, type SelectOption } from '@freon4dsl/core';
-import type { CaretDetails } from '$lib/components/svelte-utils/CaretDetails';
-import type { TableDetails } from '$lib/components/svelte-utils/TableDetails';
+import { type Box, FreEditor, type GridBox, type SelectOption } from '@freon4dsl/core';
+import type { CaretDetails } from './CaretDetails';
+import type { TableDetails } from './TableDetails';
 
 /**
  * Properties for the FreonComponent
@@ -14,14 +14,6 @@ export interface MainComponentProps {
  */
 export interface FreComponentProps<T extends Box> extends MainComponentProps {
     box: T;
-}
-
-/**
- * Properties for a GridComponent
- */
-export interface GridProps {
-    editor: FreEditor;
-    box: GridBox;
 }
 
 /**

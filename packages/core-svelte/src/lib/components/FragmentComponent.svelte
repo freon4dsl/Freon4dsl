@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { FRAGMENT_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { FRAGMENT_LOGGER } from './ComponentLoggers.js';
     import RenderComponent from './RenderComponent.svelte';
-    import { Box, FragmentBox, isNullOrUndefined } from '@freon4dsl/core';
-    import { componentId } from '$lib/components/svelte-utils/index.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { Box, notNullOrUndefined } from '@freon4dsl/core';
+    import type { FragmentBox } from '@freon4dsl/core';
+    import { componentId } from './svelte-utils/index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     let { editor, box }: FreComponentProps<FragmentBox> = $props();
 
@@ -14,7 +15,7 @@
 
     const refresh = (why?: string): void => {
         LOGGER.log('REFRESH FragmentComponent (' + why + ') ' + box?.node?.freLanguageConcept());
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             id = componentId(box);
             childBox = box.childBox;
             cssClass = box.cssClass;
@@ -25,7 +26,7 @@
 
     async function setFocus(): Promise<void> {
         LOGGER.log('FragmentComponent.setFocus for box ' + box.role);
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             box.childBox.setFocus();
         }
     }
@@ -39,7 +40,7 @@
     });
 </script>
 
-{#if !isNullOrUndefined(childBox)}
+{#if notNullOrUndefined(childBox)}
     <span class="fragment-component {cssClass}" {id}>
         <RenderComponent box={childBox} {editor} />
     </span>

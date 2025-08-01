@@ -4,10 +4,7 @@
  * @param key
  * @param value
  */
-function runtimeReplacer(key: string, value: any) {
-    if (key === "declaration") {
-        return "REF-" + value?.declaration?.name;
-    }
+function runtimeReplacer(value: any) {
     if (value instanceof Map) {
         return Array.from(value.entries());
     }
@@ -27,7 +24,7 @@ const getCircularReplacer = () => {
             }
             seen.add(value);
         }
-        return runtimeReplacer(key, value);
+        return runtimeReplacer(value);
     };
 };
 
@@ -36,6 +33,6 @@ const getCircularReplacer = () => {
  * @param object
  * @param indent
  */
-export function jsonAsString(object: any, indent?: number) {
+export function jsonAsString(object: any, indent?: number): string {
     return JSON.stringify(object, getCircularReplacer(), indent);
 }

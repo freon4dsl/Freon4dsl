@@ -1,5 +1,6 @@
 <script lang="ts">
-    import {Button, Modal, Label} from 'flowbite-svelte';
+    import Dialog from "$lib/dialogs/Dialog.svelte"
+    import {Button, Label} from 'flowbite-svelte';
     import {dialogs} from '$lib/stores/WebappStores.svelte';
     import {editorInfo} from "$lib";
     import {WebappConfigurator} from "$lib/language";
@@ -17,7 +18,7 @@
 
 </script>
 
-<Modal bind:open={dialogs.deleteUnitDialogVisible} autoclose={false} class="w-full bg-light-base-100 dark:bg-dark-base-800">
+<Dialog open={dialogs.deleteUnitDialogVisible}>
     <div class="flex flex-col space-y-6" role="dialog">
         <h3 class="mb-4 text-xl font-medium text-light-base-900 dark:text-dark-base-50">Delete unit</h3>
         <div class="flex flex-col space-y-6 p-4 bg-light-base-700 dark-bg-light-base-300" role="dialog">
@@ -38,4 +39,4 @@
             Delete
         </Button>
     </div>
-</Modal>
+</Dialog>

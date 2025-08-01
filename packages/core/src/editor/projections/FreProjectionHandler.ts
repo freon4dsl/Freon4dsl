@@ -1,12 +1,13 @@
 import { FreLogger } from "../../logging/index.js";
-import { Box, BoxFactory, ElementBox } from "../boxes/index.js";
+import type { Box, ElementBox } from "../boxes/index.js";
+import { BoxFactory } from "../boxes/index.js";
 import { isNullOrUndefined } from "../../util/index.js";
-import { FreNode } from "../../ast/index.js";
-import { FreBoxProvider } from "./FreBoxProvider.js";
-import { FreProjection } from "./FreProjection.js";
+import type { FreNode } from "../../ast/index.js";
+import type { FreBoxProvider } from "./FreBoxProvider.js";
+import type { FreProjection } from "./FreProjection.js";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { ArrayUtil } from "../../util/ArrayUtil.js";
-import { FreTableHeaderInfo } from "./FreTableHeaderInfo.js";
+import type { FreTableHeaderInfo } from "./FreTableHeaderInfo.js";
 import { FreHeaderProvider } from "./FreHeaderProvider.js";
 
 const LOGGER = new FreLogger("FreProjectionHandler");
@@ -202,6 +203,7 @@ export class FreProjectionHandler {
     addCustomProjection(p: FreProjection) {
         ArrayUtil.addIfNotPresent(this._customProjections, p);
         this.addProjection(p.name);
+        p.handler = this;
     }
 
     /**
@@ -212,15 +214,15 @@ export class FreProjectionHandler {
      */
     executeCustomProjection(element: FreNode, projectionName: string): Box {
         let BOX: Box = null;
-        let customFuction: (node: FreNode) => Box = null;
+        let customFunction: (node: FreNode) => Box = null;
         const customToUse = this.customProjections.find((cp) => cp.name === projectionName);
         if (!!customToUse) {
             // bind(customToUse) binds the projection 'customToUse' to the 'this' variable, for use within the custom function
-            customFuction = customToUse.nodeTypeToBoxMethod.get(element.freLanguageConcept())?.bind(customToUse);
+            customFunction = customToUse.nodeTypeToBoxMethod.get(element.freLanguageConcept())?.bind(customToUse);
         }
 
-        if (!!customFuction) {
-            BOX = customFuction(element);
+        if (!!customFunction) {
+            BOX = customFunction(element);
         }
         return BOX;
     }

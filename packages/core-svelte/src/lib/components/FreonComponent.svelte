@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { FREON_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { FREON_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a complete projection, by displaying the root box of
@@ -15,7 +15,7 @@
         DELETE,
         ENTER,
         ARROW_RIGHT,
-        isNullOrUndefined,
+        notNullOrUndefined,
         isTableRowBox,
         isElementBox,
         AstActionExecutor,
@@ -24,14 +24,14 @@
     import RenderComponent from './RenderComponent.svelte';
     import ContextMenu from './ContextMenu.svelte';
     import { tick } from 'svelte';
-    import { componentId, dummyBox } from '$lib/components/svelte-utils/index.js';
+    import { componentId, dummyBox } from './svelte-utils/index.js';
     import {
         contextMenu,
         contextMenuVisible,
         selectedBoxes,
         shouldBeHandledByBrowser
-    } from '$lib/components/stores/AllStores.svelte.js';
-    import type { MainComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    } from './stores/AllStores.svelte.js';
+    import type { MainComponentProps } from './svelte-utils/FreComponentProps.js';
 
     let LOGGER = FREON_LOGGER;
 
@@ -230,9 +230,9 @@
     // function setViewportSizes(elem?: Element) {
     //     // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
     //     // A: I have no idea why.
-    //     if (!isNullOrUndefined(elem)) {
+    //     if (notNullOrUndefined(elem)) {
     //         let rect = elem.getBoundingClientRect();
-    //         if (!isNullOrUndefined(elem.parentElement)) {
+    //         if (notNullOrUndefined(elem.parentElement)) {
     //             let parentRect = elem.parentElement.getBoundingClientRect();
     //             viewport.value.setSizes(rect.height, rect.width, parentRect.top, parentRect.left);
     //         } else {
@@ -279,7 +279,7 @@
                 ' editor selectedBox is ' +
                 editor?.selectedBox?.kind
         );
-        if (!isNullOrUndefined(editor.selectedBox)) {
+        if (notNullOrUndefined(editor.selectedBox)) {
             //&& !$selectedBoxes.includes(editor.selectedBox)) { // selection is no longer in sync with editor
             await tick();
             selectedBoxes.value = getSelectableChildren(editor.selectedBox);
@@ -311,7 +311,7 @@
                 ' ==================> FreonComponent with rootbox ' +
                 rootBox?.id +
                 ' unit ' +
-                (!isNullOrUndefined(rootBox?.node)
+                (notNullOrUndefined(rootBox?.node)
                     ? rootBox.node['name' as keyof FreNode]
                     : 'undefined')
         );

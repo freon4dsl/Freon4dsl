@@ -1,7 +1,8 @@
 import {FreStructureDef, FreValidatorDef, FreScoperDef, FreTyperDef, FreLanguageX} from "../language/gen";
-import { FileUtil, FreError } from "@freon4dsl/core"
-import {FreLanguageXEnvironment} from "../config/gen/FreLanguageXEnvironment.js";
-import {describe, test, expect} from "vitest";
+import { FreError } from "@freon4dsl/core"
+import { FreLanguageXEnvironment } from "../config/gen/FreLanguageXEnvironment.js";
+import { describe, test, expect } from "vitest";
+import { FileUtil } from '@freon4dsl/test-helpers';
 
 describe("Fre Language Parser", () => {
     const reader = FreLanguageXEnvironment.getInstance().reader;

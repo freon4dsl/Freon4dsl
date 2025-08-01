@@ -7,9 +7,9 @@ import {
     TableCellBox,
     TableRowBox,
 } from "../boxes/index.js";
-import { Box, FreBoxProvider, FreProjectionHandler, GridOrientation } from "../index.js";
-import { FreNode } from "../../ast/index.js";
-import { isNullOrUndefined, FreUtils } from "../../util/index.js";
+import type { Box, FreBoxProvider, FreProjectionHandler, GridOrientation } from "../index.js";
+import type { FreNode } from "../../ast/index.js";
+import { isNullOrUndefined, FreUtils, notNullOrUndefined } from '../../util/index.js';
 import { FreLanguage } from "../../language/index.js";
 import { RoleProvider } from "./RoleProvider.js";
 import { FreHeaderProvider } from "../projections/FreHeaderProvider.js";
@@ -120,7 +120,7 @@ export class TableUtil {
         const children: Box[] = [];
         let hasHeaders: boolean = false;
         let nrOfColumns: number = 0;
-        if (!isNullOrUndefined(list) && list.length > 0) {
+        if (notNullOrUndefined(list) && list.length > 0) {
             // Add the headers, an empty TableRowBox if there are none.
             const headerProvider: FreHeaderProvider = boxProviderCache.getHeaderProvider(
                 node,

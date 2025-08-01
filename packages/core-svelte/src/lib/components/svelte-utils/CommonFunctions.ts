@@ -7,14 +7,14 @@ import {
     toFreKey,
     FreAction,
     ElementBox,
-    isNullOrUndefined,
+    notNullOrUndefined,
     FreLanguage,
     ListElementInfo,
     type FreNodeReference,
     type FreNamedNode
 } from '@freon4dsl/core';
-import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
-import {draggedElem, draggedFrom} from "$lib/components/stores/AllStores.svelte";
+import { SimpleElement } from '../../__test__/test-environment/simple-models/SimpleElement.js';
+import {draggedElem, draggedFrom} from "../stores/AllStores.svelte";
 
 // const LOGGER = new FreLogger('CommonFunctions').mute();
 
@@ -77,14 +77,14 @@ export function executeCustomKeyboardShortCut(
         AST.change(() => {
             // todo KeyboardEvent does not have an "action" prop, so what is happening here?
             const action = event['action' as keyof KeyboardEvent];
-            if (!isNullOrUndefined(action)) {
+            if (notNullOrUndefined(action)) {
                 // @ts-expect-error if present, action is callable
                 action();
             }
             postAction = cmd.execute(box, toFreKey(event), editor, index);
         });
         // @ts-expect-error this causes no error, because of the if-stat check
-        if (!isNullOrUndefined(postAction)) {
+        if (notNullOrUndefined(postAction)) {
             postAction();
         }
         // todo this method will stop the event from propagating, but does not prevent default!! Should it do so?

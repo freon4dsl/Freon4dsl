@@ -16,10 +16,10 @@
     --color-light-freon-350: #A0A0A0; /* Soft, clean light gray */
     --color-light-freon-300: #C0C0C0; /* Pale, elegant gray */
     --color-light-freon-250: #E0E0E0; /* Near-white subtle gray */
-    --color-dark-freon--200: #FAEBD7; /* Antique White */
-    --color-dark-freon--150: #FFFAF0; /* Floral White */
-    --color-dark-freon--100: #F4F4F4; /* Light Smoke */
-    --color-dark-freon--50: #FFFFFF;  /* Pure White */
+    --color-light-freon-200: #FAEBD7; /* Antique White */
+    --color-light-freon-150: #FFFAF0; /* Floral White */
+    --color-light-freon-100: #F4F4F4; /* Light Smoke */
+    --color-light-freon-50: #FFFFFF;  /* Pure White */
 
     --color-light-freon-accent-error: #FF4C4C;
     --color-light-freon-accent-editable: #FFD0B3;

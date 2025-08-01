@@ -66,9 +66,11 @@
         <!--  todo improve styling: rounded top corners on first element only -->
         <div onclick={() => setHidden(index)} role="presentation">
         <AccordionItem bind:open={panelOpen[index]} >
-            <span slot="header" class="w-[85vw] text-black dark:text-white" >
+            {#snippet header()}
+            <span class="w-[85vw] text-black dark:text-white" >
                 {childBox.node.freLanguageConcept()} <span class="text-primary-700 dark:text-primary-100">{headerContent[index]}</span>
             </span>
+                {/snippet}
             <RenderComponent box={childBox} editor={editor} />
         </AccordionItem>
         </div>

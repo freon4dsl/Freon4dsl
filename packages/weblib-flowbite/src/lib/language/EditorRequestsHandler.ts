@@ -4,8 +4,15 @@ import {
     FreLogger,
     FreSearcher,
     type FreEnvironment,
-    AstActionExecutor, type FreModelUnit, isRtError, isNullOrUndefined, notNullOrUndefined, FreDelta, FreEditorUtil
-} from "@freon4dsl/core"
+    AstActionExecutor,
+    type FreModelUnit,
+    isRtError,
+    isNullOrUndefined,
+    notNullOrUndefined,
+    FreErrorSeverity,
+    FreEditorUtil,
+    FreDelta
+} from '@freon4dsl/core';
 import type { FreNode, TraceNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
 import {
@@ -18,7 +25,7 @@ import {
     searchTab
 } from "../stores/InfoPanelStore.svelte"
 import { WebappConfigurator } from "../language/index.js";
-import { editorInfo, infoPanelShown } from "../stores/index.js"
+import { editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from "../stores/index.js"
 import { TreeNodeData } from "../tree/TreeNodeData.js"
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
@@ -58,8 +65,16 @@ export class EditorRequestsHandler {
         // this.validate();
     }
 
+    saveModel = async (): Promise<void> => {
+        await WebappConfigurator.getInstance().saveModel();
+        if (userMessageOpen.value) {
+            return
+        }
+        setUserMessage(`Model '${editorInfo.modelName}' saved.`, FreErrorSeverity.Info);
+    }
+
     redo = (): void => {
-        const delta = AstActionExecutor.getInstance(this.langEnv!.editor).redo();
+        const delta: FreDelta | undefined = AstActionExecutor.getInstance(this.langEnv!.editor).redo();
         // TODO TEST
         if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
@@ -68,11 +83,13 @@ export class EditorRequestsHandler {
     }
 
     undo = (): void => {
-        const delta: FreDelta = AstActionExecutor.getInstance(this.langEnv!.editor).undo();console.log(`undo delta '${delta.toString()}'`)
+        const delta: FreDelta | undefined = AstActionExecutor.getInstance(this.langEnv!.editor).undo();
+        LOGGER.log(`undo delta '${delta?.toString()}'`)
         // TODO TEST
         if (delta !== undefined && !this.langEnv!.editor.isBoxInTree(this.langEnv!.editor.selectedBox)) {
             FreEditorUtil.selectAfterUndo(this.langEnv!.editor, delta)
         }
+        // todo do we need to warn the user if the delta is undefined?
         this.langEnv!.editor.selectionChanged()
     }
 
@@ -173,7 +190,7 @@ export class EditorRequestsHandler {
     private showSearchResults(results: FreNode[], stringToFind: string) {
         const itemsToShow: FreError[] = [];
         if (!results || results.length === 0) {
-            itemsToShow.push(new FreError("No results for " + stringToFind, null, "", ""));
+            itemsToShow.push(new FreError("No results for " + stringToFind, results[0], "", ""));
         } else {
             for (const elem of results) {
                 // todo show some part of the text string instead of the element id
@@ -186,6 +203,7 @@ export class EditorRequestsHandler {
         // console.log(`showSearchResults: ${searchResultLoading.value}, ${infoPanelShown.value}, ${searchResults.list.map(it => it.message).join("\n")}`);
     }
 
+    // todo to be added: findStructure based on a partial FreNode
     // findStructure(elemToMatch: Partial<FreNode>) {
     //     LOGGER.log("findStructure called");
     //     searchResultLoaded.value = false;

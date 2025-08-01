@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LIMITEDRADIO_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { LIMITEDRADIO_LOGGER } from './ComponentLoggers.js';
     import {
         ALT,
         ARROW_DOWN,
@@ -8,13 +8,13 @@
         ARROW_UP,
         AST,
         CONTROL,
-        isNullOrUndefined,
+        notNullOrUndefined,
         LimitedControlBox,
         SHIFT
     } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import { MdRadio } from '@material/web/all.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { MdRadio } from '@material/web/radio/radio.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
     let { editor, box }: FreComponentProps<LimitedControlBox> = $props();
@@ -46,7 +46,7 @@
      */
     async function setFocus(): Promise<void> {
         let selected = findSelectedElement();
-        if (!isNullOrUndefined(selected)) {
+        if (notNullOrUndefined(selected)) {
             selected.focus();
         }
     }
@@ -64,6 +64,8 @@
         // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh limited radio box changed ' + box?.id);
     });
 
     const onChange = (event: MouseEvent) => {

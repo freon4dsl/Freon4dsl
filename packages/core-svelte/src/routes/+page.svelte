@@ -11,7 +11,7 @@
         FreProjectionHandler,
         MenuItem,
         TextBox,
-        MultiLineTextBox
+        MultiLineTextBox, type ClientRectangle, UndefinedRectangle
     } from '@freon4dsl/core';
     import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
     import BooleanCheckboxComponent from '$lib/components/BooleanCheckboxComponent.svelte';
@@ -123,6 +123,11 @@
             console.log("element.freLanguageConcept()" + index + editor);
         })
     ];
+    // todo the context menu on the test page is still in the wrong position, must find out why
+    let contextMenuDiv: HTMLDivElement;
+    editor.getClientRectangle = (): ClientRectangle => {
+        return contextMenuDiv?.getBoundingClientRect() || UndefinedRectangle
+    }
     function showContextMenu(event: MouseEvent, index: number) {
         if (contextMenu.instance) {
             contextMenu.instance.show(event, index, contextMenuItems);
@@ -184,7 +189,8 @@
     </div>
 </div>
 
-<div class="test-area">
+<div class="test-area" bind:this={contextMenuDiv}>
+    <ContextMenu bind:this={contextMenu.instance} {editor} />
     <ul>
         <li>
             Test TextComponent: <TextComponent
@@ -255,7 +261,7 @@
             <hr class="line" />
         </li>
         <li>
-            <ContextMenu bind:this={contextMenu.instance} {editor} />
+
             <div
                 role="button"
                 tabindex={0}

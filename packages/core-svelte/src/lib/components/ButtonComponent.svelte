@@ -1,7 +1,7 @@
 <script lang="ts">
     import { ButtonBox } from '@freon4dsl/core';
-    import { BUTTON_LOGGER } from '$lib/components/ComponentLoggers.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { BUTTON_LOGGER } from './ComponentLoggers.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     let { editor, box }: FreComponentProps<ButtonBox> = $props();
 

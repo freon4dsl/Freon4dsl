@@ -272,6 +272,7 @@ export abstract class FreMetaClassifier extends FreMetaLangElement {
 
 export class FreMetaModelDescription extends FreMetaClassifier {
     isPublic: boolean = true;
+    version: string = "1"
 
     unitTypes(): FreMetaUnitDescription[] {
         let result: FreMetaUnitDescription[] = [];

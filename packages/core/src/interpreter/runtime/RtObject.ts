@@ -1,4 +1,4 @@
-import { RtBoolean } from "./RtBoolean.js";
+import type { RtBoolean } from "./RtBoolean.js";
 
 export interface IRtObject {
     get rtType(): string;

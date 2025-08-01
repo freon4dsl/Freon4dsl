@@ -11,13 +11,13 @@ export function configureLoggers() {
     // FreLogger.unmute("ActionBox")
     // FreLogger.unmute("TextComponentHelper")
     // FreLogger.unmute("TextComponent")
-    FreLogger.unmute("FreonComponent")
-    FreLogger.unmute("FreEditor")
-    FreLogger.unmute("TextDropdownComponent")
+    // FreLogger.unmute("FreonComponent")
+    // FreLogger.unmute("FreEditor")
+    // FreLogger.unmute("TextDropdownComponent")
     // FreLogger.unmute("EditorState")
     // FreLogger.unmute("InMemoryModel")
     // FreLogger.unmute("TextComponent")
     // FreLogger.unmute("ServerCommunication")
-    // // Do not show log messages contaning any of these strings
+    // // Do not show log messages containing any of these strings
     FreLogger.setFilter(["beforeUpdate", "afterUpdate", "selectedOption", "refresh", "undefined", "setting text"])
 }

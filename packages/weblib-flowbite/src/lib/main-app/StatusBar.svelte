@@ -12,15 +12,15 @@
 <span class="text-light-accent-800 dark:text-dark-accent-100 bg-light-base-50 dark:bg-dark-base-900 ">
 	<div class='text-xs ml-6'>
 		{editorInfo.modelName}
-		<ChevronRightOutline class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
+		<ChevronRightOutline tabindex={-1} class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
 		{editorInfo.currentUnit?.name ?? "<no unit>"}
-		<ChevronRightOutline class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
+		<ChevronRightOutline tabindex={-1} class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
 		box: {currentBox?.role} {currentBox?.$id}
-		<ChevronRightOutline class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
+		<ChevronRightOutline tabindex={-1} class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
 		kind: {currentBox?.kind}
-		<ChevronRightOutline class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
+		<ChevronRightOutline tabindex={-1} class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
 		elem: {currentBox?.node?.freId()} - {currentBox?.node?.freLanguageConcept()}
-		<ChevronRightOutline class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
+		<ChevronRightOutline tabindex={-1} class="dots-menu2 text-light-base-700 ms-2 inline h-6 w-6"/>
 		"{(isTextBox(currentBox) ? currentBox.getText() : "NotTextBox")}"
 	</div>
 </span>

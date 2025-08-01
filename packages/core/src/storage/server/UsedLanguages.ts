@@ -1,4 +1,4 @@
-import { LionWebJsonMetaPointer, LionWebJsonNode, LwJsonUsedLanguage } from "@lionweb/validation";
+import type { LionWebJsonMetaPointer, LionWebJsonNode, LwJsonUsedLanguage } from "@lionweb/validation";
 
 /**
  * Collect all langusges that are nbeing used in the _nodes_ collection.

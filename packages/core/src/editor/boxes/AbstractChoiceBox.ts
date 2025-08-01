@@ -1,9 +1,11 @@
 import { autorun } from "mobx"
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { FreUtils } from "../../util/index.js";
-import { BehaviorExecutionResult, FreCaret, FreKey } from "../util/index.js";
+import { BehaviorExecutionResult, FreCaret } from "../util/index.js";
+import type { FreKey } from "../util/index.js";
 import { BoxFactory, FreEditor } from "../internal.js";
-import { Box, ChoiceTextHelper, SelectOption, TextBox } from "./internal.js";
+import { Box, ChoiceTextHelper, TextBox } from "./internal.js";
+import type { SelectOption } from "./internal.js";
 
 export abstract class AbstractChoiceBox extends Box {
     kind: string = "AbstractChoiceBox";

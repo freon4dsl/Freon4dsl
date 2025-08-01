@@ -1,7 +1,7 @@
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { BehaviorExecutionResult } from "../util/index.js";
 // import { FreLogger } from "../../logging";
-import { isNullOrUndefined, FreUtils } from "../../util/index.js";
+import { isNullOrUndefined, FreUtils, notNullOrUndefined } from '../../util/index.js';
 import { FreEditor } from "../FreEditor.js";
 import {
     Box,
@@ -10,13 +10,11 @@ import {
     ActionBox,
     LabelBox,
     TextBox,
-    SelectOption,
     SelectBox,
     IndentBox,
     OptionalBox,
     HorizontalListBox,
     VerticalListBox,
-    BoolFunctie,
     GridCellBox,
     HorizontalLayoutBox,
     VerticalLayoutBox,
@@ -28,8 +26,10 @@ import {
     AbstractExternalBox,
     ExternalPartListBox,
     isExternalPartListBox,
-    ReferenceBox,
+    ReferenceBox
 } from "./internal.js";
+import type { SelectOption } from "./internal.js";
+import type { BoolFunctie } from "./internal.js";
 
 type RoleCache<T extends Box> = {
     [role: string]: T;
@@ -382,17 +382,17 @@ export class BoxFactory {
     }
 
     static verticalList(
-        element: FreNode,
+        node: FreNode,
         role: string,
         propertyName: string,
         children?: (Box | null)[],
         initializer?: Partial<VerticalListBox>,
     ): VerticalListBox {
         if (cacheVerticalListOff) {
-            return new VerticalListBox(element, role, propertyName, children, initializer);
+            return new VerticalListBox(node, role, propertyName, children, initializer);
         }
-        const creator = () => new VerticalListBox(element, role, propertyName, children);
-        const result: VerticalListBox = this.find<VerticalListBox>(element, role, creator, verticalListCache);
+        const creator = () => new VerticalListBox(node, role, propertyName, children);
+        const result: VerticalListBox = this.find<VerticalListBox>(node, role, creator, verticalListCache);
         // 2. Apply the other arguments in case they have changed
         if (!equals(result.children, children)) {
             result.replaceChildren(children);
@@ -626,7 +626,7 @@ export class BoxFactory {
 }
 
 const equals = (a, b): boolean | any => {
-    if ((isNullOrUndefined(a) && !isNullOrUndefined(b)) || (!isNullOrUndefined(a) && isNullOrUndefined(b))) {
+    if ((isNullOrUndefined(a) && notNullOrUndefined(b)) || (notNullOrUndefined(a) && isNullOrUndefined(b))) {
         return false;
     }
     if (isNullOrUndefined(a) && isNullOrUndefined(b)) {

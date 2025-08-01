@@ -39,12 +39,12 @@ router.get("/getUnitList", async (ctx: Router.IRouterContext) => {
         ctx.message = "Missing query parameter 'folder'";
     }
 });
-router.put("/putModelUnit", async (ctx: Router.IRouterContext) => {
+router.put("/saveModelUnit", async (ctx: Router.IRouterContext) => {
     const folder = ctx.query["folder"];
     const name = ctx.query["name"];
-    console.log("PutModelUnit: " + folder + "/" + name);
+    console.log("saveModelUnit: " + folder + "/" + name);
     if ((!!name || !!folder) && typeof name === "string" && typeof folder === "string") {
-        ModelRequests.putModelUnit(folder, name, ctx);
+        ModelRequests.saveModelUnit(folder, name, ctx);
         ctx.status = 201;
     } else {
         ctx.status = 412; // Precondition failed

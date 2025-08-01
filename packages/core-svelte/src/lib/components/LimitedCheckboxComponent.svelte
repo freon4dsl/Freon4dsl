@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { LIMITEDCHECKBOX_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { LIMITEDCHECKBOX_LOGGER } from './ComponentLoggers.js';
     import {
-        LimitedControlBox,
         SHIFT,
         CONTROL,
         ALT,
@@ -11,9 +10,10 @@
         ARROW_DOWN,
         ARROW_UP
     } from '@freon4dsl/core';
+    import type { LimitedControlBox } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import { MdCheckbox } from '@material/web/all.js';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import { MdCheckbox } from '@material/web/checkbox/checkbox.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
     let { editor, box }: FreComponentProps<LimitedControlBox> = $props();
@@ -73,6 +73,8 @@
         // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh limited checkbox box changed ' + box?.id);
     });
 
     function setFocusToNext() {

@@ -1,0 +1,9 @@
+editor refReplacers
+
+conceptWithRefs {[
+    REFS name   ${self.name} /* Normal box */
+          single
+            ${self.referenceProp replace=refReplacer2} /* Replacer */
+          list
+            ${self.referenceList replace=refListReplacer2} /* Replacer */
+]}

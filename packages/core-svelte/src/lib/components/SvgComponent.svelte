@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { isNullOrUndefined, type SvgBox } from '@freon4dsl/core';
-    import { onMount } from 'svelte';
-    import { componentId } from '$lib';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import { LABEL_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { notNullOrUndefined, type SvgBox } from '@freon4dsl/core';
+    import { componentId } from '../index.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
+    import { LABEL_LOGGER } from './ComponentLoggers.js';
 
     let { box }: FreComponentProps<SvgBox> = $props();
 
@@ -22,7 +21,7 @@
 
     const refresh = (why?: string) => {
         LABEL_LOGGER.log('Refresh SVG component ' + why);
-        id = !isNullOrUndefined(box) ? componentId(box) : 'SVG-for-unknown-box';
+        id = notNullOrUndefined(box) ? componentId(box) : 'SVG-for-unknown-box';
         svgPath = box.svgPath;
         portWidth = box.viewPortWidth;
         portHeight = box.viewPortHeight;

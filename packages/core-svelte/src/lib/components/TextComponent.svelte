@@ -3,9 +3,9 @@
 <!-- (cursor or selected text), when the switch is being made. -->
 
 <script lang="ts">
-    import { TEXT_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { TEXT_LOGGER } from './ComponentLoggers.js';
     import { onMount, tick } from 'svelte';
-    import { componentId, replaceHTML } from '$lib/components/svelte-utils/index.js';
+    import { componentId, replaceHTML } from './svelte-utils/index.js';
     import {
         ActionBox,
         ALT,
@@ -23,17 +23,17 @@
         FreCaretPosition,
         isActionBox,
         isNullOrUndefined,
-        isSelectBox,
+        isSelectBox, notNullOrUndefined,
         SelectBox,
         SHIFT,
         TAB,
         TextBox, UndefinedRectangle
-    } from "@freon4dsl/core"
-    import { TextComponentHelper } from '$lib/components/svelte-utils/TextComponentHelper.js';
-    import ErrorTooltip from '$lib/components/ErrorTooltip.svelte';
-    import ErrorMarker from '$lib/components/ErrorMarker.svelte';
-    import type { TextComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
-    import {contextMenu} from "$lib/components/stores/AllStores.svelte";
+    } from '@freon4dsl/core';
+    import { TextComponentHelper } from './svelte-utils/TextComponentHelper.js';
+    import ErrorTooltip from './ErrorTooltip.svelte';
+    import ErrorMarker from './ErrorMarker.svelte';
+    import type { TextComponentProps } from './svelte-utils/FreComponentProps.js';
+    import {contextMenu} from "./stores/AllStores.svelte";
 
     const LOGGER = TEXT_LOGGER;
 
@@ -51,18 +51,18 @@
 
     // Variables dependent upon the box, the prop 'text' is one of these.
     // an id for the html element
-    let id: string = $state(!isNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box');
+    let id: string = $state(notNullOrUndefined(box) ? componentId(box) : 'text-with-unknown-box');
     // the placeholder when value of text component is not present
-    let placeholder: string = $state(!isNullOrUndefined(box) ? box.placeHolder : '<..>');
+    let placeholder: string = $state(notNullOrUndefined(box) ? box.placeHolder : '<..>');
     // variable to remember the text that was in the box previously
-    let originalText: string = $state(!isNullOrUndefined(box) ? box.getText() : '');
+    let originalText: string = $state(notNullOrUndefined(box) ? box.getText() : '');
     // variable for styling
     let placeHolderStyle: string = partOfDropdown
         ? 'text-component-action-placeholder'
         : 'text-component-placeholder';
     // indication how is this text component is used, determines styling
     let boxType: BoxType = $state(
-        !isNullOrUndefined(box?.parent)
+        notNullOrUndefined(box?.parent)
             ? isActionBox(box?.parent)
                 ? 'action'
                 : isSelectBox(box?.parent)
@@ -76,7 +76,7 @@
     let editStart = $state(false);
     // indicates whether the user can use the TAB key to enter this component
     // Tab skips spaces before and after operators, which have specific roles.
-    let tabindex: number = !isNullOrUndefined(box?.role)
+    let tabindex: number = notNullOrUndefined(box?.role)
         ? box.role.startsWith('action-binary') || box.role.startsWith('action-exp')
             ? -1
             : 0
@@ -116,7 +116,7 @@
         LOGGER.log(
             `${id}: REFRESH why ${why}: (${box?.node?.freLanguageConcept()}) box text '${box?.getText()}' text '${text}'`
         );
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             // 'id' does not change, because it solely depends upon the id of the box, which remains constant,
             // 'placeholderStyle' depends on the type of the box, which remains constant.
             if (placeholder !== box.placeHolder) placeholder = box.placeHolder;
@@ -155,8 +155,9 @@
     // todo why is this function async?
     export async function setFocus(): Promise<void> {
         LOGGER.log(`setFocus for ${box?.id} ${isEditing} && ${inputElement}`);
-        if (isEditing && !isNullOrUndefined(inputElement)) {
+        if (isEditing && notNullOrUndefined(inputElement)) {
             inputElement.focus();
+            inputElement.select(); // selects all the text in the <input> element.
         } else {
             // set the local variables, then the inputElement will be shown
             await startEditing('editor');
@@ -205,7 +206,7 @@
             editor.selectElementForBox(box);
             // Get the caret position(s) of the current selection within the <span> element.
             // To be used to set the same selection in the <input> element later on.
-            if (!isNullOrUndefined(document.getSelection())) {
+            if (notNullOrUndefined(document.getSelection())) {
                 let { anchorOffset, focusOffset } = document.getSelection()!;
                 myHelper.setFromAndTo(anchorOffset, focusOffset);
             }
@@ -224,7 +225,7 @@
         // Now set the width of <input>, and the caret position,
         // either based on the input from the editor, or from the UI.
         setInputWidth();
-        if (isEditing && !isNullOrUndefined(inputElement)) {
+        if (isEditing && notNullOrUndefined(inputElement)) {
             // The check is here only to avoid any null pointer exceptions, in case anything goes wrong.
             inputElement.selectionStart = myHelper.from >= 0 ? myHelper.from : 0;
             inputElement.selectionEnd = myHelper.to >= 0 ? myHelper.to : 0;
@@ -242,7 +243,7 @@
      */
     function onMousedown(event: MouseEvent) {
         LOGGER.log(`onMousedown for ${box?.id}`);
-        if (event.button === 0) { 
+        if (event.button === 0) {
             // a 'left' click
             event.preventDefault();
             event.stopPropagation();
@@ -434,7 +435,7 @@
         if (!!widthSpan && !!inputElement) {
             LOGGER.log(`setInputWidth for ${box?.id}`);
             let value = inputElement.value;
-            if (!isNullOrUndefined(value) && value.length === 0) {
+            if (notNullOrUndefined(value) && value.length === 0) {
                 value = placeholder;
                 if (placeholder.length === 0) {
                     value = ' ';
@@ -485,13 +486,13 @@
     const clientRectangle = (): ClientRectangle => {
         LOGGER.log(`clientRectangle: ${box.id} isEditing ${isEditing} input ${isNullOrUndefined(inputElement)} span ${isNullOrUndefined(spanElement)}`)
 
-        if (!isNullOrUndefined(inputElement)) {
+        if (notNullOrUndefined(inputElement)) {
             // LOGGER.log(`clientRectangle ${box.id} using input!!!`)
             const result = inputElement.getBoundingClientRect()
             // LOGGER.log(`    x: ${result.x} y: ${result.y} w: ${result.width} h: ${result.height} `)
             return result
         }
-        if (!isNullOrUndefined(spanElement)) {
+        if (notNullOrUndefined(spanElement)) {
             // LOGGER.log(`clientRectangle ${box.id} using span`)
             const result = spanElement.getBoundingClientRect();
             // LOGGER.log(`    x: ${result.x} y: ${result.y} w: ${result.width} h: ${result.height} `)
@@ -503,7 +504,7 @@
 
     $effect(() => {
         LOGGER.log(`"effect box is ${box?.id}`)
-        if (!isNullOrUndefined(box)) {
+        if (notNullOrUndefined(box)) {
             box.getClientRectangle = clientRectangle
             box.setCaret = calculateCaret;
             box.setFocus = setFocus
@@ -511,38 +512,6 @@
         }
     })
 
-
-    // THE OLD afterUpdate:
-    // $effect(() => {
-    //     LOGGER.log(`effect 4 for ${box?.id}`)
-    //     LOGGER.log(`${id}: afterUpdate ` + myHelper.from + ', ' + myHelper.to + ' id: ' + id);
-    //     if (editStart && !!inputElement) {
-    //         LOGGER.log(`${id}:  editStart in afterUpdate text '${text}' `);
-    //         inputElement.selectionStart = myHelper.from >= 0 ? myHelper.from : 0;
-    //         inputElement.selectionEnd = myHelper.to >= 0 ? myHelper.to : 0;
-    //         inputElement.focus();
-    //         editStart = false;
-    //     } else if (isEditing) {
-    //         if (partOfDropdown) {
-    //             if (text !== originalText) {
-    //                 // check added to avoid too many textUpdate events, e.g. when moving through the text with arrows
-    //                 // send event to parent TextDropdownComponent
-    //                 LOGGER.log(
-    //                     `${id}: dispatching textUpdateFunction with text ` + text + ' from afterUpdate'
-    //                 );
-    //                 dispatcher('textUpdate', { content: text, caret: myHelper.from });
-    //             }
-    //         }
-    //     }
-    //     // Always set the input width explicitly.
-    //     setInputWidth();
-    //     if (!isNullOrUndefined(box)) {
-    //         placeholder = box?.placeHolder ? box.placeHolder : '<..>';
-    //         box.setFocus = setFocus;
-    //         box.setCaret = setCaret;
-    //         box.refreshComponent = refresh;
-    //     }
-    // });
 </script>
 
 {#if errMess.length > 0 && box.isFirstInLine}

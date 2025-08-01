@@ -1,10 +1,11 @@
 <script lang="ts">
     import '@material/web/slider/slider.js';
-    import { NUMERICSLIDER_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { NUMERICSLIDER_LOGGER } from './ComponentLoggers.js';
     import { MdSlider } from '@material/web/slider/slider.js';
-    import { isNullOrUndefined, NumberControlBox } from '@freon4dsl/core';
+    import { notNullOrUndefined } from '@freon4dsl/core';
+    import type { NumberControlBox } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     const LOGGER = NUMERICSLIDER_LOGGER;
 
@@ -26,7 +27,7 @@
         LOGGER.log(
             'NumericSliderComponent.onChange for box ' + box.role + ', value:' + sliderElement.value
         );
-        value = !isNullOrUndefined(sliderElement.value) ? sliderElement.value : 0;
+        value = notNullOrUndefined(sliderElement.value) ? sliderElement.value : 0;
         box.setNumber(value);
         if (box.selectable) {
             editor.selectElementForBox(box);
@@ -56,6 +57,8 @@
         // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        // Evaluated and re-evaluated when the box changes.
+        refresh('Refresh numeric slider box changed ' + box?.id);
     });
 
     /**

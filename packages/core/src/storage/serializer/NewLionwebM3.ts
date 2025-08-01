@@ -1,6 +1,6 @@
 // import { LionWebJsonMetaPointer, LwJsonUsedLanguage } from "@lionweb/validation";
 
-import { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/validation";
+import type { LionWebJsonChunk, LionWebJsonNode } from "@lionweb/validation";
 
 export function isLionWebJsonChunk(object: any): object is LionWebJsonChunk {
     const cnk = object as LionWebJsonChunk;

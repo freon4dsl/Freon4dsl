@@ -7,10 +7,10 @@
     // On Designing and Building Toggle Switches by Sara Soueidan https://www.sarasoueidan.com/blog/toggle-switch-design/
     // and this example by Scott O'hara https://codepen.io/scottohara/pen/zLZwNv
 
-    import { INNERSWITCH_LOGGER } from '$lib/components/ComponentLoggers.js';
-    import { type BooleanControlBox, isNullOrUndefined } from '@freon4dsl/core';
+    import { INNERSWITCH_LOGGER } from './ComponentLoggers.js';
+    import { type BooleanControlBox, notNullOrUndefined } from '@freon4dsl/core';
     import { onMount } from 'svelte';
-    import type { FreComponentProps } from '$lib/components/svelte-utils/FreComponentProps.js';
+    import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     const LOGGER = INNERSWITCH_LOGGER;
 
@@ -38,7 +38,7 @@
     });
     function handleClick(event: MouseEvent) {
         const target: HTMLButtonElement = event.target as HTMLButtonElement;
-        if (!isNullOrUndefined(target)) {
+        if (notNullOrUndefined(target)) {
             value = target.getAttribute('aria-checked') !== 'true';
             box.setBoolean(value);
         }

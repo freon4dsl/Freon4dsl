@@ -1,6 +1,6 @@
 import { FreLogger } from "../logging/index.js";
 import { FreChangeManager } from "./FreChangeManager.js";
-import { FreModelUnit } from "../ast/index.js";
+import type { FreModelUnit } from "../ast/index.js";
 import { FreDelta, FrePrimDelta, FrePartDelta, FrePartListDelta, FrePrimListDelta } from "./FreDelta.js";
 import { FreUndoStackManager } from "./FreUndoStackManager.js";
 

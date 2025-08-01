@@ -1,7 +1,8 @@
 import { InsuranceModelEnvironment } from "../config/gen/InsuranceModelEnvironment";
 import { BaseProduct, InsuranceModel, Part, Product } from "../language/gen";
-import { FileUtil, FreReader, FreValidator } from "@freon4dsl/core"
-import {describe, test, expect} from "vitest";
+import { FreReader, FreValidator } from "@freon4dsl/core";
+import { FileUtil } from '@freon4dsl/test-helpers';
+import { describe, test, expect } from "vitest";
 
 
 // const writer = InsuranceModelEnvironment.getInstance().writer;

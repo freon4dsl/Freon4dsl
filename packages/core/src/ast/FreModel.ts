@@ -1,5 +1,5 @@
-import { FreNamedNode } from "./FreNamedNode.js";
-import { FreModelUnit } from "./FreModelUnit.js";
+import type { FreNamedNode } from "./FreNamedNode.js";
+import type { FreModelUnit } from "./FreModelUnit.js";
 
 // TODO rethink inheritance from FreNamedElement: no match method needed here
 export interface FreModel extends FreNamedNode {

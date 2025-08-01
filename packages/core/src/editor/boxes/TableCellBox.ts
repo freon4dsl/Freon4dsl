@@ -1,4 +1,4 @@
-import { FreNode } from "../../ast/index.js";
+import type { FreNode } from "../../ast/index.js";
 import { Box } from "./Box.js";
 import { GridCellBox } from "./GridCellBox.js";
 import { getContextMenuOptions, MenuItem, MenuOptionsType } from "../util/index.js";
