@@ -563,7 +563,7 @@ export class WebappConfigurator {
             editorInfo.unitsInTabs.forEach(unitInTab => {
                 const unitId = store.getUnitIdentifiers().find(uid => uid.id === unitInTab.id)
                 if (notNullOrUndefined(unitId) && unitInTab.name !== unitId?.name) {
-                    console.log(`Unit with id ${unitInTab.id} changed name from ${unitInTab.name} to ${unitId.name}`)
+                    LOGGER.log(`Unit with id ${unitInTab.id} changed name from ${unitInTab.name} to ${unitId.name}`)
                     unitInTab.name = unitId.name
                 }
             })
