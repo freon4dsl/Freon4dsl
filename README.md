@@ -4,6 +4,8 @@
 Web-native Language Workbench with projectional editor. 
 The current release (version 1.0.0) can be found on npm.
 
+**August 1, 2025: Version 2.0.0-beta.1 released**
+
 **May 13, 2025: Version 1.1.0-beta.3 released**
 
 - Updated to use Svelte 5 instead of Svelte 4.
@@ -52,11 +54,11 @@ And run all tests  with:
 * Go to the package containing your language, this can e.g. be any package in `packages/samples`.
   - Build the language using `npm run build`
 
-* Go to the `webapp-starter` package.
+* Go to the `webapp-flowbite` package.
   - Open the file `package.json
   - In the _dependencies_ section change the language dependency to your chosen language:
   ```json lines
-  "@freon4dsl/samples-course-schedule": "1.1.0-beta.3",
+  "@freon4dsl/samples-course-schedule": "2.0.0-beta.1",
   ```
   - Also open the file `src/starter.ts`
   - Change line 5 to import the correct environment from your chosen language package:
@@ -70,14 +72,14 @@ And run all tests  with:
     npm run start
 ```
 
-* Goto the `webapp-starter` and start Freon:
+* Goto the `webapp-flowbite` and start Freon:
 ```bash
-    cd packages/webapp-starter
-    npm run prepare-app
+    cd packages/webapp-flowbite
+    npm run styles
     npm run dev
 ```
 This will open a browser with the example from the samples/Example package on 
-the URL displayed: `http://localhost:5000/`. The example and all other projects in samples are
+the URL displayed: `http://localhost:<port>/`. The example and all other projects in samples are
 work in progress.
 
 ## Source organisation
@@ -97,8 +99,9 @@ The source code for Freon is organised into the following packages.
 * *packages/meta/src/validatordef*: source code that generates code from a validator definition (*.valid*) file.
 * *packages/samples/*: source code for a number of sample languages.
 * *packages/server*: source code for a minimalistic model-server used for demonstration purposes.
-* *packages/webapp-lib*: source code for the web-application used for all generated languages.
-* *packages/webapp-starter/*: source code for web app including one language.
+* *packages/weblib-*: source code for the web-application used for all generated languages.
+* *packages/webapp-smui/*: source code for the old web app including one language.
+* *packages/webapp-flowbite/*: source code for new web app using flowbite including one language.
   This package import the `webapp-lib` for the full web app and one language from `samples` to be used in the webapp.
 * _/*_: the usual suspects.
 

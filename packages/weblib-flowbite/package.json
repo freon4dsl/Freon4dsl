@@ -3,7 +3,7 @@
 		"access": "public"
 	},
 	"name": "@freon4dsl/weblib-flowbite",
-	"version": "1.1.0-beta.3",
+	"version": "2.0.0-beta.1",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -69,8 +69,8 @@
 		"vitest": "3.2.4"
 	},
 	"dependencies": {
-		"@freon4dsl/core": "1.1.0-beta.3",
-		"@freon4dsl/core-svelte": "1.1.0-beta.3",
+		"@freon4dsl/core": "2.0.0-beta.1",
+		"@freon4dsl/core-svelte": "2.0.0-beta.1",
 		"flowbite-svelte": "1.7.1",
 		"flowbite-svelte-icons": "2.2.1",
 		"mobx": "^6.13.6",
