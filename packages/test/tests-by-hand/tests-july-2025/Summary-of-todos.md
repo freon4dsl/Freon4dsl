@@ -84,7 +84,7 @@ Remove one of OptionalBox and OptionalBox2.
 
 ### OR3
 Redo the save mechanism now that a rename is able to make changes in many units.
-**IMPORTANT**
+**FIXED**
 
 ### OR4
 For CI only: silence the error message in core.
