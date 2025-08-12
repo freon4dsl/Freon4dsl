@@ -11,7 +11,7 @@
         FreProjectionHandler,
         MenuItem,
         TextBox,
-        MultiLineTextBox, type ClientRectangle, UndefinedRectangle
+        MultiLineTextBox, type ClientRectangle, UndefinedRectangle, jsonAsString
     } from '@freon4dsl/core';
     import { SimpleElement } from '$lib/__test__/test-environment/simple-models/SimpleElement.js';
     import BooleanCheckboxComponent from '$lib/components/BooleanCheckboxComponent.svelte';
@@ -199,7 +199,7 @@
                 isEditing={false}
                 text=""
                 partOfDropdown={false}
-                toParent={(eventType, details) => {console.log(eventType + JSON.stringify(details))} }
+                toParent={(eventType, details) => {console.log(eventType + jsonAsString(details))} }
             />
             current value:
             {textVar}

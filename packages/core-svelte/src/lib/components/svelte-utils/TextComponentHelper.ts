@@ -6,7 +6,7 @@ import {
     FreEditor,
     FreErrorSeverity,
     FreLogger,
-    isActionTextBox,
+    isActionTextBox, jsonAsString,
     notNullOrUndefined,
     TextBox
 } from '@freon4dsl/core';
@@ -164,7 +164,7 @@ export class TextComponentHelper {
     handleAltOrCtrlKey(event: KeyboardEvent, editor: FreEditor) {
         // see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
         LOGGER.log(
-            `AltOrCtrlKey, key: ${JSON.stringify(event.key)}, ctrl: ${event.ctrlKey}, alt: ${event.altKey}`
+            `AltOrCtrlKey, key: ${jsonAsString(event.key)}, ctrl: ${event.ctrlKey}, alt: ${event.altKey}`
         );
         // assert (event.altKey || event.ctrlKey)
         // first check if this event has a command defined for it

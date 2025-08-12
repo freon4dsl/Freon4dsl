@@ -22,7 +22,7 @@
 <span class="dropdown-component-container">
     <span class="dropdown-component" {id}>
         {#if options.length > 0}
-            {#each options as option (option.id + option.label)}
+            {#each options as option (option.id)}
                 <div
                     class="dropdown-component-item"
                     class:dropdown-component-selected={options.length === 1 ||
