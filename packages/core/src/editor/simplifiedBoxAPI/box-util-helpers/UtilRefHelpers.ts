@@ -18,7 +18,7 @@ import { BoxUtil, FreListInfo } from "../BoxUtil.js";
 import { UtilCommon } from "./UtilCommon.js";
 import { FreLanguage } from "../../../language/index.js";
 import { FreEditor } from "../../FreEditor.js";
-import { FreUtils, isNullOrUndefined } from "../../../util/index.js";
+import { FreUtils, isNullOrUndefined, notNullOrUndefined } from '../../../util/index.js';
 
 const LOGGER = new FreLogger("UtilRefHelpers")
 
@@ -54,7 +54,7 @@ export class UtilRefHelpers {
             () => {
                 return scoper
                     .getVisibleNodes(node, propType)
-                    .filter((node) => !!node.name && node.name !== "")
+                    .filter((node) => notNullOrUndefined(node.name) && node.name !== "")
                     .map((node, index: number) => ({
                         id: node.name + index,
                         label: node.name,
