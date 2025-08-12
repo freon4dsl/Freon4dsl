@@ -32,7 +32,7 @@
     "@freon4dsl/core": "2.0.0-beta.2",
     "@freon4dsl/core-svelte": "2.0.0-beta.2",
     "@freon4dsl/weblib-flowbite": "2.0.0-beta.2",
-    "@freon4dsl/samples-course-schedule": "2.0.0-beta.2",
+    "@freon4dsl/samples-scoping-example": "2.0.0-beta.2",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",
     "lodash": "^4.17.21",

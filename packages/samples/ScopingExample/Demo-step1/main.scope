@@ -1,0 +1,7 @@
+scoper for language ScopingExample
+
+isNamespace { Block, Function }
+
+/* step 0: show the model without scoper */
+/* step 1a: add Block as Namespace and show what can be referenced in various places */
+/* step 1b: add Function as Namespace and show what can be referenced in various places */

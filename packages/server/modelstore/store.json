@@ -614,6 +614,18 @@
                     "file": "XXX-unit5.json"
                 }
             ]
+        },
+        {
+            "name": "ScopingExample1",
+            "folder": "ScopingExample1",
+            "language": "ScopingExample",
+            "version": "1",
+            "units": [
+                {
+                    "name": "MathFunctions",
+                    "file": "MathFunctions.json"
+                }
+            ]
         }
     ]
 }

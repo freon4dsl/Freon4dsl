@@ -1,0 +1,43 @@
+editor default
+
+
+Module {[
+    module ${name} {
+        globals: \[ ${globals horizontal separator[,]} \]
+        CHECK IT OUT: ${check}
+        ${blocks vertical}
+    }
+]}
+
+Block {[
+    block ${name} {
+        imported blocks: \[ ${imports horizontal separator[,]} \]
+        block variables: \[ ${blockVariables horizontal separator[,]} \]
+        CHECK IT OUT: ${check}
+        ${functions vertical}
+    }
+]}
+
+Function {[
+    function ${name} ( ${parameters horizontal separator[,]} ) {
+        CHECK IT OUT: ${check}
+    }
+]}
+
+Variable {[
+    ${name}
+]}
+
+SimpleVarRef {[
+    ${target}
+]
+referenceShortcut = ${target}
+}
+
+/* added for step 3, note the reference shortcut */
+ComplexVarRef {[
+    ${block} . ${target}
+]
+referenceShortcut = ${block}
+}
+
