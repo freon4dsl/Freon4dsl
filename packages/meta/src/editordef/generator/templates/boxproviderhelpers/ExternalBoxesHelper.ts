@@ -84,8 +84,8 @@ export class ExternalBoxesHelper {
         if (!!item.params && item.params.length > 0) {
             initializer = `, { params: [${item.params.map((x) => `{key: "${x.key}", value: "${x.value}"}`).join(", ")}] }`;
         }
-        this._myTemplate.imports.core.add("ExternalSimpleBox");
-        return `new ExternalSimpleBox("${item.name}", ${element}, "${myRole}"${initializer})`;
+        this._myTemplate.imports.core.add("SimpleExternalBox");
+        return `new SimpleExternalBox("${item.name}", ${element}, "${myRole}"${initializer})`;
     }
 
     private wrapByExternal(
@@ -120,9 +120,9 @@ export class ExternalBoxesHelper {
         elementVarName: string,
     ): string {
         let initializer: string = this.buildInitializer(item);
-        let methodName: string = "externalPartBox";
+        let methodName: string = "partReplacerBox";
         if (!property.isPart) {
-            methodName = "externalRefBox";
+            methodName = "refReplacerBox";
         }
         this._myTemplate.imports.core.add(`BoxUtil`);
         return `BoxUtil.${methodName}(
@@ -143,7 +143,7 @@ export class ExternalBoxesHelper {
         let initializer: string = this.buildInitializer(item);
         this._myTemplate.imports.core.add(`BoxUtil`);
         if (property.isPart) {
-            return `BoxUtil.externalPartListBox(
+            return `BoxUtil.partListReplacerBox(
                         ${elementVarName},
                         ${elementVarName}.${property.name},
                         "${property.name}",
@@ -152,7 +152,7 @@ export class ExternalBoxesHelper {
                         ${initializer}
                     )`;
         } else {
-            return `BoxUtil.externalReferenceListBox(
+            return `BoxUtil.refListReplacerBox(
                         ${elementVarName},
                         "${property.name}",
                         "${item.externalInfo!.replaceBy}",
@@ -196,14 +196,14 @@ export class ExternalBoxesHelper {
         elementVarName: string,
     ): string {
         let initializer: string = this.buildInitializer(item);
-        let methodName: string = "externalStringBox";
+        let methodName: string = "stringReplacerBox";
         switch (property.type.name) {
             case "boolean": {
-                methodName = "externalBooleanBox";
+                methodName = "booleanReplacerBox";
                 break;
             }
             case "number": {
-                methodName = "externalNumberBox";
+                methodName = "numberReplacerBox";
                 break;
             }
         }

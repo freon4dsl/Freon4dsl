@@ -3,7 +3,7 @@ import { FreLogger } from "../../../logging/index.js";
 import {
     Box,
     BoxFactory,
-    ExternalRefListBox,
+    RefListReplacerBox,
     HorizontalListBox,
     ReferenceBox,
     type SelectOption,
@@ -196,13 +196,13 @@ export class UtilRefHelpers {
         }
     }
 
-    public static externalReferenceListBox(
+    public static refListReplacerBox(
         node: FreNode,
         propertyName: string,
         externalComponentName: string,
         scoper: FreScoper,
-        initializer?: Partial<ExternalRefListBox>,
-    ): ExternalRefListBox {
+        initializer?: Partial<RefListReplacerBox>,
+    ): RefListReplacerBox {
         // find the information on the property to be shown
         const { property, isList, isPart } = UtilCommon.getPropertyInfo(node, propertyName);
         // check whether the property is a reference list
@@ -217,7 +217,7 @@ export class UtilRefHelpers {
             // determine the role
             const role: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "xreflist");
             // create and return the box
-            const result: ExternalRefListBox = new ExternalRefListBox(
+            const result: RefListReplacerBox = new RefListReplacerBox(
                 externalComponentName,
                 node,
                 role,

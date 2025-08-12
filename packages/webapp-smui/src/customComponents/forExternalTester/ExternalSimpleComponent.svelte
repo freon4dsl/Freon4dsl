@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {ExternalSimpleBox} from "@freon4dsl/core";
+    import {SimpleExternalBox} from "@freon4dsl/core";
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
     // The RenderComponent assumes that every svelte component has 'box' and 'editor' as parameters
     // Props
-    let { editor, box }: FreComponentProps<ExternalSimpleBox> = $props();
+    let { editor, box }: FreComponentProps<SimpleExternalBox> = $props();
 
     let src = '/cats-kittens.gif';
     let name1 = 'Two kittens licking';

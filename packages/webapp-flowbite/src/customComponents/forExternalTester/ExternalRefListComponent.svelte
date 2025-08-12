@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {AST, ExternalRefListBox, FreNodeReference} from "@freon4dsl/core";
+    import {AST, RefListReplacerBox, FreNodeReference} from "@freon4dsl/core";
     import {CC} from "@freon4dsl/samples-external-tester";
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ExternalRefListBox> = $props();
+    let { editor, box }: FreComponentProps<RefListReplacerBox> = $props();
 
     let button: HTMLButtonElement;
     let value: FreNodeReference<CC>[];

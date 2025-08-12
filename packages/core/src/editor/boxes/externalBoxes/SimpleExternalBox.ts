@@ -9,15 +9,15 @@ import { FreUtils } from "../../../util/index.js";
  *
  * Note that it should not be used to set values of any property of the model node.
  */
-export class ExternalSimpleBox extends AbstractExternalBox {
-    readonly kind: string = "ExternalSimpleBox";
+export class SimpleExternalBox extends AbstractExternalBox {
+    readonly kind: string = "SimpleExternalBox";
 
-    constructor(externalComponentName: string, node: FreNode, role: string, initializer?: Partial<ExternalSimpleBox>) {
+    constructor(externalComponentName: string, node: FreNode, role: string, initializer?: Partial<SimpleExternalBox>) {
         super(externalComponentName, node, role);
         FreUtils.initializeObject(this, initializer);
     }
 }
 
-export function isExternalSimpleBox(b: Box): b is ExternalSimpleBox {
-    return b?.kind === "ExternalSimpleBox"; // b instanceof ExternalSimpleBox;
+export function isSimpleExternalBox(b: Box): b is SimpleExternalBox {
+    return b?.kind === "SimpleExternalBox"; // b instanceof SimpleExternalBox;
 }

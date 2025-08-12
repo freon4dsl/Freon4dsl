@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { ExternalSimpleBox } from "@freon4dsl/core";
+    import { SimpleExternalBox } from "@freon4dsl/core";
     import type { FreComponentProps } from "@freon4dsl/core-svelte";
 
     // Freon expects both props to be present, even if they are not used.
     // Props
-    let { editor, box }: FreComponentProps<ExternalSimpleBox> = $props();
+    let { editor, box }: FreComponentProps<SimpleExternalBox> = $props();
 
 </script>
 

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import {ExternalSimpleBox, FreEditor} from "@freon4dsl/core";
+    import {SimpleExternalBox, FreEditor} from "@freon4dsl/core";
 
     // Freon expects both of these to be present, even if they are not used.
-    export let box: ExternalSimpleBox;
+    export let box: SimpleExternalBox;
     export let editor: FreEditor;
 
 </script>

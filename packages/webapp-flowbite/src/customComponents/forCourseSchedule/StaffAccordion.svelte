@@ -1,14 +1,14 @@
 <script lang="ts">
     import { AccordionItem, Accordion, Button } from 'flowbite-svelte';
-    import { AST, ExternalPartListBox } from "@freon4dsl/core";
+    import { AST, PartListReplacerBox } from "@freon4dsl/core";
     import { type FreComponentProps, RenderComponent } from "@freon4dsl/core-svelte";
     import { Person } from "@freon4dsl/samples-course-schedule";
     import { untrack } from "svelte"
     import { UserAddOutline, UserRemoveOutline } from 'flowbite-svelte-icons';
     // This component replaces the component for "teachers: Person[];" from model unit "Staff".
-    // This property is a parts list, therefore the external box to use is an ExternalPartListBox.
+    // This property is a parts list, therefore the external box to use is an PartListReplacerBox.
     // Props
-    let { editor, box }: FreComponentProps<ExternalPartListBox> = $props();
+    let { editor, box }: FreComponentProps<PartListReplacerBox> = $props();
 
     let panelOpen: boolean[] = $state([]);      // List of booleans to indicate which panel is open (true) and closed (false).
     let multiplePar: boolean = $state(false);   // Indicates whether multiple panels may be open at the same time.

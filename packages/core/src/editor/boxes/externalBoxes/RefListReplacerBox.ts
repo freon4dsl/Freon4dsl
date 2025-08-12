@@ -6,8 +6,8 @@ import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";
 /**
  * This class represents an external component that replaces the native projection of a list of references, like "reference notes: NoteConcept[]".
  */
-export class ExternalRefListBox extends AbstractExternalPropertyBox {
-    readonly kind: string = "ExternalRefListBox";
+export class RefListReplacerBox extends AbstractExternalPropertyBox {
+    readonly kind: string = "RefListReplacerBox";
     private _children: Box[] = [];
 
     constructor(
@@ -16,7 +16,7 @@ export class ExternalRefListBox extends AbstractExternalPropertyBox {
         role: string,
         propertyName: string,
         children: Box[],
-        initializer?: Partial<ExternalRefListBox>,
+        initializer?: Partial<RefListReplacerBox>,
     ) {
         super(externalComponentName, node, role, propertyName);
         FreUtils.initializeObject(this, initializer);
@@ -44,6 +44,6 @@ export class ExternalRefListBox extends AbstractExternalPropertyBox {
     }
 }
 
-export function isExternalRefListBox(b: Box): b is ExternalRefListBox {
-    return b?.kind === "ExternalRefListBox"; // b instanceof ExternalRefListBox;
+export function isRefListReplacerBox(b: Box): b is RefListReplacerBox {
+    return b?.kind === "RefListReplacerBox"; // b instanceof RefListReplacerBox;
 }

@@ -1,9 +1,9 @@
 <script lang="ts">
-    import {ExternalBooleanBox, isNullOrUndefined} from "@freon4dsl/core";
+    import {BooleanReplacerBox, isNullOrUndefined} from "@freon4dsl/core";
     import {type FreComponentProps} from "@freon4dsl/core-svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ExternalBooleanBox> = $props();
+    let { editor, box }: FreComponentProps<BooleanReplacerBox> = $props();
 
     let inputElement: HTMLInputElement;
     let value: string = $state("true");

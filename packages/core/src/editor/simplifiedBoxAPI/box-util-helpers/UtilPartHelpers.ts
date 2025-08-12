@@ -1,4 +1,4 @@
-import { Box, BoxFactory, ElementBox, ExternalPartListBox, HorizontalListBox, VerticalListBox } from "../../boxes/index.js";
+import { Box, BoxFactory, ElementBox, PartListReplacerBox, HorizontalListBox, VerticalListBox } from "../../boxes/index.js";
 import type { FreNode } from "../../../ast/index.js";
 import { RoleProvider } from "../RoleProvider.js";
 import { FreLanguage } from "../../../language/index.js";
@@ -47,14 +47,14 @@ export class UtilPartHelpers {
         return result;
     }
 
-    public static externalPartListBox(
+    public static partListReplacerBox(
         node: FreNode,
         list: FreNode[],
         propertyName: string,
         externalComponentName: string,
         boxProviderCache: FreProjectionHandler,
-        initializer?: Partial<ExternalPartListBox>,
-    ): ExternalPartListBox {
+        initializer?: Partial<PartListReplacerBox>,
+    ): PartListReplacerBox {
         // make the boxes for the children
         let children: Box[] = this.makePartItems(node, list, propertyName, boxProviderCache);
         // determine the role
