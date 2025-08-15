@@ -1,7 +1,7 @@
 <script lang="ts">
     import {
         Box,
-        ExternalPartListBox,
+        PartListReplacerBox,
         type FreNode,
         FreNodeReference,
         AST, isNullOrUndefined, LabelBox
@@ -11,9 +11,9 @@
     import IconButton from "@smui/icon-button";
 
     // This component replaces the component for "timeSlots: Slot[];" from model unit "Schedule".
-    // This property is a parts list, therefore the external box to use is an ExternalPartListBox.
+    // This property is a parts list, therefore the external box to use is an PartListReplacerBox.
     // Props
-    let { editor, box }: FreComponentProps<ExternalPartListBox> = $props();
+    let { editor, box }: FreComponentProps<PartListReplacerBox> = $props();
 
     // The following three functions need to be included for the editor to function properly.
     // Please, set the focus to the first editable/selectable element in this component.

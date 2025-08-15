@@ -1,7 +1,7 @@
 <script lang="ts">
     import Dialog, { Title, Content, Actions } from '@smui/dialog';
     import Button, { Label } from '@smui/button';
-    import {ExternalStringBox, isNullOrUndefined} from "@freon4dsl/core";
+    import {StringReplacerBox, isNullOrUndefined} from "@freon4dsl/core";
     import Textfield from '@smui/textfield';
     import Icon from '@smui/textfield/icon';
     import HelperText from '@smui/textfield/helper-text';
@@ -9,7 +9,7 @@
     import type {SvelteComponent} from "svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ExternalStringBox> = $props();
+    let { editor, box }: FreComponentProps<StringReplacerBox> = $props();
 
     let open = $state(false);
     let buttonLabel: string = $state('OpenDialog');

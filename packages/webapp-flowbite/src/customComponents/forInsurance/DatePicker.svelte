@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { ExternalStringBox, notNullOrUndefined } from "@freon4dsl/core"
+    import { StringReplacerBox, notNullOrUndefined } from "@freon4dsl/core"
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ExternalStringBox> = $props();
+    let { editor, box }: FreComponentProps<StringReplacerBox> = $props();
 
     let inputElement: HTMLInputElement;
     let value: string = $state("");

@@ -1,11 +1,11 @@
 <script lang="ts">
 
     import { AccordionItem, Accordion } from 'flowbite-svelte';
-    import { ExternalPartListBox, notNullOrUndefined } from "@freon4dsl/core"
+    import { PartListReplacerBox, notNullOrUndefined } from "@freon4dsl/core"
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ExternalPartListBox> = $props();
+    let { editor, box }: FreComponentProps<PartListReplacerBox> = $props();
 
     let panelOpen: boolean[] = $state([]);
     let multipleStr: string | undefined = box.findParam("multi");

@@ -6,15 +6,15 @@ import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";
 /**
  * This class represents an external component that replaces the native projection of a single model property, like "note: NoteConcept".
  */
-export class ExternalPartBox extends AbstractExternalPropertyBox {
-    readonly kind: string = "ExternalPartBox";
+export class PartReplacerBox extends AbstractExternalPropertyBox {
+    readonly kind: string = "PartReplacerBox";
 
     constructor(
         externalComponentName: string,
         node: FreNode,
         role: string,
         propertyName: string,
-        initializer?: Partial<ExternalPartBox>,
+        initializer?: Partial<PartReplacerBox>,
     ) {
         super(externalComponentName, node, role, propertyName);
         FreUtils.initializeObject(this, initializer);
@@ -33,6 +33,6 @@ export class ExternalPartBox extends AbstractExternalPropertyBox {
     }
 }
 
-export function isExternalPartBox(b: Box): b is ExternalPartBox {
-    return b?.kind === "ExternalPartBox"; // b instanceof ExternalPartBox;
+export function isPartReplacerBox(b: Box): b is PartReplacerBox {
+    return b?.kind === "PartReplacerBox"; // b instanceof PartReplacerBox;
 }

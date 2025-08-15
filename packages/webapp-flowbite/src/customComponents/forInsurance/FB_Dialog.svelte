@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ExternalStringBox, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
+    import { StringReplacerBox, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
     import type {SvelteComponent} from "svelte";
     import { Button, Modal, Input, Helper } from 'flowbite-svelte';
@@ -7,7 +7,7 @@
 
 
     // Props
-    let { editor, box }: FreComponentProps<ExternalStringBox> = $props();
+    let { editor, box }: FreComponentProps<StringReplacerBox> = $props();
 
     let open = $state(false);
     let buttonLabel: string = $state('OpenDialog');

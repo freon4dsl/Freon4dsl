@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { ExternalPartBox, type FreNode, isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
+    import { PartReplacerBox, type FreNode, isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
     import {BB} from "@freon4dsl/samples-external-tester";
     import type {FreComponentProps} from "@freon4dsl/core-svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ExternalPartBox> = $props();
+    let { editor, box }: FreComponentProps<PartReplacerBox> = $props();
 
     let inputElement: HTMLInputElement;
     let value: BB | undefined = $state();

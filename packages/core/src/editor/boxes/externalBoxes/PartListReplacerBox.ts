@@ -6,8 +6,8 @@ import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";
 /**
  * This class represents an external component that replaces the native projection of a list of model properties, like "notes: NoteConcept[]".
  */
-export class ExternalPartListBox extends AbstractExternalPropertyBox {
-    readonly kind: string = "ExternalPartListBox";
+export class PartListReplacerBox extends AbstractExternalPropertyBox {
+    readonly kind: string = "PartListReplacerBox";
     private _children: Box[] = [];
 
     constructor(
@@ -16,7 +16,7 @@ export class ExternalPartListBox extends AbstractExternalPropertyBox {
         role: string,
         propertyName: string,
         children: Box[],
-        initializer?: Partial<ExternalPartListBox>,
+        initializer?: Partial<PartListReplacerBox>,
     ) {
         super(externalComponentName, node, role, propertyName);
         FreUtils.initializeObject(this, initializer);
@@ -35,7 +35,7 @@ export class ExternalPartListBox extends AbstractExternalPropertyBox {
         }
     }
 
-    replaceChildren(children: Box[]): ExternalPartListBox {
+    replaceChildren(children: Box[]): PartListReplacerBox {
         this._children.forEach((ch) => { if(ch.parent === this) ch.parent = null });
         // this._children.forEach((ch) => ch.parent = null);
         this._children.splice(0, this._children.length);
@@ -64,6 +64,6 @@ export class ExternalPartListBox extends AbstractExternalPropertyBox {
     // Any changes must be done by adding removing to that list.
 }
 
-export function isExternalPartListBox(b: Box): b is ExternalPartListBox {
-    return b?.kind === "ExternalPartListBox"; // b instanceof ExternalPartListBox;
+export function isPartListReplacerBox(b: Box): b is PartListReplacerBox {
+    return b?.kind === "PartListReplacerBox"; // b instanceof PartListReplacerBox;
 }

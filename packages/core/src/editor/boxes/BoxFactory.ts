@@ -24,8 +24,8 @@ import {
     ButtonBox,
     NumberDisplay,
     AbstractExternalBox,
-    ExternalPartListBox,
-    isExternalPartListBox,
+    PartListReplacerBox,
+    isPartListReplacerBox,
     ReferenceBox
 } from "./internal.js";
 import type { SelectOption } from "./internal.js";
@@ -602,18 +602,18 @@ export class BoxFactory {
         externalComponentName: string,
         roleName: string,
         children: Box[],
-        initializer: Partial<ExternalPartListBox>,
-    ): ExternalPartListBox {
+        initializer: Partial<PartListReplacerBox>,
+    ): PartListReplacerBox {
         if (cacheExternalsOff) {
-            return new ExternalPartListBox(externalComponentName, node, roleName, propertyName, children, initializer);
+            return new PartListReplacerBox(externalComponentName, node, roleName, propertyName, children, initializer);
         }
         // 1. Create the Boolean box, or find the one that already exists for this element and role
-        const creator = () => new ExternalPartListBox(externalComponentName, node, roleName, propertyName, children, initializer);
+        const creator = () => new PartListReplacerBox(externalComponentName, node, roleName, propertyName, children, initializer);
         const result: AbstractExternalBox = this.find<AbstractExternalBox>(node, roleName, creator, externalCache);
 
         // 2. Apply the other arguments in case they have changed
         FreUtils.initializeObject(result, initializer);
-        if (isExternalPartListBox(result)) {
+        if (isPartListReplacerBox(result)) {
             result.propertyName = propertyName
             if (!equals(result.children, children)) {
                 result.replaceChildren(children);

@@ -7,15 +7,15 @@ import { AbstractExternalPropertyBox } from "./AbstractExternalPropertyBox.js";
 /**
  * This class represent an external box replacing the native projection of a single property of primitive type.
  */
-export class ExternalNumberBox extends AbstractExternalPropertyBox {
-    readonly kind: string = "ExternalNumberBox";
+export class NumberReplacerBox extends AbstractExternalPropertyBox {
+    readonly kind: string = "NumberReplacerBox";
 
     constructor(
         externalComponentName: string,
         node: FreNode,
         role: string,
         propertyName: string,
-        initializer?: Partial<ExternalNumberBox>,
+        initializer?: Partial<NumberReplacerBox>,
     ) {
         super(externalComponentName, node, role, propertyName);
         FreUtils.initializeObject(this, initializer);
@@ -36,7 +36,7 @@ export class ExternalNumberBox extends AbstractExternalPropertyBox {
             });
         } else {
             console.log(
-                "ExternalNumberBox.setPropertyValue type error: trying to set property of type " +
+                "NumberReplacerBox.setPropertyValue type error: trying to set property of type " +
                     this.getPropertyType() +
                     " to a value of type " +
                     typeof newValue,
@@ -45,6 +45,6 @@ export class ExternalNumberBox extends AbstractExternalPropertyBox {
     }
 }
 
-export function isExternalNumberBox(b: Box): b is ExternalNumberBox {
-    return b?.kind === "ExternalNumberBox"; // b instanceof ExternalNumberBox;
+export function isNumberReplacerBox(b: Box): b is NumberReplacerBox {
+    return b?.kind === "NumberReplacerBox"; // b instanceof NumberReplacerBox;
 }

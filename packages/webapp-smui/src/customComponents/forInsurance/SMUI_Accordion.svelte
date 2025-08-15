@@ -1,11 +1,11 @@
 <script lang="ts">
     import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
     import IconButton, { Icon } from '@smui/icon-button';
-    import {ExternalPartListBox} from "@freon4dsl/core";
+    import {PartListReplacerBox} from "@freon4dsl/core";
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ExternalPartListBox> = $props();
+    let { editor, box }: FreComponentProps<PartListReplacerBox> = $props();
 
     let panelOpen: boolean[] = $state([]);
     let multipleStr: string | undefined = box.findParam("multi");

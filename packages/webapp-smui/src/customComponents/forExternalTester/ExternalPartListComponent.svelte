@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {AST, ExternalPartListBox, type FreNode} from "@freon4dsl/core";
+    import {AST, PartListReplacerBox, type FreNode} from "@freon4dsl/core";
     import {BB} from "@freon4dsl/samples-external-tester";
     import {type FreComponentProps, RenderComponent} from "@freon4dsl/core-svelte";
 
     // Props
-    let { editor, box }: FreComponentProps<ExternalPartListBox> = $props();
+    let { editor, box }: FreComponentProps<PartListReplacerBox> = $props();
 
     let button: HTMLButtonElement;
     let value: BB[];
