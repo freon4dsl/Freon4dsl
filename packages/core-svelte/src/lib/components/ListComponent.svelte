@@ -137,7 +137,7 @@
         if (isNullOrUndefined(data)) {
             return false;
         }
-        // console.log(JSON.stringify(data.elementType) + ' compares to ' + JSON.stringify(myMetaType))
+        // console.log(JSON.stringify(data.elementType) + ' compares to ' + jsonAsString(myMetaType))
         // only show this item as active when the type of the element to be dropped is the right one
         if (FreLanguage.getInstance().dragMetaConformsToType(data.elementType, myMetaType)) {
             activeElem.value = { row: index, column: -1 };

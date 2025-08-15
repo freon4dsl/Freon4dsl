@@ -21,7 +21,7 @@
         type SelectOption,
         TextBox,
         BehaviorExecutionResult,
-        isNullOrUndefined, notNullOrUndefined
+        isNullOrUndefined, notNullOrUndefined, jsonAsString
     } from '@freon4dsl/core';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import { selectedBoxes } from './stores/AllStores.svelte.js';
@@ -133,7 +133,7 @@
      */
     const textUpdate = (details: CaretDetails) => {
         LOGGER.log(
-            `textUpdate for ${box.kind}: ${JSON.stringify(details)}, start: ${text.substring(0, details.caret)}`
+            `textUpdate for ${box.kind}: ${jsonAsString(details)}, start: ${text.substring(0, details.caret)}`
         );
         if (!dropdownShown) {
             showDropdown();
@@ -167,7 +167,7 @@
     const caretChanged = (details: CaretDetails) => {
         LOGGER.log(
             `caretChanged for ${box.kind}: ` +
-                JSON.stringify(details) +
+                jsonAsString(details) +
                 ', start: ' +
                 text.substring(0, details.caret)
         );
@@ -187,14 +187,14 @@
     };
 
     function makeFilteredOptionsUnique() {
-        // remove doubles, to avoid errors
+        // Remove doubles, to avoid errors. Check on the id, because identical labels are allowed!
         const seen: string[] = [];
         const result: SelectOption[] = [];
         filteredOptions.forEach((option) => {
-            if (seen.includes(option.label)) {
-                LOGGER.log('Option ' + JSON.stringify(option) + ' is a duplicate');
+            if (seen.includes(option.id)) {
+                LOGGER.log('Option ' + jsonAsString(option) + ' is a duplicate');
             } else {
-                seen.push(option.label);
+                seen.push(option.id);
                 result.push(option);
             }
         });
@@ -366,7 +366,7 @@
      */
     const startEditing = (details?: CaretDetails) => {
         LOGGER.log(
-            'startEditing detail: ' + JSON.stringify(details) + ` dropDown: ${dropdownShown}`
+            'startEditing detail: ' + jsonAsString(details) + ` dropDown: ${dropdownShown}`
         );
         isEditing = true;
         showDropdown();

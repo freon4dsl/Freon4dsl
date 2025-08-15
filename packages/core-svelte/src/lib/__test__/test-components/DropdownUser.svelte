@@ -1,6 +1,6 @@
 <script lang="ts">
     import DropdownComponent from '../../components/DropdownComponent.svelte';
-    import type { SelectOption } from '@freon4dsl/core';
+    import { jsonAsString, type SelectOption } from '@freon4dsl/core';
 
     let filteredOptions: SelectOption[] = [
         { id: 'xx', label: 'XXX', additional_label: 'from SS' },
@@ -14,7 +14,7 @@
     let newSelected: {value: string | undefined} = $state({ value: 'xx' });
 
     const selectionChanged = (sel: SelectOption) => {
-        newSelected.value = JSON.stringify(sel);
+        newSelected.value = jsonAsString(sel);
     };
 </script>
 
