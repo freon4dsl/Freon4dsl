@@ -54,7 +54,7 @@ LangModule5 {
     imports { self.imports; }
 }
 
-// do not only define the scope of ComplexVarReference5, because then the
+// do not define the scope of ComplexVarReference5 only, because then the
 // SimpleVarReference5 will still have the scope of its parent
 VarReference5 {
     alternatives {

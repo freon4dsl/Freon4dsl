@@ -35,6 +35,8 @@ concept Entity {
     isCompany: boolean;
     name: identifier;
     reference baseEntity?: Entity;
+    nrOfEmployees?: number;
+    nameOfSpouse?: string;
 }
 
 concept EntityAttribute {
