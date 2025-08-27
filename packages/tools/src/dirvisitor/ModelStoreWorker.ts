@@ -1,5 +1,5 @@
-import { StoreCatalog, StoredModel, StoredUnit } from "@freon4dsl/server/dist/index";
-import { DirectoryWorker } from "./DirectoryWalker";
+import { StoreCatalog, StoredModel, StoredUnit } from "@freon4dsl/server/dist/index.js";
+import { DirectoryWorker } from "./DirectoryWalker.js";
 
 /**
  * Worker that creates the modelstore index JSON file using the DirectoryWalker.

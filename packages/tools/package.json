@@ -3,14 +3,18 @@
   "version": "2.0.0-beta.2",
   "description": "Finds the country of origin of the incoming request",
   "main": "index.js",
+  "type": "module",
   "json": "tsm ./src/json/Json.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+  "store": "tsm ./src/dirvisitor/makeMakeStoreIndex.ts"
   },
   "dependencies": {
     "@duplojs/zod-to-typescript": "0.4.2",
     "@rushstack/ts-command-line": "4.11.0",
     "@types/node": "20.12.11",
+    "cmd-ts": "^0.13.0",
+    "commander": "^14.0.0",
     "lodash": "4.17.21",
     "tsm": "^2.3.0",
     "zod": "3.25.36"

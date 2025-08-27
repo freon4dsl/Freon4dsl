@@ -1,4 +1,4 @@
-import { FileUtil } from "@freon4dsl/server/dist/index"
+import { FileUtil } from "@freon4dsl/test-helpers"
 import fs from "fs";
 
 /**
