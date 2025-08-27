@@ -45,7 +45,7 @@
     })
 
     const openUnit = (index: number) => {
-        // console.log('openUnit ' + index)
+        console.log('openUnit ' + index + " " + editorInfo.unitIds[index]?.id)
         WebappConfigurator.getInstance().openModelUnit(editorInfo.unitIds[index]);
         drawerHidden.value = true;
     };
@@ -158,25 +158,25 @@
         <div class="w-64 ml-4 text-sm font-medium text-light-base-900 bg-light-base-50 dark:bg-dark-base-900 border-light-base-200 rounded-lg  dark:border-dark-base-600 dark:text-white">
             {#each myUnits as unit, index}
                 {#if unit.type === unitType}
-                <div class="flex justify-between items-end text-light-base-800  dark:text-dark-base-200 w-full mx-3 my-1 px-4 py-1
+                <div class="flex justify-between items-end text-light-base-800  dark:text-dark-base-200 w-full mx-3 my-1
                     cursor-pointer dark:bg-dark-base-800
                     {index === selectedIndex ? 'bg-light-accent-100 dark:bg-dark-accent-100' : 'bg-light-base-100 dark:bg-dark-base-700'}"
                 >
-                <span class="flex flex-start">
+                <button class="flex-1 flex-start h-full   py-1" onclick={() => openUnit(index)}>
+                    <span class="flex flex-start mx-2">
                     {unit.name}
-                    {#if index === selectedIndex}..<PenSolid class="{iconCls} me-2 "/>{/if}</span>
+                        {#if index === selectedIndex}..<PenSolid class="{iconCls} me-2 "/>{/if}
+                    </span>
+                </button>
+                <span class="py-1">
                     <ChevronDownOutline id="dots-menu-{index}" class="inline text-light-base-900 dark:text-dark-base-50 hover:bg-light-base-900 dark:hover:bg-dark-base-50 hover:text-light-base-150 dark:hover:text-dark-base-700"/>
                     <Tooltip class={tooltipClass} placement="bottom">Actions on {unit.name}</Tooltip>
                     <Dropdown class="p-0 m-0 bg-light-base-500" placement='bottom' triggeredBy="#dots-menu-{index}">
                         <div class="flex flex-col justify-end p-0 m-0">
-                            <Button class={dropdownButtonCls} name="Open" size="xs" onclick={() => openUnit(index)}>
-                                <FolderOpenSolid class="{iconCls} me-2"/>
-                                Open
-                            </Button>
-<!--                            <Button class={dropdownButtonCls}  name="Save" size="xs" onclick={() => saveUnit(index)}>-->
-<!--                                <FloppyDiskSolid class="{iconCls} me-2"/>-->
-<!--                                Save-->
-<!--                            </Button>-->
+<!--                            // <Button class={dropdownButtonCls} name="Open" size="xs" onclick={() => openUnit(index)}>-->
+<!--                            //     <FolderOpenSolid class="{iconCls} me-2"/>-->
+<!--                            //     Open-->
+<!--                            // </Button>-->
                             <Button class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
                                 <PenSolid class="{iconCls} me-2"/>
                                 Rename
@@ -191,6 +191,7 @@
                             </Button>
                         </div>
                     </Dropdown>
+                </span>
                 </div>
                 {/if}
             {/each}

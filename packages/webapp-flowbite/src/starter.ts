@@ -2,7 +2,7 @@ import { mount } from 'svelte'
 import { FlowbiteFreonLayout, WebappConfigurator, setDevelopment } from "@freon4dsl/weblib-flowbite"
 import { configureExternals } from "./externals.js"
 import { configureLoggers } from "./loggers.js"
-import { LanguageEnvironment } from "@freon4dsl/samples-scoping-example"
+import { LanguageEnvironment } from "@freon4dsl/samples-qname"
 import { ServerCommunication } from "@freon4dsl/core"
 
 /**
