@@ -21,8 +21,8 @@
         type SelectOption,
         TextBox,
         BehaviorExecutionResult,
-        isNullOrUndefined, notNullOrUndefined, jsonAsString
-    } from '@freon4dsl/core';
+        isNullOrUndefined, notNullOrUndefined, jsonAsString, MatchUtil
+    } from "@freon4dsl/core"
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import { selectedBoxes } from './stores/AllStores.svelte.js';
     import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
@@ -140,7 +140,7 @@
         }
         allOptions = getOptions();
         setFiltered(
-            allOptions.filter((o) => o.label.startsWith(text.substring(0, details.caret)))
+            MatchUtil.matchingOptions(text.substring(0, details.caret), allOptions)
         );
         makeFilteredOptionsUnique();
         // Only one option and has been fully typed in, use this option without waiting for the ENTER key
@@ -149,7 +149,7 @@
         );
         if (
             filteredOptions.length === 1 &&
-            filteredOptions[0].label === text &&
+            MatchUtil.fullMatch(text, filteredOptions[0].label) &&
             filteredOptions[0].label.length === details.caret
         ) {
             storeOrExecute(filteredOptions[0]);
@@ -173,7 +173,7 @@
         );
         allOptions = getOptions();
         setFiltered(
-            allOptions.filter((o) => o.label.startsWith(text.substring(0, details.caret)))
+            MatchUtil.matchingOptions(text.substring(0, details.caret), allOptions)
         );
         makeFilteredOptionsUnique();
     };
@@ -379,14 +379,11 @@
                 setFiltered(allOptions.filter(() => true));
             } else {
                 setFiltered(
-                    allOptions.filter((o) => {
-                        LOGGER.log(`    startsWith text [${text}], option is ${o.id}`);
-                        return o?.label?.startsWith(text.substring(0, details.caret));
-                    })
+                    MatchUtil.matchingOptions(text.substring(0, details.caret), allOptions)
                 );
             }
         } else {
-            setFiltered(allOptions.filter((o) => o?.label?.startsWith(text.substring(0, 0))));
+            setFiltered(MatchUtil.matchingOptions(text.substring(0, 0), allOptions))
         }
         makeFilteredOptionsUnique();
     };
@@ -421,9 +418,11 @@
         isEditing = false;
         if (dropdownShown) {
             allOptions = getOptions();
-            let validOption = allOptions.find((o) => o.label === text);
-            if (!!validOption && validOption.id !== noOptionsId) {
-                storeOrExecute(validOption);
+            let matchingOptions: SelectOption[] = MatchUtil.matchingOptions(text, allOptions)
+            // let validOption = allOptions.find((o) => o.label === text);
+            if (matchingOptions.length === 1 && MatchUtil.fullMatch(text, matchingOptions[0].label)) {
+            // if (!!validOption && validOption.id !== noOptionsId) {
+                storeOrExecute(matchingOptions[0]);
             } else {
                 // no valid option, restore the previous value
                 setText(textBox.getText());
