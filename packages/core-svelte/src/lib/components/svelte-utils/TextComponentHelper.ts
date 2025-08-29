@@ -6,8 +6,10 @@ import {
     FreEditor,
     FreErrorSeverity,
     FreLogger,
-    isActionTextBox, jsonAsString,
+    isActionTextBox,
+    jsonAsString,
     notNullOrUndefined,
+    SPACEBAR,
     TextBox
 } from '@freon4dsl/core';
 import { executeCustomKeyboardShortCut } from './CommonFunctions.js';
@@ -191,6 +193,9 @@ export class TextComponentHelper {
                         break;
                     case 'v': // ctrl-v
                         this.paste(event);
+                        break;
+                    case SPACEBAR:
+                        this._dispatcher("startEditing")
                         break;
                 }
             } else {
