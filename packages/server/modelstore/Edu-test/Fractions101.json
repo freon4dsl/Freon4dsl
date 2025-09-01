@@ -122,7 +122,8 @@
                   "ID-24",
                   "ID-25",
                   "ID-26",
-                  "ID-48"
+                  "ID-48",
+                  "ID-28"
                ]
             }
          ],
@@ -1278,6 +1279,19 @@
          "parent": "ID-9"
       },
       {
+         "id": "ID-28",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-GradeScore"
+         },
+         "properties": [],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-9"
+      },
+      {
          "id": "ID-65",
          "classifier": {
             "language": "-key-Education",
@@ -1305,7 +1319,8 @@
                   "ID-94",
                   "ID-131",
                   "ID-140",
-                  "ID-13"
+                  "ID-13",
+                  "ID-29"
                ]
             },
             {
@@ -1590,6 +1605,36 @@
          "references": [],
          "annotations": [],
          "parent": "ID-13"
+      },
+      {
+         "id": "ID-29",
+         "classifier": {
+            "language": "-key-Education",
+            "version": "2023.1",
+            "key": "-key-Question"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Question-name"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-Education",
+                  "version": "2023.1",
+                  "key": "-key-Question-content"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-65"
       },
       {
          "id": "ID-133",

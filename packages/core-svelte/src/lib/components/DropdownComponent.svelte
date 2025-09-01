@@ -2,6 +2,10 @@
     import { type SelectOption } from '@freon4dsl/core';
     import { DROPDOWN_LOGGER } from './ComponentLoggers.js';
     import type { DropdownProps } from './svelte-utils/FreComponentProps.js';
+    import { usePaneContext } from "./svelte-utils/PaneLike.js";
+    import { focusAndScrollIntoView } from './svelte-utils/ScrollingUtils.js';
+    import { tick } from 'svelte';
+    import { scrollDebug } from './svelte-utils/Scroll-debug.js';
 
     let {
         options = $bindable(),
@@ -9,6 +13,7 @@
         selectionChanged
     }: DropdownProps = $props();
     let id: string = 'dropdown';
+    let rootElement: HTMLSpanElement | undefined = $state(undefined);
 
     const LOGGER = DROPDOWN_LOGGER;
 
@@ -17,10 +22,26 @@
         selected = option;
         selectionChanged(option);
     };
+
+    const pane = usePaneContext();
+
+    export async function scrollIntoViewIfNeeded() {
+        LOGGER.log('scrollIntoViewIfNeeded');
+
+        // wait for DOM/layout before toggling visibility
+        await tick();
+        // wait one extra frame before trying to measure and scroll the dropdown,
+        // layout + styles + images may not have been applied yet
+        requestAnimationFrame(() => {
+            // Prefixing with void is a stylistic way to say “Yes, I know this returns a promise; I don’t care about awaiting it here.”
+            // Could also have been: focusAndScrollIntoView(rootEl, pane).catch(console.error);
+            if (rootElement) void focusAndScrollIntoView(rootElement, pane);
+        });
+    }
 </script>
 
-<span class="dropdown-component-container">
-    <span class="dropdown-component" {id}>
+<span class="dropdown-component-container" >
+    <span class="dropdown-component" {id} bind:this={rootElement}>
         {#if options.length > 0}
             {#each options as option (option.id)}
                 <div

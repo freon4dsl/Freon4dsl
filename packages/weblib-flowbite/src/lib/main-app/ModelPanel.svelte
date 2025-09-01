@@ -105,7 +105,7 @@
 
 
 <!-- buttons for open and new model -->
-<div class="flex items-center justify-between">
+<div id="modelPanel" class="flex items-center justify-between">
     <ButtonGroup class="*:!ring-light-base-700 ">
         <Button id="open-model-button" class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class={iconCls}/>
