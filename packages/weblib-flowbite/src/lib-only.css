@@ -19,3 +19,11 @@
         @apply dark:bg-stone-900;
     }
 }
+
+/**
+ This class is missing the "overflow"  property when using bare tailwind, we therefore define it over here.
+ */
+.text-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

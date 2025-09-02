@@ -100,13 +100,16 @@
       'hover:text-light-base-100    dark:hover:text-dark-base-800 ' +
       'hover:bg-light-base-900      dark:hover:bg-dark-base-700';
     const iconCls: string = "w-4 h-4 ";
+    
+    const hiddenButtonCls: string = 'hidden'
 </script>
 
 
 
 <!-- buttons for open and new model -->
 <div class="flex items-center justify-between">
-    <ButtonGroup class="*:!ring-light-base-700 ">
+    <ButtonGroup>
+        <Button id="dummy-model-button" class={hiddenButtonCls} name="Dummy" size="xs" onclick={openModelDialog}/>
         <Button id="open-model-button" class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class={iconCls}/>
         </Button>
@@ -123,18 +126,18 @@
 
 <!-- buttons that address the current model -->
 <div class="flex justify-between items-center p-3 mb-3 bg-light-base-500">
-    <span class="font-bold text-light-base-100 dark:text-dark-base-50">
+    <span class="font-bold text-light-base-100 dark:text-dark-base-50 text-ellipsis">
         {editorInfo.modelName}
     </span>
     <ButtonGroup class="*:!ring-light-base-700 ">
         <Button id="rename-model-button" disabled class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
-            <PenSolid class="{iconCls} me-2 "/>
+            <PenSolid class="{iconCls} me-1 "/>
         </Button>
         <Button id="delete-model-button" {disabled} class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
-            <TrashBinSolid class="{iconCls} me-2"/>
+            <TrashBinSolid class="{iconCls} me-1"/>
         </Button>
         <Button id="import-unit-button" {disabled} class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
-            <ArrowDownToBracketOutline class="{iconCls} me-2"/>
+            <ArrowDownToBracketOutline class="{iconCls} me-1"/>
         </Button>
     </ButtonGroup>
     <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
@@ -162,10 +165,16 @@
                     cursor-pointer dark:bg-dark-base-800
                     {index === selectedIndex ? 'bg-light-accent-100 dark:bg-dark-accent-100' : 'bg-light-base-100 dark:bg-dark-base-700'}"
                 >
-                <button class="flex-1 flex-start h-full   py-1" onclick={() => openUnit(index)}>
-                    <span class="flex flex-start mx-2">
-                    {unit.name}
-                        {#if index === selectedIndex}..<PenSolid class="{iconCls} me-2 "/>{/if}
+                <button class="flex-1 flex-start h-full text-ellipsis  py-1" onclick={() => openUnit(index)}>
+                    <span class="flex flex-start mx-2 text-ellipsis">
+                        {#if index === selectedIndex}
+                            <div class="flex justify-between text-ellipsis"> 
+                                <PenSolid class="{iconCls} me-2 "/>
+                                <span class="text-ellipsis">{unit.name}</span>
+                            </div>
+                        {:else}
+                            <div class="text-ellipsis">{unit.name}</div>
+                        {/if}
                     </span>
                 </button>
                 <Tooltip class={tooltipClass} placement="bottom">Open {unit.name}</Tooltip>
