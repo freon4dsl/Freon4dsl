@@ -181,15 +181,18 @@ export class TextComponentHelper {
                         this._dispatcher("hideDropdown")
                         break;
                     case 'x': // ctrl-x
+                        console.log('TextComponentHelper cut')
                         this.cut();
                         break;
                     case 'a': // ctrl-a
                         // todo SELECT ALL in focused control
                         break;
                     case 'c': // ctrl-c
+                        console.log('TextComponentHelper copy')
                         this.copy(event, editor);
                         break;
                     case 'v': // ctrl-v
+                      console.log('TextComponentHelper paste')
                         this.paste(event);
                         break;
                 }
@@ -308,7 +311,7 @@ export class TextComponentHelper {
         // Firefox only supports reading the clipboard in browser extensions, using the "clipboardRead" extension permission.
         // TODO add a check on the browser used
         // navigator.clipboard.readText().then(
-        // 		clipText => LOGGER.log('adding ' + clipText + ' after ' + this._getText()[to - 1]));
+        // 		clipText => console.log('adding ' + clipText + ' after ' + this._getText()[this._to - 1]));
         // TODO add the clipText to 'text'
     }
 

@@ -99,23 +99,26 @@
                         break;
                     case 'x': // ctrl-x => CUT
                         if (!shouldBeHandledByBrowser.value) {
-                            LOGGER.log('Ctrl-x: CUT');
+                            console.log('Ctrl-x: CUT');
                             AstActionExecutor.getInstance(editor).cut();
                             stopEvent(event);
                         }
                         break;
                     case 'c': // ctrl-c => COPY
                         if (!shouldBeHandledByBrowser.value) {
-                            LOGGER.log('Ctrl-c: COPY');
+                            console.log('Ctrl-c: COPY');
                             AstActionExecutor.getInstance(editor).copy();
                             stopEvent(event);
                         }
                         break;
                     case 'v': // ctrl-v => PASTE
                         if (!shouldBeHandledByBrowser.value) {
-                            LOGGER.log('Ctrl-v: PASTE');
+                            console.log('Ctrl-v: PASTE');
                             AstActionExecutor.getInstance(editor).paste();
                             stopEvent(event);
+                        } else {
+                            console.log('Ctrl-v: STOPPING');
+                            // stopEvent(event);
                         }
                         break;
                     case 'h': // ctrl-h => SEARCH

@@ -33,7 +33,7 @@
     import ErrorTooltip from './ErrorTooltip.svelte';
     import ErrorMarker from './ErrorMarker.svelte';
     import type { TextComponentProps } from './svelte-utils/FreComponentProps.js';
-    import {contextMenu} from "./stores/AllStores.svelte";
+    import { contextMenu, shouldBeHandledByBrowser } from './stores/AllStores.svelte';
 
     const LOGGER = TEXT_LOGGER;
 
@@ -308,7 +308,7 @@
 	 */
 	const onKeyDown = (event: KeyboardEvent) => {
 		// see https://en.wikipedia.org/wiki/Table_of_keyboard_shortcuts
-        LOGGER.log(
+        console.log(
             `${id}: onKeyDown:  isEditing ${isEditing} key: [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}] meta [${event.metaKey}]`
         );
         if (event.key === TAB) {
@@ -317,8 +317,12 @@
             // ignore meta keys
 			LOGGER.log("META KEY: stop propagation")
 			event.stopPropagation();
-		} else if (event.altKey || event.ctrlKey) { 
-            // No shift, because that is handled as normal text
+		} else if (event.altKey || event.ctrlKey) { // No shift, because that is handled as normal text
+      if (event.key === 'v') { // do nothing, let the 'onpaste' event happen and be captured
+          console.log('preventing ctrl-v')
+          shouldBeHandledByBrowser.value = true;
+          return;
+      }
 			myHelper.handleAltOrCtrlKey(event, editor);
 		} else { 
             // handle non meta keys
@@ -357,7 +361,7 @@
 					break;
 				}
 				default: { 
-                    // the event.key is SHIFT or a printable character
+          // the event.key is SHIFT or a printable character
 					if (partOfDropdown) toParent('showDropdown');
 					myHelper.getCaretPosition(event);
 					if (event.shiftKey && event.key === 'Shift') {
@@ -483,6 +487,58 @@
         }
     }
 
+    async function onPaste(e: ClipboardEvent) {
+        console.log('TextComponent onPaste')
+        e.stopPropagation();
+        e.preventDefault(); // avoid the browser inserting styled HTML
+
+        // 1) Best path: use the event's clipboardData (widest compatibility)
+        let pastedText = e.clipboardData?.getData('text/plain') ?? '';
+
+        // 2) Fallback: only try this if the paste event didn't yield any text…
+        if (!pastedText
+          && 'clipboard' in navigator           // browser exposes the async Clipboard API
+          && 'readText' in navigator.clipboard) // and specifically the readText() method
+        {
+            try {
+                // Ask the browser/OS for whatever *plain text* is currently on the system clipboard.
+                // This only succeeds in a secure context (https:// or localhost) AND during a user gesture
+                // (e.g., your keydown/click handler). Otherwise, it throws an error which we will catch.
+                pastedText = await navigator.clipboard.readText();
+            } catch {
+                // If it’s blocked (permissions, policy, or not a user gesture), we just skip it.
+            }
+        }
+
+        if (!pastedText) return;
+        // insert `pastedText` at the caret/selection
+        insertAtSelection(pastedText);
+    }
+
+    function insertAtSelection(insert: string) {
+        // Read and normalize selection
+        let from = myHelper.from ?? 0;
+        let to   = myHelper.to   ?? from;
+        if (from > to) [from, to] = [to, from];
+
+        // Clamp to current text
+        const len = text?.length ?? 0;
+        from = Math.max(0, Math.min(from, len));
+        to   = Math.max(0, Math.min(to,   len));
+
+        // Splice in the new text
+        const before = text.slice(0, from);
+        const after  = text.slice(to);
+        text = before + insert + after;
+
+        // Collapse caret to end of inserted text
+        const pos = from + insert.length;
+        myHelper.from = myHelper.to = pos;
+
+        // (optional) debug
+        console.log('added', insert, '-> new caret at', pos);
+    }
+
     const clientRectangle = (): ClientRectangle => {
         LOGGER.log(`clientRectangle: ${box.id} isEditing ${isEditing} input ${isNullOrUndefined(inputElement)} span ${isNullOrUndefined(spanElement)}`)
 
@@ -531,6 +587,7 @@
                     onclick={onClickInInput}
                     onfocusout={onFocusOut}
                     onkeydown={onKeyDown}
+                    onpaste={onPaste}
                     draggable="true"
                     ondragstart={onDragStart}
                     {placeholder}

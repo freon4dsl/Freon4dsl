@@ -11,7 +11,7 @@ import {
     notNullOrUndefined,
     FreErrorSeverity,
     FreEditorUtil,
-    FreDelta
+    FreDelta, isTextBox, TextBox, isActionTextBox
 } from '@freon4dsl/core';
 import type { FreNode, TraceNode } from "@freon4dsl/core";
 import { runInAction } from "mobx";
@@ -32,6 +32,7 @@ const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
 export class EditorRequestsHandler {
     private static instance: EditorRequestsHandler | null = null;
+    private isPasting: boolean = false;
 
     static getInstance(): EditorRequestsHandler {
         if (EditorRequestsHandler.instance === null) {
@@ -101,8 +102,39 @@ export class EditorRequestsHandler {
         AstActionExecutor.getInstance(this.langEnv!.editor).copy();
     }
 
-    paste = (): void => {
-        AstActionExecutor.getInstance(this.langEnv!.editor).paste();
+    paste = async (): Promise<void> => {
+        if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
+            // do not use this.langEnv!.editor.copiedElement, we cannot paste a FreNode into a string
+            let canReadClipboard: boolean =
+              typeof navigator !== 'undefined' &&
+              isSecureContext &&
+              !!navigator.clipboard?.readText;
+            if (!canReadClipboard) {
+                setUserMessage('Clipboard access not available here. Use Ctrl/Cmd+V instead.');
+                return;
+            }
+            try {
+                this.isPasting = true;
+
+                const clip = await navigator.clipboard.readText(); // user gesture: this click
+                if (clip) {
+                    const myBox: TextBox = this.langEnv!.editor.selectedBox;
+                    // for now, we add the new text after the old text, while replacing any line break with '\n'
+                    myBox.setText(myBox.getText() + clip.replace(/\r\n?/g, '\n'))
+                    // insertAtSelection(normalizeNewlines(clip));
+                } else {
+                    // Optional: give a tiny hint if empty
+                    setUserMessage('Clipboard is empty (no plain text).');
+                }
+            } catch {
+                // Common reasons: permission denied, cross-origin iframe w/o allow, enterprise policy
+                setUserMessage('Clipboard read was blocked. Grant permission or use Ctrl/Cmd+V.');
+            } finally {
+                this.isPasting = false;
+            }
+        } else {
+            AstActionExecutor.getInstance(this.langEnv!.editor).paste();
+        }
     }
 
     validate = (): void => {
