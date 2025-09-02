@@ -168,6 +168,7 @@
                         {#if index === selectedIndex}..<PenSolid class="{iconCls} me-2 "/>{/if}
                     </span>
                 </button>
+                <Tooltip class={tooltipClass} placement="bottom">Open {unit.name}</Tooltip>
                 <span class="py-1">
                     <ChevronDownOutline id="dots-menu-{index}" class="inline text-light-base-900 dark:text-dark-base-50 hover:bg-light-base-900 dark:hover:bg-dark-base-50 hover:text-light-base-150 dark:hover:text-dark-base-700"/>
                     <Tooltip class={tooltipClass} placement="bottom">Actions on {unit.name}</Tooltip>
