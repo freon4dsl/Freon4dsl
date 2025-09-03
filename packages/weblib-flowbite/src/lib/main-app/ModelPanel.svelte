@@ -109,6 +109,7 @@
 <!-- buttons for open and new model -->
 <div class="flex items-center justify-between">
     <ButtonGroup>
+        <!-- Dummy button first, otherwise the tooltip for open-model will show when panel is opened. -->
         <Button id="dummy-model-button" class={hiddenButtonCls} name="Dummy" size="xs" onclick={openModelDialog}/>
         <Button id="open-model-button" class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class={iconCls}/>
