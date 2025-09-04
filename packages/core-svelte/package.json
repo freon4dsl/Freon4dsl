@@ -35,7 +35,10 @@
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
   "files": [
-    "dist"
+    "dist",
+    "!dist/__test__",
+    "src/lib/**/*.ts",
+    "!src/lib/__test__"
   ],
   "sideEffects": [
     "**/*.css"
