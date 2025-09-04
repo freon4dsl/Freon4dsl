@@ -88,7 +88,7 @@ export class TextBox extends Box {
      */
     setCaret: (caret: FreCaret) => void = (caret: FreCaret) => {
         LOGGER.log("setCaret: " + caret.position);
-        /* To be overwritten by `TextComponent` */
+        /* Default, to be overwritten by `TextComponent` */
         // TODO The following is needed to keep the cursor at the end when creating a numberliteral in example
         //     Check in new components whether this is needed.
         switch (caret.position) {
@@ -107,6 +107,38 @@ export class TextBox extends Box {
                 break;
         }
     };
+
+    getCaret: () => FreCaret = (): FreCaret => {
+        /* Default, to be overwritten by `TextComponent` */
+        console.log('TextBox getCaret', FreCaret.LEFT_MOST.from);
+        return FreCaret.LEFT_MOST;
+    }
+
+    insertAtSelection(insert: string) {
+        let text = this.getText();
+        let caret: FreCaret = this.getCaret();
+        // Read and normalize selection
+        let from = caret.from ?? 0;
+        let to   = caret.to   ?? from;
+        if (from > to) [from, to] = [to, from];
+
+        // Clamp to current text
+        const len = text?.length ?? 0;
+        from = Math.max(0, Math.min(from, len));
+        to   = Math.max(0, Math.min(to,   len));
+
+        // Splice in the new text
+        const before = text.slice(0, from);
+        const after  = text.slice(to);
+        text = before + insert + after;
+
+        // Collapse caret to end of inserted text
+        const pos = from + insert.length;
+        caret.from = caret.to = pos;
+
+        LOGGER.log(`added ${insert} -> new caret at ${pos}`);
+        this.setText(text);
+    }
 
     /** @internal
      * This function is called after the text changes in the browser.

@@ -189,6 +189,15 @@
         }
     };
 
+    /**
+     * This functions returns the caret position as it is currently within this component.
+     * Used by the TextBox when pasting using the Paste button.
+     */
+    const getCaret = (): FreCaret => {
+        console.log('TextComponent getCaret', myHelper.from, myHelper.to, inputElement?.selectionStart, inputElement?.selectionEnd);
+        return FreCaret.IndexPosition(myHelper.from, myHelper.to);
+    }
+
     /* ========	The following functions are called from both the browser, and @freon4dsl/core =========== */
 
     /**
@@ -209,6 +218,7 @@
             if (notNullOrUndefined(document.getSelection())) {
                 let { anchorOffset, focusOffset } = document.getSelection()!;
                 myHelper.setFromAndTo(anchorOffset, focusOffset);
+                console.log('SETTING the caret', myHelper.from, myHelper.to)
             }
         } else {
             // Get the caret position(s) from the editor, to be used to set
@@ -268,6 +278,7 @@
     function onClickInInput() {
         LOGGER.log(`onClickInInput for ${box?.id}`);
         myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+        console.log('ON CLICK setting the caret', myHelper.from, myHelper.to)
         if (partOfDropdown) {
             // let TextDropdownComponent know, dropdown menu needs to be altered
             LOGGER.log('dispatching from onClickInInput');
@@ -282,10 +293,7 @@
     function endEditing() {
         LOGGER.log(`endEditing for ${box?.id}`);
         if (isEditing) {
-            // reset the local variables
             isEditing = false;
-            myHelper.from = -1;
-            myHelper.to = -1;
 
             if (!partOfDropdown) {
                 // store the current value in the textbox, or delete the box, if appropriate
@@ -515,6 +523,10 @@
         insertAtSelection(pastedText);
     }
 
+    /** This function copies 'insertAtSelection' in core/TextBox because the text in this component is not yet
+     * stored in the box.
+     * @param insert
+     */
     function insertAtSelection(insert: string) {
         // Read and normalize selection
         let from = myHelper.from ?? 0;
@@ -563,6 +575,7 @@
         if (notNullOrUndefined(box)) {
             box.getClientRectangle = clientRectangle
             box.setCaret = calculateCaret;
+            box.getCaret = getCaret;
             box.setFocus = setFocus
             box.refreshComponent = refresh
         }

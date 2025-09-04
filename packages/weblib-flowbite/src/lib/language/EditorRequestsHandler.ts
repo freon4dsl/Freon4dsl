@@ -104,7 +104,8 @@ export class EditorRequestsHandler {
 
     paste = async (): Promise<void> => {
         if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
-            // do not use this.langEnv!.editor.copiedElement, we cannot paste a FreNode into a string
+            // Do not use this.langEnv!.editor.copiedElement, we cannot paste a FreNode into a string.
+            // Instead, use the clipboard, if possible.
             let canReadClipboard: boolean =
               typeof navigator !== 'undefined' &&
               isSecureContext &&
@@ -114,14 +115,16 @@ export class EditorRequestsHandler {
                 return;
             }
             try {
+                if (this.isPasting) { return; }
                 this.isPasting = true;
 
-                const clip = await navigator.clipboard.readText(); // user gesture: this click
+                const clip: string = await navigator.clipboard.readText(); // user gesture: this click
                 if (clip) {
                     const myBox: TextBox = this.langEnv!.editor.selectedBox;
-                    // for now, we add the new text after the old text, while replacing any line break with '\n'
-                    myBox.setText(myBox.getText() + clip.replace(/\r\n?/g, '\n'))
-                    // insertAtSelection(normalizeNewlines(clip));
+                    console.log('Caret at:', myBox.getCaret().from, myBox.getCaret().to)
+                    // myBox.setText(myBox.getText() + clip.replace(/\r\n?/g, '\n'))
+                    // Add the new text at the caret position, while replacing any line break with '\n'
+                    myBox.insertAtSelection(clip.replace(/\r\n?/g, '\n'));
                 } else {
                     // Optional: give a tiny hint if empty
                     setUserMessage('Clipboard is empty (no plain text).');
