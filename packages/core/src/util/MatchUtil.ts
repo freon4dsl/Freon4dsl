@@ -26,6 +26,7 @@ export class MatchUtil {
 
     /**
      * Test whether `text` is a full match with `option.label`.
+     * The test is case insensitive.     
      * @param text
      * @param option
      */
