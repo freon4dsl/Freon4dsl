@@ -40,7 +40,7 @@
         draggedElem,
         draggedFrom
     } from './stores/AllStores.svelte.js';
-    import DragHandle from "$lib/components/images/DragHandle.svelte";
+    import DragHandle from "./images/DragHandle.svelte";
 
     // Props
     let { editor, box }: FreComponentProps<ListBox> = $props();
