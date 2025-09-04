@@ -10,11 +10,18 @@ export class FragmentBox extends Box {
         super(node, role);
         FreUtils.initializeObject(this, initializer);
         this._childBox = childBox;
+        childBox.parent = this
     }
 
     get childBox(): Box {
         return this._childBox;
     }
+
+    get children(): ReadonlyArray<Box> {
+        return [this._childBox];
+    }
+    
+    
 }
 
 export function isFragmentBox(box: Box): box is FragmentBox {
