@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-Example",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-18",
@@ -89,7 +94,9 @@
                "children": [
                   "ID-20",
                   "ID-21",
-                  "ID-22"
+                  "ID-22",
+                  "ID-45",
+                  "ID-51"
                ]
             },
             {
@@ -145,7 +152,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "ID-11"
                   }
                ]
             }
@@ -181,7 +188,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-3"
+                     "reference": "ID-13"
                   }
                ]
             }
@@ -217,11 +224,69 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "ID-11"
                   }
                ]
             }
          ],
+         "annotations": [],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-45",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "dd"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-11"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-51",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
          "annotations": [],
          "parent": "ID-19"
       },
@@ -272,7 +337,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "ID-12"
                   }
                ]
             }
@@ -520,7 +585,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "ID-12"
                   }
                ]
             }
@@ -607,7 +672,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "reference": "ID-11"
                   }
                ]
             }
@@ -689,7 +754,8 @@
                   "ID-46",
                   "ID-48",
                   "ID-49",
-                  "ID-50"
+                  "ID-50",
+                  "ID-44"
                ]
             },
             {
@@ -743,8 +809,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "String",
-                     "reference": "ID-1"
+                     "resolveInfo": "Integer",
+                     "reference": "ID-12"
                   }
                ]
             }
@@ -780,7 +846,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "ID-12"
                   }
                ]
             }
@@ -824,7 +890,7 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": ""
+               "value": "dwd`"
             }
          ],
          "containments": [],
@@ -846,11 +912,25 @@
                   "version": "2023.1",
                   "key": "-key-Attribute-name"
                },
-               "value": ""
+               "value": "d"
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-13"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-36"
       },
@@ -869,6 +949,28 @@
                   "key": "-key-Attribute-name"
                },
                "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-36"
+      },
+      {
+         "id": "ID-44",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "dswds"
             }
          ],
          "containments": [],
@@ -923,7 +1025,7 @@
                "targets": [
                   {
                      "resolveInfo": "Boolean",
-                     "reference": "ID-3"
+                     "reference": "ID-13"
                   }
                ]
             }
@@ -1056,7 +1158,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "ID-12"
                   }
                ]
             }

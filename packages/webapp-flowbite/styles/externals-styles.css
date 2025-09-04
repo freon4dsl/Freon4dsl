@@ -14,3 +14,13 @@
     border: 2px black solid;
     background-color: lightgrey;
 }
+
+.diagram-entity {
+    border: #0d47a1;
+    border-style: solid;
+}
+
+.diagram-attribute-list {
+    border-top: #974A04;
+    border-style: dashed;
+}

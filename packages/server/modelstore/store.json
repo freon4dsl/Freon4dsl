@@ -1,5 +1,5 @@
 {
-    "currentPostfix": 4,
+    "currentPostfix": 5,
     "models": [
         {
             "folder": "modelstore",
@@ -336,6 +336,10 @@
                 {
                     "file": "unit9_1.json",
                     "name": "unit9_1"
+                },
+                {
+                    "name": "AAAAAAA",
+                    "file": "AAAAAAA.json"
                 }
             ],
             "version": "1"

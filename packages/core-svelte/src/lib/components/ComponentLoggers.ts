@@ -31,3 +31,4 @@ export const LIST_LOGGER = new FreLogger('ListComponent');
 export const MULTILINETEXT_LOGGER = new FreLogger('MultilineComponent');
 export const NUMERICSLIDER_LOGGER = new FreLogger('NumericSliderComponent');
 export const SWITCH_LOGGER = new FreLogger('SwitchComponent');
+export const DIAGRAM_LOGGER = new FreLogger('DiagramComponent');

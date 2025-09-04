@@ -21,9 +21,12 @@ import {
     BoxUtil,
     NumberDisplay,
     TextBox,
-    FreProjectionHandler
-} from '@freon4dsl/core';
-import { Documentation, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
+    FreProjectionHandler,
+    DiagramBox,
+    BoolDisplay,
+    FreNodeReference,
+} from "@freon4dsl/core"
+import { Documentation, Entity, ExampleUnit, NumberLiteralExpression, OrExpression, SumExpression } from "../language/gen/index.js";
 import { ExampleEnvironment } from "../config/gen/ExampleEnvironment.js";
 
 const sumIcon = "M 6 5 L 6.406531 20.35309 L 194.7323 255.1056 L 4.31761 481.6469 L 3.767654 495.9135 L 373 494 C 376.606 448.306 386.512 401.054 395 356 L 383 353 C 371.817 378.228 363.867 405.207 340 421.958 C 313.834 440.322 279.304 438 249 438 L 79 438 L 252.2885 228.6811 L 96.04328 33.3622 L 187 32.99999 C 245.309 32.99999 328.257 18.91731 351.329 89.00002 C 355.273 100.98 358.007 113.421 359 126 L 372 126 L 362 5 L 6 5 L 6 5 L 6 5 L 6 5 L 6 5 z ";
@@ -54,7 +57,9 @@ export class CustomExampleProjection implements FreProjection {
         ["SumExpression", this.createSumBox],
         ["OrExpression", this.createOrBoxGrid],
         ["Documentation", this.createDocumentation],
-        ["NumberLiteralExpression", this.createNumberLiteralBox]
+        ["NumberLiteralExpression", this.createNumberLiteralBox],
+        ["Entity", this.createEntity],
+        ["ExampleUnit", this.getUnit],
     ]);
 
     nodeTypeToTableDefinition: Map<string, () => FreTableDefinition> = new Map<string, () => FreTableDefinition>([]);
@@ -186,4 +191,76 @@ createDocumentation (doc: Documentation): Box {
                 "[" + property + "]",
                 { propertyName: property, conceptName: FreLanguage.getInstance().classifier(element.freLanguageConcept()).properties.get(property).type });
     }
+
+    private createEntity(entity: Entity): Box {
+        return BoxFactory.verticalLayout(entity as Entity, "Entity-overall", "", [
+            BoxFactory.horizontalLayout(
+                entity as Entity,
+                "Entity-hlist-line-0",
+                "",
+                [
+                    BoxUtil.booleanBox(entity as Entity, "abstract", { yes: "RIGHT", no: "WRONG" }, BoolDisplay.SELECT),
+                    BoxUtil.textBox(entity as Entity, "name"),
+                ],
+                { selectable: false },
+            ),
+            BoxUtil.verticalPartListBox(entity as Entity, (entity as Entity).attributes, "attributes", null, this.handler,
+                {  cssClass: "diagram-attribute-list"})
+            // new DiagramBox(entity, "attributes", "Attribute", "entityDiagramAttributes", entity.attributes.map(att => this.handler.getBox(att)), []),
+            // BoxUtil.indentBox(
+            //     entity as Entity,
+            //     4,
+            //     "1",
+            //     BoxUtil.verticalPartListBox(entity as Entity, (entity as Entity).attributes, "attributes", null, this.mainHandler),
+            // ),
+            // BoxUtil.indentBox(
+            //     entity as Entity,
+            //     4,
+            //     "2",
+            //     BoxUtil.verticalPartListBox(entity as Entity, (entity as Entity).methods, "methods", null, this.handler),
+            // ),
+        ],
+            {cssClass: "diagram-entity"});
+    }
+
+    getUnit(unit: ExampleUnit): Box {
+        return BoxFactory.verticalLayout(unit as ExampleUnit, "ExampleUnit-overall", "", [
+            BoxUtil.getBoxOrAction(unit as ExampleUnit, "documentation", "Documentation", this.handler),
+            BoxFactory.horizontalLayout(
+                unit as ExampleUnit,
+                "ExampleUnit-hlist-line-1",
+                "",
+                [
+                    BoxUtil.labelBox(unit as ExampleUnit, "unit", "top-1-line-1-item-0"),
+                    BoxUtil.textBox(unit as ExampleUnit, "name"),
+                    BoxUtil.labelBox(unit as ExampleUnit, "{", "top-1-line-1-item-2"),
+                ],
+                { selectable: false },
+            ),
+            BoxUtil.labelBox(unit as ExampleUnit, "}", "top-1-line-6-item-0"),
+            this.createDiagramBox(unit, [...unit.entities, ...unit.interfaces])
+        ]);
+    }
+
+    createDiagramBox(unit: ExampleUnit, nodeList: FreNode[]): DiagramBox {
+        // map nodelist to 
+        const freNodeToBox = new Map<FreNode, Box>()
+        nodeList.forEach(node => freNodeToBox.set(node, this.handler.getBox(node)))
+        const edges = []
+        nodeList.filter(node => node instanceof Entity).map(e => {
+            const ent = e as Entity
+            if (!!ent.baseEntity) {
+                edges.push({
+                    id: ent.freId() + '-' + ent.baseEntity.referred.freId(),
+                    source: ent.freId(),
+                    target: ent.baseEntity.referred.freId(),
+                    animated: false,
+                    type: 'default',
+                    style: 'stroke: red'
+                })
+            }
+        })
+        return new DiagramBox(unit, "entities", "Entity", "unitDiagramEntities", Array.from(freNodeToBox.values()), edges)
+    }
+
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import DiagramComponent from "$lib/components/DiagramComponent.svelte";
     import { RENDER_LOGGER } from './ComponentLoggers.js';
     import { tick } from "svelte"
     // This component renders any box from the box model.
@@ -35,8 +36,8 @@
         BoolDisplay,
         LimitedDisplay,
         isActionTextBox,
-        notNullOrUndefined, type ClientRectangle, UndefinedRectangle
-    } from "@freon4dsl/core"
+        notNullOrUndefined, type ClientRectangle, UndefinedRectangle, isDiagramBox
+    } from "@freon4dsl/core";
     import MultiLineTextComponent from './MultiLineTextComponent.svelte';
     import EmptyLineComponent from './EmptyLineComponent.svelte';
     import GridComponent from './GridComponent.svelte';
@@ -214,6 +215,8 @@
             <ListComponent {box} {editor} />
         {:else if isOptionalBox2(box)}
             <OptionalComponent {box} {editor} />
+        {:else if isDiagramBox(box) }
+            <DiagramComponent box={box} editor={editor}/>
         {:else if isSvgBox(box)}
             <SvgComponent {box} {editor} />
         {:else if isTableBox(box)}

@@ -233,7 +233,6 @@
             class:dragged={draggedElem.value?.propertyIndex === index && draggedFrom.value === id}
             style:grid-column={!isHorizontal ? 1 : index + 1}
             style:grid-row={isHorizontal ? 1 : index + 1}
-            animate:flip
 
             onkeydown={event => {onKeyDown(event, index)}}
             ondragend={(event) => dragend(event)}

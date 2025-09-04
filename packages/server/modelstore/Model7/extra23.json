@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-Example",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-19",
@@ -24,9 +29,21 @@
                "containment": {
                   "language": "-key-Example",
                   "version": "2023.1",
+                  "key": "-key-ExampleUnit-documentation"
+               },
+               "children": [
+                  "ID-33"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
                   "key": "-key-ExampleUnit-entities"
                },
-               "children": []
+               "children": [
+                  "ID-28"
+               ]
             },
             {
                "containment": {
@@ -34,7 +51,9 @@
                   "version": "2023.1",
                   "key": "-key-ExampleUnit-interfaces"
                },
-               "children": []
+               "children": [
+                  "ID-30"
+               ]
             },
             {
                "containment": {
@@ -48,6 +67,219 @@
          "references": [],
          "annotations": [],
          "parent": null
+      },
+      {
+         "id": "ID-33",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Documentation"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Documentation-text"
+               },
+               "value": "ggreg"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-28",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Entity"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-abstract"
+               },
+               "value": "true"
+            },
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-BaseType-name"
+               },
+               "value": "aaaa"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-attributes"
+               },
+               "children": [
+                  "ID-29"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-methods"
+               },
+               "children": [
+                  "ID-35"
+               ]
+            }
+         ],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-baseInterfaces"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-29",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Attribute"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-name"
+               },
+               "value": "wd2d"
+            }
+         ],
+         "containments": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Attribute-declaredType"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "String",
+                     "reference": "ID-11"
+                  }
+               ]
+            }
+         ],
+         "annotations": [],
+         "parent": "ID-28"
+      },
+      {
+         "id": "ID-35",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Method-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-28"
+      },
+      {
+         "id": "ID-30",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Interface"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-BaseType-name"
+               },
+               "value": "vweew"
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Interface-methods"
+               },
+               "children": [
+                  "ID-34"
+               ]
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-19"
+      },
+      {
+         "id": "ID-34",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Method"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Method-name"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Method-parameters"
+               },
+               "children": []
+            }
+         ],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-30"
       }
    ]
 }

@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-Example",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-18",
@@ -101,6 +106,19 @@
                "reference": {
                   "language": "-key-Example",
                   "version": "2023.1",
+                  "key": "-key-Entity-baseEntity"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "ent45",
+                     "reference": "ID-20"
+                  }
+               ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
                   "key": "-key-Entity-baseInterfaces"
                },
                "targets": []
@@ -137,7 +155,7 @@
                "targets": [
                   {
                      "resolveInfo": "Integer",
-                     "reference": "ID-2"
+                     "reference": "ID-12"
                   }
                ]
             }

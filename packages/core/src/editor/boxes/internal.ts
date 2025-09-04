@@ -38,6 +38,7 @@ export * from "./TableBox.js";
 export * from "./TableCellBox.js";
 export * from "./TableRowBox.js";
 export * from "./externalBoxes/index.js";
+export * from "./DiagramBox.js";
 
 // the following files contain export that do not depend on any other file
 export * from "./SelectOption.js";
