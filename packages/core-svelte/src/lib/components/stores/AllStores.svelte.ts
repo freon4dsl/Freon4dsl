@@ -1,21 +1,8 @@
 import ContextMenu from '../ContextMenu.svelte';
 import type { Box, ListElementInfo } from '@freon4dsl/core';
-import { writable } from 'svelte/store';
+import type { PaneLike } from '../svelte-utils/PaneLike.js';
 
 export type GridIndex = { row: number; column: number };
-export class ViewportSizes {
-    width: number = 0;
-    height: number = 0;
-    top: number = 0;
-    left: number = 0;
-
-    setSizes(height: number, width: number, top: number, left: number) {
-        this.height = height;
-        this.width = width;
-        this.top = top;
-        this.left = left;
-    }
-}
 
 // indication whether any context menu is being shown
 export const contextMenuVisible: { value: boolean } = $state({ value: false });
@@ -35,4 +22,5 @@ export const activeElem: { value: GridIndex | undefined } = $state({ value: unde
 // id of the svelte component that contains the 'active' element
 export const activeIn: { value: string } = $state({ value: '' });
 
-export const viewport = writable(new ViewportSizes());
+// pointer to the FreonComponent, to be able to do scrolling if needed
+export const editorPane: { value: PaneLike | undefined } = $state({ value: undefined });

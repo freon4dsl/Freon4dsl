@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { CONTEXTMENU_LOGGER } from '$lib/components/ComponentLoggers.js';
+    import { CONTEXTMENU_LOGGER } from './ComponentLoggers.js';
 
     /**
      *  This component combines a menu with a submenu. The positions of both the menu and the submenu are determined
@@ -11,7 +11,7 @@
     import { type MainComponentProps } from './svelte-utils/FreComponentProps.js';
     import { tick } from 'svelte';
     import { type ClientRectangle, MenuItem } from '@freon4dsl/core';
-    import { contextMenuVisible, viewport } from './stores/AllStores.svelte.js';
+    import { contextMenuVisible } from './stores/AllStores.svelte.js';
 
     // items for the context menu
     let { editor }: MainComponentProps = $props();

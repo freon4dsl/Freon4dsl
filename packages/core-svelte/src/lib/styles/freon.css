@@ -8,7 +8,7 @@
 .freon-component {
     height: 100%;
     width: 100%;
-    overflow-x: auto;
+    /*overflow-x: auto;*/
     font-size: 14px;
     font-style: normal;
     font-weight: normal;
@@ -21,6 +21,19 @@
     flex-wrap: nowrap;
     gap: 2px;
     spellcheck: false;
+    /* Prevent accidental stacking-context/containing-block bugs */
+    transform: none !important; /* (don’t set transforms on the pane root) */
+    filter: none !important;
+    perspective: none !important;
+    /* Predictable sizing */
+    box-sizing: border-box;
+    /* The following is needed for the scrollbar to be only on the container of the FreonComponent, otherwise a second scrollbar might appear. */
+    /* Do not be a scroll owner */
+    overflow: visible;   /* or unset/inherit — but NOT auto/scroll */
+    /* Play nice inside flex/grid parents */
+    min-height: 0;       /* avoids flex/grid ancestors forcing scrollbars */
+    min-width: 0;        /* same for horizontal cases */
+    flex: 1 1 auto;      /* if it's inside a flex layout */
 }
 .gutter {
     /*border: 1px solid;*/

@@ -107,8 +107,8 @@
 
 
 <!-- buttons for open and new model -->
-<div class="flex items-center justify-between">
-    <ButtonGroup>
+<div id="modelPanel" class="flex items-center justify-between">
+    <ButtonGroup class="*:!ring-light-base-700 ">
         <!-- Dummy button first, otherwise the tooltip for open-model will show when panel is opened. -->
         <Button id="dummy-model-button" class={hiddenButtonCls} name="Dummy" size="xs" onclick={openModelDialog}/>
         <Button id="open-model-button" class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
@@ -131,14 +131,14 @@
         {editorInfo.modelName}
     </span>
     <ButtonGroup class="*:!ring-light-base-700 ">
-        <Button id="rename-model-button" disabled class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
-            <PenSolid class="{iconCls} me-1 "/>
+        <Button id="rename-model-button" disabled class="{buttonCls} px-3" name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
+            <PenSolid class="{iconCls} "/>
         </Button>
-        <Button id="delete-model-button" {disabled} class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
-            <TrashBinSolid class="{iconCls} me-1"/>
+        <Button id="delete-model-button" {disabled} class="{buttonCls} px-3" name="Delete"  onclick={() => {dialogs.deleteModelDialogVisible = true}}>
+            <TrashBinSolid class="{iconCls}"/>
         </Button>
-        <Button id="import-unit-button" {disabled} class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
-            <ArrowDownToBracketOutline class="{iconCls} me-1"/>
+        <Button id="import-unit-button" {disabled} class="{buttonCls} px-3" name="Import Unit(s)..." onclick={() => {dialogs.importDialogVisible = true}}>
+            <ArrowDownToBracketOutline class="{iconCls}"/>
         </Button>
     </ButtonGroup>
     <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->

@@ -19,8 +19,8 @@
         isTableRowBox,
         isElementBox,
         AstActionExecutor,
-        type FreNode, type ClientRectangle, UndefinedRectangle, FreEditorUtil
-    } from "@freon4dsl/core"
+        type FreNode, type ClientRectangle, UndefinedRectangle, FreEditorUtil, isNullOrUndefined
+    } from '@freon4dsl/core';
     import RenderComponent from './RenderComponent.svelte';
     import ContextMenu from './ContextMenu.svelte';
     import { tick } from 'svelte';
@@ -32,12 +32,14 @@
         shouldBeHandledByBrowser
     } from './stores/AllStores.svelte.js';
     import type { MainComponentProps } from './svelte-utils/FreComponentProps.js';
+    import { getNearestScrollContainer } from './svelte-utils/ScrollingUtils';
+    import { type PaneLike, providePaneContext } from './svelte-utils/PaneLike';
 
     let LOGGER = FREON_LOGGER;
 
     let { editor }: MainComponentProps = $props();
 
-    let element: HTMLDivElement; // The current main element of this component.
+    let freonRootElement: HTMLDivElement | undefined = $state(undefined); // The current main element of this component.
     let rootBox: Box = $state(dummyBox);
     let id: string = $derived(
         // an id for the html element showing the rootBox
@@ -76,7 +78,7 @@
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-z: UNDO');
                             const delta = AstActionExecutor.getInstance(editor).undo();
-                            console.log(`FreonComponent undu '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
+                            LOGGER.log(`FreonComponent undu '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
                             if (delta !== undefined && !editor.isBoxInTree(editor.selectedBox)) {
                                 FreEditorUtil.selectAfterUndo(editor, delta)
                             }
@@ -215,61 +217,67 @@
     function onScroll() {
         // Hide any contextmenu upon scrolling, because its position will not be correct.
         contextMenuVisible.value = false;
-        // we use a timeOut here, like below in the ResizeObserver, to improve performance
-        setTimeout(() => {
-            editor.scrollX = element.scrollLeft;
-            editor.scrollY = element.scrollTop;
-        }, 400); 
+        // we use a timeOut here, to improve performance
+        if (notNullOrUndefined(freonRootElement)) {
+            setTimeout(() => {
+                editor.scrollX = freonRootElement!.scrollLeft;
+                editor.scrollY = freonRootElement!.scrollTop;
+            }, 400);
+        }
         // Might use another value for the delay, but this seems ok.
+    }
+
+    /**
+     * Returns the nearest scrollable ancestor for this component's root.
+     */
+    export function getScrollContainer(): HTMLElement | null {
+        return getNearestScrollContainer(freonRootElement);
+    }
+
+    /**
+     * Returns a promise that resolves to the visible rectangle of `el`
+     * (intersection with viewport and clipping ancestors), in the same
+     * coordinate system as getBoundingClientRect(),
+     * or `null` if no element was provided.
+     */
+    export function getVisibleRect(el: HTMLElement | undefined): Promise<DOMRectReadOnly | null> {
+        const sc = getScrollContainer();
+        if (isNullOrUndefined(el) || isNullOrUndefined(sc)) return Promise.resolve(null);
+
+        return new Promise((resolve) => {
+            console.log('getVisibleRect: returning promise')
+            const io = new IntersectionObserver(
+              (entries) => {
+                  resolve(entries[0]?.intersectionRect ?? null);
+                  io.disconnect();
+              },
+              { root: sc, threshold: [0] }
+            );
+            io.observe(el);
+        });
     }
 
     const clientRectangle = (): ClientRectangle => {
         LOGGER.log(`FreonComponent clientRect`)
-        return element?.getBoundingClientRect() || UndefinedRectangle
+        return freonRootElement?.getBoundingClientRect() || UndefinedRectangle
     }
-    // function setViewportSizes(elem?: Element) {
-    //     // Note that entry.contentRect gives slightly different results to entry.target.getBoundingClientRect().
-    //     // A: I have no idea why.
-    //     if (notNullOrUndefined(elem)) {
-    //         let rect = elem.getBoundingClientRect();
-    //         if (notNullOrUndefined(elem.parentElement)) {
-    //             let parentRect = elem.parentElement.getBoundingClientRect();
-    //             viewport.value.setSizes(rect.height, rect.width, parentRect.top, parentRect.left);
-    //         } else {
-    //             viewport.value.setSizes(rect.height, rect.width, 0, 0);
-    //         }
-    //         console.log('setViewportSizes')
-    //     }
-    // }
 
-    // onMount(() => {
-    //     setViewportSizes(element);
-    //
-    //     // We keep track of the size of the editor component, to be able to position any context menu correctly.
-    //     // For this we use a ResizeObserver.
-    //
-    //     // Define the observer and its callback.
-    //     const resizeObserver = new ResizeObserver((entries) => {
-    //         // Hide any contextmenu upon resize, because its position will not be correct.
-    //         contextMenuVisible.value = false;
-    //         // Use a timeOut to improve performance, otherwise every slight change will activate this function.
-    //         setTimeout(() => {
-    //             // We're only watching one element, this is the first of the entries. Get it's size.
-    //             setViewportSizes(entries.at(0)?.target);
-    //         }, 400); // Might use another value for the delay, but this seems ok.
-    //     });
-    //
-    //     // Observe the FreonComponent element.
-    //     resizeObserver.observe(element);
-    //
-    //     // This callback cleans up the observer.
-    //     return () => resizeObserver.unobserve(element);
-    // });
+    const visibleRectangle = async (): Promise<DOMRectReadOnly | null> => {
+        LOGGER.log(`FreonComponent visibleRect`)
+        const rect = await getVisibleRect(freonRootElement);
+        if (rect) {
+            LOGGER.log("visible size:", rect.width, rect.height);
+            return rect;
+        } else {
+            LOGGER.log("freonRootElement was null, skipping");
+            return null;
+        }
+    }
 
     $effect(() => {
         editor.refreshComponentSelection = refreshSelection;
         editor.refreshComponentRootBox = refreshRootBox;
-        editor.getClientRectangle = clientRectangle
+        editor.getClientRectangle = clientRectangle;
     });
 
     const refreshSelection = async (why?: string) => {
@@ -319,6 +327,10 @@
 
     refreshRootBox('Initialize FreonComponent');
     refreshSelection('Initialize FreonComponent');
+
+    // Make sure the right functions are available for the Dropdown component to be able to scroll if needed.
+    const paneApi: PaneLike = { getVisibleRect, getScrollContainer };
+    providePaneContext(paneApi);
 </script>
 
 <!-- TODO This makes us dependent on @material/... do we want that?-->
@@ -338,7 +350,7 @@
     class={'freon-component'}
     onkeydown={onKeyDown}
     onscroll={onScroll}
-    bind:this={element}
+    bind:this={freonRootElement}
     {id}
     role="group"
 >

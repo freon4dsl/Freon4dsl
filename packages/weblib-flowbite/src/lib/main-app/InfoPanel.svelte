@@ -7,7 +7,7 @@
 	import { activeTab, errorTab, interpreterTab, searchTab } from "$lib/stores/InfoPanelStore.svelte.js"
 </script>
 
-<div>
+<div id="infoPanel">
 	<div class="flex flex-end p-0 m-0 w-full border-b border-light-base-300 dark:border-dark-base-800">
 		<div class="font-semibold p-1">
 			{#if activeTab.value === searchTab}

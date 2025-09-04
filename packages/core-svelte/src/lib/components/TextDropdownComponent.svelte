@@ -27,6 +27,8 @@
     import { selectedBoxes } from './stores/AllStores.svelte.js';
     import { clickOutsideConditional } from './svelte-utils/ClickOutside.js';
     import { type CaretDetails } from './svelte-utils/CaretDetails';
+    import { tick } from 'svelte';
+    import type DropdownCmp from "./DropdownComponent.svelte";
 
     const LOGGER = TEXTDROPDOWN_LOGGER;
 
@@ -36,6 +38,8 @@
     let textBox: TextBox = $state(box.textBox)!; // NB the initial value must be here, the effect starts to function after initialization
     // True if box is a referencebox and referred is in the same unit
     let selectAbleReference: boolean = $state(false)
+    // the dropdown part of this component
+    let dropdownCmp: DropdownCmp | undefined = $state(undefined);
 
     $effect(() => {
         // runs after the initial onMount
@@ -182,8 +186,17 @@
         dropdownShown = false;
     };
 
-    const showDropdown = () => {
+    const showDropdown = async () => {
         dropdownShown = true;
+        // wait until DOM updates and styles/layout settle
+        await tick();
+
+        // now wait one more frame so images/css apply
+        requestAnimationFrame(() => {
+            if (dropdownCmp) {
+                dropdownCmp?.scrollIntoViewIfNeeded();
+            }
+        });
     };
 
     function makeFilteredOptionsUnique() {
@@ -527,6 +540,7 @@
     {/if}
     {#if dropdownShown}
         <DropdownComponent
+            bind:this={dropdownCmp}
             bind:selected
             bind:options={filteredOptions}
             selectionChanged={itemSelected}

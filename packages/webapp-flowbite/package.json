@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf node_modules/",
-    "build": "echo No build for webapp-starter",
+    "build": "echo No build for webapp-flowbite",
     "build-app": "vite build",
     "build-dev": "cd ../../packages/samples/ScoperTryout && npm run build",
     "dev": "vite",
