@@ -1,5 +1,5 @@
 import fs from "fs";
-import { LwDiff } from "./LionwebM3";
+import { LwDiff } from "./LionwebM3.js";
 
 type ChangedType = {
     path: string;

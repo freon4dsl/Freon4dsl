@@ -1,5 +1,5 @@
-import { DirectoryWalker } from "./DirectoryWalker";
-import { ListDirectoriesWorker } from "./ListDirectories";
+import { DirectoryWalker } from "./DirectoryWalker.js";
+import { ListDirectoriesWorker } from "./ListDirectories.js";
 
 const worker = new ListDirectoriesWorker()
 const walker = new DirectoryWalker(worker)
