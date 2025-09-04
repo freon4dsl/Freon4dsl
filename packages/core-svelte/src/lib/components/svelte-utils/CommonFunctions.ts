@@ -1,4 +1,4 @@
-import { DummyNode } from '$lib/components/svelte-utils/DummyNode';
+import { DummyNode } from './DummyNode';
 import {
     AST,
     Box,
