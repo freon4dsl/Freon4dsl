@@ -45,7 +45,7 @@
     })
 
     const openUnit = (index: number) => {
-        // console.log('openUnit ' + index)
+        console.log('openUnit ' + index + " " + editorInfo.unitIds[index]?.id)
         WebappConfigurator.getInstance().openModelUnit(editorInfo.unitIds[index]);
         drawerHidden.value = true;
     };
@@ -100,13 +100,17 @@
       'hover:text-light-base-100    dark:hover:text-dark-base-800 ' +
       'hover:bg-light-base-900      dark:hover:bg-dark-base-700';
     const iconCls: string = "w-4 h-4 ";
+    
+    const hiddenButtonCls: string = 'hidden'
 </script>
 
 
 
 <!-- buttons for open and new model -->
 <div class="flex items-center justify-between">
-    <ButtonGroup class="*:!ring-light-base-700 ">
+    <ButtonGroup>
+        <!-- Dummy button first, otherwise the tooltip for open-model will show when panel is opened. -->
+        <Button id="dummy-model-button" class={hiddenButtonCls} name="Dummy" size="xs" onclick={openModelDialog}/>
         <Button id="open-model-button" class={buttonCls} name="Open existing model" size="xs" onclick={openModelDialog}>
             <FolderOpenSolid class={iconCls}/>
         </Button>
@@ -123,18 +127,18 @@
 
 <!-- buttons that address the current model -->
 <div class="flex justify-between items-center p-3 mb-3 bg-light-base-500">
-    <span class="font-bold text-light-base-100 dark:text-dark-base-50">
+    <span class="font-bold text-light-base-100 dark:text-dark-base-50 text-ellipsis">
         {editorInfo.modelName}
     </span>
     <ButtonGroup class="*:!ring-light-base-700 ">
         <Button id="rename-model-button" disabled class={buttonCls} name="Rename" size="xs" onclick={() => {dialogs.renameModelDialogVisible = true}}>
-            <PenSolid class="{iconCls} me-2 "/>
+            <PenSolid class="{iconCls} me-1 "/>
         </Button>
         <Button id="delete-model-button" {disabled} class={buttonCls} name="Delete" size="xs" onclick={() => {dialogs.deleteModelDialogVisible = true}}>
-            <TrashBinSolid class="{iconCls} me-2"/>
+            <TrashBinSolid class="{iconCls} me-1"/>
         </Button>
         <Button id="import-unit-button" {disabled} class={buttonCls} name="Import Unit(s)..." size="xs" onclick={() => {dialogs.importDialogVisible = true}}>
-            <ArrowDownToBracketOutline class="{iconCls} me-2"/>
+            <ArrowDownToBracketOutline class="{iconCls} me-1"/>
         </Button>
     </ButtonGroup>
     <!--  tooltips need to be outside of the button group, otherwise the styling will not be correct  -->
@@ -158,25 +162,32 @@
         <div class="w-64 ml-4 text-sm font-medium text-light-base-900 bg-light-base-50 dark:bg-dark-base-900 border-light-base-200 rounded-lg  dark:border-dark-base-600 dark:text-white">
             {#each myUnits as unit, index}
                 {#if unit.type === unitType}
-                <div class="flex justify-between items-end text-light-base-800  dark:text-dark-base-200 w-full mx-3 my-1 px-4 py-1
+                <div class="flex justify-between items-end text-light-base-800  dark:text-dark-base-200 w-full mx-3 my-1
                     cursor-pointer dark:bg-dark-base-800
                     {index === selectedIndex ? 'bg-light-accent-100 dark:bg-dark-accent-100' : 'bg-light-base-100 dark:bg-dark-base-700'}"
                 >
-                <span class="flex flex-start">
-                    {unit.name}
-                    {#if index === selectedIndex}..<PenSolid class="{iconCls} me-2 "/>{/if}</span>
+                <button class="flex-1 flex-start h-full text-ellipsis  py-1" onclick={() => openUnit(index)}>
+                    <span class="flex flex-start mx-2 text-ellipsis">
+                        {#if index === selectedIndex}
+                            <div class="flex justify-between text-ellipsis"> 
+                                <PenSolid class="{iconCls} me-2 "/>
+                                <span class="text-ellipsis">{unit.name}</span>
+                            </div>
+                        {:else}
+                            <div class="text-ellipsis">{unit.name}</div>
+                        {/if}
+                    </span>
+                </button>
+                <Tooltip class={tooltipClass} placement="bottom">Open {unit.name}</Tooltip>
+                <span class="py-1">
                     <ChevronDownOutline id="dots-menu-{index}" class="inline text-light-base-900 dark:text-dark-base-50 hover:bg-light-base-900 dark:hover:bg-dark-base-50 hover:text-light-base-150 dark:hover:text-dark-base-700"/>
                     <Tooltip class={tooltipClass} placement="bottom">Actions on {unit.name}</Tooltip>
                     <Dropdown class="p-0 m-0 bg-light-base-500" placement='bottom' triggeredBy="#dots-menu-{index}">
                         <div class="flex flex-col justify-end p-0 m-0">
-                            <Button class={dropdownButtonCls} name="Open" size="xs" onclick={() => openUnit(index)}>
-                                <FolderOpenSolid class="{iconCls} me-2"/>
-                                Open
-                            </Button>
-<!--                            <Button class={dropdownButtonCls}  name="Save" size="xs" onclick={() => saveUnit(index)}>-->
-<!--                                <FloppyDiskSolid class="{iconCls} me-2"/>-->
-<!--                                Save-->
-<!--                            </Button>-->
+<!--                            // <Button class={dropdownButtonCls} name="Open" size="xs" onclick={() => openUnit(index)}>-->
+<!--                            //     <FolderOpenSolid class="{iconCls} me-2"/>-->
+<!--                            //     Open-->
+<!--                            // </Button>-->
                             <Button class={dropdownButtonCls}  name="Rename" size="xs" onclick={() => renameUnit(index)}>
                                 <PenSolid class="{iconCls} me-2"/>
                                 Rename
@@ -191,6 +202,7 @@
                             </Button>
                         </div>
                     </Dropdown>
+                </span>
                 </div>
                 {/if}
             {/each}

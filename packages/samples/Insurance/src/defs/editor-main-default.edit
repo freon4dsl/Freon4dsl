@@ -66,5 +66,5 @@ Parameter {
 // are only used as references, so their names suffice.
 
 Entity {[
-    ${self.isCompany [COMPANY]} ${self.name}
+    ${self.isCompany [COMPANY]} ${self.name} [?based on ${self.baseEntity}]
 ]}

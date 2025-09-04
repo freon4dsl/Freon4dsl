@@ -18,12 +18,12 @@ FreNamespace {
     getParentNodes(): FreNamedNode[] {
         THIS.parentNamespace.getVisibleNodes();
     }
-    getImportedNodes(list: NamespaceImports): FreNamedNode[] {
-        list.forEach( NS => {
-            NS.getDeclaredNodes(PUBLIC_ONLY)
+    getImportedNodes(list: FreNamespaceInfo[]): FreNamedNode[] {
+        list.forEach(import => {
+            import.namespace.getDeclaredNodes(PUBLIC_ONLY)
         plus
             if (import is recursive) {
-                NS.getImportedNodes(NS.imports)
+                import.namespace.getImportedNodes(import.namespace.imports)
             }
         })
     }
