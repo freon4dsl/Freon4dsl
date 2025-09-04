@@ -218,7 +218,7 @@ export class ActionBox extends AbstractChoiceBox {
         let result: BehaviorExecutionResult;
         // Try if key fits one of the options, and execute the action that is associated with it
         const filteredOptions: SelectOption[] = MatchUtil.matchingOptions(key, this.getOptions(editor));
-        if (filteredOptions.length === 1 && MatchUtil.fullMatch(key, filteredOptions[0].label)) {
+        if (filteredOptions.length === 1 && MatchUtil.isFullMatchWithTrigger(key, filteredOptions[0].label)) {
             result = this.executeOption(editor, filteredOptions[0]);
         } else {
             // Try if key matches a regular expression, and execute the action that is associated with it

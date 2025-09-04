@@ -149,7 +149,7 @@
         );
         if (
             filteredOptions.length === 1 &&
-            MatchUtil.fullMatch(text, filteredOptions[0].label) &&
+            MatchUtil.isFullMatchWithOption(text, filteredOptions[0].label) &&
             filteredOptions[0].label.length === details.caret
         ) {
             storeOrExecute(filteredOptions[0]);
@@ -420,7 +420,7 @@
             allOptions = getOptions();
             let matchingOptions: SelectOption[] = MatchUtil.matchingOptions(text, allOptions)
             // let validOption = allOptions.find((o) => o.label === text);
-            if (matchingOptions.length === 1 && MatchUtil.fullMatch(text, matchingOptions[0].label)) {
+            if (matchingOptions.length === 1 && MatchUtil.isFullMatchWithOption(text, matchingOptions[0].label)) {
             // if (!!validOption && validOption.id !== noOptionsId) {
                 storeOrExecute(matchingOptions[0]);
             } else {

@@ -29,7 +29,7 @@ export class MatchUtil {
      * @param text
      * @param option
      */
-    public static isFullMatch(text: string, option: SelectOption): boolean {
+    public static isFullMatchWithOption(text: string, option: SelectOption): boolean {
         return option.label.toLowerCase().startsWith(text.toLowerCase())
     }
 
@@ -39,7 +39,7 @@ export class MatchUtil {
      * @param text
      * @param trigger
      */
-    public static fullMatch(text: string, trigger: FreTriggerType): boolean {
+    public static isFullMatchWithTrigger(text: string, trigger: FreTriggerType): boolean {
         if (isRegExp(trigger)) {
             return trigger.test(text)
         } else if (isString(trigger)) {
