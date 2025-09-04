@@ -21,6 +21,14 @@
 }
 
 /**
+ This class is missing the "overflow"  property when using bare tailwind, we therefore define it over here.
+ */
+.text-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/**
   I can't do this using tailwind, so I use my own class here.
  */
 .my-nav-bar {

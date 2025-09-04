@@ -1,3 +1,4 @@
+import { DummyNode } from './DummyNode';
 import {
     AST,
     Box,
@@ -13,12 +14,11 @@ import {
     type FreNodeReference,
     type FreNamedNode
 } from '@freon4dsl/core';
-import { SimpleElement } from '../../__test__/test-environment/simple-models/SimpleElement.js';
 import {draggedElem, draggedFrom} from "../stores/AllStores.svelte";
 
 // const LOGGER = new FreLogger('CommonFunctions').mute();
 
-export const dummyBox = new ElementBox(new SimpleElement('dummy'), 'box-role');
+export const dummyBox = new ElementBox(new DummyNode('dummy'), 'box-role');
 
 /**
  * This calculates the position of the context- or sub-menu, either on x-axis or y-axis

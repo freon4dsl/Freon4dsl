@@ -267,7 +267,7 @@ export class ServerCommunication implements IServerCommunication {
                 }
             } else {
                 // error
-                console.log("getWithTimeout error")
+                LOGGER.log("getWithTimeout error")
                 throw new Error(await promise.json())
             }
         } catch (e) {
