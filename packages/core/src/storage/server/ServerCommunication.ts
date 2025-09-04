@@ -260,7 +260,7 @@ export class ServerCommunication implements IServerCommunication {
             });
             clearTimeout(timeoutId);
             if (promise.status >= 200 && promise.status < 300) {
-                console.log("getWithTimeout ok")
+                LOGGER.log("getWithTimeout ok")
                 return  {
                     result: await promise.json(),
                     errors: []

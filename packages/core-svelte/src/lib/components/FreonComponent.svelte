@@ -79,7 +79,7 @@
                         if (!shouldBeHandledByBrowser.value) {
                             LOGGER.log('Ctrl-z: UNDO');
                             const delta = AstActionExecutor.getInstance(editor).undo();
-                            console.log(`FreonComponent undu '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
+                            LOGGER.log(`FreonComponent undu '${delta?.toString()} || ${editor.isBoxInTree(editor.selectedBox)}'`)
                             if (delta !== undefined && !editor.isBoxInTree(editor.selectedBox)) {
                                 FreEditorUtil.selectAfterUndo(editor, delta)
                             }
@@ -267,10 +267,10 @@
         LOGGER.log(`FreonComponent visibleRect`)
         const rect = await getVisibleRect(freonRootElement);
         if (rect) {
-            console.log("visible size:", rect.width, rect.height);
+            LOGGER.log("visible size:", rect.width, rect.height);
             return rect;
         } else {
-            console.log("freonRootElement was null, skipping");
+            LOGGER.log("freonRootElement was null, skipping");
             return null;
         }
     }
