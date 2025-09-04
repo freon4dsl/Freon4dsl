@@ -19,3 +19,28 @@
         @apply dark:bg-stone-900;
     }
 }
+
+/**
+  I can't do this using tailwind, so I use my own class here.
+ */
+.my-nav-bar {
+    padding: 1px;
+    margin: 1px;
+    margin-inline: 1px;
+}
+
+/**
+  Flowbite uses mx-auto inside the NavBar (cannot change this code) and then it gets a very big padding.
+  Does not look nice, so I redefined this.
+ */
+.mx-auto {
+    margin: 1px;
+    margin-inline: 1px;
+ }
+
+/**
+    Add background, so it is even in all places.
+ */
+.my-background  {
+    background-color: var(--color-light-base-100)
+}
