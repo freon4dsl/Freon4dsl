@@ -10,9 +10,6 @@ isNamespace { Method, Entity, SumExpression, AppliedFeature }
 
 Entity {
     imports { self.baseEntity; }
-    // How to tell that there is no imports for self.baseEntity ??
-    // imports { self.baseEntity; } for Type
-    // NOT imports { self.baseEntity; } for Entity
 }
 
 AppliedFeature {

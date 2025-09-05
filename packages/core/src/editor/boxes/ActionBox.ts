@@ -10,7 +10,7 @@ import type { FreNode } from "../../ast/index.js";
 import { FreNodeReference } from "../../ast/index.js";
 import { runInAction } from "mobx";
 import { FreLogger } from "../../logging/index.js";
-import { FreUtils, notNullOrUndefined } from '../../util/index.js';
+import { FreUtils, MatchUtil, notNullOrUndefined } from '../../util/index.js';
 
 const LOGGER: FreLogger = new FreLogger("ActionBox");
 
@@ -198,10 +198,10 @@ export class ActionBox extends AbstractChoiceBox {
         });
     }
 
-    triggerKeyPressEvent = (key: string) => {
-        // TODO rename this one, e.g. to triggerKeyEvent
-        LOGGER.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
-    };
+    // triggerKeyPressEvent = (key: string) => {
+    //     // TODO rename this one, e.g. to triggerKeyEvent
+    //     LOGGER.error("ActionBox " + this.role + " has empty triggerKeyPressEvent " + key);
+    // };
 
     executeOption(editor: FreEditor, option: SelectOption): BehaviorExecutionResult {
         LOGGER.log("ActionBox executeOption " + JSON.stringify(option));
@@ -217,8 +217,8 @@ export class ActionBox extends AbstractChoiceBox {
         LOGGER.log(`ActionBox ${this.id} tryToExecute [${key}]`);
         let result: BehaviorExecutionResult;
         // Try if key fits one of the options, and execute the action that is associated with it
-        const filteredOptions: SelectOption[] = this.getOptions(editor).filter(o => o.label.startsWith(key));
-        if (filteredOptions.length === 1 && filteredOptions[0].label === key ) {
+        const filteredOptions: SelectOption[] = MatchUtil.matchingOptions(key, this.getOptions(editor));
+        if (filteredOptions.length === 1 && MatchUtil.isFullMatchWithTrigger(key, filteredOptions[0].label)) {
             result = this.executeOption(editor, filteredOptions[0]);
         } else {
             // Try if key matches a regular expression, and execute the action that is associated with it

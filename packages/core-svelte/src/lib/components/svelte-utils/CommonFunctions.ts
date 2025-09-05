@@ -1,3 +1,4 @@
+import { DummyNode } from './DummyNode';
 import {
     AST,
     Box,
@@ -13,32 +14,11 @@ import {
     type FreNodeReference,
     type FreNamedNode
 } from '@freon4dsl/core';
-import { SimpleElement } from '../../__test__/test-environment/simple-models/SimpleElement.js';
 import {draggedElem, draggedFrom} from "../stores/AllStores.svelte";
 
 // const LOGGER = new FreLogger('CommonFunctions').mute();
 
-export const dummyBox = new ElementBox(new SimpleElement('dummy'), 'box-role');
-
-// export function focusAndScrollIntoView(element: HTMLElement) {
-//     if (!!element) {
-//         element.focus();
-//         // check if the element is already within the editor viewport
-//         let rect = element.getBoundingClientRect();
-//
-//         let elemIsVisible =
-//             rect.top >= get(viewport).top &&
-//             rect.left >= get(viewport).left &&
-//             rect.bottom <= get(viewport).height &&
-//             rect.right <= get(viewport).width;
-//
-//         // if the element is not visible then scroll to it
-//         // see https://learn.svelte.dev/tutorial/update for example on scrolling
-//         if (!elemIsVisible) {
-//             element.scrollIntoView();
-//         }
-//     }
-// }
+export const dummyBox = new ElementBox(new DummyNode('dummy'), 'box-role');
 
 /**
  * This calculates the position of the context- or sub-menu, either on x-axis or y-axis

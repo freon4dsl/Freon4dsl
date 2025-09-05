@@ -50,14 +50,14 @@ const searchFieldCls: string =
 )
 </script>
 
-<div id="freon-toolbar" class="p-0">
+<div id="freon-toolbar" class="h-12 my-background">
     <div class="flex w-full justify-between flex-nowrap bg-light-base-100 dark:bg-dark-base-800 border border-light-base-100 dark:border-dark-base-800 ">
         <div class="flex justify-start flex-nowrap">
         <!--  Model panel button and tooltip      -->
         <Button
             id="model-button"
             tabindex={-1}
-            class="{buttonCls} pill={true} ml-2  bg-light-accent-700 dark:bg-dark-accent-700" onclick={() => (drawerHidden.value = false)}>
+            class="{buttonCls} ml-2 mb-1 bg-light-accent-700 dark:bg-dark-accent-500 dark:text-dark-base-200" onclick={() => (drawerHidden.value = false)}>
             <ChevronRightOutline class="w-5 h-5" />
         </Button>
         <Tooltip tabindex={-1} placement="bottom" class={tooltipClass}>Show Model Info</Tooltip>

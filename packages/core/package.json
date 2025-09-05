@@ -28,7 +28,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "release": "npm publish",
-    "publish-local": "npm publish --registry http://localhost:4873",
+    "publish-local": "npm publish --registry http://localhost:4873 --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local"
   },

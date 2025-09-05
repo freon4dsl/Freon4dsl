@@ -26,19 +26,20 @@
 	const iconCls: string = 'ms-0 inline h-6 w-6';
 </script>
 
+<div class="h-12 my-nav-bar">
 <!--  start::navbar   -->
-<Navbar id="freon-navbar" class="bg-light-base-50 dark:bg-dark-base-900 sticky start-0 top-0 z-20 w-full flex-nowrap border-b px-2 sm:px-4">
+<Navbar id="freon-navbar" class="my-nav-bar bg-light-base-50 dark:bg-dark-base-900 sticky start-0 top-0 z-20 w-full flex-nowrap border-b">
 	<NavBrand href="/">
 		<img src="./freonlogo.svg" class="me-3 h-6 sm:h-9" alt="Freon Logo" />
 		<span
 			  class="self-center whitespace-nowrap text-xl font-semibold text-light-base-700 dark:text-dark-base-150 ">
-			Freon for <span class="text-light-accent-700 dark:text-dark-accent-150">{langInfo.name} > {editorInfo.modelName}</span>
+			Freon for <span class="text-light-accent-700 dark:text-dark-accent-100">{langInfo.name} > {editorInfo.modelName}</span>
 		</span>
 	</NavBrand>
 
 	<ButtonGroup class="*:!ring-dark-base-900 {colorCls}">
       <!--  Dark mode button and tooltip      -->
-      <DarkMode tabindex={-1} id="dark-mode-button" class="{buttonCls} {colorCls} rounded-none focus-within:ring-2 focus-within:z-10 px-4
+      <DarkMode tabindex={-1} id="dark-mode-button" class="{buttonCls} {colorCls} rounded-none focus-within:ring-2 focus-within:z-10 p-1px
 		    border [&:not(:first-child)]:-ms-px first:rounded-s-lg last:rounded-e-lg" />
 
 		<!--  Github button and tooltip      -->
@@ -73,5 +74,6 @@
 	<Tooltip tabindex={-1} triggeredBy="#about-button" placement="bottom" class="{tooltipClass}">About</Tooltip>
 </Navbar>
 <!--  end::navbar   -->
+</div>
 
 <style></style>

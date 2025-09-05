@@ -48,7 +48,7 @@ On the other hand, the parent namespace does not know the named nodes from the c
 A namespace has a set of _declared nodes_: all the child nodes of the
 namespace node (recursively) until a child which is a namespace itself.
 
-Let's define what these ste's are precisey.
+Let's define what these ste's are precisely.
 
 A namespace has a set of **declared nodes**: all the child nodes od the namespace node (recursively) until a child is a namespace itself.
 
@@ -130,7 +130,7 @@ are [H1, J1, A7], and its VisibleNodes are [A6, F1, D6].
 
 When we leave out the AST nodes, the difference to the namespace graph will become more clear.
 
-![Namespace Graph with replacements](./NS-graph-with-replacements.png)
+![Namespace Graph with replacements](./NS-graph-with-alternatives.png)
 
 ### How to Define Namespace Replacements in Freon
 

@@ -626,6 +626,18 @@
                     "file": "MathFunctions.json"
                 }
             ]
+        },
+        {
+            "name": "Qname1",
+            "folder": "Qname1",
+            "language": "QnameModel",
+            "version": "1",
+            "units": [
+                {
+                    "name": "unit1",
+                    "file": "unit1.json"
+                }
+            ]
         }
     ]
 }
