@@ -4,7 +4,7 @@
 
 <script lang="ts">
     import { TEXT_LOGGER } from './ComponentLoggers.js';
-    import { onMount, tick } from 'svelte';
+    import { flushSync, onMount, tick } from 'svelte';
     import { componentId, replaceHTML } from './svelte-utils/index.js';
     import {
         ActionBox,
@@ -169,9 +169,9 @@
      * The caret position is stored in 'myHelper.from' and 'myHelper.to', and used in 'startEditing'.
      * @param freCaret
      */
-    // todo see whether this function needs to be called from the box
     const calculateCaret = (freCaret: FreCaret) => {
         LOGGER.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]`);
+        // No need to flush any pending updates, method is being called from the box.
         switch (freCaret.position) {
             case FreCaretPosition.RIGHT_MOST: // type nr 2
                 myHelper.from = myHelper.to = text.length;
@@ -191,9 +191,10 @@
 
     /**
      * This functions returns the caret position as it is currently within this component.
-     * Used by the TextBox when pasting using the Paste button.
+     * Used by the TextBox when pasting using the Paste button, or copying, or cutting using the buttons.
      */
     const getCaret = (): FreCaret => {
+        flushSync(); // flush any pending updates.
         LOGGER.log(`TextComponent getCaret ${myHelper.from} ${myHelper.to} ${inputElement?.selectionStart} ${inputElement?.selectionEnd}`);
         return FreCaret.IndexPosition(myHelper.from, myHelper.to);
     }
@@ -211,6 +212,7 @@
         // If called from the 'UI' (e.g. by a mouse click), we need to let the
         // editor know that this box/node now has been selected.
         if (from === `UI`) {
+            flushSync(); // flush any pending updates.
             // todo make 'UI' and 'editor' strings into a type
             editor.selectElementForBox(box);
             // Get the caret position(s) of the current selection within the <span> element.
@@ -277,6 +279,7 @@
      */
     function onClickInInput() {
         LOGGER.log(`onClickInInput for ${box?.id}`);
+        flushSync(); // flush any pending updates.
         myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
         LOGGER.log(`ON CLICK setting the caret ${myHelper.from} ${myHelper.to}`)
         if (partOfDropdown) {
@@ -496,7 +499,7 @@
     }
 
     async function onPaste(e: ClipboardEvent) {
-        LOGGER.log('TextComponent onPaste')
+        console.log('TextComponent onPaste')
         e.stopPropagation();
         e.preventDefault(); // avoid the browser inserting styled HTML
 
@@ -519,6 +522,7 @@
         }
 
         if (!pastedText) return;
+        console.log(`TextComponent onPaste after return ${pastedText}`);
         // insert `pastedText` at the caret/selection
         insertAtSelection(pastedText);
     }
@@ -591,10 +595,14 @@
         // 3) Last resort: do not preventDefault → allow default cut (likely a no-op in custom widgets)
     }
 
+    /**
+     * To be called during editing, only from 'onpaste', 'oncopy', or 'oncut' events
+     */
     function getSelectedText(): string {
-        const len = text?.length ?? 0;
+        flushSync(); // flush any pending updates.
+        myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
         // Extract and return substring, using one char extra at the 'to' position
-        return text.slice(myHelper.from, Math.min(myHelper.to + 1, len));
+        return text.slice(myHelper.from, myHelper.to);
     }
 
     function deleteSelection() {
@@ -604,9 +612,10 @@
         }
 
         // Splice out the selected range
-        const len = text?.length ?? 0;
+        flushSync(); // flush any pending updates.
+        myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
         const before = text.slice(0, myHelper.from);
-        const after  = text.slice(Math.min(myHelper.to + 1, len));
+        const after  = text.slice(myHelper.to);
         text = before + after;
 
         // Collapse caret to start of deleted region
@@ -622,26 +631,23 @@
      * @param insert
      */
     function insertAtSelection(insert: string) {
-        // Read and normalize selection
-        let from = myHelper.from ?? 0;
-        let to   = myHelper.to   ?? from;
-        if (from > to) [from, to] = [to, from];
-
-        // Clamp to current text
-        const len = text?.length ?? 0;
-        from = Math.max(0, Math.min(from, len));
-        to   = Math.max(0, Math.min(to,   len));
+        flushSync(); // flush any pending updates.
+        myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
 
         // Splice in the new text
-        const before = text.slice(0, from);
-        const after  = text.slice(to);
+        const before = text.slice(0, myHelper.from);
+        const after  = text.slice(myHelper.to);
         text = before + insert + after;
+        console.log( `inserAtSelection: ${before} ${insert} ${after}`)
+        flushSync(); // flush any pending updates.
 
         // Collapse caret to end of inserted text
-        const pos = from + insert.length;
+        const pos = myHelper.from + insert.length;
         myHelper.from = myHelper.to = pos;
+        inputElement.selectionStart = inputElement.selectionEnd = pos;
 
-        // (optional) debug
+        // Reset width
+        setInputWidth();
         LOGGER.log('added ' + insert + ' -> new caret at ' + pos);
     }
 

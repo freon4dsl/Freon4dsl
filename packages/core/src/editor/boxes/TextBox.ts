@@ -138,6 +138,8 @@ export class TextBox extends Box {
 
         LOGGER.log(`added ${insert} -> new caret at ${pos}`);
         this.setText(text);
+        this.setFocus();
+        this.setCaret(caret);
     }
 
     getSelectedText() : string {
