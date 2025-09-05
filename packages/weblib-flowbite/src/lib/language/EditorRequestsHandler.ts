@@ -1,38 +1,46 @@
+import type { FreNode, TraceNode } from '@freon4dsl/core';
 import {
-    FreProjectionHandler,
-    FreError,
-    FreLogger,
-    FreSearcher,
-    type FreEnvironment,
     AstActionExecutor,
-    type FreModelUnit,
-    isRtError,
-    isNullOrUndefined,
-    notNullOrUndefined,
-    FreErrorSeverity,
+    FreDelta,
     FreEditorUtil,
-    FreDelta, isTextBox, TextBox, isActionTextBox
+    type FreEnvironment,
+    FreError,
+    FreErrorSeverity,
+    FreLogger,
+    type FreModelUnit,
+    FreProjectionHandler,
+    FreSearcher,
+    isActionTextBox,
+    isNullOrUndefined,
+    isRtError,
+    isTextBox,
+    notNullOrUndefined,
+    TextBox
 } from '@freon4dsl/core';
-import type { FreNode, TraceNode } from "@freon4dsl/core";
-import { runInAction } from "mobx";
+import { runInAction } from 'mobx';
 import {
     activeTab,
     errorsLoading,
-    errorTab, interpreterResultLoading, interpreterTab, interpreterTrace,
+    errorTab,
+    interpreterResultLoading,
+    interpreterTab,
+    interpreterTrace,
     modelErrors,
     searchResultLoading,
     searchResults,
     searchTab
-} from "../stores/InfoPanelStore.svelte"
-import { WebappConfigurator } from "../language/index.js";
-import { editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from "../stores/index.js"
-import { TreeNodeData } from "../tree/TreeNodeData.js"
+} from '../stores/InfoPanelStore.svelte';
+import { WebappConfigurator } from '../language/index.js';
+import { editorInfo, infoPanelShown, setUserMessage, userMessageOpen } from '../stores/index.js';
+import { TreeNodeData } from '../tree/TreeNodeData.js';
 
 const LOGGER = new FreLogger("EditorRequestsHandler"); // .mute();
 
 export class EditorRequestsHandler {
     private static instance: EditorRequestsHandler | null = null;
     private isPasting: boolean = false;
+    private isCopying: boolean = false;
+    private isCutting: boolean = false;
 
     static getInstance(): EditorRequestsHandler {
         if (EditorRequestsHandler.instance === null) {
@@ -94,49 +102,126 @@ export class EditorRequestsHandler {
         this.langEnv!.editor.selectionChanged()
     }
 
-    cut = (): void => {
-        AstActionExecutor.getInstance(this.langEnv!.editor).cut();
+    cut = async (): Promise<void> => {
+        if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
+            // Do not use this.langEnv!.editor.copiedElement, we cannot copy a FreNode into a string.
+            // Instead, use the clipboard, if possible.
+            await this.cutPlainText(this.langEnv!.editor.selectedBox);
+        } else {
+            AstActionExecutor.getInstance(this.langEnv!.editor).cut();
+        }
     }
 
-    copy = (): void => {
-        AstActionExecutor.getInstance(this.langEnv!.editor).copy();
+    copy = async (): Promise<void> => {
+        if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
+            // Do not use this.langEnv!.editor.copiedElement, we cannot copy a FreNode into a string.
+            // Instead, use the clipboard, if possible.
+            // TODO
+            await this.copyPlainText(this.langEnv!.editor.selectedBox);
+        } else {
+            AstActionExecutor.getInstance(this.langEnv!.editor).copy();
+        }
     }
 
     paste = async (): Promise<void> => {
         if (isTextBox(this.langEnv!.editor.selectedBox) && !isActionTextBox(this.langEnv!.editor.selectedBox)) {
             // Do not use this.langEnv!.editor.copiedElement, we cannot paste a FreNode into a string.
             // Instead, use the clipboard, if possible.
-            let canReadClipboard: boolean =
-              typeof navigator !== 'undefined' &&
-              isSecureContext &&
-              !!navigator.clipboard?.readText;
-            if (!canReadClipboard) {
-                setUserMessage('Clipboard access not available here. Use Ctrl/Cmd+V instead.');
-                return;
-            }
-            try {
-                if (this.isPasting) { return; }
-                this.isPasting = true;
-
-                const clip: string = await navigator.clipboard.readText(); // user gesture: this click
-                if (clip) {
-                    const myBox: TextBox = this.langEnv!.editor.selectedBox;
-                    console.log('Caret at:', myBox.getCaret().from, myBox.getCaret().to)
-                    // myBox.setText(myBox.getText() + clip.replace(/\r\n?/g, '\n'))
-                    // Add the new text at the caret position, while replacing any line break with '\n'
-                    myBox.insertAtSelection(clip.replace(/\r\n?/g, '\n'));
-                } else {
-                    // Optional: give a tiny hint if empty
-                    setUserMessage('Clipboard is empty (no plain text).');
-                }
-            } catch {
-                // Common reasons: permission denied, cross-origin iframe w/o allow, enterprise policy
-                setUserMessage('Clipboard read was blocked. Grant permission or use Ctrl/Cmd+V.');
-            } finally {
-                this.isPasting = false;
-            }
+            await this.pastePlainText(this.langEnv!.editor.selectedBox);
         } else {
             AstActionExecutor.getInstance(this.langEnv!.editor).paste();
+        }
+    }
+
+    private async pastePlainText(myBox: TextBox) {
+        let canReadClipboard: boolean =
+          typeof navigator !== 'undefined' &&
+          isSecureContext &&
+          !!navigator.clipboard?.readText;
+        if (!canReadClipboard) {
+            setUserMessage('Clipboard access not available here. Use Ctrl/Cmd+V instead.', FreErrorSeverity.Warning);
+            return;
+        }
+        try {
+            if (this.isPasting) {
+                return;
+            }
+            this.isPasting = true;
+
+            const clip: string = await navigator.clipboard.readText(); // user gesture: this click
+            if (clip) {
+                // Add the new text at the caret position, while replacing any line break with '\n'
+                myBox.insertAtSelection(clip.replace(/\r\n?/g, '\n'));
+            } else {
+                // Give a tiny hint if empty
+                setUserMessage('Clipboard is empty (no plain text).', FreErrorSeverity.Info);
+            }
+        } catch {
+            // Common reasons: permission denied, cross-origin iframe w/o allow, enterprise policy
+            setUserMessage('Clipboard read was blocked. Grant permission or use Ctrl/Cmd+V.');
+        } finally {
+            this.isPasting = false;
+        }
+    }
+
+    private async copyPlainText(myBox: TextBox) {
+        let canWriteClipboard: boolean =
+          typeof navigator !== 'undefined' &&
+          isSecureContext &&
+          !!navigator.clipboard?.writeText;
+
+        if (!canWriteClipboard) {
+            setUserMessage('Clipboard access not available here. Use Ctrl/Cmd+C instead.', FreErrorSeverity.Warning);
+            return;
+        }
+        try {
+            if (this.isCopying) {
+                return;
+            }
+            this.isCopying = true;
+
+            const selected: string = myBox.getSelectedText();
+            if (selected) {
+                await navigator.clipboard.writeText(selected.replace(/\r\n?/g, '\n'));
+                // setUserMessage('Copied to clipboard.', FreErrorSeverity.Info);
+            } else {
+                setUserMessage('Nothing selected to copy.', FreErrorSeverity.Info);
+            }
+        } catch {
+            setUserMessage('Clipboard write was blocked. Grant permission or use Ctrl/Cmd+C.');
+        } finally {
+            this.isCopying = false;
+        }
+    }
+
+    private async cutPlainText(myBox: TextBox) {
+        let canWriteClipboard: boolean =
+          typeof navigator !== 'undefined' &&
+          isSecureContext &&
+          !!navigator.clipboard?.writeText;
+
+        if (!canWriteClipboard) {
+            setUserMessage('Clipboard access not available here. Use Ctrl/Cmd+X instead.', FreErrorSeverity.Warning);
+            return;
+        }
+        try {
+            if (this.isCutting) {
+                return;
+            }
+            this.isCutting = true;
+
+            const selected: string = myBox.getSelectedText();
+            if (selected) {
+                await navigator.clipboard.writeText(selected.replace(/\r\n?/g, '\n'));
+                myBox.deleteSelection(); // implement this in TextBox if not present
+                // setUserMessage('Cut to clipboard.', FreErrorSeverity.Info);
+            } else {
+                setUserMessage('Nothing selected to cut.', FreErrorSeverity.Info);
+            }
+        } catch {
+            setUserMessage('Clipboard write was blocked. Grant permission or use Ctrl/Cmd+X.');
+        } finally {
+            this.isCutting = false;
         }
     }
 

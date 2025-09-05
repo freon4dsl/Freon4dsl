@@ -1,10 +1,10 @@
-import { autorun } from "mobx";
-import { AST } from "../../change-manager/index.js";
-import { FreUtils } from "../../util/index.js";
-import { FreCaret, FreCaretPosition } from "../util/index.js";
-import type { FreNode } from "../../ast/index.js";
-import { Box } from "./Box.js";
-import { FreLogger } from "../../logging/index.js";
+import { autorun } from 'mobx';
+import { AST } from '../../change-manager/index.js';
+import { FreUtils } from '../../util/index.js';
+import { FreCaret, FreCaretPosition } from '../util/index.js';
+import type { FreNode } from '../../ast/index.js';
+import { Box } from './Box.js';
+import { FreLogger } from '../../logging/index.js';
 
 const LOGGER: FreLogger = new FreLogger("TextBox");
 
@@ -138,6 +138,45 @@ export class TextBox extends Box {
 
         LOGGER.log(`added ${insert} -> new caret at ${pos}`);
         this.setText(text);
+    }
+
+    getSelectedText() : string {
+        let text = this.getText();
+        let caret: FreCaret = this.getCaret();
+
+        // Read and normalize selection
+        let from = caret.from ?? 0;
+        let to   = caret.to   ?? from;
+        if (from > to) [from, to] = [to, from];
+
+        // no selection → return empty
+        if (from === to) {
+            return '';
+        }
+        return text.substring(from, to);
+    }
+
+    deleteSelection(): void {
+        let text: string = this.getText();
+        let caret: FreCaret = this.getCaret();
+
+        // normalize selection range
+        let from: number = caret.from ?? 0;
+        let to: number = caret.to ?? from;
+        if (from > to) [from, to] = [to, from];
+
+        const len = text.length;
+        if (from === to || len === 0) {
+            // nothing selected, or empty text → nothing to delete
+            return;
+        }
+
+        // remove the selection
+        const newText = text.substring(0, from) + text.substring(to);
+        this.setText(newText);
+
+        // collapse caret to the start of the former selection
+        this.setCaret({position: FreCaretPosition.INDEX, from: from, to: from });
     }
 
     /** @internal
