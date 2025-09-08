@@ -97,6 +97,14 @@ export function notNullOrUndefined(obj: Object | null | undefined): obj is Objec
     return obj !== undefined && obj !== null;
 }
 
+/**
+ * Is string `str` empty, meaning null, undefined or the empty string.
+ * @param str
+ */
+export function isEmpty(str: string | null | undefined): str is null | undefined {
+    return str === undefined || str === null || str === "";
+}
+
 export function startWithUpperCase(word: string): string {
     if (!!word) {
         return word[0].toUpperCase() + word.substring(1);
