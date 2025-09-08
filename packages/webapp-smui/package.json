@@ -1,13 +1,12 @@
 {
   "name": "@freon4dsl/webapp-smui",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "clean": "rm -rf node_modules/",
     "build": "echo No build for webapp-smui",
     "build-app": "vite build",
-    "build-dev": "cd ../../packages/samples/CourseSchedule && npm run build",
     "dev": "vite",
     "preview": "vite preview",
     "start": "sirv public --port 8000",
@@ -37,10 +36,10 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@freon4dsl/core": "2.0.0-beta.2",
-    "@freon4dsl/core-svelte": "2.0.0-beta.2",
-    "@freon4dsl/samples-course-schedule": "2.0.0-beta.2",
-    "@freon4dsl/weblib-smui": "2.0.0-beta.2",
+    "@freon4dsl/core": "2.0.0-beta.3",
+    "@freon4dsl/core-svelte": "2.0.0-beta.3",
+    "@freon4dsl/samples-course-schedule": "2.0.0-beta.3",
+    "@freon4dsl/weblib-smui": "2.0.0-beta.3",
     "@smui/snackbar": "^8.0.0-beta.3",
     "@smui-extra/accordion": "^8.0.0-beta.3",
     "@smui/data-table": "^8.0.0-beta.3",

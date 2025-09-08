@@ -1,13 +1,12 @@
 {
   "name": "@freon4dsl/webapp-flowbite",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "clean": "rm -rf node_modules/",
     "build": "echo No build for webapp-flowbite",
     "build-app": "vite build",
-    "build-dev": "cd ../../packages/samples/ScoperTryout && npm run build",
     "dev": "vite",
     "preview": "vite preview",
     "start": "sirv public --port 8000",
@@ -29,10 +28,11 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "@freon4dsl/core": "2.0.0-beta.2",
-    "@freon4dsl/core-svelte": "2.0.0-beta.2",
-    "@freon4dsl/weblib-flowbite": "2.0.0-beta.2",
-    "@freon4dsl/samples-scoping-example": "2.0.0-beta.2",
+    "@freon4dsl/core": "2.0.0-beta.3",
+    "@freon4dsl/core-svelte": "2.0.0-beta.3",
+    "@freon4dsl/weblib-flowbite": "2.0.0-beta.3",
+    "@freon4dsl/samples-scoping-example": "2.0.0-beta.3",
+    "@freon4dsl/samples-course-schedule": "2.0.0-beta.3",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",
     "lodash": "^4.17.21",

@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/weblib-smui",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -17,7 +17,6 @@
     "clean": "rm -rf node_modules/",
     "dev": "vite dev",
     "build": "vite build && npm run prepack && publint",
-    "build-dev": "vite build && npm run prepack",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "prepack": "svelte-kit sync && svelte-package",
@@ -31,10 +30,7 @@
     "validate": "svelte-check",
     "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
     "install-local": "npm install --registry http://localhost:4873",
-    "republish-local": "npm run unpublish-local && npm run publish-local",
-    "release": "npm publish",
-    "publish-local": "npm publish --registry http://localhost:4873",
-    "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
+    "release": "npm publish"
   },
   "exports": {
     ".": {
@@ -88,8 +84,8 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
-    "@freon4dsl/core": "2.0.0-beta.2",
-    "@freon4dsl/core-svelte": "2.0.0-beta.2",
+    "@freon4dsl/core": "2.0.0-beta.3",
+    "@freon4dsl/core-svelte": "2.0.0-beta.3",
     "@material/theme": "^14.0.0",
     "@material/typography": "^14.0.0",
     "@mdi/js": "^7.4.47",
