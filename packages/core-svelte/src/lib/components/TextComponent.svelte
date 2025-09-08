@@ -329,12 +329,12 @@
 			LOGGER.log("META KEY: stop propagation")
 			event.stopPropagation();
 		} else if (event.altKey || event.ctrlKey) { // No shift, because that is handled as normal text
-      if (event.key === 'v' || event.key === 'c' || event.key === 'x') { // do nothing, let the 'onpaste', 'oncopy', or 'oncut' event happen and be captured
-          LOGGER.log('preventing ctrl-v, ctrl-c, or ctrl-x')
-          shouldBeHandledByBrowser.value = true;
-          return;
-      }
-			myHelper.handleAltOrCtrlKey(event, editor);
+              if (event.key === 'v' || event.key === 'c' || event.key === 'x') { // do nothing, let the 'onpaste', 'oncopy', or 'oncut' event happen and be captured
+                  LOGGER.log('preventing ctrl-v, ctrl-c, or ctrl-x')
+                  shouldBeHandledByBrowser.value = true;
+                  return;
+              }
+            myHelper.handleAltOrCtrlKey(event, editor);
 		} else { 
       // handle non meta keys
 			switch (event.key) {
@@ -350,6 +350,7 @@
 				// and if the selection leaves this textbox, a focusOut event will occur, which does exactly this.
 					break;
 				case ENTER: {
+                    LOGGER.log(`onKeyDown.ENTER partOfDropDown: ${partOfDropdown}`)
 					if (!partOfDropdown) {
 						endEditing()
 					}
@@ -499,7 +500,7 @@
     }
 
     async function onPaste(e: ClipboardEvent) {
-        console.log('TextComponent onPaste')
+        LOGGER.log('TextComponent onPaste')
         e.stopPropagation();
         e.preventDefault(); // avoid the browser inserting styled HTML
 
@@ -522,7 +523,7 @@
         }
 
         if (!pastedText) return;
-        console.log(`TextComponent onPaste after return ${pastedText}`);
+        LOGGER.log(`TextComponent onPaste after return ${pastedText}`);
         // insert `pastedText` at the caret/selection
         insertAtSelection(pastedText);
     }
@@ -638,7 +639,7 @@
         const before = text.slice(0, myHelper.from);
         const after  = text.slice(myHelper.to);
         text = before + insert + after;
-        console.log( `inserAtSelection: ${before} ${insert} ${after}`)
+        LOGGER.log( `inserAtSelection: ${before} ${insert} ${after}`)
         flushSync(); // flush any pending updates.
 
         // Collapse caret to end of inserted text

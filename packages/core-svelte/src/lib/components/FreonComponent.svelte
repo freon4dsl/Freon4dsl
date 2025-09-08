@@ -101,25 +101,25 @@
                         break;
                     case 'x': // ctrl-x => CUT
                         if (!shouldBeHandledByBrowser.value) {
-                            console.log('Ctrl-x: CUT');
+                            LOGGER.log('Ctrl-x: CUT');
                             AstActionExecutor.getInstance(editor).cut();
                             stopEvent(event);
                         }
                         break;
                     case 'c': // ctrl-c => COPY
                         if (!shouldBeHandledByBrowser.value) {
-                            console.log('Ctrl-c: COPY');
+                            LOGGER.log('Ctrl-c: COPY');
                             AstActionExecutor.getInstance(editor).copy();
                             stopEvent(event);
                         }
                         break;
                     case 'v': // ctrl-v => PASTE
                         if (!shouldBeHandledByBrowser.value) {
-                            console.log('Ctrl-v: PASTE');
+                            LOGGER.log('Ctrl-v: PASTE');
                             AstActionExecutor.getInstance(editor).paste();
                             stopEvent(event);
                         } else {
-                            console.log('Ctrl-v: STOPPING');
+                            LOGGER.log('Ctrl-v: Handled by browser');
                             // stopEvent(event);
                         }
                         break;
@@ -248,7 +248,7 @@
         if (isNullOrUndefined(el) || isNullOrUndefined(sc)) return Promise.resolve(null);
 
         return new Promise((resolve) => {
-            console.log('getVisibleRect: returning promise')
+            LOGGER.log('getVisibleRect: returning promise')
             const io = new IntersectionObserver(
               (entries) => {
                   resolve(entries[0]?.intersectionRect ?? null);
