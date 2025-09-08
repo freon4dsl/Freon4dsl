@@ -118,6 +118,9 @@
                             LOGGER.log('Ctrl-v: PASTE');
                             AstActionExecutor.getInstance(editor).paste();
                             stopEvent(event);
+                        } else {
+                            LOGGER.log('Ctrl-v: Handled by browser');
+                            // stopEvent(event);
                         }
                         break;
                     case 'h': // ctrl-h => SEARCH
@@ -245,7 +248,7 @@
         if (isNullOrUndefined(el) || isNullOrUndefined(sc)) return Promise.resolve(null);
 
         return new Promise((resolve) => {
-            console.log('getVisibleRect: returning promise')
+            LOGGER.log('getVisibleRect: returning promise')
             const io = new IntersectionObserver(
               (entries) => {
                   resolve(entries[0]?.intersectionRect ?? null);

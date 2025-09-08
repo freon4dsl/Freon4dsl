@@ -4,7 +4,7 @@
 
 <script lang="ts">
     import { TEXT_LOGGER } from './ComponentLoggers.js';
-    import { onMount, tick } from 'svelte';
+    import { flushSync, onMount, tick } from 'svelte';
     import { componentId, replaceHTML } from './svelte-utils/index.js';
     import {
         ActionBox,
@@ -33,7 +33,7 @@
     import ErrorTooltip from './ErrorTooltip.svelte';
     import ErrorMarker from './ErrorMarker.svelte';
     import type { TextComponentProps } from './svelte-utils/FreComponentProps.js';
-    import {contextMenu} from "./stores/AllStores.svelte";
+    import { contextMenu, shouldBeHandledByBrowser } from './stores/AllStores.svelte';
 
     const LOGGER = TEXT_LOGGER;
 
@@ -169,9 +169,9 @@
      * The caret position is stored in 'myHelper.from' and 'myHelper.to', and used in 'startEditing'.
      * @param freCaret
      */
-    // todo see whether this function needs to be called from the box
     const calculateCaret = (freCaret: FreCaret) => {
         LOGGER.log(`${id}: setCaret ${freCaret.position} [${freCaret.from}, ${freCaret.to}]`);
+        // No need to flush any pending updates, method is being called from the box.
         switch (freCaret.position) {
             case FreCaretPosition.RIGHT_MOST: // type nr 2
                 myHelper.from = myHelper.to = text.length;
@@ -189,6 +189,16 @@
         }
     };
 
+    /**
+     * This functions returns the caret position as it is currently within this component.
+     * Used by the TextBox when pasting using the Paste button, or copying, or cutting using the buttons.
+     */
+    const getCaret = (): FreCaret => {
+        flushSync(); // flush any pending updates.
+        LOGGER.log(`TextComponent getCaret ${myHelper.from} ${myHelper.to} ${inputElement?.selectionStart} ${inputElement?.selectionEnd}`);
+        return FreCaret.IndexPosition(myHelper.from, myHelper.to);
+    }
+
     /* ========	The following functions are called from both the browser, and @freon4dsl/core =========== */
 
     /**
@@ -202,6 +212,7 @@
         // If called from the 'UI' (e.g. by a mouse click), we need to let the
         // editor know that this box/node now has been selected.
         if (from === `UI`) {
+            flushSync(); // flush any pending updates.
             // todo make 'UI' and 'editor' strings into a type
             editor.selectElementForBox(box);
             // Get the caret position(s) of the current selection within the <span> element.
@@ -209,6 +220,7 @@
             if (notNullOrUndefined(document.getSelection())) {
                 let { anchorOffset, focusOffset } = document.getSelection()!;
                 myHelper.setFromAndTo(anchorOffset, focusOffset);
+                LOGGER.log(`SETTING the caret: ${myHelper.from} ${myHelper.to}`)
             }
         } else {
             // Get the caret position(s) from the editor, to be used to set
@@ -267,7 +279,9 @@
      */
     function onClickInInput() {
         LOGGER.log(`onClickInInput for ${box?.id}`);
+        flushSync(); // flush any pending updates.
         myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+        LOGGER.log(`ON CLICK setting the caret ${myHelper.from} ${myHelper.to}`)
         if (partOfDropdown) {
             // let TextDropdownComponent know, dropdown menu needs to be altered
             LOGGER.log('dispatching from onClickInInput');
@@ -282,10 +296,7 @@
     function endEditing() {
         LOGGER.log(`endEditing for ${box?.id}`);
         if (isEditing) {
-            // reset the local variables
             isEditing = false;
-            myHelper.from = -1;
-            myHelper.to = -1;
 
             if (!partOfDropdown) {
                 // store the current value in the textbox, or delete the box, if appropriate
@@ -317,11 +328,15 @@
             // ignore meta keys
 			LOGGER.log("META KEY: stop propagation")
 			event.stopPropagation();
-		} else if (event.altKey || event.ctrlKey) { 
-            // No shift, because that is handled as normal text
-			myHelper.handleAltOrCtrlKey(event, editor);
+		} else if (event.altKey || event.ctrlKey) { // No shift, because that is handled as normal text
+              if (event.key === 'v' || event.key === 'c' || event.key === 'x') { // do nothing, let the 'onpaste', 'oncopy', or 'oncut' event happen and be captured
+                  LOGGER.log('preventing ctrl-v, ctrl-c, or ctrl-x')
+                  shouldBeHandledByBrowser.value = true;
+                  return;
+              }
+            myHelper.handleAltOrCtrlKey(event, editor);
 		} else { 
-            // handle non meta keys
+      // handle non meta keys
 			switch (event.key) {
 				case ESCAPE: {
 					if (partOfDropdown) toParent('hideDropdown');
@@ -335,6 +350,7 @@
 				// and if the selection leaves this textbox, a focusOut event will occur, which does exactly this.
 					break;
 				case ENTER: {
+                    LOGGER.log(`onKeyDown.ENTER partOfDropDown: ${partOfDropdown}`)
 					if (!partOfDropdown) {
 						endEditing()
 					}
@@ -357,7 +373,7 @@
 					break;
 				}
 				default: { 
-                    // the event.key is SHIFT or a printable character
+          // the event.key is SHIFT or a printable character
 					if (partOfDropdown) toParent('showDropdown');
 					myHelper.getCaretPosition(event);
 					if (event.shiftKey && event.key === 'Shift') {
@@ -483,6 +499,159 @@
         }
     }
 
+    async function onPaste(e: ClipboardEvent) {
+        LOGGER.log('TextComponent onPaste')
+        e.stopPropagation();
+        e.preventDefault(); // avoid the browser inserting styled HTML
+
+        // 1) Best path: use the event's clipboardData (widest compatibility)
+        let pastedText = e.clipboardData?.getData('text/plain') ?? '';
+
+        // 2) Fallback: only try this if the paste event didn't yield any text…
+        if (!pastedText
+          && 'clipboard' in navigator           // browser exposes the async Clipboard API
+          && 'readText' in navigator.clipboard) // and specifically the readText() method
+        {
+            try {
+                // Ask the browser/OS for whatever *plain text* is currently on the system clipboard.
+                // This only succeeds in a secure context (https:// or localhost) AND during a user gesture
+                // (e.g., your keydown/click handler). Otherwise, it throws an error which we will catch.
+                pastedText = await navigator.clipboard.readText();
+            } catch {
+                // If it’s blocked (permissions, policy, or not a user gesture), we just skip it.
+            }
+        }
+
+        if (!pastedText) return;
+        LOGGER.log(`TextComponent onPaste after return ${pastedText}`);
+        // insert `pastedText` at the caret/selection
+        insertAtSelection(pastedText);
+    }
+
+    async function onCopy(e: ClipboardEvent) {
+        LOGGER.log('TextComponent onCopy');
+        e.stopPropagation();
+
+        const selected = getSelectedText();
+        if (!selected) {
+            // Nothing to copy; let the browser do whatever it would do (usually nothing)
+            return;
+        }
+
+        const plain = selected.replace(/\r\n?/g, '\n');
+
+        // 1) Best path: set plain text via the event clipboardData (requires preventDefault)
+        if (e.clipboardData?.setData) {
+            e.clipboardData.setData('text/plain', plain);
+            e.preventDefault(); // signal we handled it (and avoid HTML formats)
+            return;
+        }
+
+        // 2) Fallback: async Clipboard API (secure context + user gesture)
+        if ('clipboard' in navigator && 'writeText' in navigator.clipboard) {
+            try {
+                await navigator.clipboard.writeText(plain);
+                e.preventDefault(); // we successfully handled the copy
+                return;
+            } catch {
+                // If blocked (permissions/policy), fall through and let default occur.
+            }
+        }
+
+        // 3) Last resort: do not preventDefault → allow the browser’s default copy behavior
+    }
+
+    async function onCut(e: ClipboardEvent) {
+        LOGGER.log('TextComponent onCut');
+        e.stopPropagation();
+
+        const selected = getSelectedText();
+        if (!selected) {
+            // No selection → nothing to cut; let default proceed (likely a no-op)
+            return;
+        }
+
+        const plain = selected.replace(/\r\n?/g, '\n');
+
+        // 1) Best path: set via event clipboardData and then delete locally
+        if (e.clipboardData?.setData) {
+            e.clipboardData.setData('text/plain', plain);
+            deleteSelection();         // only remove after we know clipboard is set
+            e.preventDefault();        // signal we handled it & avoid HTML formats
+            return;
+        }
+
+        // 2) Fallback: async Clipboard API
+        if ('clipboard' in navigator && 'writeText' in navigator.clipboard) {
+            try {
+                await navigator.clipboard.writeText(plain);
+                deleteSelection();     // only delete if write succeeded
+                e.preventDefault();
+                return;
+            } catch {
+                // If blocked, don't delete and let default occur.
+            }
+        }
+
+        // 3) Last resort: do not preventDefault → allow default cut (likely a no-op in custom widgets)
+    }
+
+    /**
+     * To be called during editing, only from 'onpaste', 'oncopy', or 'oncut' events
+     */
+    function getSelectedText(): string {
+        flushSync(); // flush any pending updates.
+        myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+        // Extract and return substring, using one char extra at the 'to' position
+        return text.slice(myHelper.from, myHelper.to);
+    }
+
+    function deleteSelection() {
+        // Nothing selected → nothing to delete
+        if (myHelper.from === myHelper.to) {
+            return;
+        }
+
+        // Splice out the selected range
+        flushSync(); // flush any pending updates.
+        myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+        const before = text.slice(0, myHelper.from);
+        const after  = text.slice(myHelper.to);
+        text = before + after;
+
+        // Collapse caret to start of deleted region
+        myHelper.to = myHelper.from;
+
+        // (optional) debug
+        LOGGER.log(`deleted selection (from ${myHelper.from} to ${myHelper.to}) -> new caret at ${myHelper.from}`);
+    }
+
+
+    /** This function copies 'insertAtSelection' in core/TextBox because the text in this component is not yet
+     * stored in the box.
+     * @param insert
+     */
+    function insertAtSelection(insert: string) {
+        flushSync(); // flush any pending updates.
+        myHelper.setFromAndTo(inputElement.selectionStart, inputElement.selectionEnd);
+
+        // Splice in the new text
+        const before = text.slice(0, myHelper.from);
+        const after  = text.slice(myHelper.to);
+        text = before + insert + after;
+        LOGGER.log( `inserAtSelection: ${before} ${insert} ${after}`)
+        flushSync(); // flush any pending updates.
+
+        // Collapse caret to end of inserted text
+        const pos = myHelper.from + insert.length;
+        myHelper.from = myHelper.to = pos;
+        inputElement.selectionStart = inputElement.selectionEnd = pos;
+
+        // Reset width
+        setInputWidth();
+        LOGGER.log('added ' + insert + ' -> new caret at ' + pos);
+    }
+
     const clientRectangle = (): ClientRectangle => {
         LOGGER.log(`clientRectangle: ${box.id} isEditing ${isEditing} input ${isNullOrUndefined(inputElement)} span ${isNullOrUndefined(spanElement)}`)
 
@@ -507,6 +676,7 @@
         if (notNullOrUndefined(box)) {
             box.getClientRectangle = clientRectangle
             box.setCaret = calculateCaret;
+            box.getCaret = getCaret;
             box.setFocus = setFocus
             box.refreshComponent = refresh
         }
@@ -531,6 +701,9 @@
                     onclick={onClickInInput}
                     onfocusout={onFocusOut}
                     onkeydown={onKeyDown}
+                    onpaste={onPaste}
+                    oncopy={onCopy}
+                    oncut={onCut}
                     draggable="true"
                     ondragstart={onDragStart}
                     {placeholder}
