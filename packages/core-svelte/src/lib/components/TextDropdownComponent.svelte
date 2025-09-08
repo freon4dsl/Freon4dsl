@@ -21,7 +21,7 @@
         type SelectOption,
         TextBox,
         BehaviorExecutionResult,
-        isNullOrUndefined, notNullOrUndefined, jsonAsString, MatchUtil
+        isNullOrUndefined, notNullOrUndefined, jsonAsString, MatchUtil, SPACEBAR
     } from "@freon4dsl/core"
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
     import { selectedBoxes } from './stores/AllStores.svelte.js';
@@ -153,7 +153,7 @@
         );
         if (
             filteredOptions.length === 1 &&
-            MatchUtil.isFullMatchWithOption(text, filteredOptions[0].label) &&
+            MatchUtil.isPrefixOf(text, filteredOptions[0].label) &&
             filteredOptions[0].label.length === details.caret
         ) {
             storeOrExecute(filteredOptions[0]);
@@ -290,35 +290,7 @@
                     case ENTER: { 
                         // user wants current selection
                         // find the chosen option
-                        let chosenOption: SelectOption | null = null;
-                        if (filteredOptions.length <= 1) {
-                            if (filteredOptions.length !== 0) {
-                                // if there is just one option left, choose that one
-                                chosenOption = filteredOptions[0];
-                            } else {
-                                // there are no valid options left
-                                editor.setUserMessage('No valid selection');
-                            }
-                        } else {
-                            // find the selected option and choose that one
-                            const index = filteredOptions.findIndex((o) => o.id === selected?.id);
-                            if (index >= 0 && index < filteredOptions.length) {
-                                chosenOption = filteredOptions[index];
-                            }
-                        }
-                        // store or execute the option
-                        if (notNullOrUndefined(chosenOption)) {
-                            storeOrExecute(chosenOption);
-                        } else {
-                            //  no valid option, restore the original text
-                            setText(textBox.getText()); // line : using setText
-                            // stop editing
-                            isEditing = false;
-                            hideDropdown();
-                            editor.selectNextLeaf();
-                        }
-                        event.preventDefault();
-                        event.stopPropagation();
+                        handleEnterOrControlSpace(event)
                         break;
                     }
                     default: {
@@ -328,9 +300,13 @@
             }
         } else {
             // this component was selected using keystrokes, not by clicking, therefore dropDownShown = false
-            if (!event.ctrlKey && !event.altKey) {
+            if (event.ctrlKey && event.key === SPACEBAR) {
+                LOGGER.log("CONTRIOL_SPACE")
+                handleEnterOrControlSpace(event)
+            } else if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
                     case ENTER: {
+                        LOGGER.log("ENTER")
                         // Check whether there is only one option, if so execute immediately
                         const allOptions = getOptions();
                         if (allOptions.length === 1) {
@@ -351,6 +327,39 @@
             }
         }
     };
+    
+    const handleEnterOrControlSpace = (event: KeyboardEvent): void => {
+        let chosenOption: SelectOption | null = null;
+        if (filteredOptions.length <= 1) {
+            if (filteredOptions.length !== 0) {
+                // if there is just one option left, choose that one
+                chosenOption = filteredOptions[0];
+            } else {
+                // there are no valid options left
+                editor.setUserMessage('No valid selection');
+            }
+        } else {
+            // find the selected option and choose that one
+            const index = filteredOptions.findIndex((o) => o.id === selected?.id);
+            if (index >= 0 && index < filteredOptions.length) {
+                chosenOption = filteredOptions[index];
+            }
+        }
+        // store or execute the option
+        if (notNullOrUndefined(chosenOption)) {
+            storeOrExecute(chosenOption);
+        } else {
+            //  no valid option, restore the original text
+            setText(textBox.getText()); // line : using setText
+            // stop editing
+            isEditing = false;
+            hideDropdown();
+            editor.selectNextLeaf();
+        }
+        event.preventDefault();
+        event.stopPropagation();
+
+    }
 
     /**
      * This custom event is triggered by a click in the dropdown. The option that is clicked
@@ -433,7 +442,7 @@
             allOptions = getOptions();
             let matchingOptions: SelectOption[] = MatchUtil.matchingOptions(text, allOptions)
             // let validOption = allOptions.find((o) => o.label === text);
-            if (matchingOptions.length === 1 && MatchUtil.isFullMatchWithOption(text, matchingOptions[0].label)) {
+            if (matchingOptions.length === 1 && MatchUtil.isPrefixOf(text, matchingOptions[0].label)) {
             // if (!!validOption && validOption.id !== noOptionsId) {
                 storeOrExecute(matchingOptions[0]);
             } else {
@@ -494,8 +503,18 @@
      * @param details
      */
     function fromInner(eventType: string, details?: CaretDetails) {
+        LOGGER.log(`fromInner (toParent) event: ${eventType}`)
         switch (eventType) {
-            case 'showDropdown': { showDropdown(); break;}
+            case 'showDropdown': {
+                showDropdown(); 
+                allOptions = getOptions();
+                setFiltered(
+                    allOptions
+                );
+                makeFilteredOptionsUnique();
+
+                break;
+            }
             case 'hideDropdown': { hideDropdown(); break;}
             case 'startEditing': { startEditing(details as CaretDetails); break;} // has details
             case 'caretChanged': { caretChanged(details as CaretDetails); break;} // has details
