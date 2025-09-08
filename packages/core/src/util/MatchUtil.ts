@@ -1,6 +1,6 @@
 import type { FreTriggerType, SelectOption } from "../editor/index.js"
 import { isProKey, isRegExp, isString } from "../editor/index.js";
-import { notNullOrUndefined } from "./FreUtils.js";
+import { isEmpty, notNullOrUndefined } from "./FreUtils.js"
 
 export function isIdentifier(str: string): boolean {
     if (notNullOrUndefined(str)) {
@@ -21,6 +21,9 @@ export class MatchUtil {
      * @param options
      */
     public static matchingOptions(text: string, options: SelectOption[]): SelectOption[] {
+        if (isEmpty(text)) {
+            return options
+        }
         return options.filter((opt) => opt.label.toLowerCase().startsWith(text.toLowerCase()))
     }
 
@@ -30,8 +33,11 @@ export class MatchUtil {
      * @param text
      * @param option
      */
-    public static isFullMatchWithOption(text: string, option: SelectOption): boolean {
-        return option.label.toLowerCase().startsWith(text.toLowerCase())
+    public static isPrefixOf(text: string, option: string): boolean {
+        if (isEmpty(text) || isEmpty(option)) {
+            return true
+        }
+        return option.toLowerCase().startsWith(text.toLowerCase())
     }
 
     /**
@@ -41,6 +47,9 @@ export class MatchUtil {
      * @param trigger
      */
     public static isFullMatchWithTrigger(text: string, trigger: FreTriggerType): boolean {
+        if (isEmpty(text)) {
+            return false
+        }
         if (isRegExp(trigger)) {
             return trigger.test(text)
         } else if (isString(trigger)) {
