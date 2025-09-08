@@ -1,10 +1,11 @@
 // Utilities created by ChatGPT on August 28, 2025
 
-import { usePaneContext, type PaneLike } from "./PaneLike.js";
-import { isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
+import { type PaneLike } from "./PaneLike.js";
+import { FreLogger, isNullOrUndefined, notNullOrUndefined } from '@freon4dsl/core';
 
 // Treat these as scrollable values (Safari still uses 'overlay' in places)
 const SCROLLABLE_VALUES = new Set(["auto", "scroll", "overlay"]);
+const LOGGER = new FreLogger('ScrollingUtils');
 
 function isScrollable(el: HTMLElement): boolean {
 	const cs: CSSStyleDeclaration = getComputedStyle(el);
@@ -17,11 +18,11 @@ function isScrollable(el: HTMLElement): boolean {
 
 /** Walk up from `start` to find the nearest scrollable ancestor. Handles Shadow DOM. */
 export function getNearestScrollContainer(start: HTMLElement | undefined): HTMLElement | null {
-	// console.log('getNearestScrollContainer', start?.id);
+	// LOGGER.log('getNearestScrollContainer', start?.id);
 	let node: Node | undefined = start;
 	while (notNullOrUndefined(node)) {
 		if (node instanceof HTMLElement) {
-			// console.log('getNearestScrollContainer', node? 'id:'+node.id : '<no-id>', 'testing scrollability', isScrollable(node));
+			// LOGGER.log('getNearestScrollContainer', node? 'id:'+node.id : '<no-id>', 'testing scrollability', isScrollable(node));
 			if (isScrollable(node)) return node;
 			// Stop if we reach the viewport scroller
 			if (node === document.body || node === document.documentElement) {
@@ -70,25 +71,25 @@ export async function focusAndScrollIntoView(
 	const scRect: DOMRect = sc.getBoundingClientRect();
 	const paneHeight: number = sc.clientHeight;
 
-	// console.log('focusAndScrollIntoView, sc', sc.id, sc.scrollTop, sc.clientHeight);
-	// console.log('focusAndScrollIntoView, elRect', elRect.top, elRect.bottom, elRect.height);
-	// console.log('focusAndScrollIntoView, scRect', scRect.top, scRect.bottom, scRect.height);
+	// LOGGER.log('focusAndScrollIntoView, sc', sc.id, sc.scrollTop, sc.clientHeight);
+	// LOGGER.log('focusAndScrollIntoView, elRect', elRect.top, elRect.bottom, elRect.height);
+	// LOGGER.log('focusAndScrollIntoView, scRect', scRect.top, scRect.bottom, scRect.height);
 
 	// See if the element fits within the scroll container
 	const fits: boolean = elRect.height <= paneHeight + EPS;
 	// See if the element is already fully visible within the scroll container
 	const fullyVisible: boolean = elRect.bottom <= scRect.top + paneHeight;
 
-	console.log('focusAndScrollIntoView fits:', fits, 'fullyVisible:', fullyVisible, 'calc: ', `${elRect.bottom} <= ${scRect.top + paneHeight}`)
+    LOGGER.log(`focusAndScrollIntoView fits: ${fits} fullyVisible: ${fullyVisible} calc: ${elRect.bottom} <= ${scRect.top + paneHeight}`)
 	if (fits && fullyVisible) return;
 
 	// Compute minimal scroll in the container's coordinate system
 	const offsetTop: number = elRect.top - scRect.top + sc.scrollTop;
 	const offsetBottom: number = elRect.bottom + sc.scrollTop;
 
-	console.log(`A: ${scRect.top}, B: ${sc.clientHeight}, C: ${sc.scrollTop}, D: ${elRect.top}, E: ${elRect.bottom}, elRect.y: ${elRect.y}`)
+    LOGGER.log(`A: ${scRect.top}, B: ${sc.clientHeight}, C: ${sc.scrollTop}, D: ${elRect.top}, E: ${elRect.bottom}, elRect.y: ${elRect.y}`)
 	if (fits) {
-		// console.log('focusAndScrollIntoView, fits, scrolling...', offsetBottom);
+		// LOGGER.log('focusAndScrollIntoView, fits, scrolling...', offsetBottom);
 		// Bring entire element into view by aligning its bottom if needed
 		sc.scrollTo({ top: Math.max(0, offsetBottom - paneHeight), behavior: "smooth" });
 		// sc.scrollTo({ top: offsetBottom, behavior: "smooth" });
@@ -98,9 +99,9 @@ export async function focusAndScrollIntoView(
 	// Taller than visible area → align top if it’s outside the viewport of the pane
 	const topInView: boolean = elRect.top >= scRect.top - EPS && elRect.top <= scRect.bottom + EPS;
 	if (!topInView) {
-		console.log('focusAndScrollIntoView, scrolling...');
+        LOGGER.log('focusAndScrollIntoView, scrolling...');
 		sc.scrollTo({ top: Math.max(0, offsetTop), behavior: "smooth" });
 	} else {
-		console.log('focusAndScrollIntoView, topInView', topInView);
+        LOGGER.log(`focusAndScrollIntoView, topInView ${topInView}`);
 	}
 }
