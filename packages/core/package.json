@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/core",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "description": "The core part of the Freon library, which enables you to build editors for the web",
   "publishConfig": {
     "access": "public"
@@ -27,7 +27,7 @@
     "format": "prettier --write .",
     "lint": "eslint",
     "test": "vitest run",
-    "release": "npm publish",
+    "release-beta": "npm publish --tag beta",
     "publish-local": "npm publish --registry http://localhost:4873 --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local"

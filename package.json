@@ -19,6 +19,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "setup": "npm run setup --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
+    "release-beta": "npm run release-beta --workspaces --if-present",
     "prettier": "prettier --write --print-width 120 --tab-width 4 packages/*/src/**/*.ts packages/*/src/**/*.tsx packages/*/src/**/*.css"
   },
   "devDependencies": {
@@ -68,5 +69,5 @@
     "packages/server",
     "packages/test"
   ],
-  "version": "2.0.0-beta.3"
+  "version": "2.0.0-beta.4"
 }
