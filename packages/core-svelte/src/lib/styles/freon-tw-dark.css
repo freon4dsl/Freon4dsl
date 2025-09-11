@@ -329,6 +329,10 @@
     color: var(--color-dark-freon-accent-button);
 }
 
+.dark .text-dropdown-component .text-component-input {
+    color: var(--color-dark-freon-accent-button);
+}
+
 .dark .brackets {
     color: var(--color-dark-freon--500);
 }
