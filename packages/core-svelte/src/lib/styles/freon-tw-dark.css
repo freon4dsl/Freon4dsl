@@ -340,3 +340,11 @@
 .dark .drag-handle-icon {
     fill: var(--color-dark-freon--150);
 }
+
+.dark .reference-arrow {
+    stroke: var(--color-dark-freon-accent-button);
+}
+
+.dark\:text-white:where(.dark,.dark *) {
+    color: var(--color-dark-freon-400);
+}

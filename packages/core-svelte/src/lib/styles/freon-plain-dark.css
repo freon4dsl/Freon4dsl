@@ -315,3 +315,7 @@
 .drag-handle-icon {
     fill: var(--color-dark-freon--250);
 }
+
+.reference-arrow {
+    stroke: var(--color-dark-freon-accent-button);
+}
