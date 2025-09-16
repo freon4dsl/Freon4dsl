@@ -23,7 +23,7 @@ export class ConceptUtils {
         const comment: string = "// implementation of " + freProp.name
         const arrayType: string = freProp.isList ? "[]" : ""
         const optionalType: string = !freProp.isList && freProp.isOptional ? " | undefined" : ""
-        return `${freProp.name} : ${GenerationUtil.getBaseTypeAsString(freProp)}${arrayType}${optionalType}; \t${comment}`
+        return `${freProp.name}${freProp.isOptional ? `` : `!`} : ${GenerationUtil.getBaseTypeAsString(freProp)}${arrayType}${optionalType}; \t${comment}`
     }
 
     private static initEnumValue(freProp: FreMetaConceptProperty): string {
@@ -71,31 +71,18 @@ export class ConceptUtils {
         return initializer
     }
 
-    private static initPartList(freProp: FreMetaProperty): string {
-        if (freProp.isOptional) { // do not initialize an optional property
-            return "";
-        }
-        let initializer = ""
-        if (freProp.isList) {
-            initializer = `this.${freProp.name} = []`
-        } else {
-            // TODO
-        }
-        return initializer
-    }
-
     public static makePartProperty(freProp: FreMetaConceptProperty): string {
         const comment: string = "// implementation of part '" + freProp.name + "'"
         const arrayType: string = freProp.isList ? "[]" : ""
         const optionalType: string = !freProp.isList && freProp.isOptional ? " | undefined" : ""
-        return `${freProp.name} : ${Names.classifier(freProp.type)}${arrayType}${optionalType}; ${comment}`
+        return `${freProp.name}${freProp.isOptional ? `` : `!`} : ${Names.classifier(freProp.type)}${arrayType}${optionalType}; ${comment}`
     }
 
     public static makeReferenceProperty(freProp: FreMetaConceptProperty): string {
         const comment = "// implementation of reference '" + freProp.name + "'"
         const arrayType = freProp.isList ? "[]" : ""
         const optionalType: string = !freProp.isList && freProp.isOptional ? " | undefined" : ""
-        return `${freProp.name} : ${Names.FreNodeReference}<${Names.classifier(freProp.type)}>${arrayType}${optionalType}; ${comment}`
+        return `${freProp.name}${freProp.isOptional ? `` : `!`}: ${Names.FreNodeReference}<${Names.classifier(freProp.type)}>${arrayType}${optionalType}; ${comment}`
     }
 
     public static makeConvenienceMethods(list: FreMetaConceptProperty[]): string {
@@ -189,8 +176,7 @@ export class ConceptUtils {
                         ${allButPrimitiveProps
                     .map((p) =>
                         p.isList
-                            ? `observablepartlist(this, "${p.name}"); 
-                               ${this.initPartList(p)}`
+                            ? `observablepartlist(this, "${p.name}");`
                             : `observablepart(this, "${p.name}");
                         ${this.initEnumValue(p)}`,
                     )

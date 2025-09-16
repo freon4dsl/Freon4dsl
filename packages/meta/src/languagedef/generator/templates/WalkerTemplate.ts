@@ -14,6 +14,9 @@ export class WalkerTemplate {
         const imports = new Imports(relativePath)
         imports.language = new Set<string>(classifiersToDo.map(c => Names.classifier(c)))
         imports.core = new Set<string>([ Names.FreLogger, Names.FreNode ])
+        if (classifiersToDo.some(concept => concept.allParts().length > 0 && concept.allParts().some(part => part.isList))) {
+          imports.core.add('notNullOrUndefined');
+        }
         // Template starts here
         return `
         // TEMPLATE: WalkerTemplate.generateWalker(...)
@@ -78,11 +81,11 @@ export class WalkerTemplate {
                         .map((part) =>
                             part.isList
                                 ? `node.${part.name}.forEach(p => {
-                                if(!(includeChildren === undefined) && includeChildren(p)) {
+                                if(notNullOrUndefined(includeChildren) && includeChildren(p)) {
                                     this.walk(p, includeChildren );
                                 }
                             });`
-                                : `if(!(includeChildren === undefined) && includeChildren(node.${part.name})) {
+                                : `if(notNullOrUndefined(includeChildren) && notNullOrUndefined(node.${part.name})  && includeChildren(node.${part.name})) {
                                 this.walk(node.${part.name}, includeChildren );
                             }`,
                         )

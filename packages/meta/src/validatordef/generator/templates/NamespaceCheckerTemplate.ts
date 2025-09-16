@@ -65,7 +65,7 @@ export class NamespaceCheckerTemplate {
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([
             errorClassName, errorSeverityName, writerInterfaceName,
-            Names.FreLanguageEnvironment, Names.FreLanguage, Names.FreNamespace, Names.FreNode, Names.FreNamedNode, Names.isNullOrUndefined
+            Names.FreLanguageEnvironment, Names.FreLanguage, Names.FreNamespace, Names.FreNode, Names.FreNamedNode, Names.notNullOrUndefined
         ])
         imports.language = new Set<string>(this.done.map(cls => Names.classifier(cls)) )
         imports.utils.add(defaultWorkerName)
@@ -82,7 +82,7 @@ export class NamespaceCheckerTemplate {
         this.done.push(concept);
         return `${commentBefore}
                 public execBefore${Names.classifier(concept)}(${paramName}: ${Names.classifier(concept)}): boolean {
-                    if (!isNullOrUndefined(node) && FreLanguage.getInstance().classifier("${Names.classifier(concept)}").isNamespace) {
+                    if (notNullOrUndefined(node) && FreLanguage.getInstance().classifier("${Names.classifier(concept)}")?.isNamespace) {
                         this.checkDuplicateNamesInNamespace(node);
                     }
                     return false;

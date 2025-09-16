@@ -3,9 +3,10 @@ import {
     CONFIGURATION_FOLDER,
     Imports
 } from "../../../utils/on-lang/index.js"
-import { FreMetaClassifier, FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
+import { FreMetaLanguage } from "../../../languagedef/metalanguage/index.js";
 import { TyperDef } from "../../metalanguage/index.js";
 import { LOG2USER } from '../../../utils/basic-dependencies/index.js';
+import { FreTyperGenUtils } from './FreTyperGenUtils.js';
 
 /**
  * This class generates the main typer, the one that hanldes the switch between the generated typer and the custom
@@ -21,13 +22,11 @@ export class FreTyperTemplate {
         const generatedClassName: string = Names.typer(language);
         const defaultTyperName: string = Names.typerPart(language);
         const typerInterfaceName: string = Names.FreTyper;
-        let rootType: string = "";
-        if (!!typerdef && !!typerdef.typeRoot()) {
-            rootType = Names.classifier(typerdef.typeRoot() as FreMetaClassifier);
-        }
         const imports = new Imports(relativePath)
         imports.core = new Set<string>([Names.FreNode, Names.FreType, Names.FreLanguage, typerInterfaceName ])
-        if (!!rootType) imports.language.add(rootType)
+        if (!!typerdef && !!typerdef.typeRoot()) {
+            FreTyperGenUtils.addTypeToImports(typerdef.typeRoot(), imports)
+        }
         imports.utils.add(Names.listUtil)
         // Template starts here
         return `
@@ -73,7 +72,7 @@ export class FreTyperTemplate {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: ${Names.FreType} = typer.inferType(node);
-                    if (result !== null) {
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }
@@ -107,7 +106,7 @@ export class FreTyperTemplate {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.equals(type1, type2);
-                    if (result !== null && result !== undefined) {
+                    if (notNullOrUndefined(result) && result !== undefined) {
                         return result;
                     }
                 }
@@ -140,7 +139,7 @@ export class FreTyperTemplate {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: boolean = typer.conforms(type1, type2);
-                    if (result !== null) {
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }
@@ -154,7 +153,7 @@ export class FreTyperTemplate {
              * @param elemlist1
              * @param elemlist2
              */
-            public conformsListType(elemlist1: ${Names.FreNode}[], elemlist2: ${Names.FreNode}[]): boolean {
+            public conformsListType(elemlist1: ${Names.FreNode}[], elemlist2: ${Names.FreNode}[]): boolean | undefined {
                 if (!elemlist1 || !elemlist2) return false;
                 if (elemlist1.length !== elemlist2.length) return false;
 
@@ -171,11 +170,11 @@ export class FreTyperTemplate {
              * @param typelist1
              * @param typelist2
              */
-            public conformsList(typelist1: ${Names.FreType}[], typelist2: ${Names.FreType}[]): boolean {
+            public conformsList(typelist1: ${Names.FreType}[], typelist2: ${Names.FreType}[]): boolean | undefined {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: boolean = typer.conformsList(typelist1, typelist2);
-                    if (result !== null) {
+                    let result: boolean | undefined = typer.conformsList(typelist1, typelist2);
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }
@@ -187,7 +186,7 @@ export class FreTyperTemplate {
              * Returns the common super type of all elements in elemlist
              * @param elemlist
              */
-            public commonSuperType(elemlist: ${Names.FreNode}[]): ${Names.FreType} {
+            public commonSuperType(elemlist: ${Names.FreNode}[]): ${Names.FreType} | undefined {
                 if (!elemlist ) return null;
                 if (elemlist.length === 0 ) return null;
 
@@ -201,11 +200,11 @@ export class FreTyperTemplate {
              * Returns the common super type of all types in typelist
              * @param typelist
              */
-            public commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} {
+            public commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} | undefined {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
-                    let result: ${Names.FreType} = typer.commonSuper(typelist);
-                    if (!!result) {
+                    let result: ${Names.FreType} | undefined = typer.commonSuper(typelist);
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }
@@ -217,11 +216,11 @@ export class FreTyperTemplate {
              * Returns all super types as defined by the conformance rules in the typer definition.
              * @param type
              */
-            public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] {
+            public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] | undefined {
                 for (const typer of freonConfiguration.customTypers) {
                     typer.mainTyper = this;
                     let result: ${Names.FreType}[] = typer.getSuperTypes(type);
-                    if (!!result) {
+                    if (notNullOrUndefined(result)) {
                         return result;
                     }
                 }

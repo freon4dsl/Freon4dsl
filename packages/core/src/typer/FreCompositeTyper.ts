@@ -2,6 +2,7 @@ import type { FreNode } from "../ast/index.js";
 import { ArrayUtil } from "../util/ArrayUtil.js";
 import type { FreTyper } from "./FreTyper.js";
 import type { FreType } from "./FreType.js";
+import { notNullOrUndefined } from '../util/index.js';
 
 export class FreCompositeTyper implements FreTyper {
     mainTyper: FreTyper;
@@ -23,71 +24,71 @@ export class FreCompositeTyper implements FreTyper {
         t.mainTyper = this;
     }
 
-    inferType(node: FreNode): FreType | null {
+    inferType(node: FreNode): FreType | undefined {
         for (const typer of this.typers) {
             const result = typer.inferType(node);
-            if (!!result) {
+            if (notNullOrUndefined(result)) {
                 return result;
             }
         }
-        return null;
+        return undefined;
     }
 
     isType(node: FreNode): boolean {
         for (const typer of this.typers) {
             const result = typer.isType(node);
-            if (!!result) {
+            if (notNullOrUndefined(result)) {
                 return result;
             }
         }
         return false;
     }
 
-    commonSuper(typelist: FreType[]): FreType | null {
+    commonSuper(typelist: FreType[]): FreType | undefined {
         for (const typer of this.typers) {
             const result = typer.commonSuper(typelist);
-            if (!!result) {
+            if (notNullOrUndefined(result)) {
                 return result;
             }
         }
         // no result from custom typers => use the generated typer
-        return null;
+        return undefined;
     }
 
-    conforms(type1: FreType, type2: FreType): boolean | null {
+    conforms(type1: FreType, type2: FreType): boolean {
         for (const typer of this.typers) {
             const result = typer.conforms(type1, type2);
-            if (result !== null) {
+            if (notNullOrUndefined(result)) {
                 return result;
             }
         }
         return false;
     }
 
-    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | null {
+    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean {
         for (const typer of this.typers) {
             const result = typer.conformsList(typelist1, typelist2);
-            if (result !== null) {
+            if (notNullOrUndefined(result)) {
                 return result;
             }
         }
         return false;
     }
 
-    equals(type1: FreType, type2: FreType): boolean | null {
+    equals(type1: FreType, type2: FreType): boolean {
         for (const typer of this.typers) {
             const result = typer.equals(type1, type2);
-            if (result !== null && result !== undefined) {
+            if (notNullOrUndefined(result)) {
                 return result;
             }
         }
         return false;
     }
 
-    getSuperTypes(type: FreType): FreType[] | null {
+    getSuperTypes(type: FreType): FreType[]  {
         for (const typer of this.typers) {
             const result = typer.getSuperTypes(type);
-            if (!!result) {
+            if (notNullOrUndefined(result)) {
                 return result;
             }
         }
@@ -95,17 +96,17 @@ export class FreCompositeTyper implements FreTyper {
         return [];
     }
 
-    commonSuperType(elemlist: FreNode[]): FreType {
+    commonSuperType(elemlist: FreNode[]): FreType | undefined {
         if (!elemlist) {
-            return null;
+            return undefined;
         }
         if (elemlist.length === 0) {
-            return null;
+            return undefined;
         }
 
         const $typelist: FreType[] = this.elementListToTypeList(elemlist);
         if ($typelist.length === 0) {
-            return null;
+            return undefined;
         }
 
         return this.commonSuper($typelist);
@@ -173,20 +174,3 @@ export class FreCompositeTyper implements FreTyper {
         return typelist;
     }
 }
-
-// export class Composite<PART> {
-//     private typers: PART[] =[];
-//     name: string = "";
-//
-//     constructor(name: string) {
-//         this.name = name;
-//     }
-//
-//     appendTyper(t: PART) {
-//         this.typers.push(t)
-//     }
-//
-//     insertTyper(t: PART) {
-//         this.typers.splice(0, 0, t);
-//     }
-// }

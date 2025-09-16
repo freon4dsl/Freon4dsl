@@ -25,32 +25,32 @@ export class FreCustomTyperPartTemplate {
         export class ${generatedClassName} implements ${typerInterfaceName} {
             mainTyper: FreTyper;
 
-            isType(node: ${Names.FreNode}): boolean | null {
-                return null;
+            isType(node: ${Names.FreNode}): boolean | undefined {
+                return undefined;
             }
 
-            inferType(node: ${Names.FreNode}): ${Names.FreType} | null {
-                return null;
+            inferType(node: ${Names.FreNode}): ${Names.FreType} | undefined {
+                return undefined;
             }
 
-            equals(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean | null {
-                return null;
+            equals(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean | undefined {
+                return undefined;
             }
 
-            conforms(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean | null {
-                return null;
+            conforms(type1: ${Names.FreType}, type2: ${Names.FreType}): boolean | undefined {
+                return undefined;
             }
 
-            conformsList(typelist1: ${Names.FreType}[], typelist2: ${Names.FreType}[]): boolean | null {
-                return null;
+            conformsList(typelist1: ${Names.FreType}[], typelist2: ${Names.FreType}[]): boolean | undefined {
+                return undefined;
             }
 
-            commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} | null {
-                return null;
+            commonSuper(typelist: ${Names.FreType}[]): ${Names.FreType} | undefined {
+                return undefined;
             }
 
-            public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] | null {
-                return null;
+            public getSuperTypes(type: ${Names.FreType}): ${Names.FreType}[] | undefined {
+                return undefined;
             }
         }`;
     }

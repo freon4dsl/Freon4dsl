@@ -65,6 +65,7 @@ export class DefaultActionsTemplate {
                         expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
                             const parent = box.node;
                             const newExpression = new ${Names.concept(c)}();
+                            // @ts-ignore: we use a generic manner to create the right property
                             parent[(box as ActionBox).propertyName] = newExpression;
                             return newExpression;
                         }
@@ -80,6 +81,7 @@ export class DefaultActionsTemplate {
                         expressionBuilder: (box: Box, trigger: ${Names.FreTriggerType}, editor: ${Names.FreEditor}) => {
                             const parent = box.node;
                             const newExpression = new ${Names.concept(c)}();
+                            // @ts-ignore: we use a generic manner to create the right property
                             parent[(box as ActionBox).propertyName] = newExpression;
                             return newExpression;
                         }

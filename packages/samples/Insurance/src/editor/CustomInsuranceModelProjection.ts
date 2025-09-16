@@ -46,26 +46,36 @@ export class CustomInsuranceModelProjection implements FreProjection {
 
     // add your custom methods here
 
-    // BOX_FOR_CONCEPT(node: NAME_OF_CONCEPT) : Box { ... }
-    EuroLiteralWithSVG(node: EuroLiteral): Box {
+    // BOX_FOR_CONCEPT(node: FreNode): Box { ... }
+    // Note: The map type is (node: FreNode) => Box, which means handlers
+    // must accept *any* FreNode. A method with signature (node: NAME_OF_CONCEPT): Box
+    // is not assignable, even though EuroLiteral extends FreNode, because
+    // function parameters are checked contravariantly in TypeScript.
+    // Therefore, declare the handler as (node: FreNode) and cast/narrow inside.
+
+    EuroLiteralWithSVG(node: FreNode): Box {
+      if (node.freLanguageConcept() !== "EuroLiteral") {
+        throw new Error("EuroLiteralWithSVG called with non-EuroLiteral node");
+      }
+      const innerNode = node as EuroLiteral;
         return createDefaultExpressionBox(
-            node,
+            innerNode,
             [
                 BoxFactory.horizontalLayout(
-                    node,
+                    innerNode,
                     "EuroLiteral-hlist-line-0",
                     "",
                     [
-                        new SvgBox(node, "euro-icon", euroIcon, {
+                        new SvgBox(innerNode, "euro-icon", euroIcon, {
                             viewPortWidth: 20,
                             viewPortHeight: 20,
                             viewBoxWidth: 1024,
                             viewBoxHeight: 1024,
                             selectable: false
                         }),
-                        BoxUtil.numberBox(node, "euros", NumberDisplay.SELECT),
-                        BoxUtil.labelBox(node, ",", "top-1-line-0-item-2"),
-                        BoxUtil.numberBox(node, "cents", NumberDisplay.SELECT),
+                        BoxUtil.numberBox(innerNode, "euros", NumberDisplay.SELECT),
+                        BoxUtil.labelBox(innerNode, ",", "top-1-line-0-item-2"),
+                        BoxUtil.numberBox(innerNode, "cents", NumberDisplay.SELECT),
                     ],
                     { selectable: false },
                 ),

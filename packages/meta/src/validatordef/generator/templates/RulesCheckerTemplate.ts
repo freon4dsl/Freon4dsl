@@ -325,11 +325,14 @@ export class RulesCheckerTemplate {
                         + this.myWriter.writeNameOnly(${rightElement})
                         + " (" + rightType${index}?.toFreString(this.myWriter) + ")"`;
             }
+            imports.core.add('notNullOrUndefined');
             return `const leftType${index} = this.typer.inferType(${leftElement});
             const rightType${index} = this.typer.inferType(${rightElement});
-            if (!this.typer.equals(leftType${index}, rightType${index})) {
-                this.errorList.push(new ${Names.FreError}(${message}, ${leftElement}, ${locationdescription}, ${severity}));
-                ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
+            if (notNullOrUndefined(leftType0) && notNullOrUndefined(rightType0)) {
+                if (!this.typer.equals(leftType${index}, rightType${index})) {
+                    this.errorList.push(new ${Names.FreError}(${message}, ${leftElement}, ${locationdescription}, ${severity}));
+                    ${r.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
+                }
             }`;
         } else {
             return "<error in makeEqualsTypeRule>";

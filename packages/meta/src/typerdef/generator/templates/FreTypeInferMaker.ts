@@ -1,6 +1,6 @@
 import { FretInferenceRule, TyperDef } from "../../metalanguage/index.js";
-import { Names } from "../../../utils/on-lang/index.js";
-import { FreMetaClassifier, FreMetaLimitedConcept, LangUtil } from '../../../languagedef/metalanguage/index.js';
+import { Imports, Names } from '../../../utils/on-lang/index.js';
+import { FreMetaLimitedConcept, LangUtil } from '../../../languagedef/metalanguage/index.js';
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
 import { FretEqualsRule } from "../../metalanguage/FretEqualsRule.js";
 
@@ -12,7 +12,7 @@ export class FreTypeInferMaker {
     typerdef: TyperDef | undefined = undefined;
     // private toBeCopied: FreClassifier[] = [];
 
-    public makeInferType(typerDef: TyperDef, varName: string, imports: FreMetaClassifier[]): string {
+    public makeInferType(typerDef: TyperDef, varName: string, imports: Imports): string {
         FreTyperGenUtils.types = typerDef.types;
         this.typerdef = typerDef;
         const result: string[] = [];
