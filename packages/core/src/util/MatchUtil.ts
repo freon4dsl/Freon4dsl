@@ -34,7 +34,7 @@ export class MatchUtil {
      */
     public static fullMatchingOptions(text: string, options: SelectOption[]): SelectOption[] {
         if (isEmpty(text)) {
-            return options
+            return []
         }
         return options.filter((opt) => opt.label.toLowerCase() === text.toLowerCase())
     }
