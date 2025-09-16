@@ -137,10 +137,8 @@
 }
 
 .text-component-input {
-    /*color: var(--freon-dark-base-600);*/
-    color: var(--freon-dark-accent-darkorange);
-    /*background: var(--freon-dark-accent-green);*/
-    background: var(--color-dark-freon-600);
+    background: var(--color-dark-freon-accent-dropdown);
+    color: var(--color-dark-freon-accent-editable);
 }
 
 .text-component-text {
@@ -242,7 +240,12 @@
 }
 
 .render-component-selected {
-    outline-color: var(--color-dark-freon--900);
+    outline-color: var(--color-dark-freon--100);
+}
+
+.render-component-selected:has(.layout-component-horizontal) > span:focus {
+    outline-color: var(--color-dark-freon--100);
+    box-shadow: 0 0 10px var(--color-dark-freon--100);
 }
 
 .switch-component button {
@@ -305,7 +308,8 @@
 }
 
 .text-dropdown-component .text-component-input {
-    color: var(--color-dark-freon-accent-dropdown);
+    color: var(--color-dark-freon-accent-editable);
+    background: var(--color-dark-freon-accent-dropdown);
 }
 
 .brackets {

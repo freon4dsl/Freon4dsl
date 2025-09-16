@@ -156,7 +156,7 @@
 
 .dark .text-component-input {
     color: var(--color-dark-freon-accent-editable);
-    background: var(--color-dark-freon--800);
+    background: var(--color-dark-freon-accent-dropdown);
 }
 
 .dark .text-component-text {
@@ -264,6 +264,11 @@
 }
 .dark .render-component-selected {
     outline-color: var(--color-dark-freon--100);
+}
+
+.dark .render-component-selected:has(.layout-component-horizontal) > span:focus {
+    outline-color: var(--color-dark-freon--100);
+    box-shadow: 0 0 10px var(--color-dark-freon--100);
 }
 
 .dark .switch-component {

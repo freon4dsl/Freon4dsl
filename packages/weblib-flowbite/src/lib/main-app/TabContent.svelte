@@ -7,7 +7,7 @@
 
 <div id="tab-content" class="flex w-auto h-full grid-rows-[auto,1fr] col-span-2 ">
 	{#if infoPanelShown.value}
-		<div id='scroll-container-editor' class="flex-grow-1 h-[calc(100vh-155px)] w-[70vw] relative top-0 overflow-y-auto border-1">
+		<div id='scroll-container-editor' class="flex-grow-1 h-[calc(100vh-155px)] w-[70vw] relative top-0 overflow-y-auto border-1 border-light-freon-200 dark:border-dark-freon-200">
 			<EditorPart />
 		</div>
 		<div id='scroll-container-info'
@@ -17,7 +17,7 @@
 			<InfoPanel />
 		</div>
 	{:else}
-		<div id='scroll-container' class="flex-grow-1 h-[calc(100vh-155px)] w-full relative top-0 overflow-y-auto border-1 ">
+		<div id='scroll-container' class="flex-grow-1 h-[calc(100vh-155px)] w-full relative top-0 overflow-y-auto border-1 border-light-freon-200 dark:border-dark-freon-200">
 			<EditorPart />
 		</div>
 	{/if}

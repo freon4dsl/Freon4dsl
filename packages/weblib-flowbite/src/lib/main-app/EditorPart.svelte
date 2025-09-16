@@ -10,7 +10,7 @@
     let alertCls: string = 'p-1 m-2 gap-1 bg-light-base-600 dark:bg-dark-base-200 text-light-base-50 dark:text-dark-base-900';
 </script>
 
-<div id="editor-part" class='bg-light-base-50 dark:bg-dark-base-600 dark:text-dark-base-50 p-1'>
+<div id="editor-part" class='bg-light-base-50 dark:bg-dark-base-900 dark:text-dark-base-50 p-1'>
     {#if (noUnitAvailable.value || isNullOrUndefined(WebappConfigurator.getInstance().langEnv?.editor))}
         {#if !userMessageOpen.value}
             <Alert transition={fly} params={{ x: 200 }} class={alertCls}>
