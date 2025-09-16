@@ -1,10 +1,11 @@
 import { InterpreterContext } from "./InterpreterContext.js";
 import { InterpreterTracer } from "./InterpreterTracer.js";
 import { RtObject } from "./runtime/index.js";
+import type { FreNode } from '../ast';
 
 export type ConceptFunction = (node: Object) => string;
 export type OwningPropertyFunction = (node: Object) => string;
-export type EvaluateFunction = (node: Object, ctx: InterpreterContext) => RtObject;
+export type EvaluateFunction = (node: FreNode, ctx: InterpreterContext) => RtObject;
 export type InitFunction = (i: IMainInterpreter) => void;
 
 export interface IMainInterpreter {

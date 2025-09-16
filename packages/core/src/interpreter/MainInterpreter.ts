@@ -3,6 +3,7 @@ import { InterpreterError } from "./InterpreterException.js";
 import { InterpreterTracer } from "./InterpreterTracer.js";
 import type { ConceptFunction, EvaluateFunction, IMainInterpreter, InitFunction, OwningPropertyFunction } from "./IMainInterpreter.js";
 import { isRtError, RtObject } from "./runtime/index.js";
+import type { FreNode } from '../ast';
 
 /**
  * The main interpreter class, usually hidden by a facade specific for a project.
@@ -72,7 +73,7 @@ export class MainInterpreter implements IMainInterpreter {
      * @see IMainInterpreter.evaluate
      * Evaluate `node` with context `ctx` aand return the value
      */
-    public evaluate(node: Object, ctx: InterpreterContext): RtObject {
+    public evaluate(node: FreNode, ctx: InterpreterContext): RtObject {
         if (node === undefined || node === null) {
             throw new InterpreterError("Cannot interpret node that is null or undefined");
         }

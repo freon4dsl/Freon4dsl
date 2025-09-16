@@ -27,7 +27,7 @@ export class ReaderTemplate {
             LanguageProcessorResult,
             type ProcessResult,
             type SentenceContext,
-        } from 'net.akehurst.language-agl-processor/net.akehurst.language-agl-processor.mjs';
+        } from 'net.akehurst.language-agl-processor';
 
         class MyContext implements SentenceContext<FreNode> {
             constructor(readonly predefined: Map<string, FreNode>) {
@@ -47,7 +47,7 @@ export class ReaderTemplate {
                 this.analyser = new ${syntaxAnalyser}();
                 const res: LanguageProcessorResult<any, any> = Agl.getInstance().processorFromString(
                   ${Names.grammarStr(language)},
-                  Agl.getInstance().configuration(undefined, (b) => {
+                  Agl.getInstance().configuration(undefined, (b: any) => {
                       b.syntaxAnalyserResolverResult(() => this.analyser);
                   }),
                 );

@@ -56,7 +56,8 @@ export class NamespaceCheckerTemplate {
                 }
             });
             if (doubleNames.length > 0) {
-                this.errorList.push(new FreError(\`Namespace \${node['name']} has multiple nodes with the same name [\${doubleNames.map(n => n).join(', ')}].\`, node, node['name'], 'name', FreErrorSeverity.Error));
+                const namespaceName: string = 'name' in node ? (node as FreNamedNode).name : '<unnamed>';
+                this.errorList.push(new FreError(\`Namespace \${namespaceName} has multiple nodes with the same name [\${doubleNames.map(n => n).join(', ')}].\`, node, namespaceName, 'name', FreErrorSeverity.Error));
             }
         }
         }`;

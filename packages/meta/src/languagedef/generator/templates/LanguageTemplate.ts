@@ -54,7 +54,7 @@ export class LanguageTemplate {
             }
 
             function describe${Names.classifier(language.modelConcept)}(): FreLanguageModel {
-                    const model: FreLanguageModel =             {
+                    const model: FreLanguageModel<MyLanguage.${Names.classifier(language.modelConcept)}> = {
                         typeName: "${Names.classifier(language.modelConcept)}",
                         id: "${language.modelConcept.id}",
                         key: "${language.modelConcept.key}",
@@ -115,7 +115,11 @@ export class LanguageTemplate {
                                     });`,
                         )
                         .join("\n")}
-                        return model;
+                        // Type cast is here to avoid function-parameter variance issue:
+                        // function parameters are contravariant: a function that 
+                        // accepts a more specific param is not assignable to one 
+                        // that claims it can accept a broader param.
+                        return model as unknown as FreLanguageModel;
                     }
 
             ${language.units
@@ -123,7 +127,7 @@ export class LanguageTemplate {
                     (modelunit) =>
                         `
                 function describe${Names.classifier(modelunit)}(): FreLanguageModelUnit {
-                    const modelunit: FreLanguageModelUnit =             {
+                    const modelunit: FreLanguageModelUnit<MyLanguage.${Names.classifier(modelunit)}> =             {
                         typeName: "${Names.classifier(modelunit)}",
                         id: "${modelunit.id}",
                         key: "${modelunit.key}",
@@ -188,7 +192,11 @@ export class LanguageTemplate {
                                     });`,
                                 )
                                 .join("\n")}
-                        return modelunit;
+                        // Type cast is here to avoid function-parameter variance issue:
+                        // function parameters are contravariant: a function that 
+                        // accepts a more specific param is not assignable to one 
+                        // that claims it can accept a broader param.
+                        return modelunit as unknown as FreLanguageModelUnit;
                     }`,
                 )
                 .join("\n")}
@@ -198,7 +206,7 @@ export class LanguageTemplate {
                     (concept) =>
                         `
                 function describe${Names.concept(concept)}(): FreLanguageConcept {
-                    const concept: FreLanguageConcept =             {
+                    const concept: FreLanguageConcept<MyLanguage.${Names.concept(concept)}> =             {
                         typeName: "${Names.concept(concept)}",
                         id: "${concept.id}",
                         key: "${concept.key}",
@@ -269,7 +277,11 @@ export class LanguageTemplate {
                             });`,
                         )
                         .join("\n")}
-                return concept;
+                    // Type cast is here to avoid function-parameter variance issue:
+                    // function parameters are contravariant: a function that 
+                    // accepts a more specific param is not assignable to one 
+                    // that claims it can accept a broader param.
+                    return concept as unknown as FreLanguageConcept;
             }`,
                 )
                 .join("\n")}
@@ -278,7 +290,7 @@ export class LanguageTemplate {
                     (intface) =>
                         `
                 function describe${Names.interface(intface)}(): FreLanguageInterface {
-                    const intface: FreLanguageInterface =             {
+                    const intface: FreLanguageInterface<MyLanguage.${Names.interface(intface)}> =             {
                         typeName: "${Names.interface(intface)}",
                         id: "${intface.id}",
                         key: "${intface.key}",
@@ -344,7 +356,11 @@ export class LanguageTemplate {
                             });`,
                     )
                     .join("\n")}
-                return intface;
+                    // Type cast is here to avoid function-parameter variance issue:
+                    // function parameters are contravariant: a function that 
+                    // accepts a more specific param is not assignable to one 
+                    // that claims it can accept a broader param.
+                    return intface as unknown as FreLanguageConcept;
             }`,
                 )
                 .join("\n")}

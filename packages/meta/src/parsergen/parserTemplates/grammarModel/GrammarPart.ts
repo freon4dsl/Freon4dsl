@@ -29,7 +29,7 @@ export class GrammarPart {
             type KtList,
             type Sentence,
             type SpptDataNodeInfo
-        } from "net.akehurst.language-agl-processor/net.akehurst.language-agl-processor.mjs";
+        } from "net.akehurst.language-agl-processor";
         import { ${Names.FreNodeReference} } from "@freon4dsl/core";` : ""}
         ${
             this.imports.length > 0

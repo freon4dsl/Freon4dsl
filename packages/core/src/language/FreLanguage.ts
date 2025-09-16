@@ -21,7 +21,7 @@ export type FreLanguageProperty = {
     language: string;
     propertyKind: PropertyKind;
 };
-export type FreLanguageModel = {
+export type FreLanguageModel<T extends FreModel = FreModel> = { /* '= FreModel' gives a default type argument */
     typeName: string;
     id?: string;
     key?: string; // used for LionWeb
@@ -31,11 +31,11 @@ export type FreLanguageModel = {
     language: string;
     subConceptNames?: string[];
     properties: Map<string, FreLanguageProperty>;
-    constructor: (id?: string) => FreModel;
-    creator: (data: Partial<FreModel>) => FreModel;
+    constructor: (id?: string) => T;
+    creator: (data: Partial<T>) => T;
     referenceShortcut?: ReferenceShortcut;
 };
-export type FreLanguageModelUnit = {
+export type FreLanguageModelUnit<T extends FreModelUnit = FreModelUnit> = { /* '= FreModelUnit' gives a default type argument */
     typeName: string;
     id?: string;
     key?: string; // used for LionWeb
@@ -47,12 +47,12 @@ export type FreLanguageModelUnit = {
     subConceptNames: string[];
     fileExtension: string;
     properties: Map<string, FreLanguageProperty>;
-    constructor: (id?: string) => FreModelUnit;
-    creator: (data: Partial<FreModelUnit>) => FreModelUnit;
+    constructor: (id?: string) => T;
+    creator: (data: Partial<T>) => T;
     trigger: string;
     referenceShortcut?: ReferenceShortcut;
 };
-export type FreLanguageConcept = {
+export type FreLanguageConcept<T extends FreNode = FreNode> = { /* '= FreNode' gives a default type argument */
     typeName: string;
     id?: string;
     key?: string; // used for LionWeb
@@ -66,14 +66,14 @@ export type FreLanguageConcept = {
     baseName: string;
     subConceptNames: string[];
     properties: Map<string, FreLanguageProperty>;
-    constructor: (id?: string) => FreNode;
-    creator: (data: Partial<FreNode>) => FreNode;
+    constructor: (id?: string) => T;
+    creator: (data: Partial<T>) => T;
     // Used by editor, therefore only in Concept
     trigger: string;
     referenceShortcut?: ReferenceShortcut;
 };
 
-export type FreLanguageInterface = {
+export type FreLanguageInterface<T extends FreNode = FreNode> = { /* '= FreNode' gives a default type argument */
     typeName: string;
     id?: string;
     key?: string; // used for LionWeb
@@ -83,8 +83,8 @@ export type FreLanguageInterface = {
     isAbstract?: boolean;
     subConceptNames: string[];
     properties: Map<string, FreLanguageProperty>;
-    constructor?: (id?: string) => FreNode | undefined;
-    creator?: (data: Partial<FreNode>) => FreNode | undefined;
+    constructor: (id?: string) => T | undefined;
+    creator: (data: Partial<T>) => T | undefined;
     language: string;
     referenceShortcut?: ReferenceShortcut;
 };
