@@ -49,7 +49,7 @@ export class ConceptRule extends GrammarRule {
         const myProperties = this.propsToSet();
         return (
             `${ParserGenUtil.makeComment(this.toGrammar())}
-                public transform${this.ruleName} (nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.classifier(this.concept)} {
+                public transform${this.ruleName} (nodeInfo: SpptDataNodeInfo, children: KtList<any>, sentence: Sentence) : ${Names.classifier(this.concept)} {
                     // console.log('4 transform${this.ruleName} called: ' + children.toString());
                     ${myProperties.map((prop) => 
                         `let ${ParserGenUtil.internalName(prop.name)}: ${GenerationUtil.getTypeAsString(prop)};\n`).join("")}` + // to avoid an extra newline in the result

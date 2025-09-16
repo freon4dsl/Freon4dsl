@@ -36,7 +36,7 @@ export class SemanticAnalysisTemplate {
                             }
                         }
                         // find all concepts that have a single non-optional reference, and possibly other optional props
-                        // the parsing will render a rule thatmatches when only one reference is present
+                        // the parsing will render a rule that matches when only one reference is present
                         // these references need to be checked against their expected (meta)types.
                         const nonOptionals = sub.allProperties().filter((prop) => !prop.isOptional);
                         if (nonOptionals.length === 1 && !nonOptionals[0].isPart) {
@@ -111,7 +111,8 @@ export class SemanticAnalysisTemplate {
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
                             const myType: FreLanguageConcept = ${Names.FreLanguage}.getInstance().concept(toBeReplaced.freLanguageConcept());
                             myType.properties.forEach(prop => {
-                                if (prop.type !== "boolean" && !!toBeReplaced[prop.name]) {
+                                if (prop.type !== "boolean" && prop.name in toBeReplaced) {
+                                    // @ts-ignore: if prop.name id present, then it is also present in an object of the same type
                                     newObject[prop.name] = toBeReplaced[prop.name];
                                 }
                             });
@@ -119,8 +120,10 @@ export class SemanticAnalysisTemplate {
                             const propName: string = toBeReplaced.freOwnerDescriptor().propertyName;
                             const propIndex: number = toBeReplaced.freOwnerDescriptor().propertyIndex;
                             if (propIndex !== undefined) {
+                                // @ts-ignore: we are certain that prop.name is present
                                 parent[propName].splice(propIndex, 1, newObject);
                             } else {
+                                // @ts-ignore: we are certain that prop.name is present
                                 parent[propName] = newObject;
                             }
                         }
@@ -156,7 +159,7 @@ export class SemanticAnalysisTemplate {
                     this.changesToBeMade = changesToBeMade;
                 }
 
-                ${this.possibleProblems.map((poss) => `${this.makeVistorMethod(poss)}`).join("\n")}
+                ${this.possibleProblems.map((poss) => `${this.makeVisitorMethod(poss)}`).join("\n")}
 
                 private findReplacement(node: ${Names.allConcepts()}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
                     const scoper = ${Names.FreLanguageEnvironment}.getInstance().scoper;
@@ -202,7 +205,7 @@ export class SemanticAnalysisTemplate {
         return result;
     }
 
-    private makeVistorMethod(freConcept: FreMetaConcept): string {
+    private makeVisitorMethod(freConcept: FreMetaConcept): string {
         // TODO add replacement of properties that are lists
         return `
             /**

@@ -111,6 +111,7 @@ export class GrammarGenerator {
         // imports
         grammarPart.addToImports(analyser.classifiersUsed);
         grammarPart.addToImports(conceptMaker.imports);
+        grammarPart.importParsedNodeReference = conceptMaker.importParsedNodeReference;
         grammarPart.addToImports(choiceRuleMaker.imports);
         grammarPart.addToImports(limitedMaker.imports);
         grammarPart.addToImports(binaryExpMaker.imports);

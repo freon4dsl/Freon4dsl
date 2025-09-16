@@ -29,14 +29,13 @@ export class ReaderTemplate {
             type SentenceContext,
         } from 'net.akehurst.language-agl-processor';
 
-        class MyContext implements SentenceContext<FreNode> {
-            constructor(readonly predefined: Map<string, FreNode>) {
-            }
+        class MyContext {
+            constructor(readonly predefined: Map<string, FreNode>) {}
         }
         
         /**
-        *   Class ${Names.reader(language)} is a wrapper for the various parsers of
-        *   model units.
+        *   Class ${Names.reader(language)} is a wrapper that is able to parse all types of
+        *   model units in the language.
         */
         export class ${Names.reader(language)} implements ${Names.FreReader} {          
             analyser: ${syntaxAnalyser};
@@ -111,7 +110,7 @@ export class ReaderTemplate {
                         });
                     } else {
                         AST.change( () => {
-                            unit = parseResult.asm as ${Names.modelunit()};
+                            unit = parseResult.asm as unknown as ${Names.modelunit()};
                         });
                     }
                     // do semantic analysis taking into account the whole model, because references could be pointing anywhere

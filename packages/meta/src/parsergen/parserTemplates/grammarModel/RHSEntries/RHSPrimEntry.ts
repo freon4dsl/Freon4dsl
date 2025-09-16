@@ -30,7 +30,7 @@ export class RHSPrimEntry extends RHSPropEntry {
             typeStr = "PrimValueType.boolean";
         }
         return `${ParserGenUtil.internalName(this.property.name)} = 
-                    this.${mainAnalyserName}.${internalTransformPrimValue}<${tsType}>(${nodeName}.asJsReadonlyArrayView()[${index}], ${typeStr}); // RHSPrimEntry\n`
+                    this.${mainAnalyserName}.${internalTransformPrimValue}<${tsType}>(${nodeName}.asJsReadonlyArrayView()[${index}] as unknown as string, ${typeStr}); // RHSPrimEntry\n`
     }
 
     toString(depth: number): string {

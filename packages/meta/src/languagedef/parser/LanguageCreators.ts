@@ -101,7 +101,7 @@ function splitProperties(propList: FreMetaProperty[], result: FreMetaClassifier)
 }
 
 export function createModel(data: Partial<FreMetaModelDescription>): FreMetaModelDescription {
-    console.log("createModel " + data?.name);
+    // console.log("createModel " + data?.name);
     const result = new FreMetaModelDescription();
     if (!!data.name) {
         result.name = data.name;
@@ -112,7 +112,7 @@ export function createModel(data: Partial<FreMetaModelDescription>): FreMetaMode
         splitProperties(data.properties, result);
     }
     if (!!data.version) {
-        console.log(`createModel version ${data.version}`)
+        // console.log(`createModel version ${data.version}`)
         result.version = data.version;
     }
     if (!!data.location) {

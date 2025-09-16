@@ -17,7 +17,7 @@ export class RHSRefEntry extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformTempRef}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}], '${baseType}'); // RHSRefEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformTempRef}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}] as ParsedNodeReference, '${baseType}'); // RHSRefEntry\n`;
     }
 
     toString(depth: number): string {

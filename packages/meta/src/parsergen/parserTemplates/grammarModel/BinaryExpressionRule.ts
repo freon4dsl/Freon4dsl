@@ -43,7 +43,7 @@ export class BinaryExpressionRule extends GrammarRule {
          * @param branch
          * @private
          */
-        public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.concept(this.expressionBase)} {
+        public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<any>, sentence: Sentence) : ${Names.concept(this.expressionBase)} {
             // console.log('transform${this.ruleName} called: ' + children.toString());
             let index = 0;
             let list = children.asJsReadonlyArrayView()

@@ -35,7 +35,7 @@ export class RHSRefListWithTerminator extends RHSPropPartWithSeparator {
         return `// RHSRefListWithTerminator
         if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
             ${ParserGenUtil.internalName(this.property.name)} = [];
-            for (const child of ${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView()) {
+            for (const child of (${nodeName}.asJsReadonlyArrayView()[${index}] as KtList<any>).asJsReadonlyArrayView()) {
                 const _transformed = this.${mainAnalyserName}.${internalTransformRefList}<${baseType}>(child, "${baseType}");
                 if (!!_transformed) {
                     ${ParserGenUtil.internalName(this.property.name)}.push(_transformed[0]);

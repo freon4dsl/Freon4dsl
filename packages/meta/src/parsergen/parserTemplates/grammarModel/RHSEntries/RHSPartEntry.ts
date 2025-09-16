@@ -18,8 +18,8 @@ export class RHSPartEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string): string {
-        GenerationUtil.getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}]; // RHSPartEntry\n`;
+        const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        return `${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}] as ${baseType}; // RHSPartEntry\n`;
     }
 
     toString(depth: number): string {
