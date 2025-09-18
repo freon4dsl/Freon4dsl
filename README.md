@@ -1,107 +1,123 @@
+# Freon — The Language Workbench for the Web
+
 [![Build Status](https://github.com/freon4dsl/freon4dsl/actions/workflows/node.js.yml/badge.svg)]
 
-# Freon, the Language Workbench for the Web
-Web-native Language Workbench with projectional editor. 
-The current release (version 1.0.0) can be found on npm.
+**From documents to models**  
+Freon is a language workbench that generates browser-based editors from your own domain-specific language (DSL).  
+It helps businesses capture knowledge in a structured way — turning Word-style requirements into models that can be automated, stored, and reused.
 
-**August 1, 2025: Version 2.0.0-beta.2 released**
+- ⚡ **Easy to start**: smart defaults and generators for common tasks.
+- 🌐 **Runs in the browser**: editors are instantly usable, no complex setup.
+- 🧩 **Meta-languages for scope & typing**: declare rules instead of hard-coding them.
+- 🔀 **Hybrid approach**: combines projectional editing with parsing for flexible, natural DSLs.
 
-**May 13, 2025: Version 1.1.0-beta.3 released**
+📖 [Freon documentation](https://www.freon4dsl.dev)  
+🎮 [Sample DSLs](packages/samples)
 
-- Updated to use Svelte 5 instead of Svelte 4.
-- Performance improvements in generation and really fast hot reloading thanks to vite.
+---
 
-**May 13, 2025: IDE plugin version 0.0.4 released**
-- See [https://github.com/freon4dsl/freon-ide/blob/main/README.md](https://github.com/freon4dsl/freon-ide/blob/main/README.md)
+## Which Repo Do You Need?
 
-## What is Freon
+> 💡 **If your goal is to *use* Freon to build your own DSL**, head over to the [create-freon](https://github.com/freon4dsl/create-freon) repository.  
+> This repository (`freon4dsl/freon4dsl`) is for **developing Freon itself** — its core framework, editor engine, and generators.
 
-Freon is a TypeScript/JavaScript framework to create and implement projectional editors for Domain-Specific Languages (DSLs) running natively in the browser. 
-Additional to the core framework, there are generators for many parts of the work environment for your DSL.
+---
 
-For more information see the <a href="https://www.freon4dsl.dev" target="_blank">Freon</a> website.
+## Releases
 
-## Using Freon
+- **August 1, 2025: Version 2.0.0-beta.2 released**
+- **May 13, 2025: Version 1.1.0-beta.3 released**
+  - Updated to Svelte 5 (was Svelte 4).
+  - Performance improvements in generation.
+  - Really fast hot reloading thanks to Vite.
+- **May 13, 2025: IDE plugin version 0.0.4 released** → [see details here](https://github.com/freon4dsl/freon-ide/blob/main/README.md)
 
-If you want to use Freon to develop a DSL on the Web, goto the [Freon Documentation](https://www.freon4dsl.dev),
-this repository is meant for developing Freon itself.
+---
+
+## What is Freon?
+
+Freon is a **TypeScript/JavaScript framework** for creating and implementing projectional editors for DSLs that run natively in the browser.  
+Beyond the core framework, Freon includes generators for many parts of a DSL’s working environment.
+
+---
 
 ## Developing Freon
 
-The main prerequisites are: [Node.js](https://nodejs.org/) and [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/).
-We are typically using the latest versions of both, although older versions likely work just as well.
+If you want to work on the Freon framework itself:
 
-Clone or fork this GitHub project, check out the `development` branch, and install dependencies:
-```bash
-  git clone https://github.com/freon4dsl/Freon4dsl.git
-```
-Set up the multirepo and install all dependencies:
-```bash
-  npm install
-```
+### Prerequisites
+- [Node.js](https://nodejs.org/)
+- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/)
 
-Now you can build Freon with:
-```bash
-  npm run build
-```
+We typically use the latest versions, although older versions may work as well.
 
-And run all tests  with:
+### Build and Test
 ```bash
-  npm run test
+git clone https://github.com/freon4dsl/Freon4dsl.git
+cd Freon4dsl
+npm install
+npm run build
+npm run test
 ```
 
-## Starting the web app editor
-* Go to the package containing your language, this can e.g. be any package in `packages/samples`.
-  - Build the language using `npm run build`
+### Running the Web App Editor
 
-* Go to the `webapp-flowbite` package.
-  - Open the file `package.json
-  - In the _dependencies_ section change the language dependency to your chosen language:
-  ```json lines
-  "@freon4dsl/samples-course-schedule": "2.0.0-beta.2",
-  ```
-  - Also open the file `src/starter.ts`
-  - Change line 5 to import the correct environment from your chosen language package:
-  ```typescript
-  import { LanguageEnvironment } from "@freon4dsl/samples-course-schedule" 
-  ```
+You can try Freon with one of the sample languages.
 
-* Go to directory `packages/server` and start the server:
+#### 1. Build the language
 ```bash
-    cd packages/server
-    npm run start
+cd packages/samples/<your-sample>
+npm run build
 ```
 
-* Goto the `webapp-flowbite` and start Freon:
-```bash
-    cd packages/webapp-flowbite
-    npm run styles
-    npm run dev
+#### 2. Configure the web app
+Edit `packages/webapp-flowbite/package.json`:  
+```json
+"dependencies": {
+"@freon4dsl/<your-sample>": "2.0.0-beta.2"
+}
 ```
-This will open a browser with the example from the samples/Example package on 
-the URL displayed: `http://localhost:<port>/`. The example and all other projects in samples are
-work in progress.
 
-## Source organisation
+Edit `packages/webapp-flowbite/src/starter.ts`:  
+```ts
+import { LanguageEnvironment } from "@freon4dsl/<your-sample>";
+```
 
-The source code for Freon is organised into the following packages.
+#### 3. Start the server
+```bash
+cd packages/server
+npm run start
+```
+Note that the server keeps running in the background, therefore you need to open another terminal to start the web app.
 
-* *packages/core*: framework source code.
-* *packages/core/src/editor*: the editor framework source code.
-* *packages/core/src/language/decorators*: source code for <a href="https://mobx.js.org/" target="_blank">MobX</a> decorators that can be used to easily implement a language that can be
-  directly used by Freon.
-* *packages/core-svelte*: framework source code that deals with html and css.
-* *packages/meta*: source code that reads the language definition files and generates the language environment.
-* *packages/meta/src/languagedef*: source code that generates code from a language structure definition (*.ast*) file.
-* *packages/meta/src/editordef*: source code that generates code from an editor definition (*.edit*) file.
-* *packages/meta/src/scoperdef*: source code that generates code from a scoper definition (*.scope*) file.
-* *packages/meta/src/typerdef*: source code that generates code from a typer definition (*.type*) file.
-* *packages/meta/src/validatordef*: source code that generates code from a validator definition (*.valid*) file.
-* *packages/samples/*: source code for a number of sample languages.
-* *packages/server*: source code for a minimalistic model-server used for demonstration purposes.
-* *packages/weblib-*: source code for the web-application used for all generated languages.
-* *packages/webapp-smui/*: source code for the old web app including one language.
-* *packages/webapp-flowbite/*: source code for new web app using flowbite including one language.
-  This package import the `webapp-lib` for the full web app and one language from `samples` to be used in the webapp.
-* _/*_: the usual suspects.
+#### 4. Run the web app
+```bash
+cd packages/webapp-flowbite
+npm run styles
+npm run dev
+```
 
+➡️ Open the URL shown in your terminal (e.g. `http://localhost:<port>/`).  
+This will display the example language editor in your browser.
+
+---
+
+### Source Organization
+
+The codebase is organized into multiple packages:
+
+- **packages/core** – main framework
+  - `src/editor` → editor framework
+  - `src/language/decorators` → [MobX](https://mobx.js.org/) decorators
+- **packages/core-svelte** – HTML & CSS integration
+- **packages/meta** – DSL definition & code generation
+  - `languagedef` → generates code from `*.ast` files (abstract syntax trees)
+  - `editordef` → generates code from `*.edit` files (editor definitions)
+  - `scoperdef` → generates code from `*.scope` files (scoping rules)
+  - `typerdef` → generates code from `*.type` files (typing rules)
+  - `validatordef` → generates code from `*.valid` files (validators)
+- **packages/samples** – example DSLs
+- **packages/server** – minimal demo model server
+- **packages/weblib-*`** – shared web libraries
+- **packages/webapp-flowbite** – current demo web app using [Flowbite-Svelte](https://flowbite-svelte.com/)
+- **packages/webapp-smui** – older demo web app using [Svelte Material UI (SMUI)](https://sveltematerialui.com/)
