@@ -38,7 +38,7 @@ export class ScoperDefTemplate {
                  ${Array.from(concreteNamespaces)
                      .map(
                          (element) =>
-                             `${Names.FreLanguage}.getInstance().classifier("${Names.classifier(element)}").isNamespace = true;`,
+                             `${Names.FreLanguage}.getInstance().classifier("${Names.classifier(element)}")!.isNamespace = true;`,
                      )
                      .join("\n")}
                 initializeScopers(rootScoper);

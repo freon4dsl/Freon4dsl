@@ -7,16 +7,14 @@ export class CommandLineTemplate {
             import { CommandLineFlagParameter, CommandLineParser } from "@rushstack/ts-command-line";
 
             export class FreonCommandLine extends CommandLineParser {
-                private verboseArg: CommandLineFlagParameter;
+                private verboseArg!: CommandLineFlagParameter;
             
                 public constructor() {
                     super({
                         toolFilename: "lionweb",
                         toolDescription: "Freon toolset for playing with LionWeb."
                     });
-                }
-            
-                protected onDefineParameters(): void {
+
                     this.verboseArg = this.defineFlagParameter({
                         parameterLongName: "--verbose",
                         parameterShortName: "-v",
@@ -24,13 +22,14 @@ export class CommandLineTemplate {
                     });
                 }
             
-                protected onExecute(): Promise<void> {
+                protected async onExecute(): Promise<void> {
                     try {
-                        return super.onExecute();
-                    } catch (e) {
-                        console.error("Exception in onExecute: " + e.message + "\\n" + e.stack);
+                        await super.onExecute();
+                    } catch (e: unknown) {
+                        const err = e instanceof Error ? e : new Error(String(e));
+                        console.error(\`Exception in onExecute: \${err.message}\\n\${err.stack ?? ""}\`);
+                        throw err;
                     }
-                    return null;
                 }
             }`;
     }
@@ -39,7 +38,7 @@ export class CommandLineTemplate {
         return `import { CommandLineAction, CommandLineStringParameter } from "@rushstack/ts-command-line";
             
             export class DummyAction extends CommandLineAction {
-                dummyParameter: CommandLineStringParameter;
+                dummyParameter!: CommandLineStringParameter;
             
                 constructor() {
                     super({
@@ -48,9 +47,7 @@ export class CommandLineTemplate {
                         documentation:
                             "More description"
                     });
-                }
-            
-                protected onDefineParameters(): void {
+
                     this.dummyParameter = this.defineStringParameter({
                         argumentName: "DUMMY_PARAMETER",
                         defaultValue: "dummy.value",

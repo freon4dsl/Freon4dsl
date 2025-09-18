@@ -56,7 +56,7 @@ export class ConceptRule extends GrammarRule {
                     `${this.ruleParts.map((part, index) =>
                         `${part.toMethod(index, "children", mainAnalyserName)}`).join("")}
                     return ${Names.classifier(this.concept)}.create({
-                        ${myProperties.map((prop) => `${prop.name}:${ParserGenUtil.internalName(prop.name)}`).join(", ")}
+                        ${myProperties.map((prop) => `${prop.name}:${ParserGenUtil.internalName(prop.name)}!`).join(", ")}
                         ${myProperties.length > 0 ? "," : ""} parseLocation: this.${mainAnalyserName}.location(sentence, nodeInfo.node)
                     });
                 }`

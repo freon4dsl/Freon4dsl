@@ -189,7 +189,7 @@ export class DefaultActionsTemplate {
                     trigger: "${trigger}",
                     action: (box: Box, trigger: ${Names.FreTriggerType}, ed: ${Names.FreEditor}): ${Names.FreNode} | null => {
                         const parent: ${Names.classifier(concept)} = box.node as ${Names.classifier(concept)};
-                        const newBase: ${Names.FreNodeReference}<${Names.classifier(referredConcept)}> = ${Names.FreNodeReference}.create<${Names.classifier(referredConcept)}>("", null);
+                        const newBase: ${Names.FreNodeReference}<${Names.classifier(referredConcept)}> = ${Names.FreNodeReference}.create<${Names.classifier(referredConcept)}>("", "${Names.classifier(referredConcept)}");
                         parent.${reference.name}.push(newBase);
                         return newBase.referred;
                     }

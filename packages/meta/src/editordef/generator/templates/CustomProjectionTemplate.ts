@@ -20,7 +20,7 @@ export class CustomProjectionTemplate {
              */
             export class ${Names.customProjection(language)} implements ${Names.FreProjection} {
                 name: string = "Custom";
-                handler: FreProjectionHandler;
+                handler!: FreProjectionHandler;  // will get a value in Environment 
                 nodeTypeToBoxMethod: Map<string, (node: ${Names.FreNode}) => ${Names.Box}> =
                     new Map<string, (node: ${Names.FreNode}) => ${Names.Box}>([
                         // register your custom box methods here

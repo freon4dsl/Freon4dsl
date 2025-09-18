@@ -98,7 +98,7 @@ export class UtilPartHelpers {
                 index,
             );
             let innerBox: ElementBox = myProvider.box;
-            if (listJoin !== null && listJoin !== undefined) {
+            if (listJoin != FreListInfo.NullListInfo) {
                 result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, element, roleName, propertyName, innerBox));
             } else {
                 result.push(innerBox);

@@ -10,7 +10,7 @@ export class ReaderTemplate {
         const semanticAnalyser: string = Names.semanticAnalyser(language);
         const syntaxAnalyser: string = Names.syntaxAnalyser(language);
         const imports = new Imports(relativePath)
-        imports.core = new Set([Names.FreReader, Names.modelunit(), Names.FreNode, "AST"])
+        imports.core = new Set([Names.FreReader, Names.modelunit(), Names.FreNode, "AST", Names.notNullOrUndefined])
         imports.language = new Set([Names.classifier(language.modelConcept)])
         
         // Template starts here
@@ -38,8 +38,8 @@ export class ReaderTemplate {
         *   model units in the language.
         */
         export class ${Names.reader(language)} implements ${Names.FreReader} {          
-            analyser: ${syntaxAnalyser};
-            parser: LanguageProcessor<${Names.classifier(language.modelConcept)}, MyContext>;
+            analyser!: ${syntaxAnalyser};
+            parser: LanguageProcessor<${Names.classifier(language.modelConcept)}, MyContext> | null | undefined;
             isInitialized: boolean = false;
         
             initialize() {
@@ -67,7 +67,7 @@ export class ReaderTemplate {
                 if (!this.isInitialized) {
                     this.initialize();
                 }
-                this.analyser.sourceName = sourceName;
+                if (notNullOrUndefined(sourceName)) this.analyser.sourceName = sourceName;
                 let startRule: string = "";
                 // choose the correct parser
                 ${language.units
@@ -80,25 +80,27 @@ export class ReaderTemplate {
                     .join(" else ")}
 
                 // parse the input
-                let unit: ${Names.modelunit()} = null;
+                let unit: ${Names.modelunit()} | null = null;
                 if (this.parser) {
-                    let parseResult: ProcessResult<${Names.classifier(language.modelConcept)}>;
+                    let parseResult: ProcessResult<${Names.classifier(language.modelConcept)}>  | undefined;
                     const options = this.parser.optionsDefault();
                     AST.change( () => {
-                        if (startRule.length > 0) {
-                            options.parse.goalRuleName = startRule;
-                            parseResult = this.parser.process(sentence, options);
-                        } else {
-                            parseResult = this.parser.process(sentence, null);
+                        if (this.parser) {
+                            if (startRule.length > 0) {
+                                options.parse.goalRuleName = startRule;
+                                parseResult = this.parser.process(sentence, options);
+                            } else {
+                                parseResult = this.parser.process(sentence, null);
+                            }
                         }
                     });
-                    if (parseResult) {
+                    if (notNullOrUndefined(parseResult)) {
                     const errors = parseResult.issues.errors.asJsReadonlyArrayView();
                     if (errors.length > 0) {
                         errors.map((err: LanguageIssue) => {
                             // Strip the error message, otherwise it's too long for the webapp,
                             // and add the location information.
-                            let location = \` [\${sourceName}:\${err.location.line}:\${err.location.column}]\`;
+                            let location = \` [\${sourceName}:\${err.location?.line}:\${err.location?.column}]\`;
                             let mess = err.message.replace(/^Failed to match \\{.*?\\} at:\\s*\\.*\\s*/, "Parse error: ");
                             // if (!!err.data) {
                             //     mess += ' (expected ' + err.data + ')';
@@ -110,19 +112,26 @@ export class ReaderTemplate {
                         });
                     } else {
                         AST.change( () => {
-                            unit = parseResult.asm as unknown as ${Names.modelunit()};
+                            if (notNullOrUndefined(parseResult)) {
+                                unit = parseResult.asm as unknown as ${Names.modelunit()};
+                            }
                         });
                     }
                     // do semantic analysis taking into account the whole model, because references could be pointing anywhere
-                    if (!!model) {
+                    if (notNullOrUndefined(model)) {
                         try {
-                            if (model.getUnits().filter(existing => existing.name === unit.name).length > 0) {
-                                throw new Error(\`Unit named '\${unit.name}' already exists.\`);
+                            if (!unit) {
+                              throw new Error("Parsing produced no unit.");
+                            }
+                            const u: FreModelUnit = unit;   // cache the narrowed value
+                            const name = u.name; 
+                            if (model.getUnits().some((existing) => existing.name === name)) {
+                                throw new Error(\`Unit named '\${name}' already exists.\`);
                             } else {
                                 AST.change( () => {
-                                model.addUnit(unit);
-                                const semAnalyser = new ${semanticAnalyser}();
-                                semAnalyser.correct(unit);
+                                    model.addUnit(u);
+                                    const semAnalyser = new ${semanticAnalyser}();
+                                    semAnalyser.correct(u);
                                 });
                             }
                         } catch (e) {
@@ -130,6 +139,9 @@ export class ReaderTemplate {
                             throw e;
                         }
                     }
+                    }
+                    if (!unit) {
+                        throw new Error("Parsing failed to produce a model unit.");
                     }
                     return unit;
                 } else {

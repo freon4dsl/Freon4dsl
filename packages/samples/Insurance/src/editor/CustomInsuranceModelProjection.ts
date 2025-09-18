@@ -34,7 +34,7 @@ const euroIcon = "M640 789.333333c-106.88 0-199.68-60.586667-245.973333-149.3333
  */
 export class CustomInsuranceModelProjection implements FreProjection {
     name: string = "Euro-symbol";
-    handler: FreProjectionHandler;
+    handler!: FreProjectionHandler; // will get a value in Environment
     nodeTypeToBoxMethod: Map<string, (node: FreNode) => Box> = new Map<string, (node: FreNode) => Box>([
         // register your custom box methods here
         ['EuroLiteral', this.EuroLiteralWithSVG],

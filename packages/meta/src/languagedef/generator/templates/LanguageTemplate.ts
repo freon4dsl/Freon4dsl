@@ -218,10 +218,10 @@ export class LanguageTemplate {
                         language: "${concept.originalOwningLanguage.key}",
                         isNamedElement: ${concept.allPrimProperties().some((p) => p.name === "name")},
                         trigger: "${Names.concept(concept)}",
-                        constructor: (id?: string) => { return ${concept.isAbstract ? "null" : `new MyLanguage.${Names.concept(concept)}(id)`}; },
-                        creator: (data: Partial<MyLanguage.${Names.concept(concept)}>) => { return ${concept.isAbstract ? "null" : `MyLanguage.${Names.concept(concept)}.create(data)`}; },
+                        constructor: (id?: string) => { return ${concept.isAbstract ? "undefined" : `new MyLanguage.${Names.concept(concept)}(id)`}; },
+                        creator: (data: Partial<MyLanguage.${Names.concept(concept)}>) => { return ${concept.isAbstract ? "undefined" : `MyLanguage.${Names.concept(concept)}.create(data)`}; },
                         properties: new Map< string, FreLanguageProperty>(),
-                        baseName: ${!!concept.base ? `"${Names.classifier(concept.base.referred)}"` : "null"},
+                        baseName: ${!!concept.base ? `"${Names.classifier(concept.base.referred)}"` : "undefined"},
                         subConceptNames: [${FreMetaClassifier.subConcepts(concept)
                             .map((sub) => '"' + Names.classifier(sub) + '"')
                             .join(", ")}]
@@ -290,7 +290,7 @@ export class LanguageTemplate {
                     (intface) =>
                         `
                 function describe${Names.interface(intface)}(): FreLanguageInterface {
-                    const intface: FreLanguageInterface<MyLanguage.${Names.interface(intface)}> =             {
+                    const intface: FreLanguageInterface =             {
                         typeName: "${Names.interface(intface)}",
                         id: "${intface.id}",
                         key: "${intface.key}",
@@ -298,8 +298,6 @@ export class LanguageTemplate {
                         isNamedElement: ${intface.allPrimProperties().some((p) => p.name === "name")},
                         isNamespace: false,
                         properties: new Map< string, FreLanguageProperty>(),
-                        constructor: undefined,
-                        creator: undefined,
                         language: "${intface.originalOwningLanguage.NAME}",
                         subConceptNames: [${LangUtil.subClassifiers(intface)
                             .map((sub) => '"' + Names.classifier(sub) + '"')

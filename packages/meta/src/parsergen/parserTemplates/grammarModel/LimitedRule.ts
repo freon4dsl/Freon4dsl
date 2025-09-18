@@ -57,7 +57,7 @@ export class LimitedRule extends GrammarRule {
             }`;
             return `
                 ${ParserGenUtil.makeComment(this.toGrammar())}
-                public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<any>, sentence: Sentence): ${Names.FreNodeReference}<${Names.classifier(this.concept)}> {
+                public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<any>, sentence: Sentence): ${Names.FreNodeReference}<${Names.classifier(this.concept)}> | undefined {
                     // console.log('5 transform${this.ruleName} called: ' + children.toString());
                     let result: ${Names.FreNodeReference}<${Names.classifier(this.concept)}> | undefined;
                     const child: string = children.asJsReadonlyArrayView()[0];

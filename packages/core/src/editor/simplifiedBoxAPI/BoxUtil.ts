@@ -41,6 +41,7 @@ import { UtilPartHelpers } from "./box-util-helpers/UtilPartHelpers.js";
 import { UtilLimitedHelpers } from "./box-util-helpers/UtilLimitedHelpers.js";
 
 export class FreListInfo {
+    static NullListInfo: FreListInfo = { text: '', type: ''};
     text: string;
     type: string;
 }
