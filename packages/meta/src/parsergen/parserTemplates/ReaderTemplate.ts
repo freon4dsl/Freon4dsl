@@ -135,7 +135,7 @@ export class ReaderTemplate {
                                 });
                             }
                         } catch (e) {
-                            console.log(e.message);
+                            console.error(e instanceof Error ? e.message : String(e));
                             throw e;
                         }
                     }

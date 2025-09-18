@@ -23,7 +23,7 @@ export class FreCustomTyperPartTemplate {
          * custom code for type checking.
          */
         export class ${generatedClassName} implements ${typerInterfaceName} {
-            mainTyper: FreTyper;
+            mainTyper!: FreTyper;
 
             isType(node: ${Names.FreNode}): boolean | undefined {
                 return undefined;

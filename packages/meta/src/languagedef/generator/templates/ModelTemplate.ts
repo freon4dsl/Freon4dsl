@@ -19,6 +19,7 @@ export class ModelTemplate {
         imports.language = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType();
 
+        // TODO remove the @ts-ignore in the following code
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
             import { makeObservable, action, runInAction } from "mobx"
@@ -108,7 +109,8 @@ export class ModelTemplate {
                                                 ${
                                                     part.isList
                                                         ? `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)}), 1);`
-                                                        : `this.${part.name} = null;`
+                                                        : `// @ts-ignore: we want to keep the type of 'unit' clear, thus we ignore the compiler error
+                                                          this.${part.name} = null;`
                                                 }
                                             })
                                             return true;

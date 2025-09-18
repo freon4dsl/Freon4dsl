@@ -46,7 +46,7 @@ export class InterpreterMainTemplate {
             private static main: IMainInterpreter | null = null;
          
             constructor() {
-                MainInsuranceModelInterpreter.getMain();
+                ${Names.interpreterName(language)}.getMain();
             }
         
             private static getMain(): IMainInterpreter {

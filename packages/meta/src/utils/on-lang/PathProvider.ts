@@ -27,6 +27,7 @@ export const READER_FOLDER = "reader";
 export const READER_GEN_FOLDER = "reader/gen";
 export const CONFIGURATION_FOLDER = "config";
 export const COMMAND_LINE_FOLDER = "commandline";
+export const COMMAND_LINE_GEN_FOLDER = "commandline/gen";
 export const CONFIGURATION_GEN_FOLDER = "config/gen";
 export const RESERVED_WORDS_ORIGIN = "../meta/src/validatordef/generator/templates"; // the folder in which the to-be-copied files can be found
 // the predefined interfaces and classes can be found in ...

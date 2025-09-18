@@ -79,8 +79,8 @@ export class CommandLineTemplate {
         return `// TEMPLATE: CommandLineTemplate.generateCommandLineRunner()
             // Run this as the main program.
             ${imports.makeImports(language)}
-            import { FreonCommandLine } from "./FreonCommandLine.js";
-            import { DummyAction } from "./DummyAction.js";
+            import { FreonCommandLine } from "./gen/FreonCommandLine.js";
+            import { DummyAction } from "./gen/DummyAction.js";
             
             // ensure language is initialized
             const tmp = ${Names.LanguageEnvironment}.getInstance();
@@ -93,6 +93,6 @@ export class CommandLineTemplate {
             cli.addAction(new DummyAction());
             
             // Run it
-            cli.execute();`;
+            cli.executeAsync();`;
     }
 }
