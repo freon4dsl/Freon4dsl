@@ -44,7 +44,7 @@ export class ExtendedModelCreator {
             }
             // console.log("number of names created: " + this.nameNumber);
         })
-        return model;
+        return model!;
     }
 
     /**
@@ -55,14 +55,14 @@ export class ExtendedModelCreator {
      * @param primary       the index of the unit that has the focus, all other units are represented by their interfaces
      *                      note that the following must be true: primary < nrOfUnits
      */
-    public createModelWithInterfaces(nrOfUnits: number, depth: number, primary: number): DSmodel {
+    public createModelWithInterfaces(nrOfUnits: number, depth: number, primary: number): DSmodel | undefined{
         // reset names
         this.nameNumber = 0;
         this.allNames = [];
         this.numberOfRefs = 0;
         // create a new model
         if (primary >= nrOfUnits) {
-            return null;
+            return undefined;
         }
         const modelUnits: DSunit[] = [];
         let model
@@ -83,7 +83,7 @@ export class ExtendedModelCreator {
                 this.addReferencesToUnit(modelUnits[i]);
             }
         })
-        return model;
+        return model!;
     }
 
     createUnit(parent: string, depth: number): DSunit {
@@ -100,7 +100,7 @@ export class ExtendedModelCreator {
             }
             unit = DSunit.create({ name: unitName, dsPublics: dsPublics, dsPrivates: dsPrivates });
         })
-        return unit
+        return unit!
     }
 
     createPublic(parent: string, depth: number): DSpublic {
@@ -110,7 +110,7 @@ export class ExtendedModelCreator {
             const { dsPublics, dsPrivates } = this.makePublicsAndPrivates(depth, partName);
             pub = DSpublic.create({ name: partName, conceptParts: dsPublics, conceptPrivates: dsPrivates });
         })
-        return pub
+        return pub!
     }
 
     createPrivate(parentName: string, depth: number): DSprivate {

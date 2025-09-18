@@ -26,7 +26,8 @@ export function makeLiteralExp(incoming: any): DemoExpression {
         (mine as DemoStringLiteralExpression).value = incoming;
     } else {
         // When no expression can be created, return a placeholder expression.
-        mine = null;
+        mine = new DemoStringLiteralExpression();
+        (mine as DemoStringLiteralExpression).value = "No Value Available";
     }
     return mine;
 }

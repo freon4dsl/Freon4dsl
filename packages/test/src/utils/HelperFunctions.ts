@@ -55,7 +55,7 @@ export function isInScope(visibleElements: FreNamedNode[], name: string): boolea
 export function getFromVisibleElements(
   visibleElements: FreNamedNode[],
   name: string,
-): FreNamedNode {
+): FreNamedNode | undefined {
     if (visibleElements !== null) {
         for (const element of visibleElements) {
             const n: string = element.name;
@@ -64,7 +64,7 @@ export function getFromVisibleElements(
             }
         }
     }
-    return null;
+    return undefined;
 }
 
 export function getVisibleNames(visibleElements: FreNamedNode[]): string[] {
