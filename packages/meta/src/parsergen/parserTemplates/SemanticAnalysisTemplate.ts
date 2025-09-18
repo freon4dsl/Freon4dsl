@@ -137,7 +137,7 @@ export class SemanticAnalysisTemplate {
     makeWalker(language: FreMetaLanguage, relativePath: string): string {
         const className: string = Names.semanticWalker(language);
         const imports = new Imports(relativePath)
-        imports.core = new Set([Names.FreNamedNode, Names.FreLanguage, Names.FreLanguageEnvironment, Names.FreNodeReference, Names.FreNode, Names.notNullOrUndefined])
+        imports.core = new Set([Names.FreNamedNode, Names.FreLanguage, Names.FreLanguageEnvironment, Names.FreNodeReference, Names.FreNode, Names.notNullOrUndefined, Names.isNullOrUndefined])
         imports.utils.add(Names.workerInterface(language)).add(Names.defaultWorker(language))
         const everyConceptName: string = Names.allConcepts();
         this.addToImports(this.possibleProblems, imports);
@@ -209,6 +209,7 @@ export class SemanticAnalysisTemplate {
 
     private makeVisitorMethod(freConcept: FreMetaConcept): string {
         // TODO add replacement of properties that are lists
+
         return `
             /**
              * Test whether the references in 'node' are correct.
@@ -216,14 +217,15 @@ export class SemanticAnalysisTemplate {
              * @param node
              */
             public execBefore${Names.concept(freConcept)}(node: ${Names.concept(freConcept)}): boolean {
-                let referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>;
+                let referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}> | undefined;
                 ${freConcept
                     .allReferences()
                     .filter((prop) => !prop.isList)
                     .map(
                         (prop) =>
                             `referredElem = node.${prop.name};
-                if (!!node.${prop.name} && node.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
+                if (notNullOrUndefined(node.${prop.name}) && isNullOrUndefined(node.${prop.name}.referred) && notNullOrUndefined(referredElem)) { 
+                    // cannot find a '${prop.name}' with this name
                     this.findReplacement(node, referredElem);
                 }`,
                     )

@@ -2,7 +2,7 @@ import type { FreNode } from "../ast/index.js";
 import { ArrayUtil } from "../util/ArrayUtil.js";
 import type { FreTyper } from "./FreTyper.js";
 import type { FreType } from "./FreType.js";
-import { notNullOrUndefined } from '../util/index.js';
+import { isNullOrUndefined, notNullOrUndefined } from '../util/index.js';
 
 export class FreCompositeTyper implements FreTyper {
     mainTyper: FreTyper;
@@ -24,7 +24,8 @@ export class FreCompositeTyper implements FreTyper {
         t.mainTyper = this;
     }
 
-    inferType(node: FreNode): FreType | undefined {
+    inferType(node: FreNode | undefined): FreType | undefined {
+        if (isNullOrUndefined(node)) return undefined;
         for (const typer of this.typers) {
             const result = typer.inferType(node);
             if (notNullOrUndefined(result)) {
@@ -34,7 +35,8 @@ export class FreCompositeTyper implements FreTyper {
         return undefined;
     }
 
-    isType(node: FreNode): boolean {
+    isType(node: FreNode | undefined): boolean {
+        if (isNullOrUndefined(node)) return false;
         for (const typer of this.typers) {
             const result = typer.isType(node);
             if (notNullOrUndefined(result)) {
@@ -55,7 +57,8 @@ export class FreCompositeTyper implements FreTyper {
         return undefined;
     }
 
-    conforms(type1: FreType, type2: FreType): boolean {
+    conforms(type1: FreType | undefined, type2: FreType | undefined): boolean {
+        if (isNullOrUndefined(type1) || isNullOrUndefined(type2)) return false;
         for (const typer of this.typers) {
             const result = typer.conforms(type1, type2);
             if (notNullOrUndefined(result)) {
@@ -75,7 +78,8 @@ export class FreCompositeTyper implements FreTyper {
         return false;
     }
 
-    equals(type1: FreType, type2: FreType): boolean {
+    equals(type1: FreType | undefined, type2: FreType | undefined): boolean {
+        if (isNullOrUndefined(type1) || isNullOrUndefined(type2)) return false;
         for (const typer of this.typers) {
             const result = typer.equals(type1, type2);
             if (notNullOrUndefined(result)) {
@@ -132,10 +136,8 @@ export class FreCompositeTyper implements FreTyper {
         return this.conformsList($typelist1, $typelist2);
     }
 
-    conformsType(elem1: FreNode, elem2: FreNode): boolean {
-        if (!elem1 || !elem2) {
-            return false;
-        }
+    conformsType(elem1: FreNode | undefined, elem2: FreNode | undefined): boolean {
+        if (isNullOrUndefined(elem1) || isNullOrUndefined(elem2)) return false;
 
         const $type1: FreType = this.inferType(elem1);
         const $type2: FreType = this.inferType(elem2);
@@ -146,10 +148,8 @@ export class FreCompositeTyper implements FreTyper {
         return this.conforms($type1, $type2);
     }
 
-    equalsType(elem1: FreNode, elem2: FreNode): boolean {
-        if (!elem1 || !elem2) {
-            return false;
-        }
+    equalsType(elem1: FreNode | undefined, elem2: FreNode | undefined): boolean {
+        if (isNullOrUndefined(elem1) || isNullOrUndefined(elem2)) return false;
 
         const $type1: FreType = this.inferType(elem1);
         const $type2: FreType = this.inferType(elem2);

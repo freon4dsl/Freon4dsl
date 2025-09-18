@@ -61,7 +61,7 @@ export class SuperChoiceRule extends GrammarRule {
             ${ParserGenUtil.makeComment(this.toGrammar())}
             public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.classifier(this.myConcept)} {
                 // console.log('1 transform${this.ruleName} called: ' + children.toString());
-                return children.asJsReadonlyArrayView()[0]; // SuperChoiceRule
+                return children.asJsReadonlyArrayView()[0] as ${Names.classifier(this.myConcept)}; // SuperChoiceRule
             }`;
     }
 

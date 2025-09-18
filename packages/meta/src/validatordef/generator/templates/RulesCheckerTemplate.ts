@@ -390,7 +390,7 @@ export class RulesCheckerTemplate {
             }
 
             // add imports
-            imports.core.add('isNullOrUndefined');
+            imports.core.add('isNullOrUndefined').add('notNullOrUndefined');
             // ... but do not add the primitive types
             if (listpropertyTypeName !== 'number' && listpropertyTypeName !== 'string' && listpropertyTypeName !== 'boolean') {
                 imports.language.add(listpropertyTypeName);
@@ -410,7 +410,7 @@ export class RulesCheckerTemplate {
                  ${severity}));
                     ${rule.severity.severity === FreErrorSeverity.Error ? `hasFatalError = true;` : ``}
             } else {
-                if (!${uniquelistName}.includes(${listpropertyTypescript})){
+                if (notNullOrUndefined(${listpropertyTypescript}) && !${uniquelistName}.includes(${listpropertyTypescript})){
                     ${uniquelistName}.push(${listpropertyTypescript});
                 } else {
                     this.errorList.push(new ${Names.FreError}(${message},

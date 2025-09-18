@@ -221,7 +221,7 @@ export class BoxProviderTemplate {
     }
 
     private createdGetSuperMethod(supers: FreMetaClassifier[], elementVarName: string): string {
-        this.imports.core.add("FreBoxProvider");
+        this.imports.core.add("FreBoxProvider").add("notNullOrUndefined");
         return `
                 /**
                  * This method returns the content for one of the super concepts or interfaces of 'this._node'.
@@ -233,7 +233,7 @@ export class BoxProviderTemplate {
                  * @private
                  */
                 private getSuper(superName: string, projectionName?: string): Box {
-                    let superBoxProvider: FreBoxProvider = null;
+                    let superBoxProvider: FreBoxProvider | null = null;
                     switch (superName) {
                         ${supers
                             .map(
@@ -244,13 +244,21 @@ export class BoxProviderTemplate {
                             )
                             .join("\n")}
                     }
-                    if (!!superBoxProvider) {
+                    if (notNullOrUndefined(superBoxProvider)) {
                         superBoxProvider.node = ${elementVarName};
-                        return superBoxProvider.getContentForSuper(projectionName);
+                        if (notNullOrUndefined(projectionName)) {
+                            return superBoxProvider.getContentForSuper(projectionName);
+                        } else {
+                            return BoxUtil.labelBox(
+                              ${elementVarName},
+                              "ERROR: no projection name provided for a super concept or interface",
+                              "super-projection-error-box1",
+                            );              
+                        }
                     } else {
                         return BoxUtil.labelBox(${elementVarName},
                             "ERROR: '" + superName + "' is not a super concept or interface for element of type '" + ${elementVarName}.freLanguageConcept() + "'",
-                            'super-projection-error-box'
+                            'super-projection-error-box2'
                         );
                     }
                 }`;

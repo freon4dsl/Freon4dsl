@@ -79,8 +79,9 @@ export class ReferenceCheckerTemplate {
         concept.allProperties().forEach((prop) => {
             if (!prop.isPart) {
                 if (prop.isList) {
+                    imports.core.add("isNullOrUndefined");
                     result += `for (const referredElem of ${paramName}.${prop.name} ) {
-                        if (referredElem.referred === null || referredElem.referred === undefined) {
+                        if (isNullOrUndefined(referredElem.referred)) {
                             this.makeErrorMessage(${paramName}, referredElem, "${prop.name}", \`\${${locationdescription}}\`);
                         }
                     }`;

@@ -8,22 +8,22 @@ import {EntityModelEnvironment} from "../config/gen/EntityModelEnvironment.js";
  * custom code for type checking.
  */
 export class CustomEntityModelTyperPart implements FreTyper {
-    mainTyper: FreTyper;
+    mainTyper!: FreTyper;
 
-    isType(modelelement: FreNode): boolean | null {
-        return null;
+    isType(modelelement: FreNode): boolean | undefined {
+        return undefined;
     }
 
-    inferType(modelelement: FreNode): FreType | null {
-        return null;
+    inferType(modelelement: FreNode): FreType | undefined {
+        return undefined;
     }
 
-    equals(type1: FreType, type2: FreType): boolean | null {
-        return null;
+    equals(type1: FreType, type2: FreType): boolean | undefined {
+        return undefined;
     }
 
-    conforms(type1: FreType, type2: FreType): boolean | null {
-        return null;
+    conforms(type1: FreType, type2: FreType): boolean | undefined {
+        return undefined;
     }
 
     /**
@@ -32,7 +32,7 @@ export class CustomEntityModelTyperPart implements FreTyper {
      * @param typelist1
      * @param typelist2
      */
-    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | null {
+    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | undefined {
         if (typelist1.length > 0 && (typelist1[0] instanceof Variable)) {
             if (typelist1.length !== typelist2.length) return false;
             let result: boolean = true;
@@ -43,15 +43,15 @@ export class CustomEntityModelTyperPart implements FreTyper {
             }
             return result;
         } else {
-            return null;
+            return undefined;
         }
     }
 
-    commonSuper(typelist: FreType[]): FreType | null {
-        return null;
+    commonSuper(typelist: FreType[]): FreType | undefined {
+        return undefined;
     }
 
-    public getSuperTypes(type: FreType): FreType[] | null {
-        return null;
+    public getSuperTypes(type: FreType): FreType[] | undefined {
+        return undefined;
     }
 }

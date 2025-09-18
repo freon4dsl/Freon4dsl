@@ -68,7 +68,6 @@ export class WriterTemplate {
         }
 
         // next, do some admin: which concepts should be generated as what?
-        const allLangConceptsName: string = Names.allConcepts();
         const generatedClassName: String = Names.writer(language);
         const writerInterfaceName: string = Names.FreWriter;
         const limitedConcepts: FreMetaLimitedConcept[] = language.concepts.filter(
@@ -104,7 +103,7 @@ export class WriterTemplate {
             }
         }
         const imports = new Imports(relativePath)
-        imports.core = new Set([Names.FreNamedNode, Names.FreNodeReference, writerInterfaceName, Names.FreNode])
+        imports.core = new Set([Names.FreNamedNode, Names.FreNodeReference, writerInterfaceName, Names.FreNode, Names.isNullOrUndefined])
         imports.language = GenerationUtil.allConceptsInterfacesAndUnits(language)
         // Template starts here
         return `
@@ -143,7 +142,7 @@ export class WriterTemplate {
              * @param startIndent
              * @param short
              */
-            public writeToString(node: ${allLangConceptsName}, startIndent?: number, short?: boolean) : string {
+            public writeToString(node: FreNode, startIndent?: number, short?: boolean) : string {
                 this.writeToLines(node, startIndent, short);
                 return \`\$\{this.output.map(line => \`\$\{line.trimEnd()\}\`).join("\\n").trimEnd()}\`;
             }
@@ -158,7 +157,7 @@ export class WriterTemplate {
              * @param startIndent
              * @param short
              */
-            public writeToLines(node: ${allLangConceptsName}, startIndent?: number, short?: boolean): string[] {
+            public writeToLines(node: FreNode, startIndent?: number, short?: boolean): string[] {
                 // set default for optional parameters
                 if (startIndent === undefined) {
                     startIndent = 0;
@@ -190,13 +189,13 @@ export class WriterTemplate {
              *
              * @param node
              */
-            public writeNameOnly(node: ${allLangConceptsName}): string {
-                if (!node) { return ""; }
+            public writeNameOnly(node: FreNode | undefined): string {
+                if (isNullOrUndefined(node)) { return ""; }
                 ${this.makeWriteOnly(language)}
             }
 
-            private unparse(node: ${allLangConceptsName}, short: boolean) {
-                if (!node) { return; }
+            private unparse(node: FreNode, short: boolean) {
+                if (isNullOrUndefined(node)) { return; }
                 switch (node.freLanguageConcept()) {
                 ${conceptsToUnparse
                     .map(
@@ -264,8 +263,8 @@ export class WriterTemplate {
              * @param method
              * @private
              */
-            private _unparseList(list: ${allLangConceptsName}[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
-        method: (node: ${allLangConceptsName}, short: boolean) => void) {
+            private _unparseList(list: FreNode[], sepText: string, sepType: SeparatorType, vertical: boolean, indent: number, short: boolean,
+        method: (node: FreNode, short: boolean) => void) {
                 list.forEach((listElem, index) => {
                     const isLastInList: boolean = index === list.length - 1;
                     this.doInitiator(sepText, sepType);
@@ -645,7 +644,6 @@ export class WriterTemplate {
      * a single property.
      * @param myElem
      * @param item
-     * @param inOptionalGroup
      */
     private makeItemWithPrimitiveType(myElem: FreMetaPrimitiveProperty, item: FreEditPropertyProjection): string {
         // the property is of primitive type
@@ -674,7 +672,7 @@ export class WriterTemplate {
                 );`;
             }
         } else {
-            let myCall: string = "";
+            let myCall: string;
             const myType: FreMetaClassifier = myElem.type;
             if (myType === FreMetaPrimitiveType.string) {
                 myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
@@ -726,7 +724,6 @@ export class WriterTemplate {
      * of concepts, and that the type might be a reference to a concept.
      * @param myElem
      * @param item
-     * @param indent
      * @param inOptionalGroup
      */
     private makeItemWithConceptType(
@@ -793,7 +790,7 @@ export class WriterTemplate {
                 }
             } else {
                 let myCall: string = "";
-                let myTypeScript: string = "";
+                let myTypeScript: string;
                 if (myElem.isPart) {
                     myTypeScript = LangUtil.propertyToTypeScript(item.property.referred);
                     myCall += `this.${nameOfUnparseMethod}(${myTypeScript}, short) `;

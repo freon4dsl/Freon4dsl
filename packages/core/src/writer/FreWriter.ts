@@ -33,5 +33,5 @@ export interface FreWriter {
      *
      * @param node
      */
-    writeNameOnly(node: FreNode): string;
+    writeNameOnly(node: FreNode | undefined): string;
 }

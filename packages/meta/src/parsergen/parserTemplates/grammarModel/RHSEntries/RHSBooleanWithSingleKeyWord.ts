@@ -18,7 +18,7 @@ export class RHSBooleanWithSingleKeyWord extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string): string {
         return `// RHSBooleanWithSingleKeyWord
-                if (!!${nodeName}.toArray()[${index}]) {
+                if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
                     ${ParserGenUtil.internalName(this.property.name)} = true;
                 }`;
     }
