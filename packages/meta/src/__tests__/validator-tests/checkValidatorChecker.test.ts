@@ -1,13 +1,14 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaLanguage } from '../../languagedef/metalanguage/';
+import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
 import { describe, test, expect, beforeEach } from "vitest";
-import { MetaLogger } from '../../utils/no-dependencies/';
-import { Checker } from '../../utils/basic-dependencies/';
-import { ValidatorParser } from '../../validatordef/parser/ValidatorParser';
-import { ValidatorDef } from '../../validatordef/metalanguage/';
+import { MetaLogger } from '../../utils/no-dependencies/index.js';
+import { Checker } from '../../utils/basic-dependencies/index.js';
+import { ValidatorParser } from '../../validatordef/parser/ValidatorParser.js';
+import { ValidatorDef } from '../../validatordef/metalanguage/index.js';
+import { resolveAstFile, resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking the validator checker", () => {
-    const testdir = "src/__tests__/validator-tests/validatorDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "validatorDefFiles/");
     let parser: ValidatorParser;
     let checker: Checker<ValidatorDef>;
     let language: FreMetaLanguage | undefined;
@@ -16,7 +17,8 @@ describe("Checking the validator checker", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
+            const astPath: string = resolveAstFile(import.meta.url, "../commonAstFiles", "test-language.ast");
+            language = new LanguageParser().parse(astPath);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log("Language could not be read");

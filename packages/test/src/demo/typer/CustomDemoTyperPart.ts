@@ -10,25 +10,25 @@ import { DemoEntity } from "../language/gen/index.js";
  * custom code for type checking.
  */
 export class CustomDemoTyperPart implements FreTyper {
-    mainTyper: FreTyper;
+    mainTyper!: FreTyper;
 
-    isType(node: FreNode): boolean | null {
-        return null;
+    isType(node: FreNode): boolean | undefined {
+        return undefined;
     }
 
-    inferType(node: FreNode): FreType | null {
-        return null;
+    inferType(node: FreNode): FreType | undefined {
+        return undefined;
     }
 
-    equals(type1: FreType, type2: FreType): boolean | null {
-        return null;
+    equals(type1: FreType, type2: FreType): boolean | undefined {
+        return undefined;
     }
 
-    conforms(type1: FreType, type2: FreType): boolean | null {
-        return null;
+    conforms(type1: FreType, type2: FreType): boolean | undefined {
+        return undefined;
     }
 
-    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | null {
+    conformsList(typelist1: FreType[], typelist2: FreType[]): boolean | undefined {
         // console.log(`Third level is called, length: ${typelist1.length}, kind: ${typelist1[0].$typename}`);
         if (typelist1.length > 0 && (typelist1[0].toAstElement() instanceof DemoEntity)) {
             if (typelist1.length !== typelist2.length) {
@@ -45,15 +45,15 @@ export class CustomDemoTyperPart implements FreTyper {
             }
             return result;
         } else {
-            return null;
+            return undefined;
         }
     }
 
-    commonSuper(typelist: FreType[]): FreType | null {
-        return null;
+    commonSuper(typelist: FreType[]): FreType | undefined {
+        return undefined;
     }
 
-    public getSuperTypes(type: FreType): FreType[] | null {
-        return null;
+    public getSuperTypes(type: FreType): FreType[] | undefined {
+        return undefined;
     }
 }

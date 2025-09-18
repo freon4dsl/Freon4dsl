@@ -7,11 +7,12 @@ import { ScopeDef } from '../../scoperdef/metalanguage/index.js';
 import { LanguageParser } from '../../languagedef/parser/LanguageParser.js';
 import * as fs from "fs";
 import { FileUtil } from '../../utils/file-utils/index.js';
+import { resolveOutDir, resolveTestDir } from '../TestPathHelpers.js';
 
 
 describe("Checking the scoper generator", () => {
-    const testdir = "src/__tests__/scoper-tests/scopeDefFiles/";
-    const outputDir = "src/__tests__/scoper-tests/generated1/";
+    const testdir: string = resolveTestDir(import.meta.url, "scopeDefFiles/");
+    const outputDir: string = resolveOutDir(import.meta.url, "generated1/");
     let parser: ScoperParser;
     let language: FreMetaLanguage | undefined;
     let generator: ScoperGenerator = new ScoperGenerator();

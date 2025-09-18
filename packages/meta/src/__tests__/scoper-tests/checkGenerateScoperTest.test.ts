@@ -3,15 +3,16 @@ import { describe, test, expect, beforeEach, afterAll } from 'vitest';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { ScoperParser } from '../../scoperdef/parser/ScoperParser.js';
 import { ScoperGenerator } from '../../scoperdef/generator/ScoperGenerator.js';
-import { ScopeDef } from '../../scoperdef/metalanguage';
+import { ScopeDef } from '../../scoperdef/metalanguage/index.js';
 import { LanguageParser } from '../../languagedef/parser/LanguageParser.js';
 import * as fs from "fs";
-import { FileUtil } from '../../utils/file-utils';
+import { FileUtil } from '../../utils/file-utils/index.js';
+import { resolveOutDir, resolveTestDir } from '../TestPathHelpers.js';
 
 
 describe("Checking the scoper generator", () => {
-    const testdir = "src/__tests__/scoper-tests/scopeDefFiles/";
-    const outputDir = "src/__tests__/scoper-tests/generated2/";
+    const testdir: string = resolveTestDir(import.meta.url, "scopeDefFiles/");
+    const outputDir: string = resolveOutDir(import.meta.url, "generated2/");
     let parser: ScoperParser;
     let language: FreMetaLanguage | undefined;
     let generator: ScoperGenerator = new ScoperGenerator();

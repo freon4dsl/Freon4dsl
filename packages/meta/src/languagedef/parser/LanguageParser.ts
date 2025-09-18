@@ -5,6 +5,7 @@ import { parseIds } from "./IdParser.js";
 import { parse } from "./LanguageGrammar.js";
 import { cleanNonFatalParseErrors, getNonFatalParseErrors, setCurrentFileName, setIdMap } from "./LanguageCreators.js";
 import { FreLangChecker } from "../checking/index.js";
+import { notNullOrUndefined } from '@freon4dsl/core';
 
 export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     idFile: string | undefined;
@@ -18,7 +19,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
 
     parse(definitionFile: string): FreMetaLanguage | undefined {
         // LOG2USER.log("ParseFile: " + definitionFile);
-        if (this.idFile !== undefined && this.idFile !== null && this.idFile.length > 0) {
+        if (notNullOrUndefined(this.idFile) && this.idFile.length > 0) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);
             const idMap = parseIds(idJson);
@@ -28,7 +29,7 @@ export class LanguageParser extends FreGenericParser<FreMetaLanguage> {
     }
 
     parseMulti(filePaths: string[]): FreMetaLanguage | undefined {
-        if (this.idFile !== undefined && this.idFile !== null) {
+        if (notNullOrUndefined(this.idFile)) {
             const idFileString = fs.readFileSync(this.idFile, "utf-8");
             const idJson = JSON.parse(idFileString);
             const idMap = parseIds(idJson);

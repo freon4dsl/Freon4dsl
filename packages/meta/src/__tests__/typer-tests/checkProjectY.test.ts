@@ -4,6 +4,7 @@ import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { FretClassifierSpec, FretInferenceRule, FretTypeRule, TyperDef } from "../../typerdef/metalanguage/index.js";
 import { describe, test, expect, beforeEach } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 function testTypeUnit(typeUnit: TyperDef) {
     expect(typeUnit).not.toBeNull();
@@ -38,7 +39,7 @@ function testTypeUnit(typeUnit: TyperDef) {
 }
 
 describe("Checking typer", () => {
-    const testdir = "src/__tests__/typer-tests/correctDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "correctDefFiles/");
     const langParser = new LanguageParser();
 
     let parser: FreTyperMerger;

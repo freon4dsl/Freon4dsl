@@ -1,13 +1,14 @@
-import { FreMetaLanguage } from '../../languagedef/metalanguage';
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { TyperDef } from '../../typerdef/metalanguage';
-import { FreTyperMerger } from '../../typerdef/parser';
+import { TyperDef } from '../../typerdef/metalanguage/index.js';
+import { FreTyperMerger } from '../../typerdef/parser/index.js';
 import { describe, test, expect, beforeEach } from "vitest";
-import { FretClassifierSpec } from "../../typerdef/metalanguage"
+import { FretClassifierSpec } from "../../typerdef/metalanguage/index.js"
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking typer", () => {
-    const testdir = "src/__tests__/typer-tests/";
+    const testdir: string = resolveTestDir(import.meta.url, "/");
     let parser: FreTyperMerger;
     let language: FreMetaLanguage | undefined;
     MetaLogger.muteAllLogs();
@@ -48,12 +49,12 @@ describe("Checking typer", () => {
                 expect(errors.length).toBe(2);
                 expect(
                     errors.includes(
-                        "A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:41:5].",
+                        "A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: playgroundDefs/type-rules.type:41:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     errors.includes(
-                        "A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:49:5].",
+                        "A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: playgroundDefs/type-rules.type:49:5].",
                     ),
                 ).toBeTruthy();
             }

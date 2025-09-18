@@ -1,12 +1,13 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { FileUtil } from "../../utils/file-utils/index.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
-import { ReaderWriterGenerator } from "../../parsergen/ReaderWriterGenerator";
-import { FreEditParser } from "../../editordef/parser/FreEditParser";
+import { ReaderWriterGenerator } from "../../parsergen/ReaderWriterGenerator.js";
+import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
 import * as fs from "fs";
 import { FreEditUnit } from "../../editordef/metalanguage/index.js";
 import { describe, test, expect, afterAll } from "vitest";
+import { resolveOutDir, resolveTestDir } from '../TestPathHelpers.js';
 
 /* These incomplete tests only test whether the generated grammar is equal
 to the previously generated grammar. A true test of the parser must be
@@ -14,8 +15,8 @@ done in the test package.
  */
 
 describe("Checking parser generation", () => {
-    const testdir = "src/__tests__/parser-tests/correctDefFiles/";
-    const outputDir = "src/__tests__/parser-tests/generated/";
+    const testdir: string = resolveTestDir(import.meta.url, "correctDefFiles/");
+    const outputDir : string = resolveOutDir(import.meta.url, "generated/");
     let language: FreMetaLanguage | undefined;
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();

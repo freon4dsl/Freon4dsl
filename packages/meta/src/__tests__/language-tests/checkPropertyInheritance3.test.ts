@@ -8,10 +8,11 @@ import {
 } from "../../languagedef/metalanguage/index.js";
 import { parseCorrectModel } from "./utils.js";
 import { describe, test, expect } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 // The same tests as in property-inheritance1, only now all property types are interfaces
 describe("Checking generation of virtual props", () => {
-    const testdir = "src/__tests__/language-tests/faultyDefFiles/property-inheritance3/";
+    const testdir: string = resolveTestDir(import.meta.url, "faultyDefFiles/property-inheritance3/");
     const parser = new LanguageParser();
     MetaLogger.muteAllErrors();
     MetaLogger.muteAllLogs();

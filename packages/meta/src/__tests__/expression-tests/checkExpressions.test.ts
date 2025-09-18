@@ -7,10 +7,11 @@ import {
     FreFunctionExp, FreLimitedInstanceExp,
     FreVarExp,
     FreVarOrFunctionExp
-} from '../../langexpressions/metalanguage';
+} from '../../langexpressions/metalanguage/index.js';
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking expression on referredProperty", () => {
-    const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "expressionDefFiles/");
     let language: FreMetaLanguage | undefined;
     // MetaLogger.muteAllErrors();
     // MetaLogger.muteAllLogs();
