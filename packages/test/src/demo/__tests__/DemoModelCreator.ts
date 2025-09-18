@@ -92,8 +92,8 @@ export class DemoModelCreator {
             );
             const ifExpression = new DemoIfExpression();
             ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
-            ifExpression.whenTrue = makeLiteralExp("87");
-            ifExpression.whenFalse = makeLiteralExp("1345");
+            ifExpression.whenTrue = makeLiteralExp("87")!;
+            ifExpression.whenFalse = makeLiteralExp("1345")!;
             // const divideExpression = MakeDivideExp("678", "9990");
             ifFunction.expression = ifExpression;
         })
@@ -113,8 +113,8 @@ export class DemoModelCreator {
             );
             const ifExpression = new DemoIfExpression();
             ifExpression.condition = MakeLessThenExp("4", "80"); //("<")
-            ifExpression.whenTrue = makeLiteralExp("87");
-            ifExpression.whenFalse = makeLiteralExp("1345");
+            ifExpression.whenTrue = makeLiteralExp("87")!;
+            ifExpression.whenFalse = makeLiteralExp("1345")!;
             // const divideExpression = MakeDivideExp("678", "9990");
             ifFunction.expression = ifExpression;
         })
@@ -401,8 +401,8 @@ export class DemoModelCreator {
             );
             const ifExpression = new DemoIfExpression();
             ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
-            ifExpression.whenTrue = makeLiteralExp("1");
-            ifExpression.whenFalse = makeLiteralExp("5");
+            ifExpression.whenTrue = makeLiteralExp("1")!;
+            ifExpression.whenFalse = makeLiteralExp("5")!;
             // const divideExpression = MakeDivideExp("1", "2");
             ifFunction.expression = ifExpression;
             // compare(Variable1, Variable2): IF (2 < 5) THEN 1 ELSE 5 ENDIF
@@ -412,7 +412,7 @@ export class DemoModelCreator {
                 DemoAttributeType.String,
                 "DemoAttributeType",
             );
-            helloFunction.expression = makeLiteralExp("Hello Demo");
+            helloFunction.expression = makeLiteralExp("Hello Demo")!;
             // helloString() = "Hello Demo"
 
             unit.functions.push(ifFunction);
@@ -612,8 +612,8 @@ export class DemoModelCreator {
         AST.change( () => {
             const ifExpression = new DemoIfExpression();
             ifExpression.condition = MakeLessThenExp("2", "5"); //("<")
-            ifExpression.whenTrue = makeLiteralExp("1");
-            ifExpression.whenFalse = makeLiteralExp("5");
+            ifExpression.whenTrue = makeLiteralExp("1")!;
+            ifExpression.whenFalse = makeLiteralExp("5")!;
             const divideExpression = MakeDivideExp("1", "2");
             const multiplyExpression = MakeMultiplyExp(divideExpression, "Person");
             plusExp = MakePlusExp(ifExpression, multiplyExpression);
@@ -635,7 +635,7 @@ export class DemoModelCreator {
 
             const leftOr = new DemoOrExpression();
             leftOr.right = equals;
-            leftOr.left = makeLiteralExp("Yes");
+            leftOr.left = makeLiteralExp("Yes")!;
             // leftOr : ("Yes" or ("No" = Variable1))
 
             const rightAnd: DemoBinaryExpression = MakeLessThenExp("x", "122");

@@ -4,7 +4,7 @@ import {
     type FreModelUnit,
     type FreReader,
     type FreWriter,
-    FreNamedNode
+    FreNamedNode, notNullOrUndefined
 } from '@freon4dsl/core';
 import { FileHandler } from "./FileHandler.js";
 import { expect}  from "vitest";
@@ -49,7 +49,7 @@ function getShortFileName(filename: string): string {
 }
 
 export function isInScope(visibleElements: FreNamedNode[], name: string): boolean {
-    return getFromVisibleElements(visibleElements, name) !== null;
+    return notNullOrUndefined(getFromVisibleElements(visibleElements, name));
 }
 
 export function getFromVisibleElements(

@@ -33,7 +33,7 @@ describe("Checking stdlib for Demo", () => {
         expect(stdlib.find("Integer", "DemoAttributeType")).toBe(DemoAttributeType.Integer);
         expect(stdlib.find("Boolean", "DemoAttributeType")).toBe(DemoAttributeType.Boolean);
         expect(stdlib.find("ANY", "DemoAttributeType")).toBe(DemoAttributeType.ANY);
-        expect(stdlib.find("ONWAAR", "DemoAttributeType")).toBeNull();
-        expect(stdlib.find("WAAR", "DemoAttributeType")).toBeNull();
+        expect(stdlib.find("ONWAAR", "DemoAttributeType")).toBeUndefined();
+        expect(stdlib.find("WAAR", "DemoAttributeType")).toBeUndefined();
     });
 });

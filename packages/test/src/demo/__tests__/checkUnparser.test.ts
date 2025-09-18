@@ -14,8 +14,8 @@ import { DemoModelCreator } from "./DemoModelCreator.js";
 import { makeLiteralExp, MakeMultiplyExp, MakePlusExp } from "./HelperFunctions.js";
 import { DemoValidator } from "../validator/gen/index.js";
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
-// import { FileHandler } from "../../utils/FileHandler";
-import { describe, it, test, expect, beforeEach } from "vitest";
+import { FileHandler } from "../../utils/FileHandler";
+import { describe, test, expect } from "vitest";
 
 describe("Testing Unparser", () => {
     describe("Unparse DemoModel Instance", () => {
@@ -162,7 +162,7 @@ describe("Testing Unparser", () => {
             AST.change( () => {
                 let result: string = "";
                 const testmodel = new DemoModelCreator().createModelWithMultipleUnits();
-                // const fileHandler = new FileHandler();
+                expect(testmodel.models.length).not.toBe(0);
 
                 const validator = new DemoValidator();
                 const errors = validator.validate(testmodel, true);
@@ -174,8 +174,8 @@ describe("Testing Unparser", () => {
 
                 for (const unit of testmodel.models) {
                     result = unparser.writeToString(unit, 0, false);
-                    // fileHandler.stringToFile(`src/demo/__tests__/unparsed${unit.name}.txt`, result);
-
+                    // new FileHandler().stringToFile(`src/demo/__tests__/unparsed${unit.name}.txt`, result);
+                    //
                     // console.log(result);
                     expect(result).toMatchSnapshot();
                 }

@@ -2,10 +2,34 @@
 // TEMPLATE: ValidatorTemplate.generateCustomValidator
 
 import { FreError, FreErrorSeverity } from "@freon4dsl/core";
-
+import { XXEnvironment } from "../config/gen/XXEnvironment.js";
+import { ExpWithType } from "../language/gen/index.js";
 import { XXDefaultWorker } from "../utils/gen/index.js";
-import { type XXCheckerInterface } from "./gen/XXValidator.js";
+import { type XXCheckerInterface } from "./gen/index.js";
 
 export class CustomXXValidator extends XXDefaultWorker implements XXCheckerInterface {
     errorList: FreError[] = [];
+    public execBeforeExpWithType(modelelement: ExpWithType): boolean {
+        let hasFatalError: boolean = false;
+        const typer = XXEnvironment.getInstance().typer;
+        const writer = XXEnvironment.getInstance().writer;
+        // typecheck equalsType (self.expr, self.type)
+        if (!typer.equalsType(modelelement.expr, modelelement.type)) {
+            this.errorList.push(
+                new FreError(
+                    "Type '" +
+                    typer.inferType(modelelement.expr)?.toFreString(writer) +
+                    "' of [" +
+                    writer.writeNameOnly(modelelement.expr) +
+                    "] is not equal to " +
+                    writer.writeToString(modelelement.type),
+                    modelelement.expr,
+                    writer.writeNameOnly(modelelement.expr),
+                    FreErrorSeverity.Error
+                )
+            );
+            hasFatalError = true;
+        }
+        return hasFatalError;
+    }
 }

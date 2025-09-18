@@ -1,7 +1,7 @@
 import { DemoEnvironment } from "../config/gen/DemoEnvironment.js";
 import { DemoModel, DemoAttributeType } from "../language/gen/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
-import { describe, it, test, expect, beforeEach } from "vitest";
+import { describe, test, expect } from "vitest";
 
 describe("Testing Typer", () => {
     describe("Typer.isType on DemoModel Instance", () => {

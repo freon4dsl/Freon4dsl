@@ -4,8 +4,21 @@
 import { FreError, FreErrorSeverity } from "@freon4dsl/core";
 
 import { DemoDefaultWorker } from "../utils/gen/index.js";
-import { type DemoCheckerInterface } from "./gen/DemoValidator.js";
+import { type DemoCheckerInterface } from "./gen/index.js";
+import { DemoFunction } from "../language/gen/index.js";
 
 export class CustomDemoValidator extends DemoDefaultWorker implements DemoCheckerInterface {
     errorList: FreError[] = [];
+    public execBeforeDemoFunction(modelelement: DemoFunction): boolean {
+        // console.log("DOING customValidation");
+        this.errorList.push(
+            new FreError(
+                `ER IS IETS FLINK MIS MET DIT DING`,
+                modelelement,
+                modelelement.name,
+                FreErrorSeverity.Error
+            )
+        );
+        return false;
+    }
 }

@@ -3,7 +3,6 @@ import { DemoEntity, Demo } from "../language/gen/index.js";
 import { DemoModelCreator } from "./DemoModelCreator.js";
 import { getVisibleNames } from '../../utils/HelperFunctions.js';
 import { describe, test, expect, beforeEach } from "vitest";
-import { initializeScoperDef } from '../scoper/gen';
 
 describe("testing Scoper", () => {
     let scoper = DemoEnvironment.getInstance().scoper;

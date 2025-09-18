@@ -218,7 +218,7 @@ describe("Testing Validator", () => {
         errors.forEach(e => {
             reports.push(e.message + " => " + e.locationdescription + " prop: " + e.propertyName + " node: " + p(e.reportedOn) + " of severity " + e.severity);
             // console.log(e.message + " => " + e.locationdescription + " prop: " + e.propertyName + " node: " + p(e.reportedOn) + " of severity " + e.severity);
-            console.log(e.message);
+            // console.log(e.message);
         });
         // two extra errors because the validations on interfaces are taken into account
         expect(errors.length).toBe(26);

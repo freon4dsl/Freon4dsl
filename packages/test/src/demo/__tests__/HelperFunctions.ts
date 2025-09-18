@@ -13,8 +13,8 @@ import {
     DemoExpression,
 } from "../language/gen/index.js";
 
-export function makeLiteralExp(incoming: any): DemoExpression {
-    let mine: DemoExpression;
+export function makeLiteralExp(incoming: any): DemoExpression | null {
+    let mine: DemoExpression | null;
     if (typeof incoming === "string" && /[0-9]+/.test(incoming)) {
         mine = new DemoNumberLiteralExpression();
         (mine as DemoNumberLiteralExpression).value = Number.parseInt(incoming, 10);
@@ -26,8 +26,7 @@ export function makeLiteralExp(incoming: any): DemoExpression {
         (mine as DemoStringLiteralExpression).value = incoming;
     } else {
         // When no expression can be created, return a placeholder expression.
-        mine = new DemoStringLiteralExpression();
-        (mine as DemoStringLiteralExpression).value = "No Value Available";
+        mine = null;
     }
     return mine;
 }
@@ -69,11 +68,11 @@ export function MakeDivideExp(left: any, right: any): DemoDivideExpression {
 }
 
 export function addToBinaryExpression(left: any, binary: DemoBinaryExpression, right: any) {
-    binary.left = determineType(left);
-    binary.right = determineType(right);
+    binary.left = determineType(left)!;
+    binary.right = determineType(right)!;
 }
 
-export function determineType(incoming: any): DemoExpression {
+export function determineType(incoming: any): DemoExpression | null {
     if (incoming instanceof DemoExpression) {
         return incoming;
     } else {
