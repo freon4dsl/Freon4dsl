@@ -143,7 +143,8 @@ export class FreSuperTypeMaker {
                 result += `const param${index} = ${FreTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}
                 const rhs${index}: ${Names.FreType}[] = notNullOrUndefined(param${index}) ? this.getSuperTypes(param${index}) : [];\n`;
             } else if (cond instanceof FretEqualsExp) {
-                result += `const rhs${index}: ${Names.FreType}[] = [${FreTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}];\n`;
+                result += `const param${index} = ${FreTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}
+                const rhs${index}: ${Names.FreType}[] = notNullOrUndefined(param${index}) ? [param${index}] : [];\n`;
             }
         });
         if (myConditions.length > 1 && !!exp.variable.type) {
