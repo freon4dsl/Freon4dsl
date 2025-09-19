@@ -35,13 +35,23 @@ export class ParseLocationUtil {
         return `[no location]`;
     }
 
+    /**
+     * Extracts the file name from a full path.
+     * Works with both Unix-style '/' and Windows-style '\' separators.
+     *
+     * @param filename - The full path to a file.
+     * @returns The last part of the path, i.e. the file name.
+     *
+     * @example
+     * getShortFileName("C:\\foo\\bar/test.txt"); // "test.txt"
+     * getShortFileName("/usr/local/bin/script.sh"); // "script.sh"
+     */
     private static getShortFileName(filename: string): string {
-        let names: string[] = [];
-        if (filename.includes("\\")) {
-            names = filename.split("\\");
-        } else if (filename.includes("/")) {
-            names = filename.split("/");
-        }
-        return names[names.length - 1];
+        // Split the path into parts, using both '\' (Windows) and '/' (Unix) as separators.
+        const parts = filename.split(/[\\/]/);
+
+        // Return the last element, which should be the actual file name.
+        // If splitting somehow fails (empty string), fall back to the original input.
+        return parts[parts.length - 1] || filename;
     }
 }

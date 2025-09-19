@@ -39,6 +39,7 @@ describe("Checking typer", () => {
         expect(conc2.constructor.name).toBe('FreMetaLimitedConcept');
         try {
             if (!!parser) {
+                console.log(testdir + "playgroundDefs/type-rules.type")
                 parser.parse(testdir + "playgroundDefs/type-rules.type");
             }
         } catch (e: unknown) {
@@ -54,7 +55,7 @@ describe("Checking typer", () => {
                 ).toBeTruthy();
                 expect(
                     errors.includes(
-                        "A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: playgroundDefs/type-rules.type:49:5].",
+                        "A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:49:5].",
                     ),
                 ).toBeTruthy();
             }
