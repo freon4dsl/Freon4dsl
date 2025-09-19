@@ -49,7 +49,7 @@ describe("Checking typer", () => {
                 expect(errors.length).toBe(2);
                 expect(
                     errors.includes(
-                        "A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: playgroundDefs/type-rules.type:41:5].",
+                        "A 'where' expression may not be used in an 'infertype' rule, please use 'Concept {...}' [file: type-rules.type:41:5].",
                     ),
                 ).toBeTruthy();
                 expect(
