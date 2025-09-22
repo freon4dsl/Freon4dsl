@@ -370,13 +370,6 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                 ReferenceResolver.resolveClassifierReference(element.typeReference, this.runner, this.language);
                 const myType = element.type; // there is a type found, now check whether this reference resolves to a primitive type
                 this.checkPrimitiveType(myType, element);
-                // if (element.isOptional) {
-                //     this.runner.simpleWarning(
-                //         false,
-                //         `Property '${element.name}' has primitive type, may therefore not be optional, optionality will be ignored ${ParseLocationUtil.location(element)}.`,
-                //     );
-                //     element.isOptional = false;
-                // }
                 // check initial value(s)
                 if (!element.isList) {
                     this.runner.simpleCheck(
