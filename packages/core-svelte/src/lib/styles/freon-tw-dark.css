@@ -128,10 +128,12 @@
 .dark .boolean-checkbox-component {
     --md-sys-color-primary: var(--color-dark-freon--250);
 }
-.dark .boolean-checkbox-component:hover,
+.boolean-checkbox-component:hover {
+    box-shadow: 0 0 10px var(--color-dark-freon--250);
+}
 .dark .boolean-checkbox-component:focus-within {
     outline: var(--color-dark-freon--250) solid 1px;
-    box-shadow: 0 0 10px var(--color-dark-freon--250);
+    /*box-shadow: 0 0 10px var(--color-dark-freon--250);*/
 }
 
 .dark .boolean-radio-component-group {

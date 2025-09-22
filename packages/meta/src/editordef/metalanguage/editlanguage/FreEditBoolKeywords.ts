@@ -3,8 +3,9 @@ import { FreMetaDefinitionElement } from "../../../utils/no-dependencies/index.j
 export class FreEditBoolKeywords extends FreMetaDefinitionElement {
     trueKeyword: string = "true";
     falseKeyword?: string = undefined;
+    undefinedKeyword?: string = undefined;
 
     toString(): string {
-        return `BoolKeywords [ ${this.trueKeyword} | ${this.falseKeyword} ]`;
+        return `BoolKeywords [ ${this.trueKeyword} | ${this.falseKeyword} | ${this.undefinedKeyword} ]`;
     }
 }

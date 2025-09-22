@@ -352,11 +352,15 @@ button_projection = projection_begin "button" ws text:("text" equals_separator "
     })
 }
 
-keywordDecl = projection_begin text1:textBut text2:(projection_separator t2:textBut {return t2;})? projection_end
+keywordDecl = projection_begin text1:textBut 
+                               text2:(projection_separator t2:textBut {return t2;})?
+                               text3:(projection_separator t3:textBut {return t3;})?
+              projection_end
 {
     return creator.createBoolKeywords({
         "trueKeyword"   : text1,
         "falseKeyword"  : text2,
+        "undefinedKeyword": text3,
         "location"      : location()
     });
 }

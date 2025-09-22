@@ -25,6 +25,7 @@ export class PrimitivePropertyBoxesHelper {
     // The values for the boolean keywords are set on initialization (by a call to 'setGlobalBooleanKeywords').
     private trueKeyword: string = "true";
     private falseKeyword: string = "false";
+    private undefinedKeyword: string = "unknown";
     private stdBoolDisplayType: string = "text";
     private stdNumberDisplayType: string = "text";
 
@@ -134,9 +135,11 @@ export class PrimitivePropertyBoxesHelper {
                 // get the right keywords
                 let trueKeyword: string = this.trueKeyword;
                 let falseKeyword: string = this.falseKeyword;
+                let undefinedKeyword: string = this.undefinedKeyword;
                 if (!!boolKeywords) {
                     trueKeyword = boolKeywords.trueKeyword;
                     falseKeyword = boolKeywords.falseKeyword ? boolKeywords.falseKeyword : "undefined";
+                    undefinedKeyword = boolKeywords.undefinedKeyword ? boolKeywords.undefinedKeyword : "undefined-undefined";
                 }
                 // get the right displayType
                 let displayTypeToUse2: string = DisplayTypeHelper.getTypeScriptForDisplayType(this.stdBoolDisplayType);
@@ -144,7 +147,7 @@ export class PrimitivePropertyBoxesHelper {
                     displayTypeToUse2 = DisplayTypeHelper.getTypeScriptForDisplayType(displayType);
                 }
                 this._myTemplate.imports.core.add("BoolDisplay");
-                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}"}${listAddition}, BoolDisplay.${displayTypeToUse2})`;
+                return `BoxUtil.booleanBox(${element}, "${property.name}", {yes:"${trueKeyword}", no:"${falseKeyword}", unknown:"${undefinedKeyword}"}${listAddition}, BoolDisplay.${displayTypeToUse2})`;
             default:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
         }

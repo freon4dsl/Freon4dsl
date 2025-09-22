@@ -44,8 +44,9 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "@lionweb/validation": "0.6.2",
-    "@lionweb/repository-client": "0.2.2",
+    "@lionweb/json": "0.7.0-beta.13",
+    "@lionweb/server-shared": "0.3.0",
+    "@lionweb/server-client": "0.3.0",
     "mobx": "^6.12.3",
     "reflect-metadata": "^0.2.2",
     "tslib": "^2.6.3"
