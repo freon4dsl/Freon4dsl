@@ -287,6 +287,28 @@ export class TextComponentHelper {
         return this._getText() === '' || !this._getText();
     }
 
+        /**
+     * Converts camelCase text to readable text by adding spaces before capital letters
+     * and capitalizing the first letter.
+     * Example: "sourceToTargetMappings" -> "Source To Target Mappings"
+     * @param text The camelCase text to convert
+     * @returns The converted readable text
+     */
+    camelCaseToReadable(text: string): string {
+        if (!text || text.length === 0) {
+            return text;
+        }
+        
+        // Remove < and > characters
+        const withoutBrackets = text.replace(/[<>]/g, '');
+        
+        // Add space before capital letters (except the first character)
+        const withSpaces = withoutBrackets.replace(/([a-z])([A-Z])/g, '$1 $2');
+        
+        // Capitalize the first letter
+        return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
+    }
+
     /**
      * This function determines where the current keystroke event should be handled.
      * It is used for keystrokes that are not directly handled by the corresponding TextComponent,
