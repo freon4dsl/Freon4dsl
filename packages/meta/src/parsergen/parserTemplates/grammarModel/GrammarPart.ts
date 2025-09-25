@@ -31,7 +31,7 @@ export class GrammarPart {
             type Sentence,
             type SpptDataNodeInfo
         } from "net.akehurst.language-agl-processor";
-        import { ${Names.FreNodeReference} } from "@freon4dsl/core";` : ""}
+        import { ${Names.FreNodeReference}, ${Names.notNullOrUndefined} } from "@freon4dsl/core";` : ""}
         ${
             this.imports.length > 0
                 ? `import { ${this.imports.map((imp) => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";`

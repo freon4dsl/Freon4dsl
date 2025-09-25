@@ -17,7 +17,7 @@ export class UnitTemplate {
         const hasReferences = unitDescription.implementedReferences().length > 0;
         const imports = new Imports()
         imports.language = this.findModelImports(unitDescription, myName);
-        imports.core = ClassifierUtil.findMobxImportsForConcept(false, unitDescription).add(Names.FreModelUnit).add(Names.FreParseLocation)
+        imports.core = ClassifierUtil.findMobxImportsForConcept(false, unitDescription).add(Names.FreModelUnit).add(Names.FreParseLocation).add(Names.notNullOrUndefined)
         if (hasReferences) imports.core.add(Names.FreNodeReference);
         const metaType = Names.metaType();
         const intfaces = Array.from(new Set(unitDescription.interfaces.map((i) => Names.interface(i.referred))));

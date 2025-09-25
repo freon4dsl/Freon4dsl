@@ -7,8 +7,8 @@ import {
     PrimitivesTest,
     RefsTest,
     PrimsWithKeywordTest,
-    TestParserModel,
-} from "../language/gen";
+    TestParserModel, OptionalPrimitivesTest
+} from '../language/gen';
 import {describe, it, test, expect, beforeEach} from "vitest";
 
 describe("Parser properties of type", () => {
@@ -30,6 +30,18 @@ describe("Parser properties of type", () => {
         ) as PrimitivesTest;
         // console.log(writer.writeToString(unit1));
         expect(unit1).toMatchSnapshot();
+    });
+
+    test(" Optional Primitives ", () => {
+        let input = fileHandler.stringFromFile("src/parser-basic-properties/__inputs__/test4.opt");
+        const unit1: OptionalPrimitivesTest = reader.readFromString(
+          input,
+          "OptionalPrimitivesTest",
+          new TestParserModel(),
+          "test4.opt"
+        ) as OptionalPrimitivesTest;
+        console.log(writer.writeToString(unit1));
+        // expect(unit1).toMatchSnapshot();
     });
 
     test(" Primitive with Keyword projection ", () => {
