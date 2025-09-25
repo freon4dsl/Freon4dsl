@@ -687,7 +687,7 @@
     <ErrorMarker {editor} {box} />
 {/if}
 <ErrorTooltip {editor} {box} {hasErr} parentTop={0} parentLeft={0}>
-    <span {id} role="none" bind:this={surroundingElement} class="text-component-parent">
+    <span {id} role="none" bind:this={surroundingElement} class="text-component">
         {#if isEditing}
             <span class="text-component-input-wrapper">
                 <input
@@ -709,7 +709,7 @@
                 />
                 <span class="text-component-width" bind:this={widthSpan}></span>
             </span>
-            {:else}
+        {:else}
             <!-- contenteditable must be true, otherwise there is no cursor position in the span after a click,
                  But ... this is only a problem when this component is inside a draggable element (like List or table)
             -->

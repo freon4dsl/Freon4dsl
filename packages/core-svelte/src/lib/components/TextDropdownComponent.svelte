@@ -538,7 +538,7 @@
     class="text-dropdown-component {box.cssClass}"
     role="none"
 >
-    <div class="text-dropdown-component-wrapper">
+    <div class="text-dropdown-component-text-wrapper">
         <TextComponent
             {editor}
             box={textBox}
