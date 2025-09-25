@@ -262,12 +262,12 @@ export class ConceptUtils {
                 (freProp) =>
                     `${
                         freProp.isList
-                            ? `if (!!data.${freProp.name}) {
+                            ? `if (notNullOrUndefined(data.${freProp.name})) {
                                 data.${freProp.name}.forEach(x =>
                                     result.${freProp.name}.push(x)
                                 );
                             }`
-                            : `if (!!data.${freProp.name}) {
+                            : `if (notNullOrUndefined(data.${freProp.name})) {
                                 result.${freProp.name} = data.${freProp.name};
                             ${
                                 allPartsToInitialize.find((ip) => ip.part === freProp)

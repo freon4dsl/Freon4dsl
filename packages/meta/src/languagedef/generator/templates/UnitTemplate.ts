@@ -1,6 +1,6 @@
 import { ConceptUtils } from "./ConceptUtils.js"
 import { Imports, Names } from "../../../utils/on-lang/index.js"
-import { FreMetaUnitDescription } from "../../metalanguage/FreMetaLanguage.js";
+import { type FreMetaUnitDescription } from "../../metalanguage/FreMetaLanguage.js";
 import { ClassifierUtil } from "./ClassifierUtil.js";
 
 export class UnitTemplate {
@@ -17,8 +17,14 @@ export class UnitTemplate {
         const hasReferences = unitDescription.implementedReferences().length > 0;
         const imports = new Imports()
         imports.language = this.findModelImports(unitDescription, myName);
-        imports.core = ClassifierUtil.findMobxImportsForConcept(false, unitDescription).add(Names.FreModelUnit).add(Names.FreParseLocation)
+        imports.core = ClassifierUtil.findMobxImportsForConcept(false, unitDescription)
+            .add(Names.FreModelUnit)
+            .add(Names.FreParseLocation)
+            .add("notNullOrUndefined")
         if (hasReferences) imports.core.add(Names.FreNodeReference);
+        if (unitDescription.allProperties().length > 0) {
+            imports.core.add("notNullOrUndefined")
+        }
         const metaType = Names.metaType();
         const intfaces = Array.from(new Set(unitDescription.interfaces.map((i) => Names.interface(i.referred))));
 
