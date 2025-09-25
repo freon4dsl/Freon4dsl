@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/core-svelte",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "build-release": "npm run build",
     "install-local": "npm install --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
-    "release": "npm publish",
+    "release-beta": "npm publish --tag beta",
     "publish-local": "npm publish --registry http://localhost:4873 --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873"
   },
@@ -72,7 +72,7 @@
     "@material/web": "^2.3.0",
     "@material/slider": "^14.0.0",
     "@material/switch": "^14.0.0",
-    "@freon4dsl/core": "2.0.0-beta.3"
+    "@freon4dsl/core": "2.0.0-beta.4"
   },
   "keywords": [
     "svelte", "freon", "dsl"

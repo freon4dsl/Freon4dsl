@@ -1,6 +1,6 @@
 {
   "name": "@freon4dsl/server",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "publishConfig": {
     "access": "public"
   },
@@ -17,11 +17,12 @@
     "clean": "rm -rf node_modules/ && rm -rf dist/",
     "cleanup": "bash ../../scripts/cleanup.sh",
     "start": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec node ./dist/server/server-starter.js",
+    "start9090": "cross-env NODE_ENV=development NODE_PORT=8001 nodemon --watch 'src/**/*' -e ts,tsx --exec node ./dist/server/server-starter.js --port 9090",
     "build": "tsc --build",
     "build-dev": "tsc --build",
     "build-verbose": "tsc --build --verbose --listFiles --listEmittedFiles",
     "build-release": "npm run build",
-    "release": "npm publish",
+    "release-beta": "npm publish --tag beta",
     "publish-local": "npm publish --registry http://localhost:4873 --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",

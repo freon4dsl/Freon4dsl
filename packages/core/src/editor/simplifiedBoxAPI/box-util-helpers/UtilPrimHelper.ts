@@ -42,7 +42,7 @@ export class UtilPrimHelper {
                         AST.change(() => {
                             node[propertyName][index] = v;
                         }),
-                    { placeHolder: `<${propertyName}>` },
+                    { placeHolder: `${propertyName}` },
                 );
             } else {
                 result = BoxFactory.text(
@@ -53,7 +53,7 @@ export class UtilPrimHelper {
                         AST.change(() => {
                             node[propertyName] = v;
                         }),
-                    { placeHolder: `<${propertyName}>` },
+                    { placeHolder: `${propertyName}` },
                 );
                 // ENSURE TEXTBOX IS SEEN AS DIRTY
                 // result.isDirty()
@@ -163,7 +163,7 @@ export class UtilPrimHelper {
                         node[propertyName][index] = Number.parseInt(v, 10);
                     }),
                 {
-                    placeHolder: `<${propertyName}>`,
+                    placeHolder: `${propertyName}`,
                     isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
                         return isNumber(currentText, key, innerIndex);
                     }
@@ -186,7 +186,7 @@ export class UtilPrimHelper {
                         node[propertyName] = Number.parseInt(v, 10);
                     }),
                 {
-                    placeHolder: `<${propertyName}>`,
+                    placeHolder: `${propertyName}`,
                     isCharAllowed: (currentText: string, key: string, innerIndex: number) => {
                         return isNumber(currentText, key, innerIndex);
                     }

@@ -140,10 +140,8 @@
 }
 
 .text-component-input {
-    /*color: var(--freon-dark-base-600);*/
-    color: var(--freon-dark-accent-darkorange);
-    /*background: var(--freon-dark-accent-green);*/
-    background: var(--color-dark-freon-600);
+    background: var(--color-dark-freon-accent-dropdown);
+    color: var(--color-dark-freon-accent-editable);
 }
 
 .text-component-text {
@@ -245,7 +243,12 @@
 }
 
 .render-component-selected {
-    outline-color: var(--color-dark-freon--900);
+    outline-color: var(--color-dark-freon--100);
+}
+
+.render-component-selected:has(.layout-component-horizontal) > span:focus {
+    outline-color: var(--color-dark-freon--100);
+    box-shadow: 0 0 10px var(--color-dark-freon--100);
 }
 
 .switch-component button {
@@ -300,15 +303,16 @@
 
 .reference-button {
     background-color: transparent;
-    color: var(--freon-dark-base-300)
+    color: var(--freon-dark-base-100)
 }
 
 .text-dropdown-component .text-component-text {
-    color: var(--color-dark-freon-accent-green);
+    color: var(--color-dark-freon-accent-dropdown);
 }
 
 .text-dropdown-component .text-component-input {
-    color: var(--color-dark-freon-accent-dropdown);
+    color: var(--color-dark-freon-accent-editable);
+    background: var(--color-dark-freon-accent-dropdown);
 }
 
 .brackets {
@@ -317,4 +321,8 @@
 
 .drag-handle-icon {
     fill: var(--color-dark-freon--250);
+}
+
+.reference-arrow {
+    fill: var(--color-dark-freon-accent-button);
 }

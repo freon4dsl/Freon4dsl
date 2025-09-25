@@ -248,6 +248,11 @@
     outline-color: var(--color-light-freon-900);
 }
 
+.render-component-selected:has(.layout-component-horizontal) > span:focus {
+    outline-color: var(--color-light-freon-700);
+    box-shadow: 0 0 10px var(--color-light-freon-700);
+}
+
 .switch-component button {
     background: var(--color-light-freon-150);
 }
@@ -288,6 +293,10 @@
 }
 .table-cell-component-selected {
     outline-color: var(--color-light-freon-900);
+    box-shadow: 0px 0px 8px 7px var(--color-light-freon-border-green);
+}
+.table-cell-component-selected:focus {
+    box-shadow: 0px 0px 8px 7px var(--color-light-freon-border-green);
 }
 
 .grid-component {
@@ -316,4 +325,8 @@
 
 .drag-handle-icon {
     fill: var(--color-light-freon-400);
+}
+
+.reference-arrow {
+    fill: var(--color-dark-freon-accent-button);
 }

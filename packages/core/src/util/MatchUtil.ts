@@ -20,11 +20,23 @@ export class MatchUtil {
      * @param text
      * @param options
      */
-    public static matchingOptions(text: string, options: SelectOption[]): SelectOption[] {
+    public static partiallyMatchingOptions(text: string, options: SelectOption[]): SelectOption[] {
         if (isEmpty(text)) {
             return options
         }
         return options.filter((opt) => opt.label.toLowerCase().startsWith(text.toLowerCase()))
+    }
+
+    /**
+     * Returns array of all options in `options` where the option label matches `text`.
+     * @param text
+     * @param options
+     */
+    public static fullMatchingOptions(text: string, options: SelectOption[]): SelectOption[] {
+        if (isEmpty(text)) {
+            return []
+        }
+        return options.filter((opt) => opt.label.toLowerCase() === text.toLowerCase())
     }
 
     /**
