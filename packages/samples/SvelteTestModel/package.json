@@ -1,7 +1,7 @@
 {
   "name": "@freon4dsl/samples-svelte-test",
 
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -20,10 +20,10 @@
     "clean-all": "npm run clean-gen && npm run clean-config && npm run clean-custom"
   },
   "devDependencies": {
-    "@freon4dsl/meta": "2.0.0-beta.3"
+    "@freon4dsl/meta": "2.0.0-beta.4"
   },
   "dependencies": {
-    "@freon4dsl/core": "2.0.0-beta.3",
+    "@freon4dsl/core": "2.0.0-beta.4",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",
     "mobx": "^6.12.3",

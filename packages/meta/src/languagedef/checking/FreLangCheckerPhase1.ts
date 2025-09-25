@@ -376,7 +376,7 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                         `Property '${element.name}' has primitive type, may therefore not be optional, optionality will be ignored ${ParseLocationUtil.location(element)}.`,
                     );
                     element.isOptional = false;
-                }
+                }                
                 // check initial value(s)
                 if (!element.isList) {
                     this.runner.simpleCheck(

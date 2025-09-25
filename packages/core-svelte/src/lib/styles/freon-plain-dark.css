@@ -297,11 +297,11 @@
 
 .reference-button {
     background-color: transparent;
-    color: var(--freon-dark-base-300)
+    color: var(--freon-dark-base-100)
 }
 
 .text-dropdown-component .text-component-text {
-    color: var(--color-dark-freon-accent-green);
+    color: var(--color-dark-freon-accent-dropdown);
 }
 
 .text-dropdown-component .text-component-input {
@@ -314,4 +314,8 @@
 
 .drag-handle-icon {
     fill: var(--color-dark-freon--250);
+}
+
+.reference-arrow {
+    stroke: var(--color-dark-freon-accent-button);
 }
