@@ -21,7 +21,7 @@
     "clean-all": "npm run clean-gen && npm run clean-config && npm run clean-custom"
   },
   "devDependencies": {
-    "@freon4dsl/meta": "~2.0.0-beta.4"
+    "@freon4dsl/meta": "2.0.0-beta.4"
   },
   "dependencies": {
     "@freon4dsl/core": "~2.0.0-beta.4",
