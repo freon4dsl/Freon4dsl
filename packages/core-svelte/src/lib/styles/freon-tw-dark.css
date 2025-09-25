@@ -342,7 +342,7 @@
 }
 
 .dark .reference-arrow {
-    stroke: var(--color-dark-freon-accent-button);
+    fill: var(--color-dark-freon-accent-button);
 }
 
 .dark\:text-white:where(.dark,.dark *) {
