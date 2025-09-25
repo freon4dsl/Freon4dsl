@@ -128,7 +128,7 @@ export class FreTyperDefSyntaxAnalyserPart {
         // RHSPartListWithTerminator
         __properties = [];
         const _myList = (children.asJsReadonlyArrayView()[4] as KtList<any>).asJsReadonlyArrayView();
-        _myList.forEach((subNode) => {
+        _myList.forEach((subNode: KtList<any>) => {
             const _transformed = subNode.asJsReadonlyArrayView()[0];
             if (!!_transformed) {
                 __properties.push(_transformed);

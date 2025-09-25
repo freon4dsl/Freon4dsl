@@ -8,16 +8,7 @@ export interface FreModel extends FreNamedNode {
      * @param name
      * @param metatype
      */
-    findUnit(name: string, metatype?: string): FreModelUnit;
-
-    /**
-     * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
-     * Returns false if the replacement could not be done, e.g. because 'oldUnit' is not a child of this object.
-     *
-     * @param oldUnit
-     * @param newUnit
-     */
-    replaceUnit(oldUnit: FreModelUnit, newUnit: FreModelUnit): boolean;
+    findUnit(name: string, metatype?: string): FreModelUnit | undefined;
 
     /**
      * Adds a model unit. Returns false if anything goes wrong.
@@ -35,10 +26,12 @@ export interface FreModel extends FreNamedNode {
 
     /**
      * Returns an empty model unit of type 'typename' and adds it to this model.
+     * Returns undefined when the given 'typename' does not match any of the unit types
+     * known in the language.
      *
      * @param typename
      */
-    newUnit(typename: string): FreModelUnit;
+    newUnit(typename: string): FreModelUnit | undefined;
 
     /**
      * Returns a list of model units.

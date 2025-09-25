@@ -52,18 +52,21 @@ export class InterfaceTemplate {
 
     generatePrimitiveProperty(property: FreMetaPrimitiveProperty): string {
         const comment = "// implementation of " + property.name;
-        return `${property.name}: ${GenerationUtil.getBaseTypeAsString(property)} ${property.isList ? "[]" : ""}; ${comment}`;
+        const optionalType: string = !property.isList && property.isOptional ? " | undefined" : ""
+        return `${property.name}: ${GenerationUtil.getBaseTypeAsString(property)} ${property.isList ? "[]" : ""}${optionalType}; ${comment}`;
     }
 
     generatePartProperty(property: FreMetaConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${Names.classifier(property.type)}${arrayType}; ${comment}`;
+        const optionalType: string = !property.isList && property.isOptional ? " | undefined" : ""
+        return `${property.name}: ${Names.classifier(property.type)}${arrayType}${optionalType}; ${comment}`;
     }
 
     generateReferenceProperty(property: FreMetaConceptProperty): string {
         const comment = "// implementation of " + property.name;
         const arrayType = property.isList ? "[]" : "";
-        return `${property.name} : ${Names.FreNodeReference}<${Names.classifier(property.type)}>${arrayType}; ${comment}`;
+        const optionalType: string = !property.isList && property.isOptional ? " | undefined" : ""
+        return `${property.name}: ${Names.FreNodeReference}<${Names.classifier(property.type)}>${arrayType}${optionalType}; ${comment}`;
     }
 }

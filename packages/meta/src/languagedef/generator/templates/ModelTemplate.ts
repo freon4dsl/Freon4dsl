@@ -22,6 +22,7 @@ export class ModelTemplate {
         imports.language = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType();
 
+        // TODO remove the @ts-ignore in the following code
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
             import { makeObservable, action, runInAction } from "mobx"
@@ -52,53 +53,17 @@ export class ModelTemplate {
                  * @param name
                  * @param metatype
                  */
-                findUnit(name: string, metatype?: ${metaType} ): ${Names.modelunit()} {
-                    let result: ${Names.modelunit()} = null;
-                    const checkType = metatype !== undefined
+                findUnit(name: string, metatype?: ${metaType} ): ${Names.modelunit()} | undefined {
+                    let result: ${Names.modelunit()} | undefined;
+                    const checkType = metatype !== undefined;
                     result = this.getUnits().find((mod) => mod.name === name && 
                         (checkType ? FreLanguage.getInstance().metaConformsToType(mod, metatype): true));
                     if (!!result) {
                         return result;
                     }
-                    return null;
+                    return undefined;
                 }                 
                 
-                /**
-                 * Replaces a model unit by a new one. Used for swapping between complete units and unit public interfaces.
-                 * Returns false if the replacement could not be done, e.g. because 'oldUnit' is not a child of this object.
-                 * @param oldUnit
-                 * @param newUnit
-                 */
-                replaceUnit(oldUnit: ${Names.modelunit()}, newUnit: ${Names.modelunit()}): boolean {
-                    if ( oldUnit.freLanguageConcept() !== newUnit.freLanguageConcept()) {
-                        return false;
-                    }
-                    if ( oldUnit.freOwnerDescriptor().owner !== this) {
-                        return false;
-                    }
-                    // we must store the interface in the same place as the old unit, which info is held in FreContainer()
-                    ${modelDescription
-                        .parts()
-                        .map(
-                            (part) =>
-                                `if ( oldUnit.freLanguageConcept() === "${Names.classifier(part.type)}" && oldUnit.freOwnerDescriptor().propertyName === "${part.name}" ) {
-                                    AST.changeNamed("removeUnit", () => {
-                                        ${
-                                            part.isList
-                                                ? `const index = this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)});
-                                        this.${part.name}.splice(index, 1, newUnit as ${Names.classifier(part.type)});`
-                                                : `this.${part.name} = newUnit as ${Names.classifier(part.type)};`
-                                        }
-                                    })
-                            } else`,
-                        )
-                        .join(" ")}
-                    {
-                        return false;
-                    }
-                    return  true;
-                }
-
                     /**
                      * Adds a model unit. Returns false if anything goes wrong.
                      *
@@ -147,7 +112,8 @@ export class ModelTemplate {
                                                 ${
                                                     part.isList
                                                         ? `this.${part.name}.splice(this.${part.name}.indexOf(oldUnit as ${Names.classifier(part.type)}), 1);`
-                                                        : `this.${part.name} = null;`
+                                                        : `// @ts-ignore: we want to keep the type of 'unit' clear, thus we ignore the compiler error
+                                                          this.${part.name} = null;`
                                                 }
                                             })
                                             return true;
@@ -161,20 +127,23 @@ export class ModelTemplate {
 
                 /**
                  * Returns an empty model unit of type 'typeName' within 'model'.
+                 * Returns undefined when the given 'typename' does not match any of the unit types
+                 * known in the language.
                  *
                  * @param typename
                  */
-                newUnit(typename: ${Names.metaType()}) : ${Names.modelunit()}  {
+                newUnit(typename: ${Names.metaType()}) : ${Names.modelunit()} | undefined {
                     switch (typename) {
                         ${language.modelConcept
                             .allParts()
                             .map(
                                 (part) =>
                                     `case "${Names.classifier(part.type)}": {
-                                        let unit: ${Names.classifier(part.type)};
+                                        let unit: ${Names.classifier(part.type)} | undefined;
                                         runInAction( () => {
                                             unit = ${Names.classifier(part.type)}.create({});
                                         })
+                                        if (!unit) throw new Error("Failed to create ${Names.classifier(part.type)}");
                                         AST.changeNamed("newUnit", () => {
                                             ${
                                                 part.isList
@@ -187,7 +156,7 @@ export class ModelTemplate {
                             )
                             .join("\n")}
                     }
-                    return null;
+                    return undefined;
                 }
 
                     /**

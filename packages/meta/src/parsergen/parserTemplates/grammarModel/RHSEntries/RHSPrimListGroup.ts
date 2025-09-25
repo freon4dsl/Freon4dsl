@@ -21,17 +21,10 @@ export class RHSPrimListGroup extends RHSPropPartWithSeparator {
     toMethod(index: number, nodeName: string): string {
         const tsBaseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         const freonBaseType: string = GenerationUtil.getFreonBaseTypeAsString(this.property);
-        // return `// RHSPrimListGroup
-        //     if (!!${nodeName}[${index}]) {
-        //         // get the group that represents the optional primitive
-        //         // because primitives are leafs in the grammar, there is no need to get the children of this group
-        //         const subNode = this.${mainAnalyserName}.getGroup(${nodeName}[${index}]);
-        //         ${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformPartList}<${baseType}>(subNode, '${this.separatorText}');
-        //     }`;
         return `// RHSPrimListGroup
-            if (!!${nodeName}.toArray()[${index}]) {
+            if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) {
                 ${ParserGenUtil.internalName(this.property.name)} = [];
-                ${nodeName}.toArray()[${index}].toArray().forEach((item) => {
+                ${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView().forEach((item: KtList<any>) => {
                     const val = this.mainAnalyser.${internalTransformPrimValue}<${tsBaseType}>(item.asJsReadonlyArrayView()[0], PrimValueType.${freonBaseType})
                     ${ParserGenUtil.internalName(this.property.name)}.push(val);
                 })

@@ -11,7 +11,7 @@ import {
     LangUtil
 } from "../../languagedef/metalanguage/index.js";
 import { Checker, CheckRunner, ParseLocationUtil } from "../../utils/basic-dependencies/index.js";
-import { FreMetaDefinitionElement, MetaLogger } from "../../utils/no-dependencies/index.js";
+import { type FreMetaDefinitionElement, MetaLogger } from "../../utils/no-dependencies/index.js";
 import { Names } from "../../utils/on-lang/index.js";
 import { FreEditParseUtil } from "../parser/FreEditParseUtil.js";
 import {
@@ -979,6 +979,10 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 displayType === DisplayType.Text || displayType === DisplayType.Slider,
                 `A number value may only be displayed as 'text', or 'slider' ${ParseLocationUtil.location(elem)}.`,
             );
+            this.runner.simpleCheck(
+                elem instanceof FreEditPropertyProjection && elem.property.referred.isOptional ? displayType !== DisplayType.Slider : true,
+                `An optional number value can not be displayed as 'slider' ${ParseLocationUtil.location(elem)}.`,
+            )
         }
     }
 
@@ -992,6 +996,14 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     displayType === DisplayType.Switch,
                 `A boolean value may only be displayed as 'text', 'checkbox', 'radio', 'switch', or 'inner-switch' ${ParseLocationUtil.location(elem)}.`,
             );
+            this.runner.simpleCheck(
+                ((elem instanceof FreEditPropertyProjection) && elem.property.referred.isOptional ? 
+                    displayType !== DisplayType.InnerSwitch &&
+                    displayType !== DisplayType.Switch :
+                        true
+                ),
+                `An optional boolean value can not be displayed as 'switch', or 'inner-switch' ${ParseLocationUtil.location(elem)}.`,
+            )
         }
     }
 

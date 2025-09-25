@@ -32,7 +32,7 @@ const cust: FreCustomAction[] = [
     FreCustomAction.create({
         activeInBoxRoles: [],
         boxRoleToSelect: "",
-        caretPosition: null,
+        caretPosition: undefined,
         trigger: "",
     }),
     FreCustomAction.create({
@@ -89,6 +89,7 @@ export const MANUAL_CUSTOM_ACTIONS: FreCustomAction[] = [
             if( isString(trigger) ) {
                 x.value = Number.parseInt(trigger.toString());
             }
+            // @ts-ignore
             parent[(box as ActionBox).propertyName] = x;
             return x;
         },

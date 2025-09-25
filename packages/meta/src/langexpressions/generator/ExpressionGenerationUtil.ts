@@ -145,11 +145,11 @@ export class ExpressionGenerationUtil {
                 return `${previousExpAsTS}.map((x: ${previousType.name}) => ${Names.LanguageEnvironment}.getInstance().typer.inferType(x).toAstElement())`;
             } else {
                 this.previousMaybeUndefined = true;
-                return `${Names.LanguageEnvironment}.getInstance().typer.inferType(${previousExpAsTS}).toAstElement()`;
+                return `${Names.LanguageEnvironment}.getInstance().typer.inferType(${previousExpAsTS})?.toAstElement()`;
             }
         } else {
             this.previousMaybeUndefined = true;
-            return `${Names.LanguageEnvironment}.getInstance().typer.inferType(${paramName}).toAstElement()`;
+            return `${Names.LanguageEnvironment}.getInstance().typer.inferType(${paramName})?.toAstElement()`;
         }
     }
 

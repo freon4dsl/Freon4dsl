@@ -34,11 +34,11 @@ export class RHSOptionalGroup extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         if (this.subs.length > 1) {
-            return (
-                `// RHSOptionalGroup
+            return (`
+            // RHSOptionalGroup
             if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
                 const _optGroup = ${nodeName}.asJsReadonlyArrayView()[${index}];` + // to avoid an extra newline
-                `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "_optGroup", mainAnalyserName)}`).join("\n")}
+                `${this.subs.map((sub) => `${sub.toMethod(this.propIndex, "(_optGroup  as KtList<any>)", mainAnalyserName)}`).join("\n")}
             }
             // end RHSOptionalGroup
             `
@@ -46,14 +46,16 @@ export class RHSOptionalGroup extends RHSPropEntry {
         } else if (this.subs.length === 1) {
             const first = this.subs[0];
             if (first.isList) {
-                return `// RHSOptionalGroup
+                return `
+                // RHSOptionalGroup
                     if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
                         ${first.toMethod(index, nodeName, mainAnalyserName)}
                     }
             // end RHSOptionalGroup
             `;
             } else {
-                return `// RHSOptionalGroup
+                return `
+                // RHSOptionalGroup
                     if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
                         ${first.toMethod(index, nodeName, mainAnalyserName)}
                     }

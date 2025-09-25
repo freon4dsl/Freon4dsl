@@ -2,6 +2,7 @@ import { RHSPropEntry } from "./RHSPropEntry.js";
 import { FreMetaProperty } from "../../../../languagedef/metalanguage/index.js";
 import { getTypeCall, makeIndent } from "../GrammarUtils.js";
 import { ParserGenUtil } from "../../ParserGenUtil.js";
+import { GenerationUtil } from '../../../../utils/on-lang/index.js';
 
 export class RHSPartListEntry extends RHSPropEntry {
     constructor(prop: FreMetaProperty) {
@@ -15,7 +16,8 @@ export class RHSPartListEntry extends RHSPropEntry {
     }
 
     toMethod(index: number, nodeName: string): string {
-        return `${ParserGenUtil.internalName(this.property.name)} = ${nodeName}.asJsReadonlyArrayView()[${index}].asJsReadonlyArrayView(); // RHSPartListEntry\n`;
+        const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
+        return `${ParserGenUtil.internalName(this.property.name)} = (${nodeName}.asJsReadonlyArrayView()[${index}] as KtList<any>).asJsReadonlyArrayView() as ${baseType}[]; // RHSPartListEntry\n`;
     }
 
     toString(depth: number): string {

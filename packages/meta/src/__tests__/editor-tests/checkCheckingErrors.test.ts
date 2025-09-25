@@ -1,13 +1,14 @@
-import { FreMetaLanguage } from "../../languagedef/metalanguage";
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { Checker } from "../../utils/basic-dependencies/index.js";
-import { FreEditParser } from "../../editordef/parser/FreEditParser";
-import { FreEditUnit } from "../../editordef/metalanguage";
+import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
+import { FreEditUnit } from "../../editordef/metalanguage/index.js";
 import { describe, test, expect, beforeEach } from "vitest";
+import { resolveAstFile, resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking editor definition ", () => {
-    const testdir = "src/__tests__/editor-tests/faultyDefFiles/checking-errors/";
+    const testdir: string = resolveTestDir(import.meta.url, "faultyDefFiles/checking-errors/");
     let parser: FreEditParser;
     let language: FreMetaLanguage | undefined;
     let checker: Checker<FreEditUnit>;
@@ -16,7 +17,8 @@ describe("Checking editor definition ", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
+            const astPath: string = resolveAstFile(import.meta.url, "../commonAstFiles", "test-language.ast");
+            language = new LanguageParser().parse(astPath);
             if (!!language) {
                 parser = new FreEditParser(language);
                 checker = parser.checker;

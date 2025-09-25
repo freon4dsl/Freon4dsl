@@ -31,7 +31,7 @@ export class RHSPartListWithTerminator extends RHSPropPartWithSeparator {
         return `// RHSPartListWithTerminator
             ${ParserGenUtil.internalName(this.property.name)} = [];
             ${myListStatement}
-            _myList.forEach(subNode => {
+            _myList.forEach((subNode: KtList<any>) => {
                 const _transformed = subNode.asJsReadonlyArrayView()[0];
                 if (!!_transformed) {
                     ${ParserGenUtil.internalName(this.property.name)}.push(_transformed);

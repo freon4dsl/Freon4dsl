@@ -54,7 +54,7 @@ export class FreCreatePartAction extends FreAction {
         const propName: string = this.propertyName;
         const theModelElement = box.node[propName];
 
-        const newElement: FreNode = FreLanguage.getInstance().classifier(this.conceptName)?.creator({});
+        const newElement: FreNode = FreLanguage.getInstance().concept(this.conceptName)?.creator({});
         if (newElement === undefined || newElement === null) {
             // TODO Find out why this happens sometimes
             ACTION_LOGGER.error("ActionBox action: Unexpected new element undefined");

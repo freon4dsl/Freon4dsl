@@ -1,5 +1,5 @@
 // import { astToString } from "../../ast-utils/index.js";
-import type { LionWebJsonChunk, LionWebJsonContainment, LionWebJsonMetaPointer, LionWebJsonNode, LionWebJsonReference } from "@lionweb/validation";
+import type { LionWebJsonChunk, LionWebJsonContainment, LionWebJsonMetaPointer, LionWebJsonNode, LionWebJsonReference } from "@lionweb/json";
 import { runInAction } from "mobx";
 import type { FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreNodeReference } from "../../ast/index.js";
@@ -68,9 +68,9 @@ export class FreLionwebSerializer implements FreSerializer {
         const nodes: LionWebJsonNode[] = chunk.nodes;
         // Not using AST.change(...) here, because we don't need an undo for this code
         runInAction( () => {
-            for (const object of nodes) {
+            for (const node of nodes) {
                 // LOGGER.log("node: " + object.concept.key + "     with id " + object.id)
-                const parsedNode = this.toTypeScriptInstanceInternal(object);
+                const parsedNode = this.toTypeScriptInstanceInternal(node);
                 if (parsedNode !== null) {
                     this.nodesfromJson.set(parsedNode.freNode.freId(), parsedNode);
                 }
@@ -167,7 +167,6 @@ export class FreLionwebSerializer implements FreSerializer {
         const conceptMetaPointer = this.convertMetaPointer(jsonMetaPointer, node);
         // LOGGER.log(`Metapointer is ${jsonAsString(conceptMetaPointer)}`);
         const classifier = this.language.classifierByKey(conceptMetaPointer.key);
-        // @ts-expect-error TS2345
         if (isNullOrUndefined(classifier)) {
             LOGGER.error(`1 Cannot read json 3: ${conceptMetaPointer.key} unknown.`);
             return null;
@@ -192,7 +191,7 @@ export class FreLionwebSerializer implements FreSerializer {
             Array.isArray(jsonProperties),
             "Found properties value which is not a Array for node: " + jsonObject.id,
         );
-        for (const jsonProperty of Object.values(jsonProperties)) {
+        for (const jsonProperty of jsonProperties) {
             // LOGGER.log(">> creating property "+ jsonAsString(jsonProperty) + " with value " + jsonProperty.value);
             const jsonMetaPointer = jsonProperty.property;
             const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
@@ -205,8 +204,9 @@ export class FreLionwebSerializer implements FreSerializer {
             }
             if (isNullOrUndefined(property)) {
                 // FIXME known prpblems
-                if (propertyMetaPointer.key !== "qualifiedName")
-                    LOGGER.log("Unknown property: " + propertyMetaPointer.key + " for concept " + concept);
+                if (propertyMetaPointer.key !== "qualifiedName") {
+                    LOGGER.error("Unknown property: " + propertyMetaPointer.key + " for concept " + concept + "  ignored")
+                }
                 continue;
             }
             FreUtils.CHECK(!property.isList, "Lionweb does not support list properties: " + property.name);
@@ -216,16 +216,31 @@ export class FreLionwebSerializer implements FreSerializer {
             );
             const value = jsonProperty.value;
             if (isNullOrUndefined(value)) {
-                throw new Error(`Cannot read json 5: ${jsonAsString(property, 2)} value unset.`);
+                if (property.isOptional) {
+                    freNode[property.name] = undefined
+                    continue
+                } else {
+                    LOGGER.error(`Property ${property.name} should have a value: ${jsonAsString(property, 2)} value is ${value}.`);
+                }
             }
             if (property.type === "string" || property.type === "identifier") {
-                // this.checkValueToType(value, "string", property);
-                freNode[property.name] = value;
+                let stringValue = value as string
+                if (isNullOrUndefined(stringValue)) {
+                    LOGGER.error(`String value for ${property.name} has is incorrect '${value}': initializing to empty string`)
+                    stringValue = ""
+                }
+                freNode[property.name] = stringValue;
             } else if (property.type === "number") {
-                // this.checkValueToType(value, "number", property);
-                freNode[property.name] = Number.parseInt(value as string);
+                let numberValue = Number.parseInt(value as string) 
+                if (Number.isNaN(numberValue)) {
+                    LOGGER.error(`Number value for ${property.name} has incorrect number format '${value}': initializing to 0`)
+                    numberValue = 0 // default if the value is incorrect
+                }
+                freNode[property.name] = numberValue;
             } else if (property.type === "boolean") {
-                // this.checkValueToType(value, "boolean", property);
+                if (value !== "true" && value !== "false")  {
+                    LOGGER.error(`Boolean value for ${property.name} has incorrect boolean format '${value}': initializing to false`)
+                }
                 freNode[property.name] = value === "true";
             }
         }
@@ -263,7 +278,7 @@ export class FreLionwebSerializer implements FreSerializer {
             "Found children value which is not a Array for node: " + jsonObject.id,
         );
         const parsedChildren: ParsedChild[] = [];
-        for (const jsonChild of Object.values(jsonChildren)) {
+        for (const jsonChild of jsonChildren) {
             LOGGER.info(`convertChildProperties ${jsonAsString(jsonChild.containment)}`)
             const jsonMetaPointer = jsonChild.containment;
             const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);
@@ -302,7 +317,7 @@ export class FreLionwebSerializer implements FreSerializer {
             "Found references value which is not a Array for node: " + jsonObject.id,
         );
         const parsedReferences: ParsedReference[] = [];
-        for (const jsonReference of Object.values(jsonReferences)) {
+        for (const jsonReference of jsonReferences) {
             LOGGER.info(`convertReferenceProperties ${jsonAsString(jsonReference.reference)}`)
             const jsonMetaPointer = jsonReference.reference;
             const propertyMetaPointer = this.convertMetaPointer(jsonMetaPointer, jsonObject);

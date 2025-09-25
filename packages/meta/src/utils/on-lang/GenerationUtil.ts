@@ -1,4 +1,5 @@
 import {
+	FreMetaClassifier,
 	FreMetaLanguage,
 	FreMetaPrimitiveProperty,
 	FreMetaPrimitiveType,
@@ -8,10 +9,10 @@ import { Names } from './Names.js';
 
 export class GenerationUtil {
 	/**
-	 * Returns the type of the property 'prop' without taking into account 'isList' or 'isPart'
+	 * Returns the type of the property 'prop' without taking into account 'isList', 'isOptional', or 'isPart'.
 	 */
 	public static getBaseTypeAsString(property: FreMetaProperty): string {
-		const myType = property.type;
+		const myType: FreMetaClassifier = property.type;
 		if (property instanceof FreMetaPrimitiveProperty) {
 			if (myType === FreMetaPrimitiveType.identifier) {
 				return "string";
@@ -29,7 +30,7 @@ export class GenerationUtil {
 	}
 
 	/**
-	 * Returns the type of the property 'prop' without taking into account 'isList' or 'isPart'
+	 * Returns the type of the property 'prop' without taking into account 'isList', 'isOptional', or 'isPart'.
 	 * This returns the Freon type, so also 'identifier', different from the method above.
 	 */
 	public static getFreonBaseTypeAsString(property: FreMetaProperty): string {

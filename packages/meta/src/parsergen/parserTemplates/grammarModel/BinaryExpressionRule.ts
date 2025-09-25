@@ -43,7 +43,7 @@ export class BinaryExpressionRule extends GrammarRule {
          * @param branch
          * @private
          */
-        public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.concept(this.expressionBase)} {
+        public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<any>, sentence: Sentence) : ${Names.concept(this.expressionBase)} {
             // console.log('transform${this.ruleName} called: ' + children.toString());
             let index = 0;
             let list = children.asJsReadonlyArrayView()
@@ -51,7 +51,7 @@ export class BinaryExpressionRule extends GrammarRule {
             while (index < list.length) {
                 let operator = list[index++];
                 let second = list[index++];
-                let combined: ${Names.concept(this.expressionBase)} = null;
+                let combined: ${Names.concept(this.expressionBase)} | null = null;
                 switch (operator) {
                 ${cases.map((c) => `${c}`).join("")}
                     default: {

@@ -18,7 +18,7 @@ export class RHSLimitedRefListWithSeparator extends RHSPropPartWithSeparator {
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
         return `${ParserGenUtil.internalName(this.property.name)} = 
-            this.${mainAnalyserName}.${internalTransformLimitedList}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}]); // RHSLimitedRefListEntryWithSeparator\n`;
+            this.${mainAnalyserName}.${internalTransformLimitedList}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}] as KtList<any>); // RHSLimitedRefListEntryWithSeparator\n`;
     }
 
     toString(depth: number): string {

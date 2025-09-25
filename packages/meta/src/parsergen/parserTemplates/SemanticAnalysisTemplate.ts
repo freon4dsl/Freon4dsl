@@ -36,7 +36,7 @@ export class SemanticAnalysisTemplate {
                             }
                         }
                         // find all concepts that have a single non-optional reference, and possibly other optional props
-                        // the parsing will render a rule thatmatches when only one reference is present
+                        // the parsing will render a rule that matches when only one reference is present
                         // these references need to be checked against their expected (meta)types.
                         const nonOptionals = sub.allProperties().filter((prop) => !prop.isOptional);
                         if (nonOptionals.length === 1 && !nonOptionals[0].isPart) {
@@ -82,7 +82,7 @@ export class SemanticAnalysisTemplate {
         const refWalkerName: string = Names.semanticWalker(language);
         // TODO rethink the replacement of all properties of an object and test it
         const imports = new Imports(relativePath)
-        imports.core = new Set(["FreLanguageConcept", Names.FreLanguage, Names.FreNode, Names.FreNodeReference])
+        imports.core = new Set(["FreLanguageConcept", Names.FreLanguage, Names.FreNode, Names.FreNodeReference, Names.notNullOrUndefined])
         imports.utils.add(Names.walker(language))        
         // start Template
         return `// TEMPLATE SematicAnalysisTemplate.makeCorrector(...)
@@ -109,19 +109,24 @@ export class SemanticAnalysisTemplate {
 
                         // now change all ref errors
                         for (const [toBeReplaced, newObject] of changesToBeMade) {
-                            const myType: FreLanguageConcept = ${Names.FreLanguage}.getInstance().concept(toBeReplaced.freLanguageConcept());
-                            myType.properties.forEach(prop => {
-                                if (prop.type !== "boolean" && !!toBeReplaced[prop.name]) {
-                                    newObject[prop.name] = toBeReplaced[prop.name];
+                            const myType: FreLanguageConcept | undefined = ${Names.FreLanguage}.getInstance().concept(toBeReplaced.freLanguageConcept());
+                            if (notNullOrUndefined(myType)) {
+                                myType.properties.forEach(prop => {
+                                    if (prop.type !== "boolean" && prop.name in toBeReplaced) {
+                                        // @ts-ignore: if prop.name id present, then it is also present in an object of the same type
+                                        newObject[prop.name] = toBeReplaced[prop.name];
+                                    }
+                                });
+                                let parent: ${Names.FreNode} = toBeReplaced.freOwnerDescriptor().owner;
+                                const propName: string = toBeReplaced.freOwnerDescriptor().propertyName;
+                                const propIndex: number | undefined = toBeReplaced.freOwnerDescriptor().propertyIndex;
+                                if (notNullOrUndefined(propIndex)) {
+                                    // @ts-ignore: we are certain that prop.name is present
+                                    parent[propName].splice(propIndex, 1, newObject);
+                                } else {
+                                    // @ts-ignore: we are certain that prop.name is present
+                                    parent[propName] = newObject;
                                 }
-                            });
-                            let parent: ${Names.FreNode} = toBeReplaced.freOwnerDescriptor().owner;
-                            const propName: string = toBeReplaced.freOwnerDescriptor().propertyName;
-                            const propIndex: number = toBeReplaced.freOwnerDescriptor().propertyIndex;
-                            if (propIndex !== undefined) {
-                                parent[propName].splice(propIndex, 1, newObject);
-                            } else {
-                                parent[propName] = newObject;
                             }
                         }
                     }
@@ -132,7 +137,7 @@ export class SemanticAnalysisTemplate {
     makeWalker(language: FreMetaLanguage, relativePath: string): string {
         const className: string = Names.semanticWalker(language);
         const imports = new Imports(relativePath)
-        imports.core = new Set([Names.FreNamedNode, Names.FreLanguage, Names.FreLanguageEnvironment, Names.FreNodeReference, Names.FreNode])
+        imports.core = new Set([Names.FreNamedNode, Names.FreLanguage, Names.FreLanguageEnvironment, Names.FreNodeReference, Names.FreNode, Names.notNullOrUndefined, Names.isNullOrUndefined])
         imports.utils.add(Names.workerInterface(language)).add(Names.defaultWorker(language))
         const everyConceptName: string = Names.allConcepts();
         this.addToImports(this.possibleProblems, imports);
@@ -149,26 +154,26 @@ export class SemanticAnalysisTemplate {
             ${imports.makeImports(language)}
 
             export class ${className} extends ${Names.defaultWorker(language)} implements ${Names.workerInterface(language)} {
-                changesToBeMade: Map<${everyConceptName}, ${everyConceptName}> = null;
+                changesToBeMade: Map<${everyConceptName}, ${everyConceptName}>;
 
                 constructor(changesToBeMade: Map<${everyConceptName}, ${everyConceptName}>) {
                     super();
                     this.changesToBeMade = changesToBeMade;
                 }
 
-                ${this.possibleProblems.map((poss) => `${this.makeVistorMethod(poss)}`).join("\n")}
+                ${this.possibleProblems.map((poss) => `${this.makeVisitorMethod(poss)}`).join("\n")}
 
                 private findReplacement(node: ${Names.allConcepts()}, referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>) {
                     const scoper = ${Names.FreLanguageEnvironment}.getInstance().scoper;
                     const possibles = scoper.getVisibleNodes(node).filter(elem => elem.name === referredElem.name);
                     if (possibles.length > 0) {
                         // element probably refers to something with another type
-                        let replacement: ${Names.allConcepts()} = null;
+                        let replacement: ${Names.allConcepts()} | undefined = undefined;
                         for (const elem of possibles) {
                             const metatype = elem.freLanguageConcept();
                             ${replacementIfStat}
                         }
-                        this.changesToBeMade.set(node, replacement);
+                        if (notNullOrUndefined(replacement)) this.changesToBeMade.set(node, replacement);
                     } else {
                         // true error, or boolean "true" or "false"
                         ${replacementBooleanStat}
@@ -202,8 +207,9 @@ export class SemanticAnalysisTemplate {
         return result;
     }
 
-    private makeVistorMethod(freConcept: FreMetaConcept): string {
+    private makeVisitorMethod(freConcept: FreMetaConcept): string {
         // TODO add replacement of properties that are lists
+
         return `
             /**
              * Test whether the references in 'node' are correct.
@@ -211,14 +217,15 @@ export class SemanticAnalysisTemplate {
              * @param node
              */
             public execBefore${Names.concept(freConcept)}(node: ${Names.concept(freConcept)}): boolean {
-                let referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}>;
+                let referredElem: ${Names.FreNodeReference}<${Names.FreNamedNode}> | undefined;
                 ${freConcept
                     .allReferences()
                     .filter((prop) => !prop.isList)
                     .map(
                         (prop) =>
                             `referredElem = node.${prop.name};
-                if (!!node.${prop.name} && node.${prop.name}.referred === null) { // cannot find a '${prop.name}' with this name
+                if (notNullOrUndefined(node.${prop.name}) && isNullOrUndefined(node.${prop.name}.referred) && notNullOrUndefined(referredElem)) { 
+                    // cannot find a '${prop.name}' with this name
                     this.findReplacement(node, referredElem);
                 }`,
                     )

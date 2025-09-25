@@ -1,13 +1,14 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaLanguage } from '../../languagedef/metalanguage';
+import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
 import { describe, test, expect, beforeEach } from "vitest";
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { Checker } from '../../utils/basic-dependencies/index.js';
-import { ScoperParser } from '../../scoperdef/parser/ScoperParser';
-import { ScopeDef } from '../../scoperdef/metalanguage';
+import { ScoperParser } from '../../scoperdef/parser/ScoperParser.js';
+import { ScopeDef } from '../../scoperdef/metalanguage/index.js';
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking the scoper checker", () => {
-    const testdir = "src/__tests__/scoper-tests/scopeDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "scopeDefFiles/");
     let parser: ScoperParser;
     let checker: Checker<ScopeDef>;
     let language: FreMetaLanguage | undefined;

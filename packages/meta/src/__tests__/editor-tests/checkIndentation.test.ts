@@ -1,7 +1,7 @@
 import { FreMetaClassifier, FreMetaConcept, FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { Checker } from "../../utils/basic-dependencies/index.js";
-import { FreEditParser } from "../../editordef/parser/FreEditParser";
+import { FreEditParser } from "../../editordef/parser/FreEditParser.js";
 import {
     FreEditNormalProjection,
     FreEditProjectionGroup,
@@ -10,6 +10,7 @@ import {
     FreOptionalPropertyProjection,
 } from "../../editordef/metalanguage/index.js";
 import { describe, test, expect, beforeEach } from "vitest";
+import { resolveAstFile, resolveTestDir } from '../TestPathHelpers.js';
 
 function getAndTestProjection(editDef: FreEditUnit, classifier: FreMetaClassifier) {
     const defProjGroup: FreEditProjectionGroup | undefined = editDef.getDefaultProjectiongroup();
@@ -21,7 +22,7 @@ function getAndTestProjection(editDef: FreEditUnit, classifier: FreMetaClassifie
 }
 
 describe("Checking indentation ", () => {
-    const testdir = "src/__tests__/editor-tests/indentationFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "indentationFiles/");
     let parser: FreEditParser;
     let language: FreMetaLanguage | undefined;
     let checker: Checker<FreEditUnit>;
@@ -30,7 +31,8 @@ describe("Checking indentation ", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
+            const astPath: string = resolveAstFile(import.meta.url, "../commonAstFiles", "test-language.ast");
+            language = new LanguageParser().parse(astPath);
             if (!!language) {
                 parser = new FreEditParser(language);
                 checker = parser.checker;

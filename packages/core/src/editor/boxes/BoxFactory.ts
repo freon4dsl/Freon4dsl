@@ -320,7 +320,7 @@ export class BoxFactory {
         // @ts-expect-error
         // todo remove this parameter and adjust the generation in meta
         propertyName: string,
-        children?: (Box | null)[],
+        children?: (Box | undefined)[],
         initializer?: Partial<HorizontalLayoutBox>,
     ): HorizontalLayoutBox {
         if (cacheHorizontalLayoutOff) {

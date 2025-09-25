@@ -10,11 +10,12 @@ import {
 } from '../../languagedef/metalanguage/index.js';
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { describe, test, expect } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 // The tests in this file determine whether the internal structure of a language definition is correct.
 describe("Checking internal structure of language", () => {
     const parser = new LanguageParser();
-    const testdir = "src/__tests__/language-tests/correctDefFiles/internal-structure/";
+    const testdir: string = resolveTestDir(import.meta.url, "correctDefFiles/internal-structure/");
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 

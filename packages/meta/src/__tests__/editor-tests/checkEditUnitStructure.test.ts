@@ -3,7 +3,7 @@ import {
     FreMetaClassifier,
     FreMetaLanguage,
     FreMetaLimitedConcept,
-} from "../../languagedef/metalanguage";
+} from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { Checker, LOG2USER } from "../../utils/basic-dependencies/index.js";
@@ -21,9 +21,10 @@ import {
 } from "../../editordef/metalanguage/index.js";
 import { DefaultEditorGenerator } from "../../editordef/metalanguage/DefaultEditorGenerator.js";
 import { describe, test, expect } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking FretEditUnit: ", () => {
-    const testdir: string = "src/__tests__/editor-tests/correctDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "correctDefFiles/");
     let parser: FreEditParser;
     let language: FreMetaLanguage | undefined;
     let checker: Checker<FreEditUnit>;

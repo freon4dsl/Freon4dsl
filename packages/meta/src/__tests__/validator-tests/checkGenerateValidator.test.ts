@@ -3,15 +3,16 @@ import { describe, test, expect, beforeEach, afterAll } from 'vitest';
 import { MetaLogger } from '../../utils/no-dependencies/index.js';
 import { LanguageParser } from '../../languagedef/parser/LanguageParser.js';
 import * as fs from "fs";
-import { FileUtil } from '../../utils/file-utils';
-import { ValidatorParser } from '../../validatordef/parser/ValidatorParser';
-import { ValidatorGenerator } from '../../validatordef/generator';
-import { ValidatorDef } from '../../validatordef/metalanguage';
+import { FileUtil } from '../../utils/file-utils/index.js';
+import { ValidatorParser } from '../../validatordef/parser/ValidatorParser.js';
+import { ValidatorGenerator } from '../../validatordef/generator/index.js';
+import { ValidatorDef } from '../../validatordef/metalanguage/index.js';
+import { resolveAstFile, resolveOutDir, resolveTestDir } from '../TestPathHelpers.js';
 
 
 describe("Checking the validator generator", () => {
-    const testdir = "src/__tests__/validator-tests/validatorDefFiles/";
-    const outputDir = "src/__tests__/validator-tests/generated1/";
+    const testdir: string = resolveTestDir(import.meta.url, "validatorDefFiles/");
+    const outputDir : string = resolveOutDir(import.meta.url, "generated1/");
     let parser: ValidatorParser;
     let language: FreMetaLanguage | undefined;
     let generator: ValidatorGenerator = new ValidatorGenerator();
@@ -20,7 +21,8 @@ describe("Checking the validator generator", () => {
 
     beforeEach(() => {
         try {
-            language = new LanguageParser().parse("src/__tests__/commonAstFiles/test-language.ast");
+            const astPath: string = resolveAstFile(import.meta.url, "../commonAstFiles", "test-language.ast");
+            language = new LanguageParser().parse(astPath);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 console.log("Language could not be read");

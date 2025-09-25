@@ -1,13 +1,14 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaLanguage } from '../../languagedef/metalanguage';
+import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
 import { LanguageExpressionTester } from "../../langexpressions/parser/LanguageExpressionTester.js";
 import { LanguageExpressionParser } from "../../langexpressions/parser/LanguageExpressionParser.js";
 import { describe, test, expect, beforeEach } from "vitest";
-import { ExpressionGenerationUtil } from '../../langexpressions/generator/ExpressionGenerationUtil';
-import { Imports } from '../../utils/on-lang';
+import { ExpressionGenerationUtil } from '../../langexpressions/generator/ExpressionGenerationUtil.js';
+import { Imports } from '../../utils/on-lang/index.js';
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking generation of expressions", () => {
-    const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "expressionDefFiles/");
     let language: FreMetaLanguage | undefined;
     let expressionDefs: LanguageExpressionTester | undefined;
     let imports: Imports = new Imports();

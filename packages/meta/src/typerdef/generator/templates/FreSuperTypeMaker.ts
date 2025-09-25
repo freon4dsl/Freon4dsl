@@ -11,9 +11,8 @@ import {
     FretEqualsRule,
 } from "../../metalanguage/index.js";
 import { FreTyperGenUtils } from "./FreTyperGenUtils.js";
-import { Names } from "../../../utils/on-lang/index.js";
+import { Imports, Names } from '../../../utils/on-lang/index.js';
 import { FreMetaClassifier, FreMetaLimitedConcept, LangUtil } from "../../../languagedef/metalanguage/index.js";
-import { ListUtil } from '../../../utils/no-dependencies/index.js';
 
 /**
  * This class generates the code for all 'conformsto' entries in the .type file.
@@ -22,7 +21,7 @@ export class FreSuperTypeMaker {
     // @ts-ignore Property is set in the only public method 'makeSuperTypes'.
     typerdef: TyperDef;
 
-    public makeSuperTypes(typerdef: TyperDef, typevarName: string, imports: FreMetaClassifier[]): string {
+    public makeSuperTypes(typerdef: TyperDef, typevarName: string, imports: Imports): string {
         FreTyperGenUtils.types = typerdef.types;
         this.typerdef = typerdef;
         // Find all conformsto rules, which are (1) all FretConformanceRules,
@@ -112,7 +111,7 @@ export class FreSuperTypeMaker {
         binaryExps: FretBinaryExp[],
         varName: string,
         varIsType: boolean,
-        imports: FreMetaClassifier[],
+        imports: Imports,
     ): string {
         let result: string = "";
 
@@ -127,7 +126,7 @@ export class FreSuperTypeMaker {
         return result;
     }
 
-    private makeSuperForExp(exp: FretExp, typevarName: string, imports: FreMetaClassifier[]): string {
+    private makeSuperForExp(exp: FretExp, typevarName: string, imports: Imports): string {
         if (exp instanceof FretWhereExp) {
             return this.makeWhereExp(exp, typevarName, imports);
         } else {
@@ -135,20 +134,22 @@ export class FreSuperTypeMaker {
         }
     }
 
-    private makeWhereExp(exp: FretWhereExp, varName: string, imports: FreMetaClassifier[]): string {
+    private makeWhereExp(exp: FretWhereExp, varName: string, imports: Imports): string {
         let result: string = "/* FretWhereExp */\n";
         const myConditions = exp.conditions;
         myConditions.forEach((cond, index) => {
             if (cond instanceof FretConformsExp) {
-                // tslint:disable-next-line:max-line-length
-                result += `const rhs${index}: ${Names.FreType}[] = this.getSuperTypes(${FreTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)});\n`;
+                imports.core.add("notNullOrUndefined")
+                result += `const param${index} = ${FreTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}
+                const rhs${index}: ${Names.FreType}[] = notNullOrUndefined(param${index}) ? this.getSuperTypes(param${index}) : [];\n`;
             } else if (cond instanceof FretEqualsExp) {
-                result += `const rhs${index}: ${Names.FreType}[] = [${FreTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}];\n`;
+                result += `const param${index} = ${FreTyperGenUtils.makeExpAsType(cond.right, varName, true, imports)}
+                const rhs${index}: ${Names.FreType}[] = notNullOrUndefined(param${index}) ? [param${index}] : [];\n`;
             }
         });
         if (myConditions.length > 1 && !!exp.variable.type) {
             const cls: FreMetaClassifier = exp.variable.type;
-            ListUtil.addIfNotPresent(imports, cls);
+            FreTyperGenUtils.addTypeToImports(cls, imports);
             result += `/* make cartesian product of all conditions */`;
             for (let i = 0; i < myConditions.length; i++) {
                 const propAToBeChanged: string = this.getPropNameFromExp(myConditions[i].left);
@@ -229,9 +230,9 @@ export class FreSuperTypeMaker {
         return "unknown";
     }
 
-    private makeCondition(right: FretExp, partName: string, imports: FreMetaClassifier[]): string {
+    private makeCondition(right: FretExp, partName: string, imports: Imports): string {
         if (!!right.returnType) {
-            ListUtil.addIfNotPresent(imports, right.returnType);
+            FreTyperGenUtils.addTypeToImports(right.returnType, imports);
             return `(${partName} as ${Names.classifier(right.returnType)})`;
         } else {
             return "";

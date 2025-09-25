@@ -59,10 +59,12 @@ import { LOG2USER } from '../../utils/basic-dependencies/index.js';
 
 export class ConceptMaker {
     imports: FreMetaClassifier[] = [];
+    importParsedNodeReference: boolean = false;
     private currentProjectionGroup: FreEditProjectionGroup | undefined = undefined;
     // namedProjections is the list of projections with a different name than the current projection group
     // this list is filled during the build of the template and should alwyas be the last to added
     private namedProjections: FreEditNormalProjection[] = [];
+
 
     generateClassifiers(projectionGroup: FreEditProjectionGroup, conceptsUsed: FreMetaClassifier[]): GrammarRule[] {
         this.currentProjectionGroup = projectionGroup;
@@ -257,9 +259,11 @@ export class ConceptMaker {
                     result = new RHSRefListWithSeparator(prop, joinText); // [ propTypeName / "joinText" ]
                 } else if (item.listInfo?.joinType === ListJoinType.Initiator) {
                     const sub1 = new RHSRefEntry(prop);
+                    this.importParsedNodeReference = true;
                     result = new RHSRefListWithInitiator(prop, sub1, joinText); // `("joinText" propTypeName)*`
                 } else if (item.listInfo?.joinType === ListJoinType.Terminator) {
                     const sub1 = new RHSRefEntry(prop);
+                    this.importParsedNodeReference = true;
                     result = new RHSRefListWithTerminator(prop, sub1, joinText, isSingleEntry); // `(propTypeName "joinText")*`
                 }
             }
@@ -279,6 +283,7 @@ export class ConceptMaker {
             result = new RHSPartOptionalEntry(prop, myProjName); // `${propTypeName} `;
         } else if (!prop.isPart && (!prop.isOptional || inOptionalGroup)) {
             result = new RHSRefEntry(prop); // `${propTypeName} `;
+            this.importParsedNodeReference = true;
         } else if (!prop.isPart && prop.isOptional && !inOptionalGroup) {
             result = new RHSRefOptionalEntry(prop); // `${propTypeName} `;
         }

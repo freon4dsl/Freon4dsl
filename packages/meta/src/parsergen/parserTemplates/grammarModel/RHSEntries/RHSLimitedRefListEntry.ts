@@ -17,7 +17,7 @@ export class RHSLimitedRefListEntry extends RHSPropEntry {
 
     toMethod(index: number, nodeName: string, mainAnalyserName: string): string {
         const baseType: string = GenerationUtil.getBaseTypeAsString(this.property);
-        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformLimitedList}<${baseType}>(${nodeName}[${index}]); // RHSLimitedRefListEntry\n`;
+        return `${ParserGenUtil.internalName(this.property.name)} = this.${mainAnalyserName}.${internalTransformLimitedList}<${baseType}>(${nodeName}.asJsReadonlyArrayView()[${index}]); // RHSLimitedRefListEntry\n`;
     }
 
     toString(depth: number): string {

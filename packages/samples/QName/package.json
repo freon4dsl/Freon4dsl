@@ -8,7 +8,9 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf node_modules/",
-    "build": "npm run generate && tsc && rollup --config",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "generateTypes": "tsc -p tsconfig.build.json",
+    "build": "npm run generate && npm run typecheck && npm run generateTypes && rollup -c",
     "build-samples": "npm run build",
     "compile": "tsc && rollup --config",
     "install-local": "npm install --registry http://localhost:4873",
@@ -19,10 +21,10 @@
     "clean-all": "npm run clean-gen && npm run clean-config && npm run clean-custom"
   },
   "devDependencies": {
-    "@freon4dsl/meta": "~2.0.0-beta.2"
+    "@freon4dsl/meta": "2.0.0-beta.4"
   },
   "dependencies": {
-    "@freon4dsl/core": "~2.0.0-beta.2",
+    "@freon4dsl/core": "~2.0.0-beta.4",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",
     "mobx": "^6.12.3",

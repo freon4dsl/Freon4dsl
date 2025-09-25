@@ -33,7 +33,7 @@ concept BaseProduct {
     yieldsProfit: boolean;
     range: number;
     nrOfUse: number;
-    // The previoud two properties are present to show the different options for displaying numbers.
+    // The previous two properties are present to show the different options for displaying numbers.
     // The following property is present to show the use of an external DatePicker component.
     date: string;
 }

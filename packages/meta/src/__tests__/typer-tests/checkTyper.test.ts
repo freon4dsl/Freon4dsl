@@ -2,11 +2,12 @@ import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { LanguageParser } from "../../languagedef/parser/LanguageParser";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { TyperDef } from "../../typerdef/metalanguage/index.js";
-import { FreTyperMerger } from "../../typerdef/parser/FreTyperMerger";
+import { FreTyperMerger } from "../../typerdef/parser/FreTyperMerger.js";
 import { describe, test, expect, beforeEach } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking typer", () => {
-    const testdir = "src/__tests__/typer-tests/faultyDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "faultyDefFiles/");
     let parser: FreTyperMerger;
     let language: FreMetaLanguage | undefined;
     MetaLogger.muteAllLogs();

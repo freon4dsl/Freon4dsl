@@ -41,6 +41,6 @@ export class JsonModelCreator {
             });
             correctModel.functions.push(aFunction);
         })
-        return correctModel;
+        return correctModel!;
     }
 }

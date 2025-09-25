@@ -3,7 +3,7 @@ import { FreMetaBinaryExpressionConcept, FreMetaClassifier } from "../../../lang
 import { getTypeCall } from "./GrammarUtils.js";
 import { BinaryExpMaker } from "../BinaryExpMaker.js";
 import { ParserGenUtil } from "../ParserGenUtil.js";
-import { Names } from "../../../utils/on-lang/index.js";
+import { Names } from '../../../utils/on-lang/index.js';
 
 export class ChoiceRule extends GrammarRule {
     implementors: FreMetaClassifier[];
@@ -56,11 +56,12 @@ export class ChoiceRule extends GrammarRule {
     }
 
     toMethod(): string {
+        const baseType: string = Names.classifier(this.myConcept);
         return `
             ${ParserGenUtil.makeComment(this.toGrammar())}
-            public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${Names.classifier(this.myConcept)} {
+            public transform${this.ruleName}(nodeInfo: SpptDataNodeInfo, children: KtList<object>, sentence: Sentence) : ${baseType} {
                 // console.log('3 transform${this.ruleName} called: ' + children.toString());
-                return children.asJsReadonlyArrayView()[0];
+                return children.asJsReadonlyArrayView()[0] as ${baseType};
             }`;
     }
 }

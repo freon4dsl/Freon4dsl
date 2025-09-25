@@ -54,7 +54,7 @@ export class LanguageTemplate {
             }
 
             function describe${Names.classifier(language.modelConcept)}(): FreLanguageModel {
-                    const model: FreLanguageModel =             {
+                    const model: FreLanguageModel<MyLanguage.${Names.classifier(language.modelConcept)}> = {
                         typeName: "${Names.classifier(language.modelConcept)}",
                         id: "${language.modelConcept.id}",
                         key: "${language.modelConcept.key}",
@@ -115,7 +115,11 @@ export class LanguageTemplate {
                                     });`,
                         )
                         .join("\n")}
-                        return model;
+                        // Type cast is here to avoid function-parameter variance issue:
+                        // function parameters are contravariant: a function that 
+                        // accepts a more specific param is not assignable to one 
+                        // that claims it can accept a broader param.
+                        return model as unknown as FreLanguageModel;
                     }
 
             ${language.units
@@ -123,7 +127,7 @@ export class LanguageTemplate {
                     (modelunit) =>
                         `
                 function describe${Names.classifier(modelunit)}(): FreLanguageModelUnit {
-                    const modelunit: FreLanguageModelUnit =             {
+                    const modelunit: FreLanguageModelUnit<MyLanguage.${Names.classifier(modelunit)}> =             {
                         typeName: "${Names.classifier(modelunit)}",
                         id: "${modelunit.id}",
                         key: "${modelunit.key}",
@@ -188,7 +192,11 @@ export class LanguageTemplate {
                                     });`,
                                 )
                                 .join("\n")}
-                        return modelunit;
+                        // Type cast is here to avoid function-parameter variance issue:
+                        // function parameters are contravariant: a function that 
+                        // accepts a more specific param is not assignable to one 
+                        // that claims it can accept a broader param.
+                        return modelunit as unknown as FreLanguageModelUnit;
                     }`,
                 )
                 .join("\n")}
@@ -198,7 +206,7 @@ export class LanguageTemplate {
                     (concept) =>
                         `
                 function describe${Names.concept(concept)}(): FreLanguageConcept {
-                    const concept: FreLanguageConcept =             {
+                    const concept: FreLanguageConcept<MyLanguage.${Names.concept(concept)}> =             {
                         typeName: "${Names.concept(concept)}",
                         id: "${concept.id}",
                         key: "${concept.key}",
@@ -210,10 +218,10 @@ export class LanguageTemplate {
                         language: "${concept.originalOwningLanguage.key}",
                         isNamedElement: ${concept.allPrimProperties().some((p) => p.name === "name")},
                         trigger: "${Names.concept(concept)}",
-                        constructor: (id?: string) => { return ${concept.isAbstract ? "null" : `new MyLanguage.${Names.concept(concept)}(id)`}; },
-                        creator: (data: Partial<MyLanguage.${Names.concept(concept)}>) => { return ${concept.isAbstract ? "null" : `MyLanguage.${Names.concept(concept)}.create(data)`}; },
+                        constructor: (id?: string) => { return ${concept.isAbstract ? "undefined" : `new MyLanguage.${Names.concept(concept)}(id)`}; },
+                        creator: (data: Partial<MyLanguage.${Names.concept(concept)}>) => { return ${concept.isAbstract ? "undefined" : `MyLanguage.${Names.concept(concept)}.create(data)`}; },
                         properties: new Map< string, FreLanguageProperty>(),
-                        baseName: ${!!concept.base ? `"${Names.classifier(concept.base.referred)}"` : "null"},
+                        baseName: ${!!concept.base ? `"${Names.classifier(concept.base.referred)}"` : "undefined"},
                         subConceptNames: [${FreMetaClassifier.subConcepts(concept)
                             .map((sub) => '"' + Names.classifier(sub) + '"')
                             .join(", ")}]
@@ -228,7 +236,7 @@ export class LanguageTemplate {
                                 key: "${prop.key}",
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
-                                isOptional: false, // ${prop.isOptional},
+                                isOptional: ${prop.isOptional},
                                 isPublic: ${prop.isPublic},
                                 language: "${prop.language.key}",
                                 propertyKind: "primitive"
@@ -269,7 +277,11 @@ export class LanguageTemplate {
                             });`,
                         )
                         .join("\n")}
-                return concept;
+                    // Type cast is here to avoid function-parameter variance issue:
+                    // function parameters are contravariant: a function that 
+                    // accepts a more specific param is not assignable to one 
+                    // that claims it can accept a broader param.
+                    return concept as unknown as FreLanguageConcept;
             }`,
                 )
                 .join("\n")}
@@ -286,8 +298,6 @@ export class LanguageTemplate {
                         isNamedElement: ${intface.allPrimProperties().some((p) => p.name === "name")},
                         isNamespace: false,
                         properties: new Map< string, FreLanguageProperty>(),
-                        constructor: undefined,
-                        creator: undefined,
                         language: "${intface.originalOwningLanguage.NAME}",
                         subConceptNames: [${LangUtil.subClassifiers(intface)
                             .map((sub) => '"' + Names.classifier(sub) + '"')
@@ -344,7 +354,11 @@ export class LanguageTemplate {
                             });`,
                     )
                     .join("\n")}
-                return intface;
+                    // Type cast is here to avoid function-parameter variance issue:
+                    // function parameters are contravariant: a function that 
+                    // accepts a more specific param is not assignable to one 
+                    // that claims it can accept a broader param.
+                    return intface as unknown as FreLanguageConcept;
             }`,
                 )
                 .join("\n")}

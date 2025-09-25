@@ -82,6 +82,7 @@ export class Names {
     static listUtil: string = "ListUtil";
     static brackets: string = "Brackets";
     static isNullOrUndefined: string = 'isNullOrUndefined';
+    static notNullOrUndefined: string = 'notNullOrUndefined';
 
     static environment(language: FreMetaLanguage) {
         return this.startWithUpperCase(language?.name) + "Environment";

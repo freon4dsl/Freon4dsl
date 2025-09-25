@@ -1,13 +1,14 @@
 import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
-import { FreMetaLanguage } from '../../languagedef/metalanguage';
+import { FreMetaLanguage } from '../../languagedef/metalanguage/index.js';
 import { LanguageExpressionTester } from "../../langexpressions/parser/LanguageExpressionTester.js";
 import { LanguageExpressionParser } from "../../langexpressions/parser/LanguageExpressionParser.js";
 import { describe, test, expect, beforeEach } from "vitest";
-import { ExpressionGenerationUtil } from '../../langexpressions/generator/ExpressionGenerationUtil';
-import { Imports } from '../../utils/on-lang';
+import { ExpressionGenerationUtil } from '../../langexpressions/generator/ExpressionGenerationUtil.js';
+import { Imports } from '../../utils/on-lang/index.js';
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking generation of expressions", () => {
-    const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "expressionDefFiles/");
     let language: FreMetaLanguage | undefined;
     let expressionDefs: LanguageExpressionTester | undefined;
     let imports: Imports = new Imports();
@@ -112,8 +113,8 @@ describe("Checking generation of expressions", () => {
             DDconceptExps!.exps.forEach((exp) => {
                 resultStr += ExpressionGenerationUtil.langExpToTypeScript(exp, "node", imports) + "\n";
             });
-            // console.log(resultStr);
-            expect(resultStr.includes("LanguageEnvironment.getInstance().typer.inferType(node.DDprop7).toAstElement()")).toBeTruthy();
+            console.log(resultStr);
+            expect(resultStr.includes("LanguageEnvironment.getInstance().typer.inferType(node.DDprop7)?.toAstElement()")).toBeTruthy();
             expect(resultStr.includes("node.DDprop8.map((x: BB) => LanguageEnvironment.getInstance().typer.inferType(x).toAstElement())")).toBeTruthy();
         } else {
             console.log("Language or Expressions not present");

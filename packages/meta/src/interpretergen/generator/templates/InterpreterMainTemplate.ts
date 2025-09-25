@@ -43,20 +43,22 @@ export class InterpreterMainTemplate {
          * Ensures all internal interpreter state is cleaned when creating a new instance.
          */
         export class ${Names.interpreterName(language)} implements ${Names.FreInterpreter}{
-            private static  main: IMainInterpreter = null;
-
+            private static main: IMainInterpreter | null = null;
+         
             constructor() {
-                if(${Names.interpreterName(language)}.main === null) {
-                    ${Names.interpreterName(language)}.main = MainInterpreter.instance(${Names.interpreterInitname(language)}, getConceptFunction, getPropertyFunction);
-                }
+                ${Names.interpreterName(language)}.getMain();
+            }
+        
+            private static getMain(): IMainInterpreter {
+                return this.main ??= MainInterpreter.instance(${Names.interpreterInitname(language)}, getConceptFunction, getPropertyFunction);
             }
 
             setTracing(value: boolean) {
-                ${Names.interpreterName(language)}.main.setTracing(value);
+                ${Names.interpreterName(language)}.getMain().setTracing(value);
             }
 
             getTrace(): InterpreterTracer {
-                return ${Names.interpreterName(language)}.main.getTrace()
+                return ${Names.interpreterName(language)}.getMain().getTrace()
             }
 
             evaluate(node: Object): RtObject {
@@ -64,9 +66,9 @@ export class InterpreterMainTemplate {
             }
             
             evaluateWithContext(node: Object, ctx: InterpreterContext): RtObject {
-                ${Names.interpreterName(language)}.main.reset();
+                ${Names.interpreterName(language)}.getMain().reset();
                 try {
-                    return ${Names.interpreterName(language)}.main.evaluate(node, ctx);
+                    return ${Names.interpreterName(language)}.getMain().evaluate(node, ctx);
                 } catch (e: any) {
                     return new RtError(e.message);
                 }

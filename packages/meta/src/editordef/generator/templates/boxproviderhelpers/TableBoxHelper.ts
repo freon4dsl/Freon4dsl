@@ -49,7 +49,16 @@ export class TableBoxHelper {
             return `private ${NamesForEditor.tableProjectionMethod(projection)}(): TableRowBox {
                         const cells: Box[] = [];
                         ${cellDefs.map((cellDef) => `cells.push(${cellDef})`).join(";\n")}
-                        return TableUtil.rowBox(this._node, this._node.freOwnerDescriptor().propertyName, "${Names.classifier(concept)}", cells, this._node.freOwnerDescriptor().propertyIndex, ${hasHeaders});
+                        return TableUtil.rowBox(
+                            this._node, 
+                            this._node.freOwnerDescriptor().propertyName, 
+                            "${Names.classifier(concept)}", 
+                            cells, 
+                            typeof this._node.freOwnerDescriptor().propertyIndex === "number"
+                              ? this._node.freOwnerDescriptor().propertyIndex as number
+                              : 0,
+                            ${hasHeaders}
+                        );
                     }`;
         } else {
             console.log("INTERNAL FREON ERROR in generateTableCellFunction");

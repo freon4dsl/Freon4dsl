@@ -7,6 +7,7 @@ export class GrammarPart {
     unit: FreMetaUnitDescription | undefined;
     rules: GrammarRule[] = [];
     private imports: FreMetaClassifier[] = [];
+    importParsedNodeReference: boolean = false;
 
     public addToImports(extra: FreMetaClassifier | FreMetaClassifier[]) {
         if (!!extra) {
@@ -29,14 +30,14 @@ export class GrammarPart {
             type KtList,
             type Sentence,
             type SpptDataNodeInfo
-        } from "net.akehurst.language-agl-processor/net.akehurst.language-agl-processor.mjs";
+        } from "net.akehurst.language-agl-processor";
         import { ${Names.FreNodeReference} } from "@freon4dsl/core";` : ""}
         ${
             this.imports.length > 0
                 ? `import { ${this.imports.map((imp) => `${Names.classifier(imp)}`).join(", ")} } from "${relativePath}${LANGUAGE_GEN_FOLDER}/index.js";`
                 : ""
         }
-        import { PrimValueType, ${Names.syntaxAnalyser(language)} } from "./${Names.syntaxAnalyser(language)}.js";
+        import { PrimValueType, ${Names.syntaxAnalyser(language)}${this.importParsedNodeReference ? `, ParsedNodeReference` : ``} } from "./${Names.syntaxAnalyser(language)}.js";
 
         export class ${className} {
             mainAnalyser: ${Names.syntaxAnalyser(language)};

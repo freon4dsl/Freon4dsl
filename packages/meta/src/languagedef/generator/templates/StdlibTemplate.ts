@@ -58,13 +58,13 @@ export class StdlibTemplate {
 
             /**
              * Returns the element named 'name', if it can be found in this library.
-             * If the element can not be found, 'null' is returned.
+             * If the element can not be found, 'undefined' is returned.
              * When 'metatype' is provided, the element is only returned when it is
              * an instance of this metatype.
              * @param name
              * @param metatype
              */
-            public find(name: string, metatype?: ${Names.metaType()}) : ${Names.FreNamedNode} {
+            public find(name: string, metatype?: ${Names.metaType()}) : ${Names.FreNamedNode} | undefined {
                 if (!!name) {
                     const possibles = this.elements.filter((elem) => elem.name === name);
                     if (possibles.length !== 0) {
@@ -79,7 +79,7 @@ export class StdlibTemplate {
                         }
                     }
                 }
-                return null;
+                return undefined;
             }
         }`;
     }

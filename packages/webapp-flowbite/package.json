@@ -33,6 +33,7 @@
     "@freon4dsl/weblib-flowbite": "2.0.0-beta.4",
     "@freon4dsl/samples-scoping-example": "2.0.0-beta.4",
     "@freon4dsl/samples-course-schedule": "2.0.0-beta.4",
+      "@freon4dsl/samples-insurance": "2.0.0-beta.4",
     "@types/node": "^20.14.1",
     "kotlin": "^1.5.21",
     "lodash": "^4.17.21",

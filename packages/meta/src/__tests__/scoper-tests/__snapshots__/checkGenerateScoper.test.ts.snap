@@ -101,7 +101,7 @@ export class ROOTScoper extends FreScoperBase {
             // generated from 'owner().if(BB).type();'
             const xx2 = LanguageEnvironment.getInstance()
                 .typer.inferType(FreLanguage.getInstance().metaConformsToType(node.freOwner(), "BB") ? (node.freOwner() as BB) : undefined)
-                .toAstElement();
+                ?.toAstElement();
             if (!isNullOrUndefined(xx2)) {
                 result.push(new FreNamespaceInfo(xx2, false));
             }
@@ -117,7 +117,7 @@ export class ROOTScoper extends FreScoperBase {
             // generated from 'owner().if(BB).type();'
             const xx1 = LanguageEnvironment.getInstance()
                 .typer.inferType(FreLanguage.getInstance().metaConformsToType(node.freOwner(), "BB") ? (node.freOwner() as BB) : undefined)
-                .toAstElement();
+                ?.toAstElement();
             if (!isNullOrUndefined(xx1)) {
                 result.push(new FreNamespaceInfo(xx1, false));
             }

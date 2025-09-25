@@ -33,7 +33,7 @@ export class EditorDefTemplate {
         const imports = new Imports(relativePath)
         // const languageImports: string[] = [];
         // const editorImports: string[] = [];
-        imports.core.add(Names.FreLanguage).add("FreProjectionHandler").add("FreBoxProvider");
+        imports.core.add(Names.FreLanguage).add("FreProjectionHandler").add("FreBoxProvider").add("FreLanguageConcept");
 
         language.concepts
             .filter((c) => !(c instanceof FreMetaLimitedConcept || c.isAbstract))
@@ -204,6 +204,19 @@ export class EditorDefTemplate {
                     ${tableHeaderInfo.map((constr) => constr).join(",\n")}
                 ]);
             }
+            
+            /**
+             * Helper function to ensure that the meta information for typeName can be found.
+             * @param typeName
+             */
+            export function conceptRequired(typeName: string): FreLanguageConcept {
+                const c = ${Names.FreLanguage}.getInstance().concept(typeName);
+                if (!c) {
+                    throw new Error(\`Concept '\${typeName}' not found in language.\`);
+                }
+                return c;
+            }
+
 
             /**
              * Adds trigger and reference shortcut info to the in-memory representation of structure of the language metamodel.
@@ -212,13 +225,13 @@ export class EditorDefTemplate {
                  ${conceptsWithTrigger
                      .map(
                          (element) =>
-                             `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").trigger = "${element.trigger}";`,
+                             `conceptRequired("${Names.concept(element.concept)}").trigger = "${element.trigger}";`,
                      )
                      .join("\n")}
                  ${conceptsWithRefShortcut
                      .map(
                          (element) =>
-                             `${Names.FreLanguage}.getInstance().concept("${Names.concept(element.concept)}").referenceShortcut =
+                             `conceptRequired("${Names.concept(element.concept)}").referenceShortcut =
                     {
                         propertyName: "${element.property.name}",
                         conceptName: "${element.property.type.name}"

@@ -1,14 +1,15 @@
 <script lang="ts">
+    import { flushSync, tick } from "svelte"
     import { CHECKBOX_LOGGER } from './ComponentLoggers.js';
 
     /**
      * This component shows a boolean value as checkbox.
      */
-    import { BooleanControlBox, notNullOrUndefined } from '@freon4dsl/core';
+    import { BooleanControlBox, FreLanguage, isNullOrUndefined, notNullOrUndefined } from "@freon4dsl/core"
     import { componentId } from '../index.js';
     import { onMount } from 'svelte';
-    import '@material/web/checkbox/checkbox.js';
-    import { MdCheckbox } from '@material/web/checkbox/checkbox.js';
+    // import '@material/web/checkbox/checkbox.js';
+    // import { MdCheckbox } from '@material/web/checkbox/checkbox.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     // Props
@@ -17,9 +18,11 @@
     const LOGGER = CHECKBOX_LOGGER;
 
     let id: string = notNullOrUndefined(box) ? componentId(box) : 'checkbox-for-unknown-box';
-    let inputElement: MdCheckbox;
+    let inputElement: HTMLInputElement;
     let value = $state((box as BooleanControlBox).getBoolean());
 
+    let indeterminate = $state((box as BooleanControlBox).getBoolean() === null || (box as BooleanControlBox).getBoolean() === undefined);
+    let isOptional: boolean = false
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
@@ -31,7 +34,7 @@
     }
 
     const refresh = (why?: string): void => {
-        LOGGER.log('REFRESH BooleanControlBox: ' + why);
+        LOGGER.log('REFRESH BooleanCheckBoxComponent: ' + why);
         value = box.getBoolean();
     };
 
@@ -43,38 +46,56 @@
         // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        isOptional = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.isOptional || false
+        // LOGGER.log(`EFFECT for '${box.propertyName}', property '${property?.name}' optional '${property?.isOptional} `)
+        // isOptional = (isNullOrUndefined(property) ? false : property.isOptional)        
     });
 
-    const onClick = (event: MouseEvent) => {
+    /**
+     * Deal with three values login ourselves
+     * @param event
+     */
+    const onClick= (event: Event) => {
         event.stopPropagation();
         LOGGER.log(
-            'CheckBoxComponent.onClick for box ' + box.role + ', box value: ' + box.getBoolean()
+            `ONCLICK IN  box for '${box.propertyName}' value: ${box.getBoolean()} indeterminate: ${indeterminate} isOptional: ${isOptional}`
         );
-    };
-
-    const onChange = (event: MouseEvent) => {
-        value = inputElement.checked;
-        box.setBoolean(value);
-        if (box.selectable) {
-            editor.selectElementForBox(box);
+        value = box.getBoolean() // inputElement.checked;
+        if (isOptional) {
+            if (isNullOrUndefined(value)) {
+                box.setBoolean(false)
+                indeterminate = false
+            } else if (value === true) {
+                box.setBoolean(undefined)
+                indeterminate = true
+            } else {
+                box.setBoolean(true)
+                indeterminate = false
+            }
+        } else {
+            if (value === true) {
+                box.setBoolean(false)
+            } else {
+                box.setBoolean(true)
+            }
         }
-        event.stopPropagation();
         LOGGER.log(
-            'CheckBoxComponent.onClick for box ' + box.role + ', box value: ' + box.getBoolean()
+            `ONCLICK OUT box value: ${box.getBoolean()} indeterminate: ${indeterminate}`
         );
-    };
+    }
 </script>
 
-<span {id} class="boolean-checkbox-component {box.cssClass}">
+<!--<span {id} class="boolean-checkbox-component {box.cssClass}">-->
     <!-- svelte-ignore a11y_click_events_have_key_events   -->
-    <md-checkbox
+    <input {id} class="boolean-checkbox-component {box.cssClass}"
+        type="checkbox"
         aria-label={id}
         aria-checked="mixed"
         onclick={onClick}
-        onchange={onChange}
+        bind:indeterminate
         bind:this={inputElement}
         checked={value}
         role="checkbox"
         tabindex="0"
-    ></md-checkbox>
-</span>
+    >
+<!--</span>-->

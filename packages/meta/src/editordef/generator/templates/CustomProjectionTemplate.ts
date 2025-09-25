@@ -20,7 +20,7 @@ export class CustomProjectionTemplate {
              */
             export class ${Names.customProjection(language)} implements ${Names.FreProjection} {
                 name: string = "Custom";
-                handler: FreProjectionHandler;
+                handler!: FreProjectionHandler;  // will get a value in Environment 
                 nodeTypeToBoxMethod: Map<string, (node: ${Names.FreNode}) => ${Names.Box}> =
                     new Map<string, (node: ${Names.FreNode}) => ${Names.Box}>([
                         // register your custom box methods here
@@ -34,7 +34,12 @@ export class CustomProjectionTemplate {
 
                 // add your custom methods here
 
-                // BOX_FOR_CONCEPT(node: NAME_OF_CONCEPT) : ${Names.Box} { ... }
+                // BOX_FOR_CONCEPT(node: FreNode): ${Names.Box} { ... }
+                // Note: The map type is (node: FreNode) => Box, which means handlers
+                // must accept *any* FreNode. A method with signature (node: NAME_OF_CONCEPT): Box
+                // is not assignable, even though EuroLiteral extends FreNode, because
+                // function parameters are checked contravariantly in TypeScript.
+                // => Fix: declare the handler as (node: FreNode) and cast/narrow inside.
 
                 // TABLE_DEFINITION_FOR_CONCEPT() : ${Names.FreTableDefinition} { ... }
             }

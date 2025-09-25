@@ -18,13 +18,16 @@ export class PartPropertyBoxHelper {
         const featureType = Names.classifier(appliedFeature.type);
         this._myTemplate.imports.language.add(featureType);
         this._myTemplate.imports.root.add(Names.LanguageEnvironment);
-        this._myTemplate.imports.core.add(Names.FreNodeReference).add("BoxUtil");
+        this._myTemplate.imports.core.add(Names.FreNodeReference).add("BoxUtil"). add("FreNamedNode");
         return `BoxUtil.referenceBox(
                                 ${element},
                                 "${appliedFeature.name}",
-                                (selected: string | ${featureType}) => {
-                                    ${element}.${appliedFeature.name} = ${Names.FreNodeReference}.create<${featureType}>(
-                                               selected, "${featureType}" );
+                                (selected: string | FreNamedNode) => {
+                                const ref =
+                                    typeof selected === "string"
+                                    ? ${Names.FreNodeReference}.create<${featureType}>(selected, "${featureType}")
+                                    : ${Names.FreNodeReference}.create<${featureType}>(selected as ${featureType}, "${featureType}");
+                                    ${element}.${appliedFeature.name} = ref;
                                 },
                                 ${Names.LanguageEnvironment}.getInstance().scoper
                )`;

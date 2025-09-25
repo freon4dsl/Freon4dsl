@@ -17,31 +17,31 @@ export enum BoolDisplay {
 export class BooleanControlBox extends Box {
     readonly kind: string = "BooleanControlBox";
     showAs: BoolDisplay = BoolDisplay.RADIO_BUTTON;
-    labels: { yes: string; no: string } = { yes: "true", no: "false" };
-    $getBoolean: () => boolean;
-    $setBoolean: (newValue: boolean) => void;
+    labels: { yes: string; no: string, unknown?: string } = { yes: "true", no: "false", unknown: "unknown" };
+    $getBoolean: () => boolean| undefined;
+    $setBoolean: (newValue: boolean| undefined) => void;
 
     /**
      * Run the setBoolean() as defined by the user of this box inside a mobx action.
      * @param newValue
      */
-    setBoolean(newValue: boolean): void {
-        LOGGER.log("setBoolean to " + newValue);
+    setBoolean(newValue: boolean | undefined): void {
+        LOGGER.log(`setBoolean to '${newValue}' isUndefined: ${newValue === undefined}  typeof: ${typeof newValue}` );
         AST.changeNamed("BooleanControlBox.setBoolean", () => {
             this.$setBoolean(newValue);
         })
         this.isDirty();
     }
 
-    getBoolean(): boolean {
+    getBoolean(): boolean | undefined {
         return this.$getBoolean();
     }
 
     constructor(
         node: FreNode,
         role: string,
-        getBoolean: () => boolean,
-        setBoolean: (newValue: boolean) => void,
+        getBoolean: () => boolean| undefined,
+        setBoolean: (newValue: boolean| undefined) => void,
         initializer?: Partial<BooleanControlBox>,
     ) {
         super(node, role);

@@ -15,7 +15,7 @@ export class CustomScoperTemplate {
          * custom code for scoping.
          */
         export class ${Names.customScoper(language)} implements ${Names.FreScoperPart} {
-            mainScoper: ${Names.FreCompositeScoper};
+            mainScoper!: ${Names.FreCompositeScoper};
 
             /**
              *   Returns all elements that are visible in the namespace containing '_node'. Note that '_node' can 

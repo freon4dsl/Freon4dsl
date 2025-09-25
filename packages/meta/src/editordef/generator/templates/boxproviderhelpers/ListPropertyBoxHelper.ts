@@ -34,7 +34,8 @@ export class ListPropertyBoxHelper {
     public getJoinEntry(listJoin: FreEditListInfo): string {
         let joinEntry: string = `{ text:"${listJoin.joinText}", type:"${listJoin.joinType}" }`;
         if (listJoin.joinType === ListJoinType.NONE || !(listJoin.joinText?.length > 0)) {
-            joinEntry = "null";
+            this._myTemplate.imports.core.add("FreListInfo");
+            joinEntry = "FreListInfo.NullListInfo";
         }
         return joinEntry;
     }

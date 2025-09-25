@@ -56,8 +56,8 @@ export class FreTypeConceptMaker {
 
                 ${
                     !hasSuper
-                        ? `toAstElement(): ${Names.FreNode} {
-                    return null;
+                        ? `toAstElement(): ${Names.FreNode} | undefined {
+                    return undefined;
                 }`
                         : ``
                 }

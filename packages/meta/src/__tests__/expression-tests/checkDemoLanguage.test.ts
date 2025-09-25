@@ -1,11 +1,12 @@
-import { LanguageParser } from "../../languagedef/parser/LanguageParser";
-import { LanguageExpressionParser } from "../../langexpressions/parser/LanguageExpressionParser";
+import { LanguageParser } from "../../languagedef/parser/LanguageParser.js";
+import { LanguageExpressionParser } from "../../langexpressions/parser/LanguageExpressionParser.js";
 import { MetaLogger } from "../../utils/no-dependencies/index.js";
 import { FreMetaLanguage } from "../../languagedef/metalanguage/index.js";
 import { describe, test, expect } from "vitest";
+import { resolveTestDir } from '../TestPathHelpers.js';
 
 describe("Checking expression parser on syntax errors", () => {
-    const testdir = "src/__tests__/expression-tests/expressionDefFiles/";
+    const testdir: string = resolveTestDir(import.meta.url, "expressionDefFiles/");
     MetaLogger.muteAllLogs();
     MetaLogger.muteAllErrors();
 
