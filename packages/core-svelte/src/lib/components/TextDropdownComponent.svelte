@@ -144,7 +144,7 @@
         }
         allOptions = getOptions();
         setFiltered(
-            MatchUtil.matchingOptions(text.substring(0, details.caret), allOptions)
+            MatchUtil.partiallyMatchingOptions(text.substring(0, details.caret), allOptions)
         );
         makeFilteredOptionsUnique();
         // Only one option and has been fully typed in, use this option without waiting for the ENTER key
@@ -177,7 +177,7 @@
         );
         allOptions = getOptions();
         setFiltered(
-            MatchUtil.matchingOptions(text.substring(0, details.caret), allOptions)
+            MatchUtil.partiallyMatchingOptions(text.substring(0, details.caret), allOptions)
         );
         makeFilteredOptionsUnique();
     };
@@ -401,11 +401,11 @@
                 setFiltered(allOptions.filter(() => true));
             } else {
                 setFiltered(
-                    MatchUtil.matchingOptions(text.substring(0, details.caret), allOptions)
+                    MatchUtil.partiallyMatchingOptions(text.substring(0, details.caret), allOptions)
                 );
             }
         } else {
-            setFiltered(MatchUtil.matchingOptions(text.substring(0, 0), allOptions))
+            setFiltered(MatchUtil.partiallyMatchingOptions(text.substring(0, 0), allOptions))
         }
         makeFilteredOptionsUnique();
     };
@@ -440,7 +440,7 @@
         isEditing = false;
         if (dropdownShown) {
             allOptions = getOptions();
-            let matchingOptions: SelectOption[] = MatchUtil.matchingOptions(text, allOptions)
+            let matchingOptions: SelectOption[] = MatchUtil.fullMatchingOptions(text, allOptions)
             // let validOption = allOptions.find((o) => o.label === text);
             if (matchingOptions.length === 1 && MatchUtil.isPrefixOf(text, matchingOptions[0].label)) {
             // if (!!validOption && validOption.id !== noOptionsId) {

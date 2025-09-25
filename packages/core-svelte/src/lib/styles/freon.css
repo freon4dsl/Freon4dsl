@@ -468,7 +468,7 @@
 .render-component-unselected {
     border: none;
 }
-.render-component-selected {
+.render-component-selected > span {
     outline-style: solid;
     outline-width: 1px;
 }
@@ -531,6 +531,7 @@
 
 .table-cell-component {
     display: flex;
+    align-self: auto;
     align-items: flex-start;
     box-sizing: border-box;
     align-self: baseline; /* isn't this the default? */
