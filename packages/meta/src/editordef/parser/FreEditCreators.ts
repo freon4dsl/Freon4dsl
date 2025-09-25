@@ -462,6 +462,9 @@ export function createBoolKeywords(data: Partial<FreEditBoolKeywords>): FreEditB
     if (!!data.falseKeyword) {
         result.falseKeyword = data.falseKeyword;
     }
+    if (!!data.undefinedKeyword) {
+        result.undefinedKeyword = data.undefinedKeyword;
+    }
     if (!!data.location) {
         result.location = data.location;
         result.location.filename = currentFileName;

@@ -11,12 +11,11 @@
         ARROW_RIGHT,
         ARROW_UP,
         BooleanControlBox,
-        CONTROL,
+        CONTROL, FreLanguage,
         notNullOrUndefined,
         SHIFT
-    } from '@freon4dsl/core';
+    } from "@freon4dsl/core"
     import { onMount } from 'svelte';
-    import { MdRadio } from '@material/web/radio/radio.js';
     import type { FreComponentProps } from './svelte-utils/FreComponentProps.js';
 
     const LOGGER = RADIO_LOGGER;
@@ -24,12 +23,13 @@
     let { editor, box }: FreComponentProps<BooleanControlBox> = $props();
 
     let id: string = box.id;
-    let trueElement: MdRadio;
-    let falseElement: MdRadio;
-    let currentValue: boolean = $state(box.getBoolean());
+    let trueElement: HTMLInputElement;
+    let falseElement: HTMLInputElement;
+    let undefinedElement: HTMLInputElement;
+    let currentValue: boolean | undefined = $state(box.getBoolean());
     let ariaLabel = 'toBeDone'; // todo create useful aria-label
     let isHorizontal: boolean = false; // todo expose horizontal/vertical to user
-
+    let isOptional: boolean = $state(false);
     /**
      * This function sets the focus on this element programmatically.
      * It is called from the box. Note that because focus can be set,
@@ -41,6 +41,8 @@
             trueElement.focus();
         } else if (currentValue === false) {
             falseElement.focus();
+        } else if (currentValue === "unknown") {
+            undefinedElement.focus();
         }
     }
 
@@ -57,9 +59,12 @@
         // runs after the initial onMount
         box.setFocus = setFocus;
         box.refreshComponent = refresh;
+        isOptional = FreLanguage.getInstance().classifierProperty(box.node.freLanguageConcept(), box.propertyName)?.isOptional || false
     });
 
-    const onChange = (event: MouseEvent & { currentTarget: EventTarget & HTMLInputElement }) => {
+    const onChange = (event: Event & {
+        currentTarget: EventTarget & HTMLInputElement;
+    }) => {
         if (notNullOrUndefined(event.target)) {
             LOGGER.log(
                 'BooleanRadioComponent.onChange for box ' +
@@ -67,7 +72,17 @@
                     ', value:' +
                     event.target['value' as keyof EventTarget]
             );
-            currentValue = event.currentTarget.value as unknown as boolean;
+            const tmp = event.currentTarget.value
+            if (tmp === "unknown") {
+                // Using value "unknown", as undefined does not work with radio button
+                currentValue = undefined
+            } else if (typeof tmp === "boolean") {
+                currentValue = tmp
+            } else if (typeof tmp === "string") {
+                currentValue = tmp === "true"
+            } else {
+                LOGGER.error(`unkown value in BooleanRadioComponent: '${tmp}'`)
+            }
             box.setBoolean(currentValue);
             editor.selectElementForBox(box);
             event.stopPropagation();
@@ -104,37 +119,65 @@
     {id}
 >
     <span class="boolean-radio-component-single">
-        <md-radio
-            id="{id}-trueOne"
-            name="{id}-group"
-            role="radio"
-            tabindex="0"
-            aria-checked={currentValue === true}
-            value={true}
-            checked={currentValue === true}
-            aria-label="radio-control-true"
-            onclick={onClick}
-            onchange={onChange}
-            onkeydown={onKeyDown}
-            bind:this={trueElement}
-        ></md-radio>
-        <label for="{id}-trueOne" class="boolean-radio-component-label">{box.labels.yes}</label>
+        <label for="{id}-trueOne" class="boolean-radio-component-label">
+            <input
+                type="radio"
+                id="{id}-trueOne"
+                name="{id}-group"
+                role="radio"
+                tabindex="0"
+                aria-checked={currentValue === true}
+                value={true}
+                checked={currentValue === true}
+                aria-label="radio-control-true"
+                onclick={onClick}
+                onchange={onChange}
+                onkeydown={onKeyDown}
+                bind:this={trueElement}
+            />
+            {box.labels.yes}
+        </label>
     </span>
     <span class="boolean-radio-component-single">
-        <md-radio
-            id="{id}-falseOne"
-            name="{id}-group"
-            role="radio"
-            tabindex="0"
-            aria-checked={currentValue === false}
-            value={false}
-            checked={currentValue === false}
-            aria-label="radio-control-false"
-            onclick={onClick}
-            onchange={onChange}
-            onkeydown={onKeyDown}
-            bind:this={falseElement}
-        ></md-radio>
-        <label class="boolean-radio-component-label" for="{id}-falseOne">{box.labels.no}</label>
+        <label class="boolean-radio-component-label" for="{id}-falseOne">
+            <input
+                type="radio"
+                id="{id}-falseOne"
+                name="{id}-group"
+                role="radio"
+                tabindex="0"
+                aria-checked={currentValue === false}
+                value={false}
+                checked={currentValue === false}
+                aria-label="radio-control-false"
+                onclick={onClick}
+                onchange={onChange}
+                onkeydown={onKeyDown}
+                bind:this={falseElement}
+            />
+            {box.labels.no}
+        </label>
     </span>
+    {#if isOptional} 
+        <span class="boolean-radio-component-single">
+            <label class="boolean-radio-component-label" for="{id}-undefinedOne">
+                <input
+                    type="radio"
+                    id="{id}-undefinedOne"
+                    name="{id}-group"
+                    role="radio"
+                    tabindex="0"
+                    aria-checked={currentValue === undefined}
+                    value="unknown"
+                    checked={currentValue === undefined}
+                    aria-label="radio-control-undefined"
+                    onclick={onClick}
+                    onchange={onChange}
+                    onkeydown={onKeyDown}
+                    bind:this={undefinedElement}
+                />
+                {box.labels.unknown}
+            </label>
+        </span>
+    {/if}
 </span>

@@ -129,18 +129,18 @@ export function observablepartlist(target: Object, propertyKey: string) {
 export function observableprim(target: DecoratedModelElement, propertyKey: string) {
     const privatePropertyKey = MODEL_PREFIX + propertyKey.toString();
     const getter = function (this: any) {
-        const storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean>;
+        const storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean | undefined>;
         if (!!storedObserver) {
             return storedObserver.get();
         } else {
-            this[privatePropertyKey] = observable.box(null);
+            this[privatePropertyKey] = observable.box(undefined);
             return this[privatePropertyKey].get();
         }
     };
 
-    const setter = function (this: any, newValue: string | number | boolean) {
+    const setter = function (this: any, newValue: string | number | boolean | undefined) {
 
-        let storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean>;
+        let storedObserver = this[privatePropertyKey] as IObservableValue<string | number | boolean | undefined>;
 
         if (!!storedObserver) {
             const oldValue = storedObserver.get()

@@ -151,7 +151,7 @@ export class BoxUtil {
     public static booleanBox(
         node: FreNode,
         propertyName: string,
-        labels: { yes: string; no: string } = {
+        labels: { yes: string; no: string, unknown?: string } = {
             yes: "yes",
             no: "no",
         },

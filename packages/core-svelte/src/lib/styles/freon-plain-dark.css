@@ -119,10 +119,13 @@
 .boolean-checkbox-component {
     --md-sys-color-primary: var(--color-dark-freon--900);
 }
-.boolean-checkbox-component:hover,
+
+.boolean-checkbox-component:hover {
+    box-shadow: 0 0 10 var(--color-dark-freon--800);
+}
 .boolean-checkbox-component:focus-within {
     outline: var(--color-dark-freon--900) solid 1px;
-    box-shadow: 0 0 10 var(--color-dark-freon--800);
+    /*box-shadow: 0 0 10 var(--color-dark-freon--800);*/
 }
 
 .boolean-radio-component-group {
