@@ -8,7 +8,7 @@
     // within the text.
     import TextComponent from './TextComponent.svelte';
     import DropdownComponent from './DropdownComponent.svelte';
-    import ArrowForward from './images/ArrowForward.svelte';
+    import ArrowUp from './images/ArrowUp.svelte';
     import { componentId } from '../index.js';
     import {
         type AbstractChoiceBox,
@@ -538,25 +538,27 @@
     class="text-dropdown-component {box.cssClass}"
     role="none"
 >
-    <TextComponent
-        {editor}
-        box={textBox}
-        partOfDropdown={true}
-        bind:isEditing
-        bind:text
-        bind:this={textComponent}
-        toParent={fromInner}
-    />
-    {#if selectAbleReference}
-        <button
-            class="reference-button"
-            {id}
-            onclick={(event) => selectReferred(event)}
-            tabindex="-1"
-        >
-            <ArrowForward />
-        </button>
-    {/if}
+    <div class="text-dropdown-component-wrapper">
+        <TextComponent
+            {editor}
+            box={textBox}
+            partOfDropdown={true}
+            bind:isEditing
+            bind:text
+            bind:this={textComponent}
+            toParent={fromInner}
+        />
+        {#if selectAbleReference}
+            <button
+                class="reference-button"
+                {id}
+                onclick={(event) => selectReferred(event)}
+                tabindex="-1"
+            >
+                <ArrowUp />
+            </button>
+        {/if}
+    </div>
     {#if dropdownShown}
         <DropdownComponent
             bind:this={dropdownCmp}
