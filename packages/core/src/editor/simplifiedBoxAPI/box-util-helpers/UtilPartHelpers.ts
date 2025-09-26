@@ -68,7 +68,7 @@ export class UtilPartHelpers {
             BoxFactory.action(
                 element,
                 RoleProvider.property(element.freLanguageConcept(), propertyName, "new-list-item"),
-                `<+ ${propertyName}>`,
+                `${propertyName}`,
                 {
                     propertyName: `${propertyName}`,
                     conceptName: FreLanguage.getInstance().classifierProperty(
@@ -85,7 +85,7 @@ export class UtilPartHelpers {
         property: FreNode[],
         propertyName: string,
         boxProviderCache: FreProjectionHandler,
-        listJoin?: FreListInfo,
+        listJoin: FreListInfo = FreListInfo.NullListInfo,
     ): Box[] {
         const result: Box[] = [];
         const numberOfItems: number = property.length;
@@ -98,7 +98,7 @@ export class UtilPartHelpers {
                 index,
             );
             let innerBox: ElementBox = myProvider.box;
-            if (listJoin != FreListInfo.NullListInfo) {
+            if (listJoin !== FreListInfo.NullListInfo) {
                 result.push(...UtilCommon.addListJoin(listJoin, index, numberOfItems, element, roleName, propertyName, innerBox));
             } else {
                 result.push(innerBox);

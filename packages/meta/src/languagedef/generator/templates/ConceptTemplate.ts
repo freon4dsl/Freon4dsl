@@ -41,7 +41,12 @@ export class ConceptTemplate {
         imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .add(implementsFre)
             .add(Names.FreParseLocation).add(Names.notNullOrUndefined)
-        if (hasReferences) imports.core.add(Names.FreNodeReference)
+        if (hasReferences) {
+            imports.core.add(Names.FreNodeReference)
+        }
+        if (concept.allProperties().length > 0) {
+            imports.core.add("notNullOrUndefined")
+        }
         imports.language = this.findModelImports(concept, myName);
 
         const metaType: string = Names.metaType();
@@ -49,6 +54,7 @@ export class ConceptTemplate {
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
+            // TEMPLATE: ConceptTemplate.generateConceptPrivate
             ${hasSuper? "": 'import { makeObservable, action } from "mobx"'}
 
             /**
@@ -100,13 +106,14 @@ export class ConceptTemplate {
         imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
                 .add(Names.FreBinaryExpression)
                 .add(Names.FreParseLocation)
-                .add(Names.notNullOrUndefined)
+								.add(Names.notNullOrUndefined)
         imports.language = this.findModelImports(concept, myName).add(baseExpressionName);
         const metaType = Names.metaType();
         const intfaces = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
+            // TEMPLATE: ConceptTemplate.generateBinaryExpression
             ${hasSuper? "": 'import { makeObservable, action } from "mobx"'}
             
             /**
@@ -198,6 +205,7 @@ export class ConceptTemplate {
 
         // Template starts here. Note that the imports are gathered during the generation, and added later.
         const result: string = `
+            // TEMPLATE: ConceptTemplate.generateLimited
             import { runInAction ${hasSuper ? "" : ", makeObservable, action"} } from "mobx"
             /**
              * Class ${myName} is the implementation of the limited concept with the same name in the language definition file.

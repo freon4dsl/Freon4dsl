@@ -236,7 +236,7 @@ export class LanguageTemplate {
                                 key: "${prop.key}",
                                 type: "${GenerationUtil.getBaseTypeAsString(prop)}",
                                 isList: ${prop.isList},
-                                isOptional: false, // ${prop.isOptional},
+                                isOptional: ${prop.isOptional},
                                 isPublic: ${prop.isPublic},
                                 language: "${prop.language.key}",
                                 propertyKind: "primitive"

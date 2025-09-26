@@ -3,7 +3,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/weblib-smui",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -29,8 +29,7 @@
     "build-release": "npm run build",
     "validate": "svelte-check",
     "errors-only": "svelte-check --threshold error --tsconfig ./tsconfig.json",
-    "install-local": "npm install --registry http://localhost:4873",
-    "release": "npm publish"
+    "install-local": "npm install --registry http://localhost:4873"
   },
   "exports": {
     ".": {
@@ -84,8 +83,8 @@
     "vite": "^6.1.0"
   },
   "dependencies": {
-    "@freon4dsl/core": "2.0.0-beta.3",
-    "@freon4dsl/core-svelte": "2.0.0-beta.3",
+    "@freon4dsl/core": "2.0.0-beta.4",
+    "@freon4dsl/core-svelte": "2.0.0-beta.4",
     "@material/theme": "^14.0.0",
     "@material/typography": "^14.0.0",
     "@mdi/js": "^7.4.47",

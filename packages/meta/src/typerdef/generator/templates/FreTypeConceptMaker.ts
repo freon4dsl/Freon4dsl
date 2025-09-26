@@ -19,6 +19,9 @@ export class FreTypeConceptMaker {
             imports.core.add(this.freTypeName);
             imports.core.add(Names.FreNode).add(Names.notNullOrUndefined);
         }
+        if (concept.allProperties().length > 0) {
+            imports.core.add("notNullOrUndefined")
+        }
         imports.language = this.findModelImports(concept);
         imports.typer = this.findTypeImports(concept, hasSuper);
 

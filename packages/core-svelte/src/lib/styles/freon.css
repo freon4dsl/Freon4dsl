@@ -101,7 +101,7 @@
 .layout-component-horizontal {
     white-space: nowrap;
     display: flex;
-    align-items: flex-start;
+    /*align-items: flex-start;*/
 }
 
 .layout-component-vertical {
@@ -261,14 +261,14 @@
 }
 
 .boolean-radio-component-group {
-    margin: 2px;
-    padding: 4px 6px 4px 6px;
+    /*margin: 2px;*/
+    padding: 2px 6px 2px 6px;
     border: none;
     /*--md-sys-color-on-surface-variant: red; color for the one that is not checked */
     /* the following three variables determine the manner in which the focus-ring is shown */
-    --md-focus-ring-duration: 0s; /* disabled animation */
-    --md-focus-ring-active-width: 0px;
-    --md-focus-ring-width: 0px;
+    /*--md-focus-ring-duration: 0s; !* disabled animation *!*/
+    /*--md-focus-ring-active-width: 0px;*/
+    /*--md-focus-ring-width: 0px;*/
 }
 .boolean-radio-component-group:hover,
 .boolean-radio-component-group:focus-within {
@@ -468,7 +468,7 @@
 .render-component-unselected {
     border: none;
 }
-.render-component-selected {
+.render-component-selected > span {
     outline-style: solid;
     outline-width: 1px;
 }
@@ -531,6 +531,7 @@
 
 .table-cell-component {
     display: flex;
+    align-self: auto;
     align-items: flex-start;
     box-sizing: border-box;
     align-self: baseline; /* isn't this the default? */

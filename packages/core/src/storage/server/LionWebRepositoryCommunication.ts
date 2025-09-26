@@ -1,5 +1,6 @@
-import { RepositoryClient } from "@lionweb/repository-client";
-import type { ClientResponse, ListPartitionsResponse } from "@lionweb/repository-client";
+import { RepositoryClient } from "@lionweb/server-client";
+import type { ClientResponse } from "@lionweb/server-client";
+import type { ListPartitionsResponse } from "@lionweb/server-shared";
 import type { FreModelUnit, FreNamedNode, FreNode } from "../../ast/index.js";
 import { FreLogger } from "../../logging/index.js";
 import { createLionWebJsonNode, FreLionwebSerializer, type ServerResponse, type VoidServerResponse } from "../index.js"
@@ -110,7 +111,7 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     }
 
     async createModel(modelName: string): Promise<VoidServerResponse> {
-        await this.client.dbAdmin.createRepository(modelName, false);
+        await this.client.dbAdmin.createRepository(modelName, false, "2023.1");
         this.client.repository = modelName;
         return { errors: [] }
     }
@@ -147,10 +148,10 @@ export class LionWebRepositoryCommunication implements IServerCommunication {
     async loadModelList(): Promise<ServerResponse<string[]>> {
         LOGGER.log(`loadModelList`);
         const repos = await this.client.dbAdmin.listRepositories();
-        const res = repos.body.repositoryNames;
+        const res = repos.body.repositories;
         if (!!res) {
             return {
-                result: res,
+                result: res.map(repoConfig => repoConfig.name),
                 errors: []
             };
         } else {
