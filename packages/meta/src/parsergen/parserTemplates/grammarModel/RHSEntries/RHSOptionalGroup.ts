@@ -26,7 +26,7 @@ export class RHSOptionalGroup extends RHSPropEntry {
             if (first.isList || first instanceof RHSBooleanWithSingleKeyWord) {
                 return `${first.toGrammar()}` + this.doNewline(); // no need for the extra '?'
             } else {
-                return `${first.toGrammar()}? /* !!!! */` + this.doNewline();
+                return `${first.toGrammar()}?` + this.doNewline();
             }
         }
         return "";
