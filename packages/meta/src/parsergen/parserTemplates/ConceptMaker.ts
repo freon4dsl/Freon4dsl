@@ -56,6 +56,7 @@ import { ListUtil } from "../../utils/no-dependencies/index.js";
 import { RHSRefListWithTerminator } from "./grammarModel/RHSEntries/RHSRefListWithTerminator.js";
 import {RHSRefListWithInitiator} from "./grammarModel/RHSEntries/RHSRefListWithInitiator.js";
 import { LOG2USER } from '../../utils/basic-dependencies/index.js';
+import { RHSPrimOptionalEntry } from './grammarModel/RHSEntries/RHSPrimOptionalEntry.js';
 
 export class ConceptMaker {
     imports: FreMetaClassifier[] = [];
@@ -333,7 +334,7 @@ export class ConceptMaker {
                 return new RHSPrimEntry(prop);
             } else {
                 console.error('Found optional primitive property during parser generation! Primitives should not be optional.')
-                return undefined;
+                return new RHSPrimOptionalEntry(prop);
             }
         } else {
             if (!!item.listInfo) {

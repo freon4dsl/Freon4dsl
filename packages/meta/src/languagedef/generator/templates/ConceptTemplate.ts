@@ -40,7 +40,7 @@ export class ConceptTemplate {
         const imports = new Imports()
         imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .add(implementsFre)
-            .add(Names.FreParseLocation)
+            .add(Names.FreParseLocation).add(Names.notNullOrUndefined)
         if (hasReferences) {
             imports.core.add(Names.FreNodeReference)
         }
@@ -106,9 +106,7 @@ export class ConceptTemplate {
         imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
                 .add(Names.FreBinaryExpression)
                 .add(Names.FreParseLocation)
-        if (concept.allProperties().length > 0) {
-            imports.core.add("notNullOrUndefined")
-        }
+								.add(Names.notNullOrUndefined)
         imports.language = this.findModelImports(concept, myName).add(baseExpressionName);
         const metaType = Names.metaType();
         const intfaces = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));
@@ -200,9 +198,7 @@ export class ConceptTemplate {
         imports.core = ClassifierUtil.findMobxImportsForConcept(hasSuper, concept)
             .add(Names.FreNamedNode)
             .add(Names.FreParseLocation)
-        if (concept.allProperties().length > 0) {
-            imports.core.add("notNullOrUndefined")
-        }
+            .add(Names.notNullOrUndefined)
         imports.language = this.findModelImports(concept, myName);
         const metaType: string = Names.metaType();
         const intfaces: string[] = Array.from(new Set(concept.interfaces.map((i) => Names.interface(i.referred))));

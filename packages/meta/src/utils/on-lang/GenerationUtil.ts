@@ -61,6 +61,9 @@ export class GenerationUtil {
 		if (property.isList) {
 			type = type + "[]";
 		}
+		if (property instanceof FreMetaPrimitiveProperty && property.isOptional) {
+			type = "(" + type + " | undefined)";
+		}
 		return type;
 	}
 

@@ -62,6 +62,16 @@ PrimsWithInitiator {
 PrimKeyword {
      [ PrimWithKeywordProj ${self.primBoolean [<BOOL>]} ]
 }
+// for optional primitives
+
+OptionalPrim {
+    [ OptionalPrim ${self.primBoolean} ${self.primIdentifier} ${self.primNumber} ${self.primString} ]
+}
+
+OptionalPrimsWithExtraText {
+    [OptionalPrimsWithExtraText [? bool ${self.primBooleanWithExtra}]  [? ident ${self.primIdentifierWithExtra}] [? num ${self.primNumberWithExtra}] [? str ${self.primStringWithExtra}] ]
+}
+
 // for limited concepts
 
 LimitedNonOptional {

@@ -30,6 +30,8 @@ import {
 import { ParserGenUtil } from "./ParserGenUtil.js";
 import { GenerationUtil } from '../../utils/on-lang/GenerationUtil.js';
 import { ListUtil } from '../../utils/no-dependencies/index.js';
+import { isNullOrUndefined } from '../../utils/file-utils/index.js';
+import { notNullOrUndefined } from '@freon4dsl/core';
 
 // TODO more preconditions should be added to avoid null pointer errors
 
@@ -42,6 +44,8 @@ export class WriterTemplate {
     private trueValue: string = "true";
     private falseValue: string = "false";
     private refSeparator: string = ".";
+    // todo adjust this when the edit file parses a value for undefined
+    private noValue: string = "<no-value>";
 
     /**
      * Returns a string representation of the class that implements an unparser for modelunits of
@@ -55,15 +59,15 @@ export class WriterTemplate {
         const defProjGroup: FreEditProjectionGroup | undefined = editDef.getDefaultProjectiongroup();
         let stdBoolKeywords: FreEditBoolKeywords | undefined;
         let refSeparator: string | undefined;
-        if (!!defProjGroup) {
+        if (notNullOrUndefined(defProjGroup)) {
             stdBoolKeywords = defProjGroup.findGlobalProjFor(ForType.Boolean)?.keywords;
             refSeparator = defProjGroup.findGlobalProjFor(ForType.ReferenceSeparator)?.separator;
         }
-        if (!!stdBoolKeywords) {
+        if (notNullOrUndefined(stdBoolKeywords)) {
             this.trueValue = stdBoolKeywords.trueKeyword ? stdBoolKeywords.trueKeyword : "true";
             this.falseValue = stdBoolKeywords.falseKeyword ? stdBoolKeywords.falseKeyword : "";
         }
-        if (!!refSeparator) {
+        if (notNullOrUndefined(refSeparator)) {
             this.refSeparator = refSeparator;
         }
 
@@ -94,7 +98,7 @@ export class WriterTemplate {
         });
 
         const binaryExtras: FreEditExtraClassifierInfo[] = [];
-        if (!!this.currentProjectionGroup && this.currentProjectionGroup.extras) {
+        if (notNullOrUndefined(this.currentProjectionGroup) && this.currentProjectionGroup.extras) {
             for (const myExtra of this.currentProjectionGroup.extras) {
                 const myConcept: FreMetaClassifier | undefined = myExtra.classifier?.referred;
                 if (myConcept instanceof FreMetaBinaryExpressionConcept && !myConcept.isAbstract) {
@@ -103,7 +107,7 @@ export class WriterTemplate {
             }
         }
         const imports = new Imports(relativePath)
-        imports.core = new Set([Names.FreNamedNode, Names.FreNodeReference, writerInterfaceName, Names.FreNode, Names.isNullOrUndefined])
+        imports.core = new Set([Names.FreNamedNode, Names.FreNodeReference, writerInterfaceName, Names.FreNode, Names.isNullOrUndefined, Names.notNullOrUndefined])
         imports.language = GenerationUtil.allConceptsInterfacesAndUnits(language)
         // Template starts here
         return `
@@ -227,9 +231,9 @@ export class WriterTemplate {
              *
             */
             private _unparseReference(node: ${Names.FreNodeReference}<${Names.FreNamedNode}>, short: boolean) {
-                if (!!node) {
+                if (notNullOrUndefined(node)) {
                     const type: ${Names.FreNamedNode} = node?.referred;
-                    if (!!type) {
+                    if (notNullOrUndefined(type)) {
                         ${
                             limitedConcepts.length > 0
                                 ? `${limitedConcepts
@@ -314,7 +318,7 @@ export class WriterTemplate {
                 indent: number,
                 short: boolean
             ) {
-                if (!!list) {
+                if (notNullOrUndefined(list)) {
                     list.forEach((listElem, index) => {
                         const isLastInList: boolean = index === list.length - 1;
                         this.doInitiator(sepText, sepType);
@@ -435,7 +439,7 @@ export class WriterTemplate {
      */
     private makeConceptMethod(projection: FreEditClassifierProjection): string {
         const myConcept: FreMetaClassifier | undefined = projection.classifier?.referred;
-        if (!!myConcept) {
+        if (notNullOrUndefined(myConcept)) {
             if (projection instanceof FreEditNormalProjection) {
                 if (myConcept instanceof FreMetaBinaryExpressionConcept) {
                     // do nothing, binary expressions are treated differently
@@ -454,7 +458,7 @@ export class WriterTemplate {
                  * The limited concept '${myConcept.name}' is unparsed as its name.
                  */
                  private unparse${name}(node: ${name}, short: boolean) {
-                     if (!!node) {
+                     if (notNullOrUndefined(node)) {
                          this.output[this.currentLine] += "\`" + node.name + "\` " /* 9 */;
                      }
                  }`;
@@ -482,7 +486,7 @@ export class WriterTemplate {
         if (projection.name !== this.currentProjectionGroup?.name && projection.name !== "parser") {
             methodName += "_" + projection.name;
         }
-        if (!!lines) {
+        if (notNullOrUndefined(lines)) {
             if (lines.length > 1) {
                 return `
                 ${comment}
@@ -495,7 +499,7 @@ export class WriterTemplate {
                     }
                 }`;
             } else {
-                if (!!lines[0].items.find((item) => item instanceof FreOptionalPropertyProjection)) {
+                if (notNullOrUndefined(lines[0].items.find((item) => item instanceof FreOptionalPropertyProjection))) {
                     // add blockIndent, it is used in the Optional part
                     return `
                         ${comment}
@@ -554,7 +558,7 @@ export class WriterTemplate {
         } else if (item instanceof FreOptionalPropertyProjection) {
             const myElem: FreMetaProperty | undefined = item.property?.referred;
             let myTypeScript: string = "";
-            if (!!myElem) {
+            if (notNullOrUndefined(myElem)) {
                 myTypeScript = LangUtil.propertyToTypeScript(myElem);
                 if (!myElem.isPart) {
                     myTypeScript = LangUtil.propertyToTypeScriptWithoutReferred(myElem);
@@ -578,7 +582,7 @@ export class WriterTemplate {
                 }
             });
             // surround whole sub-projection with an if-statement
-            result += `if (!!${myTypeScript}) { ${subresult} }`;
+            result += `if (notNullOrUndefined(${myTypeScript})) { ${subresult} }`;
         } else if (item instanceof FreEditPropertyProjection && !!item.property) {
             const myElem = item.property.referred;
             if (myElem instanceof FreMetaPrimitiveProperty) {
@@ -600,7 +604,7 @@ export class WriterTemplate {
                     item.superRef.referred,
                     item.projectionName,
                 );
-                if (!!foundProjection) {
+                if (notNullOrUndefined(foundProjection)) {
                     ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, foundProjection);
                 }
                 result += `// SUPER
@@ -675,16 +679,16 @@ export class WriterTemplate {
             let myCall: string;
             const myType: FreMetaClassifier = myElem.type;
             if (myType === FreMetaPrimitiveType.string) {
-                myCall = `this.output[this.currentLine] += \`\"\$\{${elemStr}\}\" \``;
+                myCall = `this.output[this.currentLine] += notNullOrUndefined(${elemStr}) ? \`"\$\{${elemStr}\}" \` : \`""\` /* 5 */`;
             } else if (myType === FreMetaPrimitiveType.boolean) {
                 // get the right manner to unparse the boolean values
                 // either from the standard boolean keywords in the default projection group
                 // or from 'item', and add escapes to the keywords
                 let myTrueKeyword: string = ParserGenUtil.escapeRelevantChars(this.trueValue);
                 let myFalseKeyword: string = ParserGenUtil.escapeRelevantChars(this.falseValue);
-                if (!!item.boolKeywords) {
+                if (notNullOrUndefined(item.boolKeywords)) {
                     myTrueKeyword = ParserGenUtil.escapeRelevantChars(item.boolKeywords.trueKeyword);
-                    if (!!item.boolKeywords.falseKeyword) {
+                    if (notNullOrUndefined(item.boolKeywords.falseKeyword)) {
                         myFalseKeyword = ParserGenUtil.escapeRelevantChars(item.boolKeywords.falseKeyword);
                     } else {
                         myFalseKeyword = "";
@@ -692,27 +696,27 @@ export class WriterTemplate {
                 }
                 if (myTrueKeyword === "true" && myFalseKeyword === "false") {
                     // possibility 1: the keywords are simply 'true' and 'false'
-                    myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
-                } else if (myFalseKeyword === null) {
+                    myCall = `this.output[this.currentLine] += notNullOrUndefined(${elemStr}) ? \`\$\{${elemStr}\} \` : \`${this.noValue} \` /* 1a */`;
+                } else if (isNullOrUndefined(myFalseKeyword) || myFalseKeyword.length === 0) {
                     // possibility 2: there is no false keyword, which means that
                     // the boolean value should be shown only when it is true
                     myCall = `if (${elemStr}) {
                               this.output[this.currentLine] += \`${myTrueKeyword} \`
-                          }`;
+                           }`;
                 } else {
                     // possibility 3: both true and false keywords have been altered in the editor definition
                     myCall = `if (${elemStr}) {
                               this.output[this.currentLine] += \`${myTrueKeyword} \`
                           } else {
-                            this.output[this.currentLine] += \`${myFalseKeyword} \`
+                            this.output[this.currentLine] += notNullOrUndefined(${elemStr}) ? \`${myFalseKeyword} \` : \`${this.noValue} \` /* 1b */
                           }`;
                 }
             } else if (myType === FreMetaPrimitiveType.number) {
-                myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \` /* 2 */`;
+                myCall = `this.output[this.currentLine] += notNullOrUndefined(${elemStr}) ? \`\$\{${elemStr}\} \` : \`${this.noValue} \` /* 2 */`;
             } else if (myType === FreMetaPrimitiveType.identifier) {
                 myCall = `this.output[this.currentLine] += \`\\\`\$\{${elemStr}\}\\\` \` /* 3 */`;
             } else {
-                myCall = `this.output[this.currentLine] += \`\$\{${elemStr}\} \``;
+                myCall = `this.output[this.currentLine] += notNullOrUndefined(${elemStr}) ? \`\$\{${elemStr}\} \` : \`${this.noValue} \` /* 4 */`;
             }
             result += myCall;
         }
@@ -739,7 +743,7 @@ export class WriterTemplate {
         const type = myElem.type;
         let nameOfUnparseMethod: string = "unparse";
         let typeCast: string = "";
-        if (!!type) {
+        if (notNullOrUndefined(type)) {
             // In case of a named projection, another unparse method needs to be called,
             // and the parameter to that call needs a type cast.
             // The projection that must be implemented in this new unparse method is stored
@@ -759,14 +763,14 @@ export class WriterTemplate {
                     type,
                     item.projectionName,
                 );
-                if (!!foundProjection) {
+                if (notNullOrUndefined(foundProjection)) {
                     ListUtil.addIfNotPresent<FreEditClassifierProjection>(this.namedProjections, foundProjection);
                 }
                 nameOfUnparseMethod += `${Names.classifier(type)}_${item.projectionName}`;
                 typeCast = ` as ${Names.classifier(type)}`;
             }
             if (myElem.isList) {
-                if (!!item.listInfo && !item.listInfo.isTable) {
+                if (notNullOrUndefined(item.listInfo) && !item.listInfo.isTable) {
                     // it is a list not table
                     const vertical = item.listInfo.direction === FreEditProjectionDirection.Vertical;
                     const joinType: string = this.getJoinType(item);
@@ -800,7 +804,7 @@ export class WriterTemplate {
                 }
                 if (myElem.isOptional && !inOptionalGroup) {
                     // surround the unparse call with an if-statement, because the element may not be present
-                    result += `if (!!${myTypeScript}) { ${myCall} }`;
+                    result += `if (notNullOrUndefined(${myTypeScript})) { ${myCall} }`;
                 } else {
                     result = myCall;
                 }
@@ -815,7 +819,7 @@ export class WriterTemplate {
      */
     private getJoinType(item: FreEditPropertyProjection): string {
         let joinType: string = "SeparatorType.NONE";
-        if (!!item.listInfo) {
+        if (notNullOrUndefined(item.listInfo)) {
             if (item.listInfo.joinType === ListJoinType.Separator) {
                 joinType = "SeparatorType.Separator";
             } else if (item.listInfo.joinType === ListJoinType.Terminator) {
@@ -873,13 +877,13 @@ export class WriterTemplate {
 
     private makeBinaryExpMethod(myConcept: FreEditExtraClassifierInfo) {
         let xName: string = "<unknown>";
-        if (!!myConcept.classifier) {
+        if (notNullOrUndefined(myConcept.classifier)) {
             xName = Names.classifier(myConcept.classifier.referred);
         }
         const comment = `/**
                           * See the public unparse method.
                           */`;
-        if (!!myConcept.symbol) {
+        if (notNullOrUndefined(myConcept.symbol)) {
             return `${comment}
             private unparse${xName}(node: ${xName}, short: boolean) {
                 this.unparse(node.left, short);
