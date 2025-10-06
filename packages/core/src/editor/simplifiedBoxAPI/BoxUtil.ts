@@ -34,7 +34,7 @@ import {
 } from '../boxes/index.js';
 import type { FreScoper } from "../../scoper/index.js";
 import { RoleProvider } from "./RoleProvider.js";
-import { FreProjectionHandler } from "../projections/index.js";
+import { type FreProjectionHandler } from "../projections/index.js";
 import { UtilPrimHelper } from "./box-util-helpers/UtilPrimHelper.js";
 import { UtilRefHelpers } from "./box-util-helpers/UtilRefHelpers.js";
 import { UtilPartHelpers } from "./box-util-helpers/UtilPartHelpers.js";
