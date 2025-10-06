@@ -285,7 +285,7 @@ export class ConceptUtils {
                     }`,
             )
             .join("\n")}
-                    if (!!data.parseLocation) {
+                    if (notNullOrUndefined(data.parseLocation)) {
                         result.parseLocation = data.parseLocation;
                     }
                     return result;
@@ -307,7 +307,7 @@ export class ConceptUtils {
                 .allProperties()
                 .map(
                     (freProperty) =>
-                        `if (!!this.${freProperty.name}) {
+                        `if (notNullOrUndefined(this.${freProperty.name})) {
                             ${this.makeCopyProperty(freProperty)}
                         }`,
                 )
@@ -366,7 +366,7 @@ export class ConceptUtils {
             if (freProperty.isList) {
                 // here we know that matchPrimitiveList needs to be imported => add to imports
                 imports.core.add("matchPrimitiveList")
-                result = `if (result && !!toBeMatched.${freProperty.name}) {
+                result = `if (result && notNullOrUndefined(toBeMatched.${freProperty.name})) {
                                 result = result && matchPrimitiveList(this.${freProperty.name}, toBeMatched.${freProperty.name});
                           }`
             } else {
@@ -384,26 +384,26 @@ export class ConceptUtils {
             if (freProperty.isPart) {
                 // here we know that matchElementList needs to be imported => add to imports
                 imports.core.add("matchElementList")
-                result = `if (result && !!toBeMatched.${freProperty.name}) {
+                result = `if (result && notNullOrUndefined(toBeMatched.${freProperty.name})) {
                               result = result && matchElementList(this.${freProperty.name}, toBeMatched.${freProperty.name});
                           }`
             } else {
                 // here we know that matchReferenceList needs to be imported => add to imports
                 imports.core.add("matchReferenceList")
-                result = `if (result && !!toBeMatched.${freProperty.name}) {
+                result = `if (result && notNullOrUndefined(toBeMatched.${freProperty.name})) {
                               result = result && matchReferenceList(this.${freProperty.name}, toBeMatched.${freProperty.name});
                           }`
             }
         } else if (freProperty.isOptional) {
             // same for both parts and references
-            result = `if (result && !!toBeMatched.${freProperty.name}) {
+            result = `if (result && notNullOrUndefined(toBeMatched.${freProperty.name})) {
                         if (this.${freProperty.name}) {
                             result = result && this.${freProperty.name}.match(toBeMatched.${freProperty.name});
                         }
                       }`
         } else {
             // same for both parts and references
-            result = `if (result && !!toBeMatched.${freProperty.name}) {
+            result = `if (result && notNullOrUndefined(toBeMatched.${freProperty.name})) {
                             result = result && this.${freProperty.name}.match(toBeMatched.${freProperty.name});
                       }`
         }

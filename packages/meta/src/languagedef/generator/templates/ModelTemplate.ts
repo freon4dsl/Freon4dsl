@@ -16,9 +16,7 @@ export class ModelTemplate {
             .add(Names.FreParseLocation)
             .add(Names.modelunit())
             .add("AST")
-        if (modelDescription.allProperties().length > 0) {
-            imports.core.add("notNullOrUndefined")
-        }
+            .add(Names.notNullOrUndefined)
         imports.language = this.findModelImports(modelDescription, myName);
         const metaType = Names.metaType();
 

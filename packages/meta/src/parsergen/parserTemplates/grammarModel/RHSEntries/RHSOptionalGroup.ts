@@ -56,6 +56,7 @@ export class RHSOptionalGroup extends RHSPropEntry {
             } else {
                 return `
                 // RHSOptionalGroup
+                // this one
                     if (!!${nodeName}.asJsReadonlyArrayView()[${index}]) { 
                         ${first.toMethod(index, nodeName, mainAnalyserName)}
                     }

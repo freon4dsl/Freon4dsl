@@ -2,22 +2,22 @@ import { FreMetaClassifier, FreMetaPrimitiveType } from "../../../languagedef/me
 import { Names } from "../../../utils/on-lang/index.js";
 import { ChoiceRuleMaker } from "../ChoiceRuleMaker.js";
 
-export function getPrimCall(propType: FreMetaClassifier): string {
+export function getPrimCall(propType: FreMetaClassifier, optional: boolean = false): string {
     switch (propType) {
         case FreMetaPrimitiveType.string: {
-            return "stringLiteral";
+            return optional ? "optStringLiteral" : "stringLiteral";
         }
         case FreMetaPrimitiveType.identifier: {
-            return "identifier";
+            return optional ? "optIdentifier" : "identifier";
         }
         case FreMetaPrimitiveType.number: {
-            return "numberLiteral";
+            return optional ? "optNumberLiteral" : "numberLiteral";
         }
         case FreMetaPrimitiveType.boolean: {
-            return "booleanLiteral";
+            return optional ? "optBooleanLiteral" : "booleanLiteral";
         }
         default:
-            return "stringLiteral";
+            return optional ? "optStringLiteral" : "stringLiteral";
     }
 }
 

@@ -20,11 +20,8 @@ export class UnitTemplate {
         imports.core = ClassifierUtil.findMobxImportsForConcept(false, unitDescription)
             .add(Names.FreModelUnit)
             .add(Names.FreParseLocation)
-            .add("notNullOrUndefined")
+						.add(Names.notNullOrUndefined)
         if (hasReferences) imports.core.add(Names.FreNodeReference);
-        if (unitDescription.allProperties().length > 0) {
-            imports.core.add("notNullOrUndefined")
-        }
         const metaType = Names.metaType();
         const intfaces = Array.from(new Set(unitDescription.interfaces.map((i) => Names.interface(i.referred))));
 

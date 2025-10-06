@@ -67,7 +67,7 @@ export class ReaderTemplate {
                 if (!this.isInitialized) {
                     this.initialize();
                 }
-                if (notNullOrUndefined(sourceName)) this.analyser.sourceName = sourceName;
+                this.analyser.sourceName = notNullOrUndefined(sourceName) ? sourceName : '';
                 let startRule: string = "";
                 // choose the correct parser
                 ${language.units
