@@ -138,9 +138,9 @@ export class FreProjectionHandler {
     addProjection(p: string) {
         runInAction( () => {
             ArrayUtil.addIfNotPresent(this._allProjections, p);
-            if (p !== "default") {
-                ArrayUtil.addIfNotPresent(this._enabledProjections, p);
-            }
+            // if (p !== "default") {
+            //     ArrayUtil.addIfNotPresent(this._enabledProjections, p);
+            // }
         })
     }
 
