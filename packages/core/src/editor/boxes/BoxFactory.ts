@@ -26,8 +26,8 @@ import {
     AbstractExternalBox,
     PartListReplacerBox,
     isPartListReplacerBox,
-    ReferenceBox
-} from "./internal.js";
+    ReferenceBox, MultiLineTextBox
+} from './internal.js';
 import type { SelectOption } from "./internal.js";
 import type { BoolFunctie } from "./internal.js";
 
@@ -232,6 +232,28 @@ export class BoxFactory {
         // 1. Create the text box, or find the one that already exists for this element and role
         const creator = () => new TextBox(node, role, getText, setText);
         const result: TextBox = this.find<TextBox>(node, role, creator, textCache);
+
+        // 2. Apply the other arguments in case they have changed
+        result.$getText = getText;
+        result.$setText = setText;
+        FreUtils.initializeObject(result, initializer);
+
+        return result;
+    }
+
+    static multiline(
+      node: FreNode,
+      role: string,
+      getText: () => string,
+      setText: (text: string) => void,
+      initializer?: Partial<TextBox>,
+    ): MultiLineTextBox {
+        if (cacheTextOff) {
+            return new MultiLineTextBox(node, role, getText, setText, initializer);
+        }
+        // 1. Create the multiline box, or find the one that already exists for this element and role
+        const creator = () => new MultiLineTextBox(node, role, getText, setText);
+        const result: MultiLineTextBox = this.find<MultiLineTextBox>(node, role, creator, textCache);
 
         // 2. Apply the other arguments in case they have changed
         result.$getText = getText;

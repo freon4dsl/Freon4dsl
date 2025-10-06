@@ -1,13 +1,14 @@
 import { FreMetaPrimitiveProperty, FreMetaPrimitiveType } from "../../../../languagedef/metalanguage/index.js";
 import {
+    DisplayType,
     ForType,
     FreEditBoolKeywords,
     FreEditGlobalProjection,
     FreEditListInfo,
     FreEditProjectionDirection,
     FreEditProjectionGroup,
-    FreEditPropertyProjection,
-} from "../../../metalanguage/index.js";
+    FreEditPropertyProjection
+} from '../../../metalanguage/index.js';
 import { Roles } from "../../../../utils/on-lang/index.js";
 import { DisplayTypeHelper } from "./DisplayTypeHelper.js";
 import { BoxProviderTemplate } from "../BoxProviderTemplate.js";
@@ -119,6 +120,10 @@ export class PrimitivePropertyBoxesHelper {
         const listAddition: string = `${property.isList ? `, index` : ``}`;
         switch (property.type) {
             case FreMetaPrimitiveType.string:
+                if (!!displayType && displayType === DisplayType.Multiline) {
+                    return `BoxUtil.multiLineTextBox(${element}, "${property.name}"${listAddition})`;
+                }
+                return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
             case FreMetaPrimitiveType.identifier:
                 return `BoxUtil.textBox(${element}, "${property.name}"${listAddition})`;
             case FreMetaPrimitiveType.number:
