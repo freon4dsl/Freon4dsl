@@ -333,7 +333,7 @@ export class ConceptMaker {
             if (!prop.isOptional || inOptionalGroup) {
                 return new RHSPrimEntry(prop);
             } else {
-                console.error('Found optional primitive property during parser generation! Primitives should not be optional.')
+                // console.error('Found optional primitive property during parser generation! Primitives should not be optional.')
                 return new RHSPrimOptionalEntry(prop);
             }
         } else {

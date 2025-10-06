@@ -119,7 +119,7 @@ modelunit OptionalPrimitivesTest {
     file-extension = "opt";
 }
 concept OptionalPrim {
-    primIdentifier: identifier;
+    primIdentifier?: identifier;
     primNumber?: number;
     primString?: string;
     primBoolean?: boolean;
