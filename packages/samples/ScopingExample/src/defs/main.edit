@@ -1,28 +1,33 @@
-editor default
-
+editor comments
 
 Module {[
     module ${name} {
         globals: \[ ${globals horizontal separator[,]} \]
-        CHECK IT OUT: ${check}
         ${blocks vertical}
     }
-]}
+    [fragment vis]
+]
+fragment vis [VARIABLES VISIBLE IN MODULE: ${check}]
+}
 
 Block {[
-    block ${name} {
-        imported blocks: \[ ${imports horizontal separator[,]} \]
+    block ${name} imports ${imports} {
         block variables: \[ ${blockVariables horizontal separator[,]} \]
-        CHECK IT OUT: ${check}
+        A QUALIFIED NAME: ${qualName}
         ${functions vertical}
     }
-]}
+    [fragment vis]
+]
+fragment vis [VARIABLES VISIBLE IN BLOCK: ${check}]
+}
 
 Function {[
-    function ${name} ( ${parameters horizontal separator[,]} ) {
-        CHECK IT OUT: ${check}
+    function ${name} ( ${parameters horizontal separator[,]} {
     }
-]}
+    [fragment vis]
+]
+fragment vis [VARIABLES VISIBLE IN FUNCTION: ${check}]
+}
 
 Variable {[
     ${name}
@@ -30,6 +35,4 @@ Variable {[
 
 SimpleVarRef {[
     ${target}
-]
-referenceShortcut = ${target}
-}
+]}
