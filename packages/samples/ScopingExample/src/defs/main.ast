@@ -8,22 +8,23 @@ modelunit Module {
     name: identifier;
     globals: Variable[];
     blocks: Block[];
-    check: VariableRef;
+    check: SimpleVarRef;
 }
 
 concept Block {
     name: identifier;
-    reference imports: Block[]; /* added for step 3 */
+    reference imports: Block[]; /* needed for step 2 */
     blockVariables: Variable[];
     private functions: Function[];
-    check: VariableRef;
+    check: SimpleVarRef;
+    qualName: VariableRef;  /* needed for step 3 */
 }
 
 concept Function {
     name: identifier;
     comment: string;
     parameters: Variable[];
-    check: VariableRef;
+    check: SimpleVarRef;
 }
 
 concept Variable {
@@ -31,6 +32,11 @@ concept Variable {
 }
 
 abstract expression VariableRef {
+}
+
+expression ComplexVarRef base VariableRef { /* needed for step 3 */
+    target: VariableRef;
+    reference block: Block;
 }
 
 expression SimpleVarRef base VariableRef {

@@ -1,13 +1,8 @@
+/* Scope file for Step 3 of the demo: showing imports */
 scoper for language ScopingExample
 
-isNamespace { Block, Function, VariableRef }
+isNamespace { Module, Block, Function }
 
-/* step 0: show the model without scoper */
-/* step 1 and 2 without ComplexVarRef!!! */
-/* step 1: add Block as Namespace and show what can be referenced in various places */
-/* step 2: add Function as Namespace and show what can be referenced in various places */
-
-/* step 3: show imports */
 Block {
     imports { self.imports; }
 }
