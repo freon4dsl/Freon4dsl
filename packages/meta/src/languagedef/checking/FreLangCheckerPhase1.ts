@@ -397,6 +397,14 @@ export class FreLangCheckerPhase1 extends CheckerPhase<FreMetaLanguage> {
                     }
                 }
                 // end check initial value(s)
+                // optionality for identifiers is ignored
+                if (element.isOptional && myType === FreMetaPrimitiveType.identifier) {
+                    this.runner.simpleWarning(
+                      false,
+                      `Property '${element.name}' is an identifier which may not be optional, optionality will be ignored ${ParseLocationUtil.location(element)}.`,
+                    );
+                    element.isOptional = false;
+                }
             },
         });
     }
