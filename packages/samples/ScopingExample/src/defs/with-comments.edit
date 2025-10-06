@@ -1,0 +1,38 @@
+editor comments
+
+
+Module {[
+    module ${name} {
+        globals: \[ ${globals horizontal separator[,]} \] /* definitions of globally visible variables */
+        CHECK IT OUT: ${check}  /* here you can see what can be referenced */
+        ${blocks vertical}
+    }
+]}
+
+Block {[
+    block ${name} {
+        imported blocks: \[ ${imports horizontal separator[,]} \] /* blocks whose elements we want to use here */
+        block variables: \[ ${blockVariables horizontal separator[,]} \]  /* definitions of variables that are visible in this block only */
+        CHECK IT OUT: ${check}  /* here you can see what can be referenced */
+        ${functions vertical}
+    }
+]}
+
+Function {[
+    function ${name} ( ${parameters horizontal separator[,]} ) {
+        /* ${comment} */
+        CHECK IT OUT: ${check}  /* here you can see what can be referenced */
+    }
+]}
+
+Variable {[
+    ${name}
+]}
+/*
+ComplexVarRef {[
+    ${block} . ${target}
+]}
+*/
+SimpleVarRef {[
+    ${target}
+]}
