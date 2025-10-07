@@ -73,7 +73,7 @@
 
     // the function used to calculate all_options, called by onClick and setFocus
     let getOptions = (): SelectOption[] => {
-        LOGGER.log('getOptions for ' + box?.id)
+        LOGGER.log(`getOptions for box(${box.id})` + box?.id)
         let result = box?.getOptions(editor);
         if (isNullOrUndefined(result)) {
             result = [{ id: noOptionsId, label: '<no known options>' }];
@@ -85,7 +85,7 @@
      * This function sets the focus on this element programmatically.
      */
     const setFocus = () => {
-        LOGGER.log('TextDropdownComponent.setFocus ' + box.kind + id);
+        LOGGER.log(`TextDropdownComponent.setFocus box(${box.id})` + box.kind + id);
         if (notNullOrUndefined(textComponent)) {
             textComponent.setFocus();
         } else {
@@ -108,10 +108,10 @@
      * It sets the text in the box, if this is a SelectBox.
      */
     const refresh = (why?: string) => {
-        LOGGER.log(`${box.id}: refresh: ` + why + ' for ' + box?.kind);
+        LOGGER.log(`refresh: box(${box.id})` + why + ' for ' + box?.kind);
         if (isSelectBox(box)) {
             let selectedOption = box.getSelectedOption();
-            LOGGER.log('    selectedOption is ' + selectedOption?.label);
+            LOGGER.log(`refresh box(${box.id}) selectedOption is ` + selectedOption?.label);
             if (notNullOrUndefined(selectedOption)) {
                 setTextLocalAndInBox(selectedOption.label);
                 selected = selectedOption;
@@ -122,7 +122,7 @@
         // NB Not in an else if, because isSelectBox() is also true for ReferenceBox
         if (isReferenceBox(box)) {
             selectAbleReference = box.isSelectAble()
-            LOGGER.log("     selectAble is " + selectAbleReference)
+            LOGGER.log(`refresh box(${box.id})  selectAble is ` + selectAbleReference)
         }
         // because the box maybe a different one than we started with ...
         // box.setFocus = setFocus; todo remove?
@@ -137,7 +137,7 @@
      */
     const textUpdate = (details: CaretDetails) => {
         LOGGER.log(
-            `textUpdate for ${box.kind}: ${jsonAsString(details)}, start: ${text.substring(0, details.caret)}`
+            `textUpdate box(${box.id}) for ${box.kind}: ${jsonAsString(details)}, start: ${text.substring(0, details.caret)}`
         );
         if (!dropdownShown) {
             showDropdown();
@@ -205,7 +205,7 @@
         const result: SelectOption[] = [];
         filteredOptions.forEach((option) => {
             if (seen.includes(option.id)) {
-                LOGGER.log('Option ' + jsonAsString(option) + ' is a duplicate');
+                LOGGER.log(`makeFilteredOptionsUnique.Option box(${box.id})` + jsonAsString(option) + ' is a duplicate');
             } else {
                 seen.push(option.id);
                 result.push(option);
@@ -237,7 +237,7 @@
      * @param event
      */
     const onKeyDown = (event: KeyboardEvent) => {
-        LOGGER.log(`onKeyDown: ${id} [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selected?.id + " dropdown:" + dropdownShown + " editing:" + isEditing);
+        LOGGER.log(`onKeyDown: box(${box.id}) [${event.key}] alt [${event.altKey}] shift [${event.shiftKey}] ctrl [${event.ctrlKey}` + "] meta [" + event.metaKey + "]" + ", selectedId: " + selected?.id + " dropdown:" + dropdownShown + " editing:" + isEditing);
         if (dropdownShown) {
             if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
@@ -301,7 +301,7 @@
         } else {
             // this component was selected using keystrokes, not by clicking, therefore dropDownShown = false
             if (event.ctrlKey && event.key === SPACEBAR) {
-                LOGGER.log("CONTRIOL_SPACE")
+                LOGGER.log("CONTROL_SPACE")
                 handleEnterOrControlSpace(event)
             } else if (!event.ctrlKey && !event.altKey) {
                 switch (event.key) {
@@ -366,7 +366,7 @@
      * is set as text in the textComponent and the editing state is ended.
      */
     const itemSelected = (sel: SelectOption) => {
-        LOGGER.log('itemSelected ' + selected?.id);
+        LOGGER.log(`itemSelected box(${box.id}) '${selected?.id}`);
         const index = filteredOptions.findIndex((o) => o === sel);
         if (index >= 0 && index < filteredOptions.length) {
             const chosenOption = filteredOptions[index];
@@ -418,7 +418,7 @@
      * @param selected
      */
     function storeOrExecute(selected: SelectOption) {
-        LOGGER.log('storeOrExecute for option ' + selected.label + ' ' + box.kind + ' ' + box.role);
+        LOGGER.log(`storeOrExecute for option box(${box.id}):` + selected.label + ' ' + box.kind + ' ' + box.role);
         isEditing = false;
         hideDropdown();
 
@@ -456,7 +456,7 @@
     };
 
     const focusOutTextComponent = () => {
-        LOGGER.log('focusOutTextComponent ' + id);
+        LOGGER.log(`focusOutTextComponent box(${box.id})` + id);
         selected = undefined;
         if (isEditing) {
             endEditing();

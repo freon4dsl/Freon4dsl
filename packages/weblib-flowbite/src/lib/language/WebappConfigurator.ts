@@ -74,12 +74,13 @@ export class WebappConfigurator {
 
         // the names of the projections / views
         const proj: FreProjectionHandler = langEnv.editor.projection
-        const nameList: string[] = notNullOrUndefined(proj) ? proj.projectionNames() : ["default"]
+        const allProjectionNames: string[] = notNullOrUndefined(proj) ? proj.projectionNames() : ["default"]
+        const enabledProjectionNames: string[] = notNullOrUndefined(proj) ? proj.enabledProjections() : ["default"]
         // remove any old values
         langInfo.projectionNames.splice(0, langInfo.projectionNames.length)
         // push the right ones
-        langInfo.projectionNames.push(...nameList)
-        replaceProjectionsShown(["default"])
+        langInfo.projectionNames.push(...allProjectionNames)
+        replaceProjectionsShown(enabledProjectionNames)
 
         // the file extensions for all unit types
         // because 'langEnv.fileExtensions.values()' is not an Array but an IterableIterator,

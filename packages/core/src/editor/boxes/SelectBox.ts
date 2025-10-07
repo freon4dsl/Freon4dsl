@@ -1,6 +1,6 @@
 import { BehaviorExecutionResult } from "../util/index.js";
-import { FreEditor } from "../internal.js";
-import { AbstractChoiceBox, Box } from "./internal.js";
+import { type FreEditor } from "../internal.js";
+import { AbstractChoiceBox, type Box } from "./internal.js";
 import type { SelectOption } from "./internal.js";
 import type { FreNode } from "../../ast/index.js";
 
