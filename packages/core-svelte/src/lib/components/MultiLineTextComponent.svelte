@@ -76,6 +76,7 @@
     onfocusout={onFocusOut}
     onkeydown={onKeyDown}
     spellcheck="false"
+    tabindex="0"
     bind:this={textArea}
     {placeholder}
     bind:value={text}
