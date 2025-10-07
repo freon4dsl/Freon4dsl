@@ -324,7 +324,7 @@ describe("Checking editor definition ", () => {
         } catch (e: unknown) {
             if (e instanceof Error) {
                 // console.log(e.message + e.stack);
-                // console.log(checker.errors.map(err => `"${err}"`).join("\n"));
+                console.log(checker.errors.map(err => `"${err}"`).join("\n"));
                 expect(e.message).toBe(`checking errors (11).`);
                 expect(
                     checker.errors.includes(
@@ -333,7 +333,7 @@ describe("Checking editor definition ", () => {
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'number[]' [file: test11.edit:11:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]', found type 'number[]' [file: test11.edit:11:5].",
                     ),
                 ).toBeTruthy();
                 expect(
@@ -343,22 +343,22 @@ describe("Checking editor definition ", () => {
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'boolean[]' [file: test11.edit:19:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]', found type 'boolean[]' [file: test11.edit:19:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:21:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:21:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type 'BB[]' [file: test11.edit:22:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]', found type 'BB[]' [file: test11.edit:22:5].",
                     ),
                 ).toBeTruthy();
                 expect(
                     checker.errors.includes(
-                        "A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:23:5].",
+                        "A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]' [file: test11.edit:23:5].",
                     ),
                 ).toBeTruthy();
                 expect(

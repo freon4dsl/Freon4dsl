@@ -26,7 +26,7 @@ propProjectionEnd       = "}"
 projection_begin        = "["
 projection_end          = "]"
 projection_separator    = "|"
-displayType             = "text" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
+displayType             = "text" / "multiline" / "checkbox" / "radio" / "switch" / "inner-switch" / "slider"
 
 singleGlobalProjection = "boolean" ws kind:displayType? ws kw:keywordDecl? ws
 {

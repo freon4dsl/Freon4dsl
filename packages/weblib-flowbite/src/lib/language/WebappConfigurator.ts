@@ -79,7 +79,7 @@ export class WebappConfigurator {
         langInfo.projectionNames.splice(0, langInfo.projectionNames.length)
         // push the right ones
         langInfo.projectionNames.push(...nameList)
-        replaceProjectionsShown(nameList)
+        replaceProjectionsShown(["default"])
 
         // the file extensions for all unit types
         // because 'langEnv.fileExtensions.values()' is not an Array but an IterableIterator,
