@@ -173,10 +173,14 @@
     color: var(--freon-light-accent-lightgreen);
 }
 
+.dark .multiline-text-component:focus {
+    color: var(--color-dark-freon-accent-editable);
+    background: var(--color-dark-freon-accent-dropdown);
+}
 .dark .multiline-text-component {
     color: var(--color-dark-freon-accent-editable);
+    background-color: var(--freon-dark-base-800);
 }
-
 .dark .numeric-slider-component {
     --md-slider-inactive-track-color: var(--color-dark-freon--500);
 }

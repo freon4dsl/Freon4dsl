@@ -160,7 +160,11 @@
 }
 
 .multiline-text-component {
-    color: var(--color-light-freon-600);
+    color: var(--color-light-freon-400);
+}
+.multiline-text-component:focus {
+    color: var(--color-light-base-300);
+    background-color: var(--color-light-accent-50);
 }
 
 .numeric-slider-component {

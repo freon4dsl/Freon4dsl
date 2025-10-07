@@ -336,6 +336,7 @@
     display: inline-block;
     height: auto;
     resize: both;
+    field-sizing: content;  
 }
 
 .numeric-slider-component {
@@ -580,4 +581,15 @@
 }
 .reference-arrow {
     height: 12px;
+}
+textarea {
+    outline: none;
+    vertical-align: top;
+}
+
+.render-component-selected > span {
+    height: fit-content;
+}
+.boolean-checkbox-component {
+    vertical-align: top;
 }

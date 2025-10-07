@@ -160,10 +160,13 @@
     color: var(--color-dark-freon-350);
     /*background: var(--freon-text-component-background-color, inherit);*/
 }
-
+.multiline-text-component:focus {
+    color: var(--color-dark-freon-accent-editable);
+    background: var(--color-dark-freon-accent-dropdown);
+}
 .multiline-text-component {
-    color: var(--color-dark-freon--600);
-    /*background: var(--freon-text-component-background-color, inherit);*/
+    color: var(--color-dark-freon-accent-editable);
+    background-color: var(--freon-dark-base-800);
 }
 
 .numeric-slider-component {

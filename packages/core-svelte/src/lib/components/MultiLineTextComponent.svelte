@@ -69,6 +69,7 @@
     refresh();
 </script>
 
+<span>
 <textarea
     class="{box.cssClass} multilinetext-box multiline-text-component"
     {id}
@@ -79,3 +80,4 @@
     {placeholder}
     bind:value={text}
 ></textarea>
+</span>
