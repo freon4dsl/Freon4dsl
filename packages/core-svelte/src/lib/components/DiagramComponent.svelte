@@ -98,8 +98,8 @@
 
 
 <div
-    style:height="700px"
-    style:width="800px"
+    style:height="400px"
+    style:width="900px"
     bind:this={element}
     id="{id}">
   <SvelteFlow bind:nodes 
