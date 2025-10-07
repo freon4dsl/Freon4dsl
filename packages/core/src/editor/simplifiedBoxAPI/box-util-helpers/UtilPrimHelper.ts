@@ -5,14 +5,14 @@ import {
     type BooleanControlBox,
     type Box,
     BoxFactory,
-    CharAllowed,
+    CharAllowed, MultiLineTextBox,
     type NumberControlBox,
     NumberDisplay,
     type NumberDisplayInfo,
     type SelectBox,
     type SelectOption,
-    type TextBox,
-} from "../../boxes/index.js";
+    type TextBox
+} from '../../boxes/index.js';
 import { type FreEditor } from "../../FreEditor.js";
 import { BehaviorExecutionResult } from "../../util/index.js";
 import { UtilCheckers } from "./UtilCheckers.js";
@@ -65,6 +65,52 @@ export class UtilPrimHelper {
         }
         return result;
     }
+
+    public static multilineTextBox(node: FreNode, propertyName: string, index?: number): MultiLineTextBox {
+        let result: MultiLineTextBox = null;
+        // find the information on the property to be shown
+        const propInfo: FreLanguageProperty = FreLanguage.getInstance().classifierProperty(
+          node.freLanguageConcept(),
+          propertyName,
+        );
+        const isList: boolean = propInfo.isList;
+        const property = node[propertyName];
+        // create the box
+        if (property !== undefined && property !== null && typeof property === "string") {
+            const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName, "multilinetextbox", index);
+            if (isList && UtilCheckers.checkList(isList, index, propertyName)) {
+                result = BoxFactory.multiline(
+                  node,
+                  roleName,
+                  () => node[propertyName][index],
+                  (v: string) =>
+                    AST.change(() => {
+                        node[propertyName][index] = v;
+                    }),
+                  { placeHolder: `${propertyName}` },
+                );
+            } else {
+                result = BoxFactory.multiline(
+                  node,
+                  roleName,
+                  () => node[propertyName],
+                  (v: string) =>
+                    AST.change(() => {
+                        node[propertyName] = v;
+                    }),
+                  { placeHolder: `${propertyName}` },
+                );
+                // ENSURE TEXTBOX IS SEEN AS DIRTY
+                // result.isDirty()
+            }
+            result.propertyName = propertyName;
+            result.propertyIndex = index;
+        } else {
+            FreUtils.CHECK(false, "Property " + propertyName + " does not exist or is not a string: " + property + '"');
+        }
+        return result;
+    }
+
     public static numberBox(
         node: FreNode,
         propertyName: string,

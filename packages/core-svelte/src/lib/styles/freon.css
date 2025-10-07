@@ -335,6 +335,7 @@
     white-space: normal;
     display: inline-block;
     height: auto;
+    resize: both;
 }
 
 .numeric-slider-component {

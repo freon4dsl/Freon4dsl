@@ -21,6 +21,7 @@ export enum ListJoinType {
  * The different displayTypes
  */
 export enum DisplayType {
+    Multiline = "multiline",
     Text = "text",
     Checkbox = "checkbox",
     Radio = "radio",

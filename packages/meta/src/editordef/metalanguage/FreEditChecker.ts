@@ -883,7 +883,7 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             } else {
                 this.runner.simpleCheck(
                     !item.displayType || item.displayType.length === 0,
-                    `A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]', found type '${myProp.type.name}[]' ${ParseLocationUtil.location(item)}.`,
+                    `A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]', found type '${myProp.type.name}[]' ${ParseLocationUtil.location(item)}.`,
                 );
             }
         } else {
@@ -891,12 +891,14 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 this.checkBooleanDisplayType(item.displayType, item);
             } else if (myProp instanceof FreMetaPrimitiveProperty && myProp.type === FreMetaPrimitiveType.number) {
                 this.checkNumberDisplayType(item.displayType, item);
+            } else if (myProp instanceof FreMetaPrimitiveProperty && myProp.type === FreMetaPrimitiveType.string) {
+                this.checkStringDisplayType(item.displayType, item);
             } else if (myProp.type instanceof FreMetaLimitedConcept) {
                 this.checkSingleLimitedDisplayType(item.displayType, item);
             } else {
                 this.runner.simpleCheck(
                     !item.displayType || item.displayType.length === 0,
-                    `A display type may only be defined for types 'boolean', 'number', 'limited', 'limited[]' ${ParseLocationUtil.location(item)}.`,
+                    `A display type may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]' ${ParseLocationUtil.location(item)}.`,
                 );
             }
         }
@@ -911,11 +913,12 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                 check:
                     proj.for === ForType.Boolean ||
                     proj.for === ForType.Number ||
+                    // proj.for === ForType.String ||
                     proj.for === ForType.Limited ||
                     proj.for === ForType.LimitedList ||
                     proj.for === ForType.ReferenceSeparator ||
                     proj.for === ForType.Externals,
-                error: `A global projection may only be defined for types 'boolean', 'number', 'limited', 'limited[]', or for 'referenceSeparator' or 'externals' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
+                error: `A global projection may only be defined for types 'string', 'boolean', 'number', 'limited', 'limited[]', or for 'referenceSeparator' or 'externals' ${proj.for}, ${ParseLocationUtil.location(proj)}.`,
                 whenOk: () => {
                     if (proj.for === ForType.Boolean) {
                         // boolean global projection
@@ -931,6 +934,9 @@ export class FreEditChecker extends Checker<FreEditUnit> {
                     } else if (proj.for === ForType.Number) {
                         // number global projection, check display type
                         this.checkNumberDisplayType(proj.displayType, proj);
+                    // } else if (proj.for === ForType.String) {
+                    //     // number global projection, check display type
+                    //     this.checkStringDisplayType(proj.displayType, proj);
                     } else if (proj.for === ForType.Limited) {
                         // limited global projection, check display type
                         this.checkSingleLimitedDisplayType(proj.displayType, proj);
@@ -969,6 +975,15 @@ export class FreEditChecker extends Checker<FreEditUnit> {
             this.runner.simpleCheck(
                 displayType === DisplayType.Text || displayType === DisplayType.Radio,
                 `A limited (enum) value may only be displayed as 'text', or 'radio' ${ParseLocationUtil.location(elem)}.`,
+            );
+        }
+    }
+
+    private checkStringDisplayType(displayType: DisplayType | undefined, elem: FreMetaDefinitionElement) {
+        if (!!displayType && displayType.length > 0) {
+            this.runner.simpleCheck(
+              displayType === DisplayType.Text || displayType === DisplayType.Multiline,
+              `A string value may only be displayed as 'text', or 'multiline' ${ParseLocationUtil.location(elem)}.`,
             );
         }
     }
