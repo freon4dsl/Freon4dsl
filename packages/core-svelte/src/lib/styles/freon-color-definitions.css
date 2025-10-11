@@ -31,19 +31,19 @@
 }
 
 .dark {
-    --color-dark-freon--900: #1F1F1F; /* Near-black, deep charcoal gray */
-    --color-dark-freon--800: #2D2D2D; /* Very dark neutral gray */
-    --color-dark-freon--700: #444444; /* Balanced deep gray */
-    --color-dark-freon--600: #5A5A5A; /* Strong mid-gray */
-    --color-dark-freon--500: #6F6F6F; /* Smooth neutral gray */
-    --color-dark-freon--400: #878787; /* Lighter, airy neutral gray */
-    --color-dark-freon--350: #A0A0A0; /* Soft, clean light gray */
-    --color-dark-freon--300: #C0C0C0; /* Pale, elegant gray */
-    --color-dark-freon--250: #E0E0E0; /* Near-white subtle gray */
-    --color-dark-freon--200: #FAEBD7; /* Antique White */
-    --color-dark-freon--150: #FFFAF0; /* Floral White */
-    --color-dark-freon--100: #F4F4F4; /* Light Smoke */
-    --color-dark-freon--50: #FFFFFF;  /* Pure White */
+    --color-dark-freon-900: #1F1F1F; /* Near-black, deep charcoal gray */
+    --color-dark-freon-800: #2D2D2D; /* Very dark neutral gray */
+    --color-dark-freon-700: #444444; /* Balanced deep gray */
+    --color-dark-freon-600: #5A5A5A; /* Strong mid-gray */
+    --color-dark-freon-500: #6F6F6F; /* Smooth neutral gray */
+    --color-dark-freon-400: #878787; /* Lighter, airy neutral gray */
+    --color-dark-freon-350: #A0A0A0; /* Soft, clean light gray */
+    --color-dark-freon-300: #C0C0C0; /* Pale, elegant gray */
+    --color-dark-freon-250: #E0E0E0; /* Near-white subtle gray */
+    --color-dark-freon-200: #FAEBD7; /* Antique White */
+    --color-dark-freon-150: #FFFAF0; /* Floral White */
+    --color-dark-freon-100: #F4F4F4; /* Light Smoke */
+    --color-dark-freon-50: #FFFFFF;  /* Pure White */
 
     --color-dark-freon-accent-error: #FF4C4C;
     --color-dark-freon-accent-editable: #FFD0B3;
