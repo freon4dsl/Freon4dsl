@@ -30,11 +30,11 @@ import {
     SelectBox,
     StringWrapperBox,
     TextBox,
-    VerticalListBox
+    VerticalListBox, MultiLineTextBox
 } from '../boxes/index.js';
 import type { FreScoper } from "../../scoper/index.js";
 import { RoleProvider } from "./RoleProvider.js";
-import { FreProjectionHandler } from "../projections/index.js";
+import { type FreProjectionHandler } from "../projections/index.js";
 import { UtilPrimHelper } from "./box-util-helpers/UtilPrimHelper.js";
 import { UtilRefHelpers } from "./box-util-helpers/UtilRefHelpers.js";
 import { UtilPartHelpers } from "./box-util-helpers/UtilPartHelpers.js";
@@ -116,6 +116,18 @@ export class BoxUtil {
      */
     public static textBox(node: FreNode, propertyName: string, index?: number): TextBox {
         return UtilPrimHelper.textBox(node, propertyName, index);
+    }
+
+    /**
+     * Returns a multiline text Box for a property named 'propertyName' within 'node' of type 'string'.
+     * When the property is a list (the type is "string[]"), this method can be
+     * called for each item in the list. In that case an index to the item needs to be provided.
+     * @param node the owning FreNode of the displayed property
+     * @param propertyName the name of the displayed property
+     * @param index the index of the item in the list, if the property is a list
+     */
+    public static multiLineTextBox(node: FreNode, propertyName: string, index?: number): MultiLineTextBox {
+        return UtilPrimHelper.multilineTextBox(node, propertyName, index);
     }
 
     /**

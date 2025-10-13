@@ -35,11 +35,17 @@ export class ConceptUtils {
     }
 
     private static initializer(freProp: FreMetaPrimitiveProperty): string {
-        if (freProp.isOptional) { // do not initialize an optional property
-            return "";
+        const myType: FreMetaClassifier = freProp.type
+        if (freProp.isOptional) { 
+            if (myType === FreMetaPrimitiveType.identifier || myType === FreMetaPrimitiveType.string) {
+                // initialize optional string property to empty string
+                return `this.${freProp.name} = \"\"`
+            } else {
+                // do not initialize an optional property
+                return ""
+            }
         }
         let initializer = ""
-        const myType: FreMetaClassifier = freProp.type
         if (!freProp.isList) {
             switch (myType) {
                 case FreMetaPrimitiveType.identifier: {

@@ -1,6 +1,11 @@
 {
    "serializationFormatVersion": "2023.1",
-   "languages": [],
+   "languages": [
+      {
+         "key": "-key-Example",
+         "version": "2023.1"
+      }
+   ],
    "nodes": [
       {
          "id": "ID-47",
@@ -24,12 +29,30 @@
                "containment": {
                   "language": "-key-Example",
                   "version": "2023.1",
+                  "key": "-key-ExampleUnit-documentation"
+               },
+               "children": [
+                  "ID-18"
+               ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
                   "key": "-key-ExampleUnit-entities"
                },
                "children": [
                   "ID-48",
                   "ID-79"
                ]
+            },
+            {
+               "containment": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-ExampleUnit-interfaces"
+               },
+               "children": []
             },
             {
                "containment": {
@@ -43,7 +66,30 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": null
+      },
+      {
+         "id": "ID-18",
+         "classifier": {
+            "language": "-key-Example",
+            "version": "2023.1",
+            "key": "-key-Documentation"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Documentation-text"
+               },
+               "value": "hier staat\n\neen heleboel tekst. En\n nog meer en meerdere en andere regels . \n\n\n\nDe grootte wordt niet aangepast. Ten minste niet in de breedte. Wel in de hoogte.\n\n\nregels."
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-47"
       },
       {
          "id": "ID-48",
@@ -53,6 +99,14 @@
             "key": "-key-Entity"
          },
          "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-abstract"
+               },
+               "value": "false"
+            },
             {
                "property": {
                   "language": "-key-Example",
@@ -97,11 +151,21 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "ent4"
+                     "resolveInfo": "ent4",
+                     "reference": null
                   }
                ]
+            },
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-baseInterfaces"
+               },
+               "targets": []
             }
          ],
+         "annotations": [],
          "parent": "ID-47"
       },
       {
@@ -137,6 +201,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-48"
       },
       {
@@ -172,6 +237,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-48"
       },
       {
@@ -207,6 +273,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-48"
       },
       {
@@ -261,6 +328,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-48"
       },
       {
@@ -284,6 +352,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-52"
       },
       {
@@ -317,6 +386,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-53"
       },
       {
@@ -340,6 +410,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-54"
       },
       {
@@ -373,6 +444,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-55"
       },
       {
@@ -396,6 +468,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-56"
       },
       {
@@ -429,6 +502,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-57"
       },
       {
@@ -450,6 +524,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-58"
       },
       {
@@ -471,6 +546,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-58"
       },
       {
@@ -492,6 +568,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-56"
       },
       {
@@ -513,6 +590,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-54"
       },
       {
@@ -567,6 +645,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-48"
       },
       {
@@ -600,6 +679,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-63"
       },
       {
@@ -633,6 +713,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-64"
       },
       {
@@ -666,6 +747,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-65"
       },
       {
@@ -687,6 +769,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-66"
       },
       {
@@ -708,6 +791,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-66"
       },
       {
@@ -729,6 +813,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-65"
       },
       {
@@ -750,6 +835,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-64"
       },
       {
@@ -807,6 +893,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-48"
       },
       {
@@ -840,6 +927,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-71"
       },
       {
@@ -863,6 +951,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-72"
       },
       {
@@ -900,6 +989,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-73"
       },
       {
@@ -920,11 +1010,13 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "xx"
+                     "resolveInfo": "xx",
+                     "reference": null
                   }
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-74"
       },
       {
@@ -960,6 +1052,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-72"
       },
       {
@@ -995,6 +1088,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-71"
       },
       {
@@ -1030,6 +1124,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-71"
       },
       {
@@ -1040,6 +1135,14 @@
             "key": "-key-Entity"
          },
          "properties": [
+            {
+               "property": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-abstract"
+               },
+               "value": "false"
+            },
             {
                "property": {
                   "language": "-key-Example",
@@ -1072,7 +1175,17 @@
                ]
             }
          ],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-Example",
+                  "version": "2023.1",
+                  "key": "-key-Entity-baseInterfaces"
+               },
+               "targets": []
+            }
+         ],
+         "annotations": [],
          "parent": "ID-47"
       },
       {
@@ -1108,6 +1221,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-79"
       },
       {
@@ -1143,6 +1257,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-79"
       },
       {
@@ -1197,6 +1312,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-79"
       },
       {
@@ -1220,6 +1336,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-82"
       },
       {
@@ -1253,6 +1370,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-83"
       },
       {
@@ -1274,6 +1392,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-84"
       },
       {
@@ -1295,6 +1414,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-84"
       },
       {
@@ -1349,6 +1469,7 @@
                ]
             }
          ],
+         "annotations": [],
          "parent": "ID-47"
       },
       {
@@ -1392,6 +1513,7 @@
             }
          ],
          "references": [],
+         "annotations": [],
          "parent": "ID-87"
       },
       {
@@ -1413,6 +1535,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-88"
       },
       {
@@ -1434,6 +1557,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-88"
       },
       {
@@ -1455,6 +1579,7 @@
          ],
          "containments": [],
          "references": [],
+         "annotations": [],
          "parent": "ID-88"
       }
    ]

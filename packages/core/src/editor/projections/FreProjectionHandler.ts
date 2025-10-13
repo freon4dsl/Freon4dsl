@@ -138,9 +138,9 @@ export class FreProjectionHandler {
     addProjection(p: string) {
         runInAction( () => {
             ArrayUtil.addIfNotPresent(this._allProjections, p);
-            if (p !== "default") {
-                ArrayUtil.addIfNotPresent(this._enabledProjections, p);
-            }
+            // if (p !== "default") {
+            //     ArrayUtil.addIfNotPresent(this._enabledProjections, p);
+            // }
         })
     }
 
@@ -162,7 +162,7 @@ export class FreProjectionHandler {
         runInAction( () => {
             this._enabledProjections = newList;
         })
-        // console.log(" ============== enabled projections: " + this._enabledProjections);
+        console.log(" ============== enabled projections: " + this._enabledProjections);
 
         //  Let all providers know that projection may be changed.
         for (const provider of this.elementToProvider.values()) {

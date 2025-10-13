@@ -31,7 +31,7 @@ ExampleUnit {
 }
 
 Documentation {
-   [ doc start ${text} end doc ]
+   [ doc start ${text multiline} end doc ]
 }
 
 Method {
