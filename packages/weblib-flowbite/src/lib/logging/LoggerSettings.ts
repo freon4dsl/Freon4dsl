@@ -1,13 +1,12 @@
 import { FreLogger } from "@freon4dsl/core";
 
-export let inDevelopment = false
-
+import { inDevelopment } from "../stores/WebappStores.svelte.js"
 /**
  * Sets the development flag, logging will be turned off completely when false.
  * @param v
  */
 export function setDevelopment(v: boolean): void {
-    inDevelopment = v;
+    inDevelopment.value = v;
 }
 
 // Mute or unmute logs here (in addition to elsewhere).

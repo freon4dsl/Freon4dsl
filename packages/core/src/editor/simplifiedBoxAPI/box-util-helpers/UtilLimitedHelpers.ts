@@ -147,7 +147,7 @@ export class UtilLimitedHelpers {
         result = BoxFactory.select(
             node,
             roleName,
-            `<${propertyName}>`,
+            `+ ${propertyName}`,
             () => {
                 return scoper
                     .getVisibleNodes(node, propType)
