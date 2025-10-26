@@ -12,7 +12,7 @@ import {
 export class LionWebTemplate {
 
     generate(language: FreMetaLanguage): string {
-        const modelConcept = language.modelConcept;
+        const modelConcept = language.modelConcept
         // console.log(`Properties of model ${modelConcept.name} are ${language.modelConcept.properties.map(p => (!!p.id ? p.id : "unknown-child"))}`);
         const chunk: LionWebJsonChunk = {
             serializationFormatVersion: "2023.1",
@@ -23,12 +23,12 @@ export class LionWebTemplate {
                 },
                 {
                     key: "LionCore-builtins",
-                    version: "2023.1"
-                }
+                    version: "2023.1",
+                },
             ],
-            nodes: []
-        };
-        chunk.nodes.push(this.toLionWebLanguage(language));
+            nodes: [],
+        }
+        chunk.nodes.push(this.toLionWebLanguage(language))
 
         language.units.forEach(unit => {
             chunk.nodes.push(this.toLionWebUnit(unit, modelConcept));
@@ -324,7 +324,7 @@ export class LionWebTemplate {
                     reference: MetaPointers.PropertyType,
                     targets: [
                         {
-                            resolveInfo: prop.type.name,
+                            resolveInfo: this.toLionWebPropertyType(prop),
                             // @ts-ignore
                             reference: (prop.type.id === "" ? null : prop.type.id)
                         }
@@ -541,6 +541,29 @@ export class LionWebTemplate {
             parent: parent.id
         };
         return result;
+    }
+
+    /**
+     * Primitive property type conversion
+     * @param prop
+     */
+    toLionWebPropertyType(prop: FreMetaProperty): string {
+        switch (prop.type.name) {
+            case "number":
+                return "Integer"
+                break
+            case "string":
+                return "String"
+                break
+            case "boolean":
+                return "Boolean"
+                break
+            case "identifier":
+                return "String"
+                break
+            default:
+                return prop.type.name
+        }
     }
 }
 

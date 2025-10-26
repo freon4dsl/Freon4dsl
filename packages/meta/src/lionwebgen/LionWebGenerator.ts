@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { FreMetaLanguage } from "../languagedef/metalanguage/index.js";
+import { type FreMetaLanguage } from "../languagedef/metalanguage/index.js";
 import { LionWebTemplate } from "./templates/LionWebTemplate.js";
 import { MetaLogger } from '../utils/no-dependencies/index.js';
 import { FileUtil, GenerationStatus } from '../utils/file-utils/index.js';
