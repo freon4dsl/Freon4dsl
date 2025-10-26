@@ -1,0 +1,41 @@
+language protocol
+
+model Protocol {
+    categories: MessageGroup[];
+    typeDefinitions: Types[];
+}
+
+modelunit Types {
+    name: identifier;
+    primitiveTypes: PrimitiveType[];
+    objectTypes:  ObjectType[];
+}
+
+modelunit MessageGroup { 
+    name: identifier;      // Query, Command, Event    
+    taggedUnionProperty: string; // messageKind 
+    messages: ObjectType[]; 
+    // Properties for all messages in this SchemaCategory
+    sharedProperties: PropertyDef[];  
+    // E.g. messageKind, commandId, ProtocolMessage
+}
+
+concept PropertyDef {
+    name: identifier;
+    reference type: Type; 
+    mayBeNull: boolean = false;
+    isList: boolean = false;
+    isOptional: boolean = false; 
+    validate: string; // TODO e.g isKey, isId, 
+}
+
+abstract concept Type {
+        name: identifier;
+}
+concept PrimitiveType base Type {
+    primitiveType: string; // TODO different for TS, C#, Python, Java 
+    validator: string; // TODO e.g isKey, isId, 
+}
+concept ObjectType base Type {
+    properties: PropertyDef[];
+}

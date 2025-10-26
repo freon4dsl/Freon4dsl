@@ -1,0 +1,47 @@
+editor default 
+
+Types {
+    [
+        Type Definitions ${name}
+        
+        Primitives:
+            ${primitiveTypes}
+            
+        Objects:
+            ${objectTypes} 
+    ]
+}
+
+PrimitiveType {
+    [
+        primitive ${name} : ${primitiveType} 
+    ]
+}
+
+ObjectType {
+    [
+        object ${name}
+            ${properties}
+         
+    ]
+}
+
+PropertyDef {
+    [
+        ${name} : ${type} 
+                           ${mayBeNull checkbox} may be null ${isList checkbox} is a list ${isOptional checkbox} optional
+    ]
+}
+
+MessageGroup {
+    [
+        MessageGroup ${name}
+
+        TaggedUnion property name ${taggedUnionProperty}
+        Shared properties:
+            ${sharedProperties} 
+            
+        Messages
+        ${messages} 
+    ]
+}
