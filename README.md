@@ -149,3 +149,7 @@ The codebase is organized into multiple packages:
 - **packages/webapp-smui** – older demo web app using [Svelte Material UI (SMUI)](https://sveltematerialui.com/)
 - **developer-documentation** – technical information for contributors and maintainers
   - Explains architecture, build setup, generators, and API internals
+
+
+We build Freon and its documentation out of curiosity, passion, and love for language engineering.
+We invite you to share that enthusiasm and help make something meaningful — together. ❤️
