@@ -29,7 +29,7 @@
                   "version": "2023.1",
                   "key": "-key-MessageGroup-taggedUnionProperty"
                },
-               "value": ""
+               "value": "messageKind"
             }
          ],
          "containments": [
@@ -154,7 +154,21 @@
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-5"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-133"
       },
@@ -208,7 +222,21 @@
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-5"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-133"
       },
@@ -262,7 +290,21 @@
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Boolean",
+                     "reference": "ID-5"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-133"
       },

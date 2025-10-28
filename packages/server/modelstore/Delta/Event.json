@@ -2099,7 +2099,21 @@
             }
          ],
          "containments": [],
-         "references": [],
+         "references": [
+            {
+               "reference": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-type"
+               },
+               "targets": [
+                  {
+                     "resolveInfo": "Number",
+                     "reference": "ID-78"
+                  }
+               ]
+            }
+         ],
          "annotations": [],
          "parent": "ID-29"
       },

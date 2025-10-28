@@ -37,7 +37,8 @@
                   "ID-40",
                   "ID-41",
                   "ID-78",
-                  "ID-131"
+                  "ID-131",
+                  "ID-5"
                ]
             },
             {
@@ -279,6 +280,44 @@
                   "key": "-key-Type-name"
                },
                "value": "QueryId"
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-2"
+      },
+      {
+         "id": "ID-5",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PrimitiveType"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-primitiveType"
+               },
+               "value": "boolean"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PrimitiveType-validator"
+               },
+               "value": ""
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-Type-name"
+               },
+               "value": "Boolean"
             }
          ],
          "containments": [],

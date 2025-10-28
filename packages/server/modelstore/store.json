@@ -642,6 +642,34 @@
                     "file": "unit1.json"
                 }
             ]
+        },
+        {
+            "name": "Delta",
+            "folder": "Delta",
+            "language": "",
+            "version": "1",
+            "units": [
+                {
+                    "name": "Command",
+                    "file": "Command.json"
+                },
+                {
+                    "name": "Event",
+                    "file": "Event.json"
+                },
+                {
+                    "name": "Query",
+                    "file": "Query.json"
+                },
+                {
+                    "name": "LionWeb",
+                    "file": "LionWebJson.json"
+                },
+                {
+                    "name": "DeltaTypes",
+                    "file": "DeltaTypes.json"
+                }
+            ]
         }
     ]
 }
