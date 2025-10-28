@@ -50,7 +50,7 @@ export class UtilRefHelpers {
         result = BoxFactory.reference(
             node,
             roleName,
-            `<${propertyName}>`,
+            `+ ${propertyName}`,
             () => {
                 return scoper
                     .getVisibleNodes(node, propType)

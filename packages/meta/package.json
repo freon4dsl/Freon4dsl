@@ -4,7 +4,7 @@
     "access": "public"
   },
   "name": "@freon4dsl/meta",
-  "version": "2.0.0-beta.5",
+  "version": "2.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -39,7 +39,7 @@
     "build-dev": "npm run build",
     "build-release": "npm run build",
     "release-beta": "npm publish --tag beta",
-    "publish-local": "npm publish --verbose --registry http://localhost:4873 --tag local",
+    "publish-local": "npm publish --verbose --registry http://localhost:4873/ --tag local",
     "unpublish-local": "npm unpublish --force --registry http://localhost:4873",
     "republish-local": "npm run unpublish-local && npm run publish-local",
     "test": "vitest run",

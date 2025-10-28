@@ -355,7 +355,7 @@ export class BoxUtil {
         const roleName: string = RoleProvider.property(node.freLanguageConcept(), propertyName);
         let result: Box = !!property
             ? boxProviderCache.getBoxProvider(property).box
-            : BoxFactory.action(node, roleName, `<${propertyName}>`, {
+            : BoxFactory.action(node, roleName, `+ ${propertyName}`, {
                 propertyName: propertyName,
                 conceptName: conceptName,
             });
