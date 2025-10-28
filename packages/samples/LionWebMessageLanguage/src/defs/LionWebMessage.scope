@@ -1,0 +1,15 @@
+scoper for language LionWebMessage 
+
+isNamespace { Types, MessageGroup, ObjectType }
+
+// MessageGroup {
+//     imports {
+//         self.owner().typeDefinitions;
+//     }
+// }
+
+ObjectType {
+    alternatives {
+        self.owner().if(MessageGroup).owner().typeDefinitions;
+    }
+}
