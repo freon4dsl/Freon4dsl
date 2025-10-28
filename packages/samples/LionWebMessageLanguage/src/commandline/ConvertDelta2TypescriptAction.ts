@@ -12,7 +12,7 @@ import { TypeTemplates } from "./templates/TypeTemplates.js"
 const pathSeparator = path.sep
 
 export class ConvertDelta2TypescriptAction extends CommandLineAction {
-    protected model: CommandLineStringParameter;
+    // protected model: CommandLineStringParameter;
     protected lionWebM3File: CommandLineStringParameter;
     protected allModelUnits: FreModelUnit[] = [];
     protected protocol: Protocol = new Protocol();
@@ -23,17 +23,13 @@ export class ConvertDelta2TypescriptAction extends CommandLineAction {
             summary: "Create .ts file from Delta model in folder",
             documentation: "Lionweb Delta to TypeScript types generator"
         });
-        this.defineParameters()
-        this.protocol.name = "DeltaProtocol"
-    }
-
-    protected defineParameters(): void {
         this.lionWebM3File = this.defineStringParameter({
             argumentName: "DELTA_MODEL_FOLDER",
             parameterLongName: "--folder",
             parameterShortName: "-f",
             description: "Folder containing delta definitions in json format"
         });
+        this.protocol.name = "DeltaProtocol"
     }
 
     protected async onExecute(): Promise<void> {

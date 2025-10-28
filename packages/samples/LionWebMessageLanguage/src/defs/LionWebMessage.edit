@@ -28,8 +28,10 @@ ObjectType {
 
 PropertyDef {
     [
-        ${name} : ${type} 
-                           ${mayBeNull checkbox} may be null ${isList checkbox} is a list ${isOptional checkbox} optional
+        [fragment Options] ${name} : ${type}             
+    ]
+    fragment Options [
+        ${mayBeNull checkbox} may be null ${isList checkbox} is a list ${isOptional checkbox} optional
     ]
 }
 
