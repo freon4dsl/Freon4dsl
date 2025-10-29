@@ -668,6 +668,10 @@
                 {
                     "name": "DeltaTypes",
                     "file": "DeltaTypes.json"
+                },
+                {
+                    "name": "LionWebJson",
+                    "file": "LionWebJson.json"
                 }
             ]
         }

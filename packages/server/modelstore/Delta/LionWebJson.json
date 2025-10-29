@@ -42,8 +42,7 @@
                   "key": "-key-Types-objectTypes"
                },
                "children": [
-                  "ID-20",
-                  "ID-21"
+                  "ID-20"
                ]
             }
          ],
@@ -104,37 +103,6 @@
                   "key": "-key-Type-name"
                },
                "value": "LionWebJsonPointer"
-            }
-         ],
-         "containments": [
-            {
-               "containment": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-ObjectType-properties"
-               },
-               "children": []
-            }
-         ],
-         "references": [],
-         "annotations": [],
-         "parent": "ID-19"
-      },
-      {
-         "id": "ID-21",
-         "classifier": {
-            "language": "-key-protocol",
-            "version": "2023.1",
-            "key": "-key-ObjectType"
-         },
-         "properties": [
-            {
-               "property": {
-                  "language": "-key-protocol",
-                  "version": "2023.1",
-                  "key": "-key-Type-name"
-               },
-               "value": ""
             }
          ],
          "containments": [
