@@ -349,12 +349,68 @@
                   "version": "2023.1",
                   "key": "-key-ObjectType-properties"
                },
-               "children": []
+               "children": [
+                  "ID-10"
+               ]
             }
          ],
          "references": [],
          "annotations": [],
          "parent": "ID-2"
+      },
+      {
+         "id": "ID-10",
+         "classifier": {
+            "language": "-key-protocol",
+            "version": "2023.1",
+            "key": "-key-PropertyDef"
+         },
+         "properties": [
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-name"
+               },
+               "value": "datra"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-mayBeNull"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isList"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-isOptional"
+               },
+               "value": "false"
+            },
+            {
+               "property": {
+                  "language": "-key-protocol",
+                  "version": "2023.1",
+                  "key": "-key-PropertyDef-validate"
+               },
+               "value": ""
+            }
+         ],
+         "containments": [],
+         "references": [],
+         "annotations": [],
+         "parent": "ID-4"
       },
       {
          "id": "ID-13",

@@ -19,7 +19,7 @@
                "property": {
                   "language": "-key-protocol",
                   "version": "2023.1",
-                  "key": "-key-MessageGroup-name"
+                  "key": "-key-Type-name"
                },
                "value": "Query"
             },

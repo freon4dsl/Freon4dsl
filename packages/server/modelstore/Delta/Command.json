@@ -19,17 +19,17 @@
                "property": {
                   "language": "-key-protocol",
                   "version": "2023.1",
-                  "key": "-key-MessageGroup-name"
+                  "key": "-key-MessageGroup-taggedUnionProperty"
                },
-               "value": "Command"
+               "value": "messageKind"
             },
             {
                "property": {
                   "language": "-key-protocol",
                   "version": "2023.1",
-                  "key": "-key-MessageGroup-taggedUnionProperty"
+                  "key": "-key-Type-name"
                },
-               "value": "messageKind"
+               "value": "Command"
             }
          ],
          "containments": [
@@ -12344,8 +12344,8 @@
                },
                "targets": [
                   {
-                     "resolveInfo": "String",
-                     "reference": "ID-3"
+                     "resolveInfo": "Command",
+                     "reference": "ID-7"
                   }
                ]
             }
@@ -12413,7 +12413,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": null
+                     "reference": "ID-3"
                   }
                ]
             }
@@ -12481,7 +12481,7 @@
                "targets": [
                   {
                      "resolveInfo": "String",
-                     "reference": null
+                     "reference": "ID-3"
                   }
                ]
             }
@@ -12549,7 +12549,7 @@
                "targets": [
                   {
                      "resolveInfo": "ProtocolMessage",
-                     "reference": null
+                     "reference": "ID-4"
                   }
                ]
             }

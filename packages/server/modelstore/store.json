@@ -663,15 +663,11 @@
                 },
                 {
                     "name": "LionWeb",
-                    "file": "LionWebJson.json"
+                    "file": "LionWeb.json"
                 },
                 {
                     "name": "DeltaTypes",
                     "file": "DeltaTypes.json"
-                },
-                {
-                    "name": "LionWebJson",
-                    "file": "LionWebJson.json"
                 }
             ]
         }
