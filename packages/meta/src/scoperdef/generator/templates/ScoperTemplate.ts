@@ -127,11 +127,15 @@ export class ScoperTemplate {
             if (previousIsList) {
                 const loopVar: string = "loopVariable";
                 imports.core.add('isNullOrUndefined');
+                imports.core.add('notNullOrUndefined');
                 result = result.concat(`
                     // generated from '${namespaceInfo.toFreString()}'
-                    for (let ${loopVar} of ${namespaceExpressionStr}) {
-                        if (!isNullOrUndefined(${loopVar})) {
-                            result.push(new ${Names.FreNamespaceInfo}(${loopVar}, ${namespaceInfo.recursive}));
+                    const list${index} = ${namespaceExpressionStr}
+                    if (notNullOrUndefined(list${index}) ){
+                        for (let ${loopVar} of list${index++}) {
+                            if (!isNullOrUndefined(${loopVar})) {
+                                result.push(new ${Names.FreNamespaceInfo}(${loopVar}, ${namespaceInfo.recursive}));
+                            }
                         }
                     }`);
             } else {
