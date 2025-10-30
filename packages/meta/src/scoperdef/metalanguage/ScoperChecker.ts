@@ -1,6 +1,6 @@
 import {
     FreMetaLanguage,
-    FreMetaClassifier, LangUtil, MetaElementReference
+    FreMetaClassifier, LangUtil, MetaElementReference, FreMetaModelDescription
 } from '../../languagedef/metalanguage/index.js';
 import {
     FreNamespaceAlternative,
@@ -206,7 +206,7 @@ export class ScoperChecker extends Checker<ScopeDef> {
             }
             if (!doNotCheck) {
                 this.runner.simpleCheck(
-                  !!foundClassifier && this.myNamespaces.includes(foundClassifier),
+                    (!!foundClassifier && (this.myNamespaces.includes(foundClassifier) || foundClassifier instanceof FreMetaModelDescription)),
                   `A namespace expression should refer to a namespace (found: '${foundClassifier?.name}') ${ParseLocationUtil.location(exp)}.`
                 );
             }
